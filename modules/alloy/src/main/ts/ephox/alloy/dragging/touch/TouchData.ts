@@ -1,25 +1,20 @@
-import { Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { EventArgs, SugarPosition } from '@ephox/sugar';
 
-import { SugarPosition, SugarEvent } from '../../alien/TypeDefinitions';
-import { TouchEvent } from '@ephox/dom-globals';
-
-const getDataFrom = (touches): Option<SugarPosition> => {
+const getDataFrom = (touches: TouchList): Optional<SugarPosition> => {
   const touch = touches[0];
-  return Option.some(Position(touch.clientX, touch.clientY));
+  return Optional.some(SugarPosition(touch.clientX, touch.clientY));
 };
 
-const getData = (event: SugarEvent): Option<SugarPosition> => {
-  const raw = event.raw() as TouchEvent;
+const getData = (event: EventArgs<TouchEvent>): Optional<SugarPosition> => {
+  const raw = event.raw;
   const touches = raw.touches;
-  return touches.length === 1 ? getDataFrom(touches) : Option.none();
+  return touches.length === 1 ? getDataFrom(touches) : Optional.none();
 };
 
 // When dragging the touch, the delta is simply the difference
 // between the two touch positions (previous/old and next/nu)
-const getDelta = (old: SugarPosition, nu: SugarPosition): SugarPosition => {
-  return Position(nu.left() - old.left(), nu.top() - old.top());
-};
+const getDelta = (old: SugarPosition, nu: SugarPosition): SugarPosition => SugarPosition(nu.left - old.left, nu.top - old.top);
 
 export {
   getData,

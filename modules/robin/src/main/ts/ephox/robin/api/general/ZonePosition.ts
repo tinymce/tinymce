@@ -7,9 +7,9 @@ export interface ZonePosition<E> {
     belowView: (item: E) => T
   ) => T;
   match: <T> (branches: {
-    aboveView: (item: E) => T,
-    inView: (item: E) => T,
-    belowView: (item: E) => T
+    aboveView: (item: E) => T;
+    inView: (item: E) => T;
+    belowView: (item: E) => T;
   }) => T;
   log: (label: string) => void;
 }

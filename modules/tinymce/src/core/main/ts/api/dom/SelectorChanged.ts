@@ -5,11 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Element } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
 import Editor from '../Editor';
-import DOMUtils from './DOMUtils';
 import Tools from '../util/Tools';
+import DOMUtils from './DOMUtils';
 
 const deleteFromCallbackMap = (callbackMap, selector, callback) => {
   if (callbackMap && callbackMap.hasOwnProperty(selector)) {
@@ -23,11 +22,14 @@ const deleteFromCallbackMap = (callbackMap, selector, callback) => {
   }
 };
 
+type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void;
+
 export default (dom: DOMUtils, editor: Editor) => {
-  let selectorChangedData, currentSelectors;
+  let selectorChangedData: Record<string, SelectorChangedCallback[]>;
+  let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
   return {
-    selectorChangedWithUnbind(selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void): { unbind: () => void } {
+    selectorChangedWithUnbind(selector: string, callback: SelectorChangedCallback): { unbind: () => void } {
       if (!selectorChangedData) {
         selectorChangedData = {};
         currentSelectors = {};

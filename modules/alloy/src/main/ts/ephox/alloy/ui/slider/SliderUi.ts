@@ -1,31 +1,27 @@
-import { Arr, Fun, Merger, Option } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
+import { Fun, Optional } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
-import { Representing } from '../../api/behaviour/Representing';
 import { Receiving } from '../../api/behaviour/Receiving';
+import { Representing } from '../../api/behaviour/Representing';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
+import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import * as AlloyParts from '../../parts/AlloyParts';
-import * as ModelCommon from './ModelCommon';
-
-import { CustomEvent } from '../../events/SimulatedEvent';
+import * as Channels from '../../api/messages/Channels';
 import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { SliderDetail, SliderSpec, SliderValue } from '../../ui/types/SliderTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
-
-const isTouch = PlatformDetection.detect().deviceType.isTouch();
+import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import * as AlloyParts from '../../parts/AlloyParts';
+import { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
+import * as ModelCommon from './ModelCommon';
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: SliderDetail, components: AlloySpec[], _spec: SliderSpec, _externals) => {
   const getThumb = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'thumb');
   const getSpectrum = (component: AlloyComponent): AlloyComponent => AlloyParts.getPartOrDie(component, detail, 'spectrum');
-  const getLeftEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
-  const getRightEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'right-edge');
-  const getTopEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
-  const getBottomEdge = (component: AlloyComponent): Option<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
+  const getLeftEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'left-edge');
+  const getRightEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'right-edge');
+  const getTopEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'top-edge');
+  const getBottomEdge = (component: AlloyComponent): Optional<AlloyComponent> => AlloyParts.getPart(component, detail, 'bottom-edge');
 
   const modelDetail = detail.model;
   const model = modelDetail.manager;
@@ -40,13 +36,13 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     });
   };
 
-  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Option<boolean> => {
+  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Optional<boolean> => {
     modelDetail.value.set(newValue);
 
     const thumb = getThumb(slider);
     refresh(slider, thumb);
     detail.onChange(slider, thumb, newValue);
-    return Option.some(true);
+    return Optional.some<boolean>(true);
   };
 
   const resetToMin = (slider: AlloyComponent) => {
@@ -57,27 +53,34 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     model.setToMax(slider, detail);
   };
 
-  const touchEvents = [
-    AlloyEvents.run(NativeEvents.touchstart(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragStart(slider, getThumb(slider));
-    }),
-    AlloyEvents.run(NativeEvents.touchend(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragEnd(slider, getThumb(slider));
-    })
-  ];
+  const choose = (slider: AlloyComponent) => {
+    const fireOnChoose = () => {
+      AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
+        const value = modelDetail.value.get();
+        detail.onChoose(slider, thumb, value);
+      });
+    };
 
-  const mouseEvents = [
-    AlloyEvents.run(NativeEvents.mousedown(), (slider: AlloyComponent, simulatedEvent) => {
-      simulatedEvent.stop();
-      detail.onDragStart(slider, getThumb(slider));
-      detail.mouseIsDown.set(true);
-    }),
-    AlloyEvents.run(NativeEvents.mouseup(), (slider: AlloyComponent, _simulatedEvent) => {
-      detail.onDragEnd(slider, getThumb(slider));
-    })
-  ];
+    const wasDown = detail.mouseIsDown.get();
+    detail.mouseIsDown.set(false);
 
-  const uiEventsArr = isTouch ? touchEvents : mouseEvents;
+    // We don't want this to fire if the mouse wasn't pressed down over anything other than the slider.
+    if (wasDown) {
+      fireOnChoose();
+    }
+  };
+
+  const onDragStart = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => {
+    simulatedEvent.stop();
+    detail.mouseIsDown.set(true);
+    detail.onDragStart(slider, getThumb(slider));
+  };
+
+  const onDragEnd = (slider: AlloyComponent, simulatedEvent: NativeSimulatedEvent<DragEvent>) => {
+    simulatedEvent.stop();
+    detail.onDragEnd(slider, getThumb(slider));
+    choose(slider);
+  };
 
   return {
     uid: detail.uid,
@@ -86,66 +89,53 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
 
     behaviours: SketchBehaviours.augment(
       detail.sliderBehaviours,
-      Arr.flatten<any>([
-        !isTouch ? [
-          Keying.config({
-            mode: 'special',
-            focusIn (slider) {
-              return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.constant(true));
-            }
-          })
-        ] : [],
-        [
-          Representing.config({
-            store: {
-              mode: 'manual',
-              getValue (_) {
-                return modelDetail.value.get();
-              }
-            }
-          }),
-
-          Receiving.config({
-            channels: {
-              'mouse.released': {
-                onReceive: (slider, se) => {
-                  const wasDown = detail.mouseIsDown.get();
-                  detail.mouseIsDown.set(false);
-
-                  // We don't this to fire if the mouse wasn't pressed down over anything other than the slider.
-                  if (wasDown) {
-                    AlloyParts.getPart(slider, detail, 'thumb').each((thumb) => {
-                      const value = modelDetail.value.get();
-                      detail.onChoose(slider, thumb, value);
-                    });
-                  }
-                }
-              }
-            }
-          })
-        ]
-      ])
-    ),
-
-    events: AlloyEvents.derive(
       [
-        AlloyEvents.run<CustomEvent>(ModelCommon.sliderChangeEvent(), function (slider, simulatedEvent) {
-          changeValue(slider, simulatedEvent.event().value());
+        Keying.config({
+          mode: 'special',
+          focusIn(slider) {
+            return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.always);
+          }
         }),
-        AlloyEvents.runOnAttached((slider, simulatedEvent) => {
-          // Set the initial value
-          const getInitial = modelDetail.getInitialValue();
-          modelDetail.value.set(getInitial);
-          const thumb = getThumb(slider);
+        Representing.config({
+          store: {
+            mode: 'manual',
+            getValue(_) {
+              return modelDetail.value.get();
+            }
+          }
+        }),
 
-          refresh(slider, thumb);
-
-          const spectrum = getSpectrum(slider);
-          // Call onInit instead of onChange for the first value.
-          detail.onInit(slider, thumb, spectrum, modelDetail.value.get());
+        Receiving.config({
+          channels: {
+            [Channels.mouseReleased()]: {
+              onReceive: choose
+            }
+          }
         })
-      ].concat(uiEventsArr)
+      ]
     ),
+
+    events: AlloyEvents.derive([
+      AlloyEvents.run<SliderUpdateEvent>(ModelCommon.sliderChangeEvent(), (slider, simulatedEvent) => {
+        changeValue(slider, simulatedEvent.event.value);
+      }) as AlloyEvents.AlloyEventKeyAndHandler<EventFormat>,
+      AlloyEvents.runOnAttached((slider, _simulatedEvent) => {
+        // Set the initial value
+        const getInitial = modelDetail.getInitialValue();
+        modelDetail.value.set(getInitial);
+        const thumb = getThumb(slider);
+
+        refresh(slider, thumb);
+
+        const spectrum = getSpectrum(slider);
+        // Call onInit instead of onChange for the first value.
+        detail.onInit(slider, thumb, spectrum, modelDetail.value.get());
+      }),
+      AlloyEvents.run(NativeEvents.touchstart(), onDragStart),
+      AlloyEvents.run(NativeEvents.touchend(), onDragEnd),
+      AlloyEvents.run(NativeEvents.mousedown(), onDragStart),
+      AlloyEvents.run(NativeEvents.mouseup(), onDragEnd)
+    ]),
 
     apis: {
       resetToMin,

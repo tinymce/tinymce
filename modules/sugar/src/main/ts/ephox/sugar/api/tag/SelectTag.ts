@@ -1,34 +1,33 @@
-import { HTMLOptionElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import Element from '../node/Element';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement } from '../node/SugarElement';
 
-const getValueFromIndex = function (options: HTMLOptionElement[], index: number) {
+const getValueFromIndex = (options: HTMLOptionsCollection, index: number) => {
   const optionVal = options[index];
-  return optionVal === undefined || index === -1 ? Option.none<string>() : Option.from(optionVal.value);
+  return optionVal === undefined || index === -1 ? Optional.none<string>() : Optional.from(optionVal.value);
 };
 
-const getValue = function (select: Element) {
-  const selectDom = select.dom();
+const getValue = (select: SugarElement<HTMLSelectElement>) => {
+  const selectDom = select.dom;
   return getValueFromIndex(selectDom.options, selectDom.selectedIndex);
 };
 
-const add = function (select: Element, option: Element) {
-  select.dom().add(option.dom());
+const add = (select: SugarElement<HTMLSelectElement>, option: SugarElement<HTMLOptionElement>) => {
+  select.dom.add(option.dom);
 };
 
-const addAll = function (select: Element, options: Element[]) {
-  Arr.each(options, function (option) {
+const addAll = (select: SugarElement<HTMLSelectElement>, options: SugarElement<HTMLOptionElement>[]) => {
+  Arr.each(options, (option) => {
     add(select, option);
   });
 };
 
-const setSelected = function (select: Element, index: number) {
-  select.dom().selectedIndex = index;
+const setSelected = (select: SugarElement<HTMLSelectElement>, index: number) => {
+  select.dom.selectedIndex = index;
 };
 
-export default {
+export {
   getValue,
   add,
   addAll,
-  setSelected,
+  setSelected
 };

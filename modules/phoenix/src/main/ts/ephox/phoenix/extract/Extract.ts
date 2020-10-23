@@ -16,15 +16,17 @@ import * as TypedList from './TypedList';
  *  Otherwise returns []
  * TODO: for TBIO-470 for Multi-Language spell checking: deal with the element LANG, adding language to typeditem so this nested information is not lost
  */
-var typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): TypedItem<E, D>[] {
+const typed = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): TypedItem<E, D>[] {
   if (universe.property().isText(item)) {
-    return [TypedItem.text(item, universe)];
+    return [ TypedItem.text(item, universe) ];
   } else if (universe.property().isEmptyTag(item)) {
-    return [TypedItem.empty(item, universe)];
+    return [ TypedItem.empty(item, universe) ];
+  } else if (universe.property().isNonEditable(item)) {
+    return []; // Do not include this at all
   } else if (universe.property().isElement(item)) {
-    var children = universe.property().children(item);
-    var boundary = universe.property().isBoundary(item) ? [TypedItem.boundary(item, universe)] : [];
-    var rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, function (child) {
+    const children = universe.property().children(item);
+    const boundary = universe.property().isBoundary(item) ? [ TypedItem.boundary(item, universe) ] : [];
+    const rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, function (child) {
       return typed(universe, child, optimise);
     });
     return boundary.concat(rest).concat(boundary);
@@ -36,20 +38,20 @@ var typed = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E)
 /**
  * Returns just the actual elements from a call to typed().
  */
-var items = function <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
-  var typedItemList = typed(universe, item, optimise);
+const items = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
+  const typedItemList = typed(universe, item, optimise);
 
-  var raw = function (item: E, _universe: Universe<E, D>) { return item; };
+  const raw = function (item: E, _universe: Universe<E, D>) { return item; };
 
   return Arr.map(typedItemList, function (typedItem: TypedItem<E, D>) {
-    return typedItem.fold(raw, raw, raw);
+    return typedItem.fold(raw, raw, raw, raw);
   });
 };
 
-var extractToElem = function <E, D>(universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean) {
-  var extractions = typed(universe, item, optimise);
-  var prior = TypedList.dropUntil(extractions, child);
-  var count = TypedList.count(prior);
+const extractToElem = function <E, D> (universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean) {
+  const extractions = typed(universe, item, optimise);
+  const prior = TypedList.dropUntil(extractions, child);
+  const count = TypedList.count(prior);
   return Spot.point(item, count + offset);
 };
 
@@ -59,7 +61,7 @@ var extractToElem = function <E, D>(universe: Universe<E, D>, child: E, offset: 
  *
  * To find the exact reference later, use Find.
  */
-var extract = function <E, D>(universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) {
+const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) {
   return universe.property().parent(child).fold(function () {
     return Spot.point(child, offset);
   }, function (parent) {
@@ -73,7 +75,7 @@ var extract = function <E, D>(universe: Universe<E, D>, child: E, offset: number
  *
  * To find the exact reference later, use Find.
  */
-var extractTo = function <E, D>(universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) {
+const extractTo = function <E, D> (universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) {
   return universe.up().predicate(child, pred).fold(function () {
     return Spot.point(child, offset);
   }, function (v) {

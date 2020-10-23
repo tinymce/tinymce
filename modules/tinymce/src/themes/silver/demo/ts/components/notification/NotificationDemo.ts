@@ -1,7 +1,6 @@
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 import { Arr } from '@ephox/katamari';
-import { console, document } from '@ephox/dom-globals';
 import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
@@ -33,7 +32,7 @@ export default function () {
   };
 
   const notifyExtraLong = function (len) {
-    const longTextMessage = ['this is text '];
+    const longTextMessage = [ 'this is text ' ];
 
     for (let i = 0; i < len; i++) {
       longTextMessage.push('bla');

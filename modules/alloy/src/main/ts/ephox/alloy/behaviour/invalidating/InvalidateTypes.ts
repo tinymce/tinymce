@@ -1,25 +1,25 @@
+import { Future, Optional, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option, Future, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;
   markValid: (component: AlloyComponent) => void;
   isInvalid: (component: AlloyComponent) => boolean;
   markInvalid: (component: AlloyComponent, text: string) => void;
-  query: <T>(component: AlloyComponent) => Future<T>;
-  run: <T>(component: AlloyComponent) => Future<T>;
+  query: (component: AlloyComponent) => Future<Result<any, string>>;
+  run: (component: AlloyComponent) => Future<Result<any, string>>;
   validation: <T>(validate: (v: string) => Result<T, string>) => (component: AlloyComponent) => Future<Result<T, string>>;
 }
 
 export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
   invalidClass: string;
-  getRoot?: (comp: AlloyComponent) => Option<Element>;
+  getRoot?: (comp: AlloyComponent) => Optional<SugarElement>;
   notify?: {
     aria?: string;
-    getContainer?: (input: AlloyComponent) => Option<Element>;
+    getContainer?: (input: AlloyComponent) => Optional<SugarElement>;
     validHtml?: string;
     onValid?: (comp: AlloyComponent) => void;
     onInvalid?: (comp: AlloyComponent, err: string) => void;
@@ -34,19 +34,18 @@ export interface InvalidatingConfigSpec extends Behaviour.BehaviourConfigSpec {
 
 export interface InvalidatingConfig extends Behaviour.BehaviourConfigDetail {
   invalidClass: string;
-  notify?: Option<{
-    aria: string,
-    getContainer: (input: AlloyComponent) => Option<Element>;
+  notify: Optional<{
+    aria: string;
+    getContainer: (input: AlloyComponent) => Optional<SugarElement>;
     onValid: (comp: AlloyComponent) => void;
     validHtml: string;
     onInvalid: (comp: AlloyComponent, err: string) => void;
     onValidate: (comp: AlloyComponent) => void;
   }>;
-  onEvent?: string;
-  getRoot?: (comp: AlloyComponent) => Option<Element>;
-  validator: Option<{
+  getRoot: (comp: AlloyComponent) => Optional<SugarElement>;
+  validator: Optional<{
     validate: (input: AlloyComponent) => Future<Result<any, string>>;
-    onEvent?: string;
-    validateOnLoad?: boolean
+    onEvent: string;
+    validateOnLoad?: boolean;
   }>;
 }

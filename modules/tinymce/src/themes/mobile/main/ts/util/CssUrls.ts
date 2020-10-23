@@ -5,16 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Objects } from '@ephox/boulder';
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import * as Settings from '../api/Settings';
 
-const derive = function (editor: Editor) {
-  const base = Objects.readOptFrom(editor.settings, 'skin_url').fold(function () {
-    return EditorManager.baseURL + '/skins/ui/oxide';
-  }, function (url) {
-    return url;
-  });
+export interface CssUrls {
+  readonly content: string;
+  readonly ui: string;
+}
+
+const derive = (editor: Editor): CssUrls => {
+  const base = Optional.from(Settings.getSkinUrl(editor)).fold(
+    () => EditorManager.baseURL + '/skins/ui/oxide',
+    (url) => url
+  );
 
   return {
     content: base + '/content.mobile.min.css',
@@ -22,6 +27,6 @@ const derive = function (editor: Editor) {
   };
 };
 
-export default {
+export {
   derive
 };

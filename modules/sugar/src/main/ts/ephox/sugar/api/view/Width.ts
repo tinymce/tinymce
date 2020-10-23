@@ -1,26 +1,19 @@
-import * as Css from '../properties/Css';
 import Dimension from '../../impl/Dimension';
-import Element from '../node/Element';
-import { HTMLElement } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
+import * as Css from '../properties/Css';
 
-const api = Dimension('width', function (element: Element) {
+const api = Dimension('width', (element: SugarElement<HTMLElement>) =>
   // IMO passing this function is better than using dom['offset' + 'width']
-  return (element.dom() as HTMLElement).offsetWidth;
-});
+  element.dom.offsetWidth
+);
 
-const set = function (element: Element, h: string | number) {
-  api.set(element, h);
-};
+const set = (element: SugarElement<HTMLElement>, h: string | number) => api.set(element, h);
 
-const get = function (element: Element) {
-  return api.get(element);
-};
+const get = (element: SugarElement<HTMLElement>) => api.get(element);
 
-const getOuter = function (element: Element) {
-  return api.getOuter(element);
-};
+const getOuter = (element: SugarElement<HTMLElement>) => api.getOuter(element);
 
-const setMax = function (element: Element, value: number) {
+const setMax = (element: SugarElement<HTMLElement>, value: number) => {
   // These properties affect the absolute max-height, they are not counted natively, we want to include these properties.
   const inclusions = [ 'margin-left', 'border-left-width', 'padding-left', 'padding-right', 'border-right-width', 'margin-right' ];
   const absMax = api.max(element, value, inclusions);
@@ -31,5 +24,5 @@ export {
   set,
   get,
   getOuter,
-  setMax,
+  setMax
 };

@@ -1,22 +1,23 @@
-import { FocusTools, Keyboard, Keys, Step, Assertions, Logger, Chain, GeneralSteps } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Result, Option } from '@ephox/katamari';
-import { Focus, Value } from '@ephox/sugar';
+import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
+import { Focus } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 import TestTypeaheadSteps from 'ephox/alloy/test/typeahead/TestTypeaheadSteps';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const sink = Sinks.relativeSink();
 
     return GuiFactory.build(
@@ -42,10 +43,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
               }
             },
 
-            fetch (input) {
+            fetch(_input) {
               const future = Future.pure([
-                { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' } } },
-                { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' } } }
+                { type: 'item', data: { value: 'choice1', meta: { text: 'choice1' }}},
+                { type: 'item', data: { value: 'choice2', meta: { text: 'choice2' }}}
               ]);
 
               return future.map((items) => {
@@ -53,11 +54,11 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
                   value: 'blah',
                   items: Arr.map(items, TestDropdownMenu.renderItem)
                 });
-                return Option.some(TieredMenu.singleData('blah.overall', menu));
+                return Optional.some(TieredMenu.singleData('blah.overall', menu));
               });
             },
 
-            lazySink (c) {
+            lazySink(c) {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -74,7 +75,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, gui, component, _store) => {
 
     const typeahead = gui.getByUid('test-type').getOrDie();
 
@@ -84,14 +85,14 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
       ]),
-      FocusTools.sSetFocus('Focusing typeahead', gui.element(), 'input'),
+      FocusTools.sSetFocus('Focusing typeahead', gui.element, 'input'),
       Keyboard.sKeydown(doc, Keys.down(), { }),
       steps.sWaitForMenu('Down to activate menu'),
 
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
       steps.sWaitForNoMenu('Broadcasting dismiss on outer gui context should close popup'),
 
@@ -99,13 +100,13 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
       steps.sWaitForMenu('Down to activate menu'),
       // Focus something else.
       Step.sync(() => {
-        Focus.focus(component.element());
+        Focus.focus(component.element);
       }),
-      Step.wait(1000),
+      Step.wait(100),
       steps.sWaitForMenu('Blurring should NOT dismiss popup due to setting'),
 
       Step.sync(() => {
-        Focus.focus(typeahead.element());
+        Focus.focus(typeahead.element);
       }),
       Keyboard.sKeydown(doc, Keys.escape(), { }),
       steps.sWaitForNoMenu('Escape should still dismiss regardless of setting'),
@@ -119,11 +120,11 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoBlurTest', (success, 
             'Choose an item with <enter> key',
             Keyboard.sKeydown(doc, Keys.enter(), { })
           ),
-          Chain.asStep(component.element(), [
+          Chain.asStep(component.element, [
             FocusTools.cGetActiveValue,
             Assertions.cAssertEq('Active value should be the first option', 'choice1')
           ]),
-          steps.sWaitForNoMenu('Selecting an item should close the menu'),
+          steps.sWaitForNoMenu('Selecting an item should close the menu')
         ])
       ),
       GuiSetup.mRemoveStyles

@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { MementoRecord, Representing, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, MementoRecord, Representing } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Merger, Option } from '@ephox/katamari';
-import { Element, Html, Value } from '@ephox/sugar';
+import { Fun, Merger, Optional } from '@ephox/katamari';
+import { Html, SugarElement, Value } from '@ephox/sugar';
 
 const processors = ValueSchema.objOf([
   FieldSchema.defaulted('preprocess', Fun.identity),
@@ -34,51 +34,39 @@ const memento = (mem: MementoRecord, rawProcessors) => {
   });
 };
 
-const withComp = <D>(optInitialValue: Option<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => {
-  return Representing.config(
-    Merger.deepMerge(
-      {
-        store: {
-          mode: 'manual',
-          getValue: getter,
-          setValue: setter
-        }
-      },
-      optInitialValue.map((initialValue) => {
-        return {
-          store: {
-            initialValue
-          }
-        };
-      }).getOr({ } as any)
-    )
-  );
-};
+const withComp = <D>(optInitialValue: Optional<D>, getter: (c: AlloyComponent) => D, setter: (c: AlloyComponent, v: D) => void) => Representing.config(
+  Merger.deepMerge(
+    {
+      store: {
+        mode: 'manual' as 'manual',
+        getValue: getter,
+        setValue: setter
+      }
+    },
+    optInitialValue.map((initialValue) => ({
+      store: {
+        initialValue
+      }
+    })).getOr({ } as any)
+  )
+);
 
-const withElement = <D>(initialValue: Option<D>, getter: (elem: Element) => D, setter: (elem: Element, v: D) => void) => {
-  return withComp(
-    initialValue,
-    (c) => getter(c.element()),
-    (c, v) => setter(c.element(), v)
-  );
-};
+const withElement = <D>(initialValue: Optional<D>, getter: (elem: SugarElement) => D, setter: (elem: SugarElement, v: D) => void) => withComp(
+  initialValue,
+  (c) => getter(c.element),
+  (c, v) => setter(c.element, v)
+);
 
-const domValue = (optInitialValue: Option<string>) => {
-  return withElement(optInitialValue, Value.get, Value.set);
-};
+const domValue = (optInitialValue: Optional<string>) => withElement(optInitialValue, Value.get, Value.set);
 
-const domHtml = (optInitialValue: Option<string>) => {
-  return withElement(optInitialValue, Html.get, Html.set);
-};
+const domHtml = (optInitialValue: Optional<string>) => withElement(optInitialValue, Html.get, Html.set);
 
-const memory = <D>(initialValue) => {
-  return Representing.config({
-    store: {
-      mode: 'memory',
-      initialValue
-    }
-  });
-};
+const memory = <D>(initialValue) => Representing.config({
+  store: {
+    mode: 'memory',
+    initialValue
+  }
+});
 
 export const RepresentingConfigs = {
   memento,

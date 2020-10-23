@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -32,7 +31,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
       },
       () => {
         // create a cursor position that we can move to avoid the inline formats
-        editor.insertContent(Unicode.zeroWidth());
+        editor.insertContent(Unicode.zeroWidth);
         InlinePattern.applyMatches(editor, inlineMatches);
         BlockPattern.applyMatches(editor, blockMatches);
         // find the spot before the cursor position
@@ -41,9 +40,10 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         editor.execCommand('mceInsertNewLine');
         // clean up the cursor position we used to preserve the format
         spot.each((s) => {
-          if (s.element.data.charAt(s.offset - 1) === Unicode.zeroWidth()) {
-            s.element.deleteData(s.offset - 1, 1);
-            cleanEmptyNodes(editor.dom, s.element.parentNode, (e: Node) => e === editor.dom.getRoot());
+          const node = s.container;
+          if (node.data.charAt(s.offset - 1) === Unicode.zeroWidth) {
+            node.deleteData(s.offset - 1, 1);
+            cleanEmptyNodes(editor.dom, node.parentNode, (e: Node) => e === editor.dom.getRoot());
           }
         });
       }
@@ -70,19 +70,15 @@ const checkKeyEvent = (codes, event, predicate) => {
   }
 };
 
-const checkKeyCode = (codes, event) => {
-  return checkKeyEvent(codes, event, function (code, event) {
-    return code === event.keyCode && VK.modifierPressed(event) === false;
-  });
-};
+const checkKeyCode = (codes, event) => checkKeyEvent(codes, event, function (code, event) {
+  return code === event.keyCode && VK.modifierPressed(event) === false;
+});
 
-const checkCharCode = (chars, event) => {
-  return checkKeyEvent(chars, event, function (chr, event) {
-    return chr.charCodeAt(0) === event.charCode;
-  });
-};
+const checkCharCode = (chars, event) => checkKeyEvent(chars, event, function (chr, event) {
+  return chr.charCodeAt(0) === event.charCode;
+});
 
-export default {
+export {
   handleEnter,
   handleInlineKey,
   checkCharCode,

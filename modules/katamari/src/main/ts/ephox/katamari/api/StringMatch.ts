@@ -2,16 +2,25 @@ import { Adt } from './Adt';
 
 type StringMapper = (str: string) => string;
 
-export interface StringMatch extends Adt {
+export interface StringMatch {
   fold: <T>(
-    starts:(value: string, f: StringMapper) => T,
+    starts: (value: string, f: StringMapper) => T,
     pattern: (regex: RegExp, f: StringMapper) => T,
     contains: (value: string, f: StringMapper) => T,
     exact: (value: string, f: StringMapper) => T,
     all: () => T,
     not: (other: StringMatch) => T
   ) => T;
-};
+  match: <T>(branches: {
+    starts: (value: string, f: StringMapper) => T;
+    pattern: (regex: RegExp, f: StringMapper) => T;
+    contains: (value: string, f: StringMapper) => T;
+    exact: (value: string, f: StringMapper) => T;
+    all: () => T;
+    not: (other: StringMatch) => T;
+  }) => T;
+  log: (label: string) => void;
+}
 
 const adt = Adt.generate<{
   starts: (value: string, f: StringMapper) => StringMatch;
@@ -21,13 +30,13 @@ const adt = Adt.generate<{
   all: () => StringMatch;
   not: (stringMatch: StringMatch) => StringMatch;
 }>([
-  { starts: [ 'value', 'f' ] },
-  { pattern: [ 'regex', 'f' ] },
-  { contains: [ 'value', 'f' ] },
-  { exact: [ 'value', 'f' ] },
-  { all: [ ] },
-  { not: [ 'stringMatch' ] }
-]);
+      { starts: [ 'value', 'f' ] },
+      { pattern: [ 'regex', 'f' ] },
+      { contains: [ 'value', 'f' ] },
+      { exact: [ 'value', 'f' ] },
+      { all: [ ] },
+      { not: [ 'stringMatch' ] }
+    ]);
 
 const caseInsensitive = function (val: string) {
   return val.toLowerCase();
@@ -54,9 +63,9 @@ const matches = function (subject: StringMatch, str: string): boolean {
   });
 };
 
-const cata = function <T>(
+const cata = function <T> (
   subject: StringMatch,
-  s:(value: string, f: StringMapper) => T,
+  s: (value: string, f: StringMapper) => T,
   p: (regex: RegExp, f: StringMapper) => T,
   c: (value: string, f: StringMapper) => T,
   e: (value: string, f: StringMapper) => T,
@@ -73,8 +82,8 @@ export const StringMatch = {
   exact: adt.exact,
   all: adt.all,
   not: adt.not,
-  cata: cata,
-  matches: matches,
-  caseSensitive: caseSensitive,
-  caseInsensitive: caseInsensitive
+  cata,
+  matches,
+  caseSensitive,
+  caseInsensitive
 };

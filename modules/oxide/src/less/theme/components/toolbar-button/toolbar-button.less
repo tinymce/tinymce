@@ -10,11 +10,11 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
-@toolbar-button-background-color: none;
+@toolbar-button-background-color: transparent;
 @toolbar-button-border-radius: 3px;
 @toolbar-button-border: 0;
 @toolbar-button-box-shadow: none;
-@toolbar-button-chevron-color: @text-color-muted;
+@toolbar-button-chevron-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-chevron-width: @base-value;
 @toolbar-button-font-size: @font-size-sm;
 @toolbar-button-font-style: normal;
@@ -24,7 +24,7 @@
 @toolbar-button-spacing-x: 0;
 @toolbar-button-spacing-y: 2px;
 @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-text-transform: normal;
+@toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
 @toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
@@ -40,18 +40,21 @@
 @toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
 
 @toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
+@toolbar-button-active-border: @toolbar-button-enabled-border;
 @toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
 @toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
 @toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
 @toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
 
 @toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-button-enabled-border: @toolbar-button-hover-border;
 @toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-enabled-transform: none;
 
 @toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-border: @toolbar-button-border;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
@@ -92,23 +95,15 @@
     width: inherit;
   }
 
-  // An toggle on/off button's on state.
-  .tox-tbtn--enabled {
-    background: @toolbar-button-enabled-background-color;
-    box-shadow: @toolbar-button-enabled-box-shadow;
-    color: @toolbar-button-enabled-text-color;
-
-    > * {
-      transform: @toolbar-button-enabled-transform;
-    }
-
-    svg {
-      fill: @toolbar-button-enabled-icon-color;
-    }
+  .tox-tbtn:focus {
+    background: @toolbar-button-focus-background-color;
+    border: @toolbar-button-focus-border;
+    box-shadow: @toolbar-button-focus-box-shadow;
   }
 
   .tox-tbtn:hover {
     background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
     box-shadow: @toolbar-button-hover-box-shadow;
     color: @toolbar-button-hover-text-color;
 
@@ -117,18 +112,9 @@
     }
   }
 
-  .tox-tbtn:focus {
-    background: @toolbar-button-focus-background-color;
-    box-shadow: @toolbar-button-focus-box-shadow;
-    color: @toolbar-button-focus-text-color;
-
-    svg {
-      fill: @toolbar-button-focus-icon-color;
-    }
-  }
-
   .tox-tbtn:active {
     background: @toolbar-button-active-background-color;
+    border: @toolbar-button-active-border;
     box-shadow: @toolbar-button-active-box-shadow;
     color: @toolbar-button-active-text-color;
 
@@ -142,6 +128,7 @@
   .tox-tbtn:disabled,
   .tox-tbtn:disabled:hover {
     background: @toolbar-button-disabled-background-color;
+    border: @toolbar-button-disabled-border;
     box-shadow: @toolbar-button-disabled-box-shadow;
     color: @toolbar-button-disabled-text-color;
     cursor: not-allowed;
@@ -150,6 +137,33 @@
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  // An toggle on/off button's on state.
+  .tox-tbtn--enabled,
+  .tox-tbtn--enabled:hover {
+    background: @toolbar-button-enabled-background-color;
+    border: @toolbar-button-enabled-border;
+    box-shadow: @toolbar-button-enabled-box-shadow;
+    color: @toolbar-button-enabled-text-color;
+
+    > * {
+      transform: @toolbar-button-enabled-transform;
+    }
+
+    // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+    // since they need to be kept the same/use the same rules
+    svg { /* stylelint-disable-line no-descending-specificity */
+      fill: @toolbar-button-enabled-icon-color;
+    }
+  }
+
+  .tox-tbtn:focus:not(.tox-tbtn--disabled) {
+    color: @toolbar-button-focus-text-color;
+
+    svg {
+      fill: @toolbar-button-focus-icon-color;
     }
   }
 

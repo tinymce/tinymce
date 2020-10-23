@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from 'tinymce/core/api/html/Node';
+import Editor from 'tinymce/core/api/Editor';
+import AstNode from 'tinymce/core/api/html/Node';
 import Tools from 'tinymce/core/api/util/Tools';
-import Nodes from './Nodes';
-import Sanitize from './Sanitize';
+import * as Nodes from './Nodes';
+import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   editor.on('preInit', function () {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();
@@ -54,7 +55,7 @@ const setup = function (editor) {
         }
 
         realElmName = node.attr(name);
-        realElm = new Node(realElmName, 1);
+        realElm = new AstNode(realElmName, 1);
 
         // Add width/height to everything but audio
         if (realElmName !== 'audio' && realElmName !== 'script') {
@@ -94,7 +95,7 @@ const setup = function (editor) {
         // Inject innerhtml
         innerHtml = node.attr('data-mce-html');
         if (innerHtml) {
-          innerNode = new Node('#text', 3);
+          innerNode = new AstNode('#text', 3);
           innerNode.raw = true;
           innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
           realElm.append(innerNode);
@@ -111,13 +112,13 @@ const setup = function (editor) {
     editor.$('span.mce-preview-object').each(function (index, elm) {
       const $elm = editor.$(elm);
 
-      if ($elm.find('span.mce-shim', elm).length === 0) {
+      if ($elm.find('span.mce-shim').length === 0) {
         $elm.append('<span class="mce-shim"></span>');
       }
     });
   });
 };
 
-export default {
+export {
   setup
 };

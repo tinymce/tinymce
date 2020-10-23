@@ -1,43 +1,32 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { KeyboardEvent } from '@ephox/dom-globals';
+import { EventArgs } from '@ephox/sugar';
 
-export type KeyMatcher = (evt: SugarEvent) => boolean;
+export type KeyMatcher = (evt: EventArgs<KeyboardEvent>) => boolean;
 
-const inSet = (keys: number[]): KeyMatcher => {
-  return (event: SugarEvent) => {
-    const raw = event.raw() as KeyboardEvent;
-    return Arr.contains(keys, raw.which);
-  };
+const inSet = (keys: ReadonlyArray<number>): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
+  const raw = event.raw;
+  return Arr.contains(keys, raw.which);
 };
 
-const and = (preds: KeyMatcher[]): KeyMatcher => {
-  return (event: SugarEvent) => {
-    return Arr.forall(preds, (pred) => {
-      return pred(event);
-    });
-  };
+const and = (preds: KeyMatcher[]): KeyMatcher => (event: EventArgs<KeyboardEvent>) => Arr.forall(preds, (pred) => pred(event));
+
+const is = (key: number): KeyMatcher => (event: EventArgs<KeyboardEvent>) => {
+  const raw = event.raw;
+  return raw.which === key;
 };
 
-const is = (key: number): KeyMatcher => {
-  return (event: SugarEvent) => {
-    const raw = event.raw() as KeyboardEvent;
-    return raw.which === key;
-  };
-};
-
-const isShift = (event: SugarEvent): boolean => {
-  const raw = event.raw() as KeyboardEvent;
+const isShift = (event: EventArgs<KeyboardEvent>): boolean => {
+  const raw = event.raw;
   return raw.shiftKey === true;
 };
 
-const isControl = (event: SugarEvent): boolean => {
-  const raw = event.raw() as KeyboardEvent;
+const isControl = (event: EventArgs<KeyboardEvent>): boolean => {
+  const raw = event.raw;
   return raw.ctrlKey === true;
 };
 
-const isNotControl: (event: SugarEvent) => boolean = Fun.not(isControl);
-const isNotShift: (event: SugarEvent) => boolean = Fun.not(isShift);
+const isNotControl: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(isControl);
+const isNotShift: (event: EventArgs<KeyboardEvent>) => boolean = Fun.not(isShift);
 
 export {
   inSet,

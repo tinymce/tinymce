@@ -1,15 +1,15 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import BbcodePlugin from 'tinymce/plugins/bbcode/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', (success, failure) => {
 
   BbcodePlugin();
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'BBCode: Set bbcode content and assert the equivalent html structure is present', [

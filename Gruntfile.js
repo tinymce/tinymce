@@ -1,30 +1,11 @@
+// Tests either run in PhantomJs or real browsers
 const runsInPhantom = [
-  '@ephox/acid',
   '@ephox/alloy',
-  '@ephox/boss',
-  '@ephox/boulder',
-  '@ephox/dragster',
-  '@ephox/echo',
-  '@ephox/imagetools',
-  '@ephox/jax',
-  '@ephox/katamari',
   '@ephox/mcagar',
-  '@ephox/polaris',
-  '@ephox/porkbun',
-  '@ephox/robin',
-  '@ephox/snooker',
-];
-
-const needsTinyMCE = ['@ephox/mcagar'];
-
-const runsInBrowser = [
-  '@ephox/agar',
-  '@ephox/bridge',
-  '@ephox/darwin',
-  '@ephox/phoenix',
-  '@ephox/sand',
-  '@ephox/sugar',
-  'tinymce',
+  '@ephox/katamari',
+  '@ephox/katamari-test',
+  '@ephox/imagetools',
+  '@ephox/jax'
 ];
 
 if (!Array.prototype.flatMap) {
@@ -43,6 +24,10 @@ const filterChanges = (changes, tests) => {
   return changes.filter((change => tests.indexOf(change.name) > -1));
 };
 
+const filterChangesNot = (changes, badTests) => {
+  return changes.filter((change => badTests.indexOf(change.name) === -1));
+};
+
 /* structure of lerna output
 {
   name: string,
@@ -52,19 +37,24 @@ const filterChanges = (changes, tests) => {
 }
 */
 
-const testFolders = (tests, auto) => tests.flatMap(({location}) => [
-  `${location}/**/test/**/atomic/**/*Test.ts`,
-  `${location}/**/test/**/browser/**/*Test.ts`,
-  `${location}/**/test/**/phantom/**/*Test.ts`,
-].concat(auto ? `${location}/**/test/**/webdriver/**/*Test.ts` : []));
+/** Note: this is optimized for speed. Turns out globbing in node.js is time-consuming.
+ *  Restrict tinymce to 2 arbitrary levels of test base folders.
+ *  All other projects need their tests in src/test/ts
+ */
+const testFolders = (tests, auto) => tests.flatMap((test) => {
+  const testTypes = ['atomic', 'browser', 'phantom'].concat(auto ? ['webdriver'] : []);
+  const bases = test.name === "tinymce" ? ["src/*/test/ts", "src/*/*/test/ts"] : ["src/test/ts"];
+  return bases.flatMap(base => testTypes.map(tt => `${test.location}/${base}/${tt}/**/*Test.ts`));
+});
 
 const bedrockDefaults = {
   config: 'tsconfig.json',
+  customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 180000,
   singleTimeout: 60000,
 };
 
-const bedrockPhantom = (tests) => {
+const bedrockPhantom = (tests, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -73,30 +63,30 @@ const bedrockPhantom = (tests) => {
         ...bedrockDefaults,
         name: 'phantom-tests',
         browser: 'phantomjs',
-        testfiles: testFolders(tests, true),
-        customRoutes: 'modules/jax/src/test/json/routes.json',
+        testfiles: testFolders(tests, auto),
       }
     }
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, auto) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, auto) => {
   if (tests.length === 0) {
     return {};
   } else {
     return {
       browser: {
         ...bedrockDefaults,
-        overallTimeout: 900000,
+        overallTimeout: 1200000,
         name: `${browserName}-${osName}`,
         browser: browserName,
         testfiles: testFolders(tests, auto),
-        customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
+        bucket: bucket,
+        buckets: buckets,
 
         // we have a few tests that don't play nicely when combined together in the monorepo
         retries: 3
       }
-    }
+    };
   }
 };
 
@@ -107,7 +97,7 @@ const fetchLernaProjects = (log, runAllTests) => {
   // if JSON parse fails, well, grunt will just fail /shrug
   const parseLernaList = (cmd) => {
     try {
-      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --no-ignore-changes --json --loglevel warn 2>&1`));
+      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --json --loglevel warn 2>&1`));
     } catch (e) {
       // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
       if (e.status === 1) {
@@ -118,7 +108,7 @@ const fetchLernaProjects = (log, runAllTests) => {
     }
   };
 
-  const changes = runAllTests ? [] : parseLernaList('changed');
+  const changes = runAllTests ? [] : parseLernaList('changed --no-ignore-changes');
 
   if (changes.length === 0) {
     log.writeln('No changes found, testing all projects');
@@ -134,27 +124,28 @@ module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
   const changes = fetchLernaProjects(grunt.log, runAllTests);
 
+  const bucket = grunt.option('bucket') || 1;
+  const buckets = grunt.option('buckets') || 1;
+
   const phantomTests = filterChanges(changes, runsInPhantom);
-  const browserTests = filterChanges(changes, runsInBrowser);
+  const browserTests = filterChangesNot(changes, runsInPhantom);
 
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
-  const bedrockPhantomConfig = bedrockPhantom(phantomTests);
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
-      rollup: { command: 'yarn -s tinymce-rollup' },
       legacy: { command: 'yarn build' },
       yarn: { command: 'yarn' },
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockPhantomConfig,
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, true)
+      ...bedrockPhantom(phantomTests, true),
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, true)
     },
     'bedrock-manual': {
-      ...bedrockPhantomConfig,
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, false)
+      ...bedrockPhantom(phantomTests, false),
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, false)
     }
   };
 
@@ -162,19 +153,14 @@ module.exports = function (grunt) {
 
   grunt.initConfig(gruntConfig);
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (phantomTests.length > 0) {
     grunt.registerTask('list-changed-phantom', () => {
       const changeList = JSON.stringify(phantomTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
       grunt.log.writeln('Changed projects for phantomjs testing:', changeList);
     });
-    if (phantomTests.find(({name}) => needsTinyMCE.indexOf(name) > -1)) {
-      // only run rollup if required, since it's quite slow
-      grunt.registerTask('phantomjs-auto', ['shell:rollup', 'list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    } else {
-      grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
-    }
-    grunt.registerTask('phantomjs-manual', ['shell:tsc', 'bedrock-manual:phantomjs']);
+    grunt.registerTask('phantomjs-auto', ['list-changed-phantom', 'shell:tsc', 'bedrock-auto:phantomjs']);
+    grunt.registerTask('phantomjs-manual', ['list-changed-phantom', 'shell:tsc', 'bedrock-manual:phantomjs']);
   } else {
     const noPhantom = () => {
       grunt.log.writeln('no changed modules need phantomjs testing');
@@ -184,7 +170,7 @@ module.exports = function (grunt) {
     grunt.registerTask('list-changed-phantom', noPhantom);
   }
 
-  //dupe de dupe dupe
+  //TODO: remove duplication
   if (browserTests.length > 0) {
     grunt.registerTask('list-changed-browser', () => {
       const changeList = JSON.stringify(browserTests.reduce((acc, change) => acc.concat(change.name), []), null, 2);
@@ -212,6 +198,6 @@ Top-level grunt has been replaced by 'yarn build', and the output has moved from
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: 'package.json',
-    pattern: ['@ephox/bedrock', 'grunt-shell']
+    pattern: ['@ephox/bedrock-server', 'grunt-shell']
   });
 };

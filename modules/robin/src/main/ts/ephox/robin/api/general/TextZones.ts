@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Descent } from '@ephox/phoenix';
-import TextZones from '../../zone/TextZones';
+import * as TextZones from '../../zone/TextZones';
 import { Zones } from '../../zone/Zones';
 import { ZoneViewports } from './ZoneViewports';
 
@@ -24,16 +24,16 @@ const single = function <E, D> (universe: Universe<E, D>, element: E, envLang: s
 const range = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, envLang: string, viewport: ZoneViewports<E>) {
   const startPt = Descent.toLeaf(universe, start, soffset);
   const finishPt = Descent.toLeaf(universe, finish, foffset);
-  if (universe.eq(startPt.element(), finishPt.element())) {
-    return single(universe, startPt.element(), envLang, viewport);
+  if (universe.eq(startPt.element, finishPt.element)) {
+    return single(universe, startPt.element, envLang, viewport);
   }
-  return TextZones.fromRange(universe, startPt.element(), finishPt.element(), envLang, viewport);
+  return TextZones.fromRange(universe, startPt.element, finishPt.element, envLang, viewport);
 };
 
 type EmptyFn = <E>() => Zones<E>;
 const empty: EmptyFn = TextZones.empty;
 
-export default {
+export {
   single,
   range,
   empty

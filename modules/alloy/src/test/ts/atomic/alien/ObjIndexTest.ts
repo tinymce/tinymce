@@ -1,23 +1,18 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
+
 import * as ObjIndex from 'ephox/alloy/alien/ObjIndex';
 
 UnitTest.test('ObjIndexTest', () => {
-  const tuple = (k, v) => {
-    return { country: k, value: v };
-  };
+  const tuple = <T>(k: string, v: T) => ({ country: k, value: v });
 
-  const sortObjValue = (obj) => {
-    return Obj.map(obj, (array, k) => {
-      return array.slice(0).sort((a, b) => {
-        if (a.country < b.country) { return -1; } else if (a.country > b.country) { return +1; } else { return 0; }
-      });
-    });
-  };
+  const sortObjValue = (obj: Record<string, any[]>) => Obj.map(obj, (array, _k) => array.slice(0).sort((a, b) => {
+    if (a.country < b.country) { return -1; } else if (a.country > b.country) { return +1; } else { return 0; }
+  }));
 
-  const assertSortedEq = (label, expected, actual) => {
-    RawAssertions.assertEq(label, sortObjValue(expected), sortObjValue(actual));
+  const assertSortedEq = (label: string, expected: Record<string, any[]>, actual: Record<string, any[]>) => {
+    Assert.eq(label, sortObjValue(expected), sortObjValue(actual));
   };
 
   Logger.sync(
@@ -37,7 +32,7 @@ UnitTest.test('ObjIndexTest', () => {
         }
       }, tuple);
       assertSortedEq('Checking grouping', {
-        population: [ { country: 'aus', value: 100 }]
+        population: [{ country: 'aus', value: 100 }]
       }, actual);
     }
   );

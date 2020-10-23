@@ -5,16 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Actions, { LastSuggestion } from '../core/Actions';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
+
+type LastSuggestion = Actions.LastSuggestion;
 
 const ignoreAll = true;
 
-const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState, startedState, textMatcherState, currentLanguageState, word, spans) => {
+const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
+                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, word: string, spans: HTMLSpanElement[]) => {
   const items = [];
   const suggestions = lastSuggestionsState.get().suggestions[word];
 
@@ -61,8 +63,8 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState,
   return items;
 };
 
-const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
-
+const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
+                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
   const update = (element: HTMLElement) => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {
@@ -84,6 +86,6 @@ const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState:
   });
 };
 
-export default {
+export {
   setup
 };

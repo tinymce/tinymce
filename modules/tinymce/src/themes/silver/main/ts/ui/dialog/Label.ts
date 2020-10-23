@@ -5,27 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Keying, Replacing, SimpleSpec, AlloySpec } from '@ephox/alloy';
-import { Option, Arr } from '@ephox/katamari';
+import { AlloySpec, Behaviour, Keying, Replacing, SimpleSpec } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
+import { Arr, Optional } from '@ephox/katamari';
+import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
-import { Types } from '@ephox/bridge';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-export const renderLabel = (spec: Types.Label.Label, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
+type LabelSpec = Omit<Dialog.Label, 'type'>;
+
+export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstageShared): SimpleSpec => {
   const label = {
     dom: {
       tag: 'label',
       innerHtml: backstageShared.providers.translate(spec.label),
-      classes: ['tox-label']
+      classes: [ 'tox-label' ]
     }
   } as AlloySpec;
   const comps = Arr.map(spec.items, backstageShared.interpreter);
   return {
     dom: {
       tag: 'div',
-      classes: ['tox-form__group']
+      classes: [ 'tox-form__group' ]
     },
     components: [
       label
@@ -33,10 +35,10 @@ export const renderLabel = (spec: Types.Label.Label, backstageShared: UiFactoryB
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Replacing.config({}),
-      RepresentingConfigs.domHtml(Option.none()),
+      RepresentingConfigs.domHtml(Optional.none()),
       Keying.config({
         mode: 'acyclic'
-      }),
+      })
     ])
   };
 };

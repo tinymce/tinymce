@@ -1,15 +1,13 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Env from 'tinymce/core/api/Env';
-import * as LineWalker from 'tinymce/core/caret/LineWalker';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import $ from 'tinymce/core/api/dom/DomQuery';
+import Env from 'tinymce/core/api/Env';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import * as LineWalker from 'tinymce/core/caret/LineWalker';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -48,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
   });
 
   suite.test('upUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -57,8 +55,8 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
 
     $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
 
-    caretPosition = CaretPosition(getRoot().lastChild.lastChild, 1);
-    result = LineWalker.upUntil(getRoot(), predicate, caretPosition);
+    const caretPosition = CaretPosition(getRoot().lastChild.lastChild, 1);
+    const result = LineWalker.upUntil(getRoot(), predicate, caretPosition);
 
     LegacyUnit.equal(result.length, 3);
     LegacyUnit.equal(result[0].line, 0);
@@ -68,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
   });
 
   suite.test('downUntil', function () {
-    let caretPosition, result, predicateCallCount = 0;
+    let predicateCallCount = 0;
 
     const predicate = function () {
       predicateCallCount++;
@@ -77,8 +75,8 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
 
     $(getRoot()).html('<p>a</p><p>b</p><p>c</p>');
 
-    caretPosition = CaretPosition(getRoot().firstChild.firstChild, 0);
-    result = LineWalker.downUntil(getRoot(), predicate, caretPosition);
+    const caretPosition = CaretPosition(getRoot().firstChild.firstChild, 0);
+    const result = LineWalker.downUntil(getRoot(), predicate, caretPosition);
 
     LegacyUnit.equal(result.length, 3);
     LegacyUnit.equal(result[0].line, 0);
@@ -88,13 +86,13 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function () {
   });
 
   suite.test('isAboveLine', function () {
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.LinePosClientRect), true);
+    LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.LinePosClientRect), false);
   });
 
   suite.test('isLine', function () {
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.ClientRectLine), true);
-    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.ClientRectLine), false);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.LinePosClientRect), true);
+    LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.LinePosClientRect), false);
   });
 
   viewBlock.attach();

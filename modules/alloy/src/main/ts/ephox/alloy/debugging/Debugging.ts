@@ -1,10 +1,46 @@
 import { Objects } from '@ephox/boulder';
-import { console, window } from '@ephox/dom-globals';
-import { Arr, Cell, Fun, Obj, Option, Options } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr, Cell, Fun, Global, Obj, Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
+import { AlloyComponent } from '../api/component/ComponentApi';
 import * as SystemEvents from '../api/events/SystemEvents';
+import { GuiSystem } from '../api/system/Gui';
 import * as AlloyLogger from '../log/AlloyLogger';
+
+export interface DebuggerLogger {
+  logEventCut: (eventName: string, target: SugarElement, purpose: string) => void;
+  logEventStopped: (eventName: string, target: SugarElement, purpose: string) => void;
+  logNoParent: (eventName: string, target: SugarElement, purpose: string) => void;
+  logEventNoHandlers: (eventName: string, target: SugarElement) => void;
+  logEventResponse: (eventName: string, target: SugarElement, purpose: string) => void;
+  write: () => void;
+}
+
+export interface InspectorInfo {
+  '(original.spec)': any;
+  '(dom.ref)': Node;
+  '(element)': string;
+  '(initComponents)': InspectorInfo[];
+  '(components)': InspectorInfo[];
+  '(bound.events)': string;
+  '(behaviours)': string | Record<string, any>;
+}
+
+type LookupInfo = { [key: string]: InspectorInfo } | { error: string };
+
+export interface Inspector {
+  systems: Record<string, GuiSystem>;
+  lookup: (uid: string) => Optional<LookupInfo>;
+  events: {
+    setToNormal: (eventName: string) => void;
+    setToLogging: (eventName: string) => void;
+    setToStop: (eventName: string) => void;
+  };
+}
+
+interface AlloyGlobal {
+  __CHROME_INSPECTOR_CONNECTION_TO_ALLOY__: Inspector;
+}
 
 const unknown = 'unknown';
 
@@ -27,50 +63,48 @@ enum EventConfiguration {
 
 const eventConfig = Cell<Record<string, EventConfiguration>>({ });
 
-export type EventProcessor = (logger: any) => boolean;
+export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
-const makeEventLogger = (eventName: string, initialTarget: Element) => {
-  const sequence = [ ];
+const makeEventLogger = (eventName: string, initialTarget: SugarElement): DebuggerLogger => {
+  const sequence: Array<{ outcome: string; target: SugarElement; purpose?: string }> = [ ];
   const startTime = new Date().getTime();
 
   return {
-    logEventCut (name, target, purpose) {
+    logEventCut(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped (name, target, purpose) {
+    logEventStopped(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent (name, target, purpose) {
+    logNoParent(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers (name, target) {
+    logEventNoHandlers(_name: string, target: SugarElement) {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse (name, target, purpose) {
+    logEventResponse(_name: string, target: SugarElement, purpose: string) {
       sequence.push({ outcome: 'response', purpose, target });
     },
-    write () {
+    write() {
       const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
-      // tslint:disable-next-line:no-console
+      // eslint-disable-next-line no-console
       console.log(eventName, {
         event: eventName,
         time: finishTime - startTime,
-        target: initialTarget.dom(),
+        target: initialTarget.dom,
         sequence: Arr.map(sequence, (s) => {
-          if (! Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+          if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
         })
       });
     }
   };
 };
 
-const processEvent = (eventName: string, initialTarget: Element, f: EventProcessor) => {
-  const status = Objects.readOptFrom<EventConfiguration>(eventConfig.get(), eventName).orThunk(() => {
+const processEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor) => {
+  const status = Obj.get(eventConfig.get(), eventName).orThunk(() => {
     const patterns = Obj.keys(eventConfig.get());
-    return Options.findMap(patterns, (p) => {
-      return eventName.indexOf(p) > -1 ? Option.some(eventConfig.get()[p]) : Option.none();
-    });
+    return Arr.findMap(patterns, (p) => eventName.indexOf(p) > -1 ? Optional.some(eventConfig.get()[p]) : Optional.none());
   }).getOr(
     EventConfiguration.NORMAL
   );
@@ -101,15 +135,13 @@ const getTrace = () => {
   const err = new Error();
   if (err.stack !== undefined) {
     const lines = err.stack.split('\n');
-    return Arr.find(lines, (line) => {
-      return line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => line.indexOf(p) > -1);
-    }).getOr(unknown);
+    return Arr.find(lines, (line) => line.indexOf('alloy') > 0 && !Arr.exists(path, (p) => line.indexOf(p) > -1)).getOr(unknown);
   } else {
     return unknown;
   }
 };
 
-const logHandler = (label, handlerName, trace) => {
+const logHandler = (_label: string, _handlerName: string, _trace: any) => {
   // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
 };
 
@@ -122,29 +154,23 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = (eventName, initialTarget, f): boolean => {
-  return processEvent(eventName, initialTarget, f);
-};
+const monitorEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor): boolean => processEvent(eventName, initialTarget, f);
 
-const inspectorInfo = (comp) => {
-  const go = (c) => {
+const inspectorInfo = (comp: AlloyComponent) => {
+  const go = (c: AlloyComponent): InspectorInfo => {
     const cSpec = c.spec();
 
     return {
       '(original.spec)': cSpec,
-      '(dom.ref)': c.element().dom(),
-      '(element)': AlloyLogger.element(c.element()),
+      '(dom.ref)': c.element.dom,
+      '(element)': AlloyLogger.element(c.element),
       '(initComponents)': Arr.map(cSpec.components !== undefined ? cSpec.components : [ ], go),
       '(components)': Arr.map(c.components(), go),
-      '(bound.events)': Obj.mapToArray(c.events(), (v, k) => {
-        return [ k ];
-      }).join(', '),
-      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => {
-        return v === undefined ? '--revoked--' : {
-          'config': v.configAsRaw(),
-          'original-config': v.initialConfig,
-          'state': c.readState(k)
-        };
+      '(bound.events)': Obj.mapToArray(c.events, (_v, k) => [ k ]).join(', '),
+      '(behaviours)': cSpec.behaviours !== undefined ? Obj.map(cSpec.behaviours, (v, k) => v === undefined ? '--revoked--' : {
+        'config': v.configAsRaw(),
+        'original-config': v.initialConfig,
+        'state': c.readState(k)
       }) : 'none'
     };
   };
@@ -153,11 +179,12 @@ const inspectorInfo = (comp) => {
 };
 
 const getOrInitConnection = () => {
+  const win: AlloyGlobal = Global;
   // The format of the global is going to be:
-  // lookup(uid) -> Option { name => data }
+  // lookup(uid) -> Optional { name => data }
   // systems: Set AlloyRoots
-  if (window[CHROME_INSPECTOR_GLOBAL] !== undefined) {
-    return window[CHROME_INSPECTOR_GLOBAL];
+  if (win[CHROME_INSPECTOR_GLOBAL] !== undefined) {
+    return win[CHROME_INSPECTOR_GLOBAL];
   } else {
     const setEventStatus = (eventName: string, status: EventConfiguration) => {
       const evs = eventConfig.get();
@@ -165,21 +192,17 @@ const getOrInitConnection = () => {
       eventConfig.set(evs);
     };
 
-    window[CHROME_INSPECTOR_GLOBAL] = {
+    win[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup (uid) {
-        const systems = window[CHROME_INSPECTOR_GLOBAL].systems;
+      lookup(uid: string) {
+        const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
-        return Options.findMap(connections, (conn) => {
+        return Arr.findMap(connections, (conn) => {
           const connGui = systems[conn];
-          return connGui.getByUid(uid).toOption().map((comp) => {
-            return Objects.wrap(AlloyLogger.element(comp.element()), inspectorInfo(comp));
-          });
-        }).orThunk(() => {
-          return Option.some({
-            error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
-          });
-        });
+          return connGui.getByUid(uid).toOptional().map((comp): LookupInfo => Objects.wrap(AlloyLogger.element(comp.element), inspectorInfo(comp)));
+        }).orThunk(() => Optional.some<LookupInfo>({
+          error: 'Systems (' + connections.join(', ') + ') did not contain uid: ' + uid
+        }));
       },
 
       events: {
@@ -194,11 +217,11 @@ const getOrInitConnection = () => {
         }
       }
     };
-    return window[CHROME_INSPECTOR_GLOBAL];
+    return win[CHROME_INSPECTOR_GLOBAL];
   }
 };
 
-const registerInspector = (name, gui) => {
+const registerInspector = (name: string, gui: GuiSystem) => {
   const connection = getOrInitConnection();
   connection.systems[name] = gui;
 };

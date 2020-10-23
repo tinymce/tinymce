@@ -1,40 +1,39 @@
-import { Assertions, Chain, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import ActionChains from 'ephox/mcagar/api/ActionChains';
-import Editor from 'ephox/mcagar/api/Editor';
+import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
+import { ActionChains } from 'ephox/mcagar/api/ActionChains';
+import * as Editor from 'ephox/mcagar/api/Editor';
 
-UnitTest.asynctest('ActionTest', (success, failure) =>  {
-  let count;
+UnitTest.asynctest('ActionTest', (success, failure) => {
+  let count: number;
 
   const sResetCount = Step.sync(() => count = 0);
 
-  const assertEq:any = function () {
+  const assertEq = <T>(label: string, expected: T, actual: T): void => {
     count++;
-    Assertions.assertEq.apply(this, arguments);
+    Assertions.assertEq(label, expected, actual);
   };
 
-  const cAssertContentKeyboardEvent = (cAction, evt) => {
-    return Chain.fromChains([
-      Chain.op((editor) => {
-        editor.once(evt.type, (e) => {
-          assertEq('asserting keyboard event', evt, {
-            type: e.type,
-            code: e.keyCode,
-            modifiers: {
-              ctrl: e.ctrlKey,
-              shift: e.shiftKey,
-              alt: e.altKey,
-              meta: e.metaKey
-            }
-          });
+  const cAssertContentKeyboardEvent = (cAction: (code: number, modifiers?: Record<string, any>) => Chain<EditorType, EditorType>, evt: Record<string, any>) => Chain.fromChains([
+    Chain.op((editor: EditorType) => {
+      editor.once(evt.type, (e) => {
+        assertEq('asserting keyboard event', evt, {
+          type: e.type,
+          code: e.keyCode,
+          modifiers: {
+            ctrl: e.ctrlKey,
+            shift: e.shiftKey,
+            alt: e.altKey,
+            meta: e.metaKey
+          }
         });
-      }),
-      cAction(evt.code, evt.modifiers),
-    ]);
-  };
+      });
+    }),
+    cAction(evt.code, evt.modifiers)
+  ]);
 
-  const sTestStep = (major, minor) => Chain.asStep({}, [
-    Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
+  const sTestStep = Chain.asStep({}, [
+    Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
       code: 88,
@@ -55,16 +54,13 @@ UnitTest.asynctest('ActionTest', (success, failure) =>  {
         meta: true
       }
     }),
-    Chain.wait(100), // give some time to async ops to finish
-    Chain.op(function () {
-      Assertions.assertEq(count + ' assertions were run', 2, count);
-    }),
+    Waiter.cTryUntilPredicate('Wait for 2 assertions', (_x) => count === 2),
     Editor.cRemove
   ]);
 
   Pipeline.async({}, [
     sResetCount,
-    sTestStep(5, 0)
+    sTestStep
   ], function () {
     success();
   }, failure);

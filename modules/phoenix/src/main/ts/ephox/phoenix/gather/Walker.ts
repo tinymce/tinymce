@@ -1,9 +1,11 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Option, Struct } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
-type TraverseConstructor = <E>(item: E, mode: Transition) => Traverse<E>
-const traverse: TraverseConstructor = Struct.immutable('item', 'mode');
+const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
+  item,
+  mode
+});
 
 const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
   return universe.property().parent(item).map(function (p) {
@@ -33,12 +35,12 @@ const advance: Transition = function (universe, item, direction, transition = ad
  * fallback: the traversal to fallback to when the current traversal does not find a node
  */
 const successors: Successor[] = [
-  { current: backtrack, next: sidestep, fallback: Option.none() },
-  { current: sidestep, next: advance, fallback: Option.some(backtrack) },
-  { current: advance, next: advance, fallback: Option.some(sidestep) }
+  { current: backtrack, next: sidestep, fallback: Optional.none() },
+  { current: sidestep, next: advance, fallback: Optional.some(backtrack) },
+  { current: advance, next: advance, fallback: Optional.some(sidestep) }
 ];
 
-const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Option<Traverse<E>> {
+const go = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Optional<Traverse<E>> {
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
   const ruleOpt = Arr.find(rules, function (succ) {
     return succ.current === mode;
@@ -48,7 +50,7 @@ const go = function <E, D>(universe: Universe<E, D>, item: E, mode: Transition, 
     // Attempt the current mode. If not, use the fallback and try again.
     return rule.current(universe, item, direction, rule.next).orThunk(function () {
       return rule.fallback.bind(function (fb) {
-        return go(universe, item, fb, direction)
+        return go(universe, item, fb, direction);
       });
     });
   });
@@ -58,5 +60,5 @@ export {
   backtrack,
   sidestep,
   advance,
-  go,
+  go
 };

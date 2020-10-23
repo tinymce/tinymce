@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type, Obj, Cell } from '@ephox/katamari';
+import { Cell, Obj, Type } from '@ephox/katamari';
 
 /**
  * I18n class that handles translation of TinyMCE UI.
@@ -18,13 +18,13 @@ export interface RawString {
   raw: string;
 }
 
-export type TokenisedString = string[];
+type Primitive = string | number | boolean | Record<string | number, any> | Function;
 
-export type Untranslated = any;
+export type TokenisedString = [ string, ...Primitive[] ];
+
+export type Untranslated = Primitive | TokenisedString | RawString;
 
 export type TranslatedString = string;
-
-export type TranslateIfNeeded = Untranslated | TranslatedString;
 
 const isRaw = (str: any): str is RawString => Type.isObject(str) && Obj.has(str, 'raw');
 
@@ -33,9 +33,9 @@ const isTokenised = (str: any): str is TokenisedString => Type.isArray(str) && s
 const data: Record<string, Record<string, string>> = {};
 const currentCode = Cell('en');
 
-const getData = (): Record<string, Record<string, string>> => {
-  return Obj.map(data, (value) => ({ ...value }));
-};
+const getLanguageData = () => Obj.get(data, currentCode.get());
+
+const getData = (): Record<string, Record<string, string>> => Obj.map(data, (value) => ({ ...value }));
 
 /**
  * Sets the current language code.
@@ -72,9 +72,9 @@ const add = (code: string, items: Record<string, string>) => {
     data[code] = langData = {};
   }
 
-  for (const name in items) {
-    langData[name.toLowerCase()] = items[name];
-  }
+  Obj.each(items, (translation, name) => {
+    langData[name.toLowerCase()] = translation;
+  });
 };
 
 /**
@@ -90,7 +90,7 @@ const add = (code: string, items: Record<string, string>) => {
  * @return {String} String that got translated.
  */
 const translate = (text: Untranslated): TranslatedString => {
-  const langData = data[currentCode.get()] || {};
+  const langData: Record<string, string> = getLanguageData().getOr({});
   /**
    * number - string
    * null, undefined and empty string - empty string
@@ -101,54 +101,42 @@ const translate = (text: Untranslated): TranslatedString => {
    * @param obj
    * @returns {string}
    */
-  const toString = function (obj) {
+  const toString = (obj: Untranslated) => {
     if (Type.isFunction(obj)) {
       return Object.prototype.toString.call(obj);
     }
     return !isEmpty(obj) ? '' + obj : '';
   };
 
-  const isEmpty = function (text) {
-    return text === '' || text === null || text === undefined;
-  };
+  const isEmpty = (text: Untranslated) => text === '' || text === null || text === undefined;
 
-  const getLangData = function (text) {
+  const getLangData = (text: Untranslated) => {
     // make sure we work on a string and return a string
     const textstr = toString(text);
-    const lowercaseTextstr = textstr.toLowerCase();
-    return Obj.has(langData, lowercaseTextstr) ? toString(langData[lowercaseTextstr]) : textstr;
+    return Obj.get(langData, textstr.toLowerCase()).map(toString).getOr(textstr);
   };
 
-  const removeContext = function (str: string) {
-    return str.replace(/{context:\w+}$/, '');
-  };
-
-  const translated = (text): TranslatedString => {
-    // TODO: When we figure out how to return a type Translated that fails if you give a String, we implement here
-    return text;
-  };
+  const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
 
   // empty strings
   if (isEmpty(text)) {
-    return translated('');
+    return '';
   }
 
   // Raw, already translated
   if (isRaw(text)) {
-    return translated(toString(text.raw));
+    return toString(text.raw);
   }
 
   // Tokenised {translations}
   if (isTokenised(text)) {
     const values = text.slice(1);
-    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, function ($1, $2) {
-      return Obj.has(values, $2) ? toString(values[$2]) : $1;
-    });
-    return translated(removeContext(substitued));
+    const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => Obj.has(values, $2) ? toString(values[$2]) : $1);
+    return removeContext(substitued);
   }
 
   // straight forward translation mapping
-  return translated(removeContext(getLangData(text)));
+  return removeContext(getLangData(text));
 };
 
 /**
@@ -157,11 +145,9 @@ const translate = (text: Untranslated): TranslatedString => {
  * @method isRtl
  * @return {Boolean} True if the current language pack is rtl.
  */
-const isRtl = () => {
-  return Obj.get(data, currentCode.get())
-    .bind((items) => Obj.get(items, '_dir'))
-    .exists((dir) => dir === 'rtl');
-};
+const isRtl = () => getLanguageData()
+  .bind((items) => Obj.get(items, '_dir'))
+  .exists((dir) => dir === 'rtl');
 
 /**
  * Returns true/false if specified language pack exists.

@@ -1,15 +1,14 @@
-import { AlloySystemApi } from './SystemApi';
-import * as AlloyLogger from '../../log/AlloyLogger';
 import { Fun } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+
+import * as AlloyLogger from '../../log/AlloyLogger';
+import { AlloyComponent } from '../component/ComponentApi';
+import { AlloySystemApi } from './SystemApi';
 
 const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
-  const fail = (event) => {
-    return () => {
-      throw new Error('The component must be in a context to send: ' + event + '\n' +
-        AlloyLogger.element(getComp().element()) + ' is not in context.'
-      );
-    };
+  const fail = (event: string) => () => {
+    throw new Error('The component must be in a context to send: ' + event +
+        (getComp ? '\n' + AlloyLogger.element(getComp().element) + ' is not in context.' : '')
+    );
   };
 
   return {
@@ -27,7 +26,7 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     broadcast: fail('broadcast'),
     broadcastOn: fail('broadcastOn'),
     broadcastEvent: fail('broadcastEvent'),
-    isConnected: Fun.constant(false)
+    isConnected: Fun.never
   };
 };
 

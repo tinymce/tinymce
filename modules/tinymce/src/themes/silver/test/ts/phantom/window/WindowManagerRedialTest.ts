@@ -1,23 +1,22 @@
 import { Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
-import { Cell } from '@ephox/katamari';
-import { Body, Value } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-
 import { TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
+import { SugarBody, Value } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
 
-  const currentDialogApi = Cell<Types.Dialog.DialogInstanceApi<any>>({ } as any);
+  const currentDialogApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
   const store = TestHelpers.TestStore();
 
-  const dialogA: Types.Dialog.DialogApi<any> = {
+  const dialogA: Dialog.DialogSpec<{}> = {
     title: 'DialogA',
     body: {
       type: 'panel',
@@ -61,7 +60,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogB: Types.Dialog.DialogApi<any> =  {
+  const dialogB: Dialog.DialogSpec<{}> = {
     title: 'DialogB',
     body: {
       type: 'panel',
@@ -72,7 +71,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
         type: 'custom',
         name: 'Dest.DialogC',
         text: 'Destination: DialogC'
-      },
+      }
     ],
     initialData: { },
     onSubmit: (api) => {
@@ -87,7 +86,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     }
   };
 
-  const dialogC: Types.Dialog.DialogApi<any> =  {
+  const dialogC: Dialog.DialogSpec<{ 'c.alpha': string }> = {
     title: 'DialogC',
     body: {
       type: 'tabpanel',
@@ -128,6 +127,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     onClose: store.adder('onCloseC'),
     onAction: (dialogApi, actionData) => {
       if (actionData.name === 'tab.switch.two') {
+        // eslint-disable-next-line no-console
         console.log('going to tab');
         dialogApi.showTab('two');
       }
@@ -135,40 +135,38 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
   };
 
   const sTestOpen = Chain.asStep({ }, [
-    Chain.mapper((_) => {
-      return windowManager.open(dialogA, {}, () => store.adder('closeWindow')() );
-    }),
+    Chain.injectThunked(() => windowManager.open(dialogA, {}, () => store.adder('closeWindow')() )),
     Chain.op((dialogApi) => {
       currentDialogApi.set(dialogApi);
     })
   ]);
 
   const sTestClose = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '[aria-label="Close"]'),
-    UiFinder.sNotExists(Body.body(), '[role="dialog"]')
+    Mouse.sClickOn(SugarBody.body(), '[aria-label="Close"]'),
+    UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
   ]);
 
   Pipeline.async({}, [
     sTestOpen,
-    UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
+    UiFinder.sExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Disable other")'),
     Logger.t(
       'Button should be disabled',
-      UiFinder.sNotExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
+      UiFinder.sNotExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])')
     ),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Disable other")'),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Disable other")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Enable other")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Enable other")'),
     Logger.t(
       'Button should be enabled',
-      UiFinder.sExists(Body.body(), 'button:contains("Destination: DialogB"):not([disabled])')
+      UiFinder.sExists(SugarBody.body(), 'button:contains("Destination: DialogB"):not([disabled])')
     ),
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogB")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogB")'),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Destination: DialogC")'),
-    Chain.asStep(Body.body(), [
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Destination: DialogC")'),
+    Chain.asStep(SugarBody.body(), [
       UiFinder.cFindIn('input'),
       Chain.op((input) => {
         Assertions.assertEq('Checking input value', 'C.Alpha', Value.get(input));
@@ -178,15 +176,15 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
     Step.sync(() => {
       currentDialogApi.get().disable('tab.switch.two');
     }),
-    UiFinder.sExists(Body.body(), 'button[disabled]:contains("Switch to Tab Two")'),
+    UiFinder.sExists(SugarBody.body(), 'button[disabled]:contains("Switch to Tab Two")'),
     Step.sync(() => {
       currentDialogApi.get().enable('tab.switch.two');
     }),
 
-    Mouse.sClickOn(Body.body(), 'button:contains("Switch to Tab Two")'),
+    Mouse.sClickOn(SugarBody.body(), 'button:contains("Switch to Tab Two")'),
     Logger.t(
       'Tab "Two" should be selected',
-      UiFinder.sExists(Body.body(), '.tox-dialog__body-nav-item--active:contains("two")')
+      UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("two")')
     ),
 
     sTestClose,
@@ -195,9 +193,7 @@ UnitTest.asynctest('WindowManager:redial Test', (success, failure) => {
       store.sAssertEq('Checking stuff', [
         'closeWindow',
         'onCloseC'
-      ]),
-      100,
-      3000
+      ])
     )
   ], () => {
     helpers.destroy();

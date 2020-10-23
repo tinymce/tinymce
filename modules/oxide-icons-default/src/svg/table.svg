@@ -1,10 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
-    <title>icon-table</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M4,5 L20,5 L20,19 L4,19 L4,5 Z M10,14 L14,14 L14,11 L10,11 L10,14 Z M14,15 L10,15 L10,18 L14,18 L14,15 Z M14,7 L10,7 L10,10 L14,10 L14,7 Z M9,7 L5,7 L5,10 L9,10 L9,7 Z M5,11 L5,14 L9,14 L9,11 L5,11 Z M15,11 L15,14 L19,14 L19,11 L15,11 Z M15,10 L19,10 L19,7 L15,7 L15,10 Z M5,15 L5,18 L9,18 L9,15 L5,15 Z M15,18 L19,18 L19,15 L15,15 L15,18 Z" fill="#000000"></path>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g id="table" fill="none" fill-rule="evenodd" stroke="none" stroke-width="1"><path id="Shape" fill="#000" fill-rule="nonzero" d="M19,4 C20.1045695,4 21,4.8954305 21,6 L21,18 C21,19.1045695 20.1045695,20 19,20 L5,20 C3.8954305,20 3,19.1045695 3,18 L3,6 C3,4.8954305 3.8954305,4 5,4 L19,4 Z M5,14 L5,18 L11,18 L11,14 L5,14 Z M19,14 L13,14 L13,18 L19,18 L19,14 Z M19,8 L13,8 L13,12 L19,12 L19,8 Z M5,12 L11,12 L11,8 L5,8 L5,12 Z"/></g></svg>

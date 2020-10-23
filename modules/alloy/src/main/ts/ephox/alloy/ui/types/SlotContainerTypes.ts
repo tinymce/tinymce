@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -7,7 +7,7 @@ import { OptionalDomSchema, RawDomSchema, SimpleOrSketchSpec, SketchSpec } from 
 import { CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 
-export interface SlotContainerDetail extends CompositeSketchDetail  {
+export interface SlotContainerDetail extends CompositeSketchDetail {
   uid: string;
   dom: RawDomSchema;
   slotBehaviours: SketchBehaviours;
@@ -30,7 +30,7 @@ export interface SlotContainerParts {
 
 export interface SlotContainerApis {
   getSlotNames: (container: AlloyComponent) => string[];
-  getSlot: (container: AlloyComponent, key: string) => Option<AlloyComponent>;
+  getSlot: (container: AlloyComponent, key: string) => Optional<AlloyComponent>;
   isShowing: (comp: AlloyComponent, key: string) => boolean;
   showSlot: (container: AlloyComponent, key: string) => void;
   hideSlot: (container: AlloyComponent, key: string) => void;

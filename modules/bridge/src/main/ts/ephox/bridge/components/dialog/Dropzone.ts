@@ -1,21 +1,20 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
-export interface DropZoneApi extends FormComponentApi {
+export interface DropZoneSpec extends FormComponentWithLabelSpec {
   type: 'dropzone';
 }
 
-export interface DropZone extends FormComponent {
+export interface DropZone extends FormComponentWithLabel {
   type: 'dropzone';
 }
 
-export const dropZoneFields = formComponentFields;
+const dropZoneFields = formComponentWithLabelFields;
 
 export const dropZoneSchema = ValueSchema.objOf(dropZoneFields);
 
 export const dropZoneDataProcessor = ValueSchema.arrOfVal();
 
-export const createDropZone = (spec: DropZoneApi): Result<DropZone, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<DropZone>('dropzone', dropZoneSchema, spec);
-};
+export const createDropZone = (spec: DropZoneSpec): Result<DropZone, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<DropZone>('dropzone', dropZoneSchema, spec);

@@ -1,34 +1,27 @@
-import { Objects } from '@ephox/boulder';
-import { Merger, Option } from '@ephox/katamari';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { Obj, Optional } from '@ephox/katamari';
 
-import { isSketchSpec } from '../../api/ui/Sketcher';
 import * as Tagger from '../../registry/Tagger';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { isSketchSpec } from '../ui/Sketcher';
+import { AlloyComponent } from './ComponentApi';
+import { SimpleOrSketchSpec } from './SpecTypes';
 
 export interface MementoRecord {
   get: (comp: AlloyComponent) => AlloyComponent;
-  getOpt: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getOpt: (comp: AlloyComponent) => Optional<AlloyComponent>;
   asSpec: () => SimpleOrSketchSpec;
 }
 
 const record = (spec: SimpleOrSketchSpec): MementoRecord => {
-  const uid = isSketchSpec(spec) && Objects.hasKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
+  const uid = isSketchSpec(spec) && Obj.hasNonNullableKey(spec, 'uid') ? spec.uid : Tagger.generate('memento');
 
-  const get = (anyInSystem: AlloyComponent): AlloyComponent => {
-    return anyInSystem.getSystem().getByUid(uid).getOrDie();
-  };
+  const get = (anyInSystem: AlloyComponent): AlloyComponent => anyInSystem.getSystem().getByUid(uid).getOrDie();
 
-  const getOpt = (anyInSystem: AlloyComponent): Option<AlloyComponent> => {
-    return anyInSystem.getSystem().getByUid(uid).fold(Option.none, Option.some);
-  };
+  const getOpt = (anyInSystem: AlloyComponent): Optional<AlloyComponent> => anyInSystem.getSystem().getByUid(uid).toOptional();
 
-  const asSpec = (): SimpleOrSketchSpec => {
-    return {
-      ...spec,
-      uid
-    };
-  };
+  const asSpec = (): SimpleOrSketchSpec => ({
+    ...spec,
+    uid
+  });
 
   return {
     get,

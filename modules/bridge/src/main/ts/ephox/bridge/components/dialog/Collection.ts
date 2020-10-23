@@ -1,20 +1,20 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
-export interface CollectionApi extends FormComponentApi {
+export interface CollectionSpec extends FormComponentWithLabelSpec {
   type: 'collection';
   // TODO TINY-3229 implement collection columns properly
   // columns?: number | 'auto';
 }
 
-export interface Collection extends FormComponent {
+export interface Collection extends FormComponentWithLabel {
   type: 'collection';
   columns: number | 'auto';
 }
 
-export const collectionFields: FieldProcessorAdt[] = formComponentFields.concat([
+const collectionFields: FieldProcessorAdt[] = formComponentWithLabelFields.concat([
   FieldSchema.defaulted('columns', 'auto')
 ]);
 
@@ -27,6 +27,5 @@ export const collectionDataProcessor = ValueSchema.arrOfObj([
   FieldSchema.strictString('icon')
 ]);
 
-export const createCollection = (spec: CollectionApi): Result<Collection, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);
-};
+export const createCollection = (spec: CollectionSpec): Result<Collection, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<Collection>('collection', collectionSchema, spec);

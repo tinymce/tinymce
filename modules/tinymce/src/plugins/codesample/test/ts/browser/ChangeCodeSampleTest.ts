@@ -1,8 +1,7 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
 import CodePlugin from 'tinymce/plugins/codesample/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TestUtils from '../module/CodeSampleTestUtils';
@@ -12,9 +11,9 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.ChangeLanguageCodeSampleT
   CodePlugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
     const editorBody = editor.contentDocument.body;
     const jsContent = 'var foo = "bar";';
 
@@ -25,9 +24,9 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.ChangeLanguageCodeSampleT
         TestUtils.sSetTextareaContent(jsContent),
         TestUtils.sSubmitDialog(docBody),
         TestUtils.sAssertEditorContents(editorBody, 'javascript', jsContent, 'pre.language-javascript'),
-        TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'javascript', jsContent),
+        TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'javascript', jsContent)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'codesample',
     theme: 'silver',

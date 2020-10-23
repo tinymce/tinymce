@@ -1,65 +1,44 @@
+import { assert, Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('FlattenTest', function() {
-  const check = function (expected, input: any[]) {
+UnitTest.test('Arr.flatten: unit tests', () => {
+  const check = (expected: number[], input: number[][]) => {
     assert.eq(expected, Arr.flatten(input));
-    assert.eq(expected, Arr.flatten(Object.freeze(input.slice())));
   };
 
   check([], []);
-  check([1], [[1]]);
-  check([1, 2], [[1], [2]]);
-  check([1, 2, 3, 4, 5], [[1, 2], [], [3], Object.freeze([4, 5]), []]);
-
-  const checkError = function (input) {
-    let message = undefined;
-    try {
-      Arr.flatten(input);
-    } catch (e) {
-      message = e.message ? e.message : e;
-    }
-
-    if (message === undefined) {
-      assert.fail('Arr.flatten did not throw an error for input ' + input);
-    }
-  };
-
-  checkError([{}]);
-  checkError([function () {}]);
-  checkError([42]);
-
-  Jsc.property(
-    'Flatten is symmetric with chunking',
-    Jsc.array(Jsc.json),
-    Jsc.integer(1, 5),
-    function (arr, chunkSize) {
-      const chunks = Arr.chunk(arr, chunkSize);
-      const bound = Arr.flatten(chunks);
-      return Jsc.eq(arr, bound);
-    }
-  );
-
-  Jsc.property('Wrap then flatten array is identity', '[json]', function(arr) {
-    return Jsc.eq(
-      Arr.flatten(Arr.pure(arr)),
-      arr
-    );
-  });
-
-  Jsc.property('Mapping pure then flattening array is identity', '[json]', function(arr) {
-    return Jsc.eq(
-      Arr.flatten(Arr.map(arr, Arr.pure)),
-      arr
-    );
-  });
-
-  Jsc.property('Flattening two lists === concat', '[json]', '[json]', function(xs, ys) {
-    return Jsc.eq(
-      Arr.flatten([xs, ys]),
-      xs.concat(ys)
-    );
-  });
+  check([ 1 ], [[ 1 ]]);
+  check([ 1, 2 ], [[ 1 ], [ 2 ]]);
+  check([ 1, 2, 3, 4, 5 ], [[ 1, 2 ], [], [ 3 ], [ 4, 5 ], []]);
 });
 
+UnitTest.test('Arr.flatten: consistent with chunking', () => {
+  fc.assert(fc.property(
+    fc.array(fc.integer()),
+    fc.integer(1, 5),
+    (arr, chunkSize) => {
+      const chunks = Arr.chunk(arr, chunkSize);
+      const bound = Arr.flatten(chunks);
+      return Assert.eq('chunking', arr, bound);
+    }
+  ));
+});
+
+UnitTest.test('Arr.flatten: Wrap then flatten array is identity', () => {
+  fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+    Assert.eq('wrap then flatten', Arr.flatten(Arr.pure(arr)), arr);
+  }));
+});
+
+UnitTest.test('Mapping pure then flattening array is identity', () => {
+  fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+    Assert.eq('map pure then flatten', Arr.flatten(Arr.map(arr, Arr.pure)), arr);
+  }));
+});
+
+UnitTest.test('Flattening two lists === concat', () => {
+  fc.assert(fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
+    Assert.eq('flatten/concat', Arr.flatten([ xs, ys ]), xs.concat(ys));
+  }));
+});

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Results, Arr } from '@ephox/katamari';
+import { Arr, Cell, Results } from '@ephox/katamari';
 import { PatternSet, RawPattern } from '../core/PatternTypes';
-import { createPatternSet, normalizePattern, denormalizePattern } from './Pattern';
+import { createPatternSet, denormalizePattern, normalizePattern } from './Pattern';
 
 const get = (patternsState: Cell<PatternSet>) => {
   const setPatterns = (newPatterns: RawPattern[]) => {
@@ -19,12 +19,10 @@ const get = (patternsState: Cell<PatternSet>) => {
     patternsState.set(createPatternSet(normalized.values));
   };
 
-  const getPatterns = () => {
-    return [
-      ...Arr.map(patternsState.get().inlinePatterns, denormalizePattern),
-      ...Arr.map(patternsState.get().blockPatterns, denormalizePattern),
-    ];
-  };
+  const getPatterns = () => [
+    ...Arr.map(patternsState.get().inlinePatterns, denormalizePattern),
+    ...Arr.map(patternsState.get().blockPatterns, denormalizePattern)
+  ];
 
   return {
     setPatterns,
@@ -32,6 +30,6 @@ const get = (patternsState: Cell<PatternSet>) => {
   };
 };
 
-export default {
+export {
   get
 };

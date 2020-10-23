@@ -1,12 +1,12 @@
-import { Chain, Mouse, NamedChain, UiFinder, RawAssertions, Guard, Step, Pipeline, Log, TestLogs } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Guard, Log, Mouse, NamedChain, Pipeline, Step, TestLogs, UiFinder } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
-import { Insert, Body, Element, Html, Attr, Remove } from '@ephox/sugar';
+import { Attribute, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import EditorManager from 'tinymce/core/api/EditorManager';
+import Delay from 'tinymce/core/api/util/Delay';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import EditorManager from 'tinymce/core/api/EditorManager';
-import Delay from 'tinymce/core/api/util/Delay';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', (success, failure) => {
   Plugin();
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   '</tbody>' +
   '</table>';
 
-  const cOnSelector = function (selector) {
+  const cOnSelector = function (selector: string) {
     return Chain.control(
       Chain.async(function (_, next) {
         EditorManager.init({
@@ -34,45 +34,43 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           plugins: 'table',
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
           content_css: '/project/tinymce/js/tinymce/skins/content/default',
-          setup (editor) {
+          setup(editor) {
             editor.on('SkinLoaded', function () {
-                Delay.setTimeout(function () {
-                    next(editor);
-                }, 0);
+              Delay.setTimeout(function () {
+                next(editor);
+              }, 0);
             });
-        }
+          }
         });
       }),
       Guard.addLogging('Add editor settings')
     );
   };
 
-  const cNotExists = (container, selector) => {
-    return Chain.control(
-      Chain.op(() => {
-        UiFinder.findIn(container, selector).fold(
-          () => RawAssertions.assertEq('should not find anything', true, true),
-          () => RawAssertions.assertEq('Expected ' + selector + ' not to exist.', true, false)
-        );
-      }),
-      Guard.addLogging('Assert ' + selector + ' does not exist')
-    );
-  };
+  const cNotExists = (container: SugarElement, selector: string) => Chain.control(
+    Chain.op(() => {
+      UiFinder.findIn(container, selector).fold(
+        () => Assert.eq('should not find anything', true, true),
+        () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
+      );
+    }),
+    Guard.addLogging('Assert ' + selector + ' does not exist')
+  );
 
   const step = Step.raw((_, next, die, initLogs) => {
     NamedChain.pipeline([
-      NamedChain.write('container', Chain.async((input, n, die) => {
-        const container = Element.fromTag('div');
-        Attr.set(container, 'id', 'test-container-div');
+      NamedChain.write('container', Chain.async((_input, n, _die) => {
+        const container = SugarElement.fromTag('div');
+        Attribute.set(container, 'id', 'test-container-div');
         Html.set(container, containerHtml);
-        Insert.append(Body.body(), container);
+        Insert.append(SugarBody.body(), container);
         n(container);
       })),
       NamedChain.write('editor', cOnSelector('div.tinymce')),
       NamedChain.direct('container', Chain.fromChains([
         UiFinder.cFindIn('div.tinymce'),
         Mouse.cMouseOver,
-        cNotExists(Body.body(), 'div[data-row="0"]')
+        cNotExists(SugarBody.body(), 'div[data-row="0"]')
       ]), '_'),
       NamedChain.read('editor', Editor.cRemove),
       NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
@@ -82,4 +80,4 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   Pipeline.async({}, [
     Log.step('TBA', 'Table: Table outside of inline editor should not become resizable', step)
   ], () => success(), failure, TestLogs.init());
-  });
+});

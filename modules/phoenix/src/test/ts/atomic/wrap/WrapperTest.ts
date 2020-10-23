@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
@@ -77,4 +77,3 @@ UnitTest.test('WrapperTest', function () {
     'new-span-2'
   ], '1.1', 0, 'root', 3);
 });
-

@@ -1,12 +1,13 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/noneditable/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -35,12 +36,12 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     LegacyUnit.equal(editor.dom.select('span').length, 1);
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'NonEditable: Test noneditable class and regexp', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
     indent: false,
-    noneditable_regexp: [/\{[^\}]+\}/g],
+    noneditable_regexp: [ /\{[^\}]+\}/g ],
     plugins: 'noneditable',
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'

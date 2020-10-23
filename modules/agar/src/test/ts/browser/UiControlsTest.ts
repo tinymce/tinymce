@@ -1,16 +1,14 @@
-import { UnitTest } from '@ephox/bedrock';
-import { Element, Insert } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Insert, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as UiControls from 'ephox/agar/api/UiControls';
 
-UnitTest.asynctest('UiControlsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('UiControlsTest', function (success, failure) {
 
-  const input = Element.fromTag('input');
-  const container = Element.fromTag('container');
+  const input = SugarElement.fromTag('input');
+  const container = SugarElement.fromTag('container');
 
   Insert.append(container, input);
 
@@ -34,6 +32,5 @@ UnitTest.asynctest('UiControlsTest', function () {
       Assertions.cAssertEq('Checking that cSetValue sets the value and cGetValue reads it', 'chain.value.1')
     ])
 
-  ], function () { success(); }, failure);
+  ], () => { success(); }, failure);
 });
-

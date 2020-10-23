@@ -1,6 +1,6 @@
-import { document } from '@ephox/dom-globals';
 import { Arr, Result } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Class, SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -15,8 +15,8 @@ import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 export default (): void => {
   const gui = Gui.create();
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = GuiFactory.build({
@@ -33,7 +33,7 @@ export default (): void => {
   };
   gui.add(sink);
 
-  const button1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'This is a container of three buttons with tooltips',
     Container.sketch({

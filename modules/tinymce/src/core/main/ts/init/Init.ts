@@ -5,24 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement } from '@ephox/dom-globals';
 import { Obj, Type } from '@ephox/katamari';
-import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
 import PluginManager from '../api/PluginManager';
-import ThemeManager from '../api/ThemeManager';
-import DOMUtils from '../api/dom/DOMUtils';
-import Tools from '../api/util/Tools';
-import ErrorReporter from '../ErrorReporter';
-import InitContentBody from './InitContentBody';
-import InitIframe from './InitIframe';
-import { appendContentCssFromSettings } from './ContentCss';
+import * as Settings from '../api/Settings';
 import { ThemeInitFunc } from '../api/SettingsTypes';
+import ThemeManager from '../api/ThemeManager';
+import Tools from '../api/util/Tools';
+import * as ErrorReporter from '../ErrorReporter';
+import { appendContentCssFromSettings } from './ContentCss';
+import * as InitContentBody from './InitContentBody';
+import * as InitIframe from './InitIframe';
 
 const DOM = DOMUtils.DOM;
 
-const initPlugin = function (editor: Editor, initializedPlugins, plugin) {
+const initPlugin = function (editor: Editor, initializedPlugins: string[], plugin: string) {
   const Plugin = PluginManager.get(plugin);
 
   const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
@@ -59,18 +58,17 @@ const trimLegacyPrefix = function (name: string) {
 const initPlugins = function (editor: Editor) {
   const initializedPlugins = [];
 
-  Tools.each(editor.settings.plugins.split(/[ ,]/), function (name) {
+  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), function (name) {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };
 
 const initIcons = (editor: Editor) => {
-  const iconPackName: string = Tools.trim(editor.settings.icons);
+  const iconPackName: string = Tools.trim(Settings.getIconPackName(editor));
   const currentIcons = editor.ui.registry.getAll().icons;
 
-  const defaultIcons = getAllOxide();
   const loadIcons = {
-    ...defaultIcons,
+    ...IconManager.get('default').icons,
     ...IconManager.get(iconPackName).icons
   };
 
@@ -82,11 +80,11 @@ const initIcons = (editor: Editor) => {
   });
 };
 
-const initTheme = function (editor: Editor) {
-  const theme = editor.settings.theme;
+const initTheme = (editor: Editor) => {
+  const theme = Settings.getTheme(editor);
 
   if (Type.isString(theme)) {
-    editor.settings.theme = trimLegacyPrefix(theme);
+    editor.settings.theme = trimLegacyPrefix(theme); // Kept until a proper API can be made. TINY-6142
 
     const Theme = ThemeManager.get(theme);
     editor.theme = new Theme(editor, ThemeManager.urls[theme]);
@@ -107,7 +105,7 @@ const renderFromLoadedTheme = function (editor: Editor) {
 
 const renderFromThemeFunc = function (editor: Editor) {
   const elm = editor.getElement();
-  const theme = editor.settings.theme as ThemeInitFunc;
+  const theme = Settings.getTheme(editor) as ThemeInitFunc;
   const info = theme(editor, elm);
 
   if (info.editorContainer.nodeType) {
@@ -126,7 +124,8 @@ const renderFromThemeFunc = function (editor: Editor) {
 const createThemeFalseResult = function (element: HTMLElement) {
   return {
     editorContainer: element,
-    iframeContainer: element
+    iframeContainer: element,
+    api: {}
   };
 };
 
@@ -148,9 +147,9 @@ const renderThemeUi = function (editor: Editor) {
 
   editor.orgDisplay = elm.style.display;
 
-  if (Type.isString(editor.settings.theme)) {
+  if (Type.isString(Settings.getTheme(editor))) {
     return renderFromLoadedTheme(editor);
-  } else if (Type.isFunction(editor.settings.theme)) {
+  } else if (Type.isFunction(Settings.getTheme(editor))) {
     return renderFromThemeFunc(editor);
   } else {
     return renderThemeFalse(editor);
@@ -163,7 +162,12 @@ const init = function (editor: Editor) {
   initIcons(editor);
   initTheme(editor);
   initPlugins(editor);
-  const boxInfo = renderThemeUi(editor);
+  const renderInfo = renderThemeUi(editor);
+  editor.ui = { ...editor.ui, ...renderInfo.api };
+  const boxInfo = {
+    editorContainer: renderInfo.editorContainer,
+    iframeContainer: renderInfo.iframeContainer
+  };
   editor.editorContainer = boxInfo.editorContainer ? boxInfo.editorContainer : null;
   appendContentCssFromSettings(editor);
 
@@ -175,6 +179,6 @@ const init = function (editor: Editor) {
   }
 };
 
-export default {
+export {
   init
 };

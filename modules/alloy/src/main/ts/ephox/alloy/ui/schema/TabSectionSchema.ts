@@ -6,7 +6,9 @@ import { Tabbar } from '../../api/ui/Tabbar';
 import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { TabSectionDetail } from '../../ui/types/TabSectionTypes';
+import { TabbarSpec } from '../types/TabbarTypes';
+import { TabSectionDetail } from '../types/TabSectionTypes';
+import { TabviewSpec } from '../types/TabviewTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
@@ -16,7 +18,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   SketchBehaviours.field('tabSectionBehaviours', [ ])
 ]);
 
-const barPart = PartType.required({
+const barPart = PartType.required<TabSectionDetail, TabbarSpec>({
   factory: Tabbar,
   schema: [
     FieldSchema.strict('dom'),
@@ -26,14 +28,14 @@ const barPart = PartType.required({
     ])
   ],
   name: 'tabbar',
-  defaults (detail: TabSectionDetail) {
+  defaults(detail: TabSectionDetail) {
     return {
       tabs: detail.tabs
     };
   }
 });
 
-const viewPart = PartType.required({
+const viewPart = PartType.required<TabSectionDetail, TabviewSpec>({
   factory: Tabview,
   name: 'tabview'
 });

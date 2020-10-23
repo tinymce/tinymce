@@ -1,21 +1,23 @@
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface SlidingBehaviour extends Behaviour.AlloyBehaviour<SlidingConfigSpec, SlidingConfig> {
   config: (config: SlidingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SlidingConfigSpec, SlidingConfig>;
-  refresh?: (component: AlloyComponent) => void;
-  grow?: (component: AlloyComponent) => void;
-  shrink?: (component: AlloyComponent) => void;
-  immediateShrink?: (component: AlloyComponent) => void;
-  hasGrown?: (component: AlloyComponent) => boolean;
-  hasShrunk?: (component: AlloyComponent) => boolean;
-  isGrowing?: (component: AlloyComponent) => boolean;
-  isShrinking?: (component: AlloyComponent) => boolean;
-  isTransitioning?: (component: AlloyComponent) => boolean;
-  toggleGrow?: (component: AlloyComponent) => void;
-  disableTransitions?: (component: AlloyComponent) => void;
+  refresh: (component: AlloyComponent) => void;
+  grow: (component: AlloyComponent) => void;
+  shrink: (component: AlloyComponent) => void;
+  immediateShrink: (component: AlloyComponent) => void;
+  hasGrown: (component: AlloyComponent) => boolean;
+  hasShrunk: (component: AlloyComponent) => boolean;
+  isGrowing: (component: AlloyComponent) => boolean;
+  isShrinking: (component: AlloyComponent) => boolean;
+  isTransitioning: (component: AlloyComponent) => boolean;
+  toggleGrow: (component: AlloyComponent) => void;
+  disableTransitions: (component: AlloyComponent) => void;
 }
 
 export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
@@ -24,7 +26,7 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   closedClass: string;
   dimension: {
     property: string;
-    getDimension: (elem: Element) => string;
+    getDimension: (elem: SugarElement) => string;
   };
   onGrown: (comp: AlloyComponent) => void;
   onShrunk: (comp: AlloyComponent) => void;
@@ -32,24 +34,27 @@ export interface SlidingConfig extends Behaviour.BehaviourConfigDetail {
   growingClass: string;
   onStartGrow: (comp: AlloyComponent) => void;
   onStartShrink: (comp: AlloyComponent) => void;
-  getAnimationRoot: Option<(comp: AlloyComponent) => Element>;
+  getAnimationRoot: Optional<(comp: AlloyComponent) => SugarElement>;
 
 }
 
-export interface SlidingState {
+export interface SlidingState extends BehaviourState {
   isExpanded: () => boolean;
+  setExpanded: () => void;
+  isCollapsed: () => boolean;
+  setCollapsed: () => void;
 }
 
 export interface SlidingConfigSpec extends Behaviour.BehaviourConfigSpec {
   dimension: {
-    property: string
+    property: string;
   };
   closedClass: string;
   openClass: string;
   shrinkingClass: string;
   growingClass: string;
   onStartGrow?: (component: AlloyComponent) => void;
-  getAnimationRoot?: (component: AlloyComponent) => Element;
+  getAnimationRoot?: (component: AlloyComponent) => SugarElement;
   onStartShrink?: (component: AlloyComponent) => void;
   onShrunk?: (component: AlloyComponent) => void;
   onGrown?: (component: AlloyComponent) => void;

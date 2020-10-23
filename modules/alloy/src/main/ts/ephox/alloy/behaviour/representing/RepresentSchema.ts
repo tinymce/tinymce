@@ -1,4 +1,4 @@
-import { FieldSchema, ValueSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as Fields from '../../data/Fields';
 import DatasetStore from './DatasetStore';

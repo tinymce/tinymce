@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
-import { HTMLElement } from '@ephox/sand';
+import { Arr, Optional } from '@ephox/katamari';
+import { SandHTMLElement } from '@ephox/sand';
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import NodeType from './NodeType';
+import * as NodeType from './NodeType';
 
-const getParentList = function (editor) {
-  const selectionStart = editor.selection.getStart(true);
+const getParentList = (editor: Editor, node?: Node) => {
+  const selectionStart = node || editor.selection.getStart(true);
 
   return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart));
 };
@@ -24,7 +23,7 @@ const isParentListSelected = function (parentList, selectedBlocks) {
 };
 
 const findSubLists = function (parentList) {
-  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm) {
+  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm: Node) {
     return NodeType.isListNode(elm);
   });
 };
@@ -36,7 +35,7 @@ const getSelectedSubLists = function (editor) {
   if (isParentListSelected(parentList, selectedBlocks)) {
     return findSubLists(parentList);
   } else {
-    return Tools.grep(selectedBlocks, function (elm) {
+    return Tools.grep(selectedBlocks, function (elm: Node) {
       return NodeType.isListNode(elm) && parentList !== elm;
     });
   }
@@ -59,9 +58,7 @@ const getSelectedListItems = function (editor) {
   });
 };
 
-const getSelectedDlItems = (editor: Editor): Node[] => {
-  return Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
-};
+const getSelectedDlItems = (editor: Editor): Node[] => Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
 
 const getClosestListRootElm = function (editor, elm) {
   const parentTableCell = editor.dom.getParents(elm, 'TD,TH');
@@ -70,7 +67,7 @@ const getClosestListRootElm = function (editor, elm) {
   return root;
 };
 
-const findLastParentListNode = (editor: Editor, elm: Node): Option<Node> => {
+const findLastParentListNode = (editor: Editor, elm: Node): Optional<Node> => {
   const parentLists = editor.dom.getParents(elm, 'ol,ul', getClosestListRootElm(editor, elm));
   return Arr.last(parentLists);
 };
@@ -94,10 +91,10 @@ const getUniqueListRoots = (editor: Editor, lists: Node[]): Node[] => {
 
 const isList = (editor: Editor): boolean => {
   const list = getParentList(editor);
-  return HTMLElement.isPrototypeOf(list);
+  return SandHTMLElement.isPrototypeOf(list);
 };
 
-export default {
+export {
   isList,
   getParentList,
   getSelectedSubLists,

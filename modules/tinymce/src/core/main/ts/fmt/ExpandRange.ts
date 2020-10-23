@@ -5,64 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Bookmarks from '../bookmark/Bookmarks';
-import TreeWalker from '../api/dom/TreeWalker';
-import FormatUtils from './FormatUtils';
-import * as RangeNodes from '../selection/RangeNodes';
+import { Optional } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
+import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
+import * as Bookmarks from '../bookmark/Bookmarks';
+import * as NodeType from '../dom/NodeType';
+import * as RangeNodes from '../selection/RangeNodes';
+import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
+import * as FormatUtils from './FormatUtils';
+
+type Sibling = 'previousSibling' | 'nextSibling';
 
 const isBookmarkNode = Bookmarks.isBookmarkNode;
-const getParents = FormatUtils.getParents, isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode, isTextBlock = FormatUtils.isTextBlock;
+const getParents = FormatUtils.getParents;
+const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
+const isTextBlock = FormatUtils.isTextBlock;
 
-// This function walks down the tree to find the leaf at the selection.
-// The offset is also returned as if node initially a leaf, the offset may be in the middle of the text node.
-const findLeaf = function (node, offset?) {
-  if (typeof offset === 'undefined') {
-    offset = node.nodeType === 3 ? node.length : node.childNodes.length;
-  }
-
-  while (node && node.hasChildNodes()) {
-    node = node.childNodes[offset];
-    if (node) {
-      offset = node.nodeType === 3 ? node.length : node.childNodes.length;
-    }
-  }
-
-  return { node, offset };
-};
-
-const excludeTrailingWhitespace = function (endContainer, endOffset) {
-  // Avoid applying formatting to a trailing space,
-  // but remove formatting from trailing space
-  let leaf = findLeaf(endContainer, endOffset);
-  if (leaf.node) {
-    while (leaf.node && leaf.offset === 0 && leaf.node.previousSibling) {
-      leaf = findLeaf(leaf.node.previousSibling);
-    }
-
-    if (leaf.node && leaf.offset > 0 && leaf.node.nodeType === 3 &&
-        leaf.node.nodeValue.charAt(leaf.offset - 1) === ' ') {
-
-      if (leaf.offset > 1) {
-        endContainer = leaf.node;
-        endContainer.splitText(leaf.offset - 1);
-      }
-    }
-  }
-
-  return endContainer;
-};
-
-const isBogusBr = function (node) {
+const isBogusBr = function (node: Element) {
   return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 };
 
 // Expands the node to the closes contentEditable false element if it exists
-const findParentContentEditable = function (dom, node) {
+const findParentContentEditable = function (dom: DOMUtils, node: Node) {
   let parent = node;
 
   while (parent) {
-    if (parent.nodeType === 1 && dom.getContentEditable(parent)) {
+    if (NodeType.isElement(parent) && dom.getContentEditable(parent)) {
       return dom.getContentEditable(parent) === 'false' ? parent : node;
     }
 
@@ -72,84 +41,67 @@ const findParentContentEditable = function (dom, node) {
   return node;
 };
 
-const findSpace = function (start, remove, node, offset?) {
-  let pos, pos2;
-  const str = node.nodeValue;
-
-  if (typeof offset === 'undefined') {
-    offset = start ? str.length : 0;
-  }
-
-  if (start) {
-    pos = str.lastIndexOf(' ', offset);
-    pos2 = str.lastIndexOf('\u00a0', offset);
-    pos = pos > pos2 ? pos : pos2;
-
-    // Include the space on remove to avoid tag soup
-    // As long as we are either going to the right,
-    // - OR - going to the left and pos isn't already at the end of the string
-    if (pos !== -1 && !remove && (pos < offset || !start) && pos <= str.length) {
-      pos++;
+const walkText = (start: boolean, node: Text, offset: number, predicate: (chr: string) => boolean) => {
+  const str = node.data;
+  for (let i = offset; start ? i >= 0 : i < str.length; start ? i-- : i++) {
+    if (predicate(str.charAt(i))) {
+      return start ? i + 1 : i;
     }
-  } else {
-    pos = str.indexOf(' ', offset);
-    pos2 = str.indexOf('\u00a0', offset);
-    pos = pos !== -1 && (pos2 === -1 || pos < pos2) ? pos : pos2;
   }
-
-  return pos;
+  return -1;
 };
 
-const findWordEndPoint = function (dom, body, container, offset, start, remove) {
-  let node, pos, lastTextNode;
+const findSpace = (start: boolean, node: Text, offset: number) =>
+  walkText(start, node, offset, (c) => isNbsp(c) || isWhiteSpace(c));
 
-  if (container.nodeType === 3) {
-    pos = findSpace(start, remove, container, offset);
+const findContent = (start: boolean, node: Text, offset: number) =>
+  walkText(start, node, offset, isContent);
 
-    if (pos !== -1) {
-      return { container, offset: pos };
-    }
+const findWordEndPoint = (
+  dom: DOMUtils,
+  body: HTMLElement,
+  container: Node,
+  offset: number,
+  start: boolean,
+  includeTrailingSpaces: boolean
+) => {
+  let lastTextNode: Text;
+  const rootNode = dom.getParent(container, dom.isBlock) || body;
 
-    lastTextNode = container;
-  }
-
-  // Walk the nodes inside the block
-  const walker = new TreeWalker(container, dom.getParent(container, dom.isBlock) || body);
-  while ((node = walker[start ? 'prev' : 'next']())) {
-    if (node.nodeType === 3 && !isBookmarkNode(node.parentNode)) {
-      lastTextNode = node;
-      pos = findSpace(start, remove, node);
-
-      if (pos !== -1) {
-        return { container: node, offset: pos };
+  const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset?: number) => number) => {
+    const textSeeker = TextSeeker(dom);
+    const walker = start ? textSeeker.backwards : textSeeker.forwards;
+    return Optional.from(walker(container, offset, (text, textOffset) => {
+      if (isBookmarkNode(text.parentNode)) {
+        return -1;
+      } else {
+        lastTextNode = text;
+        return pred(start, text, textOffset);
       }
-    } else if (dom.isBlock(node) || FormatUtils.isEq(node, 'BR')) {
-      break;
-    }
-  }
+    }, rootNode));
+  };
 
-  if (lastTextNode) {
-    if (start) {
-      offset = 0;
-    } else {
-      offset = lastTextNode.length;
-    }
-
-    return { container: lastTextNode, offset };
-  }
+  const spaceResult = walk(container, offset, findSpace);
+  return spaceResult.bind(
+    (result) => includeTrailingSpaces ?
+      walk(result.container, result.offset + (start ? -1 : 0), findContent) :
+      Optional.some(result)
+  ).orThunk(
+    () => lastTextNode ?
+      Optional.some({ container: lastTextNode, offset: start ? 0 : lastTextNode.length }) :
+      Optional.none()
+  );
 };
 
-const findSelectorEndPoint = function (dom, format, rng, container, siblingName) {
-  let parents, i, y, curFormat;
-
-  if (container.nodeType === 3 && container.nodeValue.length === 0 && container[siblingName]) {
+const findSelectorEndPoint = (dom: DOMUtils, format, rng: Range, container: Node, siblingName: Sibling) => {
+  if (NodeType.isText(container) && container.nodeValue.length === 0 && container[siblingName]) {
     container = container[siblingName];
   }
 
-  parents = getParents(dom, container);
-  for (i = 0; i < parents.length; i++) {
-    for (y = 0; y < format.length; y++) {
-      curFormat = format[y];
+  const parents = getParents(dom, container);
+  for (let i = 0; i < parents.length; i++) {
+    for (let y = 0; y < format.length; y++) {
+      const curFormat = format[y];
 
       // If collapsed state is set then skip formats that doesn't match that
       if ('collapsed' in curFormat && curFormat.collapsed !== rng.collapsed) {
@@ -165,8 +117,8 @@ const findSelectorEndPoint = function (dom, format, rng, container, siblingName)
   return container;
 };
 
-const findBlockEndPoint = function (editor: Editor, format, container, siblingName) {
-  let node;
+const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName: Sibling) => {
+  let node: Node;
   const dom = editor.dom;
   const root = dom.getRoot();
 
@@ -178,10 +130,12 @@ const findBlockEndPoint = function (editor: Editor, format, container, siblingNa
   // Expand to first wrappable block element or any block element
   if (!node) {
     const scopeRoot = dom.getParent(container, 'LI,TD,TH');
-    node = dom.getParent(container.nodeType === 3 ? container.parentNode : container, function (node) {
+    node = dom.getParent(
+      NodeType.isText(container) ? container.parentNode : container,
       // Fixes #6183 where it would expand to editable parent element in inline mode
-      return node !== root && isTextBlock(editor, node);
-    }, scopeRoot);
+      (node) => node !== root && isTextBlock(editor, node),
+      scopeRoot
+    );
   }
 
   // Exclude inner lists from wrapping
@@ -208,21 +162,29 @@ const findBlockEndPoint = function (editor: Editor, format, container, siblingNa
 };
 
 // This function walks up the tree if there is no siblings before/after the node
-const findParentContainer = function (dom, format, startContainer, startOffset, endContainer, endOffset, start) {
-  let container, parent, sibling, siblingName, root;
+const findParentContainer = (
+  dom: DOMUtils,
+  format,
+  startContainer: Node,
+  startOffset: number,
+  endContainer: Node,
+  endOffset: number,
+  start: boolean
+) => {
+  let container, parent, sibling;
 
   container = parent = start ? startContainer : endContainer;
-  siblingName = start ? 'previousSibling' : 'nextSibling';
-  root = dom.getRoot();
+  const siblingName = start ? 'previousSibling' : 'nextSibling';
+  const root = dom.getRoot();
 
   // If it's a text node and the offset is inside the text
-  if (container.nodeType === 3 && !isWhiteSpaceNode(container)) {
+  if (NodeType.isText(container) && !isWhiteSpaceNode(container)) {
     if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
       return container;
     }
   }
 
-  /*eslint no-constant-condition:0 */
+  /* eslint no-constant-condition:0 */
   while (true) {
     // Stop expanding on block elements
     if (!format[0].block_expand && dom.isBlock(parent)) {
@@ -248,26 +210,30 @@ const findParentContainer = function (dom, format, startContainer, startOffset, 
   return container;
 };
 
-const expandRng = function (editor: Editor, rng, format, remove?) {
-  let endPoint,
-    startContainer = rng.startContainer,
+const expandRng = (
+  editor: Editor,
+  rng: Range,
+  format,
+  includeTrailingSpace: boolean = false
+) => {
+  let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
     endOffset = rng.endOffset;
   const dom = editor.dom;
 
   // If index based start position then resolve it
-  if (startContainer.nodeType === 1 && startContainer.hasChildNodes()) {
+  if (NodeType.isElement(startContainer) && startContainer.hasChildNodes()) {
     startContainer = RangeNodes.getNode(startContainer, startOffset);
-    if (startContainer.nodeType === 3) {
+    if (NodeType.isText(startContainer)) {
       startOffset = 0;
     }
   }
 
   // If index based end position then resolve it
-  if (endContainer.nodeType === 1 && endContainer.hasChildNodes()) {
+  if (NodeType.isElement(endContainer) && endContainer.hasChildNodes()) {
     endContainer = RangeNodes.getNode(endContainer, rng.collapsed ? endOffset : endOffset - 1);
-    if (endContainer.nodeType === 3) {
+    if (NodeType.isText(endContainer)) {
       endOffset = endContainer.nodeValue.length;
     }
   }
@@ -285,7 +251,7 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
       startContainer = startContainer.nextSibling || startContainer;
     }
 
-    if (startContainer.nodeType === 3) {
+    if (NodeType.isText(startContainer)) {
       startOffset = rng.collapsed ? startContainer.length : 0;
     }
   }
@@ -298,30 +264,32 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
       endContainer = endContainer.previousSibling || endContainer;
     }
 
-    if (endContainer.nodeType === 3) {
+    if (NodeType.isText(endContainer)) {
       endOffset = rng.collapsed ? 0 : endContainer.length;
     }
   }
 
   if (rng.collapsed) {
     // Expand left to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), startContainer, startOffset, true, remove);
-    if (endPoint) {
-      startContainer = endPoint.container;
-      startOffset = endPoint.offset;
-    }
+    const startPoint = findWordEndPoint(
+      dom,
+      editor.getBody(),
+      startContainer,
+      startOffset,
+      true,
+      includeTrailingSpace
+    );
+    startPoint.each(({ container, offset }) => {
+      startContainer = container;
+      startOffset = offset;
+    });
 
     // Expand right to closest word boundary
-    endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, remove);
-    if (endPoint) {
-      endContainer = endPoint.container;
-      endOffset = endPoint.offset;
-    }
-  }
-
-  if (format[0].inline) {
-    // For "removeformat", we include trailing whitespace. For other formatting, we don't
-    endContainer = remove ? endContainer : excludeTrailingWhitespace(endContainer, endOffset);
+    const endPoint = findWordEndPoint(dom, editor.getBody(), endContainer, endOffset, false, includeTrailingSpace);
+    endPoint.each(({ container, offset }) => {
+      endContainer = container;
+      endOffset = offset;
+    });
   }
 
   // Move start/end point up the tree if the leaves are sharp and if we are in different containers
@@ -329,11 +297,11 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
   // This will reduce the number of wrapper elements that needs to be created
   // Move start point up the tree
   if (format[0].inline || format[0].block_expand) {
-    if (!format[0].inline || (startContainer.nodeType !== 3 || startOffset === 0)) {
+    if (!format[0].inline || (!NodeType.isText(startContainer) || startOffset === 0)) {
       startContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, true);
     }
 
-    if (!format[0].inline || (endContainer.nodeType !== 3 || endOffset === endContainer.nodeValue.length)) {
+    if (!format[0].inline || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
       endContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, false);
     }
   }
@@ -364,13 +332,13 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
   }
 
   // Setup index for startContainer
-  if (startContainer.nodeType === 1) {
+  if (NodeType.isElement(startContainer)) {
     startOffset = dom.nodeIndex(startContainer);
     startContainer = startContainer.parentNode;
   }
 
   // Setup index for endContainer
-  if (endContainer.nodeType === 1) {
+  if (NodeType.isElement(endContainer)) {
     endOffset = dom.nodeIndex(endContainer) + 1;
     endContainer = endContainer.parentNode;
   }
@@ -384,6 +352,6 @@ const expandRng = function (editor: Editor, rng, format, remove?) {
   };
 };
 
-export default {
+export {
   expandRng
 };

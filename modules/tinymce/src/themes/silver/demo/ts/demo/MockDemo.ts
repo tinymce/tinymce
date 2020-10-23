@@ -4,9 +4,7 @@ const mockFeatureState = () => {
 
   let demoState = false;
 
-  const get = (): boolean => {
-    return demoState;
-  };
+  const get = (): boolean => demoState;
 
   const set = (nu: boolean): void => {
     demoState = nu;
@@ -21,7 +19,7 @@ const mockFeatureState = () => {
   return {
     get,
     set,
-    toggle,
+    toggle
   };
 };
 

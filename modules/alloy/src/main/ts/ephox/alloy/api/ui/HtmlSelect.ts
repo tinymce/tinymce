@@ -1,30 +1,25 @@
 import { FieldSchema, Objects } from '@ephox/boulder';
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
-import * as Behaviour from '../behaviour/Behaviour';
+import { HtmlSelectDetail, HtmlSelectSketcher, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
 import * as Sketcher from './Sketcher';
-import { SketchSpec } from '../../api/component/SpecTypes';
-import { HtmlSelectSketcher, HtmlSelectDetail, HtmlSelectSpec } from '../../ui/types/HtmlSelectTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import { SingleSketchFactory } from './UiSketcher';
 
-const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, spec): SketchSpec => {
-  const options = Arr.map(detail.options, (option) => {
-    return {
-      dom: {
-        tag: 'option',
-        value: option.value,
-        innerHtml: option.text
-      }
-    };
-  });
+const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, _spec): SketchSpec => {
+  const options = Arr.map(detail.options, (option) => ({
+    dom: {
+      tag: 'option',
+      value: option.value,
+      innerHtml: option.text
+    }
+  }));
 
-  const initialValues = detail.data.map((v) => {
-    return Objects.wrap('initialValue', v);
-  }).getOr({ });
+  const initialValues = detail.data.map((v) => Objects.wrap('initialValue', v)).getOr({ });
 
   return {
     uid: detail.uid,
@@ -41,15 +36,13 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
         Representing.config({
           store: {
             mode: 'manual',
-            getValue (select) {
-              return Value.get(select.element());
+            getValue(select) {
+              return Value.get(select.element);
             },
-            setValue (select, newValue) {
+            setValue(select, newValue) {
               // This is probably generically useful ... may become a part of Representing.
-              const found = Arr.find(detail.options, (opt) => {
-                return opt.value === newValue;
-              });
-              if (found.isSome()) { Value.set(select.element(), newValue); }
+              const found = Arr.find(detail.options, (opt) => opt.value === newValue);
+              if (found.isSome()) { Value.set(select.element, newValue); }
             },
             ...initialValues
           }
@@ -59,7 +52,7 @@ const factory: SingleSketchFactory<HtmlSelectDetail, HtmlSelectSpec> = (detail, 
   };
 };
 
-const HtmlSelect = Sketcher.single({
+const HtmlSelect: HtmlSelectSketcher = Sketcher.single({
   name: 'HtmlSelect',
   configFields: [
     FieldSchema.strict('options'),
@@ -69,7 +62,7 @@ const HtmlSelect = Sketcher.single({
     FieldSchema.option('data')
   ],
   factory
-}) as HtmlSelectSketcher;
+});
 
 export {
   HtmlSelect

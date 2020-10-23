@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
       "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
@@ -14,9 +15,10 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" }
   ]
 }

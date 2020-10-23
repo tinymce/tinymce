@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Fun } from '@ephox/katamari';
-import { Toggling, Disabling, Representing, Replacing, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Disabling, Replacing, Representing, Toggling } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
 
 // Purpose to wrap internal bits we don't want to expose, like alloy component.
 
@@ -19,7 +19,7 @@ const deriveToggling = (spec, component: AlloyComponent) => {
         return {
           toggleOn: () => { Toggling.on(component); },
           toggleOff: () => { Toggling.off(component); },
-          toggleIsOn: () => { Toggling.isOn(component); },
+          toggleIsOn: () => { Toggling.isOn(component); }
         };
       }
     });
@@ -31,7 +31,7 @@ const deriveRepresenting = (spec, component: AlloyComponent) => {
     const item = Representing.getValue(component);
     return {
       itemValue: () => item.value,
-      itemText: () => item.text,
+      itemText: () => item.text
     };
   }
 };
@@ -62,12 +62,17 @@ const component = (spec, component: AlloyComponent) => {
 
   const defaults = {
     // Expose more as required
-    element: component.element().dom(),
+    element: component.element.dom,
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
   };
 
-  return Merger.merge(defaults, togglingConf, representingConf, replaceingConf);
+  return {
+    ...defaults,
+    ...togglingConf,
+    ...representingConf,
+    ...replaceingConf
+  };
 };
 
 export {

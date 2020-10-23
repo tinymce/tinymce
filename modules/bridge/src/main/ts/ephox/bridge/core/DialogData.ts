@@ -1,15 +1,14 @@
-import { getNamedItems, getDataProcessor } from './DataProcessors';
-import { FieldSchema, ValueSchema, Processor } from '@ephox/boulder';
+import { FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
-import { DialogApi } from '../components/dialog/Dialog';
+import { DialogSpec } from '../components/dialog/Dialog';
+import { getDataProcessor, getNamedItems } from './DataProcessors';
 
-export const createDataValidator = <T>(structure: DialogApi<T>): Processor => {
-  const fields = Arr.bind(getNamedItems(structure), (item) => {
-    return getDataProcessor(item).fold(
-      () => [],
-      (schema) => [ FieldSchema.strictOf(item.name, schema) ]
-    );
-  });
+export const createDataValidator = <T>(structure: DialogSpec<T>): Processor => {
+  const namedItems = getNamedItems(structure);
+  const fields = Arr.bind(namedItems, (item) => getDataProcessor(item).fold(
+    () => [],
+    (schema) => [ FieldSchema.strictOf(item.name, schema) ]
+  ));
 
   return ValueSchema.objOf(fields);
 };

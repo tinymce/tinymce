@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
 import { Positioning } from '../../api/behaviour/Positioning';
@@ -9,7 +10,7 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
-import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
+import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as TooltippingApis from './TooltippingApis';
 import { ExclusivityChannel, HideTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
@@ -24,7 +25,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     state.clearTimer();
   };
 
-  const show = (comp) => {
+  const show = (comp: AlloyComponent) => {
     if (!state.isShowing()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
       const sink = tooltipConfig.lazySink(comp).getOrDie();
@@ -68,11 +69,15 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           hide(comp);
         }, tooltipConfig.delay);
       }),
-      AlloyEvents.run(SystemEvents.receive(), (comp, message) => {
+      AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (comp, message) => {
         // TODO: Think about the types for this, or find a better way for this
         // to rely on receiving.
-        const receivingData = <any> message as ReceivingInternalEvent;
-        if (Arr.contains(receivingData.channels(), ExclusivityChannel)) { hide(comp); }
+        const receivingData = message as unknown as ReceivingInternalEvent;
+        if (!receivingData.universal) {
+          if (Arr.contains(receivingData.channels, ExclusivityChannel)) {
+            hide(comp);
+          }
+        }
       }),
       AlloyEvents.runOnDetached((comp) => {
         hide(comp);
@@ -92,15 +97,15 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
           }),
           AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
+          })
         ]
         : [
-          AlloyEvents.run(SystemEvents.highlight(), (comp, se) => {
+          AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
             AlloyTriggers.emit(comp, ShowTooltipEvent);
           }),
           AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
             AlloyTriggers.emit(comp, HideTooltipEvent);
-          }),
+          })
         ]
     )
   ]));

@@ -1,26 +1,21 @@
 import { Chain, Guard, NamedChain } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 // INVESTIGATE: Does cLogging have a place in vanilla agar?
-const cLogging = (label, chains) => {
-  const logChains = Arr.map(chains, (c) => {
-    return Chain.control(c, Guard.addLogging(label));
-  });
+const cLogging = <T, U>(label: string, chains: Array<Chain<T, U>>) => {
+  const logChains = Arr.map(chains, (c) => Chain.control(c, Guard.addLogging(label)));
 
   return Chain.fromChains(logChains);
 };
 
-const cFindUid = (uid) => {
-  return Chain.binder((context: any) => {
-    return context.getByUid(uid);
-  });
-};
+const cFindUid = (uid: string) => Chain.binder((context: any) => context.getByUid(uid));
 
-const cFindUids = (gui, lookups) => {
+const cFindUids = (gui: Record<string, any>, lookups: Record<string, string>) => {
   const keys = Obj.keys(lookups);
-  const others = Arr.map(keys, (k) => {
-    return NamedChain.direct('context', cFindUid(lookups[k]), k);
-  });
+  const others = Arr.map(keys, (k) => NamedChain.direct('context', cFindUid(lookups[k]), k));
 
   return NamedChain.asChain(
     [
@@ -29,15 +24,9 @@ const cFindUids = (gui, lookups) => {
   );
 };
 
-const cToElement = Chain.mapper((comp: any) => {
-  return comp.element();
-});
+const cToElement = Chain.mapper((comp: any) => comp.element);
 
-const eToComponent = (other) => {
-  return Chain.binder((elem) => {
-    return other.getSystem().getByDom(elem);
-  });
-};
+const eToComponent = (other: AlloyComponent): Chain<SugarElement, AlloyComponent> => Chain.binder((elem) => other.getSystem().getByDom(elem));
 
 export {
   cLogging,

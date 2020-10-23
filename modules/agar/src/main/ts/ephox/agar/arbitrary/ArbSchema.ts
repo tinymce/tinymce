@@ -1,12 +1,13 @@
+import { Unicode } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-import ArbNodes from './ArbNodes';
+import * as ArbNodes from './ArbNodes';
 
 const formatting = {
   type: 'composite',
   tags: {
-    'p': { weight: 1 },
-    'h1': { weight: 1 }
+    p: { weight: 1 },
+    h1: { weight: 1 }
   },
   components: {
     anytext: { weight: 0.5 },
@@ -21,20 +22,20 @@ const inline = {
   recursionDepth: 3,
   // Underline, strikethrough
   tags: {
-    'span-strikethrough': { weight: 1, styles: { 'text-decoration': 'line-through'} },
+    'span-strikethrough': { weight: 1, styles: { 'text-decoration': 'line-through' }},
     'span': { weight: 1 },
     'font': { weight: 0 },
     'em': { weight: 1 },
     'strong': { weight: 1 },
     'b': { weight: 1 },
     'i': { weight: 1 },
-    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' } }
+    'span-underline': { weight: 1, styles: { 'text-decoration': 'underline' }}
   },
   components: {
     anytext: { weight: 0.5 },
     netext: { weight: 0.5 },
     inline: { useDepth: true, weight: 1.0 },
-    '_': { weight: 5.0 }
+    _: { weight: 5.0 }
   }
 };
 
@@ -42,15 +43,15 @@ const container = {
   type: 'composite',
   recursionDepth: 3,
   tags: {
-    'div': { weight: 1 },
-    'blockquote': { weight: 1 }
+    div: { weight: 1 },
+    blockquote: { weight: 1 }
   },
   components: {
     anytext: { weight: 0.5 },
     netext: { weight: 0.5 },
     inline: { weight: 1.0 },
     container: { weight: 0.4, useDepth: true },
-    '_': { weight: 0.5 }
+    _: { weight: 0.5 }
   }
 };
 
@@ -172,12 +173,12 @@ const whitespace = {
 
 const zerowidth = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.constant('\uFEFF'))
+  component: ArbNodes.textOfArb(Jsc.constant(Unicode.zeroWidth))
 };
 
 const zerowidths = {
   type: 'arbitrary',
-  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', '\uFEFF' ]))
+  component: ArbNodes.textOfArb(Jsc.elements([ '\u200B', Unicode.zeroWidth ]))
 };
 
 const comment = {
@@ -185,24 +186,24 @@ const comment = {
   component: ArbNodes.comment
 };
 
-export default {
-  whitespace: whitespace,
-  formatting: formatting,
-  inline: inline,
-  netext: netext,
-  anytext: anytext,
-  container: container,
-  listitem: listitem,
-  list: list,
-  table: table,
-  tbody: tbody,
-  thead: thead,
-  tfoot: tfoot,
-  tr: tr,
-  tablecell: tablecell,
-  caption: caption,
-  image: image,
-  comment: comment,
-  zerowidth: zerowidth,
-  zerowidths: zerowidths
+export {
+  whitespace,
+  formatting,
+  inline,
+  netext,
+  anytext,
+  container,
+  listitem,
+  list,
+  table,
+  tbody,
+  thead,
+  tfoot,
+  tr,
+  tablecell,
+  caption,
+  image,
+  comment,
+  zerowidth,
+  zerowidths
 };

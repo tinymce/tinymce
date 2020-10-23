@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
-import { Insert, Remove, Element, Node, Text, SelectorFilter, Traverse } from '@ephox/sugar';
+import { Arr, Unicode } from '@ephox/katamari';
+import { Insert, Remove, SelectorFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
 const getLastChildren = function (elm) {
   const children = [];
-  let rawNode = elm.dom();
+  let rawNode = elm.dom;
 
   while (rawNode) {
-    children.push(Element.fromDom(rawNode));
+    children.push(SugarElement.fromDom(rawNode));
     rawNode = rawNode.lastChild;
   }
 
@@ -31,11 +31,11 @@ const removeTrailingBr = function (elm) {
 
 const fillWithPaddingBr = function (elm) {
   Remove.empty(elm);
-  Insert.append(elm, Element.fromHtml('<br data-mce-bogus="1">'));
+  Insert.append(elm, SugarElement.fromHtml('<br data-mce-bogus="1">'));
 };
 
 const isPaddingContents = function (elm) {
-  return Node.isText(elm) ? Text.get(elm) === '\u00a0' : ElementType.isBr(elm);
+  return SugarNode.isText(elm) ? SugarText.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
 };
 
 const isPaddedElement = function (elm) {
@@ -52,7 +52,7 @@ const trimBlockTrailingBr = function (elm) {
   });
 };
 
-export default {
+export {
   removeTrailingBr,
   fillWithPaddingBr,
   isPaddedElement,

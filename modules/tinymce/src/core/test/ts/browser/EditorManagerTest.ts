@@ -1,19 +1,16 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import ViewBlock from '../module/test/ViewBlock';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import ViewBlock from '../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -32,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
       selector: 'textarea.tinymce',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (editor1) {
+      init_instance_callback(editor1) {
         LegacyUnit.equal(EditorManager.get().length, 1);
         LegacyUnit.equal(EditorManager.get(0) === EditorManager.activeEditor, true);
         LegacyUnit.equal(EditorManager.get(1), null);
@@ -56,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-          content_css: '/project/tinymce/js/tinymce/skins/content/default',
+          content_css: '/project/tinymce/js/tinymce/skins/content/default'
         });
 
         LegacyUnit.equal(EditorManager.get().length, 1);
@@ -90,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       language: langCode,
       language_url: langUrl,
-      init_instance_callback (ed) {
+      init_instance_callback(_ed) {
         const scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
           return script.src === langUrl;
         });
@@ -109,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
       selector: 'textarea',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback (editor1) {
+      init_instance_callback(editor1) {
         Delay.setTimeout(function () {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
@@ -119,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
             selector: 'textarea',
             skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
             content_css: '/project/tinymce/js/tinymce/skins/content/default',
-            init_instance_callback (editor2) {
+            init_instance_callback(editor2) {
               LegacyUnit.equal(EditorManager.get().length, 1);
               LegacyUnit.equal(editor1.id, editor2.id);
               LegacyUnit.equal(editor1.destroyed, true, 'First editor instance should be destroyed');
@@ -133,11 +130,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
   });
 
   suite.test('overrideDefaults', function () {
-    let oldBaseURI, oldBaseUrl, oldSuffix;
-
-    oldBaseURI = EditorManager.baseURI;
-    oldBaseUrl = EditorManager.baseURL;
-    oldSuffix = EditorManager.suffix;
+    const oldBaseURI = EditorManager.baseURI;
+    const oldBaseUrl = EditorManager.baseURL;
+    const oldSuffix = EditorManager.suffix;
 
     EditorManager.overrideDefaults({
       test: 42,
@@ -188,9 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', function () {
   });
 
   suite.test('Init inline editor on invalid targets', function () {
-    let invalidNames;
-
-    invalidNames = (
+    const invalidNames = (
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
       'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu'
     );

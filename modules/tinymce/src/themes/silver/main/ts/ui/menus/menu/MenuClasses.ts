@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
+import { Toolbar } from '@ephox/bridge';
 
-const forMenu = (presets: Types.PresetTypes) => {
+const forMenu = (presets: Toolbar.PresetTypes) => {
   if (presets === 'color') {
     return 'tox-swatches';
   } else {
@@ -15,16 +15,14 @@ const forMenu = (presets: Types.PresetTypes) => {
   }
 };
 
-const classes = (presets: Types.PresetTypes) => {
-  return {
-    backgroundMenu: 'tox-background-menu',
-    selectedMenu: 'tox-selected-menu',
-    selectedItem: 'tox-collection__item--active',
-    hasIcons: 'tox-menu--has-icons',
-    menu: forMenu(presets),
-    tieredMenu: 'tox-tiered-menu'
-  };
-};
+const classes = (presets: Toolbar.PresetTypes) => ({
+  backgroundMenu: 'tox-background-menu',
+  selectedMenu: 'tox-selected-menu',
+  selectedItem: 'tox-collection__item--active',
+  hasIcons: 'tox-menu--has-icons',
+  menu: forMenu(presets),
+  tieredMenu: 'tox-tiered-menu'
+});
 
 export {
   classes

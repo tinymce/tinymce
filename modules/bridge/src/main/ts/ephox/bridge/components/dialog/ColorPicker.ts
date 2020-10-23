@@ -1,21 +1,20 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
-export interface ColorPickerApi extends FormComponentApi {
+export interface ColorPickerSpec extends FormComponentWithLabelSpec {
   type: 'colorpicker';
 }
 
-export interface ColorPicker extends FormComponent {
+export interface ColorPicker extends FormComponentWithLabel {
   type: 'colorpicker';
 }
 
-export const colorPickerFields = formComponentFields;
+const colorPickerFields = formComponentWithLabelFields;
 
 export const colorPickerSchema = ValueSchema.objOf(colorPickerFields);
 
 export const colorPickerDataProcessor = ValueSchema.string;
 
-export const createColorPicker = (spec: ColorPickerApi): Result<ColorPicker, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ColorPicker>('colorpicker', colorPickerSchema, spec);
-};
+export const createColorPicker = (spec: ColorPickerSpec): Result<ColorPicker, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<ColorPicker>('colorpicker', colorPickerSchema, spec);

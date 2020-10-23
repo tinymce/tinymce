@@ -1,26 +1,24 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import * as Class from 'ephox/sugar/api/properties/Class';
-import * as Classes from 'ephox/sugar/api/properties/Classes';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Html from 'ephox/sugar/api/properties/Html';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as Class from 'ephox/sugar/api/properties/Class';
+import * as Classes from 'ephox/sugar/api/properties/Classes';
+import * as Html from 'ephox/sugar/api/properties/Html';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import Div from 'ephox/sugar/test/Div';
 import EphoxElement from 'ephox/sugar/test/EphoxElement';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('RemoveTest', function () {
-  const runChecks = function (connected) {
+UnitTest.test('RemoveTest', () => {
+  const runChecks = (connected: boolean) => {
     const container = Div();
     const span = EphoxElement('span');
-    const ol = EphoxElement('ol');
-    const li1 = EphoxElement('li');
     const li2 = EphoxElement('li');
     const li3 = EphoxElement('li');
     const li4 = EphoxElement('li');
     const li0 = EphoxElement('li');
-    Classes.add(li2, ['second', 'third']);
+    Classes.add(li2, [ 'second', 'third' ]);
     Class.add(li3, 'l3');
     Class.add(li4, 'l4');
     Class.add(li0, 'l0');
@@ -31,7 +29,7 @@ UnitTest.test('RemoveTest', function () {
     Insert.append(container, p2);
     Insert.append(p, span);
 
-    if (connected) { Insert.append(Body.body(), container); }
+    if (connected) { Insert.append(SugarBody.body(), container); }
 
     assert.eq('<p><span></span></p><p></p>', Html.get(container));
     Remove.remove(p2);
@@ -47,7 +45,7 @@ UnitTest.test('RemoveTest', function () {
     assert.eq(0, Traverse.children(container).length);
 
     // after inserting an empty text node, empty doesn't always mean empty!
-    Insert.append(container, Element.fromText(''));
+    Insert.append(container, SugarElement.fromText(''));
     Remove.empty(container);
     assert.eq('', Html.get(container));
     assert.eq(0, Traverse.children(container).length);

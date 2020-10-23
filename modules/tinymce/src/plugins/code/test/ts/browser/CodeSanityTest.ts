@@ -1,11 +1,10 @@
-import { GeneralSteps, FocusTools, Logger, Mouse, Pipeline, RawAssertions, Step, UiFinder, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { FocusTools, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { SugarElement } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import Editor from 'tinymce/core/api/Editor';
 
 UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, failure) => {
 
@@ -15,45 +14,39 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
   const dialogSelector = 'div.tox-dialog';
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
-    const docBody = Element.fromDom(document.body);
+    const docBody = SugarElement.fromDom(document.body);
 
-    const sSetTextareaContent = (content) => {
-      return Logger.t('Changing textarea content to ' + content, Step.sync(() => {
-        const textarea: any = document.querySelector('div[role="dialog"] textarea');
-        textarea.value = content;
-      }));
-    };
+    const sSetTextareaContent = (content) => Logger.t('Changing textarea content to ' + content, Step.sync(() => {
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
+      textarea.value = content;
+    }));
 
-    const sAssertTextareaContent = (expected) => {
-      return Logger.t('Asserting textarea content is ' + expected, Step.sync(() => {
-        const textarea: any = document.querySelector('div[role="dialog"] textarea');
-        RawAssertions.assertEq('Should have correct value', expected, textarea.value);
-      }));
-    };
+    const sAssertTextareaContent = (expected) => Logger.t('Asserting textarea content is ' + expected, Step.sync(() => {
+      const textarea: any = document.querySelector('div[role="dialog"] textarea');
+      Assert.eq('Should have correct value', expected, textarea.value);
+    }));
 
-    const sSubmitDialog = (docBody) => {
-      return GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
-        FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
-      ]));
-    };
+    const sSubmitDialog = (docBody) => GeneralSteps.sequence(Logger.ts('Clicking on the Save button to close dialog', [
+      FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
+      Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
+      Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector))
+    ]));
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Code: Set content in empty editor and assert values', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         sAssertTextareaContent(''),
         sSetTextareaContent('<em>a</em>'),
         sSubmitDialog(docBody),
-        tinyApis.sAssertContent('<p><em>a</em></p>'),
+        tinyApis.sAssertContent('<p><em>a</em></p>')
       ]),
 
       Log.stepsAsStep('TBA', 'Code: Reopen dialog and check textarea content is correct', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), toolbarButtonSelector),
+        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
         UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
         sAssertTextareaContent('<p><em>a</em></p>')
       ]),
@@ -61,13 +54,13 @@ UnitTest.asynctest('browser.tinymce.plugins.code.CodeSanityTest', (success, fail
       Log.stepsAsStep('TBA', 'Code: Change source code and assert editor content changes', [
         sSetTextareaContent('<strong>b</strong>'),
         sSubmitDialog(docBody),
-        tinyApis.sAssertContent('<p><strong>b</strong></p>'),
-      ]),
+        tinyApis.sAssertContent('<p><strong>b</strong></p>')
+      ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'code',
     theme: 'silver',
     toolbar: 'code',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

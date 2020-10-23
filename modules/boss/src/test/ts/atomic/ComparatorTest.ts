@@ -1,6 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
-import Comparator from 'ephox/boss/mutant/Comparator';
+import * as Comparator from 'ephox/boss/mutant/Comparator';
 
 UnitTest.test('ComparatorTest', function () {
   const a = Gene('id1', 'bob', [], {}, { border: '10' });
@@ -28,4 +28,3 @@ UnitTest.test('ComparatorTest', function () {
   assert.eq(false, Comparator.is(c, '[]'));
   assert.eq(false, Comparator.is(c, '[bob]'));
 });
-

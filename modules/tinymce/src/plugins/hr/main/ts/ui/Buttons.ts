@@ -11,7 +11,7 @@ const register = function (editor: Editor) {
   editor.ui.registry.addButton('hr', {
     icon: 'horizontal-rule',
     tooltip: 'Horizontal line',
-    onAction: () => editor.execCommand('InsertHorizontalRule'),
+    onAction: () => editor.execCommand('InsertHorizontalRule')
   });
 
   editor.ui.registry.addMenuItem('hr', {
@@ -21,6 +21,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

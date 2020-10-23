@@ -1,15 +1,16 @@
 {
   "name": "@ephox/agar",
-  "version": "4.13.10",
+  "version": "5.0.1",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/agar"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic"
+    "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "keywords": [
     "testing",
@@ -22,12 +23,16 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/jax": "^4.1.9",
-    "@ephox/sand": "^2.0.17",
-    "@ephox/sugar": "^4.6.21",
+    "@ephox/bedrock-client": "^9.3.2",
+    "@ephox/jax": "^5.0.1",
+    "@ephox/sand": "^4.0.1",
+    "@ephox/sugar": "^7.0.1",
     "@ephox/wrap-jsverify": "^2.0.1",
-    "@ephox/wrap-sizzle": "^4.0.0"
+    "@ephox/wrap-sizzle": "^4.0.0",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^2.0.1"
   },
   "files": [
     "lib/main",

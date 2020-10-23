@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import UpdateHtml from './UpdateHtml';
+import Editor from 'tinymce/core/api/Editor';
+import * as UpdateHtml from './UpdateHtml';
 
 declare let escape: any;
 declare let unescape: any;
 
-const setup = function (editor) {
-  editor.on('click keyup', function () {
+const setup = (editor: Editor) => {
+  editor.on('click keyup touchend', () => {
     const selectedNode = editor.selection.getNode();
 
     if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
@@ -21,7 +22,7 @@ const setup = function (editor) {
     }
   });
 
-  editor.on('ObjectSelected', function (e) {
+  editor.on('ObjectSelected', (e) => {
     const objectType = e.target.getAttribute('data-mce-object');
 
     if (objectType === 'audio' || objectType === 'script') {
@@ -29,7 +30,7 @@ const setup = function (editor) {
     }
   });
 
-  editor.on('ObjectResized', function (e) {
+  editor.on('ObjectResized', (e) => {
     const target = e.target;
     let html;
 
@@ -39,8 +40,8 @@ const setup = function (editor) {
         html = unescape(html);
         target.setAttribute('data-mce-html', escape(
           UpdateHtml.updateHtml(html, {
-            width: e.width,
-            height: e.height
+            width: String(e.width),
+            height: String(e.height)
           })
         ));
       }
@@ -48,6 +49,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

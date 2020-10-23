@@ -5,29 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireSkinLoaded = (editor) => {
-  return editor.fire('SkinLoaded');
-};
+import Editor from 'tinymce/core/api/Editor';
 
-const fireResizeEditor = (editor) => {
-  return editor.fire('ResizeEditor');
-};
+const fireSkinLoaded = (editor: Editor) => editor.fire('SkinLoaded');
 
-const fireBeforeRenderUI = (editor) => {
-  return editor.fire('BeforeRenderUI');
-};
+const fireSkinLoadError = (editor: Editor, error: { message: string }) => editor.fire('SkinLoadError', error);
 
-const fireResizeContent = (editor) => {
-  return editor.fire('ResizeContent');
-};
+const fireResizeEditor = (editor: Editor) => editor.fire('ResizeEditor');
 
-const fireTextColorChange = (editor, data) => {
-  editor.fire('TextColorChange', data);
-};
+const fireBeforeRenderUI = (editor: Editor) => editor.fire('BeforeRenderUI');
 
-export default {
+const fireResizeContent = (editor: Editor, e?: Event) => editor.fire('ResizeContent', e);
+
+const fireScrollContent = (editor: Editor, e: Event) => editor.fire('ScrollContent', e);
+
+const fireTextColorChange = (editor: Editor, data: { name: string; color: string }) => editor.fire('TextColorChange', data);
+
+export {
   fireSkinLoaded,
+  fireSkinLoadError,
   fireResizeEditor,
+  fireScrollContent,
   fireBeforeRenderUI,
   fireResizeContent,
   fireTextColorChange

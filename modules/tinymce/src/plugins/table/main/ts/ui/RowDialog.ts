@@ -5,122 +5,80 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLElement } from '@ephox/dom-globals';
-import { Fun } from '@ephox/katamari';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Arr, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
-
-import Styles from '../actions/Styles';
-import * as Util from '../alien/Util';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as Styles from '../actions/Styles';
 import { hasAdvancedRowTab } from '../api/Settings';
-import DomModifiers from './DomModifiers';
-import Helpers, { RowData } from './Helpers';
-import RowDialogGeneralTab from './RowDialogGeneralTab';
-import { Types } from '@ephox/bridge';
+import { switchSectionType } from '../core/TableSections';
+import * as Util from '../core/Util';
+import { ephemera } from '../selection/Ephemera';
+import * as TableSelection from '../selection/TableSelection';
+import { DomModifier } from './DomModifier';
+import * as Helpers from './Helpers';
+import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 
-const switchRowType = (dom: DOMUtils, rowElm: HTMLElement, toType) => {
-  const tableElm = dom.getParent(rowElm, 'table');
-  const oldParentElm = rowElm.parentNode;
-  let parentElm = dom.select(toType, tableElm as Element)[0];
+type RowData = Helpers.RowData;
 
-  if (!parentElm) {
-    parentElm = dom.create(toType);
-    if (tableElm.firstChild) {
-      // caption tag should be the first descendant of the table tag (see TINY-1167)
-      if (tableElm.firstChild.nodeName === 'CAPTION') {
-        dom.insertAfter(parentElm, tableElm.firstChild);
-      } else {
-        tableElm.insertBefore(parentElm, tableElm.firstChild);
-      }
-    } else {
-      tableElm.appendChild(parentElm);
+const updateSimpleProps = (modifier: DomModifier, data: RowData) => {
+  modifier.setAttrib('scope', data.scope);
+  modifier.setAttrib('class', data.class);
+  modifier.setStyle('height', Util.addPxSuffix(data.height));
+};
+
+const updateAdvancedProps = (modifier: DomModifier, data: RowData) => {
+  modifier.setStyle('background-color', data.backgroundcolor);
+  modifier.setStyle('border-color', data.bordercolor);
+  modifier.setStyle('border-style', data.borderstyle);
+};
+
+const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, data: RowData) => {
+  const isSingleRow = rows.length === 1;
+
+  Arr.each(rows, (rowElm) => {
+    // Switch row type
+    if (data.type !== Util.getNodeName(rowElm.parentNode)) {
+      switchSectionType(editor, rowElm, data.type);
     }
-  }
 
-  parentElm.appendChild(rowElm);
+    const modifier = isSingleRow ? DomModifier.normal(editor, rowElm) : DomModifier.ifTruthy(editor, rowElm);
 
-  if (!oldParentElm.hasChildNodes()) {
-    dom.remove(oldParentElm);
-  }
+    updateSimpleProps(modifier, data);
+
+    if (hasAdvancedRowTab(editor)) {
+      updateAdvancedProps(modifier, data);
+    }
+
+    if (data.align !== oldData.align) {
+      Styles.unApplyAlign(editor, rowElm);
+      Styles.applyAlign(editor, rowElm, data.align);
+    }
+  });
 };
 
-const updateAdvancedProps = (modifiers, data: RowData) => {
-  modifiers.setStyle('background-color', data.backgroundcolor);
-  modifiers.setStyle('border-color', data.bordercolor);
-  modifiers.setStyle('border-style', data.borderstyle);
-};
-
-const onSubmitRowForm = (editor: Editor, rows: HTMLElement[], oldData: RowData, api) => {
-  const dom = editor.dom;
-
+const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, api) => {
   const data: RowData = api.getData();
   api.close();
 
-  // When selection length is 1, allow things to be turned off/cleared
-  const createModifier = rows.length === 1 ? DomModifiers.normal : DomModifiers.ifTruthy;
-
   editor.undoManager.transact(() => {
-    Tools.each(rows, (rowElm) => {
-
-      // Switch row type
-      if (data.type !== rowElm.parentNode.nodeName.toLowerCase()) {
-        switchRowType(editor.dom, rowElm, data.type);
-      }
-
-      const modifiers =  createModifier(dom, rowElm);
-
-      modifiers.setAttrib('scope', data.scope);
-      modifiers.setAttrib('class', data.class);
-      modifiers.setStyle('height', Util.addSizeSuffix(data.height));
-
-      if (hasAdvancedRowTab(editor)) {
-        updateAdvancedProps(modifiers, data);
-      }
-
-      if (data.align !== oldData.align) {
-        Styles.unApplyAlign(editor, rowElm);
-        Styles.applyAlign(editor, rowElm, data.align);
-      }
-    });
+    applyRowData(editor, rows, oldData, data);
     editor.focus();
   });
 };
 
 const open = (editor: Editor) => {
-  const dom = editor.dom;
-  let tableElm, cellElm, rowElm;
-  const rows = [];
+  const rows = TableSelection.getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
 
-  tableElm = dom.getParent(editor.selection.getStart(), 'table');
-
-  if (!tableElm) {
-    // If this element is null, return now to avoid crashing.
-    return;
-  }
-
-  cellElm = dom.getParent(editor.selection.getStart(), 'td,th');
-
-  Tools.each(tableElm.rows, (row) => {
-    Tools.each(row.cells, (cell) => {
-      if ((dom.getAttrib(cell, 'data-mce-selected') || cell === cellElm) && rows.indexOf(row) < 0) {
-        rows.push(row);
-        return false;
-      }
-    });
-  });
-
-  rowElm = rows[0];
-  if (!rowElm) {
-    // If this element is null, return now to avoid crashing.
+  // Check if there are any rows to operate on
+  if (rows.length === 0) {
     return;
   }
 
   // Get current data and find shared values between rows
-  const rowsData: RowData[] = Tools.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm, hasAdvancedRowTab(editor)));
-  const data: RowData = Helpers.getSharedValues(rowsData);
+  const rowsData: RowData[] = Arr.map(rows, (rowElm) => Helpers.extractDataFromRowElement(editor, rowElm.dom, hasAdvancedRowTab(editor)));
+  const data = Helpers.getSharedValues<RowData>(rowsData);
 
-  const dialogTabPanel: Types.Dialog.TabPanelApi = {
+  const dialogTabPanel: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs: [
       {
@@ -128,10 +86,10 @@ const open = (editor: Editor) => {
         name: 'general',
         items: RowDialogGeneralTab.getItems(editor)
       },
-      Helpers.getAdvancedTab()
+      Helpers.getAdvancedTab('row')
     ]
   };
-  const dialogPanel: Types.Dialog.PanelApi = {
+  const dialogPanel: Dialog.PanelSpec = {
     type: 'panel',
     items: [
       {
@@ -150,7 +108,7 @@ const open = (editor: Editor) => {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -160,10 +118,9 @@ const open = (editor: Editor) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitRowForm, editor, rows, data),
+    onSubmit: Fun.curry(onSubmitRowForm, editor, Arr.map(rows, (r) => r.dom), data)
   });
 };
 
-export default {
-  open
-};
+export { open };
+

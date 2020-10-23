@@ -1,6 +1,7 @@
 import { Arr, Fun } from '@ephox/katamari';
+import { ResizeBehaviour } from '../api/ResizeBehaviour';
+import { TableSize } from '../api/TableSize';
 import { ColumnContext } from './ColumnContext';
-import { TableSize } from '../resize/Types';
 
 /*
  * Based on the column index, identify the context
@@ -26,50 +27,28 @@ const neighbours = function (input: number[], index: number) {
 
 /*
  * Calculate the offsets to apply to each column width (not the absolute widths themselves)
- * based on a resize at column: column of step: step. The minimum column width allowed is min
+ * based on a resize at column: column of step: step
  */
-const determine = function (input: number[], column: number, step: number, tableSize: TableSize) {
+const determine = function (input: number[], column: number, step: number, tableSize: TableSize, resize: ResizeBehaviour): number[] {
   const result = input.slice(0);
   const context = neighbours(input, column);
 
-  const zero = function (array: number[]) {
-    return Arr.map(array, Fun.constant(0));
-  };
+  const onNone = Fun.constant(Arr.map(result, Fun.constant(0)));
+  const onOnly = (index: number) => tableSize.singleColumnWidth(result[index], step);
 
-  const onNone = Fun.constant(zero(result));
-  const onOnly = function (index: number) {
-    return tableSize.singleColumnWidth(result[index], step);
-  };
+  const onLeft = (index: number, next: number) =>
+    resize.calcLeftEdgeDeltas(result, index, next, step, tableSize.minCellWidth(), tableSize.isRelative);
 
-  const onChange = function (index: number, next: number) {
-    if (step >= 0) {
-      const newNext = Math.max(tableSize.minCellWidth(), result[next] - step);
-      return zero(result.slice(0, index)).concat([ step, newNext - result[next] ]).concat(zero(result.slice(next + 1)));
-    } else {
-      const newThis = Math.max(tableSize.minCellWidth(), result[index] + step);
-      const diffx = result[index] - newThis;
-      return zero(result.slice(0, index)).concat([ newThis - result[index], diffx ]).concat(zero(result.slice(next + 1)));
-    }
-  };
+  const onMiddle = (prev: number, index: number, next: number) =>
+    resize.calcMiddleDeltas(result, prev, index, next, step, tableSize.minCellWidth(), tableSize.isRelative);
 
-  const onLeft = onChange;
-
-  const onMiddle = function (_prev: number, index: number, next: number) {
-    return onChange(index, next);
-  };
-
-  const onRight = function (_prev: number, index: number) {
-    if (step >= 0) {
-      return zero(result.slice(0, index)).concat([ step ]);
-    } else {
-      const size = Math.max(tableSize.minCellWidth(), result[index] + step);
-      return zero(result.slice(0, index)).concat([ size - result[index] ]);
-    }
-  };
+  // Applies to the last column bar
+  const onRight = (prev: number, index: number) =>
+    resize.calcRightEdgeDeltas(result, prev, index, step, tableSize.minCellWidth(), tableSize.isRelative);
 
   return context.fold(onNone, onOnly, onLeft, onMiddle, onRight);
 };
 
-export default {
+export {
   determine
 };

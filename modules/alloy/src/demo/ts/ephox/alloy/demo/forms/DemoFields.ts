@@ -1,11 +1,15 @@
 import { Arr, Future, Result } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Invalidating } from 'ephox/alloy/api/behaviour/Invalidating';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
+import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as ComponentUtil from 'ephox/alloy/api/component/ComponentUtil';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
+import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { FormChooser } from 'ephox/alloy/api/ui/FormChooser';
@@ -16,37 +20,37 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+
 import * as DemoRenders from './DemoRenders';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 
-const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => {
-  return Invalidating.config({
-    invalidClass: 'invalid-input',
-    notify: {
-      getContainer (input) {
-        return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
-      }
-    },
-    validator: {
-      validate: Invalidating.validation<Record<string, string>>(validate),
-      onEvent: NativeEvents.input()
+interface TextMungerSpec {
+  label: string;
+}
+
+const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => Invalidating.config({
+  invalidClass: 'invalid-input',
+  notify: {
+    getContainer(input) {
+      return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
     }
-  });
-};
+  },
+  validator: {
+    validate: Invalidating.validation<Record<string, string>>(validate),
+    onEvent: NativeEvents.input()
+  }
+});
 
-const rawTextMunger = (spec) => {
+const rawTextMunger = (spec: TextMungerSpec) => {
   const invalidUid = Tagger.generate('demo-invalid-uid');
 
-  const pLabel = FormField.parts().label({
+  const pLabel = FormField.parts.label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: Input,
     inputBehaviours: Behaviour.derive([
-      invalidation((v) => {
-        return v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ });
-      }, invalidUid),
+      invalidation((v) => v.indexOf('a') === 0 ? Result.error('Do not start with a!') : Result.value({ }), invalidUid),
       Tabstopping.config({ })
     ])
   });
@@ -63,17 +67,17 @@ const rawTextMunger = (spec) => {
   };
 };
 
-const textMunger = (spec): SketchSpec => {
+const textMunger = (spec: TextMungerSpec): SketchSpec => {
   const m = rawTextMunger(spec);
   return FormField.sketch(m);
 };
 
-const selectMunger = (spec): SketchSpec => {
-  const pLabel = FormField.parts().label({
+const selectMunger = (spec: { label: string; options: Array<{ value: string; text: string }> }): SketchSpec => {
+  const pLabel = FormField.parts.label({
     dom: { tag: 'label', innerHtml: spec.label }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: HtmlSelect,
     dom: {
       classes: [ 'ephox-select-wrapper' ]
@@ -98,14 +102,14 @@ const selectMunger = (spec): SketchSpec => {
   });
 };
 
-const chooserMunger = (spec): SketchSpec => {
-  const pLegend = FormChooser.parts().legend({
+const chooserMunger = (spec: { legend: string; choices: Array<{ text: string; value: string }> }): SketchSpec => {
+  const pLegend = FormChooser.parts.legend({
     dom: {
       innerHtml: spec.legend
     }
   });
 
-  const pChoices = FormChooser.parts().choices({ });
+  const pChoices = FormChooser.parts.choices({ });
 
   return FormChooser.sketch({
     markers: {
@@ -127,15 +131,15 @@ const chooserMunger = (spec): SketchSpec => {
   });
 };
 
-const coupledTextMunger = (spec): SketchSpec => {
-  const pField1 = FormCoupledInputs.parts().field1(
+const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpec }): SketchSpec => {
+  const pField1 = FormCoupledInputs.parts.field1(
     rawTextMunger(spec.field1)
   );
-  const pField2 = FormCoupledInputs.parts().field2(
+  const pField2 = FormCoupledInputs.parts.field2(
     rawTextMunger(spec.field2)
   );
 
-  const pLock = FormCoupledInputs.parts().lock({
+  const pLock = FormCoupledInputs.parts.lock({
     dom: { tag: 'button', innerHtml: 'x' },
     buttonBehaviours: Behaviour.derive([
       Tabstopping.config({ })
@@ -149,7 +153,7 @@ const coupledTextMunger = (spec): SketchSpec => {
     markers: {
       lockClass: 'demo-selected'
     },
-    onLockedChange (current, other) {
+    onLockedChange(current, other) {
       const cValue = Representing.getValue(current);
       Representing.setValue(other, cValue);
     },
@@ -162,36 +166,36 @@ const coupledTextMunger = (spec): SketchSpec => {
   });
 };
 
-const typeaheadMunger = (spec): SketchSpec => {
-  const pLabel = FormField.parts().label({
+const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any[] }): SketchSpec => {
+  const pLabel = FormField.parts.label({
     dom: {
       tag: 'label',
       innerHtml: spec.label
     }
   });
 
-  const pField = FormField.parts().field({
+  const pField = FormField.parts.field({
     factory: Typeahead,
     minChars: 1,
 
     lazySink: spec.lazySink,
 
-    fetch (input) {
+    fetch(input: AlloyComponent) {
 
-      const text = Value.get(input.element());
-      const matching = Arr.bind(spec.dataset, (d) => {
+      const text = Value.get(input.element);
+      const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {
         const index = d.indexOf(text.toLowerCase());
         if (index > -1) {
           const html = d.substring(0, index) + '<b>' + d.substring(index, index + text.length) + '</b>' +
             d.substring(index + text.length);
-          return [ { 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d } ];
+          return [{ 'type': 'item', 'data': { value: d, text: d, html }, 'item-class': 'class-' + d }];
         } else {
           return [ ];
         }
       });
 
       const matches = matching.length > 0 ? matching : [
-        { type: 'separator', text: 'No items' }
+        { type: 'separator', text: 'No items' } as DemoRenders.DemoSeparatorItem
       ];
 
       const future = Future.pure(matches);

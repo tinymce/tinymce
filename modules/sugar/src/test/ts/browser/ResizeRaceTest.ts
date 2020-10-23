@@ -1,30 +1,27 @@
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
+import { UnitTest } from '@ephox/bedrock-client';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as Resize from 'ephox/sugar/api/events/Resize';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Monitors from 'ephox/sugar/impl/Monitors';
-import { UnitTest } from '@ephox/bedrock';
-import { setTimeout } from '@ephox/dom-globals';
 
-UnitTest.asynctest('ResizeRaceTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('ResizeRaceTest', (success, failure) => {
 
-  const div = Element.fromTag('div');
-  Insert.append(Body.body(), div);
+  const div = SugarElement.fromTag('div');
+  Insert.append(SugarBody.body(), div);
 
   // tslint:disable-next-line:no-empty
-  const handler = function () {};
+  const handler = () => {};
   Resize.bind(div, handler);
   Remove.remove(div);
   Resize.unbind(div, handler);
 
-  setTimeout(function () {
+  setTimeout(() => {
     if (Monitors.query(div).isSome()) {
       failure('Monitor added to div after resize was unbound');
     } else {
       success();
     }
-  }, 200); // assumes the resize code still uses 100
+  }, 150); // assumes the resize code still uses 100
 });

@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions from '../core/Actions';
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
+import Tools from 'tinymce/core/api/util/Tools';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
 
 const register = function (editor: Editor) {
   const formats = Settings.getFormats(editor);
@@ -19,16 +19,16 @@ const register = function (editor: Editor) {
   editor.ui.registry.addSplitButton('insertdatetime', {
     icon: 'insert-time',
     tooltip: 'Insert date/time',
-    select: (value) => {
-      return value === defaultFormat.get();
-    },
+    select: (value) => value === defaultFormat.get(),
     fetch: (done) => {
-      done(Tools.map(formats, (format): Menu.ChoiceMenuItemApi => ({type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format})));
+      done(Tools.map(formats, (format): Menu.ChoiceMenuItemSpec =>
+        ({ type: 'choiceitem', text: Actions.getDateTime(editor, format), value: format })
+      ));
     },
-    onAction: (...args) => {
+    onAction: (_api) => {
       Actions.insertDateTime(editor, defaultFormat.get());
     },
-    onItemAction: (_ , value) => {
+    onItemAction: (_api, value) => {
       defaultFormat.set(value);
       Actions.insertDateTime(editor, value);
     }
@@ -42,10 +42,14 @@ const register = function (editor: Editor) {
   editor.ui.registry.addNestedMenuItem('insertdatetime', {
     icon: 'insert-time',
     text: 'Date/time',
-    getSubmenuItems: () => Tools.map(formats, (format): Menu.MenuItemApi => ({type: 'menuitem', text: Actions.getDateTime(editor, format), onAction: makeMenuItemHandler(format)}))
+    getSubmenuItems: () => Tools.map(formats, (format): Menu.MenuItemSpec => ({
+      type: 'menuitem',
+      text: Actions.getDateTime(editor, format),
+      onAction: makeMenuItemHandler(format)
+    }))
   });
 };
 
-export default {
+export {
   register
 };

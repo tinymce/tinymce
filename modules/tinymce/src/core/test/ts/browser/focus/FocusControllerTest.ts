@@ -1,15 +1,14 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import FocusManager from 'tinymce/core/api/FocusManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import FocusController from 'tinymce/core/focus/FocusController';
+import Editor from 'tinymce/core/api/Editor';
+import FocusManager from 'tinymce/core/api/FocusManager';
+import * as FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
@@ -43,12 +42,21 @@ UnitTest.asynctest('browser.tinymce.focus.FocusControllerTest', function () {
   suite.test('isUIElement on valid element', function (editor) {
     const uiElm1 = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);
     const uiElm2 = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
+    const uiElm3 = DOMUtils.DOM.create('div', { class: 'tox-dialog' }, null);
     const noUiElm = DOMUtils.DOM.create('div', { class: 'mcey-abc' }, null);
     editor.settings.custom_ui_selector = '.mcex-abc';
     LegacyUnit.equal(FocusController.isUIElement(editor, uiElm1), true, 'Should be true since mce- is a ui prefix');
     LegacyUnit.equal(FocusController.isUIElement(editor, uiElm2), true, 'Should be true since mcex- is a ui prefix');
-    LegacyUnit.equal(FocusController.isUIElement(editor, noUiElm), false, 'Should be true since mcey- is not a ui prefix');
+    LegacyUnit.equal(FocusController.isUIElement(editor, uiElm3), true, 'Should be true since tox- is a ui prefix');
+    LegacyUnit.equal(FocusController.isUIElement(editor, noUiElm), false, 'Should be false since mcey- is not a ui prefix');
     delete editor.settings.custom_ui_selector;
+  });
+
+  suite.test('isEditorContentAreaElement on valid element', function () {
+    const contentAreaElm1 = DOMUtils.DOM.create('div', { class: 'mce-content-body' }, null);
+    const contentAreaElm2 = DOMUtils.DOM.create('div', { class: 'tox-edit-area__iframe' }, null);
+    LegacyUnit.equal(FocusController.isEditorContentAreaElement(contentAreaElm1), true, 'Should be true since mce-content-body is a content area container element');
+    LegacyUnit.equal(FocusController.isEditorContentAreaElement(contentAreaElm2), true, 'Should be true since tox-edit-area__iframe is content area container element');
   });
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {

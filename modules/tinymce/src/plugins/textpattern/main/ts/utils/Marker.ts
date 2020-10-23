@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range, Text } from '@ephox/dom-globals';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { PathRange, resolvePathRange } from './PathRange';
 import * as Utils from './Utils';
@@ -16,7 +15,7 @@ export interface Marker {
   end: Node;
 }
 
-const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', 'id': id });
+const newMarker = (dom: DOMUtils, id: string) => dom.create('span', { 'data-mce-type': 'bookmark', id });
 
 const rangeFromMarker = (dom: DOMUtils, marker: Marker): Range => {
   const rng = dom.createRng();
@@ -37,7 +36,7 @@ const createMarker = (dom: DOMUtils, markerPrefix: string, pathRange: PathRange)
   return {
     prefix: markerPrefix,
     end: textEnd.parentNode.insertBefore(newMarker(dom, markerPrefix + '-end'), textEnd),
-    start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart),
+    start: textStart.parentNode.insertBefore(newMarker(dom, markerPrefix + '-start'), textStart)
   };
 };
 

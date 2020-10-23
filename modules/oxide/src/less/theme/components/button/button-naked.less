@@ -18,6 +18,11 @@
 @button-naked-hover-box-shadow: @button-secondary-hover-box-shadow;
 @button-naked-hover-icon-color: @button-secondary-hover-text-color;
 
+@button-naked-disabled-background-color: @button-secondary-disabled-background-color;
+@button-naked-disabled-border-color: @button-secondary-disabled-border-color;
+@button-naked-disabled-box-shadow: @button-secondary-disabled-box-shadow;
+@button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
+
 @button-naked-focus-background-color: @button-naked-hover-background-color;
 @button-naked-focus-border-color: @button-naked-hover-border-color;
 @button-naked-focus-box-shadow: @button-naked-hover-box-shadow;
@@ -34,6 +39,13 @@
     border-color: transparent;
     box-shadow: unset;
     color: @button-naked-icon-color;
+
+    &[disabled] {
+      background-color: @button-naked-disabled-background-color;
+      border-color: @button-naked-disabled-border-color;
+      box-shadow: @button-naked-disabled-box-shadow;
+      color: @button-naked-disabled-icon-color;
+    }
 
     &:hover:not(:disabled) {
       background-color: @button-naked-hover-background-color;
@@ -62,8 +74,6 @@
   }
 
   .tox-button--naked.tox-button--icon {
-    color: currentColor;
-
     &:hover:not(:disabled) {
       color: @button-naked-hover-icon-color;
     }

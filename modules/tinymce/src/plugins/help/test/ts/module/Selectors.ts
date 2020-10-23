@@ -1,5 +1,5 @@
-export default {
+export const selectors = {
   dialog: '[role="dialog"]',
-  toolbarHelpButton: '.tox-toolbar button',
+  toolbarHelpButton: 'button',
   pluginsTab: '[role="tab"]:contains(Plugins)'
 };

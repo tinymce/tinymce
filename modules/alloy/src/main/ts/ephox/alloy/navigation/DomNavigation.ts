@@ -1,30 +1,28 @@
-import { Fun, Option } from '@ephox/katamari';
+import { Num, Optional } from '@ephox/katamari';
+import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 
-import * as Cycles from '../alien/Cycles';
 import * as DomPinpoint from './DomPinpoint';
-import { Element, Attr, Node } from '@ephox/sugar';
 
-const horizontal = (container, selector, current, delta): Option<Element> => {
+const horizontal = (container: SugarElement<HTMLElement>, selector: string, current: SugarElement<HTMLElement>, delta: number): Optional<SugarElement> => {
 
-  const isDisabledButton = (candidate) => {
-    return Node.name(candidate) === 'button' && Attr.get(candidate, 'disabled') === 'disabled';
-  };
+  const isDisabledButton = (candidate: SugarElement<HTMLElement>) =>
+    SugarNode.name(candidate) === 'button' && Attribute.get(candidate, 'disabled') === 'disabled';
 
-  const tryCycle = (initial, index, candidates) => {
-    const newIndex = Cycles.cycleBy(index, delta, 0, candidates.length - 1);
+  const tryCycle = (initial: number, index: number, candidates: Array<SugarElement<HTMLElement>>): Optional<SugarElement<HTMLElement>> => {
+    const newIndex = Num.cycleBy(index, delta, 0, candidates.length - 1);
     if (newIndex === initial) { // If we've cycled back to the original index, we've failed to find a new valid candidate
-      return Option.none();
+      return Optional.none();
     } else {
       return isDisabledButton(candidates[newIndex]) ?
         tryCycle(initial, newIndex, candidates) :
-        Option.from(candidates[newIndex]);
+        Optional.from(candidates[newIndex]);
     }
   };
 
   // I wonder if this will be a problem when the focused element is invisible (shouldn't happen)
   return DomPinpoint.locateVisible(container, current, selector).bind((identified) => {
-    const index = identified.index();
-    const candidates = identified.candidates();
+    const index = identified.index;
+    const candidates = identified.candidates;
     return tryCycle(index, index, candidates);
   });
 };

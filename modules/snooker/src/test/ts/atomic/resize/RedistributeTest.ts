@@ -1,5 +1,5 @@
-import Redistribution from 'ephox/snooker/resize/Redistribution';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import * as Redistribution from 'ephox/snooker/resize/Redistribution';
 import { Size } from '../../../../main/ts/ephox/snooker/resize/Size';
 
 UnitTest.test('RedistributeTest', function () {
@@ -43,7 +43,9 @@ UnitTest.test('RedistributeTest', function () {
   check([ '', '', '20px' ], [ '', '', '20px' ], 60, '60px');
   check([ '', '', '' ], [ '', '', '' ], 60, '60px');
 
-  assert.eq([ '10px', '10px', '11px' ], Redistribution.toIntegers([ '10.3px', '10.3px', '10.3px' ]));
+  assert.eq([ '10px', '10px', '11px' ], Redistribution.normalize([ '10.3px', '10.3px', '10.3px' ]));
+  assert.eq([ '10px', '11px', '10px' ], Redistribution.normalize([ '10px', '11px', '10px' ]));
+  assert.eq([ '33.33%', '33.33%', '33.33%' ], Redistribution.normalize([ '33.33%', '33.33%', '33.33%' ]));
 
   assert.eq(100, Redistribution.sum([ '100px' ], 10));
   assert.eq(50, Redistribution.sum([ '50%' ], 10));

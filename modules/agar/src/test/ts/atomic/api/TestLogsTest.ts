@@ -1,24 +1,18 @@
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-
-import { RawAssertions } from '../../../../main/ts/ephox/agar/api/Main';
-import { addLogEntry, popLogLevel, pushLogLevel, TestLogs, TestLogEntryState, addStackTrace } from '../../../../main/ts/ephox/agar/api/TestLogs';
+import { addLogEntry, addStackTrace, popLogLevel, pushLogLevel, TestLogEntryState, TestLogs } from 'ephox/agar/api/TestLogs';
 
 UnitTest.test('TestLogsTest', () => {
 
   const logs = TestLogs.init();
 
-  const addToLog = (s: string) => (logs) => {
-    return addLogEntry(logs, s);
-  };
+  const addToLog = (s: string) => (logs) => addLogEntry(logs, s);
   const assertLog = (expected) => (logs) => {
-    RawAssertions.assertEq('Checking logs', expected, logs.history);
+    Assert.eq('Checking logs', expected, logs.history);
     return logs;
   };
 
-  const addTraceToLog = (trace: { stack: any }) => (logs) => {
-    return addStackTrace(logs, trace);
-  };
+  const addTraceToLog = (trace: { stack: any }) => (logs) => addStackTrace(logs, trace);
 
   Arr.foldl([
     addToLog('alpha'),
@@ -85,7 +79,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Started,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           }
@@ -104,7 +98,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           }
@@ -123,7 +117,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           },
@@ -148,7 +142,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           },
@@ -173,7 +167,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           },
@@ -198,7 +192,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           },
@@ -211,7 +205,7 @@ UnitTest.test('TestLogsTest', () => {
         ],
         trace: null
       },
-      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: null },
+      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: null }
     ]),
 
     addTraceToLog({ stack: 'gamma-trace!' }),
@@ -225,7 +219,7 @@ UnitTest.test('TestLogsTest', () => {
             message: 'beta-1',
             state: TestLogEntryState.Finished,
             entries: [
-              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null },
+              { message: 'beta-1-1', entries: [ ], state: TestLogEntryState.Original, trace: null }
             ],
             trace: null
           },
@@ -238,10 +232,17 @@ UnitTest.test('TestLogsTest', () => {
         ],
         trace: null
       },
-      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: 'gamma-trace!' },
-    ]),
+      { message: 'gamma', entries: [ ], state: TestLogEntryState.Original, trace: 'gamma-trace!' }
+    ])
   ], (b, a) => {
     const next = a(b);
     return next;
   }, logs);
+});
+
+UnitTest.test('TestLogs.concat', () => {
+  Assert.eq('[] concat [] = []', TestLogs.init(), TestLogs.concat(TestLogs.init(), TestLogs.init()));
+  Assert.eq('[a] concat [] = [a]', addLogEntry(TestLogs.init(), 'message1'), TestLogs.concat(TestLogs.single('message1'), TestLogs.init()));
+  Assert.eq('[] concat [a] = [a]', addLogEntry(TestLogs.init(), 'message1'), TestLogs.concat(TestLogs.init(), TestLogs.single('message1')));
+  Assert.eq('[a] concat [b] = [a, b]', addLogEntry(addLogEntry(TestLogs.init(), 'message1'), 'message2'), TestLogs.concat(TestLogs.single('message1'), TestLogs.single('message2')));
 });

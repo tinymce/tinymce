@@ -1,11 +1,14 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
     "strict": false,
+    "noImplicitThis": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/katamari/test/*": ["src/test/ts/module/ephox/katamari/test/*"],
       "ephox/katamari/demo/*": ["src/demo/ts/ephox/katamari/demo/*"],

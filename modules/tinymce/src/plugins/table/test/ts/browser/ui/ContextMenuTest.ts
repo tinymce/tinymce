@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UnitTest, Waiter, UiFinder } from '@ephox/agar';
-import { document } from '@ephox/dom-globals';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -15,20 +15,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
-    const doc = Element.fromDom(document);
-    const body = Body.body();
-    const editorBody = Element.fromDom(editor.getBody());
+    const doc = SugarElement.fromDom(document);
+    const body = SugarBody.body();
+    const editorBody = SugarElement.fromDom(editor.getBody());
 
-    const sOpenContextMenu = (target: string) => {
-      return Chain.asStep(editor, [
-        tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
-        Chain.wait(0)
-      ]);
-    };
+    const sOpenContextMenu = (target: string) => Chain.asStep(editor, [
+      tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
+      Chain.wait(0)
+    ]);
 
-    const sAssertFocusOnItem = (label: string, selector: string) => {
-      return FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-    };
+    const sAssertFocusOnItem = (label: string, selector: string) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
 
     const sCloseDialogAndWait = GeneralSteps.sequence([
       tinyUi.sWaitForPopup('wait for dialog', 'div[role="dialog"]'),
@@ -44,21 +40,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
     const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
 
-    const sRepeatDownArrowKey = (index) => {
-      return GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
-    };
+    const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
 
     // 'index' points to the context menuitems while 'subindex' points to the sub menuitems
-    const sSelectContextMenu = (label: string, selector: string, index: number, subindex: number) => {
-      return GeneralSteps.sequence([
-        sOpenContextMenu('td'),
-        sRepeatDownArrowKey(subindex),
-        Keyboard.sKeydown(doc, Keys.right(), {}),
-        sRepeatDownArrowKey(index),
-        sAssertFocusOnItem(label, selector),
-        sPressEnterKey
-      ]);
-    };
+    const sSelectContextMenu = (label: string, selector: string, index: number, subindex: number) => GeneralSteps.sequence([
+      sOpenContextMenu('td'),
+      sRepeatDownArrowKey(subindex),
+      Keyboard.sKeydown(doc, Keys.right(), {}),
+      sRepeatDownArrowKey(index),
+      sAssertFocusOnItem(label, selector),
+      sPressEnterKey
+    ]);
 
     const sSelectCellContextMenu = (label, selector, index) => sSelectContextMenu(label, selector, index, 0);
     const sSelectRowContextMenu = (label, selector, index) => sSelectContextMenu(label, selector, index, 1);
@@ -102,17 +94,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
       '</tbody>' +
     '</table>';
 
-    const sAssertHtmlStructure = (label: string, expectedHtml: string) => Assertions.sAssertStructure(label, ApproxStructure.build((s) => {
-      return s.element('body', {
-        children: [
-          ApproxStructure.fromHtml(expectedHtml),
-          s.theRest()
-        ]
-      });
-    }), editorBody);
+    const sAssertHtmlStructure = (label: string, expectedHtml: string) => Assertions.sAssertStructure(label, ApproxStructure.build((s) => s.element('body', {
+      children: [
+        ApproxStructure.fromHtml(expectedHtml),
+        s.theRest()
+      ]
+    })), editorBody);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Test context menus on a table', [
         tinyApis.sSetContent(tableHtml),
         sOpenContextMenu('td'),
@@ -202,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
         sAssertHtmlStructure('Assert Insert Column', '<table><tbody><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
 
         sSelectColumnContextMenu('Delete Column', '.tox-collection__item:contains("Delete column")', 2),
-        sAssertHtmlStructure('Assert Column Deleted', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
+        sAssertHtmlStructure('Assert Column Deleted', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>')
       ])
     ], onSuccess, onFailure);
   }, {
@@ -210,6 +200,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextMenuTest', (success, fa
     plugins: 'table',
     toolbar: 'table',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

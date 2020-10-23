@@ -1,6 +1,6 @@
-import { RawAssertions, Step, Waiter, Logger } from '@ephox/agar';
+import { Logger, Step, Waiter } from '@ephox/agar';
+import { Assert } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { Image } from '@ephox/dom-globals';
 
 const sExecCommand = function (editor, cmd, value?) {
   return Logger.t(`Execute ${cmd}`, Step.sync(function () {
@@ -30,7 +30,7 @@ const sUploadImages = function (editor) {
 
 const sWaitForBlobImage = function (editor) {
   return Waiter.sTryUntil('Did not find a blobimage', Step.sync(function () {
-    RawAssertions.assertEq('Should be one blob image', true, editor.dom.select('img[src^=blob]').length === 1);
+    Assert.eq('Should be one blob image', true, editor.dom.select('img[src^=blob]').length === 1);
   }), 10, 3000);
 };
 
@@ -54,7 +54,7 @@ const createStateContainer = function () {
   );
 
   const sWaitForState = Waiter.sTryUntil('Did not get a state change', Step.sync(function () {
-    RawAssertions.assertEq('Should be true when we have the state', true, state.get() !== null);
+    Assert.eq('Should be true when we have the state', true, state.get() !== null);
   }), 10, 3000);
 
   return {
@@ -65,7 +65,7 @@ const createStateContainer = function () {
   };
 };
 
-export default {
+export {
   sExecCommand,
   sLoadImage,
   sUploadImages,

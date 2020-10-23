@@ -1,60 +1,55 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Option } from '@ephox/katamari';
-import { Attr, Node } from '@ephox/sugar';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AriaTogglingConfig } from '../../behaviour/toggling/TogglingTypes';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Attribute, SugarNode } from '@ephox/sugar';
 
-const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
-  Attr.set(component.element(), 'aria-pressed', status);
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AriaTogglingConfig } from './TogglingTypes';
+
+const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
+  Attribute.set(component.element, 'aria-pressed', status);
   if (ariaInfo.syncWithExpanded) { updateExpanded(component, ariaInfo, status); }
 };
 
-const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
-  Attr.set(component.element(), 'aria-selected', status);
+const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
+  Attribute.set(component.element, 'aria-selected', status);
 };
 
-const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
-  Attr.set(component.element(), 'aria-checked', status);
+const updateChecked = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
+  Attribute.set(component.element, 'aria-checked', status);
 };
 
-const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status): void => {
-  Attr.set(component.element(), 'aria-expanded', status);
+const updateExpanded = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
+  Attribute.set(component.element, 'aria-expanded', status);
 };
 
 // INVESTIGATE: What other things can we derive?
-const tagAttributes = {
+const tagAttributes: Record<string, string[]> = {
   'button': [ 'aria-pressed' ],
   'input:checkbox': [ 'aria-checked' ]
 };
 
-const roleAttributes = {
+const roleAttributes: Record<string, string[]> = {
   button: [ 'aria-pressed' ],
   listbox: [ 'aria-pressed', 'aria-expanded' ],
   menuitemcheckbox: [ 'aria-checked' ]
 };
 
-const detectFromTag = (component: AlloyComponent): Option<string[]> => {
-  const elem = component.element();
-  const rawTag = Node.name(elem);
-  const suffix = rawTag === 'input' && Attr.has(elem, 'type') ? ':' + Attr.get(elem, 'type') : '';
-  return Objects.readOptFrom<string[]>(tagAttributes, rawTag + suffix);
+const detectFromTag = (component: AlloyComponent): Optional<string[]> => {
+  const elem = component.element;
+  const rawTag = SugarNode.name(elem);
+  const suffix = rawTag === 'input' && Attribute.has(elem, 'type') ? ':' + Attribute.get(elem, 'type') : '';
+  return Obj.get(tagAttributes, rawTag + suffix);
 };
 
-const detectFromRole = (component: AlloyComponent): Option<string[]> => {
-  const elem = component.element();
-  if (! Attr.has(elem, 'role')) { return Option.none(); } else {
-    const role = Attr.get(elem, 'role');
-    return Objects.readOptFrom<string[]>(roleAttributes, role);
-  }
+const detectFromRole = (component: AlloyComponent): Optional<string[]> => {
+  const elem = component.element;
+  return Attribute.getOpt(elem, 'role').bind((role) => Obj.get(roleAttributes, role));
 };
 
-const updateAuto = (component: AlloyComponent, _ariaInfo: void, status): void => {
+const updateAuto = (component: AlloyComponent, _ariaInfo: void, status: boolean): void => {
   // Role has priority
-  const attributes = detectFromRole(component).orThunk(() => {
-    return detectFromTag(component);
-  }).getOr([ ]);
+  const attributes = detectFromRole(component).orThunk(() => detectFromTag(component)).getOr([ ]);
   Arr.each(attributes, (attr) => {
-    Attr.set(component.element(), attr, status);
+    Attribute.set(component.element, attr, status);
   });
 };
 

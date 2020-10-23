@@ -5,21 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, HTMLIFrameElement } from '@ephox/dom-globals';
 import AddOnManager from './AddOnManager';
+import { DomQueryConstructor } from './dom/DomQuery';
 import Editor from './Editor';
 import { NotificationManagerImpl } from './NotificationManager';
-import { DomQueryConstructor } from './dom/DomQuery';
 import { WindowManagerImpl } from './WindowManager';
+import { EditorUiApi } from './ui/Ui';
 
 export type Theme = {
   ui?: any;
+  inline?: any;
   execCommand? (command: string, ui?: boolean, value?: any): boolean;
   destroy? (): void;
   init? (editor: Editor, url: string, $: DomQueryConstructor);
-  renderUI? (): { iframeContainer?: HTMLIFrameElement, editorContainer: HTMLElement };
+  renderUI? (): { iframeContainer?: HTMLIFrameElement; editorContainer: HTMLElement; api?: EditorUiApi };
   getNotificationManagerImpl? (): NotificationManagerImpl;
   getWindowManagerImpl? (): WindowManagerImpl;
 };
 
-export default AddOnManager.ThemeManager as AddOnManager<Theme>;
+type ThemeManager = AddOnManager<Theme>;
+const ThemeManager: ThemeManager = AddOnManager.ThemeManager;
+
+export default ThemeManager;

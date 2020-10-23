@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/phoenix/test/*": ["src/test/ts/module/ephox/phoenix/test/*"],
       "ephox/phoenix/demo/*": ["src/demo/ts/ephox/phoenix/demo/*"],
@@ -14,11 +15,12 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../boss" },
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../polaris" },
   ]
 }

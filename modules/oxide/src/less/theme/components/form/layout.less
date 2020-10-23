@@ -28,6 +28,11 @@
     margin-bottom: @form-group-vertical-spacing;
   }
 
+  // Make group take up all remaining width.
+  .tox-form-group--maximize {
+    flex: 1;
+  }
+
   // Modifier for validation error
   .tox-form__group--error {
     color: @form-group-error-text-color;
@@ -44,9 +49,9 @@
     justify-content: space-between;
   }
 
+  // Escape the calc expression otherwise less incorrectly converts this to 42%
+  // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
   .tox-form__grid--2col > .tox-form__group {
-    // Escape the calc expression otherwise less incorrectly converts this to 42%
-    // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
     width: calc(~"50% - (@{form-grid-horizontal-gap} / 2)");
   }
 

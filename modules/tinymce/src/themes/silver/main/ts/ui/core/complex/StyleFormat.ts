@@ -7,8 +7,10 @@
 
 import { Arr, Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import {
+  AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat
+} from 'tinymce/core/api/fmt/StyleFormat';
 import { getUserStyleFormats, isMergeStyleFormats } from 'tinymce/themes/silver/api/Settings';
-import { AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
 export const defaultStyleFormats: AllowedFormat[] = [
   {
@@ -24,13 +26,13 @@ export const defaultStyleFormats: AllowedFormat[] = [
 
   {
     title: 'Inline', items: [
-      { title: 'Bold', icon: 'bold', format: 'bold' },
-      { title: 'Italic', icon: 'italic', format: 'italic' },
-      { title: 'Underline', icon: 'underline', format: 'underline' },
-      { title: 'Strikethrough', icon: 'strike-through', format: 'strikethrough' },
-      { title: 'Superscript', icon: 'superscript', format: 'superscript' },
-      { title: 'Subscript', icon: 'subscript', format: 'subscript' },
-      { title: 'Code', icon: 'code', format: 'code' }
+      { title: 'Bold', format: 'bold' },
+      { title: 'Italic', format: 'italic' },
+      { title: 'Underline', format: 'underline' },
+      { title: 'Strikethrough', format: 'strikethrough' },
+      { title: 'Superscript', format: 'superscript' },
+      { title: 'Subscript', format: 'subscript' },
+      { title: 'Code', format: 'code' }
     ]
   },
 
@@ -45,62 +47,54 @@ export const defaultStyleFormats: AllowedFormat[] = [
 
   {
     title: 'Align', items: [
-      { title: 'Left', icon: 'align-left', format: 'alignleft' },
-      { title: 'Center', icon: 'align-center', format: 'aligncenter' },
-      { title: 'Right', icon: 'align-right', format: 'alignright' },
-      { title: 'Justify', icon: 'align-justify', format: 'alignjustify' }
+      { title: 'Left', format: 'alignleft' },
+      { title: 'Center', format: 'aligncenter' },
+      { title: 'Right', format: 'alignright' },
+      { title: 'Justify', format: 'alignjustify' }
     ]
   }
 ];
 
 // Note: Need to cast format below to Record, as Obj.has uses "K keyof T", which doesn't work with aliases
-const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => {
-  return Obj.has(format as Record<string, any>, 'items');
-};
+const isNestedFormat = (format: AllowedFormat): format is NestedFormatting => Obj.has(format as Record<string, any>, 'items');
 
-const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => {
-  return Obj.has(format as Record<string, any>, 'block');
-};
+const isBlockFormat = (format: AllowedFormat): format is BlockStyleFormat => Obj.has(format as Record<string, any>, 'block');
 
-const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => {
-  return Obj.has(format as Record<string, any>, 'inline');
-};
+const isInlineFormat = (format: AllowedFormat): format is InlineStyleFormat => Obj.has(format as Record<string, any>, 'inline');
 
-const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => {
-  return Obj.has(format as Record<string, any>, 'selector');
-};
+const isSelectorFormat = (format: AllowedFormat): format is SelectorStyleFormat => Obj.has(format as Record<string, any>, 'selector');
+
+type FormatTypes = Separator | FormatReference | NestedFormatting;
 
 interface CustomFormatMapping {
-  customFormats: { name: string, format: StyleFormat }[];
-  formats: (Separator | FormatReference | NestedFormatting)[];
+  customFormats: { name: string; format: StyleFormat }[];
+  formats: FormatTypes[];
 }
 
-const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => {
-  return Arr.foldl(userFormats, (acc, fmt) => {
-    if (isNestedFormat(fmt)) {
-      // Map the child formats
-      const result = mapFormats(fmt.items);
-      return {
-        customFormats: acc.customFormats.concat(result.customFormats),
-        formats: acc.formats.concat([{ title: fmt.title, items: result.formats }])
-      };
-    } else if (isInlineFormat(fmt) || isBlockFormat(fmt) || isSelectorFormat(fmt)) {
-      // Convert the format to a reference and add the original to the custom formats to be registered
-      const formatName = `custom-${fmt.title.toLowerCase()}`;
-      return {
-        customFormats: acc.customFormats.concat([{ name: formatName, format: fmt }]),
-        formats: acc.formats.concat([{ title: fmt.title, format: formatName, icon: fmt.icon }])
-      };
-    } else {
-      return { ...acc, formats: acc.formats.concat(fmt) };
-    }
-  }, { customFormats: [], formats: [] });
-};
+const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => Arr.foldl(userFormats, (acc, fmt) => {
+  if (isNestedFormat(fmt)) {
+    // Map the child formats
+    const result = mapFormats(fmt.items);
+    return {
+      customFormats: acc.customFormats.concat(result.customFormats),
+      formats: acc.formats.concat([{ title: fmt.title, items: result.formats }])
+    };
+  } else if (isInlineFormat(fmt) || isBlockFormat(fmt) || isSelectorFormat(fmt)) {
+    // Convert the format to a reference and add the original to the custom formats to be registered
+    const formatName = `custom-${fmt.title.toLowerCase()}`;
+    return {
+      customFormats: acc.customFormats.concat([{ name: formatName, format: fmt }]),
+      formats: acc.formats.concat([{ title: fmt.title, format: formatName, icon: fmt.icon }])
+    };
+  } else {
+    return { ...acc, formats: acc.formats.concat(fmt) };
+  }
+}, { customFormats: [], formats: [] });
 
-const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (Separator | FormatReference | NestedFormatting)[] => {
+const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): FormatTypes[] => {
   const result = mapFormats(userFormats);
 
-  const registerFormats = (customFormats: {name: string, format: StyleFormat}[]) => {
+  const registerFormats = (customFormats: {name: string; format: StyleFormat}[]) => {
     Arr.each(customFormats, (fmt) => {
       // Only register the custom format with the editor, if it's not already registered
       if (!editor.formatter.has(fmt.name)) {
@@ -121,11 +115,9 @@ const registerCustomFormats = (editor: Editor, userFormats: AllowedFormat[]): (S
   return result.formats;
 };
 
-export const getStyleFormats = (editor: Editor): (Separator | FormatReference | NestedFormatting)[] => {
-  return getUserStyleFormats(editor).map((userFormats) => {
-    // Ensure that any custom formats specified by the user are registered with the editor
-    const registeredUserFormats = registerCustomFormats(editor, userFormats);
-    // Merge the default formats with the custom formats if required
-    return isMergeStyleFormats(editor) ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats;
-  }).getOr(defaultStyleFormats);
-};
+export const getStyleFormats = (editor: Editor): FormatTypes[] => getUserStyleFormats(editor).map((userFormats) => {
+  // Ensure that any custom formats specified by the user are registered with the editor
+  const registeredUserFormats = registerCustomFormats(editor, userFormats);
+  // Merge the default formats with the custom formats if required
+  return isMergeStyleFormats(editor) ? defaultStyleFormats.concat(registeredUserFormats) : registeredUserFormats;
+}).getOr(defaultStyleFormats);

@@ -1,12 +1,11 @@
-import Element from '../node/Element';
-import { HTMLOptionElement } from '@ephox/dom-globals';
+import { SugarElement } from '../node/SugarElement';
 
-const setValue = function (option: Element, value: string, text: string) {
-  const optionDom: HTMLOptionElement = option.dom();
+const setValue = (option: SugarElement<HTMLOptionElement>, value: string, text: string) => {
+  const optionDom = option.dom;
   optionDom.value = value;
   optionDom.text = text;
 };
 
-export default {
+export {
   setValue
 };

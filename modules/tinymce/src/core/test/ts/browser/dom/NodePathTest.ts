@@ -1,12 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import NodePath from 'tinymce/core/dom/NodePath';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
+import * as NodePath from 'tinymce/core/dom/NodePath';
 import ViewBlock from '../../module/test/ViewBlock';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -21,9 +19,9 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function () {
   suite.test('create', function () {
     setupHtml('<p>a<b>12<input></b></p>');
 
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [0]);
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [0, 0]);
-    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [1, 1, 0]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [ 0 ]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.firstChild), [ 0, 0 ]);
+    LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [ 1, 1, 0 ]);
   });
 
   suite.test('resolve', function () {

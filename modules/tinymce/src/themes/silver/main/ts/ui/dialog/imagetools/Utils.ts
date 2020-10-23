@@ -5,20 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FileReader, XMLHttpRequest } from '@ephox/sand';
-
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
-import { Blob } from '@ephox/dom-globals';
 
 const isValue = function (obj) {
   return obj !== null && obj !== undefined;
 };
 
 const traverse = function (json, path) {
-  let value;
-
-  value = path.reduce(function (result, key) {
+  const value = path.reduce(function (result, key) {
     return isValue(result) ? result[key] : undefined;
   }, json);
 
@@ -26,10 +21,8 @@ const traverse = function (json, path) {
 };
 
 const requestUrlAsBlob = function (url: string, headers: Record<string, string>, withCredentials: boolean) {
-  return new Promise<{status: number, blob: Blob}>(function (resolve) {
-    let xhr;
-
-    xhr = XMLHttpRequest();
+  return new Promise<{status: number; blob: Blob}>(function (resolve) {
+    const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -55,7 +48,7 @@ const requestUrlAsBlob = function (url: string, headers: Record<string, string>,
 
 const readBlob = function (blob) {
   return new Promise(function (resolve) {
-    const fr = FileReader();
+    const fr = new FileReader();
 
     fr.onload = function (e) {
       const data = e.target;
@@ -78,7 +71,7 @@ const parseJson = function (text) {
   return json;
 };
 
-export default {
+export {
   traverse,
   readBlob,
   requestUrlAsBlob,

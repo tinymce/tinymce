@@ -1,24 +1,24 @@
-import { Objects } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
 import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import { Dispatcher, DispatchedAlloyConfig } from '../api/system/ForeignGui';
+import { DispatchedAlloyConfig } from '../api/system/ForeignGui';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
+import { UncurriedHandler } from '../events/EventRegistry';
 
 export default () => {
-  const getEvents = (elem: Element, spec: DispatchedAlloyConfig) => {
+  const getEvents = (elem: SugarElement, spec: DispatchedAlloyConfig): { readonly elem: SugarElement; readonly evts: Record<string, UncurriedHandler> } => {
     const evts = DomState.getOrCreate(elem, () => {
       // If we haven't already setup this particular element, then generate any state and config
       // required by its behaviours and put it in the cache.
       const info = {
-        events: Objects.hasKey(spec, 'events') ? spec.events : { },
-        eventOrder: Objects.hasKey(spec, 'eventOrder') ? spec.eventOrder : { }
+        events: Obj.hasNonNullableKey(spec, 'events') ? spec.events : { },
+        eventOrder: Obj.hasNonNullableKey(spec, 'eventOrder') ? spec.eventOrder : { }
       };
 
       // NOTE: Note all behaviours are supported at the moment
@@ -32,8 +32,8 @@ export default () => {
     });
 
     return {
-      elem: Fun.constant(elem),
-      evts: Fun.constant(evts)
+      elem,
+      evts
     };
   };
 

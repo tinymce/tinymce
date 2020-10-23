@@ -5,17 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Container as AlloyContainer, SketchSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Behaviour, Container as AlloyContainer, Focusing, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 
-// TODO: Refer directly to the bridge interface type (HtmlPanel.HtmlPanel) #TINY-3349
-export interface HtmlPanelFoo {
-  type: 'htmlpanel';
-  html: string;
-  presets: Types.HtmlPanelPresetTypes;
-}
+type HtmlPanelSpec = Omit<Dialog.HtmlPanel, 'type'>;
 
-export const renderHtmlPanel = (spec: HtmlPanelFoo): SketchSpec => {
+export const renderHtmlPanel = (spec: HtmlPanelSpec): SketchSpec => {
   if (spec.presets === 'presentation') {
     return AlloyContainer.sketch({
       dom: {

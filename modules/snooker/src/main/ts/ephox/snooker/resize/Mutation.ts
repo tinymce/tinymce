@@ -1,16 +1,16 @@
-import { Event, Events, Bindable } from '@ephox/porkbun';
+import { Bindable, Event, Events } from '@ephox/porkbun';
 
 export interface DragDistanceEvent {
-  xDelta: () => number;
-  yDelta: () => number;
+  readonly xDelta: number;
+  readonly yDelta: number;
 }
 
 interface DragDistanceEvents {
   registry: {
-    drag: Bindable<DragDistanceEvent>
+    drag: Bindable<DragDistanceEvent>;
   };
   trigger: {
-      drag: (xDelta: number, yDelta: number) => void;
+    drag: (xDelta: number, yDelta: number) => void;
   };
 }
 
@@ -21,7 +21,7 @@ export interface Mutation {
 
 export const Mutation = function (): Mutation {
   const events = Events.create({
-    drag: Event(['xDelta', 'yDelta'])
+    drag: Event([ 'xDelta', 'yDelta' ])
   }) as unknown as DragDistanceEvents;
 
   const mutate = function (x: number, y: number) {

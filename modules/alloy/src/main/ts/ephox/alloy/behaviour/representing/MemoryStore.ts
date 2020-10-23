@@ -1,27 +1,28 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
+import { AlloyComponent } from '../../api/component/ComponentApi';
 
 import * as Fields from '../../data/Fields';
-import * as RepresentState from './RepresentState';
-import { RepresentingConfig } from './RepresentingTypes';
+import { memory } from './RepresentState';
+import { MemoryRepresentingState, MemoryStoreConfig, RepresentingConfig } from './RepresentingTypes';
 
-// TODO: Fix types
-const setValue = (component, repConfig: any, repState, data) => {
+interface MemoryRepresentingConfig extends RepresentingConfig {
+  store: MemoryStoreConfig;
+}
+
+const setValue = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState, data: any) => {
   repState.set(data);
   repConfig.onSetValue(component, data);
 };
 
-const getValue = (component, repConfig: RepresentingConfig, repState) => {
-  return repState.get();
-};
+const getValue = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => repState.get();
 
-// TODO: Introduce types. Complicated by repConfig's structure
-const onLoad = (component, repConfig: any, repState) => {
+const onLoad = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => {
   repConfig.store.initialValue.each((initVal) => {
     if (repState.isNotSet()) { repState.set(initVal); }
   });
 };
 
-const onUnload = (component, repConfig, repState) => {
+const onUnload = (component: AlloyComponent, repConfig: MemoryRepresentingConfig, repState: MemoryRepresentingState) => {
   repState.clear();
 };
 
@@ -32,6 +33,6 @@ export default [
     getValue,
     onLoad,
     onUnload,
-    state: RepresentState.memory
+    state: memory
   })
 ];

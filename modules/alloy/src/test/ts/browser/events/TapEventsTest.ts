@@ -1,11 +1,11 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Fun, Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { EventArgs, SugarElement } from '@ephox/sugar';
+
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as TapEvent from 'ephox/alloy/events/TapEvent';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 
 UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   // Needs to be browser because it uses DOM comparison
@@ -13,32 +13,26 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   const store = TestStore();
 
   const monitor = TapEvent.monitor({
-    triggerEvent (name) {
+    triggerEvent(name) {
       store.adder(name)();
       return true;
-    },
+    }
   });
 
-  const alpha = Element.fromText('alpha');
-  const beta = Element.fromText('beta');
-  const gamma = Element.fromText('gamma');
+  const alpha = SugarElement.fromText('alpha');
 
-  const touches = (x, y, target) => {
-    return {
-      raw: Fun.constant({
-        touches: [
-          { clientX: x, clientY: y }
-        ]
-      }),
-      target: Fun.constant(target)
-    };
-  };
+  const touches = (x: number, y: number, target: SugarElement) => ({
+    raw: {
+      touches: [
+        { clientX: x, clientY: y }
+      ]
+    },
+    target
+  } as unknown as EventArgs<TouchEvent>);
 
-  const sFireIfReady = (event, type) => {
-    return Step.sync(() => {
-      monitor.fireIfReady(event, type);
-    });
-  };
+  const sFireIfReady = (event: EventArgs, type: string) => Step.sync(() => {
+    monitor.fireIfReady(event, type);
+  });
 
   Pipeline.async({ }, [
     Logger.t(
@@ -154,9 +148,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
           NativeEvents.touchmove()
         ),
         store.sAssertEq('After touch move, empty', [ ]),
-
-        Step.wait(1000),
-        store.sAssertEq('After touch start > major movement > wait = no longpress', [ ]),
+        Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('[]', [])),
         store.sClear
       ])
     ),
@@ -171,10 +163,9 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         ),
         store.sAssertEq('After touch start, empty', [ ]),
 
-        Step.wait(1000),
-        store.sAssertEq('After touch start > major movement > wait = no longpress', [
+        Waiter.sTryUntil('After touch start > major movement > wait = no longpress', store.sAssertEq('', [
           SystemEvents.longpress()
-        ]),
+        ])),
         store.sClear
       ])
     )

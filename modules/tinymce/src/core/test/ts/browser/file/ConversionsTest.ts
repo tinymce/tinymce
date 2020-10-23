@@ -1,12 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import Conversions from 'tinymce/core/file/Conversions';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import { UnitTest } from '@ephox/bedrock';
+import * as Conversions from 'tinymce/core/file/Conversions';
 
-UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
 

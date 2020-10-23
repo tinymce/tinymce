@@ -1,13 +1,13 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
-import Zwsp from 'tinymce/core/text/Zwsp';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTextFormatTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -20,6 +20,6 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTextFormatTest'
       ]))
     ], onSuccess, onFailure);
   }, {
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

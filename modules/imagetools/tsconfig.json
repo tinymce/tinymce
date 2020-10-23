@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
-    "strict": false,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/imagetools/test/*": ["src/test/ts/module/ephox/imagetools/test/*"],
       "ephox/imagetools/demo/*": ["src/demo/ts/ephox/imagetools/demo/*"],
@@ -16,10 +15,10 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../katamari" },
-    { "path": "../sand" },
+    { "path": "../sand" }
   ]
 }

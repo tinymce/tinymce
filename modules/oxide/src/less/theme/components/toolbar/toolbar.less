@@ -22,25 +22,27 @@
 @_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
 
 .tox {
+  .tox-toolbar-overlord {
+    background-color: @toolbar-background-color;
+  }
+
   .tox-toolbar,
   .tox-toolbar__primary,
   .tox-toolbar__overflow {
     background: @toolbar-background;
     background-color: @toolbar-background-color;
-    border-top: 1px solid @toolbar-separator-color;
     display: flex;
     flex: 0 0 auto;
     flex-shrink: 0;
     flex-wrap: wrap;
-    margin-bottom: -1px;
     padding: @toolbar-padding-y @toolbar-padding-x;
   }
 
   .tox-toolbar__overflow.tox-toolbar__overflow--closed {
     height: 0;
     opacity: 0;
-    padding-top: 0;
     padding-bottom: 0;
+    padding-top: 0;
     visibility: hidden;
   }
 
@@ -50,6 +52,18 @@
 
   .tox-toolbar__overflow--shrinking {
     transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
+  }
+
+  // Add top borders
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+    border-top: 1px solid @toolbar-separator-color;
+    margin-top: -1px; // Temporary fix to hide menubar bottom border below the toolbar
+  }
+
+  .tox-toolbar--scrolling {
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 
   .tox-pop .tox-toolbar {
@@ -66,6 +80,12 @@
   }
 }
 
+// Add a top border when toolbar_location is bottom and menubar is hidden
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child,
+&.tox-tinymce:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary {
+  border-top: 1px solid @toolbar-separator-color;
+}
+
 // Floating more drawer styles. Uses pop toolbar styles
 .tox.tox-tinymce-aux {
   .tox-toolbar__overflow {
@@ -76,21 +96,9 @@
   }
 }
 
-.tox.tox-tinymce-aux:not([dir=rtl]) {
-  .tox-toolbar__overflow {
-    margin-left: @pad-xs;
-  }
-}
-
 // RTL
 .tox[dir=rtl] {
   .tox-tbtn__icon-rtl svg {
     transform: rotateY(180deg);
-  }
-
-  &.tox-tinymce-aux {
-    .tox-toolbar__overflow {
-      margin-right: @pad-xs;
-    }
   }
 }

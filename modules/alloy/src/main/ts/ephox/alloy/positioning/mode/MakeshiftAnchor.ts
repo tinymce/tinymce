@@ -1,27 +1,37 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { bounds } from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
-import { OriginAdt } from '../../positioning/layout/Origins';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
+import * as Origins from '../layout/Origins';
 import { MakeshiftAnchor, nu as NuAnchoring } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: OriginAdt) => {
-  const anchorBox = bounds(anchorInfo.x, anchorInfo.y, anchorInfo.width, anchorInfo.height);
+const placement = (component: AlloyComponent, anchorInfo: MakeshiftAnchor, origin: Origins.OriginAdt) => {
+  const pos = Origins.translate(origin, anchorInfo.x, anchorInfo.y);
+  const anchorBox = bounds(pos.left, pos.top, anchorInfo.width, anchorInfo.height);
 
-  const layouts = AnchorLayouts.get(component.element(), anchorInfo, Layout.all(), Layout.allRtl());
+  const layouts = AnchorLayouts.get(
+    component.element,
+    anchorInfo,
+    Layout.all(),
+    Layout.allRtl(),
+    // No default bottomToTop layouts currently needed
+    Layout.all(),
+    Layout.allRtl(),
+    Optional.none()
+  );
 
-  return Option.some(
+  return Optional.some(
     NuAnchoring({
-      anchorBox: anchorBox,
+      anchorBox,
       bubble: anchorInfo.bubble,
       overrides: anchorInfo.overrides,
-      layouts: layouts,
-      placer: Option.none()
+      layouts,
+      placer: Optional.none()
     })
   );
 };

@@ -1,6 +1,7 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, Waiter, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, GeneralSteps, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 
 import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -11,19 +12,19 @@ UnitTest.asynctest(
     Theme();
     TextpatternPlugin();
 
-    const sTypeChar = function (editor, character) {
+    const sTypeChar = function (editor: Editor, character: string) {
       return Logger.t(`Type ${character}`, Step.sync(function () {
         const charCode = character.charCodeAt(0);
-        editor.fire('keypress', { charCode });
+        editor.fire('keypress', { charCode } as KeyboardEvent);
       }));
     };
 
-    const sTypeAndTrigger = function (tinyApis, editor) {
+    const sTypeAndTrigger = function (tinyApis: TinyApis, editor: Editor) {
       return function (label, patternText, trigger, tag, rawText) {
         return Logger.t(label, GeneralSteps.sequence([
           tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
-          tinyApis.sFocus,
-          tinyApis.sSetCursor([0, 0], patternText.length + 1),
+          tinyApis.sFocus(),
+          tinyApis.sSetCursor([ 0, 0 ], patternText.length + 1),
           sTypeChar(editor, trigger),
           Waiter.sTryUntil(
             'did not get expected format',
@@ -48,7 +49,7 @@ UnitTest.asynctest(
       };
     };
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
       const tnt = sTypeAndTrigger(tinyApis, editor);
 

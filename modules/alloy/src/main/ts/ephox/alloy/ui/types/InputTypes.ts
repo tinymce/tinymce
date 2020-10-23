@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -15,7 +15,7 @@ export interface InputDetail extends SingleSketchDetail {
   inputClasses: string[];
   inputAttributes: { };
   tag: string;
-  data: Option<string>;
+  data: Optional<string>;
   onSetValue: (comp: AlloyComponent, data: string) => void;
   selectOnFocus: boolean;
   eventOrder: Record<string, string[]>;
@@ -35,4 +35,4 @@ export interface InputSpec extends SingleSketchSpec {
   onSetValue?: (comp: AlloyComponent, data: string) => void;
 }
 
-export interface InputSketcher extends SingleSketch<InputSpec, InputDetail> { }
+export interface InputSketcher extends SingleSketch<InputSpec> { }

@@ -5,30 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, HTMLLinkElement } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Parser from './Parser';
-import Protect from './Protect';
+import * as Settings from '../api/Settings';
+import * as Parser from './Parser';
+import * as Protect from './Protect';
 
 const each = Tools.each;
 
-const low = function (s) {
-  return s.replace(/<\/?[A-Z]+/g, function (a) {
-    return a.toLowerCase();
-  });
-};
+const low = (s: string) =>
+  s.replace(/<\/?[A-Z]+/g, (a: string) => a.toLowerCase());
 
 const handleSetContent = function (editor: Editor, headState, footState, evt) {
-  let startPos, endPos, content, headerFragment, styles = '';
+  let startPos, endPos, content, styles = '';
   const dom = editor.dom;
 
   if (evt.selection) {
     return;
   }
 
-  content = Protect.protectHtml(editor.settings.protect, evt.content);
+  content = Protect.protectHtml(Settings.getProtect(editor), evt.content);
 
   // Ignore raw updated if we already have a head, this will fix issues with undo/redo keeping the head/foot separate
   if (evt.format === 'raw' && headState.get()) {
@@ -65,7 +61,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   }
 
   // Parse header and update iframe
-  headerFragment = Parser.parseHeader(headState.get());
+  const headerFragment = Parser.parseHeader(headState.get());
   each(headerFragment.getAll('style'), function (node) {
     if (node.firstChild) {
       styles += node.firstChild.value;
@@ -110,7 +106,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
       dom.add(headElm, 'link', {
         'rel': 'stylesheet',
         'text': 'text/css',
-        'href': href,
+        href,
         'data-mce-fullpage': '1'
       });
     }
@@ -175,6 +171,6 @@ const setup = function (editor: Editor, headState, footState) {
   });
 };
 
-export default {
+export {
   setup
 };

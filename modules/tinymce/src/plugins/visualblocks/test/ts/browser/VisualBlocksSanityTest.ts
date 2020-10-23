@@ -1,5 +1,5 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
@@ -11,7 +11,7 @@ UnitTest.asynctest(
     Theme();
     VisualBlocksPlugin();
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 

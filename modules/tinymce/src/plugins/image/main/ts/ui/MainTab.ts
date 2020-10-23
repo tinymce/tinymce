@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { ImageDialogInfo, ListItem } from './DialogTypes';
 import { Arr } from '@ephox/katamari';
+import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const makeItems = (info: ImageDialogInfo) => {
   const imageUrl = {
@@ -17,14 +17,15 @@ const makeItems = (info: ImageDialogInfo) => {
   };
   const imageList = info.imageList.map((items) => ({
     name: 'images',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Image list',
     items
   }));
   const imageDescription = {
     name: 'alt',
     type: 'input',
-    label: 'Image description'
+    label: 'Alternative description',
+    disabled: info.hasAccessibilityOptions && info.image.isDecorative
   };
   const imageTitle = {
     name: 'title',
@@ -35,6 +36,15 @@ const makeItems = (info: ImageDialogInfo) => {
     name: 'dimensions',
     type: 'sizeinput'
   };
+  const isDecorative = {
+    type: 'label',
+    label: 'Accessibility',
+    items: [{
+      name: 'isDecorative',
+      type: 'checkbox',
+      label: 'Image is decorative'
+    }]
+  };
 
   interface DialogItems {
     type: string;
@@ -43,9 +53,9 @@ const makeItems = (info: ImageDialogInfo) => {
     items?: Array<DialogItems | ListItem>;
   }
   // TODO: the original listbox supported styled items but bridge does not seem to support this
-  const classList = info.classList.map((items): DialogItems  => ({
+  const classList = info.classList.map((items): DialogItems => ({
     name: 'classes',
-    type: 'selectbox',
+    type: 'listbox',
     label: 'Class',
     items
   }));
@@ -62,29 +72,28 @@ const makeItems = (info: ImageDialogInfo) => {
   };
 
   return Arr.flatten<any>([
-    [imageUrl],
+    [ imageUrl ],
     imageList.toArray(),
-    info.hasDescription ? [imageDescription] : [],
-    info.hasImageTitle ? [imageTitle] : [],
-    info.hasDimensions ? [imageDimensions] : [],
+    info.hasAccessibilityOptions && info.hasDescription ? [ isDecorative ] : [],
+    info.hasDescription ? [ imageDescription ] : [],
+    info.hasImageTitle ? [ imageTitle ] : [],
+    info.hasDimensions ? [ imageDimensions ] : [],
     [{
       type: 'grid',
       columns: 2,
       items: Arr.flatten([
         classList.toArray(),
-        info.hasImageCaption ? [caption] : []
+        info.hasImageCaption ? [ caption ] : []
       ])
     }]
   ]);
 };
 
-const makeTab = (info: ImageDialogInfo) => {
-  return {
-    title: 'General',
-    name: 'general',
-    items: makeItems(info)
-  };
-};
+const makeTab = (info: ImageDialogInfo) => ({
+  title: 'General',
+  name: 'general',
+  items: makeItems(info)
+});
 
 export const MainTab = {
   makeTab,

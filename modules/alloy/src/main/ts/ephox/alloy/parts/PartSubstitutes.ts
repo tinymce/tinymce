@@ -1,38 +1,35 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger } from '@ephox/katamari';
 
+import { AlloySpec } from '../api/component/SpecTypes';
+import { CompositeSketchDetail, CompositeSketchSpec } from '../api/ui/Sketcher';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
-import * as PartType from './PartType';
 import { Substitutions } from './AlloyParts';
+import * as PartType from './PartType';
 
-const combine: any = (detail, data: PartType.PartSpec<any>, partSpec, partValidated) => {
+const combine = <D extends CompositeSketchDetail, S extends CompositeSketchSpec>(detail: D, data: PartType.BasePartDetail<D, S>, partSpec: S, partValidated?: Record<string, any>): S & { uid: string } =>
   // Extremely confusing names and types :(
-  const spec = partSpec;
-  return Merger.deepMerge(
+  Merger.deepMerge(
     data.defaults(detail, partSpec, partValidated),
     partSpec,
     { uid: detail.partUids[data.name] },
     data.overrides(detail, partSpec, partValidated)
   );
-};
 
-const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
-  const internals = { };
-  const externals = { };
+const subs = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => {
+  const internals: Record<string, UiSubstitutes.UiSubstitutesAdt> = { };
+  const externals: Record<string, () => AlloySpec> = { };
 
   Arr.each(parts, (part) => {
     part.fold(
       // Internal
-      (data: PartType.PartSpec<any>) => {
-        internals[data.pname] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => {
-          return data.factory.sketch(
-            combine(detail, data, partSpec, partValidated)
-          );
-        });
+      (data) => {
+        internals[data.pname] = UiSubstitutes.single(true, (detail, partSpec, partValidated) => data.factory.sketch(
+          combine(detail, data, partSpec, partValidated)
+        ));
       },
 
       // External
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         const partSpec = detail.parts[data.name];
         externals[data.name] = Fun.constant(
           data.factory.sketch(
@@ -44,28 +41,26 @@ const subs = (owner, detail, parts: PartType.PartTypeAdt[]): Substitutions => {
       },
 
       // Optional
-      (data: PartType.PartSpec<any>) => {
-        internals[data.pname] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => {
-          return data.factory.sketch(
-            combine(detail, data, partSpec, partValidated)
-          );
-        });
+      (data) => {
+        internals[data.pname] = UiSubstitutes.single(false, (detail, partSpec, partValidated) => data.factory.sketch(
+          combine(detail, data, partSpec, partValidated)
+        ));
       },
 
       // Group
-      (data: PartType.PartSpec<any>) => {
+      (data) => {
         internals[data.pname] = UiSubstitutes.multiple(true, (detail, _partSpec, _partValidated) => {
-          const units = detail[data.name];
-          return Arr.map(units, (u) => {
+          const units: Array<Record<string, any>> = (detail as any)[data.name];
+          return Arr.map(units, (u) =>
             // Group multiples do not take the uid because there is more than one.
-            return data.factory.sketch(
+            data.factory.sketch(
               Merger.deepMerge(
-                data.defaults(detail, u,  _partValidated),
+                data.defaults(detail, u, _partValidated),
                 u,
                 data.overrides(detail, u)
               )
-            );
-          });
+            )
+          );
         });
       }
     );

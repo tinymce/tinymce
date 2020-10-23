@@ -1,5 +1,5 @@
 import { Attachment, Gui, GuiFactory } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Inputs from 'tinymce/themes/mobile/ui/Inputs';
@@ -10,9 +10,9 @@ export default function () {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const form = SerialisedDialog.sketch({
-    onExecute () { },
-    getInitialValue () {
-      return Option.some({
+    onExecute() { },
+    getInitialValue() {
+      return Optional.some({
         alpha: 'Alpha',
         beta: '',
         gamma: '',

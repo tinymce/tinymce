@@ -1,22 +1,19 @@
-import * as Attr from './Attr';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
+import * as Attribute from './Attribute';
 
-export default function (attribute, value) {
-  const is = function (element: Element) {
-    return Attr.get(element, attribute) === value;
-  };
+export default (attribute: string, value: string) => {
+  const is = (element: SugarElement<Element>): boolean =>
+    Attribute.get(element, attribute) === value;
 
-  const remove = function (element: Element) {
-    Attr.remove(element, attribute);
-  };
+  const remove = (element: SugarElement<Element>): void =>
+    Attribute.remove(element, attribute);
 
-  const set = function (element: Element) {
-    Attr.set(element, attribute, value);
-  };
+  const set = (element: SugarElement<Element>): void =>
+    Attribute.set(element, attribute, value);
 
   return {
     is,
     remove,
-    set,
+    set
   };
-}
+};

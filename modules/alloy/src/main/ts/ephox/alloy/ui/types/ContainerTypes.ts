@@ -1,13 +1,13 @@
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, OptionalDomSchema, RawDomSchema } from '../../api/component/SpecTypes';
+import { AlloySpec, OptionalDomSchema } from '../../api/component/SpecTypes';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
-import { SingleSketch } from '../../api/ui/Sketcher';
-import { DomModificationSpec, DomModification } from '../../dom/DomModification';
+import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
-export interface ContainerDetail {
+export interface ContainerDetail extends SingleSketchDetail {
   uid: string;
-  dom: RawDomSchema;
+  dom: OptionalDomSchema;
   components: AlloySpec[ ];
   containerBehaviours: SketchBehaviours;
   // DEPRECATE:
@@ -16,7 +16,7 @@ export interface ContainerDetail {
   eventOrder: Record<string, string[]>;
 }
 
-export interface ContainerSpec {
+export interface ContainerSpec extends SingleSketchSpec {
   uid?: string;
   dom?: OptionalDomSchema;
   components?: AlloySpec[];
@@ -26,4 +26,4 @@ export interface ContainerSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export interface ContainerSketcher extends SingleSketch<ContainerSpec, ContainerDetail> { }
+export interface ContainerSketcher extends SingleSketch<ContainerSpec> { }

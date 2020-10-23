@@ -1,11 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import * as ClientRect from 'tinymce/core/geom/ClientRect';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const rect = function (x, y, w, h) {
@@ -40,6 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', function () {
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 20, 10, 10), rect(20, 20, 10, 40)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 15, 10, 10)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 15, 10, 10), rect(20, 20, 10, 10)), false);
+    LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 40), rect(20, 40, 10, 10)), false);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 20, 10, 10)), true);
     LegacyUnit.equal(ClientRect.isAbove(rect(10, 10, 10, 10), rect(20, 16, 10, 10)), true);
   });

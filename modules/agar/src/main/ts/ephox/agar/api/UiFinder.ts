@@ -1,105 +1,93 @@
+import { TestLabel } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
-import { Element, Visibility } from '@ephox/sugar';
+import { SugarElement, Truncate, Visibility } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
 import * as UiSearcher from '../find/UiSearcher';
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import { Step } from './Step';
 
-const findIn = function (container: Element, selector: string): Result<Element, string> {
-  return UiSearcher.findIn(container, selector);
-};
+const findIn = (container: SugarElement<any>, selector: string): Result<SugarElement<any>, TestLabel> =>
+  UiSearcher.findIn(container, selector);
 
-const findAllIn = function (container: Element, selector: string): Element[] {
-  return UiSearcher.findAllIn(container, selector);
-};
+const findAllIn = (container: SugarElement<any>, selector: string): SugarElement<any>[] =>
+  UiSearcher.findAllIn(container, selector);
 
-const cWaitFor = function (message: string, selector: string) {
-  return cWaitForState(message, selector, Fun.constant(true));
-};
+const cWaitFor = (message: string, selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  cWaitForState(message, selector, Fun.always);
 
-const sWaitFor = <T>(message: string, container: Element, selector: string) =>
-  Chain.asStep<T, Element>(container, [cWaitFor(message, selector)]);
+const sWaitFor = <T>(message: string, container: SugarElement<any>, selector: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(container, [ cWaitFor(message, selector) ]);
 
-const cWaitForVisible = function (message: string, selector: string) {
-  return cWaitForState(message, selector, Visibility.isVisible);
-};
+const cWaitForVisible = (message: string, selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  cWaitForState(message, selector, Visibility.isVisible);
 
 // TODO: Perhaps create cWaitForNoState rather than Fun.not here?
-const cWaitForHidden = function (message: string, selector: string) {
-  return cWaitForState(message, selector, Fun.not(Visibility.isVisible));
-};
+const cWaitForHidden = (message: string, selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  cWaitForState(message, selector, Fun.not(Visibility.isVisible));
 
-const sWaitForVisible = <T>(message: string, container: Element, selector: string) =>
-  Chain.asStep<T, Element>(container, [cWaitForVisible(message, selector)]);
+const sWaitForVisible = <T>(message: string, container: SugarElement<any>, selector: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(container, [ cWaitForVisible(message, selector) ]);
 
-const sWaitForHidden = <T>(message: string, container: Element, selector: string) =>
-  Chain.asStep<T, Element>(container, [cWaitForHidden(message, selector)]);
+const sWaitForHidden = <T>(message: string, container: SugarElement<any>, selector: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(container, [ cWaitForHidden(message, selector) ]);
 
-const cHasState = function (predicate: (element: Element) => boolean) {
-  return Chain.binder(function (element: Element): Result<Element, string> {
-    return predicate(element) ? Result.value(element) :
-      Result.error(Truncate.getHtml(element) + ' did not match predicate: ' + predicate.toString());
-  });
-};
+const cHasState = <T> (predicate: (element: SugarElement<T>) => boolean): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.binder((element) => predicate(element) ? Result.value(element) :
+    Result.error(Truncate.getHtml(element) + ' did not match predicate: ' + predicate.toString()));
 
-const cFindWithState = function (selector: string, predicate: (element: Element) => boolean): Chain<Element, Element> {
-  return Chain.fromChains([
+const cFindWithState = (selector: string, predicate: (element: SugarElement<any>) => boolean): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.fromChains([
     cFindIn(selector),
     cHasState(predicate)
   ]);
-};
 
 // Wait for a selector to have state. Max wait time: 10 seconds.
-const cWaitForState = function (message: string, selector: string, predicate: (element: Element) => boolean): Chain<Element, Element> {
-  return Chain.control(
+const cWaitForState = (message: string, selector: string, predicate: (element: SugarElement<any>) => boolean): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.control(
     cFindWithState(selector, predicate),
     Guard.tryUntil(message, 10, 10000)
   );
-};
 
-const sExists = function <T>(container: Element, selector: string) {
-  return Step.async<T>(function (next, die) {
+const sExists = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
+  Step.async<T>((next, die) => {
     findIn(container, selector).fold(die, next);
   });
-};
 
-const sNotExists = function <T>(container: Element, selector: string) {
-  return Step.async<T>((next, die) => {
-    findIn(container, selector).fold(function () {
+const sNotExists = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
+  Step.async<T>((next, die) => {
+    findIn(container, selector).fold(() => {
       next();
-    }, function () {
+    }, () => {
       die('Expected ' + selector + ' not to exist.');
     });
   });
-};
 
-const cExists = (selector: string) => Chain.async((container: Element, next, die) => {
-  findIn(container, selector).fold(
-    () => die('Expected ' + selector + ' to exist.'),
-    () => next(container)
-  );
-});
-
-const cNotExists = (selector: string) => Chain.async((container: Element, next, die) => {
-  findIn(container, selector).fold(
-    () => next(container),
-    () => die('Expected ' + selector + ' not to exist.')
-  );
-});
-
-const cFindIn = function (selector: string) {
-  return Chain.binder(function (container: Element) {
-    return findIn(container, selector);
+const cExists = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.async((container: SugarElement<any>, next, die) => {
+    findIn(container, selector).fold(
+      () => die('Expected ' + selector + ' to exist.'),
+      () => next(container)
+    );
   });
-};
 
-const cFindAllIn = function (selector: string) {
-  return Chain.mapper(function (container: Element) {
-    return findAllIn(container, selector);
+const cNotExists = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.async((container: SugarElement<any>, next, die) => {
+    findIn(container, selector).fold(
+      () => next(container),
+      () => die('Expected ' + selector + ' not to exist.')
+    );
   });
-};
+
+const cFindIn = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.binder((container: SugarElement<any>) =>
+    findIn(container, selector)
+  );
+
+const cFindAllIn = (selector: string): Chain<SugarElement<any>, SugarElement<any>[]> =>
+  Chain.mapper((container: SugarElement<any>) =>
+    findAllIn(container, selector)
+  );
 
 export {
   findIn,

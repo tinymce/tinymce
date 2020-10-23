@@ -3,10 +3,10 @@ import { createTable } from '../../../main/ts/ephox/bridge/components/dialog/Tab
 export const createWordcountDialog = () => {
   createTable({
     type: 'table',
-    header: [ 'hello', 'world'],
+    header: [ 'hello', 'world' ],
     cells: [
-      ['hej', 'vaerld'],
-      ['yahoo', 'sekai']
+      [ 'hej', 'vaerld' ],
+      [ 'yahoo', 'sekai' ]
     ]
   });
 };

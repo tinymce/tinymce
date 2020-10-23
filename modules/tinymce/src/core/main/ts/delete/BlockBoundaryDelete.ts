@@ -5,26 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/sugar';
-import BlockMergeBoundary from './BlockMergeBoundary';
-import MergeBlocks from './MergeBlocks';
+import { SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import * as BlockMergeBoundary from './BlockMergeBoundary';
+import * as MergeBlocks from './MergeBlocks';
 
-const backspaceDelete = function (editor: Editor, forward) {
-  let position;
-  const rootNode = Element.fromDom(editor.getBody());
+const backspaceDelete = (editor: Editor, forward: boolean): boolean => {
+  const rootNode = SugarElement.fromDom(editor.getBody());
 
-  position = BlockMergeBoundary.read(rootNode.dom(), forward, editor.selection.getRng()).bind(function (blockBoundary) {
-    return MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from().block(), blockBoundary.to().block());
-  });
+  const position = BlockMergeBoundary.read(rootNode.dom, forward, editor.selection.getRng()).bind((blockBoundary) =>
+    MergeBlocks.mergeBlocks(rootNode, forward, blockBoundary.from.block, blockBoundary.to.block));
 
-  position.each(function (pos) {
+  position.each((pos) => {
     editor.selection.setRng(pos.toRange());
   });
 
   return position.isSome();
 };
 
-export default {
+export {
   backspaceDelete
 };

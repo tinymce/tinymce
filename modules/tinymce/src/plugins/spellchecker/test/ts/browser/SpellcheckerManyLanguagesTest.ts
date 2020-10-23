@@ -1,5 +1,5 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
@@ -14,13 +14,14 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', func
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Multiple languages split button', [
-      ui.sWaitForUi('my button', '.tox-split-button'),
+      ui.sWaitForUi('my button', '.tox-split-button')
     ]), onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'spellchecker',
     toolbar: 'spellchecker',
     spellchecker_languages: 'English=en,French=fr,German=de',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    statusbar: false
   }, success, failure);
 });

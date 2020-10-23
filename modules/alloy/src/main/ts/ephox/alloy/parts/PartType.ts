@@ -1,40 +1,70 @@
+import { SimpleOrSketchSpec } from '@ephox/alloy';
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
-import { Adt, Fun, Id, Option } from '@ephox/katamari';
+import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
-export type PartType = (p: PartialSpec) => PartTypeAdt;
-export interface PartialSpec { }
+type DeepPartial<T> = {
+  [P in keyof T]?: Partial<T[P]>;
+};
 
-export interface PartSpec<D extends CompositeSketchDetail> {
-  // TODO: Add type information where possible
-  defaults: (detail, partSpec, partValidated?) => Record<string, any>;
-  factory: { sketch: (d, s?) => any };
+export type PartType<S, T = PartTypeAdt<S>> = (p: S) => T;
+
+export interface BasePartDetail<D extends CompositeSketchDetail, PS> {
+  defaults: OverrideHandler<D, PS>;
+  factory: { sketch: (detail: PS & { uid: string }, ...rest: any[]) => any };
   name: string;
-  overrides: OverrideHandler<D>;
+  overrides: OverrideHandler<D, PS>;
   pname: string;
   schema: FieldProcessorAdt[];
 }
 
-export type OverrideHandler<D extends CompositeSketchDetail> = (detail: D, spec?: PartialSpec, partValidated?: any) => OverrideSpec;
-
-export interface OverrideSpec {
-  [key: string]: any;
+export interface PartDetail<D extends CompositeSketchDetail, PS> extends BasePartDetail<D, PS> {
+  factory: { sketch: (detail: PS & { uid: string }) => any };
 }
 
-export type required<T> = Option<T>;
-export type external<T> = Option<T>;
-export type optional<T> = Option<T>;
-export type group<T> = Option<T>;
-export interface PartTypeAdt extends Adt {
-  fold<T>(required, external, optional, group);
+export interface ExternalPartDetail<D extends CompositeSketchDetail, PS> extends BasePartDetail<D, PS> {
+  factory: { sketch: (detail: PS & { uid: string }, partSpec: PS) => any };
+}
+
+export interface GroupPartDetail<D extends CompositeSketchDetail, PS> extends PartDetail<D, PS> {
+  unit: string;
+}
+
+export interface PartSpec<D extends CompositeSketchDetail, PS> extends Partial<PartDetail<D, PS>> {
+  name: string;
+}
+
+export interface ExternalPartSpec<D extends CompositeSketchDetail, PS> extends Partial<ExternalPartDetail<D, PS>> { }
+
+export interface GroupPartSpec<D extends CompositeSketchDetail, PS> extends Partial<GroupPartDetail<D, PS>> {
+  name: string;
+  unit: string;
+}
+
+export type OverrideHandler<D, PS> = (detail: D, spec: PS, partValidated?: Record<string, any>) => DeepPartial<PS>;
+
+export interface PartTypeAdt<S = BasePartDetail<any, any>> {
+  fold: <T>(
+    required: PartType<S, T>,
+    external: PartType<S, T>,
+    optional: PartType<S, T>,
+    group: PartType<S, T>
+  ) => T;
+  match: <T>(branches: {
+    required: PartType<S, T>;
+    external: PartType<S, T>;
+    optional: PartType<S, T>;
+    group: PartType<S, T>;
+  }) => T;
+  log: (label: string) => void;
 }
 
 const adt: {
-  required: (data) => PartTypeAdt;
-  external: (data) => PartTypeAdt;
-  optional: (data) => PartTypeAdt;
-  group: (data) => PartTypeAdt;
+  required: PartType<any>;
+  external: PartType<any>;
+  optional: PartType<any>;
+  group: PartType<any>;
 } = Adt.generate([
   { required: [ 'data' ] },
   { external: [ 'data' ] },
@@ -48,9 +78,7 @@ const fName = FieldSchema.strict('name');
 const fPname = FieldSchema.field(
   'pname',
   'pname',
-  FieldPresence.defaultedThunk((typeSpec) => {
-    return '<alloy.' + Id.generate(typeSpec.name) + '>';
-  }),
+  FieldPresence.defaultedThunk((typeSpec: PartSpec<any, any>) => '<alloy.' + Id.generate(typeSpec.name) + '>'),
   ValueSchema.anyValue()
 );
 
@@ -80,33 +108,28 @@ const groupSpec = ValueSchema.objOf([
   fPname, fDefaults, fOverrides
 ]);
 
-const asNamedPart = function <D extends CompositeSketchDetail>(part: PartTypeAdt): Option<PartSpec<D>> {
-  return part.fold(Option.some, Option.none, Option.some, Option.some);
+const asNamedPart = function <T> (part: PartTypeAdt<T>): Optional<T> {
+  return part.fold(Optional.some, Optional.none as () => Optional<T>, Optional.some, Optional.some);
 };
 
-const name = (part: PartTypeAdt): string => {
-  const get = (data: PartSpec<any>) => {
-    return data.name;
-  };
+const name = <T extends { name: string }>(part: PartTypeAdt<T>): string => {
+  const get = (data: T) => data.name;
   return part.fold(get, get, get, get);
 };
 
-const asCommon = function <D extends CompositeSketchDetail>(part: PartTypeAdt): PartSpec<D> {
+const asCommon = function <T> (part: PartTypeAdt<T>): T {
   return part.fold(Fun.identity, Fun.identity, Fun.identity, Fun.identity);
 };
 
-const convert = (adtConstructor, partSchema: Processor):
-                  (p: PartialSpec) => PartTypeAdt => {
-  return (spec) => {
-    const data = ValueSchema.asRawOrDie('Converting part type', partSchema, spec);
-    return adtConstructor(data);
-  };
+const convert = <D extends CompositeSketchDetail, S, PS extends PartSpec<D, S>, PD extends PartDetail<D, S>>(adtConstructor: PartType<PD>, partSchema: Processor) => (spec: PS): PartTypeAdt<PD> => {
+  const data = ValueSchema.asRawOrDie('Converting part type', partSchema, spec);
+  return adtConstructor(data);
 };
 
-const required = convert(adt.required, requiredSpec) as PartType;
-const external = convert(adt.external, externalSpec) as PartType;
-const optional = convert(adt.optional, optionalSpec) as PartType;
-const group = convert(adt.group, groupSpec) as PartType;
+const required: (<D extends CompositeSketchDetail, PS = SimpleOrSketchSpec> (p: PartSpec<D, PS>) => PartTypeAdt<PartDetail<D, PS>>) = convert(adt.required, requiredSpec) as any;
+const external: (<D extends CompositeSketchDetail, PS = SimpleOrSketchSpec> (p: ExternalPartSpec<D, PS>) => PartTypeAdt<ExternalPartDetail<D, PS>>) = convert(adt.external, externalSpec) as any;
+const optional: (<D extends CompositeSketchDetail, PS = SimpleOrSketchSpec> (p: PartSpec<D, PS>) => PartTypeAdt<PartDetail<D, PS>>) = convert(adt.optional, optionalSpec) as any;
+const group: (<D extends CompositeSketchDetail, PS = SimpleOrSketchSpec> (p: GroupPartSpec<D, PS>) => PartTypeAdt<GroupPartDetail<D, PS>>) = convert(adt.group, groupSpec) as any;
 const original = Fun.constant('entirety');
 
 export {

@@ -6,13 +6,13 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
 import Tools from 'tinymce/core/api/util/Tools';
 import VK from 'tinymce/core/api/util/VK';
-import Settings from '../api/Settings';
-import { window } from '@ephox/dom-globals';
+import * as Settings from '../api/Settings';
 
 const DOM = DOMUtils.DOM;
 
@@ -22,16 +22,16 @@ const tabCancel = function (e) {
   }
 };
 
-const setup = function (editor) {
+const setup = function (editor: Editor) {
   function tabHandler(e) {
-    let x, el, v, i;
+    let x: number, i: number;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
     }
 
     function find(direction) {
-      el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
+      const el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
       function canSelectRecursive(e) {
         return e.nodeName === 'BODY' || (e.type !== 'hidden' &&
@@ -66,7 +66,7 @@ const setup = function (editor) {
       return null;
     }
 
-    v = Tools.explode(Settings.getTabFocus(editor));
+    const v = Tools.explode(Settings.getTabFocus(editor));
 
     if (v.length === 1) {
       v[1] = v[0];
@@ -74,6 +74,7 @@ const setup = function (editor) {
     }
 
     // Find element to focus
+    let el: HTMLElement;
     if (e.shiftKey) {
       if (v[0] === ':prev') {
         el = find(-1);
@@ -89,7 +90,7 @@ const setup = function (editor) {
     }
 
     if (el) {
-      const focusEditor = EditorManager.get(el.id || el.name);
+      const focusEditor = EditorManager.get(el.id || (el as any).name);
 
       if (el.id && focusEditor) {
         focusEditor.focus();
@@ -123,6 +124,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

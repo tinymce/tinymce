@@ -5,15 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, Range, HTMLElement, Node } from '@ephox/dom-globals';
-import { Cell, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import * as CaretContainer from './CaretContainer';
-import CaretContainerRemove from './CaretContainerRemove';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DomQuery from '../api/dom/DomQuery';
-import NodeType from '../dom/NodeType';
-import * as GeomClientRect from '../geom/ClientRect';
+import Editor from '../api/Editor';
+import * as Settings from '../api/Settings';
 import Delay from '../api/util/Delay';
+import * as NodeType from '../dom/NodeType';
+import * as GeomClientRect from '../geom/ClientRect';
+import * as CaretContainer from './CaretContainer';
+import * as CaretContainerRemove from './CaretContainerRemove';
 
 export interface FakeCaret {
   show: (before: boolean, element: Element) => Range;
@@ -32,7 +34,9 @@ interface CaretState {
 const browser = PlatformDetection.detect().browser;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
-const isTableCell = (node: Node) => NodeType.isElement(node) && /^(TD|TH)$/i.test(node.tagName);
+const isMedia = NodeType.isMedia;
+const isTableCell = NodeType.isTableCell;
+const inlineFakeCaretSelector = '*[contentEditable=false],video,audio,embed,object';
 
 const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
   const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
@@ -68,16 +72,14 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
   return clientRect;
 };
 
-const trimInlineCaretContainers = (root: Node): void => {
-  let contentEditableFalseNodes, node, sibling, i, data;
+const trimInlineCaretContainers = (root: HTMLElement): void => {
+  const fakeCaretTargetNodes = SelectorFilter.descendants(SugarElement.fromDom(root), inlineFakeCaretSelector);
+  for (let i = 0; i < fakeCaretTargetNodes.length; i++) {
+    const node = fakeCaretTargetNodes[i].dom;
 
-  contentEditableFalseNodes = DomQuery('*[contentEditable=false]', root);
-  for (i = 0; i < contentEditableFalseNodes.length; i++) {
-    node = contentEditableFalseNodes[i];
-
-    sibling = node.previousSibling;
+    let sibling = node.previousSibling;
     if (CaretContainer.endsWithCaretContainer(sibling)) {
-      data = sibling.data;
+      const data = sibling.data;
 
       if (data.length === 1) {
         sibling.parentNode.removeChild(sibling);
@@ -88,7 +90,7 @@ const trimInlineCaretContainers = (root: Node): void => {
 
     sibling = node.nextSibling;
     if (CaretContainer.startsWithCaretContainer(sibling)) {
-      data = sibling.data;
+      const data = sibling.data;
 
       if (data.length === 1) {
         sibling.parentNode.removeChild(sibling);
@@ -99,9 +101,11 @@ const trimInlineCaretContainers = (root: Node): void => {
   }
 };
 
-export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
-  const lastVisualCaret = Cell<Option<CaretState>>(Option.none());
+export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
+  const lastVisualCaret = Cell<Optional<CaretState>>(Optional.none());
   let cursorInterval, caretContainerNode;
+  const rootBlock = Settings.getForcedRootBlock(editor);
+  const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
 
   const show = (before: boolean, element: HTMLElement): Range => {
     let clientRect, rng;
@@ -113,12 +117,12 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
     }
 
     if (isBlock(element)) {
-      caretContainerNode = CaretContainer.insertBlock('p', element, before);
+      caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
       clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
-      const caret = DomQuery('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
-      lastVisualCaret.set(Option.some({ caret, element, before }));
+      const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
+      lastVisualCaret.set(Optional.some({ caret, element, before }));
 
       lastVisualCaret.get().each((caretState) => {
         if (before) {
@@ -135,7 +139,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
       caretContainerNode = CaretContainer.insertInline(element, before);
       rng = element.ownerDocument.createRange();
 
-      if (isContentEditableFalse(caretContainerNode.nextSibling)) {
+      if (isInlineFakeCaretTarget(caretContainerNode.nextSibling)) {
         rng.setStart(caretContainerNode, 0);
         rng.setEnd(caretContainerNode, 0);
       } else {
@@ -150,6 +154,8 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
   };
 
   const hide = () => {
+    // TODO: TINY-6015 - Ensure cleaning up the fake caret preserves the selection, as currently
+    //  the CaretContainerRemove.remove below will change the selection in some cases
     trimInlineCaretContainers(root);
 
     if (caretContainerNode) {
@@ -159,10 +165,13 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
 
     lastVisualCaret.get().each((caretState) => {
       DomQuery(caretState.caret).remove();
-      lastVisualCaret.set(Option.none());
+      lastVisualCaret.set(Optional.none());
     });
 
-    Delay.clearInterval(cursorInterval);
+    if (cursorInterval) {
+      Delay.clearInterval(cursorInterval);
+      cursorInterval = null;
+    }
   };
 
   const startBlink = () => {
@@ -184,9 +193,8 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
 
   const destroy = () => Delay.clearInterval(cursorInterval);
 
-  const getCss = () => {
-    return (
-      '.mce-visual-caret {' +
+  const getCss = () => (
+    '.mce-visual-caret {' +
       'position: absolute;' +
       'background-color: black;' +
       'background-color: currentcolor;' +
@@ -203,8 +211,7 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
       'margin: 0;' +
       'padding: 0;' +
       '}'
-    );
-  };
+  );
 
   return {
     show,
@@ -217,4 +224,8 @@ export const FakeCaret = (root: HTMLElement, isBlock: (node: Node) => boolean, h
 
 export const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
-export const isFakeCaretTarget = (node: Node): boolean => isContentEditableFalse(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());
+export const isInlineFakeCaretTarget = (node: Node): node is Element =>
+  isContentEditableFalse(node) || isMedia(node);
+
+export const isFakeCaretTarget = (node: Node): node is Element =>
+  isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());

@@ -1,7 +1,7 @@
-import Binder from 'ephox/porkbun/Binder';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import * as Binder from 'ephox/porkbun/Binder';
 import { Event } from 'ephox/porkbun/Event';
-import Events from 'ephox/porkbun/Events';
-import { UnitTest, assert } from '@ephox/bedrock';
+import * as Events from 'ephox/porkbun/Events';
 
 UnitTest.test('Binder', function () {
   const events = Events.create({
@@ -13,12 +13,12 @@ UnitTest.test('Binder', function () {
 
   let called = false;
 
-  binder.bind(events.registry.myEvent, function (event) {
+  binder.bind(events.registry.myEvent, function (_event) {
     called = true;
   });
 
   assert.throws(function () {
-    binder.bind(events.registry.myEvent, function (event) {
+    binder.bind(events.registry.myEvent, function (_event) {
       called = true;
     });
   });
@@ -39,11 +39,11 @@ UnitTest.test('Binder', function () {
 
   let count = 0;
 
-  binder.bind(events.registry.myEvent, function (event) {
+  binder.bind(events.registry.myEvent, function (_event) {
     count++;
   });
 
-  binder.bind(events.registry.secondEvent, function (event) {
+  binder.bind(events.registry.secondEvent, function (_event) {
     count++;
   });
 

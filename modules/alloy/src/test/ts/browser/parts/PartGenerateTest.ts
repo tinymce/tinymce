@@ -1,16 +1,15 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, Objects } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
+
 import * as AlloyParts from 'ephox/alloy/parts/AlloyParts';
 import * as PartType from 'ephox/alloy/parts/PartType';
 
 UnitTest.test('Atomic Test: parts.GenerateTest', () => {
   const schema = [
     FieldSchema.strict('test-data'),
-    FieldSchema.state('state', () => {
-      return 'state';
-    })
+    FieldSchema.state('state', () => 'state')
   ];
 
   const internal = PartType.required({
@@ -38,22 +37,22 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     schema
   });
 
-  const check = (label, expected, parts) => {
+  const check = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
     Logger.sync(label, () => {
       const data = { 'test-data': label };
       const generated = AlloyParts.generate('owner', parts);
 
       // Check that config and validated match what was passed through
-      Obj.each(generated, (g, k) => {
+      Obj.each(generated, (g) => {
         const output = g(data);
-        RawAssertions.assertEq('Checking config', data, output.config);
-        RawAssertions.assertEq('Checking validated', {
+        Assert.eq('Checking config', data, output.config);
+        Assert.eq('Checking validated', {
           'test-data': data['test-data'],
           'state': 'state'
         }, output.validated);
       });
 
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking PartType.generate',
         expected,
         Obj.map(generated, (g) => {
@@ -64,20 +63,20 @@ UnitTest.test('Atomic Test: parts.GenerateTest', () => {
     });
   };
 
-  const checkGroup = (label, expected, parts) => {
+  const checkGroup = (label: string, expected: Record<string, any>, parts: PartType.PartTypeAdt[]) => {
     Logger.sync(label, () => {
       const data = { preprocess: 'PREPROCESSOR' };
       const generated = AlloyParts.generate('owner', parts);
 
       // Check that config, and ensure that preprocessor is all that is in validated
-      Obj.each(generated, (g, k) => {
+      Obj.each(generated, (g) => {
         const output = g(data);
-        RawAssertions.assertEq('Checking config', data, output.config);
-        RawAssertions.assertEq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
-        RawAssertions.assertEq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
+        Assert.eq('Checking config', data, output.config);
+        Assert.eq('Checking validated', 'PREPROCESSOR', output.validated.preprocess.getOr('none'));
+        Assert.eq('Should only be one key: preprocess', [ 'preprocess' ], Obj.keys(output.validated));
       });
 
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking PartType.generate',
         expected,
         Obj.map(generated, (g) => {

@@ -15,7 +15,8 @@ tinymce.init({
   templates: [
     { title: 'Some title 1', description: 'Some desc 1', content: 'My content {$username}' },
     { title: 'Some title 2', description: 'Some desc 2', content: 'My other content' },
-    { title: 'Some remote file', description: 'Some desc 3', url: 'development.html'}
+    { title: 'Some remote file', description: 'Some desc 3', url: 'development.html' },
+    { title: 'Nonexistent remote file', description: 'Some desc 4', url: 'invalid.html' }
   ]
 });
 

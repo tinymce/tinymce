@@ -1,12 +1,12 @@
-import { Pipeline, RawAssertions, Step, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import URI from 'tinymce/core/api/util/URI';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
@@ -19,14 +19,14 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
   const sAssertUploadFilename = function (expected) {
     return Logger.t('Assert uploaded filename', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
-      RawAssertions.assertEq('Should be expected file name', expected, blobInfo.filename());
+      Assert.eq('Should be expected file name', expected, blobInfo.filename());
     }));
   };
 
   const sAssertUploadFilenameMatches = function (matchRegex) {
     return Logger.t('Assert uploaded filename', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
-      RawAssertions.assertEq(`File name ${blobInfo.filename()} should match ${matchRegex}`, true, matchRegex.test(blobInfo.filename()));
+      Assert.eq(`File name ${blobInfo.filename()} should match ${matchRegex}`, true, matchRegex.test(blobInfo.filename()));
     }));
   };
 
@@ -34,11 +34,11 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     return Logger.t('ImageTools: Assert uri', Step.sync(function () {
       const blobInfo = uploadHandlerState.get().blobInfo;
       const uri = new URI(blobInfo.uri());
-      RawAssertions.assertEq('Should be expected uri', expected, uri.relative);
+      Assert.eq('Should be expected uri', expected, uri.relative);
     }));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
         sAssertUri(srcUrl)
       ]),
       Log.stepsAsStep('TBA', 'ImageTools: test rotate image', [
-        ImageUtils.sLoadImage(editor, srcUrl, {width: 200, height: 100}),
+        ImageUtils.sLoadImage(editor, srcUrl, { width: 200, height: 100 }),
         tinyApis.sSelect('img', []),
         ImageUtils.sExecCommand(editor, 'mceImageRotateRight'),
         ImageUtils.sWaitForBlobImage(editor),
@@ -80,6 +80,6 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsPluginTest', (s
     plugins: 'imagetools',
     automatic_uploads: false,
     images_upload_handler: uploadHandlerState.handler(srcUrl),
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

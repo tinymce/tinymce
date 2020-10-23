@@ -1,35 +1,33 @@
 import { Objects } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
-import { Compare, Element } from '@ephox/sugar';
-import { Touch, TouchEvent } from '@ephox/dom-globals';
+import { Cell, Obj, Optional } from '@ephox/katamari';
+import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
 
 import DelayedFunction from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { SugarEvent } from '../alien/TypeDefinitions';
 import { GuiEventSettings } from './GuiEvents';
 
 const SIGNIFICANT_MOVE = 5;
 
 const LONGPRESS_DELAY = 400;
 
-const getTouch = (event: SugarEvent): Option<Touch> => {
-  const raw = event.raw() as TouchEvent;
-  if (raw.touches === undefined || raw.touches.length !== 1) { return Option.none(); }
-  return Option.some(raw.touches[0]);
+const getTouch = (event: EventArgs<TouchEvent>): Optional<Touch> => {
+  const raw = event.raw;
+  if (raw.touches === undefined || raw.touches.length !== 1) { return Optional.none(); }
+  return Optional.some(raw.touches[0]);
 };
 
 // Check to see if the touch has changed a *significant* amount
 const isFarEnough = (touch: Touch, data: TouchHistoryData): boolean => {
-  const distX = Math.abs(touch.clientX - data.x());
-  const distY = Math.abs(touch.clientY - data.y());
+  const distX = Math.abs(touch.clientX - data.x);
+  const distY = Math.abs(touch.clientY - data.y);
   return distX > SIGNIFICANT_MOVE || distY > SIGNIFICANT_MOVE;
 };
 
 export interface TouchHistoryData {
-  x: () => number;
-  y: () => number;
-  target: () => Element;
+  x: number;
+  y: number;
+  target: SugarElement;
 }
 
 const monitor = (settings: GuiEventSettings) => {
@@ -38,63 +36,63 @@ const monitor = (settings: GuiEventSettings) => {
    */
 
   // Need a return value, so can't use Singleton.value;
-  const startData: Cell<Option<TouchHistoryData>> = Cell(Option.none());
+  const startData: Cell<Optional<TouchHistoryData>> = Cell(Optional.none());
+  const longpressFired = Cell<boolean>(false);
 
-  const longpress = DelayedFunction((event: SugarEvent) => {
-    // Stop longpress firing a tap
-    startData.set(Option.none());
+  const longpress = DelayedFunction((event: EventArgs) => {
     settings.triggerEvent(SystemEvents.longpress(), event);
+    longpressFired.set(true);
   }, LONGPRESS_DELAY);
 
-  const handleTouchstart = (event: SugarEvent): Option<boolean> => {
+  const handleTouchstart = (event: EventArgs<TouchEvent>): Optional<boolean> => {
     getTouch(event).each((touch) => {
       longpress.cancel();
 
       const data = {
-        x: Fun.constant(touch.clientX),
-        y: Fun.constant(touch.clientY),
+        x: touch.clientX,
+        y: touch.clientY,
         target: event.target
       };
 
       longpress.schedule(event);
-      startData.set(Option.some(data));
+      longpressFired.set(false);
+      startData.set(Optional.some(data));
     });
-    return Option.none();
+    return Optional.none();
   };
 
-  const handleTouchmove = (event): Option<boolean> => {
+  const handleTouchmove = (event: EventArgs<TouchEvent>): Optional<boolean> => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {
-        if (isFarEnough(touch, data)) { startData.set(Option.none()); }
+        if (isFarEnough(touch, data)) { startData.set(Optional.none()); }
       });
     });
-    return Option.none();
+    return Optional.none();
   };
 
-  const handleTouchend = (event): Option<boolean> => {
+  const handleTouchend = (event: EventArgs): Optional<boolean> => {
     longpress.cancel();
 
-    const isSame = (data) => {
-      return Compare.eq(data.target(), event.target());
-    };
+    const isSame = (data: TouchHistoryData) => Compare.eq(data.target, event.target);
 
-    return startData.get().filter(isSame).map((data) => {
-      return settings.triggerEvent(SystemEvents.tap(), event);
+    return startData.get().filter(isSame).map((_data) => {
+      if (longpressFired.get()) {
+        event.prevent();
+        return false;
+      } else {
+        return settings.triggerEvent(SystemEvents.tap(), event);
+      }
     });
   };
 
-  const handlers = Objects.wrapAll([
+  const handlers: Record<string, (event: EventArgs) => Optional<boolean>> = Objects.wrapAll([
     { key: NativeEvents.touchstart(), value: handleTouchstart },
     { key: NativeEvents.touchmove(), value: handleTouchmove },
     { key: NativeEvents.touchend(), value: handleTouchend }
   ]);
 
-  const fireIfReady = (event: SugarEvent, type: string): Option<boolean> => {
-    return Objects.readOptFrom<any>(handlers, type).bind((handler: (evt: SugarEvent) => Option<boolean>): Option<boolean> => {
-      return handler(event);
-    });
-  };
+  const fireIfReady = (event: EventArgs, type: string): Optional<boolean> => Obj.get(handlers, type).bind((handler) => handler(event));
 
   return {
     fireIfReady

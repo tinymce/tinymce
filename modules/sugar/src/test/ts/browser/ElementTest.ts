@@ -1,11 +1,12 @@
-import Element from 'ephox/sugar/api/node/Element';
-import { UnitTest, assert } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
-UnitTest.test('ElementTest', function () {
-  const checkErr = function (f, val) {
+type ElementConstructor<T extends Node | Window> = typeof SugarElement.fromDom;
+
+UnitTest.test('ElementTest', () => {
+  const checkErr = <T extends Node | Window>(f: ElementConstructor<T>, node: T | undefined | null) => {
     try {
-      f(val);
+      f(node as T);
     } catch (e) {
       // expected
       return;
@@ -13,12 +14,12 @@ UnitTest.test('ElementTest', function () {
     assert.fail('function did not throw an error');
   };
 
-  const checkEl = function (f, el, expt) {
+  const checkEl = <T extends Node | Window>(f: ElementConstructor<T>, el: T, expt: T) => {
     const element = f(el);
-    assert.eq(true, expt === element.dom());
+    assert.eq(true, expt === element.dom);
   };
 
-  checkErr(Element.fromDom, undefined);
-  checkErr(Element.fromDom, null);
-  checkEl(Element.fromDom, document.body, document.body);
+  checkErr(SugarElement.fromDom, undefined);
+  checkErr(SugarElement.fromDom, null);
+  checkEl(SugarElement.fromDom, document.body, document.body);
 });

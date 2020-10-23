@@ -1,8 +1,7 @@
 import { Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attr, Body, Element } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -12,17 +11,17 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
   EmoticonsPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     Pipeline.async({},
       Log.steps('TBA', 'Emoticons: Open dialog, Search for "rainbow", Rainbow should be first option', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
         Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]'),
+          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
         ]),
         FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
         FocusTools.sSetActiveValue(doc, 'rainbow'),
@@ -32,27 +31,21 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
         ]),
         Waiter.sTryUntil(
           'Wait until rainbow is the first choice (search should filter)',
-          Chain.asStep(Body.body(), [
+          Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => {
-              return Attr.get(item, 'data-collection-item-value');
-            }),
+            Chain.mapper((item) => Attribute.get(item, 'data-collection-item-value')),
             Assertions.cAssertEq('Search should show rainbow', '🌈')
-          ]),
-          100,
-          1000
+          ])
         ),
         Keyboard.sKeydown(doc, Keys.tab(), { }),
         FocusTools.sTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
         Waiter.sTryUntil(
           'Waiting for content update',
-          tinyApis.sAssertContent('<p>🌈</p>'),
-          100,
-          1000
+          tinyApis.sAssertContent('<p>🌈</p>')
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'emoticons',
     toolbar: 'emoticons',

@@ -6,34 +6,35 @@
  */
 
 import { Fun } from '@ephox/katamari';
-import { Compare, Element, SelectorExists } from '@ephox/sugar';
+import { Compare, SelectorExists, SugarElement } from '@ephox/sugar';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import * as CaretCandidate from '../caret/CaretCandidate';
-import NodeType from './NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
+import { isWhitespaceText } from '../text/Whitespace';
+import * as NodeType from './NodeType';
 
-const hasWhitespacePreserveParent = function (rootNode, node) {
-  const rootElement = Element.fromDom(rootNode);
-  const startNode = Element.fromDom(node);
+const hasWhitespacePreserveParent = function (node: Node, rootNode: Node) {
+  const rootElement = SugarElement.fromDom(rootNode);
+  const startNode = SugarElement.fromDom(node);
   return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
 };
 
-const isWhitespace = function (rootNode, node) {
-  return NodeType.isText(node) && /^[ \t\r\n]*$/.test(node.data) && hasWhitespacePreserveParent(rootNode, node) === false;
+const isWhitespace = function (node: Node, rootNode: Node) {
+  return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(node, rootNode) === false;
 };
 
-const isNamedAnchor = function (node) {
-  return NodeType.isElement(node) && node.nodeName === 'A' && node.hasAttribute('name');
+const isNamedAnchor = function (node: Node) {
+  return NodeType.isElement(node) && node.nodeName === 'A' && !node.hasAttribute('href') && (node.hasAttribute('name') || node.hasAttribute('id'));
 };
 
-const isContent = function (rootNode, node) {
-  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(rootNode, node) === false) || isNamedAnchor(node) || isBookmark(node);
+const isContent = function (node: Node, rootNode: Node) {
+  return (CaretCandidate.isCaretCandidate(node) && isWhitespace(node, rootNode) === false) || isNamedAnchor(node) || isBookmark(node);
 };
 
 const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
-const isEmptyNode = function (targetNode) {
+const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
   let node, brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
@@ -44,16 +45,18 @@ const isEmptyNode = function (targetNode) {
       return true;
     }
 
-    const walker = new TreeWalker(node, targetNode);
+    const walker = new DomTreeWalker(node, targetNode);
     do {
-      if (isBogusAll(node)) {
-        node = walker.next(true);
-        continue;
-      }
+      if (skipBogus) {
+        if (isBogusAll(node)) {
+          node = walker.next(true);
+          continue;
+        }
 
-      if (isBogus(node)) {
-        node = walker.next();
-        continue;
+        if (isBogus(node)) {
+          node = walker.next();
+          continue;
+        }
       }
 
       if (NodeType.isBr(node)) {
@@ -62,7 +65,7 @@ const isEmptyNode = function (targetNode) {
         continue;
       }
 
-      if (isContent(targetNode, node)) {
+      if (isContent(node, targetNode)) {
         return false;
       }
 
@@ -73,8 +76,9 @@ const isEmptyNode = function (targetNode) {
   }
 };
 
-const isEmpty = (elm) => isEmptyNode(elm.dom());
+const isEmpty = (elm: SugarElement<Node>, skipBogus: boolean = true) => isEmptyNode(elm.dom, skipBogus);
 
-export default {
-  isEmpty
+export {
+  isEmpty,
+  isContent
 };

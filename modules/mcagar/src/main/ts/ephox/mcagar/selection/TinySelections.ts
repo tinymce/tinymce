@@ -1,27 +1,26 @@
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { Traverse } from '@ephox/sugar';
+import { Chain, Cursors } from '@ephox/agar';
+import { SimRange, SugarElement, Traverse } from '@ephox/sugar';
 
-var toDomRange = function (range) {
-  var doc = Traverse.owner(range.start());
-  var rng = doc.dom().createRange();
-  rng.setStart(range.start().dom(), range.soffset());
-  rng.setEnd(range.finish().dom(), range.foffset());
+const toDomRange = function (range: SimRange) {
+  const doc = Traverse.owner(range.start);
+  const rng = doc.dom.createRange();
+  rng.setStart(range.start.dom, range.soffset);
+  rng.setEnd(range.finish.dom, range.foffset);
   return rng;
 };
 
-var createDomSelection = function (container, sPath: number[], soffset: number, fPath: number[], foffset: number) {
-  var path = Cursors.path({
+const createDomSelection = function (container: SugarElement, sPath: number[], soffset: number, fPath: number[], foffset: number) {
+  const path = Cursors.path({
     startPath: sPath,
-    soffset: soffset,
+    soffset,
     finishPath: fPath,
-    foffset: foffset
+    foffset
   });
   return toDomRange(Cursors.calculate(container, path));
 };
 
-var createDomCursor = function (container, elementPath: number[], offset: number) {
-  var elm = Cursors.calculateOne(container, elementPath);
+const createDomCursor = function (container: SugarElement, elementPath: number[], offset: number) {
+  const elm = Cursors.calculateOne(container, elementPath);
   return toDomRange(Cursors.range({
     start: elm,
     soffset: offset,
@@ -30,39 +29,39 @@ var createDomCursor = function (container, elementPath: number[], offset: number
   }));
 };
 
-var createDomSelectionOf = function (container, start, soffset: number, finish, foffset: number) {
+const createDomSelectionOf = function (container: SugarElement, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
   return toDomRange(Cursors.range({
-    start: start,
-    soffset: soffset,
-    finish: finish,
-    foffset: foffset
+    start,
+    soffset,
+    finish,
+    foffset
   }));
 };
 
-var cCreateDomSelection = function (sPath: number[], soffset: number, fPath: number[], foffset: number) {
-  return Chain.mapper(function (container) {
+const cCreateDomSelection = function (sPath: number[], soffset: number, fPath: number[], foffset: number) {
+  return Chain.mapper(function (container: SugarElement) {
     return createDomSelection(container, sPath, soffset, fPath, foffset);
   });
 };
 
-var cCreateDomCursor = function (elementPath: number[], offset: number) {
-  return Chain.mapper(function (container) {
+const cCreateDomCursor = function (elementPath: number[], offset: number) {
+  return Chain.mapper(function (container: SugarElement) {
     return createDomCursor(container, elementPath, offset);
   });
 };
 
-var cCreateDomSelectionOf = function (start, soffset: number, finish, foffset: number) {
-  return Chain.mapper(function (container) {
+const cCreateDomSelectionOf = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
+  return Chain.mapper(function (container: SugarElement) {
     return createDomSelectionOf(container, start, soffset, finish, foffset);
   });
 };
 
-export default {
-  createDomSelection: createDomSelection,
-  createDomCursor: createDomCursor,
-  createDomSelectionOf: createDomSelectionOf,
+export {
+  createDomSelection,
+  createDomCursor,
+  createDomSelectionOf,
 
-  cCreateDomSelection: cCreateDomSelection,
-  cCreateDomCursor: cCreateDomCursor,
-  cCreateDomSelectionOf: cCreateDomSelectionOf
+  cCreateDomSelection,
+  cCreateDomCursor,
+  cCreateDomSelectionOf
 };

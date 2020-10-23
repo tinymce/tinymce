@@ -1,14 +1,14 @@
 {
   "name": "@ephox/alloy",
-  "version": "4.13.2",
+  "version": "8.0.1",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^4.13.10",
-    "@ephox/boulder": "^3.3.16",
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/sand": "^2.0.17",
-    "@ephox/sugar": "^4.6.21"
+    "@ephox/agar": "^5.0.1",
+    "@ephox/boulder": "^5.0.1",
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/sand": "^4.0.1",
+    "@ephox/sugar": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "files": [
     "lib/main",
@@ -24,11 +24,12 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/jsdom src/test/ts/webdriver",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/alloy"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "keywords": [
     "ui"

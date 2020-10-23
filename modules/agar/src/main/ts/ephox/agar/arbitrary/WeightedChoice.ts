@@ -1,52 +1,54 @@
-import { Arr, Merger, Obj, Option, Struct } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 interface WeightedItem {
   weight: number;
 }
 
-interface AccWeightItem extends WeightedItem {
+interface AccWeightItem {
   accWeight: number;
 }
 
-interface WeightedList<T> {
-  list: () => (T & AccWeightItem)[];
-  total: () => number;
+interface WeightedList<T extends WeightedItem> {
+  readonly list: (T & AccWeightItem)[];
+  readonly total: number;
 }
 
-const weighted: <T> (list: (T & AccWeightItem)[], total: number) => WeightedList<T> = Struct.immutable('list', 'total');
+const weighted = <T extends WeightedItem> (list: (T & AccWeightItem)[], total: number): WeightedList<T> => ({
+  list,
+  total
+});
 
-const choose = function <T extends WeightedItem>(candidates: T[]) {
-  const result = Arr.foldl(candidates, function (rest, d) {
+const choose = <T extends WeightedItem>(candidates: T[]) => {
+  const result = Arr.foldl(candidates, (rest, d) => {
     const newTotal = rest.total + d.weight;
-    const merged: T & AccWeightItem = Merger.merge(d, {
+    const merged: T & AccWeightItem = {
+      ...d,
       accWeight: newTotal
-    });
+    };
     return {
       total: newTotal,
-      list: rest.list.concat([merged])
+      list: rest.list.concat([ merged ])
     };
-  }, { list: <(T & AccWeightItem)[]>[], total: 0 });
+  }, { list: <(T & AccWeightItem)[]> [], total: 0 });
 
   return weighted(result.list, result.total);
 };
 
-const gChoose = function <T>(weighted: WeightedList<T>) {
-  return Jsc.number(0, weighted.total()).generator.map(function (w) {
-    const raw = Arr.find(weighted.list(), function (d) {
-      return w <= d.accWeight;
-    });
+const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.number(0, weighted.total).generator.map((w) => {
+  const raw = Arr.find(weighted.list, (d) =>
+    w <= d.accWeight
+  );
 
-    const keys = raw.map(Obj.keys).getOr([]) as any[];
-    return keys.length === ['weight', 'accWeight'].length ? Option.none() : raw;
-  });
-};
+  const keys = raw.map(Obj.keys).getOr([]);
+  return keys.length === [ 'weight', 'accWeight' ].length ? Optional.none() : raw;
+});
 
-const generator = function <T extends WeightedItem>(candidates: T[]) {
+const generator = <T extends WeightedItem>(candidates: T[]) => {
   const list = choose(candidates);
   return gChoose(list);
 };
 
 export const WeightedChoice = {
-  generator: generator
+  generator
 };

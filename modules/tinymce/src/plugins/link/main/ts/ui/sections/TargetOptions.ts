@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
-import Settings from '../../api/Settings';
+import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
 import { ListItem } from '../DialogTypes';
 
@@ -19,14 +20,16 @@ const fallbacks = [
   { text: 'New window', value: '_blank' }
 ];
 
-const getTargets = (editor): Option<ListItem[]> => {
-  if (Settings.shouldShowTargetList(editor.settings)) {
-    const list = Settings.getTargetList(editor.settings);
+const getTargets = (editor: Editor): Optional<ListItem[]> => {
+  const list = Settings.getTargetList(editor);
+  if (Type.isArray(list)) {
     return ListOptions.sanitize(list).orThunk(
-      () => Option.some(fallbacks)
+      () => Optional.some(fallbacks)
     );
+  } else if (list === false) {
+    return Optional.none();
   }
-  return Option.none();
+  return Optional.some(fallbacks);
 };
 
 export const TargetOptions = {

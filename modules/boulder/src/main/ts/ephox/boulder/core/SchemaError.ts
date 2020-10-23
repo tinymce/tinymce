@@ -1,6 +1,5 @@
-import { formatObj } from '../format/PrettyPrinter';
-import { Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
+import { formatObj } from '../format/PrettyPrinter';
 
 const nu = function (path, getErrorInfo) {
   return SimpleResult.serror([{
@@ -39,7 +38,7 @@ const custom = function (path, err) {
 };
 
 const toString = function (error) {
-  return 'Failed path: ('  + error.path.join(' > ') + ')\n' + error.getErrorInfo();
+  return 'Failed path: (' + error.path.join(' > ') + ')\n' + error.getErrorInfo();
 };
 
 export {

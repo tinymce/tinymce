@@ -5,17 +5,37 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element, HTMLAnchorElement } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
+const isAnchor = (elm: Node): elm is HTMLAnchorElement => elm && elm.nodeName.toLowerCase() === 'a';
+const isLink = (elm: Node): elm is HTMLAnchorElement => isAnchor(elm) && !!getHref(elm);
+
+const collectNodesInRange = <T extends Node>(rng: Range, predicate: (node) => node is T): T[] => {
+  if (rng.collapsed) {
+    return [];
+  } else {
+    const contents = rng.cloneContents();
+    const walker = new DomTreeWalker(contents.firstChild, contents);
+    const elements: T[] = [];
+    let current: Node = contents.firstChild;
+    do {
+      if (predicate(current)) {
+        elements.push(current);
+      }
+    } while ((current = walker.next()));
+    return elements;
+  }
+};
+
 const hasProtocol = (url: string): boolean => /^\w+:/i.test(url);
 
-const getHref = (elm: HTMLAnchorElement): string => {
+const getHref = (elm: Element): string => {
   // Returns the real href value not the resolved a.href value
   const href = elm.getAttribute('data-mce-href');
   return href ? href : elm.getAttribute('href');
@@ -25,30 +45,22 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
   const rules = [ 'noopener' ];
   const rels = rel ? rel.split(/\s+/) : [];
 
-  const toString = (rels: string[]): string => {
-    return Tools.trim(rels.sort().join(' '));
-  };
+  const toString = (rels: string[]): string => Tools.trim(rels.sort().join(' '));
 
   const addTargetRules = (rels: string[]): string[] => {
     rels = removeTargetRules(rels);
     return rels.length > 0 ? rels.concat(rules) : rules;
   };
 
-  const removeTargetRules = (rels: string[]): string[] => {
-    return rels.filter((val) => {
-      return Tools.inArray(rules, val) === -1;
-    });
-  };
+  const removeTargetRules = (rels: string[]): string[] => rels.filter((val) => Tools.inArray(rules, val) === -1);
 
   const newRels = isUnsafe ? addTargetRules(rels) : removeTargetRules(rels);
   return newRels.length > 0 ? toString(newRels) : '';
 };
 
-const trimCaretContainers = (text: string): string => {
-  return text.replace(/\uFEFF/g, '');
-};
+const trimCaretContainers = (text: string): string => text.replace(/\uFEFF/g, '');
 
-const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement => {
+const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
   selectedElm = selectedElm || editor.selection.getNode();
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
@@ -63,38 +75,31 @@ const getAnchorText = (selection, anchorElm: HTMLAnchorElement) => {
   return trimCaretContainers(text);
 };
 
-const isLink = (elm: HTMLAnchorElement): boolean => {
-  return elm && elm.nodeName === 'A' && !!elm.href;
+const hasLinks = (elements: Node[]) => Tools.grep(elements, isLink).length > 0;
+
+const hasLinksInSelection = (rng: Range) => collectNodesInRange(rng, isLink).length > 0;
+
+const isOnlyTextSelected = (editor: Editor) => {
+  // Allow anchor and inline text elements to be in the selection but nothing else
+  const inlineTextElements = editor.schema.getTextInlineElements();
+  const isElement = (elm: Node): elm is Element => elm.nodeType === 1 && !isAnchor(elm) && !Obj.has(inlineTextElements, elm.nodeName.toLowerCase());
+
+  // Collect all non inline text elements in the range and make sure no elements were found
+  const elements = collectNodesInRange(editor.selection.getRng(), isElement);
+  return elements.length === 0;
 };
 
-const hasLinks = (elements: HTMLAnchorElement[]) => {
-  return Tools.grep(elements, isLink).length > 0;
-};
+const isImageFigure = (elm: Element) => elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
-const isOnlyTextSelected = (html: string) => {
-  // Partial html and not a fully selected anchor element
-  if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') === -1)) {
-    return false;
-  }
-
-  return true;
-};
-
-const isImageFigure = (elm: Element) => {
-  return elm && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
-};
-
-const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => {
-  return Arr.foldl([ 'title', 'rel', 'class', 'target' ], (acc, key) => {
-    data[key].each((value) => {
-      // If dealing with an empty string, then treat that as being null so the attribute is removed
-      acc[key] = value.length > 0 ? value : null;
-    });
-    return acc;
-  }, {
-    href: data.href
+const getLinkAttrs = (data: LinkDialogOutput): Record<string, string> => Arr.foldl([ 'title', 'rel', 'class', 'target' ], (acc, key) => {
+  data[key].each((value) => {
+    // If dealing with an empty string, then treat that as being null so the attribute is removed
+    acc[key] = value.length > 0 ? value : null;
   });
-};
+  return acc;
+}, {
+  href: data.href
+});
 
 const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP
@@ -105,7 +110,23 @@ const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExtern
   return href;
 };
 
-const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<string>, linkAttrs: Record<string, string>) => {
+const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) => {
+  const newLinkAttrs = { ...linkAttrs };
+  if (!(Settings.getRelList(editor).length > 0) && Settings.allowUnsafeLinkTarget(editor) === false) {
+    const newRel = applyRelTargetRules(newLinkAttrs.rel, newLinkAttrs.target === '_blank');
+    newLinkAttrs.rel = newRel ? newRel : null;
+  }
+
+  if (Optional.from(newLinkAttrs.target).isNone() && Settings.getTargetList(editor) === false) {
+    newLinkAttrs.target = Settings.getDefaultLinkTarget(editor);
+  }
+
+  newLinkAttrs.href = handleExternalTargets(newLinkAttrs.href, Settings.assumeExternalTargets(editor));
+
+  return newLinkAttrs;
+};
+
+const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
     if (anchorElm.hasOwnProperty('innerText')) {
@@ -119,7 +140,7 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Option<s
   editor.selection.select(anchorElm);
 };
 
-const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, linkAttrs: Record<string, string>) => {
+const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>, linkAttrs: Record<string, string>) => {
   if (isImageFigure(selectedElm)) {
     linkImageFigure(editor, selectedElm, linkAttrs);
   } else {
@@ -134,19 +155,12 @@ const createLink = (editor: Editor, selectedElm: Element, text: Option<string>, 
   }
 };
 
-const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  const selectedElm = editor.selection.getNode();
+  const anchorElm = getAnchorElement(editor, selectedElm);
+  const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
+
   editor.undoManager.transact(() => {
-    const selectedElm = editor.selection.getNode();
-    const anchorElm = getAnchorElement(editor, selectedElm);
-    const linkAttrs = getLinkAttrs(data);
-
-    if (!Settings.hasRelList(editor.settings) && Settings.allowUnsafeLinkTarget(editor.settings) === false) {
-      const newRel = applyRelTargetRules(linkAttrs.rel, linkAttrs.target === '_blank');
-      linkAttrs.rel = newRel ? newRel : null;
-    }
-
-    linkAttrs.href = handleExternalTargets(linkAttrs.href, Settings.assumeExternalTargets(editor.settings));
-
     if (data.href === attachState.href) {
       attachState.attach();
     }
@@ -160,19 +174,58 @@ const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) 
   });
 };
 
-const unlink = (editor: Editor) => {
+const unlinkSelection = (editor: Editor) => {
+  const dom = editor.dom, selection = editor.selection;
+  const bookmark = selection.getBookmark();
+  const rng = selection.getRng().cloneRange();
+
+  // Extend the selection out to the entire anchor element
+  const startAnchorElm = dom.getParent(rng.startContainer, 'a[href]', editor.getBody());
+  const endAnchorElm = dom.getParent(rng.endContainer, 'a[href]', editor.getBody());
+  if (startAnchorElm) {
+    rng.setStartBefore(startAnchorElm);
+  }
+  if (endAnchorElm) {
+    rng.setEndAfter(endAnchorElm);
+  }
+  selection.setRng(rng);
+
+  // Remove the link
+  editor.execCommand('unlink');
+  selection.moveToBookmark(bookmark);
+};
+
+const unlinkDomMutation = (editor: Editor) => {
   editor.undoManager.transact(() => {
     const node = editor.selection.getNode();
     if (isImageFigure(node)) {
       unlinkImageFigure(editor, node);
     } else {
-      const anchorElm = editor.dom.getParent(node, 'a[href]', editor.getBody());
-      if (anchorElm) {
-        editor.dom.remove(anchorElm, true);
-      }
+      unlinkSelection(editor);
     }
     editor.focus();
   });
+};
+
+const unwrapOptions = (data: LinkDialogOutput) => {
+  const { class: cls, href, rel, target, text, title } = data;
+
+  return Obj.filter({
+    class: cls.getOrNull(),
+    href,
+    rel: rel.getOrNull(),
+    target: target.getOrNull(),
+    text: text.getOrNull(),
+    title: title.getOrNull()
+  }, (v, _k) => Type.isNull(v) === false);
+};
+
+const link = (editor: Editor, attachState: AttachState, data: LinkDialogOutput) => {
+  editor.hasPlugin('rtc', true) ? editor.execCommand('createlink', false, unwrapOptions(data)) : linkDomMutation(editor, attachState, data);
+};
+
+const unlink = (editor: Editor) => {
+  editor.hasPlugin('rtc', true) ? editor.execCommand('unlink') : unlinkDomMutation(editor);
 };
 
 const unlinkImageFigure = (editor: Editor, fig: Element) => {
@@ -195,11 +248,12 @@ const linkImageFigure = (editor: Editor, fig: Element, attrs: Record<string, str
   }
 };
 
-export default {
+export {
   link,
   unlink,
   isLink,
   hasLinks,
+  hasLinksInSelection,
   getHref,
   isOnlyTextSelected,
   getAnchorElement,

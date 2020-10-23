@@ -1,10 +1,11 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+
 import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec } from '../../api/behaviour/Behaviour';
 import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive: (comp: AlloyComponent) => void;
@@ -36,10 +37,10 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
 }
 
 export interface TooltippingState extends BehaviourState {
-  getTooltip: () => Option<AlloyComponent>;
+  getTooltip: () => Optional<AlloyComponent>;
   setTooltip: (popup: AlloyComponent) => void;
   clearTooltip: () => void;
   clearTimer: () => void;
-  resetTimer: (f: Function, delay: number) => void;
+  resetTimer: (f: () => any, delay: number) => void;
   isShowing: () => boolean;
 }

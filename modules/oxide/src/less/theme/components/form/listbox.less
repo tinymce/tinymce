@@ -1,0 +1,75 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// ListBox
+//
+
+@listbox-disabled-background-color: darken(@background-color, 5%);
+@listbox-disabled-text-color: fade(@text-color, 85%);
+@listbox-button-chevron-color: contrast(@background-color, @color-white, @color-black);
+@listbox-button-chevron-width: @toolbar-button-chevron-width;
+
+.tox {
+  .tox-listboxfield {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .tox-listboxfield .tox-listbox--select[disabled] {
+    background-color: @selectbox-disabled-background-color;
+    color: @selectbox-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  .tox-listbox__select-label {
+    cursor: default;
+    flex: 1;
+    margin: 0 4px;
+  }
+
+  .tox-listbox__select-chevron {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: @listbox-button-chevron-width;
+  }
+
+  .tox-listbox__select-chevron svg {
+    fill: @listbox-button-chevron-color;
+  }
+
+  .tox-listboxfield .tox-listbox--select {
+    &:extend(.tox .tox-textfield);
+
+    align-items: center;
+    display: flex;
+  }
+
+  .tox-listboxfield .tox-listbox--select:focus {
+    &:extend(.tox .tox-textfield:focus);
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-listboxfield {
+    svg {
+      right: @pad-sm;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-listboxfield {
+    svg {
+      left: @pad-sm;
+    }
+  }
+}

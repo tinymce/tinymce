@@ -1,7 +1,6 @@
-import Attribution from './Attribution';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
+import * as Attribution from './Attribution';
 
 const ATTR_REGEX = /^\[(.*)\]$/;
 
@@ -21,10 +20,10 @@ const is = function (item: Gene, selector: string) {
   const attrMatch = function (match: RegExpMatchArray) {
     return (Attribution.get(item, match[1]) !== undefined);
   };
-  return Option.from(selector.match(ATTR_REGEX)).fold(tagMatch, attrMatch);
+  return Optional.from(selector.match(ATTR_REGEX)).fold(tagMatch, attrMatch);
 };
 
-export default {
+export {
   eq,
   is
 };

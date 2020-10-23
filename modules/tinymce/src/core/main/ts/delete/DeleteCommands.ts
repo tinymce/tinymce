@@ -5,30 +5,40 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import BlockBoundaryDelete from './BlockBoundaryDelete';
-import BlockRangeDelete from './BlockRangeDelete';
-import CefDelete from './CefDelete';
-import DeleteUtils from './DeleteUtils';
-import BoundaryDelete from './InlineBoundaryDelete';
-import TableDelete from './TableDelete';
-import InlineFormatDelete from './InlineFormatDelete';
-import CefBoundaryDelete from './CefBoundaryDelete';
+import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
+import * as BlockBoundaryDelete from './BlockBoundaryDelete';
+import * as BlockRangeDelete from './BlockRangeDelete';
+import * as CaretBoundaryDelete from './CaretBoundaryDelete';
+import * as CefDelete from './CefDelete';
+import * as DeleteUtils from './DeleteUtils';
+import * as ImageBlockDelete from './ImageBlockDelete';
+import * as BoundaryDelete from './InlineBoundaryDelete';
+import * as InlineFormatDelete from './InlineFormatDelete';
+import * as MediaDelete from './MediaDelete';
+import * as Outdent from './Outdent';
+import * as TableDelete from './TableDelete';
 
-const nativeCommand = function (editor: Editor, command: string) {
+const nativeCommand = (editor: Editor, command: string) => {
   editor.getDoc().execCommand(command, false, null);
 };
 
-const deleteCommand = function (editor: Editor) {
-  if (CefDelete.backspaceDelete(editor, false)) {
+const deleteCommand = (editor: Editor, caret: Cell<Text>) => {
+  if (Outdent.backspaceDelete(editor, false)) {
     return;
-  } else if (CefBoundaryDelete.backspaceDelete(editor, false)) {
+  } else if (CefDelete.backspaceDelete(editor, false)) {
     return;
-  } else if (BoundaryDelete.backspaceDelete(editor, false)) {
+  } else if (CaretBoundaryDelete.backspaceDelete(editor, false)) {
+    return;
+  } else if (BoundaryDelete.backspaceDelete(editor, caret, false)) {
     return;
   } else if (BlockBoundaryDelete.backspaceDelete(editor, false)) {
     return;
   } else if (TableDelete.backspaceDelete(editor)) {
+    return;
+  } else if (ImageBlockDelete.backspaceDelete(editor, false)) {
+    return;
+  } else if (MediaDelete.backspaceDelete(editor, false)) {
     return;
   } else if (BlockRangeDelete.backspaceDelete(editor, false)) {
     return;
@@ -40,16 +50,20 @@ const deleteCommand = function (editor: Editor) {
   }
 };
 
-const forwardDeleteCommand = function (editor: Editor) {
+const forwardDeleteCommand = (editor: Editor, caret: Cell<Text>) => {
   if (CefDelete.backspaceDelete(editor, true)) {
     return;
-  } else if (CefBoundaryDelete.backspaceDelete(editor, true)) {
+  } else if (CaretBoundaryDelete.backspaceDelete(editor, true)) {
     return;
-  } else if (BoundaryDelete.backspaceDelete(editor, true)) {
+  } else if (BoundaryDelete.backspaceDelete(editor, caret, true)) {
     return;
   } else if (BlockBoundaryDelete.backspaceDelete(editor, true)) {
     return;
   } else if (TableDelete.backspaceDelete(editor)) {
+    return;
+  } else if (ImageBlockDelete.backspaceDelete(editor, true)) {
+    return;
+  } else if (MediaDelete.backspaceDelete(editor, true)) {
     return;
   } else if (BlockRangeDelete.backspaceDelete(editor, true)) {
     return;
@@ -60,7 +74,18 @@ const forwardDeleteCommand = function (editor: Editor) {
   }
 };
 
-export default {
+const setup = (editor: Editor, caret: Cell<Text>) => {
+  editor.addCommand('delete', () => {
+    deleteCommand(editor, caret);
+  });
+
+  editor.addCommand('forwardDelete', () => {
+    forwardDeleteCommand(editor, caret);
+  });
+};
+
+export {
   deleteCommand,
-  forwardDeleteCommand
+  forwardDeleteCommand,
+  setup
 };

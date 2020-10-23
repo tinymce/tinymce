@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
-import SelectionBookmark from '../selection/SelectionBookmark';
+import { Arr, Optional } from '@ephox/katamari';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 import Editor from './Editor';
+import { Dialog } from './ui/Ui';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.
@@ -33,22 +33,22 @@ import Editor from './Editor';
  * });
  */
 
-type InstanceApi<T> = Types.UrlDialog.UrlDialogInstanceApi | Types.Dialog.DialogInstanceApi<T>;
-
-export interface WindowManagerImpl {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params, closeWindow: (dialog: Types.Dialog.DialogInstanceApi<T>) => void) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi, closeWindow: (dialog: Types.UrlDialog.UrlDialogInstanceApi) => void) => Types.UrlDialog.UrlDialogInstanceApi;
-  alert: (message: string, callback: () => void) => void;
-  confirm: (message: string, callback: (state: boolean) => void) => void;
-  close: (dialog: InstanceApi<any>) => void;
-}
-
 interface WindowManager {
-  open: <T>(config: Types.Dialog.DialogApi<T>, params?) => Types.Dialog.DialogInstanceApi<T>;
-  openUrl: <T>(config: Types.UrlDialog.UrlDialogApi) => Types.UrlDialog.UrlDialogInstanceApi;
+  open: <T>(config: Dialog.DialogSpec<T>, params?) => Dialog.DialogInstanceApi<T>;
+  openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
   close: () => void;
+}
+
+export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
+
+export interface WindowManagerImpl {
+  open: <T>(config: Dialog.DialogSpec<T>, params, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
+  openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
+  alert: (message: string, callback: () => void) => void;
+  confirm: (message: string, callback: (state: boolean) => void) => void;
+  close: (dialog: InstanceApi<any>) => void;
 }
 
 const WindowManager = function (editor: Editor): WindowManager {
@@ -65,24 +65,24 @@ const WindowManager = function (editor: Editor): WindowManager {
     };
   };
 
-  const fireOpenEvent = function <T>(dialog: InstanceApi<T>) {
+  const fireOpenEvent = function <T> (dialog: InstanceApi<T>) {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function <T>(dialog: InstanceApi<T>) {
+  const fireCloseEvent = function <T> (dialog: InstanceApi<T>) {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function <T>(dialog: InstanceApi<T>) {
+  const addDialog = function <T> (dialog: InstanceApi<T>) {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function <T>(dialog: InstanceApi<T>) {
+  const closeDialog = function <T> (dialog: InstanceApi<T>) {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, function (otherDialog) {
       return otherDialog !== dialog;
@@ -94,7 +94,7 @@ const WindowManager = function (editor: Editor): WindowManager {
   };
 
   const getTopDialog = function () {
-    return Option.from(dialogs[dialogs.length - 1]);
+    return Optional.from(dialogs[dialogs.length - 1]);
   };
 
   const storeSelectionAndOpenDialog = <T extends InstanceApi<any>>(openDialog: () => T) => {
@@ -106,11 +106,11 @@ const WindowManager = function (editor: Editor): WindowManager {
     return dialog;
   };
 
-  const open = function <T>(args, params?): Types.Dialog.DialogInstanceApi<T> {
+  const open = function <T> (args, params?): Dialog.DialogInstanceApi<T> {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 
-  const openUrl = function (args): Types.UrlDialog.UrlDialogInstanceApi {
+  const openUrl = function (args): Dialog.UrlDialogInstanceApi {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
@@ -140,10 +140,7 @@ const WindowManager = function (editor: Editor): WindowManager {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} args Optional name/value settings collection contains things like title/body etc.
-     * @param {Object} params Options like title, file, width, height etc.
-     * @option {String} title Window title.
-     * @option {Object} body Object containing the items to render in the window.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/dialog/#configurationoptions">Dialog - Configuration options</a>.
      */
     open,
 
@@ -151,23 +148,18 @@ const WindowManager = function (editor: Editor): WindowManager {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} args Optional name/value settings collection contains things like width/height/url etc.
-     * @param {Object} params Options like title, file, width, height etc.
-     * @option {String} title Window title.
-     * @option {String} url URL of the file to open in the window.
-     * @option {Number} width Width in pixels.
-     * @option {Number} height Height in pixels.
+     * @param {Object} args For a list of options, see: <a href="https://www.tiny.cloud/docs/ui-components/urldialog/#urldialogconfiguration">URL dialog configuration</a>.
      */
     openUrl,
 
     /**
-     * Creates a alert dialog. Please don't use the blocking behavior of this
+     * Creates an alert dialog. Please don't use the blocking behavior of this
      * native version use the callback method instead then it can be extended.
      *
      * @method alert
      * @param {String} message Text to display in the new alert dialog.
-     * @param {function} callback Callback function to be executed after the user has selected ok.
-     * @param {Object} scope Optional scope to execute the callback in.
+     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok.
+     * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
      * // Displays an alert box using the active editors window manager instance
      * tinymce.activeEditor.windowManager.alert('Hello world!');
@@ -180,8 +172,8 @@ const WindowManager = function (editor: Editor): WindowManager {
      *
      * @method confirm
      * @param {String} message Text to display in the new confirm dialog.
-     * @param {function} callback Callback function to be executed after the user has selected ok or cancel.
-     * @param {Object} scope Optional scope to execute the callback in.
+     * @param {function} callback (Optional) Callback function to be executed after the user has selected ok or cancel.
+     * @param {Object} scope (Optional) Scope to execute the callback in.
      * @example
      * // Displays an confirm box and an alert message will be displayed depending on what you choose in the confirm
      * tinymce.activeEditor.windowManager.confirm("Do you want to do something", function(s) {

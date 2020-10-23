@@ -1,28 +1,21 @@
-import { assert, UnitTest } from '@ephox/bedrock';
-import { Option } from '@ephox/katamari';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Gene } from 'ephox/boss/api/Gene';
-import Detach from 'ephox/boss/mutant/Detach';
-import Logger from 'ephox/boss/mutant/Logger';
-import Tracks from 'ephox/boss/mutant/Tracks';
+import * as Detach from 'ephox/boss/mutant/Detach';
+import * as Logger from 'ephox/boss/mutant/Logger';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('DetachTest', function() {
+UnitTest.test('DetachTest', function () {
 
-  const check = function (expectedRemain: string, expectedDetach: Option<string>, input: Gene, id: string) {
-    const family = Tracks.track(input, Option.none());
+  const check = function (expectedRemain: string, expectedDetach: Optional<string>, input: Gene, id: string) {
+    const family = Tracks.track(input, Optional.none());
     const actualDetach = Detach.detach(family, Gene(id, '.'));
-    assert.eq(expectedRemain, Logger.basic(family));
-    expectedDetach.fold(() => {
-      assert.eq(true, actualDetach.isNone(), 'Expected no detached node');
-    }, (expected) => {
-      actualDetach.map(Logger.basic).fold(() => {
-        assert.fail('Expected detached node to be ' + expected + ' but no node found.');
-      }, (actual) => {
-        assert.eq(expected, actual);
-      })
-    });
+    Assert.eq('expectedRemain', expectedRemain, Logger.basic(family));
+    KAssert.eqOptional('expectedDetach', expectedDetach, actualDetach.map(Logger.basic));
   };
 
-  check('A(B)', Option.some('C(D(E),F)'),
+  check('A(B)', Optional.some('C(D(E),F)'),
     Gene('A', '.', [
       Gene('B', '.', []),
       Gene('C', '.', [
@@ -33,7 +26,7 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'C');
 
-  check('A(B,C(D(E)))', Option.some('F'),
+  check('A(B,C(D(E)))', Optional.some('F'),
     Gene('A', '.', [
       Gene('B', '.', []),
       Gene('C', '.', [
@@ -44,7 +37,7 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'F');
 
-  check('A(B,C(F))', Option.some('D(E)'),
+  check('A(B,C(F))', Optional.some('D(E)'),
     Gene('A', '.', [
       Gene('B', '.'),
       Gene('C', '.', [
@@ -55,7 +48,7 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'D');
 
-  check('A(B,C(D(E),F))', Option.none(), 
+  check('A(B,C(D(E),F))', Optional.none(),
     Gene('A', '.', [
       Gene('B', '.'),
       Gene('C', '.', [
@@ -66,7 +59,7 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'Z');
 
-  check('A(B,C(D(E)))', Option.some('F'),
+  check('A(B,C(D(E)))', Optional.some('F'),
     Gene('A', '.', [
       Gene('B', '.'),
       Gene('C', '.', [
@@ -77,4 +70,3 @@ UnitTest.test('DetachTest', function() {
       ])
     ]), 'F');
 });
-

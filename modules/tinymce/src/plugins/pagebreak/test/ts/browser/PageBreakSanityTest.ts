@@ -1,5 +1,5 @@
-import { ApproxStructure, Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import PageBreakPlugin from 'tinymce/plugins/pagebreak/Plugin';
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', (suc
   Theme();
   PageBreakPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 

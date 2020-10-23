@@ -71,7 +71,7 @@ const isInline = function <E, D> (universe: Universe<E, D>, item: E) {
   return !(isBlock(universe, item) || isEmptyTag(universe, item)) && universe.property().name(item) !== 'li';
 };
 
-export default {
+export {
   isBlock,
   isList,
   isFormatting,

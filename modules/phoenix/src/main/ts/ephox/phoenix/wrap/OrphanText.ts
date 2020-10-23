@@ -2,9 +2,9 @@ import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
 // Textnodes cannot be children of these tags
-const textBlacklist = ['table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol'];
+const textBlacklist = [ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ];
 
-export const OrphanText = function <E, D>(universe: Universe<E, D>) {
+export const OrphanText = function <E, D> (universe: Universe<E, D>) {
   const domUtils = universe.property();
   const validateParent = function (node: E, blacklist: string[]) {
     return domUtils.parent(node).map(domUtils.name).map(function (name) {

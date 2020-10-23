@@ -1,6 +1,6 @@
 # Description
 
-`katamari` is a collection of various data structures and reusable higher-order functions. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`katamari` is a collection of various data structures and reusable higher-order functions. It does not bundle any commands. It is only a collection of modules.
 
 # Installation
 
@@ -21,7 +21,7 @@ Below is a list of commonly used parts of `katamari`
 
 ## Optional Data Types
 
-`Option`: A representation of None or Some(x)
+`Optional`: A representation of None or Some(x)
 `Result`: A representation of Error(str) or Value(v)
 
 ## Asynchronous Data Types
@@ -30,7 +30,7 @@ Below is a list of commonly used parts of `katamari`
 `FutureResult`: A composition of a `Result` and a `Future`
 `LazyValue`: An asynchronous value that is only calculated once
 
-## Mutable Data Types 
+## Mutable Data Types
 
 `Cell`: A mutable piece of data'
 `Singleton`: A mutable piece of optional data
@@ -51,7 +51,7 @@ Below is a list of commonly used parts of `katamari`
 
 # Tests
 
-`katamari` uses `bolt` to run atomic tests. The tests are chiefly written using [jsverify](https://github.com/jsverify/jsverify)
+`katamari` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests. The tests are chiefly written using [jsverify](https://github.com/jsverify/jsverify)
 
 ## Running Tests
 

@@ -1,7 +1,7 @@
-import { Step, Assertions, Logger, Chain, GeneralSteps } from '@ephox/agar';
-import { Composing, Representing } from '@ephox/alloy';
+import { Assertions, Chain, GeneralSteps, Logger, Step } from '@ephox/agar';
+import { AlloyComponent, Composing, Representing } from '@ephox/alloy';
 
-const sAssertComposedValue = (label, expected, component) => Logger.t(
+const sAssertComposedValue = (label: string, expected, component: AlloyComponent) => Logger.t(
   'sAssertComposedValue: ' + label,
   Step.sync(() => {
     const c = Composing.getCurrent(component).getOrDie('Trying to get the composed component');
@@ -9,7 +9,7 @@ const sAssertComposedValue = (label, expected, component) => Logger.t(
   })
 );
 
-const sAssertValue = (label, expected, component) => Logger.t(
+const sAssertValue = (label: string, expected, component: AlloyComponent) => Logger.t(
   'sAssertValue: ' + label,
   Chain.asStep(component, [
     Chain.mapper(Representing.getValue),
@@ -17,14 +17,14 @@ const sAssertValue = (label, expected, component) => Logger.t(
   ])
 );
 
-const sSetValue = (label, component, newValue) => Logger.t(
+const sSetValue = (label: string, component: AlloyComponent, newValue) => Logger.t(
   'sSetValue: ' + label,
   Step.sync(() => {
     Representing.setValue(component, newValue);
   })
 );
 
-const sSetComposedValue = (label, component, newValue) => Logger.t(
+const sSetComposedValue = (label: string, component: AlloyComponent, newValue) => Logger.t(
   'sAssertComposedValue: ' + label,
   Step.sync(() => {
     const c = Composing.getCurrent(component).getOrDie('Trying to get the composed component');
@@ -32,7 +32,7 @@ const sSetComposedValue = (label, component, newValue) => Logger.t(
   })
 );
 
-const sAssertRoundtrip = (label, component, newValue) => GeneralSteps.sequence([
+const sAssertRoundtrip = (label: string, component: AlloyComponent, newValue) => GeneralSteps.sequence([
   sSetValue(label, component, newValue),
   sAssertValue(label, newValue, component)
 ]);

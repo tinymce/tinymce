@@ -1,23 +1,8 @@
-import { FieldPresence, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun, Id, Option, Result } from '@ephox/katamari';
-import { BodyComponentApi } from './BodyComponent';
-import { InternalPanel, PanelApi, panelFields } from './Panel';
-import { ExternalTab, InternalTabPanel, TabPanelApi, tabPanelFields } from './TabPanel';
-
-export interface DialogButtonApi {
-  type: 'submit' | 'cancel' | 'custom';
-  name?: string;
-  text: string;
-  align?: 'start' | 'end';
-  primary?: boolean;
-  disabled?: boolean;
-  icon?: string;
-}
-
-export type PanelApi = PanelApi;
-export type TabPanelApi = TabPanelApi;
-export type TabApi = ExternalTab;
-export type BodyComponentApi = BodyComponentApi;
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Fun, Result } from '@ephox/katamari';
+import * as FooterButton from './DialogFooterButton';
+import * as Panel from './Panel';
+import * as TabPanel from './TabPanel';
 
 export type DialogDataItem = any;
 export type DialogData = Record<string, DialogDataItem>;
@@ -28,7 +13,7 @@ export interface DialogInstanceApi<T extends DialogData> {
   disable: (name: string) => void;
   focus: (name: string) => void;
   showTab: (name: string) => void;
-  redial: (nu: DialogApi<T>) => void;
+  redial: (nu: DialogSpec<T>) => void;
   enable: (name: string) => void;
   block: (msg: string) => void;
   unblock: () => void;
@@ -57,11 +42,11 @@ export type DialogCancelHandler<T> = (api: DialogInstanceApi<T>) => void;
 export type DialogTabChangeHandler<T> = (api: DialogInstanceApi<T>, details: DialogTabChangeDetails) => void;
 
 export type DialogSize = 'normal' | 'medium' | 'large';
-export interface DialogApi<T extends DialogData> {
+export interface DialogSpec<T extends DialogData> {
   title: string;
   size?: DialogSize;
-  body: TabPanelApi | PanelApi;
-  buttons: DialogButtonApi[];
+  body: TabPanel.TabPanelSpec | Panel.PanelSpec;
+  buttons: FooterButton.DialogFooterButtonSpec[];
   initialData?: T;
 
   // Gets fired when a component within the dialog has an action used by some components
@@ -83,21 +68,11 @@ export interface DialogApi<T extends DialogData> {
   onTabChange?: DialogTabChangeHandler<T>;
 }
 
-export interface DialogButton {
-  type: 'submit' | 'cancel' | 'custom';
-  name: string;
-  text: string;
-  align: 'start' | 'end';
-  primary: boolean;
-  disabled: boolean;
-  icon: Option<string>;
-}
-
 export interface Dialog<T> {
   title: string;
   size: DialogSize;
-  body: InternalTabPanel | InternalPanel;
-  buttons: DialogButton[];
+  body: TabPanel.TabPanel | Panel.Panel;
+  buttons: FooterButton.DialogFooterButton[];
   initialData: T;
   onAction: DialogActionHandler<T>;
   onChange: DialogChangeHandler<T>;
@@ -107,32 +82,14 @@ export interface Dialog<T> {
   onTabChange: DialogTabChangeHandler<T>;
 }
 
-export const dialogButtonFields = [
-  FieldSchema.field(
-    'name',
-    'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('button-name');
-    }),
-    ValueSchema.string
-  ),
-  FieldSchema.strictString('text'),
-  FieldSchema.optionString('icon'),
-  FieldSchema.defaultedStringEnum('align', 'end', ['start', 'end']),
-  FieldSchema.defaultedBoolean('primary', false),
-  FieldSchema.defaultedBoolean('disabled', false)
-];
-
-export const dialogButtonSchema = ValueSchema.objOf([
-  FieldSchema.strictStringEnum('type', ['submit', 'cancel', 'custom']),
-  ...dialogButtonFields
-]);
+export const dialogButtonFields = FooterButton.dialogFooterButtonFields;
+export const dialogButtonSchema = FooterButton.dialogFooterButtonSchema;
 
 export const dialogSchema = ValueSchema.objOf([
   FieldSchema.strictString('title'),
-  FieldSchema.strictOf('body', ValueSchema.choose('type', {
-    panel: panelFields,
-    tabpanel: tabPanelFields
+  FieldSchema.strictOf('body', ValueSchema.chooseProcessor('type', {
+    panel: Panel.panelSchema,
+    tabpanel: TabPanel.tabPanelSchema
   })),
   FieldSchema.defaultedString('size', 'normal'),
   FieldSchema.strictArrayOf('buttons', dialogButtonSchema),
@@ -142,9 +99,8 @@ export const dialogSchema = ValueSchema.objOf([
   FieldSchema.defaultedFunction('onSubmit', Fun.noop),
   FieldSchema.defaultedFunction('onClose', Fun.noop),
   FieldSchema.defaultedFunction('onCancel', Fun.noop),
-  FieldSchema.defaulted('onTabChange', Fun.noop),
+  FieldSchema.defaulted('onTabChange', Fun.noop)
 ]);
 
-export const createDialog = <T>(spec: DialogApi<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw('dialog', dialogSchema, spec);
-};
+export const createDialog = <T>(spec: DialogSpec<T>): Result<Dialog<T>, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw('dialog', dialogSchema, spec);

@@ -1,11 +1,10 @@
-import { Logger, Pipeline, Keyboard, Step, Keys, GeneralSteps, RealKeys } from '@ephox/agar';
+import { GeneralSteps, Keyboard, Keys, Logger, Pipeline, RealKeys, Step } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
-import { setTimeout } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader, TinyUi, TinyApis } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -37,19 +36,19 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
     };
   }
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
-      const eDoc = Element.fromDom(editor.getDoc());
+      const eDoc = SugarElement.fromDom(editor.getDoc());
 
       const sTestAutocompleter = (scenario: Scenario) => {
         const initialContent = scenario.initialContent || scenario.triggerChar;
         const additionalContent = scenario.additionalContent;
         return GeneralSteps.sequence([
           store.sClear,
-          tinyApis.sSetContent(`<p></p>`),
+          tinyApis.sSetContent('<p></p>'),
           RealKeys.sSendKeysOn(
             'iframe => body => p',
             [
@@ -96,7 +95,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
       });
 
       Pipeline.async({ }, Logger.ts('Trigger autocompleter', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         Logger.t('Checking delayed autocomplete, (columns = auto), trigger: "$"', sTestDelayedResponseAutocomplete)
       ]), onSuccess, onFailure);
     },
@@ -108,19 +107,17 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
           ch: '$',
           minChars: 0,
           columns: 'auto',
-          fetch: (pattern, maxResults) => {
-            return new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(
-                  Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
-                    value: `dollar-${letter}`,
-                    text: `dollar-${letter}`,
-                    icon: '$'
-                  }))
-                );
-              }, 500);
-            });
-          },
+          fetch: (_pattern, _maxResults) => new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(
+                Arr.map([ 'a', 'b', 'c', 'd' ], (letter) => ({
+                  value: `dollar-${letter}`,
+                  text: `dollar-${letter}`,
+                  icon: '$'
+                }))
+              );
+            }, 500);
+          }),
           onAction: (autocompleteApi, rng, value) => {
             store.adder('dollars:' + value)();
             ed.selection.setRng(rng);

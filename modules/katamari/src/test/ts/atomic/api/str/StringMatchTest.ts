@@ -1,30 +1,14 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import { StringMatch } from 'ephox/katamari/api/StringMatch';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('StringMatchTest', function() {
-  const check = function (testcase) {
-    assert.eq(testcase.expected, StringMatch.matches(testcase.match, testcase.input));
-    assert.eq(!testcase.expected, StringMatch.matches(
+UnitTest.test('StringMatch: unit tests', () => {
+  const check = (testcase) => {
+    Assert.eq('matches', testcase.expected, StringMatch.matches(testcase.match, testcase.input));
+    Assert.eq('not matches', !testcase.expected, StringMatch.matches(
       StringMatch.not(testcase.match),
       testcase.input
     ));
-  };
-
-  const toString = function (subject) {
-    return StringMatch.cata(subject, function (s) {
-      return 'starts with: ' + s;
-    }, function (p) {
-      return 'pattern: ' + p;
-    }, function (s) {
-      return 'contains: ' + s;
-    }, function (s) {
-      return 'exact: ' + s;
-    }, function () {
-      return 'all';
-    }, function (n) {
-      return 'not: ' + toString(n);
-    });
   };
 
   const testcases = [
@@ -67,137 +51,142 @@ UnitTest.test('StringMatchTest', function() {
     { expected: true, input: '', match: StringMatch.all() }
   ];
 
-  for (const tc in testcases) {
-    check(testcases[tc]);
+  for (let i = 0; i < testcases.length; i++) {
+    check(testcases[i]);
   }
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.starts(s1), s1 + s) === true',
-    Jsc.string,
-    Jsc.string,
-    function (s, s1) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.starts(s1), s1 + s) === true', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    (s, s1) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.starts(s1, StringMatch.caseInsensitive),
         s1 + s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.contains(s1), s1 + s) === true',
-    Jsc.string,
-    Jsc.string,
-    function (s, s1) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.contains(s1), s1 + s) === true', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    (s, s1) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.contains(s1, StringMatch.caseInsensitive),
         s1 + s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.contains(s1), s + s1) === true',
-    Jsc.string,
-    Jsc.string,
-    function (s, s1) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.contains(s1), s + s1) === true', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    (s, s1) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.contains(s1, StringMatch.caseInsensitive),
         s + s1
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.contains(s1), s) === s.indexOf(s1)',
-    Jsc.asciistring,
-    Jsc.asciinestring,
-    function (s, s1) {
-      return Jsc.eq(s.toLowerCase().indexOf(s1.toLowerCase()) > -1, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.contains(s1), s) === s.indexOf(s1)', () => {
+  fc.assert(fc.property(
+    fc.asciiString(),
+    fc.asciiString(1, 40),
+    (s, s1) => {
+      Assert.eq('eq', s.toLowerCase().indexOf(s1.toLowerCase()) > -1, StringMatch.matches(
         StringMatch.contains(s1, StringMatch.caseInsensitive),
         s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.contains(s), s) === true',
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.contains(s), s) === true', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    (s) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.contains(s, StringMatch.caseInsensitive),
         s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.exact(s), s + s1) === false',
-    Jsc.nestring,
-    Jsc.nestring,
-    function (s, s1) {
-      return Jsc.eq(false, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.exact(s), s + s1) === false', () => {
+  fc.assert(fc.property(
+    fc.string(1, 40),
+    fc.string(1, 40),
+    (s, s1) => {
+      Assert.eq('eq', false, StringMatch.matches(
         StringMatch.exact(s, StringMatch.caseInsensitive),
         s + s1
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.exact(s), s1 + s) === false',
-    Jsc.nestring,
-    Jsc.nestring,
-    function (s, s1) {
-      return Jsc.eq(false, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.exact(s), s1 + s) === false', () => {
+  fc.assert(fc.property(
+    fc.string(1, 40),
+    fc.string(1, 40),
+    (s, s1) => {
+      Assert.eq('eq', false, StringMatch.matches(
         StringMatch.exact(s, StringMatch.caseInsensitive),
         s1 + s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.exact(s), s) === true',
-    Jsc.nestring,
-    function (s) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.exact(s), s) === true', () => {
+  fc.assert(fc.property(
+    fc.string(1, 40),
+    (s) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.exact(s, StringMatch.caseInsensitive),
         s
       ));
     }
-  );
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-insensitive',
-    Jsc.asciinestring,
-    function (s) {
-      return s.toUpperCase() === s.toLowerCase() || Jsc.eq(true, StringMatch.matches(
-        StringMatch.exact(s.toLowerCase(), StringMatch.caseInsensitive),
-        s.toUpperCase()
-      ));
-    }
-  );
+UnitTest.test('StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-insensitive', () => {
+  fc.assert(fc.property(
+    fc.asciiString(1, 40),
+    (s) => s.toUpperCase() === s.toLowerCase() || StringMatch.matches(
+      StringMatch.exact(s.toLowerCase(), StringMatch.caseInsensitive),
+      s.toUpperCase()
+    )
+  ));
+});
 
-  Jsc.property(
-    'StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-sensitive',
-    Jsc.asciinestring,
-    function (s) {
-      return s.toUpperCase() === s.toLowerCase() || Jsc.eq(false, StringMatch.matches(
-        StringMatch.exact(s.toLowerCase(), StringMatch.caseSensitive),
-        s.toUpperCase()
-      ));
-    }
-  );
+UnitTest.test('StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-sensitive', () => {
+  fc.assert(fc.property(
+    fc.asciiString(1, 40),
+    (s) => s.toUpperCase() === s.toLowerCase() || !StringMatch.matches(
+      StringMatch.exact(s.toLowerCase(), StringMatch.caseSensitive),
+      s.toUpperCase()
+    )
+  ));
+});
 
-
-  Jsc.property(
-    'StringMatch.matches(StringMatch.all(s1), *) === true',
-    Jsc.string,
-    Jsc.string,
-    function (s) {
-      return Jsc.eq(true, StringMatch.matches(
+UnitTest.test('StringMatch.matches(StringMatch.all(s1), *) === true', () => {
+  fc.assert(fc.property(
+    fc.string(),
+    fc.string(),
+    (s) => {
+      Assert.eq('eq', true, StringMatch.matches(
         StringMatch.all(),
         s
       ));
     }
-  );
+  ));
 });
-

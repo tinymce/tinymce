@@ -6,13 +6,14 @@
  */
 
 import { Obj, Type } from '@ephox/katamari';
-import DefaultFormats from './DefaultFormats';
-import { Format, Formats } from '../api/fmt/Format';
-import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
+import { Format, Formats } from '../api/fmt/Format';
+import * as Settings from '../api/Settings';
+import Tools from '../api/util/Tools';
+import * as DefaultFormats from './DefaultFormats';
 
 export interface FormatRegistry {
-  get (name?: string): Formats | Format[];
+  get (name?: string): Format[] | Record<string, Format[]>;
   has (name: string): boolean;
   register (name: string | Formats, format?: Format[] | Format): void;
   unregister (name: string): Formats;
@@ -21,13 +22,9 @@ export interface FormatRegistry {
 export function FormatRegistry(editor: Editor): FormatRegistry {
   const formats: Record<string, Format[]> = {};
 
-  const get = (name?: string): Formats | Format[] => {
-    return name ? formats[name] : formats;
-  };
+  const get = (name?: string) => name ? formats[name] : formats;
 
-  const has = (name: string): boolean => {
-    return Obj.has(formats, name);
-  };
+  const has = (name: string): boolean => Obj.has(formats, name);
 
   const register = function (name: string | Formats, format?: Format | Format[]) {
     if (name) {
@@ -38,7 +35,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
       } else {
         // Force format into array and add it to internal collection
         if (!Type.isArray(format)) {
-          format = [format];
+          format = [ format ];
         }
 
         Tools.each(format, function (format: any) {
@@ -84,7 +81,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
   };
 
   register(DefaultFormats.get(editor.dom));
-  register(editor.settings.formats);
+  register(Settings.getFormats(editor));
 
   return {
     get,

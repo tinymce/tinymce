@@ -9,6 +9,6 @@
 `DomUniverse`: Provides utility functions for dealing with the DOM.
 `TestUniverse`: Provides utility functions for dealing with atomic tests.
 # Tests
-`boss` uses `bolt` to run atomic tests.
+`boss` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
 `$ yarn test`

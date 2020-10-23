@@ -1,10 +1,9 @@
-import { TabButtonWithViewSpec } from '../../ui/types/TabbarTypes';
-
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { TabButtonWithViewSpec } from './TabbarTypes';
 
 export interface TabSectionDetail extends CompositeSketchDetail {
   uid: string;
@@ -31,7 +30,9 @@ export interface TabSectionSpec extends CompositeSketchSpec {
   onDismissTab?: (component: AlloyComponent, button: AlloyComponent) => void;
 }
 
-export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec, TabSectionDetail> {
+export interface TabSectionApis {
   getViewItems: (component: AlloyComponent) => AlloyComponent[];
   showTab: (component: AlloyComponent, tabKey: string) => void;
 }
+
+export interface TabSectionSketcher extends CompositeSketch<TabSectionSpec>, TabSectionApis { }

@@ -5,17 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireRestoreDraft = (editor) => {
-  return editor.fire('RestoreDraft');
-};
+const fireRestoreDraft = (editor) => editor.fire('RestoreDraft');
 
-const fireStoreDraft = (editor) => {
-  return editor.fire('StoreDraft');
-};
+const fireStoreDraft = (editor) => editor.fire('StoreDraft');
 
-const fireRemoveDraft = (editor) => {
-  return editor.fire('RemoveDraft');
-};
+const fireRemoveDraft = (editor) => editor.fire('RemoveDraft');
 
 export {
   fireRestoreDraft,

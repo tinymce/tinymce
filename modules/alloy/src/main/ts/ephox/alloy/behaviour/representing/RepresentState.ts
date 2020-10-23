@@ -1,23 +1,18 @@
-import { Cell, Arr, Merger, Option } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 
-import { BehaviourState, nuState } from '../common/BehaviourState';
-import { Objects } from '@ephox/boulder';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { RepresentingState } from '../../behaviour/representing/RepresentingTypes';
+import { nuState } from '../common/BehaviourState';
+import { DatasetRepresentingState, ManualRepresentingState, MemoryRepresentingState, RepresentingConfig } from './RepresentingTypes';
 
-const memory = (): RepresentingState => {
-  const data = Cell(null);
+const memory = (): MemoryRepresentingState => {
+  const data = Cell<any>(null);
 
-  const readState = () => {
-    return {
-      mode: 'memory',
-      value: data.get()
-    };
-  };
+  const readState = () => ({
+    mode: 'memory',
+    value: data.get()
+  });
 
-  const isNotSet = () => {
-    return data.get() === null;
-  };
+  const isNotSet = () => data.get() === null;
 
   const clear = () => {
     data.set(null);
@@ -32,7 +27,7 @@ const memory = (): RepresentingState => {
   });
 };
 
-const manual = (): RepresentingState => {
+const manual = (): ManualRepresentingState => {
   const readState = () => {
 
   };
@@ -42,23 +37,15 @@ const manual = (): RepresentingState => {
   });
 };
 
-export interface DatasetRepresentingState extends RepresentingState {
-  lookup: <T extends ItemDataTuple>(itemString: string) => Option<T>;
-  update: <T extends ItemDataTuple>(items: T[]) => void;
-  clear: () => void;
-}
-
 const dataset = (): DatasetRepresentingState => {
   const dataByValue = Cell({ });
   const dataByText = Cell({ });
 
-  const readState = () => {
-    return {
-      mode: 'dataset',
-      dataByValue: dataByValue.get(),
-      dataByText: dataByText.get()
-    };
-  };
+  const readState = () => ({
+    mode: 'dataset',
+    dataByValue: dataByValue.get(),
+    dataByText: dataByText.get()
+  });
 
   const clear = (): void => {
     dataByValue.set({ });
@@ -66,21 +53,18 @@ const dataset = (): DatasetRepresentingState => {
   };
 
   // itemString can be matching value or text.
-  const lookup = <T extends ItemDataTuple>(itemString: string): Option<T> => {
-    return Objects.readOptFrom<T>(dataByValue.get(), itemString).orThunk(() => {
-      return Objects.readOptFrom<T>(dataByText.get(), itemString);
-    });
-  };
+  // TODO: type problem - impossible to correctly return value when type parameter only exists in return type
+  const lookup = <T extends ItemDataTuple>(itemString: string): Optional<T> => Obj.get<any, string>(dataByValue.get(), itemString).orThunk(() => Obj.get<any, string>(dataByText.get(), itemString));
 
   const update = <T extends ItemDataTuple>(items: T[]): void => {
     const currentDataByValue = dataByValue.get();
     const currentDataByText = dataByText.get();
-    const newDataByValue = { };
-    const newDataByText = { };
+    const newDataByValue: Record<string, T> = { };
+    const newDataByText: Record<string, T> = { };
     Arr.each(items, (item) => {
       newDataByValue[item.value] = item;
-      Objects.readOptFrom<Record<string, any>>(item, 'meta').each((meta) => {
-        Objects.readOptFrom<string>(meta, 'text').each((text) => {
+      Obj.get<any, string>(item, 'meta').each((meta) => {
+        Obj.get<any, string>(meta, 'text').each((text) => {
           newDataByText[text] = item;
         });
       });
@@ -93,7 +77,7 @@ const dataset = (): DatasetRepresentingState => {
     dataByText.set({
       ...currentDataByText,
       ...newDataByText
-    })
+    });
   };
 
   return nuState({
@@ -101,12 +85,10 @@ const dataset = (): DatasetRepresentingState => {
     lookup,
     update,
     clear
-  }) as DatasetRepresentingState;
+  });
 };
 
-const init = (spec) => {
-  return spec.store.manager.state(spec);
-};
+const init = (spec: RepresentingConfig) => spec.store.manager.state(spec);
 
 export {
   memory,

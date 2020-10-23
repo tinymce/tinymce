@@ -1,23 +1,23 @@
-import { Merger } from '@ephox/katamari';
-import { Attr, Class, Css, Element, Remove } from '@ephox/sugar';
-import Styles from '../style/Styles';
+import { Attribute, Class, Css, Remove, SugarElement } from '@ephox/sugar';
+import * as Styles from '../style/Styles';
 
 export interface BlockerOptions {
   layerClass: string;
 }
 
 export interface Blocker {
-  element: () => Element;
+  element: () => SugarElement;
   destroy: () => void;
 }
 
 export const Blocker = function (options: Partial<BlockerOptions>): Blocker {
-  const settings: BlockerOptions = Merger.merge({
-    layerClass: Styles.resolve('blocker')
-  }, options);
+  const settings: BlockerOptions = {
+    layerClass: Styles.resolve('blocker'),
+    ...options
+  };
 
-  const div = Element.fromTag('div');
-  Attr.set(div, 'role', 'presentation');
+  const div = SugarElement.fromTag('div');
+  Attribute.set(div, 'role', 'presentation');
   Css.setAll(div, {
     position: 'fixed',
     left: '0px',

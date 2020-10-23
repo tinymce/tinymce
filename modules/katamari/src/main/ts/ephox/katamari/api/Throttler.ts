@@ -1,11 +1,9 @@
-import { clearTimeout, setTimeout } from '@ephox/dom-globals';
-
-// Run a function fn afer rate ms. If another invocation occurs
+// Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
-export const adaptable = function (fn: Function, rate: number) {
+export const adaptable = function <A extends any[], B> (fn: (...a: A) => B, rate: number) {
   let timer: number | null = null;
-  let args: any[] | null = null;
+  let args: A | null = null;
   const cancel = function () {
     if (timer !== null) {
       clearTimeout(timer);
@@ -13,11 +11,12 @@ export const adaptable = function (fn: Function, rate: number) {
       args = null;
     }
   };
-  const throttle = function (...newArgs) {
+  const throttle = function (...newArgs: A) {
     args = newArgs;
     if (timer === null) {
       timer = setTimeout(function () {
-        fn.apply(null, args);
+        const blargs = args === null ? [] : args;
+        fn.apply(null, blargs);
         timer = null;
         args = null;
       }, rate);
@@ -25,8 +24,8 @@ export const adaptable = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };
 
@@ -50,8 +49,8 @@ export const first = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };
 
@@ -67,7 +66,9 @@ export const last = function (fn: Function, rate: number) {
     }
   };
   const throttle = function (...args) {
-    if (timer !== null) clearTimeout(timer);
+    if (timer !== null) {
+      clearTimeout(timer);
+    }
     timer = setTimeout(function () {
       fn.apply(null, args);
       timer = null;
@@ -75,7 +76,7 @@ export const last = function (fn: Function, rate: number) {
   };
 
   return {
-    cancel: cancel,
-    throttle: throttle
+    cancel,
+    throttle
   };
 };

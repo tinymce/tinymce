@@ -1,30 +1,26 @@
-import { Arr, Merger, Option } from '@ephox/katamari';
-import { Attr, SelectorFilter } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Attribute, SelectorFilter } from '@ephox/sugar';
 
 import * as FormChooserSchema from '../../ui/schema/FormChooserSchema';
-import * as Behaviour from '../behaviour/Behaviour';
+import { FormChooserDetail, FormChooserSketcher, FormChooserSpec } from '../../ui/types/FormChooserTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Sketcher from './Sketcher';
-import { SketchSpec, AlloySpec } from '../../api/component/SpecTypes';
-import { FormChooserSketcher, FormChooserDetail, FormChooserSpec } from '../../ui/types/FormChooserTypes';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import { CompositeSketchFactory } from './UiSketcher';
 
-const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], spec, externals): SketchSpec => {
-  const findByValue = (chooser, value) => {
-    const choices = SelectorFilter.descendants(chooser.element(), '.' + detail.markers.choiceClass);
-    const choiceComps = Arr.map(choices, (c) => {
-      return chooser.getSystem().getByDom(c).getOrDie();
-    });
+const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (detail, components: AlloySpec[], _spec, _externals): SketchSpec => {
+  const findByValue = (chooser: AlloyComponent, value: any) => {
+    const choices = SelectorFilter.descendants(chooser.element, '.' + detail.markers.choiceClass);
+    const choiceComps = Arr.map(choices, (c) => chooser.getSystem().getByDom(c).getOrDie());
 
-    return Arr.find(choiceComps, (c) => {
-      return Representing.getValue(c) === value;
-    });
+    return Arr.find(choiceComps, (c) => Representing.getValue(c) === value);
   };
 
   return {
@@ -39,44 +35,42 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
           mode: 'flow',
           selector: '.' + detail.markers.choiceClass,
           executeOnMove: true,
-          getInitial (chooser) {
-            return Highlighting.getHighlighted(chooser).map((choice) => {
-              return choice.element();
-            });
+          getInitial(chooser) {
+            return Highlighting.getHighlighted(chooser).map((choice) => choice.element);
           },
           // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
-          execute (chooser, simulatedEvent, focused) {
+          execute(chooser, simulatedEvent, focused) {
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
-            }).toOption().map((_) => true);
+            }).toOptional().map(Fun.constant<boolean>(true));
           }
         }),
 
         Highlighting.config({
           itemClass: detail.markers.choiceClass,
           highlightClass: detail.markers.selectedClass,
-          onHighlight (chooser, choice) {
-            Attr.set(choice.element(), 'aria-checked', 'true');
+          onHighlight(chooser, choice) {
+            Attribute.set(choice.element, 'aria-checked', 'true');
           },
-          onDehighlight (chooser, choice) {
-            Attr.set(choice.element(), 'aria-checked', 'false');
+          onDehighlight(chooser, choice) {
+            Attribute.set(choice.element, 'aria-checked', 'false');
           }
         }),
 
         Composing.config({
-          find: Option.some
+          find: Optional.some
         }),
 
         Representing.config({
           store: {
             mode: 'manual',
-            setValue (chooser, value) {
+            setValue(chooser, value) {
               findByValue(chooser, value).each((choiceWithValue) => {
                 Highlighting.highlight(chooser, choiceWithValue);
               });
             },
-            getValue (chooser) {
+            getValue(chooser) {
               return Highlighting.getHighlighted(chooser).map(Representing.getValue);
             }
           }
@@ -92,12 +86,12 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
   };
 };
 
-const FormChooser = Sketcher.composite({
+const FormChooser: FormChooserSketcher = Sketcher.composite({
   name: 'FormChooser',
   configFields: FormChooserSchema.schema(),
   partFields: FormChooserSchema.parts(),
   factory
-}) as FormChooserSketcher;
+});
 
 export {
   FormChooser

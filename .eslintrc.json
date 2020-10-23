@@ -1,0 +1,35 @@
+{
+  "extends": "plugin:@tinymce/standard",
+  "parserOptions": {
+    "sourceType": "module",
+    "project": [
+      "./tsconfig.json",
+      "modules/*/tsconfig.json"
+    ]
+  },
+  "rules": {
+    "@typescript-eslint/camelcase": "off", // leave off
+    "@typescript-eslint/consistent-type-definitions": "off", // leave off
+    "@typescript-eslint/member-ordering": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-this-alias": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off", // to be investigated later, produces different results on a uncompiled environment
+    "@typescript-eslint/prefer-for-of": "off",
+    "@typescript-eslint/prefer-regexp-exec": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "comma-dangle": ["error", "never"],
+    "import/order": ["error", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
+    }],
+    "no-empty": "off",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off",
+    "one-var": "off",
+    "prefer-rest-params": "off",
+    "prefer-spread": "off",
+    "max-len": ["warn", 260]
+  },
+  "settings": {
+    "import/internal-regex": "^(ephox|tinymce)/.*"
+  }
+}

@@ -1,5 +1,3 @@
-import { console } from '@ephox/dom-globals';
-
 export default {
   title: 'Document properties',
   body: {
@@ -34,7 +32,7 @@ export default {
         name: 'encoding',
         type: 'input',
         label: 'Encoding'
-      },
+      }
     ]
   },
   buttons: [
@@ -61,7 +59,7 @@ export default {
   onSubmit: (api) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       title: data.title,
       keywords: data.keywords,

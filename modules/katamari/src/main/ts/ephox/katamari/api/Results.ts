@@ -1,16 +1,17 @@
 import { Adt } from './Adt';
 import * as Arr from './Arr';
+import * as Fun from './Fun';
 import { Result } from './Result';
 
 const comparison = Adt.generate([
-  { bothErrors: ['error1', 'error2'] },
-  { firstError: ['error1', 'value2'] },
-  { secondError: ['value1', 'error2'] },
-  { bothValues: ['value1', 'value2'] }
+  { bothErrors: [ 'error1', 'error2' ] },
+  { firstError: [ 'error1', 'value2' ] },
+  { secondError: [ 'value1', 'error2' ] },
+  { bothValues: [ 'value1', 'value2' ] }
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-export const partition = function <T, E>(results: Result<T, E>[]) {
+export const partition = function <T, E> (results: Result<T, E>[]): { values: T[]; errors: E[] } {
   const errors: E[] = [];
   const values: T[] = [];
 
@@ -21,11 +22,10 @@ export const partition = function <T, E>(results: Result<T, E>[]) {
     );
   });
 
-  return { errors: errors, values: values };
+  return { errors, values };
 };
 
-/** compare :: (Result a, Result b) -> Comparison a b */
-export const compare = function (result1: Result<any, any>, result2: Result<any, any>) {
+export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A, B>) {
   return result1.fold(function (err1) {
     return result2.fold(function (err2) {
       return comparison.bothErrors(err1, err2);
@@ -40,3 +40,6 @@ export const compare = function (result1: Result<any, any>, result2: Result<any,
     });
   });
 };
+
+export const unite: <T>(result: Result<T, T>) => T = <T>(result: Result<T, T>): T =>
+  result.fold(Fun.identity, Fun.identity);

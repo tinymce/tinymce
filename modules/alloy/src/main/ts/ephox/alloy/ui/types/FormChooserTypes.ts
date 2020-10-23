@@ -26,4 +26,4 @@ export interface FormChooserSpec extends CompositeSketchSpec {
   choices: Array<{ value: string }>;
 }
 
-export interface FormChooserSketcher extends CompositeSketch<FormChooserSpec, FormChooserDetail> { }
+export interface FormChooserSketcher extends CompositeSketch<FormChooserSpec> { }

@@ -5,31 +5,31 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import { PredicateFilter, Element, Node } from '@ephox/sugar';
-import Settings from '../api/Settings';
-import * as CaretContainer from '../caret/CaretContainer';
-import NodeType from '../dom/NodeType';
-import TreeWalker from '../api/dom/TreeWalker';
-import InsertLi from './InsertLi';
-import NewLineUtils from './NewLineUtils';
-import NormalizeRange from '../selection/NormalizeRange';
-import Zwsp from '../text/Zwsp';
-import { isCaretNode } from '../fmt/FormatContainer';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
+import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
+import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
+import * as Settings from '../api/Settings';
 import { EditorEvent } from '../api/util/EventDispatcher';
-import Bookmarks from '../bookmark/Bookmarks';
+import * as Bookmarks from '../bookmark/Bookmarks';
+import * as CaretContainer from '../caret/CaretContainer';
+import * as NodeType from '../dom/NodeType';
+import { isCaretNode } from '../fmt/FormatContainer';
+import * as NormalizeRange from '../selection/NormalizeRange';
+import { isWhitespaceText } from '../text/Whitespace';
+import * as Zwsp from '../text/Zwsp';
+import * as InsertLi from './InsertLi';
+import * as NewLineUtils from './NewLineUtils';
 
 const trimZwsp = (fragment: DocumentFragment) => {
-  Arr.each(PredicateFilter.descendants(Element.fromDom(fragment), Node.isText), (text) => {
-    const rawNode = text.dom();
+  Arr.each(PredicateFilter.descendants(SugarElement.fromDom(fragment), SugarNode.isText), (text) => {
+    const rawNode = text.dom;
     rawNode.nodeValue = Zwsp.trim(rawNode.nodeValue);
   });
 };
 
-const isEmptyAnchor = function (dom: DOMUtils, elm: DomElement) {
+const isEmptyAnchor = function (dom: DOMUtils, elm: Element) {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
@@ -133,11 +133,39 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
+const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Record<string, string>) => {
+  const dom = editor.dom;
+
+  // Merge and apply style attribute
+  Optional.from(forcedRootBlockAttrs.style)
+    .map(dom.parseStyle)
+    .each((attrStyles) => {
+      const currentStyles = Css.getAllRaw(SugarElement.fromDom(node));
+      const newStyles = { ...currentStyles, ...attrStyles };
+      dom.setStyles(node, newStyles);
+    });
+
+  // Merge and apply class attribute
+  const attrClassesOpt = Optional.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Optional.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  Optionals.lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+    const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
+    const newClasses = [ ...attrClasses, ...filteredClasses ];
+    dom.setAttrib(node, 'class', newClasses.join(' '));
+  });
+
+  // Apply any remaining forced root block attributes
+  const appliedAttrs = [ 'style', 'class' ];
+  const remainingAttrs = Obj.filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
+  dom.setAttribs(node, remainingAttrs);
+};
+
 const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
-    editor.dom.setAttribs(node, Settings.getForcedRootBlockAttrs(editor));
+    const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+    applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
@@ -204,21 +232,19 @@ const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName
 // Adds a BR at the end of blocks that only contains an IMG or INPUT since
 // these might be floated and then they won't expand the block
 const addBrToBlockIfNeeded = function (dom, block) {
-  let lastChild;
-
   // IE will render the blocks correctly other browsers needs a BR
   block.normalize(); // Remove empty text nodes that got left behind by the extract
 
   // Check if the block is empty or contains a floated last child
-  lastChild = block.lastChild;
+  const lastChild = block.lastChild;
   if (!lastChild || (/^(left|right)$/gi.test(dom.getStyle(lastChild, 'float', true)))) {
     dom.add(block, 'br');
   }
 };
 
 const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
-  let tmpRng, editableRoot, container, offset, parentBlock, shiftKey;
-  let newBlock, fragment, containerBlock, parentBlockName, containerBlockName, newBlockName, isAfterLastNodeInContainer;
+  let tmpRng, container, offset, parentBlock;
+  let newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
   const schema = editor.schema, nonEmptyElementsMap = schema.getNonEmptyElements();
   const rng = editor.selection.getRng();
@@ -231,7 +257,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
-      setForcedBlockAttrs(editor, block);
     } else {
       block = parentBlock.cloneNode(false);
     }
@@ -263,6 +288,8 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
         }
       } while ((node = node.parentNode) && node !== editableRoot);
     }
+
+    setForcedBlockAttrs(editor, block);
 
     emptyBlock(caretNode);
 
@@ -296,7 +323,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     }
 
     // Walk the DOM and look for text nodes or non empty elements
-    const walker = new TreeWalker(container, parentBlock);
+    const walker = new DomTreeWalker(container, parentBlock);
 
     // If caret is in beginning or end of a text block then jump to the next/previous node
     if (NodeType.isText(container)) {
@@ -317,7 +344,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
             return false;
           }
         }
-      } else if (NodeType.isText(node) && !/^[ \t\r\n]*$/.test(node.nodeValue)) {
+      } else if (NodeType.isText(node) && !isWhitespaceText(node.nodeValue)) {
         return false;
       }
 
@@ -359,7 +386,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   container = rng.startContainer;
   offset = rng.startOffset;
   newBlockName = Settings.getForcedRootBlock(editor);
-  shiftKey = !!(evt && evt.shiftKey);
+  const shiftKey = !!(evt && evt.shiftKey);
   const ctrlKey = !!(evt && evt.ctrlKey);
 
   // Resolve node index
@@ -375,7 +402,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   }
 
   // Get editable root node, normally the body element but sometimes a div or span
-  editableRoot = getEditableRoot(dom, container);
+  const editableRoot = getEditableRoot(dom, container);
 
   // If there is no editable root then enter is done inside a contentEditable false element
   if (!editableRoot) {
@@ -395,7 +422,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
   // Setup block names
   parentBlockName = parentBlock ? parentBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
-  containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
+  const containerBlockName = containerBlock ? containerBlock.nodeName.toUpperCase() : ''; // IE < 9 & HTML5
 
   // Enter inside block contained within a LI then split or insert before/after LI
   if (containerBlockName === 'LI' && !ctrlKey) {
@@ -427,6 +454,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     if (dom.isEmpty(parentBlock)) {
       emptyBlock(parentBlock);
     }
+    setForcedBlockAttrs(editor, newBlock);
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock()) {
     insertNewBlockAfter();
@@ -457,6 +485,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
       dom.remove(newBlock);
       insertNewBlockAfter();
     } else {
+      setForcedBlockAttrs(editor, newBlock);
       NewLineUtils.moveToCaretPosition(editor, newBlock);
     }
   }
@@ -467,6 +496,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   editor.fire('NewBlock', { newBlock });
 };
 
-export default {
+export {
   insert
 };

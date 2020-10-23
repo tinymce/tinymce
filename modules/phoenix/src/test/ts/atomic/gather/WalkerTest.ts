@@ -1,5 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
+import { KAssert } from '@ephox/katamari-assertions';
 import { Direction, Transition } from 'ephox/phoenix/api/data/Types';
 import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';
@@ -18,13 +19,13 @@ UnitTest.test('WalkerTest', function () {
 
   const checkNone = function (id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
-    assert.eq(true, traverse(universe, item, direction).isNone());
+    KAssert.eqNone('eq', traverse(universe, item, direction));
   };
 
   const check = function (expected: string, id: string, traverse: Transition, direction: Direction) {
     const item = Finder.get(universe, id);
-    const actual = traverse(universe, item, direction).getOrDie();
-    assert.eq(expected, actual.item().id);
+    const actual = traverse(universe, item, direction).map((x) => x.item.id);
+    KAssert.eqSome('eq', expected, actual);
   };
 
   checkNone('a', Walker.backtrack, Walkers.left());
@@ -63,4 +64,3 @@ UnitTest.test('WalkerTest', function () {
   checkNone('d', Walker.advance, Walkers.right());
   checkNone('e', Walker.advance, Walkers.right());
 });
-

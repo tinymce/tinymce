@@ -1,14 +1,13 @@
-import * as Behaviour from './Behaviour';
 import * as SwapApis from '../../behaviour/swapping/SwapApis';
-import SwapSchema from '../../behaviour/swapping/SwapSchema';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SwappingBehaviour } from '../../behaviour/swapping/SwappingTypes';
+import SwapSchema from '../../behaviour/swapping/SwapSchema';
+import * as Behaviour from './Behaviour';
 
-const Swapping = Behaviour.create({
+const Swapping: SwappingBehaviour = Behaviour.create({
   fields: SwapSchema,
   name: 'swapping',
   apis: SwapApis
-}) as SwappingBehaviour;
+});
 
 export {
   Swapping

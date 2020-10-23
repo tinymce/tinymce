@@ -1,16 +1,14 @@
+import { SugarElement } from '@ephox/sugar';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
-import DemoContainer from 'ephox/agar/demo/DemoContainer';
-import { Element } from '@ephox/sugar';
+import * as DemoContainer from 'ephox/agar/demo/DemoContainer';
 
-
-
-export default <any> function () {
+export const demo = (): void => {
   DemoContainer.init(
     'General Steps Demo',
-    function (success, failure) {
-      var outcome = Element.fromTag('div');
-    
+    (success, failure) => {
+      const outcome = SugarElement.fromTag('div');
+
       Pipeline.async({}, [
         Step.wait(1000),
         Step.fail('I am an error')
@@ -18,5 +16,5 @@ export default <any> function () {
 
       return [ outcome ];
     }
-  );      
+  );
 };

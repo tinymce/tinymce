@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { OperatingSystem } from '../core/OperatingSystem';
 import { Browser } from '../core/Browser';
+import { OperatingSystem } from '../core/OperatingSystem';
 
 export interface DeviceType {
   isiPad: () => boolean;
@@ -11,18 +11,19 @@ export interface DeviceType {
   isAndroid: () => boolean;
   isiOS: () => boolean;
   isWebView: () => boolean;
+  isDesktop: () => boolean;
 }
 
-export const DeviceType = function (os: OperatingSystem, browser: Browser, userAgent: string): DeviceType {
+export const DeviceType = function (os: OperatingSystem, browser: Browser, userAgent: string, mediaMatch: (query: string) => boolean): DeviceType {
   const isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
   const isiPhone = os.isiOS() && !isiPad;
-  const isAndroid3 = os.isAndroid() && os.version.major === 3;
-  const isAndroid4 = os.isAndroid() && os.version.major === 4;
-  const isTablet = isiPad || isAndroid3 || ( isAndroid4 && /mobile/i.test(userAgent) === true );
-  const isTouch = os.isiOS() || os.isAndroid();
-  const isPhone = isTouch && !isTablet;
+  const isMobile = os.isiOS() || os.isAndroid();
+  const isTouch = isMobile || mediaMatch('(pointer:coarse)');
+  const isTablet = isiPad || !isiPhone && isMobile && mediaMatch('(min-device-width:768px)');
+  const isPhone = isiPhone || isMobile && !isTablet;
 
   const iOSwebview = browser.isSafari() && os.isiOS() && /safari/i.test(userAgent) === false;
+  const isDesktop = !isPhone && !isTablet && !iOSwebview;
 
   return {
     isiPad : Fun.constant(isiPad),
@@ -32,6 +33,7 @@ export const DeviceType = function (os: OperatingSystem, browser: Browser, userA
     isTouch: Fun.constant(isTouch),
     isAndroid: os.isAndroid,
     isiOS: os.isiOS,
-    isWebView: Fun.constant(iOSwebview)
+    isWebView: Fun.constant(iOSwebview),
+    isDesktop: Fun.constant(isDesktop)
   };
 };

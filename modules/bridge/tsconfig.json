@@ -4,7 +4,8 @@
     "strict": false,
     "outDir": "lib",
     "rootDir": "src",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
   },
   "include": [
     "src/main/ts",

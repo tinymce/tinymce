@@ -1,27 +1,29 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { FieldSchema, Objects } from '@ephox/boulder';
-import { Cell, Fun } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock-client';
+import { FieldSchema } from '@ephox/boulder';
+import { Cell, Fun, Obj } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DomModification from 'ephox/alloy/dom/DomModification';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 UnitTest.asynctest('CustomComponentTest', (success, failure) => {
 
-  const bA = Cell(null);
-  const bB = Cell(null);
+  type BehaviourA = Behaviour.AlloyBehaviour<any, any> & { behaveA: any };
+  const bA = Cell<BehaviourA | null>(null);
+  const bB = Cell<Behaviour.AlloyBehaviour<any, any> | null>(null);
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const behaviourA = Behaviour.create({
       fields: [ ],
       name: 'behaviourA',
       active: {
-        exhibit (base, info) {
+        exhibit(_base, _info) {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
@@ -33,7 +35,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         )
       },
       apis: {
-        behaveA (comp) {
+        behaveA(_comp) {
           store.adder('behaveA')();
         }
       }
@@ -47,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit (base, info) {
+        exhibit(_base, info: { attr: string}) {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr
@@ -70,7 +72,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'custom-component-test']
+          classes: [ 'custom-component-test' ]
         },
         uid: 'custom-uid',
         containerBehaviours: Behaviour.derive([
@@ -93,52 +95,46 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    return [
-      Assertions.sAssertStructure(
-        'Checking initial DOM modification',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
-            attrs: {
-              'behaviour-b-exhibit': str.is('exhibition'),
-              // This should no longer appear
-              'data-alloy-id': str.none()
-            }
-          });
-        }),
-        component.element()
-      ),
-      Step.sync(() => {
-        Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element()));
-      }),
+  }, (_doc, _body, _gui, component, store) => [
+    Assertions.sAssertStructure(
+      'Checking initial DOM modification',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('behaviour-a-exhibit'), arr.has('base-dom-modification') ],
+        attrs: {
+          'behaviour-b-exhibit': str.is('exhibition'),
+          // This should no longer appear
+          'data-alloy-id': str.none()
+        }
+      })),
+      component.element
+    ),
+    Step.sync(() => {
+      Assertions.assertEq('Tagger should read custom-uid', 'custom-uid', Tagger.readOrDie(component.element));
+    }),
 
-      store.sAssertEq('Nothing in store yet', [ ]),
+    store.sAssertEq('Nothing in store yet', [ ]),
 
-      store.sClear,
+    store.sClear,
 
-      Step.sync(() => {
-        AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
-      }),
+    Step.sync(() => {
+      AlloyTriggers.emitWith(component, 'alloy.custom.test.event', { message: 'event.data' });
+    }),
 
-      store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
-        'behaviour.a.event',
-        'behaviour.b.event'
-      ]),
+    store.sAssertEq('Should now have a behaviour.a and behaviour.b event log with a before b', [
+      'behaviour.a.event',
+      'behaviour.b.event'
+    ]),
 
-      Step.sync(() => {
-        bA.get().behaveA(component);
-      }),
+    Step.sync(() => bA.get()?.behaveA(component)),
 
-      store.sAssertEq('Should now have an Api log', [
-        'behaviour.a.event',
-        'behaviour.b.event',
-        'behaveA'
-      ]),
+    store.sAssertEq('Should now have an Api log', [
+      'behaviour.a.event',
+      'behaviour.b.event',
+      'behaveA'
+    ]),
 
-      Step.sync(() => {
-        Assertions.assertEq('There should be no internal APIs on component', false, Objects.hasKey(component, 'apis'));
-      })
-    ];
-  }, success, failure);
+    Step.sync(() => {
+      Assertions.assertEq('There should be no internal APIs on component', false, Obj.hasNonNullableKey<any, string>(component, 'apis'));
+    })
+  ], success, failure);
 });

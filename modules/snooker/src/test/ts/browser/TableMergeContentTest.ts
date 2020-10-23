@@ -1,26 +1,26 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Body, Element, Html, Insert, Remove } from '@ephox/sugar';
-import TableContent from 'ephox/snooker/api/TableContent';
+import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import * as TableContent from 'ephox/snooker/api/TableContent';
 
 UnitTest.test('TableMergeContentTest', function () {
-  const mergeContentTest = function (specs: { label: string; html: string; expected: string; }[]) {
-    const table = Element.fromTag('table');
-    const row = Element.fromTag('tr');
+  const mergeContentTest = function (specs: { label: string; html: string; expected: string }[]) {
+    const table = SugarElement.fromTag('table');
+    const row = SugarElement.fromTag('tr');
     Insert.append(table, row);
     const cells = Arr.map(specs, function (item) {
-      const cell = Element.fromTag('td');
-      cell.dom().innerHTML = item.html;
+      const cell = SugarElement.fromTag('td');
+      cell.dom.innerHTML = item.html;
 
       Insert.append(row, cell);
       return cell;
     });
 
-    Insert.append(Body.body(), table);
+    Insert.append(SugarBody.body(), table);
 
     TableContent.merge(cells);
     Arr.each(specs, function (spec, i) {
-      assert.eq(spec.expected, Html.get(cells[i]), spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]));
+      assert.eq(spec.expected, Html.get(cells[i]), () => spec.label + ' expected:\n' + spec.expected + '\n got: \n' + Html.get(cells[i]));
     });
 
     Remove.remove(table);
@@ -39,7 +39,11 @@ UnitTest.test('TableMergeContentTest', function () {
     {
       label: 'just a P block tag, there should NOT be a br proceeding it',
       html: '<p>There should not be a br after.</p>',
-      expected: '<p>There should not be a br after.</p><p>Standard paragraph</p> I am a textnode and should have a br after the period.<br><img src="/project/@ephox/snooker/src/assets/img/ephox_nav.png"><br><span><div>Nested div<p> deep para</p></div> <span>nested span</span>there SHOULD be a br proceeding the span</span><br>'
+      expected: '<p>There should not be a br after.</p><p>Standard paragraph</p>' +
+                ' I am a textnode and should have a br after the period.<br>' +
+                '<img src="/project/@ephox/snooker/src/assets/img/ephox_nav.png"><br>' +
+                '<span><div>Nested div<p> deep para</p></div> ' +
+                '<span>nested span</span>there SHOULD be a br proceeding the span</span><br>'
     },
     {
       label: 'P tag, with a textnode after, there SHOULD be a br proceeding it',
@@ -94,7 +98,7 @@ UnitTest.test('TableMergeContentTest', function () {
       expected: ''
     },
     {
-      label: 'lists should not have BR\'s after',
+      label: `lists should not have BR's after`,
       html: '<ul style="list-style-type: disc;"><li>Abotts&nbsp;list</li><li>empty</li></ul>',
       expected: ''
     },

@@ -1,12 +1,12 @@
-import Locator from 'ephox/boss/mutant/Locator';
-import Logger from 'ephox/boss/mutant/Logger';
-import Removal from 'ephox/boss/mutant/Removal';
-import Tracks from 'ephox/boss/mutant/Tracks';
-import { Option } from '@ephox/katamari';
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
+import * as Locator from 'ephox/boss/mutant/Locator';
+import * as Logger from 'ephox/boss/mutant/Logger';
+import * as Removal from 'ephox/boss/mutant/Removal';
+import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('RemovalTest', function() {
+UnitTest.test('RemovalTest', function () {
   const data = function (): Gene {
     return Gene('A', '.', [
       Gene('B', '.'),
@@ -20,7 +20,7 @@ UnitTest.test('RemovalTest', function() {
   };
 
   const check = function (expected: string, input: Gene, itemId: string) {
-    const family = Tracks.track(input, Option.none());
+    const family = Tracks.track(input, Optional.none());
     const item = Locator.byId(family, itemId).getOrDie();
     Removal.unwrap(item);
     assert.eq(expected, Logger.basic(family));
@@ -29,4 +29,3 @@ UnitTest.test('RemovalTest', function() {
   check('A(B,D(E),F)', data(), 'C');
   check('A(B,C(D,F))', data(), 'E');
 });
-

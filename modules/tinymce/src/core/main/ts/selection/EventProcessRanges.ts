@@ -6,15 +6,12 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Range } from '@ephox/dom-globals';
 
-const processRanges = (editor, ranges: Range[]): Range[] => {
-  return Arr.map(ranges, (range) => {
-    const evt = editor.fire('GetSelectionRange', { range });
-    return evt.range !== range ? evt.range : range;
-  });
-};
+const processRanges = (editor, ranges: Range[]): Range[] => Arr.map(ranges, (range) => {
+  const evt = editor.fire('GetSelectionRange', { range });
+  return evt.range !== range ? evt.range : range;
+});
 
-export default {
+export {
   processRanges
 };

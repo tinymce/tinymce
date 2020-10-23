@@ -1,6 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Element, Text, Traverse } from '@ephox/sugar';
+import { SugarElement, SugarText, Traverse } from '@ephox/sugar';
 import * as DomSplit from 'ephox/phoenix/api/dom/DomSplit';
 import { Page } from '../module/ephox/phoenix/test/Page';
 
@@ -11,38 +11,38 @@ UnitTest.test('DomSplitTest', function () {
   <div2>{t7:Next }<p4>{t8:Section }<s4>{t9:no}{t10:w}
   */
 
-  const check = function (expected: string[], element: Element) {
+  const check = function (expected: string[], element: SugarElement<Text>) {
     const parent = Traverse.parent(element);
     parent.fold(function () {
-      throw 'Element must have parent for test to work';
+      throw new Error('Element must have parent for test to work');
     }, function (v) {
-      const children = Traverse.children(v);
-      const text = Arr.map(children, Text.get);
+      const children = Traverse.children(v) as SugarElement<Text>[];
+      const text = Arr.map(children, SugarText.get);
       assert.eq(expected, text);
     });
   };
 
-  const checkSplitByPair = function (expected: string[], element: Element, start: number, end: number) {
+  const checkSplitByPair = function (expected: string[], element: SugarElement<Text>, start: number, end: number) {
     DomSplit.splitByPair(element, start, end);
     check(expected, element);
   };
 
-  const checkSplit = function (expected: string[], element: Element, offset: number) {
+  const checkSplit = function (expected: string[], element: SugarElement<Text>, offset: number) {
     DomSplit.split(element, offset);
     check(expected, element);
   };
 
-  checkSplit(['no', 'w'], Page().t9, 2);
-  checkSplit(['no', 'w'], Page().t9, 0);
-  checkSplit(['n', 'o', 'w'], Page().t9, 1);
-  checkSplit(['no', 'w'], Page().t10, 0);
-  checkSplit(['no', 'w'], Page().t10, 1);
+  checkSplit([ 'no', 'w' ], Page().t9, 2);
+  checkSplit([ 'no', 'w' ], Page().t9, 0);
+  checkSplit([ 'n', 'o', 'w' ], Page().t9, 1);
+  checkSplit([ 'no', 'w' ], Page().t10, 0);
+  checkSplit([ 'no', 'w' ], Page().t10, 1);
 
-  checkSplitByPair(['something'], Page().t5, 0, 9);
-  checkSplitByPair(['something'], Page().t5, 0, 0);
-  checkSplitByPair(['something'], Page().t5, 9, 9);
-  checkSplitByPair(['s', 'omething'], Page().t5, 0, 1);
-  checkSplitByPair(['some', 'thing'], Page().t5, 0, 4);
-  checkSplitByPair(['some', 'thing'], Page().t5, 4, 9);
-  checkSplitByPair(['s', 'omet', 'hing'], Page().t5, 1, 5);
+  checkSplitByPair([ 'something' ], Page().t5, 0, 9);
+  checkSplitByPair([ 'something' ], Page().t5, 0, 0);
+  checkSplitByPair([ 'something' ], Page().t5, 9, 9);
+  checkSplitByPair([ 's', 'omething' ], Page().t5, 0, 1);
+  checkSplitByPair([ 'some', 'thing' ], Page().t5, 0, 4);
+  checkSplitByPair([ 'some', 'thing' ], Page().t5, 4, 9);
+  checkSplitByPair([ 's', 'omet', 'hing' ], Page().t5, 1, 5);
 });

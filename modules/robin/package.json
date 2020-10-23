@@ -1,10 +1,10 @@
 {
   "name": "@ephox/robin",
   "description": "This project is for grouping sibling DOM nodes together by boundary points, for example the list of elements and nodes representing a word.",
-  "version": "7.0.18",
+  "version": "8.0.2",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/robin"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",
@@ -18,11 +18,14 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/boss": "^3.0.22",
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/phoenix": "^5.0.24",
-    "@ephox/polaris": "^3.0.25"
+    "@ephox/boss": "^4.0.1",
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/phoenix": "^6.0.1",
+    "@ephox/polaris": "^4.0.1",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^2.0.1"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -32,6 +35,7 @@
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test",
     "test-manual": "bedrock -d src/test",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "prepublishOnly": "tsc -b"
   }
 }

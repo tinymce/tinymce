@@ -1,7 +1,7 @@
 import { Chain, GeneralSteps, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -11,48 +11,40 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
   SilverTheme();
   Plugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    const sInitAndOpenDialog = (content: string, cursorPos: any) => {
-      return GeneralSteps.sequence([
-        api.sSetSetting('image_advtab', true),
-        api.sSetSetting('image_dimensions', false),
-        api.sSetContent(content),
-        // api.sSetCursor([0], 1),
-        api.sSetCursor(cursorPos.elementPath, cursorPos.offset),
-        api.sExecCommand('mceImage', true),
-        ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ]);
-    };
+    const sInitAndOpenDialog = (content: string, cursorPos: any) => GeneralSteps.sequence([
+      api.sSetSetting('image_advtab', true),
+      api.sSetSetting('image_dimensions', false),
+      api.sSetContent(content),
+      // api.sSetCursor([0], 1),
+      api.sSetCursor(cursorPos.elementPath, cursorPos.offset),
+      api.sExecCommand('mceImage', true),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]')
+    ]);
 
-    const createTestWithContent = (name: string, content: string, cursorPos: any, data: Partial<ImageDialogData>, expectedContent: string) => {
-      return Log.stepsAsStep('TBA', 'Image: ' + name, [
-        sInitAndOpenDialog(content, cursorPos),
-        Chain.asStep({}, [
-          cFillActiveDialog(data, true)
-        ]),
-        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-        api.sAssertContent(expectedContent)
-      ]);
-    };
+    const createTestWithContent = (name: string, content: string, cursorPos: any, data: Partial<ImageDialogData>, expectedContent: string) => Log.stepsAsStep('TBA', 'Image: ' + name, [
+      sInitAndOpenDialog(content, cursorPos),
+      Chain.asStep({}, [
+        cFillActiveDialog(data, true)
+      ]),
+      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
+      api.sAssertContent(expectedContent)
+    ]);
 
-    const createTestOnEmptyEditor = (name: string, data: Partial<ImageDialogData>, expectedContent: string) => {
-      return createTestWithContent(name, '', { elementPath: [0], offset: 0 }, data, expectedContent);
-    };
+    const createTestOnEmptyEditor = (name: string, data: Partial<ImageDialogData>, expectedContent: string) => createTestWithContent(name, '', { elementPath: [ 0 ], offset: 0 }, data, expectedContent);
 
-    const createTestUpdatedStyle = (name: string, style: string, assertion: Step<any, any>) => {
-      return Log.stepsAsStep('TBA', 'Image: ' + name, [
-        sInitAndOpenDialog('', { elementPath: [0], offset: 0 }),
-        ui.sClickOnUi('Switch to Advanced tab', '.tox-tab:contains("Advanced")'),
-        Chain.asStep(Body.body(), [
-          cSetInputValue(advancedTabSelectors.style, style)
-        ]),
-        assertion,
-        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      ]);
-    };
+    const createTestUpdatedStyle = (name: string, style: string, assertion: Step<any, any>) => Log.stepsAsStep('TBA', 'Image: ' + name, [
+      sInitAndOpenDialog('', { elementPath: [ 0 ], offset: 0 }),
+      ui.sClickOnUi('Switch to Advanced tab', '.tox-tab:contains("Advanced")'),
+      Chain.asStep(SugarBody.body(), [
+        cSetInputValue(advancedTabSelectors.style, style)
+      ]),
+      assertion,
+      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")')
+    ]);
 
     const suiteArr = [
       createTestOnEmptyEditor(
@@ -61,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
           alt: 'alt',
           hspace: '10',
           src: {
-            value: 'src',
+            value: 'src'
           },
           vspace: '10'
         },
@@ -118,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
         'Advanced image dialog border option on editor with content',
         '<p>a</p>',
         {
-          elementPath: [0],
+          elementPath: [ 0 ],
           offset: 1
         },
         {
@@ -196,9 +188,9 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
     ];
     Pipeline.async({}, suiteArr, onSuccess, onFailure);
   }, {
-      theme: 'silver',
-      plugins: 'image',
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
+    theme: 'silver',
+    plugins: 'image',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });

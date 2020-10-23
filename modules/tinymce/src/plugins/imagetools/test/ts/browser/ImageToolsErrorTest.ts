@@ -1,17 +1,14 @@
 import { Assertions, Chain, GeneralSteps, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import { Html } from '@ephox/sugar';
 import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import ImageUtils from '../module/test/ImageUtils';
+import * as ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function (success, failure) {
   const uploadHandlerState = ImageUtils.createStateContainer();
 
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
@@ -32,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
     Mouse.cClick
   ]));
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     function (editor, onSuccess, onFailure) {
       const tinyApis = TinyApis(editor);
 
@@ -53,25 +50,28 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
       const tests = [
 
         sTestImageToolsError('TBA', 'Incorrect service url no api key',
-            'http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
+          'http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
 
         sTestImageToolsError('TBA', 'Incorrect service url with api key',
-            'http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
+          'http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
 
         sTestImageToolsError('TBA', '403 no api key',
-            '/custom/403', undefined, 'ImageProxy HTTP error: Rejected request'),
+          '/custom/403', undefined, 'ImageProxy HTTP error: Rejected request'),
 
         sTestImageToolsError('TBA', '403 with api key',
-            '/custom/403', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
+          '/custom/403', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
 
         sTestImageToolsError('TBA', '403 with api key and return error data',
-            '/custom/403data', 'fake_key', 'ImageProxy Service error: Unknown service error'),
+          '/custom/403data', 'fake_key', 'ImageProxy Service error: Unknown service error'),
 
         sTestImageToolsError('TBA', '404 no api key',
-            '/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy'),
+          '/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy'),
 
         sTestImageToolsError('TBA', '404 with api key',
-            '/custom/404', 'fake_key', 'ImageProxy HTTP error: Could not find Image Proxy'),
+          '/custom/404', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
+
+        sTestImageToolsError('TBA', '404 with api key and return error data',
+          '/custom/404data', 'fake_key', 'ImageProxy Service error: Failed to load image.')
 
       ];
 
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
       theme: 'silver',
       plugins: 'imagetools',
       automatic_uploads: false,
-      base_url: '/project/tinymce/js/tinymce',
+      base_url: '/project/tinymce/js/tinymce'
     },
     success,
     failure

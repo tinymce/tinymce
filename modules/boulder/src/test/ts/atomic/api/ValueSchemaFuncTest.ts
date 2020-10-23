@@ -1,7 +1,6 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
+import { Logger } from '@ephox/agar';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
@@ -11,9 +10,9 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     // NOTE: v is not a function here.
     ValueSchema.asRaw(label, processor, v).fold(function (err) {
       const message = ValueSchema.formatError(err);
-      RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
+      Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
+      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
@@ -27,10 +26,10 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
         passed = val;
       } catch (err) {
         const message = err.message;
-        RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
+        Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
       }
 
-      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(passed, null, 2) + ')'); }
+      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')'); }
     });
   };
 
@@ -38,11 +37,11 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     Logger.sync(label, function () {
       const actual = ValueSchema.asRawOrDie(label, processor, f);
       const result = applicator(actual);
-      RawAssertions.assertEq(label + ', checking result', expected, result);
+      Assert.eq(label + ', checking result', expected, result);
     });
   };
 
-  const getter1 = function (a, b, c) {
+  const getter1 = function (_a, _b, _c) {
     const args = Array.prototype.slice.call(arguments, 0);
     return args.join('.');
   };
@@ -70,7 +69,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', function () {
     function (f) {
       return f('x');
     },
-    function (v) {
+    function (_v) {
       return 'y';
     },
     ValueSchema.funcOrDie([ 'value' ], ValueSchema.valueOf(function (v) {

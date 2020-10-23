@@ -5,37 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import HtmlToData from './HtmlToData';
-import Mime from './Mime';
-import UpdateHtml from './UpdateHtml';
-import * as UrlPatterns from './UrlPatterns';
-import VideoScript from './VideoScript';
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
+import * as Settings from '../api/Settings';
+import * as HtmlToData from './HtmlToData';
+import * as Mime from './Mime';
+import { MediaData } from './Types';
+import * as UpdateHtml from './UpdateHtml';
+import * as UrlPatterns from './UrlPatterns';
+import * as VideoScript from './VideoScript';
 
-export interface MediaDialogData {
-  allowFullscreen: boolean;
-  source1: string;
-  source1mime: string;
-  width: number;
-  height: number;
-  embed: string;
-  poster: string;
-  source2: string;
-  source2mime: string;
-  type: 'iframe' | 'script';
-}
+export type DataToHtmlCallback = (data: MediaData) => string;
 
-export type DataToHtmlCallback = (data: MediaDialogData) => string;
-
-const getIframeHtml = function (data: MediaDialogData) {
+const getIframeHtml = function (data: MediaData) {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
-  return '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
+  return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
-const getFlashHtml = function (data: MediaDialogData) {
-  let html = '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+const getFlashHtml = function (data: MediaData) {
+  let html = '<object data="' + data.source + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
     html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
@@ -46,23 +34,23 @@ const getFlashHtml = function (data: MediaDialogData) {
   return html;
 };
 
-const getAudioHtml = function (data: MediaDialogData, audioTemplateCallback: DataToHtmlCallback) {
+const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtmlCallback) {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
     return (
-      '<audio controls="controls" src="' + data.source1 + '">' +
+      '<audio controls="controls" src="' + data.source + '">' +
       (
-        data.source2 ?
-          '\n<source src="' + data.source2 + '"' +
-          (data.source2mime ? ' type="' + data.source2mime + '"' : '') +
+        data.altsource ?
+          '\n<source src="' + data.altsource + '"' +
+          (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') +
           ' />\n' : '') +
       '</audio>'
     );
   }
 };
 
-const getVideoHtml = function (data: MediaDialogData, videoTemplateCallback: DataToHtmlCallback) {
+const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtmlCallback) {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
@@ -70,68 +58,68 @@ const getVideoHtml = function (data: MediaDialogData, videoTemplateCallback: Dat
       '<video width="' + data.width +
       '" height="' + data.height + '"' +
       (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
-      '<source src="' + data.source1 + '"' +
-      (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
-      (data.source2 ? '<source src="' + data.source2 + '"' +
-        (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
+      '<source src="' + data.source + '"' +
+      (data.sourcemime ? ' type="' + data.sourcemime + '"' : '') + ' />\n' +
+      (data.altsource ? '<source src="' + data.altsource + '"' +
+        (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />\n' : '') +
       '</video>'
     );
   }
 };
 
-const getScriptHtml = function (data: MediaDialogData) {
-  return '<script src="' + data.source1 + '"></script>';
+const getScriptHtml = function (data: MediaData) {
+  return '<script src="' + data.source + '"></script>';
 };
 
-const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
-  const data: MediaDialogData = Tools.extend({}, dataIn);
+const dataToHtml = function (editor: Editor, dataIn: MediaData) {
+  const data: MediaData = Tools.extend({}, dataIn);
 
-  if (!data.source1) {
+  if (!data.source) {
     Tools.extend(data, HtmlToData.htmlToData(Settings.getScripts(editor), data.embed));
-    if (!data.source1) {
+    if (!data.source) {
       return '';
     }
   }
 
-  if (!data.source2) {
-    data.source2 = '';
+  if (!data.altsource) {
+    data.altsource = '';
   }
 
   if (!data.poster) {
     data.poster = '';
   }
 
-  data.source1 = editor.convertURL(data.source1, 'source');
-  data.source2 = editor.convertURL(data.source2, 'source');
-  data.source1mime = Mime.guess(data.source1);
-  data.source2mime = Mime.guess(data.source2);
+  data.source = editor.convertURL(data.source, 'source');
+  data.altsource = editor.convertURL(data.altsource, 'source');
+  data.sourcemime = Mime.guess(data.source);
+  data.altsourcemime = Mime.guess(data.altsource);
   data.poster = editor.convertURL(data.poster, 'poster');
 
-  const pattern = UrlPatterns.matchPattern(data.source1);
+  const pattern = UrlPatterns.matchPattern(data.source);
 
   if (pattern) {
-    data.source1 = pattern.url;
+    data.source = pattern.url;
     data.type = pattern.type;
     data.allowFullscreen = pattern.allowFullscreen;
-    data.width = data.width || pattern.w;
-    data.height = data.height || pattern.h;
+    data.width = data.width || String(pattern.w);
+    data.height = data.height || String(pattern.h);
   }
 
   if (data.embed) {
     return UpdateHtml.updateHtml(data.embed, data, true);
   } else {
-    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source1);
+    const videoScript = VideoScript.getVideoScriptMatch(Settings.getScripts(editor), data.source);
     if (videoScript) {
       data.type = 'script';
-      data.width = videoScript.width;
-      data.height = videoScript.height;
+      data.width = String(videoScript.width);
+      data.height = String(videoScript.height);
     }
 
     const audioTemplateCallback = Settings.getAudioTemplateCallback(editor);
     const videoTemplateCallback = Settings.getVideoTemplateCallback(editor);
 
-    data.width = data.width || 300;
-    data.height = data.height || 150;
+    data.width = data.width || '300';
+    data.height = data.height || '150';
 
     Tools.each(data, function (value, key) {
       data[key] = editor.dom.encode('' + value);
@@ -139,9 +127,9 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
 
     if (data.type === 'iframe') {
       return getIframeHtml(data);
-    } else if (data.source1mime === 'application/x-shockwave-flash') {
+    } else if (data.sourcemime === 'application/x-shockwave-flash') {
       return getFlashHtml(data);
-    } else if (data.source1mime.indexOf('audio') !== -1) {
+    } else if (data.sourcemime.indexOf('audio') !== -1) {
       return getAudioHtml(data, audioTemplateCallback);
     } else if (data.type === 'script') {
       return getScriptHtml(data);
@@ -151,6 +139,6 @@ const dataToHtml = function (editor: Editor, dataIn: MediaDialogData) {
   }
 };
 
-export default {
+export {
   dataToHtml
 };

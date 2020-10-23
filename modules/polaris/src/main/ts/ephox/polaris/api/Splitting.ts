@@ -9,9 +9,9 @@ export interface Splitting<T> {
     onExcludeWithout: SplittingHandler<T, U>
   ) => U;
   match: <U> (branches: {
-    include: SplittingHandler<T, U>,
-    excludeWith: SplittingHandler<T, U>,
-    excludeWithout: SplittingHandler<T, U>,
+    include: SplittingHandler<T, U>;
+    excludeWith: SplittingHandler<T, U>;
+    excludeWithout: SplittingHandler<T, U>;
   }) => U;
   log: (label: string) => void;
 }
@@ -35,7 +35,7 @@ const cata = function <T, U> (
   return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
 };
 
-// tslint:disable-next-line
+// tslint:disable-next-line:variable-name
 export const Splitting = {
   include: adt.include,
   excludeWith: adt.excludeWith,

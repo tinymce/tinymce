@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Css, Height, Traverse } from '@ephox/sugar';
+import { Css, Height, SugarElement, Traverse } from '@ephox/sugar';
 
-import Orientation from '../../touch/view/Orientation';
-import Devices from './Devices';
+import * as Orientation from '../../touch/view/Orientation';
+import * as Devices from './Devices';
+
+type Keyboard = Devices.Keyboard;
 
 // Green zone is the area below the toolbar and above the keyboard, its considered the viewable
 // region that is not obstructed by the keyboard. If the keyboard is down, then the Green Zone is larger.
@@ -27,11 +29,10 @@ import Devices from './Devices';
 
 */
 
-const softKeyboardLimits = function (outerWindow) {
-  return Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
-};
+const softKeyboardLimits = (outerWindow): Keyboard =>
+  Devices.findDevice(outerWindow.screen.width, outerWindow.screen.height);
 
-const accountableKeyboardHeight = function (outerWindow) {
+const accountableKeyboardHeight = (outerWindow: Window): number => {
   const portrait = Orientation.get(outerWindow).isPortrait();
   const limits = softKeyboardLimits(outerWindow);
 
@@ -45,15 +46,15 @@ const accountableKeyboardHeight = function (outerWindow) {
   return (visualScreenHeight - outerWindow.innerHeight) > keyboard ? 0 : keyboard;
 };
 
-const getGreenzone = function (socket, dropup) {
-  const outerWindow = Traverse.owner(socket).dom().defaultView;
+const getGreenzone = (socket: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>): number => {
+  const outerWindow = Traverse.owner(socket).dom.defaultView;
   // Include the dropup for this calculation because it represents the total viewable height.
   const viewportHeight = Height.get(socket) + Height.get(dropup);
   const acc = accountableKeyboardHeight(outerWindow);
   return viewportHeight - acc;
 };
 
-const updatePadding = function (contentBody, socket, dropup) {
+const updatePadding = (contentBody: SugarElement<Node>, socket: SugarElement<HTMLElement>, dropup: SugarElement<HTMLElement>): void => {
   const greenzoneHeight = getGreenzone(socket, dropup);
   const deltaHeight = (Height.get(socket) + Height.get(dropup)) - greenzoneHeight;
   // TBIO-3878 Changed the element that was receiving the padding from the iframe to the body of the
@@ -63,7 +64,7 @@ const updatePadding = function (contentBody, socket, dropup) {
   Css.set(contentBody, 'padding-bottom', deltaHeight + 'px');
 };
 
-export default {
+export {
   getGreenzone,
   updatePadding
 };

@@ -1,5 +1,6 @@
 import { FocusTools, GeneralSteps, Keyboard, Keys, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
@@ -9,24 +10,22 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 
 UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    const makeItem = (name) => {
-      return Container.sketch({
-        dom: {
-          classes: [ 'test-item', name ],
-          innerHtml: name
-        },
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+  GuiSetup.setup((_store, _doc, _body) => {
+    const makeItem = (name: string) => Container.sketch({
+      dom: {
+        classes: [ 'test-item', name ],
+        innerHtml: name
+      },
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
         dom: {
           tag: 'div',
-          classes: [ 'menu-keying-test'],
+          classes: [ 'menu-keying-test' ],
           styles: {
 
           }
@@ -49,14 +48,12 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    const checkStore = (label, steps, expected) => {
-      return GeneralSteps.sequence([
-        store.sClear
-      ].concat(steps).concat([
-        store.sAssertEq(label, expected)
-      ]));
-    };
+  }, (doc, body, _gui, component, store) => {
+    const checkStore = (label: string, steps: Array<Step<any, any>>, expected: string[]) => GeneralSteps.sequence([
+      store.sClear
+    ].concat(steps).concat([
+      store.sAssertEq(label, expected)
+    ]));
 
     return [
       GuiSetup.mSetupKeyLogger(body),

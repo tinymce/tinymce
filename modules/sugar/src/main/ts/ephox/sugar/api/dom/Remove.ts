@@ -1,30 +1,29 @@
 import { Arr } from '@ephox/katamari';
-import * as InsertAll from './InsertAll';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
-import Element from '../node/Element';
-import { Node } from '@ephox/dom-globals';
+import * as InsertAll from './InsertAll';
 
-const empty = function (element: Element) {
+const empty = (element: SugarElement<Node>): void => {
   // shortcut "empty node" trick. Requires IE 9.
-  element.dom().textContent = '';
+  element.dom.textContent = '';
 
   // If the contents was a single empty text node, the above doesn't remove it. But, it's still faster in general
   // than removing every child node manually.
   // The following is (probably) safe for performance as 99.9% of the time the trick works and
   // Traverse.children will return an empty array.
-  Arr.each(Traverse.children(element), function (rogue) {
+  Arr.each(Traverse.children(element), (rogue) => {
     remove(rogue);
   });
 };
 
-const remove = function (element: Element) {
-  const dom: Node = element.dom();
+const remove = (element: SugarElement<Node>): void => {
+  const dom = element.dom;
   if (dom.parentNode !== null) {
     dom.parentNode.removeChild(dom);
   }
 };
 
-const unwrap = function (wrapper: Element) {
+const unwrap = (wrapper: SugarElement<Node>): void => {
   const children = Traverse.children(wrapper);
   if (children.length > 0) {
     InsertAll.before(wrapper, children);
@@ -35,5 +34,5 @@ const unwrap = function (wrapper: Element) {
 export {
   empty,
   remove,
-  unwrap,
+  unwrap
 };

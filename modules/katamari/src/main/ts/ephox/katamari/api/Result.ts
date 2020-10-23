@@ -1,5 +1,5 @@
 import * as Fun from './Fun';
-import { Option } from './Option';
+import { Optional } from './Optional';
 
 export interface Result<T, E> {
   is: (value: T) => boolean;
@@ -12,25 +12,25 @@ export interface Result<T, E> {
   fold: <U> (whenError: (err: E) => U, mapper: (value: T) => U) => U;
   exists: (predicate: (value: T) => boolean) => boolean;
   forall: (predicate: (value: T) => boolean) => boolean;
-  toOption: () => Option<T>;
+  toOptional: () => Optional<T>;
   isValue: () => boolean;
   isError: () => boolean;
   getOr: (defaultValue: T) => T;
   getOrThunk: (maker: () => T) => T;
   getOrDie: () => T;
-};
+}
 
-/* The type signatures for Result 
+/* The type signatures for Result
  * is :: this Result a -> a -> Bool
  * or :: this Result a -> Result a -> Result a
  * orThunk :: this Result a -> (_ -> Result a) -> Result a
  * map :: this Result a -> (a -> b) -> Result b
- * each :: this Result a -> (a -> _) -> _ 
+ * each :: this Result a -> (a -> _) -> _
  * bind :: this Result a -> (a -> Result b) -> Result b
  * fold :: this Result a -> (_ -> b, a -> b) -> b
  * exists :: this Result a -> (a -> Bool) -> Bool
  * forall :: this Result a -> (a -> Bool) -> Bool
- * toOption :: this Result a -> Option a
+ * toOptional :: this Result a -> Optional a
  * isValue :: this Result a -> Bool
  * isError :: this Result a -> Bool
  * getOr :: this Result a -> a -> a
@@ -38,24 +38,24 @@ export interface Result<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-const value = function <T, E = any>(o: T): Result<T, E> {
+const value = function <T, E = any> (o: T): Result<T, E> {
   const is = function (v: T) {
     return o === v;
   };
 
-  const or = function (opt: Result<T, E>) {
+  const or = function (_opt: Result<T, E>) {
     return value(o);
   };
 
-  const orThunk = function (f: () => Result<T, E>) {
+  const orThunk = function (_f: () => Result<T, E>) {
     return value(o);
   };
 
-  const map = function <U>(f: (value: T) => U) {
+  const map = function <U> (f: (value: T) => U) {
     return value(f(o));
   };
 
-  const mapError = function <U>(f: (error: E) => U) {
+  const mapError = function <U> (_f: (error: E) => U) {
     return value(o);
   };
 
@@ -63,11 +63,11 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     f(o);
   };
 
-  const bind = function <U>(f: (value: T) => Result<U, E>) {
+  const bind = function <U> (f: (value: T) => Result<U, E>) {
     return f(o);
   };
 
-  const fold = function <U>(_: (err: E) => U, onValue: (value: T) => U) {
+  const fold = function <U> (_: (err: E) => U, onValue: (value: T) => U) {
     return onValue(o);
   };
 
@@ -79,31 +79,31 @@ const value = function <T, E = any>(o: T): Result<T, E> {
     return f(o);
   };
 
-  const toOption = function () {
-    return Option.some(o);
+  const toOptional = function () {
+    return Optional.some(o);
   };
 
   return {
-    is: is,
+    is,
     isValue: Fun.always,
     isError: Fun.never,
     getOr: Fun.constant(o),
     getOrThunk: Fun.constant(o),
     getOrDie: Fun.constant(o),
-    or: or,
-    orThunk: orThunk,
-    fold: fold,
-    map: map,
+    or,
+    orThunk,
+    fold,
+    map,
     mapError,
-    each: each,
-    bind: bind,
-    exists: exists,
-    forall: forall,
-    toOption: toOption
+    each,
+    bind,
+    exists,
+    forall,
+    toOptional
   };
 };
 
-const error = function <T=any, E=any>(message: E): Result<T, E> {
+const error = function <T = any, E = any> (message: E): Result<T, E> {
   const getOrThunk = function (f: () => T) {
     return f();
   };
@@ -120,19 +120,19 @@ const error = function <T=any, E=any>(message: E): Result<T, E> {
     return f();
   };
 
-  const map = function <U>(f: (value: T) => U) {
+  const map = function <U> (_f: (value: T) => U) {
     return error<U, E>(message);
   };
 
-  const mapError = function <U>(f: (error: E) => U) {
+  const mapError = function <U> (f: (error: E) => U) {
     return error(f(message));
   };
 
-  const bind = function <U>(f: (value: T) => Result<U, E>) {
+  const bind = function <U> (_f: (value: T) => Result<U, E>) {
     return error<U, E>(message);
   };
 
-  const fold = function <U>(onError: (err: E) => U, _: (value: T) => U) {
+  const fold = function <U> (onError: (err: E) => U, _: (value: T) => U) {
     return onError(message);
   };
 
@@ -141,27 +141,25 @@ const error = function <T=any, E=any>(message: E): Result<T, E> {
     isValue: Fun.never,
     isError: Fun.always,
     getOr: Fun.identity,
-    getOrThunk: getOrThunk,
-    getOrDie: getOrDie,
-    or: or,
-    orThunk: orThunk,
-    fold: fold,
-    map: map,
-    mapError: mapError,
+    getOrThunk,
+    getOrDie,
+    or,
+    orThunk,
+    fold,
+    map,
+    mapError,
     each: Fun.noop,
-    bind: bind,
+    bind,
     exists: Fun.never,
     forall: Fun.always,
-    toOption: Option.none
+    toOptional: Optional.none
   };
 };
 
-const fromOption = <T, E>(opt: Option<T>, err: E): Result<T, E> => {
-  return opt.fold(
-    () => error(err),
-    value
-  );
-};
+const fromOption = <T, E>(opt: Optional<T>, err: E): Result<T, E> => opt.fold(
+  () => error(err),
+  value
+);
 
 export const Result = {
   value,

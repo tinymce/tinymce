@@ -5,8 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
-
 /**
  * This class manages the focus/blur state of the editor. This class is needed since some
  * browsers fire false focus/blur states when the selection is moved to a UI dialog or similar.
@@ -31,7 +29,8 @@ interface FocusManager {
  */
 const isEditorUIElement = function (elm: Element) {
   // Needs to be converted to string since svg can have focus: #6776
-  return elm.className.toString().indexOf('tox-') !== -1 || elm.className.toString().indexOf('mce-') !== -1;
+  const className = elm.className.toString();
+  return className.indexOf('tox-') !== -1 || className.indexOf('mce-') !== -1;
 };
 
 const FocusManager: FocusManager = {

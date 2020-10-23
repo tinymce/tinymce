@@ -5,44 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import SizeSlider from './SizeSlider';
-import * as ToolbarWidgets from './ToolbarWidgets';
-import FontSizes from '../util/FontSizes';
-import * as UiDomFactory from '../util/UiDomFactory';
 import { SketchSpec } from '@ephox/alloy';
+import * as FontSizes from '../util/FontSizes';
+import * as UiDomFactory from '../util/UiDomFactory';
+import { MobileRealm } from './IosRealm';
+import * as SizeSlider from './SizeSlider';
+import * as ToolbarWidgets from './ToolbarWidgets';
 
 const sizes = FontSizes.candidates();
 
-const makeSlider = function (spec) {
-  return SizeSlider.sketch({
-    onChange: spec.onChange,
-    sizes,
-    category: 'font',
-    getInitialValue: spec.getInitialValue
-  });
-};
+const makeSlider = (spec): SketchSpec => SizeSlider.sketch({
+  onChange: spec.onChange,
+  sizes,
+  category: 'font',
+  getInitialValue: spec.getInitialValue
+});
 
-const makeItems = function (spec) {
-  return [
-    UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
-    makeSlider(spec),
-    UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
-  ];
-};
+const makeItems = (spec) => [
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-small-font ${prefix}-icon"></span>'),
+  makeSlider(spec),
+  UiDomFactory.spec('<span class="${prefix}-toolbar-button ${prefix}-icon-large-font ${prefix}-icon"></span>')
+];
 
-const sketch = function (realm, editor): SketchSpec {
+const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {
-    onChange (value) {
+    onChange(value) {
       FontSizes.apply(editor, value);
     },
-    getInitialValue (/* slider */) {
+    getInitialValue(/* slider */) {
       return FontSizes.get(editor);
     }
   };
 
-  return ToolbarWidgets.button(realm, 'font-size', function () {
-    return makeItems(spec);
-  }, editor);
+  return ToolbarWidgets.button(realm, 'font-size', () => makeItems(spec), editor);
 };
 
 export {

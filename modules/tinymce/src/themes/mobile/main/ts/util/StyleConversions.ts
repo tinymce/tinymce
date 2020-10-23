@@ -6,7 +6,7 @@
  */
 
 import { Objects } from '@ephox/boulder';
-import { Arr, Merger } from '@ephox/katamari';
+import { Arr, Merger, Obj } from '@ephox/katamari';
 
 const getFromExpandingItem = function (item) {
   const newItem = Merger.deepMerge(
@@ -38,7 +38,7 @@ const getFromExpandingItem = function (item) {
 };
 
 const getFromItem = function (item) {
-  return Objects.hasKey(item, 'items') ? getFromExpandingItem(item) : {
+  return Obj.hasNonNullableKey(item, 'items') ? getFromExpandingItem(item) : {
     item,
     menus: { },
     expansions: { }
@@ -61,6 +61,6 @@ const expand = function (items) {
   });
 };
 
-export default {
+export {
   expand
 };

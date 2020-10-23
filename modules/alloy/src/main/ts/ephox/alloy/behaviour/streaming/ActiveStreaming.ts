@@ -1,5 +1,5 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
-import { StreamingConfig, StreamingState } from '../../behaviour/streaming/StreamingTypes';
+import { StreamingConfig, StreamingState } from './StreamingTypes';
 
 const events = (streamConfig: StreamingConfig, streamState: StreamingState): AlloyEvents.AlloyEventRecord => {
   const streams = streamConfig.stream.streams;
@@ -8,11 +8,9 @@ const events = (streamConfig: StreamingConfig, streamState: StreamingState): All
     AlloyEvents.run(streamConfig.event, processor),
     AlloyEvents.runOnDetached(() => streamState.cancel())
   ].concat(
-    streamConfig.cancelEvent.map((e) => {
-      return [
-        AlloyEvents.run(e, () => streamState.cancel())
-      ];
-    }).getOr([ ])
+    streamConfig.cancelEvent.map((e) => [
+      AlloyEvents.run(e, () => streamState.cancel())
+    ]).getOr([ ])
   ));
 };
 

@@ -1,11 +1,10 @@
-import * as SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
-import * as Fields from '../../data/Fields';
 import { FieldSchema } from '@ephox/boulder';
-import { Merger } from '@ephox/katamari';
-import { SketchSpec } from '../../api/component/SpecTypes';
+
 import { ContainerDetail, ContainerSketcher, ContainerSpec } from '../../ui/types/ContainerTypes';
-import { SingleSketchFactory } from '../../api/ui/UiSketcher';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { SketchSpec } from '../component/SpecTypes';
+import * as Sketcher from './Sketcher';
+import { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): SketchSpec => {
   const { attributes, ...domWithoutAttributes } = detail.dom;
@@ -27,7 +26,7 @@ const factory: SingleSketchFactory<ContainerDetail, ContainerSpec> = (detail): S
   };
 };
 
-const Container = Sketcher.single({
+const Container: ContainerSketcher = Sketcher.single({
   name: 'Container',
   factory,
   configFields: [
@@ -38,7 +37,7 @@ const Container = Sketcher.single({
     FieldSchema.defaulted('domModification', { }),
     FieldSchema.defaulted('eventOrder', { })
   ]
-}) as ContainerSketcher;
+});
 
 export {
   Container

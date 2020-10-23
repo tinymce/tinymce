@@ -1,5 +1,8 @@
-import { Attr, Css, Traverse } from '@ephox/sugar';
+import { Attribute, Css, SugarNode, Traverse } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { Container } from '../../api/ui/Container';
 
 const initialAttribute = 'data-initial-z-index';
 
@@ -8,23 +11,25 @@ const initialAttribute = 'data-initial-z-index';
 // discarding it, we need to reset those z-indices back to what they
 // were. ASSUMPTION: the blocker has been added as a direct child of the root
 const resetZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).each((root) => {
-    const initZIndex = Attr.get(root, initialAttribute);
-    if (Attr.has(root, initialAttribute)) { Css.set(root, 'z-index', initZIndex); } else { Css.remove(root, 'z-index'); }
+  Traverse.parent(blocker.element).filter(SugarNode.isElement).each((root) => {
+    Attribute.getOpt(root, initialAttribute).fold(
+      () => Css.remove(root, 'z-index'),
+      (zIndex) => Css.set(root, 'z-index', zIndex)
+    );
 
-    Attr.remove(root, initialAttribute);
+    Attribute.remove(root, initialAttribute);
   });
 };
 
 const changeZIndex = (blocker: AlloyComponent): void => {
-  Traverse.parent(blocker.element()).each((root) => {
+  Traverse.parent(blocker.element).filter(SugarNode.isElement).each((root) => {
     Css.getRaw(root, 'z-index').each((zindex) => {
-      Attr.set(root, initialAttribute, zindex);
+      Attribute.set(root, initialAttribute, zindex);
     });
 
     // Used to be a really high number, but it probably just has
     // to match the blocker
-    Css.set(root, 'z-index', Css.get(blocker.element(), 'z-index'));
+    Css.set(root, 'z-index', Css.get(blocker.element, 'z-index'));
   });
 };
 
@@ -38,7 +43,26 @@ const discard = (blocker: AlloyComponent): void => {
   blocker.getSystem().removeFromGui(blocker);
 };
 
+const createComponent = (component: AlloyComponent, blockerClass: string, blockerEvents: AlloyEventRecord) => component.getSystem().build(
+  Container.sketch({
+    dom: {
+      // Probably consider doing with classes?
+      styles: {
+        'left': '0px',
+        'top': '0px',
+        'width': '100%',
+        'height': '100%',
+        'position': 'fixed',
+        'z-index': '1000000000000000'
+      },
+      classes: [ blockerClass ]
+    },
+    events: blockerEvents
+  })
+);
+
 export {
+  createComponent,
   instigate,
   discard
 };

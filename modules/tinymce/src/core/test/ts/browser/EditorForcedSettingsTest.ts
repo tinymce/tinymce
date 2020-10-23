@@ -1,15 +1,13 @@
 import { Assertions, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', function (success, failure) {
 
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, [
       Assertions.sAssertEq('Validate should always be true', true, editor.settings.validate),
       Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.inline)

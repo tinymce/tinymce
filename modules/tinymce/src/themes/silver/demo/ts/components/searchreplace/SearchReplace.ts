@@ -1,10 +1,9 @@
-import { Types } from '@ephox/bridge';
-import { console } from '@ephox/dom-globals';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
 
-export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
+export const SearchReplaceDialogSpec: Dialog.DialogSpec<any> = {
   title: 'Find and replace',
   body: {
     type: 'panel',
@@ -12,12 +11,14 @@ export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
       {
         type: 'input',
         name: 'findtext',
-        label: 'Find'
+        label: 'Find',
+        inputMode: 'search'
       },
       {
         type: 'input',
         name: 'replacetext',
-        label: 'Replace with'
+        label: 'Replace with',
+        inputMode: 'search'
       },
       {
         type: 'grid',
@@ -79,10 +80,10 @@ export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
   onAction: (api, details) => {
     const data = api.getData();
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log(details.name); // Show action find/replace etc
 
-    // tslint:disable-next-line:no-console
+    // eslint-disable-next-line no-console
     console.log({
       find: data.find,
       replace: data.replace,
@@ -91,6 +92,7 @@ export const SearchReplaceDialogSpec: Types.Dialog.DialogApi<any> = {
     });
   },
   onClose: () => {
+    // eslint-disable-next-line no-console
     console.log('dialog closing');
   }
 };

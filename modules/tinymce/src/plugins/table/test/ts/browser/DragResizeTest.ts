@@ -1,10 +1,9 @@
-import {
-    Assertions, Chain, Log, Mouse, Pipeline, Step, UiFinder, Waiter, RawAssertions, Logger, GeneralSteps
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, Height, Hierarchy, Width, Attr } from '@ephox/sugar';
+import { Attribute, Height, Hierarchy, SugarElement, Width } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -13,82 +12,70 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
   SilverTheme();
   TablePlugin();
 
-  const sDragDrop = (container, selector, dx, dy) => {
-    return Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
-      UiFinder.cFindIn(selector),
-      Mouse.cMouseDown,
-      Mouse.cMouseMoveTo(dx, dy),
-      Mouse.cMouseUpTo(dx, dy)
-    ]));
-  };
+  const sDragDrop = (container: SugarElement, selector: string, dx: number, dy: number) => Logger.t('Drag from a point and drop at specified point', Chain.asStep(container, [
+    UiFinder.cFindIn(selector),
+    Mouse.cMouseDown,
+    Mouse.cMouseMoveTo(dx, dy),
+    Mouse.cMouseUpTo(dx, dy)
+  ]));
 
-  const sDragDropBlocker = (container, selector, dx, dy) => {
-    return Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
-      Chain.fromParent(Chain.inject(container), [
-        Chain.fromChains([
-          UiFinder.cFindIn(selector),
-          Mouse.cMouseDown
-        ]),
-        Chain.fromChains([
-          UiFinder.cFindIn('div.ephox-dragster-blocker'),
-          Mouse.cMouseMove,
-          Mouse.cMouseMoveTo(dx, dy),
-          Mouse.cMouseUpTo(dx, dy)
-        ])
+  const sDragDropBlocker = (container: SugarElement, selector: string, dx: number, dy: number) => Logger.t('Block dragging and dropping of any other element in the container', Chain.asStep({}, [
+    Chain.fromParent(Chain.inject(container), [
+      Chain.fromChains([
+        UiFinder.cFindIn(selector),
+        Mouse.cMouseDown
+      ]),
+      Chain.fromChains([
+        UiFinder.cFindIn('div.ephox-dragster-blocker'),
+        Mouse.cMouseMove,
+        Mouse.cMouseMoveTo(dx, dy),
+        Mouse.cMouseUpTo(dx, dy)
       ])
-    ]));
-  };
+    ])
+  ]));
 
-  const sMouseover = (container, selector) => {
-    return Logger.t('Place mouse point over element', Chain.asStep(container, [
-      UiFinder.cFindIn(selector),
-      Mouse.cMouseOver
-    ]));
-  };
+  const sMouseover = (container, selector) => Logger.t('Place mouse point over element', Chain.asStep(container, [
+    UiFinder.cFindIn(selector),
+    Mouse.cMouseOver
+  ]));
 
   const state = Cell(null);
 
-  const sSetStateFrom = (editor, path) => {
-    return Logger.t('Set height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-      const height = Height.get(element);
-      const width = Width.get(element);
+  const sSetStateFrom = (editor, path) => Logger.t('Set height and width', Step.sync(() => {
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
+    const height = Height.get(element);
+    const width = Width.get(element);
 
-      state.set({
-        h: height,
-        w: width
-      });
-    }));
-  };
+    state.set({
+      h: height,
+      w: width
+    });
+  }));
 
   const sResetState = Logger.t('Reset height and width', Step.sync(() => {
     state.set(null);
   }));
 
-  const looseEqual = (exp, act, loose) => {
-    return Math.abs(exp - act) <= loose;
-  };
+  const looseEqual = (exp, act, loose) => Math.abs(exp - act) <= loose;
 
   const sAssertNoDataStyle = (editor, path) => Logger.t('Assert no data style is applied', Step.sync(() => {
-    const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-    const hasDataStyle = Attr.has(element, 'data-mce-style');
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element');
+    const hasDataStyle = Attribute.has(element, 'data-mce-style');
 
-    RawAssertions.assertEq('should not have data style', false, hasDataStyle);
+    Assert.eq('should not have data style', false, hasDataStyle);
   }));
 
-  const sAssertSizeChange = (editor, path, change) => {
-    return Logger.t('Asset change in height and width', Step.sync(() => {
-      const element = Hierarchy.follow(Element.fromDom(editor.getBody()), path).getOrDie('could not find element');
-      const height = Height.get(element);
-      const width = Width.get(element);
+  const sAssertSizeChange = (editor, path, change) => Logger.t('Asset change in height and width', Step.sync(() => {
+    const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
+    const height = Height.get(element);
+    const width = Width.get(element);
 
-      const changedHeight = state.get().h + change.dh;
-      const changedWidth = state.get().w + change.dw;
+    const changedHeight = state.get().h + change.dh;
+    const changedWidth = state.get().w + change.dw;
 
-      Assertions.assertEq('height is ' + height + ' but expected ' + changedHeight, true, looseEqual(changedHeight, height, 4));
-      Assertions.assertEq('width is ' + width + ' but expected ' + changedWidth, true, looseEqual(changedWidth, width, 4));
-    }));
-  };
+    Assertions.assertEq('height is ' + height + ' but expected ' + changedHeight, true, looseEqual(changedHeight, height, 4));
+    Assertions.assertEq('width is ' + width + ' but expected ' + changedWidth, true, looseEqual(changedWidth, width, 4));
+  }));
 
   const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
                     '<tbody>' +
@@ -103,137 +90,134 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
                     '</tbody>' +
                   '</table>';
 
-  const sWaitForSelection = (editor, tinyApis) => {
-    return Logger.t('Wait for resize handles to be visible', GeneralSteps.sequence([
-      tinyApis.sSetSelection([0, 0, 0, 0, 0], 0, [0, 0, 0, 0, 0], 0),
-      Waiter.sTryUntil(
-        'wait for resize handles',
-        UiFinder.sExists(Element.fromDom(editor.getBody()), '#mceResizeHandlese'),
-        10, 1000
-      )
-    ]));
-  };
+  const sWaitForSelection = (editor: Editor, tinyApis: TinyApis) => Logger.t('Wait for resize handles to be visible', GeneralSteps.sequence([
+    tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0),
+    Waiter.sTryUntil(
+      'wait for resize handles',
+      UiFinder.sExists(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese')
+    )
+  ]));
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
 
       Log.stepsAsStep('TBA', 'Table: resize table height by dragging bottom', [
         tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
-        sSetStateFrom(editor, [0, 0, 0, 0]),
+        sSetStateFrom(editor, [ 0, 0, 0, 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
-        sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 50, dw: 0 }),
-        sAssertNoDataStyle(editor, [0]),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sAssertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 50, dw: 0 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: resize table width by dragging right side', [
         tinyApis.sSetContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>'),
-        sSetStateFrom(editor, [0, 0, 0, 0]),
+        sSetStateFrom(editor, [ 0, 0, 0, 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
-        sAssertSizeChange(editor, [0, 0, 0, 0], { dh: 0, dw: 50 }),
-        sAssertNoDataStyle(editor, [0]),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sAssertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 0, dw: 50 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table bigger with handle, then resize row height bigger by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
-        sAssertSizeChange(editor, [0], { dh: 100, dw: 50 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sAssertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table bigger with handle, then resize row height smaller by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
-        sAssertSizeChange(editor, [0], { dh: 20, dw: 50 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -30),
+        sAssertSizeChange(editor, [ 0 ], { dh: 20, dw: 50 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table bigger with handle, then resize column width bigger by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
-        sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sAssertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table bigger with handle, then resize column width smaller by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
-        sAssertSizeChange(editor, [0], { dh: 50, dw: 50 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', 50, 50),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -30, 0),
+        sAssertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table smaller with handle, then resize row height bigger by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
-        sAssertSizeChange(editor, [0], { dh: 40, dw: -10 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, 50),
+        sAssertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table smaller with handle, then resize row height smaller by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
-        sAssertSizeChange(editor, [0], { dh: -30, dw: -10 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-row="0"]', 0, -20),
+        sAssertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table smaller with handle, then resize column width bigger by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
-        sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', 50, 0),
+        sAssertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ]),
 
       Log.stepsAsStep('TBA', 'Table: Resize table smaller with handle, then resize column width smaller by dragging middle border', [
         tinyApis.sSetContent(tableHtml),
-        sSetStateFrom(editor, [0]),
+        sSetStateFrom(editor, [ 0 ]),
         sWaitForSelection(editor, tinyApis),
-        sDragDrop(Element.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
-        sMouseover(Element.fromDom(editor.getBody()), 'td'),
-        sDragDropBlocker(Element.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
-        sAssertSizeChange(editor, [0], { dh: -10, dw: -10 }),
-        sAssertNoDataStyle(editor, [0]),
+        sDragDrop(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlese', -10, -10),
+        sMouseover(SugarElement.fromDom(editor.getBody()), 'td'),
+        sDragDropBlocker(SugarElement.fromDom(editor.getDoc().documentElement), 'div[data-column="0"]', -20, 0),
+        sAssertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 }),
+        sAssertNoDataStyle(editor, [ 0 ]),
         sResetState
       ])
     ], onSuccess, onFailure);
@@ -243,5 +227,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DragResizeTest', (success, fai
     height: 400,
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
+    table_responsive_width: false
   }, success, failure);
 });

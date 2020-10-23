@@ -1,20 +1,25 @@
-import { Chain } from '@ephox/agar';
-import { NamedChain } from '@ephox/agar';
-import { Keyboard } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, NamedChain } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import { SugarElement } from '@ephox/sugar';
+import { Editor } from '../alien/EditorTypes';
 
-var cIDoc = Chain.mapper(function (editor: any) {
-  return Element.fromDom(editor.getDoc());
+export interface ActionChains {
+  cContentKeypress: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cContentKeydown: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+  cContentKeystroke: <T extends Editor> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+
+  cUiKeydown: <T> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
+}
+
+const cIDoc = Chain.mapper(function (editor: Editor) {
+  return SugarElement.fromDom(editor.getDoc());
 });
 
-var cUiDoc = Chain.mapper(function (editor: any) {
-  return Element.fromDom(document);
+const cUiDoc = Chain.injectThunked(function () {
+  return SugarElement.fromDom(document);
 });
 
-var cTriggerKeyEvent = function (cTarget, evtType: string, code: number, modifiers = {}) {
+const cTriggerKeyEvent = function <T> (cTarget: Chain<T, SugarElement>, evtType: 'keydown' | 'keyup' | 'keypress' | 'keystroke', code: number, modifiers = {}) {
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
@@ -25,7 +30,7 @@ var cTriggerKeyEvent = function (cTarget, evtType: string, code: number, modifie
   ]);
 };
 
-export default {
+export const ActionChains: ActionChains = {
   cContentKeypress: Fun.curry(cTriggerKeyEvent, cIDoc, 'keypress'),
   cContentKeydown: Fun.curry(cTriggerKeyEvent, cIDoc, 'keydown'),
   cContentKeystroke: Fun.curry(cTriggerKeyEvent, cIDoc, 'keystroke'),

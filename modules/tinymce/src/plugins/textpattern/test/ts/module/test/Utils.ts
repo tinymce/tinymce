@@ -1,48 +1,47 @@
-import { ApproxStructure, GeneralSteps, Keys, Logger, Step } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { ApproxStructure, GeneralSteps, Keys, Logger, Step, StructAssert } from '@ephox/agar';
+import { Arr, Unicode } from '@ephox/katamari';
+import { TinyActions, TinyApis } from '@ephox/mcagar';
 
-const sSetContentAndFireKeystroke = function (key) {
-  return function (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0]) {
+const sSetContentAndFireKeystroke = function (key: number) {
+  return function (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
-      tinyApis.sSetContent('<p>' + content + '</p>'),
-      tinyApis.sFocus,
+      tinyApis.sSetContent(wrapInP ? '<p>' + content + '</p>' : content),
+      tinyApis.sFocus(),
       tinyApis.sSetCursor(
         elementPath,
         offset
       ),
-      tinyActions.sContentKeystroke(key, {}),
+      tinyActions.sContentKeystroke(key, {})
     ]));
   };
 };
 
-const sSetContentAndPressSpace = (tinyApis, tinyActions, content: string, offset = content.length, elementPath = [0, 0]) => {
-  return Step.label(`Set content and press space`, GeneralSteps.sequence([
-    tinyApis.sSetContent('<p>' + content + '</p>'),
-    tinyApis.sFocus,
-    tinyApis.sSetCursor(
-      elementPath,
-      offset
-    ),
-    tinyApis.sExecCommand('mceInsertContent', ' '),
-    tinyActions.sContentKeystroke(32, {}),
-  ]));
-};
+const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ]) => Step.label('Set content and press space', GeneralSteps.sequence([
+  tinyApis.sSetContent('<p>' + content + '</p>'),
+  tinyApis.sFocus(),
+  tinyApis.sSetCursor(
+    elementPath,
+    offset
+  ),
+  tinyApis.sExecCommand('mceInsertContent', ' '),
+  tinyActions.sContentKeystroke(32, {})
+]));
 
-const withTeardown = function (steps, teardownStep) {
+const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
   return Arr.bind(steps, function (step) {
-    return [step, teardownStep];
+    return [ step, teardownStep ];
   });
 };
 
-const bodyStruct = function (children) {
-  return ApproxStructure.build(function (s, str) {
+const bodyStruct = function (children: StructAssert[]) {
+  return ApproxStructure.build(function (s, _str) {
     return s.element('body', {
       children
     });
   });
 };
 
-const inlineStructHelper = function (tag, content) {
+const inlineStructHelper = function (tag: string, content: string) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element('p', {
@@ -52,21 +51,21 @@ const inlineStructHelper = function (tag, content) {
               s.text(str.is(content), true)
             ]
           }),
-          s.text(str.is('\u00A0'), true)
+          s.text(str.is(Unicode.nbsp), true)
         ]
       })
     ]);
   });
 };
 
-const inlineBlockStructHelper = function (tag, content) {
+const inlineBlockStructHelper = function (tag: string, content: string) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element('p', {
         children: [
           s.element(tag, {
             children: [
-              s.text(str.is(content), true),
+              s.text(str.is(content), true)
             ]
           }),
           s.zeroOrOne(s.text(str.is(''), true))
@@ -77,7 +76,7 @@ const inlineBlockStructHelper = function (tag, content) {
   });
 };
 
-const blockStructHelper = function (tag, content) {
+const blockStructHelper = function (tag: string, content: string) {
   return ApproxStructure.build(function (s, str) {
     return bodyStruct([
       s.element(tag, {
@@ -90,12 +89,45 @@ const blockStructHelper = function (tag, content) {
   });
 };
 
-export default {
+const forcedRootBlockInlineStructHelper = function (tag: string, content: string) {
+  return ApproxStructure.build(function (s, str) {
+    return bodyStruct([
+      s.element(tag, {
+        children: [
+          s.text(str.is(content), true)
+        ]
+      }),
+      s.text(str.is('')),
+      s.element('br', {}),
+      s.element('br', {})
+    ]);
+  });
+};
+
+const forcedRootBlockStructHelper = function (tag: string, content: string) {
+  return ApproxStructure.build(function (s, str) {
+    return bodyStruct([
+      s.element(tag, {
+        children: [
+          s.text(str.is(content), true),
+          s.element('br', {}),
+          s.element('br', {})
+        ]
+      })
+    ]);
+  });
+};
+
+const sSetContentAndPressEnter = sSetContentAndFireKeystroke(Keys.enter());
+
+export {
   sSetContentAndPressSpace,
-  sSetContentAndPressEnter: sSetContentAndFireKeystroke(Keys.enter()),
+  sSetContentAndPressEnter,
   withTeardown,
   bodyStruct,
   inlineStructHelper,
   inlineBlockStructHelper,
-  blockStructHelper
+  blockStructHelper,
+  forcedRootBlockInlineStructHelper,
+  forcedRootBlockStructHelper
 };

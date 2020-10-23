@@ -1,17 +1,16 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const pressEnter = function (editor, evt?) {
+  const pressEnter = function (editor: Editor, evt?: any) {
     const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
@@ -469,7 +468,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     editor.settings.forced_root_block = 'p';
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

@@ -1,8 +1,10 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import { Optional } from '@ephox/katamari';
+
+import { DomModification } from '../../dom/DomModification';
 import { ConfiguredPart } from '../../parts/AlloyParts';
-import { Option } from '@ephox/katamari';
+import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import { AlloyEventRecord } from '../events/AlloyEvents';
+import { AlloyComponent } from './ComponentApi';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 
@@ -10,7 +12,7 @@ export type SimpleOrSketchSpec = SketchSpec | SimpleSpec;
 
 export interface OptionalDomSchema {
   tag?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, string | boolean | number>;
   styles?: Record<string, string>;
   innerHtml?: string;
   classes?: string[];
@@ -18,15 +20,27 @@ export interface OptionalDomSchema {
 
 export interface StructDomSchema {
   tag: string;
-  attributes: Record<string, any>;
+  attributes: Record<string, string | boolean | number>;
   styles: Record<string, string>;
   classes: string[];
-  value: Option<string>;
-  innerHtml: Option<string>;
+  value: Optional<string>;
+  innerHtml: Optional<string>;
 }
 
 export interface RawDomSchema extends OptionalDomSchema {
   tag: string;
+}
+
+export interface ComponentDetail {
+  dom: RawDomSchema;
+  components: AlloyComponent[];
+  events: {
+    events: AlloyEventRecord;
+  };
+  apis?: {};
+  behaviours?: AlloyBehaviourRecord;
+  domModification?: Partial<DomModification>;
+  eventOrder?: {};
 }
 
 export interface ComponentSpec {
@@ -35,7 +49,7 @@ export interface ComponentSpec {
   events?: AlloyEventRecord;
   apis?: {};
   behaviours?: AlloyBehaviourRecord;
-  domModification?: {};
+  domModification?: Partial<DomModification>;
   eventOrder?: {};
 }
 

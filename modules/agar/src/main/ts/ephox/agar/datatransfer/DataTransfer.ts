@@ -1,14 +1,13 @@
-import { Arr, Type, Id, Option } from '@ephox/katamari';
-import { Element, DataTransfer, DataTransferItemList } from '@ephox/dom-globals';
-import { createDataTransferItemList } from './DataTransferItemList';
+import { Arr, Id, Optional, Type } from '@ephox/katamari';
 import { createFileList } from '../file/FileList';
 import { getData } from './DataTransferItem';
-import { setReadWriteMode, isInProtectedMode, isInReadWriteMode } from './Mode';
+import { createDataTransferItemList } from './DataTransferItemList';
+import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
 
 const imageId = Id.generate('image');
 
-const validDropEffects = ['none', 'copy', 'link', 'move'];
-const validEffectAlloweds = ['none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized'];
+const validDropEffects = [ 'none', 'copy', 'link', 'move' ];
+const validEffectAlloweds = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
 
 export interface DragImageData {
   image: Element;
@@ -21,9 +20,9 @@ const setDragImage = (transfer: DataTransfer, imageData: DragImageData) => {
   dt[imageId] = imageData;
 };
 
-const getDragImage = (transfer: DataTransfer): Option<DragImageData> => {
+const getDragImage = (transfer: DataTransfer): Optional<DragImageData> => {
   const dt: any = transfer;
-  return Option.from(dt[imageId]);
+  return Optional.from(dt[imageId]);
 };
 
 const normalize = (format: string) => {
@@ -39,9 +38,8 @@ const normalize = (format: string) => {
 };
 
 const createDataTransfer = (): DataTransfer => {
-  let dropEffect: string = 'move';
-  let effectAllowed: string = 'all';
-  let items: DataTransferItemList;
+  let dropEffect = 'move';
+  let effectAllowed = 'all';
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
@@ -73,9 +71,7 @@ const createDataTransfer = (): DataTransfer => {
         return createFileList([]);
       }
 
-      const files = Arr.bind(Arr.from(items), (item) => {
-        return item.kind === 'file' ? [ item.getAsFile() ] : [];
-      });
+      const files = Arr.bind(Arr.from(items), (item) => item.kind === 'file' ? [ item.getAsFile() ] : []);
 
       return createFileList(files);
     },
@@ -83,7 +79,7 @@ const createDataTransfer = (): DataTransfer => {
     get types() {
       const types = Arr.map(Arr.from(items), (item) => item.type);
       const hasFiles = Arr.exists(Arr.from(items), (item) => item.kind === 'file');
-      return types.concat(hasFiles ? ['Files'] : []);
+      return types.concat(hasFiles ? [ 'Files' ] : []);
     },
 
     setDragImage: (image: Element, x: number, y: number) => {
@@ -105,8 +101,6 @@ const createDataTransfer = (): DataTransfer => {
         dataTransfer.clearData(normalize(format));
         items.add(data, normalize(format));
       }
-
-      return true; // Standard says void dom-globals says boolean
     },
 
     clearData: (format?: string) => {
@@ -125,12 +119,10 @@ const createDataTransfer = (): DataTransfer => {
           }
         }
       }
-
-      return true; // Standard says void dom-globals says boolean
     }
   };
 
-  items = createDataTransferItemList(dataTransfer);
+  const items = createDataTransferItemList(dataTransfer);
 
   setReadWriteMode(dataTransfer);
 

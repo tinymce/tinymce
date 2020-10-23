@@ -1,22 +1,31 @@
-import { Struct } from '@ephox/katamari';
-import { BubbleInstance, Bubble } from '../layout/Bubble';
+import { BubbleInstance } from '../layout/Bubble';
+import { DirectionAdt } from '../layout/Direction';
+import { BoundsRestriction } from '../layout/LayoutBounds';
 
 export interface SpotInfo {
-  x: () => number;
-  y: () => number;
-  bubble: () => BubbleInstance;
-  // TYPIFY
-  direction: () => any;
-  label: () => string;
+  readonly x: number;
+  readonly y: number;
+  readonly bubble: BubbleInstance;
+  readonly direction: DirectionAdt;
+  readonly label: string;
+  readonly boundsRestriction: BoundsRestriction;
 }
 
-const nu: (
+const nu = (
   x: number,
   y: number,
   bubble: BubbleInstance,
-  direction: any,
+  direction: DirectionAdt,
+  boundsRestriction: BoundsRestriction,
   label: string
-) => SpotInfo = Struct.immutable('x', 'y', 'bubble', 'direction', 'label');
+): SpotInfo => ({
+  x,
+  y,
+  bubble,
+  direction,
+  boundsRestriction,
+  label
+});
 
 export {
   nu

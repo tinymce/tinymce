@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
-import Settings from './Settings';
+import * as Actions from '../core/Actions';
+import * as Settings from './Settings';
 
 const register = function (editor) {
   editor.addCommand('mceLink', () => {
-    if (Settings.useQuickLink(editor.settings)) {
+    if (Settings.useQuickLink(editor)) {
       // Taken from ContextEditorEvents in silver. Find a better way.
       editor.fire('contexttoolbar-show', {
         toolbarKey: 'quicklink'
@@ -21,6 +21,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

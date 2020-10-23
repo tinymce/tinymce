@@ -1,6 +1,6 @@
 # Description
 
-`agar` is a library containing testing infrastructure for _keyboard_, _mouse_, _focus_, and _DOM Manipulation_. It is designed to provide a pipeline for composing together asynchronous testing operations. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`agar` is a library containing testing infrastructure for _keyboard_, _mouse_, _focus_, and _DOM Manipulation_. It is designed to provide a pipeline for composing together asynchronous testing operations. It does not bundle any commands. It is only a collection of modules.
 
 # Installation
 

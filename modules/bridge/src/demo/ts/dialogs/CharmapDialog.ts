@@ -1,7 +1,6 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export const createCharmapDialog = () => {
   openDemoDialog(
@@ -35,6 +34,7 @@ export const createCharmapDialog = () => {
       onAction: (api, details) => {
         if (details.name === 'chars') {
           // Would log '@' if the At sign is clicked these values doesn't have to be part of the state model
+          // eslint-disable-next-line no-console
           console.log({
             char: details.value
           });

@@ -6,14 +6,15 @@
  */
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Guid from './Guid';
+import * as Settings from '../api/Settings';
+import * as Guid from './Guid';
 
 const tocId = Guid.create('mcetoc_');
 
-const generateSelector = function generateSelector(depth) {
+const generateSelector = function (depth: number) {
   let i;
   const selector = [];
   for (i = 1; i <= depth; i++) {
@@ -22,11 +23,11 @@ const generateSelector = function generateSelector(depth) {
   return selector.join(',');
 };
 
-const hasHeaders = function (editor) {
+const hasHeaders = function (editor: Editor) {
   return readHeaders(editor).length > 0;
 };
 
-const readHeaders = function (editor) {
+const readHeaders = function (editor: Editor) {
   const tocClass = Settings.getTocClass(editor);
   const headerTag = Settings.getTocHeader(editor);
   const selector = generateSelector(Settings.getTocDepth(editor));
@@ -40,8 +41,9 @@ const readHeaders = function (editor) {
   }
 
   return Tools.map(headers, function (h) {
+    const id = (h as Element).id;
     return {
-      id: h.id ? h.id : tocId(),
+      id: id ? id : tocId(),
       level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
       title: editor.$.text(h),
       element: h
@@ -147,7 +149,7 @@ const updateToc = function (editor) {
   }
 };
 
-export default {
+export {
   hasHeaders,
   insertToc,
   updateToc

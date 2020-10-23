@@ -6,7 +6,7 @@ import * as Extract from '../api/general/Extract';
 /**
  * Return an array of arrays split by boundaries (exclude) or empty tags (include).
  */
-const group = function <E, D>(universe: Universe<E, D>, items: E[], optimise?: (e: E) => boolean) {
+const group = function <E, D> (universe: Universe<E, D>, items: E[], optimise?: (e: E) => boolean) {
   const extractions = Arr.bind(items, function (item) {
     return Extract.from(universe, item, optimise);
   });
@@ -17,7 +17,8 @@ const group = function <E, D>(universe: Universe<E, D>, items: E[], optimise?: (
     return item.match({
       boundary: () => Splitting.excludeWithout(item),
       empty: () => Splitting.excludeWith(item),
-      text: () => Splitting.include(item)
+      text: () => Splitting.include(item),
+      nonEditable: () => Splitting.excludeWithout(item)
     });
   });
 

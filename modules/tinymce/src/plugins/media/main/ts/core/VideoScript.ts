@@ -5,7 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getVideoScriptMatch = function (prefixes, src) {
+export interface VideoScript {
+  filter: string;
+  width?: number;
+  height?: number;
+}
+
+const getVideoScriptMatch = function (prefixes: VideoScript[], src: string): VideoScript {
   // var prefixes = Settings.getScripts(editor);
   if (prefixes) {
     for (let i = 0; i < prefixes.length; i++) {
@@ -16,6 +22,6 @@ const getVideoScriptMatch = function (prefixes, src) {
   }
 };
 
-export default {
+export {
   getVideoScriptMatch
 };

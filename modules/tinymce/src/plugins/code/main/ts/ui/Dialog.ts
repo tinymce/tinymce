@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Content from '../core/Content';
 import Editor from 'tinymce/core/api/Editor';
+import * as Content from '../core/Content';
 
 const open = function (editor: Editor) {
   const editorContent: string = Content.getContent(editor);
@@ -27,7 +27,7 @@ const open = function (editor: Editor) {
       {
         type: 'cancel',
         name: 'cancel',
-        text: 'Cancel',
+        text: 'Cancel'
       },
       {
         type: 'submit',
@@ -51,6 +51,6 @@ const open = function (editor: Editor) {
   // win.find('#code').value(Content.getContent(editor));
 };
 
-export default {
+export {
   open
 };

@@ -1,15 +1,14 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import HtmlUtils from '../../module/test/HtmlUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
@@ -28,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'h1', 3);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<h1>abc</h1><p>\u00a0</p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'P');
   });
 
   suite.test('Enter in midde of H1', function (editor) {
@@ -36,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'h1', 2);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<h1>ab</h1><h1>cd</h1>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'H1');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.parentNode.nodeName, 'H1');
   });
 
   suite.test('Enter before text after EM', function (editor) {
@@ -44,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><em>a</em></p><p>b</p>');
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeValue, 'b');
   });
 
@@ -59,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.setContent('<p><b><img src="about:blank" /></b></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getBody().firstChild.innerHTML, (Env.ie && Env.ie < 11) ? '' : '<br data-mce-bogus="1">');
+    LegacyUnit.equal((editor.getBody().firstChild as HTMLElement).innerHTML, '<br data-mce-bogus="1">');
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p><b><img src="about:blank" /></b></p>');
   });
 
@@ -68,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>abc</p><p><img src="about:blank" /></p>');
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
   });
@@ -78,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><img src="about:blank" /></p><p><img src="about:blank" /></p>');
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'IMG');
   });
@@ -95,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>abc</p><p><input type="text" /></p>');
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
   });
@@ -105,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.selection.setCursorLocation(editor.getBody().firstChild, 1);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><input type="text" /></p><p><input type="text" /></p>');
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'INPUT');
   });
@@ -122,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'p', 3);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>abc</p><p>\u00a0</p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'P');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'P');
   });
 
   suite.test('Enter at end of EM inside P', function (editor) {
@@ -133,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, ''),
       '<p><em>abc</em></p><p><em></em></p>'
     );
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'EM');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'EM');
   });
 
   suite.test('Enter at middle of EM inside P', function (editor) {
@@ -141,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'em', 2);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><em>ab</em></p><p><em>cd</em></p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'EM');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.parentNode.nodeName, 'EM');
   });
 
   suite.test('Enter at beginning EM inside P', function (editor) {
@@ -152,7 +151,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, ''),
       '<p><em></em></p><p><em>abc</em></p>'
     );
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeValue, 'abc');
   });
 
   suite.test('Enter at end of STRONG in EM inside P', function (editor) {
@@ -163,7 +162,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, ''),
       '<p><em><strong>abc</strong></em></p><p><em><strong></strong></em></p>'
     );
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'STRONG');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'STRONG');
   });
 
   suite.test('Enter at middle of STRONG in EM inside P', function (editor) {
@@ -171,7 +170,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'strong', 2);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><em><strong>ab</strong></em></p><p><em><strong>cd</strong></em></p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'STRONG');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.parentNode.nodeName, 'STRONG');
   });
 
   suite.test('Enter at beginning STRONG in EM inside P', function (editor) {
@@ -182,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
       HtmlUtils.cleanHtml(editor.getBody().innerHTML).replace(/<br([^>]+|)>|&nbsp;/g, ''),
       '<p><em><strong></strong></em></p><p><em><strong>abc</strong></em></p>'
     );
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeValue, 'abc');
   });
 
   suite.test('Enter at beginning of P', function (editor) {
@@ -190,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p>abc</p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeValue, 'abc');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeValue, 'abc');
   });
 
   suite.test('Enter at middle of P with style, id and class attributes', function (editor) {
@@ -198,7 +197,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p id="a" class="b" style="color: #000;">ab</p><p class="b" style="color: #000;">cd</p>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.parentNode.nodeName, 'P');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.parentNode.nodeName, 'P');
   });
 
   suite.test('Enter at a range between H1 and P', function (editor) {
@@ -222,7 +221,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'h1', 3);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<hgroup><h1>abc</h1><h1>\u00a0</h1></hgroup>');
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeName, 'H1');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'H1');
   });
 
   suite.test('Enter inside empty TD', function (editor) {
@@ -292,7 +291,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 3);
     pressEnter(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), (Env.ie && Env.ie < 11) ? '<p>abc<br></p>' : '<p>abc<br><br></p>');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abc<br><br></p>');
     editor.settings.forced_root_block = 'p';
   });
 
@@ -322,14 +321,13 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.setSelection(editor, 'body', 4);
     editor.focus();
     pressEnter(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), (Env.ie && Env.ie < 11) ? 'abcd<br>' : 'abcd<br><br>');
+    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), 'abcd<br><br>');
     editor.settings.forced_root_block = 'p';
   });
 
   suite.test('Enter in empty P at the end of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p>abc</p><p></p></blockquote>' : '<blockquote><p>abc</p><p><br></p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p>abc</p><p><br></p></blockquote>';
     LegacyUnit.setSelection(editor, 'p:last', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p>');
@@ -338,8 +336,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
 
   suite.test('Enter in empty P at the beginning of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p></p><p>abc</p></blockquote>' : '<blockquote><p><br></p><p>abc</p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p><br></p><p>abc</p></blockquote>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><blockquote><p>abc</p></blockquote>');
@@ -348,8 +345,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
 
   suite.test('Enter in empty P at in the middle of a blockquote and end_container_on_empty_block: true', function (editor) {
     editor.settings.end_container_on_empty_block = true;
-    editor.getBody().innerHTML = (Env.ie && Env.ie < 11) ?
-      '<blockquote><p>abc</p><p></p><p>123</p></blockquote>' : '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
+    editor.getBody().innerHTML = '<blockquote><p>abc</p><p><br></p><p>123</p></blockquote>';
     LegacyUnit.setSelection(editor, 'p:nth-child(2)', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<blockquote><p>abc</p></blockquote><p>\u00a0</p><blockquote><p>123</p></blockquote>');
@@ -400,7 +396,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<p>abcd</p>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getContent(), (Env.ie && Env.ie < 11) ? '<p>abcd</p>' : '<p>abcd<br /><br /></p>');
+    LegacyUnit.equal(editor.getContent(), '<p>abcd<br /><br /></p>');
   });
 
   suite.test('Shift+Enter in the middle of B with a BR after it', function (editor) {
@@ -435,7 +431,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     editor.getBody().innerHTML = '<pre>abcd</pre>';
     LegacyUnit.setSelection(editor, 'pre', 4);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), (Env.ie && Env.ie < 11) ? '<pre>abcd</pre>' : '<pre>abcd<br /><br /></pre>');
+    LegacyUnit.equal(editor.getContent(), '<pre>abcd<br /><br /></pre>');
   });
 
   suite.test('Enter in beginning of PRE and br_in_pre: false', function (editor) {
@@ -572,7 +568,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>a</p><p><br />b</p>');
 
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startContainer.childNodes[rng.startOffset].nodeName, 'BR');
     editor.settings.forced_root_block = 'p';
@@ -660,27 +656,27 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p><p>\u00a0</p>');
 
-    const rng = editor.selection.getRng(true);
+    const rng = editor.selection.getRng();
     LegacyUnit.equal(rng.startContainer.nodeName, 'B');
-    LegacyUnit.equal(rng.startContainer.data !== ' ', true);
+    LegacyUnit.equal(rng.startContainer.textContent !== ' ', true);
   });
 
   suite.test('Enter inside first li with block inside', function (editor) {
-    editor.getBody().innerHTML = '<ul><li><p><br /></p></li><li><p>b</p></><li>c</></ul>';
+    editor.getBody().innerHTML = '<ul><li><p><br /></p></li><li><p>b</p></li><li>c</li></ul>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><ul><li><p>b</p></li><li>c</li></ul>');
   });
 
   suite.test('Enter inside middle li with block inside', function (editor) {
-    editor.getBody().innerHTML = '<ul><li>a</><li><p><br /></p></><li>c</></ul>';
+    editor.getBody().innerHTML = '<ul><li>a</li><li><p><br /></p></li><li>c</li></ul>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<ul><li>a</li></ul><p>\u00a0</p><ul><li>c</li></ul>');
   });
 
   suite.test('Enter inside last li with block inside', function (editor) {
-    editor.getBody().innerHTML = '<ul><li>a</li><li>b</><li><p><br /></p></li></ul>';
+    editor.getBody().innerHTML = '<ul><li>a</li><li>b</li><li><p><br /></p></li></ul>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
     LegacyUnit.equal(editor.getContent(), '<ul><li>a</li><li>b</li></ul><p>\u00a0</p>');
@@ -693,7 +689,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKey', function () {
     LegacyUnit.equal(editor.getContent(), '<details><summary>a<br />b</summary></details>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

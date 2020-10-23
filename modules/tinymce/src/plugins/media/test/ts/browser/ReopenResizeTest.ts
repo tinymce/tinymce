@@ -1,34 +1,35 @@
-import { Pipeline, RawAssertions, Step, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sWaitForResizeHandles = function (editor) {
+  const sWaitForResizeHandles = function (editor: Editor) {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
-      RawAssertions.assertEq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
-    }), 1, 3000);
+      Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
+    }));
   };
 
-  const sRawAssertImagePresence = function (editor) {
+  const sRawAssertImagePresence = function (editor: Editor) {
     // Hacky way to assert that the placeholder image is in
     // the correct place that works cross browser
     // assertContentStructure did not work because some
     // browsers insert BRs and some do not
     return Logger.t('Assert image is present', Step.sync(function () {
       const actualCount = editor.dom.select('img.mce-object').length;
-      RawAssertions.assertEq('assert raw content', 1, actualCount);
+      Assert.eq('assert raw content', 1, actualCount);
     }));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
 
     Pipeline.async({},
@@ -45,12 +46,12 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
         Waiter.sTryUntil(
           'Try assert content',
           sRawAssertImagePresence(editor),
-          100, 3000
+          10, 3000
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     indent: false,

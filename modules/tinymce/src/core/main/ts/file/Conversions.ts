@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { FileReader, Uint8Array, Window, XMLHttpRequest } from '@ephox/sand';
+import { Optional } from '@ephox/katamari';
 import Promise from '../api/util/Promise';
-import { Blob } from '@ephox/dom-globals';
 
 /**
  * Converts blob/uris back and forth.
@@ -24,7 +23,7 @@ const blobUriToBlob = function (url: string): Promise<Blob> {
     };
 
     try {
-      const xhr = XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
       xhr.open('GET', url, true);
       xhr.responseType = 'blob';
@@ -50,11 +49,11 @@ const blobUriToBlob = function (url: string): Promise<Blob> {
 };
 
 const parseDataUri = function (uri: string) {
-  let type, matches;
+  let type;
 
   const uriParts = decodeURIComponent(uri).split(',');
 
-  matches = /data:([^;]+)/.exec(uriParts[0]);
+  const matches = /data:([^;]+)/.exec(uriParts[0]);
   if (matches) {
     type = matches[1];
   }
@@ -65,27 +64,33 @@ const parseDataUri = function (uri: string) {
   };
 };
 
+const buildBlob = (type: string, data: string): Optional<Blob> => {
+  let str: string;
+
+  // Might throw error if data isn't proper base64
+  try {
+    str = atob(data);
+  } catch (e) {
+    return Optional.none();
+  }
+
+  const arr = new Uint8Array(str.length);
+
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = str.charCodeAt(i);
+  }
+
+  return Optional.some(new Blob([ arr ], { type }));
+};
+
 const dataUriToBlob = function (uri: string): Promise<Blob> {
-  return new Promise(function (resolve) {
-    let str, arr, i;
+  return new Promise((resolve) => {
+    const { type, data } = parseDataUri(uri);
 
-    const uriParts = parseDataUri(uri);
-
-    // Might throw error if data isn't proper base64
-    try {
-      str = Window.atob(uriParts.data);
-    } catch (e) {
-      resolve(new Blob([]));
-      return;
-    }
-
-    arr = Uint8Array(str.length);
-
-    for (i = 0; i < arr.length; i++) {
-      arr[i] = str.charCodeAt(i);
-    }
-
-    resolve(new Blob([arr], { type: uriParts.type }));
+    buildBlob(type, data).fold(
+      () => resolve(new Blob([])), // TODO: Consider rejecting here instead
+      resolve
+    );
   });
 };
 
@@ -103,17 +108,18 @@ const uriToBlob = function (url: string): Promise<Blob> {
 
 const blobToDataUri = function (blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);
   });
 };
 
-export default {
+export {
+  buildBlob,
   uriToBlob,
   blobToDataUri,
   parseDataUri

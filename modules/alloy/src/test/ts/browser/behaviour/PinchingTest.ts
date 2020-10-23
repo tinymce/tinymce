@@ -1,44 +1,40 @@
 import { Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Pinching } from 'ephox/alloy/api/behaviour/Pinching';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { Fun } from '@ephox/katamari';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build({
-      dom: {
-        tag: 'div',
-        styles: {
-          width: '100px',
-          height: '100px'
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build({
+    dom: {
+      tag: 'div',
+      styles: {
+        width: '100px',
+        height: '100px'
+      }
+    },
+    behaviours: Behaviour.derive([
+      Pinching.config({
+        onPinch(_elem, dx, dy) {
+          store.adder({ method: 'pinch', dx, dy })();
+        },
+        onPunch(_elem, dx, dy) {
+          store.adder({ method: 'punch', dx, dy })();
         }
-      },
-      behaviours: Behaviour.derive([
-        Pinching.config({
-          onPinch (elem, dx, dy) {
-            store.adder({ method: 'pinch', dx, dy })();
-          },
-          onPunch (elem, dx, dy) {
-            store.adder({ method: 'punch', dx, dy })();
-          }
-        })
-      ])
-    });
-  }, (doc, body, gui, component, store) => {
+      })
+    ])
+  }), (_doc, _body, _gui, component, store) => {
 
-    const sSendTouchmove = (touches) => {
-      return Step.sync(() => {
-        AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
-          raw: { touches }
-        });
+    const sSendTouchmove = (touches: Array<{ clientX: number; clientY: number}>) => Step.sync(() => {
+      AlloyTriggers.emitWith(component, NativeEvents.touchmove(), {
+        raw: { touches }
       });
-    };
+    });
 
     return [
       store.sAssertEq('Initially empty', [ ]),

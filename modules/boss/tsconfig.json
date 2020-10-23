@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/boss/test/*": ["src/test/ts/module/ephox/boss/test/*"],
       "ephox/boss/demo/*": ["src/demo/ts/ephox/boss/demo/*"],
@@ -18,6 +19,7 @@
   ],
   "references": [
     { "path": "../katamari" },
-    { "path": "../sugar" },
+    { "path": "../katamari-assertions" },
+    { "path": "../sugar" }
   ]
 }

@@ -1,19 +1,23 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
+import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { NoState } from '../common/BehaviourState';
+import { ManualRepresentingState, ManualStoreConfig, RepresentingConfig } from './RepresentingTypes';
 
-const getValue = (component, repConfig, repState) => {
-  return repConfig.store.getValue(component);
-};
+interface ManualRepresentingConfig extends RepresentingConfig {
+  store: ManualStoreConfig;
+}
 
-const setValue = (component, repConfig, repState, data) => {
+const getValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) => repConfig.store.getValue(component);
+
+const setValue = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState, data: any) => {
   repConfig.store.setValue(component, data);
   repConfig.onSetValue(component, data);
 };
 
-const onLoad = (component, repConfig, repState) => {
+const onLoad = (component: AlloyComponent, repConfig: ManualRepresentingConfig, _repState: ManualRepresentingState) => {
   repConfig.store.initialValue.each((data) => {
     repConfig.store.setValue(component, data);
   });

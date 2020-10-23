@@ -1,9 +1,9 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene, Universe } from '@ephox/boss';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('ExtractTextTest', function() {
+UnitTest.test('ExtractTextTest', function () {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
@@ -36,4 +36,3 @@ UnitTest.test('ExtractTextTest', function() {
   check('Inside em', Extract.toText, '1.2.4');
   check('post-image text\n\nThis is textinside a span\nMore textInside emLast piece of text', Extract.toText, '1');
 });
-

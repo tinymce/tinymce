@@ -26,4 +26,4 @@ export interface ToolbarGroupSpec extends CompositeSketchSpec {
   };
 }
 
-export interface ToolbarGroupSketcher extends CompositeSketch<ToolbarGroupSpec, ToolbarGroupDetail> { }
+export interface ToolbarGroupSketcher extends CompositeSketch<ToolbarGroupSpec> { }

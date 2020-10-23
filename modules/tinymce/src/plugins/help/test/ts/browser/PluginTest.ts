@@ -1,13 +1,12 @@
-import { Pipeline, Mouse, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import PluginAssert from '../module/PluginAssert';
-import Selectors from '../module/Selectors';
+import * as PluginAssert from '../module/PluginAssert';
+import { selectors } from '../module/Selectors';
 
 UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
 
@@ -15,25 +14,26 @@ UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
   HelpPlugin();
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    TinyUi(editor);
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Assert Help Plugin list contains Help', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Failed to find `Help` plugin',
           {
             'a:contains("Help")': 1
           },
-          Selectors.dialog,
-          Selectors.pluginsTab
+          selectors.dialog,
+          selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help',
     toolbar: 'help',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    statusbar: false,
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

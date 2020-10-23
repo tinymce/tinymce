@@ -1,18 +1,19 @@
-import { FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Option, Result } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Arr, Cell, Fun, Obj, Optional, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
+import { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
 import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
+import { AlloySpec, PremadeSpec, SimpleOrSketchSpec } from './SpecTypes';
 
 const buildSubcomponents = (spec: SimpleOrSketchSpec): AlloyComponent[] => {
-  const components = Objects.readOr('components', [ ])(spec);
+  const components = Obj.get(spec, 'components').getOr([ ]);
   return Arr.map(components, build);
 };
 
@@ -35,7 +36,7 @@ const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, str
 };
 
 const text = (textContent: string): PremadeSpec => {
-  const element = Element.fromText(textContent);
+  const element = SugarElement.fromText(textContent);
 
   return external({
     element
@@ -43,23 +44,21 @@ const text = (textContent: string): PremadeSpec => {
 };
 
 // Rename.
-export interface ExternalElement { uid ?: string; element: Element; }
+export interface ExternalElement { uid?: string; element: SugarElement }
 const external = (spec: ExternalElement): PremadeSpec => {
-  const extSpec: { uid: Option<string>, element: Element } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
+  const extSpec: { uid: Optional<string>; element: SugarElement } = ValueSchema.asRawOrDie('external.component', ValueSchema.objOfOnly([
     FieldSchema.strict('element'),
     FieldSchema.option('uid')
   ]), spec);
 
   const systemApi = Cell(NoContextApi());
 
-  const connect = (newApi) => {
+  const connect = (newApi: AlloySystemApi) => {
     systemApi.set(newApi);
   };
 
   const disconnect = () => {
-    systemApi.set(NoContextApi(() => {
-      return me;
-    }));
+    systemApi.set(NoContextApi(() => me));
   };
 
   extSpec.uid.each((uid) => {
@@ -68,17 +67,17 @@ const external = (spec: ExternalElement): PremadeSpec => {
 
   const me: AlloyComponent = {
     getSystem: systemApi.get,
-    config: Option.none,
-    hasConfigured: Fun.constant(false),
+    config: Optional.none,
+    hasConfigured: Fun.never,
     connect,
     disconnect,
     getApis: <A>(): A => ({ } as any),
-    element: Fun.constant(extSpec.element),
-    spec: Fun.constant(spec),
+    element: extSpec.element,
+    spec,
     readState: Fun.constant('No state'),
     syncComponents: Fun.noop,
     components: Fun.constant([ ]),
-    events: Fun.constant({ })
+    events: { }
   };
   return GuiTypes.premade(me);
 };
@@ -92,18 +91,14 @@ const external = (spec: ExternalElement): PremadeSpec => {
 const uids = Tagger.generate;
 
 // INVESTIGATE: A better way to provide 'meta-specs'
-const build = (spec: AlloySpec): AlloyComponent => {
-  return GuiTypes.getPremade(spec).fold(() => {
-    // EFFICIENCY: Consider not merging here, and passing uid through separately
-    const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
-      uid: uids(''),
-      ...spec,
-    } as SimpleOrSketchSpec;
-    return buildFromSpec(userSpecWithUid).getOrDie();
-  }, (prebuilt) => {
-    return prebuilt;
-  });
-};
+const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
+  // EFFICIENCY: Consider not merging here, and passing uid through separately
+  const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
+    uid: uids(''),
+    ...spec
+  } as SimpleOrSketchSpec;
+  return buildFromSpec(userSpecWithUid).getOrDie();
+}, (prebuilt) => prebuilt);
 
 const premade = GuiTypes.premade;
 

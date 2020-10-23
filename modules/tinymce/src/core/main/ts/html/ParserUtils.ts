@@ -5,38 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Node from '../api/html/Node';
+import { Unicode } from '@ephox/katamari';
+import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
+import Schema, { SchemaMap } from '../api/html/Schema';
 
-const paddEmptyNode = function (settings, args, blockElements, node) {
+const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, blockElements: SchemaMap, node: AstNode) => {
   const brPreferred = settings.padd_empty_with_br || args.insert;
 
   if (brPreferred && blockElements[node.name]) {
-    node.empty().append(new Node('br', 1)).shortEnded = true;
+    node.empty().append(new AstNode('br', 1)).shortEnded = true;
   } else {
-    node.empty().append(new Node('#text', 3)).value = '\u00a0';
+    node.empty().append(new AstNode('#text', 3)).value = Unicode.nbsp;
   }
 };
 
-const isPaddedWithNbsp = function (node) {
-  return hasOnlyChild(node, '#text') && node.firstChild.value === '\u00a0';
-};
+const isPaddedWithNbsp = (node: AstNode) => hasOnlyChild(node, '#text') && node.firstChild.value === Unicode.nbsp;
 
-const hasOnlyChild = function (node, name) {
-  return node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
-};
+const hasOnlyChild = (node: AstNode, name: string) => node && node.firstChild && node.firstChild === node.lastChild && node.firstChild.name === name;
 
-const isPadded = function (schema, node) {
+const isPadded = (schema: Schema, node: AstNode) => {
   const rule = schema.getElementRule(node.name);
   return rule && rule.paddEmpty;
 };
 
-const isEmpty = function (schema, nonEmptyElements, whitespaceElements, node) {
-  return node.isEmpty(nonEmptyElements, whitespaceElements, function (node) {
-    return isPadded(schema, node);
-  });
-};
+const isEmpty = (schema: Schema, nonEmptyElements: SchemaMap, whitespaceElements: SchemaMap, node: AstNode) => node.isEmpty(nonEmptyElements, whitespaceElements, (node) => isPadded(schema, node));
 
-const isLineBreakNode = (node, blockElements) => node && (blockElements[node.name] || node.name === 'br');
+const isLineBreakNode = (node: AstNode, blockElements: SchemaMap) => node && (blockElements[node.name] || node.name === 'br');
 
 export {
   paddEmptyNode,

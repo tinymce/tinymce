@@ -1,23 +1,10 @@
 import {
-  ApproxStructure,
-  Assertions,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Step,
-  UiFinder,
-  Waiter,
-  Chain,
-  Log,
-  Mouse,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Step, UiFinder, Waiter
 } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
-import { Fun, Arr, Strings } from '@ephox/katamari';
-import { Element, SelectorFind, Selectors } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Arr, Fun, Strings } from '@ephox/katamari';
+import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import SilverMenubar from 'tinymce/themes/silver/ui/menus/menubar/SilverMenubar';
 
@@ -26,30 +13,28 @@ import TestExtras from '../../module/TestExtras';
 // TODO: Expose properly through alloy.
 UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
   const helpers = TestExtras();
-  const sink = Element.fromDom(document.querySelector('.mce-silver-sink'));
+  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
 
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build({
-        dom: {
-          tag: 'div',
-          classes: [ 'silvermenubar-test-container' ]
-        },
-        components: [
-          SilverMenubar.sketch({
-            dom: {
-              tag: 'div',
-              classes: [ 'test-menubar' ]
-            },
-            onEscape: store.adder('Menubar.escape'),
-            onSetup: store.adder('Menubar.setup'),
-            backstage: helpers.backstage
-          })
-        ]
-      });
-    },
-    (doc, body, gui, testContainer, store) => {
-      const menubarEl = SelectorFind.descendant(testContainer.element(), '.test-menubar').getOrDie('Could not find menubar to test');
+    (store, _doc, _body) => GuiFactory.build({
+      dom: {
+        tag: 'div',
+        classes: [ 'silvermenubar-test-container' ]
+      },
+      components: [
+        SilverMenubar.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'test-menubar' ]
+          },
+          onEscape: store.adder('Menubar.escape'),
+          onSetup: store.adder('Menubar.setup'),
+          backstage: helpers.backstage
+        })
+      ]
+    }),
+    (doc, _body, _gui, testContainer, store) => {
+      const menubarEl = SelectorFind.descendant(testContainer.element, '.test-menubar').getOrDie('Could not find menubar to test');
 
       const menubar = testContainer.getSystem().getByDom(menubarEl).getOrDie();
 
@@ -63,8 +48,8 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
       const sAssertActiveToggleItemHasOneCheckmark = (itemText: string) =>
         Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu [role=menuitemcheckbox]:contains("' + itemText + '")'),
-          Chain.op((menu) => {
-            const checkMarks = Selectors.all('.tox-collection__item-icon');
+          Chain.op((_menu) => {
+            const checkMarks = Selectors.all('.tox-collection__item-checkmark');
             Assertions.assertEq('only one check mark is displayed for active toggled menu items', 1, checkMarks.length);
           })
         ]);
@@ -87,50 +72,42 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         // Wait for menu to appear
         Waiter.sTryUntil(
           'Waiting for menu to be in DOM',
-          UiFinder.sExists(sink, '.tox-menu'),
-          100,
-          1000
+          UiFinder.sExists(sink, '.tox-menu')
         );
 
       const sWaitForMenuToDisappear = () =>
         Waiter.sTryUntil(
           'Waiting for menu to NO LONGER be in DOM',
-          UiFinder.sNotExists(sink, '.tox-menu'),
-          100,
-          1000
+          UiFinder.sNotExists(sink, '.tox-menu')
         );
 
-      const sAssertMenuItemGroups = (label: string, groups: string[][]) => Logger.t(
+      const sAssertMenuItemGroups = (label: string, groups: string[][], hasIcons: boolean, hasCheckmark: boolean) => Logger.t(
         label,
         Chain.asStep(sink, [
           UiFinder.cFindIn('.tox-selected-menu'),
           Assertions.cAssertStructure(
             'Checking contents of menu',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: Arr.map(groups, (items) => {
+            ApproxStructure.build((s, str, arr) => s.element('div', {
+              children: Arr.map(groups, (items) => s.element('div', {
+                classes: [ arr.has('tox-collection__group') ],
+                children: Arr.map(items, (itemText) => {
+                  // itemText can have a trailing >, which means it has a caret
+                  const hasCaret = Strings.endsWith(itemText, '>');
                   return s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: Arr.map(items, (itemText) => {
-                      // itemText can have a trailing >, which means it has a caret
-                      const hasCaret = Strings.endsWith(itemText, '>');
-                      return s.element('div', {
-                        classes: [ arr.has('tox-collection__item') ],
-                        children: [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }),
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-label') ],
-                            html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
-                          })
-                        ].concat(hasCaret ? [
-                          s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
-                        ] : [ ])
-                      });
-                    })
+                    classes: [ arr.has('tox-collection__item') ],
+                    children: [
+                      ...hasIcons ? [ s.element('div', { classes: [ arr.has('tox-collection__item-icon') ] }) ] : [],
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-label') ],
+                        html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
+                      })
+                    ].concat(hasCaret ? [
+                      s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
+                    ] : hasCheckmark ? [ s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] }) ] : [])
                   });
                 })
-              });
-            })
+              }))
+            }))
           )
         ])
       );
@@ -140,16 +117,14 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         store.sClear,
         Assertions.sAssertStructure(
           'Checking initial structure for menubar',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [arr.has('test-menubar')],
-              attrs: {
-                role: str.is('menubar')
-              },
-              children: [ ]
-            });
-          }),
-          menubar.element()
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('test-menubar') ],
+            attrs: {
+              role: str.is('menubar')
+            },
+            children: [ ]
+          })),
+          menubar.element
         ),
 
         Logger.t(
@@ -291,10 +266,10 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
         store.sAssertEq('Pressing escape in menubar should fire event', [ 'Menubar.escape' ]),
 
         Log.stepsAsStep('TBA', 'AP-307: Once a menu is expanded, hovering on buttons should switch which menu is expanded', [
-          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          Mouse.sHoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")'),
           Step.wait(100),
           UiFinder.sNotExists(sink, '[role="menu"]'),
-          Mouse.sClickOn(menubar.element(), 'button[role="menuitem"]:contains("Changes")'),
+          Mouse.sClickOn(menubar.element, 'button[role="menuitem"]:contains("Changes")'),
           UiFinder.sWaitForVisible(
             'Waiting for changes menu',
             sink,
@@ -302,8 +277,8 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           ),
           sAssertMenuItemGroups('After clicking on "Changes"', [
             [ 'Remember me' ]
-          ]),
-          Mouse.sHoverOn(menubar.element(), 'button[role="menuitem"]:contains("Basic Menu Button")'),
+          ], false, true),
+          Mouse.sHoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")'),
           UiFinder.sWaitForVisible(
             'Waiting for basic menu',
             sink,
@@ -320,7 +295,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
           sAssertMenuItemGroups('After hovering on Basic (after another menu was open)', [
             [ 'Item1' ],
             [ 'Item2', 'Nested menu>' ]
-          ])
+          ], true, false)
         ])
       ];
     }, () => {

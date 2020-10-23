@@ -1,104 +1,92 @@
-import { Option } from './Option';
 import { Cell } from './Cell';
+import { Optional } from './Optional';
 
-const revocable = function <T> (doRevoke: (data: T) => void) {
-  const subject = Cell(Option.none<T>());
+interface Singleton<T> {
+  clear: () => void;
+  isSet: () => boolean;
+  set: (value: T) => void;
+}
 
-  const revoke = function () {
-    subject.get().each(doRevoke);
-  };
+export interface Revocable<T> extends Singleton<T> { };
 
-  const clear = function () {
+export interface Api<T> extends Singleton<T> {
+  run: (fn: (data: T) => void) => void;
+}
+
+export interface Value<T> extends Singleton<T> {
+  on: (fn: (data: T) => void) => void;
+}
+
+const revocable = <T> (doRevoke: (data: T) => void): Singleton<T> => {
+  const subject = Cell(Optional.none<T>());
+
+  const revoke = (): void => subject.get().each(doRevoke);
+
+  const clear = () => {
     revoke();
-    subject.set(Option.none());
+    subject.set(Optional.none());
   };
 
-  const set = function (s: T) {
+  const isSet = () => subject.get().isSome();
+
+  const set = (s: T) => {
     revoke();
-    subject.set(Option.some(s));
-  };
-
-  const isSet = function () {
-    return subject.get().isSome();
+    subject.set(Optional.some(s));
   };
 
   return {
-    clear: clear,
-    isSet: isSet,
-    set: set
+    clear,
+    isSet,
+    set
   };
 };
 
-export const destroyable = function <T extends { destroy: () => void; }> () {
-  return revocable<T>(function (s) {
-    s.destroy();
-  });
-};
+export const destroyable = <T extends { destroy: () => void }> (): Revocable<T> => revocable<T>((s) => s.destroy());
 
-export const unbindable = function <T extends { unbind: () => void; }> () {
-  return revocable<T>(function (s) {
-    s.unbind();
-  });
-};
+export const unbindable = <T extends { unbind: () => void }> (): Revocable<T> => revocable<T>((s) => s.unbind());
 
-export const api = function <T extends { destroy: () => void; }> () {
-  const subject = Cell(Option.none<T>());
+export const api = <T extends { destroy: () => void }> (): Api<T> => {
+  const subject = Cell(Optional.none<T>());
 
-  const revoke = function () {
-    subject.get().each(function (s) {
-      s.destroy();
-    });
-  };
+  const revoke = () => subject.get().each((s) => s.destroy());
 
-  const clear = function () {
+  const clear = () => {
     revoke();
-    subject.set(Option.none());
+    subject.set(Optional.none());
   };
 
-  const set = function (s: T) {
+  const set = (s: T) => {
     revoke();
-    subject.set(Option.some(s));
+    subject.set(Optional.some(s));
   };
 
-  const run = function (f: (data: T) => void) {
-    subject.get().each(f);
-  };
+  const run = (f: (data: T) => void) => subject.get().each(f);
 
-  const isSet = function () {
-    return subject.get().isSome();
-  };
+  const isSet = () => subject.get().isSome();
 
   return {
-    clear: clear,
-    isSet: isSet,
-    set: set,
-    run: run
+    clear,
+    isSet,
+    set,
+    run
   };
 };
 
-export const value = function <T> () {
-  const subject = Cell(Option.none<T>());
+export const value = <T> (): Value<T> => {
+  const subject = Cell(Optional.none<T>());
 
-  const clear = function () {
-    subject.set(Option.none());
-  };
+  const clear = () => subject.set(Optional.none());
 
-  const set = function (s: T) {
-    subject.set(Option.some(s));
-  };
+  const set = (s: T) => subject.set(Optional.some(s));
 
-  const on = function (f: (data: T) => void) {
-    subject.get().each(f);
-  };
+  const isSet = () => subject.get().isSome();
 
-  const isSet = function () {
-    return subject.get().isSome();
-  };
+  const on = (f: (data: T) => void) => subject.get().each(f);
 
   return {
-    clear: clear,
-    set: set,
-    isSet: isSet,
-    on: on
+    clear,
+    set,
+    isSet,
+    on
   };
 };

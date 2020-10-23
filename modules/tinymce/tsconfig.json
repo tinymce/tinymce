@@ -6,6 +6,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],
@@ -69,7 +70,7 @@
     "src/themes/*/demo/ts",
     "src/themes/*/test/ts",
     "src/core/dist/globals/tinymce/core/",
-    "src/core/dist/globals/**/*.ts",
+    "src/core/dist/globals/**/*.ts"
   ],
   "references": [
     { "path": "../acid" },
@@ -80,11 +81,12 @@
     { "path": "../darwin" },
     { "path": "../imagetools" },
     { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
     { "path": "../mcagar" },
     { "path": "../polaris" },
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" },
+    { "path": "../sugar" }
   ]
 }

@@ -1,10 +1,7 @@
 import { ValueSchema } from '@ephox/boulder';
-import { Arr, Cell, Fun, Option, Type } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { AlloyBehaviour } from '../../api/behaviour/Behaviour';
-import { AlloySystemApi } from '../../api/system/SystemApi';
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
 import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import * as ComponentDom from '../../construct/ComponentDom';
@@ -14,17 +11,19 @@ import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
 import { UncurriedHandler } from '../../events/EventRegistry';
+import { AlloyBehaviour } from '../behaviour/Behaviour';
 import { NoContextApi, singleton } from '../system/NoContextApi';
-import * as GuiTypes from '../ui/GuiTypes';
+import { AlloySystemApi } from '../system/SystemApi';
 import * as CompBehaviours from './CompBehaviours';
 import { AlloyComponent } from './ComponentApi';
+import { ComponentDetail } from './SpecTypes';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.
 const getDomDefinition = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
+  bData: Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): DomDefinitionDetail => {
   // Get the current DOM definition from the spec
   const definition = CustomDefinition.toDefinition(info);
@@ -47,7 +46,7 @@ const getDomDefinition = (
 const getEvents = (
   info: CustomDefinition.CustomDetail<any>,
   bList: Array<AlloyBehaviour<any, any>>,
-  bData: Record<string, () => Option<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
+  bData: Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>
 ): Record<string, UncurriedHandler> => {
   const baseEvents = {
     'alloy.base.behaviour': CustomDefinition.toEvents(info)
@@ -55,16 +54,13 @@ const getEvents = (
   return ComponentEvents.combine(bData, info.eventOrder, bList, baseEvents).getOrDie();
 };
 
-const build = (spec): AlloyComponent => {
-  const getMe = () => {
-    return me;
-  };
+const build = (spec: ComponentDetail): AlloyComponent => {
+  const getMe = () => me;
 
   const systemApi = Cell(singleton);
 
   const info: CustomDefinition.CustomDetail<any> = ValueSchema.getOrDie(CustomDefinition.toInfo(spec));
   const bBlob = CompBehaviours.generate(spec);
-
 
   const bList = BehaviourBlob.getBehaviours(bBlob);
   const bData = BehaviourBlob.getData(bBlob);
@@ -87,56 +83,43 @@ const build = (spec): AlloyComponent => {
   const syncComponents = (): void => {
     // Update the component list with the current children
     const children = Traverse.children(item);
-    const subs = Arr.bind(children, (child) => {
-
-      return systemApi.get().getByDom(child).fold(() => {
-        // INVESTIGATE: Not sure about how to handle text nodes here.
-        return [ ];
-      }, (c) => {
-        return [ c ];
-      });
-    });
+    // INVESTIGATE: Not sure about how to handle text nodes here.
+    const subs = Arr.bind(children, (child) => systemApi.get().getByDom(child).fold(
+      () => [ ],
+      (c) => [ c ]
+    ));
     subcomponents.set(subs);
   };
 
   // TYPIFY (any here is for the info.apis() pathway)
-  const config = <D>(behaviour: AlloyBehaviour<any, D>): D | any => {
+  const config = (behaviour: AlloyBehaviour<any, any>): Optional<BehaviourBlob.BehaviourConfigAndState<any, any>> => {
     const b = bData;
     const f = Type.isFunction(b[behaviour.name()]) ? b[behaviour.name()] : () => {
-      throw new Error('Could not find ' + behaviour.name() + ' in ' + Json.stringify(spec, null, 2));
+      throw new Error('Could not find ' + behaviour.name() + ' in ' + JSON.stringify(spec, null, 2));
     };
     return f();
   };
 
-  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => {
-    return Type.isFunction(bData[behaviour.name()]);
-  };
+  const hasConfigured = (behaviour: AlloyBehaviour<any, any>): boolean => Type.isFunction(bData[behaviour.name()]);
 
-  const getApis = <A>(): A => {
-    return info.apis;
-  };
+  const getApis = <A>(): A => info.apis;
 
-  // TYPIFY
-  const readState = (behaviourName: string): Option<any> => {
-    return bData[behaviourName]().map((b) => {
-      return b.state.readState();
-    }).getOr('not enabled');
-  };
+  const readState = (behaviourName: string): any => bData[behaviourName]().map((b) => b.state.readState()).getOr('not enabled');
 
   const me: AlloyComponent = {
     getSystem: systemApi.get,
     config,
     hasConfigured,
-    spec: Fun.constant(spec),
+    spec,
     readState,
     getApis,
 
     connect,
     disconnect,
-    element: Fun.constant(item),
+    element: item,
     syncComponents,
     components: subcomponents.get,
-    events: Fun.constant(events)
+    events
   };
 
   return me;

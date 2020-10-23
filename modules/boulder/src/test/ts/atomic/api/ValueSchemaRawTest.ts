@@ -1,31 +1,31 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock';
-import { Result, Fun } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Logger } from '@ephox/agar';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun, Result } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
 import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
+import { Processor } from 'ephox/boulder/api/Main';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
-import { Processor } from 'ephox/boulder/api/DslType';
 
 UnitTest.test('ValueSchemaRawTest', function () {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
     ValueSchema.asRaw(label, processor, input).fold(function (err) {
       const message = ValueSchema.formatError(err);
-      RawAssertions.assertEq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
+      Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
     }, function (val) {
-      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + Json.stringify(val, null, 2) + ')');
+      assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
 
   const check = function (label: string, input: any, processor: Processor) {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
-    RawAssertions.assertEq(label, input, actual);
+    Assert.eq(label, input, actual);
   };
 
   const checkIs = function (label: string, expected: any, input: any, processor: Processor) {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
-    RawAssertions.assertEq(label, expected, actual);
+    Assert.eq(label, expected, actual);
   };
 
   check('test.1', 10, ValueSchema.anyValue());
@@ -118,14 +118,14 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   check('strictArrayOf test',
     { values: [ 'a', 'b' ] },
-    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
   );
 
   checkErr(
     'strictArrayOf should fail since types are not the same',
     'string but got: number',
     { values: [ 'a', 3 ] },
-    ValueSchema.objOf([FieldSchema.strictArrayOf('values', ValueSchema.string)])
+    ValueSchema.objOf([ FieldSchema.strictArrayOf('values', ValueSchema.string) ])
   );
 
   checkErr('test.6 should fail because fields do not both start with f',
@@ -200,35 +200,35 @@ UnitTest.test('ValueSchemaRawTest', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), {});
-    RawAssertions.assertEq('alpha should be none', true, v.alpha.isNone());
+    KAssert.eqNone('alpha should be none', v.alpha);
   });
 
   Logger.sync('option, value supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), { alpha: 'beta' });
-    RawAssertions.assertEq('alpha should be some(beta)', 'beta', v.alpha.getOrDie('expected some'));
+    KAssert.eqSome('alpha should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: 'beta' });
-    RawAssertions.assertEq('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha.getOrDie());
+    KAssert.eqSome('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value supplied as true', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: true });
-    RawAssertions.assertEq('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha.getOrDie());
+    KAssert.eqSome('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha);
   });
 
   Logger.sync('defaulted option(fallback), value not supplied', function () {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
-    ]), {  });
-    RawAssertions.assertEq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    ]), { });
+    KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk not supplied', function () {
@@ -241,7 +241,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk' }
     );
-    RawAssertions.assertEq('fallback.opt: no alpha should be none', true, v.alpha.isNone());
+    KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk supplied as true', function () {
@@ -254,9 +254,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk', alpha: true }
     );
-    RawAssertions.assertEq('Checking output', 'defaulted thunk.fallback', v.alpha.getOrDie(
-      'Alpha should be some'
-    ));
+    KAssert.eqSome('Checking output', 'defaulted thunk.fallback', v.alpha);
   });
 
   Logger.sync('asDefaultedOptionThunk supplied', function () {
@@ -269,9 +267,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       ]),
       { label: 'defaulted thunk', alpha: 'alpha.value' }
     );
-    RawAssertions.assertEq('Checking output', 'alpha.value', v.alpha.getOrDie(
-      'Alpha should be some'
-    ));
+    KAssert.eqSome('Checking output', 'alpha.value', v.alpha);
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
@@ -289,7 +285,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
         label: 'dog'
       }
     );
-    RawAssertions.assertEq('Checking output', { original: 'value', extra: 'dog' }, v.alpha);
+    Assert.eq('Checking output', { original: 'value', extra: 'dog' }, v.alpha);
   });
 
   Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', function () {
@@ -304,7 +300,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
         label: 'dog'
       }
     );
-    RawAssertions.assertEq('Checking output', { extra: 'dog' }, v.alpha);
+    Assert.eq('Checking output', { extra: 'dog' }, v.alpha);
   });
 
   Logger.sync(
@@ -398,16 +394,16 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   Logger.sync('Checking basic types', function () {
     checkIs('Checking valid number', 42, 42, ValueSchema.number);
-    checkErr('Checking invalid number', `Expected type: number but got: string`, 'a', ValueSchema.number);
+    checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueSchema.number);
 
     checkIs('Checking valid string', 'a', 'a', ValueSchema.string);
-    checkErr('Checking invalid string', `Expected type: string but got: number`, 42, ValueSchema.string);
+    checkErr('Checking invalid string', 'Expected type: string but got: number', 42, ValueSchema.string);
 
     checkIs('Checking valid boolean', true, true, ValueSchema.boolean);
-    checkErr('Checking invalid boolean', `Expected type: boolean but got: string`, 'a', ValueSchema.boolean);
+    checkErr('Checking invalid boolean', 'Expected type: boolean but got: string', 'a', ValueSchema.boolean);
 
     checkIs('Checking valid function', Fun.noop, Fun.noop, ValueSchema.func);
-    checkErr('Checking invalid function', `Expected type: function but got: string`, 'a', ValueSchema.func);
+    checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueSchema.func);
   });
 
   Logger.sync('asRaw with type', function () {
@@ -415,7 +411,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
       num: number;
       str: string;
     }
-  
+
     const schema = ValueSchema.objOf([
       FieldSchema.strictOf('num', ValueSchema.number),
       FieldSchema.strictOf('str', ValueSchema.string)
@@ -426,15 +422,41 @@ UnitTest.test('ValueSchemaRawTest', function () {
       str: 'a'
     }).fold(
       () => assert.fail('Should not fail'),
-      (actual) => RawAssertions.assertEq('Should be expected object', {
+      (actual) => Assert.eq('Should be expected object', {
         num: 42,
         str: 'a'
       }, actual)
     );
 
     ValueSchema.asRaw<SomeType>('SomeType', schema, {}).fold(
-      (err) => RawAssertions.assertEq('Should be two errors', 2, err.errors.length),
-      (actual) => assert.fail('Should not pass')
+      (err) => Assert.eq('Should be two errors', 2, err.errors.length),
+      () => assert.fail('Should not pass')
+    );
+  });
+
+  Logger.sync('Checking oneOf', () => {
+    const processor = ValueSchema.oneOf([
+      ValueSchema.string,
+      ValueSchema.number
+    ]);
+
+    check('oneOf ',
+      'a',
+      processor
+    );
+
+    check('oneOf',
+      1,
+      processor
+    );
+
+    checkErr('oneOf',
+      'Failed path: (oneOf)\n' +
+      'Expected type: string but got: object\n' +
+      'Failed path: (oneOf)\n' +
+      'Expected type: number but got: object',
+      {},
+      processor
     );
   });
 });

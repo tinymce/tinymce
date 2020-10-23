@@ -1,17 +1,17 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Body, Traverse } from '@ephox/sugar';
-
-import TestTheme from '../../module/test/theme/TestTheme';
-import TestUi from '../../module/test/ui/TestUi';
-import { PlatformDetection } from '@ephox/sand';
 import { TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
+import { SugarBody, Traverse } from '@ephox/sugar';
+
+import * as TestTheme from '../../module/test/theme/TestTheme';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (success, failure) {
   const browser = PlatformDetection.detect().browser;
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
-  const body = Body.body();
+  const body = SugarBody.body();
 
   TestTheme.setup({
     container: body,
@@ -56,7 +56,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('"no" reverted to normal', false)(buttons[name]),
 
-          apis.sSetSelection([ 0, 1 + 1, 0 ], 'for'.length, [ 0, 1 + 1, 0 ], 'for'.length),
+          apis.sSetSelection([ 0, 3, 0 ], 'for'.length, [ 0, 3, 0 ], 'for'.length),
           sCheckComponent('moving back to ' + name, true)(buttons[name]),
           TestUi.sClickComponent(realm, buttons[name]),
           sCheckComponent('converting ' + name + ' to normal', false)(buttons[name]),
@@ -73,7 +73,7 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', function (succe
           '.tinymce-mobile-icon-italic:before { content: "ITALIC"; }',
           '.tinymce-mobile-icon-underline:before { content: "UNDERLINE"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
 
         sTestFormatter('strong', 'strong', 'bold'),
         sTestFormatter('em', 'em', 'italic'),

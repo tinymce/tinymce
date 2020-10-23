@@ -1,4 +1,4 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -13,7 +13,7 @@ export interface TabButtonDetail extends SingleSketchDetail {
   uid: string;
   dom: RawDomSchema;
   components: AlloySpec[ ];
-  action: Option<ButtonAction>;
+  action: Optional<ButtonAction>;
   tabButtonBehaviours: SketchBehaviours;
   domModification: DomModification;
   value: string;
@@ -29,4 +29,4 @@ export interface TabButtonSpec extends SingleSketchSpec {
   domModification?: DomModificationSpec;
 }
 
-export interface TabButtonSketcher extends SingleSketch<TabButtonSpec, TabButtonDetail> { }
+export interface TabButtonSketcher extends SingleSketch<TabButtonSpec> { }

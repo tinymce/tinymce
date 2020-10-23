@@ -1,5 +1,5 @@
-import { console } from '@ephox/dom-globals';
-import { Element } from '@ephox/sugar';
+/* eslint-disable no-console */
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -13,18 +13,18 @@ export default function () {
       tooltip: 'Tooltip for ' + name,
       onSetup: (api) => {
         console.log('onSetup ' + name);
-        const box = Element.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
-        api.element().appendChild(box.dom());
+        const box = SugarElement.fromHtml('<div style="width: ' + width + 'px; background: ' + background + ';"></div>');
+        api.element().appendChild(box.dom);
         return () => {
-          api.element().removeChild(box.dom());
+          api.element().removeChild(box.dom);
         };
       },
-      onShow: (api) => {
+      onShow: (_api) => {
         console.log('onShow ' + name);
       },
-      onHide: (api) => {
+      onHide: (_api) => {
         console.log('onHide ' + name);
-      },
+      }
     });
   };
 
@@ -35,12 +35,12 @@ export default function () {
     plugins: [
       'lists', // Required for list functionality (commands),
       'autolink', // Required for turning pasted text into hyperlinks
-      'autosave', // Required to prevent users losing content when they press back
+      'autosave' // Required to prevent users losing content when they press back
     ],
     // statusbar: false,
     resize: 'both',
 
-    setup (ed: Editor) {
+    setup(ed: Editor) {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'red', 300);
       makeSidebar(ed, 'sidebar3', 'blue', 150);

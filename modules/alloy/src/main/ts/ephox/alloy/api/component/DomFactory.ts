@@ -1,11 +1,10 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Merger } from '@ephox/katamari';
-import { Element, Html, Node, Traverse } from '@ephox/sugar';
-import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
-import { RawDomSchema, AlloySpec } from '../../api/component/SpecTypes';
+import { Arr } from '@ephox/katamari';
+import { Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-const getAttrs = (elem) => {
-  const attributes = elem.dom().attributes !== undefined ? elem.dom().attributes : [ ];
+import { AlloySpec, RawDomSchema, SketchSpec } from './SpecTypes';
+
+const getAttrs = (elem: SugarElement) => {
+  const attributes = elem.dom.attributes !== undefined ? elem.dom.attributes : [ ];
   return Arr.foldl(attributes, (b, attr) => {
     // Make class go through the class path. Do not list it as an attribute.
     if (attr.name === 'class') {
@@ -16,51 +15,43 @@ const getAttrs = (elem) => {
   }, {});
 };
 
-const getClasses = (elem) => {
-  return Array.prototype.slice.call(elem.dom().classList, 0);
-};
+const getClasses = (elem: SugarElement) => Array.prototype.slice.call(elem.dom.classList, 0);
 
 const fromHtml = (html: string): RawDomSchema => {
-  const elem = Element.fromHtml(html);
+  const elem = SugarElement.fromHtml(html);
 
   const children = Traverse.children(elem);
   const attrs = getAttrs(elem);
   const classes = getClasses(elem);
-  const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem) };
+  const contents = children.length === 0 ? { } : { innerHtml: Html.get(elem as SugarElement<HTMLElement>) };
 
   return {
-    tag: Node.name(elem),
+    tag: SugarNode.name(elem),
     classes,
     attributes: attrs,
     ...contents
   };
 };
 
-const sketch = (sketcher, html, config) => {
-  return sketcher.sketch({
-    dom: fromHtml(html),
-    ...config
-  });
-};
+const sketch = <T>(sketcher: { sketch: (spec: { dom: RawDomSchema } & T) => SketchSpec}, html: string, config: T) => sketcher.sketch({
+  dom: fromHtml(html),
+  ...config
+});
 
-const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => {
-  return {
+const dom = (tag: string, classes: string[], attributes = { }, styles = { }) => ({
+  tag,
+  classes,
+  attributes,
+  styles
+});
+
+const simple = (tag: string, classes: string[], components: AlloySpec[]) => ({
+  dom: {
     tag,
-    classes,
-    attributes,
-    styles
-  }
-};
-
-const simple = (tag: string, classes: string[], components: AlloySpec[]) => {
-  return {
-    dom: {
-      tag,
-      classes
-    },
-    components
-  };
-}
+    classes
+  },
+  components
+});
 
 export {
   getAttrs,

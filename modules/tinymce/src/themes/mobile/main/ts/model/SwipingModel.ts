@@ -47,7 +47,7 @@ const move = function (model, xValue) {
   };
 };
 
-const complete = function (model/*, snaps*/) {
+const complete = function (model/* , snaps*/) {
   if (model.points.length === 0) {
     return SWIPING_NONE;
   } else {
@@ -60,7 +60,7 @@ const complete = function (model/*, snaps*/) {
   }
 };
 
-export default {
+export {
   init,
   move,
   complete

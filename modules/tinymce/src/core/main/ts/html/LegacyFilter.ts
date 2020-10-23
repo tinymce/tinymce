@@ -6,18 +6,20 @@
  */
 
 import { Arr } from '@ephox/katamari';
+import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import AstNode from '../api/html/Node';
 import Styles from '../api/html/Styles';
 import Tools from '../api/util/Tools';
 
-const removeAttrs = function (node, names) {
-  Arr.each(names, function (name) {
+const removeAttrs = (node: AstNode, names: string[]) => {
+  Arr.each(names, (name) => {
     node.attr(name, null);
   });
 };
 
-const addFontToSpansFilter = function (domParser, styles, fontSizes) {
-  domParser.addNodeFilter('font', function (nodes) {
-    Arr.each(nodes, function (node) {
+const addFontToSpansFilter = (domParser: DomParser, styles: Styles, fontSizes: string[]) => {
+  domParser.addNodeFilter('font', (nodes) => {
+    Arr.each(nodes, (node) => {
       const props = styles.parse(node.attr('style'));
       const color = node.attr('color');
       const face = node.attr('face');
@@ -37,14 +39,14 @@ const addFontToSpansFilter = function (domParser, styles, fontSizes) {
 
       node.name = 'span';
       node.attr('style', styles.serialize(props));
-      removeAttrs(node, ['color', 'face', 'size']);
+      removeAttrs(node, [ 'color', 'face', 'size' ]);
     });
   });
 };
 
-const addStrikeToSpanFilter = function (domParser, styles) {
-  domParser.addNodeFilter('strike', function (nodes) {
-    Arr.each(nodes, function (node) {
+const addStrikeToSpanFilter = (domParser: DomParser, styles: Styles) => {
+  domParser.addNodeFilter('strike', (nodes) => {
+    Arr.each(nodes, (node) => {
       const props = styles.parse(node.attr('style'));
 
       props['text-decoration'] = 'line-through';
@@ -55,7 +57,7 @@ const addStrikeToSpanFilter = function (domParser, styles) {
   });
 };
 
-const addFilters = function (domParser, settings) {
+const addFilters = (domParser: DomParser, settings: DomParserSettings) => {
   const styles = Styles();
 
   if (settings.convert_fonts_to_spans) {
@@ -65,12 +67,12 @@ const addFilters = function (domParser, settings) {
   addStrikeToSpanFilter(domParser, styles);
 };
 
-const register = function (domParser, settings) {
+const register = (domParser: DomParser, settings: DomParserSettings) => {
   if (settings.inline_styles) {
     addFilters(domParser, settings);
   }
 };
 
-export default {
+export {
   register
 };

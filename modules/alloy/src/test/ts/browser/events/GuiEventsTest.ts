@@ -1,29 +1,15 @@
-import {
-  Chain,
-  Cursors,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document, window } from '@ephox/dom-globals';
-import { Attr, Css, DomEvent, Element, Insert, Node, Remove, Text } from '@ephox/sugar';
+import { Chain, Cleaner, Cursors, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, Touch, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Attribute, DomEvent, EventArgs, Insert, Remove, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
+
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import * as GuiEvents from 'ephox/alloy/events/GuiEvents';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
-import { Cleaner } from '../../module/ephox/alloy/test/Cleaner';
 
 UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const cleanup = Cleaner();
 
-  const page = Element.fromHtml(
+  const page = SugarElement.fromHtml(
     `<div class="gui-events-test-container">
       <input class="test-input" />
       <div class="test-contenteditable"  contenteditable="true"></div>
@@ -34,8 +20,8 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     </div>`
   );
 
-  const doc = Element.fromDom(document);
-  const body = Element.fromDom(document.body);
+  const doc = SugarElement.fromDom(document);
+  const body = SugarElement.fromDom(document.body);
   Insert.append(body, page);
   cleanup.add(() => Remove.remove(page));
 
@@ -43,15 +29,15 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const store = TestStore();
 
   const onBodyKeydown = DomEvent.bind(body, 'keydown', (evt) => {
-    if (evt.raw().which === Keys.backspace()) {
-      outerStore.adder('Backspace on ' + Node.name(evt.target()) + ': preventDefault = ' + evt.raw().defaultPrevented)();
+    if (evt.raw.which === Keys.backspace()) {
+      outerStore.adder('Backspace on ' + SugarNode.name(evt.target) + ': preventDefault = ' + evt.raw.defaultPrevented)();
     }
   });
   cleanup.add(onBodyKeydown.unbind);
 
-  const triggerEvent = (eventName, event) => {
-    const target = event.target();
-    const targetValue = Node.isText(target) ? 'text(' + Text.get(target) + ')' : Attr.get(target, 'class');
+  const triggerEvent = (eventName: string, event: EventArgs) => {
+    const target = event.target;
+    const targetValue = SugarNode.isText(target) ? 'text(' + SugarText.get(target) + ')' : Attribute.get(target, 'class');
     store.adder({ eventName, target: targetValue })();
   };
 
@@ -174,6 +160,33 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     store.sClear
   ]);
 
+  const sTestTap = GeneralSteps.sequence([
+    Touch.sTapOn(page, '.test-button'),
+    store.sAssertEq(
+      'Checking event log after tapping on test-button',
+      [
+        { eventName: 'touchstart', target: 'test-button' },
+        { eventName: 'alloy.tap', target: 'test-button' },
+        { eventName: 'touchend', target: 'test-button' }
+      ]
+    ),
+    store.sClear,
+    Chain.asStep(page, [
+      UiFinder.cFindIn('.test-button'),
+      Cursors.cFollow([ 0 ]),
+      Touch.cTap
+    ]),
+    store.sAssertEq(
+      'Checking event log after tapping on test-button text',
+      [
+        { eventName: 'touchstart', target: 'text(Button)' },
+        { eventName: 'alloy.tap', target: 'text(Button)' },
+        { eventName: 'touchend', target: 'text(Button)' }
+      ]
+    ),
+    store.sClear
+  ]);
+
   // TODO: VAN-12: Add agar support for input events.
   const sTestInput = Step.pass;
 
@@ -191,18 +204,16 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     store.sClear
   ]);
 
-  const sTestMouseOperation = (eventName, op) => {
-    return GeneralSteps.sequence([
-      Chain.asStep(page, [ op ]),
-      store.sAssertEq(
-        'Checking event log after ' + eventName + ' on root',
-        [
-          { eventName, target: 'gui-events-test-container' }
-        ]
-      ),
-      store.sClear
-    ]);
-  };
+  const sTestMouseOperation = (eventName: string, op: Chain<any, any>) => GeneralSteps.sequence([
+    Chain.asStep(page, [ op ]),
+    store.sAssertEq(
+      'Checking event log after ' + eventName + ' on root',
+      [
+        { eventName, target: 'gui-events-test-container' }
+      ]
+    ),
+    store.sClear
+  ]);
 
   const sTestUnbind = GeneralSteps.sequence([
     Step.sync(() => {
@@ -238,7 +249,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
   const sTestTransitionEnd = Step.pass;
 
   const gui = GuiEvents.setup(page, {
-    triggerEvent,
+    triggerEvent
   });
 
   Pipeline.async({}, [
@@ -247,6 +258,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestFocusSpan,
     sTestKeydown,
     sTestClick,
+    sTestTap,
     sTestInput,
     sTestMouseover,
     sTestSelectStart,

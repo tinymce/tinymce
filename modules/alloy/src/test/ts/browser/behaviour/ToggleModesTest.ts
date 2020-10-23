@@ -1,16 +1,15 @@
 import { ApproxStructure, Assertions, Logger } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as ToggleModes from 'ephox/alloy/behaviour/toggling/ToggleModes';
 
 UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
-  const mTag = (name) => {
-    return {
-      dom: {
-        tag: name
-      }
-    };
-  };
+  const mTag = (name: string) => ({
+    dom: {
+      tag: name
+    }
+  });
 
   const notUsed: any = 'not-used';
 
@@ -21,15 +20,13 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
 
     Assertions.assertStructure(
       'Button should have aria-pressed role',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('button', {
-          attrs: {
-            'aria-checked': str.none(),
-            'aria-pressed': str.is('true')
-          }
-        });
-      }),
-      button.element()
+      ApproxStructure.build((s, str, _arr) => s.element('button', {
+        attrs: {
+          'aria-checked': str.none(),
+          'aria-pressed': str.is('true')
+        }
+      })),
+      button.element
     );
   });
 
@@ -43,15 +40,13 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     ToggleModes.updateAuto(listbox, notUsed, true);
     Assertions.assertStructure(
       'Listbox should have aria-pressed and aria-expanded role',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('button', {
-          attrs: {
-            'aria-checked': str.none(),
-            'aria-pressed': str.is('true')
-          }
-        });
-      }),
-      listbox.element()
+      ApproxStructure.build((s, str, _arr) => s.element('button', {
+        attrs: {
+          'aria-checked': str.none(),
+          'aria-pressed': str.is('true')
+        }
+      })),
+      listbox.element
     );
   });
 
@@ -65,15 +60,13 @@ UnitTest.test('Browser Test: behaviour.ToggleModesTest', () => {
     ToggleModes.updateAuto(menuitem, notUsed, true);
     Assertions.assertStructure(
       'Menu Item Checkbox should have aria-checked role',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('li', {
-          attrs: {
-            'aria-checked': str.is('true'),
-            'aria-pressed': str.none()
-          }
-        });
-      }),
-      menuitem.element()
+      ApproxStructure.build((s, str, _arr) => s.element('li', {
+        attrs: {
+          'aria-checked': str.is('true'),
+          'aria-pressed': str.none()
+        }
+      })),
+      menuitem.element
     );
   });
 });

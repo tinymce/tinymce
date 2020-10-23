@@ -1,9 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
-const wrap = function (key, value) {
-  const r = {};
-  r[key] = value;
-  return r;
+const wrap = function <K, V> (key: string, value: V): { [key: string]: V} {
+  return { [key]: value };
 };
 
 const wrapAll = function (keyvalues) {

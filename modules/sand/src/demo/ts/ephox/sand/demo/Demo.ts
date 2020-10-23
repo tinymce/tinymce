@@ -1,5 +1,4 @@
-import { document } from '@ephox/dom-globals';
-import PlatformDetection from 'ephox/sand/api/PlatformDetection';
+import * as PlatformDetection from 'ephox/sand/api/PlatformDetection';
 
 const platform = PlatformDetection.detect();
 

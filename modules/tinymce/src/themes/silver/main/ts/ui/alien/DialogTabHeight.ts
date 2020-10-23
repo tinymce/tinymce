@@ -5,76 +5,102 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabSection } from '@ephox/alloy';
-import { document, window } from '@ephox/dom-globals';
-import { Arr, Cell, Option } from '@ephox/katamari';
-import { Css, Element, Focus, SelectorFind } from '@ephox/sugar';
+import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
+import { Arr, Cell, Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
-const measureHeights = (allTabs, tabview, tabviewComp): number[] => {
-  return Arr.map(allTabs, (tab, i) => {
-    Replacing.set(tabviewComp, allTabs[i].view());
-    const rect = tabview.dom().getBoundingClientRect();
-    Replacing.set(tabviewComp, [ ]);
-    return rect.height;
-  });
-};
+const measureHeights = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, tabview: SugarElement, tabviewComp: AlloyComponent): number[] => Arr.map(allTabs, (_tab, i) => {
+  Replacing.set(tabviewComp, allTabs[i].view());
+  const rect = tabview.dom.getBoundingClientRect();
+  Replacing.set(tabviewComp, [ ]);
+  return rect.height;
+});
 
-const getMaxHeight = (heights: number[]) => {
-  return Arr.head(Arr.sort(heights, (a, b) => {
-    if (a > b) {
-      return -1;
-    } else if (a < b) {
-      return +1;
-    } else {
-      return 0;
-    }
-  }));
-};
+const getMaxHeight = (heights: number[]) => Arr.head(Arr.sort(heights, (a, b) => {
+  if (a > b) {
+    return -1;
+  } else if (a < b) {
+    return +1;
+  } else {
+    return 0;
+  }
+}));
 
-const getMaxTabviewHeight = (dialog: Element, dialogBody: Element) => {
+const getMaxTabviewHeight = (dialog: SugarElement, tabview: SugarElement, tablist: SugarElement) => {
+  const documentElement = Traverse.documentElement(dialog).dom;
   const rootElm = SelectorFind.ancestor(dialog, '.tox-dialog-wrap').getOr(dialog);
   const isFixed = Css.get(rootElm, 'position') === 'fixed';
+
   // Get the document or window/viewport height
   let maxHeight;
   if (isFixed) {
-    maxHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    maxHeight = Math.max(documentElement.clientHeight, window.innerHeight);
   } else {
-    maxHeight = Math.max(document.documentElement.offsetHeight, document.documentElement.scrollHeight);
+    maxHeight = Math.max(documentElement.offsetHeight, documentElement.scrollHeight);
   }
-  // Determine the max dialog body height
-  const dialogChrome = dialog.dom().getBoundingClientRect().height - dialogBody.dom().getBoundingClientRect().height;
-  return maxHeight - dialogChrome;
+
+  // Determine the current height taken up by the tabview panel
+  const tabviewHeight = Height.get(tabview);
+  const isTabListBeside = tabview.dom.offsetLeft >= tablist.dom.offsetLeft + Width.get(tablist);
+  const currentTabHeight = isTabListBeside ? Math.max(Height.get(tablist), tabviewHeight) : tabviewHeight;
+
+  // Get the dialog height, making sure to account for any margins on the dialog
+  const dialogTopMargin = parseInt(Css.get(dialog, 'margin-top'), 10) || 0;
+  const dialogBottomMargin = parseInt(Css.get(dialog, 'margin-bottom'), 10) || 0;
+  const dialogHeight = Height.get(dialog) + dialogTopMargin + dialogBottomMargin;
+
+  const chromeHeight = dialogHeight - currentTabHeight;
+  return maxHeight - chromeHeight;
 };
 
-const showTab = (allTabs, comp: AlloyComponent) => {
+// TODO: add a stronger type for allTabs
+const showTab = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>, comp: AlloyComponent) => {
   Arr.head(allTabs).each((tab) => TabSection.showTab(comp, tab.value));
 };
 
-const updateTabviewHeight = (dialogBody: Element, tabview: Element, maxTabHeight: Cell<Option<number>>) => {
+const setTabviewHeight = (tabview: SugarElement<Element>, height: number) => {
+  // Set both height and flex-basis as some browsers don't support flex-basis. However don't set it on
+  // IE 11 since it incorrectly includes margins in the flex-basis calculations so it can't be relied on.
+  Css.set(tabview, 'height', height + 'px');
+  if (!PlatformDetection.detect().browser.isIE()) {
+    Css.set(tabview, 'flex-basis', height + 'px');
+  } else {
+    Css.remove(tabview, 'flex-basis');
+  }
+};
+
+const updateTabviewHeight = (dialogBody: SugarElement, tabview: SugarElement, maxTabHeight: Cell<Optional<number>>) => {
   SelectorFind.ancestor(dialogBody, '[role="dialog"]').each((dialog) => {
-    maxTabHeight.get().map((height) => {
-      // Set the tab view height to 0, so we can calculate the max tabview height, without worrying about overflows
-      Css.set(tabview, 'height', '0');
-      return Math.min(height, getMaxTabviewHeight(dialog, dialogBody));
-    }).each((height) => {
-      Css.set(tabview, 'height', height + 'px');
+    SelectorFind.descendant(dialog, '[role="tablist"]').each((tablist) => {
+      maxTabHeight.get().map((height) => {
+        // Set the tab view height to 0, so we can calculate the max tabview height, without worrying about overflows
+        Css.set(tabview, 'height', '0');
+        Css.set(tabview, 'flex-basis', '0');
+        return Math.min(height, getMaxTabviewHeight(dialog, tabview, tablist));
+      }).each((height) => {
+        setTabviewHeight(tabview, height);
+      });
     });
   });
 };
 
-const setMode = (allTabs) => {
+const getTabview = (dialog: SugarElement<Element>) => SelectorFind.descendant(dialog, '[role="tabpanel"]');
+
+const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => {
   const smartTabHeight = (() => {
-    const maxTabHeight = Cell<Option<number>>(Option.none());
+    const maxTabHeight = Cell<Optional<number>>(Optional.none());
 
     const extraEvents = [
       AlloyEvents.runOnAttached((comp) => {
-        SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
+        const dialog = comp.element;
+        getTabview(dialog).each((tabview) => {
           Css.set(tabview, 'visibility', 'hidden');
 
           // Determine the maximum heights of each tab
-          comp.getSystem().getByDom(tabview).toOption().each((tabviewComp) => {
+          comp.getSystem().getByDom(tabview).toOptional().each((tabviewComp) => {
             const heights = measureHeights(allTabs, tabview, tabviewComp);
 
             // Calculate the maximum tab height and store it
@@ -83,7 +109,7 @@ const setMode = (allTabs) => {
           });
 
           // Set an initial height, based on the current size
-          updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+          updateTabviewHeight(dialog, tabview, maxTabHeight);
 
           // Show the tabs
           Css.remove(tabview, 'visibility');
@@ -92,30 +118,33 @@ const setMode = (allTabs) => {
           // Use a delay here and recalculate the height, as we need all the components attached
           // to be able to properly calculate the max height
           Delay.requestAnimationFrame(() => {
-            updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+            updateTabviewHeight(dialog, tabview, maxTabHeight);
           });
         });
       }),
       AlloyEvents.run(SystemEvents.windowResize(), (comp) => {
-        SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
-          updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+        const dialog = comp.element;
+        getTabview(dialog).each((tabview) => {
+          updateTabviewHeight(dialog, tabview, maxTabHeight);
         });
       }),
-      AlloyEvents.run(formResizeEvent, (comp, se) => {
-        SelectorFind.descendant(comp.element(), '[role="tabpanel"]').each((tabview) => {
+      AlloyEvents.run(formResizeEvent, (comp, _se) => {
+        const dialog = comp.element;
+        getTabview(dialog).each((tabview) => {
           const oldFocus = Focus.active();
           Css.set(tabview, 'visibility', 'hidden');
           const oldHeight = Css.getRaw(tabview, 'height').map((h) => parseInt(h, 10));
           Css.remove(tabview, 'height');
-          const newHeight = tabview.dom().getBoundingClientRect().height;
+          Css.remove(tabview, 'flex-basis');
+          const newHeight = tabview.dom.getBoundingClientRect().height;
           const hasGrown = oldHeight.forall((h) => newHeight > h);
 
           if (hasGrown) {
-            maxTabHeight.set(Option.from(newHeight));
-            updateTabviewHeight(comp.element(), tabview, maxTabHeight);
+            maxTabHeight.set(Optional.from(newHeight));
+            updateTabviewHeight(dialog, tabview, maxTabHeight);
           } else {
             oldHeight.each((h) => {
-              Css.set(tabview, 'height', `${h}px`);
+              setTabviewHeight(tabview, h);
             });
           }
 

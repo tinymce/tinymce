@@ -1,22 +1,22 @@
 import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import GridRow from '../model/GridRow';
-import { Element } from '@ephox/sugar';
+import * as GridRow from '../model/GridRow';
 
-type CompElm = (e1: Element, e2: Element) => boolean;
-type Subst = (element: Element, comparator: CompElm) => Element;
+type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
+type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
 
 // substitution :: (item, comparator) -> item
 const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst) {
   const isTarget = function (cell: Structs.ElementNew) {
     return Arr.exists(targets, function (target) {
-      return comparator(cell.element(), target.element());
+      return comparator(cell.element, target.element);
     });
   };
 
   return Arr.map(grid, function (row) {
     return GridRow.mapCells(row, function (cell) {
-      return isTarget(cell) ? Structs.elementnew(substitution(cell.element(), comparator), true) : cell;
+      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true) : cell;
     });
   });
 };
@@ -43,17 +43,18 @@ const replaceColumn = function (grid: Structs.RowCells[], index: number, compara
 
 // substitution :: (item, comparator) -> item
 const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
-  const targetRow = grid[index];
-  const targets = Arr.bind(targetRow.cells(), function (item, i) {
+  const rows = GridRow.extractGridDetails(grid).rows;
+  const targetRow = rows[index];
+  const targets = Arr.bind(targetRow.cells, function (item, i) {
     // Check that we haven't already added this one.
-    const alreadyAdded = notStartRow(grid, index, i, comparator) || notStartColumn(targetRow, i, comparator);
+    const alreadyAdded = notStartRow(rows, index, i, comparator) || notStartColumn(targetRow, i, comparator);
     return alreadyAdded ? [] : [ item ];
   });
 
   return replaceIn(grid, targets, comparator, substitution);
 };
 
-export default {
+export {
   replaceColumn,
   replaceRow
 };

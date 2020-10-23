@@ -1,17 +1,17 @@
-import { Future, Option, Result } from '@ephox/katamari';
-import { ItemSpec, ItemDataTuple } from '../../ui/types/ItemTypes';
-import { TabviewSpec } from '../../ui/types/TabviewTypes';
-import { PartialMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { Future, Optional } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorSpec } from '../../positioning/mode/Anchoring';
-import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
-import { LazySink } from '../../api/component/CommonTypes';
+import { AnchorSpec } from '../../positioning/mode/Anchoring';
+import { CommonDropdownDetail } from './DropdownTypes';
+import { ItemDataTuple, ItemSpec } from './ItemTypes';
+import { TabviewSpec } from './TabviewTypes';
+import { PartialMenuSpec } from './TieredMenuTypes';
 
 export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, CompositeSketchDetail {
   uid: string;
@@ -31,12 +31,12 @@ export interface TouchMenuDetail extends CommonDropdownDetail<ItemSpec[]>, Compo
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
   eventOrder: Record<string, string[]>;
-  role: Option<string>;
+  role: Optional<string>;
 
   getAnchor: (comp: AlloyComponent) => AnchorSpec;
-  lazySink: Option<LazySink>;
+  lazySink: Optional<LazySink>;
 
-  fetch: (comp: AlloyComponent) => Future<Option<ItemSpec[]>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<ItemSpec[]>>;
 }
 
 export interface TouchMenuSpec extends CompositeSketchSpec {
@@ -54,7 +54,7 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
   onExecute?: (sandbox: AlloyComponent, menu: AlloyComponent, item: AlloyComponent, value: ItemDataTuple) => void;
   onTap?: (comp: AlloyComponent) => void;
 
-  menuTransition?: { property: string, transitionClass: string };
+  menuTransition?: { property: string; transitionClass: string };
 
   onOpen?: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;
   onClosed?: (sandbox: AlloyComponent, inline: AlloyComponent) => void;
@@ -63,17 +63,17 @@ export interface TouchMenuSpec extends CompositeSketchSpec {
 
   lazySink?: LazySink;
 
-  fetch: (comp: AlloyComponent) => Future<Option<ItemSpec[]>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<ItemSpec[]>>;
   matchWidth?: boolean;
   useMinWidth?: boolean;
 
   parts: {
-    menu: PartialMenuSpec,
-    view: Partial<TabviewSpec>,
-    sink?: SimpleOrSketchSpec
+    menu: PartialMenuSpec;
+    view: Partial<TabviewSpec>;
+    sink?: SimpleOrSketchSpec;
   };
 
   getAnchor?: (comp: AlloyComponent) => AnchorSpec;
 }
 
-export interface TouchMenuSketcher extends CompositeSketch<TouchMenuSpec, TouchMenuDetail> { }
+export interface TouchMenuSketcher extends CompositeSketch<TouchMenuSpec> { }

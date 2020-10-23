@@ -5,34 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Menu } from '@ephox/bridge';
-import { Node } from '@ephox/dom-globals';
-import { Element, Node as SugarNode, Traverse } from '@ephox/sugar';
-import { Dialog } from './Dialog';
-import { isFigure, isImage } from '../core/ImageData';
-import Utils from '../core/Utils';
 import Editor from 'tinymce/core/api/Editor';
-
-const getRootElement = (elm: Element): Element => {
-  return Traverse.parent(elm).filter((parentElm: Element) => SugarNode.name(parentElm) === 'figure').getOr(elm);
-};
+import { isFigure, isImage } from '../core/ImageData';
+import * as Utils from '../core/Utils';
+import { Dialog } from './Dialog';
 
 const register = (editor: Editor) => {
-  const makeContextMenuItem = (node: Node): Menu.ContextMenuItem => {
-    return {
-      text: 'Image',
-      icon: 'image',
-      onAction: () => {
-        // Ensure the figure/image is selected before opening the image edit dialog
-        // as some browsers don't do this when right clicking
-        const rootElm = getRootElement(Element.fromDom(node));
-        editor.selection.select(rootElm.dom());
-        // Open the dialog now that the image is selected
-        Dialog(editor).open();
-      }
-    };
-  };
-
   editor.ui.registry.addToggleButton('image', {
     icon: 'image',
     tooltip: 'Insert/edit image',
@@ -47,13 +25,11 @@ const register = (editor: Editor) => {
   });
 
   editor.ui.registry.addContextMenu('image', {
-    update: (element): Menu.ContextMenuItem[] => {
-      return isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [makeContextMenuItem(element)] : [];
-    }
+    update: (element): string[] => isFigure(element) || (isImage(element) && !Utils.isPlaceholderImage(element)) ? [ 'image' ] : []
   });
 
 };
 
-export default {
+export {
   register
 };

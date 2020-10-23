@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -14,10 +14,11 @@ import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as Fields from '../../data/Fields';
 import * as SketcherFields from '../../data/SketcherFields';
 import * as PartType from '../../parts/PartType';
-import { attemptSelectOver, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
-import { TypeaheadDetail } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from '../composite/TypeaheadEvents';
+import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel';
+import { TieredMenuSpec } from '../types/TieredMenuTypes';
+import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('lazySink'),
@@ -26,12 +27,12 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.defaulted('responseTime', 1000),
   Fields.onHandler('onOpen'),
   // TODO: Remove dupe with Dropdown
-  FieldSchema.defaulted('getHotspot', Option.some),
+  FieldSchema.defaulted('getHotspot', Optional.some),
   FieldSchema.defaulted('getAnchorOverrides', Fun.constant({ })),
-  FieldSchema.defaulted('layouts', Option.none()),
+  FieldSchema.defaulted('layouts', Optional.none()),
   FieldSchema.defaulted('eventOrder', { }),
   FieldSchema.defaultedObjOf('model', { }, [
-    FieldSchema.defaulted('getDisplayText', (itemData) => itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value),
+    FieldSchema.defaulted('getDisplayText', (itemData: TypeaheadData) => itemData.meta !== undefined && itemData.meta.text !== undefined ? itemData.meta.text : itemData.value),
     FieldSchema.defaulted('selectsOver', true),
     FieldSchema.defaulted('populateFromBrowse', true)
   ]),
@@ -52,9 +53,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
     Focusing, Representing, Streaming, Keying, Toggling, Coupling
   ]),
 
-  FieldSchema.state('previewing', () => {
-    return Cell(true);
-  })
+  FieldSchema.state('previewing', () => Cell(true))
 ].concat(
   InputBase.schema()
 ).concat(
@@ -62,16 +61,16 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.external({
+  PartType.external<TypeaheadDetail, TieredMenuSpec>({
     schema: [
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    overrides (detail: TypeaheadDetail) {
+    overrides(detail) {
       return {
         fakeFocus: true,
-        onHighlight (menu: AlloyComponent, item: AlloyComponent): void {
-          if (! detail.previewing.get()) {
+        onHighlight(menu: AlloyComponent, item: AlloyComponent): void {
+          if (!detail.previewing.get()) {
             menu.getSystem().getByUid(detail.uid).each((input) => {
 
               if (detail.model.populateFromBrowse) {
@@ -100,15 +99,15 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // firing so that the typeahead doesn't lose focus. This is the handler
         // for clicking on an item. We need to close the sandbox, update the typeahead
         // to show the item clicked on, and fire an execute.
-        onExecute (menu: AlloyComponent, item: AlloyComponent): Option<boolean> {
+        onExecute(menu: AlloyComponent, item: AlloyComponent): Optional<boolean> {
           // Note: This will only work when the typeahead and menu are in the same system.
-          return menu.getSystem().getByUid(detail.uid).toOption().map((typeahead) => {
+          return menu.getSystem().getByUid(detail.uid).toOptional().map((typeahead): boolean => {
             AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
             return true;
           });
         },
 
-        onHover (menu: AlloyComponent, item: AlloyComponent): void {
+        onHover(menu: AlloyComponent, item: AlloyComponent): void {
           // Hovering is also a user-initiated action, so previewing mode is over.
           // TODO: Have a better API for managing state in between parts.
           detail.previewing.set(false);

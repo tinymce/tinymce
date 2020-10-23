@@ -1,15 +1,15 @@
 import { GeneralSteps, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Body, Traverse } from '@ephox/sugar';
-
-import TestTheme from '../../module/test/theme/TestTheme';
-import TestUi from '../../module/test/ui/TestUi';
 import { TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
+import { SugarBody, Traverse } from '@ephox/sugar';
+
+import * as TestTheme from '../../module/test/theme/TestTheme';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failure) {
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
-  const body = Body.body();
+  const body = SugarBody.body();
 
   TestTheme.setup({
     container: body,
@@ -54,7 +54,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failu
           '.tinymce-mobile-icon-unlink:before { content: "UNLINK"; }',
           '.tinymce-mobile-icon-link:before { content: "LINK"; }'
         ]),
-        apis.sFocus,
+        apis.sFocus(),
 
         apis.sSetContent(
           '<p>no link <a href="www.tinymce.com">tinymce</a></p>'

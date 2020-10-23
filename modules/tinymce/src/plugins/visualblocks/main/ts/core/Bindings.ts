@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
-import VisualBlocks from './VisualBlocks';
-import Editor from 'tinymce/core/api/Editor';
 import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
+import * as VisualBlocks from './VisualBlocks';
 
 const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   // Prevents the visualblocks from being presented in the preview of formats when that is computed
@@ -23,12 +23,8 @@ const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<bo
       VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
     }
   });
-
-  editor.on('remove', function () {
-    editor.dom.removeClass(editor.getBody(), 'mce-visualblocks');
-  });
 };
 
-export default {
+export {
   setup
 };

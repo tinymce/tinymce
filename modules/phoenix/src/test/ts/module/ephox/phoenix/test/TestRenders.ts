@@ -1,5 +1,5 @@
 import { Gene } from '@ephox/boss';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { TypedItem } from 'ephox/phoenix/api/Main';
 
 const typeditem = function (a: TypedItem<Gene, undefined>) {
@@ -7,6 +7,8 @@ const typeditem = function (a: TypedItem<Gene, undefined>) {
     return 'boundary(' + item.id + ')';
   }, function (item) {
     return 'empty(' + item.id + ')';
+  }, function (item) {
+    return 'text("' + item.text + '")';
   }, function (item) {
     return 'text("' + item.text + '")';
   });
@@ -29,7 +31,7 @@ const texts = function (items: Gene[]) {
 };
 
 const text = function (item: Gene) {
-  return Option.from(item.text).getOr('');
+  return Optional.from(item.text).getOr('');
 };
 
 export {

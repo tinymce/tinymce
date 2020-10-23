@@ -1,47 +1,50 @@
 import { Arr } from '@ephox/katamari';
-import { Attr, Node, Traverse, Element } from '@ephox/sugar';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
-import TableLookup from '../api/TableLookup';
+import * as TableLookup from '../api/TableLookup';
+import { getAttrValue } from '../util/CellUtils';
+
+const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section) =>
+  Arr.map(elems, (row) => {
+    if (SugarNode.name(row) === 'colgroup') {
+      const cells = Arr.map(TableLookup.columns(row), (column) => {
+        const colspan = getAttrValue(column, 'span', 1);
+        return Structs.detail(column, 1, colspan);
+      });
+      return Structs.rowdata(row, cells, 'colgroup');
+    } else {
+      const cells = Arr.map(TableLookup.cells(row), (cell) => {
+        const rowspan = getAttrValue(cell, 'rowspan', 1);
+        const colspan = getAttrValue(cell, 'colspan', 1);
+        return Structs.detail(cell, rowspan, colspan);
+      });
+
+      return Structs.rowdata(row, cells, getSection(row));
+    }
+  });
+
+const getParentSection = (group: SugarElement<HTMLElement>) =>
+  Traverse.parent(group).map((parent) => {
+    const parentName = SugarNode.name(parent);
+    return Structs.isValidSection(parentName) ? parentName : 'tbody';
+  }).getOr('tbody');
 
 /*
  * Takes a DOM table and returns a list of list of:
    element: row element
    cells: (id, rowspan, colspan) structs
  */
-const fromTable = function (table: Element) {
+const fromTable = (table: SugarElement<HTMLTableElement>) => {
   const rows = TableLookup.rows(table);
-  return Arr.map(rows, function (row) {
-    const element = row;
+  const columnGroups = TableLookup.columnGroups(table);
 
-    const parent = Traverse.parent(element);
-    const parentSection = parent.map(function (p) {
-      const parentName = Node.name(p);
-      return (parentName === 'tfoot' || parentName === 'thead' || parentName === 'tbody') ? parentName : 'tbody';
-    }).getOr('tbody');
-
-    const cells = Arr.map(TableLookup.cells(row), function (cell) {
-      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
-      return Structs.detail(cell, rowspan, colspan);
-    });
-
-    return Structs.rowdata(element, cells, parentSection);
-  });
+  const elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[] = [ ...columnGroups, ...rows ];
+  return fromRowsOrColGroups(elems, getParentSection);
 };
 
-const fromPastedRows = function (rows: Element[], example: Structs.RowCells) {
-  return Arr.map(rows, function (row) {
-    const cells = Arr.map(TableLookup.cells(row), function (cell) {
-      const rowspan = Attr.has(cell, 'rowspan') ? parseInt(Attr.get(cell, 'rowspan'), 10) : 1;
-      const colspan = Attr.has(cell, 'colspan') ? parseInt(Attr.get(cell, 'colspan'), 10) : 1;
-      return Structs.detail(cell, rowspan, colspan);
-    });
+const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section) => fromRowsOrColGroups(elems, () => section);
 
-    return Structs.rowdata(row, cells, example.section());
-  });
-};
-
-export default {
+export {
   fromTable,
   fromPastedRows
 };

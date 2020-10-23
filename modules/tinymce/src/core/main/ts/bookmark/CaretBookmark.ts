@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
-import DOMUtils from '../api/dom/DOMUtils';
-import ArrUtils from '../util/ArrUtils';
-import CaretPosition from '../caret/CaretPosition';
-import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
+import DOMUtils from '../api/dom/DOMUtils';
+import CaretPosition from '../caret/CaretPosition';
+import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 
 /**
  * This module creates or resolves xpath like string representation of a CaretPositions.
@@ -76,12 +75,12 @@ const normalizedTextOffset = (node: Node, offset: number): number => {
 const equal = (a) => (b) => a === b;
 
 const normalizedNodeIndex = (node: Node): number => {
-  let nodes, index, numTextFragments;
+  let nodes: Node[], index: number;
 
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
   nodes = nodes.slice(0, index + 1);
-  numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
+  const numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
     if (isText(node) && isText(nodes[i - 1])) {
       result++;
     }
@@ -89,7 +88,7 @@ const normalizedNodeIndex = (node: Node): number => {
     return result;
   }, 0);
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames(node.nodeName));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ node.nodeName ]));
   index = ArrUtils.findIndex(nodes, equal(node), node);
 
   return index - numTextFragments;
@@ -159,7 +158,7 @@ const resolvePathItem = (node: Node, name: string, index: number): Node => {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
-  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames(name));
+  nodes = ArrUtils.filter(nodes, NodeType.matchNodeNames([ name ]));
   return nodes[index];
 };
 
@@ -193,27 +192,27 @@ const findTextPosition = (container: Node, offset: number): CaretPosition => {
 };
 
 const resolve = (root: Node, path: string): CaretPosition => {
-  let parts, container, offset;
+  let offset;
 
   if (!path) {
     return null;
   }
 
-  parts = path.split(',');
-  path = parts[0].split('/');
+  const parts = path.split(',');
+  const paths = parts[0].split('/');
   offset = parts.length > 1 ? parts[1] : 'before';
 
-  container = ArrUtils.reduce(path, function (result, value) {
-    value = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
-    if (!value) {
+  const container = ArrUtils.reduce(paths, function (result, value) {
+    const match = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
+    if (!match) {
       return null;
     }
 
-    if (value[1] === 'text()') {
-      value[1] = '#text';
+    if (match[1] === 'text()') {
+      match[1] = '#text';
     }
 
-    return resolvePathItem(result, value[1], parseInt(value[2], 10));
+    return resolvePathItem(result, match[1], parseInt(match[2], 10));
   }, root);
 
   if (!container) {

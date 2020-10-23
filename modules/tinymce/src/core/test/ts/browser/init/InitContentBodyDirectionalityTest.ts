@@ -1,9 +1,9 @@
-import { Assertions, Pipeline, Log, Chain, NamedChain } from '@ephox/agar';
+import { Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as McEditor } from '@ephox/mcagar';
-import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest', (success, failure) => {
   Theme();
@@ -19,19 +19,17 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   });
 
-  const makeStep = (config, label, expected) => {
-    return Chain.asStep({}, [
-      McEditor.cFromSettings(config),
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cSetContent('<p>Hello world!</p>'), ''),
-        NamedChain.direct('editor', cGetBodyDir, 'editorBodyDirectionality'),
-        NamedChain.direct('editorBodyDirectionality', Assertions.cAssertEq(label, expected), 'assertion'),
-        NamedChain.output('editor')
-      ]),
-      McEditor.cRemove
-    ]);
-  };
+  const makeStep = (config, label, expected) => Chain.asStep({}, [
+    McEditor.cFromSettings(config),
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
+      NamedChain.direct('editor', cSetContent('<p>Hello world!</p>'), ''),
+      NamedChain.direct('editor', cGetBodyDir, 'editorBodyDirectionality'),
+      NamedChain.direct('editorBodyDirectionality', Assertions.cAssertEq(label, expected), 'assertion'),
+      NamedChain.output('editor')
+    ]),
+    McEditor.cRemove
+  ]);
 
   Pipeline.async({}, [
     Log.step('TBA', 'Test default directionality of the editor when set to use a rtl language', makeStep(
@@ -60,6 +58,6 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
       },
       'Directionality should not be set if the editor language does not have a directionality',
       ''
-    )),
+    ))
   ], success, failure);
 });

@@ -1,6 +1,5 @@
-import { console } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import { setupDemo } from '../DemoHelpers';
 
@@ -18,7 +17,7 @@ export default () => {
         items: [
           {
             name: 'preview',
-            type: 'iframe',
+            type: 'iframe'
           }
         ]
       },
@@ -32,10 +31,12 @@ export default () => {
       initialData: {
         preview: 'Some content '
       },
-      onSubmit: (api) => {
+      onSubmit: (_api) => {
+        // eslint-disable-next-line no-console
         console.log('Preview Demo onSubmit');
       },
       onClose: () => {
+        // eslint-disable-next-line no-console
         console.log('Preview Demo Close');
       }
     }, {}, Fun.noop);

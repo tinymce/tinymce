@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import Editor from 'tinymce/core/api/Editor';
-import { defaultData, read, ImageData, create, isFigure, write } from './ImageData';
-import Utils from './Utils';
+import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
+import * as Utils from './Utils';
 
 const normalizeCss = (editor: Editor, cssText: string): string => {
   const css = editor.dom.styles.parse(cssText);
@@ -35,9 +34,7 @@ const getSelectedImage = (editor: Editor): HTMLElement => {
 const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   const dom = editor.dom;
 
-  const textBlock = dom.getParent(figure.parentNode, (node: Node) => {
-    return editor.schema.getTextBlockElements()[node.nodeName];
-  }, editor.getBody());
+  const textBlock = dom.getParent(figure.parentNode, (node: Node) => !!editor.schema.getTextBlockElements()[node.nodeName], editor.getBody());
 
   if (textBlock) {
     return dom.split(textBlock, figure);
@@ -104,16 +101,19 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
   }
 };
 
-const insertOrUpdateImage = (editor: Editor, data: ImageData) => {
+const insertOrUpdateImage = (editor: Editor, partialData: Partial<ImageData>) => {
   const image = getSelectedImage(editor);
   if (image) {
+    const selectedImageData = read((css) => normalizeCss(editor, css), image);
+    const data = { ...selectedImageData, ...partialData };
+
     if (data.src) {
       writeImageDataToSelection(editor, data);
     } else {
       deleteImage(editor, image);
     }
-  } else if (data.src) {
-    insertImageAtCaret(editor, data);
+  } else if (partialData.src) {
+    insertImageAtCaret(editor, { ...defaultData(), ...partialData });
   }
 };
 

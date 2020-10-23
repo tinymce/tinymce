@@ -1,6 +1,6 @@
-import Assertion from 'ephox/imagetools/test/Assertion';
+import { UnitTest } from '@ephox/bedrock-client';
+import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Mime from 'ephox/imagetools/util/Mime';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.test('MimeTest', function () {
   const check = function (expected: string | undefined, input: string) {

@@ -3,7 +3,7 @@ import { Gene } from '../api/Gene';
 const set = function (item: Gene, property: string, value: string | number | boolean) {
   item.attrs = {
     ...item.attrs,
-    [property]: String(value),
+    [property]: String(value)
   };
 };
 
@@ -24,7 +24,7 @@ const copyTo = function (source: Gene, destination: Gene) {
   };
 };
 
-export default {
+export {
   get,
   set,
   remove,

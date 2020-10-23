@@ -1,0 +1,75 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Editor
+//
+
+@editor-header-box-shadow: none;
+@editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
+
+.tox {
+  // styles for making statusbar appear above toolbars when making the editor height very small
+  .tox-editor-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tox-editor-header {
+    z-index: 1;
+  }
+
+  &:not(.tox-tinymce-inline) .tox-editor-header {
+    box-shadow: @editor-header-box-shadow;
+    transition: box-shadow .5s;
+  }
+}
+
+// Remove double border when using toolbar_location bottom
+// or when using inline mode.
+.tox.tox-tinymce--toolbar-bottom,
+.tox.tox-tinymce-inline {
+  .tox-editor-header {
+    margin-bottom: -1px;
+  }
+}
+
+.tox.tox-tinymce--toolbar-sticky-off {
+  //
+}
+
+.tox.tox-tinymce--toolbar-sticky-on {
+  .tox-editor-header {
+    box-shadow: @editor-header-sticky-box-shadow;
+  }
+}
+
+// Docking styles for the editor container and sink
+.tox-editor-dock-fadeout {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tox-editor-dock-fadein {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tox-editor-dock-transition {
+  transition: visibility 0s linear .25s, opacity .25s ease;
+
+  // Set all transition delays to 0s, overriding visibility to apply immediately
+  // and thus allowing the opacity to fade in
+  //
+  // transition-delay: 0s;
+}
+
+.tox-editor-dock-transition.tox-editor-dock-fadein {
+  transition-delay: 0s;
+}

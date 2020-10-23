@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import * as Searcher from 'ephox/phoenix/search/Searcher';
@@ -54,28 +54,27 @@ UnitTest.test('SearcherTest', function () {
   const checkWords = function (expected: CheckItem[], itemIds: string[], words: string[], input: Gene) {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, itemIds);
-    const actual = Searcher.safeWords(universe, items, words, Fun.constant(false) as (e: Gene) => boolean);
+    const actual = Searcher.safeWords(universe, items, words, Fun.never as (e: Gene) => boolean);
 
     const processed = Arr.map(actual, function (match): CheckItem {
       return {
-        items: TestRenders.texts(match.elements()),
-        word: match.word(),
-        exact: match.exact()
+        items: TestRenders.texts(match.elements),
+        word: match.word,
+        exact: match.exact
       };
     });
     assert.eq(expected, processed);
   };
 
-  //An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
-  //paragraphs. This one ends with a partial fo|r and more.
+  // An example of some <test> data. The <word> being looked <for> will be <w_or_d> and <for>.|There will be some <tes_t>
+  // paragraphs. This one ends with a partial fo|r and more.
 
   checkWords([
-    { items: ['test'], word: 'test', exact: 'test' },
-    { items: ['word'], word: 'word', exact: 'word' },
-    { items: ['for'], word: 'for', exact: 'for' },
-    { items: ['w', 'or', 'd'], word: 'word', exact: 'word' },
-    { items: ['for'], word: 'for', exact: 'for' },
-    { items: ['tes', 't'], word: 'test', exact: 'test' }
-  ], ['p1', 'p2', 'p3'], ['for', 'test', 'word'], data());
+    { items: [ 'test' ], word: 'test', exact: 'test' },
+    { items: [ 'word' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'w', 'or', 'd' ], word: 'word', exact: 'word' },
+    { items: [ 'for' ], word: 'for', exact: 'for' },
+    { items: [ 'tes', 't' ], word: 'test', exact: 'test' }
+  ], [ 'p1', 'p2', 'p3' ], [ 'for', 'test', 'word' ], data());
 });
-

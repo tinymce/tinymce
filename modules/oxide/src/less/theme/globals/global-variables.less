@@ -23,7 +23,12 @@
 @color-tint: #207ab7;
 @color-white: #fff;
 @color-error: #c00;
+@color-success: #78AB46;
 @font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+
+// Content;
+
+@content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
 
 // Colors
 @border-color: darken(@background-color, 20);
@@ -52,11 +57,12 @@
 @pad-xl: @base-value * 2;
 
 // z-index stack (reserved range 1000-10000)
-@z-index-throbber: 1400;
-@z-index-sink: 1300;
-@z-index-fullscreen: 1200;
-@z-index-dialogs: 1100;
 @z-index-loading: 1000;
+@z-index-dialogs: 1100;
+@z-index-menu: 1150;
+@z-index-fullscreen: 1200;
+@z-index-sink: 1300;
+@z-index-throbber: 1400;
 
 // Responsive breakpoints
 @breakpoint-md: ~"only screen and (min-width:1000px)";

@@ -1,36 +1,31 @@
 import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
-import { Option } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 import { RepresentingSteps } from '../../../module/ReperesentingSteps';
 
 UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
   TestHelpers.GuiSetup.setup(
-    (store, doc, body) => {
-      return GuiFactory.build(
-        renderColorPicker({
-          type: 'colorpicker',
-          label: Option.some('ColorPicker label'),
-          name: 'col1'
-        })
-      );
-    },
-    (doc, body, gui, component, store) => {
+    (_store, _doc, _body) => GuiFactory.build(
+      renderColorPicker({
+        label: Optional.some('ColorPicker label'),
+        name: 'col1'
+      })
+    ),
+    (_doc, _body, _gui, component, _store) => {
 
       const sAssertColour = (label: string, expected: string, labelText: string) =>
         Logger.t(
           label,
           Waiter.sTryUntil(
             'Waiting until hex updates the other fields',
-            Chain.asStep(component.element(), [
+            Chain.asStep(component.element, [
               UiFinder.cFindIn(`label:contains("${labelText}") + input`),
               UiControls.cGetValue,
               Assertions.cAssertEq('Checking value in input', expected)
-            ]),
-            100,
-            1000
+            ])
           )
         );
 

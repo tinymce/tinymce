@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
 import Entities from 'tinymce/core/api/html/Entities';
+import Tools from 'tinymce/core/api/util/Tools';
 
-export interface RootAttrs {[key: string]: string; }
+export interface RootAttrs {[key: string]: string }
 
 /**
  * Newlines class contains utilities to convert newlines (\n or \r\n) tp BRs or to a combination of the specified block element and BRs
@@ -63,11 +63,11 @@ const toBlockElements = function (text: string, rootTag: string, rootAttrs: Root
   return paragraphs.length === 1 ? paragraphs[0] : Tools.map(paragraphs, stitch).join('');
 };
 
-const convert = function (text: string, rootTag: string, rootAttrs: RootAttrs) {
-  return rootTag ? toBlockElements(text, rootTag, rootAttrs) : toBRs(text);
+const convert = function (text: string, rootTag: string | boolean, rootAttrs: RootAttrs) {
+  return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs) : toBRs(text);
 };
 
-export default {
+export {
   isPlainText,
   convert,
   toBRs,

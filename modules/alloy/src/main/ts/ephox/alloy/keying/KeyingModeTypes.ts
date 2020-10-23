@@ -1,19 +1,18 @@
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
+import * as AlloyEvents from '../api/events/AlloyEvents';
 import { FocusManager } from '../api/focus/FocusManagers';
 import { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 
-// TODO: Fix this.
-export type KeyHandlerApi<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config?: C, state?: S) => Option<boolean>;
+export type KeyHandlerApi = (comp: AlloyComponent, se: NativeSimulatedEvent) => Optional<boolean>;
 
-export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state?: S) => Option<boolean>;
-
+export type KeyRuleHandler<C, S> = (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Optional<boolean>;
 
 export enum FocusInsideModes {
-  OnFocusMode ='onFocus',
+  OnFocusMode = 'onFocus',
   OnEnterOrSpaceMode = 'onEnterOrSpace',
   OnApiMode = 'onApi'
 }
@@ -25,26 +24,30 @@ export interface GeneralKeyingConfigSpec {
 
 export interface GeneralKeyingConfig {
   focusManager: FocusManager;
-  sendFocusIn: <C extends GeneralKeyingConfig, S>(conf: C) => Option<(comp: AlloyComponent, config: C, state: S, evt?: SimulatedEvent<any>) => void>;
+  sendFocusIn: <C extends GeneralKeyingConfig, S>(conf: C) => Optional<(comp: AlloyComponent, config: C, state: S, evt?: SimulatedEvent<EventArgs>) => void>;
   focusInside: FocusInsideModes;
+  handler: {
+    toEvents: <C extends GeneralKeyingConfig, S>(keyingConfig: C, keyingState: S) => AlloyEvents.AlloyEventRecord;
+  };
+  state: <C extends GeneralKeyingConfig>(spec: C) => Stateless | FlatgridState;
 }
 
 export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyingConfigSpec {
-  onEscape?: KeyHandlerApi<C, Stateless>;
-  onEnter?: KeyHandlerApi<C, Stateless>;
+  onEscape?: KeyHandlerApi;
+  onEnter?: KeyHandlerApi;
   selector?: string;
   firstTabstop?: number;
-  useTabstopAt?: (elem: Element) => boolean;
+  useTabstopAt?: (elem: SugarElement) => boolean;
   visibilitySelector?: string;
 }
 
 export interface TabbingConfig extends GeneralKeyingConfig {
-  onEscape: Option<KeyHandlerApi<TabbingConfig, Stateless>>;
-  onEnter: Option<KeyHandlerApi<TabbingConfig, Stateless>>;
+  onEscape: Optional<KeyHandlerApi>;
+  onEnter: Optional<KeyHandlerApi>;
   selector: string;
   firstTabstop: number;
-  useTabstopAt: (elem: Element) => boolean;
-  visibilitySelector: Option<string>;
+  useTabstopAt: (elem: SugarElement) => boolean;
+  visibilitySelector: Optional<string>;
   cyclic: boolean;
 }
 
@@ -67,18 +70,18 @@ export interface CyclicConfig extends TabbingConfig {
 // Escaping Type
 export interface EscapingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'escaping';
-  onEscape: KeyHandlerApi<EscapingConfig, Stateless>;
+  onEscape: KeyHandlerApi;
 }
 
 export interface EscapingConfig extends GeneralKeyingConfig {
-  onEscape: KeyHandlerApi<EscapingConfig, Stateless>;
+  onEscape: KeyHandlerApi;
 }
 
 // Execution Type
 export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'execution';
   // NOTE: inconsistent.
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   useSpace?: boolean;
   useEnter?: boolean;
   useControlEnter?: boolean;
@@ -86,7 +89,7 @@ export interface ExecutingConfigSpec extends GeneralKeyingConfigSpec {
 }
 
 export interface ExecutingConfig extends GeneralKeyingConfig {
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   useSpace: boolean;
   useEnter: boolean;
   useControlEnter: boolean;
@@ -97,8 +100,8 @@ export interface ExecutingConfig extends GeneralKeyingConfig {
 export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flatgrid';
   selector: string;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
-  onEscape?: KeyHandlerApi<FlatgridConfig, FlatgridState>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  onEscape?: KeyHandlerApi;
   captureTab?: boolean;
   initSize: {
     numColumns: number;
@@ -108,8 +111,8 @@ export interface FlatgridConfigSpec extends GeneralKeyingConfigSpec {
 
 export interface FlatgridConfig extends GeneralKeyingConfig {
   selector: string;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
-  onEscape: KeyHandlerApi<FlatgridConfig, FlatgridState>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
+  onEscape: KeyHandlerApi;
   captureTab: boolean;
   initSize: {
     numColumns: number;
@@ -118,8 +121,8 @@ export interface FlatgridConfig extends GeneralKeyingConfig {
 }
 
 export interface FlatgridState extends BehaviourState {
-  getNumRows: () => Option<number>;
-  getNumColumns: () => Option<number>;
+  getNumRows: () => Optional<number>;
+  getNumColumns: () => Optional<number>;
   setGridSize: (numRows: number, numColumns: number) => void;
 }
 
@@ -127,18 +130,18 @@ export interface FlatgridState extends BehaviourState {
 export interface FlowConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'flow';
   selector: string;
-  getInitial?: (comp: AlloyComponent) => Option<Element>;
-  onEscape?: KeyHandlerApi<FlowConfig, Stateless>;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  getInitial?: (comp: AlloyComponent) => Optional<SugarElement>;
+  onEscape?: KeyHandlerApi;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   executeOnMove?: boolean;
   allowVertical?: boolean;
 }
 
 export interface FlowConfig extends GeneralKeyingConfig {
   selector: string;
-  getInitial: (comp: AlloyComponent) => Option<Element>;
-  onEscape: KeyHandlerApi<FlowConfig, Stateless>;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  getInitial: (comp: AlloyComponent) => Optional<SugarElement>;
+  onEscape: KeyHandlerApi;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   executeOnMove: boolean;
   allowVertical: boolean;
 }
@@ -151,8 +154,8 @@ export interface MatrixConfigSpec extends GeneralKeyingConfigSpec {
     cell: string;
   };
   cycles?: boolean;
-  previousSelector?: (comp: AlloyComponent) => Option<Element>;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  previousSelector?: (comp: AlloyComponent) => Optional<SugarElement>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
 }
 
 export interface MatrixConfig extends GeneralKeyingConfig {
@@ -161,51 +164,51 @@ export interface MatrixConfig extends GeneralKeyingConfig {
     cell: string;
   };
   cycles: boolean;
-  previousSelector: (comp: AlloyComponent) => Option<Element>;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  previousSelector: (comp: AlloyComponent) => Optional<SugarElement>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
 }
 
 // Menu type
 export interface MenuConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'menu';
   selector: string;
-  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  execute?: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   moveOnTab?: boolean;
 }
 
 export interface MenuConfig extends GeneralKeyingConfig {
   selector: string;
-  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: Element) => Option<boolean>;
+  execute: (comp: AlloyComponent, se: NativeSimulatedEvent, focused: SugarElement) => Optional<boolean>;
   moveOnTab: boolean;
 }
 
 export interface SpecialConfigSpec extends GeneralKeyingConfigSpec {
   mode: 'special';
-  onSpace?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onShiftEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onLeft?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onRight?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onTab?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onShiftTab?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onUp?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onDown?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onEscape?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onSpace?: KeyHandlerApi;
+  onEnter?: KeyHandlerApi;
+  onShiftEnter?: KeyHandlerApi;
+  onLeft?: KeyHandlerApi;
+  onRight?: KeyHandlerApi;
+  onTab?: KeyHandlerApi;
+  onShiftTab?: KeyHandlerApi;
+  onUp?: KeyHandlerApi;
+  onDown?: KeyHandlerApi;
+  onEscape?: KeyHandlerApi;
   stopSpaceKeyup?: boolean;
-  focusIn?: (comp: AlloyComponent, info: SpecialConfig) => void;
+  focusIn?: (comp: AlloyComponent, info: SpecialConfig, state: Stateless) => void;
 }
 
 export interface SpecialConfig extends GeneralKeyingConfig {
-  onSpace?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onShiftEnter?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onLeft?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onRight?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onTab?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onShiftTab?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onUp?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onDown?: KeyHandlerApi<SpecialConfig, Stateless>;
-  onEscape?: KeyHandlerApi<SpecialConfig, Stateless>;
+  onSpace: KeyHandlerApi;
+  onEnter: KeyHandlerApi;
+  onShiftEnter: KeyHandlerApi;
+  onLeft: KeyHandlerApi;
+  onRight: KeyHandlerApi;
+  onTab: KeyHandlerApi;
+  onShiftTab: KeyHandlerApi;
+  onUp: KeyHandlerApi;
+  onDown: KeyHandlerApi;
+  onEscape: KeyHandlerApi;
   stopSpaceKeyup: boolean;
-  focusIn?: Option<(comp: AlloyComponent, info: SpecialConfig) => Option<boolean>>;
+  focusIn: Optional<(comp: AlloyComponent, info: SpecialConfig, state: Stateless) => void>;
 }

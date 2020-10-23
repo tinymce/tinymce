@@ -1,12 +1,10 @@
-import { Gene } from '@ephox/boss';
-import { TestUniverse } from '@ephox/boss';
-import { TextGene } from '@ephox/boss';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('IdentifyTest', function() {
+UnitTest.test('IdentifyTest', function () {
   const check = function (all: string[], expected: string[], baseid: string, baseoffset: number, endid: string, endoffset: number, input: Gene) {
     const universe = TestUniverse(input);
     const base = Finder.get(universe, baseid);
@@ -63,4 +61,3 @@ UnitTest.test('IdentifyTest', function() {
     TextGene('b', 'Gorilla')
   ]));
 });
-

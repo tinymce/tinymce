@@ -12,14 +12,14 @@
  *
  * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
  */
-let htmlDiff: (v1: string, v2: string) => string = (function () {
-  let hasOwn = Object.prototype.hasOwnProperty;
+const htmlDiff: (v1: string, v2: string) => string = (() => {
+  const hasOwn = Object.prototype.hasOwnProperty;
 
-  /*jshint eqeqeq:false, eqnull:true */
-  function diff(o, n) {
-    let i,
-      ns = {},
-      os = {};
+  /* jshint eqeqeq:false, eqnull:true */
+  const diff = (o, n) => {
+    let i;
+    const ns = {};
+    const os = {};
 
     for (i = 0; i < n.length; i++) {
       if (!hasOwn.call(ns, n[i])) {
@@ -58,7 +58,7 @@ let htmlDiff: (v1: string, v2: string) => string = (function () {
 
     for (i = 0; i < n.length - 1; i++) {
       if (n[i].text != null && n[i + 1].text == null && n[i].row + 1 < o.length && o[n[i].row + 1].text == null &&
-        n[i + 1] == o[n[i].row + 1]) {
+        n[i + 1] === o[n[i].row + 1]) {
 
         n[i + 1] = {
           text: n[i + 1],
@@ -73,7 +73,7 @@ let htmlDiff: (v1: string, v2: string) => string = (function () {
 
     for (i = n.length - 1; i > 0; i--) {
       if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null &&
-        n[i - 1] == o[n[i].row - 1]) {
+        n[i - 1] === o[n[i].row - 1]) {
 
         n[i - 1] = {
           text: n[i - 1],
@@ -87,59 +87,55 @@ let htmlDiff: (v1: string, v2: string) => string = (function () {
     }
 
     return {
-      o: o,
-      n: n
+      o,
+      n
     };
-  }
+  };
 
-  return function (o, n) {
-    o = o.replace(/\s+$/, "");
-    n = n.replace(/\s+$/, "");
+  return (o, n) => {
+    o = o.replace(/\s+$/, '');
+    n = n.replace(/\s+$/, '');
 
     let i, pre,
-      str = "",
-      out = diff(o === "" ? [] : o.split(/\s+/), n === "" ? [] : n.split(/\s+/)),
+      str = '',
       oSpace = o.match(/\s+/g),
       nSpace = n.match(/\s+/g);
+    const out = diff(o === '' ? [] : o.split(/\s+/), n === '' ? [] : n.split(/\s+/));
 
     if (oSpace == null) {
-      oSpace = [" "];
-    }
-    else {
-      oSpace.push(" ");
+      oSpace = [ ' ' ];
+    } else {
+      oSpace.push(' ');
     }
 
     if (nSpace == null) {
-      nSpace = [" "];
-    }
-    else {
-      nSpace.push(" ");
+      nSpace = [ ' ' ];
+    } else {
+      nSpace.push(' ');
     }
 
     if (out.n.length === 0) {
       for (i = 0; i < out.o.length; i++) {
-        str += "<del>" + out.o[i] + oSpace[i] + "</del>";
+        str += '<del>' + out.o[i] + oSpace[i] + '</del>';
       }
-    }
-    else {
+    } else {
       if (out.n[0].text == null) {
         for (n = 0; n < out.o.length && out.o[n].text == null; n++) {
-          str += "<del>" + out.o[n] + oSpace[n] + "</del>";
+          str += '<del>' + out.o[n] + oSpace[n] + '</del>';
         }
       }
 
       for (i = 0; i < out.n.length; i++) {
         if (out.n[i].text == null) {
-          str += "<ins>" + out.n[i] + nSpace[i] + "</ins>";
-        }
-        else {
+          str += '<ins>' + out.n[i] + nSpace[i] + '</ins>';
+        } else {
           // `pre` initialized at top of scope
-          pre = "";
+          pre = '';
 
           for (n = out.n[i].row + 1; n < out.o.length && out.o[n].text == null; n++) {
-            pre += "<del>" + out.o[n] + oSpace[n] + "</del>";
+            pre += '<del>' + out.o[n] + oSpace[n] + '</del>';
           }
-          str += " " + out.n[i].text + nSpace[i] + pre;
+          str += ' ' + out.n[i].text + nSpace[i] + pre;
         }
       }
     }

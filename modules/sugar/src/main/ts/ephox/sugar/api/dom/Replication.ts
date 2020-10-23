@@ -1,41 +1,38 @@
-import * as Attr from '../properties/Attr';
-import Element from '../node/Element';
+import { SugarElement } from '../node/SugarElement';
+import * as Attribute from '../properties/Attribute';
+import * as Traverse from '../search/Traverse';
 import * as Insert from './Insert';
 import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';
-import * as Traverse from '../search/Traverse';
 
-const clone = function (original: Element, isDeep: boolean) {
-  return Element.fromDom(original.dom().cloneNode(isDeep));
-};
+const clone = <E extends Node> (original: SugarElement<E>, isDeep: boolean): SugarElement<E> =>
+  SugarElement.fromDom(original.dom.cloneNode(isDeep) as E);
 
 /** Shallow clone - just the tag, no children */
-const shallow = function (original: Element) {
-  return clone(original, false);
-};
+const shallow = <E extends Node> (original: SugarElement<E>): SugarElement<E> =>
+  clone(original, false);
 
 /** Deep clone - everything copied including children */
-const deep = function (original: Element) {
-  return clone(original, true);
-};
+const deep = <E extends Node> (original: SugarElement<E>): SugarElement<E> =>
+  clone(original, true);
 
 /** Shallow clone, with a new tag */
-const shallowAs = function (original: Element, tag: string) {
-  const nu = Element.fromTag(tag);
+const shallowAs = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
+  const nu = SugarElement.fromTag(tag);
 
-  const attributes = Attr.clone(original);
-  Attr.setAll(nu, attributes);
+  const attributes = Attribute.clone(original);
+  Attribute.setAll(nu, attributes);
 
   return nu;
 };
 
 /** Deep clone, with a new tag */
-const copy = function (original: Element, tag: string) {
+const copy = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   // NOTE
   // previously this used serialisation:
-  // nu.dom().innerHTML = original.dom().innerHTML;
+  // nu.dom.innerHTML = original.dom.innerHTML;
   //
   // Clone should be equivalent (and faster), but if TD <-> TH toggle breaks, put it back.
 
@@ -46,7 +43,7 @@ const copy = function (original: Element, tag: string) {
 };
 
 /** Change the tag name, but keep all children */
-const mutate = function (original: Element, tag: string) {
+const mutate = <K extends keyof HTMLElementTagNameMap> (original: SugarElement<Element>, tag: K): SugarElement<HTMLElementTagNameMap[K]> => {
   const nu = shallowAs(original, tag);
 
   Insert.before(original, nu);
@@ -61,5 +58,5 @@ export {
   shallowAs,
   deep,
   copy,
-  mutate,
+  mutate
 };

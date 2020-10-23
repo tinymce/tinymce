@@ -1,69 +1,61 @@
-import { ApproxStructure, Assertions, Logger, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Optional } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { Arr, Option } from '@ephox/katamari';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        containerBehaviours: Behaviour.derive([
-          Replacing.config({ })
-        ]),
-        components: [
-          Container.sketch({ dom: { tag: 'span' } })
-        ]
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      containerBehaviours: Behaviour.derive([
+        Replacing.config({ })
+      ]),
+      components: [
+        Container.sketch({ dom: { tag: 'span' }})
+      ]
+    })
+  ), (_doc, _body, _gui, component, _store) => {
+
+    const makeTag = (tag: string, classes: string[]): AlloySpec => ({
+      dom: {
+        tag,
+        classes
+      },
+      components: [ ]
+    });
+
+    const sCheckReplaceAt = (label: string, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: string) => Logger.t(
+      `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
+      Step.sync(() => {
+        Replacing.set(component,
+          Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
+        );
+        Replacing.replaceAt(component, replaceeIndex, Optional.some(makeTag('div', [ replaceClass ])));
+        Assertions.assertStructure(
+          'Asserting structure',
+          ApproxStructure.build((s, _str, arr) => s.element('div', {
+            children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
+          })),
+          component.element
+        );
       })
     );
-  }, (doc, body, gui, component, store) => {
-
-    const makeTag = (tag: string, classes: string[]) => {
-      return {
-        dom: {
-          tag,
-          classes
-        },
-        components: [ ]
-      };
-    };
-
-    const sCheckReplaceAt = (label: string, expectedClasses: string[], inputClasses: string[], replaceeIndex: number, replaceClass: string) => {
-      return Logger.t(
-        `${label}: Check replaceAt(${replaceeIndex}, "${replaceClass}") for data: [${inputClasses.join(', ')}]`,
-        Step.sync(() => {
-          Replacing.set(component,
-              Arr.map(inputClasses, (ic) => makeTag('div', [ ic ]))
-          );
-          Replacing.replaceAt(component, replaceeIndex, Option.some(makeTag('div', [ replaceClass ])));
-          Assertions.assertStructure(
-            'Asserting structure',
-            ApproxStructure.build((s, str, arr) => {
-              return s.element('div', {
-                children: Arr.map(expectedClasses, (ec) => s.element('div', { classes: [ arr.has(ec) ] }))
-              });
-            }),
-            component.element()
-          );
-        })
-      );
-    };
 
     return [
       Assertions.sAssertStructure(
         'Initially, has a single span',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('span', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('span', { })
+          ]
+        })),
+        component.element
       ),
 
       Step.sync(() => {
@@ -74,15 +66,13 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After set([]), is empty',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [ ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [ ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have no contents', [ ], Replacing.contents(component));
+        Assert.eq('Should have no contents', [ ], Replacing.contents(component));
       }),
 
       Step.sync(() => {
@@ -94,18 +84,16 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After first time of replace([ first, second ])',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', { }),
-              s.element('div', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('div', { }),
+            s.element('div', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 2 children', 2, Replacing.contents(component).length);
+        Assert.eq('Should have 2 children', 2, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -119,41 +107,37 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
       ),
       Assertions.sAssertStructure(
         'After second time of set([ first, second ])',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', { }),
-              s.element('div', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('div', { }),
+            s.element('div', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 2 children still', 2, Replacing.contents(component).length);
+        Assert.eq('Should have 2 children still', 2, Replacing.contents(component).length);
       }),
 
       Logger.t(
         'Replacing.append to put a new thing at the end.',
         Step.sync(() => {
-          Replacing.append(component, Container.sketch({ dom: { tag: 'span' } }));
+          Replacing.append(component, Container.sketch({ dom: { tag: 'span' }}));
         })
       ),
       Assertions.sAssertStructure(
         'After append(span)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('div', { }),
-              s.element('div', { }),
-              s.element('span', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('div', { }),
+            s.element('div', { }),
+            s.element('span', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 3 children now', 3, Replacing.contents(component).length);
+        Assert.eq('Should have 3 children now', 3, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -169,20 +153,18 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After prepend(label)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('label', {}),
-              s.element('div', { }),
-              s.element('div', { }),
-              s.element('span', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('label', {}),
+            s.element('div', { }),
+            s.element('div', { }),
+            s.element('span', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 4 children now', 4, Replacing.contents(component).length);
+        Assert.eq('Should have 4 children now', 4, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -195,19 +177,17 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After remove(second)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('label', {}),
-              s.element('div', { }),
-              s.element('span', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('label', {}),
+            s.element('div', { }),
+            s.element('span', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 3 children again', 3, Replacing.contents(component).length);
+        Assert.eq('Should have 3 children again', 3, Replacing.contents(component).length);
       }),
 
       Logger.t(
@@ -219,20 +199,18 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
 
       Assertions.sAssertStructure(
         'After append(second) after remove(second)',
-        ApproxStructure.build((s, str, arr) => {
-          return s.element('div', {
-            children: [
-              s.element('label', {}),
-              s.element('div', { }),
-              s.element('span', { }),
-              s.element('div', { })
-            ]
-          });
-        }),
-        component.element()
+        ApproxStructure.build((s, _str, _arr) => s.element('div', {
+          children: [
+            s.element('label', {}),
+            s.element('div', { }),
+            s.element('span', { }),
+            s.element('div', { })
+          ]
+        })),
+        component.element
       ),
       Step.sync(() => {
-        RawAssertions.assertEq('Should have 4 children again', 4, Replacing.contents(component).length);
+        Assert.eq('Should have 4 children again', 4, Replacing.contents(component).length);
       }),
 
       sCheckReplaceAt(

@@ -1,39 +1,36 @@
-import { assert, UnitTest } from '@ephox/bedrock';
-import { window } from '@ephox/dom-globals';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
-import * as Body from 'ephox/sugar/api/node/Body';
-import Element from 'ephox/sugar/api/node/Element';
-import * as Node from 'ephox/sugar/api/node/Node';
+import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import * as SugarNode from 'ephox/sugar/api/node/SugarNode';
 import * as Html from 'ephox/sugar/api/properties/Html';
-import { Selection } from 'ephox/sugar/api/selection/Selection';
+import { SimSelection } from 'ephox/sugar/api/selection/SimSelection';
 import * as WindowSelection from 'ephox/sugar/api/selection/WindowSelection';
 
-UnitTest.test('Browser Test: SelectionTest', function () {
-  const p1 = Element.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
-  const p2 = Element.fromHtml('<p>This is the <em>second</em> paragraph</p>');
+UnitTest.test('Browser Test: SelectionTest', () => {
+  const p1 = SugarElement.fromHtml('<p>This is the <strong>first</strong> paragraph</p>');
+  const p2 = SugarElement.fromHtml('<p>This is the <em>second</em> paragraph</p>');
 
-  InsertAll.append(Body.body(), [ p1, p2 ]);
+  InsertAll.append(SugarBody.body(), [ p1, p2 ]);
 
-  const assertWithin = function (expected, outer) {
+  const assertWithin = (expected: Record<string, number>, outer: SugarElement<Node>) => {
     WindowSelection.setToElement(window, outer);
-    WindowSelection.getExact(window).fold(function () {
+    WindowSelection.getExact(window).fold(() => {
       assert.fail('Selection should be wrapping: ' + Html.getOuter(outer));
-    }, function (sel) {
-      Obj.each(expected, function (num, tag) {
+    }, (sel) => {
+      Obj.each(expected, (num, tag) => {
         const actual = WindowSelection.findWithin(
           window,
-          Selection.exact(sel.start(), sel.soffset(), sel.finish(), sel.foffset()),
+          SimSelection.exact(sel.start, sel.soffset, sel.finish, sel.foffset),
           tag
         );
         assert.eq(
           num, actual.length, 'Incorrect number of ' + tag + ' tags.\n' +
           'Expected: ' + num + ', but was: ' + actual.length
         );
-        assert.eq(true, Arr.forall(actual, function (a) {
-          return Node.name(a) === tag;
-        }), 'All tags must be: ' + tag);
+        assert.eq(true, Arr.forall(actual, (a) => SugarNode.name(a) === tag), 'All tags must be: ' + tag);
       });
     });
   };

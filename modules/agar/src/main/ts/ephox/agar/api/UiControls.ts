@@ -1,31 +1,27 @@
-import { Element, Value } from '@ephox/sugar';
+import { SugarElement, Value } from '@ephox/sugar';
 
 import { Chain } from './Chain';
+import { Step } from './Step';
 import * as UiFinder from './UiFinder';
-import { Step } from './Main';
 
-const cSetValue = function (newValue: string) {
-  return Chain.op(function (element: Element) {
+const cSetValue = (newValue: string): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.op((element: SugarElement<any>) => {
     Value.set(element, newValue);
   });
-};
 
-const cGetValue = Chain.mapper(function (element: Element) {
-  return Value.get(element);
-});
+const cGetValue: Chain<SugarElement<any>, string> =
+  Chain.mapper(Value.get);
 
-const sSetValue = function <T>(element: Element, newValue: string): Step<T, T> {
-  return Chain.asStep<T, Element>(element, [
+const sSetValue = <T>(element: SugarElement<any>, newValue: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(element, [
     cSetValue(newValue)
   ]);
-};
 
-const sSetValueOn = function <T>(container: Element, selector: string, newValue: string): Step<T, T> {
-  return Chain.asStep<T, Element>(container, [
+const sSetValueOn = <T>(container: SugarElement<any>, selector: string, newValue: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement>(container, [
     UiFinder.cFindIn(selector),
     cSetValue(newValue)
   ]);
-};
 
 export {
   sSetValueOn,

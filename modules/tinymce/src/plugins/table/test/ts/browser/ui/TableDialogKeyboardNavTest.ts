@@ -1,36 +1,33 @@
-import { Pipeline, Log, FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import { Element } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (success, failure) => {
 
   Plugin();
   SilverTheme();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
-    const doc = Element.fromDom(document);
+    const doc = SugarElement.fromDom(document);
 
     // Table html structure
     const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';
 
     const sSetTable = tinyApis.sSetContent(htmlEmptyTable);
-    const sSetCursor = tinyApis.sSetCursor([0, 0, 0], 0);
+    const sSetCursor = tinyApis.sSetCursor([ 0, 0, 0 ], 0);
     // Tab key press
     const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
 
     // Assert focus is on the expected form element
-    const sAssertFocusOnItem = (label, selector) => {
-      return FocusTools.sTryOnSelector(
-        `Focus should be on: ${label}`,
-        doc,
-        selector
-      );
-    };
+    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(
+      `Focus should be on: ${label}`,
+      doc,
+      selector
+    );
 
     Pipeline.async({}, Log.steps('TBA', 'Table: Open dialog, test the tab key navigation cycles through all focusable fields in General and Advanced tabs', [
       // Create table and set focus
@@ -55,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Caption', 'input[type="checkbox"]'),
       sPressTabKey,
-      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-selectfield select'),
+      sAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")'),
       sPressTabKey,
@@ -69,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       // Keyboard nav within the Advanced tab
       sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
       sPressTabKey,
-      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-selectfield select'),
+      sAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-listboxfield > .tox-listbox'),
       sPressTabKey,
       sAssertFocusOnItem('Border color', '.tox-form div:nth-child(2) input'),
       sPressTabKey,
@@ -83,13 +80,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', (
       sPressTabKey,
       sAssertFocusOnItem('Save', '.tox-button:contains("Save")'),
       sPressTabKey,
-      sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
+      sAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")')
     ]), onSuccess, onFailure);
   }, {
-      plugins: 'table',
-      toolbar: 'tableprops',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      table_advtab: true
-    }, success, failure);
+    plugins: 'table',
+    toolbar: 'tableprops',
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce',
+    table_advtab: true
+  }, success, failure);
 });

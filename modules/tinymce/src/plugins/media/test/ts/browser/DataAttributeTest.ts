@@ -1,18 +1,20 @@
-import { GeneralSteps, Pipeline, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { GeneralSteps, Log, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestEmbedContentFromUrlWithAttribute = function (editor, ui, url, content) {
+  const sTestEmbedContentFromUrlWithAttribute = function (editor: Editor, api: TinyApis, ui: TinyUi, url: string, content: string) {
     return Logger.t(`Assert embeded ${content} from ${url} with attribute`, GeneralSteps.sequence([
+      api.sSetContent(''),
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
       // We can't assert the DOM because tab panels don't render hidden tabs, so we check the data model
@@ -22,8 +24,9 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
       Utils.sCloseDialog(ui)
     ]));
   };
-  const sTestEmbedContentFromUrl2 = function (editor, ui, url, url2, content, content2) {
+  const sTestEmbedContentFromUrl2 = function (editor: Editor, api: TinyApis, ui: TinyUi, url: string, url2: string, content: string, content2: string) {
     return Logger.t(`Assert embeded ${content} from ${url} and ${content2} from ${url2}`, GeneralSteps.sequence([
+      api.sSetContent(''),
       Utils.sOpenDialog(ui),
       Utils.sPasteSourceValue(ui, url),
       Utils.sAssertEmbedData(ui, content),
@@ -35,37 +38,36 @@ UnitTest.asynctest('browser.plugins.media.DataAttributeTest', function (success,
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Media: Test embeded content from url with attribute', [
-        sTestEmbedContentFromUrlWithAttribute(editor, ui,
+        sTestEmbedContentFromUrlWithAttribute(editor, api, ui,
           'a',
           '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
         ),
-        sTestEmbedContentFromUrl2(editor, ui, 'a', 'b',
+        sTestEmbedContentFromUrl2(editor, api, ui, 'a', 'b',
           '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
           '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
         ),
-        Utils.sTestEmbedContentFromUrl(ui,
+        Utils.sTestEmbedContentFromUrl(api, ui,
           'a',
           '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
         ),
         Utils.sAssertSizeRecalcConstrained(ui),
         Utils.sAssertSizeRecalcUnconstrained(ui),
-        api.sSetContent(''),
         Utils.sAssertSizeRecalcConstrainedReopen(ui)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver (data, resolve) {
+    media_url_resolver(data, resolve) {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

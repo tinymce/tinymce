@@ -8,8 +8,8 @@
 import { Arr, Future, Futures } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
-import IosScrolling from '../scroll/IosScrolling';
-import IosViewport from './IosViewport';
+import * as IosScrolling from '../scroll/IosScrolling';
+import * as IosViewport from './IosViewport';
 
 const updateFixed = function (element, property, winY, offsetY) {
   const destination = winY + offsetY;
@@ -22,7 +22,7 @@ const updateScrollingFixed = function (element, winY, offsetY) {
   const oldProp = Css.getRaw(element, 'top').getOr(offsetY);
   // While we are changing top, aim to scroll by the same amount to keep the cursor in the same location.
   const delta = destTop - parseInt(oldProp, 10);
-  const destScroll = element.dom().scrollTop + delta;
+  const destScroll = element.dom.scrollTop + delta;
   return IosScrolling.moveScrollAndTop(element, destScroll, destTop);
 };
 
@@ -42,6 +42,6 @@ const updatePositions = function (container, winY) {
   return Futures.par(updates);
 };
 
-export default {
+export {
   updatePositions
 };

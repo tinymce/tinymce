@@ -6,7 +6,13 @@
  */
 
 import Env from '../Env';
-import { KeyboardEvent } from '@ephox/dom-globals';
+
+interface KeyboardLikeEvent {
+  shiftKey: boolean;
+  ctrlKey: boolean;
+  altKey: boolean;
+  metaKey: boolean;
+}
 
 interface VK {
   BACKSPACE: number;
@@ -21,8 +27,8 @@ interface VK {
   END: number;
   HOME: number;
 
-  modifierPressed (e: KeyboardEvent): boolean;
-  metaKeyPressed (e: KeyboardEvent): boolean;
+  modifierPressed (e: KeyboardLikeEvent): boolean;
+  metaKeyPressed (e: KeyboardLikeEvent): boolean;
 }
 
 /**
@@ -42,11 +48,11 @@ const VK: VK = {
   END: 35,
   HOME: 36,
 
-  modifierPressed (e: KeyboardEvent): boolean {
+  modifierPressed(e: KeyboardLikeEvent): boolean {
     return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
   },
 
-  metaKeyPressed (e: KeyboardEvent): boolean {
+  metaKeyPressed(e: KeyboardLikeEvent): boolean {
     // Check if ctrl or meta key is pressed. Edge case for AltGr on Windows where it produces ctrlKey+altKey states
     return (Env.mac ? e.metaKey : e.ctrlKey && !e.altKey);
   }

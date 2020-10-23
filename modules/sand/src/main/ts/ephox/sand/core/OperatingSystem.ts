@@ -1,17 +1,18 @@
 import { Fun } from '@ephox/katamari';
-import { Version } from '../detect/Version';
 import { UaString } from '../detect/UaString';
+import { Version } from '../detect/Version';
 
 export interface OperatingSystem {
-  current: string | undefined;
-  version: Version;
-  isWindows: () => boolean;
-  isiOS: () => boolean;
-  isAndroid: () => boolean;
-  isOSX: () => boolean;
-  isLinux: () => boolean;
-  isSolaris: () => boolean;
-  isFreeBSD: () => boolean;
+  readonly current: string | undefined;
+  readonly version: Version;
+  readonly isWindows: () => boolean;
+  readonly isiOS: () => boolean;
+  readonly isAndroid: () => boolean;
+  readonly isOSX: () => boolean;
+  readonly isLinux: () => boolean;
+  readonly isSolaris: () => boolean;
+  readonly isFreeBSD: () => boolean;
+  readonly isChromeOS: () => boolean;
 }
 
 const windows = 'Windows';
@@ -21,14 +22,10 @@ const linux = 'Linux';
 const osx = 'OSX';
 const solaris = 'Solaris';
 const freebsd = 'FreeBSD';
+const chromeos = 'ChromeOS';
 
-// Though there is a bit of dupe with this and Browser, trying to 
+// Though there is a bit of dupe with this and Browser, trying to
 // reuse code makes it much harder to follow and change.
-const isOS = function (name: string, current: string) {
-  return function () {
-    return current === name;
-  };
-};
 
 const unknown = function (): OperatingSystem {
   return nu({
@@ -41,24 +38,27 @@ const nu = function (info: UaString): OperatingSystem {
   const current = info.current;
   const version = info.version;
 
-  return {
-    current: current,
-    version: version,
+  const isOS = (name: string) => (): boolean => current === name;
 
-    isWindows: isOS(windows, current),
+  return {
+    current,
+    version,
+
+    isWindows: isOS(windows),
     // TODO: Fix capitalisation
-    isiOS: isOS(ios, current),
-    isAndroid: isOS(android, current),
-    isOSX: isOS(osx, current),
-    isLinux: isOS(linux, current),
-    isSolaris: isOS(solaris, current),
-    isFreeBSD: isOS(freebsd, current)
+    isiOS: isOS(ios),
+    isAndroid: isOS(android),
+    isOSX: isOS(osx),
+    isLinux: isOS(linux),
+    isSolaris: isOS(solaris),
+    isFreeBSD: isOS(freebsd),
+    isChromeOS: isOS(chromeos)
   };
 };
 
 export const OperatingSystem = {
-  unknown: unknown,
-  nu: nu,
+  unknown,
+  nu,
 
   windows: Fun.constant(windows),
   ios: Fun.constant(ios),
@@ -66,5 +66,6 @@ export const OperatingSystem = {
   linux: Fun.constant(linux),
   osx: Fun.constant(osx),
   solaris: Fun.constant(solaris),
-  freebsd: Fun.constant(freebsd)
+  freebsd: Fun.constant(freebsd),
+  chromeos: Fun.constant(chromeos)
 };

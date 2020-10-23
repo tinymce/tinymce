@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
-import { Version } from '../detect/Version';
 import { UaString } from '../detect/UaString';
+import { Version } from '../detect/Version';
 
 const edge = 'Edge';
 const chrome = 'Chrome';
@@ -10,21 +10,15 @@ const firefox = 'Firefox';
 const safari = 'Safari';
 
 export interface Browser {
-  current: string | undefined;
-  version: Version;
-  isEdge: () => boolean;
-  isChrome: () => boolean;
-  isIE: () => boolean;
-  isOpera: () => boolean;
-  isFirefox: () => boolean;
-  isSafari: () => boolean;
+  readonly current: string | undefined;
+  readonly version: Version;
+  readonly isEdge: () => boolean;
+  readonly isChrome: () => boolean;
+  readonly isIE: () => boolean;
+  readonly isOpera: () => boolean;
+  readonly isFirefox: () => boolean;
+  readonly isSafari: () => boolean;
 }
-
-const isBrowser = function (name: string, current: string) {
-  return function () {
-    return current === name;
-  };
-};
 
 const unknown = function () {
   return nu({
@@ -37,23 +31,25 @@ const nu = function (info: UaString): Browser {
   const current = info.current;
   const version = info.version;
 
-  return {
-    current: current,
-    version: version,
+  const isBrowser = (name: string) => (): boolean => current === name;
 
-    isEdge: isBrowser(edge, current),
-    isChrome: isBrowser(chrome, current),
+  return {
+    current,
+    version,
+
+    isEdge: isBrowser(edge),
+    isChrome: isBrowser(chrome),
     // NOTE: isIe just looks too weird
-    isIE: isBrowser(ie, current),
-    isOpera: isBrowser(opera, current),
-    isFirefox: isBrowser(firefox, current),
-    isSafari: isBrowser(safari, current)
+    isIE: isBrowser(ie),
+    isOpera: isBrowser(opera),
+    isFirefox: isBrowser(firefox),
+    isSafari: isBrowser(safari)
   };
 };
 
 export const Browser = {
-  unknown: unknown,
-  nu: nu,
+  unknown,
+  nu,
   edge: Fun.constant(edge),
   chrome: Fun.constant(chrome),
   ie: Fun.constant(ie),

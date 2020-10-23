@@ -5,44 +5,42 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
-import { Types } from '@ephox/bridge';
-import { HTMLAnchorElement } from '@ephox/dom-globals';
+import { Optional } from '@ephox/katamari';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-export interface ListValue {
-  text: string;
-  value: string;
+export type ListValue = Dialog.ListBoxSingleItemSpec;
+export type ListGroup = Dialog.ListBoxNestedItemSpec;
+export type ListItem = Dialog.ListBoxItemSpec;
+
+export interface UserListItem {
+  text?: string;
+  title?: string;
+  menu?: UserListItem[];
 }
 
-export interface ListGroup {
-  text: string;
-  items: ListItem[];
+export interface LinkDialogCatalog {
+  link: Optional<ListItem[]>;
+  targets: Optional<ListItem[]>;
+  rels: Optional<ListItem[]>;
+  classes: Optional<ListItem[]>;
+  anchor: Optional<ListItem[]>;
 }
-
-// TODO TINY-2236 re-enable this (support will need to be added to bridge)
-export type ListItem = ListValue/*  | ListGroup */;
 
 export interface LinkDialogInfo {
   anchor: {
-    url: Option<string>;
-    text: Option<string>;
-    target: Option<string>;
-    rel: Option<string>;
-    linkClass: Option<string>;
-    title: Option<string>;
+    url: Optional<string>;
+    text: Optional<string>;
+    target: Optional<string>;
+    rel: Optional<string>;
+    linkClass: Optional<string>;
+    title: Optional<string>;
   };
-  catalogs: {
-    link: Option<ListItem[]>;
-    targets: Option<ListItem[]>;
-    rels: Option<ListItem[]>;
-    classes: Option<ListItem[]>;
-    anchor: Option<ListItem[]>;
-  };
+  catalogs: LinkDialogCatalog;
   flags: {
     titleEnabled: boolean;
   };
-  optNode: Option<HTMLAnchorElement>;
-  onSubmit?: (api: Types.Dialog.DialogInstanceApi<LinkDialogData>) => void;
+  optNode: Optional<HTMLAnchorElement>;
+  onSubmit?: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void;
 }
 
 export interface LinkDialogUrlData {
@@ -63,15 +61,16 @@ export interface LinkDialogData {
 
 export interface LinkDialogOutput {
   href: string;
-  text: Option<string>;
-  target: Option<string>;
-  rel: Option<string>;
-  class: Option<string>;
-  title: Option<string>;
+  text: Optional<string>;
+  target: Optional<string>;
+  rel: Optional<string>;
+  class: Optional<string>;
+  title: Optional<string>;
 }
 
 interface LinkUrlMeta {
   text?: string;
+  title?: string;
   attach?: () => void;
   original?: {
     value: string;

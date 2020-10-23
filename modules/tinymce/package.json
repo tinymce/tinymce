@@ -1,10 +1,10 @@
 {
   "name": "tinymce",
-  "version": "5.0.7",
+  "version": "5.5.1",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinymce/tinymce.git"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "description": "TinyMCE rich text editor",
   "author": "Tiny Technologies",
@@ -18,11 +18,11 @@
   "main": "tinymce.js",
   "scripts": {
     "test": "grunt test",
-    "lint": "tslint src/**/*.ts",
+    "lint": "grunt eslint",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "tslib": "^1.9.3"
+    "tslib": "^2.0.0"
   }
 }

@@ -1,6 +1,5 @@
 import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -12,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.JustFirstFieldTest', (success, 
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 
@@ -34,12 +33,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.JustFirstFieldTest', (success, 
           'Waiting for link to be inserted',
           tinyApis.sAssertContentPresence({
             'a[href="http://goo"]': 1
-          }),
-          100,
-          1000
+          })
         )
       ]),
-      TestLinkUi.sClearHistory,
+      TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {
     plugins: 'link',

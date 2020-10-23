@@ -5,17 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { URL } from '@ephox/sand';
-import Uuid from '../../util/Uuid';
-import { Blob } from '@ephox/dom-globals';
-import { Type, Fun, Arr } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
+import * as Uuid from '../../util/Uuid';
 
 export interface BlobCache {
   create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string) => BlobInfo;
   add: (blobInfo: BlobInfo) => void;
-  get: (id: string) => BlobInfo;
-  getByUri: (blobUri: string) => BlobInfo;
-  findFirst: (predicate: (blobInfo: BlobInfo) => boolean) => any;
+  get: (id: string) => BlobInfo | undefined;
+  getByUri: (blobUri: string) => BlobInfo | undefined;
+  getByData: (base64: string, type: string) => BlobInfo | undefined;
+  findFirst: (predicate: (blobInfo: BlobInfo) => boolean) => BlobInfo | undefined;
   removeByUri: (blobUri: string) => void;
   destroy: () => void;
 }
@@ -39,10 +38,10 @@ export interface BlobInfo {
   uri: () => string;
 }
 
-export const BlobCache = function (): BlobCache {
+export const BlobCache = (): BlobCache => {
   let cache: BlobInfo[] = [];
 
-  const mimeToExt = function (mime) {
+  const mimeToExt = (mime: string) => {
     const mimes = {
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
@@ -53,9 +52,9 @@ export const BlobCache = function (): BlobCache {
     return mimes[mime.toLowerCase()] || 'dat';
   };
 
-  const create = function (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo {
+  const create = (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo => {
     if (Type.isString(o)) {
-      const id = o as string;
+      const id = o;
 
       return toBlobInfo({
         id,
@@ -70,15 +69,13 @@ export const BlobCache = function (): BlobCache {
     }
   };
 
-  const toBlobInfo = function (o: BlobInfoData): BlobInfo {
-    let id, name;
-
+  const toBlobInfo = (o: BlobInfoData): BlobInfo => {
     if (!o.blob || !o.base64) {
       throw new Error('blob and base64 representations of the image are required for BlobInfo to be created');
     }
 
-    id = o.id || Uuid.uuid('blobid');
-    name = o.name || id;
+    const id = o.id || Uuid.uuid('blobid');
+    const name = o.name || id;
 
     return {
       id: Fun.constant(id),
@@ -91,30 +88,25 @@ export const BlobCache = function (): BlobCache {
     };
   };
 
-  const add = function (blobInfo: BlobInfo) {
+  const add = (blobInfo: BlobInfo) => {
     if (!get(blobInfo.id())) {
       cache.push(blobInfo);
     }
   };
 
-  const get = function (id: string): BlobInfo {
-    return findFirst(function (cachedBlobInfo) {
-      return cachedBlobInfo.id() === id;
-    });
-  };
+  const findFirst = (predicate: (blobInfo: BlobInfo) => boolean) => Arr.find(cache, predicate).getOrUndefined();
 
-  const findFirst = function (predicate: (blobInfo: BlobInfo) => boolean) {
-    return Arr.filter(cache, predicate)[0];
-  };
+  const get = (id: string) =>
+    findFirst((cachedBlobInfo) => cachedBlobInfo.id() === id);
 
-  const getByUri = function (blobUri: string): BlobInfo {
-    return findFirst(function (blobInfo) {
-      return blobInfo.blobUri() === blobUri;
-    });
-  };
+  const getByUri = (blobUri: string) =>
+    findFirst((blobInfo) => blobInfo.blobUri() === blobUri);
 
-  const removeByUri = function (blobUri: string) {
-    cache = Arr.filter(cache, function (blobInfo) {
+  const getByData = (base64: string, type: string) =>
+    findFirst((blobInfo) => blobInfo.base64() === base64 && blobInfo.blob().type === type);
+
+  const removeByUri = (blobUri: string) => {
+    cache = Arr.filter(cache, (blobInfo) => {
       if (blobInfo.blobUri() === blobUri) {
         URL.revokeObjectURL(blobInfo.blobUri());
         return false;
@@ -124,8 +116,8 @@ export const BlobCache = function (): BlobCache {
     });
   };
 
-  const destroy = function () {
-    Arr.each(cache, function (cachedBlobInfo) {
+  const destroy = () => {
+    Arr.each(cache, (cachedBlobInfo) => {
       URL.revokeObjectURL(cachedBlobInfo.blobUri());
     });
 
@@ -137,6 +129,7 @@ export const BlobCache = function (): BlobCache {
     add,
     get,
     getByUri,
+    getByData,
     findFirst,
     removeByUri,
     destroy

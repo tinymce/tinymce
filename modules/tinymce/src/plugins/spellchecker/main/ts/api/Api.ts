@@ -7,11 +7,14 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Actions, { LastSuggestion, Data } from '../core/Actions';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
-import Settings from './Settings';
+import * as Settings from './Settings';
 
-const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, url: string) {
+type LastSuggestion = Actions.LastSuggestion;
+type Data = Actions.Data;
+
+const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, _url: string) {
   const getLanguage = function () {
     return currentLanguageState.get();
   };
@@ -36,6 +39,6 @@ const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestio
   };
 };
 
-export default {
+export {
   get
 };

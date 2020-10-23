@@ -1,16 +1,16 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 /**
- * Applies f repeatedly until it completes (by returning Option.none()).
+ * Applies f repeatedly until it completes (by returning Optional.none()).
  *
  * Normally would just use recursion, but JavaScript lacks tail call optimisation.
  *
  * This is what recursion looks like when manually unravelled :)
  */
-const toArray = function  <T = any>(target: T, f: (T) => Option<T>) {
-  const r: T[] = [];
+const toArray = <T = any, U extends T = T> (target: T, f: (t: T) => Optional<U>): U[] => {
+  const r: U[] = [];
 
-  const recurse = function (e) {
+  const recurse = (e: U) => {
     r.push(e);
     return f(e);
   };
@@ -23,6 +23,6 @@ const toArray = function  <T = any>(target: T, f: (T) => Option<T>) {
   return r;
 };
 
-export default {
+export {
   toArray
 };

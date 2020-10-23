@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Arr, Obj, Option, Options } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Settings from '../api/Settings';
 import { CustomTabSpecs, TabSpecs } from '../Plugin';
-import KeyboardShortcutsTab from './KeyboardShortcutsTab';
-import PluginsTab from './PluginsTab';
-import VersionTab from './VersionTab';
+import * as KeyboardNavTab from './KeyboardNavTab';
+import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';
+import * as PluginsTab from './PluginsTab';
+import * as VersionTab from './VersionTab';
 
 interface TabData {
   tabs: TabSpecs;
@@ -35,28 +36,30 @@ const parseHelpTabsSetting = (tabsFromSettings: Settings.HelpTabsSetting, tabs: 
       return t.name;
     }
   });
-  return {tabs: newTabs, names};
+  return { tabs: newTabs, names };
 };
 
 const getNamesFromTabs = (tabs: TabSpecs): TabData => {
   const names = Obj.keys(tabs);
 
   // Move the versions tab to the end if it exists
-  const versionsIdx = Arr.indexOf(names, 'versions');
-  versionsIdx.each((idx) => {
+  const idx = names.indexOf('versions');
+  if (idx !== -1) {
     names.splice(idx, 1);
     names.push('versions');
-  });
+  }
 
-  return {tabs, names};
+  return { tabs, names };
 };
 
 const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
   const shortcuts = KeyboardShortcutsTab.tab();
+  const nav = KeyboardNavTab.tab();
   const plugins = PluginsTab.tab(editor);
   const versions = VersionTab.tab();
   const tabs = {
     [shortcuts.name]: shortcuts,
+    [nav.name]: nav,
     [plugins.name]: plugins,
     [versions.name]: versions,
     ...customTabs.get()
@@ -68,36 +71,32 @@ const parseCustomTabs = (editor: Editor, customTabs: CustomTabSpecs) => {
   );
 };
 
-const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => {
-  return () => {
-    // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
-    const {tabs, names} = parseCustomTabs(editor, customTabs);
-    const foundTabs: Option<Types.Dialog.TabApi>[] = Arr.map(names, (name) => {
-      return Obj.get(tabs, name);
-    });
-    const dialogTabs: Types.Dialog.TabApi[] = Options.cat(foundTabs);
+const init = (editor: Editor, customTabs: CustomTabSpecs): () => void => () => {
+  // const tabSpecs: Record<string, Types.Dialog.TabApi> = customTabs.get();
+  const { tabs, names } = parseCustomTabs(editor, customTabs);
+  const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
+  const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);
 
-    const body: Types.Dialog.TabPanelApi = {
-      type: 'tabpanel',
-      tabs: dialogTabs
-    };
-    editor.windowManager.open(
-      {
-        title: 'Help',
-        size: 'medium',
-        body,
-        buttons: [
-          {
-            type: 'cancel',
-            name: 'close',
-            text: 'Close',
-            primary: true
-          }
-        ],
-        initialData: {}
-      }
-    );
+  const body: Dialog.TabPanelSpec = {
+    type: 'tabpanel',
+    tabs: dialogTabs
   };
+  editor.windowManager.open(
+    {
+      title: 'Help',
+      size: 'medium',
+      body,
+      buttons: [
+        {
+          type: 'cancel',
+          name: 'close',
+          text: 'Close',
+          primary: true
+        }
+      ],
+      initialData: {}
+    }
+  );
 };
 
 export { init };

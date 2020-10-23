@@ -5,14 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Element } from '@ephox/dom-globals';
 import { Cell } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Delay from 'tinymce/core/api/util/Delay';
-import Events from '../api/Events';
-import Settings from '../api/Settings';
+import * as Events from '../api/Events';
+import * as Settings from '../api/Settings';
 
 /**
  * This class contains all core logic for the autoresize plugin.
@@ -21,9 +20,7 @@ import Settings from '../api/Settings';
  * @private
  */
 
-const isFullscreen = (editor: Editor) => {
-  return editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
-};
+const isFullscreen = (editor: Editor) => editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 /**
  * Calls the resize x times in 100ms intervals. We can't wait for load events since
@@ -61,7 +58,6 @@ const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed:
  * This method gets executed each time the editor needs to resize.
  */
 const resize = (editor: Editor, oldSize: Cell<number>) => {
-  let deltaSize, resizeHeight, contentHeight;
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -76,12 +72,12 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
 
   const docEle = doc.documentElement;
   const resizeBottomMargin = Settings.getAutoResizeBottomMargin(editor);
-  resizeHeight = Settings.getAutoResizeMinHeight(editor);
+  let resizeHeight = Settings.getAutoResizeMinHeight(editor);
 
   // Calculate outer height of the doc element using CSS styles
   const marginTop = parseCssValueToInt(dom, docEle, 'margin-top', true);
   const marginBottom = parseCssValueToInt(dom, docEle, 'margin-bottom', true);
-  contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
+  let contentHeight = docEle.offsetHeight + marginTop + marginBottom + resizeBottomMargin;
 
   // Make sure we have a valid height
   // Note: Previously we had to do some fallbacks here for IE/Webkit, as the height calculation above didn't work.
@@ -111,10 +107,22 @@ const resize = (editor: Editor, oldSize: Cell<number>) => {
 
   // Resize content element
   if (resizeHeight !== oldSize.get()) {
-    deltaSize = resizeHeight - oldSize.get();
+    const deltaSize = resizeHeight - oldSize.get();
     dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set(resizeHeight);
     Events.fireResizeEditor(editor);
+
+    // iPadOS has an issue where it won't rerender the body when the iframe is resized
+    // however if we reset the scroll position then it re-renders correctly
+    if (Env.browser.isSafari() && Env.mac) {
+      const win = editor.getWin();
+      win.scrollTo(win.pageXOffset, win.pageYOffset);
+    }
+
+    // Ensure the selected node is in view, as it's potentially out of view after resizing the editor
+    if (editor.hasFocus()) {
+      editor.selection.scrollIntoView(editor.selection.getNode());
+    }
 
     // WebKit doesn't decrease the size of the body element until the iframe gets resized
     // So we need to continue to resize the iframe down until the size gets fixed
@@ -129,6 +137,11 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     const overflowPadding = Settings.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
+    // Disable height 100% on the root document element otherwise we'll end up resizing indefinitely
+    dom.setStyles(editor.getDoc().documentElement, {
+      height: 'auto'
+    });
+
     dom.setStyles(editor.getBody(), {
       'paddingLeft': overflowPadding,
       'paddingRight': overflowPadding,
@@ -137,7 +150,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
     });
   });
 
-  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', function (e) {
+  editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', () => {
     resize(editor, oldSize);
   });
 
@@ -152,7 +165,7 @@ const setup = (editor: Editor, oldSize: Cell<number>) => {
   }
 };
 
-export default {
+export {
   setup,
   resize
 };

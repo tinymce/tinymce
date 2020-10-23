@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Templates from '../core/Templates';
-import Dialog from './Dialog';
 import Editor from 'tinymce/core/api/Editor';
+import * as Templates from '../core/Templates';
+import * as Dialog from './Dialog';
 
 const showDialog = function (editor: Editor) {
   return function (templates) {
@@ -19,16 +19,16 @@ const register = function (editor: Editor) {
   editor.ui.registry.addButton('template', {
     icon: 'template',
     tooltip: 'Insert template',
-    onAction: Templates.createTemplateList(editor.settings, showDialog(editor))
+    onAction: Templates.createTemplateList(editor, showDialog(editor))
   });
 
   editor.ui.registry.addMenuItem('template', {
     icon: 'template',
     text: 'Insert template...',
-    onAction: Templates.createTemplateList(editor.settings, showDialog(editor)),
+    onAction: Templates.createTemplateList(editor, showDialog(editor))
   });
 };
 
-export default {
+export {
   register
 };

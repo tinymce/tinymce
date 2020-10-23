@@ -1,4 +1,5 @@
-import { Body } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
@@ -6,18 +7,15 @@ import { Button } from 'ephox/alloy/api/ui/Button';
 import { Form } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
-
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { console } from '@ephox/dom-globals';
-
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
 
-  const body = Body.body();
+  const body = SugarBody.body();
   Attachment.attachSystem(body, gui);
 
   Debugging.registerInspector('inspector-demo', gui);
@@ -36,20 +34,18 @@ export default (): void => {
             tag: 'button',
             innerHtml: 'Button'
           },
-          action () {
+          action() {
             console.log('clicked on a button');
           }
         }),
-        Form.sketch((parts: FormParts) => {
-          return {
-            dom: {
-              tag: 'div'
-            },
-            components: [
-              parts.field('alpha', Input.sketch({ }))
-            ]
-          };
-        })
+        Form.sketch((parts: FormParts) => ({
+          dom: {
+            tag: 'div'
+          },
+          components: [
+            parts.field('alpha', Input.sketch({ }))
+          ]
+        }))
       ]
     }
   );

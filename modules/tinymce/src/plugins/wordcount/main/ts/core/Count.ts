@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import { Words } from '@ephox/polaris';
 import Schema from 'tinymce/core/api/html/Schema';
@@ -13,9 +12,7 @@ import { getText } from './GetText';
 
 export type Counter = (node: Node, schema: Schema) => number;
 
-const strLen = (str: string): number => {
-  return str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
-};
+const strLen = (str: string): number => str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '_').length;
 
 const countWords: Counter = (node: Node, schema: Schema) => {
   const text = getText(node, schema).join('\n');

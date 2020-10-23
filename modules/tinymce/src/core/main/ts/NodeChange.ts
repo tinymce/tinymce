@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Env from './api/Env';
-import RangeCompare from './selection/RangeCompare';
-import Delay from './api/util/Delay';
-import { hasAnyRanges } from './selection/SelectionUtils';
+import DomQuery from './api/dom/DomQuery';
 import Editor from './api/Editor';
+import Env from './api/Env';
+import * as Settings from './api/Settings';
+import Delay from './api/util/Delay';
+import * as RangeCompare from './selection/RangeCompare';
+import { hasAnyRanges } from './selection/SelectionUtils';
 
 /**
  * This class handles the nodechange event dispatching both manual and through selection change events.
@@ -20,9 +22,9 @@ import Editor from './api/Editor';
 
 class NodeChange {
   private readonly editor: Editor;
-  private lastPath = [];
+  private lastPath: DomQuery | [] = [];
 
-  constructor (editor: Editor) {
+  public constructor(editor: Editor) {
     this.editor = editor;
     let lastRng;
     const self = this;
@@ -30,12 +32,10 @@ class NodeChange {
     // Gecko doesn't support the "selectionchange" event
     if (!('onselectionchange' in editor.getDoc())) {
       editor.on('NodeChange click mouseup keyup focus', function (e) {
-        let nativeRng, fakeRng;
-
         // Since DOM Ranges mutate on modification
         // of the DOM we need to clone it's contents
-        nativeRng = editor.selection.getRng();
-        fakeRng = {
+        const nativeRng = editor.selection.getRng();
+        const fakeRng = {
           startContainer: nativeRng.startContainer,
           startOffset: nativeRng.startOffset,
           endContainer: nativeRng.endContainer,
@@ -97,12 +97,12 @@ class NodeChange {
    * @method nodeChanged
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
-  public nodeChanged (args?) {
+  public nodeChanged(args?) {
     const selection = this.editor.selection;
     let node, parents, root;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (this.editor.initialized && selection && !this.editor.settings.disable_nodechange && !this.editor.readonly) {
+    if (this.editor.initialized && selection && !Settings.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
       root = this.editor.getBody();
       node = selection.getStart(true) || root;
@@ -136,10 +136,10 @@ class NodeChange {
    * @private
    * @return {Boolean} True if the element path is the same false if it's not.
    */
-  private isSameElementPath (startElm) {
-    let i, currentPath;
+  private isSameElementPath(startElm) {
+    let i;
 
-    currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
+    const currentPath = this.editor.$(startElm).parentsUntil(this.editor.getBody()).add(startElm);
     if (currentPath.length === this.lastPath.length) {
       for (i = currentPath.length; i >= 0; i--) {
         if (currentPath[i] !== this.lastPath[i]) {

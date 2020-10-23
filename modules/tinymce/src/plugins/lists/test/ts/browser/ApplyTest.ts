@@ -1,13 +1,14 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -625,33 +626,30 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getEnd().nodeName, Env.ie && Env.ie < 9 ? 'LI' : 'EM');
   });
 
-  // Ignore on IE 7, 8 this is a known bug not worth fixing
-  if (!Env.ie || Env.ie > 8) {
-    suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', function (editor) {
-      editor.settings.forced_root_block = false;
+  suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', function (editor) {
+    editor.settings.forced_root_block = false;
 
-      editor.setContent(
-        'a' +
-        '<p>b</p>'
-      );
+    editor.setContent(
+      'a' +
+      '<p>b</p>'
+    );
 
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.getBody().firstChild, 0);
-      rng.setEnd(editor.getBody().lastChild.firstChild, 1);
-      editor.selection.setRng(rng);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    const rng = editor.dom.createRng();
+    rng.setStart(editor.getBody().firstChild, 0);
+    rng.setEnd(editor.getBody().lastChild.firstChild, 1);
+    editor.selection.setRng(rng);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
 
-      LegacyUnit.equal(editor.getContent(),
-        '<ul>' +
-        '<li>a</li>' +
-        '<li>b</li>' +
-        '</ul>'
-      );
+    LegacyUnit.equal(editor.getContent(),
+      '<ul>' +
+      '<li>a</li>' +
+      '<li>b</li>' +
+      '</ul>'
+    );
 
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
-      LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
-    });
-  }
+    LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
+    LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
+  });
 
   suite.test('TestCase-TBA: Lists: Apply UL list to text block line and br line', function (editor) {
     editor.settings.forced_root_block = false;
@@ -961,7 +959,28 @@ UnitTest.asynctest('tinymce.lists.browser.ApplyTest', (success, failure) => {
     LegacyUnit.equal(editor.getBody().innerHTML, '<table><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single P with forced_root_block_attrs', function (editor) {
+    editor.settings.forced_root_block = 'p';
+    editor.settings.forced_root_block_attrs = {
+      'data-editor': '1'
+    };
+
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<p data-editor="1">a</p>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'p', 0);
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+
+    LegacyUnit.equal(editor.getContent(), '<ul><li data-editor="1">a</li></ul>');
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+
+    editor.settings.forced_root_block = 'p';
+    delete editor.settings.forced_root_block_attrs;
+  });
+
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply list tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

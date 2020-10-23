@@ -1,53 +1,41 @@
-import { Cell, Fun, Option } from '@ephox/katamari';
+import { Cell, Optional } from '@ephox/katamari';
+import { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 
-import { BehaviourState, nuState } from '../common/BehaviourState';
-import { FlatgridState } from '../../keying/KeyingModeTypes';
+import { nuState } from '../common/BehaviourState';
 
-const flatgrid = (spec): FlatgridState => {
-  const dimensions = Cell(Option.none());
+interface RowsCols {
+  readonly numRows: number;
+  readonly numColumns: number;
+}
 
-  const setGridSize = (numRows, numColumns) => {
+const flatgrid = (): FlatgridState => {
+  const dimensions = Cell(Optional.none<RowsCols>());
+
+  const setGridSize = (numRows: number, numColumns: number) => {
     dimensions.set(
-      Option.some({
-        numRows: Fun.constant(numRows),
-        numColumns: Fun.constant(numColumns)
-      })
+      Optional.some({ numRows, numColumns })
     );
   };
 
-  const getNumRows = () => {
-    return dimensions.get().map((d) => {
-      return d.numRows();
-    });
-  };
+  const getNumRows = () => dimensions.get().map((d) => d.numRows);
 
-  const getNumColumns = () => {
-    return dimensions.get().map((d) => {
-      return d.numColumns();
-    });
-  };
+  const getNumColumns = () => dimensions.get().map((d) => d.numColumns);
 
   return nuState({
-    readState: () => {
-      return dimensions.get().map((d) => {
-        return {
-          numRows: d.numRows(),
-          numColumns: d.numColumns()
-        }
-      }).getOr({
-        numRows: '?',
-        numColumns: '?'
-      })
-    },
+    readState: () => dimensions.get().map((d) => ({
+      numRows: String(d.numRows),
+      numColumns: String(d.numColumns)
+    })).getOr({
+      numRows: '?',
+      numColumns: '?'
+    }),
     setGridSize,
     getNumRows,
     getNumColumns
-  }) as FlatgridState;
+  });
 };
 
-const init = (spec) => {
-  return spec.state(spec);
-};
+const init = (spec: GeneralKeyingConfig) => spec.state(spec);
 
 export {
   flatgrid,

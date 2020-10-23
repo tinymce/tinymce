@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import JSONRequest from 'tinymce/core/api/util/JSONRequest';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_ok',
-      success (data) {
+      success(data) {
         LegacyUnit.equal(data, 'Hello JSON-RPC');
         done();
       }
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_ok',
-      success (data) {
+      success(data) {
         LegacyUnit.equal(data, 'Hello JSON-RPC');
         done();
       }
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_fail',
-      error (error) {
+      error(error) {
         LegacyUnit.equal(error.code, 42);
         done();
       }
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_fail',
-      error (error) {
+      error(error) {
         LegacyUnit.equal(error.code, 42);
         done();
       }

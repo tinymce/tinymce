@@ -1,6 +1,4 @@
-const resolve = (rest) => {
-  return 'ephox-alloy-position-' + rest;
-};
+const resolve = (rest: string) => 'ephox-alloy-position-' + rest;
 
 export {
   resolve

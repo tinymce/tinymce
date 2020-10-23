@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { window } from '@ephox/dom-globals';
+import { Arr } from '@ephox/katamari';
 
-/*jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
+/* jshint bitwise:false, expr:true, noempty:false, sub:true, eqnull:true, latedef:false, maxlen:255 */
 
 /*eslint-disable */
 
@@ -22,12 +22,11 @@ import { window } from '@ephox/dom-globals';
  * Date: @DATE
  */
 
-/*eslint-enable */
+/* eslint-enable */
 
-/* tslint:disable */
+/* eslint-disable no-bitwise, prefer-const */
 
-let i,
-  support,
+let support,
   Expr,
   getText,
   isXML,
@@ -101,13 +100,13 @@ let i,
     // Operator (capture 2)
     '*([*^$|!~]?=)' + whitespace +
     // "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
-    '*(?:\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)"|(' + identifier + '))|)' + whitespace +
+    `*(?:'((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)"|(` + identifier + '))|)' + whitespace +
     '*\\]',
 
   pseudos = ':(' + identifier + ')(?:\\((' +
     // To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
     // 1. quoted (capture 3; capture 4 or capture 5)
-    '(\'((?:\\\\.|[^\\\\\'])*)\'|"((?:\\\\.|[^\\\\"])*)")|' +
+    `('((?:\\\\.|[^\\\\'])*)'|"((?:\\\\.|[^\\\\"])*)")|` +
     // 2. simple (capture 6)
     '((?:\\\\.|[^\\\\()[\\]]|' + attributes + ')*)|' +
     // 3. anything else (capture 2)
@@ -120,7 +119,7 @@ let i,
   rcomma = new RegExp('^' + whitespace + '*,' + whitespace + '*'),
   rcombinators = new RegExp('^' + whitespace + '*([>+~]|' + whitespace + ')' + whitespace + '*'),
 
-  rattributeQuotes = new RegExp('=' + whitespace + '*([^\\]\'"]*?)' + whitespace + '*\\]', 'g'),
+  rattributeQuotes = new RegExp('=' + whitespace + `*([^\\]'"]*?)` + whitespace + '*\\]', 'g'),
 
   rpseudo = new RegExp(pseudos),
   ridentifier = new RegExp('^' + identifier + '$'),
@@ -176,7 +175,7 @@ try {
   );
   // Support: Android<4.0
   // Detect silently failing push.apply
-  // tslint:disable-next-line:no-unused-expression
+  // eslint-disable-next-line no-unused-expressions
   arr[preferredDoc.childNodes.length].nodeType;
 } catch (e) {
   push = {
@@ -278,7 +277,7 @@ const Sizzle: any = function (selector, context, results, seed) {
         } else {
           context.setAttribute('id', nid);
         }
-        nid = '[id=\'' + nid + '\'] ';
+        nid = `[id='${nid}'] `;
 
         i = groups.length;
         while (i--) {
@@ -341,7 +340,7 @@ function markFunction(fn) {
  * Support testing using an element
  * @param {Function} fn Passed the created div and expects a boolean result
  */
-/*function assert(fn) {
+/* function assert(fn) {
   var div = document.createElement("div");
 
   try {
@@ -542,22 +541,22 @@ setDocument = Sizzle.setDocument = function (node) {
   support.getById = true;
 
   // ID find and filter
-  /*if (support.getById) {*/
+  /* if (support.getById) {*/
   Expr.find.ID = function (id, context) {
-      if (typeof context.getElementById !== strundefined && documentIsHTML) {
-        const m = context.getElementById(id);
-        // Check parentNode to catch when Blackberry 4.6 returns
-        // nodes that are no longer in the document #6963
-        return m && m.parentNode ? [m] : [];
-      }
-    };
+    if (typeof context.getElementById !== strundefined && documentIsHTML) {
+      const m = context.getElementById(id);
+      // Check parentNode to catch when Blackberry 4.6 returns
+      // nodes that are no longer in the document #6963
+      return m && m.parentNode ? [ m ] : [];
+    }
+  };
   Expr.filter.ID = function (id) {
-      const attrId = id.replace(runescape, funescape);
-      return function (elem) {
-        return elem.getAttribute('id') === attrId;
-      };
+    const attrId = id.replace(runescape, funescape);
+    return function (elem) {
+      return elem.getAttribute('id') === attrId;
     };
-  /*} else {
+  };
+  /* } else {
     // Support: IE6/7
     // getElementById is not reliable as a find shortcut
     delete Expr.find["ID"];
@@ -789,8 +788,8 @@ setDocument = Sizzle.setDocument = function (node) {
         i = 0,
         aup = a.parentNode,
         bup = b.parentNode,
-        ap = [a],
-        bp = [b];
+        ap = [ a ],
+        bp = [ b ];
 
       // Parentless nodes are either documents or disconnected
       if (!aup || !bup) {
@@ -846,7 +845,7 @@ Sizzle.matchesSelector = function (elem, expr) {
   }
 
   // Make sure that attribute selectors are quoted
-  expr = expr.replace(rattributeQuotes, '=\'$1\']');
+  expr = expr.replace(rattributeQuotes, `='$1']`);
 
   if (support.matchesSelector && documentIsHTML &&
     (!rbuggyMatches || !rbuggyMatches.test(expr)) &&
@@ -865,7 +864,7 @@ Sizzle.matchesSelector = function (elem, expr) {
     } catch (e) { }
   }
 
-  return Sizzle(expr, document, null, [elem]).length > 0;
+  return Sizzle(expr, document, null, [ elem ]).length > 0;
 };
 
 Sizzle.contains = function (context, elem) {
@@ -990,7 +989,7 @@ Expr = Sizzle.selectors = {
   },
 
   preFilter: {
-    ATTR (match) {
+    ATTR(match) {
       match[1] = match[1].replace(runescape, funescape);
 
       // Move the given value to match[3] whether quoted or unquoted
@@ -1003,7 +1002,7 @@ Expr = Sizzle.selectors = {
       return match.slice(0, 4);
     },
 
-    CHILD (match) {
+    CHILD(match) {
       /* matches from matchExpr["CHILD"]
         1 type (only|nth|...)
         2 what (child|of-type)
@@ -1035,7 +1034,7 @@ Expr = Sizzle.selectors = {
       return match;
     },
 
-    PSEUDO (match) {
+    PSEUDO(match) {
       let excess,
         unquoted = !match[6] && match[2];
 
@@ -1066,7 +1065,7 @@ Expr = Sizzle.selectors = {
 
   filter: {
 
-    TAG (nodeNameSelector) {
+    TAG(nodeNameSelector) {
       const nodeName = nodeNameSelector.replace(runescape, funescape).toLowerCase();
       return nodeNameSelector === '*' ?
         function () { return true; } :
@@ -1075,7 +1074,7 @@ Expr = Sizzle.selectors = {
         };
     },
 
-    CLASS (className) {
+    CLASS(className) {
       let pattern = classCache[className + ' '];
 
       return pattern ||
@@ -1085,7 +1084,7 @@ Expr = Sizzle.selectors = {
         });
     },
 
-    ATTR (name, operator, check) {
+    ATTR(name, operator, check) {
       return function (elem) {
         let result = Sizzle.attr(elem, name);
 
@@ -1109,7 +1108,7 @@ Expr = Sizzle.selectors = {
       };
     },
 
-    CHILD (type, what, argument, first, last) {
+    CHILD(type, what, argument, first, last) {
       const simple = type.slice(0, 3) !== 'nth',
         forward = type.slice(-4) !== 'last',
         ofType = what === 'of-type';
@@ -1145,7 +1144,7 @@ Expr = Sizzle.selectors = {
               return true;
             }
 
-            start = [forward ? parent.firstChild : parent.lastChild];
+            start = [ forward ? parent.firstChild : parent.lastChild ];
 
             // non-xml :nth-child(...) stores cache data on `parent`
             if (forward && useCache) {
@@ -1163,7 +1162,7 @@ Expr = Sizzle.selectors = {
 
                 // When found, cache indexes on `parent` and break
                 if (node.nodeType === 1 && ++diff && node === elem) {
-                  outerCache[type] = [dirruns, nodeIndex, diff];
+                  outerCache[type] = [ dirruns, nodeIndex, diff ];
                   break;
                 }
               }
@@ -1181,7 +1180,7 @@ Expr = Sizzle.selectors = {
                 if ((ofType ? node.nodeName.toLowerCase() === name : node.nodeType === 1) && ++diff) {
                   // Cache the index of each encountered element
                   if (useCache) {
-                    (node[expando] || (node[expando] = {}))[type] = [dirruns, diff];
+                    (node[expando] || (node[expando] = {}))[type] = [ dirruns, diff ];
                   }
 
                   if (node === elem) {
@@ -1198,7 +1197,7 @@ Expr = Sizzle.selectors = {
         };
     },
 
-    PSEUDO (pseudo, argument) {
+    PSEUDO(pseudo, argument) {
       // pseudo-class names are case-insensitive
       // http://www.w3.org/TR/selectors/#pseudo-classes
       // Prioritize by case sensitivity in case custom pseudos are added with uppercase letters
@@ -1216,7 +1215,7 @@ Expr = Sizzle.selectors = {
 
       // But maintain support for old signatures
       if (fn.length > 1) {
-        args = [pseudo, pseudo, '', argument];
+        args = [ pseudo, pseudo, '', argument ];
         return Expr.setFilters.hasOwnProperty(pseudo.toLowerCase()) ?
           markFunction(function (seed, matches) {
             let idx,
@@ -1308,40 +1307,40 @@ Expr = Sizzle.selectors = {
     }),
 
     // Miscellaneous
-    target (elem) {
+    target(elem) {
       const hash = window.location && window.location.hash;
       return hash && hash.slice(1) === elem.id;
     },
 
-    root (elem) {
+    root(elem) {
       return elem === docElem;
     },
 
-    focus (elem) {
+    focus(elem) {
       return elem === document.activeElement && (!document.hasFocus || document.hasFocus()) && !!(elem.type || elem.href || ~elem.tabIndex);
     },
 
     // Boolean properties
-    enabled (elem) {
+    enabled(elem) {
       return elem.disabled === false;
     },
 
-    disabled (elem) {
+    disabled(elem) {
       return elem.disabled === true;
     },
 
-    checked (elem) {
+    checked(elem) {
       // In CSS3, :checked should return both checked and selected elements
       // http://www.w3.org/TR/2011/REC-css3-selectors-20110929/#checked
       const nodeName = elem.nodeName.toLowerCase();
       return (nodeName === 'input' && !!elem.checked) || (nodeName === 'option' && !!elem.selected);
     },
 
-    selected (elem) {
+    selected(elem) {
       // Accessing this property makes selected-by-default
       // options in Safari work properly
       if (elem.parentNode) {
-        // tslint:disable-next-line:no-unused-expression
+        // eslint-disable-next-line no-unused-expressions
         elem.parentNode.selectedIndex;
       }
 
@@ -1349,7 +1348,7 @@ Expr = Sizzle.selectors = {
     },
 
     // Contents
-    empty (elem) {
+    empty(elem) {
       // http://www.w3.org/TR/selectors/#empty-pseudo
       // :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
       //   but not by others (comment: 8; processing instruction: 7; etc.)
@@ -1362,25 +1361,25 @@ Expr = Sizzle.selectors = {
       return true;
     },
 
-    parent (elem) {
+    parent(elem) {
       return !Expr.pseudos.empty(elem);
     },
 
     // Element/input types
-    header (elem) {
+    header(elem) {
       return rheader.test(elem.nodeName);
     },
 
-    input (elem) {
+    input(elem) {
       return rinputs.test(elem.nodeName);
     },
 
-    button (elem) {
+    button(elem) {
       const name = elem.nodeName.toLowerCase();
       return name === 'input' && elem.type === 'button' || name === 'button';
     },
 
-    text (elem) {
+    text(elem) {
       let attr;
       return elem.nodeName.toLowerCase() === 'input' &&
         elem.type === 'text' &&
@@ -1392,15 +1391,15 @@ Expr = Sizzle.selectors = {
 
     // Position-in-collection
     first: createPositionalPseudo(function () {
-      return [0];
+      return [ 0 ];
     }),
 
     last: createPositionalPseudo(function (matchIndexes, length) {
-      return [length - 1];
+      return [ length - 1 ];
     }),
 
     eq: createPositionalPseudo(function (matchIndexes, length, argument) {
-      return [argument < 0 ? argument + length : argument];
+      return [ argument < 0 ? argument + length : argument ];
     }),
 
     even: createPositionalPseudo(function (matchIndexes, length) {
@@ -1440,12 +1439,12 @@ Expr = Sizzle.selectors = {
 Expr.pseudos.nth = Expr.pseudos.eq;
 
 // Add button/input type pseudos
-for (i in { radio: true, checkbox: true, file: true, password: true, image: true }) {
+Arr.each([ 'radio', 'checkbox', 'file', 'password', 'image' ], (i) => {
   Expr.pseudos[i] = createInputPseudo(i);
-}
-for (i in { submit: true, reset: true }) {
+});
+Arr.each([ 'submit', 'reset' ], (i) => {
   Expr.pseudos[i] = createButtonPseudo(i);
-}
+});
 
 // Easy API for creating new setFilters
 function setFilters() { }
@@ -1491,7 +1490,9 @@ tokenize = Sizzle.tokenize = function (selector, parseOnly) {
 
     // Filters
     for (type in Expr.filter) {
-      if (!Expr.filter.hasOwnProperty(type)) continue;
+      if (!Expr.filter.hasOwnProperty(type)) {
+        continue;
+      }
       if ((match = matchExpr[type].exec(soFar)) && (!preFilters[type] ||
         (match = preFilters[type](match)))) {
         matched = match.shift();
@@ -1548,7 +1549,7 @@ function addCombinator(matcher, combinator, base?) {
     // Check against all ancestor/preceding elements
     function (elem, context, xml) {
       let oldCache, outerCache,
-        newCache = [dirruns, doneName];
+        newCache = [ dirruns, doneName ];
 
       // We can't set arbitrary data on XML nodes, so they don't benefit from dir caching
       if (xml) {
@@ -1641,7 +1642,7 @@ function setMatcher(preFilter, selector?, matcher?, postFilter?, postFinder?, po
       preexisting = results.length,
 
       // Get initial elements from seed or context
-      elems = seed || multipleContexts(selector || '*', context.nodeType ? [context] : context, []),
+      elems = seed || multipleContexts(selector || '*', context.nodeType ? [ context ] : context, []),
 
       // Prefilter to get matcher input, preserving a map for seed-results synchronization
       matcherIn = preFilter && (seed || !selector) ?
@@ -1734,16 +1735,16 @@ function matcherFromTokens(tokens) {
     matchAnyContext = addCombinator(function (elem) {
       return indexOf.call(checkContext, elem) > -1;
     }, implicitRelative, true),
-    matchers = [function (elem, context, xml) {
+    matchers = [ function (elem, context, xml) {
       return (!leadingRelative && (xml || context !== outermostContext)) || (
         (checkContext = context).nodeType ?
           matchContext(elem, context, xml) :
           matchAnyContext(elem, context, xml));
-    }];
+    } ];
 
   for (; i < len; i++) {
     if ((matcher = Expr.relative[tokens[i].type])) {
-      matchers = [addCombinator(elementMatcher(matchers), matcher)];
+      matchers = [ addCombinator(elementMatcher(matchers), matcher) ];
     } else {
       matcher = Expr.filter[tokens[i].type].apply(null, tokens[i].matches);
 

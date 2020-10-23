@@ -1,7 +1,7 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene } from 'ephox/boss/api/Gene';
 import { TestUniverse } from 'ephox/boss/api/TestUniverse';
-import Query from 'ephox/boss/mutant/Query';
+import * as Query from 'ephox/boss/mutant/Query';
 
 UnitTest.test('QueryTest', function () {
   const universe = TestUniverse(Gene('1', 'root', [
@@ -50,4 +50,3 @@ UnitTest.test('QueryTest', function () {
   checkNext('1.1.2', '1.1.1');
   checkNext('_nope_', '1.1.4');
 });
-

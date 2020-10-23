@@ -5,30 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 const addToEditor = (editor: Editor) => {
-  editor.ui.registry.addContextToolbar('imageselection', {
-    predicate: (node) => {
-      return node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
-    },
-    items: 'alignleft aligncenter alignright',
-    position: 'node'
-  });
+  const isEditable = (node: Element) => editor.dom.getContentEditableParent(node) !== 'false';
+  const isImage = (node: Element) => node.nodeName === 'IMG' || node.nodeName === 'FIGURE' && /image/i.test(node.className);
+
+  const imageToolbarItems = Settings.getImageToolbarItems(editor);
+  if (imageToolbarItems.trim().length > 0) {
+    editor.ui.registry.addContextToolbar('imageselection', {
+      predicate: isImage,
+      items: imageToolbarItems,
+      position: 'node'
+    });
+  }
 
   const textToolbarItems = Settings.getTextSelectionToolbarItems(editor);
   if (textToolbarItems.trim().length > 0) {
     editor.ui.registry.addContextToolbar('textselection', {
-      predicate: (node) => {
-        return !editor.selection.isCollapsed();
-      },
+      predicate: (node) => !isImage(node) && !editor.selection.isCollapsed() && isEditable(node),
       items: textToolbarItems,
-      position: 'selection'
+      position: 'selection',
+      scope: 'editor'
     });
   }
 };
 
-export default {
+export {
   addToEditor
 };

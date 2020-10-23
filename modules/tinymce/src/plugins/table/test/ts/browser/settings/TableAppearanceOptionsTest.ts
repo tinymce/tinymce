@@ -1,10 +1,10 @@
-import { Assertions, Chain, Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import TableTestUtils from '../../module/test/TableTestUtils';
+import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success, failure) => {
   TablePlugin();
@@ -12,15 +12,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be disabled', [
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [0]),
+        tinyApis.sSelect('table td', [ 0 ]),
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
@@ -41,10 +41,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
 
       Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be enabled', [
         tinyApis.sSetSetting('table_appearance_options', true),
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyApis.sSetContent(tableHtml),
         // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [0]),
+        tinyApis.sSelect('table td', [ 0 ]),
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
@@ -68,6 +68,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
     toolbar: 'table',
     table_appearance_options: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

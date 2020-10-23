@@ -5,22 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  Input,
-  Keying,
-  Memento
-} from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
-import { Id, Option, Result } from '@ephox/katamari';
-
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { renderToolbar } from '../toolbar/CommonToolbar';
+import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento } from '@ephox/alloy';
+import { InlineContent } from '@ephox/bridge';
+import { Id, Optional } from '@ephox/katamari';
+import { ToolbarMode } from '../../api/Settings';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
-const renderContextForm = (ctx: Toolbar.ContextForm, backstage: UiFactoryBackstage) => {
+const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
   // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
   const inputAttributes = ctx.label.fold(
     () => ({ }),
@@ -36,49 +29,51 @@ const renderContextForm = (ctx: Toolbar.ContextForm, backstage: UiFactoryBacksta
       inputBehaviours: Behaviour.derive([
         Keying.config({
           mode: 'special',
-          onEnter: (input) => {
-            return commands.findPrimary(input).map((primary) => {
-              AlloyTriggers.emitExecute(primary);
-              return true;
-            });
-          },
+          onEnter: (input) => commands.findPrimary(input).map((primary) => {
+            AlloyTriggers.emitExecute(primary);
+            return true;
+          }),
           // These two lines need to be tested. They are about left and right bypassing
           // any keyboard handling, and allowing left and right to be processed by the input
           // Maybe this should go in an alloy sketch for Input?
           onLeft: (comp, se) => {
             se.cut();
-            return Option.none();
+            return Optional.none();
           },
           onRight: (comp, se) => {
             se.cut();
-            return Option.none();
+            return Optional.none();
           }
         })
       ])
     })
   );
 
-  const commands = generate(memInput, ctx.commands, backstage.shared.providers);
+  const commands = generate(memInput, ctx.commands, providers);
 
-  return renderToolbar({
-    uid: Id.generate('context-toolbar'),
-    initGroups: [
-      {
-        title: Option.none(),
-        items: [ memInput.asSpec() ]
-      },
-      {
-        title: Option.none(),
-        items: commands.asSpecs() as AlloySpec[]
-      }
-    ],
-    onEscape: Option.none,
-    cyclicKeying: true,
-    backstage,
-    getSink: () => Result.error('')
-  });
+  return [
+    {
+      title: Optional.none(),
+      items: [ memInput.asSpec() ]
+    },
+    {
+      title: Optional.none(),
+      items: commands.asSpecs() as AlloySpec[]
+    }
+  ];
 };
 
+
+const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
+  type: toolbarType,
+  uid: Id.generate('context-toolbar'),
+  initGroups: buildInitGroups(ctx, providers),
+  onEscape: Optional.none,
+  cyclicKeying: true,
+  providers
+});
+
 export const ContextForm = {
-  renderContextForm
+  renderContextForm,
+  buildInitGroups
 };

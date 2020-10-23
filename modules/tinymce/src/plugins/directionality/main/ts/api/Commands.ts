@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Direction from '../core/Direction';
+import * as Direction from '../core/Direction';
 
 const register = function (editor) {
   editor.addCommand('mceDirectionLTR', function () {
@@ -17,6 +17,6 @@ const register = function (editor) {
   });
 };
 
-export default {
+export {
   register
 };

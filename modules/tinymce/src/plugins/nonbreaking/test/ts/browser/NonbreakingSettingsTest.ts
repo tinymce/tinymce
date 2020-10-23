@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Settings from 'tinymce/plugins/nonbreaking/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import * as Settings from 'tinymce/plugins/nonbreaking/api/Settings';
 
 UnitTest.test('browser.tinymce.plugins.nonbreaking.SettingsTest', function () {
   Assertions.assertEq('TestCase-TBA: NonBreaking: Should be 0 as default', 0, Settings.getKeyboardSpaces(new Editor('x', {}, EditorManager)));

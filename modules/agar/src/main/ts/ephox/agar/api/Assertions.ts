@@ -1,91 +1,86 @@
-import { Obj, Option } from '@ephox/katamari';
-import { Compare, Element } from '@ephox/sugar';
+import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
+import { Obj, Optional } from '@ephox/katamari';
+import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
-import * as Truncate from '../alien/Truncate';
-import { StructAssert, elementQueue } from '../assertions/ApproxStructures';
+import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
 import * as ApproxStructure from './ApproxStructure';
 import { Chain } from './Chain';
 import * as Logger from './Logger';
-import { assertEq } from './RawAssertions';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
-const toStep = function <U extends any[]> (method: (...args: U) => void) {
-  return function <T> (...args: U) {
-    return Step.sync<T>(function () {
-      method.apply(undefined, args);
-    });
-  };
-};
+const toStep = <U extends any[]>(method: (...args: U) => void) =>
+  <T>(...args: U) => Step.sync<T>(() => {
+    method.apply(undefined, args);
+  });
 
-const toChain = function <B,C> (method: (label: string, expected: B, actual: C) => void) {
-  return function (label: string, expected: B) {
-    return Chain.op<C>(function(actual: C) {
+const toChain = <B, C>(method: (label: TestLabel, expected: B, actual: C) => void) =>
+  (label: string, expected: B): Chain<C, C> =>
+    Chain.op<C>((actual: C) => {
       method.call(undefined, label, expected, actual);
     });
+
+const textError = (label: string, expected: string, actual: string): UnitTest.HtmlDiffError => {
+  const err: Partial<UnitTest.HtmlDiffError> = new Error(label);
+  err.diff = {
+    expected,
+    actual,
+    comparison: Differ.htmlDiff(expected, actual)
   };
+  err.label = label;
+  err.name = 'HtmlAssertion';
+
+  return err as UnitTest.HtmlDiffError;
 };
 
-// Note, this requires changes to tunic
-const textError = function (label: string, expected: string, actual: string) {
-  const err = new Error(label);
-  return ({
-    diff: {
-      expected: expected,
-      actual: actual,
-      comparison: Differ.htmlDiff(expected, actual)
-    },
-    label: label,
-    stack: err.stack,
-    name: 'HtmlAssertion',
-    message: err.message
-  });
+const assertHtml = (label: TestLabel, expected: string, actual: string): void => {
+  if (expected !== actual) {
+    throw textError(TestLabel.asString(label), expected, actual);
+  }
 };
 
-const assertHtml = function (label: string, expected: string, actual: string) {
-  if (expected !== actual) throw textError(label, expected, actual);
-};
-
-const assertStructure = function (label: string, expected: StructAssert, container: Element) {
-  Logger.sync(label, function () {
+const assertStructure = (label: TestLabel, expected: StructAssert, container: SugarElement<any>): void => {
+  Logger.sync(label, () => {
     if (expected.type === 'advanced') {
-      expected.doAssert(elementQueue([container], Option.none()));
+      expected.doAssert(elementQueue([ container ], Optional.none()));
     } else {
       expected.doAssert(container);
     }
   });
 };
 
-const assertHtmlStructure = function (label: string, expected: string, actual: string) {
-  assertStructure(label, ApproxStructure.fromHtml(expected), Element.fromHtml(actual));
+const assertHtmlStructure = (label: TestLabel, expected: string, actual: string): void => {
+  assertStructure(label, ApproxStructure.fromHtml(expected), SugarElement.fromHtml(actual));
 };
 
-const assertHtmlStructure2 = function (label: string, expected: string, actual: Element) {
+const assertHtmlStructure2 = (label: TestLabel, expected: string, actual: SugarElement<any>): void => {
   assertStructure(label, ApproxStructure.fromHtml(expected), actual);
 };
 
-const assertPresence = function (label: string, expected: Record<string, number>, container: Element) {
-  Obj.each(expected, function (num: number, selector: string) {
+const assertPresence = (label: TestLabel, expected: Record<string, number>, container: SugarElement<any>): void => {
+  Obj.each(expected, (num: number, selector: string) => {
     const actual = UiFinder.findAllIn(container, selector).length;
-    assertEq('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ' + label, num, actual);
+    Assert.eq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
 
-const assertDomEq = function (label: string, expected: Element, actual: Element) {
-  assertEq(
-    label + '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual),
+const assertEq = Assert.eq;
+
+const assertDomEq = (label: TestLabel, expected: SugarElement<any>, actual: SugarElement<any>): void => {
+  Assert.eq(
+    TestLabel.concat(label, () => '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)),
     true,
     Compare.eq(expected, actual)
   );
 };
 
-const sAssertEq: <T, V> (label: string, expected: V, actual: V) => Step<T, T> = toStep(assertEq);
+const sAssertEq: <T, V> (label: TestLabel, expected: V, actual: V) => Step<T, T> = toStep(Assert.eq);
 const sAssertHtml = toStep(assertHtml);
 const sAssertPresence = toStep(assertPresence);
 const sAssertStructure = toStep(assertStructure);
 
-const cAssertEq: <T> (label: string, expected: T) => Chain<T,T> = toChain(assertEq);
+const cAssertEq: <T> (label: string, expected: T) => Chain<T, T> = toChain(Assert.eq);
 const cAssertDomEq = toChain(assertDomEq);
 const cAssertHtml = toChain(assertHtml);
 const cAssertPresence = toChain(assertPresence);

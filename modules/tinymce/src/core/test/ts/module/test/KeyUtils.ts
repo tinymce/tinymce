@@ -10,7 +10,7 @@ const charCodeToKeyCode = function (charCode) {
 };
 
 const type = function (editor, chr) {
-  let keyCode, charCode, evt, startElm, rng, offset;
+  let keyCode, charCode, evt, rng, offset;
 
   const fakeEvent = function (target, type, evt) {
     editor.dom.fire(target, type, evt);
@@ -46,7 +46,7 @@ const type = function (editor, chr) {
 
   evt = evt || { keyCode, charCode };
 
-  startElm = editor.selection.getStart();
+  const startElm = editor.selection.getStart();
   fakeEvent(startElm, 'keydown', evt);
   fakeEvent(startElm, 'keypress', evt);
 
@@ -90,7 +90,7 @@ const type = function (editor, chr) {
         editor.getDoc().execCommand('Delete', false, null);
       }
     } else if (typeof chr === 'string') {
-      rng = editor.selection.getRng(true);
+      rng = editor.selection.getRng();
 
       if (rng.startContainer.nodeType === 3 && rng.collapsed) {
         rng.startContainer.insertData(rng.startOffset, chr);
@@ -107,6 +107,6 @@ const type = function (editor, chr) {
   fakeEvent(startElm, 'keyup', evt);
 };
 
-export default {
+export {
   type
 };

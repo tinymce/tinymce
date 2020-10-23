@@ -1,75 +1,70 @@
-import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, RawAssertions, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
+
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Slider } from 'ephox/alloy/api/ui/Slider';
 import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
-import { Element } from '@ephox/sugar';
 
 UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, failure) => {
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.skip()) { return success(); }
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Slider.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'horizontal-slider-test' ],
-          styles: {
-            border: '1px solid black',
-            height: '20px',
-            display: 'flex'
-          }
-        },
-        model: {
-          mode: 'x',
-          minX: 50,
-          getInitialValue: Fun.constant({x: Fun.constant(200)}),
-          maxX: 200
-        },
-        stepSize: 10,
-        snapToGrid: true,
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Slider.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'horizontal-slider-test' ],
+        styles: {
+          border: '1px solid black',
+          height: '20px',
+          display: 'flex'
+        }
+      },
+      model: {
+        mode: 'x',
+        minX: 50,
+        getInitialValue: Fun.constant({ x: 200 }),
+        maxX: 200
+      },
+      stepSize: 10,
+      snapToGrid: true,
 
-        components: [
-          Slider.parts()['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
-            width: '40px',
-            height: '20px',
-            background: 'black'
-          } } }),
-          Slider.parts().spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
-            height: '150px',
-            background: 'green'
-          } } }),
-          Slider.parts()['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
-            width: '40px',
-            height: '20px',
-            background: 'white'
-          } } }),
-          Slider.parts().thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
-            width: '20px',
-            height: '20px',
-            background: 'gray'
-          } } })
-        ]
-      })
-    );
-  }, (doc, body, gui, component, store) => {
+      components: [
+        Slider.parts['left-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-left-edge' ], styles: {
+          width: '40px',
+          height: '20px',
+          background: 'black'
+        }}}),
+        Slider.parts.spectrum({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-spectrum' ], styles: {
+          height: '150px',
+          background: 'green'
+        }}}),
+        Slider.parts['right-edge']({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-right-edge' ], styles: {
+          width: '40px',
+          height: '20px',
+          background: 'white'
+        }}}),
+        Slider.parts.thumb({ dom: { tag: 'div', classes: [ 'horizontal-slider-test-thumb' ], styles: {
+          width: '20px',
+          height: '20px',
+          background: 'gray'
+        }}})
+      ]
+    })
+  ), (doc, _body, _gui, component, _store) => {
 
-    const cGetBounds = Chain.mapper((elem: Element) => {
-      return elem.dom().getBoundingClientRect();
-    });
+    const cGetBounds = Chain.mapper((elem: SugarElement) => elem.dom.getBoundingClientRect());
 
-    const cGetComponent = Chain.binder((elem: Element) => {
-      return component.getSystem().getByDom(elem);
-    });
+    const cGetComponent = Chain.binder((elem: SugarElement) => component.getSystem().getByDom(elem));
 
     const cGetParts = NamedChain.asChain([
-      NamedChain.writeValue('slider', component.element()),
+      NamedChain.writeValue('slider', component.element),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-thumb'), 'thumb'),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-left-edge'), 'ledge'),
       NamedChain.direct('slider', UiFinder.cFindIn('.horizontal-slider-test-right-edge'), 'redge'),
@@ -90,7 +85,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     ]);
 
     const cCheckThumbAtLeft = Chain.op((parts: any) => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Left-Edge: (' + parts.ledgeRect.left + '->' + parts.ledgeRect.right + ')',
         true,
@@ -99,7 +94,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     });
 
     const cCheckThumbAtRight = Chain.op((parts: any) => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Thumb (' + parts.thumbRect.left + '->' + parts.thumbRect.right +
           '), Right-Edge: (' + parts.redgeRect.left + '->' + parts.redgeRect.right + ')',
         true,
@@ -108,29 +103,25 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
     });
 
     const cCheckThumbPastRight = Chain.op((parts: any) => {
-      RawAssertions.assertEq('Checking thumb past end of spectrum', true,
+      Assert.eq('Checking thumb past end of spectrum', true,
         parts.thumbRect.left > parts.spectrumRect.right
       );
     });
 
     const cCheckThumbBeforeLeft = Chain.op((parts: any) => {
-      RawAssertions.assertEq('Checking thumb before start of spectrum', true,
+      Assert.eq('Checking thumb before start of spectrum', true,
         parts.thumbRect.right < parts.spectrumRect.left
       );
     });
 
-    const cCheckValue = (expected) => {
-      return Chain.op((parts: any) => {
-        const v = Representing.getValue(parts.sliderComp);
-        RawAssertions.assertEq('Checking slider value', expected, v.x());
-      });
-    };
+    const cCheckValue = (expected: number) => Chain.op((parts: any) => {
+      const v = Representing.getValue(parts.sliderComp);
+      Assert.eq('Checking slider value', expected, v.x());
+    });
 
-    const sAssertValue = (label, expected) => {
-      return Logger.t(label, Step.sync(() => {
-        RawAssertions.assertEq(label, expected, Representing.getValue(component).x());
-      }));
-    };
+    const sAssertValue = (label: string, expected: number) => Logger.t(label, Step.sync(() => {
+      Assert.eq(label, expected, Representing.getValue(component).x());
+    }));
 
     return [
       Logger.t(
@@ -141,9 +132,7 @@ UnitTest.asynctest('Browser Test: ui.slider.HorizontalSliderTest', (success, fai
             cGetParts,
             cCheckThumbAtRight,
             cCheckValue(200)
-          ]),
-          100,
-          1000
+          ])
         )
       ),
 

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 
 const stateToggle = function (editor: Editor) {
   return function (api) {
@@ -39,6 +39,6 @@ const register = function (editor: Editor) {
   editor.addShortcut('Meta+S', '', 'mceSave');
 };
 
-export default {
+export {
   register
 };

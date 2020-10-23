@@ -5,39 +5,46 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option } from '@ephox/katamari';
-import EditorView from '../EditorView';
+import { Arr, Optional } from '@ephox/katamari';
+import { Focus, SugarElement } from '@ephox/sugar';
+import * as EditorView from '../EditorView';
 import { NotificationManagerImpl } from '../ui/NotificationManagerImpl';
 import Editor from './Editor';
+import * as Settings from './Settings';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
-  open (spec: NotificationSpec, closeCallback?: () => void): Notification;
-  close <T extends Notification>(notification: T): void;
-  reposition <T extends Notification>(notifications: T[]): void;
-  getArgs <T extends Notification>(notification: T): NotificationSpec;
+  open (spec: NotificationSpec, closeCallback?: () => void): NotificationApi;
+  close <T extends NotificationApi>(notification: T): void;
+  reposition <T extends NotificationApi>(notifications: T[]): void;
+  getArgs <T extends NotificationApi>(notification: T): NotificationSpec;
 }
 
 export interface NotificationSpec {
-  type: 'info' | 'warn' | 'error' | 'success';
+  type?: 'info' | 'warning' | 'error' | 'success';
   text: string;
   icon?: string;
   progressBar?: boolean;
   timeout?: number;
+  closeButton?: boolean;
 }
 
-export interface Notification {
+export interface NotificationApi {
   close: () => void;
   progressBar: {
     value: (percent: number) => void;
   };
   text: (text: string) => void;
+  moveTo: (x: number, y: number) => void;
+  moveRel: (element: Element, rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc' | 'banner') => void;
+  getEl: () => HTMLElement;
+  settings: NotificationSpec;
 }
 
 interface NotificationManager {
-  open: (spec: NotificationSpec) => Notification;
+  open: (spec: NotificationSpec) => NotificationApi;
   close: () => void;
-  getNotifications: () => Notification[];
+  getNotifications: () => NotificationApi[];
 }
 
 /**
@@ -53,15 +60,15 @@ interface NotificationManager {
  */
 
 function NotificationManager(editor: Editor): NotificationManager {
-  const notifications: Notification[] = [];
+  const notifications: NotificationApi[] = [];
 
   const getImplementation = function (): NotificationManagerImpl {
     const theme = editor.theme;
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function (): Option<Notification> {
-    return Option.from(notifications[0]);
+  const getTopNotification = function (): Optional<NotificationApi> {
+    return Optional.from(notifications[0]);
   };
 
   const isEqual = function (a: NotificationSpec, b: NotificationSpec) {
@@ -74,11 +81,11 @@ function NotificationManager(editor: Editor): NotificationManager {
     }
   };
 
-  const addNotification = function (notification: Notification) {
+  const addNotification = function (notification: NotificationApi) {
     notifications.push(notification);
   };
 
-  const closeNotification = function (notification: Notification) {
+  const closeNotification = function (notification: NotificationApi) {
     Arr.findIndex(notifications, function (otherNotification) {
       return otherNotification === notification;
     }).each(function (index) {
@@ -102,6 +109,12 @@ function NotificationManager(editor: Editor): NotificationManager {
       const notification = getImplementation().open(spec, function () {
         closeNotification(notification);
         reposition();
+        // Move focus back to editor when the last notification is closed,
+        // otherwise focus the top notification
+        getTopNotification().fold(
+          () => editor.focus(),
+          (top) => Focus.focus(SugarElement.fromDom(top.getEl()))
+        );
       });
 
       addNotification(notification);
@@ -118,19 +131,19 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const getNotifications = function (): Notification[] {
+  const getNotifications = function (): NotificationApi[] {
     return notifications;
   };
 
   const registerEvents = function (editor: Editor) {
     editor.on('SkinLoaded', function () {
-      const serviceMessage = editor.settings.service_message;
+      const serviceMessage = Settings.getServiceMessage(editor);
 
       if (serviceMessage) {
         open({
           text: serviceMessage,
-          type: 'warn',
-          timeout: 0,
+          type: 'warning',
+          timeout: 0
         });
       }
     });
@@ -155,7 +168,9 @@ function NotificationManager(editor: Editor): NotificationManager {
      * Opens a new notification.
      *
      * @method open
-     * @param {Object} args Optional name/value settings collection contains things like timeout/color/message etc.
+     * @param {Object} args A <code>name: value</code> collection containing settings such as: <code>timeout</code>, <code>type</code>, and message (<code>text</code>).
+     * <br /><br />
+     * For information on the available settings, see: <a href="https://www.tiny.cloud/docs/advanced/creating-custom-notifications/">Create custom notifications</a>.
      */
     open,
 

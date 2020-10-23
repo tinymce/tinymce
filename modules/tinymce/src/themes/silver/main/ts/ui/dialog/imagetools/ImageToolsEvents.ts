@@ -5,8 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Id, Fun } from '@ephox/katamari';
+import { CustomEvent } from '@ephox/alloy';
+import { ImageResult } from '@ephox/imagetools';
+import { Fun, Id, Optional } from '@ephox/katamari';
 import { formActionEvent } from '../../general/FormEvents';
+
+interface WithDirection {
+  readonly direction: number;
+}
+
+interface WithSwap {
+  readonly swap: () => void;
+}
+
+interface WithTransform {
+  readonly transform: (ir: ImageResult) => Promise<ImageResult>;
+}
+
+export interface ImageToolsZoomEvent extends CustomEvent, WithDirection { }
+export interface ImageToolsUndoEvent extends CustomEvent, WithDirection { }
+export interface ImageToolsRedoEvent extends CustomEvent, WithDirection { }
+export interface ImageToolsApplyEvent extends CustomEvent, WithSwap { }
+export interface ImageToolsBackEvent extends CustomEvent { }
+export interface ImageToolsSwapEvent extends CustomEvent, WithSwap {
+  readonly transform: Optional<(ir: ImageResult) => Promise<ImageResult>>;
+}
+export interface ImageToolsTransformEvent extends CustomEvent, WithTransform { }
+export interface ImageToolsTransformApplyEvent extends CustomEvent, WithSwap, WithTransform { }
 
 const undo = Fun.constant(Id.generate('undo'));
 const redo = Fun.constant(Id.generate('redo'));

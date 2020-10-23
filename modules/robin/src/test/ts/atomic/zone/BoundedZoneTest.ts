@@ -1,16 +1,16 @@
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
-import PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
+import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, assertZones, RawZone } from 'ephox/robin/test/ZoneObjects';
-import TextZones from 'ephox/robin/zone/TextZones';
+import * as TextZones from 'ephox/robin/zone/TextZones';
 
 UnitTest.test('BoundedZoneTest', function () {
   const check = function (universe: TestUniverse, expected: RawZone[], id: string) {
     const item = universe.find(universe.get(), id).getOrDie();
     const actual = TextZones.fromBounded(universe, item, item, 'en', ZoneViewports.anything());
-    assertZones('Starting from: ' + id, universe, expected, actual.zones());
+    assertZones('Starting from: ' + id, universe, expected, actual.zones);
   };
 
   const doc1 = TestUniverse(Gene('root', 'root', [
@@ -47,19 +47,19 @@ UnitTest.test('BoundedZoneTest', function () {
 
   check(doc1, [
 
-    { lang: 'fr', elements: ['a'], words: ['one'] },
-    { lang: 'fr', elements: ['b', 'c'], words: ['two'] },
+    { lang: 'fr', elements: [ 'a' ], words: [ 'one' ] },
+    { lang: 'fr', elements: [ 'b', 'c' ], words: [ 'two' ] },
 
-    { lang: 'en', elements: ['en-a'], words: ['one'] },
-    { lang: 'en', elements: ['en-b', 'en-c'], words: ['two'] },
+    { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+    { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
 
-    { lang: 'de', elements: ['de-a', 'de-b'], words: ['die'] },
+    { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
 
-    { lang: 'en', elements: ['en-d', 'en-e'], words: ['butter'] },
+    { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
 
-    { lang: 'de', elements: ['de-c'], words: ['der', 'Hund'] },
+    { lang: 'de', elements: [ 'de-c' ], words: [ 'der', 'Hund' ] },
 
-    { lang: 'en', elements: ['en-f', 'en-g'], words: ['another'] }
+    { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
 
   ], 'div1');
 
@@ -102,14 +102,14 @@ UnitTest.test('BoundedZoneTest', function () {
 
   check(doc2, [
 
-    { lang: 'en', elements: ['en-a'], words: ['one'] },
-    { lang: 'en', elements: ['en-b', 'en-c'], words: ['two'] },
-    { lang: 'de', elements: ['de-a', 'de-b'], words: ['die'] },
-    { lang: 'fr', elements: ['fr-a'], words: ['e'] },
-    { lang: 'de', elements: ['de-c', 'de-c-1'], words: ['undinside'] },
-    { lang: 'en', elements: ['en-d', 'en-e'], words: ['butter'] },
-    { lang: 'de', elements: ['de-d'], words: [] },
-    { lang: 'en', elements: ['en-f', 'en-g'], words: ['another'] }
+    { lang: 'en', elements: [ 'en-a' ], words: [ 'one' ] },
+    { lang: 'en', elements: [ 'en-b', 'en-c' ], words: [ 'two' ] },
+    { lang: 'de', elements: [ 'de-a', 'de-b' ], words: [ 'die' ] },
+    { lang: 'fr', elements: [ 'fr-a' ], words: [ 'e' ] },
+    { lang: 'de', elements: [ 'de-c', 'de-c-1' ], words: [ 'undinside' ] },
+    { lang: 'en', elements: [ 'en-d', 'en-e' ], words: [ 'butter' ] },
+    { lang: 'de', elements: [ 'de-d' ], words: [] },
+    { lang: 'en', elements: [ 'en-f', 'en-g' ], words: [ 'another' ] }
 
   ], 'div1');
 
@@ -119,7 +119,7 @@ UnitTest.test('BoundedZoneTest', function () {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZones.fromBounded(doc1, item1, item2, 'en', ZoneViewports.anything());
-    assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones());
+    assertProps('Testing zones for ' + info.startId + '->' + info.finishId, doc1, actual.zones);
     return true;
   });
 });

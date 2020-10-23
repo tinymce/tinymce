@@ -1,5 +1,6 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Cell } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
@@ -8,6 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest(
   'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', (success, failure) => {
     const suite = LegacyUnit.createSuite();
+    const formatsCell = Cell<any>({});
 
     Plugin();
     Theme();
@@ -117,13 +119,34 @@ UnitTest.asynctest(
       LegacyUnit.equal(editor.getContent(), '<p>text</p>');
     });
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    suite.test('TestCase-TINY-4741: LegacyOutput: Convert bold to span if styling attributes are present on format removal', (editor) => {
+      editor.setContent('<p><b class="abc" style="color: red; font-size: 20px;" data-test="2">text</b></p>');
+      LegacyUnit.setSelection(editor, 'b', 0, 'b', 4);
+      editor.execCommand('bold');
+      LegacyUnit.equal(editor.getContent(), '<p><span class="abc" style="color: red; font-size: 20px;">text</span></p>');
+    });
+
+    suite.test('TestCase-TBA: LegacyOutput: Formats registered before loading initial content', () => {
+      const formats = formatsCell.get();
+      LegacyUnit.equal(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+      LegacyUnit.equal(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+      LegacyUnit.equal(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+      LegacyUnit.equal(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
+    });
+
+    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
       Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
     }, {
       plugins: 'legacyoutput',
       indent: false,
       base_url: '/project/tinymce/js/tinymce',
-      font_formats: 'Arial=arial,helvetica,sans-serif;'
+      font_formats: 'Arial=arial,helvetica,sans-serif;',
+      setup: (editor) => {
+        // Store the formats on `PostRender`, which is fired before the initial editor content is loaded
+        editor.on('PostRender', () => {
+          formatsCell.set({ ...editor.formatter.get() });
+        });
+      }
     }, success, failure);
   }
 );

@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Env from 'tinymce/core/api/Env';
-import Settings from '../api/Settings';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import * as Settings from '../api/Settings';
 
 const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
   return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
@@ -57,8 +57,8 @@ const setEnd = function (rng, container, offset) {
   }
 };
 
-const parseCurrentLine = function (editor, endOffset, delimiter) {
-  let rng, end, start, endContainer, bookmark, text, matches, prev, len, rngText;
+const parseCurrentLine = function (editor: Editor, endOffset, delimiter) {
+  let end, endContainer, bookmark, text, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
 
@@ -69,7 +69,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
 
   // We need at least five characters to form a URL,
   // hence, at minimum, five characters from the beginning of the line.
-  rng = editor.selection.getRng(true).cloneRange();
+  const rng = editor.selection.getRng().cloneRange();
   if (rng.startOffset < 5) {
     // During testing, the caret is placed between two text nodes.
     // The previous text node contains the URL.
@@ -115,7 +115,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     }
   }
 
-  start = end;
+  const start = end;
 
   do {
     // Move the selection one character backwards.
@@ -146,11 +146,13 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
   }
 
   text = rng.toString().trim();
-  matches = text.match(autoLinkPattern);
+  const matches = text.match(autoLinkPattern);
+
+  const protocol = Settings.getDefaultLinkProtocol(editor);
 
   if (matches) {
     if (matches[1] === 'www.') {
-      matches[1] = 'http://www.';
+      matches[1] = protocol + '://www.';
     } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
       matches[1] = 'mailto:' + matches[1];
     }
@@ -160,7 +162,7 @@ const parseCurrentLine = function (editor, endOffset, delimiter) {
     editor.selection.setRng(rng);
     editor.execCommand('createlink', false, matches[1] + matches[2]);
 
-    if (defaultLinkTarget) {
+    if (defaultLinkTarget !== false) {
       editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
     }
 
@@ -179,7 +181,7 @@ const setup = function (editor: Editor) {
   });
 
   // Internet Explorer has built-in automatic linking for most cases
-  if (Env.ie) {
+  if (Env.browser.isIE()) {
     editor.on('focus', function () {
       if (!autoUrlDetectState) {
         autoUrlDetectState = true;
@@ -208,6 +210,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

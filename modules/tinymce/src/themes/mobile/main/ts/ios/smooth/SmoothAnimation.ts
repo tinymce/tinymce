@@ -5,16 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 
 const adjust = function (value, destination, amount) {
   if (Math.abs(value - destination) <= amount) {
-    return Option.none();
+    return Optional.none();
   } else if (value < destination) {
-    return Option.some(value + amount);
+    return Optional.some(value + amount);
   } else {
-    return Option.some(value - amount);
+    return Optional.some(value - amount);
   }
 };
 
@@ -43,7 +43,7 @@ const create = function () {
         finish(destination);
       }, function (s) {
         increment(s, abort);
-        if (! finished) {
+        if (!finished) {
           const newValue = getCurrent();
           // Jump to the end if the increment is no longer working.
           if (newValue !== s || Math.abs(newValue - destination) > Math.abs(value - destination)) {
@@ -60,7 +60,7 @@ const create = function () {
   };
 };
 
-export default {
+export {
   create,
   adjust
 };

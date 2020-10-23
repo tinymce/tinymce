@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
+import { DomQueryConstructor } from './dom/DomQuery';
 import ScriptLoader from './dom/ScriptLoader';
-import Tools from './util/Tools';
 import Editor from './Editor';
 import I18n from './util/I18n';
 
@@ -77,33 +77,41 @@ import I18n from './util/I18n';
  * });
  */
 
-const each = Tools.each;
+export interface UrlObject { prefix: string; resource: string; suffix: string }
 
-export interface UrlObject { prefix: string; resource: string; suffix: string; }
+type WaitState = 'added' | 'loaded';
 
-export type AddOnCallback<T> = (editor: Editor, url: string) => T;
+// This is a work around as constructors will only work with classes,
+// but our plugins are all functions.
+type AddOnCallback<T> = (editor: Editor, url: string, $?: DomQueryConstructor) => void | T;
+export type AddOnConstructor<T> = new (editor: Editor, url: string, $?: DomQueryConstructor) => T;
 
 interface AddOnManager<T> {
-  items: AddOnCallback<T>[];
+  items: AddOnConstructor<T>[];
   urls: Record<string, string>;
-  lookup: {};
-  _listeners: { name: string, callback: () => void }[];
-  get (name: string): any;
-  dependencies (name: string): any;
+  lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
+  _listeners: { name: string; state: WaitState; callback: () => void }[];
+  get (name: string): AddOnConstructor<T>;
+  dependencies (name: string): string[];
   requireLangPack (name: string, languages: string): void;
-  add (id: string, addOn: AddOnCallback<T>, dependencies?: any): AddOnCallback<T>;
+  add (id: string, addOn: AddOnCallback<T>, dependencies?: string[]): AddOnConstructor<T>;
   remove (name: string): void;
   createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
   addComponents (pluginName: string, scripts: string[]): void;
-  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void): void;
-  waitFor (name: string, callback: () => void): void;
+  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void): void;
+  waitFor (name: string, callback: () => void, state?: WaitState): void;
 }
 
 function AddOnManager<T>(): AddOnManager<T> {
-  const items = [];
+  const items: AddOnConstructor<T>[] = [];
   const urls: Record<string, string> = {};
-  const lookup = {};
-  let _listeners = [];
+  const lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }> = {};
+  const _listeners: { name: string; state: WaitState; callback: () => void }[] = [];
+
+  const runListeners = (name: string, state: WaitState) => {
+    const matchedListeners = Arr.filter(_listeners, (listener) => listener.name === name && listener.state === state);
+    Arr.each(matchedListeners, (listener) => listener.callback());
+  };
 
   const get = (name: string) => {
     if (lookup[name]) {
@@ -124,38 +132,28 @@ function AddOnManager<T>(): AddOnManager<T> {
   };
 
   const requireLangPack = (name: string, languages: string) => {
-    let language = I18n.getCode();
+    if (AddOnManager.languageLoad !== false) {
+      waitFor(name, () => {
+        const language = I18n.getCode();
+        const wrappedLanguages = ',' + (languages || '') + ',';
 
-    if (language && AddOnManager.languageLoad !== false) {
-      if (languages) {
-        languages = ',' + languages + ',';
-
-        // Load short form sv.js or long form sv_SE.js
-        if (languages.indexOf(',' + language.substr(0, 2) + ',') !== -1) {
-          language = language.substr(0, 2);
-        } else if (languages.indexOf(',' + language + ',') === -1) {
+        if (!language || languages && wrappedLanguages.indexOf(',' + language + ',') === -1) {
           return;
         }
-      }
 
-      ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
+        ScriptLoader.ScriptLoader.add(urls[ name ] + '/langs/' + language + '.js');
+      }, 'loaded');
     }
   };
 
-  const add = (id: string, addOn: (editor: Editor, url: string) => any, dependencies?) => {
-    items.push(addOn);
-    lookup[id] = { instance: addOn, dependencies };
-    const result = Arr.partition(_listeners, function (listener) {
-      return listener.name === id;
-    });
+  const add = (id: string, addOn: AddOnCallback<T>, dependencies?: string[]) => {
+    const addOnConstructor = addOn as unknown as AddOnConstructor<T>;
+    items.push(addOnConstructor);
+    lookup[id] = { instance: addOnConstructor, dependencies };
 
-    _listeners = result.fail;
+    runListeners(id, 'added');
 
-    each(result.pass, function (listener) {
-      listener.callback();
-    });
-
-    return addOn;
+    return addOnConstructor;
   };
 
   const remove = (name: string) => {
@@ -176,7 +174,7 @@ function AddOnManager<T>(): AddOnManager<T> {
   const addComponents = (pluginName: string, scripts: string[]) => {
     const pluginUrl = this.urls[pluginName];
 
-    each(scripts, function (script) {
+    Arr.each(scripts, function (script) {
       ScriptLoader.ScriptLoader.add(pluginUrl + '/' + script);
     });
   };
@@ -184,7 +182,7 @@ function AddOnManager<T>(): AddOnManager<T> {
   const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) {
     const deps = dependencies(name);
 
-    each(deps, function (dep) {
+    Arr.each(deps, function (dep) {
       const newUrl = createUrl(addOnUrl, dep);
 
       load(newUrl.resource, newUrl, undefined, undefined);
@@ -199,7 +197,7 @@ function AddOnManager<T>(): AddOnManager<T> {
     }
   };
 
-  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: {}, failure?: () => void) => {
+  const load = (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => {
     if (urls[name]) {
       return;
     }
@@ -212,18 +210,25 @@ function AddOnManager<T>(): AddOnManager<T> {
 
     urls[name] = urlString.substring(0, urlString.lastIndexOf('/'));
 
-    if (lookup[name]) {
+    const done = () => {
+      runListeners(name, 'loaded');
       loadDependencies(name, addOnUrl, success, scope);
+    };
+
+    if (lookup[name]) {
+      done();
     } else {
-      ScriptLoader.ScriptLoader.add(urlString, () => loadDependencies(name, addOnUrl, success, scope), scope, failure);
+      ScriptLoader.ScriptLoader.add(urlString, done, scope, failure);
     }
   };
 
-  const waitFor = (name: string, callback: () => void) => {
-    if (lookup.hasOwnProperty(name)) {
+  const waitFor = (name: string, callback: () => void, state: 'added' | 'loaded' = 'added') => {
+    if (Obj.has(lookup, name) && state === 'added') {
+      callback();
+    } else if (Obj.has(urls, name) && state === 'loaded') {
       callback();
     } else {
-      _listeners.push({ name, callback });
+      _listeners.push({ name, state, callback });
     }
   };
 
@@ -317,13 +322,14 @@ function AddOnManager<T>(): AddOnManager<T> {
     load,
 
     waitFor
+
   };
 }
 
 namespace AddOnManager {
-  export let language;
-  export let languageLoad;
-  export let baseURL;
+  export let language: string;
+  export let languageLoad: boolean;
+  export let baseURL: string;
   export const PluginManager: AddOnManager<any> = AddOnManager();
   export const ThemeManager: AddOnManager<any> = AddOnManager();
 }

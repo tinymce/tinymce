@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Tools from 'tinymce/core/api/util/Tools';
-import Editor from 'tinymce/core/api/Editor';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Element } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 
 const getTDTHOverallStyle = function (dom: DOMUtils, elm: Element, name: string): string {
   const cells = dom.select('td,th', elm);
@@ -27,8 +26,7 @@ const getTDTHOverallStyle = function (dom: DOMUtils, elm: Element, name: string)
     return firstChildStyle;
   };
 
-  firstChildStyle = checkChildren(firstChildStyle, cells);
-  return firstChildStyle;
+  return checkChildren(firstChildStyle, cells);
 };
 
 const applyAlign = function (editor: Editor, elm: Element, name: string) {
@@ -55,7 +53,7 @@ const unApplyVAlign = function (editor: Editor, elm: Element) {
   });
 };
 
-export default {
+export {
   applyAlign,
   applyVAlign,
   unApplyAlign,

@@ -1,12 +1,9 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Element, SelectorFind, Traverse } from '@ephox/sugar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function (success, failure) {
 
   TinyLoader.setup(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
@@ -17,19 +14,19 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
         tinyApis.sAssertContent('<p>a</p>')
       ])),
       Logger.t('Editor element properties', Step.sync(function () {
-        const body = Element.fromDom(document.body);
+        const body = SugarElement.fromDom(document.body);
         const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
         const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
 
-        Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.editorContainer));
-        Assertions.assertDomEq('Should be expected element', editorElement, Element.fromDom(editor.contentAreaContainer));
-        Assertions.assertDomEq('Should be expected element', targetElement, Element.fromDom(editor.getElement()));
+        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.editorContainer));
+        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.contentAreaContainer));
+        Assertions.assertDomEq('Should be expected element', targetElement, SugarElement.fromDom(editor.getElement()));
       }))
     ], onSuccess, onFailure);
   }, {
     theme: false,
     base_url: '/project/tinymce/js/tinymce',
-    init_instance_callback (editor) {
+    init_instance_callback(editor) {
       editor.fire('SkinLoaded');
     }
   }, success, failure);

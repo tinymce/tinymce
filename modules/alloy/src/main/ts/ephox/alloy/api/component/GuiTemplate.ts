@@ -1,63 +1,60 @@
-import { Objects } from '@ephox/boulder';
 import { Arr, Obj, Result } from '@ephox/katamari';
-import { Element, Node, Text, Traverse } from '@ephox/sugar';
-
-import { RawDomSchema, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import { SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import { getAttrs, getClasses } from './DomFactory';
 
-const readText = (elem) => {
-  const text = Text.get(elem);
-  return text.trim().length > 0 ? [ { text } ] : [ ];
+import { SimpleOrSketchSpec } from './SpecTypes';
+
+// TODO: This looks to be incorrect and needs fixing, as { text: '' } isn't a valid spec
+// for now though lets just cast the types
+const readText = (elem: SugarElement<Text>) => {
+  const text = SugarText.get(elem);
+  return text.trim().length > 0 ? [{ text }] as unknown as SimpleOrSketchSpec[] : [ ];
 };
 
-const readChildren = (elem) => {
-  if (Node.isText(elem)) { return readText(elem); } else if (Node.isComment(elem)) { return [ ]; } else {
-    const attrs = getAttrs(elem);
+const readChildren = (elem: SugarElement<Node>): SimpleOrSketchSpec[] => {
+  if (SugarNode.isText(elem)) {
+    return readText(elem);
+  } else if (SugarNode.isComment(elem)) {
+    return [ ];
+  } else {
+    const attributes = getAttrs(elem);
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
 
-    const components = Arr.bind(children, (child) => {
-      if (Node.isText(child)) { return readText(child); } else { return readChildren(child); }
-    });
+    const components = Arr.bind(children, (child) => SugarNode.isText(child) ? readText(child) : readChildren(child));
 
     return [{
-      dom: Objects.wrapAll(
-        Arr.flatten<{key: string, value: string}>([
-          [ { key: 'tag', value: Node.name(elem) } ],
-          Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
-          classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
-        ])
-      ),
+      dom: {
+        tag: SugarNode.name(elem),
+        ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+        ...(classes.length > 0 ? { classes } : {})
+      },
       components
     }];
   }
 };
 
-const read = (elem): SimpleOrSketchSpec => {
-  const attrs = getAttrs(elem);
+const read = (elem: SugarElement<Node>): SimpleOrSketchSpec => {
+  const attributes = getAttrs(elem);
   const classes = getClasses(elem);
 
   const children = Traverse.children(elem);
 
-  const components = Arr.bind(children, (child) => {
-    return readChildren(child);
-  }) as SimpleOrSketchSpec[];
+  const components = Arr.bind(children, (child) => readChildren(child));
 
   return {
-    dom: Objects.wrapAll(
-      Arr.flatten<{key: string, value: string}>([
-        [ { key: 'tag', value: Node.name(elem) } ],
-        Obj.keys(attrs).length > 0 ? [ { key: 'attributes', value: attrs } ] : [ ],
-        classes.length > 0 ? [ { key: 'classes', value: classes } ] : [ ]
-      ])
-    ) as RawDomSchema,
+    dom: {
+      tag: SugarNode.name(elem),
+      ...(!Obj.isEmpty(attributes) ? { attributes } : {}),
+      ...(classes.length > 0 ? { classes } : {})
+    },
     components
   };
 };
 
 const readHtml = (html: string): Result<SimpleOrSketchSpec, string> => {
-  const elem = Element.fromHtml(html);
-  return Node.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
+  const elem = SugarElement.fromHtml(html);
+  return SugarNode.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
     read(elem)
   );
 };

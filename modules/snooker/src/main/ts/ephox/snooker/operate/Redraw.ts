@@ -1,53 +1,88 @@
-import { Arr, Fun } from '@ephox/katamari';
-import { Attr, Element, Insert, InsertAll, Remove, Replication, SelectorFind, Traverse } from '@ephox/sugar';
-import { RowDataNew, DetailNew, Detail } from '../api/Structs';
+import { Arr } from '@ephox/katamari';
+import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Detail, DetailNew, RowDataNew, Section } from '../api/Structs';
 
-const setIfNot = function (element: Element, property: string, value: number, ignore: number) {
+interface NewRowsAndCells {
+  readonly newRows: SugarElement[];
+  readonly newCells: SugarElement[];
+}
+
+const setIfNot = (element: SugarElement, property: string, value: number, ignore: number): void => {
   if (value === ignore) {
-    Attr.remove(element, property);
+    Attribute.remove(element, property);
   } else {
-    Attr.set(element, property, value);
+    Attribute.set(element, property, value);
   }
 };
 
-const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T>[]) {
-  const newRows: Element[] = [];
-  const newCells: Element[] = [];
+const insert = (table: SugarElement<HTMLTableElement>, selector: string, element: SugarElement<HTMLTableSectionElement | HTMLTableColElement>) => {
+  Arr.last(SelectorFilter.children(table, selector)).fold(
+    () => Insert.prepend(table, element),
+    (child) => Insert.after(child, element)
+  );
+};
 
-  const renderSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
-    const section = SelectorFind.child(table, sectionName).getOrThunk(function () {
-      const tb = Element.fromTag(sectionName, Traverse.owner(table).dom());
-      Insert.append(table, tb);
-      return tb;
-    });
+const generateSection = (table: SugarElement<HTMLTableElement>, sectionName: Section) => {
+  const section = SelectorFind.child(table, sectionName).getOrThunk(() => {
+    const newSection = SugarElement.fromTag(sectionName, Traverse.owner(table).dom);
+    if (sectionName === 'thead') {
+      insert(table, 'caption,colgroup', newSection);
+    } else if (sectionName === 'colgroup') {
+      insert(table, 'caption', newSection);
+    } else {
+      Insert.append(table, newSection);
+    }
+    return newSection;
+  });
 
-    Remove.empty(section);
+  Remove.empty(section);
 
-    const rows = Arr.map(gridSection, function (row) {
-      if (row.isNew()) {
-        newRows.push(row.element());
+  return section;
+};
+
+const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells => {
+  const newRows: SugarElement[] = [];
+  const newCells: SugarElement[] = [];
+
+  const syncRows = (gridSection: RowDataNew<T>[]) =>
+    Arr.map(gridSection, (row) => {
+      if (row.isNew) {
+        newRows.push(row.element);
       }
-      const tr = row.element();
+      const tr = row.element;
       Remove.empty(tr);
-      Arr.each(row.cells(), function (cell) {
-        if (cell.isNew()) {
-          newCells.push(cell.element());
+      Arr.each(row.cells, (cell) => {
+        if (cell.isNew) {
+          newCells.push(cell.element);
         }
-        setIfNot(cell.element(), 'colspan', cell.colspan(), 1);
-        setIfNot(cell.element(), 'rowspan', cell.rowspan(), 1);
-        Insert.append(tr, cell.element());
+        setIfNot(cell.element, 'colspan', cell.colspan, 1);
+        setIfNot(cell.element, 'rowspan', cell.rowspan, 1);
+        Insert.append(tr, cell.element);
       });
       return tr;
     });
 
-    InsertAll.append(section, rows);
+  // Assumption we should only ever have 1 colgroup. The spec allows for multiple, however it's currently unsupported
+  const syncColGroup = (gridSection: RowDataNew<T>[]) =>
+    Arr.bind(gridSection, (colGroup) =>
+      Arr.map(colGroup.cells, (col) => {
+        setIfNot(col.element, 'span', col.colspan, 1);
+        return col.element;
+      })
+    );
+
+  const renderSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
+    const section = generateSection(table, sectionName);
+    const sync = sectionName === 'colgroup' ? syncColGroup : syncRows;
+    const sectionElems = sync(gridSection);
+    InsertAll.append(section, sectionElems);
   };
 
-  const removeSection = function (sectionName: 'thead' | 'tbody' | 'tfoot') {
+  const removeSection = (sectionName: Section) => {
     SelectorFind.child(table, sectionName).each(Remove.remove);
   };
 
-  const renderOrRemoveSection = function (gridSection: RowDataNew<T>[], sectionName: 'thead' | 'tbody' | 'tfoot') {
+  const renderOrRemoveSection = (gridSection: RowDataNew<T>[], sectionName: Section) => {
     if (gridSection.length > 0) {
       renderSection(gridSection, sectionName);
     } else {
@@ -58,9 +93,10 @@ const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T
   const headSection: RowDataNew<T>[] = [];
   const bodySection: RowDataNew<T>[] = [];
   const footSection: RowDataNew<T>[] = [];
+  const columnGroupsSection: RowDataNew<T>[] = [];
 
-  Arr.each(grid, function (row) {
-    switch (row.section()) {
+  Arr.each(grid, (row) => {
+    switch (row.section) {
       case 'thead':
         headSection.push(row);
         break;
@@ -70,35 +106,36 @@ const render = function <T extends DetailNew>(table: Element, grid: RowDataNew<T
       case 'tfoot':
         footSection.push(row);
         break;
+      case 'colgroup':
+        columnGroupsSection.push(row);
+        break;
     }
   });
 
+  renderOrRemoveSection(columnGroupsSection, 'colgroup');
   renderOrRemoveSection(headSection, 'thead');
   renderOrRemoveSection(bodySection, 'tbody');
   renderOrRemoveSection(footSection, 'tfoot');
 
   return {
-    newRows: Fun.constant(newRows),
-    newCells: Fun.constant(newCells)
+    newRows,
+    newCells
   };
 };
 
-const copy = function <T extends Detail> (grid: RowDataNew<T>[]) {
-  const rows = Arr.map(grid, function (row) {
-    // Shallow copy the row element
-    const tr = Replication.shallow(row.element());
-    Arr.each(row.cells(), function (cell) {
-      const clonedCell = Replication.deep(cell.element());
-      setIfNot(clonedCell, 'colspan', cell.colspan(), 1);
-      setIfNot(clonedCell, 'rowspan', cell.rowspan(), 1);
-      Insert.append(tr, clonedCell);
-    });
-    return tr;
+const copy = <T extends Detail> (grid: RowDataNew<T>[]): SugarElement<HTMLTableRowElement>[] => Arr.map(grid, (row) => {
+  // Shallow copy the row element
+  const tr = Replication.shallow(row.element);
+  Arr.each(row.cells, (cell) => {
+    const clonedCell = Replication.deep(cell.element);
+    setIfNot(clonedCell, 'colspan', cell.colspan, 1);
+    setIfNot(clonedCell, 'rowspan', cell.rowspan, 1);
+    Insert.append(tr, clonedCell);
   });
-  return rows;
-};
+  return tr;
+});
 
-export default {
+export {
   render,
   copy
 };

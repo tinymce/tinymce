@@ -1,8 +1,9 @@
-import { Assertions, Chain, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter, FileInput } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, FileInput, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Body } from '@ephox/sugar';
-import Conversions from 'tinymce/core/file/Conversions';
+import { SugarBody } from '@ephox/sugar';
+import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -13,32 +14,30 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
   SilverTheme();
   Plugin();
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    const sAssertImageTab = (title: string, isPresent: boolean) => {
-      return Logger.t('Assert image tab is present', GeneralSteps.sequence([
-        ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-        Chain.asStep({}, [
-          ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-          Chain.op((container) => {
-            const expected = {};
-            expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
-            Assertions.assertPresence('Asserting presence', expected, container);
-          })
-        ]),
-        ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-      ]));
-    };
+    const sAssertImageTab = (title: string, isPresent: boolean) => Logger.t('Assert image tab is present', GeneralSteps.sequence([
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      Chain.asStep({}, [
+        ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+        Chain.op((container) => {
+          const expected = {};
+          expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
+          Assertions.assertPresence('Asserting presence', expected, container);
+        })
+      ]),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
+    ]));
 
     const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
       Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
-          FileInput.sRunOnPatchedFileInput([Files.createFile('logo.png', 0, blob)], Chain.asStep({}, [
+          FileInput.sRunOnPatchedFileInput([ Files.createFile('logo.png', 0, blob) ], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
-            UiFinder.cFindIn('input[type="file"]'),
+            UiFinder.cFindIn('button:contains("Browse for an image")'),
             Mouse.cClick
           ]))
         ], next, die);
@@ -68,9 +67,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sSetContent('<p><img src="' + src + '" /></p>'),
       api.sSelect('img', []),
       api.sSetSetting('image_uploadtab', false),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       sAssertImageTab('Upload', false),
       api.sSetSetting('image_advtab', true),
       api.sDeleteSetting('image_uploadtab'),
@@ -81,9 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sSetContent('<p><img src="' + src + '" /></p>'),
       api.sSelect('img', []),
       api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       sAssertImageTab('Upload', true),
       sAssertImageTab('Advanced', false),
       api.sSetSetting('image_advtab', true),
@@ -92,17 +87,20 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       sAssertImageTab('Advanced', true)
     ]);
 
-    const sAssertSrcTextValue = (expectedValue: string) => {
-      return Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(Body.body(), [
-        UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-        Chain.op((input) => {
-          Assertions.assertEq('Assert field source value ', expectedValue, input.dom().value);
-        })
-      ]), 10, 10000);
-    };
+    const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(SugarBody.body(), [
+      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
+      Chain.op((input) => {
+        Assertions.assertEq('Assert field source value ', expectedValue, input.dom.value);
+      })
+    ]), 10, 10000);
 
-    // The following tests have been removed from the testing pipeline as they depend
-    // on the triggerUpload functionality which is currently not feasible in the state of the code
+    const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(SugarBody.body(), [
+      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
+      Chain.op((input) => {
+        Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom.value, expectedValue));
+      })
+    ]), 10, 10000);
+
     const uploadWithCustomRoute = Log.stepsAsStep('TBA', 'Image: Image uploader test with custom route', [
       api.sSetContent(''),
       api.sSetSetting('images_upload_url', '/custom/imageUpload'),
@@ -118,9 +116,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
     const uploadWithCustomHandler = Log.stepsAsStep('TBA', 'Image: Image uploader test with images_upload_handler', [
       api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success('file.jpg');
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
@@ -132,9 +128,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
 
     const uploadCustomHandlerBase64String = Log.stepsAsStep('TBA', 'Image: Test that we get full base64 string in images_upload_handler', [
       api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => {
-        return success(blobInfo.base64());
-      }),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.base64())),
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
@@ -144,6 +138,33 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]);
 
+    const uploadWithError = Log.stepsAsStep('TNY-6020', 'Image: Image uploader test with upload error', [
+      api.sSetContent(''),
+      api.sSetSetting('images_upload_handler', (blobInfo, success, failure) => failure('Error occurred')),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload,
+      ui.sWaitForUi('Wait for an alert dialog to appear', '.tox-alert-dialog'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-alert-dialog .tox-button:contains("OK")'),
+      UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog'),
+      UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
+    ]);
+
+    const uploadWithAutomaticUploadsDisabled = Log.stepsAsStep('TBA', 'Image: Image uploader test with automatic uploads disabled', [
+      api.sSetContent(''),
+      api.sSetSetting('automatic_uploads', false),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload,
+      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
+      sAssertSrcTextValueStartsWith('blob:'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
+      api.sDeleteSetting('automatic_uploads')
+    ]);
+
     Pipeline.async({}, [
       uploadTabNotPresent,
       uploadTabPresentOnUploadUrl,
@@ -151,7 +172,9 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadTabPresentOnUploadHandler,
       uploadWithCustomRoute,
       uploadWithCustomHandler,
-      uploadCustomHandlerBase64String
+      uploadCustomHandlerBase64String,
+      uploadWithError,
+      uploadWithAutomaticUploadsDisabled
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

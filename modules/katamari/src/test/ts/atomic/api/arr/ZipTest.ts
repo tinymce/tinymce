@@ -1,13 +1,14 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
+import { Optional } from 'ephox/katamari/api/Optional';
 import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Zip', function() {
-  const check1 = function(expectedZipToObject, expectedZipToTuples, keys, values) {
-    const sort = function(a, ord) {
+UnitTest.test('Zip: unit tests', () => {
+  const check1 = (expectedZipToObject: Optional<Record<string, string>>, expectedZipToTuples: Optional<Array<{ k: string; v: string }>>, keys: string[], values: string[]) => {
+    const sort = <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) => {
       const c = a.slice();
       c.sort(ord);
       return c;
@@ -17,100 +18,105 @@ UnitTest.test('Zip', function() {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = function(a) {  
-      return sort(a, function(a, b) {
-        return (
-          a.k === b.k ? a.v === b.v ? eq
-                                    : a.v > b.v ? gt
-                                                : lt
-                      : a.k > b.k ? gt
-                                  : lt
-        );
-      });
-    };
+    const sortTuples = (a: Array<{ k: string; v: string }>) => sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) => (
+      a.k === b.k ? a.v === b.v ? eq
+        : a.v > b.v ? gt
+          : lt
+        : a.k > b.k ? gt
+          : lt
+    ));
 
-    assert.eq(expectedZipToObject, Zip.zipToObject(keys, values));
-    assert.eq(sortTuples(expectedZipToTuples), sortTuples(Zip.zipToTuples(keys, values)));
+    expectedZipToObject.fold(() => {
+      Assert.throws('boom', () => Zip.zipToObject(keys, values));
+    }, (expected) => {
+      Assert.eq('eq', expected, Zip.zipToObject(keys, values));
+    });
+    expectedZipToTuples.fold(() => {
+      Assert.throws('boom', () => Zip.zipToTuples(keys, values));
+    }, (expected) => {
+      Assert.eq('eq', sortTuples(expected), sortTuples(Zip.zipToTuples(keys, values)));
+    });
   };
 
   check1(
-    {q: 'a', r: 'x'},
-    [{k: 'q', v: 'a'}, {k: 'r', v: 'x'}],
-    ['q', 'r'], 
-    ['a', 'x']
+    Optional.some({ q: 'a', r: 'x' }),
+    Optional.some([{ k: 'q', v: 'a' }, { k: 'r', v: 'x' }]),
+    [ 'q', 'r' ],
+    [ 'a', 'x' ]
   );
 
   check1(
-    {},
+    Optional.some({}),
+    Optional.some([]),
     [],
-    [], 
     []
   );
   check1(
-    {},
-    [], 
+    Optional.none(),
+    Optional.none(),
     [],
-    ['x']
+    [ 'x' ]
   );
   check1(
-    {},
+    Optional.none(),
+    Optional.none(),
     [],
-    [], 
-    ['x', 'y']
+    [ 'x', 'y' ]
   );
   check1(
-    {q: undefined},
-    [{k: 'q', v: undefined}],
-    ['q'], 
+    Optional.none(),
+    Optional.none(),
+    [ 'q' ],
     []
   );
   check1(
-    {q: undefined, r: undefined},
-    [{k: 'q', v: undefined}, {k: 'r', v: undefined}],
-    ['q', 'r'], 
+    Optional.none(),
+    Optional.none(),
+    [ 'q', 'r' ],
     []
   );
   check1(
-    {q: 'a', r: undefined},
-    [{k: 'q', v: 'a'}, {k: 'r', v: undefined}],
-    ['q', 'r'], 
-    ['a']
+    Optional.none(),
+    Optional.none(),
+    [ 'q', 'r' ],
+    [ 'a' ]
   );
+});
 
-  Jsc.property(
-    'zipToObject has matching keys and values',
-    Jsc.array(Jsc.nestring),
-    function (rawValues) {
+UnitTest.test('zipToObject has matching keys and values', () => {
+  fc.assert(fc.property(
+    fc.array(fc.asciiString(1, 30)),
+    (rawValues: string[]) => {
       const values = Unique.stringArray(rawValues);
 
-      const keys = Arr.map(values, function (v, i) {
-        return i;
-      });
+      const keys = Arr.map(values, (v, i) => i);
 
       const output = Zip.zipToObject(keys, values);
 
       const oKeys = Obj.keys(output);
-      if (oKeys.length !== values.length) return 'Output keys did not match';
-      return Arr.forall(oKeys, function (oKey) {
+      Assert.eq('Output keys did not match', oKeys.length, values.length);
+
+      Assert.eq('Output keys', true, Arr.forall(oKeys, (oKey) => {
         const index = parseInt(oKey, 10);
         const expected = values[index];
         return output[oKey] === expected;
-      });
+      }));
     }
-  );
-
-  Jsc.property(
-    'zipToTuples matches corresponding tuples',
-    Jsc.array(Jsc.json),
-    Jsc.array(Jsc.json),
-    function (keys, values) {
-      const output = Zip.zipToTuples(keys, values);
-
-      if (output.length !== keys.length) return 'Output keys did not match';
-      return Arr.forall(output, function (x, i) {
-        return x.k === keys[i] && x.v === values[i];
-      });
-    }
-  );
+  ));
 });
 
+UnitTest.test('zipToTuples matches corresponding tuples', () => {
+  fc.assert(fc.property(
+    fc.array(fc.integer()),
+    fc.array(fc.integer()),
+    (keys, values) => {
+      if (keys.length !== values.length) {
+        Assert.throws('Should throw with different lengths', () => Zip.zipToTuples(keys, values));
+      } else {
+        const output = Zip.zipToTuples(keys, values);
+        Assert.eq('Output keys did not match', keys.length, output.length);
+        Assert.eq('', true, Arr.forall(output, (x, i) => x.k === keys[i] && x.v === values[i]));
+      }
+    }
+  ));
+});

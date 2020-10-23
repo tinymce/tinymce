@@ -1,16 +1,15 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const ok = function (value, label?) {
+  const ok = function (value: boolean, label?: string) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -50,6 +49,11 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     editor.execCommand('SelectAll');
     editor.execCommand('FontName', false, 'Arial');
     LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: Arial;">test 123</span></p>');
+
+    editor.setContent('test 123');
+    editor.execCommand('SelectAll');
+    editor.execCommand('FontName', false, 'Bauhaus 93');
+    LegacyUnit.equal(editor.getContent(), `<p><span style="font-family: 'Bauhaus 93';">test 123</span></p>`);
 
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
@@ -250,11 +254,9 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
   });
 
   suite.test('mceInsertLink (link adjacent text)', function (editor) {
-    let rng;
-
     editor.setContent('<p><a href="#">a</a>b</p>');
 
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild.lastChild, 0);
     rng.setEnd(editor.getBody().firstChild.lastChild, 1);
     editor.selection.setRng(rng);
@@ -434,7 +436,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function () {
     LegacyUnit.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag</p>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

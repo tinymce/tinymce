@@ -1,23 +1,21 @@
 import { Assertions, GeneralSteps, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Option, Result } from '@ephox/katamari';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Optional, Result } from '@ephox/katamari';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { InlineView } from 'ephox/alloy/api/ui/InlineView';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestBroadcasts from 'ephox/alloy/test/TestBroadcasts';
 
-UnitTest.asynctest('InlineViewTest', (success, failure) => {
+UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return Sinks.relativeSink();
-
-  }, (doc, body, gui, component, store) => {
+  GuiSetup.setup((_store, _doc, _body) => Sinks.relativeSink(), (_doc, _body, gui, component, store) => {
     const inline = GuiFactory.build(
       InlineView.sketch({
         dom: {
@@ -25,12 +23,12 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink () {
+        lazySink() {
           return Result.value(component);
         },
 
-        getRelated () {
-          return Option.some(related);
+        getRelated() {
+          return Optional.some(related);
         },
 
         fireDismissalEventInstead: {
@@ -38,7 +36,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         },
 
         inlineBehaviours: Behaviour.derive([
-          AddEventsBehaviour.config('inline-dimiss-test', [
+          AddEventsBehaviour.config('inline-dismiss-test', [
             AlloyEvents.run('test-dismiss', store.adder('test-dismiss-fired'))
           ])
         ])
@@ -59,46 +57,38 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
 
     gui.add(related);
 
-    const sCheckOpen = (label) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be DOM',
-            UiFinder.sExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckOpen = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be DOM',
+          UiFinder.sExists(gui.element, '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', true, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
-    const sCheckClosed = (label) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          Waiter.sTryUntil(
-            'Test inline should not be in DOM',
-            UiFinder.sNotExists(gui.element(), '.test-inline'),
-            100,
-            1000
-          ),
-          Step.sync(() => {
-            Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
-          })
-        ])
-      );
-    };
+    const sCheckClosed = (label: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        Waiter.sTryUntil(
+          'Test inline should not be in DOM',
+          UiFinder.sNotExists(gui.element, '.test-inline')
+        ),
+        Step.sync(() => {
+          Assertions.assertEq('Checking isOpen API', false, InlineView.isOpen(inline));
+        })
+      ])
+    );
 
     return [
-      UiFinder.sNotExists(gui.element(), '.test-inline'),
+      UiFinder.sNotExists(gui.element, '.test-inline'),
       Step.sync(() => {
         InlineView.showAt(inline, {
           anchor: 'selection',
-          root: gui.element()
+          root: gui.element
         }, Container.sketch({
           dom: {
             innerHtml: 'Inner HTML'
@@ -118,7 +108,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
         Step.sync(() => {
           InlineView.showAt(inline, {
             anchor: 'selection',
-            root: gui.element()
+            root: gui.element
           }, Container.sketch({
             components: [
               Button.sketch({ uid: 'bold-button', dom: { tag: 'button', innerHtml: 'B', classes: [ 'bold-button' ] }, action: store.adder('bold') })
@@ -139,11 +129,10 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       sCheckOpen('Broadcasting dismiss on button should not close inline toolbar'),
       store.sAssertEq('Broadcasting on button should not fire dismiss event', [ ]),
 
-
       TestBroadcasts.sDismiss(
         'related element: should not close',
         gui,
-        related.element()
+        related.element
       ),
       sCheckOpen('The inline view should not have fired dismiss event when broadcasting on related'),
       store.sAssertEq('Broadcasting on related element should not fire dismiss event', [ ]),
@@ -151,7 +140,7 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       TestBroadcasts.sDismiss(
         'outer gui element: should close',
         gui,
-        gui.element()
+        gui.element
       ),
 
       sCheckOpen('Dialog should stay open, because we are firing an event instead of dismissing automatically'),

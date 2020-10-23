@@ -1,9 +1,9 @@
 import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
-import { BodyComponentApi, BodyComponent } from './BodyComponent';
+import { BodyComponentSpec, BodyComponent } from './BodyComponent';
 
-export interface BarApi {
+export interface BarSpec {
   type: 'bar';
-  items: BodyComponentApi[];
+  items: BodyComponentSpec[];
 }
 
 export interface Bar {
@@ -11,9 +11,7 @@ export interface Bar {
   items: BodyComponent[];
 }
 
-export const createBarFields = (itemsField: FieldProcessorAdt) => {
-  return [
-    FieldSchema.strictString('type'),
-    itemsField
-  ];
-};
+export const createBarFields = (itemsField: FieldProcessorAdt) => [
+  FieldSchema.strictString('type'),
+  itemsField
+];

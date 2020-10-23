@@ -1,8 +1,8 @@
-import { Attachment, GuiFactory, DomFactory, Behaviour, Positioning, Gui } from '@ephox/alloy';
-import { Body, Class } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
-import TestBackstage from './TestBackstage';
+import { Attachment, Behaviour, DomFactory, Gui, GuiFactory, Positioning } from '@ephox/alloy';
+import { Fun } from '@ephox/katamari';
+import { Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import TestBackstage from './TestBackstage';
 
 export default () => {
 
@@ -15,20 +15,22 @@ export default () => {
     dom: DomFactory.fromHtml('<div class="mce-silver-sink"></div>'),
     behaviours: Behaviour.derive([
       Positioning.config({
-        useFixed: true
+        useFixed: Fun.always
       })
     ])
   });
 
   const uiMothership = Gui.create();
-  Class.add(uiMothership.element(), 'tox');
+  Class.add(uiMothership.element, 'tox');
 
   const backstage = TestBackstage(sink);
+  const settings = {};
 
   const mockEditor = {
-    setContent: (content) => {},
-    insertContent: (content: string, args?: any) => {},
-    execCommand: (cmd: string, ui?: boolean, value?: any) => {}
+    setContent: (_content) => {},
+    insertContent: (_content: string, _args?: any) => {},
+    execCommand: (_cmd: string, _ui?: boolean, _value?: any) => {},
+    getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
   } as Editor;
 
   const extras = {
@@ -37,7 +39,7 @@ export default () => {
   };
 
   uiMothership.add(sink);
-  Attachment.attachSystem(Body.body(), uiMothership);
+  Attachment.attachSystem(SugarBody.body(), uiMothership);
 
   const destroy = () => {
     uiMothership.remove(sink);

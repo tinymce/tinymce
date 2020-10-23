@@ -1,18 +1,24 @@
-import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Arr, Future, Obj, Result, Option } from '@ephox/katamari';
+import { FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Arr, Fun, Future, Obj, Optional, Result } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
+
+interface TestFocusable {
+  label: string;
+  selector: string;
+}
 
 UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
@@ -20,25 +26,23 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
     Container.sketch({
       containerBehaviours: Behaviour.derive([
         Positioning.config({
-          useFixed: true
+          useFixed: Fun.always
         })
       ])
     })
   );
 
-  GuiSetup.setup((store, doc, body) => {
-    const makeFlow = (v) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          innerHtml: ' ' + v + ' ',
-          classes: [ v ]
-        },
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+  GuiSetup.setup((store, _doc, _body) => {
+    const makeFlow = (v: string) => Container.sketch({
+      dom: {
+        tag: 'span',
+        innerHtml: ' ' + v + ' ',
+        classes: [ v ]
+      },
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     const widget = Container.sketch({
       containerBehaviours: Behaviour.derive([
@@ -61,39 +65,39 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           value: 'tools-menu-value',
           text: 'Tools Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' } }, hasSubmenu: true },
-            { type: 'item', data: { value: 'about', meta: { text: 'About' } } },
-            { type: 'widget', widget, data: { value: 'widget', meta: { } } }
+            { type: 'item', data: { value: 'packages', meta: { text: 'Packages' }}, hasSubmenu: true },
+            { type: 'item', data: { value: 'about', meta: { text: 'About' }}},
+            { type: 'widget', widget, data: { value: 'widget', meta: { }}}
           ], TestDropdownMenu.renderItem)
         },
         'packages': { // menu name should be triggering parent item so TieredMenuSpec path works
           value: 'packages-menu-value',
           text: 'Packages Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' } }, hasSubmenu: true }
+            { type: 'item', data: { value: 'sortby', meta: { text: 'SortBy' }}, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
         'sortby': {
           value: 'sortby-menu-value',
           text: 'Sortby Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' } }, hasSubmenu: true },
-            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' } }, hasSubmenu: true }
+            { type: 'item', data: { value: 'strings', meta: { text: 'Strings' }}, hasSubmenu: true },
+            { type: 'item', data: { value: 'numbers', meta: { text: 'Numbers' }}, hasSubmenu: true }
           ], TestDropdownMenu.renderItem)
         },
         'strings': {
           value: 'strings-menu-value',
           text: 'Strings Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'versions', meta: { text: 'Versions', html: '<b>V</b>ersions' } } },
-            { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' } } }
+            { type: 'item', data: { value: 'versions', meta: { text: 'Versions', html: '<b>V</b>ersions' }}},
+            { type: 'item', data: { value: 'alphabetic', meta: { text: 'Alphabetic' }}}
           ], TestDropdownMenu.renderItem)
         },
         'numbers': {
           value: 'numbers-menu-value',
           text: 'Numbers Menu',
           items: Arr.map([
-            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' } }, hasSubmenu: false }
+            { type: 'item', data: { value: 'doubled', meta: { text: 'Doubled digits' }}, hasSubmenu: false }
           ], TestDropdownMenu.renderItem)
         }
       }, TestDropdownMenu.renderMenu),
@@ -118,7 +122,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
         components: [ ],
 
-        lazySink (c) {
+        lazySink(c) {
           TestDropdownMenu.assertLazySinkArgs('div', 'dropdown-button', c);
           return Result.value(sink.get(c));
         },
@@ -127,22 +131,20 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch () {
-          return Future.pure(testData).map((d) => {
-            return Option.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions));
-          });
+        fetch() {
+          return Future.pure(testData).map((d) => Optional.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
         }
       })
     );
 
     return c;
 
-  }, (doc, body, gui, dropdown, store) => {
+  }, (doc, _body, gui, dropdown, store) => {
     gui.add(
       GuiFactory.build(sink.asSpec())
     );
 
-    const focusables = {
+    const focusables: Record<string, TestFocusable> = {
       toolsMenu: { label: 'tools-menu', selector: '.menu[aria-label="Tools Menu"]' },
       packagesMenu: { label: 'packages-menu', selector: '.menu[aria-label="Packages Menu"]' },
       sortbyMenu: { label: 'sortby-menu', selector: '.menu[aria-label="Sortby Menu"]' },
@@ -165,26 +167,20 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       widgetThree: { label: 'widget-item:3', selector: '.item-widget .three' }
     };
 
-    const sTestMenus = (label, stored, focused, active, background, others) => {
+    const sTestMenus = (label: string, stored: string[], focused: TestFocusable, active: TestFocusable[], background: TestFocusable[], others: TestFocusable[]) => {
       const sCheckBackground = GeneralSteps.sequence(
-        Arr.bind(background, (bg) => {
-          return [
-            UiFinder.sExists(gui.element(), bg.selector),
-            UiFinder.sNotExists(gui.element(), bg.selector + '.selected-menu')
-          ];
-        })
+        Arr.bind(background, (bg) => [
+          UiFinder.sExists(gui.element, bg.selector),
+          UiFinder.sNotExists(gui.element, bg.selector + '.selected-menu')
+        ])
       );
 
       const sCheckActive = GeneralSteps.sequence(
-        Arr.map(active, (o) => {
-          return UiFinder.sExists(gui.element(), o.selector + '.selected-menu');
-        })
+        Arr.map(active, (o) => UiFinder.sExists(gui.element, o.selector + '.selected-menu'))
       );
 
       const sCheckOthers = GeneralSteps.sequence(
-        Arr.map(others, (o) => {
-          return UiFinder.sNotExists(gui.element(), o.selector);
-        })
+        Arr.map(others, (o) => UiFinder.sNotExists(gui.element, o.selector))
       );
 
       return Logger.t(
@@ -223,9 +219,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
       Waiter.sTryUntil(
         'Wait until dropdown content loads',
-        UiFinder.sExists(gui.element(), '.menu'),
-        100,
-        1000
+        UiFinder.sExists(gui.element, '.menu')
       ),
 
       sTestMenus(
@@ -353,7 +347,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Hover on "strings"
-      Mouse.sHoverOn(gui.element(), focusables.strings.selector),
+      Mouse.sHoverOn(gui.element, focusables.strings.selector),
       sTestMenus(
         'After hovering on "strings" (should only expand)',
         [ ],
@@ -364,14 +358,19 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
       ),
 
       // Click on "about"
-      Mouse.sClickOn(gui.element(), focusables.about.selector),
+      Mouse.sClickOn(gui.element, focusables.about.selector),
       // Menus are somewhat irrelevant here, because the hover would have changed them,
       // not the click
       store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
       store.sClear,
 
+      // Tap on "about"
+      Touch.sTapOn(gui.element, focusables.about.selector),
+      store.sAssertEq('Checking about fired', [ 'dropdown.menu.execute: about' ]),
+      store.sClear,
+
       // Hover on "about"
-      Mouse.sHoverOn(gui.element(), focusables.about.selector),
+      Mouse.sHoverOn(gui.element, focusables.about.selector),
       sTestMenus(
         'After hovering on "strings"',
         [ ],

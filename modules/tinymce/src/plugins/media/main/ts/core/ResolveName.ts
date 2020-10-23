@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setup = function (editor) {
+import Editor from 'tinymce/core/api/Editor';
+
+const setup = function (editor: Editor) {
   editor.on('ResolveName', function (e) {
     let name;
 
@@ -15,6 +17,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

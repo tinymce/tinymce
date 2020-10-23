@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Injection from 'ephox/phoenix/injection/Injection';
 import * as Finder from 'ephox/phoenix/test/Finder';
@@ -51,4 +51,3 @@ UnitTest.test('InsertAtTest', function () {
   // Invalid child of parent.
   check('root(a(aa(text("aaa"),text("aab"),text("aac")),ab(text("aba"),text("abb"))))', 'aa', 6, TextGene('INJECTED', 'INJECTED'));
 });
-

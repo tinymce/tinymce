@@ -6,16 +6,16 @@
  */
 
 import { SimpleSpec } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-export const renderBar = <I>(spec: Types.Grid.Grid, backstage: UiFactoryBackstageShared): SimpleSpec => {
-  return {
-    dom: {
-      tag: 'div',
-      classes: ['tox-bar']
-    },
-    components: Arr.map(spec.items, backstage.interpreter)
-  };
-};
+type BarSpec = Omit<Dialog.Bar, 'type'>;
+
+export const renderBar = (spec: BarSpec, backstage: UiFactoryBackstageShared): SimpleSpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-bar', 'tox-form__controls-h-stack' ]
+  },
+  components: Arr.map(spec.items, backstage.interpreter)
+});

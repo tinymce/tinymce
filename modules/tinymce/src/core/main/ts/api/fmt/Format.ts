@@ -5,14 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
+import { RangeLikeObject } from '../../selection/RangeTypes';
 
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
 export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;
 export type Format = ApplyFormat | RemoveFormat;
 export type Formats = Record<string, Format | Format[]>;
 
-export type FormatVars = Record<string, any>;
+export type ApplyFormatPartial = Partial<BlockFormat> & Partial<InlineFormat> & Partial<SelectorFormat>;
+export type RemoveFormatPartial = Partial<RemoveBlockFormat> & Partial<RemoveInlineFormat> & Partial<RemoveSelectorFormat>;
+
+export type FormatAttrOrStyleValue = string | ((vars?: FormatVars) => string);
+export type FormatVars = Record<string, string>;
 
 // Largely derived from the docs and src/core/main/ts/fmt/DefaultFormats.ts
 export interface CommonFormat<T> {
@@ -23,16 +27,18 @@ export interface CommonFormat<T> {
   expand?: boolean;
   links?: boolean;
   onmatch?: (node: Node, fmt: T, itemName: string) => boolean;
-  onformat?: (node: Node, fmt: T, vars?: FormatVars) => void;
+  onformat?: (elm: Node, fmt: T, vars?: FormatVars, node?: Node | RangeLikeObject) => void;
   remove_similar?: boolean;
 }
 
 export interface CommonApplyFormat<T> extends CommonFormat<T> {
-  attributes?: Record<string, string | ((vars?: FormatVars) => string | number)>;
+  attributes?: Record<string, FormatAttrOrStyleValue>;
   preview?: string | boolean;
-  styles?: Record<string, string>;
+  styles?: Record<string, FormatAttrOrStyleValue>;
   toggle?: boolean;
   wrapper?: boolean;
+  merge_siblings?: boolean;
+  merge_with_parents?: boolean;
 }
 
 export interface BlockFormat extends CommonApplyFormat<BlockFormat> {
@@ -53,18 +59,21 @@ export interface SelectorFormat extends CommonApplyFormat<SelectorFormat> {
 
 export interface CommonRemoveFormat<T> extends CommonFormat<T> {
   remove?: 'none' | 'empty' | 'all';
-  attributes?: string[];
-  styles?: string[];
+  attributes?: string[] | Record<string, FormatAttrOrStyleValue>;
+  styles?: string[] | Record<string, FormatAttrOrStyleValue>;
   split?: boolean;
   deep?: boolean;
+  mixed?: boolean; // Legacy
 }
 
 export interface RemoveBlockFormat extends CommonRemoveFormat<RemoveBlockFormat> {
   block: string;
+  list_block?: string; // Legacy
 }
 
 export interface RemoveInlineFormat extends CommonRemoveFormat<RemoveInlineFormat> {
   inline: string;
+  preserve_attributes?: string[];
 }
 
 export interface RemoveSelectorFormat extends CommonRemoveFormat<RemoveSelectorFormat> {

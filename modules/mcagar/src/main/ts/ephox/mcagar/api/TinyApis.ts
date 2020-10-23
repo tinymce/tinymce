@@ -1,160 +1,172 @@
-import { Assertions } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import { Cursors } from '@ephox/agar';
-import { FocusTools } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import { UiFinder } from '@ephox/agar';
-import { Waiter } from '@ephox/agar';
-import TinySelections from '../selection/TinySelections';
-import { Hierarchy } from '@ephox/sugar';
-import { Element } from '@ephox/sugar';
-import { Html } from '@ephox/sugar';
-import { document } from '@ephox/dom-globals';
+import { Assertions, Chain, Cursors, FocusTools, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import { Editor } from '../alien/EditorTypes';
+import * as TinySelections from '../selection/TinySelections';
 
 export interface Presence {
-  [selector:string]: number;
+  [selector: string]: number;
 }
 
-export default function (editor) {
-  var setContent = function (html: string) {
+export interface TinyApis {
+  sSetContent: <T> (html: string) => Step<T, T>;
+  sSetRawContent: <T> (html: string) => Step<T, T>;
+  sFocus: <T> () => Step<T, T>;
+  sNodeChanged: <T> () => Step<T, T>;
+  sAssertContent: <T> (expected: string) => Step<T, T>;
+  sAssertContentPresence: <T> (expected: Presence) => Step<T, T>;
+  sAssertContentStructure: <T> (expected: StructAssert) => Step<T, T>;
+  sAssertSelection: <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Step<T, T>;
+  sSetCursor: <T> (elementPath: number[], offset: number) => Step<T, T>;
+  sSetSelectionFrom: <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) => Step<T, T>;
+  sSetSelection: <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Step<T, T>;
+  sSelect: <T> (selector: string, path: number[]) => Step<T, T>;
+  sDeleteSetting: <T> (key: string) => Step<T, T>;
+  sSetSetting: <T> (key: string, value: any) => Step<T, T>;
+  sExecCommand: <T> (command: string, value?: any) => Step<T, T>;
+  sTryAssertFocus: <T> () => Step<T, T>;
+
+  cNodeChanged: <T> () => Chain<T, T>;
+  cGetContent: <T> () => Chain<T, string>;
+}
+
+export const TinyApis = function (editor: Editor): TinyApis {
+  const setContent = function (html: string): void {
     editor.setContent(html);
   };
 
-  var sSetContent = function (html: string) {
-    return Step.sync(function () {
+  const sSetContent = function <T> (html: string) {
+    return Step.sync<T>(function () {
       setContent(html);
     });
   };
 
-  var sSetRawContent = function (html: string) {
-    return Step.sync(function () {
+  const sSetRawContent = function <T> (html: string) {
+    return Step.sync<T>(function () {
       editor.getBody().innerHTML = html;
     });
   };
 
-  var lazyBody = function () {
-    return Element.fromDom(editor.getBody());
+  const lazyBody = function (): SugarElement {
+    return SugarElement.fromDom(editor.getBody());
   };
 
-  var cNodeChanged = Chain.op(function () {
+  // Has to be thunked, so it can remain polymorphic
+  const cNodeChanged = <T> () => Chain.op<T>(function () {
     editor.nodeChanged();
   });
 
-  var cSetDomSelection = Chain.op(function (range) {
+  const cSetDomSelection = Chain.op<Range>(function (range: Range) {
     editor.selection.setRng(range);
   });
 
-  var cSelectElement = Chain.op(function (target: Element) {
-    editor.selection.select(target.dom());
+  const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op(function (target: SugarElement) {
+    editor.selection.select(target.dom);
   });
 
-  var sSetSelectionFrom = function (spec) {
-    var path = Cursors.pathFrom(spec);
-    return sSetSelection(path.startPath(), path.soffset(), path.finishPath(), path.foffset());
+  const sSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
+    const path = Cursors.pathFrom(spec);
+    return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
   };
 
-  var sSetCursor = function (elementPath: number[], offset: number) {
-    return sSetSelection(elementPath, offset, elementPath, offset);
+  const sSetCursor = function <T> (elementPath: number[], offset: number) {
+    return sSetSelection<T>(elementPath, offset, elementPath, offset);
   };
 
-  var sSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
-    return Chain.asStep(lazyBody(), [
+  const sSetSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> {
+    return Chain.asStep<T, SugarElement>(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
-      cNodeChanged
+      cNodeChanged()
     ]);
   };
 
-  var sSetSetting = function (key: string, value) {
+  const sSetSetting = function <T> (key: string, value: any): Step<T, T> {
     return Step.sync(function () {
       editor.settings[key] = value;
     });
   };
 
-  var sDeleteSetting = function (key: string) {
-    return Step.sync(function () {
+  const sDeleteSetting = function <T> (key: string): Step<T, T> {
+    return Step.sync<T>(function () {
       delete editor.settings[key];
     });
   };
 
-  var sSelect = function (selector: string, path: number[]) {
-    return Chain.asStep(lazyBody(), [
+  const sSelect = function <T> (selector: string, path: number[]) {
+    return Chain.asStep<T, SugarElement>(lazyBody(), [
       UiFinder.cFindIn(selector),
       Cursors.cFollow(path),
       cSelectElement
     ]);
   };
 
-  var cGetContent = Chain.mapper(function (input) {
-    // Technically not mapping value.
-    return editor.getContent();
-  });
+  const cGetContent = <T> () => Chain.injectThunked<T, string>(() => editor.getContent());
 
-  var sExecCommand = function (command: string, value?) {
-    return Step.sync(function () {
+  const sExecCommand = function <T> (command: string, value?: any) {
+    return Step.sync<T>(function () {
       editor.execCommand(command, false, value);
     });
   };
 
-  var sAssertContent = function (expected: string) {
-    return Chain.asStep({}, [
-      cGetContent,
+  const sAssertContent = function <T> (expected: string) {
+    return Chain.asStep<T, any>({}, [
+      cGetContent(),
       Assertions.cAssertHtml('Checking TinyMCE content', expected)
     ]);
   };
 
-  var sAssertContentPresence = function (expected: Presence) {
-    return Assertions.sAssertPresence(
-      'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
+  const sAssertContentPresence = function <T> (expected: Presence) {
+    return Assertions.sAssertPresence<T>(
+      () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
       lazyBody()
     );
   };
 
-  var sAssertContentStructure = function (expected) {
-    return Assertions.sAssertStructure(
+  const sAssertContentStructure = function <T> (expected: StructAssert) {
+    return Assertions.sAssertStructure<T>(
       'Asserting the structure of tiny content.',
       expected,
       lazyBody()
     );
   };
 
-  // var sAssertSelectionFrom = function (expected) {
-    // TODO
+  // const sAssertSelectionFrom = function (expected) {
+  // TODO
   // };
 
-  var assertPath = function (label: string, root, expPath: number[], expOffset: number, actElement, actOffset: number) {
-    var expected = Cursors.calculateOne(root, expPath);
-    var message = function () {
-      var actual = Element.fromDom(actElement);
-      var actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
+  const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
+    const expected = Cursors.calculateOne(root, expPath);
+    const message = function () {
+      const actual = SugarElement.fromDom(actElement);
+      const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
       return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
     };
-    Assertions.assertEq('Assert incorrect for ' + label + '.\n' + message(), true, expected.dom() === actElement);
-    Assertions.assertEq('Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
+    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
+    Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
-  var sAssertSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
-    return Step.sync(function () {
-      var actual = editor.selection.getRng();
+  const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+    return Step.sync<T>(function () {
+      const actual = editor.selection.getRng();
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
     });
   };
 
-  var sFocus = Step.sync(function () {
+  const sFocus = <T> () => Step.sync<T>(function () {
     editor.focus();
   });
 
-  var sNodeChanged = Step.sync(function () {
+  const sNodeChanged = <T> () => Step.sync<T>(function () {
     editor.nodeChanged();
   });
 
-  var sTryAssertFocus = Waiter.sTryUntil(
+  const sTryAssertFocus = <T> () => Waiter.sTryUntil<T, T>(
     'Waiting for focus on tinymce editor',
     FocusTools.sIsOnSelector(
       'iframe focus',
-      Element.fromDom(document),
+      SugarElement.fromDom(document),
       'iframe'
     ),
     100,
@@ -162,25 +174,25 @@ export default function (editor) {
   );
 
   return {
-    sSetContent: sSetContent,
-    cGetContent: cGetContent,
-    sSetRawContent: sSetRawContent,
-    cNodeChanged: cNodeChanged,
+    sSetContent,
+    cGetContent,
+    sSetRawContent,
+    cNodeChanged,
 
-    sAssertContent: sAssertContent,
-    sAssertContentPresence: sAssertContentPresence,
-    sAssertContentStructure: sAssertContentStructure,
-    sSetSelectionFrom: sSetSelectionFrom,
-    sSetSelection: sSetSelection,
-    sSetSetting: sSetSetting,
-    sDeleteSetting: sDeleteSetting,
-    sSetCursor: sSetCursor,
-    sSelect: sSelect,
-    sExecCommand: sExecCommand,
+    sAssertContent,
+    sAssertContentPresence,
+    sAssertContentStructure,
+    sSetSelectionFrom,
+    sSetSelection,
+    sSetSetting,
+    sDeleteSetting,
+    sSetCursor,
+    sSelect,
+    sExecCommand,
     // sAssertSelectionFrom: sAssertSelectionFrom,
-    sAssertSelection: sAssertSelection,
-    sTryAssertFocus: sTryAssertFocus,
-    sFocus: sFocus,
-    sNodeChanged: sNodeChanged
+    sAssertSelection,
+    sTryAssertFocus,
+    sFocus,
+    sNodeChanged
   };
 };

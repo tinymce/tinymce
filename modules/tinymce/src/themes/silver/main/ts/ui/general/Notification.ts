@@ -5,11 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Behaviour, Button, GuiFactory, Memento, Replacing, Sketcher, UiSketcher, AlloySpec } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, GuiFactory, Memento, NativeEvents, Replacing, Sketcher,
+  UiSketcher
+} from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Option, Arr } from '@ephox/katamari';
-import { IconProvider, get as getIcon, getFirst } from '../icons/Icons';
+import { Arr, Optional } from '@ephox/katamari';
 import { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+import { get as getIcon, getFirst, IconProvider } from '../icons/Icons';
 
 export interface NotificationSketchApis {
   updateProgress: (comp: AlloyComponent, percent: number) => void;
@@ -19,8 +22,9 @@ export interface NotificationSketchApis {
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   text: string;
-  level: 'info' | 'warn' | 'error' | 'success';
-  icon: Option<string>;
+  level: 'info' | 'warn' | 'warning' | 'error' | 'success';
+  icon: Optional<string>;
+  closeButton?: boolean;
   progress: boolean;
   onAction: Function;
   iconProvider: IconProvider;
@@ -29,17 +33,17 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
-
   text: string;
-  level: Option<'info' | 'warn' | 'error' | 'success'>;
-  icon: Option<string>;
+  level: Optional<'info' | 'warn' | 'warning' | 'error' | 'success'>;
+  icon: Optional<string>;
+  closeButton: boolean;
   onAction: Function;
-  progress: Boolean;
+  progress: boolean;
   iconProvider: IconProvider;
   translationProvider: (text: Untranslated) => TranslatedString;
 }
 
-export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec, NotificationSketchDetail>, NotificationSketchApis {
+export interface NotificationSketcher extends Sketcher.SingleSketch<NotificationSketchSpec>, NotificationSketchApis {
 
 }
 
@@ -140,8 +144,50 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
     detail.level.toArray(),
-    detail.level.bind((level) => Option.from(notificationIconMap[level])).toArray()
+    detail.level.bind((level) => Optional.from(notificationIconMap[level])).toArray()
   ]);
+
+  const memButton = Memento.record(Button.sketch({
+    dom: {
+      tag: 'button',
+      classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
+    },
+    components: [{
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-icon' ],
+        innerHtml: getIcon('close', detail.iconProvider),
+        attributes: {
+          'aria-label': detail.translationProvider('Close')
+        }
+      }
+    }],
+    action: (comp) => {
+      detail.onAction(comp);
+    }
+  }));
+
+  const components: AlloySpec[] = [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__icon' ],
+        innerHtml: getFirst(iconChoices, detail.iconProvider)
+      }
+    },
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-notification__body' ]
+      },
+      components: [
+        memBannerText.asSpec()
+      ],
+      behaviours: Behaviour.derive([
+        Replacing.config({ })
+      ])
+    }
+  ];
 
   return {
     uid: detail.uid,
@@ -154,52 +200,22 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         [ 'tox-notification', 'tox-notification--in' ]
       )
     },
-    components: [{
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__icon' ],
-          innerHtml: getFirst(iconChoices, detail.iconProvider)
-        }
-      } as AlloySpec,
-      {
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notification__body'],
-        },
-        components: [
-          memBannerText.asSpec()
-        ],
-        behaviours: Behaviour.derive([
-          Replacing.config({ })
-        ])
-      } as AlloySpec
-    ]
-    .concat(detail.progress ? [memBannerProgress.asSpec()] : [])
-    .concat(Button.sketch({
-        dom: {
-          tag: 'button',
-          classes: [ 'tox-notification__dismiss', 'tox-button', 'tox-button--naked', 'tox-button--icon' ]
-        },
-        components: [{
-          dom: {
-            tag: 'div',
-            classes: ['tox-icon'],
-            innerHtml: getIcon('close', detail.iconProvider),
-            attributes: {
-              'aria-label': detail.translationProvider('Close')
-            }
-          }
-        }],
-        action: (comp) => {
-          detail.onAction(comp);
-        }
-      })
-    ),
+    behaviours: Behaviour.derive([
+      Focusing.config({ }),
+      AddEventsBehaviour.config('notification-events', [
+        AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+          memButton.getOpt(comp).each(Focusing.focus);
+        })
+      ])
+    ]),
+    components: components
+      .concat(detail.progress ? [ memBannerProgress.asSpec() ] : [])
+      .concat(!detail.closeButton ? [] : [ memButton.asSpec() ]),
     apis
   };
 };
 
-export const Notification = Sketcher.single<NotificationSketchSpec, NotificationSketchDetail>({
+export const Notification: NotificationSketcher = Sketcher.single({
   name: 'Notification',
   factory,
   configFields: [
@@ -210,6 +226,7 @@ export const Notification = Sketcher.single<NotificationSketchSpec, Notification
     FieldSchema.strict('text'),
     FieldSchema.strict('iconProvider'),
     FieldSchema.strict('translationProvider'),
+    FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
     updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {

@@ -1,5 +1,5 @@
 // NOTE: Source: npm package: emojilib, file:emojis.json
-window.tinymce.emoticons_plugin_database = {
+window.tinymce.Resource.add('tinymce.plugins.emoticons.test-emojis-alt.js', {
   "red_car": {
     "keywords": ["red", "transportation", "vehicle"],
     "char": "🚗",
@@ -714,4 +714,4 @@ window.tinymce.emoticons_plugin_database = {
     "fitzpatrick_scale": false,
     "category": "travel_and_places"
   }
-}
+});

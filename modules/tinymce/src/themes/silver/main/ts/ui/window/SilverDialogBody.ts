@@ -6,48 +6,42 @@
  */
 
 import { AlloySpec, Behaviour, Focusing, Keying, ModalDialog, Reflecting, Tabstopping } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { Fun, Option } from '@ephox/katamari';
+import { Dialog } from '@ephox/bridge';
+import { Fun, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
-type WindowBodyFoo = {
-  body: Types.Dialog.Dialog<unknown>['body']
+type WindowBodySpec = {
+  body: Dialog.Dialog<unknown>['body'];
 };
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
-  const renderComponents = (incoming: WindowBodyFoo) => {
+const renderBody = (spec: WindowBodySpec, id: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): AlloySpec => {
+  const renderComponents = (incoming: WindowBodySpec) => {
     switch (incoming.body.type) {
       case 'tabpanel': {
         return [
-          renderTabPanel({
-            tabs: incoming.body.tabs
-          }, backstage)
+          renderTabPanel(incoming.body, backstage)
         ];
       }
 
       default: {
         return [
-          renderBodyPanel({
-            items: incoming.body.items
-          }, backstage)
+          renderBodyPanel(incoming.body, backstage)
         ];
       }
     }
   };
 
-  const updateState = (_comp, incoming: WindowBodyFoo) => {
-    return Option.some({
-      isTabPanel: () => incoming.body.type === 'tabpanel'
-    });
-  };
+  const updateState = (_comp, incoming: WindowBodySpec) => Optional.some({
+    isTabPanel: () => incoming.body.type === 'tabpanel'
+  });
 
   const ariaAttributes = {
     'aria-live': 'polite'
@@ -58,7 +52,7 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
       tag: 'div',
       classes: [ 'tox-dialog__content-js' ],
       attributes: {
-        ...id.map((x): {id?: string} => ({id: x})).getOr({}),
+        ...id.map((x): {id?: string} => ({ id: x })).getOr({}),
         ...ariaAttrs ? ariaAttributes : {}
       }
     },
@@ -69,24 +63,22 @@ const renderBody = (foo: WindowBodyFoo, id: Option<string>, backstage: UiFactory
         channel: bodyChannel,
         updateState,
         renderComponents,
-        initialData: foo
+        initialData: spec
       })
     ])
   };
 };
 
-const renderInlineBody = (foo: WindowBodyFoo, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
-  return renderBody(foo, Option.some(contentId), backstage, ariaAttrs);
-};
+const renderInlineBody = (spec: WindowBodySpec, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean) => renderBody(spec, Optional.some(contentId), backstage, ariaAttrs);
 
-const renderModalBody = (foo: WindowBodyFoo, backstage: UiFactoryBackstage) => {
-  const bodySpec = renderBody(foo, Option.none(), backstage, false);
-  return ModalDialog.parts().body(
+const renderModalBody = (spec: WindowBodySpec, backstage: UiFactoryBackstage) => {
+  const bodySpec = renderBody(spec, Optional.none(), backstage, false);
+  return ModalDialog.parts.body(
     bodySpec
   );
 };
 
-const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
+const renderIframeBody = (spec: Dialog.UrlDialog) => {
   const bodySpec = {
     dom: {
       tag: 'div',
@@ -122,7 +114,7 @@ const renderIframeBody = (spec: Types.UrlDialog.UrlDialog) => {
     ])
   };
 
-  return ModalDialog.parts().body(
+  return ModalDialog.parts.body(
     bodySpec
   );
 };

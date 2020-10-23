@@ -1,34 +1,25 @@
 import { Fun } from '@ephox/katamari';
-import { CurriedHandler, UncurriedHandler } from '../events/EventRegistry';
 
-const uncurried = (handler: Function, purpose: string): UncurriedHandler => {
-  return {
-    handler,
-    purpose: Fun.constant(purpose)
-  };
-};
+import { CurriedHandler, UncurriedHandler } from './EventRegistry';
 
-const curried = (handler: Function, purpose: string): CurriedHandler => {
-  return {
-    cHandler: handler,
-    purpose: Fun.constant(purpose)
-  };
-};
+const uncurried = (handler: Function, purpose: string): UncurriedHandler => ({
+  handler,
+  purpose
+});
 
-const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler => {
-  return curried(
-    Fun.curry.apply(undefined, [ descHandler.handler ].concat(extraArgs)),
-    descHandler.purpose()
-  );
-};
+const curried = (handler: Function, purpose: string): CurriedHandler => ({
+  cHandler: handler,
+  purpose
+});
 
-const getCurried = (descHandler: CurriedHandler): Function => {
-  return descHandler.cHandler;
-};
+const curryArgs = (descHandler: UncurriedHandler, extraArgs: any[]): CurriedHandler => curried(
+  Fun.curry.apply(undefined, ([ descHandler.handler ] as any).concat(extraArgs)),
+  descHandler.purpose
+);
 
-const getUncurried = (descHandler: UncurriedHandler): Function => {
-  return descHandler.handler;
-};
+const getCurried = (descHandler: CurriedHandler): Function => descHandler.cHandler;
+
+const getUncurried = (descHandler: UncurriedHandler): Function => descHandler.handler;
 
 export {
   curried,

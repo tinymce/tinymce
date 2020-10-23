@@ -6,20 +6,20 @@
  */
 
 import { AlloyComponent, AlloyTriggers, Container, Disabling, Memento, SketchSpec } from '@ephox/alloy';
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderIconButton } from '../../general/Button';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
-  return renderIconButton({
-    name: innerHtml,
-    icon: Option.some(icon),
-    disabled,
-    tooltip: Option.some(innerHtml)
-  }, action, providersBackstage);
-};
+const createButton = (innerHtml: string, icon: string, disabled: boolean, action: (button: AlloyComponent) => void, providersBackstage: UiFactoryBackstageProviders): SketchSpec => renderIconButton({
+  name: innerHtml,
+  icon: Optional.some(icon),
+  disabled,
+  tooltip: Optional.some(innerHtml),
+  primary: false,
+  borderless: false
+}, action, providersBackstage);
 
 const setButtonEnabled = (button: AlloyComponent, enabled: boolean): void => {
   if (enabled) {
@@ -58,7 +58,7 @@ const renderSideBar = (providersBackstage: UiFactoryBackstageProviders) => {
   const container = Container.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-image-tools__toolbar', 'tox-image-tools__sidebar']
+      classes: [ 'tox-image-tools__toolbar', 'tox-image-tools__sidebar' ]
     },
     components: [
       memUndo.asSpec(),

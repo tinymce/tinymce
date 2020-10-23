@@ -1,21 +1,30 @@
-import { bounds, Bounds } from 'ephox/alloy/alien/Boxes';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+
+import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { UnitTest, assert } from '@ephox/bedrock';
+
+interface TestDecisionSpec {
+  label: string;
+  x: number;
+  y: number;
+  candidateYforTest?: number;
+}
 
 UnitTest.test('BounderCursorTest', () => {
-  /* global assert */
-  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
+  const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    assert.eq(expected.label, actual.label());
-    assert.eq(expected.x, actual.x());
-    assert.eq(expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest()); }
+    Assert.eq('label', expected.label, actual.label);
+    Assert.eq('X', expected.x, actual.x);
+    Assert.eq('Y', expected.y, actual.y);
+    if (expected.candidateYforTest !== undefined) { Assert.eq('Candidate Y', expected.candidateYforTest, actual.candidateYforTest); }
   };
 
   // Layout is for boxes with a bubble pointing to a cursor position (vertically aligned to nearest side)
   const four = [ Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest ];
+  const two = [ Layout.east, Layout.west ];
 
   // empty input array is now invalid, just returns anchor coordinates
   check({
@@ -156,4 +165,46 @@ UnitTest.test('BounderCursorTest', () => {
     x: 350 + 50 - 99 - 100 + 2,
     y: 220 + 50 - 2 - 74 - 75
   }, four, bounds(350 + 50 - 99, 220 + 50 - 2 - 74, 2, 2), panelBox, bubb, view);
+
+  // East
+  check({
+    label: 'layout-e',
+    x: 55 + 10,
+    y: 150 - (75 / 2) + (10 / 2)
+  }, two, bounds(55, 150, 10, 10), panelBox, bubb, view);
+
+  // None near bottom left -> best fit is east (limited to bottom bounds)
+  check({
+    label: 'layout-e',
+    x: 55 + 10,
+    y: 270 - 75
+  }, two, bounds(55, 240, 10, 10), panelBox, bubb, view);
+
+  // None near top left -> best fit is east (limited to top bounds)
+  check({
+    label: 'layout-e',
+    x: 55 + 10,
+    y: 50
+  }, two, bounds(55, 80, 10, 10), panelBox, bubb, view);
+
+  // West
+  check({
+    label: 'layout-w',
+    x: 350 - 100,
+    y: 150 - (75 / 2) + (10 / 2)
+  }, two, bounds(350, 150, 10, 10), panelBox, bubb, view);
+
+  // None near bottom right -> best fit is west (limited to bottom bounds)
+  check({
+    label: 'layout-w',
+    x: 350 - 100,
+    y: 270 - 75
+  }, two, bounds(350, 240, 10, 10), panelBox, bubb, view);
+
+  // None near top right -> best fit is west (limited to top bounds)
+  check({
+    label: 'layout-w',
+    x: 350 - 100,
+    y: 50
+  }, two, bounds(350, 80, 10, 10), panelBox, bubb, view);
 });

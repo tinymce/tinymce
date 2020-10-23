@@ -1,18 +1,19 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Serializer from 'tinymce/core/api/html/Serializer';
+import AstNode from 'tinymce/core/api/html/Node';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
   Theme();
 
-  const toHtml = function (node) {
-    const htmlSerializer = Serializer({});
+  const toHtml = function (node: AstNode) {
+    const htmlSerializer = HtmlSerializer({});
     return htmlSerializer.serialize(node);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -25,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       ])),
       Logger.t('Get selection as tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>ab<em>c</em></p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 1, 0], 1),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
         Step.sync(function () {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
@@ -33,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       ])),
       Logger.t('Get selection as tree with whitespace', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a b c</p>'),
-        tinyApis.sSetSelection([0, 0], 1, [0, 0], 4),
+        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 4),
         Step.sync(function () {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', ' b ', html);

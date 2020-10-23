@@ -1,13 +1,10 @@
 import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
-import { Element, Hierarchy } from '@ephox/sugar';
-import FontInfo from 'tinymce/core/fmt/FontInfo';
-import { document } from '@ephox/dom-globals';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const assertComputedFontProp = function (fontProp, html, path, expected) {
@@ -17,12 +14,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
     document.body.appendChild(div);
     div.style[fontProp] = expected;
     div.innerHTML = html;
-    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom());
+    const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const actual = fontGetProp(div, elm.dom);
     LegacyUnit.equal(
       actual,
       expected,
-      'Doesn\'t match the expected computed runtime style'
+      `Doesn't match the expected computed runtime style`
     );
     div.parentNode.removeChild(div);
   };
@@ -33,12 +30,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
 
     document.body.appendChild(div);
     div.innerHTML = html;
-    const elm = Hierarchy.follow(Element.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
-    const actual = fontGetProp(div, elm.dom());
+    const elm = Hierarchy.follow(SugarElement.fromDom(div), path).getOrDie('oh no! ' + path.toString() + '  path was bad');
+    const actual = fontGetProp(div, elm.dom);
     LegacyUnit.equal(
       actual,
       expected,
-      'Doesn\'t match the expected specific element style'
+      `Doesn't match the expected specific element style`
     );
     div.parentNode.removeChild(div);
   };
@@ -55,43 +52,47 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
   });
 
   suite.test('getFontSize', function () {
-    assertComputedFontProp('fontSize', '<mark></mark>', [0], '10px');
-    assertComputedFontProp('fontSize', '<span><mark></mark></span>', [0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [0], '10px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', [0], '14px');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', [0], '14pt');
-    assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', [0], '14em');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', [0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [0, 0], '14px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [0, 0, 0], '10px');
-    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [0, 0, 0], '14px');
+    assertComputedFontProp('fontSize', '<mark></mark>', [ 0 ], '10px');
+    assertComputedFontProp('fontSize', '<span><mark></mark></span>', [ 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [ 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14px"></mark>', [ 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14pt"></mark>', [ 0 ], '14pt');
+    assertSpecificFontProp('fontSize', '<mark style="font-size: 14em"></mark>', [ 0 ], '14em');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><mark></mark></span>', [ 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><mark></mark></span>', [ 0, 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 10px"><span><mark></mark></span></span>', [ 0, 0, 0 ], '10px');
+    assertSpecificFontProp('fontSize', '<span style="font-size: 14px"><span><mark></mark></span></span>', [ 0, 0, 0 ], '14px');
+    assertSpecificFontProp('fontSize', '<font size="2"></font>', [ 0 ], '2');
+    assertSpecificFontProp('fontSize', '<font size="4"><mark></mark></font>', [ 0, 0 ], '4');
   });
 
   suite.test('getFontFamily', function () {
-    assertComputedFontProp('fontFamily', '<mark></mark>', [0], 'Arial,Verdana');
-    assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [0, 0], 'Arial,Helvetica,Verdana');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [0], 'Arial,Verdana');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Comic Sans MS"></mark>', [0], 'Comic Sans MS');
-    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [0], 'Arial,Helvetica,Verdana');
-    assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [0, 0], 'Arial,Verdana');
+    assertComputedFontProp('fontFamily', '<mark></mark>', [ 0 ], 'Arial,Verdana');
+    assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [ 0, 0 ], 'Arial,Helvetica,Verdana');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [ 0 ], 'Arial,Verdana');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Comic Sans MS"></mark>', [ 0 ], 'Comic Sans MS');
+    assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Helvetica, Verdana"></mark>', [ 0 ], 'Arial,Helvetica,Verdana');
+    assertSpecificFontProp('fontFamily', '<span style="font-family: Arial, Verdana"><mark></mark></span>', [ 0, 0 ], 'Arial,Verdana');
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Helvetica, Verdana"><mark></mark></span>',
-      [0, 0],
+      [ 0, 0 ],
       'Arial,Helvetica,Verdana'
     );
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Verdana"><span><mark></mark></span>',
-      [0, 0, 0],
+      [ 0, 0, 0 ],
       'Arial,Verdana'
     );
     assertSpecificFontProp(
       'fontFamily',
       '<span style="font-family: Arial, Helvetica, Verdana"><span><mark></mark></span></span>',
-      [0, 0, 0],
+      [ 0, 0, 0 ],
       'Arial,Helvetica,Verdana'
     );
+    assertSpecificFontProp('fontFamily', '<font face="Comic Sans MS"></font>', [ 0 ], 'Comic Sans MS');
+    assertSpecificFontProp('fontFamily', '<font face="Arial, Verdana"><mark></mark></font>', [ 0, 0 ], 'Arial,Verdana');
   });
 
   suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {
@@ -138,10 +139,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function () {
   });
 
   suite.test('comments should always return empty string', function () {
-    assertComputedFontProp('fontFamily', '<!-- comment -->', [0], '');
-    assertComputedFontProp('fontSize', '<!-- comment -->', [0], '');
-    assertSpecificFontProp('fontFamily', '<!-- comment -->', [0], '');
-    assertSpecificFontProp('fontSize', '<!-- comment -->', [0], '');
+    assertComputedFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertComputedFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
+    assertSpecificFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
   });
 
   suite.test('should not throw error when passed in element without parent', () => {

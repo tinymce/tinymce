@@ -1,10 +1,14 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
+import { Attribute, SelectorFind } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { DataField } from 'ephox/alloy/api/ui/DataField';
 import { FormChooser } from 'ephox/alloy/api/ui/FormChooser';
@@ -12,29 +16,24 @@ import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
-import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
-import { input } from 'ephox/alloy/api/events/NativeEvents';
-import { Attr, SelectorFind } from '@ephox/sugar';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
+import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
 
 UnitTest.asynctest('FieldsTest', (success, failure) => {
 
-  const renderChoice = (choiceSpec) => {
-    return {
-      value: choiceSpec.value,
-      dom: {
-        tag: 'span',
-        innerHtml: choiceSpec.text,
-        attributes: {
-          'data-value': choiceSpec.value
-        }
-      },
-      components: [ ]
-    };
-  };
+  const renderChoice = (choiceSpec: { value: string; text: string }): AlloySpec & { value: string } => ({
+    value: choiceSpec.value,
+    dom: {
+      tag: 'span',
+      innerHtml: choiceSpec.text,
+      attributes: {
+        'data-value': choiceSpec.value
+      }
+    },
+    components: [ ]
+  });
 
-  const labelSpec = {
+  const labelSpec: AlloySpec = {
     dom: {
       tag: 'label',
       innerHtml: 'Label'
@@ -42,19 +41,19 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
     components: [ ]
   };
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const inputA = FormField.sketch({
       uid: 'input-a',
       dom: {
         tag: 'div'
       },
       components: [
-        FormField.parts().field({
+        FormField.parts.field({
           factory: Input,
           data: 'init'
         }),
-        FormField.parts().label(labelSpec),
-        FormField.parts()['aria-descriptor']({
+        FormField.parts.label(labelSpec),
+        FormField.parts['aria-descriptor']({
           text: 'help'
         })
       ]
@@ -67,8 +66,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       },
       components: [
         // TODO: Do not recalculate
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: HtmlSelect,
           options: [
             { value: 'select-b-init', text: 'Select-b-init' }
@@ -83,8 +82,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormChooser.parts().legend({ }),
-        FormChooser.parts().choices({ })
+        FormChooser.parts.legend({ }),
+        FormChooser.parts.choices({ })
       ],
 
       markers: {
@@ -103,8 +102,8 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        FormField.parts().label(labelSpec),
-        FormField.parts().field({
+        FormField.parts.label(labelSpec),
+        FormField.parts.field({
           factory: Input
         })
       ]
@@ -116,9 +115,9 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         classes: [ 'coupled-group' ]
       },
       components: [
-        FormCoupledInputs.parts().field1(coupledDText),
-        FormCoupledInputs.parts().field2(coupledDText),
-        FormCoupledInputs.parts().lock({
+        FormCoupledInputs.parts.field1(coupledDText),
+        FormCoupledInputs.parts.field2(coupledDText),
+        FormCoupledInputs.parts.lock({
           dom: {
             tag: 'button',
             innerHtml: '+'
@@ -126,7 +125,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         })
       ],
 
-      onLockedChange (current, other) {
+      onLockedChange(current, other) {
         Representing.setValueFrom(other, current);
       },
       markers: {
@@ -158,7 +157,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, _store) => {
 
     const inputA = component.getSystem().getByUid('input-a').getOrDie();
     const selectB = component.getSystem().getByUid('select-b').getOrDie();
@@ -172,12 +171,12 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
 
       RepresentPipes.sAssertValue('Checking input-a value', 'init', inputA),
 
-      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, arr) => {
-        const input = SelectorFind.descendant(inputA.element(), 'input').getOrDie('input element child was not found');
-        const span = SelectorFind.descendant(inputA.element(), 'span').getOrDie('span element child was not found');
+      Assertions.sAssertStructure('Check the input-a DOM', ApproxStructure.build((s, str, _arr) => {
+        const input = SelectorFind.descendant(inputA.element, 'input').getOrDie('input element child was not found');
+        const span = SelectorFind.descendant(inputA.element, 'span').getOrDie('span element child was not found');
 
-        const inputID = Attr.get(input, 'id');
-        const spanID = Attr.get(span, 'id');
+        const inputID = Attribute.getOpt(input, 'id').getOrDie('Expected value for input.id');
+        const spanID = Attribute.getOpt(span, 'id').getOrDie('Expected value for span.id');
         return s.element('div', {
           children: [
             s.element('input', {
@@ -193,27 +192,23 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
             s.element('span', { })
           ]
         });
-      }), inputA.element()),
+      }), inputA.element),
 
-      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: [
-            s.element('label', { }),
-            s.element('select', { })
-          ]
-        });
-      }), selectB.element()),
+      Assertions.sAssertStructure('Check the select-b dom', ApproxStructure.build((s, _str, _arr) => s.element('div', {
+        children: [
+          s.element('label', { }),
+          s.element('select', { })
+        ]
+      })), selectB.element),
 
-      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          children: [
-            s.element('legend', { }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } }),
-            s.element('span', { attrs: { role: str.is('radio') } })
-          ]
-        });
-      }), chooserC.element()),
+      Assertions.sAssertStructure('Check the chooser-c dom', ApproxStructure.build((s, str, _arr) => s.element('div', {
+        children: [
+          s.element('legend', { }),
+          s.element('span', { attrs: { role: str.is('radio') }}),
+          s.element('span', { attrs: { role: str.is('radio') }}),
+          s.element('span', { attrs: { role: str.is('radio') }})
+        ]
+      })), chooserC.element),
 
       RepresentPipes.sAssertValue('Checking select-b value', 'select-b-init', selectB),
 
@@ -226,9 +221,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         Assertions.assertEq('Checking chooser-c value after set', 'choice3', val2);
       }),
 
-      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, str, arr) => {
-        return s.element('span', { children: [ ] });
-      }), dataE.element()),
+      Assertions.sAssertStructure('Checking the data field (E)', ApproxStructure.build((s, _str, _arr) => s.element('span', { children: [ ] })), dataE.element),
 
       Step.sync(() => {
         const val = Representing.getValue(dataE);
@@ -248,15 +241,15 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
       Step.sync(() => {
         FormField.getField(inputA).fold(() => {
           throw new Error('The input Field could not be found');
-        },  (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
+        }, (comp) => {
+          const alloyId = Tagger.readOrDie(comp.element);
           Assertions.assertEq('FormField should have an api that returns the input field', 'input-a-field', alloyId);
         });
 
         FormField.getLabel(inputA).fold(() => {
           throw new Error('The input Label could not be found');
-        },  (comp) => {
-          const alloyId = Tagger.readOrDie(comp.element());
+        }, (comp) => {
+          const alloyId = Tagger.readOrDie(comp.element);
           Assertions.assertEq('FormField should have an api that returns the input Label', 'input-a-label', alloyId);
         });
       }),

@@ -1,4 +1,3 @@
-import { Blob, File } from '@ephox/dom-globals';
 import { DataType } from './DataType';
 
 export interface ResponseTypeMap {

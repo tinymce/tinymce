@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Unicode } from '@ephox/katamari';
 import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
-import { navigator } from '@ephox/dom-globals';
 
 /**
  * This class contails various utility functions for the paste plugin.
@@ -113,13 +113,13 @@ function trimHtml(html: string) {
       return ' ';
     }
 
-    return '\u00a0';
+    return Unicode.nbsp;
   }
 
   html = filter(html, [
     /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/ig, // Remove anything but the contents within the BODY element
     /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
-    [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
+    [ /( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces ],
     /<br class="Apple-interchange-newline">/g,
     /<br>$/i // Trailing BR elements
   ]);
@@ -136,14 +136,9 @@ function createIdGenerator(prefix: string) {
   };
 }
 
-const isMsEdge = function () {
-  return navigator.userAgent.indexOf(' Edge/') !== -1;
-};
-
-export default {
+export {
   filter,
   innerText,
   trimHtml,
-  createIdGenerator,
-  isMsEdge
+  createIdGenerator
 };

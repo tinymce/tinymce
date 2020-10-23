@@ -1,6 +1,5 @@
-import { document, HTMLButtonElement, HTMLElement, HTMLFormElement, HTMLImageElement, HTMLSelectElement, NodeListOf } from '@ephox/dom-globals';
-import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
+import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 import { ImageResult } from 'ephox/imagetools/util/ImageResult';
 
 function isSelect(el: HTMLElement): el is HTMLSelectElement {
@@ -27,7 +26,7 @@ function modify(image: HTMLImageElement, op: string, args: any[]) {
   });
 }
 
-const forms = document.querySelectorAll('.options') as NodeListOf<HTMLFormElement>;
+const forms = document.querySelectorAll<HTMLFormElement>('.options');
 // tslint:disable-next-line:prefer-for-of
 for (let i = 0; i < forms.length; i++) {
   (function (form: HTMLFormElement) {

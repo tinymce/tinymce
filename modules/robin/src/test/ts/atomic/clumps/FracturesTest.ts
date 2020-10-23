@@ -1,6 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import Fractures from 'ephox/robin/clumps/Fractures';
+import * as Fractures from 'ephox/robin/clumps/Fractures';
 
 UnitTest.test('FracturesTest', function () {
   const regen = function () {

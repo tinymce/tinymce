@@ -5,19 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
 import { Cell, Fun } from '@ephox/katamari';
-import ApplyFormat from '../fmt/ApplyFormat';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatChanged from '../fmt/FormatChanged';
 import { FormatRegistry } from '../fmt/FormatRegistry';
-import MatchFormat from '../fmt/MatchFormat';
-import Preview from '../fmt/Preview';
-import RemoveFormat from '../fmt/RemoveFormat';
-import ToggleFormat from '../fmt/ToggleFormat';
-import FormatShortcuts from '../keyboard/FormatShortcuts';
-import { Format, FormatVars } from './fmt/Format';
+import * as MatchFormat from '../fmt/MatchFormat';
+import * as Preview from '../fmt/Preview';
+import * as FormatShortcuts from '../keyboard/FormatShortcuts';
+import * as Rtc from '../Rtc';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
+import { Format, FormatVars } from './fmt/Format';
 
 /**
  * Text formatter engine class. This class is used to apply formats like bold, italic, font size
@@ -34,20 +32,12 @@ import Editor from './Editor';
  *  tinymce.activeEditor.formatter.apply('mycustomformat');
  */
 
-// TODO: Figure out why we need a range like object, instead of an actual range (see ExpandRange.ts)
-interface RangeLikeObject {
-  startContainer: Node;
-  startOffset: number;
-  endContainer: Node;
-  endOffset: number;
-}
-
 interface Formatter extends FormatRegistry {
   apply (name: string, vars?: FormatVars, node?: Node | RangeLikeObject): void;
-  remove (name: string, vars?: FormatVars, node?: Node | RangeLikeObject, similar?: boolean): void;
+  remove (name: string, vars?: FormatVars, node?: Node | Range, similar?: boolean): void;
   toggle (name: string, vars?: FormatVars, node?: Node): void;
   match (name: string, vars?: FormatVars, node?: Node): boolean;
-  matchAll (names: string[], vars?: FormatVars): Format[];
+  matchAll (names: string[], vars?: FormatVars): string[];
   matchNode (node: Node, name: string, vars?: FormatVars, similar?: boolean): boolean;
   canApply (name: string): boolean;
   formatChanged (names: string, callback: FormatChanged.FormatChangeCallback, similar?: boolean): { unbind: () => void };
@@ -106,7 +96,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before applying it.
      * @param {Node} node Optional node to apply the format to defaults to current selection.
      */
-    apply: Fun.curry(ApplyFormat.applyFormat, editor),
+    apply: (name, vars?, node?) => {
+      Rtc.applyFormat(editor, name, vars, node);
+    },
 
     /**
      * Removes the specified format from the current selection or specified node.
@@ -116,7 +108,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before removing it.
      * @param {Node/Range} node Optional node or DOM range to remove the format from defaults to current selection.
      */
-    remove: Fun.curry(RemoveFormat.remove, editor),
+    remove: (name, vars?, node?, similar?) => {
+      Rtc.removeFormat(editor, name, vars, node, similar);
+    },
 
     /**
      * Toggles the specified format on/off.
@@ -126,7 +120,9 @@ const Formatter = function (editor: Editor): Formatter {
      * @param {Object} vars Optional list of variables to replace within format before applying/removing it.
      * @param {Node} node Optional node to apply the format to or remove from. Defaults to current selection.
      */
-    toggle: Fun.curry(ToggleFormat.toggle, editor, formats),
+    toggle: (name, vars?, node?) => {
+      Rtc.toggleFormat(editor, name, vars, node);
+    },
 
     /**
      * Matches the current selection or specified node against the specified format name.

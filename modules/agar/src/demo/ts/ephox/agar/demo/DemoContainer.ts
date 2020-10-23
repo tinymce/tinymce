@@ -1,42 +1,38 @@
-import { document } from '@ephox/dom-globals';
-import { Class, Element, Elements, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { Class, Html, Insert, InsertAll, Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
-var init = function (name, f) {
-  var container = Element.fromTag('div');
+export const init = (name: string, f: (success: () => void, failure: (err: any) => void) => SugarElement[]): void => {
+  const container = SugarElement.fromTag('div');
   Class.add(container, 'demo-container');
   Html.set(container, '<p>' + name + '</p>');
 
-  var outcome = Element.fromTag('div');
+  const outcome = SugarElement.fromTag('div');
   Html.set(outcome, 'Running ....');
-    
-  var success = function () {
+
+  const success = () => {
     Class.add(outcome, 'success');
     Html.set(outcome, 'Success!');
   };
 
   // Taken from tunic
-  var htmlentities = function (str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  };
+  const htmlentities = (str: string): string =>
+    String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-  var keepMarkers = function (html) {
-    return html.replace(/&lt;del&gt;/g, '<del>').replace(/&lt;\/del&gt;/g, '</del>').replace(/&lt;ins&gt;/g, '<ins>').replace(/&lt;\/ins&gt;/g, '</ins>');
-  };
+  const keepMarkers = (html: string): string =>
+    html.replace(/&lt;del&gt;/g, '<del>').replace(/&lt;\/del&gt;/g, '</del>').replace(/&lt;ins&gt;/g, '<ins>').replace(/&lt;\/ins&gt;/g, '</ins>');
 
-  var failure = function (err) {
+  const failure = (err: any): void => {
     Class.add(outcome, 'failure');
     Remove.empty(outcome);
-    if (err.diff) InsertAll.append(outcome, Elements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
-    else Insert.append(outcome, Element.fromText(err));
+    if (err.diff) {
+      InsertAll.append(outcome, SugarElements.fromHtml(keepMarkers(htmlentities(err.diff.comparison))));
+    } else {
+      Insert.append(outcome, SugarElement.fromText(err));
+    }
   };
 
   Insert.append(container, outcome);
 
-  var elements = f(success, failure);
+  const elements = f(success, failure);
   InsertAll.append(container, elements);
-  Insert.append(Element.fromDom(document.body), container);
-};
-
-export default <any> {
-  init: init
+  Insert.append(SugarElement.fromDom(document.body), container);
 };

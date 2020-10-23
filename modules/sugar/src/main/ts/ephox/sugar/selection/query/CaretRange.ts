@@ -1,31 +1,29 @@
-import { Option } from '@ephox/katamari';
-import Element from '../../api/node/Element';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '../../api/node/SugarElement';
 import * as Traverse from '../../api/search/Traverse';
 import { SimRange } from '../../api/selection/SimRange';
 import * as ContainerPoint from './ContainerPoint';
 import * as EdgePoint from './EdgePoint';
-import { Window, Document, Range } from '@ephox/dom-globals';
 
 declare const document: any;
 
-const caretPositionFromPoint = function (doc: Element, x: number, y: number) {
-  return Option.from(doc.dom().caretPositionFromPoint(x, y)).bind(function (pos) {
+const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from((doc.dom as any).caretPositionFromPoint(x, y))
+  .bind((pos) => {
     // It turns out that Firefox can return null for pos.offsetNode
-    if (pos.offsetNode === null) { return Option.none<Range>(); }
-    const r = (doc.dom() as Document).createRange();
+    if (pos.offsetNode === null) {
+      return Optional.none<Range>();
+    }
+    const r = doc.dom.createRange();
     r.setStart(pos.offsetNode, pos.offset);
     r.collapse();
-    return Option.some(r);
+    return Optional.some(r);
   });
-};
 
-const caretRangeFromPoint = function (doc: Element, x: number, y: number) {
-  return Option.from((doc.dom() as Document).caretRangeFromPoint(x, y));
-};
+const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from(doc.dom.caretRangeFromPoint(x, y));
 
-const searchTextNodes = function (doc, node, x, y) {
-  const r = doc.dom().createRange();
-  r.selectNode(node.dom());
+const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) => {
+  const r = doc.dom.createRange();
+  r.selectNode(node.dom);
   const rect = r.getBoundingClientRect();
   // Clamp x,y at the bounds of the node so that the locate function has SOME chance
   const boundedX = Math.max(rect.left, Math.min(rect.right, x));
@@ -34,35 +32,30 @@ const searchTextNodes = function (doc, node, x, y) {
   return ContainerPoint.locate(doc, node, boundedX, boundedY);
 };
 
-const searchFromPoint = function (doc: Element, x: number, y: number): Option<Range> {
+const searchFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
   // elementFromPoint is defined to return null when there is no element at the point
   // This often happens when using IE10 event.y instead of event.clientY
-  return Element.fromPoint(doc, x, y).bind(function (elem) {
+  SugarElement.fromPoint(doc, x, y).bind((elem) => {
     // used when the x,y position points to an image, or outside the bounds
-    const fallback = function () {
-      return EdgePoint.search(doc, elem, x);
-    };
+    const fallback = () => EdgePoint.search(doc, elem, x);
 
     return Traverse.children(elem).length === 0 ? fallback() :
-            // if we have children, search for the right text node and then get the offset out of it
-            searchTextNodes(doc, elem, x, y).orThunk(fallback);
+    // if we have children, search for the right text node and then get the offset out of it
+      searchTextNodes(doc, elem, x, y).orThunk(fallback);
   });
-};
 
 const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint :  // defined standard
-                      document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
-                      searchFromPoint;                                            // fallback
+  document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
+    searchFromPoint;                                            // fallback
 
-const fromPoint = function (win: Window, x: number, y: number) {
-  const doc = Element.fromDom(win.document);
-  return availableSearch(doc, x, y).map(function (rng) {
-    return SimRange.create(
-      Element.fromDom(rng.startContainer),
-      rng.startOffset,
-      Element.fromDom(rng.endContainer),
-      rng.endOffset
-    );
-  });
+const fromPoint = (win: Window, x: number, y: number) => {
+  const doc = SugarElement.fromDom(win.document);
+  return availableSearch(doc, x, y).map((rng) => SimRange.create(
+    SugarElement.fromDom(rng.startContainer),
+    rng.startOffset,
+    SugarElement.fromDom(rng.endContainer),
+    rng.endOffset
+  ));
 };
 
 export {

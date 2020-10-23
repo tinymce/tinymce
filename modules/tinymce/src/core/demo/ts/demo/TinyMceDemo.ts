@@ -1,5 +1,3 @@
-import { document } from '@ephox/dom-globals';
-
 declare let tinymce: any;
 
 export default function () {
@@ -18,11 +16,10 @@ export default function () {
     // images_upload_base_path: 'base/path',
     // images_upload_credentials: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    setup (ed) {
-      ed.addButton('demoButton', {
-        type: 'button',
+    setup(ed) {
+      ed.ui.registry.addButton('demoButton', {
         text: 'Demo',
-        onclick () {
+        onAction() {
           ed.insertContent('Hello world!');
         }
       });

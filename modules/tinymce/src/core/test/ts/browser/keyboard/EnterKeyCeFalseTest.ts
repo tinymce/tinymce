@@ -1,18 +1,17 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import HtmlUtils from '../../module/test/HtmlUtils';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
+import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const pressEnter = function (editor, evt?) {
+  const pressEnter = function (editor: Editor, evt?: any) {
     const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13 }, evt);
@@ -56,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

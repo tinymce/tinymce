@@ -1,28 +1,43 @@
 import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
-import { Direction, Element } from '@ephox/sugar';
-import { AnchorLayout } from '../../positioning/layout/LayoutTypes';
-import { HasLayoutAnchor } from '../../positioning/mode/Anchoring';
+import { Optional } from '@ephox/katamari';
+import { Direction, SugarElement } from '@ephox/sugar';
 
-const schema: () => FieldProcessorAdt = () => {
-  return FieldSchema.optionObjOf('layouts', [
-    FieldSchema.strict('onLtr'),
-    FieldSchema.strict('onRtl')
-  ]);
-};
+import { AnchorLayout } from '../layout/LayoutTypes';
+import { HasLayoutAnchor } from './Anchoring';
+import { isBottomToTopDir } from './VerticalDir';
+
+const schema: () => FieldProcessorAdt = () => FieldSchema.optionObjOf('layouts', [
+  FieldSchema.strict('onLtr'),
+  FieldSchema.strict('onRtl'),
+  FieldSchema.option('onBottomLtr'),
+  FieldSchema.option('onBottomRtl')
+]);
 
 const get = (
-  elem: Element,
+  elem: SugarElement,
   info: HasLayoutAnchor,
   defaultLtr: AnchorLayout[],
-  defaultRtl: AnchorLayout[]
+  defaultRtl: AnchorLayout[],
+  defaultBottomLtr: AnchorLayout[],
+  defaultBottomRtl: AnchorLayout[],
+  dirElement: Optional<SugarElement>
 ): AnchorLayout[] => {
-  const ltr = info.layouts.map((ls) => {
-    return ls.onLtr(elem);
-  }).getOr(defaultLtr);
+  const isBottomToTop = dirElement.map(isBottomToTopDir).getOr(false);
 
-  const rtl = info.layouts.map((ls) => {
-    return ls.onRtl(elem);
-  }).getOr(defaultRtl);
+  const customLtr = info.layouts.map((ls) => ls.onLtr(elem));
+  const customRtl = info.layouts.map((ls) => ls.onRtl(elem));
+
+  const ltr = isBottomToTop ?
+    info.layouts.bind((ls) => ls.onBottomLtr.map((f) => f(elem)))
+      .or(customLtr)
+      .getOr(defaultBottomLtr) :
+    customLtr.getOr(defaultLtr);
+
+  const rtl = isBottomToTop ?
+    info.layouts.bind((ls) => ls.onBottomRtl.map((f) => f(elem)))
+      .or(customRtl)
+      .getOr(defaultBottomRtl) :
+    customRtl.getOr(defaultRtl);
 
   const f = Direction.onDirection(ltr, rtl);
   return f(elem);

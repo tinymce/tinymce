@@ -1,31 +1,42 @@
 import { Arr } from '@ephox/katamari';
-import * as Body from '../node/Body';
+import * as SugarBody from '../node/SugarBody';
+import { SugarElement } from '../node/SugarElement';
 import * as Traverse from './Traverse';
-import Element from '../node/Element';
 
 // maybe TraverseWith, similar to traverse but with a predicate?
 
-const all = function (predicate: (e: Element) => boolean) {
-  return descendants(Body.body(), predicate);
-};
+const all: {
+  <T extends Node = Node>(predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (predicate: (e: SugarElement<Node>) => boolean) =>
+  descendants(SugarBody.body(), predicate);
 
-const ancestors = function (scope: Element, predicate: (e: Element) => boolean, isRoot?: (e: Element) => boolean) {
-  return Arr.filter(Traverse.parents(scope, isRoot), predicate);
-};
+const ancestors: {
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>, isRoot?: (e: SugarElement<Node>) => boolean): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean, isRoot?: (e: SugarElement<Node>) => boolean) =>
+  Arr.filter(Traverse.parents(scope, isRoot), predicate);
 
-const siblings = function (scope: Element, predicate: (e: Element) => boolean) {
-  return Arr.filter(Traverse.siblings(scope), predicate);
-};
+const siblings: {
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) =>
+  Arr.filter(Traverse.siblings(scope), predicate);
 
-const children = function (scope: Element, predicate: (e: Element) => boolean) {
-  return Arr.filter(Traverse.children(scope), predicate);
-};
+const children: {
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) =>
+  Arr.filter(Traverse.children(scope), predicate);
 
-const descendants = function (scope: Element, predicate: (e: Element) => boolean) {
-  let result: Element[] = [];
+const descendants: {
+  <T extends Node = Node>(scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => e is SugarElement<T>): SugarElement<T>[];
+  (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean): SugarElement<Node>[];
+} = (scope: SugarElement<Node>, predicate: (e: SugarElement<Node>) => boolean) => {
+  let result: SugarElement<Node>[] = [];
 
   // Recurse.toArray() might help here
-  Arr.each(Traverse.children(scope), function (x) {
+  Arr.each(Traverse.children(scope), (x) => {
     if (predicate(x)) {
       result = result.concat([ x ]);
     }
@@ -39,5 +50,5 @@ export {
   ancestors,
   siblings,
   children,
-  descendants,
+  descendants
 };

@@ -1,12 +1,6 @@
-import { Objects } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
-import { SugarEvent } from '../../alien/TypeDefinitions';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, SketchSpec } from '../../api/component/SpecTypes';
-import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import * as TieredMenu from '../../api/ui/TieredMenu';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
@@ -17,18 +11,19 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
+import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import * as Sketcher from './Sketcher';
+import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
+import * as Sketcher from './Sketcher';
+import * as TieredMenu from './TieredMenu';
+import { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
-  const lookupAttr = (attr: string): Option<string> => {
-    return Objects.readOptFrom<Record<string, string>>(detail.dom, 'attributes').bind((attrs) => {
-      return Objects.readOptFrom<string>(attrs, attr);
-    });
-  };
+  const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));
 
-  const switchToMenu = (sandbox) => {
+  const switchToMenu = (sandbox: AlloyComponent) => {
     Sandboxing.getState(sandbox).each((tmenu) => {
       TieredMenu.tieredMenu.highlightPrimary(tmenu);
     });
@@ -41,12 +36,12 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
   const apis: DropdownApis = {
     expand: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightNone).get(Fun.noop);
       }
     },
     open: (comp) => {
-      if (! Toggling.isOn(comp)) {
+      if (!Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
     },
@@ -55,12 +50,18 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
       if (Toggling.isOn(comp)) {
         DropdownUtils.togglePopup(detail, (x) => x, comp, externals, Fun.noop, DropdownUtils.HighlightOnOpen.HighlightFirst).get(Fun.noop);
       }
+    },
+    // If we are open, refresh the menus in the tiered menu system
+    repositionMenus: (comp) => {
+      if (Toggling.isOn(comp)) {
+        DropdownUtils.repositionMenus(comp);
+      }
     }
   };
 
-  const triggerExecute = (comp: AlloyComponent, se: SimulatedEvent<SugarEvent>): Option<boolean> => {
+  const triggerExecute = (comp: AlloyComponent, _se: SimulatedEvent<EventArgs>): Optional<boolean> => {
     AlloyTriggers.emitExecute(comp);
-    return Option.some(true);
+    return Optional.some<boolean>(true);
   };
 
   return {
@@ -78,10 +79,10 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         }),
         Coupling.config({
           others: {
-            sandbox (hotspot) {
+            sandbox(hotspot) {
               return DropdownUtils.makeSandbox(detail, hotspot, {
-                onOpen () { Toggling.on(hotspot); },
-                onClose () { Toggling.off(hotspot); }
+                onOpen() { Toggling.on(hotspot); },
+                onClose() { Toggling.off(hotspot); }
               });
             }
           }
@@ -90,7 +91,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
           mode: 'special',
           onSpace: triggerExecute,
           onEnter: triggerExecute,
-          onDown: (comp, se) => {
+          onDown: (comp, _se): Optional<boolean> => {
             if (Dropdown.isOpen(comp)) {
               const sandbox = Coupling.getCoupled(comp, 'sandbox');
               switchToMenu(sandbox);
@@ -98,14 +99,14 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
               Dropdown.open(comp);
             }
 
-            return Option.some(true);
+            return Optional.some<boolean>(true);
           },
-          onEscape: (comp, se) => {
+          onEscape: (comp, _se): Optional<boolean> => {
             if (Dropdown.isOpen(comp)) {
               Dropdown.close(comp);
-              return Option.some(true);
+              return Optional.some<boolean>(true);
             } else {
-              return Option.none();
+              return Optional.none();
             }
           }
         }),
@@ -114,7 +115,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
     ),
 
     events: ButtonBase.events(
-      Option.some(action)
+      Optional.some(action)
     ),
 
     eventOrder: {
@@ -135,18 +136,19 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
   };
 };
 
-const Dropdown = Sketcher.composite({
+const Dropdown: DropdownSketcher = Sketcher.composite<DropdownSpec, DropdownDetail, DropdownApis>({
   name: 'Dropdown',
   configFields: DropdownSchema.schema(),
   partFields: DropdownSchema.parts(),
   factory,
   apis: {
-    open: (apis: DropdownApis, comp) => apis.open(comp),
-    expand: (apis: DropdownApis, comp) => apis.expand(comp),
-    close: (apis: DropdownApis, comp) => apis.close(comp),
-    isOpen: (apis: DropdownApis, comp) => apis.isOpen(comp)
+    open: (apis, comp) => apis.open(comp),
+    expand: (apis, comp) => apis.expand(comp),
+    close: (apis, comp) => apis.close(comp),
+    isOpen: (apis, comp) => apis.isOpen(comp),
+    repositionMenus: (apis, comp) => apis.repositionMenus(comp)
   }
-}) as DropdownSketcher;
+});
 
 export {
   Dropdown

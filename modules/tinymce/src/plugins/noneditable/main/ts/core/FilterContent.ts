@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const hasClass = function (checkClassName) {
   return function (node) {
@@ -57,12 +58,11 @@ const convertRegExpsToNonEditable = function (editor, nonEditableRegExps, e) {
   e.content = content;
 };
 
-const setup = function (editor) {
-  let editClass, nonEditClass;
+const setup = function (editor: Editor) {
   const contentEditableAttrName = 'contenteditable';
 
-  editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';
-  nonEditClass = ' ' + Tools.trim(Settings.getNonEditableClass(editor)) + ' ';
+  const editClass = ' ' + Tools.trim(Settings.getEditableClass(editor)) + ' ';
+  const nonEditClass = ' ' + Tools.trim(Settings.getNonEditableClass(editor)) + ' ';
 
   const hasEditClass = hasClass(editClass);
   const hasNonEditClass = hasClass(nonEditClass);
@@ -111,6 +111,6 @@ const setup = function (editor) {
   });
 };
 
-export default {
+export {
   setup
 };

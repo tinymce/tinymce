@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 
-import Newlines from 'tinymce/plugins/paste/core/Newlines';
+import * as Newlines from 'tinymce/plugins/paste/core/Newlines';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -18,7 +18,7 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
       isText: true
     },
     {
-      label: 'TestCase-TBA: Paste: Case shouldn\'t matter',
+      label: `TestCase-TBA: Paste: Case shouldn't matter`,
       content: '<DIV>a</DIV><DIV><BR></DIV>',
       isText: true
     },
@@ -50,7 +50,12 @@ UnitTest.test('tinymce.plugins.paste.browser.NewlinesTest', function () {
   ];
 
   // only DIV,P,BR and SPAN[style="white-space:pre"] tags are allowed in "plain text" string
-  Arr.each('a,abbr,address,article,aside,audio,b,bdi,bdo,blockquote,button,cite,code,del,details,dfn,dl,em,embed,fieldset,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,i,ins,label,menu,nav,noscript,object,ol,pre,q,s,script,section,select,small,strong,style,sub,sup,svg,table,textarea,time,u,ul,var,video,wbr'.split(','),
+  Arr.each(
+    ('a,abbr,address,article,aside,audio,b,bdi,bdo,blockquote,button,cite,' +
+    'code,del,details,dfn,dl,em,embed,fieldset,figure,footer,form,h1,h2,h3,' +
+    'h4,h5,h6,header,hgroup,hr,i,ins,label,menu,nav,noscript,object,ol,pre,' +
+    'q,s,script,section,select,small,strong,style,sub,sup,svg,table,textarea,' +
+    'time,u,ul,var,video,wbr').split(','),
     function (tag) {
       const content = '<p>a</p><' + tag + '>b</' + tag + '><p>c<br>d</p>';
       textCases.push({

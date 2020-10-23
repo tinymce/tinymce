@@ -1,99 +1,52 @@
 import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  GeneralSteps,
-  Keyboard,
-  Keys,
-  Log,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, Step, UiFinder
 } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
+import * as MenuUtils from '../../../module/MenuUtils';
 
 UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
   Theme();
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
-      const sAssertFocusOnItem = (itemText: string) => {
-        return FocusTools.sTryOnSelector(
-          `Focus should be on ${itemText}`,
-          doc,
-          `.tox-collection__item:contains("${itemText}")`
-        );
-      };
+      const sAssertFocusOnItem = (itemText: string) => FocusTools.sTryOnSelector(
+        `Focus should be on ${itemText}`,
+        doc,
+        `.tox-collection__item:contains("${itemText}")`
+      );
 
-      const sAssertFocusOnToolbarButton = (buttonText: string) => {
-        return FocusTools.sTryOnSelector(
-          `Focus should be on ${buttonText}`,
-          doc,
-          `.tox-toolbar button:contains("${buttonText}")`
-        );
-      };
+      const sAssertFocusOnToolbarButton = (buttonText: string) => FocusTools.sTryOnSelector(
+        `Focus should be on ${buttonText}`,
+        doc,
+        `.tox-toolbar__group button:contains("${buttonText}")`
+      );
 
-      const sAssertFocusOnAlignToolbarButton = () => {
-        return FocusTools.sTryOnSelector(
-          `Focus should be on Align`,
-          doc,
-          `.tox-toolbar button[aria-label="Align"]`
-        );
-      };
-
-      const sOpenMenu = (label: string, menuText: string) => {
-        const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
-        const btnText = menuTextParts[0];
-        const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
-        const selector = `button:contains(${btnText})${pseudo}`;
-        return sOpenMenuWithSelector(label, selector);
-      };
-
-      const sOpenAlignMenu = (label: string) => {
-        const selector = `button[aria-label="Align"]`;
-        return sOpenMenuWithSelector(label, selector);
-      };
-
-      const sOpenMenuWithSelector = (label: string, selector: string) => {
-        return Logger.t(
-          `Trying to open menu: ${label}`,
-          GeneralSteps.sequence([
-            Mouse.sClickOn(Body.body(), selector),
-            Chain.asStep(Body.body(), [
-              UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-            ]),
-          ])
-        );
-      };
+      const sAssertFocusOnAlignToolbarButton = () => FocusTools.sTryOnSelector(
+        'Focus should be on Align',
+        doc,
+        '.tox-toolbar__group button[aria-label="Align"]'
+      );
 
       const sAssertItemTicks = (label: string, expectedTicks: boolean[]) => Logger.t(
         `Checking tick state of items (${label})`,
-        Chain.asStep(Body.body(), [
+        Chain.asStep(SugarBody.body(), [
           UiFinder.cFindIn('.tox-selected-menu .tox-collection__group'),
-          Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-collection__group') ],
-              children: Arr.map(expectedTicks, (expected) => {
-                return s.element('div', {
-                  attrs: {
-                    'role': str.is('menuitemcheckbox'),
-                    'aria-checked': str.is(expected ? 'true' : 'false')
-                  }
-                });
-              })
-            });
-          }))
+          Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-collection__group') ],
+            children: Arr.map(expectedTicks, (expected) => s.element('div', {
+              attrs: {
+                'role': str.is('menuitemcheckbox'),
+                'aria-checked': str.is(expected ? 'true' : 'false')
+              }
+            }))
+          })))
         ])
       );
 
@@ -101,17 +54,17 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         label,
         GeneralSteps.sequence([
           tinyApis.sSetCursor(path, offset),
-            sOpen(menuText),
-            beforeStep,
-            sAssertItemTicks('Checking ticks at location', expectedTicks),
-            afterStep,
-            Keyboard.sKeydown(doc, Keys.escape(), { }),
-            UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+          sOpen(menuText),
+          beforeStep,
+          sAssertItemTicks('Checking ticks at location', expectedTicks),
+          afterStep,
+          Keyboard.sKeydown(doc, Keys.escape(), { }),
+          UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
         ])
       );
 
-      const sCheckItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, (text) => sOpenMenu('', text));
-      const sCheckAlignItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, () => sOpenAlignMenu(''));
+      const sCheckItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, (text) => MenuUtils.sOpenMenu('', text));
+      const sCheckAlignItemsAtLocation = sCheckItemsAtLocationPlus(Step.pass, Step.pass, () => MenuUtils.sOpenAlignMenu(''));
 
       const sCheckSubItemsAtLocation = (expectedSubmenu: string) => sCheckItemsAtLocationPlus(
         GeneralSteps.sequence([
@@ -120,18 +73,18 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ]),
         // Afterwards, escape the submenu
         Keyboard.sKeydown(doc, Keys.escape(), { }),
-        (text) => sOpenMenu('', text)
+        (text) => MenuUtils.sOpenMenu('', text)
       );
 
       const sTestAlignment = Log.stepsAsStep('TBA', 'Checking alignment ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenAlignMenu('Align'),
+        MenuUtils.sOpenAlignMenu('Align'),
         sAssertFocusOnItem('Left'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Center'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckAlignItemsAtLocation(
           'First paragraph after "centering"',
@@ -166,10 +119,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFontSelect = Log.stepsAsStep('TBA', 'Checking fontselect ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('FontSelect', 'Verdana'),
+        MenuUtils.sOpenMenu('FontSelect', 'Verdana'),
         sAssertFocusOnItem('Andale Mono'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First paragraph after "Andale Mono"',
@@ -196,10 +149,10 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFontSizeSelect = Log.stepsAsStep('TBA', 'Checking fontsize ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('FontSelect', '12pt'), // This might be fragile.
+        MenuUtils.sOpenMenu('FontSelect', '12pt'), // This might be fragile.
         sAssertFocusOnItem('8pt'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First paragraph after "8pt',
@@ -226,12 +179,12 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestFormatSelect = Log.stepsAsStep('TBA', 'Checking format ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('Format', 'Paragraph:first'),
+        MenuUtils.sOpenMenu('Format', 'Paragraph:first'),
         sAssertFocusOnItem('Paragraph'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Heading 1'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckItemsAtLocation(
           'First block after "h1',
@@ -255,7 +208,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ),
 
         // Check that the menus are working also
-        Mouse.sClickOn(Body.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
+        Mouse.sClickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
         sAssertFocusOnItem('Bold'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Italic'),
@@ -285,12 +238,12 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestStyleSelect = Log.stepsAsStep('TBA', 'Checking style ticks and updating', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenMenu('Format', 'Paragraph:last'),
+        MenuUtils.sOpenMenu('Format', 'Paragraph:last'),
         sAssertFocusOnItem('Headings'),
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnItem('Heading 1'),
         Keyboard.sKeydown(doc, Keys.enter(), { }),
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
 
         sCheckSubItemsAtLocation('Heading 1')(
           'First block after "h1',
@@ -314,7 +267,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         ),
 
         // Check that the menus are working also
-        Mouse.sClickOn(Body.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
+        Mouse.sClickOn(SugarBody.body(), '[role="menubar"] [role="menuitem"]:contains("Format")'),
         sAssertFocusOnItem('Bold'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Italic'),
@@ -345,7 +298,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
       const sTestToolbarKeyboardNav = Log.stepsAsStep('TBA', 'Checking toolbar keyboard navigation', [
         tinyApis.sSetContent('<p>First paragraph</p><p>Second paragraph</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'Fi'.length),
-        sOpenAlignMenu('Align'),
+        MenuUtils.sOpenAlignMenu('Align'),
         sAssertFocusOnItem('Left'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Center'),
@@ -353,12 +306,12 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         // Check moving left and right closes the open dropdown and navigates to the next item
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnToolbarButton('Verdana'), // Font Select
-        UiFinder.sNotExists(Body.body(), '[role="menu"]'),
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]'),
         Keyboard.sKeydown(doc, Keys.down(), { }),
         sAssertFocusOnItem('Andale Mono'),
         Keyboard.sKeydown(doc, Keys.left(), { }),
         sAssertFocusOnAlignToolbarButton(), // Alignment
-        UiFinder.sNotExists(Body.body(), '[role="menu"]')
+        UiFinder.sNotExists(SugarBody.body(), '[role="menu"]')
       ]);
 
       Pipeline.async({ }, [

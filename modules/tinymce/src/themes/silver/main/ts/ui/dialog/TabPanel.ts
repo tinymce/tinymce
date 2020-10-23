@@ -5,26 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing, SketchSpec, Tabbar as AlloyTabbar, TabSection as AlloyTabSection, Tabstopping } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Composing, Form as AlloyForm, Keying, Receiving, Representing,
+  SketchSpec, Tabbar as AlloyTabbar, TabbarTypes, TabSection as AlloyTabSection, Tabstopping
+} from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
+import { Dialog } from '@ephox/bridge';
 import { Arr, Cell, Fun, Merger } from '@ephox/katamari';
 import { toValidValues } from 'tinymce/themes/silver/ui/general/FormValues';
 import { interpretInForm } from 'tinymce/themes/silver/ui/general/UiFactory';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { setMode } from '../alien/DialogTabHeight';
 import { formTabChangeEvent } from '../general/FormEvents';
-import NavigableObject from '../general/NavigableObject';
+import * as NavigableObject from '../general/NavigableObject';
 
 const SendDataToSectionChannel = 'send-data-to-section';
 const SendDataToViewChannel = 'send-data-to-view';
 
-export interface InternalTabApi<I> {
-  tabs: Array<{ name: string, title: string, items: I[]}>;
-}
-
 export type TabData = Record<string, any>;
 
-export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryBackstage): SketchSpec => {
+type TabPanelSpec = Omit<Dialog.TabPanel, 'type'>;
+
+export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage): SketchSpec => {
   const storedValue = Cell<TabData>({ });
 
   const updateDataWithForm = (form: AlloyComponent): void => {
@@ -42,7 +44,7 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
 
   const oldTab = Cell(null);
 
-  const allTabs = Arr.map(spec.tabs, function (tab) {
+  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, function (tab) {
     return {
       value: tab.name,
       dom: {
@@ -50,45 +52,43 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
         classes: [ 'tox-dialog__body-nav-item' ],
         innerHtml: backstage.shared.providers.translate(tab.title)
       },
-      view () {
+      view() {
         return [
           // Dupe with SilverDialog
-          AlloyForm.sketch((parts) => {
-            return {
-              dom: {
-                tag: 'div',
-                classes: [ 'tox-form' ]
-              },
-              components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
-              formBehaviours: Behaviour.derive([
-                Keying.config({
-                  mode: 'acyclic',
-                  useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
-                }),
+          AlloyForm.sketch((parts) => ({
+            dom: {
+              tag: 'div',
+              classes: [ 'tox-form' ]
+            },
+            components: Arr.map(tab.items, (item) => interpretInForm(parts, item, backstage)),
+            formBehaviours: Behaviour.derive([
+              Keying.config({
+                mode: 'acyclic',
+                useTabstopAt: Fun.not(NavigableObject.isPseudoStop)
+              }),
 
-                AddEventsBehaviour.config('TabView.form.events', [
-                  AlloyEvents.runOnAttached(setDataOnForm),
-                  AlloyEvents.runOnDetached(updateDataWithForm)
-                ]),
-                Receiving.config({
-                  channels: Objects.wrapAll([
-                    {
-                      key: SendDataToSectionChannel,
-                      value:  {
-                        onReceive: updateDataWithForm
-                      }
-                    },
-                    {
-                      key: SendDataToViewChannel,
-                      value: {
-                        onReceive: setDataOnForm
-                      }
+              AddEventsBehaviour.config('TabView.form.events', [
+                AlloyEvents.runOnAttached(setDataOnForm),
+                AlloyEvents.runOnDetached(updateDataWithForm)
+              ]),
+              Receiving.config({
+                channels: Objects.wrapAll([
+                  {
+                    key: SendDataToSectionChannel,
+                    value:  {
+                      onReceive: updateDataWithForm
                     }
-                  ])
-                })
-              ])
-            };
-          })
+                  },
+                  {
+                    key: SendDataToViewChannel,
+                    value: {
+                      onReceive: setDataOnForm
+                    }
+                  }
+                ])
+              })
+            ])
+          }))
         ];
       }
     };
@@ -115,13 +115,13 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
     tabs: allTabs,
 
     components: [
-      AlloyTabSection.parts().tabbar({
+      AlloyTabSection.parts.tabbar({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-nav' ]
         },
         components: [
-          AlloyTabbar.parts().tabs({ })
+          AlloyTabbar.parts.tabs({ })
         ],
         markers: {
           tabClass: 'tox-tab',
@@ -132,7 +132,7 @@ export const renderTabPanel = <I>(spec: InternalTabApi<I>, backstage: UiFactoryB
           Tabstopping.config({ })
         ])
       }),
-      AlloyTabSection.parts().tabview({
+      AlloyTabSection.parts.tabview({
         dom: {
           tag: 'div',
           classes: [ 'tox-dialog__body-content' ]

@@ -1,43 +1,47 @@
-import { AlertBanner, AlertBannerApi } from './AlertBanner';
-import { Bar, BarApi } from './Bar';
-import { Button, ButtonApi } from './Button';
-import { Checkbox, CheckboxApi } from './Checkbox';
-import { Collection, CollectionApi } from './Collection';
-import { ColorInput, ColorInputApi } from './ColorInput';
-import { ColorPicker, ColorPickerApi } from './ColorPicker';
-import { DropZone, DropZoneApi } from './Dropzone';
-import { Grid, GridApi } from './Grid';
-import { Iframe, IframeApi } from './Iframe';
-import { ImageTools, ImageToolsApi } from './ImageTools';
-import { Input, InputApi } from './Input';
-import { Label, LabelApi } from './Label';
-import { SelectBox, SelectBoxApi } from './SelectBox';
-import { SizeInput, SizeInputApi } from './SizeInput';
-import { Table, TableApi } from './Table';
-import { TextArea, TextAreaApi } from './Textarea';
-import { UrlInput, UrlInputApi } from './UrlInput';
-import { HtmlPanel, HtmlPanelApi } from './HtmlPanel';
+import { AlertBanner, AlertBannerSpec } from './AlertBanner';
+import { Bar, BarSpec } from './Bar';
+import { Button, ButtonSpec } from './Button';
+import { Checkbox, CheckboxSpec } from './Checkbox';
+import { Collection, CollectionSpec } from './Collection';
+import { ColorInput, ColorInputSpec } from './ColorInput';
+import { ColorPicker, ColorPickerSpec } from './ColorPicker';
+import { DropZone, DropZoneSpec } from './Dropzone';
+import { Grid, GridSpec } from './Grid';
+import { Iframe, IframeSpec } from './Iframe';
+import { ImageTools, ImageToolsSpec } from './ImageTools';
+import { Input, InputSpec } from './Input';
+import { Label, LabelSpec } from './Label';
+import { ListBox, ListBoxSpec } from './ListBox';
+import { SelectBox, SelectBoxSpec } from './SelectBox';
+import { SizeInput, SizeInputSpec } from './SizeInput';
+import { Table, TableSpec } from './Table';
+import { TextArea, TextAreaSpec } from './Textarea';
+import { UrlInput, UrlInputSpec } from './UrlInput';
+import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
+import { Panel, PanelSpec } from './Panel';
 
-export type BodyComponentApi
-  = BarApi
-  | ButtonApi
-  | CheckboxApi
-  | TextAreaApi
-  | InputApi
-  | SelectBoxApi
-  | SizeInputApi
-  | IframeApi
-  | HtmlPanelApi
-  | UrlInputApi
-  | DropZoneApi
-  | ColorInputApi
-  | GridApi
-  | ColorPickerApi
-  | ImageToolsApi
-  | AlertBannerApi
-  | CollectionApi
-  | LabelApi
-  | TableApi;
+export type BodyComponentSpec
+  = BarSpec
+  | ButtonSpec
+  | CheckboxSpec
+  | TextAreaSpec
+  | InputSpec
+  | ListBoxSpec
+  | SelectBoxSpec
+  | SizeInputSpec
+  | IframeSpec
+  | HtmlPanelSpec
+  | UrlInputSpec
+  | DropZoneSpec
+  | ColorInputSpec
+  | GridSpec
+  | ColorPickerSpec
+  | ImageToolsSpec
+  | AlertBannerSpec
+  | CollectionSpec
+  | LabelSpec
+  | TableSpec
+  | PanelSpec;
 
 export type BodyComponent
   = Bar
@@ -45,6 +49,7 @@ export type BodyComponent
   | Checkbox
   | TextArea
   | Input
+  | ListBox
   | SelectBox
   | SizeInput
   | Iframe
@@ -58,4 +63,5 @@ export type BodyComponent
   | AlertBanner
   | Collection
   | Label
-  | Table;
+  | Table
+  | Panel;

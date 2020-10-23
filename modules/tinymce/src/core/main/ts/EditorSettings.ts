@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Option, Strings, Struct, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import Tools from './api/util/Tools';
+
 import Editor from './api/Editor';
 import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
+import Tools from './api/util/Tools';
 
 export interface ParamTypeMap {
   'hash': Record<string, string>;
@@ -20,12 +21,26 @@ export interface ParamTypeMap {
   'array': any[];
 }
 
-const sectionResult = Struct.immutable('sections', 'settings');
-const detection = PlatformDetection.detect();
-const isTouch = detection.deviceType.isTouch();
-const isPhone = detection.deviceType.isPhone();
-const mobilePlugins = [ 'lists', 'autolink', 'autosave' ];
-const defaultMobileSettings = isPhone ? { theme: 'mobile' } : { };
+interface SectionResult {
+  sections: () => Record<string, Partial<RawEditorSettings>>;
+  settings: () => RawEditorSettings;
+}
+
+const sectionResult = (sections: Record<string, Partial<RawEditorSettings>>, settings: RawEditorSettings): SectionResult => ({
+  sections: Fun.constant(sections),
+  settings: Fun.constant(settings)
+});
+
+const deviceDetection = PlatformDetection.detect().deviceType;
+const isTouch = deviceDetection.isTouch();
+const isPhone = deviceDetection.isPhone();
+const isTablet = deviceDetection.isTablet();
+const legacyMobilePlugins = [ 'lists', 'autolink', 'autosave' ];
+const defaultTouchSettings: RawEditorSettings = {
+  table_grid: false,          // Table grid relies on hover, which isn't available so use the dialog instead
+  object_resizing: false,     // No nice way to do object resizing at this stage
+  resize: false              // Editor resize doesn't work on touch devices at this stage
+};
 
 const normalizePlugins = function (plugins: string | string[]) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
@@ -35,8 +50,9 @@ const normalizePlugins = function (plugins: string | string[]) {
   });
 };
 
-const filterMobilePlugins = function (plugins: string[]) {
-  return Arr.filter(plugins, Fun.curry(Arr.contains, mobilePlugins));
+// Filter out plugins for the legacy mobile theme
+const filterLegacyMobilePlugins = function (plugins: string[]) {
+  return Arr.filter(plugins, Fun.curry(Arr.contains, legacyMobilePlugins));
 };
 
 const extractSections = function (keys, settings) {
@@ -47,20 +63,37 @@ const extractSections = function (keys, settings) {
   return sectionResult(result.t, result.f);
 };
 
-const getSection = function (sectionResult, name, defaults) {
+const getSection = function (sectionResult: SectionResult, name: string, defaults: Partial<RawEditorSettings> = { }) {
   const sections = sectionResult.sections();
   const sectionSettings = sections.hasOwnProperty(name) ? sections[name] : { };
   return Tools.extend({}, defaults, sectionSettings);
 };
 
-const hasSection = function (sectionResult, name) {
+const hasSection = function (sectionResult: SectionResult, name: string) {
   return sectionResult.sections().hasOwnProperty(name);
 };
 
-const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEditorSettings {
-  return {
+const isSectionTheme = function (sectionResult: SectionResult, name: string, theme: string) {
+  const section = sectionResult.sections();
+  return hasSection(sectionResult, name) && section[name].theme === theme;
+};
+
+const getSectionConfig = function (sectionResult: SectionResult, name: string) {
+  return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
+};
+
+const getToolbarMode = (settings: RawEditorSettings, defaultVal) =>
+  // If toolbar_mode is unset by the user, fall back to:
+  Obj.get(settings, 'toolbar_mode')
+    .orThunk(() => Obj.get(settings, 'toolbar_drawer').map((val) => val === false ? 'wrap' : val))     // #1 toolbar_drawer
+    .getOr(defaultVal);                                // #2 defaultVal
+
+
+const getDefaultSettings = function (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
+  const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
+    toolbar_mode: getToolbarMode(settings, 'floating'),
     plugins: '',
     document_base_url: documentBaseUrl,
     add_form_submit_trigger: true,
@@ -88,11 +121,33 @@ const getDefaultSettings = function (id, documentBaseUrl, editor: Editor): RawEd
     url_converter: editor.convertURL,
     url_converter_scope: editor
   };
+
+  return {
+    ...baseDefaults,
+    ...isTouch ? defaultTouchSettings : { }
+  };
+};
+
+const getDefaultMobileSettings = (mobileSettings: RawEditorSettings, isPhone: boolean): RawEditorSettings => {
+  const defaultMobileSettings: RawEditorSettings = {
+    resize: false,               // Editor resize doesn't make sense on mobile
+    toolbar_mode: getToolbarMode(mobileSettings, 'scrolling'),   // Use the default side-scrolling toolbar for tablets/phones
+    toolbar_sticky: false        // Only enable sticky toolbar on desktop by default
+  };
+
+  const defaultPhoneSettings: RawEditorSettings = {
+    menubar: false               // Phones don't have a lot of screen space, so disable the menubar
+  };
+
+  return {
+    ...defaultTouchSettings,
+    ...defaultMobileSettings,
+    ...isPhone ? defaultPhoneSettings : { }
+  };
 };
 
 const getExternalPlugins = function (overrideSettings: RawEditorSettings, settings: RawEditorSettings) {
   const userDefinedExternalPlugins = settings.external_plugins ? settings.external_plugins : { };
-
   if (overrideSettings && overrideSettings.external_plugins) {
     return Tools.extend({}, overrideSettings.external_plugins, userDefinedExternalPlugins);
   } else {
@@ -100,14 +155,25 @@ const getExternalPlugins = function (overrideSettings: RawEditorSettings, settin
   }
 };
 
-const combinePlugins = function (forcedPlugins, plugins) {
+const combinePlugins = function (forcedPlugins: string[], plugins: string[]): string[] {
   return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
 };
 
-const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
+const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings & { external_plugins: Record<string, string> }): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
-  const plugins = normalizePlugins(settings.plugins);
-  const platformPlugins = isTouchDevice && hasSection(sectionResult, 'mobile') ? filterMobilePlugins(plugins) : plugins;
+  const desktopPlugins = normalizePlugins(settings.plugins);
+
+  const mobileConfig = getSectionConfig(sectionResult, 'mobile');
+  const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
+
+  const platformPlugins =
+    // is a mobile device with mobile theme
+    isMobileDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterLegacyMobilePlugins(mobilePlugins) :
+    // is a mobile device with any mobile settings
+      isMobileDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
+      // is desktop
+        desktopPlugins;
+
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
 
   return Tools.extend(settings, {
@@ -115,13 +181,15 @@ const processPlugins = function (isTouchDevice: boolean, sectionResult, defaultO
   });
 };
 
-const isOnMobile = function (isTouchDevice, sectionResult) {
-  const isInline = sectionResult.settings().inline; // We don't support mobile inline yet
-  return isTouchDevice && !isInline;
+const isOnMobile = function (isMobileDevice: boolean, sectionResult: SectionResult) {
+  return isMobileDevice && hasSection(sectionResult, 'mobile');
 };
 
-const combineSettings = (isTouchDevice: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
-  const sectionResult = extractSections(['mobile'], settings);
+const combineSettings = (isMobileDevice: boolean, isPhone: boolean, defaultSettings: RawEditorSettings, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings => {
+  // Use mobile mode by default on phones, so patch in the default mobile settings
+  const defaultDeviceSettings = isMobileDevice ? { mobile: getDefaultMobileSettings(settings.mobile || {}, isPhone) } : { };
+  const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(defaultDeviceSettings, settings));
+
   const extendedSettings = Tools.extend(
     // Default settings
     defaultSettings,
@@ -133,7 +201,7 @@ const combineSettings = (isTouchDevice: boolean, defaultSettings: RawEditorSetti
     sectionResult.settings(),
 
     // Sections
-    isOnMobile(isTouchDevice, sectionResult) ? getSection(sectionResult, 'mobile', defaultMobileSettings) : { },
+    isOnMobile(isMobileDevice, sectionResult) ? getSection(sectionResult, 'mobile') : { },
 
     // Forced settings
     {
@@ -142,17 +210,15 @@ const combineSettings = (isTouchDevice: boolean, defaultSettings: RawEditorSetti
     }
   );
 
-  return processPlugins(isTouchDevice, sectionResult, defaultOverrideSettings, extendedSettings);
+  return processPlugins(isMobileDevice, sectionResult, defaultOverrideSettings, extendedSettings);
 };
 
 const getEditorSettings = function (editor: Editor, id: string, documentBaseUrl: string, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings): EditorSettings {
-  const defaultSettings = getDefaultSettings(id, documentBaseUrl, editor);
-  return combineSettings(isTouch, defaultSettings, defaultOverrideSettings, settings);
+  const defaultSettings = getDefaultSettings(settings, id, documentBaseUrl, isTouch, editor);
+  return combineSettings(isPhone || isTablet, isPhone, defaultSettings, defaultOverrideSettings, settings);
 };
 
-const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Option<EditorSettings[K]> => {
-  return Option.from(editor.settings[name]).filter(predicate);
-};
+const getFiltered = <K extends keyof EditorSettings> (predicate: (x: any) => boolean, editor: Editor, name: K): Optional<EditorSettings[K]> => Optional.from(editor.settings[name]).filter(predicate);
 
 const getParamObject = (value: string) => {
   let output = {};
@@ -200,8 +266,4 @@ const getParam = (editor: Editor, name: string, defaultVal?: any, type?: string)
   }
 };
 
-export {
-  getEditorSettings,
-  getParam,
-  combineSettings
-};
+export { getEditorSettings, getParam, combineSettings, getDefaultSettings, getDefaultMobileSettings };

@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ApplyFormat from './ApplyFormat';
-import MatchFormat from './MatchFormat';
-import RemoveFormat from './RemoveFormat';
 import Editor from '../api/Editor';
-import { FormatRegistry } from './FormatRegistry';
+import { FormatVars } from '../api/fmt/Format';
+import * as ApplyFormat from './ApplyFormat';
+import * as MatchFormat from './MatchFormat';
+import * as RemoveFormat from './RemoveFormat';
 
-const toggle = function (editor: Editor, formats: FormatRegistry, name: string, vars, node) {
-  const fmt = formats.get(name);
+const toggle = (editor: Editor, name: string, vars: FormatVars, node: Node) => {
+  const fmt = editor.formatter.get(name);
 
   if (MatchFormat.match(editor, name, vars, node) && (!('toggle' in fmt[0]) || fmt[0].toggle)) {
     RemoveFormat.remove(editor, name, vars, node);
@@ -21,6 +21,6 @@ const toggle = function (editor: Editor, formats: FormatRegistry, name: string, 
   }
 };
 
-export default {
+export {
   toggle
 };

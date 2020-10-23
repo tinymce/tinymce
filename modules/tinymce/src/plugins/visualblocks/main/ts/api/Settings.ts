@@ -11,6 +11,6 @@ const isEnabledByDefault = function (editor: Editor) {
   return editor.getParam('visualblocks_default_state', false, 'boolean');
 };
 
-export default {
+export {
   isEnabledByDefault
 };

@@ -1,32 +1,26 @@
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Chain } from 'ephox/agar/api/Chain';
 import { NamedChain } from 'ephox/agar/api/NamedChain';
-import * as RawAssertions from 'ephox/agar/api/RawAssertions';
-import { TestLogs } from '../../../../main/ts/ephox/agar/api/Main';
+import { TestLogs } from 'ephox/agar/api/TestLogs';
 
+UnitTest.asynctest('NamedChainPipelineTest', (success, failure) => {
 
-UnitTest.asynctest('NamedChainPipelineTest', function() {
-  const success = arguments[arguments.length-2];
-  const failure = arguments[arguments.length-1];
-
-  const cAcc = function (ch: number) {
-    return Chain.async((input: number, next, die) => {
+  const cAcc = (ch: number) =>
+    Chain.async((input: number, next, _die) => {
       next(input + ch);
     });
-  };
 
   NamedChain.pipeline([
     NamedChain.writeValue('value', 1),
     NamedChain.overwrite('value', cAcc(2)),
     NamedChain.overwrite('value', cAcc(3)),
     NamedChain.output('value')
-  ], function (result) {
-      try {
-        RawAssertions.assertEq('Expected result to be the sum', 6, result);
-        success();
-      } catch (err) {
-          failure(err);
-      }
+  ], (result) => {
+    try {
+      Assert.eq('Expected result to be the sum', 6, result);
+      success();
+    } catch (err) {
+      failure(err);
+    }
   }, failure, TestLogs.init());
 });
-

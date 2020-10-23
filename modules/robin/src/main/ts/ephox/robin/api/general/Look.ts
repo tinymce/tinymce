@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Fun } from '@ephox/katamari';
-import Look from '../../look/Look';
+import * as Look from '../../look/Look';
 
 const selector = function <E, D> (_universe: Universe<E, D>, sel: string) {
   return Look.selector(sel);
@@ -16,7 +16,7 @@ const exact = function <E, D> (universe: Universe<E, D>, item: E) {
   return Look.predicate(itemMatch);
 };
 
-export default {
+export {
   selector,
   predicate,
   exact

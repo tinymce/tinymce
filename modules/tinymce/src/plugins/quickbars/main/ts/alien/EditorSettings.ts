@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Editor from 'tinymce/core/api/Editor';
 import { Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
 const validDefaultOrDie = (value: any, predicate: (value: any) => boolean): boolean => {
   if (predicate(value)) {
     return true;
   }
 
-  throw new Error('Default value doesn\'t match requested type.');
+  throw new Error(`Default value doesn't match requested type.`);
 };
 
 const items = (value: boolean | string, defaultValue: string): string => {
@@ -32,14 +32,10 @@ const items = (value: boolean | string, defaultValue: string): string => {
   return value;
 };
 
-const getToolbarItemsOr = (predicate: (value: any) => boolean) => {
-  return (editor: Editor, name: string, defaultValue: string): string => {
-    validDefaultOrDie(defaultValue, predicate);
-    const value = editor.getParam(name, defaultValue);
-    return items(value, defaultValue);
-  };
+const getToolbarItemsOr_ = (predicate: (value: any) => boolean) => (editor: Editor, name: string, defaultValue: string): string => {
+  validDefaultOrDie(defaultValue, predicate);
+  const value = editor.getParam(name, defaultValue);
+  return items(value, defaultValue);
 };
 
-export default {
-  getToolbarItemsOr: getToolbarItemsOr(Type.isString)
-};
+export const getToolbarItemsOr = getToolbarItemsOr_(Type.isString);

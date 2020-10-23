@@ -1,13 +1,11 @@
-import { Adt, Arr, Fun, Merger, Obj, Option, Result, Thunk, Type } from '@ephox/katamari';
+import { Adt, Arr, Fun, Merger, Obj, Optional, Thunk, Type } from '@ephox/katamari';
+import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 
 import * as FieldPresence from '../api/FieldPresence';
 import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
-import { fieldAdt, TypeProcessorAdt, FieldProcessorAdt, typeAdt } from '../format/TypeTokens';
-import * as ObjReader from './ObjReader';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
-import { SimpleResult } from '../alien/SimpleResult';
 
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
 export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
@@ -16,26 +14,34 @@ export type ValueExtractor = (label: string, prop: Processor, strength: () => an
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
-  toDsl: () => TypeProcessorAdt;
 }
 
-export type FieldValueProcessor = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => FieldProcessorAdt;
-export type StateValueProcessor = <T>(okey: string, instantiator) => T;
+export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
+export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => any) => T;
 
-export interface ValueProcessorAdt extends Adt {
-  fold: (FieldValueProcessor, StateValueProcessor) => any;
+export interface ValueProcessorAdt {
+  fold: <T>(
+    field: FieldValueProcessor<T>,
+    state: StateValueProcessor<T>
+  ) => T;
+  match: <T>(branches: {
+    field: FieldValueProcessor<T>;
+    state: StateValueProcessor<T>;
+  }) => T;
+  log: (label: string) => void;
 }
+export type FieldProcessorAdt = ValueProcessorAdt;
 
 export interface ValueProcessor {
-  field: FieldValueProcessor;
-  state: StateValueProcessor;
+  field: FieldValueProcessor<ValueProcessorAdt>;
+  state: StateValueProcessor<ValueProcessorAdt>;
 }
 
 // data ValueAdt = Field fields | state
-const adt = Adt.generate([
+const adt: ValueProcessor = Adt.generate([
   { field: [ 'key', 'okey', 'presence', 'prop' ] },
   { state: [ 'okey', 'instantiator' ] }
-]) as ValueProcessor;
+]);
 
 const output = function (okey, value): ValueProcessorAdt {
   return adt.state(okey, Fun.constant(value));
@@ -47,24 +53,24 @@ const snapshot = function (okey): ValueProcessorAdt {
 
 const strictAccess = function (path, obj, key) {
   // In strict mode, if it undefined, it is an error.
-  return ObjReader.readOptFrom(obj, key).fold(function () {
+  return Obj.get(obj, key).fold(function () {
     return SchemaError.missingStrict(path, key, obj);
   }, SimpleResult.svalue);
 };
 
 const fallbackAccess = function (obj, key, fallbackThunk) {
-  const v = ObjReader.readOptFrom(obj, key).fold(function () {
+  const v = Obj.get(obj, key).fold(function () {
     return fallbackThunk(obj);
   }, Fun.identity);
   return SimpleResult.svalue(v);
 };
 
 const optionAccess = function (obj, key) {
-  return SimpleResult.svalue(ObjReader.readOptFrom(obj, key));
+  return SimpleResult.svalue(Obj.get(obj, key));
 };
 
 const optionDefaultedAccess = function (obj, key, fallback) {
-  const opt = ObjReader.readOptFrom(obj, key).map(function (val) {
+  const opt = Obj.get(obj, key).map(function (val) {
     return val === true ? fallback(obj) : val;
   });
   return SimpleResult.svalue(opt);
@@ -75,19 +81,17 @@ const cExtractOne = function (path, obj, field, strength) {
     function (key, okey, presence, prop) {
       const bundle = function (av) {
         const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => {
-          return ObjWriter.wrap(okey, strength(res));
-        });
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue) {
         return optValue.fold(function () {
-          const outcome = ObjWriter.wrap(okey, strength(Option.none()));
+          const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
         }, function (ov) {
           const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
           return SimpleResult.map(result, function (res) {
-            return ObjWriter.wrap(okey, strength(Option.some(res)));
+            return ObjWriter.wrap(okey, strength(Optional.some(res)));
           });
         });
       };
@@ -113,15 +117,13 @@ const cExtractOne = function (path, obj, field, strength) {
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, fallbackThunk),
             bundleAsOption
-          )
+          );
         }, function (baseThunk) {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
-            (v) => {
-              return Merger.deepMerge(base, v);
-            }
-          )
+            (v) => Merger.deepMerge(base, v)
+          );
           return SimpleResult.bind(result, bundle);
         });
       })();
@@ -141,6 +143,21 @@ const cExtract = function (path, obj, fields, strength) {
   return ResultCombine.consolidateObj(results, {});
 };
 
+const valueThunk = (getDelegate: () => Processor): Processor => {
+  const extract = function (path, strength, val) {
+    return getDelegate().extract(path, strength, val);
+  };
+
+  const toString = function () {
+    return getDelegate().toString();
+  };
+
+  return {
+    extract,
+    toString
+  };
+};
+
 const value = function (validator: ValueValidator): Processor {
   const extract = function (path, strength, val) {
     return SimpleResult.bindError(
@@ -156,29 +173,19 @@ const value = function (validator: ValueValidator): Processor {
     return 'val';
   };
 
-  const toDsl = function () {
-    return typeAdt.itemOf(validator);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
 // This is because Obj.keys can return things where the key is set to undefined.
-const getSetKeys = function (obj) {
-  const keys = Obj.keys(obj);
-  return Arr.filter(keys, function (k) {
-    return Objects.hasKey(obj, k);
-  });
-};
+const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr(fields, function (acc, f: ValueProcessorAdt) {
+  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(fields, function (acc, f: ValueProcessorAdt) {
     return f.fold(function (key) {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
@@ -187,21 +194,20 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     const keys = Type.isBoolean(o) ? [ ] : getSetKeys(o);
     const extra = Arr.filter(keys, function (k) {
-      return !Objects.hasKey(fieldNames, k);
+      return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
-    return extra.length === 0  ? delegate.extract(path, strength, o) :
+    return extra.length === 0 ? delegate.extract(path, strength, o) :
       SchemaError.unsupportedFields(path, extra);
   };
 
   return {
     extract,
-    toString: delegate.toString,
-    toDsl: delegate.toDsl
+    toString: delegate.toString
   };
 };
 
-const objOf = function (fields: FieldProcessorAdt[]): Processor {
+const objOf = function (fields: ValueProcessorAdt[]): Processor {
   const extract = function (path, strength, o) {
     return cExtract(path, o, fields, strength);
   };
@@ -210,36 +216,23 @@ const objOf = function (fields: FieldProcessorAdt[]): Processor {
     const fieldStrings = Arr.map(fields, function (field) {
       return field.fold(function (key, okey, presence, prop) {
         return key + ' -> ' + prop.toString();
-      }, function (okey, instantiator) {
+      }, function (okey, _instantiator) {
         return 'state(' + okey + ')';
       });
     });
     return 'obj{\n' + fieldStrings.join('\n') + '}';
   };
 
-  const toDsl = function () {
-    return typeAdt.objOf(
-      Arr.map(fields, function (f) {
-        return f.fold(function (key, okey, presence, prop) {
-          return fieldAdt.field(key, presence, prop);
-        }, function (okey, instantiator) {
-          return fieldAdt.state(okey);
-        });
-      })
-    );
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
     const results = Arr.map(array, function (a, i) {
-      return prop.extract(path.concat(['[' + i + ']' ]), strength, a);
+      return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
     });
     return ResultCombine.consolidateArr(results);
   };
@@ -248,14 +241,36 @@ const arrOf = function (prop: Processor): Processor {
     return 'array(' + prop.toString() + ')';
   };
 
-  const toDsl = function () {
-    return typeAdt.arrOf(prop);
+  return {
+    extract,
+    toString
+  };
+};
+
+const oneOf = function (props: Processor[]): Processor {
+  const extract = function (path: string[], strength, val: any): SimpleResult<any, any> {
+    const errors: Array<SimpleResult<string[], any>> = [];
+
+    // Return on first match
+    for (const prop of props) {
+      const res = prop.extract(path, strength, val);
+      if (res.stype === SimpleResultType.Value) {
+        return res;
+      }
+      errors.push(res);
+    }
+
+    // All failed, return errors
+    return ResultCombine.consolidateArr(errors);
+  };
+
+  const toString = function () {
+    return 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
   };
 
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -280,14 +295,9 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
     return 'setOf(' + prop.toString() + ')';
   };
 
-  const toDsl = function () {
-    return typeAdt.setOf(validator, prop);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -304,11 +314,8 @@ const func = function (args: string[], schema: Processor, retriever): Processor 
 
   return {
     extract: delegate.extract,
-    toString () {
+    toString() {
       return 'function';
-    },
-    toDsl () {
-      return typeAdt.func(args, schema);
     }
   };
 };
@@ -326,14 +333,9 @@ const thunk = function (desc: string, processor: () => Processor): Processor {
     return getP().toString();
   };
 
-  const toDsl = function () {
-    return typeAdt.thunk(desc);
-  };
-
   return {
     extract,
-    toString,
-    toDsl
+    toString
   };
 };
 
@@ -346,10 +348,12 @@ const field = adt.field;
 export {
   anyValue,
   value,
+  valueThunk,
 
   objOf,
   objOfOnly,
   arrOf,
+  oneOf,
   setOf,
   arrOfObj,
 

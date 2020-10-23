@@ -1,23 +1,31 @@
-import { Types } from '@ephox/bridge';
-import Helpers from './Helpers';
-import { getTableClassList, hasAppearanceOptions } from '../api/Settings';
-import Editor from 'tinymce/core/api/Editor';
+/**
+ * Copyright (c) Tiny Technologies, Inc. All rights reserved.
+ * Licensed under the LGPL or a commercial license.
+ * For LGPL see License.txt in the project root for license information.
+ * For commercial licenses see https://www.tiny.cloud/
+ */
 
-const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) => {
-  const rowColCountItems: Types.Dialog.BodyComponentApi[] = !insertNewTable ? [] : [
+import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { hasAppearanceOptions } from '../api/Settings';
+
+const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTable: boolean) => {
+  const rowColCountItems: Dialog.BodyComponentSpec[] = !insertNewTable ? [] : [
     {
       type: 'input',
       name: 'cols',
-      label: 'Cols'
+      label: 'Cols',
+      inputMode: 'numeric'
     },
     {
       type: 'input',
       name: 'rows',
-      label: 'Rows'
+      label: 'Rows',
+      inputMode: 'numeric'
     }
   ];
 
-  const alwaysItems: Types.Dialog.BodyComponentApi[] = [
+  const alwaysItems: Dialog.BodyComponentSpec[] = [
     {
       type: 'input',
       name: 'width',
@@ -30,16 +38,18 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ];
 
-  const appearanceItems: Types.Dialog.BodyComponentApi[] = hasAppearanceOptions(editor) ? [
+  const appearanceItems: Dialog.BodyComponentSpec[] = hasAppearanceOptions(editor) ? [
     {
       type: 'input',
       name: 'cellspacing',
-      label: 'Cell spacing'
+      label: 'Cell spacing',
+      inputMode: 'numeric'
     },
     {
       type: 'input',
       name: 'cellpadding',
-      label: 'Cell padding'
+      label: 'Cell padding',
+      inputMode: 'numeric'
     },
     {
       type: 'input',
@@ -59,9 +69,9 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ] : [];
 
-  const alignmentItem: Types.Dialog.BodyComponentApi[] = [
+  const alignmentItem: Dialog.ListBoxSpec[] = [
     {
-      type: 'selectbox',
+      type: 'listbox',
       name: 'align',
       label: 'Alignment',
       items: [
@@ -73,27 +83,16 @@ const getItems = (editor: Editor, hasClasses: boolean, insertNewTable: boolean) 
     }
   ];
 
-  const classListItem: Types.Dialog.BodyComponentApi[] = hasClasses ? [
+  const classListItem: Dialog.ListBoxSpec[] = classes.length > 0 ? [
     {
-      type: 'selectbox',
+      type: 'listbox',
       name: 'class',
       label: 'Class',
-      items: Helpers.buildListItems(
-        getTableClassList(editor),
-        (item) => {
-          if (item.value) {
-            item.textStyle = () => {
-              return editor.formatter.getCssText({ block: 'table', classes: [item.value] });
-            };
-          }
-        }
-      )
+      items: classes
     }
   ] : [];
 
   return rowColCountItems.concat(alwaysItems).concat(appearanceItems).concat(alignmentItem).concat(classListItem);
 };
 
-export default {
-  getItems
-};
+export { getItems };

@@ -5,25 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyTriggers,
-  Composing,
-  Disabling,
-  Focusing,
-  Form,
-  Reflecting,
-  Representing,
-  TabSection,
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Composing, Disabling, Focusing, Form, Reflecting, Representing, TabSection } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { DialogManager, Types } from '@ephox/bridge';
-import { Merger, Option, Type } from '@ephox/katamari';
+import { Dialog, DialogManager } from '@ephox/bridge';
+import { Cell, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 
-const getCompByName = (access: DialogAccess<any>, name: string): Option<AlloyComponent> => {
+const getCompByName = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
   // This is just to avoid throwing errors if the dialog closes before this. We should take it out
@@ -34,34 +24,31 @@ const getCompByName = (access: DialogAccess<any>, name: string): Option<AlloyCom
       const footer = access.getFooter();
       const footerState = Reflecting.getState(footer);
       return footerState.get().bind((f) => f.lookupByName(form, name));
-    }, (comp) => {
-      return Option.some(comp);
-    });
+    }, (comp) => Optional.some(comp));
   } else {
-    return Option.none();
+    return Optional.none();
   }
 };
 
-const validateData = <T>(access: DialogAccess<T>, data) => {
+const validateData = <T>(access: DialogAccess, data) => {
   const root = access.getRoot();
-  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => {
-    return ValueSchema.getOrDie(
-      ValueSchema.asRaw('data', dialogState.dataValidator, data)
-    );
-  }).getOr(data);
+  return Reflecting.getState(root).get().map((dialogState: DialogManager.DialogInit<T>) => ValueSchema.getOrDie(
+    ValueSchema.asRaw('data', dialogState.dataValidator, data)
+  )).getOr(data);
 };
 
-export interface DialogAccess<T> {
+export interface DialogAccess {
   getRoot: () => AlloyComponent;
   getBody: () => AlloyComponent;
   getFooter: () => AlloyComponent;
   getFormWrapper: () => AlloyComponent;
 }
 
-const getDialogApi = <T>(
-  access: DialogAccess<T>,
-  doRedial: (newConfig: Types.Dialog.DialogApi<T>) => DialogManager.DialogInit<T>,
-): Types.Dialog.DialogInstanceApi<T> => {
+const getDialogApi = <T extends Dialog.DialogData>(
+  access: DialogAccess,
+  doRedial: (newConfig: Dialog.DialogSpec<T>) => DialogManager.DialogInit<T>,
+  menuItemStates: Record<string, Cell<Boolean>>
+): Dialog.DialogInstanceApi<T> => {
   const withRoot = (f: (r: AlloyComponent) => void): void => {
     const root = access.getRoot();
     if (root.getSystem().isConnected()) {
@@ -72,17 +59,27 @@ const getDialogApi = <T>(
   const getData = (): T => {
     const root = access.getRoot();
     const valueComp = root.getSystem().isConnected() ? access.getFormWrapper() : root;
-    return Representing.getValue(valueComp);
+    const representedValues = Representing.getValue(valueComp);
+    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) => cell.get());
+    return {
+      ...representedValues,
+      ...menuItemCurrentState
+    };
   };
 
   const setData = (newData) => {
     // Currently, the decision is to ignore setData calls that fire after the dialog is closed
     withRoot((_) => {
       const prevData = instanceApi.getData();
-      const mergedData = Merger.merge(prevData, newData);
+      const mergedData = { ...prevData, ...newData };
       const newInternalData = validateData(access, mergedData);
       const form = access.getFormWrapper();
       Representing.setValue(form, newInternalData);
+      Obj.each(menuItemStates, (v, k) => {
+        if (Obj.has(mergedData, k)) {
+          v.set(mergedData[ k ]);
+        }
+      });
     });
   };
 
@@ -125,10 +122,10 @@ const getDialogApi = <T>(
     });
   };
 
-  const redial = (d: Types.Dialog.DialogApi<T>): void => {
+  const redial = (d: Dialog.DialogSpec<T>): void => {
     withRoot((root) => {
       const dialogInit = doRedial(d);
-      root.getSystem().broadcastOn( [ dialogChannel ], dialogInit);
+      root.getSystem().broadcastOn([ dialogChannel ], dialogInit);
 
       root.getSystem().broadcastOn([ titleChannel ], dialogInit.internalDialog);
       root.getSystem().broadcastOn([ bodyChannel ], dialogInit.internalDialog);

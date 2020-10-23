@@ -1,13 +1,13 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
-import Env from 'tinymce/core/api/Env';
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -306,50 +306,6 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL with single LI in BR mode', function (editor) {
-    editor.settings.forced_root_block = false;
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      'a'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
-
-    editor.settings.forced_root_block = 'p';
-  });
-
-  suite.test('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', function (editor) {
-    editor.settings.forced_root_block = false;
-
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '<li>b</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li:first', 1, 'li:last', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-    LegacyUnit.equal(editor.getContent(),
-      'a<br />' +
-      'b'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
-
-    editor.settings.forced_root_block = 'p';
-  });
-
   suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', function (editor) {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<div>a</div>' +
@@ -426,8 +382,8 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
       '<li>d</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getStart().firstChild.data, 'b');
-    LegacyUnit.equal(editor.selection.getEnd().firstChild.data, 'c');
+    LegacyUnit.equal((editor.selection.getStart().firstChild as Text).data, 'b');
+    LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
   });
 
   suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
@@ -454,35 +410,7 @@ UnitTest.asynctest('tinymce.lists.browser.RemoveTest', (success, failure) => {
     );
   });
 
-  // Ignore on IE 7, 8 this is a known bug not worth fixing
-  if (!Env.ie || Env.ie > 8) {
-    suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', function (editor) {
-      editor.settings.forced_root_block = false;
-
-      editor.getBody().innerHTML = LegacyUnit.trimBrs(
-        '<div>a</div>' +
-        '<ul>' +
-        '<li></li>' +
-        '</ul>' +
-        '<div>b</div>'
-      );
-
-      editor.focus();
-      LegacyUnit.setSelection(editor, 'li:first', 0);
-      LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-
-      LegacyUnit.equal(editor.getContent(),
-        '<div>a</div>' +
-        '<br />' +
-        '<div>b</div>'
-      );
-      LegacyUnit.equal(editor.selection.getStart().nodeName, 'BR');
-
-      editor.settings.forced_root_block = 'p';
-    });
-  }
-
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

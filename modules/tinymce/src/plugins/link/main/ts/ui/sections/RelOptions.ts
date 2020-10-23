@@ -5,23 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 
-import Settings from '../../api/Settings';
-import Utils from '../../core/Utils';
+import * as Settings from '../../api/Settings';
 import { ListOptions } from '../../core/ListOptions';
+import * as Utils from '../../core/Utils';
 import { ListItem } from '../DialogTypes';
 
-const getRels = (editor, initialTarget: Option<string>): Option<ListItem[]> => {
-  if (Settings.hasRelList(editor.settings)) {
-    const list = Settings.getRelList(editor.settings);
+const getRels = (editor: Editor, initialTarget: Optional<string>): Optional<ListItem[]> => {
+  const list = Settings.getRelList(editor);
+  if (list.length > 0) {
     const isTargetBlank = initialTarget.is('_blank');
-    const enforceSafe = Settings.allowUnsafeLinkTarget(editor.settings) === false;
+    const enforceSafe = Settings.allowUnsafeLinkTarget(editor) === false;
     const safeRelExtractor = (item) => Utils.applyRelTargetRules(ListOptions.getValue(item), isTargetBlank);
     const sanitizer = enforceSafe ? ListOptions.sanitizeWith(safeRelExtractor) : ListOptions.sanitize;
     return sanitizer(list);
   }
-  return Option.none();
+  return Optional.none();
 };
 
 export const RelOptions = {

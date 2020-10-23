@@ -1,5 +1,5 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, Guard, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor, TinyDom, UiChains } from '@ephox/mcagar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
@@ -20,17 +20,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
 
   const cGetElementSize = Chain.control(
     Chain.mapper(function (elm: any) {
-      const elmStyle = elm.dom().style;
+      const elmStyle = elm.dom.style;
       return { w: elmStyle.width, h: elmStyle.height };
     }),
     Guard.addLogging('Get element size')
-);
+  );
 
   const cDragHandleRight = function (px) {
     return Chain.control(
       Chain.op(function (input: any) {
         const dom = input.editor.dom;
-        const target = input.resizeSE.dom();
+        const target = input.resizeSE.dom;
         const pos = dom.getPos(target);
 
         dom.fire(target, 'mousedown', { screenX: pos.x, screenY: pos.y });
@@ -61,11 +61,11 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
           },
           dimensions: {
             width: '100px',
-            height: '100px',
+            height: '100px'
           },
           caption: true
         }),
-        Guard.tryUntil('Waiting for fill active dialog', 100, 5000)
+        Guard.tryUntil('Waiting for fill active dialog')
       ),
       UiChains.cSubmitDialog(),
       NamedChain.asChain([
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         NamedChain.direct(NamedChain.inputName(), ApiChains.cAssertSelection([], 0, [], 1), '_'),
         NamedChain.direct('editorBody', Chain.control(
           UiFinder.cFindIn('#mceResizeHandlese'),
-          Guard.tryUntil('wait for resize handlers', 100, 40000)
+          Guard.tryUntil('wait for resize handlers')
         ), '_'),
         // actually drag the handle to the right
         NamedChain.direct('editorBody', UiFinder.cFindIn('#mceResizeHandlese'), 'resizeSE'),

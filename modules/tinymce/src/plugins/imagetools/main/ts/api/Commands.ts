@@ -6,8 +6,8 @@
  */
 
 import Tools from 'tinymce/core/api/util/Tools';
-import Actions from '../core/Actions';
-import Dialog from '../ui/Dialog';
+import * as Actions from '../core/Actions';
+import * as Dialog from '../ui/Dialog';
 
 const register = function (editor, imageUploadTimerState) {
   Tools.each({
@@ -21,6 +21,6 @@ const register = function (editor, imageUploadTimerState) {
   });
 };
 
-export default {
+export {
   register
 };

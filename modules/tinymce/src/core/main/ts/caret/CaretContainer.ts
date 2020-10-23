@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Element, document, Range } from '@ephox/dom-globals';
-import NodeType from '../dom/NodeType';
-import Zwsp from '../text/Zwsp';
+import * as NodeType from '../dom/NodeType';
+import * as Zwsp from '../text/Zwsp';
 import { CaretPosition } from './CaretPosition';
 
 /**
@@ -34,11 +33,11 @@ const isCaretContainer = (node: Node): boolean => isCaretContainerBlock(node) ||
 const hasContent = (node: Node): boolean => node.firstChild !== node.lastChild || !NodeType.isBr(node.firstChild);
 
 const insertInline = (node: Node, before: boolean): Node => {
-  let doc, sibling, textNode, parentNode;
+  let sibling;
 
-  doc = node.ownerDocument;
-  textNode = doc.createTextNode(Zwsp.ZWSP);
-  parentNode = node.parentNode;
+  const doc = node.ownerDocument;
+  const textNode = doc.createTextNode(Zwsp.ZWSP);
+  const parentNode = node.parentNode;
 
   if (!before) {
     sibling = node.nextSibling;
@@ -102,7 +101,7 @@ const appendInline = (node: Node): Node => {
 
 const isBeforeInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  if (!pos || !NodeType.isText(container)) {
+  if (!NodeType.isText(container)) {
     return false;
   }
 
@@ -112,7 +111,7 @@ const isBeforeInline = (pos: CaretPosition): boolean => {
 
 const isAfterInline = (pos: CaretPosition): boolean => {
   const container = pos.container();
-  if (!pos || !NodeType.isText(container)) {
+  if (!NodeType.isText(container)) {
     return false;
   }
 
@@ -127,14 +126,12 @@ const createBogusBr = (): Element => {
 };
 
 const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
-  let doc, blockNode, parentNode;
-
-  doc = node.ownerDocument;
-  blockNode = doc.createElement(blockName);
+  const doc = node.ownerDocument;
+  const blockNode = doc.createElement(blockName);
   blockNode.setAttribute('data-mce-caret', before ? 'before' : 'after');
   blockNode.setAttribute('data-mce-bogus', 'all');
   blockNode.appendChild(createBogusBr());
-  parentNode = node.parentNode;
+  const parentNode = node.parentNode;
 
   if (!before) {
     if (node.nextSibling) {
@@ -149,8 +146,8 @@ const insertBlock = (blockName: string, node: Node, before: boolean): Node => {
   return blockNode;
 };
 
-const startsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[0] === Zwsp.ZWSP;
-const endsWithCaretContainer = (node: Node): boolean => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
+const startsWithCaretContainer = (node: Node): node is Text => isText(node) && node.data[0] === Zwsp.ZWSP;
+const endsWithCaretContainer = (node: Node): node is Text => isText(node) && node.data[node.data.length - 1] === Zwsp.ZWSP;
 
 const trimBogusBr = (elm: Element): void => {
   const brs = elm.getElementsByTagName('br');

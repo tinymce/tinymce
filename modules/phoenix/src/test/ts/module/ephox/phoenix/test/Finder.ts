@@ -1,11 +1,11 @@
-import { Arr } from '@ephox/katamari';
 import { TestUniverse } from '@ephox/boss';
+import { Arr } from '@ephox/katamari';
 
-var get = function (universe: TestUniverse, id: string) {
+const get = function (universe: TestUniverse, id: string) {
   return universe.find(universe.get(), id).getOrDie('Test element "' + id + '" not found');
 };
 
-var getAll = function (universe: TestUniverse, ids: string[]) {
+const getAll = function (universe: TestUniverse, ids: string[]) {
   return Arr.map(ids, function (id) {
     return get(universe, id);
   });

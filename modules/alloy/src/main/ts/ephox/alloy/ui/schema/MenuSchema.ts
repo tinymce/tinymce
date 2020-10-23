@@ -1,11 +1,10 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
 import { field as SketchBehaviourField } from '../../api/component/SketchBehaviours';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import * as Fields from '../../data/Fields';
@@ -15,8 +14,8 @@ import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { ItemSpec } from '../../ui/types/ItemTypes';
-import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../../ui/types/MenuTypes';
+import { ItemSpec } from '../types/ItemTypes';
+import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
 
 const itemSchema = ValueSchema.choose(
   'type',
@@ -27,56 +26,50 @@ const itemSchema = ValueSchema.choose(
   }
 );
 
-const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => {
-  return {
-    mode: 'flatgrid',
-    selector: '.' + detail.markers.item,
-    initSize: {
-      numColumns: movementInfo.initSize.numColumns,
-      numRows: movementInfo.initSize.numRows
-    },
-    focusManager: detail.focusManager
-  };
-};
+const configureGrid = (detail: MenuDetail, movementInfo: MenuGridMovement): FlatgridConfigSpec => ({
+  mode: 'flatgrid',
+  selector: '.' + detail.markers.item,
+  initSize: {
+    numColumns: movementInfo.initSize.numColumns,
+    numRows: movementInfo.initSize.numRows
+  },
+  focusManager: detail.focusManager
+});
 
-const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): MatrixConfigSpec => {
-  return {
-    mode: 'matrix',
-    selectors: {
-      row: movementInfo.rowSelector,
-      cell: '.' + detail.markers.item,
-    },
-    focusManager: detail.focusManager
-  };
-};
+const configureMatrix = (detail: MenuDetail, movementInfo: MenuMatrixMovement): MatrixConfigSpec => ({
+  mode: 'matrix',
+  selectors: {
+    row: movementInfo.rowSelector,
+    cell: '.' + detail.markers.item
+  },
+  focusManager: detail.focusManager
+});
 
-const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => {
-  return {
-    mode: 'menu',
-    selector: '.' + detail.markers.item,
-    moveOnTab: movementInfo.moveOnTab,
-    focusManager: detail.focusManager
-  };
-};
+const configureMenu = (detail: MenuDetail, movementInfo: MenuNormalMovement): MenuConfigSpec => ({
+  mode: 'menu',
+  selector: '.' + detail.markers.item,
+  moveOnTab: movementInfo.moveOnTab,
+  focusManager: detail.focusManager
+});
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
-  PartType.group({
+  PartType.group<MenuDetail, ItemSpec>({
     factory: {
-      sketch (spec: ItemSpec) {
+      sketch(spec) {
         const itemInfo = ValueSchema.asRawOrDie('menu.spec item', itemSchema, spec);
         return itemInfo.builder(itemInfo);
       }
     },
     name: 'items',
     unit: 'item',
-    defaults (detail: MenuDetail, u) {
+    defaults(detail, u) {
       // Switch this to a common library
       return u.hasOwnProperty('uid') ? u : {
         ...u,
         uid: Tagger.generate('item')
-      }
+      };
     },
-    overrides (detail: MenuDetail, u) {
+    overrides(detail, u) {
       return {
         type: u.type,
         ignoreFocus: detail.fakeFocus,
@@ -108,7 +101,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
       ],
       matrix: [
         Fields.output('config', configureMatrix),
-        FieldSchema.strict('rowSelector'),
+        FieldSchema.strict('rowSelector')
       ],
       menu: [
         FieldSchema.defaulted('moveOnTab', true),

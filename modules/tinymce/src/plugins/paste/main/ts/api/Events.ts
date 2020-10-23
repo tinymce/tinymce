@@ -6,7 +6,6 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement } from '@ephox/dom-globals';
 
 const firePastePreProcess = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
   return editor.fire('PastePreProcess', { content: html, internal, wordContent: isWordHtml });
@@ -21,10 +20,11 @@ const firePastePlainTextToggle = function (editor: Editor, state: boolean) {
 };
 
 const firePaste = function (editor: Editor, ieFake: boolean) {
-  return editor.fire('paste', { ieFake });
+  // Casting this as it only exists for IE compatibility
+  return editor.fire('paste', { ieFake } as any as ClipboardEvent);
 };
 
-export default {
+export {
   firePastePreProcess,
   firePastePostProcess,
   firePastePlainTextToggle,

@@ -1,26 +1,22 @@
-import { assert, UnitTest} from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Menu } from '@ephox/bridge';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
 UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
-  const buildMenuItem = (name: string): Menu.MenuItemApi => {
-    return {
-      type: 'menuitem',
-      text: name,
-      value: `${name}-value`
-    };
-  };
+  const buildMenuItem = (name: string): Menu.MenuItemSpec => ({
+    type: 'menuitem',
+    text: name,
+    value: `${name}-value`
+  });
 
-  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemApi => {
-    return {
-      type: 'nestedmenuitem',
-      text: name,
-      value: `${name}-value`,
-      getSubmenuItems: () => submenus
-    };
-  };
+  const buildNestedMenuItem = (name: string, submenus: string | Array<Menu.NestedMenuItemContents>): Menu.NestedMenuItemSpec => ({
+    type: 'nestedmenuitem',
+    text: name,
+    value: `${name}-value`,
+    getSubmenuItems: () => submenus
+  });
 
-  const separator: Menu.SeparatorMenuItemApi = {
+  const separator: Menu.SeparatorMenuItemSpec = {
     type: 'separator'
   };
 
@@ -51,7 +47,7 @@ UnitTest.test('themes.silver.ui.menus.MenuConversion', () => {
   });
 
   // Menu reference array
-  expandAndAssertEq([ 'menu-1', '|', 'menu-2'], {
+  expandAndAssertEq([ 'menu-1', '|', 'menu-2' ], {
     items: [ menu1, separator, menu2 ],
     menus: { },
     expansions: { }

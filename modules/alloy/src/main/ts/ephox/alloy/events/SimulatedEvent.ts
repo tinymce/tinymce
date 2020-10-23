@@ -1,48 +1,54 @@
 import { Cell, Fun } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-
-import { SugarEvent } from '../alien/TypeDefinitions';
-import { Event } from '@ephox/dom-globals';
+import { EventArgs, SugarElement } from '@ephox/sugar';
 
 export interface EventFormat {
-  target: () => Element;
-  kill: () => void;
-  prevent: () => void;
+  readonly target: SugarElement;
+  readonly kill: () => void;
+  readonly prevent: () => void;
 }
 
 export interface SimulatedEvent<T extends EventFormat> {
-  stop: () => void;
-  cut: () => void;
-  isStopped: () => boolean;
-  isCut: () => boolean;
-  event: () => T;
+  readonly stop: () => void;
+  readonly cut: () => void;
+  readonly isStopped: () => boolean;
+  readonly isCut: () => boolean;
+  readonly event: T;
 
-  getSource: () => Element;
-  setSource: (elem: Element) => void;
+  readonly getSource: () => SugarElement;
+  readonly setSource: (elem: SugarElement) => void;
 }
 
-export type NativeSimulatedEvent = SimulatedEvent<SugarEvent>;
+export type NativeSimulatedEvent<T = any> = SimulatedEvent<EventArgs<T>>;
 export type CustomSimulatedEvent = SimulatedEvent<CustomEvent>;
 
 export interface CustomEvent extends EventFormat {
   // General properties on a custom event.
   // TODO: Maybe separate them from target and kill to allow for overlap?
-  [key: string]: () => any;
+  readonly [key: string]: any;
 }
 
-export interface ReceivingInternalEvent extends EventFormat {
-  channels: () => string[];
+export interface ReceivingUniversalInternalEvent {
+  readonly universal: true;
+  readonly data: any;
 }
+
+export interface ReceivingChannelsInternalEvent {
+  readonly universal: false;
+  readonly channels: ReadonlyArray<string>;
+  readonly data: any;
+}
+
+export type ReceivingInternalEvent = ReceivingUniversalInternalEvent | ReceivingChannelsInternalEvent;
 
 export interface ReceivingEvent extends EventFormat {
-  data: () => any;
+  readonly data: any;
 }
 
 export interface FocusingEvent extends EventFormat {
-  originator: () => Element;
+  readonly originator: SugarElement;
 }
 
-const fromSource = <T extends EventFormat>(event: T, source: Cell<Element>): SimulatedEvent<T> => {
+const fromSource = <T extends EventFormat>(event: T, source: Cell<SugarElement>): SimulatedEvent<T> => {
   const stopper = Cell(false);
 
   const cutter = Cell(false);
@@ -60,7 +66,7 @@ const fromSource = <T extends EventFormat>(event: T, source: Cell<Element>): Sim
     cut,
     isStopped: stopper.get,
     isCut: cutter.get,
-    event: Fun.constant(event),
+    event,
     // Used only for tiered menu at the moment. It is an element, not a component
     setSource: source.set,
     getSource: source.get
@@ -79,15 +85,15 @@ const fromExternal = <T extends EventFormat>(event: T): SimulatedEvent<T> => {
     stop,
     cut: Fun.noop, // cutting has no meaning for a broadcasted event
     isStopped: stopper.get,
-    isCut: Fun.constant(false),
-    event: Fun.constant(event),
+    isCut: Fun.never,
+    event,
     // Nor do targets really
     setSource: Fun.die('Cannot set source of a broadcasted event'),
     getSource: Fun.die('Cannot get source of a broadcasted event')
   };
 };
 
-const fromTarget = <T extends EventFormat>(event: T, target: Element): SimulatedEvent<T> => {
+const fromTarget = <T extends EventFormat>(event: T, target: SugarElement): SimulatedEvent<T> => {
   const source = Cell(target);
   return fromSource(event, source);
 };

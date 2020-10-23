@@ -5,72 +5,86 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import { Arr, Fun, Obj, Strings } from '@ephox/katamari';
-import { Css, Element } from '@ephox/sugar';
+import { Arr, Fun, Obj, Optional, Strings } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
-import Tools from 'tinymce/core/api/util/Tools';
-
-import Styles from '../actions/Styles';
-import { shouldStyleWithCss, getDefaultStyles, getDefaultAttributes } from '../api/Settings';
-import { Types } from '@ephox/bridge';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as Styles from '../actions/Styles';
+import { getDefaultAttributes, getDefaultStyles, shouldStyleWithCss } from '../api/Settings';
+import { getRowType } from '../core/TableSections';
+import * as Util from '../core/Util';
 
 /**
  * @class tinymce.table.ui.Helpers
  * @private
  */
 
-const buildListItems = (inputList, itemCallback, startItems?): Types.SelectBox.ExternalSelectBoxItem[] => {
-  const appendItems = (values, output?: Types.SelectBox.ExternalSelectBoxItem[]) => {
-    output = output || [];
+interface ClassListValue {
+  title?: string;
+  text?: string;
+  value: string;
+}
 
-    Tools.each(values, (item) => {
-      const menuItem: any = { text: item.text || item.title };
+interface ClassListGroup {
+  title?: string;
+  text?: string;
+  menu: ClassListItem[];
+}
 
-      // TODO TINY-2236 - this implies table_class_list supports nested menus, but bridge doesn't, so this either needs to be supported or deleted
-      if (item.menu) {
-        menuItem.menu = appendItems(item.menu);
+type ClassListItem = ClassListValue | ClassListGroup;
+
+type InternalClassListItem = Dialog.ListBoxItemSpec;
+
+const isListGroup = (item: ClassListItem): item is ClassListGroup => Obj.hasNonNullableKey(item as Record<string, any>, 'menu');
+
+const buildListItems = (inputList: ClassListItem[], startItems?: InternalClassListItem[]): InternalClassListItem[] => {
+  // Used to also take a callback (that in all instances applied an item.textStyles property using Formatter)
+  // to each item but seems to have been an undocumented TinyMCE 4 or even 3 feature and doesn't work with
+  // TinyMCE 5 selectboxes so deleted
+  const appendItems = (values: ClassListItem[], acc: InternalClassListItem[]) =>
+    // item.text is not documented - maybe deprecated option we can delete??
+    acc.concat(Arr.map(values, (item) => {
+      const text = item.text || item.title;
+
+      if (isListGroup(item)) {
+        return {
+          text,
+          items: buildListItems(item.menu)
+        };
       } else {
-        menuItem.value = item.value;
-
-        if (itemCallback) {
-          itemCallback(menuItem);
-        }
+        return {
+          text,
+          value: item.value
+        };
       }
-
-      output.push(menuItem);
-    });
-
-    return output;
-  };
+    }));
 
   return appendItems(inputList, startItems || []);
 };
 
-const extractAdvancedStyles = (dom, elm) => {
-  const rgbToHex = (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
+const rgbToHex = (dom: DOMUtils) => (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
 
-  const borderStyle = Css.getRaw(Element.fromDom(elm), 'border-style').getOr('');
-  const borderColor = Css.getRaw(Element.fromDom(elm), 'border-color').map(rgbToHex).getOr('');
-  const bgColor = Css.getRaw(Element.fromDom(elm), 'background-color').map(rgbToHex).getOr('');
-
+const extractAdvancedStyles = (dom: DOMUtils, elm: Node) => {
+  const element = SugarElement.fromDom(elm);
   return {
-    borderstyle: borderStyle,
-    bordercolor: borderColor,
-    backgroundcolor: bgColor
+    borderwidth: Css.getRaw(element, 'border-width').getOr(''),
+    borderstyle: Css.getRaw(element, 'border-style').getOr(''),
+    bordercolor: Css.getRaw(element, 'border-color').map(rgbToHex(dom)).getOr(''),
+    backgroundcolor: Css.getRaw(element, 'background-color').map(rgbToHex(dom)).getOr('')
   };
 };
 
-const getSharedValues = (data) => {
+const getSharedValues = <T>(data: Array<T>) => {
+  // TODO surely there's a better way to do this??
   // Mutates baseData to return an object that contains only the values
   // that were the same across all objects in data
   const baseData = data[0];
   const comparisonData = data.slice(1);
-  const keys = Obj.keys(baseData);
 
   Arr.each(comparisonData, (items) => {
-    Arr.each(keys, (key) => {
-      Obj.each(items, (itemValue, itemKey, _) => {
+    Arr.each(Obj.keys(baseData), (key) => {
+      Obj.each(items, (itemValue, itemKey) => {
         const comparisonValue = baseData[key];
         if (comparisonValue !== '' && key === itemKey) {
           if (comparisonValue !== itemValue) {
@@ -84,11 +98,11 @@ const getSharedValues = (data) => {
   return baseData;
 };
 
-const getAdvancedTab = () => {
-  const items: Types.Dialog.BodyComponentApi[] = [
+const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
+  const advTabItems: Dialog.BodyComponentSpec[] = [
     {
       name: 'borderstyle',
-      type: 'selectbox',
+      type: 'listbox',
       label: 'Border style',
       items: [
         { text: 'Select...', value: '' },
@@ -115,6 +129,15 @@ const getAdvancedTab = () => {
       label: 'Background color'
     }
   ];
+
+  const borderWidth: Dialog.InputSpec = {
+    name: 'borderwidth',
+    type: 'input',
+    label: 'Border width'
+  };
+
+  const items = dialogName === 'cell' ? ([ borderWidth ] as Dialog.BodyComponentSpec[]).concat(advTabItems) : advTabItems;
+
   return {
     title: 'Advanced',
     name: 'advanced',
@@ -125,24 +148,10 @@ const getAdvancedTab = () => {
 // The extractDataFrom... functions are in this file partly for code reuse and partly so we can test them,
 // because some of these are crazy complicated
 
-const getAlignment = (alignments, formatName, dataName, editor, elm) => {
-  const alignmentData = {};
-  Tools.each(alignments.split(' '), (name) => {
-    if (editor.formatter.matchNode(elm, formatName + name)) {
-      alignmentData[dataName] = name;
-    }
-  });
-
-  if (!alignmentData[dataName]) {
-    // TODO: Note, this isn't a real value. But maybe that is OK?
-    alignmentData[dataName] = '';
-  }
-
-  return alignmentData;
-};
-
-const getHAlignment = Fun.curry(getAlignment, 'left center right');
-const getVAlignment = Fun.curry(getAlignment, 'top middle bottom');
+const getAlignment = (formats: string[], formatName: string, editor: Editor, elm: Node) =>
+  Arr.find(formats, (name) => editor.formatter.matchNode(elm, formatName + name)).getOr('');
+const getHAlignment = Fun.curry(getAlignment, [ 'left', 'center', 'right' ], 'align');
+const getVAlignment = Fun.curry(getAlignment, [ 'top', 'middle', 'bottom' ], 'valign');
 
 export interface TableData {
   height: string;
@@ -160,24 +169,15 @@ export interface TableData {
   backgroundcolor?: string;
 }
 
-const extractDataFromSettings = (editor, hasAdvTableTab): TableData => {
-
+const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): TableData => {
   const style = getDefaultStyles(editor);
   const attrs = getDefaultAttributes(editor);
 
-  const extractAdvancedStyleData = (dom) => {
-    const rgbToHex = (value: string) => Strings.startsWith(value, 'rgb') ? dom.toHex(value) : value;
-
-    const borderStyle = Obj.get(style, 'border-style').getOr('');
-    const borderColor = Obj.get(style, 'border-color').getOr('');
-    const bgColor = Obj.get(style, 'background-color').getOr('');
-
-    return {
-      borderstyle: borderStyle,
-      bordercolor: rgbToHex(borderColor),
-      backgroundcolor: rgbToHex(bgColor)
-    };
-  };
+  const extractAdvancedStyleData = (dom: DOMUtils) => ({
+    borderstyle: Obj.get(style, 'border-style').getOr(''),
+    bordercolor: rgbToHex(dom)(Obj.get(style, 'border-color').getOr('')),
+    backgroundcolor: rgbToHex(dom)(Obj.get(style, 'background-color').getOr(''))
+  });
 
   const defaultData: TableData = {
     height: '',
@@ -195,14 +195,12 @@ const extractDataFromSettings = (editor, hasAdvTableTab): TableData => {
     if (shouldStyleWithCss(editor) && borderWidth) {
       return { border: borderWidth };
     }
-    return Obj.get(attrs, 'border').fold( () => ({}), (border) => ({ border }));
+    return Obj.get(attrs, 'border').fold(() => ({}), (border) => ({ border }));
   };
 
-  const dom = editor.dom;
+  const advStyle = (hasAdvTableTab ? extractAdvancedStyleData(editor.dom) : {});
 
-  const advStyle = (hasAdvTableTab ? extractAdvancedStyleData(dom) : {});
-
-  const getCellPaddingCellSpacing  = () => {
+  const getCellPaddingCellSpacing = () => {
     const spacing = Obj.get(style, 'border-spacing').or(Obj.get(attrs, 'cellspacing')).fold( () => ({}), (cellspacing) => ({ cellspacing }));
     const padding = Obj.get(style, 'border-padding').or(Obj.get(attrs, 'cellpadding')).fold( () => ({}), (cellpadding) => ({ cellpadding }));
     return {
@@ -222,14 +220,14 @@ const extractDataFromSettings = (editor, hasAdvTableTab): TableData => {
   return data;
 };
 
-const extractDataFromTableElement = (editor: Editor, elm, hasAdvTableTab: boolean): TableData => {
-  const getBorder = (dom, elm) => {
+const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTab: boolean): TableData => {
+  const getBorder = (dom: DOMUtils, elm: Element) => {
     // Cases (in order to check):
     // 1. shouldStyleWithCss - extract border-width style if it exists
     // 2. !shouldStyleWithCss && border attribute - set border attribute as value
     // 3. !shouldStyleWithCss && nothing on the table - grab styles from the first th or td
 
-    const optBorderWidth = Css.getRaw(Element.fromDom(elm), 'border-width');
+    const optBorderWidth = Css.getRaw(SugarElement.fromDom(elm), 'border-width');
     if (shouldStyleWithCss(editor) && optBorderWidth.isSome()) {
       return optBorderWidth.getOr('');
     }
@@ -239,7 +237,7 @@ const extractDataFromTableElement = (editor: Editor, elm, hasAdvTableTab: boolea
 
   const dom = editor.dom;
 
-  const data: any = {
+  return {
     width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     cellspacing: dom.getStyle(elm, 'border-spacing') || dom.getAttrib(elm, 'cellspacing'),
@@ -247,11 +245,9 @@ const extractDataFromTableElement = (editor: Editor, elm, hasAdvTableTab: boolea
     border: getBorder(dom, elm),
     caption: !!dom.select('caption', elm)[0],
     class: dom.getAttrib(elm, 'class', ''),
-    ...getHAlignment('align', 'align', editor, elm),
+    align: getHAlignment(editor, elm),
     ...(hasAdvTableTab ? extractAdvancedStyles(dom, elm) : {})
   };
-
-  return data;
 };
 
 export interface RowData {
@@ -265,19 +261,16 @@ export interface RowData {
   backgroundcolor?: string;
 }
 
-const extractDataFromRowElement = (editor: Editor, elm: HTMLElement, hasAdvancedRowTab: boolean): RowData => {
+const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, hasAdvancedRowTab: boolean): RowData => {
   const dom = editor.dom;
-  const data: RowData = {
+  return {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
     scope: dom.getAttrib(elm, 'scope'),
     class: dom.getAttrib(elm, 'class', ''),
-    align: '',
-    type: elm.parentNode.nodeName.toLowerCase(),
-    ...getHAlignment('align', 'align', editor, elm),
+    type: getRowType(editor, elm),
+    align: getHAlignment(editor, elm),
     ...(hasAdvancedRowTab ? extractAdvancedStyles(dom, elm) : {})
   };
-
-  return data;
 };
 
 export interface CellData {
@@ -288,34 +281,29 @@ export interface CellData {
   class: string;
   halign: string;
   valign: string;
+  borderwidth?: string;
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
 }
 
-const extractDataFromCellElement = (editor: Editor, elm: HTMLElement, hasAdvancedCellTab: boolean): CellData => {
+const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellElement, hasAdvancedCellTab: boolean, column: Optional<HTMLTableColElement>): CellData => {
   const dom = editor.dom;
-  const data: any = {
-    width: dom.getStyle(elm, 'width') || dom.getAttrib(elm, 'width'),
-    height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    scope: dom.getAttrib(elm, 'scope'),
-    celltype: elm.nodeName.toLowerCase(),
-    class: dom.getAttrib(elm, 'class', ''),
-    ...getHAlignment('align', 'halign', editor, elm),
-    ...getVAlignment('valign', 'valign', editor, elm),
-    ...(hasAdvancedCellTab ? extractAdvancedStyles(dom, elm) : {})
+  const colElm = column.getOr(cell);
+
+  const getStyle = (element: HTMLElement, style: string) => dom.getStyle(element, style) || dom.getAttrib(element, style);
+
+  return {
+    width: getStyle(colElm, 'width'),
+    height: getStyle(cell, 'height'),
+    scope: dom.getAttrib(cell, 'scope'),
+    celltype: Util.getNodeName(cell),
+    class: dom.getAttrib(cell, 'class', ''),
+    halign: getHAlignment(editor, cell),
+    valign: getVAlignment(editor, cell),
+    ...(hasAdvancedCellTab ? extractAdvancedStyles(dom, cell) : {})
   };
-
-  return data;
 };
 
-export default {
-  buildListItems,
-  extractAdvancedStyles,
-  getSharedValues,
-  getAdvancedTab,
-  extractDataFromTableElement,
-  extractDataFromRowElement,
-  extractDataFromCellElement,
-  extractDataFromSettings
-};
+export { buildListItems, extractAdvancedStyles, getSharedValues, getAdvancedTab, extractDataFromTableElement, extractDataFromRowElement, extractDataFromCellElement, extractDataFromSettings };
+

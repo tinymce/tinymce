@@ -5,21 +5,23 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import DOMUtils from '../api/dom/DOMUtils';
+import { Formats, FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
-import { Formats } from '../api/fmt/Format';
+import * as NodeType from '../dom/NodeType';
 
-const get = function (dom) {
+const get = function (dom: DOMUtils) {
   const formats: Formats = {
     valigntop: [
-      { selector: 'td,th', styles: { verticalAlign: 'top' } }
+      { selector: 'td,th', styles: { verticalAlign: 'top' }}
     ],
 
     valignmiddle: [
-      { selector: 'td,th', styles: { verticalAlign: 'middle' } }
+      { selector: 'td,th', styles: { verticalAlign: 'middle' }}
     ],
 
     valignbottom: [
-      { selector: 'td,th', styles: { verticalAlign: 'bottom' } }
+      { selector: 'td,th', styles: { verticalAlign: 'bottom' }}
     ],
 
     alignleft: [
@@ -127,32 +129,33 @@ const get = function (dom) {
     ],
 
     bold: [
-      { inline: 'strong', remove: 'all' },
-      { inline: 'span', styles: { fontWeight: 'bold' } },
-      { inline: 'b', remove: 'all' }
+      { inline: 'strong', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'span', styles: { fontWeight: 'bold' }},
+      { inline: 'b', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
     italic: [
-      { inline: 'em', remove: 'all' },
-      { inline: 'span', styles: { fontStyle: 'italic' } },
-      { inline: 'i', remove: 'all' }
+      { inline: 'em', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'span', styles: { fontStyle: 'italic' }},
+      { inline: 'i', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
     underline: [
       { inline: 'span', styles: { textDecoration: 'underline' }, exact: true },
-      { inline: 'u', remove: 'all' }
+      { inline: 'u', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
     strikethrough: [
       { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true },
-      { inline: 'strike', remove: 'all' }
+      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
     forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     hilitecolor: { inline: 'span', styles: { backgroundColor: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
     fontname: { inline: 'span', toggle: false, styles: { fontFamily: '%value' }, clear_child_styles: true },
     fontsize: { inline: 'span', toggle: false, styles: { fontSize: '%value' }, clear_child_styles: true },
-    fontsize_class: { inline: 'span', attributes: { class: '%value' } },
+    lineheight: { selector: 'h1,h2,h3,h4,h5,h6,p,li,td,th,div', defaultBlock: 'p', styles: { lineHeight: '%value' }},
+    fontsize_class: { inline: 'span', attributes: { class: '%value' }},
     blockquote: { block: 'blockquote', wrapper: true, remove: 'all' },
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
@@ -160,12 +163,12 @@ const get = function (dom) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch () {
-        return true;
+      onmatch(node, _fmt, _itemName) {
+        return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat (elm, fmt, vars) {
-        Tools.each(vars, function (value, key) {
+      onformat(elm, _fmt, vars?: FormatVars) {
+        Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });
       }
@@ -180,8 +183,8 @@ const get = function (dom) {
         block_expand: true,
         deep: true
       },
-      { selector: 'span', attributes: ['style', 'class'], remove: 'empty', split: true, expand: false, deep: true },
-      { selector: '*', attributes: ['style', 'class'], split: false, expand: false, deep: true }
+      { selector: 'span', attributes: [ 'style', 'class' ], remove: 'empty', split: true, expand: false, deep: true },
+      { selector: '*', attributes: [ 'style', 'class' ], split: false, expand: false, deep: true }
     ]
   };
 
@@ -192,6 +195,6 @@ const get = function (dom) {
   return formats;
 };
 
-export default {
+export {
   get
 };

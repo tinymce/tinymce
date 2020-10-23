@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getKeyboardSpaces = function (editor) {
+import Editor from 'tinymce/core/api/Editor';
+
+const getKeyboardSpaces = function (editor: Editor) {
   const spaces = editor.getParam('nonbreaking_force_tab', 0);
 
   if (typeof spaces === 'boolean') {
@@ -15,6 +17,11 @@ const getKeyboardSpaces = function (editor) {
   }
 };
 
-export default {
-  getKeyboardSpaces
+const wrapNbsps = function (editor: Editor) {
+  return editor.getParam('nonbreaking_wrap', true, 'boolean');
+};
+
+export {
+  getKeyboardSpaces,
+  wrapNbsps
 };

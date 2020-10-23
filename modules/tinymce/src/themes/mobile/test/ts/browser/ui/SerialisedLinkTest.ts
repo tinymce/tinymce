@@ -1,31 +1,28 @@
-import {
-    ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse,
-    Pipeline, Step, UiFinder
-} from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Attachment, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Class, Element, Focus, Traverse } from '@ephox/sugar';
+import { Class, Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 import * as LinkButton from 'tinymce/themes/mobile/ui/LinkButton';
 
 import TestEditor from '../../module/test/ui/TestEditor';
-import TestSelectors from '../../module/test/ui/TestSelectors';
-import TestStyles from '../../module/test/ui/TestStyles';
-import TestUi from '../../module/test/ui/TestUi';
+import * as TestSelectors from '../../module/test/ui/TestSelectors';
+import * as TestStyles from '../../module/test/ui/TestStyles';
+import * as TestUi from '../../module/test/ui/TestUi';
 
 UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
-  const body = Body.body();
-  Attachment.attachSystem(body, realm.system());
+  const body = SugarBody.body();
+  Attachment.attachSystem(body, realm.system);
 
   const doc = Traverse.owner(body);
 
@@ -33,7 +30,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   const tEditor = TestEditor();
@@ -125,7 +122,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     sAssertTargetFocused,
     Keyboard.sKeydown(doc, Keys.tab(), { }),
 
-    Step.wait(1000),
+    Step.wait(100),
     Logger.t('Checking pressing tab at the end should not move focus', sAssertTargetFocused),
 
     sClickPrev,
@@ -140,13 +137,13 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     sAssertUrlFocused
   ]);
 
-  const sClickLink = Mouse.sClickOn(realm.element(), TestSelectors.link());
+  const sClickLink = Mouse.sClickOn(realm.element, TestSelectors.link());
 
   const sTestScenario = function (rawScenario) {
     const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('content', ''),
-      FieldSchema.defaulted('node', Element.fromText('')),
+      FieldSchema.defaulted('node', SugarElement.fromText('')),
       FieldSchema.strictObjOf('fields', [
         FieldSchema.option('url'),
         FieldSchema.option('text'),
@@ -161,7 +158,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     return Logger.t(
       scenario.label,
       GeneralSteps.sequence([
-        tEditor.sPrepareState(scenario.node.dom(), scenario.content),
+        tEditor.sPrepareState(scenario.node.dom, scenario.content),
         sClickLink,
         TestUi.sSetFieldOptValue(scenario.fields.url),
         sClickNext,
@@ -193,12 +190,12 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     TestHelpers.GuiSetup.mAddStyles(doc, [
       '.tinymce-mobile-toolbar-button:before { content: "LINK"; background: black; color: white; }',
       // Speeds up tests.
-      '.tinymce-mobile-serialised-dialog-chain { transition: left linear 0.000001s !important }'
+      '* { transition-duration: 1ms !important }'
     ]),
 
     TestStyles.sWaitForToolstrip(realm),
 
-    tEditor.sPrepareState(Element.fromText('hi'), 'link-text'),
+    tEditor.sPrepareState(SugarElement.fromText('hi'), 'link-text'),
 
     sClickLink,
     FocusTools.sTryOnSelector('Focus should be on input with link URL', doc, 'input[placeholder="Type or paste URL"]'),
@@ -337,11 +334,11 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in nothing with an existing link with url',
-      node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: { },
       expected: [ ],
-      mutations (node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+      mutations(node) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://prepared-url')
@@ -354,13 +351,13 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content did not match URL previously)',
-      node: Element.fromHtml('<a href="http://prepared-url">Prepared</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: {
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations (node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+      mutations(node) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -373,13 +370,13 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL with an existing link with url (and text content matched URL previously)',
-      node: Element.fromHtml('<a href="http://prepared-url">http://prepared-url</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">http://prepared-url</a>'),
       fields: {
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations (node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+      mutations(node) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -392,14 +389,14 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
     sTestScenario({
       label: 'Testing hitting ENTER after filling in URL and text with an existing link with url',
-      node: Element.fromHtml('<a href="http://prepared-url">any text</a>'),
+      node: SugarElement.fromHtml('<a href="http://prepared-url">any text</a>'),
       fields: {
         url: 'http://new-url',
         text: 'new-text'
       },
       expected: [ ],
-      mutations (node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, arr) {
+      mutations(node) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')

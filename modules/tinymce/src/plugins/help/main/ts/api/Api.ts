@@ -1,6 +1,3 @@
-import { CustomTabSpecs } from '../Plugin';
-import { Types } from '@ephox/bridge';
-
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -8,8 +5,11 @@ import { Types } from '@ephox/bridge';
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { CustomTabSpecs } from '../Plugin';
+
 const get = (customTabs: CustomTabSpecs) => {
-  const addTab = (spec: Types.Dialog.TabApi): void => {
+  const addTab = (spec: Dialog.TabSpec): void => {
     const currentCustomTabs = customTabs.get();
     currentCustomTabs[spec.name] = spec;
     customTabs.set(currentCustomTabs);

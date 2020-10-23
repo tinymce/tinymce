@@ -15,11 +15,7 @@ const entitiesAttr = {
   '\'': '&#039;'
 };
 
-const htmlEscape = (html: string): string => {
-  return html.replace(/["'<>&]/g, (match: string) => {
-    return Obj.get<Record<string, string>, string>(entitiesAttr, match).getOr(match);
-  });
-};
+const htmlEscape = (html: string): string => html.replace(/["'<>&]/g, (match: string) => Obj.get<Record<string, string>, string>(entitiesAttr, match).getOr(match));
 
 export {
   htmlEscape

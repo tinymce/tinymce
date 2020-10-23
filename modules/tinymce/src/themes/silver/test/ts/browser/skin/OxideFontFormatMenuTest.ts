@@ -1,25 +1,11 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  FocusTools,
-  Keyboard,
-  Keys,
-  Mouse,
-  Pipeline,
-  UiFinder,
-  GeneralSteps,
-  Log,
-  Step,
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Body, Element } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { TestHelpers } from '@ephox/alloy';
+import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';
-import { PlatformDetection } from '@ephox/sand';
-import { TestHelpers } from '@ephox/alloy';
 
 UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
   const isIE = PlatformDetection.detect().browser.isIE();
@@ -27,9 +13,10 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const apis = TinyApis(editor);
+      const tinyUi = TinyUi(editor);
 
       Pipeline.async({}, [
         Log.step('TBA', 'Check structure of font format', GeneralSteps.sequence([
@@ -39,167 +26,164 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
           ])),
 
           Step.label('Set editor content', apis.sSetContent('<blockquote>Text</blockquote>')),
-          Step.label('Set cursor position', apis.sSetCursor([0, 0], 'Te'.length)),
+          Step.label('Set cursor position', apis.sSetCursor([ 0, 0 ], 'Te'.length)),
 
-          Step.label('Click on the style select button', Mouse.sClickOn(Body.body(), '.tox-toolbar button')),
-          Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', Body.body(), '[role="menu"]')),
-          Step.label('Checking menu structure', Chain.asStep(Body.body(), [
+          tinyUi.sClickOnToolbar('Click on the style select button', 'button'),
+          Step.label('Wait for the style select menu', UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]')),
+          Step.label('Checking menu structure', Chain.asStep(SugarBody.body(), [
             UiFinder.cFindIn('[role="menu"]'),
             Assertions.cAssertStructure(
               'Checking structure',
-              ApproxStructure.build((s, str, arr) => {
-                return s.element('div', {
-                  classes: [arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list')],
-                  children: [
-                    s.element('div', {
-                      classes: [arr.has('tox-collection__group')],
-                      children: [
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('h1', { html: str.is('Title') })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('h2', { html: str.is('Main heading') })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('h3', { html: str.is('Sub heading') })
-                              ]
-                            })
-                          ]
-                        })
-                      ]
-                    }),
+              ApproxStructure.build((s, str, arr) => s.element('div', {
+                classes: [ arr.has('tox-menu'), arr.has('tox-collection'), arr.has('tox-collection--list') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__group') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('h1', { html: str.is('Title') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('h2', { html: str.is('Main heading') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('h3', { html: str.is('Sub heading') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      })
+                    ]
+                  }),
 
-                    s.element('div', {
-                      classes: [arr.has('tox-collection__group')],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item'), arr.has('tox-collection__group-heading') ],
-                          children: [ s.text(str.is('Example Separator')) ]
-                        }),
-                        s.element('div', {
-                          classes: [ arr.has('tox-collection__item') ],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('p', { html: str.is('Paragraph') })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('blockquote', { html: str.is('Blockquote') })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('pre', { html: str.is('Code') })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              html: str.is('Others')
-                            }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-caret')]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('span', {
-                                  html: str.is('Red text'),
-                                  styles: {
-                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
-                                  }
-                                })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('p', {
-                                  html: str.is('Red paragraph'),
-                                  styles: {
-                                    color: (isIE ? str.is('rgb(255,0,0)') : str.is('rgb(255, 0, 0)'))
-                                  }
-                                })
-                              ]
-                            })
-                          ]
-                        }),
-                        s.element('div', {
-                          classes: [arr.has('tox-collection__item')],
-                          children: [
-                            s.element('div', { classes: [arr.has('tox-collection__item-icon')] }),
-                            s.element('div', {
-                              classes: [arr.has('tox-collection__item-label')],
-                              children: [
-                                s.element('div', { html: str.is('Table row 1') })
-                              ]
-                            })
-                          ]
-                        })
-                      ]
-                    })
-                  ],
-                });
-              })
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__group') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item'), arr.has('tox-collection__group-heading') ],
+                        children: [ s.text(str.is('Example Separator')) ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('p', { html: str.is('Paragraph') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('blockquote', { html: str.is('Blockquote') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('pre', { html: str.is('Code') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            html: str.is('Others')
+                          }),
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-caret') ]
+                          })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('span', {
+                                html: str.is('Red text'),
+                                styles: {
+                                  color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
+                                }
+                              })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('p', {
+                                html: str.is('Red paragraph'),
+                                styles: {
+                                  color: (isIE ? str.is('#ff0000') : str.is('rgb(255, 0, 0)'))
+                                }
+                              })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      }),
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item') ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label') ],
+                            children: [
+                              s.element('div', { html: str.is('Table row 1') })
+                            ]
+                          }),
+                          s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }))
             )
           ])),
           Step.label('Check focus is on "Title"', FocusTools.sTryOnSelector('Focus should be on Title', doc, '.tox-collection__item:contains(Title)')),
@@ -231,12 +215,12 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
             { title: 'Other1', format: 'bold' }
           ]
         },
-        { title: 'Red text', inline: 'span', styles: { color: 'rgb(255, 0, 0)' } },
-        { title: 'Red paragraph', block: 'p', styles: { color: 'rgb(255, 0, 0)' } },
+        { title: 'Red text', inline: 'span', styles: { color: 'rgb(255, 0, 0)' }},
+        { title: 'Red paragraph', block: 'p', styles: { color: 'rgb(255, 0, 0)' }},
         { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ],
       base_url: '/project/tinymce/js/tinymce',
-      setup: (ed) => {
+      setup: (_ed) => {
 
       }
     },

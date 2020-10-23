@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Events from '../api/Events';
+import * as Events from '../api/Events';
 
 const insertChar = function (editor, chr) {
   const evtChr = Events.fireInsertCustomChar(editor, chr).chr;
   editor.execCommand('mceInsertContent', false, evtChr);
 };
 
-export default {
+export {
   insertChar
 };

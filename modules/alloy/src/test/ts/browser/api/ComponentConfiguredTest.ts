@@ -1,6 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Element } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { SugarElement } from '@ephox/sugar';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
@@ -53,7 +54,7 @@ UnitTest.asynctest('Browser Test: api.ComponentConfiguredTest', (success, failur
       'Checking external component',
       Step.sync(() => {
         const toggler = GuiFactory.build(
-          GuiFactory.external({ element: Element.fromTag('div') })
+          GuiFactory.external({ element: SugarElement.fromTag('div') })
         );
 
         Assertions.assertEq('hasConfigured', false, toggler.hasConfigured(Toggling));

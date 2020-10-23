@@ -8,7 +8,6 @@
 # Usage
 `CellLocation`: The CellLocation ADT is used to represent a cell when navigating.
 `CellMutations`: A collection of cell mutations to perform on cells when an operation has occured.
-`CellProperties`: Used to set attributes and styles of a cell.
 `CopyRows`: Used to duplicate DOM rows of selected cells.
 `Generators`: Provides methods for generating new rows and cells for table operations.
 `Picker`: Used to a table picker UI.
@@ -24,7 +23,7 @@
 `TableRender`: Creates a table.
 `TableResize`: Provides resize events for the resize bars.
 # Tests
-`snooker` uses `bolt` to run atomic tests and `bedrock` to run browser tests.
+`snooker` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run tests.
 ## Running Tests
-`$ grunt bolt-test`
-`$ grunt bedrock-auto`
+`$ yarn test-manual`
+`$ yarn test`

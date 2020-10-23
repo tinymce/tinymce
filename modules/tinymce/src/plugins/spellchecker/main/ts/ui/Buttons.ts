@@ -5,16 +5,24 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Actions, { LastSuggestion } from '../core/Actions';
+import * as Settings from '../api/Settings';
+import * as Actions from '../core/Actions';
 import { DomTextMatcher } from '../core/DomTextMatcher';
+
+type LastSuggestion = Actions.LastSuggestion;
+
+interface LanguageValue {
+  name: string;
+  value: string;
+}
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 
-const buildMenuItems = function (listName: string, languageValues) {
+const buildMenuItems = function (listName: string, languageValues: LanguageValue[]) {
   const items = [];
 
   Tools.each(languageValues, function (languageValue) {
@@ -28,13 +36,13 @@ const buildMenuItems = function (listName: string, languageValues) {
   return items;
 };
 
-const getItems = function (editor) {
+const getItems = function (editor: Editor): LanguageValue[] {
   return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
-    langPair = langPair.split('=');
+    const langPairs = langPair.split('=');
 
     return {
-      name: langPair[0],
-      value: langPair[1]
+      name: langPairs[0],
+      value: langPairs[1]
     };
   });
 };
@@ -45,11 +53,11 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 
-  const buttonArgs = {
+  const buttonArgs: Toolbar.ToolbarToggleButtonSpec = {
     tooltip: 'Spellcheck',
     onAction: startSpellchecking,
     icon: 'spell-check',
-    onSetup : (buttonApi) => {
+    onSetup: (buttonApi) => {
       const setButtonState = () => {
         buttonApi.setActive(startedState.get());
       };
@@ -57,36 +65,35 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
       return () => {
         editor.off(spellcheckerEvents, setButtonState);
       };
+    }
+  };
+
+  const splitButtonArgs: Toolbar.ToolbarSplitButtonSpec = {
+    ...buttonArgs,
+    type : 'splitbutton',
+    select : (value) => value === currentLanguageState.get(),
+    fetch : (callback) => {
+      const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemSpec => ({
+        type: 'choiceitem',
+        value: languageItem.data,
+        text: languageItem.text
+      }));
+      callback(items);
     },
+    onItemAction: (splitButtonApi, value) => {
+      currentLanguageState.set(value);
+    }
   };
 
-  const getSplitButtonArgs = () => {
-    return {
-      type : 'splitbutton',
-      menu : languageMenuItems,
-      select : (value) => {
-        return value === currentLanguageState.get();
-      },
-      fetch : (callback) => {
-        const items = Tools.map(languageMenuItems, (languageItem) => {
-          return {
-            type: 'choiceitem',
-            value: languageItem.data,
-            text: languageItem.text
-          };
-        });
-        callback(items);
-      },
-      onItemAction: (splitButtonApi, value) => {
-        currentLanguageState.set(value);
-      }
-    };
-  };
-
-  editor.ui.registry.addButton('spellchecker', Merger.merge(buttonArgs, languageMenuItems.length > 1 ? getSplitButtonArgs() : {type: 'togglebutton'}));
+  if (languageMenuItems.length > 1) {
+    editor.ui.registry.addSplitButton('spellchecker', splitButtonArgs);
+  } else {
+    editor.ui.registry.addToggleButton('spellchecker', buttonArgs);
+  }
 
   editor.ui.registry.addToggleMenuItem('spellchecker', {
     text: 'Spellcheck',
+    icon: 'spell-check',
     onSetup: (menuApi) => {
       menuApi.setActive(startedState.get());
       const setMenuItemCheck = () => {
@@ -102,6 +109,6 @@ const register = function (editor: Editor, pluginUrl: string, startedState: Cell
 
 };
 
-export default {
+export {
   register
 };

@@ -5,42 +5,83 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Merger, Obj, Arr, Type } from '@ephox/katamari';
-import Tools from 'tinymce/core/api/util/Tools';
+import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as Settings from '../api/Settings';
+import { dataToHtml } from '../core/DataToHtml';
+import * as HtmlToData from '../core/HtmlToData';
+import * as Service from '../core/Service';
+import { DialogSubData, MediaData, MediaDialogData } from '../core/Types';
+import * as UpdateHtml from '../core/UpdateHtml';
 
-import Settings from '../api/Settings';
-import HtmlToData from '../core/HtmlToData';
-import Service from '../core/Service';
-import Size from '../core/Size';
-import UpdateHtml from '../core/UpdateHtml';
-import { Types } from '@ephox/bridge';
+const extractMeta = (sourceInput: keyof MediaDialogData, data: MediaDialogData): Optional<Record<string, string>> => Obj.get(data, sourceInput).bind((mainData: DialogSubData) => Obj.get(mainData, 'meta'));
 
-type DialogData = {
-  source1?: string;
-  source2?: string;
-  embed?: string;
-  dimensions?: {
-    width?: string;
-    height?: string;
-  };
-  poster?: string;
+const getValue = (data: MediaDialogData, metaData: Record<string, string>, sourceInput?: keyof MediaDialogData) => (prop: keyof MediaDialogData): Record<string, string> => {
+  // Cases:
+  // 1. Get the nested value prop (component is the executed urlinput)
+  // 2. Get from metadata (a urlinput was executed but urlinput != this component)
+  // 3. Not a urlinput so just get string
+  // If prop === sourceInput do 1, 2 then 3, else do 2 then 1 or 3
+  // ASSUMPTION: we only want to get values for props that already exist in data
+  const getFromData = (): Optional<string | Record<string, string> | DialogSubData> => Obj.get(data, prop);
+  const getFromMetaData = (): Optional<string> => Obj.get(metaData, prop);
+  const getNonEmptyValue = (c: Record<string, string>): Optional<string> => Obj.get(c, 'value').bind((v: string) => v.length > 0 ? Optional.some(v) : Optional.none());
+
+  const getFromValueFirst = () => getFromData().bind((child) => Type.isObject(child)
+    ? getNonEmptyValue(child as Record<string, string>).orThunk(getFromMetaData)
+    : getFromMetaData().orThunk(() => Optional.from(child as string)));
+
+  const getFromMetaFirst = () => getFromMetaData().orThunk(() => getFromData().bind((child) => Type.isObject(child)
+    ? getNonEmptyValue(child as Record<string, string>)
+    : Optional.from(child as string)));
+
+  return { [prop]: (prop === sourceInput ? getFromValueFirst() : getFromMetaFirst()).getOr('') };
 };
 
-// NOTE: This means the dialog doesn't actually comply with the DialogData type, but it's too complex to unwind now
-const unwrap = (data) => Merger.merge(data, {
-  source1: data.source1.value,
-  source2: Obj.get(data, 'source2').bind((source2) => Obj.get(source2, 'value')).getOr(''),
-  poster: Obj.get(data, 'poster').bind((poster) => Obj.get(poster, 'value')).getOr('')
-});
+const getDimensions = (data: MediaDialogData, metaData: Record<string, string>) => {
+  const dimensions = {};
+  Obj.get(data, 'dimensions').each((dims) => {
+    Arr.each([ 'width', 'height' ] as ('width' | 'height')[], (prop) => {
+      Obj.get(metaData, prop).orThunk(() => Obj.get(dims, prop)).each((value) => dimensions[prop] = value);
+    });
+  });
+  return dimensions;
+};
 
-const wrap = (data) => Merger.merge(data, {
-  source1: { value: Obj.get(data, 'source1').getOr('') },
-  source2: { value: Obj.get(data, 'source2').getOr('') },
-  poster: { value: Obj.get(data, 'poster').getOr('') }
-});
+const unwrap = (data: MediaDialogData, sourceInput?: keyof MediaDialogData): MediaData => {
+  const metaData = sourceInput ? extractMeta(sourceInput, data).getOr({}) : {};
+  const get = getValue(data, metaData, sourceInput);
+  return {
+    ...get('source'),
+    ...get('altsource'),
+    ...get('poster'),
+    ...get('embed'),
+    ...getDimensions(data, metaData)
+  } as MediaData;
+};
 
-const handleError = function (editor: Editor) {
+const wrap = (data: MediaData): MediaDialogData => {
+  const wrapped: MediaDialogData = {
+    ...data,
+    source: { value: Obj.get(data, 'source').getOr('') },
+    altsource: { value: Obj.get(data, 'altsource').getOr('') },
+    poster: { value: Obj.get(data, 'poster').getOr('') }
+  };
+
+  // Add additional size values that may or may not have been in the html
+  Arr.each([ 'width', 'height' ] as (keyof MediaData)[], (prop) => {
+    Obj.get(data, prop).each((value) => {
+      const dimensions = wrapped.dimensions || {};
+      dimensions[prop] = value;
+      wrapped.dimensions = dimensions;
+    });
+  });
+
+  return wrapped;
+};
+
+const handleError = function (editor: Editor): (error?: { msg: string }) => void {
   return function (error) {
     const errorMessage = error && error.msg ?
       'Media embed handler error: ' + error.msg :
@@ -49,66 +90,42 @@ const handleError = function (editor: Editor) {
   };
 };
 
-const snippetToData = (editor: Editor, embedSnippet) => {
-  return Tools.extend({}, HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet));
-};
+const snippetToData = (editor: Editor, embedSnippet: string): MediaData => HtmlToData.htmlToData(Settings.getScripts(editor), embedSnippet);
 
-const getEditorData = function (editor: Editor) {
-  // This return type is 'any' almost entirely because 'htmlToDataSax' returns any
+const isMediaElement = (element: Element) => element.getAttribute('data-mce-object') || element.getAttribute('data-ephox-embed-iri');
+
+const getEditorData = function (editor: Editor): MediaData {
   const element = editor.selection.getNode();
-  const dataEmbed = element.getAttribute('data-ephox-embed-iri');
-
-  if (dataEmbed) {
-    return {
-      source1: dataEmbed,
-      width: Size.getMaxWidth(element),
-      height: Size.getMaxHeight(element)
-    };
-  }
-
-  return element.getAttribute('data-mce-object') ?
-    HtmlToData.htmlToData(Settings.getScripts(editor), editor.serializer.serialize(element, { selection: true })) :
-    {};
+  const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
+  return {
+    embed: snippet,
+    ...HtmlToData.htmlToData(Settings.getScripts(editor), snippet)
+  };
 };
 
-const getSource = function (editor: Editor) {
-  const elm = editor.selection.getNode();
-  return elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri') ? editor.selection.getContent() : '';
-};
-
-const addEmbedHtml = function (win: Types.Dialog.DialogInstanceApi<DialogData>, editor: Editor) {
-  return function (response) {
+const addEmbedHtml = function (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
+  return function (response: { url: string; html: string }) {
     // Only set values if a URL has been defined
     if (Type.isString(response.url) && response.url.trim().length > 0) {
       const html = response.html;
       const snippetData = snippetToData(editor, html);
-      const nuData: Partial<DialogData> = {
-        source1: response.url,
+      const nuData: MediaData = {
+        ...snippetData,
+        source: response.url,
         embed: html
       };
 
-      // Add additional values that might have been returned in the html
-      Arr.each([ 'width', 'height' ], (prop) => {
-        Obj.get(snippetData, prop).each((value) => {
-          const dimensions = nuData.dimensions || {};
-          dimensions[prop] = value;
-          nuData.dimensions = dimensions;
-        });
-      });
-
-      win.setData(wrap(nuData));
+      api.setData(wrap(nuData));
     }
   };
 };
 
-const selectPlaceholder = function (editor: Editor, beforeObjects) {
-  let i;
-  let y;
+const selectPlaceholder = function (editor: Editor, beforeObjects: HTMLElement[]) {
   const afterObjects = editor.dom.select('img[data-mce-object]');
 
   // Find new image placeholder so we can select it
-  for (i = 0; i < beforeObjects.length; i++) {
-    for (y = afterObjects.length - 1; y >= 0; y--) {
+  for (let i = 0; i < beforeObjects.length; i++) {
+    for (let y = afterObjects.length - 1; y >= 0; y--) {
       if (beforeObjects[i] === afterObjects[y]) {
         afterObjects.splice(y, 1);
       }
@@ -118,7 +135,7 @@ const selectPlaceholder = function (editor: Editor, beforeObjects) {
   editor.selection.select(afterObjects[0]);
 };
 
-const handleInsert = function (editor: Editor, html) {
+const handleInsert = function (editor: Editor, html: string) {
   const beforeObjects = editor.dom.select('img[data-mce-object]');
 
   editor.insertContent(html);
@@ -126,13 +143,14 @@ const handleInsert = function (editor: Editor, html) {
   editor.nodeChanged();
 };
 
-const submitForm = function (data, editor: Editor) {
-  data.embed = UpdateHtml.updateHtml(data.embed, data);
+const submitForm = function (prevData: MediaData, newData: MediaData, editor: Editor) {
+  newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
 
-  if (data.embed && Service.isCached(data.source1)) {
-    handleInsert(editor, data.embed);
+  // Only fetch the embed HTML content if the URL has changed from what it previously was
+  if (newData.embed && (prevData.source === newData.source || Service.isCached(newData.source))) {
+    handleInsert(editor, newData.embed);
   } else {
-    Service.getEmbedHtml(editor, data)
+    Service.getEmbedHtml(editor, newData)
       .then(function (response) {
         handleInsert(editor, response.html);
       }).catch(handleError(editor));
@@ -141,56 +159,44 @@ const submitForm = function (data, editor: Editor) {
 
 const showDialog = function (editor: Editor) {
   const editorData = getEditorData(editor);
+  const currentData = Cell<MediaData>(editorData);
+  const initialData = wrap(editorData);
 
-  const defaultData: DialogData = {
-    source1: '',
-    source2: '',
-    embed: getSource(editor),
-    poster: '',
-    dimensions: {
-      height: editorData.height ? editorData.height : '',
-      width: editorData.width ? editorData.width : ''
+  const handleSource = (prevData: MediaData, api: Dialog.DialogInstanceApi<MediaDialogData>) => {
+    const serviceData = unwrap(api.getData(), 'source');
+
+    // If a new URL is entered, then clear the embed html and fetch the new data
+    if (prevData.source !== serviceData.source) {
+      addEmbedHtml(win, editor)({ url: serviceData.source, html: '' });
+
+      Service.getEmbedHtml(editor, serviceData)
+        .then(addEmbedHtml(win, editor))
+        .catch(handleError(editor));
     }
   };
 
-  // This is a bit of a lie because the editor data doesn't have dimensions sub-objects, but that's handled above
-  const initialData: DialogData = wrap(Merger.merge(defaultData, editorData));
-
-  const getSourceData = (api) => {
+  const handleEmbed = (api: Dialog.DialogInstanceApi<MediaDialogData>) => {
     const data = unwrap(api.getData());
-
-    return Settings.hasDimensions(editor) ? Merger.merge(data, {
-      width: data.dimensions.width,
-      height: data.dimensions.height
-    }) : data;
-  };
-
-  const handleSource1 = (api) => {
-    const serviceData = getSourceData(api);
-    Service.getEmbedHtml(editor, serviceData)
-      .then(addEmbedHtml(win, editor))
-      .catch(handleError(editor));
-  };
-
-  const handleEmbed = (api) => {
-    const data = unwrap(api.getData());
-
     const dataFromEmbed = snippetToData(editor, data.embed);
-    dataFromEmbed.dimensions = {
-      width: dataFromEmbed.width ? dataFromEmbed.width : data.dimensions.width,
-      height: dataFromEmbed.height ? dataFromEmbed.height : data.dimensions.height
-    };
-
     api.setData(wrap(dataFromEmbed));
   };
 
-  const mediaInput: Types.Dialog.BodyComponentApi[] = [{
-    name: 'source1',
+  const handleUpdate = (api: Dialog.DialogInstanceApi<MediaDialogData>, sourceInput: keyof MediaDialogData) => {
+    const data = unwrap(api.getData(), sourceInput);
+    const embed = dataToHtml(editor, data);
+    api.setData(wrap({
+      ...data,
+      embed
+    }));
+  };
+
+  const mediaInput: Dialog.UrlInputSpec[] = [{
+    name: 'source',
     type: 'urlinput',
     filetype: 'media',
     label: 'Source'
   }];
-  const sizeInput: Types.Dialog.BodyComponentApi[] = !Settings.hasDimensions(editor) ? [] : [{
+  const sizeInput: Dialog.SizeInputSpec[] = !Settings.hasDimensions(editor) ? [] : [{
     type: 'sizeinput',
     name: 'dimensions',
     label: 'Constrain proportions',
@@ -198,12 +204,12 @@ const showDialog = function (editor: Editor) {
   }];
 
   const generalTab = {
-      title: 'General',
-      name: 'general',
-      items: Arr.flatten<Types.Dialog.BodyComponentApi>([mediaInput, sizeInput])
-    };
+    title: 'General',
+    name: 'general',
+    items: Arr.flatten<Dialog.BodyComponentSpec>([ mediaInput, sizeInput ])
+  };
 
-  const embedTextarea: Types.Dialog.BodyComponentApi = {
+  const embedTextarea: Dialog.TextAreaSpec = {
     type: 'textarea',
     name: 'embed',
     label: 'Paste your embed code below:'
@@ -215,15 +221,15 @@ const showDialog = function (editor: Editor) {
     ]
   };
 
-  const advancedFormItems: Types.Dialog.BodyComponentApi[] = [];
+  const advancedFormItems: Dialog.BodyComponentSpec[] = [];
 
   if (Settings.hasAltSource(editor)) {
     advancedFormItems.push({
-        name: 'source2',
-        type: 'urlinput',
-        filetype: 'media',
-        label: 'Alternative source URL'
-      }
+      name: 'altsource',
+      type: 'urlinput',
+      filetype: 'media',
+      label: 'Alternative source URL'
+    }
     );
   }
 
@@ -251,7 +257,7 @@ const showDialog = function (editor: Editor) {
     tabs.push(advancedTab);
   }
 
-  const body: Types.Dialog.TabPanelApi = {
+  const body: Dialog.TabPanelSpec = {
     type: 'tabpanel',
     tabs
   };
@@ -273,29 +279,37 @@ const showDialog = function (editor: Editor) {
         primary: true
       }
     ],
-    onSubmit (api) {
-      const serviceData = getSourceData(api);
-      submitForm(serviceData, editor);
+    onSubmit(api) {
+      const serviceData = unwrap(api.getData());
+      submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
-    onChange (api, detail) {
+    onChange(api, detail) {
       switch (detail.name) {
-        case 'source1':
-          handleSource1(api);
+        case 'source':
+          handleSource(currentData.get(), api);
           break;
 
         case 'embed':
           handleEmbed(api);
           break;
 
+        case 'dimensions':
+        case 'altsource':
+        case 'poster':
+          handleUpdate(api, detail.name);
+          break;
+
         default:
           break;
       }
+      currentData.set(unwrap(api.getData()));
     },
     initialData
   });
 };
 
-export default {
-  showDialog
+export {
+  showDialog,
+  unwrap
 };

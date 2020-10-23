@@ -1,12 +1,10 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
+UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function (success, failure) {
+  const suite = LegacyUnit.createSuite<Editor>();
 
   suite.test('getContainer/getContentAreaContainer', function (editor) {
     LegacyUnit.equal(editor.getContainer().id, 'editorContainer', 'Should be the new editorContainer element');
@@ -15,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function (
     LegacyUnit.equal(editor.getContentAreaContainer().nodeType, 1, 'Should be an element');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
@@ -24,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', function (
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    theme (editor, targetnode) {
+    theme(editor, targetnode) {
       const editorContainer = document.createElement('div');
       editorContainer.id = 'editorContainer';
 

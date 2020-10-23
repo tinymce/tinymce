@@ -1,16 +1,17 @@
-import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, Truncate, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
-import { Attr, Compare, Element, Html, Insert, SelectorFilter } from '@ephox/sugar';
+import { Attribute, Compare, Html, Insert, SelectorFilter, SugarElement, Truncate } from '@ephox/sugar';
+
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
-import EventRegistry from 'ephox/alloy/events/EventRegistry';
+import EventRegistry, { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { document } from '@ephox/dom-globals';
+
+type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string };
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
-  const body = Element.fromDom(document.body);
-  const page = Element.fromTag('div');
+  const body = SugarElement.fromDom(document.body);
+  const page = SugarElement.fromTag('div');
 
   Html.set(page,
     '<div data-test-uid="comp-1">' +
@@ -27,7 +28,7 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   // Add alloy UID tags to match these attributes.
   const pageBits = SelectorFilter.descendants(page, '[data-test-uid]');
   Arr.each(pageBits, (bit) => {
-    Tagger.writeOnly(bit, Attr.get(bit, 'data-test-uid'));
+    Attribute.getOpt(bit, 'data-test-uid').each((testUid) => Tagger.writeOnly(bit, testUid));
   });
 
   const isRoot = Fun.curry(Compare.eq, page);
@@ -38,78 +39,60 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
 
   events.registerId([ 'extra-args' ], 'comp-1', {
     'event.alpha': DescribedHandler.uncurried(
-      (extra) => {
-        return 'event.alpha.1(' + extra + ')';
-      },
+      (extra: string) => 'event.alpha.1(' + extra + ')',
       'event.alpha.1.handler'
     ),
     'event.only': DescribedHandler.uncurried(
-      (extra) => {
-        return 'event.only(' + extra + ')';
-      },
+      (extra: string) => 'event.only(' + extra + ')',
       'event.only.handler'
     )
   });
 
   events.registerId([ 'extra-args' ], 'comp-4', {
     'event.alpha': DescribedHandler.uncurried(
-      (extra) => {
-        return 'event.alpha.4(' + extra + ')';
-      },
+      (extra: string) => 'event.alpha.4(' + extra + ')',
       'event.alpha.4.handler'
     )
   });
 
-  const sAssertFilterByType = (expected, type) => {
-    return Step.sync(() => {
-      const filtered = events.filterByType(type);
-      const raw = Arr.map(filtered, (f) => {
-        return {
-          // Invoke the handler
-          handler: f.descHandler().cHandler(),
-          purpose: f.descHandler().purpose(),
-          id: f.id()
-        };
-      }).sort((f, g) => {
-        if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
-      });
-
-      Assertions.assertEq('filter(' + type + ') = ' + Json.stringify(expected), expected, raw);
+  const sAssertFilterByType = (expected: ExpectedType[], type: string) => Step.sync(() => {
+    const filtered = events.filterByType(type);
+    const raw = Arr.map(filtered, (f) => ({
+      // Invoke the handler
+      handler: f.descHandler.cHandler(),
+      purpose: f.descHandler.purpose,
+      id: f.id
+    })).sort((f, g) => {
+      if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
     });
-  };
 
-  const sAssertNotFound = (label, type, id) => {
-    return Logger.t(
-      'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
-      GeneralSteps.sequence([
-        Chain.asStep(page, [
-          UiFinder.cFindIn('[data-test-uid="' + id + '"]'),
-          Chain.binder((target) => {
-            const handler = events.find(isRoot, type, target);
-            return handler.fold(() => {
-              return Result.value({ });
-            }, (h) => {
-              return Result.error(
-                'Unexpected handler found: ' + Json.stringify({
-                  element: Truncate.getHtml(h.element()),
-                  // INVESTIGATE: Should this have changed?
-                  handler: h.descHandler()
-                })
-              );
-            });
-          })
-        ])
+    Assertions.assertEq(() => 'filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
+  });
+
+  const sAssertNotFound = (label: string, type: string, id: string) => Logger.t(
+    'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type + '. Should not find any',
+    GeneralSteps.sequence([
+      Chain.asStep(page, [
+        UiFinder.cFindIn('[data-test-uid="' + id + '"]'),
+        Chain.binder((target) => {
+          const handler = events.find(isRoot, type, target);
+          return handler.fold(() => Result.value({ }), (h) => Result.error(
+            'Unexpected handler found: ' + JSON.stringify({
+              element: Truncate.getHtml(h.element),
+              // INVESTIGATE: Should this have changed?
+              handler: h.descHandler
+            })
+          ));
+        })
       ])
-    );
-  };
+    ])
+  );
 
-  const sAssertFind = (label, expected, type, id) => {
-    const cFindHandler = Chain.binder((target: Element) => {
-      return events.find(isRoot, type, target).fold(
-        () => Result.error('No event handler for ' + type + ' on ' + target.dom()),
-        Result.value
-      );
-    });
+  const sAssertFind = (label: string, expected: ExpectedType, type: string, id: string) => {
+    const cFindHandler = Chain.binder((target: SugarElement) => events.find(isRoot, type, target).fold(
+      () => Result.error('No event handler for ' + type + ' on ' + target.dom),
+      Result.value
+    ));
 
     return Logger.t(
       'Test: ' + label + '\nLooking for handlers for  id = ' + id + ' and event = ' + type,
@@ -122,16 +105,16 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
             NamedChain.bundle(Result.value)
           ]),
           Chain.op((actual) => {
-            const section = actual.handler;
+            const section: ElementAndHandler = actual.handler;
             Assertions.assertEq(
               'find(' + type + ', ' + id + ') = true',
               expected.target,
-              Attr.get(section.element(), 'data-test-uid')
+              Attribute.get(section.element, 'data-test-uid')
             );
             Assertions.assertEq(
-              'find(' + type + ', ' + id + ') = ' + Json.stringify(expected.handler),
+              () => 'find(' + type + ', ' + id + ') = ' + JSON.stringify(expected.handler),
               expected.handler,
-              section.descHandler().cHandler()
+              section.descHandler.cHandler()
             );
           })
         ])

@@ -1,35 +1,35 @@
-import { ApproxStructure, GeneralSteps, Pipeline, Waiter, Logger, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { ApproxStructure, GeneralSteps, Log, Logger, Pipeline, StructAssert, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import Utils from '../module/test/Utils';
+import * as Utils from '../module/test/Utils';
 
 UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
   Plugin();
   Theme();
 
-  const sTestPlaceholder = function (ui, editor, apis, url, expected, struct) {
+  const sTestPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, url: string, expected: string, struct: StructAssert) {
     return Logger.t(`Test placeholder ${expected}`, GeneralSteps.sequence([
       Utils.sOpenDialog(ui),
       Utils.sSetFormItemNoEvent(ui, url),
       ui.sClickOnUi('click checkbox', Utils.selectors.saveButton),
       Utils.sAssertEditorContent(apis, editor, expected),
       Waiter.sTryUntil('Wait for structure check',
-        apis.sAssertContentStructure(struct),
-        100, 3000),
+        apis.sAssertContentStructure(struct)),
       apis.sSetContent('')
     ]));
   };
 
-  const sTestScriptPlaceholder = function (ui, editor, apis, expected, struct) {
+  const sTestScriptPlaceholder = function (ui: TinyUi, editor: Editor, apis: TinyApis, expected: string, struct: StructAssert) {
     return Logger.t(`Test script placeholder ${expected}`, GeneralSteps.sequence([
       apis.sSetContent(
         '<script src="http://media1.tinymce.com/123456"></script>' +
         '<script src="http://media2.tinymce.com/123456"></script>'),
-      apis.sNodeChanged,
+      apis.sNodeChanged(),
       Waiter.sTryUntil('Wait for structure check',
         apis.sAssertContentStructure(struct),
         10, 500),
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
     });
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 
@@ -116,25 +116,25 @@ UnitTest.asynctest('browser.core.PlaceholderTest', function (success, failure) {
           '</p>', scriptStruct),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           placeholderStructure),
         Utils.sSetSetting(editor.settings, 'media_live_embeds', true),
         sTestPlaceholder(ui, editor, apis,
           'https://www.youtube.com/watch?v=P_205ZY52pY',
-          '<p><iframe src="//www.youtube.com/embed/P_205ZY52pY" width="560" ' +
+          '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
           'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
           iframeStructure)
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
-    plugins: ['media'],
+    plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
     extended_valid_elements: 'script[src|type]',
     media_scripts: [
-        { filter: 'http://media1.tinymce.com' },
-        { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
+      { filter: 'http://media1.tinymce.com' },
+      { filter: 'http://media2.tinymce.com', width: 100, height: 200 }
     ],
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);

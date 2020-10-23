@@ -1,45 +1,44 @@
 import { FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 import * as NavigationUtils from 'ephox/alloy/test/NavigationUtils';
 
 UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
-  GuiSetup.setup((store, doc, body) => {
-    const item = (classes, name) => {
-      return Container.sketch({
-        dom: {
-          tag: 'span',
-          styles: {
-            display: 'inline-block',
-            width: '20px',
-            height: '20px',
-            margin: '2px',
-            border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
-          },
-          classes
+  GuiSetup.setup((store, _doc, _body) => {
+    const item = (classes: string[], name: string) => Container.sketch({
+      dom: {
+        tag: 'span',
+        styles: {
+          display: 'inline-block',
+          width: '20px',
+          height: '20px',
+          margin: '2px',
+          border: '1px solid ' + (Arr.contains(classes, 'stay') ? 'blue' : 'yellow')
         },
-        events: AlloyEvents.derive([
-          AlloyEvents.runOnExecute(
-            store.adder('item.execute: ' + name)
-          )
-        ]),
-        containerBehaviours: Behaviour.derive([
-          Focusing.config({ })
-        ])
-      });
-    };
+        classes
+      },
+      events: AlloyEvents.derive([
+        AlloyEvents.runOnExecute(
+          store.adder('item.execute: ' + name)
+        )
+      ]),
+      containerBehaviours: Behaviour.derive([
+        Focusing.config({ })
+      ])
+    });
 
     return GuiFactory.build(
       Container.sketch({
         dom: {
-          classes: [ 'flow-keying-test'],
+          classes: [ 'flow-keying-test' ],
           styles: {
             background: 'white',
             width: '200px',
@@ -63,7 +62,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
         ]
       })
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, body, gui, _component, store) => {
 
     const targets = {
       one: { label: 'one', selector: '.one' },
@@ -73,7 +72,7 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
 
     return [
       GuiSetup.mSetupKeyLogger(body),
-      FocusTools.sSetFocus('Initial focus', gui.element(), '.one'),
+      FocusTools.sSetFocus('Initial focus', gui.element, '.one'),
       NavigationUtils.sequence(
         doc,
         Keys.right(),

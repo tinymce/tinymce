@@ -1,130 +1,175 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Pprint, Testable } from '@ephox/dispute';
+import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Type from 'ephox/katamari/api/Type';
-import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
 
-UnitTest.test('Type', function() {
-  const check = function (expected, method, input) {
-    const actual = Type[method](input);
-    assert.eq(expected, actual, "I'm a failure.");
+const { tNumber } = Testable;
+
+UnitTest.test('Type.is*: Unit tests', () => {
+  const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
+    const actual = method(input);
+    Assert.eq(
+      () => 'Expected: ' + methodName + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected,
+      expected, actual
+    );
   };
 
+  // eslint-disable-next-line no-new-wrappers
   const objectString = new String('ball');
-  const noop = function () { };
+  const noop = () => {};
 
-  check(true, 'isNull', null);
-  check(false, 'isNull', undefined);
-  check(false, 'isNull', true);
-  check(false, 'isNull', false);
-  check(false, 'isNull', 'ball');
-  check(false, 'isNull', {});
-  check(false, 'isNull', objectString);
-  check(false, 'isNull', []);
-  check(false, 'isNull', noop);
-  check(false, 'isNull', [1,3,4,5]);
-  check(false, 'isNull', 1);
+  const checkIsNull = check(Type.isNull, 'isNull');
+  const checkIsUndefined = check(Type.isUndefined, 'isUndefined');
+  const checkIsBoolean = check(Type.isBoolean, 'isBoolean');
+  const checkIsString = check(Type.isString, 'isString');
+  const checkIsObject = check(Type.isObject, 'isObject');
+  const checkIsArray = check(Type.isArray, 'isArray');
+  const checkIsFunction = check(Type.isFunction, 'isFunction');
+  const checkIsNumber = check(Type.isNumber, 'isNumber');
 
-  check(false, 'isUndefined', null);
-  check(true, 'isUndefined', undefined);
-  check(false, 'isUndefined', true);
-  check(false, 'isUndefined', false);
-  check(false, 'isUndefined', 'ball');
-  check(false, 'isUndefined', {});
-  check(false, 'isUndefined', objectString);
-  check(false, 'isUndefined', []);
-  check(false, 'isUndefined', noop);
-  check(false, 'isUndefined', [1,3,4,5]);
-  check(false, 'isUndefined', 1);
+  checkIsNull(true, null);
+  checkIsNull(false, undefined);
+  checkIsNull(false, true);
+  checkIsNull(false, false);
+  checkIsNull(false, 'ball');
+  checkIsNull(false, {});
+  checkIsNull(false, objectString);
+  checkIsNull(false, []);
+  checkIsNull(false, noop);
+  checkIsNull(false, [ 1, 3, 4, 5 ]);
+  checkIsNull(false, 1);
 
-  check(false, 'isBoolean', null);
-  check(false, 'isBoolean', undefined);
-  check(true, 'isBoolean', true);
-  check(true, 'isBoolean', false);
-  check(false, 'isBoolean', 'ball');
-  check(false, 'isBoolean', {});
-  check(false, 'isBoolean', objectString);
-  check(false, 'isBoolean', []);
-  check(false, 'isBoolean', noop);
-  check(false, 'isBoolean', [1,3,4,5]);
-  check(false, 'isBoolean', 1);
+  checkIsUndefined(false, null);
+  checkIsUndefined(true, undefined);
+  checkIsUndefined(false, true);
+  checkIsUndefined(false, false);
+  checkIsUndefined(false, 'ball');
+  checkIsUndefined(false, {});
+  checkIsUndefined(false, objectString);
+  checkIsUndefined(false, []);
+  checkIsUndefined(false, noop);
+  checkIsUndefined(false, [ 1, 3, 4, 5 ]);
+  checkIsUndefined(false, 1);
 
-  check(false, 'isString', null);
-  check(false, 'isString', undefined);
-  check(false, 'isString', true);
-  check(false, 'isString', false);
-  check(true, 'isString', 'ball');
-  check(false, 'isString', {});
-  check(true, 'isString', objectString);
-  check(false, 'isString', []);
-  check(false, 'isString', noop);
-  check(false, 'isString', [1,3,4,5]);
-  check(false, 'isString', 1);
+  checkIsBoolean(false, null);
+  checkIsBoolean(false, undefined);
+  checkIsBoolean(true, true);
+  checkIsBoolean(true, false);
+  checkIsBoolean(false, 'ball');
+  checkIsBoolean(false, {});
+  checkIsBoolean(false, objectString);
+  checkIsBoolean(false, []);
+  checkIsBoolean(false, noop);
+  checkIsBoolean(false, [ 1, 3, 4, 5 ]);
+  checkIsBoolean(false, 1);
 
-  check(false, 'isObject', null);
-  check(false, 'isObject', undefined);
-  check(false, 'isObject', true);
-  check(false, 'isObject', false);
-  check(false, 'isObject', 'ball');
-  check(true, 'isObject', {});
-  check(false, 'isObject', objectString);
-  check(false, 'isObject', []);
-  check(false, 'isObject', noop);
-  check(false, 'isObject', [1,3,4,5]);
-  check(false, 'isObject', 1);
+  checkIsString(false, null);
+  checkIsString(false, undefined);
+  checkIsString(false, true);
+  checkIsString(false, false);
+  checkIsString(true, 'ball');
+  checkIsString(false, {});
+  checkIsString(true, objectString);
+  checkIsString(false, []);
+  checkIsString(false, noop);
+  checkIsString(false, [ 1, 3, 4, 5 ]);
+  checkIsString(false, 1);
 
-  check(false, 'isArray', null);
-  check(false, 'isArray', undefined);
-  check(false, 'isArray', true);
-  check(false, 'isArray', false);
-  check(false, 'isArray', 'ball');
-  check(false, 'isArray', {});
-  check(false, 'isArray', objectString);
-  check(true, 'isArray', []);
-  check(false, 'isArray', noop);
-  check(true, 'isArray', [1,3,4,5]);
-  check(false, 'isArray', 1);
+  checkIsObject(false, null);
+  checkIsObject(false, undefined);
+  checkIsObject(false, true);
+  checkIsObject(false, false);
+  checkIsObject(false, 'ball');
+  checkIsObject(true, {});
+  checkIsObject(false, objectString);
+  checkIsObject(false, []);
+  checkIsObject(false, noop);
+  checkIsObject(false, [ 1, 3, 4, 5 ]);
+  checkIsObject(false, 1);
 
-  check(false, 'isFunction', null);
-  check(false, 'isFunction', undefined);
-  check(false, 'isFunction', true);
-  check(false, 'isFunction', false);
-  check(false, 'isFunction', 'ball');
-  check(false, 'isFunction', {});
-  check(false, 'isFunction', objectString);
-  check(false, 'isFunction', []);
-  check(true, 'isFunction', noop);
-  check(false, 'isFunction', [1,3,4,5]);
-  check(false, 'isFunction', 1);
+  checkIsArray(false, null);
+  checkIsArray(false, undefined);
+  checkIsArray(false, true);
+  checkIsArray(false, false);
+  checkIsArray(false, 'ball');
+  checkIsArray(false, {});
+  checkIsArray(false, objectString);
+  checkIsArray(true, []);
+  checkIsArray(false, noop);
+  checkIsArray(true, [ 1, 3, 4, 5 ]);
+  checkIsArray(false, 1);
 
-  check(false, 'isNumber', null);
-  check(false, 'isNumber', undefined);
-  check(false, 'isNumber', true);
-  check(false, 'isNumber', false);
-  check(false, 'isNumber', 'ball');
-  check(false, 'isNumber', {});
-  check(false, 'isNumber', objectString);
-  check(false, 'isNumber', []);
-  check(false, 'isNumber', noop);
-  check(false, 'isNumber', [1,3,4,5]);
-  check(true, 'isNumber', 1);
+  checkIsFunction(false, null);
+  checkIsFunction(false, undefined);
+  checkIsFunction(false, true);
+  checkIsFunction(false, false);
+  checkIsFunction(false, 'ball');
+  checkIsFunction(false, {});
+  checkIsFunction(false, objectString);
+  checkIsFunction(false, []);
+  checkIsFunction(true, noop);
+  checkIsFunction(false, [ 1, 3, 4, 5 ]);
+  checkIsFunction(false, 1);
 
-  Jsc.property('Check Type.is* :: only one should match for every value', Jsc.json, function (json) {
-    const classifiers = [
-      Type.isString,
-      Type.isObject,
-      Type.isArray,
-      Type.isNull,
-      Type.isBoolean,
-      Type.isUndefined,
-      Type.isFunction,
-      Type.isNumber
-    ];
+  checkIsNumber(false, null);
+  checkIsNumber(false, undefined);
+  checkIsNumber(false, true);
+  checkIsNumber(false, false);
+  checkIsNumber(false, 'ball');
+  checkIsNumber(false, {});
+  checkIsNumber(false, objectString);
+  checkIsNumber(false, []);
+  checkIsNumber(false, noop);
+  checkIsNumber(false, [ 1, 3, 4, 5 ]);
+  checkIsNumber(true, 1);
 
-    const matches = Arr.filter(classifiers, function (c) {
-      return c(json);
-    });
+});
 
-    return matches.length === 1;
-  });
+UnitTest.test('Type.is*: only one should match for every value', () => {
+  const classifiers = [
+    Type.isString,
+    Type.isObject,
+    Type.isArray,
+    Type.isNull,
+    Type.isBoolean,
+    Type.isUndefined,
+    Type.isFunction,
+    Type.isNumber
+  ];
+
+  fc.assert(fc.property(fc.anything(), (x) => {
+    const matches = Arr.filter(classifiers, (c) => c(x));
+    Assert.eq('number of matching types', 1, matches.length, tNumber);
+  }));
+});
+
+UnitTest.test('Type.isNullable', () => {
+  Assert.eq('null should be nullable', true, Type.isNullable(null));
+  Assert.eq('undefined should be nullable', true, Type.isNullable(undefined));
+  fc.assert(fc.property(fc.string(), (s) => {
+    Assert.eq('string should not be nullable', false, Type.isNullable(s));
+  }));
+  fc.assert(fc.property(fc.integer(), (i) => {
+    Assert.eq('integer should not be nullable', false, Type.isNullable(i));
+  }));
+});
+
+UnitTest.test('Type.isNonNullable', () => {
+  Assert.eq('null should be nullable', false, Type.isNonNullable(null));
+  Assert.eq('undefined should be nullable', false, Type.isNonNullable(undefined));
+  fc.assert(fc.property(fc.string(), (s) => {
+    Assert.eq('string should not be nullable', true, Type.isNonNullable(s));
+  }));
+  fc.assert(fc.property(fc.integer(), (i) => {
+    Assert.eq('integer should not be nullable', true, Type.isNonNullable(i));
+  }));
+
+  // this is testing a compile-time check of the type guard
+  const os: string | null | undefined = 'hello';
+  if (Type.isNonNullable(os)) {
+    const s: string = os;
+    Assert.eq('s', s, os);
+  }
 });
 

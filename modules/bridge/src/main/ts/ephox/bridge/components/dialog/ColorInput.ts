@@ -1,21 +1,20 @@
 import { ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { FormComponent, FormComponentApi, formComponentFields } from './FormComponent';
+import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
-export interface ColorInputApi extends FormComponentApi {
+export interface ColorInputSpec extends FormComponentWithLabelSpec {
   type: 'colorinput';
 }
 
-export interface ColorInput extends FormComponent {
+export interface ColorInput extends FormComponentWithLabel {
   type: 'colorinput';
 }
 
-export const colorInputFields = formComponentFields;
+const colorInputFields = formComponentWithLabelFields;
 
 export const colorInputSchema = ValueSchema.objOf(colorInputFields);
 
 export const colorInputDataProcessor = ValueSchema.string;
 
-export const createInputBox = (spec: ColorInputApi): Result<ColorInput, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<ColorInput>('colorinput', colorInputSchema, spec);
-};
+export const createColorInput = (spec: ColorInputSpec): Result<ColorInput, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<ColorInput>('colorinput', colorInputSchema, spec);

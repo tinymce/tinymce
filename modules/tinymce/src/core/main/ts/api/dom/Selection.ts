@@ -5,31 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Selection as NativeSelection, HTMLElement, Node, Range, Element, ClientRect, Window } from '@ephox/dom-globals';
-import { Compare, Element as SugarElement } from '@ephox/sugar';
-import Env from '../Env';
-import BookmarkManager from './BookmarkManager';
+import { Compare, SugarElement } from '@ephox/sugar';
+import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
-import ControlSelection from './ControlSelection';
-import NodeType from '../../dom/NodeType';
-import ScrollIntoView from '../../dom/ScrollIntoView';
-import EditorFocus from '../../focus/EditorFocus';
-import CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
-import EventProcessRanges from '../../selection/EventProcessRanges';
-import GetSelectionContent from '../../selection/GetSelectionContent';
-import MultiRange from '../../selection/MultiRange';
-import NormalizeRange from '../../selection/NormalizeRange';
-import SelectionBookmark from '../../selection/SelectionBookmark';
-import SetSelectionContent from '../../selection/SetSelectionContent';
+import * as NodeType from '../../dom/NodeType';
+import * as ScrollIntoView from '../../dom/ScrollIntoView';
+import * as EditorFocus from '../../focus/EditorFocus';
+import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as ElementSelection from '../../selection/ElementSelection';
-import { moveEndPoint, hasAnyRanges } from '../../selection/SelectionUtils';
+import * as EventProcessRanges from '../../selection/EventProcessRanges';
+import * as GetSelectionContent from '../../selection/GetSelectionContent';
+import * as MultiRange from '../../selection/MultiRange';
+import * as NormalizeRange from '../../selection/NormalizeRange';
+import * as SelectionBookmark from '../../selection/SelectionBookmark';
+import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
+import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import Editor from '../Editor';
+import Env from '../Env';
+import AstNode from '../html/Node';
+import BookmarkManager from './BookmarkManager';
+import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
 import SelectorChanged from './SelectorChanged';
+import DomSerializer from './Serializer';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.
- * Consult the TinyMCE Wiki API for more details and examples on how to use this class.
+ * Consult the TinyMCE API Documentation for more details and examples on how to use this class.
  *
  * @class tinymce.dom.Selection
  * @example
@@ -37,9 +39,7 @@ import SelectorChanged from './SelectorChanged';
  * alert(tinymce.activeEditor.selection.getNode().nodeName);
  */
 
-const isNativeIeSelection = (rng: any): boolean => {
-  return !!(<any> rng).select;
-};
+const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
 const isAttachedToDom = function (node: Node): boolean {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
@@ -55,36 +55,37 @@ const isValidRange = function (rng: Range) {
   }
 };
 
-interface Selection {
-  bookmarkManager: any;
+interface EditorSelection {
+  bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
-  dom: any;
+  dom: DOMUtils;
   win: Window;
-  serializer: any;
-  editor: any;
+  serializer: DomSerializer;
+  editor: Editor;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
-  getContent: (args?: any) => any;
-  setContent: (content: any, args?: any) => void;
-  getBookmark: (type?: number, normalized?: boolean) => any;
-  moveToBookmark: (bookmark: any) => boolean;
+  getContent (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
+  getContent (args?: GetSelectionContent.GetSelectionContentArgs): string;
+  setContent: (content: string, args?: SetSelectionContent.SelectionSetContentArgs) => void;
+  getBookmark: (type?: number, normalized?: boolean) => Bookmark;
+  moveToBookmark: (bookmark: Bookmark) => boolean;
   select: (node: Node, content?: boolean) => Node;
   isCollapsed: () => boolean;
   isForward: () => boolean;
   setNode: (elm: Element) => Element;
   getNode: () => Element;
-  getSel: () => NativeSelection;
+  getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
-  getRng: () => Range;
+  getRng: () => Range | null;
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
-      node: Node;
-      selector: String;
-      parents: Element[];
-  }) => void) => any;
+    node: Node;
+    selector: String;
+    parents: Element[];
+  }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
     selector: String;
@@ -107,9 +108,9 @@ interface Selection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Editor): Selection {
-  let bookmarkManager, controlSelection: ControlSelection;
-  let selectedRange, explicitRange;
+const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor): EditorSelection {
+  let selectedRange: Range | null;
+  let explicitRange: Range | null;
 
   const { selectorChangedWithUnbind } = SelectorChanged(dom, editor);
 
@@ -148,7 +149,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * // Alerts the currently selected contents as plain text
    * alert(tinymce.activeEditor.selection.getContent({format: 'text'}));
    */
-  const getContent = (args) => GetSelectionContent.getContent(editor, args);
+  const getContent = (args?: GetSelectionContent.GetSelectionContentArgs): any => GetSelectionContent.getContent(editor, args);
 
   /**
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
@@ -162,7 +163,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  const setContent = (content, args?) => SetSelectionContent.setContent(editor, content, args);
+  const setContent = (content: string, args?: SetSelectionContent.SelectionSetContentArgs) => SetSelectionContent.setContent(editor, content, args);
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -218,7 +219,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  const moveToBookmark = (bookmark): boolean => bookmarkManager.moveToBookmark(bookmark);
+  const moveToBookmark = (bookmark: Bookmark): boolean => bookmarkManager.moveToBookmark(bookmark);
 
   /**
    * Selects the specified element. This will place the start and end of the selection range around the element.
@@ -276,7 +277,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): NativeSelection => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): Selection | null => win.getSelection ? win.getSelection() : (<any> win.document).selection;
 
   /**
    * Returns the browsers internal range object.
@@ -286,8 +287,8 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * @see http://www.quirksmode.org/dom/range_intro.html
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
-  const getRng = (): Range => {
-    let selection, rng, elm, doc;
+  const getRng = (): Range | null => {
+    let selection, rng, elm;
 
     const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
       try {
@@ -306,7 +307,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
       return null;
     }
 
-    doc = win.document;
+    const doc = win.document;
 
     if (typeof doc === 'undefined' || doc === null) {
       return null;
@@ -316,7 +317,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
       const bookmark = SelectionBookmark.getRng(editor);
 
       if (bookmark.isSome()) {
-        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [r])[0]).getOr(doc.createRange());
+        return bookmark.map((r) => EventProcessRanges.processRanges(editor, [ r ])[0]).getOr(doc.createRange());
       }
     }
 
@@ -327,18 +328,19 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
         } else {
           rng = selection.createRange ? selection.createRange() : doc.createRange();
         }
+
+        rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
       }
     } catch (ex) {
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
-    rng = EventProcessRanges.processRanges(editor, [rng])[0];
-
     // No range found then create an empty one
     // This can occur when the editor is placed in a hidden container element on Gecko
     // Or on IE when there was an exception
     if (!rng) {
-      rng = doc.createRange ? doc.createRange() : doc.body.createTextRange();
+      // TODO: Is this still needed in modern browsers?
+      rng = doc.createRange ? doc.createRange() : (doc.body as any).createTextRange();
     }
 
     // If range is at start of document then move it to start of body
@@ -371,7 +373,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * @param {Boolean} forward Optional boolean if the selection is forwards or backwards.
    */
   const setRng = (rng: Range, forward?: boolean) => {
-    let sel, node, evt;
+    let node;
 
     if (!isValidRange(rng)) {
       return;
@@ -391,9 +393,9 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
       return;
     }
 
-    sel = getSel();
+    const sel = getSel();
 
-    evt = editor.fire('SetSelectionRange', { range: rng, forward });
+    const evt = editor.fire('SetSelectionRange', { range: rng, forward });
     rng = evt.range;
 
     if (sel) {
@@ -474,20 +476,21 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
 
   const isForward = (): boolean => {
     const sel = getSel();
-    let anchorRange,
-      focusRange;
+
+    const anchorNode = sel?.anchorNode;
+    const focusNode = sel?.focusNode;
 
     // No support for selection direction then always return true
-    if (!sel || !sel.anchorNode || !sel.focusNode) {
+    if (!sel || !anchorNode || !focusNode || NodeType.isRestrictedNode(anchorNode) || NodeType.isRestrictedNode(focusNode)) {
       return true;
     }
 
-    anchorRange = dom.createRng();
-    anchorRange.setStart(sel.anchorNode, sel.anchorOffset);
+    const anchorRange = dom.createRng();
+    anchorRange.setStart(anchorNode, sel.anchorOffset);
     anchorRange.collapse(true);
 
-    focusRange = dom.createRng();
-    focusRange.setStart(sel.focusNode, sel.focusOffset);
+    const focusRange = dom.createRng();
+    focusRange.setStart(focusNode, sel.focusOffset);
     focusRange.collapse(true);
 
     return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
@@ -510,7 +513,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
     return rng;
   };
 
-    /**
+  /**
    * Executes callback when the current selection starts/stops matching the specified selector. The current
    * state will be passed to the callback as it's first argument.
    *
@@ -518,7 +521,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
    * @param {String} selector CSS selector to check for.
    * @param {function} callback Callback with state and args when the selector is matches or not.
    */
-  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node, selector: String, parents: Element[] }) => void) => {
+  const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Element[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
   };
@@ -552,7 +555,7 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
     controlSelection.destroy();
   };
 
-  const exports = {
+  const exports: EditorSelection = {
     bookmarkManager: null,
     controlSelection: null,
     dom,
@@ -586,8 +589,8 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
     destroy
   };
 
-  bookmarkManager = BookmarkManager(exports);
-  controlSelection = ControlSelection(exports, editor);
+  const bookmarkManager = BookmarkManager(exports);
+  const controlSelection = ControlSelection(exports, editor);
 
   exports.bookmarkManager = bookmarkManager;
   exports.controlSelection = controlSelection;
@@ -595,4 +598,4 @@ const Selection = function (dom: DOMUtils, win: Window, serializer, editor: Edit
   return exports;
 };
 
-export default Selection;
+export default EditorSelection;

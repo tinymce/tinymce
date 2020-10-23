@@ -5,29 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Writer from 'tinymce/core/api/html/Writer';
+import { Cell, Obj } from '@ephox/katamari';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import SaxParser from 'tinymce/core/api/html/SaxParser';
 import Schema from 'tinymce/core/api/html/Schema';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Size from './Size';
-import { Element } from '@ephox/dom-globals';
-import { MediaDialogData } from './DataToHtml';
+import Writer from 'tinymce/core/api/html/Writer';
+import { MediaData } from './Types';
+
+type AttrList = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const DOM = DOMUtils.DOM;
 
-const setAttributes = function (attrs, updatedAttrs) {
-  let name;
-  let i;
-  let value;
-  let attr;
+const addPx = (value: string) => /^[0-9.]+$/.test(value) ? (value + 'px') : value;
 
-  for (name in updatedAttrs) {
-    value = '' + updatedAttrs[name];
+const setAttributes = (attrs: AttrList, updatedAttrs: Record<string, any>) => {
+  Obj.each(updatedAttrs, (val, name) => {
+    const value = '' + val;
 
     if (attrs.map[name]) {
-      i = attrs.length;
+      let i = attrs.length;
       while (i--) {
-        attr = attrs[i];
+        const attr = attrs[i];
 
         if (attr.name === name) {
           if (value) {
@@ -47,18 +45,24 @@ const setAttributes = function (attrs, updatedAttrs) {
 
       attrs.map[name] = value;
     }
-  }
+  });
 };
 
-const normalizeHtml = function (html) {
-  const writer = Writer();
-  const parser = SaxParser(writer);
-  parser.parse(html);
-  return writer.getContent();
+const updateEphoxEmbed = (data: Partial<MediaData>, attrs: AttrList) => {
+  const style = attrs.map.style;
+  const styleMap = style ? DOM.parseStyle(style) : { };
+  styleMap['max-width'] = addPx(data.width);
+  styleMap['max-height'] = addPx(data.height);
+  setAttributes(attrs, {
+    style: DOM.serializeStyle(styleMap)
+  });
 };
 
-const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?) {
+const sources = [ 'source', 'altsource' ];
+
+const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean): string => {
   const writer = Writer();
+  const isEphoxEmbed = Cell<boolean>(false);
   let sourceCount = 0;
   let hasImage;
 
@@ -66,113 +70,121 @@ const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?
     validate: false,
     allow_conditional_comments: true,
 
-    comment (text) {
+    comment(text) {
       writer.comment(text);
     },
 
-    cdata (text) {
+    cdata(text) {
       writer.cdata(text);
     },
 
-    text (text, raw) {
+    text(text, raw) {
       writer.text(text, raw);
     },
 
-    start (name, attrs, empty) {
-      switch (name) {
-        case 'video':
-        case 'object':
-        case 'embed':
-        case 'img':
-        case 'iframe':
-          if (data.height !== undefined && data.width !== undefined) {
-            setAttributes(attrs, {
-              width: data.width,
-              height: data.height
-            });
-          }
-          break;
-      }
-
-      if (updateAll) {
+    start(name, attrs, empty) {
+      if (isEphoxEmbed.get()) {
+        // Don't make any changes to children of an EME embed
+      } else if (Obj.has(attrs.map, 'data-ephox-embed-iri')) {
+        isEphoxEmbed.set(true);
+        updateEphoxEmbed(data, attrs);
+      } else {
         switch (name) {
           case 'video':
-            setAttributes(attrs, {
-              poster: data.poster,
-              src: ''
-            });
-
-            if (data.source2) {
+          case 'object':
+          case 'embed':
+          case 'img':
+          case 'iframe':
+            if (data.height !== undefined && data.width !== undefined) {
               setAttributes(attrs, {
+                width: data.width,
+                height: data.height
+              });
+            }
+            break;
+        }
+
+        if (updateAll) {
+          switch (name) {
+            case 'video':
+              setAttributes(attrs, {
+                poster: data.poster,
                 src: ''
               });
-            }
-            break;
 
-          case 'iframe':
-            setAttributes(attrs, {
-              src: data.source1
-            });
-            break;
+              if (data.altsource) {
+                setAttributes(attrs, {
+                  src: ''
+                });
+              }
+              break;
 
-          case 'source':
-            sourceCount++;
-
-            if (sourceCount <= 2) {
+            case 'iframe':
               setAttributes(attrs, {
-                src: data['source' + sourceCount],
-                type: data['source' + sourceCount + 'mime']
+                src: data.source
               });
+              break;
 
-              if (!data['source' + sourceCount]) {
+            case 'source':
+              if (sourceCount < 2) {
+                setAttributes(attrs, {
+                  src: data[sources[sourceCount]],
+                  type: data[sources[sourceCount] + 'mime']
+                });
+
+                if (!data[sources[sourceCount]]) {
+                  return;
+                }
+              }
+              sourceCount++;
+              break;
+
+            case 'img':
+              if (!data.poster) {
                 return;
               }
-            }
-            break;
 
-          case 'img':
-            if (!data.poster) {
-              return;
-            }
-
-            hasImage = true;
-            break;
+              hasImage = true;
+              break;
+          }
         }
       }
 
       writer.start(name, attrs, empty);
     },
 
-    end (name) {
-      if (name === 'video' && updateAll) {
-        for (let index = 1; index <= 2; index++) {
-          if (data['source' + index]) {
-            const attrs: any = [];
-            attrs.map = {};
+    end(name) {
+      if (!isEphoxEmbed.get()) {
+        if (name === 'video' && updateAll) {
+          for (let index = 0; index < 2; index++) {
+            if (data[sources[index]]) {
+              const attrs: any = [];
+              attrs.map = {};
 
-            if (sourceCount < index) {
-              setAttributes(attrs, {
-                src: data['source' + index],
-                type: data['source' + index + 'mime']
-              });
+              if (sourceCount <= index) {
+                setAttributes(attrs, {
+                  src: data[sources[index]],
+                  type: data[sources[index] + 'mime']
+                });
 
-              writer.start('source', attrs, true);
+                writer.start('source', attrs, true);
+              }
             }
           }
         }
-      }
 
-      if (data.poster && name === 'object' && updateAll && !hasImage) {
-        const imgAttrs: any = [];
-        imgAttrs.map = {};
+        if (data.poster && name === 'object' && updateAll && !hasImage) {
+          const imgAttrs: any = [];
+          imgAttrs.map = {};
 
-        setAttributes(imgAttrs, {
-          src: data.poster,
-          width: data.width,
-          height: data.height
-        });
+          setAttributes(imgAttrs, {
+            src: data.poster,
+            width: data.width,
+            height: data.height
+          });
 
-        writer.start('img', imgAttrs, true);
+          writer.start('img', imgAttrs, true);
+        }
       }
 
       writer.end(name);
@@ -182,25 +194,6 @@ const updateHtmlSax = function (html, data: Partial<MediaDialogData>, updateAll?
   return writer.getContent();
 };
 
-const isEphoxEmbed = function (html) {
-  const fragment = DOM.createFragment(html);
-  return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
-};
-
-const updateEphoxEmbed = function (html, data: Partial<MediaDialogData>) {
-  const fragment = DOM.createFragment(html);
-  const div = fragment.firstChild as Element;
-
-  Size.setMaxWidth(div, data.width);
-  Size.setMaxHeight(div, data.height);
-
-  return normalizeHtml(div.outerHTML);
-};
-
-const updateHtml = function (html: string, data: Partial<MediaDialogData>, updateAll?: boolean) {
-  return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
-};
-
-export default {
+export {
   updateHtml
 };

@@ -1,35 +1,36 @@
 import { Chain, FocusTools, GeneralSteps, Logger, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as FocusManagers from 'ephox/alloy/api/focus/FocusManagers';
+import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { NormalItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((store, _doc, _body) => {
     const markers = {
       item: TestDropdownMenu.markers().item,
       selectedItem: TestDropdownMenu.markers().selectedItem
     };
 
-    const items = (suffix) => [
+    const items = (suffix: string) => [
       {
         type: 'widget',
-        data: { value: 'alpha', meta: { text: 'Alpha' } },
+        data: { value: 'alpha', meta: { text: 'Alpha' }},
         dom: {
           tag: 'span',
           classes: [ `alpha-widget-${suffix}` ]
         },
         components: [
-          ItemWidget.parts().widget({
+          ItemWidget.parts.widget({
             dom: {
               tag: 'div',
               classes: [ 'internal-widget' ],
@@ -46,7 +47,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
 
       {
         type: 'item',
-        data: { value: 'beta', meta: { text: 'Beta' } },
+        data: { value: 'beta', meta: { text: 'Beta' }},
         dom: {
           tag: 'span',
           classes: [ `beta-item-${suffix}` ],
@@ -69,7 +70,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
 
       markers
@@ -83,7 +84,7 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         classes: [ 'test-menu' ]
       },
       components: [
-        Menu.parts().items({ })
+        Menu.parts.items({ })
       ],
       fakeFocus: true,
       focusManager: FocusManagers.highlights(),
@@ -108,23 +109,21 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
         ]
       }
     );
-  }, (doc, body, gui, component, store) => {
+  }, (doc, _body, _gui, component, store) => {
 
-    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => {
-      return Logger.t(
-        label,
-        GeneralSteps.sequence([
-          FocusTools.sSetFocus('Focus input field', component.element(), 'input'),
-          Chain.asStep(component.element(), [
-            UiFinder.cFindIn(focusTarget),
-            Chain.op((alphaWidget) => {
-              Focusing.focus(component.getSystem().getByDom(alphaWidget).toOption().getOrDie('Could not find selector: ' + focusTarget));
-            })
-          ]),
-          FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
-        ])
-      );
-    };
+    const sAssertFocusShift = (label: string, expected: string, focusTarget: string) => Logger.t(
+      label,
+      GeneralSteps.sequence([
+        FocusTools.sSetFocus('Focus input field', component.element, 'input'),
+        Chain.asStep(component.element, [
+          UiFinder.cFindIn(focusTarget),
+          Chain.op((alphaWidget) => {
+            Focusing.focus(component.getSystem().getByDom(alphaWidget).toOptional().getOrDie('Could not find selector: ' + focusTarget));
+          })
+        ]),
+        FocusTools.sTryOnSelector('Focus hould be on', doc, expected)
+      ])
+    );
 
     return [
       store.sAssertEq('Checking behaviours were added', [

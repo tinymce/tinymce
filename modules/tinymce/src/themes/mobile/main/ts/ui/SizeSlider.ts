@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Slider, Toggling, SketchSpec } from '@ephox/alloy';
+import { Behaviour, SketchSpec, Slider, Toggling } from '@ephox/alloy';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 import * as UiDomFactory from '../util/UiDomFactory';
 
 const schema = ValueSchema.objOfOnly([
@@ -42,21 +42,19 @@ const sketch = function (rawSpec): SketchSpec {
         Styles.resolve('slider-size-container') ]
     },
     onChange,
-    onDragStart (slider, thumb) {
+    onDragStart(slider, thumb) {
       Toggling.on(thumb);
     },
-    onDragEnd (slider, thumb) {
+    onDragEnd(slider, thumb) {
       Toggling.off(thumb);
     },
     model: {
       mode: 'x',
       minX: 0,
       maxX: spec.sizes.length - 1,
-      getInitialValue: () => {
-        return {
-          x: () => spec.getInitialValue()
-        };
-      }
+      getInitialValue: () => ({
+        x: spec.getInitialValue()
+      })
     },
     stepSize: 1,
     snapToGrid: true,
@@ -66,14 +64,14 @@ const sketch = function (rawSpec): SketchSpec {
     ]),
 
     components: [
-      Slider.parts().spectrum({
+      Slider.parts.spectrum({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-size-container"></div>'),
         components: [
           UiDomFactory.spec('<div class="${prefix}-slider-size-line"></div>')
         ]
       }),
 
-      Slider.parts().thumb({
+      Slider.parts.thumb({
         dom: UiDomFactory.dom('<div class="${prefix}-slider-thumb"></div>'),
         behaviours: Behaviour.derive([
           Toggling.config({
@@ -85,6 +83,6 @@ const sketch = function (rawSpec): SketchSpec {
   });
 };
 
-export default {
+export {
   sketch
 };

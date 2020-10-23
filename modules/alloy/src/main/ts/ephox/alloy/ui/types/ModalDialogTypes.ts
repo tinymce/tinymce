@@ -1,13 +1,14 @@
-import { Option, Result } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-import { Element } from '@ephox/sugar';
+import { Bounds } from '../../alien/Boxes';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { LazySink } from '../../api/component/CommonTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { LazySink } from '../../api/component/CommonTypes';
 
 export interface ModalDialogDetail extends CompositeSketchDetail {
   uid: string;
@@ -16,12 +17,13 @@ export interface ModalDialogDetail extends CompositeSketchDetail {
   modalBehaviours: SketchBehaviours;
   eventOrder: Record<string, string[]>;
 
-  onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  useTabstopAt: (elem: Element) => boolean;
+  onExecute: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
+  onEscape: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
+  useTabstopAt: (elem: SugarElement) => boolean;
 
   lazySink: LazySink;
-  dragBlockClass: Option<string>;
+  dragBlockClass: Optional<string>;
+  getDragBounds: () => Bounds;
 }
 
 export interface ModalDialogSpec extends CompositeSketchSpec {
@@ -32,16 +34,17 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
 
   lazySink?: LazySink;
-  useTabstopAt?: (comp: Element) => boolean;
-  onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
-  onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Option<boolean>;
+  useTabstopAt?: (comp: SugarElement) => boolean;
+  onExecute?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
+  onEscape?: (comp: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   dragBlockClass?: string;
+  getDragBounds?: () => Bounds;
 
   parts: {
     blocker: {
       dom?: Partial<RawDomSchema>;
       components?: AlloySpec[];
-    }
+    };
   };
 }
 
@@ -50,14 +53,13 @@ export type GetBusySpec = (
   busyBehaviours: AlloyBehaviourRecord
 ) => AlloySpec;
 
-export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec, ModalDialogDetail> {
+export interface ModalDialogApis {
   show: (dialog: AlloyComponent) => void;
   hide: (dialog: AlloyComponent) => void;
   getBody: (dialog: AlloyComponent) => AlloyComponent;
   getFooter: (dialog: AlloyComponent) => AlloyComponent;
-  setBusy(
-    dialog: AlloyComponent,
-    getBusySpec: GetBusySpec
-  );
-  setIdle(dialog: AlloyComponent);
+  setBusy: (dialog: AlloyComponent, getBusySpec: GetBusySpec) => void;
+  setIdle: (dialog: AlloyComponent) => void;
 }
+
+export interface ModalDialogSketcher extends CompositeSketch<ModalDialogSpec>, ModalDialogApis { }

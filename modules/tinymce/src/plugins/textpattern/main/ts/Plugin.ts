@@ -7,13 +7,13 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
+import * as Api from './api/Api';
 import * as Settings from './api/Settings';
-import Keyboard from './keyboard/Keyboard';
+import * as Keyboard from './keyboard/Keyboard';
 
 export default function () {
   PluginManager.add('textpattern', (editor) => {
-    const patternsState = Cell(Settings.getPatternSet(editor.settings));
+    const patternsState = Cell(Settings.getPatternSet(editor));
 
     Keyboard.setup(editor, patternsState);
 

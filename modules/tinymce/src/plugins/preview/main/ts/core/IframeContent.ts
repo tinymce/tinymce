@@ -6,10 +6,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
-const getPreviewHtml = function (editor: Editor) {
+const getPreviewHtml = (editor: Editor) => {
   let headHtml = '';
   const encode = editor.dom.encode;
   const contentStyle = Settings.getContentStyle(editor);
@@ -21,27 +22,21 @@ const getPreviewHtml = function (editor: Editor) {
   }
 
   const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
-  Tools.each(editor.contentCSS, function (url) {
+  Tools.each(editor.contentCSS, (url) => {
     headHtml += '<link type="text/css" rel="stylesheet" href="' + encode(editor.documentBaseURI.toAbsolute(url)) + '"' + cors + '>';
   });
 
-  let bodyId = editor.settings.body_id || 'tinymce';
-  if (bodyId.indexOf('=') !== -1) {
-    bodyId = editor.getParam('body_id', '', 'hash');
-    bodyId = bodyId[editor.id] || bodyId;
-  }
+  const bodyId = Settings.getBodyId(editor);
 
-  let bodyClass = editor.settings.body_class || '';
-  if (bodyClass.indexOf('=') !== -1) {
-    bodyClass = editor.getParam('body_class', '', 'hash');
-    bodyClass = bodyClass[editor.id] || '';
-  }
+  const bodyClass = Settings.getBodyClass(editor);
+
+  const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
   const preventClicksOnLinksScript = (
     '<script>' +
     'document.addEventListener && document.addEventListener("click", function(e) {' +
     'for (var elm = e.target; elm; elm = elm.parentNode) {' +
-    'if (elm.nodeName === "A") {' +
+    'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
     'e.preventDefault();' +
     '}' +
     '}' +
@@ -68,6 +63,6 @@ const getPreviewHtml = function (editor: Editor) {
   return previewHtml;
 };
 
-export default {
-  getPreviewHtml,
+export {
+  getPreviewHtml
 };

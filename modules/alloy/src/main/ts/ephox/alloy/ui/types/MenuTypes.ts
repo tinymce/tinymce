@@ -6,14 +6,14 @@ import { FocusManager } from '../../api/focus/FocusManagers';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
-import { ItemSpec } from '../../ui/types/ItemTypes';
+import { ItemSpec } from './ItemTypes';
 
 export interface MenuGridMovementSpec {
   mode: 'grid';
   initSize: {
     numColumns: number;
     numRows: number;
-  }
+  };
 }
 
 export interface MenuMatrixMovementSpec {
@@ -31,8 +31,8 @@ export type MenuMovementSpec = MenuGridMovementSpec | MenuMatrixMovementSpec | M
 // config: (detail: MenuDetail,  movementInfo: MenuMovement) => KeyingConfigSpec
 export interface MenuGridMovement {
   mode: 'grid';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => FlatgridConfigSpec;
-  initSize?: {
+  config: (detail: MenuDetail, movementInfo: MenuMovement) => FlatgridConfigSpec;
+  initSize: {
     numColumns: number;
     numRows: number;
   };
@@ -40,7 +40,7 @@ export interface MenuGridMovement {
 
 export interface MenuMatrixMovement {
   mode: 'matrix';
-  config: (detail: MenuDetail,  movementInfo: MenuMovement) => MatrixConfigSpec;
+  config: (detail: MenuDetail, movementInfo: MenuMovement) => MatrixConfigSpec;
   rowSelector: string;
 }
 
@@ -75,7 +75,7 @@ export interface MenuDetail extends CompositeSketchDetail {
 export interface MenuSpec extends CompositeSketchSpec {
   uid?: string;
   dom: RawDomSchema;
-  components?: AlloySpec[];
+  components: AlloySpec[];
   menuBehaviours?: AlloyBehaviourRecord;
 
   value: string;
@@ -94,8 +94,13 @@ export interface MenuSpec extends CompositeSketchSpec {
   eventOrder?: Record<string, string[]>;
 }
 
-export interface MenuSketcher extends CompositeSketch<MenuSpec, MenuDetail> { }
+export interface MenuSketcher extends CompositeSketch<MenuSpec> { }
 
 export interface MenuItemHoverEvent extends CustomEvent {
-  item: () => AlloyComponent;
+  readonly item: AlloyComponent;
+}
+
+export interface MenuFocusEvent extends CustomEvent {
+  readonly menu: AlloyComponent;
+  readonly item: AlloyComponent;
 }

@@ -1,12 +1,13 @@
-import { Pipeline, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
@@ -197,8 +198,8 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getRng(true).startContainer.nodeValue, '2');
-    LegacyUnit.equal(editor.selection.getRng(true).endContainer.nodeValue, '3');
+    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeValue, '2');
+    LegacyUnit.equal(editor.selection.getRng().endContainer.nodeValue, '3');
   });
 
   suite.test('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', function (editor) {
@@ -402,7 +403,67 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
     );
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute', (editor) => {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol>' +
+      '<li>a' +
+      '<ol start="5">' +
+      '<li>b</li>' +
+      '<li>c</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li li', 1);
+    LegacyUnit.execCommand(editor, 'Outdent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ol>' +
+      '<li>a</li>' +
+      '<li>b' +
+      '<ol start="5">' +
+      '<li>c</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute on both OL', (editor) => {
+    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+      '<ol start="2">' +
+      '<li>a' +
+      '<ol start="5">' +
+      '<li>b</li>' +
+      '<li>c</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    editor.focus();
+    LegacyUnit.setSelection(editor, 'li li', 1);
+    LegacyUnit.execCommand(editor, 'Outdent');
+
+    LegacyUnit.equal(editor.getContent(),
+      '<ol start="2">' +
+      '<li>a</li>' +
+      '<li>b' +
+      '<ol start="5">' +
+      '<li>c</li>' +
+      '</ol>' +
+      '</li>' +
+      '</ol>'
+    );
+
+    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+  });
+
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Outdent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',
@@ -411,7 +472,7 @@ UnitTest.asynctest('tinymce.lists.browser.OutdentTest', (success, failure) => {
     indent: false,
     entities: 'raw',
     valid_elements:
-      'li[style|class|data-custom],ol[style|class|data-custom],' +
+      'li[style|class|data-custom],ol[style|class|data-custom|start],' +
       'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,' +

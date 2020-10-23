@@ -1,8 +1,8 @@
+import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 
 export interface CustomListDetail extends CompositeSketchDetail {
   uid: string;
@@ -23,6 +23,8 @@ export interface CustomListSpec extends CompositeSketchSpec {
   setupItem?: (list: AlloyComponent, item: AlloyComponent, data: any, index: number) => void;
 }
 
-export interface CustomListSketcher extends CompositeSketch<CustomListSpec, CustomListDetail> {
-  setItems: (list: AlloyComponent, items: AlloySpec [][]) => void;
+export interface CustomListApis {
+  setItems: (list: AlloyComponent, items: AlloySpec[][]) => void;
 }
+
+export interface CustomListSketcher extends CompositeSketch<CustomListSpec>, CustomListApis { }

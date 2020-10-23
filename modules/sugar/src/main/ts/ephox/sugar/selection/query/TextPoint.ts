@@ -1,38 +1,34 @@
-import { ClientRect, Document, DOMRect, Range } from '@ephox/dom-globals';
-import { Option, Options } from '@ephox/katamari';
-import Element from '../../api/node/Element';
-import * as Text from '../../api/node/Text';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarElement } from '../../api/node/SugarElement';
+import * as SugarText from '../../api/node/SugarText';
 import * as Geometry from '../alien/Geometry';
 
-const locateOffset = function (doc: Element, textnode, x: number, y: number, rect: ClientRect | DOMRect) {
-  const rangeForOffset = function (o) {
-    const r: Range = (doc.dom() as Document).createRange();
-    r.setStart(textnode.dom(), o);
+const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>, x: number, y: number, rect: ClientRect | DOMRect) => {
+  const rangeForOffset = (o: number) => {
+    const r = doc.dom.createRange();
+    r.setStart(textnode.dom, o);
     r.collapse(true);
     return r;
   };
 
-  const rectForOffset = function (o: number) {
+  const rectForOffset = (o: number) => {
     const r = rangeForOffset(o);
     return r.getBoundingClientRect();
   };
 
-  const length = Text.get(textnode).length;
+  const length = SugarText.get(textnode).length;
   const offset = Geometry.searchForPoint(rectForOffset, x, y, rect.right, length);
   return rangeForOffset(offset);
 };
 
-const locate = function (doc: Element, node: Element, x: number, y: number) {
-  const r = (doc.dom() as Document).createRange();
-  r.selectNode(node.dom());
+const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number, y: number) => {
+  const r = doc.dom.createRange();
+  r.selectNode(node.dom);
   const rects = r.getClientRects();
-  const foundRect = Options.findMap(rects as any, function (rect: ClientRect) {
-    return Geometry.inRect(rect, x, y) ? Option.some(rect) : Option.none();
-  });
+  const foundRect = Arr.findMap<ClientRect | DOMRect, ClientRect | DOMRect>(rects, (rect) =>
+    Geometry.inRect(rect, x, y) ? Optional.some(rect) : Optional.none());
 
-  return foundRect.map(function (rect) {
-    return locateOffset(doc, node, x, y, rect);
-  });
+  return foundRect.map((rect) => locateOffset(doc, node, x, y, rect));
 };
 
 export { locate };

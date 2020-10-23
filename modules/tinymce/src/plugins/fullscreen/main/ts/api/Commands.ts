@@ -5,14 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Actions from '../core/Actions';
 
-const register = function (editor, fullscreenState) {
-  editor.addCommand('mceFullScreen', function () {
+const register = (editor: Editor, fullscreenState: Cell<Actions.ScrollInfo | null>) => {
+  editor.addCommand('mceFullScreen', () => {
     Actions.toggleFullscreen(editor, fullscreenState);
   });
 };
 
-export default {
+export {
   register
 };

@@ -5,12 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
+export interface DomTreeWalkerConstructor {
+  readonly prototype: DomTreeWalker;
 
-export interface TreeWalkerConstructor {
-  readonly prototype: TreeWalker;
-
-  new (startNode: Node, rootNode: Node): TreeWalker;
+  new (startNode: Node, rootNode: Node): DomTreeWalker;
 }
 
 /**
@@ -25,11 +23,11 @@ export interface TreeWalkerConstructor {
  * } while (walker.next());
  */
 
-class TreeWalker {
+class DomTreeWalker {
   private readonly rootNode: Node;
   private node: Node;
 
-  constructor (startNode: Node, rootNode: Node) {
+  public constructor(startNode: Node, rootNode: Node) {
     this.node = startNode;
     this.rootNode = rootNode;
 
@@ -47,7 +45,7 @@ class TreeWalker {
    * @method current
    * @return {Node} Current node where the walker is.
    */
-  public current (): Node {
+  public current(): Node {
     return this.node;
   }
 
@@ -57,7 +55,7 @@ class TreeWalker {
    * @method next
    * @return {Node} Current node where the walker is after moving to the next node.
    */
-  public next (shallow?: boolean): Node {
+  public next(shallow?: boolean): Node {
     this.node = this.findSibling(this.node, 'firstChild', 'nextSibling', shallow);
     return this.node;
   }
@@ -68,17 +66,17 @@ class TreeWalker {
    * @method prev
    * @return {Node} Current node where the walker is after moving to the previous node.
    */
-  public prev (shallow?: boolean): Node {
+  public prev(shallow?: boolean): Node {
     this.node = this.findSibling(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  public prev2 (shallow?: boolean): Node {
+  public prev2(shallow?: boolean): Node {
     this.node = this.findPreviousNode(this.node, 'lastChild', 'previousSibling', shallow);
     return this.node;
   }
 
-  private findSibling (node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
+  private findSibling(node: Node, startName: 'firstChild' | 'lastChild', siblingName: 'nextSibling' | 'previousSibling', shallow?: boolean) {
     let sibling: Node, parent: Node;
 
     if (node) {
@@ -105,7 +103,7 @@ class TreeWalker {
     }
   }
 
-  private findPreviousNode (node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
+  private findPreviousNode(node: Node, startName: 'lastChild', siblingName: 'previousSibling', shallow?: boolean) {
     let sibling: Node, parent: Node, child: Node;
 
     if (node) {
@@ -135,4 +133,4 @@ class TreeWalker {
   }
 }
 
-export default TreeWalker;
+export default DomTreeWalker;

@@ -6,30 +6,17 @@
  */
 
 import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Button,
-  Disabling,
-  FormField as AlloyFormField,
-  Memento,
-  NativeEvents,
-  Representing,
-  SimpleSpec,
-  SimulatedEvent,
-  SugarEvent,
-  SystemEvents,
-  Tabstopping,
-  Toggling,
-  AlloyComponent
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents,
+  Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
-import { Types } from '@ephox/bridge';
-import { DragEvent, FileList } from '@ephox/dom-globals';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
+import { EventArgs } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
@@ -41,32 +28,32 @@ const filterByExtension = function (files: FileList) {
   return Arr.filter(Arr.from(files), (file) => re.test(file.name));
 };
 
-export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
+
+export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
 
   // TODO: Consider moving to alloy
-  const stopper: AlloyEvents.EventRunHandler<SugarEvent> = (_: AlloyComponent, se: SimulatedEvent<SugarEvent>): void => {
+  const stopper: AlloyEvents.EventRunHandler<EventArgs> = (_: AlloyComponent, se: SimulatedEvent<EventArgs>): void => {
     se.stop();
   };
 
   // TODO: Consider moving to alloy
-  const sequence = (actions: Array<AlloyEvents.EventRunHandler<SugarEvent>>): AlloyEvents.EventRunHandler<SugarEvent> => {
-    return (comp, se) => {
-      Arr.each(actions, (a) => {
-        a(comp, se);
-      });
-    };
+  const sequence = (actions: Array<AlloyEvents.EventRunHandler<EventArgs>>): AlloyEvents.EventRunHandler<EventArgs> => (comp, se) => {
+    Arr.each(actions, (a) => {
+      a(comp, se);
+    });
   };
 
-  const onDrop: AlloyEvents.EventRunHandler<SugarEvent> = (comp, se) => {
-    if (! Disabling.isDisabled(comp)) {
-      const transferEvent = se.event().raw() as DragEvent;
+  const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
+    if (!Disabling.isDisabled(comp)) {
+      const transferEvent = se.event.raw as DragEvent;
       handleFiles(comp, transferEvent.dataTransfer.files);
     }
   };
 
-  const onSelect = (component, simulatedEvent) => {
-    const files = simulatedEvent.event().raw().target.files;
-    handleFiles(component, files);
+  const onSelect = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
+    const input = simulatedEvent.event.raw.target as HTMLInputElement;
+    handleFiles(component, input.files);
   };
 
   const handleFiles = (component, files: FileList) => {
@@ -88,79 +75,80 @@ export const renderDropZone = (spec: Types.DropZone.DropZone, providersBackstage
       },
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('input-file-events', [
-          AlloyEvents.cutter(SystemEvents.tapOrClick())
+          AlloyEvents.cutter(NativeEvents.click()),
+          AlloyEvents.cutter(SystemEvents.tap())
         ])
       ])
     }
   );
 
-  const renderField = (s) => {
-    return {
-      uid: s.uid,
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dropzone-container' ]
-      },
-      behaviours: Behaviour.derive([
-        RepresentingConfigs.memory([ ]),
-        ComposingConfigs.self(),
-        Disabling.config({}),
-        Toggling.config({
-          toggleClass: 'dragenter',
-          toggleOnExecute: false
-        }),
-        AddEventsBehaviour.config('dropzone-events', [
-          AlloyEvents.run('dragenter', sequence([ stopper, Toggling.toggle ])),
-          AlloyEvents.run('dragleave', sequence([ stopper, Toggling.toggle ])),
-          AlloyEvents.run('dragover', stopper),
-          AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
-          AlloyEvents.run(NativeEvents.change(), onSelect)
-        ]),
-      ]),
-      components: [
-        {
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dropzone' ],
-            styles: {}
+  const renderField = (s) => ({
+    uid: s.uid,
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-dropzone-container' ]
+    },
+    behaviours: Behaviour.derive([
+      RepresentingConfigs.memory([ ]),
+      ComposingConfigs.self(),
+      Disabling.config({}),
+      Toggling.config({
+        toggleClass: 'dragenter',
+        toggleOnExecute: false
+      }),
+      AddEventsBehaviour.config('dropzone-events', [
+        AlloyEvents.run('dragenter', sequence([ stopper, Toggling.toggle ])),
+        AlloyEvents.run('dragleave', sequence([ stopper, Toggling.toggle ])),
+        AlloyEvents.run('dragover', stopper),
+        AlloyEvents.run('drop', sequence([ stopper, onDrop ])),
+        AlloyEvents.run(NativeEvents.change(), onSelect)
+      ])
+    ]),
+    components: [
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-dropzone' ],
+          styles: {}
+        },
+        components: [
+          {
+            dom: {
+              tag: 'p',
+              innerHtml: providersBackstage.translate('Drop an image here')
+            }
           },
-          components: [
-            {
-              dom: {
-                tag: 'p',
-                innerHtml: providersBackstage.translate('Drop an image here')
-              }
+          Button.sketch({
+            dom: {
+              tag: 'button',
+              innerHtml: providersBackstage.translate('Browse for an image'),
+              styles: {
+                position: 'relative'
+              },
+              classes: [ 'tox-button', 'tox-button--secondary' ]
             },
-            Button.sketch({
-              dom: {
-                tag: 'button',
-                innerHtml: providersBackstage.translate('Browse for an image'),
-                styles: {
-                  position: 'relative'
-                },
-                classes: [ 'tox-button', 'tox-button--secondary']
-              },
-              components: [
-                memInput.asSpec()
-              ],
-              action: (comp) => {
-                const inputComp = memInput.get(comp);
-                inputComp.element().dom().click();
-              },
-              buttonBehaviours: Behaviour.derive([
-                Tabstopping.config({ })
-              ])
-            })
-          ]
-        }
-      ]
-    };
-  };
+            components: [
+              memInput.asSpec()
+            ],
+            action: (comp) => {
+              const inputComp = memInput.get(comp);
+              inputComp.element.dom.click();
+            },
+            buttonBehaviours: Behaviour.derive([
+              Tabstopping.config({ }),
+              DisablingConfigs.button(providersBackstage.isReadOnly),
+              ReadOnly.receivingConfig()
+            ])
+          })
+        ]
+      }
+    ]
+  });
 
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
-  const pField = AlloyFormField.parts().field({
+  const pField = AlloyFormField.parts.field({
     factory: { sketch: renderField }
   });
 
-  return renderFormFieldWith(pLabel, pField, ['tox-form__group--stretched']);
+  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
 };

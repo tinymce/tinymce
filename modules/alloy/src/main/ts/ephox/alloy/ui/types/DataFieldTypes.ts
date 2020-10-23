@@ -17,4 +17,4 @@ export interface DataFieldSpec extends SingleSketchSpec {
   dataBehaviours?: AlloyBehaviourRecord;
 }
 
-export interface DataFieldSketcher extends SingleSketch<DataFieldSpec, DataFieldDetail> { }
+export interface DataFieldSketcher extends SingleSketch<DataFieldSpec> { }

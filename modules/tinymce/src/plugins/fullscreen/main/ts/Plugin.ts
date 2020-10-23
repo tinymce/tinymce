@@ -7,15 +7,16 @@
 
 import { Cell } from '@ephox/katamari';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Commands from './api/Commands';
-import Buttons from './ui/Buttons';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
+import { ScrollInfo } from './core/Actions';
+import * as Buttons from './ui/Buttons';
 
 export default function () {
   PluginManager.add('fullscreen', (editor) => {
-    const fullscreenState = Cell(null);
+    const fullscreenState = Cell<ScrollInfo | null>(null);
 
-    if (editor.settings.inline) {
+    if (editor.inline) {
       return Api.get(fullscreenState);
     }
 

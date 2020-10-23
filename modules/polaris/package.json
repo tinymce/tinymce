@@ -1,10 +1,10 @@
 {
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
-  "version": "3.0.25",
+  "version": "4.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/polaris"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "files": [
     "lib/main",
@@ -18,14 +18,17 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "tslib": "^1.9.3"
+    "@ephox/katamari": "^7.0.1",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^2.0.1"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts"
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",

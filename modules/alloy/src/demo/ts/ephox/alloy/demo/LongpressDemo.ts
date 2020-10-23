@@ -1,5 +1,6 @@
-import { Arr, Future, Result, Option } from '@ephox/katamari';
-import { Class, Element } from '@ephox/sugar';
+import { Arr, Future, Optional, Result } from '@ephox/katamari';
+import { Class, SugarElement } from '@ephox/sugar';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
@@ -10,21 +11,20 @@ import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
 import * as DemoRenders from './forms/DemoRenders';
-import { document, console } from '@ephox/dom-globals';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export default (): void => {
   const gui = Gui.create();
   Debugging.registerInspector('gui', gui);
 
-  const body = Element.fromDom(document.body);
-  Class.add(gui.element(), 'gui-root-demo-container');
+  const body = SugarElement.fromDom(document.body);
+  Class.add(gui.element, 'gui-root-demo-container');
   Attachment.attachSystem(body, gui);
 
   const sink = DemoSink.make();
 
-  const button1 = HtmlDisplay.section(
+  HtmlDisplay.section(
     gui,
     'Run this in touch device mode. It is a button that if you press and hold on it, it opens a circular menu below.',
     {
@@ -40,16 +40,16 @@ export default (): void => {
             innerHtml: 'Menu button (sketch)',
             classes: [ 'tap-menu' ]
           },
-          lazySink () {
+          lazySink() {
             return Result.value(sink);
           },
-          fetch () {
-            return Future.pure(Option.from(Arr.map([
-              { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' } } },
-              { type: 'item', data: { value: 'beta', meta: { text: 'Beta'} } }
+          fetch() {
+            return Future.pure(Optional.from(Arr.map([
+              { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
+              { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}}
             ], DemoRenders.orb)));
           },
-          onExecute (component, menuComp, item, data) {
+          onExecute(component, menuComp, item, data) {
             console.log('selected', data.value);
           },
           menuTransition: {
@@ -69,8 +69,9 @@ export default (): void => {
                 tag: 'div'
               },
               components: [
-                Menu.parts().items({ })
+                Menu.parts.items({ })
               ],
+              items: [],
               value: 'touchmenu',
               markers: DemoRenders.orbMarkers()
             }

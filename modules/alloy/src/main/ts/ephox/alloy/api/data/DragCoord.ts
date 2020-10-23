@@ -1,23 +1,35 @@
-import { Adt, Arr, Option } from '@ephox/katamari';
-import { Position } from '@ephox/sugar';
-import { SugarPosition } from '../../alien/TypeDefinitions';
+import { Adt, Arr, Optional } from '@ephox/katamari';
+import { SugarPosition } from '@ephox/sugar';
 
-// TODO: Morgan, check why and how this type can take both a number or an option.
-export type DragCoords = (x: number | Option<number>, y: number | Option<number>) => CoordAdt;
+// Snappables use an option for the coord and then pass it to absorb below
+// so "T" here should either be a `number` or an `Optional<number>`
+export type DragCoords<T = number, U = CoordAdt<T>> = (x: T, y: T) => U;
 
-export interface CoordAdt extends Adt {
-  // TODO
+export interface CoordAdt<T = number> {
+  fold: <U>(
+    offset: DragCoords<T, U>,
+    absolute: DragCoords<T, U>,
+    fixed: DragCoords<T, U>,
+  ) => U;
+  match: <U>(branches: {
+    offset: DragCoords<T, U>;
+    absolute: DragCoords<T, U>;
+    fixed: DragCoords<T, U>;
+  }) => U;
+  log: (label: string) => void;
 }
 
-export interface StylesCoord {
-  left: string;
-  top: string;
-  position: string;
-}
+export type StylesCoord = {
+  left: Optional<string>;
+  right: Optional<string>;
+  top: Optional<string>;
+  bottom: Optional<string>;
+  position: Optional<string>;
+};
 
 type CoordTransform = (coords: SugarPosition) => SugarPosition;
 
-export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => SugarPosition;
+export type CoordStencil = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition) => SugarPosition;
 /*
  * origin: the position (without scroll) of the offset parent
  * scroll: the scrolling position of the window
@@ -27,136 +39,116 @@ export type CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: Suga
  * absolute: the absolute coordinates to show before considering the offset parent
  */
 const adt: {
-  offset: DragCoords;
-  absolute: DragCoords;
-  fixed: DragCoords;
+  offset: DragCoords<number | Optional<number>>;
+  absolute: DragCoords<number | Optional<number>>;
+  fixed: DragCoords<number | Optional<number>>;
 } = Adt.generate([
   { offset: [ 'x', 'y' ] },
   { absolute: [ 'x', 'y' ] },
   { fixed: [ 'x', 'y' ] }
 ]);
 
-const subtract = (change: SugarPosition): CoordTransform => {
-  return (point) => {
-    return point.translate(-change.left(), -change.top());
-  };
-};
+const subtract = (change: SugarPosition): CoordTransform => (point) => point.translate(-change.left, -change.top);
 
-const add = (change: SugarPosition): CoordTransform => {
-  return (point) => {
-    return point.translate(change.left(), change.top());
-  };
-};
+const add = (change: SugarPosition): CoordTransform => (point) => point.translate(change.left, change.top);
 
-const transform = (changes: CoordTransform[]) => (x: number, y: number): SugarPosition => {
-  return Arr.foldl(changes, (rest, f) => {
-    return f(rest);
-  }, Position(x, y));
-};
+const transform = (changes: CoordTransform[]) => (x: number, y: number): SugarPosition => Arr.foldl(changes, (rest, f) => f(rest), SugarPosition(x, y));
 
-const asFixed: CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => {
-  return coord.fold(
-    // offset to fixed
-    transform([ add(origin), subtract(scroll) ]),
-    // absolute to fixed
-    transform([ subtract(scroll) ]),
-    // fixed to fixed
-    transform([ ])
-  );
-};
+const asFixed: CoordStencil = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition) => coord.fold(
+  // offset to fixed
+  transform([ add(origin), subtract(scroll) ]),
+  // absolute to fixed
+  transform([ subtract(scroll) ]),
+  // fixed to fixed
+  transform([ ])
+);
 
-const asAbsolute: CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => {
-  return coord.fold(
-    // offset to absolute
-    transform([ add(origin) ]),
-    // absolute to absolute
-    transform([ ]),
-    // fixed to absolute
-    transform([ add(scroll) ])
-  );
-};
+const asAbsolute: CoordStencil = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition) => coord.fold(
+  // offset to absolute
+  transform([ add(origin) ]),
+  // absolute to absolute
+  transform([ ]),
+  // fixed to absolute
+  transform([ add(scroll) ])
+);
 
-const asOffset: CoordStencil = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition) => {
-  return coord.fold(
-    // offset to offset
-    transform([ ]),
-    // absolute to offset
-    transform([ subtract(origin) ]),
-    // fixed to offset
-    transform([ add(scroll), subtract(origin) ])
-  );
-};
+const asOffset: CoordStencil = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition) => coord.fold(
+  // offset to offset
+  transform([ ]),
+  // absolute to offset
+  transform([ subtract(origin) ]),
+  // fixed to offset
+  transform([ add(scroll), subtract(origin) ])
+);
 
-const toString = (coord: CoordAdt): string => {
-  return coord.fold(
-    (x, y) => {
-      return 'offset(' + x + ', ' + y + ')';
-    },
-    (x, y) => {
-      return 'absolute(' + x + ', ' + y + ')';
-    },
-    (x, y) => {
-      return 'fixed(' + x + ', ' + y + ')';
-    }
-  );
-};
+const toString = (coord: CoordAdt<number>): string => coord.fold(
+  (x, y) => 'offset(' + x + ', ' + y + ')',
+  (x, y) => 'absolute(' + x + ', ' + y + ')',
+  (x, y) => 'fixed(' + x + ', ' + y + ')'
+);
 
-const withinRange = (coord1: CoordAdt, coord2: CoordAdt, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): boolean => {
+const withinRange = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): boolean => {
   const a1 = asAbsolute(coord1, scroll, origin);
   const a2 = asAbsolute(coord2, scroll, origin);
-  return Math.abs(a1.left() - a2.left()) <= xRange &&
-    Math.abs(a1.top() - a2.top()) <= yRange;
+  // eslint-disable-next-line no-console
+  // console.log(`a1.left: ${a1.left}, a2.left: ${a2.left}, leftDelta: ${a1.left - a2.left}, xRange: ${xRange}, lD <= xRange: ${Math.abs(a1.left - a2.left) <= xRange}`);
+  // console.log(`a1.top: ${a1.top}, a2.top: ${a2.top}, topDelta: ${a1.top - a2.top}, yRange: ${yRange}, lD <= xRange: ${Math.abs(a1.top - a2.top) <= yRange}`);
+  return Math.abs(a1.left - a2.left) <= xRange &&
+    Math.abs(a1.top - a2.top) <= yRange;
 };
 
-const toStyles = (coord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {
-  return coord.fold(
-    (x, y) => {
-      // offset
-      return { position: 'absolute', left: x + 'px', top: y + 'px'};
-    },
-    (x, y) => {
-      return { position: 'absolute', left: (x - origin.left()) + 'px', top: (y - origin.top()) + 'px' };
-      // absolute
-    },
-    (x, y) => {
-      // fixed
-      return { position: 'fixed', left: x + 'px', top: y + 'px' };
-    }
+const getDeltas = (coord1: CoordAdt<number>, coord2: CoordAdt<number>, xRange: number, yRange: number, scroll: SugarPosition, origin: SugarPosition): SugarPosition => {
+  const a1 = asAbsolute(coord1, scroll, origin);
+  const a2 = asAbsolute(coord2, scroll, origin);
+  const left = Math.abs(a1.left - a2.left);
+  const top = Math.abs(a1.top - a2.top);
+  return SugarPosition(left, top);
+};
+
+const toStyles = (coord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): StylesCoord => {
+  const stylesOpt = coord.fold(
+    (x, y) =>
+      ({ position: Optional.some('absolute'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }), // offset
+    (x, y) =>
+      ({ position: Optional.some('absolute'), left: Optional.some((x - origin.left) + 'px'), top: Optional.some((y - origin.top) + 'px') }), // absolute
+    (x, y) =>
+      ({ position: Optional.some('fixed'), left: Optional.some(x + 'px'), top: Optional.some(y + 'px') }) // fixed
   );
+
+  return { right: Optional.none(), bottom: Optional.none(), ...stylesOpt };
 };
 
-const translate = (coord: CoordAdt, deltaX: number, deltaY: number): CoordAdt => {
-  return coord.fold(
-    (x, y) => {
-      return adt.offset(x + deltaX, y + deltaY);
-    },
-    (x, y) => {
-      return adt.absolute(x + deltaX, y + deltaY);
-    },
-    (x, y) => {
-      return adt.fixed(x + deltaX, y + deltaY);
-    }
-  );
-};
+const translate = (coord: CoordAdt<number>, deltaX: number, deltaY: number): CoordAdt<number> => coord.fold(
+  (x, y) => offset(x + deltaX, y + deltaY),
+  (x, y) => absolute(x + deltaX, y + deltaY),
+  (x, y) => fixed(x + deltaX, y + deltaY)
+);
 
-const absorb = (partialCoord: CoordAdt, originalCoord: CoordAdt, scroll: SugarPosition, origin: SugarPosition): CoordAdt => {
-  const absorbOne = (stencil: CoordStencil, nu: DragCoords) => {
-    return (optX, optY): CoordAdt => {
-      const original = stencil(originalCoord, scroll, origin);
-      return nu(optX.getOr(original.left()), optY.getOr(original.top()));
-    };
+const absorb = (partialCoord: CoordAdt<Optional<number>>, originalCoord: CoordAdt<number>, scroll: SugarPosition, origin: SugarPosition): CoordAdt<number> => {
+  const absorbOne = (stencil: CoordStencil, nu: DragCoords) => (optX: Optional<number>, optY: Optional<number>): CoordAdt => {
+    const original = stencil(originalCoord, scroll, origin);
+    return nu(optX.getOr(original.left), optY.getOr(original.top));
   };
 
   return partialCoord.fold(
-    absorbOne(asOffset, adt.offset),
-    absorbOne(asAbsolute, adt.absolute),
-    absorbOne(asFixed, adt.fixed)
+    absorbOne(asOffset, offset),
+    absorbOne(asAbsolute, absolute),
+    absorbOne(asFixed, fixed)
   );
 };
 
-const offset = adt.offset as DragCoords;
-const absolute = adt.absolute as DragCoords;
-const fixed = adt.fixed as DragCoords;
+const offset = adt.offset as {
+  (x: number, y: number): CoordAdt<number>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
+};
+const absolute = adt.absolute as {
+  (x: number, y: number): CoordAdt<number>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
+};
+const fixed = adt.fixed as {
+  (x: number, y: number): CoordAdt<number>;
+  (x: Optional<number>, y: Optional<number>): CoordAdt<Optional<number>>;
+};
 
 export {
   offset,
@@ -167,6 +159,7 @@ export {
   asAbsolute,
   asOffset,
   withinRange,
+  getDeltas,
   toStyles,
   translate,
 

@@ -1,28 +1,26 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
 
-// The htmlpanel can either have role: presentation or role: document and associated behaviours
-export type HtmlPanelPresetTypes = 'presentation' | 'document';
-
-export interface HtmlPanelApi {
+export interface HtmlPanelSpec {
   type: 'htmlpanel';
   html: string;
-  presets?: HtmlPanelPresetTypes;
+  presets?: 'presentation' | 'document';
 }
 
 export interface HtmlPanel {
   type: 'htmlpanel';
   html: string;
-  presets: HtmlPanelPresetTypes;
+  // The htmlpanel can either have the attribute role = "presentation" or role = "document" and associated behaviours
+  presets: 'presentation' | 'document';
 }
 
-export const htmlPanelFields = [
+const htmlPanelFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('html'),
-  FieldSchema.defaultedStringEnum('presets', 'presentation', ['presentation', 'document'])
+  FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ])
 ];
 
 export const htmlPanelSchema = ValueSchema.objOf(htmlPanelFields);
 
-export const createHtmlPanel = (spec: HtmlPanelApi) => {
-  return ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);
-};
+export const createHtmlPanel = (spec: HtmlPanelSpec): Result<HtmlPanel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<HtmlPanel>('htmlpanel', htmlPanelSchema, spec);

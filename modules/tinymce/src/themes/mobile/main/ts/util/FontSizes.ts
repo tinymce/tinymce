@@ -5,72 +5,65 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Option } from '@ephox/katamari';
-import { Compare, Css, Element, Node, Traverse, PredicateFind } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Compare, Css, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
 
-const candidates = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
+const candidatesArray = [ '9px', '10px', '11px', '12px', '14px', '16px', '18px', '20px', '24px', '32px', '36px' ];
 
 const defaultSize = 'medium';
 const defaultIndex = 2;
 
-const indexToSize = function (index) {
-  return Option.from(candidates[index]);
-};
+const indexToSize = (index): Optional<string> =>
+  Optional.from(candidatesArray[index]);
 
-const sizeToIndex = function (size) {
-  return Arr.findIndex(candidates, function (v) {
-    return v === size;
-  });
-};
+const sizeToIndex = (size): Optional<number> =>
+  Arr.findIndex(candidatesArray, (v) => v === size);
 
-const getRawOrComputed = function (isRoot, rawStart) {
-  const optStart = Node.isElement(rawStart) ? Option.some(rawStart) : Traverse.parent(rawStart);
-  return optStart.map(function (start) {
+const getRawOrComputed = (isRoot: (e: SugarElement<Node>) => boolean, rawStart: SugarElement<any>): string => {
+  const optStart = SugarNode.isElement(rawStart) ? Optional.some(rawStart) : Traverse.parent(rawStart).filter(SugarNode.isElement);
+  return optStart.map((start) => {
     const inline = PredicateFind.closest(start, (elem) => Css.getRaw(elem, 'font-size').isSome(), isRoot)
       .bind((elem) => Css.getRaw(elem, 'font-size'));
 
-    return inline.getOrThunk(function () {
-      return Css.get(start, 'font-size');
-    });
+    return inline.getOrThunk(() => Css.get(start, 'font-size'));
   }).getOr('');
 };
 
-const getSize = function (editor) {
+const getSize = (editor: Editor): string => {
   // This was taken from the tinymce approach (FontInfo is unlikely to be global)
   const node = editor.selection.getStart();
-  const elem = Element.fromDom(node);
-  const root = Element.fromDom(editor.getBody());
+  const elem = SugarElement.fromDom(node);
+  const root = SugarElement.fromDom(editor.getBody());
 
-  const isRoot = function (e) {
-    return Compare.eq(root, e);
-  };
+  const isRoot = (e) => Compare.eq(root, e);
 
   const elemSize = getRawOrComputed(isRoot, elem);
-  return Arr.find(candidates, function (size) {
-    return elemSize === size;
-  }).getOr(defaultSize);
+  return Arr.find(candidatesArray, (size) => elemSize === size).getOr(defaultSize);
 };
 
-const applySize = function (editor, value) {
+const applySize = (editor: Editor, value: string): void => {
   const currentValue = getSize(editor);
   if (currentValue !== value) {
     editor.execCommand('fontSize', false, value);
   }
 };
 
-const get = function (editor) {
+const get = (editor: Editor): number => {
   const size = getSize(editor);
   return sizeToIndex(size).getOr(defaultIndex);
 };
 
-const apply = function (editor, index) {
-  indexToSize(index).each(function (size) {
+const apply = (editor: Editor, index: number): void => {
+  indexToSize(index).each((size) => {
     applySize(editor, size);
   });
 };
 
-export default {
-  candidates: Fun.constant(candidates),
+const candidates = Fun.constant(candidatesArray);
+
+export {
+  candidates,
   get,
   apply
 };

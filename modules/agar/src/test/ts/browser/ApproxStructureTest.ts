@@ -1,9 +1,9 @@
-import { UnitTest } from '@ephox/bedrock';
-import { Element, InsertAll } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { InsertAll, SugarElement } from '@ephox/sugar';
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
 
-UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
+UnitTest.asynctest('ApproxStructureTest', (success, _failure) => {
 
   const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +
     '<div selected="true">' +
@@ -13,17 +13,17 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
     '<span></span>' +
     '</div>';
 
-  const check = function (expected, input) {
-    const target = Element.fromHtml(input);
+  const check = (expected, input) => {
+    const target = SugarElement.fromHtml(input);
     Assertions.assertStructure('Test', expected, target);
   };
 
-  check(ApproxStructure.build(function (s, str, arr) {
-    return s.element('div', {
+  check(ApproxStructure.build((s, str, arr) =>
+    s.element('div', {
       attrs: {
-        selected: str.is('double'),
-        car: str.none('no car attribute'),
-        "data-key": str.contains('test')
+        'selected': str.is('double'),
+        'car': str.none('no car attribute'),
+        'data-key': str.contains('test')
       },
       classes: [
         arr.has('test1'),
@@ -56,26 +56,24 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
         ),
         s.anything()
       ]
-    });
-  }), html);
+    })), html);
 
   check(ApproxStructure.fromHtml(html), html);
 
-  check(ApproxStructure.build(function(s, str, arr) {
-    return s.element('div', {
+  check(ApproxStructure.build((s, str, _arr) =>
+    s.element('div', {
       children: [
         s.element('div', {
           attrs: {
             selected: str.is('true')
-          },
+          }
         }),
         s.theRest()
       ]
-    });
-  }), html);
+    })), html);
 
-  const struct1 = ApproxStructure.build(function(s, str, arr) {
-    return s.either([
+  const struct1 = ApproxStructure.build((s, str, arr) =>
+    s.either([
       s.element('span', {
         classes: [
           arr.has('hello'),
@@ -88,14 +86,13 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
           arr.not('hello')
         ]
       })
-    ]);
-  });
+    ]));
 
   check(struct1, '<span class="hello"></span>');
   check(struct1, '<div class="fizzbuzz"></span>');
 
-  const struct2 = ApproxStructure.build(function(s, str, arr) {
-    return s.element('div', {
+  const struct2 = ApproxStructure.build((s, str, arr) =>
+    s.element('div', {
       children: [
         s.oneOrMore(s.element('span', {
           classes: [
@@ -109,37 +106,33 @@ UnitTest.asynctest('ApproxStructureTest', function (success, failure) {
           ]
         }))
       ]
-    })
-  });
+    }));
 
   check(struct2, '<div><span class="hello"></span><div></div></div>');
   check(struct2, '<div><span class="hello"></span><div></div><span class="bye"></span></div>');
   check(struct2, '<div><span class="hello"></span><span class="hello"></span><span class="hello"></span><span class="hello"></span><div></div><span class="bye"></span></div>');
 
-  const container = Element.fromTag('div');
+  const container = SugarElement.fromTag('div');
   InsertAll.append(container, [
-    Element.fromText('hello'),
-    Element.fromText(' '),
-    Element.fromText('world')
+    SugarElement.fromText('hello'),
+    SugarElement.fromText(' '),
+    SugarElement.fromText('world')
   ]);
 
-  Assertions.assertStructure('Test', ApproxStructure.build(function(s, str, arr) {
-    return s.element('div', {
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+    s.element('div', {
       children: [
         s.text(str.is('hello world'), true)
       ]
-    })
-  }), container);
+    })), container);
 
-  Assertions.assertStructure('Test', ApproxStructure.build(function(s, str, arr) {
-    return s.element('div', {
+  Assertions.assertStructure('Test', ApproxStructure.build((s, str, _arr) =>
+    s.element('div', {
       children: [
         s.text(str.is('hello'), false),
         s.text(str.is(' world'), true)
       ]
-    })
-  }), container);
+    })), container);
 
   success();
 });
-

@@ -5,27 +5,29 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Actions from '../core/Actions';
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import * as Actions from '../core/Actions';
 
-const get = function (editor, currentIndexState) {
-  const done = function (keepEditorSelection) {
-    return Actions.done(editor, currentIndexState, keepEditorSelection);
+const get = function (editor: Editor, currentState: Cell<Actions.SearchState>) {
+  const done = function (keepEditorSelection?: boolean) {
+    return Actions.done(editor, currentState, keepEditorSelection);
   };
 
-  const find = function (text, matchCase, wholeWord) {
-    return Actions.find(editor, currentIndexState, text, matchCase, wholeWord);
+  const find = function (text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean = false) {
+    return Actions.find(editor, currentState, text, matchCase, wholeWord, inSelection);
   };
 
   const next = function () {
-    return Actions.next(editor, currentIndexState);
+    return Actions.next(editor, currentState);
   };
 
   const prev = function () {
-    return Actions.prev(editor, currentIndexState);
+    return Actions.prev(editor, currentState);
   };
 
-  const replace = function (text, forward, all) {
-    return Actions.replace(editor, currentIndexState, text, forward, all);
+  const replace = function (text: string, forward?: boolean, all?: boolean) {
+    return Actions.replace(editor, currentState, text, forward, all);
   };
 
   return {
@@ -37,6 +39,6 @@ const get = function (editor, currentIndexState) {
   };
 };
 
-export default {
+export {
   get
 };

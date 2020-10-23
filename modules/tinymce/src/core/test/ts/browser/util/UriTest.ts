@@ -1,11 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import URI from 'tinymce/core/api/util/URI';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.UriTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
@@ -35,6 +33,12 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function () {
     LegacyUnit.equal(new URI('http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
     ok(new URI('http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI() !== 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
     LegacyUnit.equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
+  });
+
+  suite.test('parseRelativeURLs', function () {
+    LegacyUnit.equal(new URI('./test.html').getURI(), 'http://mce_host/test.html');
+    LegacyUnit.equal(new URI('test.html').getURI(), 'http://mce_host/test.html');
+    LegacyUnit.equal(new URI('/assets/test.html').getURI(), 'http://mce_host/assets/test.html');
   });
 
   suite.test('relativeURLs', function () {

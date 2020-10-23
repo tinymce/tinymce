@@ -1,5 +1,5 @@
 import { Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -11,12 +11,12 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
   SilverTheme();
   ImagePlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       Log.stepsAsStep('TBA', 'Image: removing src in dialog should remove figure element', [
         tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
         tinyApis.sSetSelection([], 1, [], 2),
@@ -48,6 +48,6 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, f
     plugins: 'image',
     toolbar: 'image',
     image_caption: true,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

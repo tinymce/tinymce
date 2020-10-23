@@ -1,13 +1,13 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
-import { convertUnit, nuSize, SizeUnit, Size } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+import { convertUnit, nuSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 import { convertableUnits, largeSensible, units } from './SizeInputShared';
-import { Option, Arr } from '@ephox/katamari';
 
 UnitTest.test('SizeInputConvertTest', () => {
 
-  const check = (expected: Option<number>, size: Size, unit: SizeUnit) => {
+  const check = (expected: Optional<number>, size: Size, unit: SizeUnit) => {
     const result = convertUnit(size, unit);
     assert.eq(
       true, expected.equals(result),
@@ -16,10 +16,10 @@ UnitTest.test('SizeInputConvertTest', () => {
     );
   };
 
-  check(Option.some(12), nuSize(12, 'mm'), 'mm');
-  check(Option.some(16848), nuSize(234, 'in'), 'pt');
-  check(Option.some(75.59055118110236), nuSize(2, 'cm'), 'px');
-  check(Option.none(), nuSize(2, 'cm'), 'ch');
+  check(Optional.some(12), nuSize(12, 'mm'), 'mm');
+  check(Optional.some(16848), nuSize(234, 'in'), 'pt');
+  check(Optional.some(75.59055118110236), nuSize(2, 'cm'), 'px');
+  check(Optional.none(), nuSize(2, 'cm'), 'ch');
 
   Jsc.property(
     'All units can convert to themselves',

@@ -1,14 +1,15 @@
-import { Pipeline, RawAssertions, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Attr, Body, Traverse } from '@ephox/sugar';
+import { Pipeline, Step } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Attribute, SugarBody, SugarNode, Traverse } from '@ephox/sugar';
+
 import * as EventRoot from 'ephox/alloy/alien/EventRoot';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
+import { TestStore } from 'ephox/alloy/api/testhelpers/TestStore';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import TestStore from 'ephox/alloy/api/testhelpers/TestStore';
 
 UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure) => {
 
@@ -38,18 +39,18 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
         events: AlloyEvents.derive([
           AlloyEvents.runOnAttached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element).filter(SugarNode.isElement).getOrDie(
               'At attachedToDom, a DOM parent must exist'
             );
-            store.adder('attached-to:' + Attr.get(parent, 'class'))();
+            store.adder('attached-to:' + Attribute.get(parent, 'class'))();
           }),
 
           AlloyEvents.runOnDetached((comp, simulatedEvent) => {
             simulatedEvent.stop();
-            const parent = Traverse.parent(comp.element()).getOrDie(
+            const parent = Traverse.parent(comp.element).filter(SugarNode.isElement).getOrDie(
               'At detachedFromDom, a DOM parent must exist'
             );
-            store.adder('detached-from:' + Attr.get(parent, 'class'))();
+            store.adder('detached-from:' + Attribute.get(parent, 'class'))();
           }),
 
           AlloyEvents.run(SystemEvents.systemInit(), (comp, simulatedEvent) => {
@@ -65,10 +66,10 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
 
   Pipeline.async({}, [
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Checking that the component has no size',
         0,
-        wrapper.element().dom().getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
 
@@ -82,24 +83,24 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     Step.wait(500),
 
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Even though added to system, not added to DOM yet so still size 0',
         0,
-        wrapper.element().dom().getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
     store.sAssertEq('After adding to system and waiting, still only init should have fired', [ 'init' ]),
     store.sClear,
 
     Step.sync(() => {
-      Attachment.attachSystem(Body.body(), gui);
+      Attachment.attachSystem(SugarBody.body(), gui);
     }),
 
     Step.sync(() => {
-      RawAssertions.assertEq(
+      Assert.eq(
         'Now added to the DOM, so should have size 100',
         100,
-        wrapper.element().dom().getBoundingClientRect().width
+        wrapper.element.dom.getBoundingClientRect().width
       );
     }),
 

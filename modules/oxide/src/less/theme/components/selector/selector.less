@@ -1,0 +1,35 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Selector
+//
+@selector-handle-color: #4099ff;
+@selector-handle-size: 10px;
+@selector-handle-touch-size: @selector-handle-size + 2;
+
+.tox {
+  .tox-selector {
+    background-color: @selector-handle-color;
+    border-color: @selector-handle-color;
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    display: inline-block;
+    height: @selector-handle-size;
+    position: absolute;
+    width: @selector-handle-size;
+    // Don't include a z-index as the selector will be in the sink, which already has
+    // a z-index. So adding one makes it appear above other items in the sink.
+  }
+}
+
+// Increase the selector size marginally on touch devices
+.tox.tox-platform-touch .tox-selector {
+  height: @selector-handle-touch-size;
+  width: @selector-handle-touch-size;
+}

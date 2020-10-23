@@ -1,32 +1,17 @@
-import { Struct, Option } from '@ephox/katamari';
-
-export interface RepositionCss {
-  position: () => any;
-  left: () => Option<number>;
-  top: () => Option<number>;
-  right: () => Option<number>;
-  bottom: () => Option<number>;
-}
+import { DirectionAdt } from '../layout/Direction';
 
 export interface RepositionDecision {
-  x: () => number;
-  y: () => number;
-  width: () => number;
-  height: () => number;
-  maxHeight: () => number;
-  direction: () => any;
-  classes: () => {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly maxHeight: number;
+  readonly maxWidth: number;
+  readonly direction: DirectionAdt;
+  readonly classes: {
     off: string[];
-    on: string[]
+    on: string[];
   };
-  label: () => string;
-  candidateYforTest: any;
+  readonly label: string;
+  readonly candidateYforTest: number;
 }
-
-const decision: (...args)  => RepositionDecision = Struct.immutableBag(['x', 'y', 'width', 'height', 'maxHeight', 'direction', 'classes', 'label', 'candidateYforTest'], []);
-const css: (...args) => RepositionCss = Struct.immutable('position', 'left', 'top', 'right', 'bottom');
-
-export {
-  decision,
-  css
-};

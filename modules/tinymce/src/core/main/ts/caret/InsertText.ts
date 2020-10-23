@@ -5,22 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { getElementFromPosition } from '../caret/CaretUtils';
-import NodeType from '../dom/NodeType';
-import { CaretPosition } from '../caret/CaretPosition';
-import { Insert, Element } from '@ephox/sugar';
-import { Option, Fun } from '@ephox/katamari';
+import { Fun, Optional, Unicode } from '@ephox/katamari';
+import { Insert, SugarElement } from '@ephox/sugar';
+import * as NodeType from '../dom/NodeType';
+import { CaretPosition } from './CaretPosition';
+import { getElementFromPosition } from './CaretUtils';
 
-const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPosition> => {
+const insertTextAtPosition = (text: string, pos: CaretPosition): Optional<CaretPosition> => {
   const container = pos.container();
   const offset = pos.offset();
 
   if (NodeType.isText(container)) {
     container.insertData(offset, text);
-    return Option.some(CaretPosition(container, offset + text.length));
+    return Optional.some(CaretPosition(container, offset + text.length));
   } else {
     return getElementFromPosition(pos).map((elm) => {
-      const textNode = Element.fromText(text);
+      const textNode = SugarElement.fromText(text);
 
       if (pos.isAtEnd()) {
         Insert.after(elm, textNode);
@@ -28,12 +28,12 @@ const insertTextAtPosition = (text: string, pos: CaretPosition): Option<CaretPos
         Insert.before(elm, textNode);
       }
 
-      return CaretPosition(textNode.dom(), text.length);
+      return CaretPosition(textNode.dom, text.length);
     });
   }
 };
 
-const insertNbspAtPosition = Fun.curry(insertTextAtPosition, '\u00a0');
+const insertNbspAtPosition = Fun.curry(insertTextAtPosition, Unicode.nbsp);
 const insertSpaceAtPosition = Fun.curry(insertTextAtPosition, ' ');
 
 export {

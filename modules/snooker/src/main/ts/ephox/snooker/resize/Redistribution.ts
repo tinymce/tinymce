@@ -1,5 +1,4 @@
 import { Arr, Fun } from '@ephox/katamari';
-import * as Util from '../util/Util';
 import { Size } from './Size';
 
 // Convert all column widths to percent.
@@ -31,21 +30,20 @@ const redistributeToPx = function (widths: string[], totalWidth: number, newTota
   });
 };
 
-const redistributeEmpty = function (newWidthType: Size, columns: number) {
+const redistributeEmpty = (newWidthType: Size, columns: number) => {
   const f = newWidthType.fold(
-    function () {
-      return Fun.constant('');
-    },
-    function (px) {
-      const num = px / columns;
+    () =>
+      Fun.constant(''),
+    (pixels) => { // Pixels
+      const num = pixels / columns;
       return Fun.constant(num + 'px');
     },
-    function (pc) {
-      const num = pc / columns;
-      return Fun.constant(num + 'px');
+    () => { // Percentages.
+      const num = 100 / columns;
+      return Fun.constant(num + '%');
     }
   );
-  return Util.repeat(columns, f);
+  return Arr.range(columns, f);
 };
 
 const redistributeValues = function (newWidthType: Size, widths: string[], totalWidth: number) {
@@ -61,7 +59,7 @@ const redistributeValues = function (newWidthType: Size, widths: string[], total
 const redistribute = function (widths: string[], totalWidth: number, newWidth: string) {
   const newType = Size.from(newWidth);
   const floats = Arr.forall(widths, function (s) { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
-  return toIntegers(floats);
+  return normalize(floats);
 };
 
 const sum = function (values: string[], fallback: number) {
@@ -86,21 +84,15 @@ const add = function (value: string, amount: number) {
   });
 };
 
-const toIntegers = function (values: string[]) {
+const normalize = function (values: string[]) {
   if (values.length === 0) {
     return values;
   }
-  const scan = Arr.foldr(values, function (rest, value) {
+  const scan = Arr.foldr(values, (rest, value) => {
     const info = Size.from(value).fold(
-      function () {
-        return { value, remainder: 0 };
-      },
-      function (num) {
-        return roundDown(num, 'px');
-      },
-      function (num) {
-        return roundDown(num, '%');
-      }
+      () => ({ value, remainder: 0 }),
+      (num) => roundDown(num, 'px'),
+      (num) => ({ value: num + '%', remainder: 0 })
     );
 
     return {
@@ -115,9 +107,5 @@ const toIntegers = function (values: string[]) {
 
 const validate = Size.from;
 
-export default {
-  validate,
-  redistribute,
-  sum,
-  toIntegers
-};
+export { validate, redistribute, sum, normalize };
+

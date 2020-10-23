@@ -1,14 +1,12 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 // FIX: TODO....
 export const registerEmoticonItems = () => {
   getDemoRegistry().addButton('emoticon', {
     type: 'button',
     disabled: false,
-    onSetup: (buttonApi) => {
-      return () => { };
-    },
-    onAction: (buttonApi) => {
+    onSetup: (_buttonApi) => () => { },
+    onAction: (_buttonApi) => {
 
     }
   });

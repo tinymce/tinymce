@@ -24,19 +24,23 @@
 @menubar-select-text-transform: @toolbar-button-text-transform;
 
 @menubar-select-disabled-background-color: @toolbar-button-background-color;
-@menubar-select-disabled-border-color: @toolbar-button-background-color;
+@menubar-select-disabled-border: @menubar-select-border;
+@menubar-select-disabled-border-color: @toolbar-button-background-color; /* Deprecated. Remove in next major release */
 @menubar-select-disabled-box-shadow: @toolbar-button-box-shadow;
 @menubar-select-disabled-text-color: fade(@toolbar-button-text-color, 50%);
 
 @menubar-select-hover-background-color: @toolbar-button-hover-background-color;
+@menubar-select-hover-border: @menubar-select-border;
 @menubar-select-hover-box-shadow: @toolbar-button-hover-box-shadow;
 @menubar-select-hover-text-color: @toolbar-button-hover-text-color;
 
 @menubar-select-focus-background-color: @menubar-select-hover-background-color;
+@menubar-select-focus-border: @menubar-select-hover-border;
 @menubar-select-focus-box-shadow: @menubar-select-hover-box-shadow;
 @menubar-select-focus-text-color: @menubar-select-hover-text-color;
 
 @menubar-select-active-background-color: @toolbar-button-active-background-color;
+@menubar-select-active-border: @menubar-select-hover-border;
 @menubar-select-active-box-shadow: @toolbar-button-active-box-shadow;
 @menubar-select-active-text-color: @toolbar-button-active-text-color;
 
@@ -65,29 +69,32 @@
 
   .tox-mbtn[disabled] {
     background-color: @menubar-select-disabled-background-color;
-    border-color: @menubar-select-disabled-border-color;
+    border: @menubar-select-disabled-border;
     box-shadow: @menubar-select-disabled-box-shadow;
     color: @menubar-select-disabled-text-color;
     cursor: not-allowed;
   }
 
-  .tox-mbtn:hover:not(:disabled) {
-    background: @menubar-select-hover-background-color;
-    box-shadow: @menubar-select-hover-box-shadow;
-    color: @menubar-select-hover-text-color;
-  }
-
   .tox-mbtn:focus:not(:disabled) {
     background: @menubar-select-focus-background-color;
+    border: @menubar-select-focus-border;
     box-shadow: @menubar-select-focus-box-shadow;
-    color: @menubar-select-text-color;
+    color: @menubar-select-focus-text-color;
   }
 
   // Active state applied using class
   .tox-mbtn--active {
     background: @menubar-select-active-background-color;
+    border: @menubar-select-active-border;
     box-shadow: @menubar-select-active-box-shadow;
     color: @menubar-select-active-text-color;
+  }
+
+  .tox-mbtn:hover:not(:disabled):not(.tox-mbtn--active) {
+    background: @menubar-select-hover-background-color;
+    border: @menubar-select-hover-border;
+    box-shadow: @menubar-select-hover-box-shadow;
+    color: @menubar-select-hover-text-color;
   }
 
   .tox-mbtn__select-label {

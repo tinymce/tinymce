@@ -5,16 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Cell, Obj } from '@ephox/katamari';
 import Editor from '../api/Editor';
-import Events from '../api/Events';
-import { Obj, Arr, Cell } from '@ephox/katamari';
-import { console } from '@ephox/dom-globals';
-import { ModeApi } from '../api/Mode';
+import * as Events from '../api/Events';
+import { EditorModeApi } from '../api/Mode';
 import { toggleReadOnly } from './Readonly';
 
-const defaultModes = ['design', 'readonly'];
+const defaultModes = [ 'design', 'readonly' ];
 
-const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: Record<string, ModeApi>, mode: string) => {
+const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: Record<string, EditorModeApi>, mode: string) => {
   const oldMode = availableModes[activeMode.get()];
   const newMode = availableModes[mode];
 
@@ -22,6 +21,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   try {
     newMode.activate();
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(`problem while activating editor mode ${mode}:`, e);
     return;
   }
@@ -33,7 +33,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   Events.fireSwitchMode(editor, mode);
 };
 
-const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, activeMode: Cell<string>, mode: string) => {
+const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string) => {
   if (mode === activeMode.get()) {
     return;
   } else if (!Obj.has(availableModes, mode)) {
@@ -47,7 +47,7 @@ const setMode = (editor: Editor, availableModes: Record<string, ModeApi>, active
   }
 };
 
-const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api: ModeApi): Record<string, ModeApi> => {
+const registerMode = (availableModes: Record<string, EditorModeApi>, mode: string, api: EditorModeApi): Record<string, EditorModeApi> => {
   if (Arr.contains(defaultModes, mode)) {
     throw new Error(`Cannot override default mode ${mode}`);
   }
@@ -61,8 +61,8 @@ const registerMode = (availableModes: Record<string, ModeApi>, mode: string, api
         try {
           api.deactivate();
         } catch (e) {
-          console.error(`problem while deactivating editor mode ${mode}:`);
-          console.error(e);
+          // eslint-disable-next-line no-console
+          console.error(`problem while deactivating editor mode ${mode}:`, e);
         }
       }
     }

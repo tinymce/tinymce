@@ -20,7 +20,7 @@ const checkWith = function <T extends any[]> (label: string, arbitraries: T, f: 
   // NOTE: Due to a current implementation detail of Jsc's wrapper, these will not have labels in the console
   // However, use this one if you want to supply options (like seed, number of tests etc.)
   Logger.sync(label, function () {
-    const property = Jsc.forall.apply(Jsc, [...arbitraries, f]);
+    const property = Jsc.forall.apply(Jsc, [ ...arbitraries, f ]);
     try {
       const output = Jsc.check(property, options);
       if (output !== true) {
@@ -34,10 +34,10 @@ const checkWith = function <T extends any[]> (label: string, arbitraries: T, f: 
 };
 
 const check = function <T extends any[]> (label: string, arbitraries: T, f: Function) { // TODO narrow types
-  Jsc.property.apply(Jsc, [label, ...arbitraries, f]);
+  Jsc.property.apply(Jsc, [ label, ...arbitraries, f ]);
 };
 
-export default {
+export {
   check,
   checkWith
 };

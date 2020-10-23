@@ -1,7 +1,6 @@
-import Element from 'ephox/sugar/api/node/Element';
-import { document } from '@ephox/dom-globals';
+import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 
-export default function (type) {
+export default (type: string) => {
   const dom = document.createElement(type);
-  return Element.fromDom(dom);
-}
+  return SugarElement.fromDom(dom);
+};

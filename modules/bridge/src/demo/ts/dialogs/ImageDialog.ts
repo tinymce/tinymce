@@ -1,7 +1,6 @@
-import { console } from '@ephox/dom-globals';
 import { openDemoDialog } from './DemoDialogHelpers';
 
-// tslint:disable:no-console
+/* eslint-disable no-console */
 
 export const createImageDialog = () => {
   openDemoDialog(
@@ -103,7 +102,7 @@ export const createImageDialog = () => {
         } else if (details.name === 'size') {
           // Notice that the size has a more complex json output separating
           // width/height the constrain logic should be done at implementation level
-          const value = data.size as { width: string, height: string };
+          const value = data.size as { width: string; height: string };
           console.log(value.width, value.height);
         }
       },

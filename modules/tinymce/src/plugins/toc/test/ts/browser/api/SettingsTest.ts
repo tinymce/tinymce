@@ -1,8 +1,8 @@
 import { Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Settings from 'tinymce/plugins/toc/api/Settings';
-import { UnitTest } from '@ephox/bedrock';
+import * as Settings from 'tinymce/plugins/toc/api/Settings';
 
 UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function () {
   Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default toc class', 'mce-toc', Settings.getTocClass(new Editor('x', {}, EditorManager)));

@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLElement } from '@ephox/dom-globals';
-import Prism from './Prism';
-import Utils from '../util/Utils';
 import Editor from 'tinymce/core/api/Editor';
+import * as Utils from '../util/Utils';
+import * as Prism from './Prism';
 
 const setup = function (editor: Editor) {
   const $ = editor.$;
@@ -43,7 +42,7 @@ const setup = function (editor: Editor) {
 
           elm.contentEditable = 'false';
           elm.innerHTML = editor.dom.encode(elm.textContent);
-          Prism.highlightElement(elm);
+          Prism.get(editor).highlightElement(elm);
           elm.className = $.trim(elm.className);
         });
       });
@@ -51,6 +50,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

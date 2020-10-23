@@ -1,36 +1,38 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, StructAssert } from '@ephox/agar';
+import { Unicode } from '@ephox/katamari';
 
-const sAssertSpanStruct = ApproxStructure.build(function (s, str) {
-  return s.element('body', {
-    children: [
-      s.element('p', {
-        children: [
-          s.text(str.is('a')),
-          s.element('span', {}),
-          s.element('span', {}),
-          s.text(str.is('b'))
-        ]
-      })
-    ]
-  });
-});
+const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, _str) => s.element('body', {
+  children: [
+    s.element('p', {
+      children: paraStruct
+    })
+  ]
+}));
 
-const sAssertNbspStruct = ApproxStructure.build(function (s, str) {
-  return s.element('body', {
+const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => [
+  s.text(str.is('a')),
+  s.element('span', {
     children: [
-      s.element('p', {
-        children: [
-          s.text(str.is('a')),
-          s.text(str.is('\u00a0')),
-          s.text(str.is('\u00a0')),
-          s.text(str.is('b'))
-        ]
-      })
+      s.text(str.is(Unicode.nbsp))
     ]
-  });
-});
+  }),
+  s.element('span', {
+    children: [
+      s.text(str.is(Unicode.nbsp))
+    ]
+  }),
+  s.text(str.is('b'))
+]));
+
+const sAssertNbspStruct = sAssertStruct(ApproxStructure.build((s, str) => [
+  s.text(str.is('a')),
+  s.text(str.is(Unicode.nbsp)),
+  s.text(str.is(Unicode.nbsp)),
+  s.text(str.is('b'))
+]));
 
 export {
+  sAssertStruct,
   sAssertNbspStruct,
   sAssertSpanStruct
 };

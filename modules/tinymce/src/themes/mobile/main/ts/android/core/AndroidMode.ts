@@ -7,12 +7,12 @@
 
 import { Singleton } from '@ephox/katamari';
 import { Class } from '@ephox/sugar';
-import AndroidEvents from './AndroidEvents';
-import AndroidSetup from './AndroidSetup';
-import PlatformEditor from '../../ios/core/PlatformEditor';
-import Thor from '../../util/Thor';
-import Styles from '../../style/Styles';
-import MetaViewport from '../../touch/view/MetaViewport';
+import * as PlatformEditor from '../../ios/core/PlatformEditor';
+import * as Styles from '../../style/Styles';
+import * as MetaViewport from '../../touch/view/MetaViewport';
+import * as Thor from '../../util/Thor';
+import * as AndroidEvents from './AndroidEvents';
+import * as AndroidSetup from './AndroidSetup';
 
 const create = function (platform, mask) {
 
@@ -28,7 +28,7 @@ const create = function (platform, mask) {
     Class.add(platform.container, Styles.resolve('android-maximized'));
     meta.maximize();
 
-    /// TM-48 Prevent browser refresh by swipe/scroll on android devices
+    // TM-48 Prevent browser refresh by swipe/scroll on android devices
     Class.add(platform.body, Styles.resolve('android-scroll-reload'));
 
     androidApi.set(
@@ -36,7 +36,7 @@ const create = function (platform, mask) {
     );
 
     PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
-      Thor.clobberStyles(platform.container, editorApi.body());
+      Thor.clobberStyles(platform.container, editorApi.body);
       androidEvents.set(
         AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)
       );
@@ -50,7 +50,7 @@ const create = function (platform, mask) {
     Class.remove(platform.container, Styles.resolve('android-maximized'));
     Thor.restoreStyles();
 
-    /// TM-48 re-enable swipe/scroll browser refresh on android
+    // TM-48 re-enable swipe/scroll browser refresh on android
     Class.remove(platform.body, Styles.resolve('android-scroll-reload'));
 
     androidEvents.clear();
@@ -64,6 +64,6 @@ const create = function (platform, mask) {
   };
 };
 
-export default {
+export {
   create
 };

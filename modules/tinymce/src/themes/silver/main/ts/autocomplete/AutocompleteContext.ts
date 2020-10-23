@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range, Text } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import { Phase, repeatLeft } from '../alien/TextSearch';
+import { repeatLeft } from '../alien/TextSearch';
 import * as AutocompleteTag from './AutocompleteTag';
+import { getText, isValidTextRange, isWhitespace } from './AutocompleteUtils';
 
 export interface AutocompleteContext {
   range: Range;
@@ -18,20 +18,16 @@ export interface AutocompleteContext {
   triggerChar: string;
 }
 
-const isValidTextRange = (rng: Range): boolean => {
-  return rng.collapsed && rng.startContainer.nodeType === 3;
-};
+const stripTriggerChar = (text: string, triggerCh: string) => text.substring(triggerCh.length);
 
-const whiteSpace = /[\u00a0 \t\r\n]/;
-
-const parse = (text: string, index: number, ch: string, minChars: number): Option<string> => {
+const findChar = (text: string, index: number, ch: string): Optional<number> => {
   // Identify the `char` in, and start the text from that point forward. If there is ever any whitespace, fail
   let i;
 
   for (i = index - 1; i >= 0; i--) {
     const char = text.charAt(i);
-    if (whiteSpace.test(char)) {
-      return Option.none();
+    if (isWhitespace(char)) {
+      return Optional.none();
     }
 
     if (char === ch) {
@@ -39,58 +35,53 @@ const parse = (text: string, index: number, ch: string, minChars: number): Optio
     }
   }
 
-  if (i === -1 || index - i < minChars) {
-    return Option.none();
-  }
-
-  return Option.some(text.substring(i + 1, index));
+  return Optional.some(i);
 };
 
-const getText = (rng: Range, ch: string) => {
-  // Get the range text minus the trigger char.
-  const text = rng.toString().substring(ch.length);
-  // Normalize the text by replacing non-breaking spaces with regular spaces and stripping zero-width spaces (fake carets).
-  return text.replace(/\u00A0/g, ' ').replace(/\uFEFF/g, '');
-};
-
-const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
+const findStart = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => {
   if (!isValidTextRange(initRange)) {
-    return Option.none();
+    return Optional.none();
   }
 
-  const findTriggerCh = (phase: Phase<AutocompleteContext>, element: Text, text: string, optOffset: Option<number>) => {
-    const index = optOffset.getOr(text.length);
-    return parse(text, index, ch, 1).fold(
-      () => {
-        // Abort if we find whitespace, otherwise continue searching
-        return text.match(whiteSpace) ? phase.abort() : phase.kontinue();
-      },
-      (newText) => {
-        const range = initRange.cloneRange();
-        range.setStart(element, index - newText.length - 1);
-        range.setEnd(initRange.endContainer, initRange.endOffset);
+  const findTriggerChIndex = (element: Text, offset: number, text: string) =>
+    // Stop searching by just returning the current offset if whitespace was found (eg Optional.none())
+    // and we'll handle the final checks below instead
+    findChar(text, offset, ch).getOr(offset);
 
-        // If the match is less than the minimum number of chars, then abort
-        return text.length < minChars ? phase.abort() : phase.finish({ text: getText(range, ch), range, triggerChar: ch });
-      }
-    );
-  };
+  const root = dom.getParent(initRange.startContainer, dom.isBlock) || dom.getRoot();
+  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerChIndex, root).bind((spot) => {
+    const range = initRange.cloneRange();
+    range.setStart(spot.container, spot.offset);
+    range.setEnd(initRange.endContainer, initRange.endOffset);
 
-  return repeatLeft(dom, initRange.startContainer, initRange.startOffset, findTriggerCh).fold(Option.none, Option.none, Option.some);
-};
-
-const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Option<AutocompleteContext> => {
-  return AutocompleteTag.detect(Element.fromDom(initRange.startContainer)).fold(
-    () => findStart(dom, initRange, ch, minChars),
-    (elm) => {
-      const range = dom.createRng();
-      range.selectNode(elm.dom());
-      return Option.some({ range, text: getText(range, ch), triggerChar: ch });
+    // If the range is collapsed then we didn't find a match so abort
+    if (range.collapsed) {
+      return Optional.none();
     }
-  );
+
+    const text = getText(range);
+    const triggerCharIndex = text.lastIndexOf(ch);
+
+    // If the match doesn't start with the trigger char (eg whitespace found) or the match is less than the minimum number of chars then abort
+    if (triggerCharIndex !== 0 || stripTriggerChar(text, ch).length < minChars ) {
+      return Optional.none();
+    } else {
+      return Optional.some({ text: stripTriggerChar(text, ch), range, triggerChar: ch });
+    }
+  });
 };
+
+const getContext = (dom: DOMUtils, initRange: Range, ch: string, minChars: number = 0): Optional<AutocompleteContext> => AutocompleteTag.detect(SugarElement.fromDom(initRange.startContainer)).fold(
+  () => findStart(dom, initRange, ch, minChars),
+  (elm) => {
+    const range = dom.createRng();
+    range.selectNode(elm.dom);
+    const text = getText(range);
+    return Optional.some({ range, text: stripTriggerChar(text, ch), triggerChar: ch });
+  }
+);
 
 export {
-  parse, // Exposed for testing.
+  findChar, // Exposed for testing.
   getContext
 };

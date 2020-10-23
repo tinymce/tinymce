@@ -6,10 +6,10 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Commands from './api/Commands';
-import Actions from './core/Actions';
-import Keyboard from './core/Keyboard';
-import Controls from './ui/Controls';
+import * as Commands from './api/Commands';
+import * as Actions from './core/Actions';
+import * as Keyboard from './core/Keyboard';
+import * as Controls from './ui/Controls';
 
 export default function () {
   PluginManager.add('link', function (editor) {

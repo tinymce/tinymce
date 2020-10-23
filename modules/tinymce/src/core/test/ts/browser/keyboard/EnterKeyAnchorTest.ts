@@ -1,40 +1,40 @@
 import { ApproxStructure, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Env from 'tinymce/core/api/Env';
-import Zwsp from 'tinymce/core/text/Zwsp';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success, failure) => {
   Theme();
 
-  const sSetup = function (tinyApis, html, elementPath, offset) {
+  const sSetup = function (tinyApis: TinyApis, html: string, elementPath: number[], offset: number) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetCursor(elementPath, offset)
     ]);
   };
 
-  const sEnterKey = function (tinyActions) {
+  const sEnterKey = function (tinyActions: TinyActions) {
     return tinyActions.sContentKeystroke(Keys.enter(), {});
   };
 
   const addGeckoBr = function (s, str, children) {
     if (Env.gecko) {
-      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') } }));
+      return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}));
     } else {
       return children;
     }
   };
 
-  const sTestEnterAtStartOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwsp = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwsp',
       GeneralSteps.sequence([
-        sSetup(tinyApis, '<p><a href="#">' + Zwsp.ZWSP + 'a</a></p>', [0, 0, 0], 1),
+        sSetup(tinyApis, '<p><a href="#">' + Zwsp.ZWSP + 'a</a></p>', [ 0, 0, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -63,19 +63,19 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
             });
           })
         ),
-        tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
+        tinyApis.sAssertSelection([ 1, 0, 0 ], 1, [ 1, 0, 0 ], 1)
       ])
     );
   };
 
-  const sTestEnterAtEndOfAnchorZwsp = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwsp = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtEndOfAnchorZwsp',
       GeneralSteps.sequence([
-        sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [0, 0, 0], 2),
+        sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [ 0, 0, 0 ], 2),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -104,19 +104,19 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
             });
           })
         ),
-        tinyApis.sAssertSelection([1], 0, [1], 0)
+        tinyApis.sAssertSelection([ 1 ], 0, [ 1 ], 0)
       ])
     );
   };
 
-  const sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtStartOfAnchorZwspWithAdjacentContent = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([
-        sSetup(tinyApis, '<p>a<a href="#">' + Zwsp.ZWSP + 'b</a>c</p>', [0, 1, 0], 1),
+        sSetup(tinyApis, '<p>a<a href="#">' + Zwsp.ZWSP + 'b</a>c</p>', [ 0, 1, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -148,19 +148,19 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
             });
           })
         ),
-        tinyApis.sAssertSelection([1, 0, 0], 1, [1, 0, 0], 1)
+        tinyApis.sAssertSelection([ 1, 0, 0 ], 1, [ 1, 0, 0 ], 1)
       ])
     );
   };
 
-  const sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis, tinyActions) {
+  const sTestEnterAtEndOfAnchorZwspWithAdjacentContent = function (tinyApis: TinyApis, tinyActions: TinyActions) {
     return Logger.t(
       'sTestEnterAtStartOfAnchorZwspWithAdjacentContent',
       GeneralSteps.sequence([
-        sSetup(tinyApis, '<p>a<a href="#">b' + Zwsp.ZWSP + '</a>c</p>', [0, 1, 0], 1),
+        sSetup(tinyApis, '<p>a<a href="#">b' + Zwsp.ZWSP + '</a>c</p>', [ 0, 1, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build(function (s, str, _arr) {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -186,17 +186,17 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
             });
           })
         ),
-        tinyApis.sAssertSelection([1, 0], 0, [1, 0], 0)
+        tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
       ])
     );
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
     Pipeline.async({}, [
-      tinyApis.sFocus,
+      tinyApis.sFocus(),
       sTestEnterAtStartOfAnchorZwsp(tinyApis, tinyActions),
       sTestEnterAtEndOfAnchorZwsp(tinyApis, tinyActions),
       sTestEnterAtStartOfAnchorZwspWithAdjacentContent(tinyApis, tinyActions),

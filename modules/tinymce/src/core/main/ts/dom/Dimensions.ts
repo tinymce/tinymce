@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from './NodeType';
-import * as ClientRect from '../geom/ClientRect';
-import { HTMLElement, Node } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
+import * as ClientRect from '../geom/ClientRect';
+import * as NodeType from './NodeType';
 
 export interface NodeClientRect extends ClientRect.ClientRect {
   node: HTMLElement;
@@ -38,11 +37,7 @@ const getNodeClientRects = (node: Node): NodeClientRect[] => {
   }
 };
 
-const getClientRects = (node: Node[]): NodeClientRect[] => {
-  return Arr.foldl(node, function (result, node) {
-    return result.concat(getNodeClientRects(node));
-  }, []);
-};
+const getClientRects = (nodes: Node[]): NodeClientRect[] => Arr.bind(nodes, getNodeClientRects);
 
 export {
   getClientRects

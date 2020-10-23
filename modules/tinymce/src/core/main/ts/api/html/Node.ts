@@ -5,10 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export type ElementMap = Array<{ [name: string]: boolean; }>;
-export type Attributes = Array<{ [name: string]: string; }>;
+import { Obj } from '@ephox/katamari';
+import { isWhitespaceText } from '../../text/Whitespace';
+import { SchemaMap } from './Schema';
 
-const whiteSpaceRegExp = /^[ \t\r\n]*$/;
+export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
+
 const typeLookup = {
   '#text': 3,
   '#comment': 8,
@@ -19,9 +21,7 @@ const typeLookup = {
 };
 
 // Walks the tree left/right
-const walk = function (node: Node, root: Node, prev?: boolean): Node {
-  let sibling;
-  let parent;
+const walk = function (node: AstNode, root: AstNode | null, prev?: boolean): AstNode {
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 
@@ -32,14 +32,14 @@ const walk = function (node: Node, root: Node, prev?: boolean): Node {
 
   // Return the sibling if it has one
   if (node !== root) {
-    sibling = node[siblingName];
+    let sibling = node[siblingName];
 
     if (sibling) {
       return sibling;
     }
 
     // Walk up the parents to look for siblings
-    for (parent = node.parent; parent && parent !== root; parent = parent.parent) {
+    for (let parent = node.parent; parent && parent !== root; parent = parent.parent) {
       sibling = parent[siblingName];
 
       if (sibling) {
@@ -48,6 +48,35 @@ const walk = function (node: Node, root: Node, prev?: boolean): Node {
     }
   }
 };
+
+const isEmptyTextNode = (node: AstNode) => {
+  // Non whitespace content
+  if (!isWhitespaceText(node.value)) {
+    return false;
+  }
+
+  // Parent is not a span and only spaces or is a span but has styles
+  const parentNode = node.parent;
+  if (parentNode && (parentNode.name !== 'span' || parentNode.attr('style')) && /^[ ]+$/.test(node.value)) {
+    return false;
+  }
+
+  return true;
+};
+
+// Check if node contains data-bookmark attribute, name attribute, id attribute or is a named anchor
+const isNonEmptyElement = (node: AstNode) => {
+  const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
+  return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
+};
+
+export interface AstNodeConstructor {
+  readonly prototype: AstNode;
+
+  new (name: string, type: number): AstNode;
+
+  create(name: string, attrs?: Record<string, string>): AstNode;
+}
 
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.
@@ -60,7 +89,7 @@ const walk = function (node: Node, root: Node, prev?: boolean): Node {
  * @version 3.4
  */
 
-class Node {
+class AstNode {
   /**
    * Creates a node of a specific type.
    *
@@ -69,17 +98,15 @@ class Node {
    * @param {String} name Name of the node type to create for example "b" or "#text".
    * @param {Object} attrs Name/value collection of attributes that will be applied to elements.
    */
-  public static create (name: string, attrs: Attributes): Node {
-    let node, attrName;
-
+  public static create(name: string, attrs?: Record<string, string>): AstNode {
     // Create node
-    node = new Node(name, typeLookup[name] || 1);
+    const node = new AstNode(name, typeLookup[name] || 1);
 
     // Add attributes if needed
     if (attrs) {
-      for (attrName in attrs) {
-        node.attr(attrName, attrs[attrName]);
-      }
+      Obj.each(attrs, (value, attrName) => {
+        node.attr(attrName, value);
+      });
     }
 
     return node;
@@ -87,14 +114,14 @@ class Node {
 
   public name: string;
   public type: number;
-  public attributes: Attributes;
-  public value: string;
-  public shortEnded: boolean;
-  public parent: Node;
-  public firstChild: Node;
-  public lastChild: Node;
-  public next: Node;
-  public prev: Node;
+  public attributes?: Attributes;
+  public value?: string;
+  public shortEnded?: boolean;
+  public parent?: AstNode;
+  public firstChild?: AstNode;
+  public lastChild?: AstNode;
+  public next?: AstNode;
+  public prev?: AstNode;
 
   /**
    * Constructs a new Node instance.
@@ -104,7 +131,7 @@ class Node {
    * @param {String} name Name of the node type.
    * @param {Number} type Numeric type representing the node.
    */
-  constructor(name: string, type: number) {
+  public constructor(name: string, type: number) {
     this.name = name;
     this.type = type;
 
@@ -124,7 +151,7 @@ class Node {
    * @param {tinymce.html.Node} node Node to replace the current node with.
    * @return {tinymce.html.Node} The old node that got replaced.
    */
-  public replace (node: Node): Node {
+  public replace(node: AstNode): AstNode {
     const self = this;
 
     if (node.parent) {
@@ -150,16 +177,18 @@ class Node {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr (name: string, value: string): string | Node;
-  public attr (name: Record<string, string>): Node;
-  public attr (name: string): string;
-  public attr (name: string | Record<string, string>, value?: string): string | Node {
+  public attr(name: string, value: string): string | AstNode;
+  public attr(name: Record<string, string>): AstNode;
+  public attr(name: string): string;
+  public attr(name: string | Record<string, string>, value?: string): string | AstNode {
     const self = this;
-    let attrs: Attributes, i;
+    let attrs: Attributes;
 
     if (typeof name !== 'string') {
-      for (i in name) {
-        self.attr(i, name[i]);
+      if (name !== undefined && name !== null) {
+        Obj.each(name, (value, key) => {
+          self.attr(key, value);
+        });
       }
 
       return self;
@@ -172,10 +201,10 @@ class Node {
           if (name in attrs.map) {
             delete attrs.map[name];
 
-            i = attrs.length;
+            let i = attrs.length;
             while (i--) {
               if (attrs[i].name === name) {
-                attrs = attrs.splice(i, 1);
+                attrs.splice(i, 1);
                 return self;
               }
             }
@@ -187,7 +216,7 @@ class Node {
         // Set attribute
         if (name in attrs.map) {
           // Set attribute
-          i = attrs.length;
+          let i = attrs.length;
           while (i--) {
             if (attrs[i].name === name) {
               attrs[i].value = value;
@@ -217,18 +246,18 @@ class Node {
    * @method clone
    * @return {tinymce.html.Node} New copy of the original node.
    */
-  public clone (): Node {
+  public clone(): AstNode {
     const self = this;
-    const clone = new Node(self.name, self.type);
-    let i, l, selfAttrs, selfAttr, cloneAttrs;
+    const clone = new AstNode(self.name, self.type);
+    let selfAttrs: Attributes;
 
     // Clone element attributes
     if ((selfAttrs = self.attributes)) {
-      cloneAttrs = [];
-      cloneAttrs.map = {};
+      const cloneAttrs = [] as Attributes;
+      (cloneAttrs as any).map = {};
 
-      for (i = 0, l = selfAttrs.length; i < l; i++) {
-        selfAttr = selfAttrs[i];
+      for (let i = 0, l = selfAttrs.length; i < l; i++) {
+        const selfAttr = selfAttrs[i];
 
         // Clone everything except id
         if (selfAttr.name !== 'id') {
@@ -254,7 +283,7 @@ class Node {
    *
    * @method wrap
    */
-  public wrap (wrapper: Node): Node {
+  public wrap(wrapper: AstNode): AstNode {
     const self = this;
 
     self.parent.insert(wrapper, self);
@@ -271,12 +300,11 @@ class Node {
    *
    * @method unwrap
    */
-  public unwrap () {
+  public unwrap() {
     const self = this;
-    let node, next;
 
-    for (node = self.firstChild; node;) {
-      next = node.next;
+    for (let node = self.firstChild; node;) {
+      const next = node.next;
       self.insert(node, self, true);
       node = next;
     }
@@ -293,7 +321,7 @@ class Node {
    * @method remove
    * @return {tinymce.html.Node} Current node that got removed.
    */
-  public remove (): Node {
+  public remove(): AstNode {
     const self = this, parent = self.parent, next = self.next, prev = self.prev;
 
     if (parent) {
@@ -333,15 +361,14 @@ class Node {
    * @param {tinymce.html.Node} node Node to append as a child of the current one.
    * @return {tinymce.html.Node} The node that got appended.
    */
-  public append (node: Node): Node {
+  public append(node: AstNode): AstNode {
     const self = this;
-    let last;
 
     if (node.parent) {
       node.remove();
     }
 
-    last = self.lastChild;
+    const last = self.lastChild;
     if (last) {
       last.next = node;
       node.prev = last;
@@ -367,14 +394,13 @@ class Node {
    * @param {Boolean} before Optional state to insert the node before the reference node.
    * @return {tinymce.html.Node} The node that got inserted.
    */
-  public insert (node: Node, refNode: Node, before?: boolean): Node {
-    let parent;
+  public insert(node: AstNode, refNode: AstNode, before?: boolean): AstNode {
 
     if (node.parent) {
       node.remove();
     }
 
-    parent = refNode.parent || this;
+    const parent = refNode.parent || this;
 
     if (before) {
       if (refNode === parent.firstChild) {
@@ -410,12 +436,11 @@ class Node {
    * @param {String} name Name of the child nodes to collect.
    * @return {Array} Array with child nodes matchin the specified name.
    */
-  public getAll (name: string): Node[] {
+  public getAll(name: string): AstNode[] {
     const self = this;
-    let node;
-    const collection = [];
+    const collection: AstNode[] = [];
 
-    for (node = self.firstChild; node; node = walk(node, self)) {
+    for (let node = self.firstChild; node; node = walk(node, self)) {
       if (node.name === name) {
         collection.push(node);
       }
@@ -430,23 +455,22 @@ class Node {
    * @method empty
    * @return {tinymce.html.Node} The current node that got cleared.
    */
-  public empty (): Node {
+  public empty(): AstNode {
     const self = this;
-    let nodes, i, node;
 
     // Remove all children
     if (self.firstChild) {
-      nodes = [];
+      const nodes = [];
 
       // Collect the children
-      for (node = self.firstChild; node; node = walk(node, self)) {
+      for (let node = self.firstChild; node; node = walk(node, self)) {
         nodes.push(node);
       }
 
       // Remove the children
-      i = nodes.length;
+      let i = nodes.length;
       while (i--) {
-        node = nodes[i];
+        const node = nodes[i];
         node.parent = node.firstChild = node.lastChild = node.next = node.prev = null;
       }
     }
@@ -467,11 +491,13 @@ class Node {
    * @param {function} predicate Optional predicate that gets called after the other rules determine that the node is empty. Should return true if the node is a content node.
    * @return {Boolean} true/false if the node is empty or not.
    */
-  public isEmpty (elements: ElementMap, whitespace?: ElementMap, predicate?: (node: Node) => boolean) {
+  public isEmpty(elements: SchemaMap, whitespace: SchemaMap = {}, predicate?: (node: AstNode) => boolean) {
     const self = this;
-    let node = self.firstChild, i, name;
+    let node = self.firstChild;
 
-    whitespace = whitespace || {} as ElementMap;
+    if (isNonEmptyElement(self)) {
+      return false;
+    }
 
     if (node) {
       do {
@@ -486,13 +512,8 @@ class Node {
             return false;
           }
 
-          // Keep bookmark nodes and name attribute like <a name="1"></a>
-          i = node.attributes.length;
-          while (i--) {
-            name = node.attributes[i].name;
-            if (name === 'name' || name.indexOf('data-mce-bookmark') === 0) {
-              return false;
-            }
+          if (isNonEmptyElement(node)) {
+            return false;
           }
         }
 
@@ -502,12 +523,12 @@ class Node {
         }
 
         // Keep non whitespace text nodes
-        if (node.type === 3 && !whiteSpaceRegExp.test(node.value)) {
+        if (node.type === 3 && !isEmptyTextNode(node)) {
           return false;
         }
 
         // Keep whitespace preserve elements
-        if (node.type === 3 && node.parent && whitespace[node.parent.name] && whiteSpaceRegExp.test(node.value)) {
+        if (node.type === 3 && node.parent && whitespace[node.parent.name] && isWhitespaceText(node.value)) {
           return false;
         }
 
@@ -528,9 +549,9 @@ class Node {
    * @param {Boolean} prev Optional previous node state defaults to false.
    * @return {tinymce.html.Node} Node that is next to or previous of the current node.
    */
-  public walk (prev?: boolean): Node {
+  public walk(prev?: boolean): AstNode {
     return walk(this, null, prev);
   }
 }
 
-export default Node;
+export default AstNode;

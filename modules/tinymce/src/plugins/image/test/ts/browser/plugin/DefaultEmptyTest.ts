@@ -1,17 +1,11 @@
-import { Chain, Log, Pipeline, UnitTest } from '@ephox/agar';
+import { Chain, Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Editor } from '@ephox/mcagar';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 import {
-  cAssertCleanHtml,
-  cAssertInputValue,
-  cExecCommand,
-  cFillActiveDialog,
-  cSubmitDialog,
-  cWaitForDialog,
-  generalTabSelectors,
-  silverSettings,
+  cAssertCleanHtml, cAssertInputValue, cExecCommand, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors, silverSettings
 } from '../../module/Helpers';
 
 UnitTest.asynctest('Default image dialog on empty data', (success, failure) => {

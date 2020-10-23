@@ -1,7 +1,7 @@
-import { Event, Bindable } from 'ephox/porkbun/Event';
-import Events from 'ephox/porkbun/Events';
-import { Saloon, ShootEvent, DieEvent, Outlaw } from './Types';
 import { Singleton } from '@ephox/katamari';
+import { Bindable, Event } from 'ephox/porkbun/Event';
+import * as Events from 'ephox/porkbun/Events';
+import { DieEvent, Outlaw, Saloon, ShootEvent } from './Types';
 
 interface OutlawEvents {
   registry: {
@@ -18,7 +18,7 @@ declare const $: any;
 
 const create = function (name: string): Outlaw {
   const container = $('<div />');
-  container.css({  width: '1px dashed gray' });
+  container.css({ width: '1px dashed gray' });
 
   const character = $('<div />');
   character.css({ width: '200px', float: 'left' });
@@ -52,7 +52,7 @@ const create = function (name: string): Outlaw {
   };
 
   const events = Events.create({
-    shoot: Event(['target']),
+    shoot: Event([ 'target' ]),
     die:   Event([])
   }) as OutlawEvents;
 
@@ -96,6 +96,6 @@ const create = function (name: string): Outlaw {
   return api;
 };
 
-export default {
+export {
   create
 };

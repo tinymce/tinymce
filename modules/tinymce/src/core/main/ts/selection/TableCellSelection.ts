@@ -6,30 +6,26 @@
  */
 
 import { Arr } from '@ephox/katamari';
-import { Element, SelectorFilter } from '@ephox/sugar';
-import * as ElementType from '../dom/ElementType';
-import MultiRange from './MultiRange';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
+import * as ElementType from '../dom/ElementType';
+import * as MultiRange from './MultiRange';
 
-const getCellsFromRanges = function (ranges) {
-  return Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
-};
+const getCellsFromRanges = (ranges: Range[]): SugarElement<HTMLTableCellElement>[] =>
+  Arr.filter(MultiRange.getSelectedNodes(ranges), ElementType.isTableCell);
 
-const getCellsFromElement = function (elm) {
-  return SelectorFilter.descendants(elm, 'td[data-mce-selected],th[data-mce-selected]');
-};
+const getCellsFromElement = (elm: SugarElement): SugarElement<HTMLTableCellElement>[] =>
+  SelectorFilter.descendants<HTMLTableCellElement>(elm, 'td[data-mce-selected],th[data-mce-selected]');
 
-const getCellsFromElementOrRanges = function (ranges, element) {
+const getCellsFromElementOrRanges = (ranges: Range[], element: SugarElement): SugarElement<HTMLTableCellElement>[] => {
   const selectedCells = getCellsFromElement(element);
-  const rangeCells = getCellsFromRanges(ranges);
-  return selectedCells.length > 0 ? selectedCells : rangeCells;
+  return selectedCells.length > 0 ? selectedCells : getCellsFromRanges(ranges);
 };
 
-const getCellsFromEditor = function (editor: Editor) {
-  return getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), Element.fromDom(editor.getBody()));
-};
+const getCellsFromEditor = (editor: Editor) =>
+  getCellsFromElementOrRanges(MultiRange.getRanges(editor.selection.getSel()), SugarElement.fromDom(editor.getBody()));
 
-export default {
+export {
   getCellsFromRanges,
   getCellsFromElement,
   getCellsFromElementOrRanges,

@@ -1,16 +1,15 @@
-import { RawAssertions } from '@ephox/agar';
-import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import Jsc from '@ephox/wrap-jsverify';
-import { UnitTest, assert } from '@ephox/bedrock';
+
+import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
 
 UnitTest.test('MenuPathingTest', () => {
-  /* global assert */
   const actual = MenuPathing.generate({ }, { });
-  assert.eq({ }, actual);
+  Assert.eq('MenuPathingTest', { }, actual);
 
-  const check = (label, expected, menus, expansions) => {
+  const check = (label: string, expected: Record<string, string[]>, menus: Record<string, string[]>, expansions: Record<string, string>) => {
     const actual = MenuPathing.generate(menus, expansions);
-    RawAssertions.assertEq(label, expected, actual);
+    Assert.eq(label, expected, actual);
   };
 
   check('Base case', { }, { }, { });
@@ -47,8 +46,6 @@ UnitTest.test('MenuPathingTest', () => {
 
   Jsc.property(
     '*** No property checking anything for MenuPathing yet',
-    () => {
-      return true;
-    }
+    () => true
   );
 });

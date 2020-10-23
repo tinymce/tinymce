@@ -1,15 +1,16 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 import JSON from 'tinymce/core/api/util/JSON';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const normalizeRng = function (rng) {
+  const normalizeRng = function (rng: Range) {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -29,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     return rng;
   };
 
-  const ok = function (value, label?) {
+  const ok = function (value: boolean, label?: string) {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -38,31 +39,27 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
   };
 
   suite.test('mceInsertContent - p inside text of p', function (editor) {
-    let rng;
-
     editor.setContent('<p>1234</p>');
     editor.focus();
-    rng = editor.dom.createRng();
+    let rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>1</p><p>abc</p><p>4</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
     LegacyUnit.equal(rng.endContainer.nodeName, 'P');
     LegacyUnit.equal(rng.endOffset, 1);
-    LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
+    LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
   suite.test('mceInsertContent before HR', function (editor) {
-    let rng;
-
     editor.setContent('<hr>');
     editor.focus();
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
@@ -124,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -143,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<pre>abc</pre>');
     LegacyUnit.equal(getContent(editor), '<pre>1</pre><pre>abc</pre><pre>4</pre>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'PRE');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -162,7 +159,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<h1>abc</h1>');
     LegacyUnit.equal(getContent(editor), '<h1>1</h1><h1>abc</h1><h1>4</h1>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'H1');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -181,7 +178,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<li>abc</li>');
     LegacyUnit.equal(getContent(editor), '<ul><li>1</li><li>abc</li><li>4</li></ul>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'LI');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -191,23 +188,19 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
   });
 
   suite.test('mceInsertContent - p inside empty editor', function (editor) {
-    let rng;
-
     editor.setContent('');
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    const rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
     LegacyUnit.equal(rng.endContainer.nodeName, 'P');
     LegacyUnit.equal(rng.endOffset, 1);
-    LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
+    LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
   suite.test('mceInsertContent - text inside empty p', function (editor) {
-    let rng;
-
     editor.getBody().innerHTML = '<p></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('mceInsertContent', false, 'abc');
@@ -215,13 +208,13 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
       editor.getBody().innerHTML.toLowerCase().replace(/^<br>/, ''),
       '<p>abc</p>'
     ); // Opera inserts a BR at the beginning of contents if the P is empty
-    rng = normalizeRng(editor.selection.getRng(true));
+    const rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
     LegacyUnit.equal(rng.endContainer.nodeName, 'P');
     LegacyUnit.equal(rng.endOffset, 1);
-    LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
+    LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
   suite.test('mceInsertContent - text inside empty p with br caret node', function (editor) {
@@ -234,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, 'abc');
     LegacyUnit.equal(editor.getBody().innerHTML.toLowerCase(), '<p>abc</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -253,7 +246,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<img src="about:blank" />');
     LegacyUnit.equal(editor.getContent(), '<p><img src="about:blank" /></p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
     LegacyUnit.equal(rng.startOffset, 1);
@@ -262,11 +255,9 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
   });
 
   suite.test('mceInsertContent - legacy content', function (editor) {
-    let rng;
-
     // Convert legacy content
     editor.setContent('<p>1</p>');
-    rng = editor.dom.createRng();
+    const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
@@ -287,7 +278,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     editor.selection.setRng(rng);
     editor.execCommand('mceInsertContent', false, '<hr />');
     LegacyUnit.equal(editor.getContent(), '<p>1</p><hr /><p>3</p>');
-    rng = normalizeRng(editor.selection.getRng(true));
+    rng = normalizeRng(editor.selection.getRng());
     ok(rng.collapsed);
     LegacyUnit.equalDom(rng.startContainer, editor.getBody().lastChild);
     LegacyUnit.equal(rng.startContainer.nodeName, 'P');
@@ -422,7 +413,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

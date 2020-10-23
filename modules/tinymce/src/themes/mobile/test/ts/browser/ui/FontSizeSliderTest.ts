@@ -1,39 +1,37 @@
 import { Mouse, Pipeline, Step } from '@ephox/agar';
 import { Attachment } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Body, Class } from '@ephox/sugar';
+import { Class, SugarBody } from '@ephox/sugar';
 
 import * as FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import IosRealm from 'tinymce/themes/mobile/ui/IosRealm';
 
 import TestFrameEditor from '../../module/test/ui/TestFrameEditor';
-import TestSelectors from '../../module/test/ui/TestSelectors';
-import TestStyles from '../../module/test/ui/TestStyles';
-import { Fun } from '@ephox/katamari';
+import * as TestSelectors from '../../module/test/ui/TestSelectors';
+import * as TestStyles from '../../module/test/ui/TestStyles';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
   // Make toolbar appear
-  Class.add(realm.system().element(), 'tinymce-mobile-fullscreen-maximized');
+  Class.add(realm.element, 'tinymce-mobile-fullscreen-maximized');
 
-  const body = Body.body();
-  Attachment.attachSystem(body, realm.system());
+  const body = SugarBody.body();
+  Attachment.attachSystem(body, realm.system);
 
   TestStyles.addStyles();
 
   const unload = function () {
     TestStyles.removeStyles();
-    Attachment.detachSystem(realm.system());
+    Attachment.detachSystem(realm.system);
   };
 
   const tEditor = TestFrameEditor();
 
-  realm.system().add(tEditor.component());
+  realm.system.add(tEditor.component());
 
   realm.setToolbarGroups([
     {
@@ -50,7 +48,7 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function () {
     Step.sync(function () {
       tEditor.editor().focus();
     }),
-    Mouse.sClickOn(realm.system().element(), TestSelectors.fontsize()),
+    Mouse.sClickOn(realm.element, TestSelectors.fontsize()),
     tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
     // Think about how to do the slider events

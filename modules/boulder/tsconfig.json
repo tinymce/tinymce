@@ -1,11 +1,11 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
     "strict": false,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/boulder/test/*": ["src/test/ts/module/ephox/boulder/test/*"],
       "ephox/boulder/demo/*": ["src/demo/ts/ephox/boulder/demo/*"],
@@ -16,11 +16,12 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
     { "path": "../agar" },
     { "path": "../katamari" },
-    { "path": "../sand" },
+    { "path": "../katamari-assertions" },
+    { "path": "../sand" }
   ]
 }

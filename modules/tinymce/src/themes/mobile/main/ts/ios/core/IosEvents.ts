@@ -8,64 +8,65 @@
 import { Arr, Throttler } from '@ephox/katamari';
 import { Compare, DomEvent, Height } from '@ephox/sugar';
 
-import TappingEvent from '../../util/TappingEvent';
+import * as TappingEvent from '../../util/TappingEvent';
+import { PlatformEditor } from './PlatformEditor';
 
-const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
-  const saveSelectionFirst = function () {
-    iosApi.run(function (api) {
+const initEvents = (editorApi: PlatformEditor, iosApi, toolstrip, socket, _dropup): { destroy: () => void } => {
+  const saveSelectionFirst = () => {
+    iosApi.run((api) => {
       api.highlightSelection();
     });
   };
 
-  const refreshIosSelection = function () {
-    iosApi.run(function (api) {
+  const refreshIosSelection = () => {
+    iosApi.run((api) => {
       api.refreshSelection();
     });
   };
 
-  const scrollToY = function (yTop, height) {
+  const scrollToY = (yTop: number, height: number): void => {
     // Because the iframe has no scroll, and the socket is the part that scrolls,
     // anything visible inside the iframe actually has a top value (for bounding
     // rectangle) > socket.scrollTop. The rectangle is with respect to the top of
     // the iframe, which has scrolled up above the socket viewport.
-    const y = yTop - socket.dom().scrollTop;
-    iosApi.run(function (api) {
+    const y = yTop - socket.dom.scrollTop;
+    iosApi.run((api) => {
       api.scrollIntoView(y, y + height);
     });
   };
 
-  const scrollToElement = function (target) {
+  const scrollToElement = (_target): void => {
     scrollToY(iosApi, socket);
   };
 
-  const scrollToCursor = function () {
-    editorApi.getCursorBox().each(function (box) {
-      scrollToY(box.top(), box.height());
+  const scrollToCursor = (): void => {
+    editorApi.getCursorBox().each((box) => {
+      scrollToY(box.top, box.height);
     });
   };
 
-  const clearSelection = function () {
+  const clearSelection = (): void => {
     // Clear any fake selections visible.
-    iosApi.run(function (api) {
+    iosApi.run((api) => {
       api.clearSelection();
     });
   };
 
-  const clearAndRefresh = function () {
+  const clearAndRefresh = (): void => {
     clearSelection();
     refreshThrottle.throttle();
   };
 
-  const refreshView = function () {
+  const refreshView = (): void => {
     scrollToCursor();
-    iosApi.run(function (api) {
+    iosApi.run((api) => {
       api.syncHeight();
     });
   };
 
-  const reposition = function () {
+  const reposition = (): void => {
     const toolbarHeight = Height.get(toolstrip);
-    iosApi.run(function (api) {
+    iosApi.run((api) => {
       api.setViewportOffset(toolbarHeight);
     });
 
@@ -73,20 +74,20 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     refreshView();
   };
 
-  const toEditing = function () {
-    iosApi.run(function (api) {
+  const toEditing = (): void => {
+    iosApi.run((api) => {
       api.toEditing();
     });
   };
 
-  const toReading = function () {
-    iosApi.run(function (api) {
+  const toReading = (): void => {
+    iosApi.run((api) => {
       api.toReading();
     });
   };
 
-  const onToolbarTouch = function (event) {
-    iosApi.run(function (api) {
+  const onToolbarTouch = (event): void => {
+    iosApi.run((api) => {
       api.onToolbarTouch(event);
     });
   };
@@ -106,14 +107,14 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     editorApi.onDomChanged(refreshIosSelection),
 
     // Scroll to cursor and update the iframe height
-    editorApi.onScrollToCursor(function (tinyEvent) {
+    editorApi.onScrollToCursor((tinyEvent) => {
       tinyEvent.preventDefault();
       refreshThrottle.throttle();
     }),
 
     // Scroll to element
-    editorApi.onScrollToElement(function (event) {
-      scrollToElement(event.element());
+    editorApi.onScrollToElement((event) => {
+      scrollToElement(event.element);
     }),
 
     // Focus the content and show the keyboard
@@ -124,22 +125,22 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
 
     // If the user is touching outside the content, but on the body(?) or html elements, find the nearest selection
     // and focus that.
-    DomEvent.bind(editorApi.doc(), 'touchend', function (touchEvent) {
-      if (Compare.eq(editorApi.html(), touchEvent.target()) || Compare.eq(editorApi.body(), touchEvent.target())) {
+    DomEvent.bind(editorApi.doc, 'touchend', (touchEvent) => {
+      if (Compare.eq(editorApi.html, touchEvent.target) || Compare.eq(editorApi.body, touchEvent.target)) {
         // IosHacks.setSelectionAtTouch(editorApi, touchEvent);
       }
     }),
 
     // Listen to the toolstrip growing animation so that we can update the position of the socket once it is done.
-    DomEvent.bind(toolstrip, 'transitionend', function (transitionEvent) {
-      if (transitionEvent.raw().propertyName === 'height') {
+    DomEvent.bind<TransitionEvent>(toolstrip, 'transitionend', (transitionEvent) => {
+      if (transitionEvent.raw.propertyName === 'height') {
         reposition();
       }
     }),
 
     // Capture the start of interacting with a toolstrip. It is most likely going to lose the selection, so we save it
     // before that happens
-    DomEvent.capture(toolstrip, 'touchstart', function (touchEvent) {
+    DomEvent.capture(toolstrip, 'touchstart', (touchEvent) => {
       // When touching the toolbar, the first thing that we need to do is 'represent' the selection. We do this with
       // a fake selection. As soon as the focus switches away from the content, the real selection will disappear, so
       // this lets the user still see their selection.
@@ -154,7 +155,7 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     }),
 
     // When the user clicks back into the content, clear any fake selections
-    DomEvent.bind(editorApi.body(), 'touchstart', function (evt) {
+    DomEvent.bind(editorApi.body, 'touchstart', (evt) => {
       clearSelection();
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
@@ -164,18 +165,18 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
     tapping.onTouchend(),
 
     // Stop any "clicks" being processed in the body at alls
-    DomEvent.bind(editorApi.body(), 'click', function (event) {
+    DomEvent.bind(editorApi.body, 'click', (event) => {
       event.kill();
     }),
 
     // Close any menus when scrolling the toolstrip
-    DomEvent.bind(toolstrip, 'touchmove', function (/* event */) {
+    DomEvent.bind(toolstrip, 'touchmove', (/* event */) => {
       editorApi.onToolbarScrollStart();
     })
   ];
 
-  const destroy = function () {
-    Arr.each(listeners, function (l) {
+  const destroy = () => {
+    Arr.each(listeners, (l) => {
       l.unbind();
     });
   };
@@ -185,6 +186,6 @@ const initEvents = function (editorApi, iosApi, toolstrip, socket, dropup) {
   };
 };
 
-export default {
+export {
   initEvents
 };

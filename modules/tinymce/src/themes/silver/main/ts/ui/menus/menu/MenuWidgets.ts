@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, SimpleOrSketchSpec, MenuTypes } from '@ephox/alloy';
-import { Id, Option } from '@ephox/katamari';
+import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, MenuTypes, SimpleOrSketchSpec } from '@ephox/alloy';
+import { Id, Optional } from '@ephox/katamari';
 
 import { dom as menuDom } from './MenuParts';
 
-export interface WidgetMenuFoo {
+export interface WidgetMenuSpec {
   value: string;
   widget: AlloySpec;
 }
 
-export const renderWidgetMenu = (spec: WidgetMenuFoo): Partial<MenuTypes.MenuSpec> => {
+export const renderWidgetMenu = (spec: WidgetMenuSpec): Partial<MenuTypes.MenuSpec> => {
   const memWidget = Memento.record(spec.widget as SimpleOrSketchSpec);
   return {
     value: spec.value,
@@ -33,7 +33,7 @@ export const renderWidgetMenu = (spec: WidgetMenuFoo): Partial<MenuTypes.MenuSpe
           tag: 'div'
         },
         components: [
-          ItemWidget.parts().widget(
+          ItemWidget.parts.widget(
             {
               dom: {
                 tag: 'div',
@@ -45,18 +45,18 @@ export const renderWidgetMenu = (spec: WidgetMenuFoo): Partial<MenuTypes.MenuSpe
                   mode: 'special',
                   focusIn: (comp) => {
                     memWidget.getOpt(comp).each(Keying.focusIn);
-                    return Option.some(true);
+                    return Optional.some(true);
                   }
                 })
               ])
             }
           )
-        ],
+        ]
       }
     ],
     dom: menuDom(false, 1, 'normal'),
     components: [
-      Menu.parts().items({ })
+      Menu.parts.items({ })
     ]
   };
 };

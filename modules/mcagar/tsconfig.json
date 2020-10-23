@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "noUnusedLocals": false,
-    "strict": false,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/mcagar/test/*": ["src/test/ts/module/ephox/mcagar/test/*"],
       "ephox/mcagar/demo/*": ["src/demo/ts/ephox/mcagar/demo/*"],

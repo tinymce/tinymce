@@ -1,11 +1,13 @@
 const LiveReloadPlugin = require('webpack-livereload-plugin');
-const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+let { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 const path = require('path');
 const swag = require('@ephox/swag');
 
 
 
 let create = (inFile, outFile) => {
+  const tsConfig = "tsconfig.json";
+
   return {
     entry: inFile,
     mode: 'development',
@@ -19,11 +21,20 @@ let create = (inFile, outFile) => {
       symlinks: false,
       extensions: ['.ts', '.js'],
       plugins: [
-        new TsConfigPathsPlugin({})
+        // We need to use the awesome typescript loader config paths since the one for ts-loader doesn't resolve aliases correctly
+        new TsConfigPathsPlugin({
+          baseUrl: '.',
+          compiler: 'typescript',
+          configFileName: tsConfig
+        })
       ]
     },
     module: {
       rules: [
+        {
+          test: /\.js|\.ts$/,
+          use: ['@ephox/swag/webpack/remapper']
+        },
         {
           test: /\.ts$/,
           use: [
@@ -31,6 +42,10 @@ let create = (inFile, outFile) => {
               loader: 'ts-loader',
               options: {
                 transpileOnly: true,
+                compilerOptions: {
+                  declarationMap: false
+                },
+                configFile: tsConfig,
                 experimentalWatchApi: true
               }
             }
@@ -58,13 +73,6 @@ module.exports = function (grunt) {
 
     shell: {
       command: 'tsc'
-    },
-
-    tslint: {
-      options: {
-        configuration: 'tslint.json'
-      },
-      plugin: ['src/**/*.ts']
     },
 
     'webpack-dev-server': {
@@ -109,12 +117,11 @@ module.exports = function (grunt) {
 
   });
 
-
-  require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('@ephox/swag');
-  // grunt.loadNpmTasks('grunt-webpack');
-
+  require('load-grunt-tasks')(grunt, {
+    requireResolution: true,
+    config: "../../package.json",
+    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag']
+  });
 
   grunt.registerTask('dev', ['webpack-dev-server']);
 };

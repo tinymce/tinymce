@@ -1,8 +1,8 @@
 import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import * as FakeStorage from 'tinymce/core/api/util/FakeStorage';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
 
   const appendTeardown = function (steps) {
     return Arr.bind(steps, function (step) {
-      return [step, teardown];
+      return [ step, teardown ];
     });
   };
 

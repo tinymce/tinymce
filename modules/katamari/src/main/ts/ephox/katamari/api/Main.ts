@@ -13,16 +13,18 @@ import { LazyValue } from './LazyValue';
 import * as LazyValues from './LazyValues';
 import * as Merger from './Merger';
 import * as Namespace from './Namespace';
+import * as Num from './Num';
 import * as Obj from './Obj';
-import { Option } from './Option';
-import * as Options from './Options';
+import { Optional } from './Optional';
+import * as OptionalInstances from './OptionalInstances';
+import * as Optionals from './Optionals';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
+import * as ResultInstances from './ResultInstances';
 import * as Results from './Results';
 import * as Singleton from './Singleton';
 import { StringMatch } from './StringMatch';
 import * as Strings from './Strings';
-import * as Struct from './Struct';
 import * as Throttler from './Throttler';
 import * as Thunk from './Thunk';
 import * as Type from './Type';
@@ -35,6 +37,7 @@ export {
   Arr,
   Cell,
   Contracts,
+  Num,
   Fun,
   Future,
   FutureResult,
@@ -47,15 +50,16 @@ export {
   Merger,
   Namespace,
   Obj,
-  Option,
-  Options,
+  Optional,
+  Optionals,
+  OptionalInstances,
   Resolve,
   Result,
   Results,
+  ResultInstances,
   Singleton,
   StringMatch,
   Strings,
-  Struct,
   Throttler,
   Thunk,
   Type,

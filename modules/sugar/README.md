@@ -1,6 +1,6 @@
 # Description
 
-`sugar` is a library for manipulating and accessing the DOM. It does not bundle any commands. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`sugar` is a library for manipulating and accessing the DOM. It does not bundle any commands. It is only a collection of modules.
 
 # Installation
 

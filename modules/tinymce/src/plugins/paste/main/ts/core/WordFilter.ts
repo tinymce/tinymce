@@ -5,14 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import DomParser from 'tinymce/core/api/html/DomParser';
-import Node from 'tinymce/core/api/html/Node';
-import Schema from 'tinymce/core/api/html/Schema';
-import Serializer from 'tinymce/core/api/html/Serializer';
-import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
-import Utils from './Utils';
+import { Unicode } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
+import Schema from 'tinymce/core/api/html/Schema';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
+import Tools from 'tinymce/core/api/util/Tools';
+import * as Settings from '../api/Settings';
+import * as Utils from './Utils';
 
 /**
  * This class parses word HTML into proper TinyMCE markup.
@@ -26,7 +27,7 @@ import Editor from 'tinymce/core/api/Editor';
  */
 function isWordContent(content) {
   return (
-    (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content) ||
+    (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^']*\bmso-|w:WordDocument/i).test(content) ||
     (/class="OutlineElement/).test(content) ||
     (/id="?docs\-internal\-guid\-/.test(content))
   );
@@ -36,9 +37,9 @@ function isWordContent(content) {
  * Checks if the specified text starts with "1. " or "a. " etc.
  */
 function isNumericList(text) {
-  let found, patterns;
+  let found;
 
-  patterns = [
+  const patterns = [
     /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
     /^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
     /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
@@ -139,7 +140,7 @@ function convertFakeListsToProperLists(node) {
 
     if (!currentListNode || currentListNode.name !== listName) {
       prevListNode = prevListNode || currentListNode;
-      currentListNode = new Node(listName, 1);
+      currentListNode = new AstNode(listName, 1);
 
       if (start > 1) {
         currentListNode.attr('start', '' + start);
@@ -225,7 +226,7 @@ function convertFakeListsToProperLists(node) {
   }
 }
 
-function filterStyles(editor, validStyles, node, styleValue) {
+function filterStyles(editor: Editor, validStyles, node, styleValue) {
   let outputStyles = {}, matches;
   const styles = editor.dom.parseStyle(styleValue);
 
@@ -302,13 +303,13 @@ function filterStyles(editor, validStyles, node, styleValue) {
   // Convert bold style to "b" element
   if (/(bold)/i.test(outputStyles['font-weight'])) {
     delete outputStyles['font-weight'];
-    node.wrap(new Node('b', 1));
+    node.wrap(new AstNode('b', 1));
   }
 
   // Convert italic style to "i" element
   if (/(italic)/i.test(outputStyles['font-style'])) {
     delete outputStyles['font-style'];
-    node.wrap(new Node('i', 1));
+    node.wrap(new AstNode('i', 1));
   }
 
   // Serialize the styles and see if there is something left to keep
@@ -321,9 +322,9 @@ function filterStyles(editor, validStyles, node, styleValue) {
 }
 
 const filterWordContent = function (editor: Editor, content: string) {
-  let retainStyleProperties, validStyles;
+  let validStyles;
 
-  retainStyleProperties = Settings.getRetainStyleProps(editor);
+  const retainStyleProperties = Settings.getRetainStyleProps(editor);
   if (retainStyleProperties) {
     validStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));
   }
@@ -344,17 +345,17 @@ const filterWordContent = function (editor: Editor, content: string) {
     /<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
 
     // Convert <s> into <strike> for line-though
-    [/<(\/?)s>/gi, '<$1strike>'],
+    [ /<(\/?)s>/gi, '<$1strike>' ],
 
     // Replace nsbp entites to char since it's easier to handle
-    [/&nbsp;/gi, '\u00a0'],
+    [ /&nbsp;/gi, Unicode.nbsp ],
 
     // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
     // breaking/non-breaking spaces of same length
-    [/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
+    [ /<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
       function (str, spaces) {
         return (spaces.length > 0) ?
-          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join('\u00a0') : '';
+          spaces.replace(/./, ' ').slice(Math.floor(spaces.length / 2)).split('').join(Unicode.nbsp) : '';
       }
     ]
   ]);
@@ -370,7 +371,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   // Add style/class attribute to all element rules since the user might have removed them from
   // paste_word_valid_elements config option and we need to check them for properties
   Tools.each(schema.elements, function (rule) {
-    /*eslint dot-notation:0*/
+    /* eslint dot-notation:0*/
     if (!rule.attributes.class) {
       rule.attributes.class = {};
       rule.attributesOrder.push('class');
@@ -472,8 +473,8 @@ const filterWordContent = function (editor: Editor, content: string) {
   }
 
   // Serialize DOM back to HTML
-  content = Serializer({
-    validate: editor.settings.validate
+  content = HtmlSerializer({
+    validate: Settings.getValidate(editor)
   }, schema).serialize(rootNode);
 
   return content;
@@ -483,7 +484,7 @@ const preProcess = function (editor: Editor, content) {
   return Settings.shouldUseDefaultFilters(editor) ? filterWordContent(editor, content) : content;
 };
 
-export default {
+export {
   preProcess,
   isWordContent
 };

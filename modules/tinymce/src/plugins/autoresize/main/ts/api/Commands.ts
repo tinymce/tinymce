@@ -7,7 +7,7 @@
 
 import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import Resize from '../core/Resize';
+import * as Resize from '../core/Resize';
 
 const register = (editor: Editor, oldSize: Cell<number>) => {
   editor.addCommand('mceAutoResize', () => {
@@ -15,6 +15,6 @@ const register = (editor: Editor, oldSize: Cell<number>) => {
   });
 };
 
-export default {
+export {
   register
 };

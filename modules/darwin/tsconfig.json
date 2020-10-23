@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/darwin/test/*": ["src/test/ts/module/ephox/darwin/test/*"],
       "ephox/darwin/demo/*": ["src/demo/ts/ephox/darwin/demo/*"],

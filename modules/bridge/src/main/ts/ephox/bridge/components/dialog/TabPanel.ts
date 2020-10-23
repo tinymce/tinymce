@@ -1,37 +1,35 @@
 import { FieldSchema, ValueSchema, FieldPresence } from '@ephox/boulder';
 import { Id, Result } from '@ephox/katamari';
-import { BodyComponent, BodyComponentApi } from './BodyComponent';
-import { itemSchema } from './ItemSchema';
+import { BodyComponent, BodyComponentSpec } from './BodyComponent';
+import { itemSchema } from './Panel';
 
-export interface ExternalTab {
+export interface TabSpec {
   name?: string;
   title: string;
-  items: BodyComponentApi[];
+  items: BodyComponentSpec[];
 }
 
-export interface TabPanelApi {
+export interface TabPanelSpec {
   type: 'tabpanel';
-  tabs: ExternalTab[];
+  tabs: TabSpec[];
 }
 
-export interface InternalTab {
+export interface Tab {
   name: string;
   title: string;
   items: BodyComponent[];
 }
 
-export interface InternalTabPanel {
+export interface TabPanel {
   type: 'tabpanel';
-  tabs: InternalTab[];
+  tabs: Tab[];
 }
 
 export const tabFields = [
   FieldSchema.field(
     'name',
     'name',
-    FieldPresence.defaultedThunk(() => {
-      return Id.generate('tab-name');
-    }),
+    FieldPresence.defaultedThunk(() => Id.generate('tab-name')),
     ValueSchema.string
   ),
   FieldSchema.strictString('title'),
@@ -45,6 +43,5 @@ export const tabPanelFields = [
 
 export const tabPanelSchema = ValueSchema.objOf(tabPanelFields);
 
-export const createTabPanel = (spec: TabPanelApi): Result<InternalTabPanel, ValueSchema.SchemaError<any>> => {
-  return ValueSchema.asRaw<InternalTabPanel>('tabpanel', tabPanelSchema, spec);
-};
+export const createTabPanel = (spec: TabPanelSpec): Result<TabPanel, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<TabPanel>('tabpanel', tabPanelSchema, spec);

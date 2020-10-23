@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Sanitise from 'ephox/polaris/string/Sanitise';
 
 UnitTest.test('api.Sanitise.css', function () {

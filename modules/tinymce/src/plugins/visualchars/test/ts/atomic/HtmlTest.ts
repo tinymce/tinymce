@@ -1,20 +1,17 @@
-import { RawAssertions } from '@ephox/agar';
-import Html from 'tinymce/plugins/visualchars/core/Html';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
+import * as Html from 'tinymce/plugins/visualchars/core/Html';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.HtmlTest', function () {
-  const nbsp = '\u00a0';
-  const shy = '\u00AD';
-
-  RawAssertions.assertEq(
+  Assert.eq(
     'should return correct span',
-    '<span data-mce-bogus="1" class="mce-nbsp">' + nbsp + '</span>',
-    Html.wrapCharWithSpan(nbsp)
+    '<span data-mce-bogus="1" class="mce-nbsp">' + Unicode.nbsp + '</span>',
+    Html.wrapCharWithSpan(Unicode.nbsp)
   );
 
-  RawAssertions.assertEq(
+  Assert.eq(
     'should return correct span',
-    '<span data-mce-bogus="1" class="mce-shy">' + shy + '</span>',
-    Html.wrapCharWithSpan(shy)
+    '<span data-mce-bogus="1" class="mce-shy">' + Unicode.softHyphen + '</span>',
+    Html.wrapCharWithSpan(Unicode.softHyphen)
   );
 });

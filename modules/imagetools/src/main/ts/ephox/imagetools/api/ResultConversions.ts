@@ -1,5 +1,4 @@
-import { Blob, HTMLImageElement } from '@ephox/dom-globals';
-import { ImageResult, fromBlob, fromBlobAndUrlSync as fromBlobAndUrl, fromImage } from '../util/ImageResult';
+import { fromBlob, fromBlobAndUrlSync as fromBlobAndUrl, fromImage, ImageResult } from '../util/ImageResult';
 
 const blobToImageResult = function (blob: Blob): Promise<ImageResult> {
   return fromBlob(blob);

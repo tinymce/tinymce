@@ -5,9 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import NodeType from '../dom/NodeType';
 import Tools from '../api/util/Tools';
-import { Document, Range } from '@ephox/dom-globals';
+import * as NodeType from '../dom/NodeType';
 
 const hasCeProperty = function (node) {
   return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);
@@ -29,10 +28,10 @@ const findParent = function (node, rootNode, predicate) {
  * Finds the closest selection rect tries to get the range from that.
  */
 const findClosestIeRange = function (clientX, clientY, doc) {
-  let element, rng, rects;
+  let rects;
 
-  element = doc.elementFromPoint(clientX, clientY);
-  rng = doc.body.createTextRange();
+  let element = doc.elementFromPoint(clientX, clientY);
+  const rng = doc.body.createTextRange();
 
   if (!element || element.tagName === 'HTML') {
     element = doc.body;
@@ -98,6 +97,6 @@ const fromPoint = function (clientX: number, clientY: number, doc: Document): Ra
   return rng;
 };
 
-export default {
+export {
   fromPoint
 };

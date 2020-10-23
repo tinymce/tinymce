@@ -1,16 +1,15 @@
-import { Pipeline, Mouse, Log } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Element } from '@ephox/sugar';
 
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import * as PluginAssert from '../module/PluginAssert';
+
+import { selectors } from '../module/Selectors';
 
 import FakePlugin from '../module/test/FakePlugin';
 import NoMetaFakePlugin from '../module/test/NoMetaFakePlugin';
-import PluginAssert from '../module/PluginAssert';
-
-import Selectors from '../module/Selectors';
 
 UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
 
@@ -19,12 +18,12 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
   NoMetaFakePlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
-    TinyUi(editor);
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    const ui = TinyUi(editor);
 
     Pipeline.async({},
       Log.steps('TBA', 'Help: Assert Help Plugin list contains getMetadata functionality', [
-        Mouse.sClickOn(Element.fromDom(editor.getContainer()), Selectors.toolbarHelpButton),
+        ui.sClickOnToolbar('Click help button', selectors.toolbarHelpButton),
         PluginAssert.sAssert(
           'Failed to list fake plugins',
           {
@@ -33,15 +32,15 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
             'li:contains("nometafake")': 1,
             'button:contains("Close")': 1
           },
-          Selectors.dialog,
-          Selectors.pluginsTab
+          selectors.dialog,
+          selectors.pluginsTab
         )
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'help fake nometafake',
     toolbar: 'help',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

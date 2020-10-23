@@ -1,26 +1,24 @@
-import { UnitTest } from '@ephox/bedrock';
-import { document, setTimeout } from '@ephox/dom-globals';
-import { Class, Css, DomEvent, Element, Html, Insert, InsertAll, Remove } from '@ephox/sugar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Class, Css, DomEvent, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import { Chain } from 'ephox/agar/api/Chain';
+import * as ChainSequence from 'ephox/agar/api/ChainSequence';
 import * as Guard from 'ephox/agar/api/Guard';
 import * as Mouse from 'ephox/agar/api/Mouse';
 import { Pipeline } from 'ephox/agar/api/Pipeline';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('Example for Tutorial', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('Example for Tutorial', (success, failure) => {
 
-  const makeSource = function () {
-    const editor = Element.fromTag('div');
+  const makeSource = () => {
+    const editor = SugarElement.fromTag('div');
     Class.add(editor, 'editor');
     // Css.set(editor, 'display', 'none');
 
-    const showButton = Element.fromTag('button');
+    const showButton = SugarElement.fromTag('button');
     Class.add(showButton, 'show');
     Html.set(showButton, 'Show');
 
-    const dialog = Element.fromTag('div');
+    const dialog = SugarElement.fromTag('div');
     Class.add(dialog, 'dialog');
     Css.setAll(dialog, {
       width: '300px',
@@ -31,32 +29,32 @@ UnitTest.asynctest('Example for Tutorial', function () {
       top: '100px',
       background: 'white'
     });
-    const dialogContent = Element.fromTag('textarea');
+    const dialogContent = SugarElement.fromTag('textarea');
     Html.set(dialogContent, 'Look at this dialog ... wow!');
 
-    const cancelButton = Element.fromTag('button');
+    const cancelButton = SugarElement.fromTag('button');
     Html.set(cancelButton, 'Cancel');
     Class.add(cancelButton, 'cancel');
 
-    InsertAll.append(dialog, [dialogContent, cancelButton]);
+    InsertAll.append(dialog, [ dialogContent, cancelButton ]);
 
     Insert.append(editor, showButton);
 
-    setTimeout(function () {
-      Insert.append(Element.fromDom(document.body), editor);
-    }, 1000);
+    setTimeout(() => {
+      Insert.append(SugarElement.fromDom(document.body), editor);
+    }, 5);
 
-    const onClick = DomEvent.bind(showButton, 'click', function () {
-      setTimeout(function () {
+    const onClick = DomEvent.bind(showButton, 'click', () => {
+      setTimeout(() => {
         Insert.append(editor, dialog);
-      }, 1000);
+      }, 5);
       onClick.unbind();
     });
 
-    const onCancel = DomEvent.bind(cancelButton, 'click', function () {
-      setTimeout(function () {
+    const onCancel = DomEvent.bind(cancelButton, 'click', () => {
+      setTimeout(() => {
         Remove.remove(dialog);
-      }, 1000);
+      }, 5);
       onCancel.unbind();
     });
 
@@ -65,11 +63,11 @@ UnitTest.asynctest('Example for Tutorial', function () {
 
   const source = makeSource();
 
-  const body = Element.fromDom(document.body);
+  const body = SugarElement.fromDom(document.body);
 
-  Pipeline.async({}, [
+  Pipeline.runStep({},
     // Inject as the first input: body
-    Chain.asStep(body, [
+    Chain.isolate(body, ChainSequence.sequence([
       // Input: > container, output: visible element
       UiFinder.cWaitForVisible('Waiting for ".editor" to be visible', '.editor'),
       Mouse.cClickOn('button.show'),
@@ -79,12 +77,11 @@ UnitTest.asynctest('Example for Tutorial', function () {
       Chain.inject(body),
       Chain.control(
         UiFinder.cFindIn('.dialog'),
-        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 100, 2000)
+        Guard.tryUntilNot('Keep going until .dialog is not in the DOM', 10, 2000)
       )
-    ])
-  ], function () {
-    Remove.remove(source);
-    success();
-  }, failure);
+    ]))
+    , () => {
+      Remove.remove(source);
+      success();
+    }, failure);
 });
-

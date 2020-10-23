@@ -1,24 +1,7 @@
-import { Blob, HTMLCanvasElement, HTMLImageElement, Image, URL, XMLHttpRequest } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Blob as SandBlob, FileReader, Uint8Array, Window } from '@ephox/sand';
+import { Optional, Type } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
-
-function loadImage(image: HTMLImageElement): Promise<HTMLImageElement> {
-  return new Promise(function (resolve) {
-    function loaded() {
-      image.removeEventListener('load', loaded);
-      resolve(image);
-    }
-
-    if (image.complete) {
-      resolve(image);
-    } else {
-      image.addEventListener('load', loaded);
-    }
-  });
-}
 
 function imageToBlob(image: HTMLImageElement): Promise<Blob> {
   const src = image.src;
@@ -97,18 +80,18 @@ function anyUriToBlob(url: string): Promise<Blob> {
   });
 }
 
-function dataUriToBlobSync(uri: string): Option<Blob> {
+function dataUriToBlobSync(uri: string): Optional<Blob> {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) { return Option.none(); }
+  if (!matches) { return Optional.none(); }
 
   const mimetype = matches[1];
   const base64 = data[1];
 
   // al gore rhythm via http://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
   const sliceSize = 1024;
-  const byteCharacters = Window.atob(base64);
+  const byteCharacters = atob(base64);
   const bytesLength = byteCharacters.length;
   const slicesCount = Math.ceil(bytesLength / sliceSize);
   const byteArrays = new Array(slicesCount);
@@ -122,9 +105,9 @@ function dataUriToBlobSync(uri: string): Option<Blob> {
     for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
       bytes[i] = byteCharacters[offset].charCodeAt(0);
     }
-    byteArrays[sliceIndex] = Uint8Array(bytes);
+    byteArrays[sliceIndex] = new Uint8Array(bytes);
   }
-  return Option.some(SandBlob(byteArrays, { type: mimetype }));
+  return Optional.some(new Blob(byteArrays, { type: mimetype }));
 }
 
 function dataUriToBlob(uri: string): Promise<Blob> {
@@ -151,7 +134,7 @@ function uriToBlob(url: string): Promise<Blob> | null {
 function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
   type = type || 'image/png';
 
-  if (HTMLCanvasElement.prototype.toBlob) {
+  if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
     return new Promise<Blob>(function (resolve, reject) {
       canvas.toBlob(function (blob) {
         if (blob) {
@@ -186,10 +169,10 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
 
 function blobToDataUri(blob: Blob): Promise<string> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);
@@ -198,10 +181,10 @@ function blobToDataUri(blob: Blob): Promise<string> {
 
 function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   return new Promise(function (resolve) {
-    const reader = FileReader();
+    const reader = new FileReader();
 
     reader.onloadend = function () {
-      resolve(reader.result);
+      resolve(reader.result as ArrayBuffer);
     };
 
     reader.readAsArrayBuffer(blob);

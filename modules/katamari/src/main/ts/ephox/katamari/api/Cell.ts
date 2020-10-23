@@ -1,7 +1,6 @@
 export interface Cell<T> {
   get: () => T;
   set: (value: T) => void;
-  clone: () => Cell<T>;
 }
 
 export const Cell = <T>(initial: T): Cell<T> => {
@@ -11,17 +10,12 @@ export const Cell = <T>(initial: T): Cell<T> => {
     return value;
   };
 
-  const set = function (v) {
+  const set = function (v: T) {
     value = v;
   };
 
-  const clone = function () {
-    return Cell(get());
-  };
-
   return {
-    get: get,
-    set: set,
-    clone: clone
+    get,
+    set
   };
 };

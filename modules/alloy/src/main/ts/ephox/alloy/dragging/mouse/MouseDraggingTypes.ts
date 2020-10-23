@@ -1,20 +1,7 @@
-import { DraggingConfig, CommonDraggingConfigSpec } from '../../dragging/common/DraggingTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Element } from '@ephox/sugar';
-import { SugarEvent } from '../../alien/TypeDefinitions';
+import { CommonDraggingConfigSpec, DraggingConfig } from '../common/DraggingTypes';
 
-export interface MouseDraggingConfig extends DraggingConfig {
-  blockerClass: string;
-}
+export interface MouseDraggingConfig<E> extends DraggingConfig<E> { }
 
-export interface DragApi {
-  drop: (comp: AlloyComponent) => void;
-  delayDrop: (comp: AlloyComponent) => void;
-  forceDrop: (comp: AlloyComponent) => void;
-  move: (evt: SugarEvent) => void;
-}
-
-export interface MouseDraggingConfigSpec extends CommonDraggingConfigSpec {
+export interface MouseDraggingConfigSpec<E> extends CommonDraggingConfigSpec<E> {
   mode: 'mouse';
-  blockerClass: string;
 }

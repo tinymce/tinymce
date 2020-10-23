@@ -1,56 +1,25 @@
-import { FieldProcessorAdt, FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
-import { Fun, Option } from '@ephox/katamari';
+import { FieldSchema, Objects, Processor, ValueSchema } from '@ephox/boulder';
+import { Fun } from '@ephox/katamari';
 
 import * as CommonBehaviour from '../../behaviour/common/Behaviour';
 import { NoState, BehaviourState } from '../../behaviour/common/BehaviourState';
-import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
-import { DomModification } from '../../dom/DomModification';
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import * as BehaviourTypes from '../../behaviour/common/BehaviourTypes';
 
-export type AlloyBehaviourRecord = Record<string, ConfiguredBehaviour<any, any>>;
+export type ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState = BehaviourState> = BehaviourTypes.ConfiguredBehaviour<C, D, S>;
+export type AlloyBehaviourRecord = BehaviourTypes.BehaviourRecord;
 
-export interface BehaviourConfigSpec { }
-export interface BehaviourConfigDetail { }
+export type BehaviourConfigSpec = BehaviourTypes.BehaviourConfigSpec;
+export type BehaviourConfigDetail = BehaviourTypes.BehaviourConfigDetail;
 
-export interface NamedConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail> {
-  key: string;
-  value: ConfiguredBehaviour<C, D>;
-}
+export type NamedConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState = BehaviourState> = BehaviourTypes.NamedConfiguredBehaviour<C, D, S>;
+export type AlloyBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState = BehaviourState> = BehaviourTypes.AlloyBehaviour<C, D, S>;
 
-export interface AlloyBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail> {
-  config: (spec: C) => NamedConfiguredBehaviour<C, D>;
-  exhibit: (
-    info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
-    base: DomDefinitionDetail
-  ) => DomModification;
-  handlers: (info: D) => {};
-  name: () => string;
-  revoke: () => { key: string, value: undefined };
-  schema: () => FieldProcessorAdt;
-}
-
-export interface ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail> {
-  config: D;
-  configAsRaw: () => C;
-  initialConfig: {};
-  me: AlloyBehaviour<C, D>;
-  state: any;
-}
-
-export interface AlloyBehaviourConfig {
-  fields: FieldProcessorAdt[];
-  name: string;
-  active?: {};
-  apis?: {};
-  extra?: {};
-  state?: {};
-}
+export type AlloyBehaviourConfig<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourTypes.BehaviourApisRecord<D, S>, E extends BehaviourTypes.BehaviourExtraRecord<E> = {}> = BehaviourTypes.BehaviourConfig<D, S, A, E>;
+export type BehaviourModeSpec<D extends BehaviourConfigDetail, S extends BehaviourState, A extends BehaviourTypes.BehaviourApisRecord<D, S>, E extends BehaviourTypes.BehaviourExtraRecord<E> = {}> = BehaviourTypes.BehaviourModeSpec<D, S, A, E>;
 
 const derive = (
-  capabilities: Array<NamedConfiguredBehaviour<any, any>>
-): AlloyBehaviourRecord => {
-  return Objects.wrapAll(capabilities);
-};
+  capabilities: Array<NamedConfiguredBehaviour<any, any, any>>
+): AlloyBehaviourRecord => Objects.wrapAll(capabilities);
 
 const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('fields'),
@@ -61,20 +30,16 @@ const simpleSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extra', { })
 ]);
 
-const create = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail>(data: AlloyBehaviourConfig): AlloyBehaviour<C, D> => {
+const create = <
+  C extends BehaviourTypes.BehaviourConfigSpec,
+  D extends BehaviourTypes.BehaviourConfigDetail,
+  S extends BehaviourState,
+  A extends BehaviourTypes.BehaviourApisRecord<D, S>,
+  E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
+>(data: AlloyBehaviourConfig<D, S, A, E>) => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
-  return CommonBehaviour.create(value.fields, value.name, value.active, value.apis, value.extra, value.state);
+  return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
-
-export interface BehaviourModeSpec {
-  branchKey: string;
-  branches: Record<string, FieldProcessorAdt[]>;
-  name: string;
-  active?: any;
-  apis?: { };
-  extra?: { };
-  state?: { };
-}
 
 const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.strict('branchKey'),
@@ -86,9 +51,15 @@ const modeSchema: Processor = ValueSchema.objOfOnly([
   FieldSchema.defaulted('extra', { })
 ]);
 
-const createModes = <C extends BehaviourConfigSpec, D extends BehaviourConfigDetail>(data: BehaviourModeSpec): AlloyBehaviour<C, D> => {
-  const value: BehaviourModeSpec = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
-  return CommonBehaviour.createModes(
+const createModes = <
+  C extends BehaviourTypes.BehaviourConfigSpec,
+  D extends BehaviourTypes.BehaviourConfigDetail,
+  S extends BehaviourState,
+  A extends BehaviourTypes.BehaviourApisRecord<D, S>,
+  E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
+>(data: BehaviourModeSpec<D, S, A, E>) => {
+  const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
+  return CommonBehaviour.createModes<C, D, S, A, E>(
     ValueSchema.choose(value.branchKey, value.branches),
     value.name, value.active, value.apis, value.extra, value.state
   );

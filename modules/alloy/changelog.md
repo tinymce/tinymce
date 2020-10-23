@@ -6,6 +6,161 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+# [8.0.0] - 2020-09-29
+
+### Changed
+- Changed some public APIs (eg Components, Custom Events) to no longer be thunked.
+
+### Added
+- Added new `isOpen` API to the `SplitFloatingToolbar` and `SplitSlidingToolbar` components.
+
+### Fixed
+- Fixed `AriaOwner` not able to find the owner component when rendered within a ShadowRoot.
+- Fixed `AriaFocus` not preserving focus when the component is rendered within a ShadowRoot.
+
+# [7.0.2] - 2020-05-25
+
+### Fixed
+- Fixed `Tooltipping` behaviour failing to run due to not being listed in the default `alloy.receive` events.
+
+# [7.0.0] - 2020-05-21
+
+### Added
+- Added new `isExtraPart` property to `InlineView`. This allows the component to declare an external component as part of itself for dismissal events.
+- Added new `getModes` and `setModes` API to the docking behaviour.
+- Exposed the `AriaVoice` voice module in the API.
+
+### Changed
+- The `AriaOwner` module, `Boxes` module, `Pinching` behaviour and `SnapConfig`/`SnapOutput` specs no longer use thunked functions and instead use the variable directly.
+- All uses of `Struct.immutableBag` and `Struct.immutable` have been replaced with readonly interfaces.
+- Changed the `Disabling` behaviour to use a lazy `disabled` configuration to determine if the component should be disabled on initial load.
+
+# [6.1.0] - 2020-03-16
+
+### Added
+
+- Added new `isExtraPart` property to `InlineView`. This allows the component to declare an external component as part of itself for dismissal events.
+
+# [6.0.1] - 2020-03-02
+
+### Fixed
+
+- Fixed `Bounder` incorrectly calculating the bottom/right limits, due to not taking into account the element size.
+- Fixed `LayoutInside` incorrectly placing items in the opposite direction.
+
+# [6.0.0] - 2020-02-13
+
+### Removed
+- Removed `getMoreButton` and `getOverflow` methods from the `SplitSlidingToolbar` component.
+- Removed `getMoreButton` method from the `SplitFloatingToolbar` component.
+- Removed `getAnchor` configuration from the `SplitFloatingToolbar` component.
+- Removed `SugarEvent` from exports list.
+- Removed `leftAttr`, `topAttr` and `positionAttr` options from the `Docking` behavior.
+
+### Added
+- Added new `FloatingToolbar` component.
+- Added new vertical directionality for layouts
+- Added `setGroups` and `toggle` methods and `getBounds` configuration to the `FloatingToolbarButton` component.
+
+### Changed
+- Moved modules from "alien" folder into Sugar, Katamari and other folders in Alloy.
+- Changed `Docking` to use `bottom` instead of `top` when docking to the bottom of the viewport.
+- Changed `Docking` to restore the position when undocking using styles which it was previously positioned with.
+
+# [5.1.0] - 2019-12-17
+
+### Added
+- Added new `mouseOrTouch` mode to dragging to support dragging for both mouse and touch events.
+
+### Changed
+- Changed touch/mouse event handling to work with hybrid devices that accept both mouse and touch events.
+- Changed `AlloyEvents.runActionExtra()` to pass the simulated event to the callback.
+
+### Fixed
+- Fixed the `Slider` component not working in some cases on touch devices.
+
+# [5.0.7] - 2019-12-02
+
+### Fixed
+- Improved `Docking` scroll performance by only calculating the offset origin as required.
+
+# [5.0.2] - 2019-11-11
+
+### Fixed
+- Fixed `TouchDragging` behaviour triggering drag on any document touchmove event.
+- Fixed dragging updating start state on window scroll, when dragging hadn't started.
+- Fixed menu item execute not killing the original mouse or touch event.
+- Fixed touchstart events bubbling up from buttons.
+
+# [5.0.1] - 2019-10-25
+
+### Fixed
+- Fixed clicking on the modal dialog blocker component focusing the document body.
+
+# [5.0.0] - 2019-10-17
+
+### Added
+- Added `mustSnap` configuration to `Dragging` to force draggables to snapping points.
+- Added the ability to calculate a max width to `Bounder` though defaulted it to a no-op.
+- Added `MaxWidth` export for use in anchor overrides.
+- Added `onDocked`, `onUndocked`, `onShow`, `onShown`, `onHide` and `onHidden` configuration callbacks for the `Docking` behaviour.
+- Added `modes` configuration to `Docking` to control where the component should be docked. eg: `top` or `bottom` of the viewport.
+- Added `isDocked` and `reset` APIs to `Docking` to check if a component is docked and to reset the stored original position and state.
+- Added reposition APIs for `TieredMenu`, `Dropdown`, `InlineView`, `SplitDropdown` and `SplitFloatingToolbar` components.
+- Added new reposition channel to notify sandboxed components that they should reposition.
+- Added `onOpened` and `onClosed` configuration callbacks for the `SplitSlidingToolbar` component.
+- Added `getOverflowBounds` configuration to the `SplitFloatingToolbar` component.
+
+### Changed
+- Reworked the `Docking` behaviour to support both absolute and static positioning.
+- Changed the `Docking` behaviours `lazyContext` configuration to require a `Bounds` be returned instead of an `Element`.
+- Changed the `Positioning` behaviours `useFixed` configuration to require a `Function` instead of a `boolean`.
+- Changed `Boxes.win` to use the visual viewport API where available to determine the window bounds.
+
+### Fixed
+- Fixed `Docking` not undocking to the correct position when a parent was using `position: relative`.
+- Fixed `Docking` not undocking to the correct position when the window has been resized.
+- Fixed replacing and reflecting losing component state when replacing with the same components.
+- Fixed `MakeshiftAnchor` incorrectly calculating the anchor coordinates in fixed position mode.
+- Fixed custom position bounds being ignored in fixed position mode.
+- Fixed incorrect right/bottom positioning in fixed mode when a scrollbar is visible.
+- Fixed `Positioning` placing the element off the page or out of view when the anchor point is out of bounds.
+
+# [4.15.25] - 2019-09-18
+
+### Fixed
+
+- Fixed dragging being blocked when scrolled and not at the bottom of the viewport.
+
+# [4.15.2] - 2019-07-31
+
+### Added
+- Added `useNative` option to Disabling to allow for buttons, textareas, inputs and select to be "fake-disabled" instead of using the native disabled attribute.
+
+# [4.15.1] - 2019-07-30
+
+### Changed
+- Changed tabbing behaviour to not try to tab to disabled elements by default.
+
+# [4.15.0] - 2019-07-23
+
+### Added
+- Added `getBounds` property to the dragging behaviour to prevent dragging outside the specified bounds.
+
+### Changed
+- Changed dragging behaviour to prevent dragging outside the window by default.
+
+# [4.14.0] - 2019-07-11
+
+### Added
+- Added `onDisabled` and `onEnabled` callbacks to the disabling behaviour.
+- Added new `positionWithinBounds` positioning API to allow positioning with a custom bounding box.
+- Exposed `Boxes` module and `Bounds` type in api main entry point.
+
+### Fixed
+- Fixed disabling `select` elements not using the `disabled` attribute.
+- Fixed `LayoutInside` bubbling inverting where the bubble should be placed.
+
 # [4.13.0] - 2019-06-06
 
 ### Added

@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
-import { Version } from './Version';
 import { PlatformInfo } from '../info/PlatformInfo';
+import { Version } from './Version';
 
 export interface UaString {
   current: string | undefined;
@@ -21,7 +21,7 @@ const detectBrowser = function (browsers: PlatformInfo[], userAgent: any) {
     const version = Version.detect(browser.versionRegexes, userAgent);
     return {
       current: browser.name,
-      version: version
+      version
     };
   });
 };
@@ -31,12 +31,12 @@ const detectOs = function (oses: PlatformInfo[], userAgent: any) {
     const version = Version.detect(os.versionRegexes, userAgent);
     return {
       current: os.name,
-      version: version
+      version
     };
   });
 };
 
 export const UaString = {
-  detectBrowser: detectBrowser,
-  detectOs: detectOs
+  detectBrowser,
+  detectOs
 };

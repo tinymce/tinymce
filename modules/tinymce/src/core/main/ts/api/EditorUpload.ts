@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { HTMLImageElement, Blob } from '@ephox/dom-globals';
 import { Arr } from '@ephox/katamari';
-import { Uploader } from '../file/Uploader';
+import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
-import { BlobCache } from './file/BlobCache';
+import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
-import ErrorReporter from '../ErrorReporter';
+import * as Rtc from '../Rtc';
 import Editor from './Editor';
-import Settings from './Settings';
+import { BlobCache, BlobInfo } from './file/BlobCache';
+import * as Settings from './Settings';
+import Env from './Env';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -22,13 +23,20 @@ import Settings from './Settings';
  * @class tinymce.EditorUpload
  */
 
-export type UploadCallback = (results: Array<{ element: HTMLImageElement, status: boolean }>) => void;
+export interface UploadResult {
+  element: HTMLImageElement;
+  status: boolean;
+  blobInfo: BlobInfo;
+  uploadUri: string;
+}
+
+export type UploadCallback = (results: UploadResult[]) => void;
 
 interface EditorUpload {
   blobCache: BlobCache;
   addFilter (filter: (img: HTMLImageElement) => boolean): void;
-  uploadImages (callback?: UploadCallback): Promise<BlobInfoImagePair[]>;
-  uploadImagesAuto (callback?: UploadCallback): void | Promise<BlobInfoImagePair[]>;
+  uploadImages (callback?: UploadCallback): Promise<UploadResult[]>;
+  uploadImagesAuto (callback?: UploadCallback): void | Promise<UploadResult[]>;
   scanForImages (): Promise<BlobInfoImagePair[]>;
   destroy (): void;
 }
@@ -39,7 +47,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
-  const aliveGuard = function <T>(callback?: (result: T) => any) {
+  const aliveGuard = function <T, R> (callback?: (result: T) => R) {
     return function (result: T) {
       if (editor.selection) {
         return callback(result);
@@ -49,9 +57,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     };
   };
 
-  const cacheInvalidator = function (): string {
-    return '?' + (new Date()).getTime();
-  };
+  const cacheInvalidator = (url: string): string => url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
 
   // Replaces strings without regexps to avoid FF regexp to big issue
   const replaceString = function (content: string, search: string, replace: string): string {
@@ -69,19 +75,22 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     return content;
   };
 
-  const replaceImageUrl = function (content: string, targetUrl: string, replacementUrl: string): string {
-    content = replaceString(content, 'src="' + targetUrl + '"', 'src="' + replacementUrl + '"');
+  const replaceImageUrl = (content: string, targetUrl: string, replacementUrl: string): string => {
+    const replacementString = `src="${replacementUrl}"${replacementUrl === Env.transparentSrc ? ' data-mce-placeholder="1"' : ''}`;
+
+    content = replaceString(content, `src="${targetUrl}"`, replacementString);
+
     content = replaceString(content, 'data-mce-src="' + targetUrl + '"', 'data-mce-src="' + replacementUrl + '"');
 
     return content;
   };
 
-  const replaceUrlInUndoStack = function (targetUrl: string, replacementUrl: string) {
-    Arr.each(editor.undoManager.data, function (level) {
+  const replaceUrlInUndoStack = (targetUrl: string, replacementUrl: string) => {
+    Arr.each(editor.undoManager.data, (level) => {
       if (level.type === 'fragmented') {
-        level.fragments = Arr.map(level.fragments, function (fragment) {
-          return replaceImageUrl(fragment, targetUrl, replacementUrl);
-        });
+        level.fragments = Arr.map(level.fragments, (fragment) =>
+          replaceImageUrl(fragment, targetUrl, replacementUrl)
+        );
       } else {
         level.content = replaceImageUrl(level.content, targetUrl, replacementUrl);
       }
@@ -97,17 +106,18 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  const replaceImageUri = function (image: HTMLImageElement, resultUri: string) {
-    blobCache.removeByUri(image.src);
+  const replaceImageUriInView = (image: HTMLImageElement, resultUri: string) => {
+    const src = editor.convertURL(resultUri, 'src');
+
     replaceUrlInUndoStack(image.src, resultUri);
 
     editor.$(image).attr({
-      'src': Settings.shouldReuseFileName(editor) ? resultUri + cacheInvalidator() : resultUri,
-      'data-mce-src': editor.convertURL(resultUri, 'src')
+      'src': Settings.shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
+      'data-mce-src': src
     });
   };
 
-  const uploadImages = function (callback?) {
+  const uploadImages = (callback?: UploadCallback): Promise<UploadResult[]> => {
     if (!uploader) {
       uploader = Uploader(uploadStatus, {
         url: Settings.getImageUploadUrl(editor),
@@ -117,28 +127,49 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       });
     }
 
-    return scanForImages().then(aliveGuard(function (imageInfos) {
-      let blobInfos;
+    return scanForImages().then(aliveGuard((imageInfos) => {
+      const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
-      blobInfos = Arr.map(imageInfos, function (imageInfo) {
-        return imageInfo.blobInfo;
-      });
+      return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+        const imagesToRemove: HTMLImageElement[] = [];
 
-      return uploader.upload(blobInfos, openNotification).then(aliveGuard(function (result) {
-        const filteredResult = Arr.map(result, function (uploadInfo, index) {
+        const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
+          const blobInfo = imageInfos[index].blobInfo;
           const image = imageInfos[index].image;
 
           if (uploadInfo.status && Settings.shouldReplaceBlobUris(editor)) {
-            replaceImageUri(image, uploadInfo.url);
+            blobCache.removeByUri(image.src);
+            replaceImageUriInView(image, uploadInfo.url);
           } else if (uploadInfo.error) {
-            ErrorReporter.uploadError(editor, uploadInfo.error);
+            if (uploadInfo.error.options.remove) {
+              replaceUrlInUndoStack(image.getAttribute('src'), Env.transparentSrc);
+              imagesToRemove.push(image);
+            }
+
+            ErrorReporter.uploadError(editor, uploadInfo.error.message);
           }
 
           return {
             element: image,
-            status: uploadInfo.status
+            status: uploadInfo.status,
+            uploadUri: uploadInfo.url,
+            blobInfo
           };
         });
+
+        if (imagesToRemove.length > 0) {
+          if (Rtc.isRtc(editor)) {
+            // To be replaced by RTC API to mirror DOM changes when such is implemented.
+            console.error('Removing images on failed uploads is currently unsupported for RTC'); // eslint-disable-line no-console
+          } else {
+            editor.undoManager.transact(() => {
+              Arr.each(imagesToRemove, (element) => {
+                editor.dom.remove(element);
+                blobCache.removeByUri(element.src);
+              });
+            });
+          }
+        }
 
         if (callback) {
           callback(filteredResult);
@@ -149,7 +180,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }));
   };
 
-  const uploadImagesAuto = function (callback?) {
+  const uploadImagesAuto = (callback?: UploadCallback) => {
     if (Settings.isAutomaticUploadsEnabled(editor)) {
       return uploadImages(callback);
     }

@@ -9,21 +9,19 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import { onSetupFormatToggle } from './complex/utils/Utils';
 
-const toggleFormat = (editor: Editor, fmt: string) => {
-  return () => {
-    editor.execCommand('mceToggleFormat', false, fmt);
-  };
+const toggleFormat = (editor: Editor, fmt: string) => () => {
+  editor.execCommand('mceToggleFormat', false, fmt);
 };
 
 const registerFormatButtons = (editor: Editor) => {
   Tools.each([
-    {name: 'bold', text: 'Bold', icon: 'bold'},
-    {name: 'italic', text: 'Italic', icon: 'italic'},
-    {name: 'underline', text: 'Underline', icon: 'underline'},
-    {name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through'},
-    {name: 'subscript', text: 'Subscript', icon: 'subscript'},
-    {name: 'superscript', text: 'Superscript', icon: 'superscript'}
-  ], (btn, idx) => {
+    { name: 'bold', text: 'Bold', icon: 'bold' },
+    { name: 'italic', text: 'Italic', icon: 'italic' },
+    { name: 'underline', text: 'Underline', icon: 'underline' },
+    { name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through' },
+    { name: 'subscript', text: 'Subscript', icon: 'subscript' },
+    { name: 'superscript', text: 'Superscript', icon: 'superscript' }
+  ], (btn, _idx) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
@@ -45,15 +43,15 @@ const registerFormatButtons = (editor: Editor) => {
 
 const registerCommandButtons = (editor: Editor) => {
   Tools.each([
-    {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut'},
-    {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy'},
-    {name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste'},
-    {name: 'help', text: 'Help', action: 'mceHelp', icon: 'help'},
-    {name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all'},
+    { name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut' },
+    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy' },
+    { name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste' },
+    { name: 'help', text: 'Help', action: 'mceHelp', icon: 'help' },
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all' },
     // visualaid was here but also exists in VisualAid.ts?
-    {name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document'},
-    {name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting'},
-    {name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove'}
+    { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
+    { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting' },
+    { name: 'remove', text: 'Remove', action: 'Delete', icon: 'remove' }
   ], (btn) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
@@ -65,7 +63,7 @@ const registerCommandButtons = (editor: Editor) => {
 
 const registerCommandToggleButtons = (editor: Editor) => {
   Tools.each([
-    {name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote'},
+    { name: 'blockquote', text: 'Blockquote', action: 'mceBlockQuote', icon: 'quote' }
   ], (btn) => {
     editor.ui.registry.addToggleButton(btn.name, {
       tooltip: btn.text,
@@ -84,18 +82,18 @@ const registerButtons = (editor: Editor) => {
 
 const registerMenuItems = (editor: Editor) => {
   Tools.each([
-    {name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B'},
-    {name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I'},
-    {name: 'underline', text: 'Underline', action: 'Underline', icon: 'underline', shortcut: 'Meta+U'},
-    {name: 'strikethrough', text: 'Strikethrough', action: 'Strikethrough', icon: 'strike-through', shortcut: ''},
-    {name: 'subscript', text: 'Subscript', action: 'Subscript', icon: 'subscript', shortcut: ''},
-    {name: 'superscript', text: 'Superscript', action: 'Superscript', icon: 'superscript', shortcut: ''},
-    {name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting', shortcut: ''},
-    {name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document', shortcut: ''},
-    {name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut', shortcut: 'Meta+X'},
-    {name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C'},
-    {name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste', shortcut: 'Meta+V'},
-    {name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A'}
+    { name: 'bold', text: 'Bold', action: 'Bold', icon: 'bold', shortcut: 'Meta+B' },
+    { name: 'italic', text: 'Italic', action: 'Italic', icon: 'italic', shortcut: 'Meta+I' },
+    { name: 'underline', text: 'Underline', action: 'Underline', icon: 'underline', shortcut: 'Meta+U' },
+    { name: 'strikethrough', text: 'Strikethrough', action: 'Strikethrough', icon: 'strike-through', shortcut: '' },
+    { name: 'subscript', text: 'Subscript', action: 'Subscript', icon: 'subscript', shortcut: '' },
+    { name: 'superscript', text: 'Superscript', action: 'Superscript', icon: 'superscript', shortcut: '' },
+    { name: 'removeformat', text: 'Clear formatting', action: 'RemoveFormat', icon: 'remove-formatting', shortcut: '' },
+    { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document', shortcut: '' },
+    { name: 'cut', text: 'Cut', action: 'Cut', icon: 'cut', shortcut: 'Meta+X' },
+    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C' },
+    { name: 'paste', text: 'Paste', action: 'Paste', icon: 'paste', shortcut: 'Meta+V' },
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' }
   ], (btn) => {
     editor.ui.registry.addMenuItem(btn.name, {
       text: btn.text,
@@ -117,6 +115,6 @@ const register = (editor: Editor) => {
   registerMenuItems(editor);
 };
 
-export default {
+export {
   register
 };

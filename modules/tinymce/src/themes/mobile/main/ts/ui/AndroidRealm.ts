@@ -5,22 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Replacing, Gui, AlloyComponent } from '@ephox/alloy';
+import { Replacing } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
+import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
-import AndroidWebapp from '../api/AndroidWebapp';
-import Styles from '../style/Styles';
-import ScrollingToolbar from '../toolbar/ScrollingToolbar';
-import CommonRealm from './CommonRealm';
+import * as AndroidWebapp from '../api/AndroidWebapp';
+import * as Styles from '../style/Styles';
+import { ScrollingToolbar } from '../toolbar/ScrollingToolbar';
+import * as CommonRealm from './CommonRealm';
 import * as Dropup from './Dropup';
 import OuterContainer from './OuterContainer';
-import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
-import { MobileWebApp } from 'tinymce/themes/mobile/api/IosWebapp';
 
-export default function (scrollIntoView: () => void) {
+export default (scrollIntoView: () => void): MobileRealm => {
   const alloy = OuterContainer({
     classes: [ Styles.resolve('android-container') ]
-  }) as Gui.GuiSystem;
+  });
 
   const toolbar = ScrollingToolbar();
 
@@ -28,52 +28,52 @@ export default function (scrollIntoView: () => void) {
 
   const switchToEdit = CommonRealm.makeEditSwitch(webapp);
 
-  const socket = CommonRealm.makeSocket() as AlloyComponent;
+  const socket = CommonRealm.makeSocket();
 
   const dropup = Dropup.build(Fun.noop, scrollIntoView);
 
-  alloy.add(toolbar.wrapper());
+  alloy.add(toolbar.wrapper);
   alloy.add(socket);
-  alloy.add(dropup.component());
+  alloy.add(dropup.component);
 
-  const setToolbarGroups = function (rawGroups) {
+  const setToolbarGroups = (rawGroups) => {
     const groups = toolbar.createGroups(rawGroups);
     toolbar.setGroups(groups);
   };
 
-  const setContextToolbar = function (rawGroups) {
+  const setContextToolbar = (rawGroups) => {
     const groups = toolbar.createGroups(rawGroups);
     toolbar.setContextToolbar(groups);
   };
 
   // You do not always want to do this.
-  const focusToolbar = function () {
+  const focusToolbar = () => {
     toolbar.focus();
   };
 
-  const restoreToolbar = function () {
+  const restoreToolbar = () => {
     toolbar.restoreToolbar();
   };
 
-  const init = function (spec) {
+  const init = (spec) => {
     webapp.set(
       AndroidWebapp.produce(spec)
     );
   };
 
-  const exit = function () {
-    webapp.run(function (w) {
+  const exit = () => {
+    webapp.run((w) => {
       w.exit();
       Replacing.remove(socket, switchToEdit);
     });
   };
 
-  const updateMode = function (readOnly) {
-    CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root());
+  const updateMode = (readOnly) => {
+    CommonRealm.updateMode(socket, switchToEdit, readOnly, alloy.root);
   };
 
   return {
-    system: Fun.constant(alloy),
+    system: alloy,
     element: alloy.element,
     init,
     exit,
@@ -82,7 +82,7 @@ export default function (scrollIntoView: () => void) {
     focusToolbar,
     restoreToolbar,
     updateMode,
-    socket: Fun.constant(socket),
-    dropup: Fun.constant(dropup)
-  } as MobileRealm;
-}
+    socket,
+    dropup
+  };
+};

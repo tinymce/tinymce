@@ -1,48 +1,48 @@
 import * as Arr from './Arr';
-import { Option } from './Option';
-import { setTimeout } from '@ephox/dom-globals';
+import { Optional } from './Optional';
 
 export interface LazyValue<T> {
-  get: (callback: (value: T) => void) => void;
-  map: <U> (mapper: (value: T) => U) => LazyValue<U>;
-  isReady: () => boolean;
+  readonly get: (callback: (value: T) => void) => void;
+  readonly map: <U> (mapper: (value: T) => U) => LazyValue<U>;
+  readonly isReady: () => boolean;
 }
 
-const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyValue<T> {
-  let data = Option.none<T>();
+const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> => {
+  let data = Optional.none<T>();
   let callbacks: ((value: T) => void)[] = [];
 
   /** map :: this LazyValue a -> (a -> b) -> LazyValue b */
-  const map = function <U> (f: (value: T) => U) {
-    return nu(function (nCallback: (value: U) => void) {
-      get(function (data) {
-        nCallback(f(data));
-      });
+  const map = <U>(f: (value: T) => U) => nu((nCallback: (value: U) => void) => {
+    get((data) => {
+      nCallback(f(data));
     });
+  });
+
+  const get = (nCallback: (value: T) => void) => {
+    if (isReady()) {
+      call(nCallback);
+    } else {
+      callbacks.push(nCallback);
+    }
   };
 
-  const get = function (nCallback: (value: T) => void) {
-    if (isReady()) call(nCallback);
-    else callbacks.push(nCallback);
+  const set = (x: T) => {
+    if (!isReady()) {
+      data = Optional.some(x);
+      run(callbacks);
+      callbacks = [];
+    }
   };
 
-  const set = function (x: T) {
-    data = Option.some(x);
-    run(callbacks);
-    callbacks = [];
-  };
+  const isReady = () => data.isSome();
 
-  const isReady = function () {
-    return data.isSome();
-  };
-
-  const run = function (cbs: ((value: T) => void)[]) {
+  const run = (cbs: ((value: T) => void)[]) => {
     Arr.each(cbs, call);
   };
 
-  const call = function(cb: (value: T) => void) {
-    data.each(function(x) {
-      setTimeout(function() {
+  const call = (cb: (value: T) => void) => {
+    data.each((x) => {
+      setTimeout(() => {
         cb(x);
       }, 0);
     });
@@ -52,19 +52,18 @@ const nu = function <T> (baseFn: (completer: (value: T) => void) => void): LazyV
   baseFn(set);
 
   return {
-    get: get,
-    map: map,
-    isReady: isReady
+    get,
+    map,
+    isReady
   };
 };
 
-const pure = function <T> (a: T) {
-  return nu(function (callback: (value: T) => void) {
+const pure = <T>(a: T) =>
+  nu((callback: (value: T) => void) => {
     callback(a);
   });
-};
 
 export const LazyValue = {
-  nu: nu,
-  pure: pure
+  nu,
+  pure
 };

@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Bookmark from './Bookmark';
-import Tools from 'tinymce/core/api/util/Tools';
-import TreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
+import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
-import { HTMLElement, Node } from '@ephox/dom-globals';
+import Tools from 'tinymce/core/api/util/Tools';
+import * as Bookmark from './Bookmark';
 
 /**
  * Unlink implementation that doesn't leave partial links for example it would produce:
@@ -23,7 +22,7 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
   let node;
   const elms = [];
 
-  const walker = new TreeWalker(startNode, rootElm);
+  const walker = new DomTreeWalker(startNode, rootElm);
   for (node = startNode; node; node = walker.next()) {
     if (node.nodeType === 1) {
       elms.push(node);
@@ -38,11 +37,9 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
 };
 
 const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
-  let bookmark, dom, selection;
-
-  dom = editor.dom;
-  selection = editor.selection;
-  bookmark = Bookmark.create(dom, selection.getRng());
+  const dom = editor.dom;
+  const selection = editor.selection;
+  const bookmark = Bookmark.create(dom, selection.getRng());
 
   Tools.each(elms, function (elm) {
     editor.dom.remove(elm, true);
@@ -61,23 +58,20 @@ const getParentAnchorOrSelf = function (dom, elm: Node) {
 };
 
 const getSelectedAnchors = function (editor: Editor) {
-  let startElm, endElm, rootElm, anchorElms, selection, dom, rng;
+  const selection = editor.selection;
+  const dom = editor.dom;
+  const rng = selection.getRng();
+  const startElm = getParentAnchorOrSelf(dom, RangeUtils.getNode(rng.startContainer, rng.startOffset));
+  const endElm = RangeUtils.getNode(rng.endContainer, rng.endOffset);
+  const rootElm = editor.getBody();
 
-  selection = editor.selection;
-  dom = editor.dom;
-  rng = selection.getRng();
-  startElm = getParentAnchorOrSelf(dom, RangeUtils.getNode(rng.startContainer, rng.startOffset));
-  endElm = RangeUtils.getNode(rng.endContainer, rng.endOffset);
-  rootElm = editor.getBody();
-  anchorElms = Tools.grep(getSelectedElements(rootElm, startElm, endElm), isLink);
-
-  return anchorElms;
+  return Tools.grep(getSelectedElements(rootElm, startElm, endElm), isLink);
 };
 
 const unlinkSelection = function (editor: Editor) {
   unwrapElements(editor, getSelectedAnchors(editor));
 };
 
-export default {
+export {
   unlinkSelection
 };

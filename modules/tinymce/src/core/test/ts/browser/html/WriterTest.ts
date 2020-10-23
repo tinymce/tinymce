@@ -1,11 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import Writer from 'tinymce/core/api/html/Writer';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('Comment', function () {
@@ -109,9 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function () {
   });
 
   suite.test('End', function () {
-    let writer;
-
-    writer = Writer();
+    const writer = Writer();
     writer.end('b');
     LegacyUnit.equal(writer.getContent(), '</b>');
   });
@@ -141,22 +137,22 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function () {
     let writer;
 
     writer = Writer();
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"\'&amp;\u00e5\u00e4\u00f6</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`);
 
     writer = Writer({ entity_encoding: 'numeric' });
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&#229;&#228;&#246;">&lt;&gt;"\'&amp;&#229;&#228;&#246;</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`);
 
     writer = Writer({ entity_encoding: 'named' });
-    writer.start('p', [{ name: 'title', value: '<>"\'&\u00e5\u00e4\u00f6' }]);
-    writer.text('<>"\'&\u00e5\u00e4\u00f6');
+    writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
+    writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p title="&lt;&gt;&quot;\'&amp;&aring;&auml;&ouml;">&lt;&gt;"\'&amp;&aring;&auml;&ouml;</p>');
+    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {

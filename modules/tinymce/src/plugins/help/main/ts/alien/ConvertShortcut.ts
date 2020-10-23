@@ -34,4 +34,6 @@ const convertText = (source: string) => {
   return Env.mac ? (updated.join('')).replace(/\s/, '') : updated.join('+');
 };
 
-export default { convertText };
+export {
+  convertText
+};

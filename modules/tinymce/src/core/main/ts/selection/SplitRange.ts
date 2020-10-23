@@ -5,21 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
-import NodeType from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
+import { RangeLikeObject } from './RangeTypes';
 
-interface SplitRange {
-  startContainer: Node;
-  startOffset: number;
-  endContainer: Node;
-  endOffset: number;
-}
-
-const splitText = function (node, offset) {
+const splitText = function (node: Text, offset: number) {
   return node.splitText(offset);
 };
 
-const split = function (rng): SplitRange {
+const split = function (rng: RangeLikeObject): RangeLikeObject {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
@@ -33,7 +26,7 @@ const split = function (rng): SplitRange {
 
       if (endOffset > startOffset) {
         endOffset = endOffset - startOffset;
-        startContainer = endContainer = splitText(endContainer, endOffset).previousSibling;
+        startContainer = endContainer = splitText(endContainer as Text, endOffset).previousSibling;
         endOffset = endContainer.nodeValue.length;
         startOffset = 0;
       } else {
@@ -63,6 +56,5 @@ const split = function (rng): SplitRange {
 };
 
 export {
-  split,
-  SplitRange
+  split
 };

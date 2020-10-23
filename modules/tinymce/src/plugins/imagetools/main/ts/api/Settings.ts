@@ -5,12 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Option } from '@ephox/katamari';
 
-const getToolbarItems = (editor: Editor): string => {
-  return editor.getParam('imagetools_toolbar', 'rotateleft rotateright flipv fliph editimage imageoptions');
-};
+const getToolbarItems = (editor: Editor): string => editor.getParam('imagetools_toolbar', 'rotateleft rotateright flipv fliph editimage imageoptions');
 
 const getProxyUrl = (editor: Editor): string => editor.getParam('imagetools_proxy');
 
@@ -18,11 +16,9 @@ const getCorsHosts = (editor: Editor) => editor.getParam('imagetools_cors_hosts'
 
 const getCredentialsHosts = (editor: Editor) => editor.getParam('imagetools_credentials_hosts', [], 'string[]');
 
-const getFetchImage = (editor: Editor) => Option.from(editor.getParam('imagetools_fetch_image', null, 'function'));
+const getFetchImage = (editor: Editor) => Optional.from(editor.getParam('imagetools_fetch_image', null, 'function'));
 
-const getApiKey = (editor: Editor) => {
-  return editor.getParam('api_key', editor.getParam('imagetools_api_key', '', 'string'), 'string');
-};
+const getApiKey = (editor: Editor) => editor.getParam('api_key', editor.getParam('imagetools_api_key', '', 'string'), 'string');
 
 const getUploadTimeout = (editor: Editor) => editor.getParam('images_upload_timeout', 30000, 'number');
 

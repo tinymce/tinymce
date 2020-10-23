@@ -1,19 +1,16 @@
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Objects, ValueSchema } from '@ephox/boulder';
-import { Arr, Fun, Merger, Obj, Option, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
 
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { AlloySpec, RawDomSchema } from '../api/component/SpecTypes';
+import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/SpecTypes';
+import { CompositeSketchDetail } from '../api/ui/Sketcher';
 import * as Fields from '../data/Fields';
-import { SpecSchemaStruct } from '../spec/SpecSchema';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
-import { CompositeSketchDetail } from '../api/ui/Sketcher';
-
-export interface PartialSpec { }
 
 export interface GeneratedParts {
-  [key: string]: (config: PartialSpec) => ConfiguredPart;
+  [key: string]: (config: Record<string, any>) => ConfiguredPart;
 }
 
 export interface UnconfiguredPart {
@@ -22,21 +19,22 @@ export interface UnconfiguredPart {
   uiType: string;
 }
 
+// TODO: Try and use stronger types for the config, however it's pretty arbitrary so it may not be possible
 export interface ConfiguredPart extends UnconfiguredPart {
   config: Record<string, any>;
   validated: Record<string, any>;
 }
 
-export interface Substition { [ key: string ]: FieldProcessorAdt; }
+export type Substitution = Record<string, UiSubstitutes.UiSubstitutesAdt>;
 
 export interface Substitutions {
-  internals: () => Substition;
-  externals: () => Record<string, () => any>;
+  internals: () => Substitution;
+  externals: () => Record<string, () => Record<string, any>>;
 }
 
 // TODO: Make more functional if performance isn't an issue.
 const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts => {
-  const r = { };
+  const r: GeneratedParts = { };
   Arr.each(parts, (part) => {
     PartType.asNamedPart(part).each((np) => {
       const g: UnconfiguredPart = doGenerateOne(owner, np.pname);
@@ -54,119 +52,90 @@ const generate = (owner: string, parts: PartType.PartTypeAdt[]): GeneratedParts 
 };
 
 // Does not have the config.
-const doGenerateOne = (owner: string, pname: string): UnconfiguredPart => {
-  return {
-    uiType: UiSubstitutes.placeholder(),
-    owner,
-    name: pname
-  };
-};
+const doGenerateOne = (owner: string, pname: string): UnconfiguredPart => ({
+  uiType: UiSubstitutes.placeholder(),
+  owner,
+  name: pname
+});
 
-const generateOne = (owner: string, pname: string, config: RawDomSchema): ConfiguredPart => {
-  return {
-    uiType: UiSubstitutes.placeholder(),
-    owner,
-    name: pname,
-    config,
-    validated: { }
-  };
-};
+const generateOne = (owner: string, pname: string, config: SimpleOrSketchSpec): ConfiguredPart => ({
+  uiType: UiSubstitutes.placeholder(),
+  owner,
+  name: pname,
+  config,
+  validated: { }
+});
 
-const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] => {
+const schemas = (parts: PartType.PartTypeAdt[]): FieldProcessorAdt[] =>
   // This actually has to change. It needs to return the schemas for things that will
   // not appear in the components list, which is only externals
-  return Arr.bind(parts, (part: PartType.PartTypeAdt) => {
-    return part.fold(
-      Option.none,
-      Option.some,
-      Option.none,
-      Option.none
-    ).map((data: PartType.PartSpec<any>) => {
-      return FieldSchema.strictObjOf(data.name, data.schema.concat([
-        Fields.snapshot(PartType.original())
-      ]));
-    }).toArray();
-  });
-};
+  Arr.bind(parts, (part: PartType.PartTypeAdt) => part.fold<Optional<PartType.BasePartDetail<any, any>>>(
+    Optional.none,
+    Optional.some,
+    Optional.none,
+    Optional.none
+  ).map((data) => FieldSchema.strictObjOf(data.name, data.schema.concat([
+    Fields.snapshot(PartType.original())
+  ]))).toArray());
 
-const names = (parts: PartType.PartTypeAdt[]): string[] => {
-  return Arr.map(parts, PartType.name);
-};
+const names = (parts: PartType.PartTypeAdt[]): string[] => Arr.map(parts, PartType.name);
 
-const substitutes = (owner: string, detail: CompositeSketchDetail, parts: PartType.PartTypeAdt[]): Substitutions => {
-  return PartSubstitutes.subs(owner, detail, parts);
-};
+const substitutes = <D extends CompositeSketchDetail>(owner: string, detail: D, parts: PartType.PartTypeAdt[]): Substitutions => PartSubstitutes.subs(owner, detail, parts);
 
-const components = (owner: string, detail: CompositeSketchDetail, internals: Substition): AlloySpec[] => {
-  return UiSubstitutes.substitutePlaces(Option.some(owner), detail, detail.components, internals);
-};
+const components = <D extends CompositeSketchDetail>(owner: string, detail: D, internals: Substitution): AlloySpec[] => UiSubstitutes.substitutePlaces(Optional.some(owner), detail, detail.components, internals);
 
-const getPart = (component: AlloyComponent, detail: CompositeSketchDetail, partKey: string): Option<AlloyComponent> => {
+const getPart = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): Optional<AlloyComponent> => {
   const uid = detail.partUids[partKey];
-  return component.getSystem().getByUid(uid).toOption();
+  return component.getSystem().getByUid(uid).toOptional();
 };
 
-const getPartOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKey: string): AlloyComponent => {
-  return getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
-};
+const getPartOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKey: string): AlloyComponent => getPart(component, detail, partKey).getOrDie('Could not find part: ' + partKey);
 
-const getParts = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): { [key: string]: () => Result<AlloyComponent, string> } => {
-  const r = { };
+const getParts = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKeys: string[]): Record<string, () => Result<AlloyComponent, Error>> => {
+  const r: Record<string, () => Result<AlloyComponent, Error>> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {
-    r[pk] = system.getByUid(uids[pk]);
+    r[pk] = Fun.constant(system.getByUid(uids[pk]));
   });
 
-  // Structing
-  return Obj.map(r, Fun.constant);
+  return r;
 };
 
-const getAllParts = (component: AlloyComponent, detail: CompositeSketchDetail): Record<string, () => Result<AlloyComponent, string | Error>> => {
+const getAllParts = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D): Record<string, () => Result<AlloyComponent, Error>> => {
   const system = component.getSystem();
-  return Obj.map(detail.partUids, (pUid, k) => {
-    return Fun.constant(system.getByUid(pUid));
-  });
+  return Obj.map(detail.partUids, (pUid, _k) => Fun.constant(system.getByUid(pUid)));
 };
 
-const getAllPartNames = (detail: CompositeSketchDetail) => {
-  return Obj.keys(detail.partUids);
-};
+const getAllPartNames = <D extends CompositeSketchDetail>(detail: D) => Obj.keys(detail.partUids);
 
-const getPartsOrDie = (component: AlloyComponent, detail: CompositeSketchDetail, partKeys: string[]): Record<string, () => AlloyComponent> => {
-  const r = { };
+const getPartsOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKeys: string[]): Record<string, () => AlloyComponent> => {
+  const r: Record<string, () => AlloyComponent> = { };
   const uids = detail.partUids;
 
   const system = component.getSystem();
   Arr.each(partKeys, (pk) => {
-    r[pk] = system.getByUid(uids[pk]).getOrDie();
+    r[pk] = Fun.constant(system.getByUid(uids[pk]).getOrDie());
   });
 
-  // Structing
-  return Obj.map(r, Fun.constant);
+  return r;
 };
 
 const defaultUids = (baseUid: string, partTypes: PartType.PartTypeAdt[]): Record<string, string> => {
   const partNames = names(partTypes);
 
   return Objects.wrapAll(
-    Arr.map(partNames, (pn) => {
-      return { key: pn, value: baseUid + '-' + pn };
-    })
+    Arr.map(partNames, (pn) => ({ key: pn, value: baseUid + '-' + pn }))
   );
 };
 
-const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt => {
-  return FieldSchema.field(
-    'partUids',
-    'partUids',
-    FieldPresence.mergeWithThunk((spec) => {
-      return defaultUids(spec.uid, partTypes);
-    }),
-    ValueSchema.anyValue()
-  );
-};
+const defaultUidsSchema = (partTypes: PartType.PartTypeAdt[]): FieldProcessorAdt => FieldSchema.field(
+  'partUids',
+  'partUids',
+  FieldPresence.mergeWithThunk((spec: SketchSpec) => defaultUids(spec.uid, partTypes)),
+  ValueSchema.anyValue()
+);
 
 export {
   generate,

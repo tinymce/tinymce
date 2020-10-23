@@ -6,16 +6,16 @@
  */
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
-import Tools from 'tinymce/core/api/util/Tools';
-import Bookmark from '../core/Bookmark';
-import NodeType from '../core/NodeType';
-import Selection from '../core/Selection';
-import { HTMLElement } from '@ephox/dom-globals';
-import { flattenListSelection } from './Indendation';
-import { fireListEvent } from '../api/Events';
-import { isCustomList } from '../core/Util';
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
+import { fireListEvent } from '../api/Events';
+import * as Bookmark from '../core/Bookmark';
 import { listToggleActionFromListName } from '../core/ListAction';
+import * as NodeType from '../core/NodeType';
+import * as Selection from '../core/Selection';
+import { isCustomList } from '../core/Util';
+import { flattenListSelection } from './Indendation';
 
 const updateListStyle = function (dom, el, detail) {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
@@ -45,10 +45,8 @@ const removeStyles = (dom, element: HTMLElement, styles: string[]) => {
 };
 
 const getEndPointNode = function (editor, rng, start, root) {
-  let container, offset;
-
-  container = rng[start ? 'startContainer' : 'endContainer'];
-  offset = rng[start ? 'startOffset' : 'endOffset'];
+  let container = rng[start ? 'startContainer' : 'endContainer'];
+  const offset = rng[start ? 'startOffset' : 'endOffset'];
 
   // Resolve node index
   if (container.nodeType === 1) {
@@ -74,7 +72,7 @@ const getEndPointNode = function (editor, rng, start, root) {
   return container;
 };
 
-const getSelectedTextBlocks = function (editor, rng, root) {
+const getSelectedTextBlocks = function (editor: Editor, rng, root) {
   const textBlocks = [], dom = editor.dom;
 
   const startNode = getEndPointNode(editor, rng, true, root);
@@ -126,7 +124,7 @@ const getSelectedTextBlocks = function (editor, rng, root) {
   return textBlocks;
 };
 
-const hasCompatibleStyle = function (dom, sib, detail) {
+const hasCompatibleStyle = function (dom: DOMUtils, sib, detail) {
   const sibStyle = dom.getStyle(sib, 'list-style-type');
   let detailStyle = detail ? detail['list-style-type'] : '';
 
@@ -135,9 +133,8 @@ const hasCompatibleStyle = function (dom, sib, detail) {
   return sibStyle === detailStyle;
 };
 
-const applyList = function (editor, listName: string, detail = {}) {
-  const rng = editor.selection.getRng(true);
-  let bookmark;
+const applyList = function (editor: Editor, listName: string, detail = {}) {
+  const rng = editor.selection.getRng();
   let listItemName = 'LI';
   const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
   const dom = editor.dom;
@@ -152,12 +149,12 @@ const applyList = function (editor, listName: string, detail = {}) {
     listItemName = 'DT';
   }
 
-  bookmark = Bookmark.createBookmark(rng);
+  const bookmark = Bookmark.createBookmark(rng);
 
   Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
-    let listBlock, sibling;
+    let listBlock;
 
-    sibling = block.previousSibling;
+    const sibling = block.previousSibling;
     if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
       listBlock = sibling;
       block = dom.rename(block, listItemName);
@@ -171,7 +168,7 @@ const applyList = function (editor, listName: string, detail = {}) {
 
     removeStyles(dom, block, [
       'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
-      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top',
+      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top'
     ]);
 
     updateListWithDetails(dom, listBlock, detail);
@@ -238,7 +235,7 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
   } else {
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
-    Tools.each([parentList].concat(lists), function (elm) {
+    Tools.each([ parentList ].concat(lists), function (elm) {
       updateList(editor, elm, listName, detail);
     });
 
@@ -250,7 +247,7 @@ const hasListStyleDetail = function (detail) {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList =  function (editor, parentList, listName, detail) {
+const toggleSingleList = function (editor, parentList, listName, detail) {
   if (parentList === editor.getBody()) {
     return;
   }
@@ -285,7 +282,7 @@ const toggleList = function (editor, listName, detail) {
   }
 };
 
-export default {
+export {
   toggleList,
   mergeWithAdjacentLists
 };

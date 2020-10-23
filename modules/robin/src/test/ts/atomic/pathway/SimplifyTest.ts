@@ -1,7 +1,7 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import Simplify from 'ephox/robin/pathway/Simplify';
+import * as Simplify from 'ephox/robin/pathway/Simplify';
 
 UnitTest.test('SimplifyTest', function () {
   const doc = TestUniverse(Gene('root', 'root', [
@@ -45,8 +45,8 @@ UnitTest.test('SimplifyTest', function () {
   };
 
   check([], []);
-  check(['a'], ['a']);
-  check(['a'], ['a', 'aa', 'ab']);
-  check(['a'], ['a', 'aa', 'ab', 'acbba']);
-  check(['a', 'b'], ['a', 'aa', 'ab', 'b']);
+  check([ 'a' ], [ 'a' ]);
+  check([ 'a' ], [ 'a', 'aa', 'ab' ]);
+  check([ 'a' ], [ 'a', 'aa', 'ab', 'acbba' ]);
+  check([ 'a', 'b' ], [ 'a', 'aa', 'ab', 'b' ]);
 });

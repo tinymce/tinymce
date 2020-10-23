@@ -1,41 +1,36 @@
 import { ApproxStructure, Assertions, Step } from '@ephox/agar';
-import { Element } from '@ephox/dom-globals';
 import { Arr, Obj } from '@ephox/katamari';
-import { Element as SugarElement } from '@ephox/sugar';
+import { TinyApis } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-const sAnnotate = (editor: Editor, name: string, uid: string, data: { }) => Step.sync(() => {
-  editor.annotator.annotate(name, {
-    uid,
-    ...data
+const sAnnotate = <T> (editor: Editor, name: string, uid: string, data: { }): Step<T, T> =>
+  Step.sync(() => {
+    editor.annotator.annotate(name, {
+      uid,
+      ...data
+    });
   });
-});
 
 // This will result in an attribute order-insensitive HTML assertion
-const sAssertHtmlContent = (tinyApis, children: string[]) => {
-  return tinyApis.sAssertContentStructure(
-    ApproxStructure.build((s, str, arr) => {
-      return s.element('body', {
-        children: Arr.map(children, ApproxStructure.fromHtml)
-      });
-    })
-  );
-};
+const sAssertHtmlContent = <T> (tinyApis: TinyApis, children: string[], allowExtras?: boolean): Step<T, T> => tinyApis.sAssertContentStructure(
+  ApproxStructure.build((s, _str, _arr) => s.element('body', {
+    children: Arr.map(children, ApproxStructure.fromHtml).concat(allowExtras ? [ s.theRest() ] : [ ])
+  }))
+);
 
-const assertMarker = (editor: Editor, expected, nodes: Element[]) => {
+const assertMarker = (editor: Editor, expected: { uid: string; name: string}, nodes: Element[]) => {
   const { uid, name } = expected;
   Arr.each(nodes, (node) => {
     Assertions.assertEq('Wrapper must be in content', true, editor.getBody().contains(node));
     Assertions.assertStructure(
       'Checking wrapper has correct decoration',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('span', {
-          attrs: {
-            'data-mce-annotation': str.is(name),
-            'data-mce-annotation-uid': str.is(uid)
-          }
-        });
-      }),
+      ApproxStructure.build((s, str, _arr) => s.element('span', {
+        attrs: {
+          'data-mce-annotation': str.is(name),
+          'data-mce-annotation-uid': str.is(uid)
+        }
+      })),
       SugarElement.fromDom(node)
     );
   });

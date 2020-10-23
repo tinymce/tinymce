@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import LegacyFilter from '../../html/LegacyFilter';
+import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
-import { paddEmptyNode,  isPaddedWithNbsp,  hasOnlyChild, isEmpty, isLineBreakNode } from '../../html/ParserUtils';
-import Node from './Node';
-import SaxParser from './SaxParser';
-import Schema from './Schema';
+import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
+import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
+import AstNode from './Node';
+import SaxParser, { ParserFormat } from './SaxParser';
+import Schema, { SchemaElement } from './Schema';
 
 /**
  * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
@@ -33,12 +34,13 @@ export interface ParserArgs {
   forced_root_block?: boolean | string;
   context?: string;
   isRootContent?: boolean;
+  format?: string;
 
   // TODO finish typing the parser args
   [key: string]: any;
 }
 
-export type ParserFilterCallback = (nodes: Node[], name: string, args: ParserArgs) => void;
+export type ParserFilterCallback = (nodes: AstNode[], name: string, args: ParserArgs) => void;
 
 export interface ParserFilter {
   name: string;
@@ -46,6 +48,7 @@ export interface ParserFilter {
 }
 
 export interface DomParserSettings {
+  allow_html_data_urls?: boolean;
   allow_conditional_comments?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
@@ -56,19 +59,23 @@ export interface DomParserSettings {
   forced_root_block?: boolean | string;
   forced_root_block_attrs?: Record<string, string>;
   padd_empty_with_br?: boolean;
+  preserve_cdata?: boolean;
   remove_trailing_brs?: boolean;
   root_name?: string;
   validate?: boolean;
+  inline_styles?: boolean;
+  blob_cache?: BlobCache;
+  images_dataimg_filter?: (img: HTMLImageElement) => boolean;
 }
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addAttributeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
   getAttributeFilters (): ParserFilter[];
-  addNodeFilter (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void): void;
+  addNodeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
   getNodeFilters (): ParserFilter[];
-  filterNode (node: Node): Node;
-  parse (html: string, args?: ParserArgs): Node;
+  filterNode (node: AstNode): AstNode;
+  parse (html: string, args?: ParserArgs): AstNode;
 }
 
 const DomParser = function (settings?: DomParserSettings, schema = Schema()): DomParser {
@@ -83,13 +90,13 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   const fixInvalidChildren = function (nodes) {
     let ni, node, parent, parents, newParent, currentNode, tempNode, childNode, i;
-    let nonEmptyElements, whitespaceElements, nonSplitableElements, textBlockElements, specialElements, sibling, nextNode;
+    let sibling, nextNode;
 
-    nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
-    nonEmptyElements = schema.getNonEmptyElements();
-    whitespaceElements = schema.getWhiteSpaceElements();
-    textBlockElements = schema.getTextBlockElements();
-    specialElements = schema.getSpecialElements();
+    const nonSplitableElements = makeMap('tr,td,th,tbody,thead,tfoot,table');
+    const nonEmptyElements = schema.getNonEmptyElements();
+    const whitespaceElements = schema.getWhiteSpaceElements();
+    const textBlockElements = schema.getTextBlockElements();
+    const specialElements = schema.getSpecialElements();
 
     for (ni = 0; ni < nodes.length; ni++) {
       node = nodes[ni];
@@ -122,7 +129,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       }
 
       // Get list of all parent nodes until we find a valid parent to stick the child into
-      parents = [node];
+      parents = [ node ];
       for (parent = node.parent; parent && !schema.isValidChild(parent.name, node.name) &&
         !nonSplitableElements[parent.name]; parent = parent.parent) {
         parents.push(parent);
@@ -170,24 +177,24 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         // If it's an LI try to find a UL/OL for it or wrap it
         if (node.name === 'li') {
           sibling = node.prev;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
             sibling.append(node);
             continue;
           }
 
           sibling = node.next;
-          if (sibling && (sibling.name === 'ul' || sibling.name === 'ul')) {
+          if (sibling && (sibling.name === 'ul' || sibling.name === 'ol')) {
             sibling.insert(node, sibling.firstChild, true);
             continue;
           }
 
-          node.wrap(filterNode(new Node('ul', 1)));
+          node.wrap(filterNode(new AstNode('ul', 1)));
           continue;
         }
 
         // Try wrapping the element in a DIV
         if (schema.isValidChild(node.parent.name, 'div') && schema.isValidChild('div', node.name)) {
-          node.wrap(filterNode(new Node('div', 1)));
+          node.wrap(filterNode(new AstNode('div', 1)));
         } else {
           // We failed wrapping it, then remove or unwrap it
           if (specialElements[node.name]) {
@@ -207,7 +214,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {tinymce.html.Node} node the node to run filters on.
    * @return {tinymce.html.Node} The passed in node.
    */
-  const filterNode = (node: Node): Node => {
+  const filterNode = (node: AstNode): AstNode => {
     let i, name, list;
 
     name = node.name;
@@ -218,7 +225,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       if (list) {
         list.push(node);
       } else {
-        matchedNodes[name] = [node];
+        matchedNodes[name] = [ node ];
       }
     }
 
@@ -233,7 +240,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedAttributes[name] = [node];
+          matchedAttributes[name] = [ node ];
         }
       }
     }
@@ -243,7 +250,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   /**
    * Adds a node filter function to the parser, the parser will collect the specified nodes by name
-   * and then execute the callback ones it has finished parsing the document.
+   * and then execute the callback once it has finished parsing the document.
    *
    * @example
    * parser.addNodeFilter('p,h1', function(nodes, name) {
@@ -255,7 +262,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addNodeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
+  const addNodeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let list = nodeFilters[name];
 
@@ -281,7 +288,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
   /**
    * Adds a attribute filter function to the parser, the parser will collect nodes that has the specified attributes
-   * and then execute the callback ones it has finished parsing the document.
+   * and then execute the callback once it has finished parsing the document.
    *
    * @example
    * parser.addAttributeFilter('src,href', function(nodes, name) {
@@ -293,7 +300,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addAttributeFilter = (name: string, callback: (nodes: Node[], name: string, args: ParserArgs) => void) => {
+  const addAttributeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
     each(explode(name), function (name) {
       let i;
 
@@ -304,7 +311,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       }
 
-      attributeFilters.push({ name, callbacks: [callback] });
+      attributeFilters.push({ name, callbacks: [ callback ] });
     });
   };
 
@@ -320,12 +327,11 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {Object} args Optional args object that gets passed to all filter functions.
    * @return {tinymce.html.Node} Root node containing the tree.
    */
-  const parse = (html: string, args?: ParserArgs): Node => {
-    let parser, nodes, i, l, fi, fl, list, name;
-    let blockElements;
+  const parse = (html: string, args?: ParserArgs): AstNode => {
+    let nodes, i, l, fi, fl, list, name;
     const invalidChildren = [];
     let isInWhiteSpacePreservedElement;
-    let node: Node;
+    let node: AstNode;
 
     const getRootBlockName = (name) => {
       if (name === false) {
@@ -340,12 +346,12 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     args = args || {};
     matchedNodes = {};
     matchedAttributes = {};
-    blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
     const nonEmptyElements = schema.getNonEmptyElements();
     const children = schema.children;
     const validate = settings.validate;
     const forcedRootBlockName = 'forced_root_block' in args ? args.forced_root_block : settings.forced_root_block;
-    const rootBlockName =  getRootBlockName(forcedRootBlockName);
+    const rootBlockName = getRootBlockName(forcedRootBlockName);
     const whiteSpaceElements = schema.getWhiteSpaceElements();
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
@@ -404,7 +410,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
     };
 
     const createNode = function (name, type) {
-      const node = new Node(name, type);
+      const node = new AstNode(name, type);
       let list;
 
       if (name in nodeFilters) {
@@ -413,7 +419,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         if (list) {
           list.push(node);
         } else {
-          matchedNodes[name] = [node];
+          matchedNodes[name] = [ node ];
         }
       }
 
@@ -468,19 +474,21 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       return output;
     };
 
-    parser = SaxParser({
+    const parser = SaxParser({
       validate,
+      allow_html_data_urls: settings.allow_html_data_urls,
       allow_script_urls: settings.allow_script_urls,
       allow_conditional_comments: settings.allow_conditional_comments,
+      preserve_cdata: settings.preserve_cdata,
 
       // Exclude P and LI from DOM parsing since it's treated better by the DOM parser
       self_closing_elements: cloneAndExcludeBlocks(schema.getSelfClosingElements()),
 
-      cdata (text) {
+      cdata(text) {
         node.append(createNode('#cdata', 4)).value = text;
       },
 
-      text (text, raw) {
+      text(text, raw) {
         let textNode;
 
         // Trim all redundant whitespace on non white space elements
@@ -500,27 +508,25 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      comment (text) {
+      comment(text) {
         node.append(createNode('#comment', 8)).value = text;
       },
 
-      pi (name, text) {
+      pi(name, text) {
         node.append(createNode(name, 7)).value = text;
         removeWhitespaceBefore(node);
       },
 
-      doctype (text) {
-        let newNode;
-
-        newNode = node.append(createNode('#doctype', 10));
+      doctype(text) {
+        const newNode = node.append(createNode('#doctype', 10));
         newNode.value = text;
         removeWhitespaceBefore(node);
       },
 
-      start (name, attrs, empty) {
-        let newNode, attrFiltersLen, elementRule, attrName, parent;
+      start(name, attrs, empty) {
+        let newNode, attrFiltersLen, attrName, parent;
 
-        elementRule = validate ? schema.getElementRule(name) : {};
+        const elementRule = validate ? schema.getElementRule(name) : {} as SchemaElement;
         if (elementRule) {
           newNode = createNode(elementRule.outputName || name, 1);
           newNode.attributes = attrs;
@@ -545,7 +551,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
               if (list) {
                 list.push(newNode);
               } else {
-                matchedAttributes[attrName] = [newNode];
+                matchedAttributes[attrName] = [ newNode ];
               }
             }
           }
@@ -567,10 +573,10 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
         }
       },
 
-      end (name) {
-        let textNode, elementRule, text, sibling, tempNode;
+      end(name) {
+        let textNode, text, sibling, tempNode;
 
-        elementRule = validate ? schema.getElementRule(name) : {};
+        const elementRule: Partial<SchemaElement> = validate ? schema.getElementRule(name) : {};
         if (elementRule) {
           if (blockElements[name]) {
             if (!isInWhiteSpacePreservedElement) {
@@ -635,7 +641,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
 
             // Trim start white space
             // Removed due to: #5424
-            /*textNode = node.prev;
+            /* textNode = node.prev;
             if (textNode && textNode.type === 3) {
               text = textNode.value.replace(startWhiteSpaceRegExp, '');
 
@@ -652,19 +658,16 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
           }
 
           if (elementRule.removeEmpty && isEmpty(schema, nonEmptyElements, whiteSpaceElements, node)) {
-            // Leave nodes that have a name like <a name="name">
-            if (!node.attr('name') && !node.attr('id')) {
-              tempNode = node.parent;
+            tempNode = node.parent;
 
-              if (blockElements[node.name]) {
-                node.empty().remove();
-              } else {
-                node.unwrap();
-              }
-
-              node = tempNode;
-              return;
+            if (blockElements[node.name]) {
+              node.empty().remove();
+            } else {
+              node.unwrap();
             }
+
+            node = tempNode;
+            return;
           }
 
           if (elementRule.paddEmpty && (isPaddedWithNbsp(node) || isEmpty(schema, nonEmptyElements, whiteSpaceElements, node))) {
@@ -676,9 +679,9 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
       }
     }, schema);
 
-    const rootNode = node = new Node(args.context || settings.root_name, 11);
+    const rootNode = node = new AstNode(args.context || settings.root_name, 11);
 
-    parser.parse(html);
+    parser.parse(html, args.format as ParserFormat);
 
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length) {

@@ -5,20 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Debugging } from '@ephox/alloy';
-import { Fun, Id } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 import ThemeManager, { Theme } from 'tinymce/core/api/ThemeManager';
 import NotificationManagerImpl from './alien/NotificationManagerImpl';
 import { Autocompleter } from './Autocompleter';
-import Render, { RenderInfo } from './Render';
-import WindowManager from './ui/dialog/WindowManager';
+import * as Render from './Render';
+import * as WindowManager from './ui/dialog/WindowManager';
+
+type RenderInfo = Render.RenderInfo;
 
 export default function () {
   ThemeManager.add('silver', (editor): Theme => {
-    const { mothership, uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
-
-    Debugging.registerInspector(Id.generate('silver-demo'), mothership);
-    Debugging.registerInspector(Id.generate('silver-ui-demo'), uiMothership);
+    const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
     Autocompleter.register(editor, backstage.shared);
 
@@ -27,9 +25,7 @@ export default function () {
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl: () => {
-        return NotificationManagerImpl(editor, {backstage}, uiMothership);
-      },
+      getNotificationManagerImpl: () => NotificationManagerImpl(editor, { backstage }, uiMothership),
       // TODO: move to editor.ui namespace
       ui: getUi()
     };

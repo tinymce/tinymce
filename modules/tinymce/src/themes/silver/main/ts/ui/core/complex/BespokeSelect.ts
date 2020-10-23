@@ -5,53 +5,68 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
-import { Arr, Option, Fun } from '@ephox/katamari';
+import { AlloyComponent, TieredData } from '@ephox/alloy';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { TranslateIfNeeded } from 'tinymce/core/api/util/I18n';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
-import { AdvancedSelectDataset, BasicSelectDataset } from './SelectDatasets';
+import { SelectDataset } from './SelectDatasets';
 import * as FormatRegister from './utils/FormatRegister';
 
 export interface PreviewSpec {
   tag: string;
-  styleAttr: string;
+  styles: Record<string, string>;
 }
 
-export interface FormatItem {
-  type: 'separator' | 'submenu' | 'formatter';
-  title?: TranslateIfNeeded;
-  icon?: string;
-  getStyleItems: () => FormatItem[];
+export interface FormatterFormatItem {
+  type: 'formatter';
+  title?: string;
   format: string;
-  isSelected: () => boolean;
-  getStylePreview: () => Option<PreviewSpec>;
+  icon?: string;
+  isSelected: (value: Optional<any>) => boolean;
+  getStylePreview: () => Optional<PreviewSpec>;
 }
+
+export interface SubMenuFormatItem {
+  type: 'submenu';
+  title: string;
+  getStyleItems: () => FormatItem[];
+}
+
+export interface SeparatorFormatItem {
+  type: 'separator';
+  title?: string;
+}
+
+export type FormatItem = FormatterFormatItem | SubMenuFormatItem | SeparatorFormatItem;
 
 export interface SelectSpec {
   tooltip: string;
-  icon: Option<string>;
+  icon: Optional<string>;
   // This is used for determining if an item gets a tick in the menu
   isSelectedFor: FormatRegister.IsSelectedForType;
+  // This is used to get the current selection value when a menu is opened
+  getCurrentValue: () => Optional<any>;
   // This is used for rendering individual items with styles
   getPreviewFor: FormatRegister.GetPreviewForType;
   // This is used for clicking on the item
-  onAction: (item) => (api) => void;
+  onAction: (item: FormatterFormatItem) => (api) => void;
   // This is used for setting up the handler to change the menu text
-  nodeChangeHandler: Option<(comp: AlloyComponent) => (e) => void>;
+  nodeChangeHandler: Optional<(comp: AlloyComponent) => (e) => void>;
   // This is true if items should be hidden if they are not an applicable
   // format to the current selection
   shouldHide: boolean;
   // This determines if an item is applicable
-  isInvalid: (item: FormatItem) => boolean;
+  isInvalid: (item: FormatterFormatItem) => boolean;
 
   // This is used for assigning initial values
-  setInitialValue: Option<(comp: AlloyComponent) => void>;
+  setInitialValue: Optional<(comp: AlloyComponent) => void>;
+
+  dataset: SelectDataset;
 }
 
 export interface SelectData {
@@ -65,34 +80,35 @@ interface BespokeSelectApi {
 
 const enum IrrelevantStyleItemResponse { Hide, Disable }
 
-const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec) => {
-  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean): Option<Menu.NestedMenuItemContents> => {
+const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, disabled: boolean, value: Optional<any>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
-      return Option.some<Menu.SeparatorMenuItemApi>({
+      return Optional.some<Menu.SeparatorMenuItemSpec>({
         type: 'separator',
         text: translatedText
       });
     } else if (rawItem.type === 'submenu') {
-      const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response));
+      const items = Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value));
       if (response === IrrelevantStyleItemResponse.Hide && items.length <= 0) {
-        return Option.none();
+        return Optional.none();
       } else {
-        return Option.some<Menu.NestedMenuItemApi>({
+        return Optional.some<Menu.NestedMenuItemSpec>({
           type: 'nestedmenuitem',
           text: translatedText,
           disabled: items.length <= 0,
-          getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response))
+          getSubmenuItems: () => Arr.bind(rawItem.getStyleItems(), (si) => validate(si, response, value))
         });
       }
     } else {
-      return Option.some<Menu.ToggleMenuItemApi>({
+      return Optional.some<Menu.ToggleMenuItemSpec>({
         // ONLY TOGGLEMENUITEMS HANDLE STYLE META.
         // See ToggleMenuItem and ItemStructure for how it's handled.
         // If this type ever changes, we'll need to change that too
         type: 'togglemenuitem',
         text: translatedText,
-        active: rawItem.isSelected(),
+        icon: rawItem.icon,
+        active: rawItem.isSelected(value),
         disabled,
         onAction: spec.onAction(rawItem),
         ...rawItem.getStylePreview().fold(() => ({}), (preview) => ({ meta: { style: preview } as any }))
@@ -100,26 +116,27 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
     }
   };
 
-  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse): Menu.NestedMenuItemContents[] => {
+  const validate = (item: FormatItem, response: IrrelevantStyleItemResponse, value: Optional<any>): Menu.NestedMenuItemContents[] => {
     const invalid = item.type === 'formatter' && spec.isInvalid(item);
 
     // If we are making them disappear based on some setting
     if (response === IrrelevantStyleItemResponse.Hide) {
-      return invalid ? [ ] : generateItem(item, response, false).toArray();
+      return invalid ? [ ] : generateItem(item, response, false, value).toArray();
     } else {
-      return generateItem(item, response, invalid).toArray();
+      return generateItem(item, response, invalid, value).toArray();
     }
   };
 
-  const validateItems = (preItems) => {
+  const validateItems = (preItems: FormatItem[]) => {
+    const value = spec.getCurrentValue();
     const response = spec.shouldHide ? IrrelevantStyleItemResponse.Hide : IrrelevantStyleItemResponse.Disable;
-    return Arr.bind(preItems, (item) => validate(item, response));
+    return Arr.bind(preItems, (item) => validate(item, response, value));
   };
 
-  const getFetch = (backstage, getStyleItems) => (callback) => {
+  const getFetch = (backstage: UiFactoryBackstage, getStyleItems: () => FormatItem[]) => (comp: AlloyComponent, callback: (menu: Optional<TieredData>) => null) => {
     const preItems = getStyleItems();
     const items = validateItems(preItems);
-    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage);
+    const menu = NestedMenus.build(items, ItemResponse.CLOSE_ON_EXECUTE, backstage, false);
     callback(menu);
   };
 
@@ -128,7 +145,8 @@ const generateSelectItems = (editor: Editor, backstage: UiFactoryBackstage, spec
   };
 };
 
-const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
+const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const dataset = spec.dataset; // needs to be a var for tsc to understand the ternary
   const getStyleItems = dataset.type === 'basic' ? () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) : dataset.getData;
   return {
     items: generateSelectItems(editor, backstage, spec),
@@ -136,12 +154,10 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, dataset:
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, dataset: BasicSelectDataset | AdvancedSelectDataset, spec: SelectSpec) => {
-  const { items, getStyleItems } = createMenuItems(editor, backstage, dataset, spec);
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+  const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
-  const getApi = (comp: AlloyComponent): BespokeSelectApi => {
-    return { getComponent: () => comp };
-  };
+  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: () => comp });
 
   const onSetup = (api: BespokeSelectApi): () => void => {
     spec.setInitialValue.each((f) => f(api.getComponent()));
@@ -157,10 +173,10 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, datas
 
   return renderCommonDropdown(
     {
-      text: spec.icon.isSome() ? Option.none() : Option.some(''),
+      text: spec.icon.isSome() ? Optional.none() : Optional.some(''),
       icon: spec.icon,
-      tooltip: Option.from(spec.tooltip),
-      role: Option.none(),
+      tooltip: Optional.from(spec.tooltip),
+      role: Optional.none(),
       fetch: items.getFetch(backstage, getStyleItems),
       onSetup,
       getApi,

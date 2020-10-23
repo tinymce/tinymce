@@ -5,10 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document } from '@ephox/dom-globals';
 import { Throttler } from '@ephox/katamari';
-import * as CefUtils from '../keyboard/CefUtils';
 import Editor from '../api/Editor';
+import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 
 const setup = function (editor: Editor) {
   const renderFocusCaret = Throttler.first(function () {
@@ -20,7 +19,7 @@ const setup = function (editor: Editor) {
     if (!editor.removed && editor.getBody().contains(document.activeElement)) {
       const rng = editor.selection.getRng();
       if (rng.collapsed) { // see TINY-1479
-        const caretRange = CefUtils.renderRangeCaret(editor, editor.selection.getRng(), false);
+        const caretRange = FakeCaretUtils.renderRangeCaret(editor, rng, false);
         editor.selection.setRng(caretRange);
       }
     }
@@ -35,6 +34,6 @@ const setup = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   setup
 };

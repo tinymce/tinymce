@@ -1,12 +1,10 @@
-import { Objects } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
-import { EventFormat } from './SimulatedEvent';
-import { Element } from '@ephox/sugar';
+import { Cell, Obj } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-const derive = (rawEvent: EventFormat, rawTarget: Element): Cell<Element> => {
-  const source = Objects.readOptFrom<() => Element>(rawEvent, 'target').map((getTarget) => {
-    return getTarget();
-  }).getOr(rawTarget);
+import { EventFormat } from './SimulatedEvent';
+
+const derive = (rawEvent: EventFormat, rawTarget: SugarElement): Cell<SugarElement> => {
+  const source = Obj.get(rawEvent, 'target').getOr(rawTarget);
 
   return Cell(source);
 };

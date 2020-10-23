@@ -1,6 +1,6 @@
 {
   "name": "@tinymce/oxide-icons-default",
-  "version": "1.0.41",
+  "version": "1.5.1",
   "description": "The default icon pack for TinyMCE",
   "main": "dist/js/icons.js",
   "scripts": {
@@ -17,6 +17,6 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "author": "Ephox Corporation",
+  "author": "Tiny Technologies",
   "license": "LGPL-2.1"
 }

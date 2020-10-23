@@ -1,37 +1,36 @@
-import { Pipeline, GeneralSteps } from '@ephox/agar';
-import { Step } from '@ephox/agar';
-import TinyApis from 'ephox/mcagar/api/TinyApis';
-import TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import TinyUi from 'ephox/mcagar/api/TinyUi';
-import { UnitTest } from '@ephox/bedrock';
+import { Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import { TinyUi } from 'ephox/mcagar/api/TinyUi';
 
 UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
-  var handler = (ed) => () => {
-    var content = ed.getContent();
+  const handler = (ed: Editor) => () => {
+    const content = ed.getContent();
     ed.focus();
     if (content === '<p>tutorial content</p>') {
       ed.setContent('<p>alternate content</p>');
-      var paragraph = ed.getBody().childNodes[0];
+      const paragraph = ed.getBody().childNodes[0];
       ed.selection.setCursorLocation(paragraph, 1);
     } else {
       ed.setContent('<p>tutorial content</p>');
-      var target = ed.getBody().childNodes[0];
+      const target = ed.getBody().childNodes[0];
       ed.selection.select(target);
     }
   };
 
-  var silverSetup = (ed) => {
+  const silverSetup = (ed: Editor) => {
     ed.ui.registry.addButton('tutorial-button', {
       text: 'tutorial',
       onAction: handler(ed)
     });
   };
 
-  TinyLoader.setup((editor, loadSuccess, loadFailure) => {
+  TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
 
-    var ui = TinyUi(editor);
-    var apis = TinyApis(editor);
-
+    const ui = TinyUi(editor);
+    const apis = TinyApis(editor);
 
     Pipeline.async({}, [
       ui.sClickOnToolbar('Clicking on button', 'button:contains("tutorial")'),
@@ -41,7 +40,7 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
       ui.sClickOnToolbar('Clicking on button to change to alternate', 'button:contains("tutorial")'),
       apis.sAssertContent('<p>alternate content</p>'),
       Step.wait(400),
-      apis.sAssertSelection([0], 1, [0], 1),
+      apis.sAssertSelection([ 0 ], 1, [ 0 ], 1),
       ui.sClickOnToolbar('Clicking on button to change to tutorial again', 'button:contains("tutorial")'),
       apis.sAssertContent('<p>tutorial content</p>'),
       Step.wait(400),
@@ -49,10 +48,9 @@ UnitTest.asynctest('McagarTutorialTest', (success, failure) => {
     ], loadSuccess, loadFailure);
 
   }, {
-      setup: silverSetup,
-      menubar: false,
-      toolbar: 'tutorial-button',
-      base_url: '/project/tinymce/js/tinymce',
-    }, success, failure);
+    setup: silverSetup,
+    menubar: false,
+    toolbar: 'tutorial-button',
+    base_url: '/project/tinymce/js/tinymce'
+  }, success, failure);
 });
-

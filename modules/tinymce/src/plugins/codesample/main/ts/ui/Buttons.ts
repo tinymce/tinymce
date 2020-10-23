@@ -5,12 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Dialog from './Dialog';
 import Editor from 'tinymce/core/api/Editor';
+import * as Dialog from './Dialog';
 
-const isCodeSampleSelection = (editor) => {
+const isCodeSampleSelection = (editor: Editor) => {
   const node = editor.selection.getStart();
-  return editor.dom.is(node, 'pre.language-markup');
+  return editor.dom.is(node, 'pre[class*="language-"]');
 };
 
 const register = function (editor: Editor) {
@@ -24,7 +24,7 @@ const register = function (editor: Editor) {
       };
       editor.on('NodeChange', nodeChangeHandler);
       return () => editor.off('NodeChange', nodeChangeHandler);
-    },
+    }
   });
 
   editor.ui.registry.addMenuItem('codesample', {
@@ -34,6 +34,6 @@ const register = function (editor: Editor) {
   });
 };
 
-export default {
+export {
   register
 };

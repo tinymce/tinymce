@@ -1,139 +1,129 @@
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
+import { Arr, Future } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import * as AriaOwner from '../../aria/AriaOwner';
-import * as ComponentStructure from '../../alien/ComponentStructure';
-import * as AlloyParts from '../../parts/AlloyParts';
+import * as Layout from '../../positioning/layout/Layout';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
-import * as SplitToolbarBase from '../../ui/common/SplitToolbarBase';
 import * as SplitFloatingToolbarSchema from '../../ui/schema/SplitFloatingToolbarSchema';
-import { SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec } from '../../ui/types/SplitFloatingToolbarTypes';
+import {
+  SplitFloatingToolbarApis, SplitFloatingToolbarDetail, SplitFloatingToolbarSketcher, SplitFloatingToolbarSpec
+} from '../../ui/types/SplitFloatingToolbarTypes';
 import { Coupling } from '../behaviour/Coupling';
-import { Focusing } from '../behaviour/Focusing';
-import { Keying } from '../behaviour/Keying';
-import { Positioning } from '../behaviour/Positioning';
-import { Sandboxing } from '../behaviour/Sandboxing';
-import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
+import * as GuiFactory from '../component/GuiFactory';
+import * as Memento from '../component/Memento';
+import * as SketchBehaviours from '../component/SketchBehaviours';
+import { AlloySpec } from '../component/SpecTypes';
+import { FloatingToolbarButton } from './FloatingToolbarButton';
 import * as Sketcher from './Sketcher';
+import { ToolbarGroup } from './ToolbarGroup';
+import { CompositeSketchFactory } from './UiSketcher';
 
-const toggleToolbar = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail, externals: Record<string, any>) => {
-  const sandbox = Coupling.getCoupled(toolbar, 'sandbox');
-  if (Sandboxing.isOpen(sandbox)) {
-    Sandboxing.close(sandbox);
-  } else {
-    Sandboxing.open(sandbox, externals['overflow']());
-  }
-};
+const buildGroups = (comps: AlloyComponent[]): AlloySpec[] => Arr.map(comps, (g) => GuiFactory.premade(g));
 
-const isOpen = (over: AlloyComponent) => over.getSystem().isConnected();
+const refresh = (toolbar: AlloyComponent, memFloatingToolbarButton: Memento.MementoRecord, detail: SplitFloatingToolbarDetail) => {
+  SplitToolbarUtils.refresh(toolbar, detail, (overflowGroups) => {
+    detail.overflowGroups.set(overflowGroups);
 
-const refresh = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
-  const overflow = Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox'));
-  SplitToolbarUtils.refresh(toolbar, detail, overflow, isOpen);
-
-  // Position the overflow
-  overflow.each((overf) => {
-    const sink = detail.lazySink(toolbar).getOrDie();
-    const anchor = detail.getAnchor(toolbar);
-    Positioning.position(sink, anchor, overf);
+    memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
+      FloatingToolbarButton.setGroups(floatingToolbarButton, buildGroups(overflowGroups));
+    });
   });
-};
-
-const makeSandbox = (toolbar: AlloyComponent, detail: SplitFloatingToolbarDetail) => {
-  const ariaOwner = AriaOwner.manager();
-
-  const onOpen = (sandbox: AlloyComponent, overf: AlloyComponent) => {
-    // Refresh the content
-    refresh(toolbar, detail);
-
-    // Toggle the button and focus the first item in the overflow
-    AlloyParts.getPart(toolbar, detail, 'overflow-button').each((button) => {
-      Toggling.on(button);
-      ariaOwner.link(button.element());
-    });
-    Keying.focusIn(overf);
-  };
-
-  const onClose = () => {
-    // Toggle and focus the button
-    AlloyParts.getPart(toolbar, detail, 'overflow-button').each((button) => {
-      Toggling.off(button);
-      Focusing.focus(button);
-      ariaOwner.unlink(button.element());
-    });
-  };
-
-  return {
-    dom: {
-      tag: 'div',
-      attributes: {
-        id: ariaOwner.id()
-      }
-    },
-    behaviours: Behaviour.derive(
-      [
-        Keying.config({
-          mode: 'special',
-          onEscape: (comp) => {
-            Sandboxing.close(comp);
-            return Option.some(true);
-          }
-        }),
-        Sandboxing.config({
-          onOpen,
-          onClose,
-          isPartOf (container: AlloyComponent, data: AlloyComponent, queryElem: Element): boolean {
-            return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(toolbar, queryElem);
-          },
-          getAttachPoint () {
-            return detail.lazySink(toolbar).getOrDie();
-          }
-        })
-      ]
-    )
-  };
 };
 
 const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingToolbarSpec> = (detail, components, spec, externals) => {
-  return SplitToolbarBase.spec(detail, components, spec, externals, {
-    refresh,
-    toggleToolbar,
-    getOverflow: (toolbar) => Sandboxing.getState(Coupling.getCoupled(toolbar, 'sandbox')),
-    coupling: {
-      sandbox (toolbar) {
-        return makeSandbox(toolbar, detail)
+  const memFloatingToolbarButton = Memento.record(
+    FloatingToolbarButton.sketch({
+      fetch: () => Future.nu((resolve) => {
+        resolve(buildGroups(detail.overflowGroups.get()));
+      }),
+      layouts: {
+        onLtr: () => [ Layout.southwest, Layout.southeast ],
+        onRtl: () => [ Layout.southeast, Layout.southwest ],
+        onBottomLtr: () => [ Layout.northwest, Layout.northeast ],
+        onBottomRtl: () => [ Layout.northeast, Layout.northwest ]
+      },
+      getBounds: spec.getOverflowBounds,
+      lazySink: detail.lazySink,
+      fireDismissalEventInstead: {},
+      markers: {
+        toggledClass: detail.markers.overflowToggledClass
+      },
+      parts: {
+        button: externals['overflow-button'](),
+        toolbar: externals.overflow()
       }
+    })
+  );
+
+  return {
+    uid: detail.uid,
+    dom: detail.dom,
+    components,
+    behaviours: SketchBehaviours.augment(
+      detail.splitToolbarBehaviours,
+      [
+        Coupling.config({
+          others: {
+            overflowGroup() {
+              return ToolbarGroup.sketch({
+                ...externals['overflow-group'](),
+                items: [
+                  memFloatingToolbarButton.asSpec()
+                ]
+              });
+            }
+          }
+        })
+      ]
+    ),
+    apis: {
+      setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
+        detail.builtGroups.set(Arr.map(groups, toolbar.getSystem().build));
+        refresh(toolbar, memFloatingToolbarButton, detail);
+      },
+      refresh: (toolbar: AlloyComponent) => refresh(toolbar, memFloatingToolbarButton, detail),
+      toggle: (toolbar: AlloyComponent) => {
+        memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
+          FloatingToolbarButton.toggle(floatingToolbarButton);
+        });
+      },
+      isOpen: (toolbar: AlloyComponent) =>
+        memFloatingToolbarButton.getOpt(toolbar).map(FloatingToolbarButton.isOpen).getOr(false),
+      reposition: (toolbar: AlloyComponent) => {
+        memFloatingToolbarButton.getOpt(toolbar).each((floatingToolbarButton) => {
+          FloatingToolbarButton.reposition(floatingToolbarButton);
+        });
+      },
+      getOverflow: (toolbar: AlloyComponent) =>
+        memFloatingToolbarButton.getOpt(toolbar).bind(FloatingToolbarButton.getToolbar)
+    },
+
+    domModification: {
+      attributes: { role: 'group' }
     }
-  });
+  };
 };
 
-const SplitFloatingToolbar = Sketcher.composite({
+const SplitFloatingToolbar: SplitFloatingToolbarSketcher = Sketcher.composite<SplitFloatingToolbarSpec, SplitFloatingToolbarDetail, SplitFloatingToolbarApis>({
   name: 'SplitFloatingToolbar',
   configFields: SplitFloatingToolbarSchema.schema(),
   partFields: SplitFloatingToolbarSchema.parts(),
   factory,
   apis: {
-    setGroups(apis, toolbar, groups) {
+    setGroups: (apis, toolbar, groups) => {
       apis.setGroups(toolbar, groups);
     },
-    refresh(apis, toolbar) {
+    refresh: (apis, toolbar) => {
       apis.refresh(toolbar);
     },
-    getMoreButton(apis, toolbar) {
-      return apis.getMoreButton(toolbar);
+    reposition: (apis, toolbar) => {
+      apis.reposition(toolbar);
     },
-    getOverflow(apis, toolbar) {
-      return apis.getOverflow(toolbar);
-    },
-    toggle(apis, toolbar) {
+    toggle: (apis, toolbar) => {
       apis.toggle(toolbar);
-    }
+    },
+    isOpen: (apis, toolbar) => apis.isOpen(toolbar),
+    getOverflow: (apis, toolbar) => apis.getOverflow(toolbar)
   }
-}) as SplitFloatingToolbarSketcher;
+});
 
-export {
-  SplitFloatingToolbar
-};
+export { SplitFloatingToolbar };

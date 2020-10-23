@@ -1,14 +1,14 @@
-import { Cell, Future, Option, Result } from '@ephox/katamari';
-import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { Cell, Future, Optional, Result } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { CommonDropdownDetail } from '../../ui/types/DropdownTypes';
-import { InputDetail } from '../../ui/types/InputTypes';
-import { TieredData, TieredMenuSpec } from '../../ui/types/TieredMenuTypes';
+import { CommonDropdownDetail } from './DropdownTypes';
+import { InputDetail } from './InputTypes';
+import { ItemDataTuple } from './ItemTypes';
+import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 export interface TypeaheadModelDetail {
   getDisplayText: (item: TypeaheadData) => string;
@@ -31,7 +31,7 @@ export interface TypeaheadDetail extends CommonDropdownDetail<TieredData>, Input
   onItemExecute: (typeahead: AlloyComponent, sandbox: AlloyComponent, item: AlloyComponent, value: any) => void;
   dismissOnBlur: boolean;
 
-  initialData: Option<TypeaheadData>;
+  initialData: Optional<TypeaheadData>;
 
   markers: {
     openClass: string;
@@ -47,12 +47,12 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   // TODO: Add everything else.
   uid?: string;
   lazySink?: (comp: AlloyComponent) => Result<AlloyComponent, Error>;
-  fetch: (comp: AlloyComponent) => Future<Option<TieredData>>;
+  fetch: (comp: AlloyComponent) => Future<Optional<TieredData>>;
   components?: AlloySpec[];
   typeaheadBehaviours?: AlloyBehaviourRecord;
   sandboxClasses?: string[];
   sandboxBehaviours?: AlloyBehaviourRecord;
-  getHotspot?: (comp: AlloyComponent) => Option<AlloyComponent>;
+  getHotspot?: (comp: AlloyComponent) => Optional<AlloyComponent>;
   inputClasses?: string[];
   inputAttributes?: { };
   inputStyles?: { };
@@ -82,4 +82,4 @@ export interface TypeaheadSpec extends CompositeSketchSpec {
   initialData?: TypeaheadData;
 }
 
-export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec, TypeaheadDetail> { }
+export interface TypeaheadSketcher extends CompositeSketch<TypeaheadSpec> { }

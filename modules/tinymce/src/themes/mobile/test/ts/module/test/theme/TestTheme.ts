@@ -1,12 +1,13 @@
-import { Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Behaviour, Gui, GuiFactory, Memento, Replacing } from '@ephox/alloy';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 
 import ThemeManager from 'tinymce/core/api/ThemeManager';
-import Features from 'tinymce/themes/mobile/features/Features';
-import FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
+import * as Features from 'tinymce/themes/mobile/features/Features';
+import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
+import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 
-const name = 'test';
+const strName = 'test';
 
 const setup = function (info, onSuccess, onFailure) {
 
@@ -35,25 +36,34 @@ const setup = function (info, onSuccess, onFailure) {
   alloy.add(toolbar);
   alloy.add(socket);
 
-  const realm = {
-    system: Fun.constant(alloy),
-    socket: Fun.constant(socket)
+  const realm: MobileRealm = {
+    dropup: null,
+    element: null,
+    exit: Fun.die('not implemented'),
+    focusToolbar: Fun.die('not implemented'),
+    init: Fun.die('not implemented'),
+    restoreToolbar: Fun.die('not implemented'),
+    setContextToolbar: Fun.die('not implemented'),
+    setToolbarGroups: Fun.die('not implemented'),
+    updateMode: Fun.die('not implemented'),
+    system: alloy,
+    socket
   };
 
-  ThemeManager.add(name, function (editor) {
+  ThemeManager.add(strName, function (editor) {
     return {
-      renderUI () {
+      renderUI() {
         editor.fire('SkinLoaded');
         return {
-          iframeContainer: socket.element().dom(),
-          editorContainer: alloy.element().dom()
+          iframeContainer: socket.element.dom,
+          editorContainer: alloy.element.dom
         };
       }
     };
   });
 
   return {
-    use (f) {
+    use(f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
       TinyLoader.setup(function (editor, onS, onF) {
         const features = Features.setup(realm, editor);
 
@@ -74,14 +84,16 @@ const setup = function (info, onSuccess, onFailure) {
         Replacing.set(toolbar, toolbarItems);
         f(realm, apis, toolbar, socket, buttons, onS, onF);
       }, {
-        theme: name,
+        theme: strName,
         base_url: '/project/tinymce/js/tinymce'
       }, onSuccess, onFailure);
     }
   };
 };
 
-export default {
+const name = Fun.constant(strName);
+
+export {
   setup,
-  name: Fun.constant(name)
+  name
 };

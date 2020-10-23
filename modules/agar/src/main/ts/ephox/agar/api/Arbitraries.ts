@@ -1,31 +1,26 @@
-import Generators from './Generators';
-import ArbContent from '../arbitrary/ArbContent';
-import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
+import * as ArbContent from '../arbitrary/ArbContent';
+import * as Generators from './Generators';
 
-var scenario = function (component, overrides, exclusions) {
+const scenario = (component, overrides, exclusions) => {
   // Note, in some environments, scenarios will not work, if setting
   // the arbitrary html involves some normalisation.
-  var arbitrary = content(component, overrides);
-  var generator = arbitrary.generator.flatMap(function (root) {
-    return Generators.selection(root, exclusions).map(function (selection) {
-      return {
-        root: Fun.constant(root),
-        selection: Fun.constant(selection)
-      };
-    });
-  });
+  const arbitrary = content(component, overrides);
+  const generator = arbitrary.generator.flatMap((root) =>
+    Generators.selection(root, exclusions).map((selection) => ({
+      root,
+      selection
+    })));
 
   return Jsc.bless({
-    generator: generator
+    generator
   });
 };
 
-var content = function (component, overrides?) {
-  return ArbContent.arbOf(component, overrides);
-};
+const content = (component, overrides?) =>
+  ArbContent.arbOf(component, overrides);
 
-export default {
-  scenario: scenario,
-  content: content
+export {
+  scenario,
+  content
 };

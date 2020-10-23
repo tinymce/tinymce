@@ -1,15 +1,12 @@
-import { Result, Arr } from '@ephox/katamari';
-import { value, objOf, arrOf, arrOfObj, anyValue, objOfOnly, Processor, field, state as valueState } from '../core/ValueProcessor';
-import * as FieldPresence from './FieldPresence';
-import { FieldProcessorAdt } from '../format/TypeTokens';
-import * as ValueSchema from './ValueSchema';
+import { Arr, Result } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
+import { anyValue, arrOf, arrOfObj, field, FieldProcessorAdt, objOf, objOfOnly, Processor, state as valueState, value } from '../core/ValueProcessor';
+import * as FieldPresence from './FieldPresence';
+import * as ValueSchema from './ValueSchema';
 
-const validateEnum = (values) => ValueSchema.valueOf((value) => {
-  return Arr.contains(values, value) ?
-    Result.value(value) :
-    Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`);
-});
+const validateEnum = (values) => ValueSchema.valueOf((value) => Arr.contains(values, value) ?
+  Result.value(value) :
+  Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`));
 
 const strict = function (key: string): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), anyValue());
@@ -39,18 +36,22 @@ const strictFunction = function (key: string): FieldProcessorAdt {
   return strictOf(key, ValueSchema.func);
 };
 
+const strictPostMsg = function (key: string): FieldProcessorAdt {
+  return strictOf(key, ValueSchema.postMessageable);
+};
+
 const forbid = function (key: string, message: string): FieldProcessorAdt {
   return field(
     key,
     key,
     FieldPresence.asOption(),
-    value(function (v) {
+    value(function (_v) {
       return SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message);
     })
   );
 };
 
-const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt  {
+const strictObjOf = function (key: string, objSchema: FieldProcessorAdt[]): FieldProcessorAdt {
   return field(key, key, FieldPresence.strict(), objOf(objSchema));
 };
 
@@ -77,7 +78,7 @@ const option = function (key: string): FieldProcessorAdt {
 };
 
 const optionOf = function (key: string, schema: Processor): FieldProcessorAdt {
-   return field(key, key, FieldPresence.asOption(), schema);
+  return field(key, key, FieldPresence.asOption(), schema);
 };
 
 const optionNumber = function (key: string): FieldProcessorAdt {
@@ -98,6 +99,10 @@ const optionBoolean = function (key: string): FieldProcessorAdt {
 
 const optionFunction = function (key: string): FieldProcessorAdt {
   return optionOf(key, ValueSchema.func);
+};
+
+const optionPostMsg = function (key: string): FieldProcessorAdt {
+  return optionOf(key, ValueSchema.postMessageable);
 };
 
 const optionArrayOf = function (key: string, schema: Processor): FieldProcessorAdt {
@@ -140,6 +145,10 @@ const defaultedFunction = function (key: string, fallback: (...x: any[]) => any)
   return defaultedOf(key, fallback, ValueSchema.func);
 };
 
+const defaultedPostMsg = function (key: string, fallback: any): FieldProcessorAdt {
+  return defaultedOf(key, fallback, ValueSchema.postMessageable);
+};
+
 const defaultedArrayOf = function (key: string, fallback: any[], schema: Processor): FieldProcessorAdt {
   return defaultedOf(key, fallback, arrOf(schema));
 };
@@ -163,6 +172,7 @@ export {
   strictStringEnum,
   strictBoolean,
   strictFunction,
+  strictPostMsg,
 
   forbid,
 
@@ -173,6 +183,7 @@ export {
   optionStringEnum,
   optionBoolean,
   optionFunction,
+  optionPostMsg,
   optionObjOf,
   optionObjOfOnly,
   optionArrayOf,
@@ -184,6 +195,7 @@ export {
   defaultedStringEnum,
   defaultedBoolean,
   defaultedFunction,
+  defaultedPostMsg,
   defaultedObjOf,
   defaultedArrayOf,
 

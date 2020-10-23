@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import ArrUtils from '../util/ArrUtils';
-import NodeType from '../dom/NodeType';
 import DomQuery from '../api/dom/DomQuery';
 import Editor from '../api/Editor';
+import * as NodeType from '../dom/NodeType';
+import * as ArrUtils from '../util/ArrUtils';
 
 /**
  * Internal class for overriding formatting.
@@ -17,13 +17,15 @@ import Editor from '../api/Editor';
  * @class tinymce.fmt.Hooks
  */
 
-const postProcessHooks = {}, filter = ArrUtils.filter, each = ArrUtils.each;
+const postProcessHooks: Record<string, Array<(editor: Editor) => void>> = {};
+const filter = ArrUtils.filter;
+const each = ArrUtils.each;
 
 const addPostProcessHook = function (name, hook) {
-  let hooks = postProcessHooks[name];
+  const hooks = postProcessHooks[name];
 
   if (!hooks) {
-    postProcessHooks[name] = hooks = [];
+    postProcessHooks[name] = [];
   }
 
   postProcessHooks[name].push(hook);
@@ -37,7 +39,7 @@ const postProcess = function (name: string, editor: Editor) {
 
 addPostProcessHook('pre', function (editor: Editor) {
   const rng = editor.selection.getRng();
-  let isPre, blocks;
+  let blocks;
 
   const hasPreSibling = function (pre) {
     return isPre(pre.previousSibling) && ArrUtils.indexOf(blocks, pre.previousSibling) !== -1;
@@ -48,7 +50,7 @@ addPostProcessHook('pre', function (editor: Editor) {
     DomQuery(pre1).append('<br><br>').append(pre2.childNodes);
   };
 
-  isPre = NodeType.matchNodeNames('pre');
+  const isPre = NodeType.matchNodeNames([ 'pre' ]);
 
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();
@@ -59,6 +61,6 @@ addPostProcessHook('pre', function (editor: Editor) {
   }
 });
 
-export default {
+export {
   postProcess
 };

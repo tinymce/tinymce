@@ -1,32 +1,28 @@
 import { FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { Traverse } from '@ephox/sugar';
+import { SugarElement, Traverse } from '@ephox/sugar';
 
-/* global assert */
-
-const range = (num, f) => {
+const range = <T, R>(num: number, f: (v: T, i: number) => R[]) => {
   const array = new Array(num);
   return Arr.bind(array, f);
 };
 
-const sequence = (doc, key, modifiers, identifiers) => {
-  const array = range(identifiers.length, (_, i) => {
-    return [
-      Keyboard.sKeydown(doc, key, modifiers),
-      FocusTools.sTryOnSelector(
-        'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
-        doc,
-        identifiers[i].selector
-      ),
-      Step.wait(0)
-    ];
-  });
+const sequence = (doc: SugarElement<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
+  const array = range(identifiers.length, (_, i) => [
+    Keyboard.sKeydown(doc, key, modifiers),
+    FocusTools.sTryOnSelector(
+      'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label,
+      doc,
+      identifiers[i].selector
+    ),
+    Step.wait(0)
+  ]);
 
   return GeneralSteps.sequence(array);
 };
 
 // Selector based
-const highlights = (container, key, modifiers, identifiers) => {
+const highlights = (container: SugarElement, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
   const array = range(identifiers.length, (_, i) => {
     const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
     const doc = Traverse.owner(container);

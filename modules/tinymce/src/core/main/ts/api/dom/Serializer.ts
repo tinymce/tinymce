@@ -5,27 +5,22 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { DomSerializer, DomSerializerSettings } from '../../dom/DomSerializer';
-import Schema from '../html/Schema';
+import { DomSerializerImpl, DomSerializerSettings } from '../../dom/DomSerializerImpl';
 import Editor from '../Editor';
 
-// tslint:disable-next-line:no-empty-interface
-export interface SerializerSettings extends DomSerializerSettings {
-}
+export { DomSerializerSettings } from '../../dom/DomSerializerImpl';
 
-// tslint:disable-next-line:no-empty-interface
-interface Serializer extends DomSerializer {
-}
+interface DomSerializer extends DomSerializerImpl { }
 
 /**
- * This class is used to serialize DOM trees into a string. Consult the TinyMCE Wiki API for
+ * This class is used to serialize DOM trees into a string. Consult the TinyMCE API Documentation for
  * more details and examples on how to use this class.
  *
  * @class tinymce.dom.Serializer
  */
 
-const Serializer = function (settings: SerializerSettings, editor?: Editor): Serializer {
-  const domSerializer = DomSerializer(settings, editor);
+const DomSerializer = function (settings: DomSerializerSettings, editor?: Editor): DomSerializer {
+  const domSerializer = DomSerializerImpl(settings, editor);
 
   // Return public methods
   return {
@@ -34,11 +29,11 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
      *
      * @field {tinymce.html.Schema} schema
      */
-    schema: domSerializer.schema as Schema,
+    schema: domSerializer.schema,
 
     /**
      * Adds a node filter function to the parser used by the serializer, the parser will collect the specified nodes by name
-     * and then execute the callback ones it has finished parsing the document.
+     * and then execute the callback once it has finished parsing the document.
      *
      * @example
      * parser.addNodeFilter('p,h1', function(nodes, name) {
@@ -55,7 +50,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Adds a attribute filter function to the parser used by the serializer, the parser will
      * collect nodes that has the specified attributes
-     * and then execute the callback ones it has finished parsing the document.
+     * and then execute the callback once it has finished parsing the document.
      *
      * @example
      * parser.addAttributeFilter('src,href', function(nodes, name) {
@@ -81,7 +76,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Adds valid elements rules to the serializers schema instance this enables you to specify things
      * like what elements should be outputted and what attributes specific elements might have.
-     * Consult the Wiki for more details on this format.
+     * Consult the TinyMCE Documentation for more details on this format.
      *
      * @method addRules
      * @param {String} rules Valid elements rules string to add to schema.
@@ -91,7 +86,7 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
     /**
      * Sets the valid elements rules to the serializers schema instance this enables you to specify things
      * like what elements should be outputted and what attributes specific elements might have.
-     * Consult the Wiki for more details on this format.
+     * Consult the TinyMCE Documentation for more details on this format.
      *
      * @method setRules
      * @param {String} rules Valid elements rules string.
@@ -113,8 +108,12 @@ const Serializer = function (settings: SerializerSettings, editor?: Editor): Ser
      * @method getTempAttrs
      * @return {String[]} Array with attribute names.
      */
-    getTempAttrs: domSerializer.getTempAttrs
+    getTempAttrs: domSerializer.getTempAttrs,
+
+    getNodeFilters: domSerializer.getNodeFilters,
+
+    getAttributeFilters: domSerializer.getAttributeFilters
   };
 };
 
-export default Serializer;
+export default DomSerializer;

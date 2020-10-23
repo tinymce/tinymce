@@ -1,26 +1,8 @@
-import { LegacyUnit } from '@ephox/mcagar';
-import { Pipeline } from '@ephox/agar';
-import Zwsp from 'tinymce/core/text/Zwsp';
-import { UnitTest } from '@ephox/bedrock';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import * as Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('atomic.tinymce.core.text.ZwspTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
-  const suite = LegacyUnit.createSuite();
-
-  suite.test('ZWSP', function () {
-    LegacyUnit.strictEqual(Zwsp.ZWSP, '\uFEFF');
-  });
-
-  suite.test('isZwsp', function () {
-    LegacyUnit.strictEqual(Zwsp.isZwsp(Zwsp.ZWSP), true);
-  });
-
-  suite.test('isZwsp', function () {
-    LegacyUnit.strictEqual(Zwsp.trim('a' + Zwsp.ZWSP + 'b'), 'ab');
-  });
-
-  Pipeline.async({}, suite.toSteps({}), function () {
-    success();
-  }, failure);
+UnitTest.test('atomic.tinymce.core.text.ZwspTest', () => {
+  Assert.eq('ZWSP should be FEFF', '\uFEFF', Zwsp.ZWSP);
+  Assert.eq('isZwsp(ZWSP) should be true', true, Zwsp.isZwsp(Zwsp.ZWSP));
+  Assert.eq('ZWSP should be stripped out', 'ab', Zwsp.trim('a' + Zwsp.ZWSP + 'b'));
 });

@@ -5,23 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { EmojiDatabase } from '../core/EmojiDatabase';
 
 import { emojisFrom } from '../core/Lookup';
-import { EmojiDatabase } from '../core/EmojiDatabase';
 
 const init = (editor: Editor, database: EmojiDatabase): void => {
   editor.ui.registry.addAutocompleter('emoticons', {
     ch: ':',
     columns: 'auto',
     minChars: 2,
-    fetch: (pattern, maxResults) => {
-      return database.waitForLoad().then(() => {
-        const candidates = database.listAll();
-        return emojisFrom(candidates, pattern, Option.some(maxResults));
-      });
-    },
+    fetch: (pattern, maxResults) => database.waitForLoad().then(() => {
+      const candidates = database.listAll();
+      return emojisFrom(candidates, pattern, Optional.some(maxResults));
+    }),
     onAction: (autocompleteApi, rng, value) => {
       editor.selection.setRng(rng);
       editor.insertContent(value);

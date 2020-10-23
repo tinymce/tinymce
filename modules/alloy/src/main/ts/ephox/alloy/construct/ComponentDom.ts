@@ -1,6 +1,4 @@
-import { Objects } from '@ephox/boulder';
-import { Arr, Merger, Obj, Option, Result } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import { AlloyBehaviour } from '../api/behaviour/Behaviour';
@@ -9,11 +7,17 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import { DomDefinitionDetail } from '../dom/DomDefinition';
 import { DomModification, nu as NuModification } from '../dom/DomModification';
 
-type Mergers<K extends keyof DomModification> = Record<K, (a: DomModification[K], b: DomModification[K]) => DomModification[K]>;
+interface Modification<T> {
+  name: string;
+  modification: T;
+}
+
+type DomModificationAspectRecord = { [K in keyof DomModification]: Array<Modification<DomModification[K]>> };
+
 // Based on all the behaviour exhibits, and the original dom modification, identify
 // the overall combined dom modification that needs to occur
 const combine = (
-  info: Record<string, () => Option<BehaviourConfigAndState<any, BehaviourState>>>,
+  info: Record<string, () => Optional<BehaviourConfigAndState<any, BehaviourState>>>,
   baseMod: Record<string, DomModification>,
   behaviours: Array<AlloyBehaviour<any, any>>,
   base: DomDefinitionDetail
@@ -21,40 +25,22 @@ const combine = (
   // Collect all the DOM modifications, indexed by behaviour name (and base for base)
   type BehaviourName = string;
   // classes are array of strings, styles and attributes are a record
-  type ModificationName = keyof DomModification;
-  type ModificationEffect = any;
-
+  type DomModificationRecord = { [K in keyof DomModification]: DomModification[K] };
 
   // Clone the object so we can change it.
-  const modsByBehaviour: Record<BehaviourName, DomModification> = { ...baseMod };
-  Arr.each(behaviours, (behaviour: AlloyBehaviour<any, any>) => {
+  const modsByBehaviour: Record<BehaviourName, DomModificationRecord> = { ...baseMod };
+  Arr.each(behaviours, (behaviour) => {
     modsByBehaviour[behaviour.name()] = behaviour.exhibit(info, base);
   });
 
-  const nameAndMod = (name: BehaviourName, modification: ModificationEffect) => {
-    return {
-      name,
-      modification: modification
-    };
-  };
-
   // byAspect format: { classes: [ { name: Toggling, modification: [ 'selected' ] } ] }
-  const byAspect = ObjIndex.byInnerKey<any, any>(modsByBehaviour, nameAndMod) as Record<
-    ModificationName,
-    Array<{ name: BehaviourName, modification: ModificationEffect }>
-  >;
+  const byAspect = ObjIndex.byInnerKey(modsByBehaviour, (name, modification) => ({ name, modification })) as DomModificationAspectRecord;
 
+  const combineObjects = <T extends Record<string, any>>(objects: Array<Modification<T>>): T => Arr.foldr(objects, (b, a) => ({ ...a.modification, ...b }), { } as T);
 
-  const combineObjects = (objects: Record<any, any>[]) => Arr.foldr(objects, (b, a: { modification: Record<string, string> }) => {
-    return { ...a.modification, ... b}
-  }, { });
-
-
-  const combinedClasses: string[] = Arr.foldr(byAspect.classes, (b, a: { modification: string[] }) => {
-    return a.modification.concat(b);
-  }, [ ]);
-  const combinedAttributes: Record<string, string> = combineObjects(byAspect.attributes);
-  const combinedStyles: Record<string, string> = combineObjects(byAspect.styles);
+  const combinedClasses = Arr.foldr(byAspect.classes, (b: string[], a) => a.modification.concat(b), [ ]);
+  const combinedAttributes = combineObjects(byAspect.attributes);
+  const combinedStyles = combineObjects(byAspect.styles);
 
   return NuModification({
     classes: combinedClasses,

@@ -5,201 +5,252 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Cell, Singleton } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Arr } from '@ephox/katamari';
+import Env from 'tinymce/core/api/Env';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import Actions from '../core/Actions';
-import { Types } from '@ephox/bridge';
-import I18n from 'tinymce/core/api/util/I18n';
+import * as Actions from '../core/Actions';
 
 export interface DialogData {
   findtext: string;
   replacetext: string;
   matchcase: boolean;
   wholewords: boolean;
+  inselection: boolean;
 }
 
-const open = function (editor: Editor, currentIndexState) {
-  let last: any = {}, selectedText: string;
+const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+  const dialogApi = Singleton.value<Dialog.DialogInstanceApi<DialogData>>();
   editor.undoManager.add();
 
-  selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
+  const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api: Types.Dialog.DialogInstanceApi<DialogData>) {
-    const updateNext = Actions.hasNext(editor, currentIndexState) ? api.enable : api.disable;
+  function updateButtonStates(api: Dialog.DialogInstanceApi<DialogData>) {
+    const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
-    const updatePrev = Actions.hasPrev(editor, currentIndexState) ? api.enable : api.disable;
+    const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
   }
 
-  const disableAll = function (api: Types.Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
+  const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>) => {
+    const data = api.getData();
+    const current = currentSearchState.get();
+
+    currentSearchState.set({
+      ...current,
+      matchCase: data.matchcase,
+      wholeWord: data.wholewords,
+      inSelection: data.inselection
+    });
+  };
+
+  const disableAll = function (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api: Types.Dialog.DialogInstanceApi<DialogData>) {
+  function notFoundAlert(api: Dialog.DialogInstanceApi<DialogData>) {
     editor.windowManager.alert('Could not find the specified string.', function () {
       api.focus('findtext');
     });
   }
 
-  const doSubmit = (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
+  // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441
+  const focusButtonIfRequired = (api: Dialog.DialogInstanceApi<DialogData>, name: string) => {
+    if (Env.browser.isSafari() && Env.deviceType.isTouch() && (name === 'find' || name === 'replace' || name === 'replaceall')) {
+      api.focus(name);
+    }
+  };
+
+  const reset = (api: Dialog.DialogInstanceApi<DialogData>) => {
+    // Clean up the markers if required
+    Actions.done(editor, currentSearchState, false);
+
+    // Disable the buttons
+    disableAll(api, true);
+    updateButtonStates(api);
+  };
+
+  const doFind = (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
+    const last = currentSearchState.get();
 
     if (!data.findtext.length) {
-      Actions.done(editor, currentIndexState, false);
-      disableAll(api, true);
-      updateButtonStates(api);
+      reset(api);
       return;
     }
 
-    if (last.text === data.findtext && last.caseState === data.matchcase && last.wholeWord === data.wholewords) {
-      if (!Actions.hasNext(editor, currentIndexState)) {
-          notFoundAlert(api);
-          return;
+    // Same search text, so treat the find as a next click instead
+    if (last.text === data.findtext && last.matchCase === data.matchcase && last.wholeWord === data.wholewords) {
+      Actions.next(editor, currentSearchState);
+    } else {
+      // Find new matches
+      const count = Actions.find(editor, currentSearchState, data.findtext, data.matchcase, data.wholewords, data.inselection);
+      if (count <= 0) {
+        notFoundAlert(api);
       }
-      Actions.next(editor, currentIndexState);
-      updateButtonStates(api);
-      return;
-    }
-    const count = Actions.find(editor, currentIndexState, data.findtext, data.matchcase, data.wholewords);
-    if (!count) {
-      notFoundAlert(api);
+      disableAll(api, count === 0);
     }
 
-    disableAll(api, count === 0);
     updateButtonStates(api);
-
-    last = {
-      text: data.findtext,
-      caseState: data.matchcase,
-      wholeWord: data.wholewords
-    };
   };
+
+  const initialState = currentSearchState.get();
 
   const initialData: DialogData = {
     findtext: selectedText,
     replacetext: '',
-    matchcase: false,
-    wholewords: false
+    wholewords: initialState.wholeWord,
+    matchcase: initialState.matchCase,
+    inselection: initialState.inSelection
   };
-  editor.windowManager.open<DialogData>({
+
+  const spec: Dialog.DialogSpec<DialogData> = {
     title: 'Find and Replace',
     size: 'normal',
     body: {
       type: 'panel',
       items: [
         {
-          type: 'input',
-          name: 'findtext',
-          label: 'Find'
+          type: 'bar',
+          items: [
+            {
+              type: 'input',
+              name: 'findtext',
+              placeholder: 'Find',
+              maximized: true,
+              inputMode: 'search'
+            },
+            {
+              type: 'button',
+              name: 'prev',
+              text: 'Previous',
+              icon: 'action-prev',
+              disabled: true,
+              borderless: true
+            },
+            {
+              type: 'button',
+              name: 'next',
+              text: 'Next',
+              icon: 'action-next',
+              disabled: true,
+              borderless: true
+            }
+          ]
         },
         {
           type: 'input',
           name: 'replacetext',
-          label: 'Replace with'
-        },
-        {
-          type: 'grid',
-          columns: 2,
-          items: [
-            {
-              type: 'checkbox',
-              name: 'matchcase',
-              label: 'Match case'
-            },
-            {
-              type: 'checkbox',
-              name: 'wholewords',
-              label: 'Find whole words only'
-            }
-          ]
+          placeholder: 'Replace with',
+          inputMode: 'search'
         }
       ]
     },
     buttons: [
       {
+        type: 'menu',
+        name: 'options',
+        icon: 'preferences',
+        tooltip: 'Preferences',
+        align: 'start',
+        items: [
+          {
+            type: 'togglemenuitem',
+            name: 'matchcase',
+            text: 'Match case'
+          }, {
+            type: 'togglemenuitem',
+            name: 'wholewords',
+            text: 'Find whole words only'
+          },
+          {
+            type: 'togglemenuitem',
+            name: 'inselection',
+            text: 'Find in selection'
+          }
+        ]
+      },
+      {
         type: 'custom',
         name: 'find',
         text: 'Find',
-        align: 'start',
         primary: true
       },
       {
         type: 'custom',
         name: 'replace',
         text: 'Replace',
-        align: 'start',
-        disabled: true,
+        disabled: true
       },
       {
         type: 'custom',
         name: 'replaceall',
         text: 'Replace All',
-        align: 'start',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'prev',
-        text: 'Previous',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-right' : 'arrow-left',
-        disabled: true,
-      },
-      {
-        type: 'custom',
-        name: 'next',
-        text: 'Next',
-        align: 'end',
-        // TODO TINY-3598: Use css to transform the icons when dir=rtl instead of swapping them
-        icon: I18n.isRtl() ? 'arrow-left' : 'arrow-right',
-        disabled: true,
+        disabled: true
       }
     ],
     initialData,
+    onChange: (api, details) => {
+      if (details.name === 'findtext' && currentSearchState.get().count > 0) {
+        reset(api);
+      }
+    },
     onAction: (api, details) => {
       const data = api.getData();
       switch (details.name) {
         case 'find':
-          doSubmit(api);
+          doFind(api);
           break;
         case 'replace':
-          if (!Actions.replace(editor, currentIndexState, data.replacetext)) {
-            disableAll(api, true);
-            currentIndexState.set(-1);
-            last = {};
+          if (!Actions.replace(editor, currentSearchState, data.replacetext)) {
+            reset(api);
+          } else {
+            updateButtonStates(api);
           }
           break;
         case 'replaceall':
-          Actions.replace(editor, currentIndexState, data.replacetext, true, true);
-          disableAll(api, true);
-          last = {};
+          Actions.replace(editor, currentSearchState, data.replacetext, true, true);
+          reset(api);
           break;
         case 'prev':
-          Actions.prev(editor, currentIndexState);
+          Actions.prev(editor, currentSearchState);
           updateButtonStates(api);
           break;
         case 'next':
-          Actions.next(editor, currentIndexState);
+          Actions.next(editor, currentSearchState);
           updateButtonStates(api);
+          break;
+        case 'matchcase':
+        case 'wholewords':
+        case 'inselection':
+          updateSearchState(api);
+          reset(api);
           break;
         default:
           break;
       }
+
+      focusButtonIfRequired(api, details.name);
     },
-    onSubmit: doSubmit,
+    onSubmit: (api) => {
+      doFind(api);
+      focusButtonIfRequired(api, 'find');
+    },
     onClose: () => {
       editor.focus();
-      Actions.done(editor, currentIndexState);
+      Actions.done(editor, currentSearchState);
       editor.undoManager.add();
     }
-  });
+  };
+
+  dialogApi.set(editor.windowManager.open(spec, { inline: 'toolbar' }));
 };
 
-export default {
+export {
   open
 };

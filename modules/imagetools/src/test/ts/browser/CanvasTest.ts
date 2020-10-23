@@ -1,6 +1,5 @@
-import { UnitTest } from '@ephox/bedrock';
-import { HTMLCanvasElement } from '@ephox/dom-globals';
-import Assertion from 'ephox/imagetools/test/Assertion';
+import { UnitTest } from '@ephox/bedrock-client';
+import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Canvas from 'ephox/imagetools/util/Canvas';
 
 UnitTest.test('CanvasTest', function () {

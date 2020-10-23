@@ -8,8 +8,8 @@
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
 import I18n from 'tinymce/core/api/util/I18n';
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
+import * as ConvertShortcut from '../alien/ConvertShortcut';
 import * as ItemClasses from '../ItemClasses';
-import ConvertShortcut from '../alien/ConvertShortcut';
 
 const renderIcon = (iconHtml: string): AlloySpec => ({
   dom: {
@@ -37,19 +37,19 @@ const renderHtml = (html: string): AlloySpec => ({
 
 interface StyleProps {
   tag: string;
-  styleAttr: string;
+  styles: Record<string, string>;
 }
 
 const renderStyledText = (style: StyleProps, text: string): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes: [ ItemClasses.textClass ]
   },
   components: [
     {
       dom: {
         tag: style.tag,
-        attributes: { style: style.styleAttr  }
+        styles: style.styles
       },
       components: [ GuiFactory.text(I18n.translate(text)) ]
     }
@@ -67,7 +67,7 @@ const renderShortcut = (shortcut: string): AlloySpec => ({
 const renderCheckmark = (icons: IconProvider): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.iconClass, ItemClasses.checkmarkClass ],
+    classes: [ ItemClasses.checkmarkClass ],
     innerHtml: getIcon('checkmark', icons)
   }
 });
@@ -80,6 +80,14 @@ const renderSubmenuCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
+const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ ItemClasses.caretClass ],
+    innerHtml: getIcon('chevron-down', icons)
+  }
+});
+
 export {
   renderIcon,
   renderText,
@@ -87,5 +95,6 @@ export {
   renderStyledText,
   renderShortcut,
   renderCheckmark,
-  renderSubmenuCaret
+  renderSubmenuCaret,
+  renderDownwardsCaret
 };

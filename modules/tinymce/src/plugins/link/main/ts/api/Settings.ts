@@ -5,13 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
+import { UserListItem } from '../ui/DialogTypes';
 import { AssumeExternalTargets } from './Types';
 
-const assumeExternalTargets = function (editorSettings): AssumeExternalTargets {
-  const externalTargets = editorSettings.link_assume_external_targets;
-  if (typeof externalTargets === 'boolean' && externalTargets) {
+const assumeExternalTargets = (editor: Editor): AssumeExternalTargets => {
+  const externalTargets = editor.getParam('link_assume_external_targets', false);
+  if (Type.isBoolean(externalTargets) && externalTargets) {
     return AssumeExternalTargets.WARN;
-  } else if (typeof externalTargets === 'string'
+  } else if (Type.isString(externalTargets)
       && (externalTargets === AssumeExternalTargets.ALWAYS_HTTP
         || externalTargets === AssumeExternalTargets.ALWAYS_HTTPS)) {
     return externalTargets;
@@ -19,76 +22,36 @@ const assumeExternalTargets = function (editorSettings): AssumeExternalTargets {
   return AssumeExternalTargets.OFF;
 };
 
-const hasContextToolbar = function (editorSettings) {
-  return typeof editorSettings.link_context_toolbar === 'boolean' ? editorSettings.link_context_toolbar : false;
-};
+const hasContextToolbar = (editor: Editor) => editor.getParam('link_context_toolbar', false, 'boolean');
 
-const getLinkList = function (editorSettings) {
-  return editorSettings.link_list;
-};
+const getLinkList = (editor: Editor): string | UserListItem[] | ((success: (val: any) => void) => void) => editor.getParam('link_list');
 
-const hasDefaultLinkTarget = function (editorSettings) {
-  return typeof editorSettings.default_link_target === 'string';
-};
+const getDefaultLinkTarget = (editor: Editor) => editor.getParam('default_link_target');
 
-const useQuickLink = function (editorSettings) {
-  return editorSettings.link_quicklink === true;
-};
+const getTargetList = (editor: Editor): boolean | UserListItem[] => editor.getParam('target_list', true);
 
-const getDefaultLinkTarget = function (editorSettings) {
-  return editorSettings.default_link_target;
-};
+const getRelList = (editor: Editor): UserListItem[] => editor.getParam('rel_list', [], 'array');
 
-const getTargetList = function (editorSettings) {
-  return editorSettings.target_list;
-};
+const getLinkClassList = (editor: Editor): UserListItem[] => editor.getParam('link_class_list', [], 'array');
 
-const setTargetList = function (editor, list) {
-  editor.settings.target_list = list;
-};
+const shouldShowLinkTitle = (editor: Editor) => editor.getParam('link_title', true, 'boolean');
 
-const shouldShowTargetList = function (editorSettings) {
-  return getTargetList(editorSettings) !== false;
-};
+const allowUnsafeLinkTarget = (editor: Editor) => editor.getParam('allow_unsafe_link_target', false, 'boolean');
 
-const getRelList = function (editorSettings) {
-  return editorSettings.rel_list;
-};
+const useQuickLink = (editor: Editor) => editor.getParam('link_quicklink', false, 'boolean');
 
-const hasRelList = function (editorSettings) {
-  return getRelList(editorSettings) !== undefined;
-};
+const getDefaultLinkProtocol = (editor: Editor): string => editor.getParam('link_default_protocol', 'http', 'string');
 
-const getLinkClassList = function (editorSettings) {
-  return editorSettings.link_class_list;
-};
-
-const hasLinkClassList = function (editorSettings) {
-  return getLinkClassList(editorSettings) !== undefined;
-};
-
-const shouldShowLinkTitle = function (editorSettings) {
-  return editorSettings.link_title !== false;
-};
-
-const allowUnsafeLinkTarget = function (editorSettings) {
-  return typeof editorSettings.allow_unsafe_link_target === 'boolean' ? editorSettings.allow_unsafe_link_target : false;
-};
-
-export default {
+export {
   assumeExternalTargets,
   hasContextToolbar,
   getLinkList,
-  hasDefaultLinkTarget,
   getDefaultLinkTarget,
   getTargetList,
-  setTargetList,
-  shouldShowTargetList,
   getRelList,
-  hasRelList,
   getLinkClassList,
-  hasLinkClassList,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
-  useQuickLink
+  useQuickLink,
+  getDefaultLinkProtocol
 };

@@ -5,22 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Container, GuiFactory, Replacing, Sliding, AlloyComponent } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Container, GuiFactory, Replacing, Sliding } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-import Receivers from '../channels/Receivers';
-import Styles from '../style/Styles';
-import { SugarElement } from 'tinymce/themes/mobile/alien/TypeDefinitions';
-import { window } from '@ephox/dom-globals';
+import * as Receivers from '../channels/Receivers';
+import * as Styles from '../style/Styles';
 
 export interface DropUp {
-  appear: (menu: any, update: any, component: any) => void;
-  disappear: (onReadyToShrink: any) => void;
-  component: () => AlloyComponent;
-  element: () => SugarElement;
+  readonly appear: (menu: any, update: any, component: any) => void;
+  readonly disappear: (onReadyToShrink: any) => void;
+  readonly component: AlloyComponent;
+  readonly element: SugarElement;
 }
 
-const build = function (refresh, scrollIntoView): DropUp {
+const build = (refresh, scrollIntoView): DropUp => {
   const dropup = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -40,27 +39,27 @@ const build = function (refresh, scrollIntoView): DropUp {
           dimension: {
             property: 'height'
           },
-          onShrunk (component) {
+          onShrunk(component) {
             refresh();
             scrollIntoView();
 
             Replacing.set(component, [ ]);
           },
-          onGrown (component) {
+          onGrown(_component) {
             refresh();
             scrollIntoView();
           }
         }),
-        Receivers.orientation(function (component, data) {
+        Receivers.orientation((_component, _data) => {
           disappear(Fun.noop);
         })
       ])
     })
-  ) as AlloyComponent;
+  );
 
-  const appear = function (menu, update, component) {
+  const appear = (menu, update, component) => {
     if (Sliding.hasShrunk(dropup) === true && Sliding.isTransitioning(dropup) === false) {
-      window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(() => {
         update(component);
         Replacing.set(dropup, [ menu() ]);
         Sliding.grow(dropup);
@@ -68,8 +67,8 @@ const build = function (refresh, scrollIntoView): DropUp {
     }
   };
 
-  const disappear = function (onReadyToShrink) {
-    window.requestAnimationFrame(function () {
+  const disappear = (onReadyToShrink) => {
+    window.requestAnimationFrame(() => {
       onReadyToShrink();
       Sliding.shrink(dropup);
     });
@@ -78,7 +77,7 @@ const build = function (refresh, scrollIntoView): DropUp {
   return {
     appear,
     disappear,
-    component: Fun.constant(dropup),
+    component: dropup,
     element: dropup.element
   };
 };

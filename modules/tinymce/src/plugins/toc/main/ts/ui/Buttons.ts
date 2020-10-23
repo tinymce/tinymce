@@ -5,24 +5,20 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Settings from '../api/Settings';
-import Toc from '../core/Toc';
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from '@ephox/bridge';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import * as Settings from '../api/Settings';
+import * as Toc from '../core/Toc';
 
 const toggleState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi) => {
-  const toggleDisabledState = () => api.setDisabled(editor.readonly || !Toc.hasHeaders(editor));
+  const toggleDisabledState = () => api.setDisabled(editor.mode.isReadOnly() || !Toc.hasHeaders(editor));
 
   toggleDisabledState();
   editor.on('LoadContent SetContent change', toggleDisabledState);
   return () => editor.on('LoadContent SetContent change', toggleDisabledState);
 };
 
-const isToc = (editor: Editor) => {
-  return (elm) => {
-    return elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
-  };
-};
+const isToc = (editor: Editor) => (elm) => elm && editor.dom.is(elm, '.' + Settings.getTocClass(editor)) && editor.getBody().contains(elm);
 
 const register = (editor: Editor) => {
   editor.ui.registry.addButton('toc', {
@@ -53,6 +49,6 @@ const register = (editor: Editor) => {
   });
 };
 
-export default {
+export {
   register
 };

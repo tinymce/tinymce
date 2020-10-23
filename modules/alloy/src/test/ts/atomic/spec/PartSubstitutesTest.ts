@@ -1,8 +1,11 @@
-import { Logger, RawAssertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Fun, Obj } from '@ephox/katamari';
+import { Logger } from '@ephox/agar';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
+
+import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { subs } from 'ephox/alloy/parts/PartSubstitutes';
 import * as PartType from 'ephox/alloy/parts/PartType';
+import * as UiSubstitutes from 'ephox/alloy/spec/UiSubstitutes';
 
 UnitTest.test('PartSubstitutesTest', () => {
   // TODO: Make this test more exhaustive. This is really just a sanity
@@ -11,13 +14,20 @@ UnitTest.test('PartSubstitutesTest', () => {
     'Testing subs',
     () => {
       const detail = {
-        partUids: ({
+        'uid': '1',
+        'dom': {
+          tag: 'div'
+        },
+        'components': [ ] as AlloySpec[],
+        'originalSpec': { },
+        'debug.sketcher': { },
+        'partUids': ({
           'required.A': 'a-uid',
           'optional.B' : 'b-uid',
           'external.C': 'c-uid',
           'group.D': 'd-uid'
         }),
-        parts: ({
+        'parts': ({
           'required.A': ({ }),
           'optional.B': ({ }),
           'external.C': ({
@@ -39,36 +49,30 @@ UnitTest.test('PartSubstitutesTest', () => {
           name: 'required.A',
           pname: 'part:a',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.A',
-                spec
-              }
-            }
+            sketch: (spec) => ({
+              factory: 'factory.A',
+              spec
+            })
           }
         }),
         PartType.optional({
           name: 'optional.B',
           pname: 'part:b',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.B',
-                spec
-              }
-            }
+            sketch: (spec) => ({
+              factory: 'factory.B',
+              spec
+            })
           }
         }),
         PartType.external({
           name: 'external.C',
           pname: 'part:c',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.C',
-                spec
-              }
-            }
+            sketch: (spec) => ({
+              factory: 'factory.C',
+              spec
+            })
           }
         }),
         PartType.group({
@@ -76,12 +80,10 @@ UnitTest.test('PartSubstitutesTest', () => {
           pname: 'part:d',
           unit: 'unit.d',
           factory: {
-            sketch: (spec) => {
-              return {
-                factory: 'factory.D',
-                spec
-              }
-            }
+            sketch: (spec) => ({
+              factory: 'factory.D',
+              spec
+            })
           }
         })
       ]);
@@ -89,22 +91,20 @@ UnitTest.test('PartSubstitutesTest', () => {
       const internals = substitutes.internals();
       const externals = substitutes.externals();
 
-      const internalKeys = Obj.keys(internals);
-
-      const checkSinglePart = (label: string, expected, part) => {
+      const checkSinglePart = (label: string, expected: { required: boolean; spec: any; factory: any }, part: UiSubstitutes.UiSubstitutesAdt) => {
         Logger.sync('Checking: ' + label, () => {
           part.match({
             single: (required, valueThunk) => {
-              RawAssertions.assertEq('Checking required status', expected.required, required);
-              RawAssertions.assertEq('Checking result', {
+              Assert.eq('Checking required status', expected.required, required);
+              Assert.eq('Checking result', {
                 factory: expected.factory,
                 spec: expected.spec
-              }, valueThunk(detail, { }, { }))
+              }, valueThunk(detail, { }, { }));
             },
             multiple: Fun.die('Should not be a multiple')
           });
         });
-      }
+      };
 
       checkSinglePart('A', {
         required: true,
@@ -125,7 +125,7 @@ UnitTest.test('PartSubstitutesTest', () => {
       Logger.sync('Checking external.C', () => {
         const outcome = externals['external.C']();
 
-        RawAssertions.assertEq('Checking result', {
+        Assert.eq('Checking result', {
           factory: 'factory.C',
           spec: {
             uid: 'c-uid'
@@ -137,8 +137,8 @@ UnitTest.test('PartSubstitutesTest', () => {
         internals['part:d'].match({
           single: Fun.die('Should not be a single'),
           multiple: (required, valueThunks) => {
-            RawAssertions.assertEq('Checking required status', true, required);
-            RawAssertions.assertEq('Checking result',
+            Assert.eq('Checking required status', true, required);
+            Assert.eq('Checking result',
               [
                 {
                   factory: 'factory.D',
@@ -152,7 +152,7 @@ UnitTest.test('PartSubstitutesTest', () => {
                     uid: 'group.D.2'
                   }
                 }
-              ],
+              ] as any[],
               valueThunks(detail, { }, { })
             );
           }

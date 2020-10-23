@@ -5,40 +5,32 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyTriggers, AlloyComponent } from '@ephox/alloy';
-import { Element } from '@ephox/dom-globals';
-import { Arr, Option } from '@ephox/katamari';
+import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getStyleFormats } from 'tinymce/themes/silver/ui/core/complex/StyleFormat';
+import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
-import { onActionToggleFormat } from './utils/Utils';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { AdvancedSelectDataset, SelectDataset } from './SelectDatasets';
+import { getStyleFormats } from './StyleFormat';
 import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { onActionToggleFormat } from './utils/Utils';
 
-const getSpec = (editor): SelectSpec => {
-  const isSelectedFor = (format) => {
-    return () => {
-      return editor.formatter.match(format);
-    };
-  };
+const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
+  const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
-  const getPreviewFor = (format) => () => {
+  const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
-    return fmt !== undefined ? Option.some({
+    return fmt !== undefined ? Optional.some({
       tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
-      styleAttr: editor.formatter.getCssText(format)
-    }) : Option.none();
-  };
-
-  const flatten = (fmt): string[] => {
-    const subs = fmt.items;
-    return subs !== undefined && subs.length > 0 ? Arr.bind(subs, flatten) : [ fmt.format ];
+      styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
+    }) : Optional.none();
   };
 
   const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
-      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [ { title: fmt.title, format: fmt.format } ];
+      return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     const detectedFormat = findNearest(editor, () => flattenedItems, parents);
@@ -48,37 +40,36 @@ const getSpec = (editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Option.some((comp) => {
-    return (e) => updateSelectMenuText(e.parents, comp);
-  });
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
 
-  const setInitialValue = Option.some((comp) => {
+  const setInitialValue = Optional.some((comp: AlloyComponent) => {
     const parents = getCurrentSelectionParents(editor);
     updateSelectMenuText(parents, comp);
   });
 
   return {
     tooltip: 'Formats',
-    icon: Option.none(),
+    icon: Optional.none(),
     isSelectedFor,
+    getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
     setInitialValue,
     nodeChangeHandler,
     shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
-    isInvalid: (item) => !editor.formatter.canApply(item.format)
+    isInvalid: (item) => !editor.formatter.canApply(item.format),
+    dataset
   } as SelectSpec;
 };
 
-const createStyleSelect = (editor: Editor, backstage) => {
-  // FIX: Not right.
-  const data = backstage.styleselect;
-  return createSelectButton(editor, backstage, data, getSpec(editor));
+const createStyleSelect = (editor: Editor, backstage: UiFactoryBackstage) => {
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+  return createSelectButton(editor, backstage, getSpec(editor, dataset));
 };
 
-const styleSelectMenu = (editor: Editor, backstage) => {
-  const data = backstage.styleselect;
-  const menuItems = createMenuItems(editor, backstage, data, getSpec(editor));
+const styleSelectMenu = (editor: Editor, backstage: UiFactoryBackstage) => {
+  const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styleselect };
+  const menuItems = createMenuItems(editor, backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('formats', {
     text: 'Formats',
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())

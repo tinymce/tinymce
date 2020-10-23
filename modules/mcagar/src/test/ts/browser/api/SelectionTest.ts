@@ -1,13 +1,12 @@
-import { Pipeline } from '@ephox/agar';
-import { Chain } from '@ephox/agar';
-import ApiChains from 'ephox/mcagar/api/ApiChains';
-import Editor from 'ephox/mcagar/api/Editor';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { ApiChains } from 'ephox/mcagar/api/ApiChains';
+import * as Editor from 'ephox/mcagar/api/Editor';
 
 UnitTest.asynctest('SelectionTest', (success, failure) => {
 
   const sTestStep = Chain.asStep({}, [
-    Editor.cFromSettings({base_url: '/project/tinymce/js/tinymce'}),
+    Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
     ApiChains.cFocus,
     ApiChains.cSetContent('<p>this is one paragraph</p><p>This is another</p>'),
     ApiChains.cSetSelection([ 0, 0 ], 'this'.length, [ 1, 0 ], 'This is'.length),
@@ -44,4 +43,3 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
     success();
   }, failure);
 });
-

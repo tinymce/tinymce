@@ -10,7 +10,6 @@
 //
 
 @sidebar-background-color: @background-color;
-@sidebar-separator-color: @border-color;
 
 .tox {
   .tox-sidebar-wrap {
@@ -21,12 +20,12 @@
     // min-height: auto, and the sidebar-wrap will grow in height as soon
     // as the sidebar contents does. This happens even if the sidebar contents has
     // overflow: auto.
+    -ms-flex-preferred-size: 0;
     min-height: 0;
   }
 
   .tox-sidebar {
     background-color: @sidebar-background-color;
-    border-top: 1px solid @sidebar-separator-color;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;

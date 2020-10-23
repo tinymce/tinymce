@@ -7,51 +7,29 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const shouldBlockDrop = (editor: Editor): boolean => {
-  return editor.getParam('paste_block_drop', false);
-};
+const shouldBlockDrop = (editor: Editor): boolean => editor.getParam('paste_block_drop', false);
 
-const shouldPasteDataImages = (editor: Editor): boolean => {
-  return editor.getParam('paste_data_images', false);
-};
+const shouldPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false);
 
-const shouldFilterDrop = (editor: Editor): boolean => {
-  return editor.getParam('paste_filter_drop', true);
-};
+const shouldFilterDrop = (editor: Editor): boolean => editor.getParam('paste_filter_drop', true);
 
 type ProcessFn = (plugin, args) => void;
 
-const getPreProcess = (editor: Editor): ProcessFn => {
-  return editor.getParam('paste_preprocess');
-};
+const getPreProcess = (editor: Editor): ProcessFn => editor.getParam('paste_preprocess');
 
-const getPostProcess = (editor: Editor): ProcessFn => {
-  return editor.getParam('paste_postprocess');
-};
+const getPostProcess = (editor: Editor): ProcessFn => editor.getParam('paste_postprocess');
 
-const getWebkitStyles = (editor: Editor): string => {
-  return editor.getParam('paste_webkit_styles');
-};
+const getWebkitStyles = (editor: Editor): string => editor.getParam('paste_webkit_styles');
 
-const shouldRemoveWebKitStyles = (editor: Editor): boolean => {
-  return editor.getParam('paste_remove_styles_if_webkit', true);
-};
+const shouldRemoveWebKitStyles = (editor: Editor): boolean => editor.getParam('paste_remove_styles_if_webkit', true);
 
-const shouldMergeFormats = (editor: Editor): boolean => {
-  return editor.getParam('paste_merge_formats', true);
-};
+const shouldMergeFormats = (editor: Editor): boolean => editor.getParam('paste_merge_formats', true);
 
-const isSmartPasteEnabled = (editor: Editor): boolean => {
-  return editor.getParam('smart_paste', true);
-};
+const isSmartPasteEnabled = (editor: Editor): boolean => editor.getParam('smart_paste', true);
 
-const isPasteAsTextEnabled = (editor: Editor): boolean => {
-  return editor.getParam('paste_as_text', false);
-};
+const isPasteAsTextEnabled = (editor: Editor): boolean => editor.getParam('paste_as_text', false);
 
-const getRetainStyleProps = (editor: Editor): string => {
-  return editor.getParam('paste_retain_style_properties');
-};
+const getRetainStyleProps = (editor: Editor): string => editor.getParam('paste_retain_style_properties');
 
 const getWordValidElements = (editor: Editor): string => {
   const defaultValidElements = (
@@ -63,15 +41,27 @@ const getWordValidElements = (editor: Editor): string => {
   return editor.getParam('paste_word_valid_elements', defaultValidElements);
 };
 
-const shouldConvertWordFakeLists = (editor: Editor): boolean => {
-  return editor.getParam('paste_convert_word_fake_lists', true);
-};
+const shouldConvertWordFakeLists = (editor: Editor): boolean => editor.getParam('paste_convert_word_fake_lists', true);
 
-const shouldUseDefaultFilters = (editor: Editor): boolean => {
-  return editor.getParam('paste_enable_default_filters', true);
-};
+const shouldUseDefaultFilters = (editor: Editor): boolean => editor.getParam('paste_enable_default_filters', true);
 
-export default {
+const getValidate = (editor: Editor) => editor.getParam('validate');
+
+const getAllowHtmlDataUrls = (editor: Editor): boolean => editor.getParam('allow_html_data_urls', false, 'boolean');
+
+const getPasteDataImages = (editor: Editor): boolean => editor.getParam('paste_data_images', false, 'boolean');
+
+const getImagesDataImgFilter = (editor: Editor) => editor.getParam('images_dataimg_filter');
+
+const getImagesReuseFilename = (editor: Editor) => editor.getParam('images_reuse_filename');
+
+const getForcedRootBlock = (editor: Editor) => editor.getParam('forced_root_block');
+
+const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root_block_attrs');
+
+const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 'number');
+
+export {
   shouldBlockDrop,
   shouldPasteDataImages,
   shouldFilterDrop,
@@ -85,5 +75,13 @@ export default {
   getRetainStyleProps,
   getWordValidElements,
   shouldConvertWordFakeLists,
-  shouldUseDefaultFilters
+  shouldUseDefaultFilters,
+  getValidate,
+  getAllowHtmlDataUrls,
+  getPasteDataImages,
+  getImagesDataImgFilter,
+  getImagesReuseFilename,
+  getForcedRootBlock,
+  getForcedRootBlockAttrs,
+  getTabSpaces
 };

@@ -10,6 +10,6 @@ const applyListFormat = function (editor, listName, styleValue) {
   editor.execCommand(cmd, false, styleValue === false ? null : { 'list-style-type': styleValue });
 };
 
-export default {
+export {
   applyListFormat
 };

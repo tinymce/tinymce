@@ -1,10 +1,10 @@
-import { getDemoRegistry } from './../buttons/DemoRegistry';
+import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 export const registerLinkItems = () => {
   getDemoRegistry().addButton('link', {
     type: 'button',
     disabled: false,
-    onAction: (buttonApi) => {
+    onAction: (_buttonApi) => {
       // open link dialog
     }
   });

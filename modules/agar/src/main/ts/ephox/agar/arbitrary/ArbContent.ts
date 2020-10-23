@@ -1,49 +1,50 @@
-import { console } from '@ephox/dom-globals';
 import { Merger, Obj } from '@ephox/katamari';
-import { JSON as Json } from '@ephox/sand';
 
-import ArbSchema from './ArbSchema';
-import ArbSchemaTypes from './ArbSchemaTypes';
+import * as ArbSchema from './ArbSchema';
+import * as ArbSchemaTypes from './ArbSchemaTypes';
 
 const unknownDepth = undefined;
 
-const makeArbOf = function (component, schema, depth) {
+const makeArbOf = (component, schema, depth): any => {
   const arbitrary = schema[component];
   if (arbitrary === undefined) {
     const message =
-      'Did not understand arbitrary schema element: ' + Json.stringify(component) +
-      '. Known schema elements were: ' + Json.stringify(Obj.keys(schema));
+      'Did not understand arbitrary schema element: ' + JSON.stringify(component) +
+      '. Known schema elements were: ' + JSON.stringify(Obj.keys(schema));
+    // eslint-disable-next-line no-console
     console.error(message);
     throw new Error(message);
   }
   return arbitrary(depth);
 };
 
-const createSchema = function (factory, extras) {
+const createSchema = (factory, extras): any => {
   const base = ArbSchema;
   const schema = Merger.deepMerge(base, extras);
-  return Obj.map(schema, function (s, k) {
+  return Obj.map(schema, (s, k) => {
     const type = s.type;
-    if (factory[type] === undefined && base[k] !== undefined) throw new Error('Component: ' + k + ' has invalid type: ' + type);
+    if (factory[type] === undefined && base[k] !== undefined) {
+      throw new Error('Component: ' + k + ' has invalid type: ' + type);
     // deprecate `custom` function
-    else if (factory[type] === undefined) return factory.custom(s);
-    else return factory[type](s);
+    } else if (factory[type] === undefined) {
+      return factory.custom(s);
+    } else {
+      return factory[type](s);
+    }
   });
 };
 
-const arbOf = function (component, _schema?) {
+const arbOf = (component, _schema?) => {
   // For the schema to create other components;
-  const constructor = function (comp, newDepth) {
-    return makeArbOf(comp, schema, newDepth);
-  };
+  const constructor = (comp, newDepth) => makeArbOf(comp, schema, newDepth);
 
-  const factory = ArbSchemaTypes(constructor);
+  const factory = ArbSchemaTypes.create(constructor);
   const extras = _schema !== undefined ? _schema : { };
   const schema = createSchema(factory, extras);
 
   return makeArbOf(component, schema, unknownDepth);
 };
 
-export default {
-  arbOf: arbOf
+export {
+  arbOf
 };

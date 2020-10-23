@@ -24,7 +24,7 @@
 
 @collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
-@collection-list-item-enabled-background-color: inherit;
+@collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
 @collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
@@ -46,6 +46,8 @@
 @collection-group-label-font-weight: @font-weight-normal;
 @collection-group-label-text-color:contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
 @collection-group-label-text-transform: none;
+
+@collection-horizontal-border-radius: @panel-border-radius;
 
 .tox {
   .tox-collection {
@@ -137,9 +139,8 @@
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+  .tox-collection--list .tox-collection__item--active {
     background-color: @collection-list-item-active-background-color;
-    color: @collection-list-item-label-active-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--enabled {
@@ -147,9 +148,8 @@
     color: @collection-toolbar-item-label-enabled-text-color;
   }
 
-  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+  .tox-collection--toolbar .tox-collection__item--active {
     background-color: @collection-toolbar-item-active-background-color;
-    color: @collection-toolbar-item-label-active-text-color;
   }
 
   .tox-collection--grid .tox-collection__item--enabled {
@@ -162,14 +162,23 @@
     color: @collection-grid-item-label-active-text-color;
   }
 
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    color: @collection-list-item-label-active-text-color;
+  }
+
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    color: @collection-toolbar-item-label-active-text-color;
+  }
+
   // Disabled item
   .tox-collection__item--state-disabled {
     background-color: transparent;
     color: @collection-item-label-disabled-text-color;
-    cursor: default;
+    cursor: not-allowed;
   }
 
-  .tox-collection__item-icon {
+  .tox-collection__item-icon,
+  .tox-collection__item-checkmark {
     align-items: center;
     display: flex;
     height: @collection-item-list-icon-height;
@@ -184,11 +193,6 @@
   .tox-collection--toolbar-lg .tox-collection__item-icon {
     height: @collection-item-list-icon-height * 2;
     width: @collection-item-list-icon-width * 2;
-  }
-
-  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
-  .tox-collection__item[role="menuitemcheckbox"]:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
-    display: none;
   }
 
   .tox-collection__item-label {
@@ -210,7 +214,7 @@
     font-size: @font-size-sm;
     height: @collection-item-list-icon-height;
     line-height: @collection-item-list-icon-height;
-    text-transform: normal;
+    text-transform: none;
   }
 
   .tox-collection__item-caret {
@@ -224,10 +228,65 @@
       font-size: 0;
       min-height: inherit;
     }
+
+    svg {
+      fill: @collection-item-label-text-color;
+    }
+  }
+
+  // Tickable items that are not ticked hide the check mark SVG (not the entire icon so there is still a gap)
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-checkmark svg {
+    display: none;
+  }
+
+  // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
+    display: none;
+  }
+
+  .tox-collection--horizontal {
+    background-color: @menu-background-color;
+    border: 1px solid @collection-item-separator-color;
+    border-radius: @collection-horizontal-border-radius;
+    box-shadow: @pop-box-shadow;
+    display: flex;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+    overflow-x: auto;
+    padding: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .tox-collection--horizontal .tox-collection__group {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0 @pad-xs;
+  }
+
+  .tox-collection--horizontal .tox-collection__item {
+    height: @toolbar-button-height; // 24px
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0; // 2px 0 3px 0
+    padding: 0 4px;
+  }
+
+  .tox-collection--horizontal .tox-collection__item-label {
+    white-space: nowrap;
+  }
+
+  .tox-collection--horizontal .tox-collection__item-caret {
+    margin-left: 4px;
   }
 }
 
 .tox:not([dir=rtl]) {
+  .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
+    border-right: 1px solid @toolbar-group-separator-color;
+  }
+
   // Make a space between all elements within a list item
   .tox-collection--list .tox-collection__item > *:not(:first-child) {
     margin-left: @pad-sm;
@@ -243,13 +302,17 @@
     text-align: right;
   }
 
-  .tox-collection__item-caret {
+  .tox-collection .tox-collection__item-caret {
     margin-left: @pad-md;
   }
 }
 
 // RTL
 .tox[dir=rtl] {
+  .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
+    border-left: 1px solid @toolbar-group-separator-color;
+  }
+
   // Make a space between all elements within a list item
   .tox-collection--list .tox-collection__item > *:not(:first-child) {
     margin-right: @pad-sm;
@@ -272,8 +335,12 @@
     text-align: left;
   }
 
-  .tox-collection__item-caret {
+  .tox-collection .tox-collection__item-caret {
     margin-right: @pad-md;
     transform: rotateY(180deg);
+  }
+
+  .tox-collection--horizontal .tox-collection__item-caret {
+    margin-right: 4px;
   }
 }

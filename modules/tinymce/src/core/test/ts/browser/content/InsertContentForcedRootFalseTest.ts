@@ -1,15 +1,16 @@
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
-import InsertContent from 'tinymce/core/content/InsertContent';
+import Editor from 'tinymce/core/api/Editor';
+import * as InsertContent from 'tinymce/core/content/InsertContent';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
 UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFalseTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+  const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  const trimBrs = function (string) {
+  const trimBrs = function (string: string) {
     return string.replace(/<br>/g, '');
   };
 
@@ -33,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     LegacyUnit.equal(trimBrs(editor.getBody().innerHTML), 'b<div data-mce-bogus="all">x</div>');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     selector: 'textarea',

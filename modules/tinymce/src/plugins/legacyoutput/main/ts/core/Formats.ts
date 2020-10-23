@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
-import Settings from '../api/Settings';
+import * as Settings from '../api/Settings';
 
 const overrideFormats = (editor: Editor) => {
   const alignElements = 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table',
@@ -17,39 +17,39 @@ const overrideFormats = (editor: Editor) => {
   // Override some internal formats to produce legacy elements and attributes
   editor.formatter.register({
     // Change alignment formats to use the deprecated align attribute
-    alignleft: { selector: alignElements, attributes: { align: 'left' } },
-    aligncenter: { selector: alignElements, attributes: { align: 'center' } },
-    alignright: { selector: alignElements, attributes: { align: 'right' } },
-    alignjustify: { selector: alignElements, attributes: { align: 'justify' } },
+    alignleft: { selector: alignElements, attributes: { align: 'left' }},
+    aligncenter: { selector: alignElements, attributes: { align: 'center' }},
+    alignright: { selector: alignElements, attributes: { align: 'right' }},
+    alignjustify: { selector: alignElements, attributes: { align: 'justify' }},
 
     // Change the basic formatting elements to use deprecated element types
     bold: [
-      { inline: 'b', remove: 'all' },
-      { inline: 'strong', remove: 'all' },
-      { inline: 'span', styles: { fontWeight: 'bold' } }
+      { inline: 'b', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'strong', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'span', styles: { fontWeight: 'bold' }}
     ],
     italic: [
-      { inline: 'i', remove: 'all' },
-      { inline: 'em', remove: 'all' },
-      { inline: 'span', styles: { fontStyle: 'italic' } }
+      { inline: 'i', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'em', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 'span', styles: { fontStyle: 'italic' }}
     ],
     underline: [
-      { inline: 'u', remove: 'all' },
+      { inline: 'u', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { textDecoration: 'underline' }, exact: true }
     ],
     strikethrough: [
-      { inline: 'strike', remove: 'all' },
+      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
       { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true }
     ],
 
     // Change font size and font family to use the deprecated font element
-    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' } },
+    fontname: { inline: 'font', toggle: false, attributes: { face: '%value' }},
     fontsize: {
       inline: 'font',
       toggle: false,
       attributes: {
-        size (vars) {
-          return Tools.inArray(fontSizes, vars.value) + 1;
+        size(vars) {
+          return String(Tools.inArray(fontSizes, vars.value) + 1);
         }
       }
     },
@@ -119,9 +119,9 @@ const overrideSettings = (editor: Editor) => {
 
 const setup = (editor: Editor) => {
   overrideSettings(editor);
-  editor.on('init', () => overrideFormats(editor));
+  editor.on('PreInit', () => overrideFormats(editor));
 };
 
-export default {
+export {
   setup
 };

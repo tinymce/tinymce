@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attr } from '@ephox/sugar';
+import { Attribute, SugarElement } from '@ephox/sugar';
 
-const safeParse = function (element, attribute) {
-  const parsed = parseInt(Attr.get(element, attribute), 10);
+const safeParse = (element: SugarElement<Element>, attribute: string): number => {
+  const parsed = parseInt(Attribute.get(element, attribute), 10);
   return isNaN(parsed) ? 0 : parsed;
 };
 
-export default {
+export {
   safeParse
 };

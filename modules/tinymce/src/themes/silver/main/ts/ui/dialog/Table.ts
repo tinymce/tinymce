@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { SimpleSpec, Behaviour, Tabstopping, Focusing } from '@ephox/alloy';
+import { Behaviour, Focusing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
+import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
-export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
+type TableSpec = Omit<Dialog.Table, 'type'>;
+
+export const renderTable = (spec: TableSpec, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const renderTh = (text: string) => ({
     dom: {
       tag: 'th',
@@ -30,7 +32,7 @@ export const renderTable = (spec: Types.Table.Table, providersBackstage: UiFacto
       }
     ]
   });
-  const renderTd = (text: string) => ({ dom: { tag: 'td', innerHtml: providersBackstage.translate(text) } });
+  const renderTd = (text: string) => ({ dom: { tag: 'td', innerHtml: providersBackstage.translate(text) }});
   const renderTr = (row: string[]) => ({ dom: { tag: 'tr' }, components: Arr.map(row, renderTd) });
   const renderRows = (rows: string[][]) => ({ dom: { tag: 'tbody' }, components: Arr.map(rows, renderTr) });
   return {

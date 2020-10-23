@@ -1,11 +1,9 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import EventDispatcher from 'tinymce/core/api/util/EventDispatcher';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('fire (no event listeners)', function () {
@@ -265,23 +263,23 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function () 
   });
 
   suite.test('beforeFire setting', function () {
-    let lastArgs, dispatcher, args;
+    let lastArgs;
 
-    dispatcher = new EventDispatcher({
-      beforeFire (args) {
+    const dispatcher = new EventDispatcher({
+      beforeFire(args) {
         lastArgs = args;
       }
     });
 
-    args = dispatcher.fire('click');
+    const args = dispatcher.fire('click');
     LegacyUnit.equal(lastArgs === args, true);
   });
 
   suite.test('beforeFire setting (stopImmediatePropagation)', function () {
-    let lastArgs, dispatcher, args, data = '';
+    let lastArgs, data = '';
 
-    dispatcher = new EventDispatcher({
-      beforeFire (args) {
+    const dispatcher = new EventDispatcher({
+      beforeFire(args) {
         lastArgs = args;
         args.stopImmediatePropagation();
       }
@@ -292,16 +290,16 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', function () 
     };
 
     dispatcher.on('click', listenerA);
-    args = dispatcher.fire('click');
+    const args = dispatcher.fire('click');
     LegacyUnit.equal(lastArgs === args, true);
     LegacyUnit.equal(data, '');
   });
 
   suite.test('toggleEvent setting', function () {
-    let lastName, lastState, dispatcher;
+    let lastName, lastState;
 
-    dispatcher = new EventDispatcher({
-      toggleEvent (name, state) {
+    const dispatcher = new EventDispatcher({
+      toggleEvent(name, state) {
         lastName = name;
         lastState = state;
       }

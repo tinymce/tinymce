@@ -4,12 +4,12 @@ import { StreamingBehaviour } from '../../behaviour/streaming/StreamingTypes';
 import * as StreamingState from '../../behaviour/streaming/StreamingState';
 import * as Behaviour from './Behaviour';
 
-const Streaming = Behaviour.create({
+const Streaming: StreamingBehaviour = Behaviour.create({
   fields: StreamingSchema,
   name: 'streaming',
   active: ActiveStreaming,
   state: StreamingState
-}) as StreamingBehaviour;
+});
 
 export {
   Streaming

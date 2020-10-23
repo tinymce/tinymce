@@ -5,36 +5,48 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Data from './Data';
-import Nodes from './Nodes';
 import { Arr } from '@ephox/katamari';
-import { Element, Node } from '@ephox/sugar';
+import { Class, SugarElement, SugarNode } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import * as Data from './Data';
+import * as Nodes from './Nodes';
 
-const show = function (editor, rootElm) {
-  let node, div;
-  const nodeList = Nodes.filterDescendants(Element.fromDom(rootElm), Nodes.isMatch);
+const isWrappedNbsp = (node) => node.nodeName.toLowerCase() === 'span' && node.classList.contains('mce-nbsp-wrap');
 
-  Arr.each(nodeList, function (n) {
-    const withSpans = Nodes.replaceWithSpans(Node.value(n));
+const show = (editor: Editor, rootElm: Node) => {
+  const nodeList = Nodes.filterDescendants(SugarElement.fromDom(rootElm), Nodes.isMatch);
 
-    div = editor.dom.create('div', null, withSpans);
-    while ((node = div.lastChild)) {
-      editor.dom.insertAfter(node, n.dom());
+  Arr.each(nodeList, (n) => {
+    const parent = n.dom.parentNode;
+    if (isWrappedNbsp(parent)) {
+      Class.add(SugarElement.fromDom(parent), Data.nbspClass);
+    } else {
+      const withSpans = Nodes.replaceWithSpans(editor.dom.encode(SugarNode.value(n)));
+
+      const div = editor.dom.create('div', null, withSpans);
+      let node: any;
+      while ((node = div.lastChild)) {
+        editor.dom.insertAfter(node, n.dom);
+      }
+
+      editor.dom.remove(n.dom);
     }
-
-    editor.dom.remove(n.dom());
   });
 };
 
-const hide = function (editor, body) {
-  const nodeList = editor.dom.select(Data.selector, body);
+const hide = (editor: Editor, rootElm: Node) => {
+  const nodeList = editor.dom.select(Data.selector, rootElm);
 
-  Arr.each(nodeList, function (node) {
-    editor.dom.remove(node, 1);
+  Arr.each(nodeList, (node) => {
+    if (isWrappedNbsp(node)) {
+      Class.remove(SugarElement.fromDom(node), Data.nbspClass);
+    } else {
+      editor.dom.remove(node, true);
+    }
   });
 };
 
-const toggle = function (editor) {
+const toggle = (editor: Editor) => {
   const body = editor.getBody();
   const bookmark = editor.selection.getBookmark();
   let parentNode = Nodes.findParentElm(editor.selection.getNode(), body);
@@ -48,7 +60,7 @@ const toggle = function (editor) {
   editor.selection.moveToBookmark(bookmark);
 };
 
-export default {
+export {
   show,
   hide,
   toggle

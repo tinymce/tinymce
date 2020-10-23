@@ -6,17 +6,22 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import Api from './api/Api';
-import Commands from './api/Commands';
-import Keyboard from './core/Keyboard';
-import Buttons from './ui/Buttons';
+import * as Api from './api/Api';
+import * as Commands from './api/Commands';
+import * as Keyboard from './core/Keyboard';
+import * as Buttons from './ui/Buttons';
+import * as MenuItems from './ui/MenuItems';
 
-export default function () {
-  PluginManager.add('lists', function (editor) {
-    Keyboard.setup(editor);
+export default () => {
+  PluginManager.add('lists', (editor) => {
+    if (editor.hasPlugin('rtc', true) === false) {
+      Keyboard.setup(editor);
+      Commands.register(editor);
+    }
+
     Buttons.register(editor);
-    Commands.register(editor);
+    MenuItems.register(editor);
 
     return Api.get(editor);
   });
-}
+};

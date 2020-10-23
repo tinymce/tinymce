@@ -1,4 +1,3 @@
-import { Blob, HTMLCanvasElement, HTMLImageElement } from '@ephox/dom-globals';
 import { Fun } from '@ephox/katamari';
 import * as Canvas from './Canvas';
 import * as Conversions from './Conversions';
@@ -24,9 +23,7 @@ function create(getCanvas: Promise<HTMLCanvasElement>, blob: Blob, uri: string):
     return Promise.resolve(blob);
   }
 
-  function toDataURL() {
-    return uri;
-  }
+  const toDataURL = Fun.constant(uri);
 
   function toBase64() {
     return uri.split(',')[1];

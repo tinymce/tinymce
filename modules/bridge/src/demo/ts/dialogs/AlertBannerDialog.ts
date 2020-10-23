@@ -11,7 +11,7 @@ export const createAlertBannerDialog = () => {
             type: 'alertbanner',
             level: 'warn',
             text: 'The alert bannner message',
-            icon: 'iconsvg',
+            icon: 'iconsvg'
           }
         ]
       },

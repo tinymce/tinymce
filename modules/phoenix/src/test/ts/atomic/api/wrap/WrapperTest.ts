@@ -1,4 +1,4 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, Logger, TestUniverse, TextGene } from '@ephox/boss';
 import * as Wrapping from 'ephox/phoenix/api/general/Wrapping';
 import * as Finder from 'ephox/phoenix/test/Finder';
@@ -53,17 +53,17 @@ UnitTest.test('WrapperTest', function () {
     beginId: string;
     beginOffset: number;
     endId: string;
-    endOffset: number
+    endOffset: number;
   }
 
   const check = function (overall: string, expResult: ExpResult, startId: string, startOffset: number, endId: string, endOffset: number) {
     counter = 0;
     const actual = Wrapping.leaves(doc, Finder.get(doc, startId), startOffset, Finder.get(doc, endId), endOffset, factory).getOrDie();
     assert.eq(overall, dump());
-    assert.eq(expResult.beginId, actual.begin().element().id);
-    assert.eq(expResult.beginOffset, actual.begin().offset());
-    assert.eq(expResult.endId, actual.end().element().id);
-    assert.eq(expResult.endOffset, actual.end().offset());
+    assert.eq(expResult.beginId, actual.begin.element.id);
+    assert.eq(expResult.beginOffset, actual.begin.offset);
+    assert.eq(expResult.endId, actual.end.element.id);
+    assert.eq(expResult.endOffset, actual.end.offset);
   };
 
   // Let's just do stuff.
@@ -99,4 +99,3 @@ UnitTest.test('WrapperTest', function () {
     'b("yes")' +
     ')', { beginId: 'wrap_0', beginOffset: 0, endId: 'wrap_6', endOffset: 1 }, 'aa', 1, 'aca', 4);
 });
-

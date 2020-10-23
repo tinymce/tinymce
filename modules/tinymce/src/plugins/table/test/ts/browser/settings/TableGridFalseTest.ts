@@ -1,5 +1,5 @@
 import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import TablePlugin from 'tinymce/plugins/table/Plugin';
@@ -16,9 +16,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
 
     Pipeline.async({}, [
       Logger.t('test table grid disabled', GeneralSteps.sequence([
-        tinyApis.sFocus,
+        tinyApis.sFocus(),
         tinyUi.sClickOnMenu('click table menu', 'span:contains("Table")'),
-        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")'), 10, 1000),
+        Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div.tox-dialog:has(div.tox-dialog__title:contains("Table Properties"))'),
           Chain.op(function (x) {
@@ -36,6 +36,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
     plugins: 'table',
     table_grid: false,
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

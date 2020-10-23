@@ -10,13 +10,13 @@ tinymce.init({
 
   spellchecker_language: 'en',
   spellchecker_languages: 'English=en,Spanish=es',
-  spellchecker_callback: (method, text, success, failure) => {
+  spellchecker_callback: (method, text, _success, _failure) => {
     const words = text.match(tinymce.activeEditor.plugins.spellchecker.getWordCharPattern());
 
     if (method === 'spellcheck' && words != null) {
       const suggestions = {};
       for (let i = 0; i < words.length; i++) {
-        suggestions[words[i]] = ['First', 'Second'];
+        suggestions[words[i]] = [ 'First', 'Second' ];
       }
       tinymce.activeEditor.plugins.spellchecker.markErrors({ words: suggestions, dictionary: [ ] });
     }

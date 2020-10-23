@@ -1,5 +1,6 @@
+import { Optional } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
-import { Option } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfigSpec, DisableConfig> {
@@ -12,11 +13,17 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfig
 }
 
 export interface DisableConfig extends Behaviour.BehaviourConfigDetail {
-  disabled: boolean;
-  disableClass: Option<string>;
+  disabled: () => boolean;
+  disableClass: Optional<string>;
+  useNative: boolean;
+  onEnabled: (comp: AlloyComponent) => void;
+  onDisabled: (comp: AlloyComponent) => void;
 }
 
 export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {
-  disabled?: boolean;
+  disabled?: () => boolean;
   disableClass?: string;
+  useNative?: boolean;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
 }

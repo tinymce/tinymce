@@ -1,6 +1,6 @@
-import { setupDemo } from '../DemoHelpers';
 import { GuiFactory } from '@ephox/alloy';
 import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner';
+import { setupDemo } from '../DemoHelpers';
 
 export default () => {
   const helpers = setupDemo();
@@ -11,7 +11,8 @@ export default () => {
       text: 'I say I say yi ha',
       level: 'info', // info | warn | error | success
       icon: 'info',
-      actionLabel: 'I might close the banner'
+      iconTooltip: 'I might close the banner',
+      url: ''
     }, sharedBackstage.providers)
   );
 

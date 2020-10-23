@@ -5,27 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Types } from '@ephox/bridge';
-import { Arr, Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import Env from 'tinymce/core/api/Env';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Promise from 'tinymce/core/api/util/Promise';
 import Tools from 'tinymce/core/api/util/Tools';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import Templates from '../core/Templates';
+import * as Settings from '../api/Settings';
+import * as Templates from '../core/Templates';
 import * as Utils from '../core/Utils';
 
-interface TemplateValues {
+interface UrlTemplate {
   title: string;
-  url?: string;
-  content: string;
   description: string;
+  url: string;
 }
 
-interface TemplateData {
+interface ContentTemplate {
+  title: string;
+  description: string;
+  content: string;
+}
+
+type ExternalTemplate = UrlTemplate | ContentTemplate;
+
+interface InternalTemplate {
   selected: boolean;
   text: string;
-  value: TemplateValues;
+  value: {
+    url: Optional<string>;
+    content: Optional<string>;
+    description: string;
+  };
 }
 
 type DialogData = {
@@ -33,25 +45,42 @@ type DialogData = {
   preview: string;
 };
 
-type UpdateDialogCallback = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => void;
+type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 
 const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
-    let contentCssLinks = '';
+    let contentCssEntries = '';
 
-    Tools.each(editor.contentCSS, (url) => {
-      contentCssLinks += '<link type="text/css" rel="stylesheet" href="' +
-        editor.documentBaseURI.toAbsolute(url) +
-        '">';
-    });
-
-    let bodyClass = editor.settings.body_class || '';
-    if (bodyClass.indexOf('=') !== -1) {
-      bodyClass = editor.getParam('body_class', '', 'hash');
-      bodyClass = bodyClass[editor.id] || '';
+    const contentStyle = Settings.getContentStyle(editor);
+    if (contentStyle) {
+      contentCssEntries += '<style type="text/css">' + contentStyle + '</style>';
     }
 
+    const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
+
+    Tools.each(editor.contentCSS, (url) => {
+      contentCssEntries += '<link type="text/css" rel="stylesheet" href="' +
+        editor.documentBaseURI.toAbsolute(url) +
+        '"' + cors + '>';
+    });
+
+    const bodyClass = Settings.getBodyClass(editor);
+
     const encode = editor.dom.encode;
+
+    const isMetaKeyPressed = Env.mac ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
+
+    const preventClicksOnLinksScript = (
+      '<script>' +
+      'document.addEventListener && document.addEventListener("click", function(e) {' +
+      'for (var elm = e.target; elm; elm = elm.parentNode) {' +
+      'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
+      'e.preventDefault();' +
+      '}' +
+      '}' +
+      '}, false);' +
+      '</script> '
+    );
 
     const directionality = editor.getBody().dir;
     const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
@@ -60,7 +89,9 @@ const getPreviewContent = (editor: Editor, html: string) => {
       '<!DOCTYPE html>' +
       '<html>' +
       '<head>' +
-      contentCssLinks +
+      '<base href="' + encode(editor.documentBaseURI.getURI()) + '">' +
+      contentCssEntries +
+      preventClicksOnLinksScript +
       '</head>' +
       '<body class="' + encode(bodyClass) + '"' + dirAttr + '>' +
       html +
@@ -72,87 +103,85 @@ const getPreviewContent = (editor: Editor, html: string) => {
   return Templates.replaceTemplateValues(html, Settings.getPreviewReplaceValues(editor));
 };
 
-const open = (editor: Editor, templateList: TemplateValues[]) => {
-  const createTemplates = () => {
+const open = (editor: Editor, templateList: ExternalTemplate[]) => {
+  const createTemplates = (): Optional<Array<InternalTemplate>> => {
     if (!templateList || templateList.length === 0) {
       const message = editor.translate('No templates defined.');
       editor.notificationManager.open({ text: message, type: 'info' });
-      return Option.none();
+      return Optional.none();
     }
 
-    return Option.from(Tools.map(templateList, (template, index) => {
+    return Optional.from(Tools.map(templateList, (template: ExternalTemplate, index) => {
+      const isUrlTemplate = (t: ExternalTemplate): t is UrlTemplate => (t as UrlTemplate).url !== undefined;
       return {
         selected: index === 0,
         text: template.title,
         value: {
-          url: template.url,
-          content: template.content,
+          url: isUrlTemplate(template) ? Optional.from(template.url) : Optional.none(),
+          content: !isUrlTemplate(template) ? Optional.from(template.content) : Optional.none(),
           description: template.description
         }
       };
     }));
   };
 
-  const createSelectBoxItems = (templates: TemplateData[]) => {
-    return Arr.map(templates, (v) => {
-      return {
-        text: v.text,
-        value: v.text
-      };
-    });
+  const createSelectBoxItems = (templates: InternalTemplate[]) => Arr.map(templates, (t) => ({
+    text: t.text,
+    value: t.text
+  }));
+
+  const findTemplate = (templates: InternalTemplate[], templateTitle: string) => Arr.find(templates, (t) => t.text === templateTitle);
+
+  const loadFailedAlert = (api: Dialog.DialogInstanceApi<DialogData>) => {
+    editor.windowManager.alert('Could not load the specified template.', () => api.focus('template'));
   };
 
-  const findTemplate = (templates: TemplateData[], templateTitle: string) => {
-    return Arr.find(templates, (t) => {
-      return t.text === templateTitle;
-    });
-  };
-
-  const getTemplateContent = (t: TemplateData) => {
-    return new Promise<string>((resolve, reject) => {
-      if (t.value.url) {
-        XHR.send({
-          url: t.value.url,
-          success (html: string) {
-            resolve(html);
-          },
-          error: (e) => {
-            reject(e);
-          }
-        });
-      } else {
-        resolve(t.value.content);
+  const getTemplateContent = (t: InternalTemplate) => new Promise<string>((resolve, reject) => {
+    t.value.url.fold(() => resolve(t.value.content.getOr('')), (url) => XHR.send({
+      url,
+      success(html: string) {
+        resolve(html);
+      },
+      error: (e) => {
+        reject(e);
       }
-    });
-  };
+    }));
+  });
 
-  const onChange = (templates: TemplateData[], updateDialog: UpdateDialogCallback) => (api: Types.Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
-    if (change.name === 'template') {
-      const newTemplateTitle = api.getData().template;
-      findTemplate(templates, newTemplateTitle).each((t) => {
-        api.block('Loading...');
-        getTemplateContent(t).then((previewHtml) => {
-          updateDialog(api, t, previewHtml);
-          api.unblock();
+  const onChange = (templates: InternalTemplate[], updateDialog: UpdateDialogCallback) =>
+    (api: Dialog.DialogInstanceApi<DialogData>, change: { name: string }) => {
+      if (change.name === 'template') {
+        const newTemplateTitle = api.getData().template;
+        findTemplate(templates, newTemplateTitle).each((t) => {
+          api.block('Loading...');
+          getTemplateContent(t).then((previewHtml) => {
+            updateDialog(api, t, previewHtml);
+          }).catch(() => {
+            updateDialog(api, t, '');
+            api.disable('save');
+            loadFailedAlert(api);
+          });
         });
-      });
-    }
-  };
+      }
+    };
 
-  const onSubmit = (templates: TemplateData[]) => (api: Types.Dialog.DialogInstanceApi<DialogData>) => {
+  const onSubmit = (templates: InternalTemplate[]) => (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
     findTemplate(templates, data.template).each((t) => {
       getTemplateContent(t).then((previewHtml) => {
         Templates.insertTemplate(editor, false, previewHtml);
         api.close();
+      }).catch(() => {
+        api.disable('save');
+        loadFailedAlert(api);
       });
     });
   };
 
-  const openDialog = (templates: TemplateData[]) => {
+  const openDialog = (templates: InternalTemplate[]) => {
     const selectBoxItems = createSelectBoxItems(templates);
 
-    const buildDialogSpec = (bodyItems: Types.Dialog.BodyComponentApi[], initialData: DialogData): Types.Dialog.DialogApi<DialogData> => ({
+    const buildDialogSpec = (bodyItems: Dialog.BodyComponentSpec[], initialData: DialogData): Dialog.DialogSpec<DialogData> => ({
       title: 'Insert Template',
       size: 'large',
       body: {
@@ -164,7 +193,7 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
         {
           type: 'cancel',
           name: 'cancel',
-          text: 'Cancel',
+          text: 'Cancel'
         },
         {
           type: 'submit',
@@ -177,9 +206,9 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
       onChange: onChange(templates, updateDialog)
     });
 
-    const updateDialog = (dialogApi: Types.Dialog.DialogInstanceApi<DialogData>, template: TemplateData, previewHtml: string) => {
+    const updateDialog = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => {
       const content = getPreviewContent(editor, previewHtml);
-      const bodyItems: Types.Dialog.BodyComponentApi[] = [
+      const bodyItems: Dialog.BodyComponentSpec[] = [
         {
           type: 'selectbox',
           name: 'template',
@@ -213,13 +242,18 @@ const open = (editor: Editor, templateList: TemplateValues[]) => {
 
     getTemplateContent(templates[0]).then((previewHtml) => {
       updateDialog(dialogApi, templates[0], previewHtml);
+    }).catch(() => {
+      updateDialog(dialogApi, templates[0], '');
+      dialogApi.disable('save');
+      loadFailedAlert(dialogApi);
     });
   };
 
-  const optTemplates: Option<TemplateData[]> = createTemplates();
+  const optTemplates: Optional<InternalTemplate[]> = createTemplates();
   optTemplates.each(openDialog);
 };
 
-export default {
-  open
+export {
+  open,
+  getPreviewContent
 };

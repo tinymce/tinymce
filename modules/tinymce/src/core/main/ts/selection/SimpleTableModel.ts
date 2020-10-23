@@ -5,22 +5,50 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Option, Struct } from '@ephox/katamari';
-import { Compare, Insert, InsertAll, Replication, Element, Attr, SelectorFilter } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Attribute, Compare, Insert, InsertAll, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-const tableModel = Struct.immutable('element', 'width', 'rows');
-const tableRow = Struct.immutable('element', 'cells');
-const cellPosition = Struct.immutable('x', 'y');
+export interface TableModel {
+  readonly element: SugarElement<HTMLTableElement>;
+  readonly width: number;
+  readonly rows: TableRowModel[];
+}
 
-const getSpan = function (td, key) {
-  const value = parseInt(Attr.get(td, key), 10);
+export interface TableRowModel {
+  readonly element: SugarElement<HTMLTableRowElement>;
+  readonly cells: SugarElement<HTMLTableCellElement>[];
+}
+
+interface CellPosition {
+  readonly x: number;
+  readonly y: number;
+}
+
+const tableModel = (element: SugarElement<HTMLTableElement>, width: number, rows: TableRowModel[]): TableModel => ({
+  element,
+  width,
+  rows
+});
+
+const tableRow = (element: SugarElement<HTMLTableRowElement>, cells: SugarElement<HTMLTableCellElement>[]): TableRowModel => ({
+  element,
+  cells
+});
+
+const cellPosition = (x: number, y: number): CellPosition => ({
+  x,
+  y
+});
+
+const getSpan = function (td: SugarElement<HTMLTableCellElement>, key: string) {
+  const value = parseInt(Attribute.get(td, key), 10);
   return isNaN(value) ? 1 : value;
 };
 
-const fillout = function (table, x, y, tr, td) {
+const fillout = function (table: TableModel, x: number, y: number, tr: SugarElement<HTMLTableRowElement>, td: SugarElement<HTMLTableCellElement>) {
   const rowspan = getSpan(td, 'rowspan');
   const colspan = getSpan(td, 'colspan');
-  const rows = table.rows();
+  const rows = table.rows;
 
   for (let y2 = y; y2 < y + rowspan; y2++) {
     if (!rows[y2]) {
@@ -28,7 +56,7 @@ const fillout = function (table, x, y, tr, td) {
     }
 
     for (let x2 = x; x2 < x + colspan; x2++) {
-      const cells = rows[y2].cells();
+      const cells = rows[y2].cells;
 
       // not filler td:s are purposely not cloned so that we can
       // find cells in the model by element object references
@@ -37,13 +65,13 @@ const fillout = function (table, x, y, tr, td) {
   }
 };
 
-const cellExists = function (table, x, y) {
-  const rows = table.rows();
-  const cells = rows[y] ? rows[y].cells() : [];
+const cellExists = function (table: TableModel, x: number, y: number) {
+  const rows = table.rows;
+  const cells = rows[y] ? rows[y].cells : [];
   return !!cells[x];
 };
 
-const skipCellsX = function (table, x, y) {
+const skipCellsX = function (table: TableModel, x: number, y: number) {
   while (cellExists(table, x, y)) {
     x++;
   }
@@ -51,50 +79,50 @@ const skipCellsX = function (table, x, y) {
   return x;
 };
 
-const getWidth = function (rows) {
+const getWidth = function (rows: TableRowModel[]) {
   return Arr.foldl(rows, function (acc, row) {
-    return row.cells().length > acc ? row.cells().length : acc;
+    return row.cells.length > acc ? row.cells.length : acc;
   }, 0);
 };
 
-const findElementPos = function (table, element) {
-  const rows = table.rows();
+const findElementPos = function (table: TableModel, element: SugarElement<unknown>): Optional<CellPosition> {
+  const rows = table.rows;
   for (let y = 0; y < rows.length; y++) {
-    const cells = rows[y].cells();
+    const cells = rows[y].cells;
     for (let x = 0; x < cells.length; x++) {
       if (Compare.eq(cells[x], element)) {
-        return Option.some(cellPosition(x, y));
+        return Optional.some(cellPosition(x, y));
       }
     }
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
-const extractRows = function (table, sx, sy, ex, ey) {
+const extractRows = function (table: TableModel, sx: number, sy: number, ex: number, ey: number) {
   const newRows = [];
-  const rows = table.rows();
+  const rows = table.rows;
 
   for (let y = sy; y <= ey; y++) {
-    const cells = rows[y].cells();
+    const cells = rows[y].cells;
     const slice = sx < ex ? cells.slice(sx, ex + 1) : cells.slice(ex, sx + 1);
-    newRows.push(tableRow(rows[y].element(), slice));
+    newRows.push(tableRow(rows[y].element, slice));
   }
 
   return newRows;
 };
 
-const subTable = function (table, startPos, endPos) {
-  const sx = startPos.x(), sy = startPos.y();
-  const ex = endPos.x(), ey = endPos.y();
+const subTable = function (table: TableModel, startPos: CellPosition, endPos: CellPosition) {
+  const sx = startPos.x, sy = startPos.y;
+  const ex = endPos.x, ey = endPos.y;
   const newRows = sy < ey ? extractRows(table, sx, sy, ex, ey) : extractRows(table, sx, ey, ex, sy);
 
-  return tableModel(table.element(), getWidth(newRows), newRows);
+  return tableModel(table.element, getWidth(newRows), newRows);
 };
 
-const createDomTable = function (table, rows) {
-  const tableElement = Replication.shallow(table.element());
-  const tableBody = Element.fromTag('tbody');
+const createDomTable = function (table: TableModel, rows: SugarElement<HTMLTableRowElement>[]) {
+  const tableElement = Replication.shallow(table.element);
+  const tableBody = SugarElement.fromTag('tbody');
 
   InsertAll.append(tableBody, rows);
   Insert.append(tableElement, tableBody);
@@ -102,38 +130,38 @@ const createDomTable = function (table, rows) {
   return tableElement;
 };
 
-const modelRowsToDomRows = function (table) {
-  return Arr.map(table.rows(), function (row) {
-    const cells = Arr.map(row.cells(), function (cell) {
+const modelRowsToDomRows = function (table: TableModel) {
+  return Arr.map(table.rows, function (row) {
+    const cells = Arr.map(row.cells, function (cell) {
       const td = Replication.deep(cell);
-      Attr.remove(td, 'colspan');
-      Attr.remove(td, 'rowspan');
+      Attribute.remove(td, 'colspan');
+      Attribute.remove(td, 'rowspan');
       return td;
     });
 
-    const tr = Replication.shallow(row.element());
+    const tr = Replication.shallow(row.element);
     InsertAll.append(tr, cells);
     return tr;
   });
 };
 
-const fromDom = function (tableElm) {
+const fromDom = function (tableElm: SugarElement<HTMLTableElement>) {
   const table = tableModel(Replication.shallow(tableElm), 0, []);
 
-  Arr.each(SelectorFilter.descendants(tableElm, 'tr'), function (tr, y) {
-    Arr.each(SelectorFilter.descendants(tr, 'td,th'), function (td, x) {
+  Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(tableElm, 'tr'), function (tr, y) {
+    Arr.each(SelectorFilter.descendants<HTMLTableCellElement>(tr, 'td,th'), function (td, x) {
       fillout(table, skipCellsX(table, x, y), y, tr, td);
     });
   });
 
-  return tableModel(table.element(), getWidth(table.rows()), table.rows());
+  return tableModel(table.element, getWidth(table.rows), table.rows);
 };
 
-const toDom = function (table) {
+const toDom = function (table: TableModel) {
   return createDomTable(table, modelRowsToDomRows(table));
 };
 
-const subsection = function (table, startElement, endElement) {
+const subsection = function (table: TableModel, startElement: SugarElement<unknown>, endElement: SugarElement<unknown>) {
   return findElementPos(table, startElement).bind(function (startPos) {
     return findElementPos(table, endElement).map(function (endPos) {
       return subTable(table, startPos, endPos);
@@ -141,7 +169,7 @@ const subsection = function (table, startElement, endElement) {
   });
 };
 
-export default {
+export {
   fromDom,
   toDom,
   subsection

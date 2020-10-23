@@ -5,17 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import Delay from 'tinymce/core/api/util/Delay';
-import * as Events from '../api/Events';
 import Editor from 'tinymce/core/api/Editor';
+import Delay from 'tinymce/core/api/util/Delay';
 import { WordCountApi } from '../api/Api';
+import * as Events from '../api/Events';
 
 const updateCount = (editor: Editor, api: WordCountApi) => {
   Events.fireWordCountUpdate(editor, api);
 };
 
-const setup = (editor: Editor, api: WordCountApi) => {
-  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), 300);
+const setup = (editor: Editor, api: WordCountApi, delay: number) => {
+  const debouncedUpdate = Delay.debounce(() => updateCount(editor, api), delay);
 
   editor.on('init', () => {
     updateCount(editor, api);

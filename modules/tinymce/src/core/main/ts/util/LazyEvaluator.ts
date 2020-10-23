@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 const evaluateUntil = function (fns, args) {
   for (let i = 0; i < fns.length; i++) {
@@ -15,9 +15,9 @@ const evaluateUntil = function (fns, args) {
     }
   }
 
-  return Option.none();
+  return Optional.none();
 };
 
-export default {
+export {
   evaluateUntil
 };

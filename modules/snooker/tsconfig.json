@@ -4,6 +4,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
       "ephox/snooker/test/*": ["src/test/ts/module/ephox/snooker/test/*"],
       "ephox/snooker/demo/*": ["src/demo/ts/ephox/snooker/demo/*"],
@@ -18,7 +19,6 @@
   ],
   "references": [
     { "path": "../dragster" },
-    { "path": "../echo" },
     { "path": "../katamari" },
     { "path": "../porkbun" },
     { "path": "../robin" },

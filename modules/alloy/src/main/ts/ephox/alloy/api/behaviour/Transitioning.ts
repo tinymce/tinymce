@@ -7,7 +7,7 @@ import { TransitioningBehaviour, TransitionPropertiesSpec, TransitioningConfigSp
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 import * as Behaviour from './Behaviour';
 
-const createRoutes = (routes): TransitioningConfigSpec['routes'] => {
+const createRoutes = (routes: Record<string, TransitionPropertiesSpec>): TransitioningConfigSpec['routes'] => {
   const r: TransitioningConfigSpec['routes'] = { };
   Obj.each(routes, (v: TransitionPropertiesSpec, k: string) => {
     const waypoints = k.split('<->');
@@ -17,40 +17,36 @@ const createRoutes = (routes): TransitioningConfigSpec['routes'] => {
   return r;
 };
 
-const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
-  return Objects.wrapAll([
-    { key: first, value: Objects.wrap(second, transitions) },
-    { key: second, value: Objects.wrap(first, transitions) }
-  ]);
-};
+const createBistate = (first: string, second: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => Objects.wrapAll([
+  { key: first, value: Objects.wrap(second, transitions) },
+  { key: second, value: Objects.wrap(first, transitions) }
+]);
 
-const createTristate = (first: string, second: string, third: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => {
-  return Objects.wrapAll([
-    {
-      key: first,
-      value: Objects.wrapAll([
-        { key: second, value: transitions },
-        { key: third, value: transitions }
-      ])
-    },
-    {
-      key: second,
-      value: Objects.wrapAll([
-        { key: first, value: transitions },
-        { key: third, value: transitions }
-      ])
-    },
-    {
-      key: third,
-      value: Objects.wrapAll([
-        { key: first, value: transitions },
-        { key: second, value: transitions }
-      ])
-    }
-  ]);
-};
+const createTristate = (first: string, second: string, third: string, transitions: TransitionPropertiesSpec): TransitioningConfigSpec['routes'] => Objects.wrapAll([
+  {
+    key: first,
+    value: Objects.wrapAll([
+      { key: second, value: transitions },
+      { key: third, value: transitions }
+    ])
+  },
+  {
+    key: second,
+    value: Objects.wrapAll([
+      { key: first, value: transitions },
+      { key: third, value: transitions }
+    ])
+  },
+  {
+    key: third,
+    value: Objects.wrapAll([
+      { key: first, value: transitions },
+      { key: second, value: transitions }
+    ])
+  }
+]);
 
-const Transitioning = Behaviour.create({
+const Transitioning: TransitioningBehaviour = Behaviour.create({
   fields: TransitionSchema,
   name: 'transitioning',
   active: ActiveTransitioning,
@@ -60,7 +56,7 @@ const Transitioning = Behaviour.create({
     createBistate,
     createTristate
   }
-}) as TransitioningBehaviour;
+});
 
 export {
   Transitioning

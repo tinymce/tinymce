@@ -1,33 +1,31 @@
-import { assert, UnitTest } from '@ephox/bedrock';
-import { Option } from '@ephox/katamari';
-import { Element } from '@ephox/sugar';
-import DomTextdata from 'ephox/robin/api/dom/DomTextdata';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
+import { KAssert } from '@ephox/katamari-assertions';
+import { SugarElement } from '@ephox/sugar';
+import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 
 UnitTest.test('DomTextdataTest', function () {
-  const a = Element.fromText('alpha');
-  const b = Element.fromText(' beta');
-  const c = Element.fromText('');
-  const d = Element.fromText(' ');
-  const e = Element.fromText('epsilon');
-  const f = Element.fromText('foo');
+  const a = SugarElement.fromText('alpha');
+  const b = SugarElement.fromText(' beta');
+  const c = SugarElement.fromText('');
+  const d = SugarElement.fromText(' ');
+  const e = SugarElement.fromText('epsilon');
+  const f = SugarElement.fromText('foo');
 
-  const check = function (expected: { text: string, cursor: Option<number> }, elements: Element[], current: Element, offset: number) {
+  const check = function (expected: { text: string; cursor: Optional<number> }, elements: SugarElement[], current: SugarElement, offset: number) {
     const actual = DomTextdata.from(elements, current, offset);
-    assert.eq(expected.text, actual.text());
-    expected.cursor.fold(function () {
-      assert.eq(true, actual.cursor().isNone(), 'Actual cursor should be none for: ' + actual.text());
-    }, function (exp) {
-      assert.eq(exp, actual.cursor().getOrDie('Expected an actual cursor at ' + exp));
-    });
+    Assert.eq('eq', expected.text, actual.text);
+
+    KAssert.eqOptional('eq', expected.cursor, actual.cursor);
   };
 
   check({
     text: '',
-    cursor: Option.some(0)
-  }, [c], c, 0);
+    cursor: Optional.some(0)
+  }, [ c ], c, 0);
 
   check({
     text: 'alpha beta epsilonfoo',
-    cursor: Option.some(13)
-  }, [a, b, c, d, e, f], e, 2);
+    cursor: Optional.some(13)
+  }, [ a, b, c, d, e, f ], e, 2);
 });

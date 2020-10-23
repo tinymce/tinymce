@@ -1,5 +1,6 @@
 import { Chain, NamedChain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
@@ -9,7 +10,7 @@ import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
+  GuiSetup.setup((_store, _doc, _body) => {
     const item = GuiFactory.build(
       Container.sketch({
         dom: {
@@ -49,13 +50,11 @@ UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
       })
     );
 
-  }, (doc, body, gui, component, store) => {
-    const cSetupAnchor = Chain.mapper((item) => {
-      return {
-        anchor: 'submenu',
-        item
-      };
-    });
+  }, (_doc, _body, gui, _component, _store) => {
+    const cSetupAnchor = Chain.mapper((item) => ({
+      anchor: 'submenu',
+      item
+    }));
 
     return [
       Chain.asStep({}, [

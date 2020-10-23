@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Range } from '@ephox/dom-globals';
 import Tools from '../api/util/Tools';
 
 export interface StringPathBookmark {

@@ -1,8 +1,9 @@
+import { Optional } from '@ephox/katamari';
+
 import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Option } from '@ephox/katamari';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import { BehaviourState } from '../common/BehaviourState';
 
 export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<RepresentingConfigSpec, RepresentingConfig> {
   config: (config: RepresentingConfigSpec) => Behaviour.NamedConfiguredBehaviour<RepresentingConfigSpec, RepresentingConfig>;
@@ -12,17 +13,43 @@ export interface RepresentingBehaviour extends Behaviour.AlloyBehaviour<Represen
   getState: (component: AlloyComponent) => RepresentingState;
 }
 
+export interface RepresentingState extends BehaviourState { }
+
+export interface MemoryRepresentingState extends RepresentingState {
+  get: <T>() => T;
+  set: <T>(value: T) => void;
+  isNotSet: () => boolean;
+  clear: () => void;
+}
+
+export interface ManualRepresentingState extends RepresentingState { }
+
+export interface DatasetRepresentingState extends RepresentingState {
+  lookup: <T extends ItemDataTuple>(itemString: string) => Optional<T>;
+  update: <T extends ItemDataTuple>(items: T[]) => void;
+  clear: () => void;
+}
+
 // NOTE: I'm not sure we have any guarantees on what this can be.
 export type RepresentingData = any;
+
+interface BaseStoreConfig<T, S extends RepresentingState> {
+  initialValue: Optional<T>;
+  manager: {
+    setValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState, data: RepresentingData) => void;
+    getValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => RepresentingData;
+    onLoad: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
+    onUnload: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
+    state: (spec: RepresentingConfig) => S;
+  };
+}
 
 export interface MemoryStoreConfigSpec {
   mode: 'memory';
   initialValue?: RepresentingData;
 }
 
-export interface MemoryStoreConfig {
-  initialValue: Option<RepresentingData>;
-}
+export interface MemoryStoreConfig extends BaseStoreConfig<RepresentingData, MemoryRepresentingState> { }
 
 export interface ManualStoreConfigSpec {
   mode: 'manual';
@@ -31,8 +58,7 @@ export interface ManualStoreConfigSpec {
   setValue?: (comp: AlloyComponent, data: RepresentingData) => void;
 }
 
-export interface ManualStoreConfig {
-  initialValue: Option<RepresentingData>;
+export interface ManualStoreConfig extends BaseStoreConfig<RepresentingData, ManualRepresentingState> {
   getValue: (comp: AlloyComponent) => RepresentingData;
   setValue: (comp: AlloyComponent, data: RepresentingData) => void;
 }
@@ -46,10 +72,9 @@ export interface DatasetStoreConfigSpec<T extends ItemDataTuple> {
   setValue: (comp: AlloyComponent, data: T) => void;
 }
 
-export interface DatasetStoreConfig<T extends ItemDataTuple> {
-  initialValue?: Option<T>;
+export interface DatasetStoreConfig<T extends ItemDataTuple> extends BaseStoreConfig<T, DatasetRepresentingState> {
   getFallbackEntry: (key: DatasetStoreKey) => T;
-  getDataKey?: (comp: AlloyComponent) => DatasetStoreKey;
+  getDataKey: (comp: AlloyComponent) => DatasetStoreKey;
   setValue: (comp: AlloyComponent, data: T) => void;
 }
 
@@ -58,16 +83,8 @@ export interface RepresentingConfigSpec extends Behaviour.BehaviourConfigSpec {
   onSetValue?: (comp: AlloyComponent, data: RepresentingData) => void;
 }
 
-export interface RepresentingState extends BehaviourState { }
-
 export interface RepresentingConfig extends Behaviour.BehaviourConfigDetail {
   resetOnDom: boolean;
-  store: {
-    manager: {
-      setValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState, data: RepresentingData) => void;
-      getValue: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => RepresentingData;
-      onLoad: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
-      onUnload: (comp: AlloyComponent, config: RepresentingConfig, state: RepresentingState) => void;
-    }
-  };
+  store: MemoryStoreConfig | ManualStoreConfig | DatasetStoreConfig<RepresentingData>;
+  onSetValue: (comp: AlloyComponent, data: RepresentingData) => void;
 }

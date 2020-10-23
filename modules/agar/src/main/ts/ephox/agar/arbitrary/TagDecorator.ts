@@ -1,7 +1,7 @@
+import { Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import { WeightedChoice } from './WeightedChoice';
-import { Option } from '@ephox/katamari';
 
 interface Decorator {
   weight: number;
@@ -9,25 +9,19 @@ interface Decorator {
   value: any; // generator
 }
 
-const gOne = function (wDecorations: Decorator[]) {
-  return WeightedChoice.generator(wDecorations).flatMap(function (choice: Option<Decorator>) {
-    return choice.fold(function () {
-      return Jsc.constant({}).generator;
-    }, function (c) {
-      return c.value.map(function (v) {
-        const r = {};
-        r[c.property] = v;
-        return r;
-      });
-    });
-  });
-};
+const gOne = (wDecorations: Decorator[]) =>
+  WeightedChoice.generator(wDecorations).flatMap((choice: Optional<Decorator>) =>
+    choice.fold(() =>
+      Jsc.constant({}).generator,
+    (c) => c.value.map((v) => {
+      const r = {};
+      r[c.property] = v;
+      return r;
+    })));
 
-const gEnforce = function (decorations) {
-  return Jsc.constant(decorations).generator;
-};
+const gEnforce = (decorations) => Jsc.constant(decorations).generator;
 
-export default {
-  gOne: gOne,
-  gEnforce: gEnforce
+export {
+  gOne,
+  gEnforce
 };

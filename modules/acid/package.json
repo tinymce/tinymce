@@ -1,18 +1,17 @@
 {
   "name": "@ephox/acid",
   "description": "Color library including Alloy UI component for a color picker",
-  "version": "1.0.18",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ephox/acid"
+    "url": "https://github.com/tinymce/tinymce"
   },
   "dependencies": {
-    "@ephox/alloy": "^4.13.2",
-    "@ephox/boulder": "^3.3.16",
-    "@ephox/dom-globals": "^1.1.2",
-    "@ephox/katamari": "^2.4.21",
-    "@ephox/sugar": "^4.6.21",
-    "tslib": "^1.9.3"
+    "@ephox/alloy": "^8.0.1",
+    "@ephox/boulder": "^5.0.1",
+    "@ephox/katamari": "^7.0.1",
+    "@ephox/sugar": "^7.0.1",
+    "tslib": "^2.0.0"
   },
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
@@ -32,7 +31,7 @@
   "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc -b",
-    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts"
   }

@@ -1,5 +1,5 @@
 import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
 
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 

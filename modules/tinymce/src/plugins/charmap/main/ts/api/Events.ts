@@ -9,6 +9,6 @@ const fireInsertCustomChar = function (editor, chr) {
   return editor.fire('insertCustomChar', { chr });
 };
 
-export default {
+export {
   fireInsertCustomChar
 };

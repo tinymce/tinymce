@@ -1,19 +1,19 @@
-import { UnitTest, assert } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import { buildUrl } from 'ephox/jax/core/UrlBuilder';
-import { Option } from '@ephox/katamari';
 
 UnitTest.test('UrlBuilderTest', () => {
-  const createRecord = (record: any) => Option.some<Record<string, string>>(record);
+  const createRecord = (record: any) => Optional.some<Record<string, string>>(record);
 
   // copied from agar, perhaps we shoud move it to bedrock
-  const assertEq = function <T>(label: string, expected: string, actual: string) {
+  const assertEq = function <T> (label: string, expected: string, actual: string) {
     assert.eq(expected, actual, `${label}.\n  Expected: ${expected} \n  Actual: ${actual}`);
   };
 
-  assertEq('Should remain unchanged', 'http://localhost', buildUrl('http://localhost', Option.none()));
-  assertEq('Should remain unchanged', 'http://localhost?a=1', buildUrl('http://localhost?a=1', Option.none()));
-  assertEq('Should remain unchanged', 'http://localhost?a=1&b=2', buildUrl('http://localhost?a=1&b=2', Option.none()));
-  assertEq('Should remain unchanged', 'http://localhost', buildUrl('http://localhost', Option.some({})));
+  assertEq('Should remain unchanged', 'http://localhost', buildUrl('http://localhost', Optional.none()));
+  assertEq('Should remain unchanged', 'http://localhost?a=1', buildUrl('http://localhost?a=1', Optional.none()));
+  assertEq('Should remain unchanged', 'http://localhost?a=1&b=2', buildUrl('http://localhost?a=1&b=2', Optional.none()));
+  assertEq('Should remain unchanged', 'http://localhost', buildUrl('http://localhost', Optional.some({})));
 
   assertEq('Should be expected url with encoding', 'http://localhost?a=1%262', buildUrl('http://localhost', createRecord({ a: '1&2' })));
   assertEq('Should be expected url with encoding', 'http://localhost?a%26b=1', buildUrl('http://localhost', createRecord({ 'a&b': '1' })));

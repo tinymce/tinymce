@@ -9,6 +9,8 @@
 // Toolbar split button
 //
 
+@toolbar-split-button-chevron-touch-padding: 4px;
+
 .tox {
   .tox-split-button {
     border: 0;
@@ -41,12 +43,19 @@
     fill: @toolbar-button-chevron-color;
   }
 
-  .tox-pop .tox-split-button__chevron svg {
-    transform: rotate(-90deg);
-  }
-
   .tox-split-button .tox-tbtn {
     margin: 0;
+  }
+
+  // Increase the chevron size and decrease the button size on touch devices
+  &.tox-platform-touch {
+    .tox-split-button .tox-tbtn:first-child {
+      width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
+    }
+
+    .tox-split-button__chevron {
+      width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
+    }
   }
 
   .tox-split-button.tox-tbtn--disabled:hover,

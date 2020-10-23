@@ -1,57 +1,80 @@
-import { Event, Events, Bindable } from '@ephox/porkbun';
-import Adjustments from '../resize/Adjustments';
+import { Bindable, Event, Events } from '@ephox/porkbun';
+import { SugarElement } from '@ephox/sugar';
+import * as Adjustments from '../resize/Adjustments';
 import { BarManager } from '../resize/BarManager';
-import { BarPositions, ColInfo } from '../resize/BarPositions';
+import * as BarPositions from '../resize/BarPositions';
+import { ResizeBehaviour } from './ResizeBehaviour';
 import { ResizeWire } from './ResizeWire';
-import { Element } from '@ephox/sugar';
+import { TableSize } from './TableSize';
+
+type BarPositions<A> = BarPositions.BarPositions<A>;
+type ResizeType = 'row' | 'col';
 
 export interface BeforeTableResizeEvent {
-  table: () => Element;
+  readonly table: SugarElement;
+  readonly type: ResizeType;
 }
 
 export interface AfterTableResizeEvent {
-  table: () => Element;
+  readonly table: SugarElement;
+  readonly type: ResizeType;
 }
+
+type TableResizeEventRegistry = {
+  readonly beforeResize: Bindable<BeforeTableResizeEvent>;
+  readonly afterResize: Bindable<AfterTableResizeEvent>;
+  readonly startDrag: Bindable<{}>;
+};
 
 interface TableResizeEvents {
-  registry: {
-    beforeResize: Bindable<BeforeTableResizeEvent>;
-    afterResize: Bindable<AfterTableResizeEvent>;
-    startDrag: Bindable<{}>;
-  };
-  trigger: {
-    beforeResize: (table: Element) => void;
-    afterResize: (table: Element) => void;
-    startDrag: () => void;
+  readonly registry: TableResizeEventRegistry;
+  readonly trigger: {
+    readonly beforeResize: (table: SugarElement, type: ResizeType) => void;
+    readonly afterResize: (table: SugarElement, type: ResizeType) => void;
+    readonly startDrag: () => void;
   };
 }
 
-export default function (wire: ResizeWire, vdirection: BarPositions<ColInfo>) {
+export interface TableResize {
+  readonly on: () => void;
+  readonly off: () => void;
+  readonly hideBars: () => void;
+  readonly showBars: () => void;
+  readonly destroy: () => void;
+  readonly events: TableResizeEventRegistry;
+}
+
+const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
   const hdirection = BarPositions.height;
-  const manager = BarManager(wire, vdirection, hdirection);
+  const vdirection = BarPositions.width;
+  const manager = BarManager(wire);
 
   const events = Events.create({
-    beforeResize: Event(['table']),
-    afterResize: Event(['table']),
+    beforeResize: Event([ 'table', 'type' ]),
+    afterResize: Event([ 'table', 'type' ]),
     startDrag: Event([])
   }) as TableResizeEvents;
 
-  manager.events.adjustHeight.bind(function (event) {
-    events.trigger.beforeResize(event.table());
-    const delta = hdirection.delta(event.delta(), event.table());
-    Adjustments.adjustHeight(event.table(), delta, event.row(), hdirection);
-    events.trigger.afterResize(event.table());
+  manager.events.adjustHeight.bind((event) => {
+    const table = event.table;
+    events.trigger.beforeResize(table, 'row');
+    const delta = hdirection.delta(event.delta, table);
+    // TODO: Use the resizing behaviour for heights as well
+    Adjustments.adjustHeight(table, delta, event.row, hdirection);
+    events.trigger.afterResize(table, 'row');
   });
 
-  manager.events.startAdjust.bind(function (event) {
+  manager.events.startAdjust.bind((_event) => {
     events.trigger.startDrag();
   });
 
-  manager.events.adjustWidth.bind(function (event) {
-    events.trigger.beforeResize(event.table());
-    const delta = vdirection.delta(event.delta(), event.table());
-    Adjustments.adjustWidth(event.table(), delta, event.column(), vdirection);
-    events.trigger.afterResize(event.table());
+  manager.events.adjustWidth.bind((event) => {
+    const table = event.table;
+    events.trigger.beforeResize(table, 'col');
+    const delta = vdirection.delta(event.delta, table);
+    const tableSize = lazySizing(table);
+    Adjustments.adjustWidth(table, delta, event.column, resizing, tableSize);
+    events.trigger.afterResize(table, 'col');
   });
 
   return {
@@ -62,4 +85,8 @@ export default function (wire: ResizeWire, vdirection: BarPositions<ColInfo>) {
     destroy: manager.destroy,
     events: events.registry
   };
-}
+};
+
+export const TableResize = {
+  create
+};

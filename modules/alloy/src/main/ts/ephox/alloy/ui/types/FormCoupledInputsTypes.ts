@@ -1,9 +1,10 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import { Optional } from '@ephox/katamari';
 import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { Option } from '@ephox/katamari';
+
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
 export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   uid: string;
@@ -33,8 +34,10 @@ export interface FormCoupledInputsSpec extends CompositeSketchSpec {
   };
 }
 
-export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec, FormCoupledInputsDetail> {
-  getField1: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getField2: (comp: AlloyComponent) => Option<AlloyComponent>;
-  getLock: (comp: AlloyComponent) => Option<AlloyComponent>;
+export interface FormCoupledInputsApis {
+  getField1: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  getField2: (comp: AlloyComponent) => Optional<AlloyComponent>;
+  getLock: (comp: AlloyComponent) => Optional<AlloyComponent>;
 }
+
+export interface FormCoupledInputsSketcher extends CompositeSketch<FormCoupledInputsSpec>, FormCoupledInputsApis { }

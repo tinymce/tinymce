@@ -6,9 +6,8 @@
  */
 
 import { Arr, Fun, Id } from '@ephox/katamari';
-import { Element, SelectorFilter } from '@ephox/sugar';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
-import { HTMLElement, HTMLAnchorElement, Node } from '@ephox/dom-globals';
 
 /**
  * This module is enables you to get anything that you can link to in a element.
@@ -69,8 +68,8 @@ const isChildOfContentEditableTrue = function (node: Node) {
 };
 
 const select = function (selector: string, root: HTMLElement) {
-  return Arr.map(SelectorFilter.descendants(Element.fromDom(root), selector), function (element): HTMLElement {
-    return element.dom();
+  return Arr.map(SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(root), selector), function (element) {
+    return element.dom;
   });
 };
 

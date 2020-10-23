@@ -1,11 +1,9 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
-import { UnitTest } from '@ephox/bedrock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (success, failure) {
 
   Theme();
 
@@ -77,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -99,14 +97,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function () {
         sUploadImages(editor),
         tinyApis.sSetContent('a'),
         tinyApis.sExecCommand('bold'),
-        tinyApis.sFocus,
-        tinyApis.sNodeChanged,
+        tinyApis.sFocus(),
+        tinyApis.sNodeChanged(),
         sExecCallback(editor, 'test_callback', 1)
       ]))
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    test_callback () {
+    test_callback() {
     }
   }, success, failure);
 });

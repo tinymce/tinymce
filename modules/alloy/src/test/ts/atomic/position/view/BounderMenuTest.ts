@@ -1,17 +1,25 @@
+import { UnitTest, assert } from '@ephox/bedrock-client';
+
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
+import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
-import { UnitTest, assert } from '@ephox/bedrock';
+
+interface TestDecisionSpec {
+  label: string;
+  x: number;
+  y: number;
+  candidateYforTest?: number;
+}
 
 UnitTest.test('BounderMenuTest', () => {
-  /* global assert */
-  const check = (expected, preference, anchor, panel, bubbles, bounds) => {
+  const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    assert.eq(expected.label, actual.label());
-    assert.eq(expected.x, actual.x());
-    assert.eq(expected.y, actual.y());
-    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest()); }
+    assert.eq(expected.label, actual.label);
+    assert.eq(expected.x, actual.x);
+    assert.eq(expected.y, actual.y);
+    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest); }
   };
 
   // LinkedLayout is for submenus (vertically aligned to opposite side of menu)

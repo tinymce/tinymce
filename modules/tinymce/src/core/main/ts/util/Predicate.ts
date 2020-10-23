@@ -5,10 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const slice = [].slice;
-
-const or = function (...x: any[]) {
-  const args = slice.call(arguments);
+const or = function (...args: any[]) {
 
   return function (x) {
     for (let i = 0; i < args.length; i++) {
@@ -21,9 +18,7 @@ const or = function (...x: any[]) {
   };
 };
 
-const and = function (...x: any[]) {
-  const args = slice.call(arguments);
-
+const and = function (...args: any[]) {
   return function (x) {
     for (let i = 0; i < args.length; i++) {
       if (!args[i](x)) {
@@ -35,7 +30,7 @@ const and = function (...x: any[]) {
   };
 };
 
-export default {
+export {
   and,
   or
 };

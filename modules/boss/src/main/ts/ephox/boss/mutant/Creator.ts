@@ -1,9 +1,9 @@
-import { Option } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 import { TextGene } from '../api/TextGene';
 
 const isNu = function (item: Gene) {
-  return item.id === 'nu_' + item.name || Option.from(item.text).exists((text) => item.id === '?_' + text);
+  return item.id === 'nu_' + item.name || Optional.from(item.text).exists((text) => item.id === '?_' + text);
 };
 
 const seed = function () {
@@ -24,7 +24,7 @@ const clone = function (item: Gene): Gene {
     ...item,
     children: [],
     id: 'clone**<' + item.id + '>'
-  }
+  };
 };
 
 const text = function (value: string): Gene {
@@ -34,7 +34,7 @@ const text = function (value: string): Gene {
   };
 };
 
-export default {
+export {
   nu,
   clone,
   text,

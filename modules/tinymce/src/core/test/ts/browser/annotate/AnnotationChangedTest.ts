@@ -1,5 +1,5 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Assertions, Chain, Logger, Pipeline, Step, StepSequence, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
@@ -11,41 +11,38 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
   Theme();
 
-  const changes: Cell<Array<{state: boolean, name: string, uid: string}>> = Cell([ ]);
+  const changes: Cell<Array<{state: boolean; name: string; uid: string}>> = Cell([ ]);
 
-  const sAssertChanges = (message: string, expected: Array<{uid: string, state: boolean, name: string}>) => Logger.t(
-    message,
-    // Use a chain so that changes.get() can be evaluated at run-time.
-    Chain.asStep({ }, [
-      Chain.mapper((_) => {
-        return changes.get();
-      }),
-      Chain.op((cs: Array<{uid: string, name: string}>) => {
-        Assertions.assertEq('Checking changes', expected, cs);
-      })
-    ])
-  );
+  const sAssertChanges = <T> (message: string, expected: Array<{uid: string; state: boolean; name: string}>): Step<T, T> =>
+    Logger.t(
+      message,
+      // Use a chain so that changes.get() can be evaluated at run-time.
+      Chain.asStep({ }, [
+        Chain.injectThunked(changes.get),
+        Chain.op((cs: Array<{uid: string; name: string}>) => {
+          Assertions.assertEq('Checking changes', expected, cs);
+        })
+      ])
+    );
 
-  const sClearChanges = Step.sync(() => {
-    changes.set([ ]);
-  });
+  const sClearChanges = <T> (): Step<T, T> =>
+    Step.sync(() => {
+      changes.set([ ]);
+    });
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
 
-    const sTestAnnotationEvents = (label: string, start: number[], soffset: number, expected: Array<{ uid: string, name: string, state: boolean}>): any => {
-      return GeneralSteps.sequence([
-        tinyApis.sSetSelection(start, soffset, start, soffset),
-        Waiter.sTryUntil(
-          label,
-          sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected),
-          10,
-          1000
-        ),
-      ]);
-    };
+    const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => StepSequence.sequenceSame<T>([
+      tinyApis.sSetSelection(start, soffset, start, soffset),
+      Waiter.sTryUntil(
+        label,
+        sAssertChanges('sTestAnnotationEvents.sAssertChanges', expected)
+      )
+    ]);
 
-    const sTestChanges = GeneralSteps.sequence([
+    const sTestChanges = <T> () => StepSequence.sequenceSame<T>([
+      tinyApis.sFocus(),
       // '<p>This |is the first paragraph</p><p>This is the second.</p><p>This is| the third.</p><p>Spanning |multiple</p><p>par||ag||raphs| now</p>'
       tinyApis.sSetContent([
         '<p>This is the first paragraph</p>',
@@ -69,21 +66,21 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       tinyApis.sSetSelection([ 4, 0, 0 ], 'par'.length, [ 4, 0, 0 ], 'parag'.length ),
       sAnnotate(editor, 'delta', 'id-five', { something: 'comment-five' }),
 
-      Step.wait(1000),
-      sClearChanges,
+      Step.wait(500),
+      sClearChanges(),
 
       sAssertHtmlContent(tinyApis, [
-        `<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">is</span> the first paragraph</p>`,
+        '<p>This <span data-mce-annotation="alpha" data-test-anything="comment-1" data-mce-annotation-uid="id-one" class="mce-annotation">is</span> the first paragraph</p>',
 
-        `<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>`,
+        '<p>T<span data-mce-annotation="alpha" data-test-anything="comment-two" data-mce-annotation-uid="id-two" class="mce-annotation">his is</span> the second.</p>',
 
-        `<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>`,
+        '<p>This is the th<span data-mce-annotation="beta" data-test-something="comment-three" data-mce-annotation-uid="id-three" class="mce-annotation">ir</span>d.</p>',
 
-        `<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>`,
+        '<p>Spanning <span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">multiple</span></p>',
 
-        `<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">par` +
-          `<span data-mce-annotation="delta" data-test-something="comment-five" data-mce-annotation-uid="id-five" class="mce-annotation delta-test">ag</span>` +
-          `raphs</span> now</p>`
+        '<p><span data-mce-annotation="gamma" data-test-something="comment-four" data-mce-annotation-uid="id-four" class="mce-annotation">par' +
+          '<span data-mce-annotation="delta" data-test-something="comment-five" data-mce-annotation-uid="id-five" class="mce-annotation delta-test">ag</span>' +
+          'raphs</span> now</p>'
       ]),
 
       // Outside: p(0) > text(0) > "Th".length
@@ -93,9 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
 
       Waiter.sTryUntil(
         'Waiting for no changes',
-        sAssertChanges('Should be no changes', [ ]),
-        10,
-        1000
+        sAssertChanges('Should be no changes', [ ])
       ),
 
       sTestAnnotationEvents(
@@ -140,9 +135,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'alpha', uid: 'id-one' },
             { state: true, name: 'alpha', uid: 'id-two' }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       sTestAnnotationEvents(
@@ -183,9 +176,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'beta', uid: 'id-three' },
             { state: false, name: 'beta', uid: null }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       tinyApis.sSetSelection([ 2, 2 ], 'd'.length, [ 2, 2 ], 'd'.length),
@@ -203,11 +194,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'beta', uid: 'id-three' },
             { state: false, name: 'beta', uid: null }
           ]
-        ),
-        10,
-        1000
+        )
       ),
-      sClearChanges,
+      sClearChanges(),
 
       tinyApis.sSetSelection([ 4, 0, 1, 0 ], 'a'.length, [ 4, 0, 1, 0 ], 'a'.length),
       // Give it time to throttle a node change.
@@ -219,9 +208,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'delta', uid: 'id-five' },
             { state: true, name: 'gamma', uid: 'id-four' }
           ]
-        ),
-        10,
-        1000
+        )
       ),
 
       tinyApis.sSetSelection([ 4, 0, 0 ], 'p'.length, [ 4, 0, 0 ], 'p'.length),
@@ -235,62 +222,49 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
             { state: true, name: 'gamma', uid: 'id-four' },
             { state: false, name: 'delta', uid: null }
           ]
-        ),
-        10,
-        1000
-      ),
+        )
+      )
     ]);
 
-    Pipeline.async({}, [
-      tinyApis.sFocus,
-      sTestChanges
-    ], onSuccess, onFailure);
+    Pipeline.runStep({}, sTestChanges<{}>(), onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.on('init', () => {
         ed.annotator.register('alpha', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-anything': data.anything
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-anything': data.anything
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('beta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('gamma', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ ]
+          })
         });
 
         ed.annotator.register('delta', {
-          decorate: (uid, data) => {
-            return {
-              attributes: {
-                'data-test-something': data.something
-              },
-              classes: [ 'delta-test' ]
-            };
-          }
+          decorate: (uid, data) => ({
+            attributes: {
+              'data-test-something': data.something
+            },
+            classes: [ 'delta-test' ]
+          })
         });
 
         // NOTE: Have to use old function syntax here when accessing "arguments"

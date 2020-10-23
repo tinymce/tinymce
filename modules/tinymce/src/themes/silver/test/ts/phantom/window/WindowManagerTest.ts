@@ -1,72 +1,68 @@
-import {
-  ApproxStructure,
-  Assertions,
-  Chain,
-  GeneralSteps,
-  Logger,
-  Mouse,
-  Pipeline,
-  Step,
-  UiFinder,
-  Waiter,
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { Types } from '@ephox/bridge';
-import { document, HTMLInputElement } from '@ephox/dom-globals';
+import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Body, Element as SugarElement } from '@ephox/sugar';
-import WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+
+import { Dialog } from 'tinymce/core/api/ui/Ui';
+import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   const helpers = TestExtras();
   const windowManager = WindowManager.setup(helpers.extras);
-
-  const shouldFail = (label, conf, asserter) => {
-    return Step.async(function (next, die) {
-      try {
-        windowManager.open(conf, {}, Fun.noop);
-      } catch (err) {
-        asserter(err);
-        return next();
+  const windowManagerWithDragging = WindowManager.setup({
+    editor: helpers.extras.editor,
+    backstage: {
+      ...helpers.extras.backstage,
+      dialog: {
+        isDraggableModal: () => true
       }
+    }
+  });
 
-      die('This should throw a configuration error: ' + label);
-    });
-  };
+  const shouldFail = (label: string, conf, asserter: (err: Error) => void) => Step.async(function (next, die) {
+    try {
+      windowManager.open(conf, {}, Fun.noop);
+    } catch (err) {
+      asserter(err);
+      return next();
+    }
 
-  const sSetupDialog = (conf) => Step.sync(() => {
+    die('This should throw a configuration error: ' + label);
+  });
+
+  const sSetupDialogWithoutDragging = (conf) => Step.sync(() => {
     windowManager.open(conf, {}, Fun.noop);
   });
 
+  const sSetupDialogWithDragging = (conf) => Step.sync(() => {
+    windowManagerWithDragging.open(conf, {}, Fun.noop);
+  });
+
   const sTeardown = GeneralSteps.sequence([
-    Mouse.sClickOn(Body.body(), '.tox-button--icon[aria-label="Close"]'),
+    Mouse.sClickOn(SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
     Waiter.sTryUntil(
       'Waiting for blocker to disappear after clicking close',
-      UiFinder.sNotExists(Body.body(), '.tox-dialog-wrap'),
-      100,
-      1000
+      UiFinder.sNotExists(SugarBody.body(), '.tox-dialog-wrap')
     )
   ]);
 
-  const sAssertSinkStructure = (asserter) => Chain.asStep(Body.body(), [
+  const sAssertSinkStructure = (asserter) => Chain.asStep(SugarBody.body(), [
     UiFinder.cWaitFor('Looking for sink', '.mce-silver-sink'),
     Chain.op(asserter)
   ]);
 
-  const createTest = (label, conf, asserter) => Logger.t(
+  const createTest = (label, conf, asserter, drag?) => Logger.t(
     label,
     GeneralSteps.sequence([
       Waiter.sTryUntil(
         'Waiting for any other dialogs to disappear',
-        UiFinder.sNotExists(Body.body(), '.tox-button--icon[aria-label="Close"]'),
-        100,
-        1000
+        UiFinder.sNotExists(SugarBody.body(), '.tox-button--icon[aria-label="Close"]')
       ),
-      sSetupDialog(conf),
-      UiFinder.sWaitFor('Waiting for dialog to appear', Body.body(), '.tox-button--icon[aria-label="Close"]'),
+      drag ? sSetupDialogWithDragging(conf) : sSetupDialogWithoutDragging(conf),
+      UiFinder.sWaitFor('Waiting for dialog to appear', SugarBody.body(), '.tox-button--icon[aria-label="Close"]'),
       sAssertSinkStructure(asserter),
-      sTeardown,
+      sTeardown
     ])
   );
 
@@ -86,7 +82,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     title: 'test-missing-panel',
     body: {
       type: 'panel'
-      /*items: []*/ // I need items: [] to work, thats what this test should complain about
+      /* items: []*/ // I need items: [] to work, thats what this test should complain about
     },
     buttons: []
   }, (err) => {
@@ -95,8 +91,8 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     Assertions.assertEq('This should throw a configuration error: showing the exact failure', message[2], 'Could not find valid *strict* value for "items" in {');
   });
 
-  const sTestMinRequiredConfig = createTest('The smallest config to get dialog working, it should have this DOM structure', {
-    title: 'test-min-required',
+  const sTestMinRequiredConfigWithDragging = createTest('The smallest config to get draggable dialog working, it should have this DOM structure', {
+    title: 'test-min-required-with-dragging',
     body: {
       type: 'panel',
       items: []
@@ -105,60 +101,114 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   }, (rootElement: SugarElement) => {
 
     Assertions.assertStructure('A basic dialog should have these components',
-      ApproxStructure.build((s, str, arr) => {
-        return s.element('div', {
-          classes: [ arr.has('mce-silver-sink') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-dialog-wrap') ],
-              children: [
-                s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
-                s.element('div', {
-                  classes: [ arr.has('tox-dialog') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__header') ],
-                      children: [
-                        s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
-                        s.element('div', { classes: [ arr.has('tox-dialog__draghandle') ] }),
-                        s.element('button', { classes: [ arr.has('tox-button') ] })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__content-js') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-dialog__body') ],
-                          children: [
-                            s.element('div', {
-                              // Potentially reinstate once we have the structure 100% defined.
-                              // attrs: {
-                              //   role: str.is('presentation')
-                              // }
-                            })
-                          ]
-                        })
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-dialog__footer') ]
-                    })
-                  ]
-                })
-              ]
-            })
-          ]
-        });
-      }),
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('mce-silver-sink') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-dialog-wrap') ],
+            children: [
+              s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
+              s.element('div', {
+                classes: [ arr.has('tox-dialog') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__header') ],
+                    children: [
+                      s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+                      s.element('div', { classes: [ arr.has('tox-dialog__draghandle') ] }),
+                      s.element('button', { classes: [ arr.has('tox-button') ] })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__content-js') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-dialog__body') ],
+                        children: [
+                          s.element('div', {
+                            // Potentially reinstate once we have the structure 100% defined.
+                            // attrs: {
+                            //   role: str.is('presentation')
+                            // }
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__footer') ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
       rootElement
     );
-  });
+  }, true);
+
+  const sTestMinRequiredConfigWithoutDragging = createTest('The smallest config to get non-draggable dialog working, it should have this DOM structure', {
+    title: 'test-min-required-without-dragging',
+    body: {
+      type: 'panel',
+      items: []
+    },
+    buttons: []
+  }, (rootElement: SugarElement) => {
+
+    Assertions.assertStructure('A basic dialog should have these components',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('mce-silver-sink') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-dialog-wrap') ],
+            children: [
+              s.element('div', { classes: [ arr.has('tox-dialog-wrap__backdrop') ] }),
+              s.element('div', {
+                classes: [ arr.has('tox-dialog') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__header') ],
+                    children: [
+                      s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+                      s.element('button', { classes: [ arr.has('tox-button') ] })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__content-js') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-dialog__body') ],
+                        children: [
+                          s.element('div', {
+                            // Potentially reinstate once we have the structure 100% defined.
+                            // attrs: {
+                            //   role: str.is('presentation')
+                            // }
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [ arr.has('tox-dialog__footer') ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      rootElement
+    );
+  }, false);
 
   const sWindowDataTest = Logger.t(
     'Initial Data test',
     GeneralSteps.sequence([
       Step.sync(function () {
-        const conf: Types.Dialog.DialogApi<any> = {
+        const conf: Dialog.DialogSpec<any> = {
           title: 'test',
           body: {
             type: 'panel',
@@ -167,7 +217,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
                 name: 'fooname',
                 type: 'input',
                 label: 'Foo Label'
-              },
+              }
             ]
           },
           buttons: [],
@@ -180,41 +230,39 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
         const dialogBody = SugarElement.fromDom(document.querySelector('.tox-dialog__body'));
 
         Assertions.assertStructure('It should load with form components in the dom structure',
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-dialog__body') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-dialog__body-content') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-form') ],
-                      children: [
-                        s.element('div', {
-                          classes: [ arr.has('tox-form__group') ],
-                          children: [
-                            s.element('label', {
-                              classes: [ arr.has('tox-label') ],
-                              attrs: {
-                                for: str.startsWith( 'form-field_' )
-                              },
-                              html: str.is('Foo Label')
-                            }),
-                            s.element('input', {
-                              classes: [ arr.has('tox-textfield') ],
-                              attrs: {
-                                type: str.is('text')
-                              }
-                            })
-                          ]
-                        })
-                      ]
-                    })
-                  ]
-                })
-              ]
-            });
-          }),
+          ApproxStructure.build((s, str, arr) => s.element('div', {
+            classes: [ arr.has('tox-dialog__body') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-dialog__body-content') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-form') ],
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-form__group') ],
+                        children: [
+                          s.element('label', {
+                            classes: [ arr.has('tox-label') ],
+                            attrs: {
+                              for: str.startsWith( 'form-field_' )
+                            },
+                            html: str.is('Foo Label')
+                          }),
+                          s.element('input', {
+                            classes: [ arr.has('tox-textfield') ],
+                            attrs: {
+                              type: str.is('text')
+                            }
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          })),
           dialogBody
         );
 
@@ -244,8 +292,9 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   Pipeline.async({}, [
     sTestWrongBodyType,
     sTestMissingPanelItems,
-    sTestMinRequiredConfig,
-    sWindowDataTest,
+    sTestMinRequiredConfigWithDragging,
+    sTestMinRequiredConfigWithoutDragging,
+    sWindowDataTest
 
   ], function () {
     helpers.destroy();

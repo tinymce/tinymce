@@ -1,19 +1,18 @@
 import * as Arr from './Arr';
 import * as Obj from './Obj';
 import * as Type from './Type';
-import { console } from '@ephox/dom-globals';
 
 export interface Adt {
   fold: <T> (...caseHandlers: ((...data: any[]) => T)[]) => T;
-  match: <T> (branches: { [branch: string]: (...data: any[]) => T; }) => T;
+  match: <T> (branches: { [branch: string]: (...data: any[]) => T }) => T;
   log: (label: string) => void;
-};
+}
 
 /*
  * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
  * For syntax and use, look at the test code.
  */
-var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [key: string]: string[] }[]): T {
+const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: { [key: string]: string[] }[]): T {
   // validation
   if (!Type.isArray(cases)) {
     throw new Error('cases must be an array');
@@ -25,7 +24,7 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
   const constructors: string[] = [];
 
   // adt is mutated to add the individual cases
-  const adt: Record<string,(...data: any[]) => Adt> = {};
+  const adt: Record<string, (...data: any[]) => Adt> = {};
   Arr.each(cases, function (acase, count) {
     const keys: string[] = Obj.keys(acase);
 
@@ -61,8 +60,9 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
 
       // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
       const args = new Array(argLength);
-      for (let i = 0; i < args.length; i++) args[i] = arguments[i];
-
+      for (let i = 0; i < args.length; i++) {
+        args[i] = arguments[i];
+      }
 
       const match = function (branches: { [branch: string]: Function }) {
         const branchKeys: string[] = Obj.keys(branches);
@@ -74,7 +74,9 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
           return Arr.contains(branchKeys, reqKey);
         });
 
-        if (!allReqd) throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
+        if (!allReqd) {
+          throw new Error('Not all branches were specified when using match. Specified: ' + branchKeys.join(', ') + '\nRequired: ' + constructors.join(', '));
+        }
 
         return branches[key].apply(null, args);
       };
@@ -83,7 +85,7 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
       // the fold function for key
       //
       return {
-        fold: function (/* arguments */) {
+        fold(/* arguments */) {
           // runtime validation
           if (arguments.length !== cases.length) {
             throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
@@ -91,12 +93,13 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
           const target = arguments[count];
           return target.apply(null, args);
         },
-        match: match,
+        match,
 
         // NOTE: Only for debugging.
-        log: function (label) {
+        log(label) {
+          // eslint-disable-next-line no-console
           console.log(label, {
-            constructors: constructors,
+            constructors,
             constructor: key,
             params: args
           });
@@ -105,9 +108,9 @@ var generate = function <T = Record<string,(...data: any[]) => Adt>> (cases: { [
     };
   });
 
-  return <any>adt;
+  return <any> adt;
 };
 
 export const Adt = {
-  generate: generate
+  generate
 };

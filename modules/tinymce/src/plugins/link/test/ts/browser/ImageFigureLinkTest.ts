@@ -1,7 +1,7 @@
-import { Assertions, Logger, Log, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
+import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -11,11 +11,12 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const api = TinyApis(editor);
+    const ui = TinyUi(editor);
 
     const sLinkTheSelection = function () {
-      return Logger.t('Link the selection', TestLinkUi.sInsertLink('http://google.com'));
+      return Logger.t('Link the selection', TestLinkUi.sInsertLink(ui, 'http://google.com'));
     };
 
     const sUnlinkSelection = function () {
@@ -24,10 +25,9 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
       }));
     };
 
-    const sAssertPresence = function (selector) {
+    const sAssertPresence = function (selector: Record<string, number>) {
       return Waiter.sTryUntil('Assert element is present',
-        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody())),
-        100, 1000
+        Assertions.sAssertPresence('Detect presence of the element', selector, TinyDom.fromDom(editor.getBody()))
       );
     };
 
@@ -40,20 +40,20 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
             '<figcaption>TinyMCE</figcaption>' +
           '</figure>'
         ),
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sLinkTheSelection(),
         sAssertPresence({ 'figure.image > a[href="http://google.com"] > img': 1 }),
 
-        api.sSetSelection([0], 0, [0], 0),
+        api.sSetSelection([ 0 ], 0, [ 0 ], 0),
         sUnlinkSelection(),
         sAssertPresence({ 'figure.image > img': 1 }),
         TestLinkUi.sClearHistory
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'link',
     toolbar: 'link',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

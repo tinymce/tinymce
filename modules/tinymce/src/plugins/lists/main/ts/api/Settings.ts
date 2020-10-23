@@ -5,10 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const shouldIndentOnTab = function (editor) {
-  return editor.getParam('lists_indent_on_tab', true);
+import Editor from 'tinymce/core/api/Editor';
+
+const shouldIndentOnTab = (editor: Editor) => editor.getParam('lists_indent_on_tab', true);
+
+const getForcedRootBlock = (editor: Editor): string => {
+  const block = editor.getParam('forced_root_block', 'p');
+  if (block === false) {
+    return '';
+  } else if (block === true) {
+    return 'p';
+  } else {
+    return block;
+  }
 };
 
-export default {
-  shouldIndentOnTab
+const getForcedRootBlockAttrs = (editor: Editor): Record<string, string> => editor.getParam('forced_root_block_attrs', {});
+
+export {
+  shouldIndentOnTab,
+  getForcedRootBlock,
+  getForcedRootBlockAttrs
 };

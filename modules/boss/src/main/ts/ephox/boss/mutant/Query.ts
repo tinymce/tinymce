@@ -1,8 +1,7 @@
-import Properties from './Properties';
-import Up from './Up';
-import { Arr } from '@ephox/katamari';
-import { Option } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
+import * as Properties from './Properties';
+import * as Up from './Up';
 
 const extract = function (item: Gene): string[] {
   const self = item.id;
@@ -19,31 +18,34 @@ const comparePosition = function (item: Gene, other: Gene) {
   const otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
   return itemIndex.bind(function (iIndex) {
     return otherIndex.map(function (oIndex): number {
-      if (iIndex < oIndex) return 4;
-      else return 2;
+      if (iIndex < oIndex) {
+        return 4;
+      } else {
+        return 2;
+      }
     });
   }).getOr(0);
 };
 
-const prevSibling = function (item: Gene): Option<Gene> {
+const prevSibling = function (item: Gene): Optional<Gene> {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
   const itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
   return itemIndex.bind(function (iIndex) {
-    return iIndex > 0 ? Option.some(kin[iIndex - 1]) : Option.none();
+    return iIndex > 0 ? Optional.some(kin[iIndex - 1]) : Optional.none();
   });
 };
 
-const nextSibling = function (item: Gene): Option<Gene> {
+const nextSibling = function (item: Gene): Optional<Gene> {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
   const itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
   return itemIndex.bind(function (iIndex) {
-    return iIndex < kin.length - 1 ? Option.some(kin[iIndex + 1]) : Option.none();
+    return iIndex < kin.length - 1 ? Optional.some(kin[iIndex + 1]) : Optional.none();
   });
 };
 
-export default {
+export {
   comparePosition,
   prevSibling,
   nextSibling

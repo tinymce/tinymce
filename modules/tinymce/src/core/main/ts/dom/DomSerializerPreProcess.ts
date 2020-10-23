@@ -5,27 +5,25 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element } from '@ephox/dom-globals';
-import { Merger } from '@ephox/katamari';
-import Events from '../api/Events';
-import Tools from '../api/util/Tools';
 import Editor from '../api/Editor';
+import * as Events from '../api/Events';
+import Tools from '../api/util/Tools';
 
 const preProcess = function (editor: Editor, node: Element, args) {
-  let impl, doc, oldDoc;
+  let doc, oldDoc;
   const dom = editor.dom;
 
   node = node.cloneNode(true) as Element;
 
   // Nodes needs to be attached to something in WebKit/Opera
   // This fix will make DOM ranges and make Sizzle happy!
-  impl = document.implementation;
+  const impl = document.implementation;
   if (impl.createHTMLDocument) {
     // Create an empty HTML document
     doc = impl.createHTMLDocument('');
 
     // Add the element or it's children if it's a body element to the new document
-    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [node], function (node) {
+    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [ node ], function (node) {
       doc.body.appendChild(doc.importNode(node, true));
     });
 
@@ -41,7 +39,7 @@ const preProcess = function (editor: Editor, node: Element, args) {
     dom.doc = doc;
   }
 
-  Events.firePreProcess(editor, Merger.merge(args, { node }));
+  Events.firePreProcess(editor, { ...args, node });
 
   if (oldDoc) {
     dom.doc = oldDoc;
@@ -58,6 +56,6 @@ const process = function (editor: Editor, node: Element, args) {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 
-export default {
+export {
   process
 };

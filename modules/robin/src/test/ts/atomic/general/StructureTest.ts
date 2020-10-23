@@ -1,6 +1,6 @@
-import { assert, UnitTest } from '@ephox/bedrock';
+import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse } from '@ephox/boss';
-import Structure from 'ephox/robin/api/general/Structure';
+import * as Structure from 'ephox/robin/api/general/Structure';
 
 UnitTest.test('StructureTest', function () {
   const doc = TestUniverse(Gene('root', 'root', [

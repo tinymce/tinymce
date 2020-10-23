@@ -1,7 +1,7 @@
-import MouseDrag from './MouseDrag';
-import Dragging from '../core/Dragging';
-import { DragMode, DragMutation } from './DragApis';
+import * as Dragging from '../core/Dragging';
 import { BlockerOptions } from '../detect/Blocker';
+import { DragMode, DragMutation } from './DragApis';
+import MouseDrag from './MouseDrag';
 
 export interface DraggerOptions extends BlockerOptions {
   mode: DragMode;
@@ -12,6 +12,6 @@ const transform = function (mutation: DragMutation, settings: Partial<DraggerOpt
   return Dragging.setup(mutation, mode, settings);
 };
 
-export default {
+export {
   transform
 };

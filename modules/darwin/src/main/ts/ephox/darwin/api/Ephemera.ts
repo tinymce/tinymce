@@ -1,13 +1,12 @@
-import { Fun } from '@ephox/katamari';
-import Styles from '../style/Styles';
+import * as Styles from '../style/Styles';
 
 export interface Ephemera {
-  selected: () => string;
-  selectedSelector: () => string;
-  firstSelected: () => string;
-  firstSelectedSelector: () => string;
-  lastSelected: () => string;
-  lastSelectedSelector: () => string;
+  readonly selected: string;
+  readonly selectedSelector: string;
+  readonly firstSelected: string;
+  readonly firstSelectedSelector: string;
+  readonly lastSelected: string;
+  readonly lastSelectedSelector: string;
 }
 
 const selected = Styles.resolve('selected');
@@ -18,10 +17,10 @@ const lastSelected = Styles.resolve('last-selected');
 const lastSelectedSelector = '.' + lastSelected;
 
 export const Ephemera: Ephemera = {
-  selected: Fun.constant(selected),
-  selectedSelector: Fun.constant(selectedSelector),
-  firstSelected: Fun.constant(firstSelected),
-  firstSelectedSelector: Fun.constant(firstSelectedSelector),
-  lastSelected: Fun.constant(lastSelected),
-  lastSelectedSelector: Fun.constant(lastSelectedSelector)
+  selected,
+  selectedSelector,
+  firstSelected,
+  firstSelectedSelector,
+  lastSelected,
+  lastSelectedSelector
 };

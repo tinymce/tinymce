@@ -1,13 +1,10 @@
-import { LegacyUnit } from '@ephox/mcagar';
 import { Pipeline } from '@ephox/agar';
-import NodeType from 'tinymce/core/dom/NodeType';
+import { UnitTest } from '@ephox/bedrock-client';
+import { LegacyUnit } from '@ephox/mcagar';
 import $ from 'tinymce/core/api/dom/DomQuery';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
-  const success = arguments[arguments.length - 2];
-  const failure = arguments[arguments.length - 1];
+UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
 
   suite.test('isText/isElement/isComment', function () {
@@ -59,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function () {
   });
 
   suite.test('matchNodeNames', function () {
-    const matchNodeNames = NodeType.matchNodeNames('a div #text');
+    const matchNodeNames = NodeType.matchNodeNames([ 'a', 'div', '#text' ]);
 
     LegacyUnit.strictEqual(matchNodeNames(null), false);
     LegacyUnit.strictEqual(matchNodeNames(document.createTextNode('x')), true);

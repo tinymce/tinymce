@@ -1,8 +1,7 @@
-import { Class, Element } from '@ephox/sugar';
-import { Option } from '@ephox/katamari';
+import { Class } from '@ephox/sugar';
+
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TogglingConfig, TogglingState } from '../../behaviour/toggling/TogglingTypes';
-import { Stateless } from '../../behaviour/common/BehaviourState';
+import { TogglingConfig, TogglingState } from './TogglingTypes';
 
 const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   const ariaInfo = toggleConfig.aria;
@@ -12,15 +11,15 @@ const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig
 const updateClass = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   toggleConfig.toggleClass.each((toggleClass: string) => {
     if (toggleState.get()) {
-      Class.add(component.element(), toggleClass);
+      Class.add(component.element, toggleClass);
     } else {
-      Class.remove(component.element(), toggleClass);
+      Class.remove(component.element, toggleClass);
     }
   });
 };
 
 const toggle = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
-  set(component, toggleConfig, toggleState, !toggleState.get())
+  set(component, toggleConfig, toggleState, !toggleState.get());
 };
 
 const on = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
@@ -40,9 +39,7 @@ const set = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleStat
   action(component, toggleConfig, toggleState);
 };
 
-const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
-  return toggleState.get();
-};
+const isOn = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => toggleState.get();
 
 const onLoad = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState) => {
   // There used to be a bit of code in here that would only overwrite

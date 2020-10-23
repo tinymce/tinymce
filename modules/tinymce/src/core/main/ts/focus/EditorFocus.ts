@@ -5,43 +5,36 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node, Range } from '@ephox/dom-globals';
-import { Option } from '@ephox/katamari';
-import { Compare, Focus, Element } from '@ephox/sugar';
+import { Optional } from '@ephox/katamari';
+import { Compare, Focus, SugarElement } from '@ephox/sugar';
+import EditorSelection from '../api/dom/Selection';
+import Editor from '../api/Editor';
 import Env from '../api/Env';
-import CaretFinder from '../caret/CaretFinder';
+import * as CaretFinder from '../caret/CaretFinder';
+import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
-import SelectionBookmark from '../selection/SelectionBookmark';
-import Selection from '../api/dom/Selection';
-import { CaretPosition } from '../caret/CaretPosition';
-import Editor from '../api/Editor';
+import * as SelectionBookmark from '../selection/SelectionBookmark';
+import * as FocusController from './FocusController';
 
-const getContentEditableHost = (editor: Editor, node: Node) => {
-  return editor.dom.getParent(node, function (node) {
-    return editor.dom.getContentEditable(node) === 'true';
-  });
-};
+const getContentEditableHost = (editor: Editor, node: Node): Element =>
+  editor.dom.getParent(node, (node) => editor.dom.getContentEditable(node) === 'true');
 
-const getCollapsedNode = (rng: Range) => {
-  return rng.collapsed ? Option.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(Element.fromDom) : Option.none();
-};
+const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> => rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
 
-const getFocusInElement = (root, rng: Range) => {
-  return getCollapsedNode(rng).bind(function (node) {
-    if (ElementType.isTableSection(node)) {
-      return Option.some(node);
-    } else if (Compare.contains(root, node) === false) {
-      return Option.some(root);
-    } else {
-      return Option.none();
-    }
-  });
-};
+const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarElement<any>> => getCollapsedNode(rng).bind(function (node) {
+  if (ElementType.isTableSection(node)) {
+    return Optional.some(node);
+  } else if (Compare.contains(root, node) === false) {
+    return Optional.some(root);
+  } else {
+    return Optional.none();
+  }
+});
 
 const normalizeSelection = (editor: Editor, rng: Range): void => {
-  getFocusInElement(Element.fromDom(editor.getBody()), rng).bind(function (elm) {
-    return CaretFinder.firstPositionIn(elm.dom());
+  getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind(function (elm) {
+    return CaretFinder.firstPositionIn(elm.dom);
   }).fold(
     () => { editor.selection.normalize(); return; },
     (caretPos: CaretPosition) => editor.selection.setRng(caretPos.toRange())
@@ -62,27 +55,37 @@ const focusBody = (body) => {
   }
 };
 
-const hasElementFocus = (elm): boolean => {
-  return Focus.hasFocus(elm) || Focus.search(elm).isSome();
-};
+const hasElementFocus = (elm: SugarElement): boolean => Focus.hasFocus(elm) || Focus.search(elm).isSome();
 
-const hasIframeFocus = (editor: Editor): boolean => {
-  return editor.iframeElement && Focus.hasFocus(Element.fromDom(editor.iframeElement));
-};
+const hasIframeFocus = (editor: Editor): boolean => editor.iframeElement && Focus.hasFocus(SugarElement.fromDom(editor.iframeElement));
 
 const hasInlineFocus = (editor: Editor): boolean => {
   const rawBody = editor.getBody();
-  return rawBody && hasElementFocus(Element.fromDom(rawBody));
+  return rawBody && hasElementFocus(SugarElement.fromDom(rawBody));
 };
+
+const hasUiFocus = (editor: Editor): boolean =>
+  // Editor container is the obvious one (Menubar, Toolbar, Status bar, Sidebar) and dialogs and menus are in an auxiliary element (silver theme specific)
+  // This can't use Focus.search() because only the theme has this element reference
+  Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom) && FocusController.isUIElement(editor, elem.dom)).isSome();
 
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 
+const hasEditorOrUiFocus = (editor: Editor): boolean => hasFocus(editor) || hasUiFocus(editor);
+
 const focusEditor = (editor: Editor) => {
-  const selection: Selection = editor.selection;
+  const selection: EditorSelection = editor.selection;
   const body = editor.getBody();
   let rng = selection.getRng();
 
   editor.quirks.refreshContentEditable();
+
+  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
+    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
+      editor.selection.setRng(bookmarkRng);
+      rng = bookmarkRng;
+    });
+  }
 
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
@@ -91,13 +94,6 @@ const focusEditor = (editor: Editor) => {
     normalizeSelection(editor, rng);
     activateEditor(editor);
     return;
-  }
-
-  if (editor.bookmark !== undefined && hasFocus(editor) === false) {
-    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
-      editor.selection.setRng(bookmarkRng);
-      rng = bookmarkRng;
-    });
   }
 
   // Focus the window iframe
@@ -130,7 +126,8 @@ const focus = (editor: Editor, skipFocus: boolean) => {
   skipFocus ? activateEditor(editor) : focusEditor(editor);
 };
 
-export default {
+export {
   focus,
-  hasFocus
+  hasFocus,
+  hasEditorOrUiFocus
 };

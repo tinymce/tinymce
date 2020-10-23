@@ -1,7 +1,7 @@
-import { UnitTest } from "@ephox/bedrock";
-import { Assertions, Pipeline, Step, Log, Chain } from "../../../../main/ts/ephox/agar/api/Main";
-import StepAssertions from "../../module/ephox/agar/test/StepAssertions";
-import { Result } from "@ephox/katamari";
+import { UnitTest } from '@ephox/bedrock-client';
+import { Result } from '@ephox/katamari';
+import { Assertions, Chain, Log, Pipeline, Step } from 'ephox/agar/api/Main';
+import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepTest = StepAssertions.testStepFail(
@@ -117,19 +117,20 @@ UnitTest.asynctest('LogTest', (success, failure) => {
   const logStepsPassTest = StepAssertions.testStepsPass(
     'TestCase-13: good-value',
     Log.steps('TestCase-13', 'Steps passing value', [
-      Step.stateful<any,any>((value, next, die) => {
-        next('TestCase-13: good-value')
+      Step.stateful<any, any>((value, next, _die) => {
+        next('TestCase-13: good-value');
       })
     ])
   );
 
-  const logStepPassTestWithMessage = StepAssertions.testStepFail(
-    'right-value',
+  const logStepPassTestWithMessage = StepAssertions.testStepFailPprintError(
+    '"TestCase-13b: right-value"',
+    '"TestCase-13b: wrong-value"',
     StepAssertions.testStepsPass(
       'TestCase-13b: right-value',
       Log.steps('TestCase-13b', 'Steps passing value', [
-        Step.stateful<any,any>((value, next, die) => {
-          next('TestCase-13b: wrong-value')
+        Step.stateful<any, any>((value, next, _die) => {
+          next('TestCase-13b: wrong-value');
         })
       ])
     )
@@ -138,8 +139,8 @@ UnitTest.asynctest('LogTest', (success, failure) => {
   const logChainsAsStepPassTest = StepAssertions.testStepsPass(
     'Value before chain',
     [
-      Step.stateful((value, next, die) => {
-        next('Value before chain')
+      Step.stateful((value, next, _die) => {
+        next('Value before chain');
       }),
       Log.chainsAsStep('TestCast-14', 'Chain failure', [
         Chain.inject(1),

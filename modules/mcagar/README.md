@@ -1,6 +1,6 @@
 # Description
 
-`mcagar` is a [`tinymce`](https://www.npmjs.com/package/tinymce) specific wrapping of [`agar`](https://www.npmjs.com/package/@ephox/agar)'s testing infrastructure. It is only a collection of `bolt` ([github](https://github.com/ephox/bolt), [npm](https://www.npmjs.com/package/@ephox/bolt)) modules.
+`mcagar` is a [`tinymce`](https://www.npmjs.com/package/tinymce) specific wrapping of [`agar`](https://www.npmjs.com/package/@ephox/agar)'s testing infrastructure. It is only a collection of modules.
 
 # Installation
 

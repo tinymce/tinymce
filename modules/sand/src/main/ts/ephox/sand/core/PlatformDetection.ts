@@ -1,8 +1,8 @@
-import { Browser } from './Browser';
-import { OperatingSystem } from './OperatingSystem';
 import { DeviceType } from '../detect/DeviceType';
 import { UaString } from '../detect/UaString';
 import { PlatformInfo } from '../info/PlatformInfo';
+import { Browser } from './Browser';
+import { OperatingSystem } from './OperatingSystem';
 
 export interface PlatformDetection {
   browser: Browser;
@@ -10,7 +10,7 @@ export interface PlatformDetection {
   deviceType: DeviceType;
 }
 
-const detect = function (userAgent: string): PlatformDetection {
+const detect = function (userAgent: string, mediaMatch: (query: string) => boolean): PlatformDetection {
   const browsers = PlatformInfo.browsers();
   const oses = PlatformInfo.oses();
 
@@ -22,12 +22,12 @@ const detect = function (userAgent: string): PlatformDetection {
     OperatingSystem.unknown,
     OperatingSystem.nu
   );
-  const deviceType = DeviceType(os, browser, userAgent);
+  const deviceType = DeviceType(os, browser, userAgent, mediaMatch);
 
   return {
-    browser: browser,
-    os: os,
-    deviceType: deviceType
+    browser,
+    os,
+    deviceType
   };
 };
 

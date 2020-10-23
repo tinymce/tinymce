@@ -5,14 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { document, Element, Blob, HTMLElement } from '@ephox/dom-globals';
-import { Result } from '@ephox/katamari';
-import { FileReader } from '@ephox/sand';
+import Editor from 'tinymce/core/api/Editor';
+import { StyleMap } from 'tinymce/core/api/html/Styles';
 import Promise from 'tinymce/core/api/util/Promise';
 import XHR from 'tinymce/core/api/util/XHR';
-import Settings from '../api/Settings';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import Editor from 'tinymce/core/api/Editor';
+import * as Settings from '../api/Settings';
 import { ImageData } from './ImageData';
 
 export interface ImageDimensions {
@@ -21,14 +18,12 @@ export interface ImageDimensions {
 }
 
 // TODO: Figure out if these would ever be something other than numbers. This was added in: #TINY-1350
-const parseIntAndGetMax = (val1: any, val2: any) => {
-  return Math.max(parseInt(val1, 10), parseInt(val2, 10));
-};
+const parseIntAndGetMax = (val1: any, val2: any) => Math.max(parseInt(val1, 10), parseInt(val2, 10));
 
-const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions, string>) => void) => {
+const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((callback) => {
   const img = document.createElement('img');
 
-  const done = (dimensions: Result<ImageDimensions, string>) => {
+  const done = (dimensions: Promise<ImageDimensions>) => {
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
@@ -40,11 +35,11 @@ const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions
     const width = parseIntAndGetMax(img.width, img.clientWidth);
     const height = parseIntAndGetMax(img.height, img.clientHeight);
     const dimensions = { width, height };
-    done(Result.value(dimensions));
+    done(Promise.resolve(dimensions));
   };
 
   img.onerror = () => {
-    done(Result.error(`Failed to get image dimensions for: ${url}`));
+    done(Promise.reject(`Failed to get image dimensions for: ${url}`));
   };
 
   const style = img.style;
@@ -55,7 +50,7 @@ const getImageSize = (url: string, callback: (dimensions: Result<ImageDimensions
 
   document.body.appendChild(img);
   img.src = url;
-};
+});
 
 const removePixelSuffix = (value: string): string => {
   if (value) {
@@ -114,7 +109,7 @@ const createImageList = (editor: Editor, callback: (imageList: any) => void) => 
   if (typeof imageList === 'string') {
     XHR.send({
       url: imageList,
-      success (text) {
+      success(text) {
         callback(JSON.parse(text));
       }
     });
@@ -149,24 +144,20 @@ const waitLoadImage = (editor: Editor, data: ImageData, imgElm: HTMLElement) => 
   imgElm.onerror = selectImage;
 };
 
-const blobToDataUri = (blob: Blob) => {
-  return new Promise<string>((resolve, reject) => {
-    const reader = FileReader();
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-    reader.onerror = () => {
-      reject(reader.error.message);
-    };
-    reader.readAsDataURL(blob);
-  });
-};
+const blobToDataUri = (blob: Blob) => new Promise<string>((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    resolve(reader.result as string);
+  };
+  reader.onerror = () => {
+    reject(reader.error.message);
+  };
+  reader.readAsDataURL(blob);
+});
 
-const isPlaceholderImage = (imgElm: Element): boolean => {
-  return imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
-};
+const isPlaceholderImage = (imgElm: Element): boolean => imgElm.nodeName === 'IMG' && (imgElm.hasAttribute('data-mce-object') || imgElm.hasAttribute('data-mce-placeholder'));
 
-export default {
+export {
   getImageSize,
   removePixelSuffix,
   addPixelSuffix,

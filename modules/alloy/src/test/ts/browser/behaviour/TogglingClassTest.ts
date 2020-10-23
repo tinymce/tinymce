@@ -1,91 +1,79 @@
 import { ApproxStructure, Assertions, Logger, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { UnitTest } from '@ephox/bedrock-client';
+
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('TogglingClassTest', (success, failure) => {
 
-  GuiSetup.setup((store, doc, body) => {
-    return GuiFactory.build(
-      Container.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'custom-component-test'],
-          styles: {
-            background: 'blue',
-            width: '200px',
-            height: '200px'
+  GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'custom-component-test' ],
+        styles: {
+          background: 'blue',
+          width: '200px',
+          height: '200px'
+        }
+      },
+      containerBehaviours: Behaviour.derive([
+        Toggling.config({
+          selected: true,
+          toggleClass: 'test-selected',
+          aria: {
+            mode: 'pressed'
           }
-        },
-        containerBehaviours: Behaviour.derive([
-          Toggling.config({
-            selected: true,
-            toggleClass: 'test-selected',
-            aria: {
-              mode: 'pressed'
-            }
-          })
-        ])
+        })
+      ])
+    })
+  ), (_doc, _body, _gui, component, _store) => {
+
+    const testIsSelected = (label: string) => Step.sync(() => {
+      Assertions.assertStructure(
+        'Asserting structure shows selected\n' + label,
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [
+            arr.has('test-selected'),
+            arr.not('selected')
+          ],
+          attrs: {
+            'aria-pressed': str.is('true'),
+            'aria-expanded': str.none()
+          }
+        })),
+        component.element
+      );
+    });
+
+    const testNotSelected = (label: string) => Step.sync(() => {
+      Assertions.assertStructure(
+        'Asserting structure shows not selected\n' + label,
+        ApproxStructure.build((s, str, arr) => s.element('div', {
+          classes: [
+            arr.not('test-selected'),
+            arr.not('selected')
+          ],
+          attrs: {
+            'aria-pressed': str.is('false'),
+            'aria-expanded': str.none()
+          }
+        })),
+        component.element
+      );
+    });
+
+    const assertIsSelected = (label: string, expected: boolean) => Logger.t(
+      'Asserting isSelected()\n' + label,
+      Step.sync(() => {
+        const actual = Toggling.isOn(component);
+        Assertions.assertEq(label, expected, actual);
       })
     );
-
-  }, (doc, body, gui, component, store) => {
-
-    const testIsSelected = (label) => {
-      return Step.sync(() => {
-        Assertions.assertStructure(
-          'Asserting structure shows selected\n' + label,
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [
-                arr.has('test-selected'),
-                arr.not('selected')
-              ],
-              attrs: {
-                'aria-pressed': str.is('true'),
-                'aria-expanded': str.none()
-              }
-            });
-          }),
-          component.element()
-        );
-      });
-    };
-
-    const testNotSelected = (label) => {
-      return Step.sync(() => {
-        Assertions.assertStructure(
-          'Asserting structure shows not selected\n' + label,
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [
-                arr.not('test-selected'),
-                arr.not('selected')
-              ],
-              attrs: {
-                'aria-pressed': str.is('false'),
-                'aria-expanded': str.none()
-              }
-            });
-          }),
-          component.element()
-        );
-      });
-    };
-
-    const assertIsSelected = (label, expected) => {
-      return Logger.t(
-        'Asserting isSelected()\n' + label,
-        Step.sync(() => {
-          const actual = Toggling.isOn(component);
-          Assertions.assertEq(label, expected, actual);
-        })
-      );
-    };
 
     const sSelect = Step.sync(() => {
       Toggling.on(component);

@@ -1,10 +1,9 @@
-import { FocusTools, Keyboard, Keys, Pipeline, Step, UiFinder, Log, Chain, Assertions, ApproxStructure, Waiter, GeneralSteps } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock';
-import { document } from '@ephox/dom-globals';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Element, Body } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -16,10 +15,10 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
   const skipInIE = <T, U> (step: Step<T, U>) => isIE ? Step.pass : step;
   const store = TestHelpers.TestStore();
 
-  TinyLoader.setup(
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
-      const doc = Element.fromDom(document);
+      const doc = SugarElement.fromDom(document);
 
       const sOpen = (toolbarKey: string) => Step.sync(() => {
         editor.fire('contexttoolbar-show', {
@@ -27,35 +26,29 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
       });
 
-      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => {
-        return Chain.asStep(Body.body(), [
-          UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
-          Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              children: children(s, str, arr)
-            });
-          }))
-        ]);
-      };
+      const sCheckLastButtonGroup = (label: string, children: (s, str, arr) => any) => Chain.asStep(SugarBody.body(), [
+        UiFinder.cFindIn('.tox-pop .tox-toolbar__group:last'),
+        Assertions.cAssertStructure(label, ApproxStructure.build((s, str, arr) => s.element('div', {
+          children: children(s, str, arr)
+        })))
+      ]);
 
       const sFire = (event: string, object) => Step.sync(() => {
         editor.fire(event, object);
       });
 
-      const sHasDialog = (label: string) => Chain.asStep(Body.body(), [
+      const sHasDialog = (label: string) => Chain.asStep(SugarBody.body(), [
         UiFinder.cFindIn('.tox-pop'),
         Assertions.cAssertStructure(
           `${label}: Checking pop has a dialog`,
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('div', {
-              classes: [ arr.has('tox-pop') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-pop__dialog') ]
-                })
-              ]
-            });
-          })
+          ApproxStructure.build((s, _str, arr) => s.element('div', {
+            classes: [ arr.has('tox-pop') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-pop__dialog') ]
+              })
+            ]
+          }))
         )
       ]);
 
@@ -66,13 +59,11 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
 
       const sCheckNoPopDialog = Waiter.sTryUntil(
         'Pop dialog should disappear (soon)',
-        UiFinder.sNotExists(Body.body(), '.tox-pop'),
-        100,
-        1000
+        UiFinder.sNotExists(SugarBody.body(), '.tox-pop')
       );
 
       Pipeline.async({ }, [
-        Step.label('Focus editor', tinyApis.sFocus),
+        Step.label('Focus editor', tinyApis.sFocus()),
 
         Log.step('TBA', 'Immediately launching a context form, and navigating and triggering enter and esc', GeneralSteps.sequence([
           Step.label('Open context form', sOpen('test-form')),
@@ -86,8 +77,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check the action of button "B" fired', store.sAssertEq('B should have fired because it is primary', [ 'B.Words' ])),
           Step.label('Check that a dialog is displayed', sHasDialog('Immediate context form should have an inner dialog class')),
           Step.label('Press escape', Keyboard.sKeydown(doc, Keys.escape(), { })),
-          Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
-          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus),
+          Step.label('Check that the context popup still exists', UiFinder.sExists(SugarBody.body(), '.tox-pop')),
+          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
         ])),
@@ -106,8 +97,8 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           Step.label('Check focus returns to context toolbar', FocusTools.sTryOnSelector('Focus should have shifted back to the triggering toolbar', doc, '.tox-pop button')),
           Step.label('Check context toolbar has inner dialog class', sHasDialog('Restored context toolbar (esc from form) should have an inner dialog class')),
           Step.label('Press escape (again)', Keyboard.sKeydown(doc, Keys.escape(), { })),
-          Step.label('Check that the context popup still exists', UiFinder.sExists(Body.body(), '.tox-pop')),
-          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus),
+          Step.label('Check that the context popup still exists', UiFinder.sExists(SugarBody.body(), '.tox-pop')),
+          Step.label('Check that the editor still has focus', tinyApis.sTryAssertFocus()),
           Step.label('Simulate clicking elsewhere in the editor (fire node change)', sClickAway),
           Step.label('Check that the popup dialog closes', sCheckNoPopDialog)
         ]))),
@@ -117,22 +108,19 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonABC', { disable: true }),
           sCheckLastButtonGroup('Checking button is disabled after event', (s, str, arr) => [
             s.element('button', {
-              attrs: {
-                disabled: str.is('disabled')
-              }
+              classes: [ arr.has('tox-tbtn--disabled') ],
+              attrs: { 'aria-disabled': str.is('true') }
             })
           ]),
           sFire('test.updateButtonABC', { disable: false }),
-          sCheckLastButtonGroup('Checking button is re-enabled after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is re-enabled after event', (s, _str, arr) => [
             s.element('button', {
-              attrs: {
-                disabled: str.none()
-              }
+              classes: [ arr.not('tox-tbtn--disabled') ]
             })
           ]),
 
           sFire('test.updateButtonABC', { active: true }),
-          sCheckLastButtonGroup('Checking button is pressed after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is pressed after event', (s, str, _arr) => [
             s.element('button', {
               attrs: {
                 'aria-pressed': str.is('true')
@@ -141,7 +129,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           ]),
 
           sFire('test.updateButtonABC', { active: false }),
-          sCheckLastButtonGroup('Checking button is *not* pressed after event', (s, str, arr) => [
+          sCheckLastButtonGroup('Checking button is *not* pressed after event', (s, str, _arr) => [
             s.element('button', {
               attrs: {
                 'aria-pressed': str.is('false')
@@ -155,9 +143,9 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
           sFire('test.updateButtonA', { disable: true }),
           sFire('test.updateButtonC', { active: true }),
           sCheckLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
-            s.element('button', { attrs: { disabled: str.is('disabled') } }),
-            s.element('button', { attrs: { disabled: str.none() } }),
-            s.element('button', { attrs: { 'aria-pressed': str.is('true') } })
+            s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
+            s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
+            s.element('button', { attrs: { 'aria-pressed': str.is('true') }})
           ])
         ])
       ], onSuccess, onFailure);
@@ -207,14 +195,14 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonA', f);
                 };
               },
-              onAction: (formApi, buttonApi) => store.adder('A.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('A.' + formApi.getValue())()
             },
             {
               type: 'contextformbutton',
               icon: 'fake-icon-name',
               tooltip: 'B',
               primary: true,
-              onAction: (formApi, buttonApi) => store.adder('B.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('B.' + formApi.getValue())()
             },
             {
               type: 'contextformtogglebutton',
@@ -235,7 +223,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
                   ed.off('test.updateButtonC', f);
                 };
               },
-              onAction: (formApi, buttonApi) => store.adder('C.' + formApi.getValue())()
+              onAction: (formApi, _buttonApi) => store.adder('C.' + formApi.getValue())()
             }
           ]
         });

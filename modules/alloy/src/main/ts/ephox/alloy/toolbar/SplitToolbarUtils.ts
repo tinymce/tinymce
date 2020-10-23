@@ -1,84 +1,62 @@
-import { Arr, Option } from '@ephox/katamari';
-import { Css, Width, Focus } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Css, Focus, Width } from '@ephox/sugar';
 
 import { Coupling } from '../api/behaviour/Coupling';
 import { Focusing } from '../api/behaviour/Focusing';
 import { Replacing } from '../api/behaviour/Replacing';
-import { Toggling } from '../api/behaviour/Toggling';
 import { AlloyComponent } from '../api/component/ComponentApi';
-import { Toolbar } from '../api/ui/Toolbar';
-import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
-import * as AlloyParts from '../parts/AlloyParts';
-import * as Overflows from './Overflows';
 import * as GuiFactory from '../api/component/GuiFactory';
+import { Toolbar } from '../api/ui/Toolbar';
+import * as AlloyParts from '../parts/AlloyParts';
+import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
+import * as Overflows from './Overflows';
 
-const setStoredGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
+const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
   Toolbar.setGroups(toolbar, bGroups);
 };
 
-const findFocusedComp = (overflow: Option<AlloyComponent>, overflowButton: Option<AlloyComponent>): Option<AlloyComponent> => {
-  return overflow.bind((overf) => {
-    return Focus.search(overf.element()).bind((focusedElm) => overf.getSystem().getByDom(focusedElm).toOption());
-  }).orThunk(() => {
-    return overflowButton.filter(Focusing.isFocused);
-  });
-};
+const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> => Arr.findMap(comps, (comp) => Focus.search(comp.element).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
 
-const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, overflow: Option<AlloyComponent>, isOpen: (overf: AlloyComponent) => boolean) => {
+const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void) => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
-  const overflowButton = AlloyParts.getPart(toolbar, detail, 'overflow-button');
   const overflowGroup = Coupling.getCoupled(toolbar, 'overflowGroup');
 
   // Set the primary toolbar to have visibility hidden;
-  Css.set(primary.element(), 'visibility', 'hidden');
+  Css.set(primary.element, 'visibility', 'hidden');
+
+  const groups = detail.builtGroups.get().concat([ overflowGroup ]);
 
   // Store the current focus state
-  const focusedComp = findFocusedComp(overflow, overflowButton);
+  const focusedComp = findFocusedComp(groups);
 
   // Clear the overflow toolbar
-  overflow.each((overf) => {
-    Toolbar.setGroups(overf, []);
-  });
+  setOverflow([]);
 
   // Put all the groups inside the primary toolbar
-  const groups = detail.builtGroups.get();
+  setGroups(primary, groups);
 
-  setStoredGroups(primary, groups.concat([overflowGroup]));
+  const availableWidth = Width.get(primary.element);
 
-  const total = Width.get(primary.element());
+  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element), overflowGroup);
 
-  const overflows = Overflows.partition(total, groups, (comp) => {
-    return Width.get(comp.element());
-  }, overflowGroup);
-
-  if (overflows.extra().length === 0) {
+  if (overflows.extra.length === 0) {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert
     // Can just reset the toolbar groups also ... but may be a bit slower.
     Replacing.remove(primary, overflowGroup);
-    overflow.each((overf) => {
-      Toolbar.setGroups(overf, []);
-    });
-    // Maybe remove the overflow drawer.
+    setOverflow([]);
   } else {
-    setStoredGroups(primary, overflows.within());
-    overflow.each((overf) => {
-      setStoredGroups(overf, overflows.extra());
-    });
-    // Maybe add the overflow drawer.
+    setGroups(primary, overflows.within);
+    setOverflow(overflows.extra);
   }
 
-  Css.remove(primary.element(), 'visibility');
-  Css.reflow(primary.element());
+  Css.remove(primary.element, 'visibility');
+  Css.reflow(primary.element);
 
-  // Restore the focus and toggle state
-  overflow.each((overf) => {
-    overflowButton.each((button) => Toggling.set(button, isOpen(overf)));
-    focusedComp.each(Focusing.focus);
-  });
+  // Restore the focus
+  focusedComp.each(Focusing.focus);
 };
 
 export {
-  refresh,
-  setStoredGroups
-}
+  refresh
+};

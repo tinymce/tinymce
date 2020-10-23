@@ -1,7 +1,5 @@
-import {
-    Chain, Log, Mouse, Pipeline, Step, UiControls, UiFinder, Logger
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock';
+import { Chain, Log, Logger, Mouse, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
@@ -24,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
     }));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -35,11 +33,11 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
         Chain.asStep({}, [
           Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
             Chain.fromChains([
-              UiFinder.cFindIn('label:contains("Find") + input'),
+              UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
               UiControls.cSetValue('cats')
             ]),
             Chain.fromChains([
-              UiFinder.cFindIn('label:contains("Replace with") + input'),
+              UiFinder.cFindIn('input.tox-textfield[placeholder="Replace with"]'),
               UiControls.cSetValue('dogs')
             ]),
             Chain.fromChains([
@@ -65,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
         tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 }),
         tinyApis.sAssertContent('<p>dogs cats cats</p>')
       ])
-    , onSuccess, onFailure);
+      , onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
