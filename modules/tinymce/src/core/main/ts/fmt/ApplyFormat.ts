@@ -40,7 +40,7 @@ const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-const canFormatBR = (editor: Editor, format: ApplyFormat, node: Node, parentName: string) => {
+const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
   // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
   if (Settings.canFormatEmptyLines(editor) && FormatUtils.isInlineFormat(format)) {
     // A curated list using the textBlockElements map and parts of the blockElements map from the schema
@@ -161,7 +161,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         }
 
         // Stop wrapping on br elements except when valid
-        if (FormatUtils.isEq(nodeName, 'br') && !canFormatBR(ed, format, node, parentName)) {
+        if (NodeType.isBr(node) && !canFormatBR(ed, format, node, parentName)) {
           currentWrapElm = null;
           // Remove any br elements when we wrap things
           if (FormatUtils.isBlockFormat(format)) {
