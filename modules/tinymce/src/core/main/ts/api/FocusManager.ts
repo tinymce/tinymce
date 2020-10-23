@@ -28,6 +28,11 @@ interface FocusManager {
  * @return {Boolean} True/false state if the element is part of the UI or not.
  */
 const isEditorUIElement = function (elm: Element) {
+  // className is undefined if editor is inside Shadow DOM or when focus is moved from WebComponent :#2697, #6093
+  if (!elm.className) {
+    return false;
+  }
+
   // Needs to be converted to string since svg can have focus: #6776
   const className = elm.className.toString();
   return className.indexOf('tox-') !== -1 || className.indexOf('mce-') !== -1;
