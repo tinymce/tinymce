@@ -85,18 +85,21 @@ class ScriptLoader {
     const dom = DOM;
     let elm;
 
+    const cleanup = () => {
+      dom.remove(id);
+      if (elm) {
+        elm.onerror = elm.onload = elm = null;
+      }
+    };
+
     // Execute callback when script is loaded
     const done = function () {
-      dom.remove(id);
-
-      if (elm) {
-        elm.onreadystatechange = elm.onload = elm = null;
-      }
-
+      cleanup();
       success();
     };
 
     const error = function () {
+      cleanup();
 
       // We can't mark it as done if there is a load error since
       // A) We don't want to produce 404 errors on the server and
@@ -170,10 +173,10 @@ class ScriptLoader {
    */
   public add(url: string, success?: () => void, scope?: any, failure?: () => void) {
     const state = this.states[url];
+    this.queue.push(url);
 
     // Add url to load queue
     if (state === undefined) {
-      this.queue.push(url);
       this.states[url] = QUEUED;
     }
 
