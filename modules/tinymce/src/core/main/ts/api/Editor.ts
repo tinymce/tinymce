@@ -311,6 +311,11 @@ class Editor implements EditorObservable {
       ScriptLoader.ScriptLoader._setReferrerPolicy(this.settings.referrer_policy);
       DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(this.settings.referrer_policy);
     }
+    if (this.settings.nonce) {
+      ScriptLoader.ScriptLoader._setNonce(this.settings.nonce);
+      DOMUtils.DOM.styleSheetLoader._setNonce(this.settings.nonce);
+    }
+
 
     AddOnManager.languageLoad = this.settings.language_load;
     AddOnManager.baseURL = editorManager.baseURL;

@@ -137,6 +137,7 @@ interface BaseEditorSettings {
   min_height?: number;
   min_width?: number;
   no_newline_selector?: string;
+  nonce?: string;
   nowrap?: boolean;
   object_resizing?: boolean | string;
   placeholder?: string;

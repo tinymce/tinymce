@@ -22,12 +22,14 @@ export interface StyleSheetLoader {
   load: (url: string, loadedCallback: Function, errorCallback?: Function) => void;
   loadAll: (urls: string[], success: Function, failure: Function) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
+  _setNonce: (nonce: string) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime: number;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
+  nonce: string;
 }
 
 export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot, settings: Partial<StyleSheetLoaderSettings> = {}): StyleSheetLoader {
@@ -41,6 +43,10 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
+  };
+
+  const _setNonce = (nonce: string) => {
+    settings.nonce = nonce;
   };
 
   const addStyle = (element: Element<DomNode>) => {
@@ -199,6 +205,9 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
       // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
       Attr.set(Element.fromDom(link), 'referrerpolicy', settings.referrerPolicy);
     }
+    if (settings.nonce) {
+      link.setAttribute('nonce', settings.nonce);
+    }
 
     // Feature detect onload on link element and sniff older webkits since it has an broken onload event
     if ('onload' in link && !isOldWebKit()) {
@@ -259,6 +268,7 @@ export function StyleSheetLoader(documentOrShadowRoot: DomDocument | ShadowRoot,
   return {
     load,
     loadAll,
-    _setReferrerPolicy
+    _setReferrerPolicy,
+    _setNonce
   };
 }
