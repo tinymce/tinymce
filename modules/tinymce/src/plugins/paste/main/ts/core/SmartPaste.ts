@@ -31,8 +31,9 @@ const isAbsoluteUrl = function (url: string) {
   return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 };
 
-const isImageUrl = function (url: string) {
-  return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
+const isImageUrl = function (editor: Editor, url: string) {
+  const validImageFileTypes = new RegExp('.(' + Settings.allowedImageFileTypes(editor).join('|') + ')$');
+  return isAbsoluteUrl(url) && validImageFileTypes.test(url);
 };
 
 const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
@@ -60,7 +61,7 @@ const linkSelection = function (editor: Editor, html: string, pasteHtmlFn: typeo
 };
 
 const insertImage = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
-  return isImageUrl(html) ? createImage(editor, html, pasteHtmlFn) : false;
+  return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
 const smartInsertContent = function (editor: Editor, html: string) {
