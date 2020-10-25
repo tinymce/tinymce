@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import TextSeeker from '../api/dom/TextSeeker';
 import Editor from '../api/Editor';
@@ -22,8 +22,8 @@ const getParents = FormatUtils.getParents;
 const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
 const isTextBlock = FormatUtils.isTextBlock;
 
-const isBogusBr = function (node: Element) {
-  return node.nodeName === 'BR' && node.getAttribute('data-mce-bogus') && !node.nextSibling;
+const isBogusBr = function (node: Node) {
+  return NodeType.isBr(node) && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 };
 
 // Expands the node to the closes contentEditable false element if it exists
@@ -161,25 +161,34 @@ const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName:
   return node || container;
 };
 
-// This function walks up the tree if there is no siblings before/after the node
+// We're at the edge if the parent is a block and there's no next sibling
+const isAtBlockBoundary = (dom: DOMUtils, root: Node, container: Node, siblingName: Sibling) => {
+  const parent = container.parentNode;
+  if (Type.isNullable(container[siblingName]) && Type.isNonNullable(parent)) {
+    return dom.isBlock(parent) || parent === root ? true : isAtBlockBoundary(dom, root, parent, siblingName);
+  } else {
+    return false;
+  }
+};
+
+// This function walks up the tree if there is no siblings before/after the node.
+// If a sibling is found then the container is returned
 const findParentContainer = (
   dom: DOMUtils,
   format,
-  startContainer: Node,
-  startOffset: number,
-  endContainer: Node,
-  endOffset: number,
+  container: Node,
+  offset: number,
   start: boolean
 ) => {
-  let container, parent, sibling;
+  let parent = container;
+  let sibling: Node;
 
-  container = parent = start ? startContainer : endContainer;
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
 
   // If it's a text node and the offset is inside the text
   if (NodeType.isText(container) && !isWhiteSpaceNode(container)) {
-    if (start ? startOffset > 0 : endOffset < container.nodeValue.length) {
+    if (start ? offset > 0 : offset < container.data.length) {
       return container;
     }
   }
@@ -193,7 +202,9 @@ const findParentContainer = (
 
     // Walk left/right
     for (sibling = parent[siblingName]; sibling; sibling = sibling[siblingName]) {
-      if (!isBookmarkNode(sibling) && !isWhiteSpaceNode(sibling) && !isBogusBr(sibling)) {
+      // Allow spaces if not at the edge of a block element, as the spaces won't have been collapsed
+      const allowSpaces = NodeType.isText(sibling) && !isAtBlockBoundary(dom, root, sibling, siblingName);
+      if (!isBookmarkNode(sibling) && !isBogusBr(sibling) && !isWhiteSpaceNode(sibling, allowSpaces)) {
         return parent;
       }
     }
@@ -210,12 +221,9 @@ const findParentContainer = (
   return container;
 };
 
-const expandRng = (
-  editor: Editor,
-  rng: Range,
-  format,
-  includeTrailingSpace: boolean = false
-) => {
+const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
+
+const expandRng = (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false) => {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,
@@ -243,7 +251,7 @@ const expandRng = (
   endContainer = findParentContentEditable(dom, endContainer);
 
   // Exclude bookmark nodes if possible
-  if (isBookmarkNode(startContainer.parentNode) || isBookmarkNode(startContainer)) {
+  if (isSelfOrParentBookmark(startContainer)) {
     startContainer = isBookmarkNode(startContainer) ? startContainer : startContainer.parentNode;
     if (rng.collapsed) {
       startContainer = startContainer.previousSibling || startContainer;
@@ -256,7 +264,7 @@ const expandRng = (
     }
   }
 
-  if (isBookmarkNode(endContainer.parentNode) || isBookmarkNode(endContainer)) {
+  if (isSelfOrParentBookmark(endContainer)) {
     endContainer = isBookmarkNode(endContainer) ? endContainer : endContainer.parentNode;
     if (rng.collapsed) {
       endContainer = endContainer.nextSibling || endContainer;
@@ -298,11 +306,11 @@ const expandRng = (
   // Move start point up the tree
   if (format[0].inline || format[0].block_expand) {
     if (!format[0].inline || (!NodeType.isText(startContainer) || startOffset === 0)) {
-      startContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, true);
+      startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
     }
 
     if (!format[0].inline || (!NodeType.isText(endContainer) || endOffset === endContainer.nodeValue.length)) {
-      endContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, false);
+      endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
     }
   }
 
@@ -322,11 +330,11 @@ const expandRng = (
     // Non block element then try to expand up the leaf
     if (format[0].block) {
       if (!dom.isBlock(startContainer)) {
-        startContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, true);
+        startContainer = findParentContainer(dom, format, startContainer, startOffset, true);
       }
 
       if (!dom.isBlock(endContainer)) {
-        endContainer = findParentContainer(dom, format, startContainer, startOffset, endContainer, endOffset, false);
+        endContainer = findParentContainer(dom, format, endContainer, endOffset, false);
       }
     }
   }
