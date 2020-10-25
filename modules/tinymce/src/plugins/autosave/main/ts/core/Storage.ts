@@ -71,10 +71,8 @@ const restoreDraft = (editor: Editor) => {
 
 const startStoreDraft = (editor: Editor) => {
   const interval = Settings.getAutoSaveInterval(editor);
-  Delay.setInterval(() => {
-    if (!editor.removed) {
-      storeDraft(editor);
-    }
+  Delay.setEditorInterval(editor, () => {
+    storeDraft(editor);
   }, interval);
 };
 
