@@ -136,7 +136,7 @@ const Formatter = function (editor: Editor): Formatter {
     match: (name, vars?, node?) => Rtc.matchFormat(editor, name, vars, node),
 
     /**
-     * Finds the closest matching format from a set of formats at the current selection.
+     * Finds the closest matching format from a set of formats for the current selection.
      * <br>
      * <em>Added in TinyMCE 5.6</em>
      *
