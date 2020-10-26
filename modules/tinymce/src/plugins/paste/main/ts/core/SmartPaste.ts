@@ -9,6 +9,10 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
+
+// TODO: Used in a few places, we should move this to Katamari
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const pasteHtml = (editor: Editor, html: string) => {
   editor.insertContent(html, {
     merge: Settings.shouldMergeFormats(editor),
@@ -32,7 +36,8 @@ const isAbsoluteUrl = function (url: string) {
 };
 
 const isImageUrl = function (editor: Editor, url: string) {
-  const validImageFileTypes = new RegExp('.(' + Settings.allowedImageFileTypes(editor).join('|') + ')$');
+  const escapedFileTypes = escapeRegExp(Settings.allowedImageFileTypes(editor)).replace(',', '|');
+  const validImageFileTypes = new RegExp('.(' + escapedFileTypes + ')$');
   return isAbsoluteUrl(url) && validImageFileTypes.test(url);
 };
 
