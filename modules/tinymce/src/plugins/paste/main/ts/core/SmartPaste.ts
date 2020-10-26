@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
@@ -36,7 +37,7 @@ const isAbsoluteUrl = function (url: string) {
 };
 
 const isImageUrl = function (editor: Editor, url: string) {
-  const escapedFileTypes = escapeRegExp(Settings.allowedImageFileTypes(editor)).replace(',', '|');
+  const escapedFileTypes = Arr.map(Settings.allowedImageFileTypes(editor), escapeRegExp).join('|');
   const validImageFileTypes = new RegExp('.(' + escapedFileTypes + ')$');
   return isAbsoluteUrl(url) && validImageFileTypes.test(url);
 };
