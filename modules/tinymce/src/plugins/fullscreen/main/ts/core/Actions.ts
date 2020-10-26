@@ -6,7 +6,7 @@
  */
 
 import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { Css, DomEvent, EventUnbinder, SugarElement, Traverse, WindowVisualViewport } from '@ephox/sugar';
+import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -112,14 +112,21 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
   const iframe = editor.iframeElement;
   const iframeStyle = iframe.style;
 
+  const handleClasses = (handler: (elm: string | Node | Node[], cls: string) => void) => {
+    handler(body, 'tox-fullscreen');
+    handler(documentElement, 'tox-fullscreen');
+    handler(editorContainer, 'tox-fullscreen');
+    if (SugarShadowDom.isOpenShadowHost(fullscreenRoot)) {
+      handler(fullscreenRoot.dom, 'tox-fullscreen tox-shadowhost');
+    }
+  };
+
   const cleanup = () => {
     if (isTouch) {
       Thor.restoreStyles(editor.dom);
     }
 
-    DOM.removeClass(body, 'tox-fullscreen');
-    DOM.removeClass(documentElement, 'tox-fullscreen');
-    DOM.removeClass(editorContainer, 'tox-fullscreen');
+    handleClasses(DOM.removeClass);
 
     viewportUpdate.unbind();
     Optional.from(fullscreenState.get()).each((info) => info.fullscreenChangeHandler.unbind());
@@ -154,9 +161,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     iframeStyle.width = iframeStyle.height = '100%';
     editorContainerStyle.width = editorContainerStyle.height = '';
 
-    DOM.addClass(body, 'tox-fullscreen');
-    DOM.addClass(documentElement, 'tox-fullscreen');
-    DOM.addClass(editorContainer, 'tox-fullscreen');
+    handleClasses(DOM.addClass);
 
     viewportUpdate.bind(editorContainerS);
 

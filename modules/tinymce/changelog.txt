@@ -6,6 +6,7 @@ Version 5.6.0 (TBD)
     Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
     Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282
     Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541
+    Fixed `fullscreen` plugin not working correctly with multiple editors and shadow dom #TINY-6280
     Fixed font size keywords such as `medium` not displaying correctly in font size menus #TINY-6291
     Fixed an issue where some attributes in table cells were not copied over to new rows or columns #TINY-6485
     Fixed incorrectly removing formatting on adjacent spaces when removing formatting on a ranged selection #TINY-6268
