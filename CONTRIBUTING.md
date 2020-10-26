@@ -45,6 +45,17 @@ This will produce an editor build in `modules/tinymce/js`, with distribution zip
 
 This performs compilation steps which webpack requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
 
+### Online one-click setup
+
+You can use Gitpod(An online IDE which free for Open Source) for making Prs and working on issues online. With a single click. It will launch a workspace and automatically:
+
+- clone the `TinyMCE` repo.
+- install the dependencies.
+- run `yarn build`.
+- run `yarn start`.
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
+
 ### Builds
 
 To build the editor in development, use `yarn tinymce-grunt`. This will output to the `modules/tinymce/js` folder (`build` is effectively `dev` followed by `tinymce-grunt`).
