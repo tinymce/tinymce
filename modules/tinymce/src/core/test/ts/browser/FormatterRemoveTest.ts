@@ -521,6 +521,20 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', function (success
     Assert.eq('', '<p>test</p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>', getContent(editor));
   });
 
+  suite.test('TINY-6268: Remove inline format on text range selection with adjacent spaces', (editor) => {
+    editor.setContent('<p>test<span style="text-decoration: underline;"> t</span>est</p>');
+    LegacyUnit.setSelection(editor, 'span', 1, 'span', 2);
+    editor.formatter.remove('underline');
+    Assert.eq('Formatting on the space should not have been removed', '<p>test<span style="text-decoration: underline;"> </span>test</p>', getContent(editor));
+  });
+
+  suite.test('TINY-6268: Remove inline format on text collapsed selection with adjacent spaces', (editor) => {
+    editor.setContent('<p>test<span style="text-decoration: underline;"> t</span>est</p>');
+    LegacyUnit.setSelection(editor, 'span', 1, 'span', 1);
+    editor.formatter.remove('underline');
+    Assert.eq('Formatting on the space should not have been removed', '<p>test test</p>', getContent(editor));
+  });
+
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {

@@ -11,6 +11,7 @@ import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
+import * as Whitespace from '../text/Whitespace';
 import { ApplyFormat, BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node => !!(node).nodeType;
@@ -85,11 +86,17 @@ const isValid = function (ed: Editor, parent: string, child: string) {
   return ed.schema.isValidChild(parent, child);
 };
 
-const isWhiteSpaceNode = function (node: Node) {
-  return node && NodeType.isText(node) && /^([\t \r\n]+|)$/.test(node.nodeValue);
+const isWhiteSpaceNode = function (node: Node | null, allowSpaces: boolean = false) {
+  if (node && NodeType.isText(node)) {
+    // If spaces are allowed, treat them as a non-breaking space
+    const data = allowSpaces ? node.data.replace(/ /g, '\u00a0') : node.data;
+    return Whitespace.isWhitespaceText(data);
+  } else {
+    return false;
+  }
 };
 
-const isEmptyTextNode = function (node: Node) {
+const isEmptyTextNode = function (node: Node | null) {
   return node && NodeType.isText(node) && node.length === 0;
 };
 
