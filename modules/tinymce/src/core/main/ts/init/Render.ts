@@ -6,6 +6,7 @@
  */
 
 import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -99,6 +100,8 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 };
 
 const loadPlugins = (editor: Editor, suffix: string) => {
+  const platform = PlatformDetection.detect();
+
   Tools.each(Settings.getExternalPlugins(editor), (url: string, name: string): void => {
     PluginManager.load(name, url, Fun.noop, undefined, () => {
       ErrorReporter.pluginLoadError(editor, url, name);
@@ -111,6 +114,10 @@ const loadPlugins = (editor: Editor, suffix: string) => {
     plugin = Tools.trim(plugin);
 
     if (plugin && !PluginManager.urls[plugin]) {
+      if (plugin === 'rtc' && platform.browser.isIE()) {
+        throw new Error('RTC plugin is not supported on IE 11.');
+      }
+
       if (hasSkipLoadPrefix(plugin)) {
         plugin = plugin.substr(1, plugin.length);
 
