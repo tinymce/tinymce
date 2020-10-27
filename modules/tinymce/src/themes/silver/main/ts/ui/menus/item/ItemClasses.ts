@@ -22,11 +22,15 @@ const separatorClass = 'tox-collection__separator';
 const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
 const textClass = 'tox-collection__item-label';
+const textDescriptionClass = 'tox-collection__item-label-description';
 const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
 const iconClassRtl = 'tox-collection__item-icon-rtl';
+const imageClass = 'tox-card__image';
+const containerColumnClass = 'tox-card__container-column';
+const containerRowClass = 'tox-card__container-row';
 
 const classForPreset = (presets: Toolbar.PresetTypes): string => Obj.get(presetClasses, presets).getOr(navClass);
 
@@ -45,5 +49,9 @@ export {
   accessoryClass,
   caretClass,
   checkmarkClass,
-  iconClassRtl
+  iconClassRtl,
+  imageClass,
+  textDescriptionClass,
+  containerColumnClass,
+  containerRowClass
 };

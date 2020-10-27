@@ -1,4 +1,5 @@
 import { ChoiceMenuItem, ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec, createChoiceMenuItem } from '../components/menu/ChoiceMenuItem';
+import { CardMenuItemSpec, CardMenuItem, createCardMenuItem, CardMenuItemInstanceApi, CardItem } from '../components/menu/CardMenuItem';
 import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
 import { createFancyMenuItem, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec } from '../components/menu/FancyMenuItem';
 import { createMenuItem, MenuItem, MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
@@ -42,5 +43,11 @@ export {
   ContextMenuApi,
   ContextMenuContents,
   ContextMenuItem,
-  ContextSubMenu
+  ContextSubMenu,
+
+  createCardMenuItem,
+  CardMenuItem,
+  CardMenuItemSpec,
+  CardMenuItemInstanceApi,
+  CardItem
 };

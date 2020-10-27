@@ -5,6 +5,7 @@ import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { getGreenImageDataUrl } from '../../../module/Assets';
 
 UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failure) => {
   FullscreenPlugin();
@@ -20,8 +21,6 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
     };
     classes: string;
   }
-
-  const imageSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFElEQVR42mNk+A+ERADGUYX0VQgAXAYT9xTSUocAAAAASUVORK5CYII=';
 
   TinyLoader.setup(
     (editor, onSuccess, onFailure) => {
@@ -126,7 +125,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         ]),
 
         Log.stepsAsStep('TBA', 'Context toolbar falls back to positioning inside the content', [
-          tinyApis.sSetContent(`<p><img src="${imageSrc}" style="height: 380px; width: 100px"></p>`),
+          tinyApis.sSetContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), '.tox-pop.tox-pop--top'),
           sAssertPosition('top', -309),
@@ -174,7 +173,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         Log.stepsAsStep('TINY-4023', 'Context toolbar is visible in fullscreen mode', [
           tinyUi.sClickOnToolbar('Trigger fullscreen', fullscreenButtonSelector),
           tinyUi.sWaitForUi('Wait for fullscreen to be triggered', fullscreenSelector),
-          tinyApis.sSetContent(`<p><img src="${imageSrc}" style="height: 380px; width: 100px"></p>`),
+          tinyApis.sSetContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`),
           tinyApis.sSelect('img', []),
           UiFinder.sWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), '.tox-pop.tox-pop--top'),
           sAssertFullscreenPosition('top', 470),

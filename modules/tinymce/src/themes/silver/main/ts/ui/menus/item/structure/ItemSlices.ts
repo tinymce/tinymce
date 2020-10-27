@@ -88,6 +88,32 @@ const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
+const renderContainer = (components: Array<AlloySpec>, direction: string): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass ]
+  },
+  components
+});
+
+const renderImage = (src: string): AlloySpec => ({
+  dom: {
+    tag: 'img',
+    classes: [ ItemClasses.imageClass ],
+    attributes: {
+      src
+    }
+  }
+});
+
+const renderDescription = (text: string): AlloySpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ ItemClasses.textDescriptionClass ]
+  },
+  components: [ GuiFactory.text(I18n.translate(text)) ]
+});
+
 export {
   renderIcon,
   renderText,
@@ -96,5 +122,8 @@ export {
   renderShortcut,
   renderCheckmark,
   renderSubmenuCaret,
-  renderDownwardsCaret
+  renderDownwardsCaret,
+  renderImage,
+  renderContainer,
+  renderDescription
 };

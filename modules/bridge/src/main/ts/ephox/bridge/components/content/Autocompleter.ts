@@ -1,5 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
+import { CardMenuItemSpec } from '../menu/CardMenuItem';
 
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
@@ -13,7 +14,7 @@ export interface AutocompleterItemSpec {
   meta?: Record<string, any>;
 }
 
-export type AutocompleterContents = SeparatorItemSpec | AutocompleterItemSpec;
+export type AutocompleterContents = SeparatorItemSpec | AutocompleterItemSpec | CardMenuItemSpec;
 
 export type SeparatorItem = SeparatorMenuItem;
 export interface AutocompleterItem {

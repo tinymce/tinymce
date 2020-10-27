@@ -1,0 +1,35 @@
+//
+// Copyright (c) Tiny Technologies, Inc. All rights reserved.
+// Licensed under the LGPL or a commercial license.
+// For LGPL see License.txt in the project root for license information.
+// For commercial licenses see https://www.tiny.cloud/
+//
+
+//
+// Card
+//
+
+.tox {
+  .tox-card__image {
+    border-radius: 50%;
+    height: @collection-item-list-image-height;
+    width: @collection-item-list-image-width;
+  }
+
+  .tox-card__container {
+    display: flex;
+    margin: 0 @pad-xs;
+  }
+
+  .tox-card__container-column {
+    &:extend(.tox .tox-card__container);
+
+    flex-direction: column;
+  }
+
+  .tox-card__container-row {
+    &:extend(.tox .tox-card__container);
+
+    flex-direction: row;
+  }
+}

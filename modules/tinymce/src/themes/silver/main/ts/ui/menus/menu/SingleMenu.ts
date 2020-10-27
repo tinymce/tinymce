@@ -11,6 +11,7 @@ import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
+import { tooltipBehaviour } from '../item/build/AutocompleteMenuItem';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 import { deriveMenuMovement } from './MenuMovement';
@@ -104,25 +105,46 @@ export const createAutocompleteItems = (
   const renderIcons = !renderText || MenuUtils.menuHasIcons(items);
   return Optionals.cat(
     Arr.map(items, (item) => {
-      if (item.type === 'separator') {
-        return InlineContent.createSeparatorItem(item).fold(
-          MenuUtils.handleError,
-          (d) => Optional.some(MenuItems.separator(d))
-        );
-      } else {
-        return InlineContent.createAutocompleterItem(item).fold(
-          MenuUtils.handleError,
-          (d: InlineContent.AutocompleterItem) => Optional.some(MenuItems.autocomplete(
-            d,
-            matchText,
-            renderText,
-            'normal',
-            onItemValueHandler,
-            itemResponse,
-            sharedBackstage,
-            renderIcons
-          ))
-        );
+      switch (item.type) {
+        case 'separator':
+          return InlineContent.createSeparatorItem(item).fold(
+            MenuUtils.handleError,
+            (d) => Optional.some(MenuItems.separator(d))
+          );
+
+        case 'cardmenuitem':
+          return BridgeMenu.createCardMenuItem(item).fold(
+            MenuUtils.handleError,
+            (d) => Optional.some(MenuItems.card(
+              {
+                ...d,
+                // Intercept action
+                onAction: (_api) => onItemValueHandler(d.value, d.meta)
+              },
+              itemResponse,
+              sharedBackstage,
+              {
+                itemBehaviours: tooltipBehaviour(d.meta, sharedBackstage),
+                autocompleteMatchText: matchText
+              }
+            ))
+          );
+
+        case 'autocompleteitem':
+        default:
+          return InlineContent.createAutocompleterItem(item).fold(
+            MenuUtils.handleError,
+            (d: InlineContent.AutocompleterItem) => Optional.some(MenuItems.autocomplete(
+              d,
+              matchText,
+              renderText,
+              'normal',
+              onItemValueHandler,
+              itemResponse,
+              sharedBackstage,
+              renderIcons
+            ))
+          );
       }
     })
   );
