@@ -2,7 +2,7 @@ Version 5.6.0 (TBD)
     Added new `format_empty_lines` setting to control if empty lines are formatted in a ranged selection #TINY-6483
     Added new user interface `enable` and `disable` methods #TINY-6397
     Added new `closest` formatter API to get the closest matching selection format from a set of formats. #TINY-6479
-    Added new `name` field to the style_select setting object to enable specifying a name for the format. #TINY-4239
+    Added new `name` field to the `style_formats` setting object to enable specifying a name for the format. #TINY-4239
     Fixed an issue where the root document could be scrolled while an editor dialog was open inside a shadow root #TINY-6363
     Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
     Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282

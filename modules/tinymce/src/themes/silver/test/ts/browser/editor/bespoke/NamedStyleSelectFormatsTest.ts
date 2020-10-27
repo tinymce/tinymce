@@ -15,7 +15,8 @@ interface StyleSelectMenuItem {
 
 UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormatTest', (success, failure) => {
   Theme();
-  TinyLoader.setup(
+
+  TinyLoader.setupLight(
     (editor, onSuccess, onFailure) => {
       const sAssertStyleSelectMenuItems = (label: string, expectedItems: StyleSelectMenuItem[]) => Logger.t(
         label,
@@ -93,9 +94,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormat
         }
       ]
     },
-    () => {
-      success();
-    },
+    () => success(),
     failure
   );
 });
