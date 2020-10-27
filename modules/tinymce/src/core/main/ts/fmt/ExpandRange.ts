@@ -161,13 +161,16 @@ const findBlockEndPoint = (editor: Editor, format, container: Node, siblingName:
   return node || container;
 };
 
-// We're at the edge if the parent is a block and there's no next sibling
+// We're at the edge if the parent is a block and there's no next sibling. Alternatively,
+// if we reach the root or can't walk further we also consider it to be a boundary.
 const isAtBlockBoundary = (dom: DOMUtils, root: Node, container: Node, siblingName: Sibling) => {
   const parent = container.parentNode;
-  if (Type.isNullable(container[siblingName]) && Type.isNonNullable(parent)) {
-    return dom.isBlock(parent) || parent === root ? true : isAtBlockBoundary(dom, root, parent, siblingName);
-  } else {
+  if (Type.isNonNullable(container[siblingName])) {
     return false;
+  } else if (parent === root || Type.isNullable(parent) || dom.isBlock(parent)) {
+    return true;
+  } else {
+    return isAtBlockBoundary(dom, root, parent, siblingName);
   }
 };
 

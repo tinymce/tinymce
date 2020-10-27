@@ -87,7 +87,7 @@ const isValid = function (ed: Editor, parent: string, child: string) {
 };
 
 const isWhiteSpaceNode = function (node: Node | null, allowSpaces: boolean = false) {
-  if (node && NodeType.isText(node)) {
+  if (Type.isNonNullable(node) && NodeType.isText(node)) {
     // If spaces are allowed, treat them as a non-breaking space
     const data = allowSpaces ? node.data.replace(/ /g, '\u00a0') : node.data;
     return Whitespace.isWhitespaceText(data);
@@ -97,7 +97,7 @@ const isWhiteSpaceNode = function (node: Node | null, allowSpaces: boolean = fal
 };
 
 const isEmptyTextNode = function (node: Node | null) {
-  return node && NodeType.isText(node) && node.length === 0;
+  return Type.isNonNullable(node) && NodeType.isText(node) && node.length === 0;
 };
 
 /**
