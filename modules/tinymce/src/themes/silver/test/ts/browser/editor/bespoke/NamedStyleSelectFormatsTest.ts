@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormat
         }
       ]
     },
-    () => success(),
+    success,
     failure
   );
 });
