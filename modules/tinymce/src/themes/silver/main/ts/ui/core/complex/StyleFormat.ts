@@ -81,10 +81,11 @@ const mapFormats = (userFormats: AllowedFormat[]): CustomFormatMapping => Arr.fo
     };
   } else if (isInlineFormat(fmt) || isBlockFormat(fmt) || isSelectorFormat(fmt)) {
     // Convert the format to a reference and add the original to the custom formats to be registered
-    const formatName = Type.isString(fmt.name) ? fmt.name : `custom-${fmt.title.toLowerCase()}`;
+    const formatName = Type.isString(fmt.name) ? fmt.name : fmt.title.toLowerCase();
+    const formatNameWithPrefix = `custom-${formatName}`;
     return {
-      customFormats: acc.customFormats.concat([{ name: formatName, format: fmt }]),
-      formats: acc.formats.concat([{ title: fmt.title, format: formatName, icon: fmt.icon }])
+      customFormats: acc.customFormats.concat([{ name: formatNameWithPrefix, format: fmt }]),
+      formats: acc.formats.concat([{ title: fmt.title, format: formatNameWithPrefix, icon: fmt.icon }])
     };
   } else {
     return { ...acc, formats: acc.formats.concat(fmt) };

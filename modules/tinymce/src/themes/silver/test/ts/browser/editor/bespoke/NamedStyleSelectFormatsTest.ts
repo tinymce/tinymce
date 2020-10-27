@@ -64,9 +64,9 @@ UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormat
           { title: 'My block', element: 'h1' },
           { title: 'My selector', element: 'div' }
         ]),
-        sAssertFormatExists('my-inline'),
-        sAssertFormatExists('my-block'),
-        sAssertFormatExists('my-selector')
+        sAssertFormatExists('custom-my-inline'),
+        sAssertFormatExists('custom-my-block'),
+        sAssertFormatExists('custom-my-selector')
       ], onSuccess, onFailure);
     },
     {
