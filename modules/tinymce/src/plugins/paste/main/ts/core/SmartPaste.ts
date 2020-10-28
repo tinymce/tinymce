@@ -5,14 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
-
-// TODO: Used in a few places, we should move this to Katamari
-const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const pasteHtml = (editor: Editor, html: string) => {
   editor.insertContent(html, {
@@ -37,9 +34,7 @@ const isAbsoluteUrl = function (url: string) {
 };
 
 const isImageUrl = function (editor: Editor, url: string) {
-  const escapedFileTypes = Arr.map(Settings.allowedImageFileTypes(editor), escapeRegExp).join('|');
-  const validImageFileTypes = new RegExp('.(' + escapedFileTypes + ')$');
-  return isAbsoluteUrl(url) && validImageFileTypes.test(url);
+  return isAbsoluteUrl(url) && Arr.exists(Settings.allowedImageFileTypes(editor), (type) => Strings.endsWith(url, `.${type}`));
 };
 
 const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {

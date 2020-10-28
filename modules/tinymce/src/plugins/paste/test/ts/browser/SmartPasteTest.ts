@@ -73,6 +73,12 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
       false,
       'File type "svg" is invalid by default'
     );
+
+    LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, 'https://www.site.com/filejpeg'),
+      false,
+      'Missing "." but valid extension'
+    );
   });
 
   suite.test('TINY-6306: New image_file_types settings', (editor) => {

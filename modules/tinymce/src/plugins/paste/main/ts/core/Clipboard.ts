@@ -127,7 +127,7 @@ const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement) => {
 };
 
 const extractFilename = (editor: Editor, str: string) => {
-  const m = str.match(/([\s\S]+?)\.(?:[a-z0-9.]+)$/i);
+  const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
   return m ? editor.dom.encode(m[1]) : null;
 };
 
