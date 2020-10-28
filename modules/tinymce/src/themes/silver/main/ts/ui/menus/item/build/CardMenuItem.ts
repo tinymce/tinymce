@@ -26,7 +26,7 @@ const render = (items: Menu.CardItem[], extras: CardExtras): Array<AlloySpec> =>
       return renderContainer(render(item.items, extras), item.direction);
 
     case 'image':
-      return renderImage(item.src);
+      return renderImage(item.src, item.width, item.height, item.alt);
 
     case 'description':
       return renderDescription(item.text);

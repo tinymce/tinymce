@@ -6,6 +6,7 @@
  */
 
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
@@ -96,12 +97,18 @@ const renderContainer = (components: Array<AlloySpec>, direction: string): Alloy
   components
 });
 
-const renderImage = (src: string): AlloySpec => ({
+const renderImage = (src: string, width: Optional<string>, height: Optional<string>, alt: Optional<string>): AlloySpec => ({
   dom: {
     tag: 'img',
     classes: [ ItemClasses.imageClass ],
+    styles: {
+      'vertical-align': 'top'
+    },
     attributes: {
-      src
+      src,
+      ...width.map((width) => ({ width })).getOr({}),
+      ...height.map((height) => ({ height })).getOr({}),
+      ...alt.map((alt) => ({ alt })).getOr({})
     }
   }
 });

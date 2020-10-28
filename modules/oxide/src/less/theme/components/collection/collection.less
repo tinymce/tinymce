@@ -40,8 +40,7 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
-@collection-item-list-image-height: 36px;
-@collection-item-list-image-width: 36px;
+@collection-item-list-image-radius: 50%;
 
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
 @collection-group-label-font-size: @font-size-xs;
@@ -291,9 +290,7 @@
   }
 
   .tox-collection__item-image {
-    border-radius: 50%;
-    height: @collection-item-list-image-height;
-    width: @collection-item-list-image-width;
+    border-radius: @collection-item-list-image-radius;
   }
 
   .tox-collection__item-container {
