@@ -10,25 +10,25 @@
 //
 
 .tox {
-  .tox-card__image {
+  .tox-collection__item-image {
     border-radius: 50%;
     height: @collection-item-list-image-height;
     width: @collection-item-list-image-width;
   }
 
-  .tox-card__container {
+  .tox-collection__item-container {
     display: flex;
     margin: 0 @pad-xs;
   }
 
-  .tox-card__container-column {
-    &:extend(.tox .tox-card__container);
+  .tox-collection__item-container-column {
+    &:extend(.tox .tox-collection__item-container);
 
     flex-direction: column;
   }
 
-  .tox-card__container-row {
-    &:extend(.tox .tox-card__container);
+  .tox-collection__item-container-row {
+    &:extend(.tox .tox-collection__item-container);
 
     flex-direction: row;
   }
