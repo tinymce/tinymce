@@ -289,6 +289,29 @@
   .tox-collection--horizontal .tox-collection__item-caret {
     margin-left: 4px;
   }
+
+  .tox-collection__item-image {
+    border-radius: 50%;
+    height: @collection-item-list-image-height;
+    width: @collection-item-list-image-width;
+  }
+
+  .tox-collection__item-container {
+    display: flex;
+    margin: 0 @pad-xs;
+  }
+
+  .tox-collection__item-container-column {
+    &:extend(.tox .tox-collection__item-container);
+
+    flex-direction: column;
+  }
+
+  .tox-collection__item-container-row {
+    &:extend(.tox .tox-collection__item-container);
+
+    flex-direction: row;
+  }
 }
 
 .tox:not([dir=rtl]) {
@@ -302,7 +325,7 @@
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
     margin-left: @pad-xs;
   }
 
@@ -328,7 +351,7 @@
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
     margin-right: @pad-xs;
   }
 
