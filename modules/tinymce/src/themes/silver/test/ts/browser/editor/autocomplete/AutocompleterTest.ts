@@ -392,10 +392,10 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 },
                 children: [
                   s.element('img', {
-                    classes: [ arr.has('tox-card__image') ]
+                    classes: [ arr.has('tox-collection__item-image') ]
                   }),
                   s.element('div', {
-                    classes: [ arr.has('tox-card__container-column') ],
+                    classes: [ arr.has('tox-collection__item-container-column') ],
                     children: [
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item-label') ],
