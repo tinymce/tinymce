@@ -25,7 +25,7 @@ export interface CardExtras {
 
 const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpec> => Arr.map(items, (item) => {
   switch (item.type) {
-    case 'container':
+    case 'cardcontainer':
       return renderContainer(render(item.items, extras), item.direction);
 
     case 'image':

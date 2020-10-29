@@ -629,7 +629,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                   items: [
                     { type: 'image', src: getGreenImageDataUrl() },
                     {
-                      type: 'container',
+                      type: 'cardcontainer',
                       direction: 'vertical',
                       items: [
                         { type: 'title', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' },

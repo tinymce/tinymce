@@ -2,18 +2,18 @@ import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
 import { Title, TitleSpec } from './Title';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
-import { Container, ContainerSpec, itemSchema } from './Container';
+import { CardContainer, CardContainerSpec, itemSchema } from './CardContainer';
 import { Description, DescriptionSpec } from './Description';
 import { Image, ImageSpec } from './Image';
 
 export type ContainerItemSpec =
-  ContainerSpec |
+  CardContainerSpec |
   ImageSpec |
   DescriptionSpec |
   TitleSpec;
 
 export type ContainerItem =
-  Container |
+  CardContainer |
   Image |
   Description |
   Title;
