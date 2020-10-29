@@ -1,21 +1,21 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { CardItem } from '../../api/Menu';
+import { ContainerItem } from '../../api/Menu';
 import { titleSchema } from './Title';
-import { CardItemSpec } from './CardMenuItem';
+import { ContainerItemSpec } from './CardMenuItem';
 import { descriptionSchema } from './Description';
 import { imageSchema } from './Image';
 
 export interface ContainerSpec {
   type: 'container';
   direction?: 'vertical' | 'horizontal';
-  items: CardItemSpec[];
+  items: ContainerItemSpec[];
 }
 
 export interface Container {
   type: 'container';
   direction: 'vertical' | 'horizontal';
-  items: CardItem[];
+  items: ContainerItem[];
 }
 
 export const itemSchema = ValueSchema.valueThunkOf(

@@ -6,13 +6,13 @@ import { Container, ContainerSpec, itemSchema } from './Container';
 import { Description, DescriptionSpec } from './Description';
 import { Image, ImageSpec } from './Image';
 
-export type CardItemSpec =
+export type ContainerItemSpec =
   ContainerSpec |
   ImageSpec |
   DescriptionSpec |
   TitleSpec;
 
-export type CardItem =
+export type ContainerItem =
   Container |
   Image |
   Description |
@@ -22,14 +22,14 @@ export interface CardMenuItemInstanceApi extends CommonMenuItemInstanceApi { }
 
 export interface CardMenuItemSpec extends CommonMenuItemSpec {
   type: 'cardmenuitem';
-  items: CardItemSpec[];
+  items: ContainerItemSpec[];
   onSetup?: (api: CardMenuItemInstanceApi) => (api: CardMenuItemInstanceApi) => void;
   onAction?: (api: CardMenuItemInstanceApi) => void;
 }
 
 export interface CardMenuItem extends CommonMenuItem {
   type: 'cardmenuitem';
-  items: CardItem[];
+  items: ContainerItem[];
   onSetup: (api: CardMenuItemInstanceApi) => (api: CardMenuItemInstanceApi) => void;
   onAction: (api: CardMenuItemInstanceApi) => void;
 }
