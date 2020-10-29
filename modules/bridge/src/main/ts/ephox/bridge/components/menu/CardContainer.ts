@@ -23,7 +23,7 @@ export const itemSchema = ValueSchema.valueThunkOf(
     image: imageSchema,
     description: descriptionSchema,
     title: titleSchema,
-    cardContainer: cardContainerSchema
+    cardcontainer: cardContainerSchema
   })
 );
 
