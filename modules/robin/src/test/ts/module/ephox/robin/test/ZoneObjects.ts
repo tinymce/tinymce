@@ -23,7 +23,7 @@ const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   };
 };
 
-const raw = function <E, D> (universe: TestUniverse, zones: Zone<Gene>[]) {
+const raw = function (universe: TestUniverse, zones: Zone<Gene>[]) {
   return Arr.map(zones, function (zone) {
     return rawOne(universe, zone);
   });

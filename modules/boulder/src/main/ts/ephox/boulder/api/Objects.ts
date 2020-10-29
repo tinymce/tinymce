@@ -19,7 +19,7 @@ const wrapAll = function (keyvalues: Array<{key: string; value: any}>): Record<s
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = function <T> (array: Array<{[T: string]: any}>, key: string): {[T: string]: any} {
+const indexOnKey = function (array: Array<{[T: string]: any}>, key: string): {[T: string]: any} {
   return ObjChanger.indexOnKey(array, key);
 };
 

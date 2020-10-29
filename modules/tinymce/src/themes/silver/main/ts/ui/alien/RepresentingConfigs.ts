@@ -61,7 +61,7 @@ const domValue = (optInitialValue: Optional<string>) => withElement(optInitialVa
 
 const domHtml = (optInitialValue: Optional<string>) => withElement(optInitialValue, Html.get, Html.set);
 
-const memory = <D>(initialValue) => Representing.config({
+const memory = (initialValue) => Representing.config({
   store: {
     mode: 'memory',
     initialValue
