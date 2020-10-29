@@ -28,10 +28,10 @@ const renderText = (text: string): AlloySpec => ({
   components: [ GuiFactory.text(I18n.translate(text)) ]
 });
 
-const renderHtml = (html: string): AlloySpec => ({
+const renderHtml = (html: string, classes: string[]): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes: [ ItemClasses.textClass ].concat(classes),
     innerHtml: html
   }
 });
@@ -110,10 +110,10 @@ const renderImage = (src: string, width: Optional<string>, height: Optional<stri
   }
 });
 
-const renderDescription = (text: string): AlloySpec => ({
+const renderDescription = (text: string, classes: string[]): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textDescriptionClass ]
+    classes: [ ItemClasses.textDescriptionClass ].concat(classes)
   },
   components: [ GuiFactory.text(I18n.translate(text)) ]
 });

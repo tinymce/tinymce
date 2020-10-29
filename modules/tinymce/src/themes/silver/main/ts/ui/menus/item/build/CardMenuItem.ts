@@ -32,13 +32,13 @@ const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpe
       return renderImage(item.src, item.width, item.height, item.alt);
 
     case 'description':
-      return renderDescription(item.text);
+      return renderDescription(item.text, item.classes);
 
     case 'title':
       // Only highlight targeted titles
       const shouldHighlight = item.name.exists((name) => Arr.contains(extras.title.highlight, name));
       const matchText = shouldHighlight ? Optional.from(extras.title.matchText).getOr('') : '';
-      return renderHtml(replaceText(item.text, matchText));
+      return renderHtml(replaceText(item.text, matchText), item.classes);
   }
 });
 

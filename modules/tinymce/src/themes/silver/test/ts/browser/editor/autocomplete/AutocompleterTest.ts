@@ -398,11 +398,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                     classes: [ arr.has('tox-collection__item-container-column') ],
                     children: [
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item-label') ],
+                        classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
                         html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
                       }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item-label-description') ],
+                        classes: [ arr.has('tox-collection__item-label-description'), arr.has('description_class') ],
                         html: str.is('Description for equals sign')
                       })
                     ]
@@ -611,6 +611,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '€',
           minChars: 1,
           columns: 1,
+          highlight: [ 'my_title_to_highlight' ],
           fetch: (pattern, _maxResults) => {
             const filteredItems = Arr.filter([
               { text: 'equals sign', value: '=' },
@@ -631,8 +632,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       type: 'container',
                       direction: 'vertical',
                       items: [
-                        { type: 'title', text: item.text },
-                        { type: 'description', text: `Description for ${item.text}` }
+                        { type: 'title', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' },
+                        { type: 'description', text: `Description for ${item.text}`, classes: [ 'description_class' ] }
                       ]
                     }
                   ]
