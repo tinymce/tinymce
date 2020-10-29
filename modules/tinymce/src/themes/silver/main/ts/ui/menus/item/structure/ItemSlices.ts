@@ -101,9 +101,6 @@ const renderImage = (src: string, width: Optional<string>, height: Optional<stri
   dom: {
     tag: 'img',
     classes: [ ItemClasses.imageClass ],
-    styles: {
-      'vertical-align': 'top'
-    },
     attributes: {
       src,
       ...width.map((width) => ({ width })).getOr({}),
