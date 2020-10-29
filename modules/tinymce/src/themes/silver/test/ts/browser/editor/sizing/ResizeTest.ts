@@ -1,7 +1,7 @@
 import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import Theme from 'tinymce/themes/silver/Theme';
@@ -26,6 +26,14 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
           editor.dom.setStyles(editor.getContainer(), {
             border: '2px solid #ccc'
           });
+        }),
+        Chain.op(() => {
+          const html = SugarBody.body();
+          const sink = SelectorFind.descendant<HTMLElement>(html, '.tox-silver-sink').getOrDie();
+
+          const expectedWidth = Width.get(html);
+
+          Assertions.assertEq(`Sink should be ${expectedWidth}px wide`, expectedWidth, Width.get(sink));
         }),
         Chain.label('Test resize with max/min sizing', NamedChain.asChain([
           NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
