@@ -7,7 +7,7 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Disabling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 import ItemResponse from '../ItemResponse';
@@ -16,8 +16,11 @@ import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 interface CardExtras {
-  autocompleteMatchText?: string;
   itemBehaviours?: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
+  title: { // Extras specific to title components
+    matchText?: string;
+    highlight: string[];
+  };
 }
 
 const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpec> => Arr.map(items, (item) => {
@@ -32,7 +35,9 @@ const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpe
       return renderDescription(item.text);
 
     case 'title':
-      const matchText = Obj.get(extras, 'autocompleteMatchText').getOr('');
+      // Only highlight targeted titles
+      const shouldHighlight = item.name.exists((name) => Arr.contains(extras.title.highlight, name));
+      const matchText = shouldHighlight ? Optional.from(extras.title.matchText).getOr('') : '';
       return renderHtml(replaceText(item.text, matchText));
   }
 });
