@@ -9,6 +9,7 @@ import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari'
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
+import Env from './api/Env';
 import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
 import Tools from './api/util/Tools';
 
@@ -175,6 +176,10 @@ const processPlugins = function (isMobileDevice: boolean, sectionResult: Section
         desktopPlugins;
 
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
+
+  if (Env.browser.isIE() && Arr.contains(combinedPlugins, 'rtc')) {
+    throw new Error('RTC plugin is not supported on IE 11.');
+  }
 
   return Tools.extend(settings, {
     plugins: combinedPlugins.join(' ')
