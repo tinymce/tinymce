@@ -15,7 +15,7 @@ import { renderContainer, renderDescription, renderHtml, renderImage } from '../
 import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-interface CardExtras {
+export interface CardExtras {
   itemBehaviours?: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
   title: { // Extras specific to title components
     matchText?: string;
@@ -42,12 +42,12 @@ const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpe
   }
 });
 
-export function renderCardMenuItem(
+export const renderCardMenuItem = (
   spec: Menu.CardMenuItem,
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,
   extras: CardExtras
-) {
+) => {
   const getApi = (component: AlloyComponent): Menu.CardMenuItemInstanceApi => ({
     isDisabled: () => Disabling.isDisabled(component),
     setDisabled: (state: boolean) => Disabling.set(component, state)
@@ -67,4 +67,4 @@ export function renderCardMenuItem(
     triggersSubmenu: false,
     itemBehaviours: Optional.from(extras.itemBehaviours).getOr([])
   }, structure, itemResponse, sharedBackstage.providers);
-}
+};
