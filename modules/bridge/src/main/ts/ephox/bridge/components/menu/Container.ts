@@ -1,15 +1,15 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { CardItem } from '../../api/Menu';
-import { autocompleteSchema } from './Autocomplete';
-import { CardItemsSpec } from './CardMenuItem';
+import { titleSchema } from './Title';
+import { CardItemSpec } from './CardMenuItem';
 import { descriptionSchema } from './Description';
 import { imageSchema } from './Image';
 
 export interface ContainerSpec {
   type: 'container';
   direction?: 'vertical' | 'horizontal';
-  items: CardItemsSpec[];
+  items: CardItemSpec[];
 }
 
 export interface Container {
@@ -22,7 +22,7 @@ export const itemSchema = ValueSchema.valueThunkOf(
   () => ValueSchema.chooseProcessor('type', {
     image: imageSchema,
     description: descriptionSchema,
-    autocomplete: autocompleteSchema,
+    title: titleSchema,
     container: containerSchema
   })
 );

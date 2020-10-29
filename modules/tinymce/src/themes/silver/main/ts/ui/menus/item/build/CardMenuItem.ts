@@ -31,7 +31,7 @@ const render = (items: Menu.CardItem[], extras: CardExtras): Array<AlloySpec> =>
     case 'description':
       return renderDescription(item.text);
 
-    case 'autocomplete':
+    case 'title':
       const matchText = Obj.get(extras, 'autocompleteMatchText').getOr('');
       return renderHtml(replaceText(item.text, matchText));
   }

@@ -1,28 +1,28 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Result } from '@ephox/katamari';
-import { Autocomplete, AutocompleteSpec } from './Autocomplete';
+import { Title, TitleSpec } from './Title';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
 import { Container, ContainerSpec, itemSchema } from './Container';
 import { Description, DescriptionSpec } from './Description';
 import { Image, ImageSpec } from './Image';
 
-export type CardItemsSpec =
+export type CardItemSpec =
   ContainerSpec |
   ImageSpec |
   DescriptionSpec |
-  AutocompleteSpec;
+  TitleSpec;
 
 export type CardItem =
   Container |
   Image |
   Description |
-  Autocomplete;
+  Title;
 
 export interface CardMenuItemInstanceApi extends CommonMenuItemInstanceApi { }
 
 export interface CardMenuItemSpec extends CommonMenuItemSpec {
-  type?: 'cardmenuitem';
-  items: CardItemsSpec[];
+  type: 'cardmenuitem';
+  items: CardItemSpec[];
   onSetup?: (api: CardMenuItemInstanceApi) => (api: CardMenuItemInstanceApi) => void;
   onAction?: (api: CardMenuItemInstanceApi) => void;
 }

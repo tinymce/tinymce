@@ -628,7 +628,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       type: 'container',
                       direction: 'vertical',
                       items: [
-                        { type: 'autocomplete', text: item.text },
+                        { type: 'title', text: item.text },
                         { type: 'description', text: `Description for ${item.text}` }
                       ]
                     }
