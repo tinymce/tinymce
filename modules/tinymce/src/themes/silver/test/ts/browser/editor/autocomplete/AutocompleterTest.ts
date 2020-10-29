@@ -415,7 +415,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         choice: GeneralSteps.sequence([
           tinyActions.sContentKeydown(Keys.enter(), { })
         ]),
-        assertion: store.sAssertEq('Euro-= should fire', [ 'euro:euro-=' ])
+        assertion: store.sAssertEq('Euro-= should fire', [ 'euro:euro-=', 'euro:AutocompleterContents->onAction' ])
       });
 
       Pipeline.async({ }, Logger.ts(
@@ -622,6 +622,9 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                   value: `euro-${item.value}`,
                   text: `${item.text}`,
                   type: 'cardmenuitem',
+                  onAction: () => {
+                    store.add('euro:AutocompleterContents->onAction');
+                  },
                   items: [
                     { type: 'image', src: getGreenImageDataUrl() },
                     {

@@ -119,7 +119,10 @@ export const createAutocompleteItems = (
               {
                 ...d,
                 // Intercept action
-                onAction: (_api) => onItemValueHandler(d.value, d.meta)
+                onAction: (api) => {
+                  onItemValueHandler(d.value, d.meta);
+                  d.onAction(api);
+                }
               },
               itemResponse,
               sharedBackstage,
