@@ -130,10 +130,10 @@ const getHrefOpt = (editor: Editor, elm: SugarElement): Optional<string> => {
 
 const processReadonlyEvents = (editor: Editor, e: Event) => {
   /*
-    If an event is a click event on an anchor and the CMD/CTRL key is
-    not held, then we want to prevent default behvariour and either:
+    If an event is a click event on or within an anchor, and the CMD/CTRL key is
+    not held, then we want to prevent default behaviour and either:
       a) scroll to the relevant bookmark
-      b) open an external link using default browser behaviour
+      b) open the link using default browser behaviour
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);

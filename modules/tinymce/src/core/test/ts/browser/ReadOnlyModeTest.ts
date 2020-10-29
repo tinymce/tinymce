@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     const sAssertHrefOpt = (selector: string, expectedHref) => Step.sync(() => {
       const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
       const hrefOpt = Readonly.getHrefOpt(editor, elm);
-      Assert.eq('href options should match', expectedHref, hrefOpt, tOptional());
+      Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
     });
 
     Pipeline.async({}, [
