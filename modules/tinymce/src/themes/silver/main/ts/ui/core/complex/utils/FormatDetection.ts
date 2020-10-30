@@ -5,24 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { BasicSelectItem } from '../SelectDatasets';
 
-const findNearest = (editor: Editor, getStyles, parents: Element[]) => {
+export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]) => {
   const styles = getStyles();
+  const formats = Arr.map(styles, (style) => style.format);
 
-  return Arr.findMap(parents, (parent) => Arr.find(styles, (fmt) => editor.formatter.matchNode(parent, fmt.format))).orThunk(() => {
-    if (editor.formatter.match('p')) { return Optional.some({ title: 'Paragraph', format: 'p' }); }
-    return Optional.none();
-  });
-};
-
-const getCurrentSelectionParents = (editor: Editor): Element[] => {
-  const currentNode = editor.selection.getStart(true) || editor.getBody();
-  return editor.dom.getParents(currentNode, () => true, editor.getBody());
-};
-
-export {
-  findNearest,
-  getCurrentSelectionParents
+  return Optional.from(editor.formatter.closest(formats)).bind((fmt) =>
+    Arr.find(styles, (data) => data.format === fmt)
+  ).orThunk(() => Optionals.someIf(editor.formatter.match('p'), { title: 'Paragraph', format: 'p' }));
 };

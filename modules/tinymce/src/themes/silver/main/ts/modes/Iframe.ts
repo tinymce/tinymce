@@ -9,9 +9,9 @@ import { Attachment } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 import Editor from 'tinymce/core/api/Editor';
+import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
 import { UiFactoryBackstage } from '../backstage/Backstage';
@@ -22,12 +22,12 @@ import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import { setToolbar } from './Toolbars';
 
-const DOM = DOMUtils.DOM;
 const detection = PlatformDetection.detect();
 const isiOS12 = detection.os.isiOS() && detection.os.version.major <= 12;
 
 const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
-  const contentWindow = editor.getWin();
+  const dom = editor.dom;
+  let contentWindow = editor.getWin();
   const initialDocEle = editor.getDoc().documentElement;
 
   const lastWindowDimensions = Cell(SugarPosition(contentWindow.innerWidth, contentWindow.innerHeight));
@@ -56,8 +56,8 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
 
   const scroll = (e: EventUtilsEvent<Event>) => Events.fireScrollContent(editor, e);
 
-  DOM.bind(contentWindow, 'resize', resizeWindow);
-  DOM.bind(contentWindow, 'scroll', scroll);
+  dom.bind(contentWindow, 'resize', resizeWindow);
+  dom.bind(contentWindow, 'scroll', scroll);
 
   // Bind to async load events and trigger a content resize event if the size has changed
   const elementLoad = DomEvent.capture(SugarElement.fromDom(editor.getBody()), 'load', resizeDocument);
@@ -73,8 +73,11 @@ const setupEvents = (editor: Editor, uiComponents: RenderUiComponents) => {
   editor.on('NodeChange', resizeDocument);
   editor.on('remove', () => {
     elementLoad.unbind();
-    DOM.unbind(contentWindow, 'resize', resizeWindow);
-    DOM.unbind(contentWindow, 'scroll', scroll);
+    dom.unbind(contentWindow, 'resize', resizeWindow);
+    dom.unbind(contentWindow, 'scroll', scroll);
+
+    // Clean memory for IE
+    contentWindow = null;
   });
 };
 
@@ -119,7 +122,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
       editor.fire('ScrollContent');
     }, 20);
 
-    DomEvent.bind(socket.element, 'scroll', limit.throttle);
+    const unbinder = DomEvent.bind(socket.element, 'scroll', limit.throttle);
+    editor.on('remove', unbinder.unbind);
   }
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiComponents);
@@ -148,9 +152,19 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     });
   }
 
+  const api: Partial<EditorUiApi> = {
+    enable: () => {
+      ReadOnly.broadcastReadonly(uiComponents, false);
+    },
+    disable: () => {
+      ReadOnly.broadcastReadonly(uiComponents, true);
+    }
+  };
+
   return {
     iframeContainer: socket.element.dom,
-    editorContainer: outerContainer.element.dom
+    editorContainer: outerContainer.element.dom,
+    api
   };
 };
 

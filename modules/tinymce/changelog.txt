@@ -1,9 +1,20 @@
 Version 5.6.0 (TBD)
+    Added new `format_empty_lines` setting to control if empty lines are formatted in a ranged selection #TINY-6483
+    Added new user interface `enable` and `disable` methods #TINY-6397
+    Added new `closest` formatter API to get the closest matching selection format from a set of formats. #TINY-6479
+    Fixed an issue where the root document could be scrolled while an editor dialog was open inside a shadow root #TINY-6363
+    Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
+    Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282
+    Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541
     Fixed font size keywords such as `medium` not displaying correctly in font size menus #TINY-6291
+    Fixed an issue where some attributes in table cells were not copied over to new rows or columns #TINY-6485
+    Fixed incorrectly removing formatting on adjacent spaces when removing formatting on a ranged selection #TINY-6268
     Fixed some incorrect types in the new TypeScript declaration file #TINY-6413
+    Fixed some minor memory leaks that prevented garbage collection for editor instances #TINY-6570
 Version 5.5.1 (TBD)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
     Fixed incorrect Typescript types for the `Tools` API #TINY-6475
+    Fixed an issue where spaces were not preserved in pre-blocks when getting text content #TINY-6448
 Version 5.5.0 (2020-09-29)
     Added a TypeScript declaration file to the bundle output for TinyMCE core #TINY-3785
     Added new `table_column_resizing` setting to control how table columns are resized when using the resize bars #TINY-6001

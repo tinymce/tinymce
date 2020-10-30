@@ -14,7 +14,7 @@ import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { AdvancedSelectDataset, SelectDataset } from './SelectDatasets';
 import { getStyleFormats } from './StyleFormat';
-import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { findNearest } from './utils/FormatDetection';
 import { onActionToggleFormat } from './utils/Utils';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
@@ -28,25 +28,22 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     }) : Optional.none();
   };
 
-  const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
+  const updateSelectMenuText = (comp: AlloyComponent) => {
     const getFormatItems = (fmt) => {
       const subs = fmt.items;
       return subs !== undefined && subs.length > 0 ? Arr.bind(subs, getFormatItems) : [{ title: fmt.title, format: fmt.format }];
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
-    const detectedFormat = findNearest(editor, () => flattenedItems, parents);
+    const detectedFormat = findNearest(editor, () => flattenedItems);
     const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Optional.some((comp: AlloyComponent) => {
-    const parents = getCurrentSelectionParents(editor);
-    updateSelectMenuText(parents, comp);
-  });
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
 
   return {
     tooltip: 'Formats',

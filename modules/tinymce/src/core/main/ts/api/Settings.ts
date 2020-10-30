@@ -159,6 +159,8 @@ const getPreviewStyles = (editor: Editor): string => {
   }
 };
 
+const canFormatEmptyLines = (editor: Editor) => editor.getParam('format_empty_lines', false, 'boolean');
+
 const getCustomUiSelector = (editor: Editor): string => editor.getParam('custom_ui_selector', '', 'string');
 
 const getThemeUrl = (editor: Editor): string => editor.getParam('theme_url');
@@ -190,6 +192,12 @@ const getPlugins = (editor: Editor): string => editor.getParam('plugins', '', 's
 const getExternalPlugins = (editor: Editor) => editor.getParam('external_plugins');
 
 const shouldBlockUnsupportedDrop = (editor: Editor) => editor.getParam('block_unsupported_drop', true, 'boolean');
+
+const isVisualAidsEnabled = (editor: Editor) => editor.getParam('visual', true, 'boolean');
+
+const getVisualAidsTableClass = (editor: Editor) => editor.getParam('visual_table_class', 'mce-item-table', 'string');
+
+const getVisualAidsAnchorClass = (editor: Editor) => editor.getParam('visual_anchor_class', 'mce-item-anchor', 'string');
 
 export {
   getIframeAttrs,
@@ -236,6 +244,7 @@ export {
   isInlineBoundariesEnabled,
   getFormats,
   getPreviewStyles,
+  canFormatEmptyLines,
   getCustomUiSelector,
   getThemeUrl,
   isInline,
@@ -251,5 +260,8 @@ export {
   hasContentCssCors,
   getPlugins,
   getExternalPlugins,
-  shouldBlockUnsupportedDrop
+  shouldBlockUnsupportedDrop,
+  isVisualAidsEnabled,
+  getVisualAidsTableClass,
+  getVisualAidsAnchorClass
 };

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Type } from '@ephox/katamari';
+import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
@@ -13,6 +13,7 @@ import PluginManager from '../api/PluginManager';
 import * as Settings from '../api/Settings';
 import { ThemeInitFunc } from '../api/SettingsTypes';
 import ThemeManager from '../api/ThemeManager';
+import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
 import { appendContentCssFromSettings } from './ContentCss';
@@ -156,6 +157,20 @@ const renderThemeUi = function (editor: Editor) {
   }
 };
 
+const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
+  const uiApiFacade: EditorUiApi = {
+    show: Optional.from(api.show).getOr(Fun.noop),
+    hide: Optional.from(api.hide).getOr(Fun.noop),
+    disable: Optional.from(api.disable).getOr(Fun.noop),
+    enable: () => {
+      if (!editor.mode.isReadOnly()) {
+        Optional.from(api.enable).map(Fun.call);
+      }
+    }
+  };
+  editor.ui = { ...editor.ui, ...uiApiFacade };
+};
+
 const init = function (editor: Editor) {
   editor.fire('ScriptsLoaded');
 
@@ -163,7 +178,7 @@ const init = function (editor: Editor) {
   initTheme(editor);
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
-  editor.ui = { ...editor.ui, ...renderInfo.api };
+  augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
   const boxInfo = {
     editorContainer: renderInfo.editorContainer,
     iframeContainer: renderInfo.iframeContainer

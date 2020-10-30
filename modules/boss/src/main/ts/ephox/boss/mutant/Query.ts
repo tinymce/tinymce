@@ -9,6 +9,8 @@ const extract = function (item: Gene): string[] {
   return [ self ].concat(rest);
 };
 
+// TODO: This is broken. See TINY-6501, but the gist is that the behaviour of this function should match
+//  https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition and it doesn't.
 const comparePosition = function (item: Gene, other: Gene) {
   // horribly inefficient
   const top = Up.top(item);

@@ -1,7 +1,7 @@
-import { SimpleOrSketchSpec } from '@ephox/alloy';
 import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
+import { SimpleOrSketchSpec } from '../api/component/SpecTypes';
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 type DeepPartial<T> = {

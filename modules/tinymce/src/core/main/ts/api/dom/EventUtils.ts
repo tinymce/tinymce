@@ -200,6 +200,9 @@ const bindOnReady = function (win, callback, eventUtils) {
       eventUtils.domLoaded = true;
       callback(event);
     }
+
+    // Clean memory for IE
+    win = null;
   };
 
   if (isDocReady()) {
@@ -209,7 +212,9 @@ const bindOnReady = function (win, callback, eventUtils) {
   }
 
   // Fallback if any of the above methods should fail for some odd reason
-  addEvent(win, 'load', readyHandler);
+  if (!eventUtils.domLoaded) {
+    addEvent(win, 'load', readyHandler);
+  }
 };
 
 export interface EventUtilsConstructor {

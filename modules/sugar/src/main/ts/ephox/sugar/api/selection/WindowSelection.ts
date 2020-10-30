@@ -1,5 +1,4 @@
 import { Optional } from '@ephox/katamari';
-import { RawRect } from '@ephox/sugar';
 import * as NativeRange from '../../selection/core/NativeRange';
 import * as SelectionDirection from '../../selection/core/SelectionDirection';
 import * as CaretRange from '../../selection/query/CaretRange';
@@ -9,6 +8,7 @@ import * as Compare from '../dom/Compare';
 import * as DocumentPosition from '../dom/DocumentPosition';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarFragment from '../node/SugarFragment';
+import { RawRect } from './Rect';
 import { SimRange } from './SimRange';
 import { SimSelection } from './SimSelection';
 import { Situ } from './Situ';

@@ -15,14 +15,15 @@
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
+    { "path": "../agar" },
     { "path": "../dragster" },
     { "path": "../katamari" },
     { "path": "../porkbun" },
     { "path": "../robin" },
     { "path": "../sand" },
-    { "path": "../sugar" },
+    { "path": "../sugar" }
   ]
 }
