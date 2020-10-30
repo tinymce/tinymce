@@ -13,7 +13,7 @@ interface StyleSelectMenuItem {
   title: string;
 }
 
-UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormatTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.StyleSelectFormatNamesTest', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight(
@@ -60,13 +60,19 @@ UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormat
       Pipeline.async({ }, [
         MenuUtils.sOpenMenu('Format', 'Paragraph:last'),
         sAssertStyleSelectMenuItems('Checking style select items', [
-          { title: 'My inline', element: 'span' },
-          { title: 'My block', element: 'h1' },
-          { title: 'My selector', element: 'div' }
+          { title: 'Named inline format', element: 'span' },
+          { title: 'Named block format', element: 'h1' },
+          { title: 'Named selector format', element: 'div' },
+          { title: 'Unnamed inline format', element: 'span' },
+          { title: 'Unnamed block format', element: 'h1' },
+          { title: 'Unnamed selector format', element: 'div' }
         ]),
         sAssertFormatExists('custom-my-inline'),
         sAssertFormatExists('custom-my-block'),
-        sAssertFormatExists('custom-my-selector')
+        sAssertFormatExists('custom-my-selector'),
+        sAssertFormatExists('custom-unnamed inline format'),
+        sAssertFormatExists('custom-unnamed block format'),
+        sAssertFormatExists('custom-unnamed selector format')
       ], onSuccess, onFailure);
     },
     {
@@ -76,19 +82,34 @@ UnitTest.asynctest('browser.tinymce.themes.silver.bespoke.NamedStyleSelectFormat
       style_formats: [
         {
           name: 'my-inline',
-          title: 'My inline',
+          title: 'Named inline format',
           inline: 'span',
           classes: [ 'my-inline' ]
         },
         {
           name: 'my-block',
-          title: 'My block',
+          title: 'Named block format',
           block: 'h1',
           classes: [ 'my-block' ]
         },
         {
           name: 'my-selector',
-          title: 'My selector',
+          title: 'Named selector format',
+          selector: 'p',
+          classes: [ 'my-selector' ]
+        },
+        {
+          title: 'Unnamed inline format',
+          inline: 'span',
+          classes: [ 'my-inline' ]
+        },
+        {
+          title: 'Unnamed block format',
+          block: 'h1',
+          classes: [ 'my-block' ]
+        },
+        {
+          title: 'Unnamed selector format',
           selector: 'p',
           classes: [ 'my-selector' ]
         }
