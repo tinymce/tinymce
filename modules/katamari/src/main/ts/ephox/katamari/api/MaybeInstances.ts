@@ -1,5 +1,5 @@
 import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
-import { Maybe, equals_ } from './Maybe';
+import { Maybe } from './Maybe';
 
 type Pprint<A> = Pprint.Pprint<A>;
 type Eq<A> = Eq.Eq<A>;
@@ -15,7 +15,7 @@ export const pprintMaybe = <A> (pprintA: Pprint<A> = Pprint.pprintAny): Pprint<M
 });
 
 export const eqMaybe = <A> (eqA: Eq<A> = Eq.eqAny): Eq<Maybe<A>> =>
-  Eq.eq((oa, ob) => equals_(oa, ob, eqA.eq));
+  Eq.eq((oa, ob) => Maybe.equals_(oa, ob, eqA.eq));
 
 export const tMaybe = <A> (testableA: Testable<A> = Testable.tAny): Testable<Maybe<A>> =>
   Testable.testable(eqMaybe(testableA), pprintMaybe(testableA));

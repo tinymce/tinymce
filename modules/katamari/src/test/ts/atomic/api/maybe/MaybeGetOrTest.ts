@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import * as Maybe from 'ephox/katamari/api/Maybe';
+import { Maybe } from 'ephox/katamari/api/Maybe';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 const { just, nothing } = Maybe;

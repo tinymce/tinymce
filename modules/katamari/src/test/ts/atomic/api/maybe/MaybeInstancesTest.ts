@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Pprint, Testable } from '@ephox/dispute';
-import * as Maybe from 'ephox/katamari/api/Maybe';
+import { Maybe } from 'ephox/katamari/api/Maybe';
 import { tMaybe } from 'ephox/katamari/api/MaybeInstances';
 
 const { tNumber, tString } = Testable;

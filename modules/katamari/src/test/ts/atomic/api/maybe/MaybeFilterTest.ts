@@ -3,7 +3,7 @@ import { Testable } from '@ephox/dispute';
 import fc from 'fast-check';
 import { tMaybe } from 'ephox/katamari/api/MaybeInstances';
 import * as Fun from 'ephox/katamari/api/Fun';
-import * as Maybe from 'ephox/katamari/api/Maybe';
+import { Maybe } from 'ephox/katamari/api/Maybe';
 
 const { just, nothing } = Maybe;
 

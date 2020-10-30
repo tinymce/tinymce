@@ -1,8 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import * as Maybe from 'ephox/katamari/api/Maybe';
+import { Maybe } from 'ephox/katamari/api/Maybe';
 import { tMaybe } from 'ephox/katamari/api/MaybeInstances';
 
-type Maybe<T> = Maybe.Maybe<T>;
 const { nothing, just } = Maybe;
 
 const assertMaybe = <A> (a: Maybe<A>, b: Maybe<A>) => {
