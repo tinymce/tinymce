@@ -2,7 +2,6 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Maybe } from 'ephox/katamari/api/Maybe';
-import { tMaybe } from 'ephox/katamari/api/MaybeInstances';
 
 const { just, nothing } = Maybe;
 
@@ -14,20 +13,20 @@ UnitTest.test('Maybe.nothing: unit tests', () => {
   Assert.eq('or', 6, Maybe.getOrDie(Maybe.or(s, just(6))));
   Assert.eq('orThunk', 6, Maybe.getOrDie(Maybe.orThunk(s, () => just(6))));
 
-  Assert.eq('map is nothing', nothing, Maybe.map(s, (v: number) => v * 2), tMaybe());
-  Assert.eq('map bottom is nothing', nothing, Maybe.map(s, Fun.die('boom')), tMaybe());
+  Assert.eq('map is nothing', nothing, Maybe.map(s, (v: number) => v * 2));
+  Assert.eq('map bottom is nothing', nothing, Maybe.map(s, Fun.die('boom')));
 
-  Assert.eq('bind nothing just is nothing', nothing, Maybe.bind(s, (v) => just('test' + v)), tMaybe());
+  Assert.eq('bind nothing just is nothing', nothing, Maybe.bind(s, (v) => just('test' + v)));
 
-  Assert.eq('from null is nothing', nothing, Maybe.from(null), tMaybe());
-  Assert.eq('from undefined is nothing', nothing, Maybe.from(undefined), tMaybe());
+  Assert.eq('from null is nothing', nothing, Maybe.from(null));
+  Assert.eq('from undefined is nothing', nothing, Maybe.from(undefined));
 
   Assert.eq('nothing or just(7) is just(s)', true, Maybe.equals(Maybe.or(nothing, just(7)), just(7)));
   Assert.eq('nothing or nothing is nothing', true, Maybe.equals(Maybe.or(nothing, nothing), nothing));
 
   Assert.eq('nothing to array is empty array', [], Maybe.toArr(nothing));
 
-  Assert.eq('bind', nothing, Maybe.bind(nothing, Fun.die('boom')), tMaybe());
+  Assert.eq('bind', nothing, Maybe.bind(nothing, Fun.die('boom')));
   Assert.eq('each', undefined, Maybe.each(nothing, Fun.die('boom')));
 
   Assert.eq('forAll nothing is true', true, Maybe.forAll(nothing, Fun.die('boom')));
