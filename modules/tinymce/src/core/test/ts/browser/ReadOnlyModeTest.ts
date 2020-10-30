@@ -81,9 +81,9 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       })
     ]);
 
-    const sAssertHrefOpt = (selector: string, expectedHref) => Step.sync(() => {
+    const sAssertHrefOpt = (selector: string, expectedHref: Optional<string>) => Step.sync(() => {
       const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-      const hrefOpt = Readonly.getHrefOpt(editor, elm);
+      const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
       Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
     });
 
@@ -235,7 +235,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sSetMode('readonly'),
         UiFinder.sNotExists(SugarBody.body(), '.tox-menu')
       ]),
-      Log.stepsAsStep('TINY-6248', 'getHrefOpt should return an Optional of the href of the closest anchor tag', [
+      Log.stepsAsStep('TINY-6248', 'getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', [
         tinyApis.sSetContent('<p><a href="https://tiny.cloud">external link</a></p>'),
         sAssertHrefOpt('a', Optional.some('https://tiny.cloud')),
         tinyApis.sSetContent('<p><a>external link with no href</a></p>'),
@@ -245,7 +245,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
       ]),
       Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmarks', [
         sSetMode('readonly'),
-        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"/><p><a id="someBookmark"></a></p>'),
+        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>'),
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),

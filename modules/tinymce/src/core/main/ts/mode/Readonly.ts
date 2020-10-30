@@ -123,7 +123,7 @@ const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 /*
 * This function is exported for unit testing purposes only
 */
-const getHrefOpt = (editor: Editor, elm: SugarElement): Optional<string> => {
+const getAnchorHrefOpt = (editor: Editor, elm: SugarElement): Optional<string> => {
   const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
   return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
 };
@@ -137,7 +137,7 @@ const processReadonlyEvents = (editor: Editor, e: Event) => {
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);
-    getHrefOpt(editor, elm).each((href) => {
+    getAnchorHrefOpt(editor, elm).each((href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
@@ -167,7 +167,7 @@ const registerReadOnlySelectionBlockers = (editor: Editor) => {
 
 export {
   isReadOnly,
-  getHrefOpt,
+  getAnchorHrefOpt,
   toggleReadOnly,
   registerReadOnlyContentFilters,
   processReadonlyEvents,
