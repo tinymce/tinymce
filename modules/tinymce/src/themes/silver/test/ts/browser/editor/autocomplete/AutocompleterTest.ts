@@ -621,7 +621,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
               resolve(
                 Arr.map(filteredItems, (item) => ({
                   value: `euro-${item.value}`,
-                  text: `${item.text}`,
+                  ariaLabel: item.text,
                   type: 'cardmenuitem',
                   onAction: () => {
                     store.add('euro:AutocompleterContents->onAction');

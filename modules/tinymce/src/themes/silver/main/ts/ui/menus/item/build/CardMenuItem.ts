@@ -54,12 +54,12 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    dom: renderItemDomStructure(false, spec.text),
+    dom: renderItemDomStructure(false, spec.ariaLabel),
     optComponents: Arr.map(render(spec.items, extras), Optional.some)
   };
 
   return renderCommonItem({
-    data: buildData(spec),
+    data: buildData({ text: Optional.none(), ...spec }),
     disabled: spec.disabled,
     getApi,
     onAction: spec.onAction,
