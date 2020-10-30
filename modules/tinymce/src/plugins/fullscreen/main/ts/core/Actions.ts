@@ -116,9 +116,12 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     handler(body, 'tox-fullscreen');
     handler(documentElement, 'tox-fullscreen');
     handler(editorContainer, 'tox-fullscreen');
-    if (SugarShadowDom.isOpenShadowHost(fullscreenRoot)) {
-      handler(fullscreenRoot.dom, 'tox-fullscreen tox-shadowhost');
-    }
+    SugarShadowDom.getShadowRoot(editorContainerS)
+      .map((root) => SugarShadowDom.getShadowHost(root).dom)
+      .each((host) => {
+        handler(host, 'tox-fullscreen');
+        handler(host, 'tox-shadowhost');
+      });
   };
 
   const cleanup = () => {
