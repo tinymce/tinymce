@@ -28,7 +28,6 @@ const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
 const iconClassRtl = 'tox-collection__item-icon-rtl';
-const imageClass = 'tox-collection__item-image';
 const containerColumnClass = 'tox-collection__item-container-column';
 const containerRowClass = 'tox-collection__item-container-row';
 
@@ -50,7 +49,6 @@ export {
   caretClass,
   checkmarkClass,
   iconClassRtl,
-  imageClass,
   textDescriptionClass,
   containerColumnClass,
   containerRowClass

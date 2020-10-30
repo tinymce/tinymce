@@ -392,7 +392,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                 },
                 children: [
                   s.element('img', {
-                    classes: [ arr.has('tox-collection__item-image') ]
+                    classes: [ arr.has('my_autocompleter_avatar_class') ]
                   }),
                   s.element('div', {
                     classes: [ arr.has('tox-collection__item-container-column') ],
@@ -627,7 +627,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                     store.add('euro:AutocompleterContents->onAction');
                   },
                   items: [
-                    { type: 'image', src: getGreenImageDataUrl() },
+                    { type: 'image', src: getGreenImageDataUrl(), classes: [ 'my_autocompleter_avatar_class' ] },
                     {
                       type: 'cardcontainer',
                       direction: 'vertical',

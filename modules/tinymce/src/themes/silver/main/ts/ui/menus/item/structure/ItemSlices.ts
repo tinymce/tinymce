@@ -97,15 +97,13 @@ const renderContainer = (components: Array<AlloySpec>, direction: string): Alloy
   components
 });
 
-const renderImage = (src: string, width: Optional<string>, height: Optional<string>, alt: Optional<string>): AlloySpec => ({
+const renderImage = (src: string, classes: string[], alt: Optional<string>): AlloySpec => ({
   dom: {
     tag: 'img',
-    classes: [ ItemClasses.imageClass ],
+    classes,
     attributes: {
       src,
-      ...width.map((width) => ({ width })).getOr({}),
-      ...height.map((height) => ({ height })).getOr({}),
-      ...alt.map((alt) => ({ alt })).getOr({})
+      alt: alt.getOr('')
     }
   }
 });

@@ -4,25 +4,22 @@ import { Optional, Result } from '@ephox/katamari';
 export interface ImageSpec {
   type: 'image';
   src: string;
-  width?: string;
-  height?: string;
+  classes?: string[];
   alt?: string;
 }
 
 export interface Image {
   type: 'image';
   src: string;
-  width: Optional<string>;
-  height: Optional<string>;
   alt: Optional<string>;
+  classes: string[];
 }
 
 const imageFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('src'),
-  FieldSchema.optionString('width'),
-  FieldSchema.optionString('height'),
-  FieldSchema.optionString('alt')
+  FieldSchema.optionString('alt'),
+  FieldSchema.defaultedArrayOf('classes', [], ValueSchema.string)
 ];
 
 export const imageSchema = ValueSchema.objOf(imageFields);
