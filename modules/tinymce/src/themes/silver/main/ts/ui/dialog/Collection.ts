@@ -13,6 +13,7 @@ import { Dialog } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import Entities from 'tinymce/core/api/html/Entities';
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -33,11 +34,6 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     SelectorFind.closest(se.event.target, '[data-collection-item-value]').each((target: SugarElement<HTMLElement>) => {
       f(comp, se, target, Attribute.get(target, 'data-collection-item-value'));
     });
-  };
-
-  const escapeAttribute = (ch) => {
-    if (ch === '"') { return '&quot;'; }
-    return ch;
   };
 
   const setContents = (comp, items) => {
@@ -62,7 +58,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
       const readonlyClass = providersBackstage.isReadOnly() ? ' tox-collection__item--state-disabled' : '';
-      return `<div class="tox-collection__item${readonlyClass}" tabindex="-1" data-collection-item-value="${escapeAttribute(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
+      return `<div class="tox-collection__item${readonlyClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];

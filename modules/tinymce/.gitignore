@@ -42,3 +42,6 @@ mentions
 **/instrumented_*
 .rpt2_cache
 tinymce-*.tgz
+
+emojis*.js
+twemoji*.js
