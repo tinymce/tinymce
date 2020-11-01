@@ -243,9 +243,28 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         tinyApis.sSetContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>'),
         sAssertHrefOpt('img', Optional.some('https://tiny.cloud'))
       ]),
-      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmarks', [
+      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with id', [
         sSetMode('readonly'),
         tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>'),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.write(
+              'yPos',
+              Chain.mapper(() => Scroll.get(eDoc).top),
+            ),
+            NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
+            NamedChain.read('anchor', Mouse.cClick),
+            NamedChain.read('yPos', Chain.op((yPos) => {
+              const newPos = Scroll.get(eDoc).top;
+              Assert.eq('assert yPos has changed i.e. has scrolled', true, yPos !== newPos);
+            }))
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with name', [
+        sSetMode('readonly'),
+        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>'),
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
           NamedChain.asChain([
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
