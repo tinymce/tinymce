@@ -244,6 +244,8 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sAssertHrefOpt('img', Optional.some('https://tiny.cloud'))
       ]),
       Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with id', [
+        sSetMode('design'),
+        Step.sync(() => editor.resetContent()),
         sSetMode('readonly'),
         tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>'),
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
@@ -263,6 +265,8 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         ])
       ]),
       Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with name', [
+        sSetMode('design'),
+        Step.sync(() => editor.resetContent()),
         sSetMode('readonly'),
         tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>'),
         Chain.asStep(SugarElement.fromDom(editor.getBody()), [
