@@ -411,7 +411,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         choice: GeneralSteps.sequence([
           tinyActions.sContentKeydown(Keys.enter(), { })
         ]),
-        assertion: store.sAssertEq('Euro-= should fire', [ 'euro:euro-=', 'euro:AutocompleterContents->onAction' ])
+        assertion: store.sAssertEq('Euro-= should fire', [ 'euro:AutocompleterContents->onAction', 'euro:euro-=' ])
       });
 
       Pipeline.async({ }, Logger.ts(
@@ -619,16 +619,17 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                   value: `euro-${item.value}`,
                   ariaLabel: item.text,
                   type: 'cardmenuitem',
+                  label: item.text,
                   onAction: () => {
                     store.add('euro:AutocompleterContents->onAction');
                   },
                   items: [
-                    { type: 'image', src: getGreenImageDataUrl(), classes: [ 'my_autocompleter_avatar_class' ] },
+                    { type: 'cardimage', src: getGreenImageDataUrl(), classes: [ 'my_autocompleter_avatar_class' ] },
                     {
                       type: 'cardcontainer',
                       direction: 'vertical',
                       items: [
-                        { type: 'title', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' }
+                        { type: 'cardtext', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' }
                       ]
                     }
                   ]

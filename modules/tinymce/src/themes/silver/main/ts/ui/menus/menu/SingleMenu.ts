@@ -121,8 +121,8 @@ export const createAutocompleteItems = (
                 ...d,
                 // Intercept action
                 onAction: (api) => {
-                  onItemValueHandler(d.value, d.meta);
                   d.onAction(api);
+                  onItemValueHandler(d.value, d.meta);
                 }
               },
               itemResponse,

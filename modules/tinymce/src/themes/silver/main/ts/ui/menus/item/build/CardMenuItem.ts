@@ -18,7 +18,8 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 
 export interface CardExtras {
   itemBehaviours?: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
-  title: { // Extras specific to title components
+  // Extras specific to title components
+  title: {
     matchText?: string;
     highlight: string[];
   };
@@ -29,11 +30,11 @@ const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpe
     case 'cardcontainer':
       return renderContainer(render(item.items, extras), item.direction);
 
-    case 'image':
+    case 'cardimage':
       return renderImage(item.src, item.classes, item.alt);
 
-    case 'title':
-      // Only highlight targeted titles
+    case 'cardtext':
+      // Only highlight targeted text components
       const shouldHighlight = item.name.exists((name) => Arr.contains(extras.title.highlight, name));
       const matchText = shouldHighlight ? Optional.from(extras.title.matchText).getOr('') : '';
       return renderHtml(replaceText(item.text, matchText), item.classes);
@@ -63,7 +64,7 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    dom: renderItemDomStructure(false, spec.ariaLabel),
+    dom: renderItemDomStructure(false, spec.label),
     optComponents: Arr.map(render(spec.items, extras), Optional.some)
   };
 

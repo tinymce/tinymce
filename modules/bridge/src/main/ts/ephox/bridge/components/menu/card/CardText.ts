@@ -1,28 +1,28 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
-export interface TitleSpec {
-  type: 'title';
+export interface CardTextSpec {
+  type: 'cardtext';
   text: string;
   name?: string;
   classes?: string[];
 }
 
-export interface Title {
-  type: 'title';
+export interface CardText {
+  type: 'cardtext';
   text: string;
   name: Optional<string>;
   classes: string[];
 }
 
-const titleFields = [
+const cardTextFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
   FieldSchema.optionString('name'),
   FieldSchema.defaultedArrayOf('classes', [], ValueSchema.string)
 ];
 
-export const titleSchema = ValueSchema.objOf(titleFields);
+export const cardTextSchema = ValueSchema.objOf(cardTextFields);
 
-export const createTitle = (spec: TitleSpec): Result<Title, ValueSchema.SchemaError<any>> =>
-  ValueSchema.asRaw<Title>('title', titleSchema, spec);
+export const createCardText = (spec: CardTextSpec): Result<CardText, ValueSchema.SchemaError<any>> =>
+  ValueSchema.asRaw<CardText>('cardtext', cardTextSchema, spec);

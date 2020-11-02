@@ -1,25 +1,25 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { CardContainer, CardContainerSpec, itemSchema } from './card/CardContainer';
-import { Image, ImageSpec } from './card/Image';
-import { Title, TitleSpec } from './card/Title';
+import { CardImage, CardImageSpec } from './card/CardImage';
+import { CardText, CardTextSpec } from './card/CardText';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
 
 export type ContainerItemSpec =
   CardContainerSpec |
-  ImageSpec |
-  TitleSpec;
+  CardImageSpec |
+  CardTextSpec;
 
 export type ContainerItem =
   CardContainer |
-  Image |
-  Title;
+  CardImage |
+  CardText;
 
 export interface CardMenuItemInstanceApi extends CommonMenuItemInstanceApi { }
 
-export interface CardMenuItemSpec extends Omit<CommonMenuItemSpec, 'text'> {
+export interface CardMenuItemSpec extends Omit<CommonMenuItemSpec, 'text' | 'shortcut'> {
   type: 'cardmenuitem';
-  ariaLabel?: string;
+  label?: string;
   items: ContainerItemSpec[];
   onSetup?: (api: CardMenuItemInstanceApi) => (api: CardMenuItemInstanceApi) => void;
   onAction?: (api: CardMenuItemInstanceApi) => void;
@@ -27,7 +27,7 @@ export interface CardMenuItemSpec extends Omit<CommonMenuItemSpec, 'text'> {
 
 export interface CardMenuItem extends Omit<CommonMenuItem, 'text'> {
   type: 'cardmenuitem';
-  ariaLabel: Optional<string>;
+  label: Optional<string>;
   items: ContainerItem[];
   onSetup: (api: CardMenuItemInstanceApi) => (api: CardMenuItemInstanceApi) => void;
   onAction: (api: CardMenuItemInstanceApi) => void;
@@ -35,7 +35,7 @@ export interface CardMenuItem extends Omit<CommonMenuItem, 'text'> {
 
 const cardMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
-  FieldSchema.optionString('ariaLabel'),
+  FieldSchema.optionString('label'),
   FieldSchema.strictArrayOf('items', itemSchema),
   FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
   FieldSchema.defaultedFunction('onAction', Fun.noop)
