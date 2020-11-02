@@ -1,10 +1,9 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
-import { ContainerItem } from '../../api/Menu';
-import { titleSchema } from './Title';
-import { ContainerItemSpec } from './CardMenuItem';
+import { ContainerItem, ContainerItemSpec } from '../CardMenuItem';
 import { descriptionSchema } from './Description';
 import { imageSchema } from './Image';
+import { titleSchema } from './Title';
 
 export interface CardContainerSpec {
   type: 'cardcontainer';

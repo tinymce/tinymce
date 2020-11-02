@@ -1,10 +1,10 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
-import { Title, TitleSpec } from './Title';
+import { CardContainer, CardContainerSpec, itemSchema } from './card/CardContainer';
+import { Description, DescriptionSpec } from './card/Description';
+import { Image, ImageSpec } from './card/Image';
+import { Title, TitleSpec } from './card/Title';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
-import { CardContainer, CardContainerSpec, itemSchema } from './CardContainer';
-import { Description, DescriptionSpec } from './Description';
-import { Image, ImageSpec } from './Image';
 
 export type ContainerItemSpec =
   CardContainerSpec |
