@@ -1,7 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 import { ContainerItem, ContainerItemSpec } from '../CardMenuItem';
-import { descriptionSchema } from './Description';
 import { imageSchema } from './Image';
 import { titleSchema } from './Title';
 
@@ -20,7 +19,6 @@ export interface CardContainer {
 export const itemSchema = ValueSchema.valueThunkOf(
   () => ValueSchema.chooseProcessor('type', {
     image: imageSchema,
-    description: descriptionSchema,
     title: titleSchema,
     cardcontainer: cardContainerSchema
   })

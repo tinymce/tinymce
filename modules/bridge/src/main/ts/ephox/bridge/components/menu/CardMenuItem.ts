@@ -1,7 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { CardContainer, CardContainerSpec, itemSchema } from './card/CardContainer';
-import { Description, DescriptionSpec } from './card/Description';
 import { Image, ImageSpec } from './card/Image';
 import { Title, TitleSpec } from './card/Title';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
@@ -9,13 +8,11 @@ import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, Common
 export type ContainerItemSpec =
   CardContainerSpec |
   ImageSpec |
-  DescriptionSpec |
   TitleSpec;
 
 export type ContainerItem =
   CardContainer |
   Image |
-  Description |
   Title;
 
 export interface CardMenuItemInstanceApi extends CommonMenuItemInstanceApi { }

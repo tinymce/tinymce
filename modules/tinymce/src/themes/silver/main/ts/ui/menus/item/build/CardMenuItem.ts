@@ -11,7 +11,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 import ItemResponse from '../ItemResponse';
-import { renderContainer, renderDescription, renderHtml, renderImage } from '../structure/ItemSlices';
+import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';
 import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -30,9 +30,6 @@ const render = (items: Menu.ContainerItem[], extras: CardExtras): Array<AlloySpe
 
     case 'image':
       return renderImage(item.src, item.classes, item.alt);
-
-    case 'description':
-      return renderDescription(item.text, item.classes);
 
     case 'title':
       // Only highlight targeted titles

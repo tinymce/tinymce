@@ -22,7 +22,6 @@ const separatorClass = 'tox-collection__separator';
 const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
 const textClass = 'tox-collection__item-label';
-const textDescriptionClass = 'tox-collection__item-label-description';
 const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
@@ -49,7 +48,6 @@ export {
   caretClass,
   checkmarkClass,
   iconClassRtl,
-  textDescriptionClass,
   containerColumnClass,
   containerRowClass
 };

@@ -400,10 +400,6 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
                         html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item-label-description'), arr.has('description_class') ],
-                        html: str.is('Description for equals sign')
                       })
                     ]
                   })
@@ -632,8 +628,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                       type: 'cardcontainer',
                       direction: 'vertical',
                       items: [
-                        { type: 'title', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' },
-                        { type: 'description', text: `Description for ${item.text}`, classes: [ 'description_class' ] }
+                        { type: 'title', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' }
                       ]
                     }
                   ]

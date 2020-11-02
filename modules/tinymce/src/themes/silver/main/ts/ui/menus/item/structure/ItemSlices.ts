@@ -108,14 +108,6 @@ const renderImage = (src: string, classes: string[], alt: Optional<string>): All
   }
 });
 
-const renderDescription = (text: string, classes: string[]): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ ItemClasses.textDescriptionClass ].concat(classes)
-  },
-  components: [ GuiFactory.text(I18n.translate(text)) ]
-});
-
 export {
   renderIcon,
   renderText,
@@ -126,6 +118,5 @@ export {
   renderSubmenuCaret,
   renderDownwardsCaret,
   renderImage,
-  renderContainer,
-  renderDescription
+  renderContainer
 };
