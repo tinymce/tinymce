@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^9.3.2",
-    "@ephox/bedrock-server": "^9.5.1",
+    "@ephox/bedrock-server": "^9.7.1",
     "@ephox/oxide-icons-tools": "^2.1.1",
     "@ephox/swag": "^4.3.0",
     "@ephox/wrap-jsverify": "^2.0.1",
