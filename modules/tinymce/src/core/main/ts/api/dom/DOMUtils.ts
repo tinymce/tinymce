@@ -568,7 +568,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     while (node) {
-      if (node === root || !node.nodeType || node.nodeType === 9) {
+      if (node === root || !node.nodeType || NodeType.isDocument(node) || NodeType.isDocumentFragment(node)) {
         break;
       }
 
