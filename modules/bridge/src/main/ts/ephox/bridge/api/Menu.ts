@@ -1,7 +1,8 @@
 import { CardContainer, CardContainerSpec } from '../components/menu/card/CardContainer';
 import { CardImage, CardImageSpec } from '../components/menu/card/CardImage';
+import { CardItem, CardItemSpec } from '../components/menu/card/CardItem';
 import { CardText, CardTextSpec } from '../components/menu/card/CardText';
-import { CardMenuItem, CardMenuItemInstanceApi, CardMenuItemSpec, ContainerItem, ContainerItemSpec, createCardMenuItem } from '../components/menu/CardMenuItem';
+import { CardMenuItem, CardMenuItemInstanceApi, CardMenuItemSpec, createCardMenuItem } from '../components/menu/CardMenuItem';
 import { ChoiceMenuItem, ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec, createChoiceMenuItem } from '../components/menu/ChoiceMenuItem';
 import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
 import { createFancyMenuItem, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec } from '../components/menu/FancyMenuItem';
@@ -53,8 +54,8 @@ export {
   CardMenuItemSpec,
   CardMenuItemInstanceApi,
 
-  ContainerItemSpec,
-  ContainerItem,
+  CardItemSpec,
+  CardItem,
 
   CardContainerSpec,
   CardContainer,
