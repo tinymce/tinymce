@@ -14,7 +14,7 @@ export interface CardMenuItemSpec extends Omit<CommonMenuItemSpec, 'text' | 'sho
   onAction?: (api: CardMenuItemInstanceApi) => void;
 }
 
-export interface CardMenuItem extends Omit<CommonMenuItem, 'text'> {
+export interface CardMenuItem extends Omit<CommonMenuItem, 'text' | 'shortcut'> {
   type: 'cardmenuitem';
   label: Optional<string>;
   items: CardItem[];

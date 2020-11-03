@@ -27,8 +27,15 @@ const caretClass = 'tox-collection__item-caret';
 const checkmarkClass = 'tox-collection__item-checkmark';
 const activeClass = 'tox-collection__item--active';
 const iconClassRtl = 'tox-collection__item-icon-rtl';
-const containerColumnClass = 'tox-collection__item-container-column';
-const containerRowClass = 'tox-collection__item-container-row';
+
+const containerClass = 'tox-collection__item-container';
+const containerColumnClass = 'tox-collection__item-container--column';
+const containerRowClass = 'tox-collection__item-container--row';
+const containerAlignRightClass = 'tox-collection__item-container--align-right';
+const containerAlignLeftClass = 'tox-collection__item-container--align-left';
+const containerValignTopClass = 'tox-collection__item-container--valign-top';
+const containerValignMiddleClass = 'tox-collection__item-container--valign-middle';
+const containerValignBottomClass = 'tox-collection__item-container--valign-bottom';
 
 const classForPreset = (presets: Toolbar.PresetTypes): string => Obj.get(presetClasses, presets).getOr(navClass);
 
@@ -48,6 +55,12 @@ export {
   caretClass,
   checkmarkClass,
   iconClassRtl,
+  containerClass,
   containerColumnClass,
-  containerRowClass
+  containerRowClass,
+  containerAlignRightClass,
+  containerAlignLeftClass,
+  containerValignTopClass,
+  containerValignMiddleClass,
+  containerValignBottomClass
 };

@@ -4,16 +4,24 @@ import { cardImageSchema } from './CardImage';
 import { CardItem, CardItemSpec } from './CardItem';
 import { cardTextSchema } from './CardText';
 
+export type CardContainerDirection = 'vertical' | 'horizontal';
+export type CardContainerAlign = 'left' | 'right';
+export type CardContainerValign = 'top' | 'middle' | 'bottom';
+
 export interface CardContainerSpec {
   type: 'cardcontainer';
-  direction?: 'vertical' | 'horizontal';
   items: CardItemSpec[];
+  direction?: CardContainerDirection;
+  align?: CardContainerAlign;
+  valign?: CardContainerValign;
 }
 
 export interface CardContainer {
   type: 'cardcontainer';
-  direction: 'vertical' | 'horizontal';
   items: CardItem[];
+  direction: CardContainerDirection;
+  align: CardContainerAlign;
+  valign: CardContainerValign;
 }
 
 export const itemSchema = ValueSchema.valueThunkOf(
@@ -27,6 +35,8 @@ export const itemSchema = ValueSchema.valueThunkOf(
 export const cardContainerSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.defaultedString('direction', 'horizontal'),
+  FieldSchema.defaultedString('align', 'left'),
+  FieldSchema.defaultedString('valign', 'middle'),
   FieldSchema.strictArrayOf('items', itemSchema)
 ]);
 

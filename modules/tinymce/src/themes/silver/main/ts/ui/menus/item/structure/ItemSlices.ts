@@ -6,6 +6,7 @@
  */
 
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
+import { Menu } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
@@ -89,10 +90,19 @@ const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
-const renderContainer = (components: Array<AlloySpec>, direction: string): AlloySpec => ({
+const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass ]
+    classes: [
+      ItemClasses.containerClass
+    ].concat([
+      container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass
+    ]).concat([
+      container.align === 'left' ? ItemClasses.containerAlignLeftClass : ItemClasses.containerAlignRightClass
+    ]).concat([
+      container.valign === 'top' ? ItemClasses.containerValignTopClass : (container.valign === 'middle' ?
+        ItemClasses.containerValignMiddleClass : ItemClasses.containerValignBottomClass)
+    ])
   },
   components
 });

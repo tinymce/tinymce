@@ -395,7 +395,11 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                     classes: [ arr.has('my_autocompleter_avatar_class') ]
                   }),
                   s.element('div', {
-                    classes: [ arr.has('tox-collection__item-container-column') ],
+                    classes: [
+                      arr.has('tox-collection__item-container--column'),
+                      arr.has('tox-collection__item-container--align-right'),
+                      arr.has('tox-collection__item-container--valign-bottom')
+                    ],
                     children: [
                       s.element('div', {
                         classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
@@ -628,6 +632,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                     {
                       type: 'cardcontainer',
                       direction: 'vertical',
+                      align: 'right',
+                      valign: 'bottom',
                       items: [
                         { type: 'cardtext', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' }
                       ]
