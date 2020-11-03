@@ -391,19 +391,27 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                   title: str.is('equals sign')
                 },
                 children: [
-                  s.element('img', {
-                    classes: [ arr.has('my_autocompleter_avatar_class') ]
-                  }),
                   s.element('div', {
                     classes: [
-                      arr.has('tox-collection__item-container--column'),
-                      arr.has('tox-collection__item-container--align-right'),
-                      arr.has('tox-collection__item-container--valign-bottom')
+                      arr.has('tox-collection__item-container--row'),
+                      arr.has('tox-collection__item-container')
                     ],
                     children: [
+                      s.element('img', {
+                        classes: [ arr.has('my_autocompleter_avatar_class') ]
+                      }),
                       s.element('div', {
-                        classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
-                        html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
+                        classes: [
+                          arr.has('tox-collection__item-container--column'),
+                          arr.has('tox-collection__item-container--align-right'),
+                          arr.has('tox-collection__item-container--valign-bottom')
+                        ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
+                            html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
+                          })
+                        ]
                       })
                     ]
                   })

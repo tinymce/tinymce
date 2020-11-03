@@ -11,6 +11,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Selectors } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
+import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';
 import { replaceText } from './AutocompleteMenuItem';
@@ -65,7 +66,15 @@ export const renderCardMenuItem = (
 
   const structure = {
     dom: renderItemDomStructure(false, spec.label),
-    optComponents: Arr.map(render(spec.items, extras), Optional.some)
+    optComponents: [
+      Optional.some({
+        dom: {
+          tag: 'div',
+          classes: [ ItemClasses.containerClass, ItemClasses.containerRowClass ]
+        },
+        components: render(spec.items, extras)
+      })
+    ]
   };
 
   return renderCommonItem({
