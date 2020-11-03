@@ -408,7 +408,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                         ],
                         children: [
                           s.element('div', {
-                            classes: [ arr.has('tox-collection__item-label'), arr.has('title_class') ],
+                            classes: [ arr.has('title_class') ],
                             html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
                           })
                         ]

@@ -32,7 +32,7 @@ const renderText = (text: string): AlloySpec => ({
 const renderHtml = (html: string, classes: string[]): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ].concat(classes),
+    classes,
     innerHtml: html
   }
 });

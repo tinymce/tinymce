@@ -113,7 +113,7 @@ const renderNormalItemStructure = (info: NormalItemSpec, icon: Optional<string>,
   const checkmark = info.checkMark;
 
   const content = info.htmlContent.fold(() => info.textContent.map(textRender),
-    (html) => Optional.some(renderHtml(html, []))
+    (html) => Optional.some(renderHtml(html, [ ItemClasses.textClass ]))
   );
 
   const menuItem = {

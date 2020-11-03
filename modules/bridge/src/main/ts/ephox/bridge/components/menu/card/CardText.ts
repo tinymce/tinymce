@@ -19,7 +19,7 @@ const cardTextFields = [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('text'),
   FieldSchema.optionString('name'),
-  FieldSchema.defaultedArrayOf('classes', [], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('classes', [ 'tox-collection__item-label' ], ValueSchema.string)
 ];
 
 export const cardTextSchema = ValueSchema.objOf(cardTextFields);
