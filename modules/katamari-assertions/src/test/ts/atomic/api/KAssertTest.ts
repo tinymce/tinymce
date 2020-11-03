@@ -6,7 +6,7 @@ import fc from 'fast-check';
 
 const { tNumber } = Testable;
 
-const tBoom = <T>() => Testable.testable(Eq.eq(Fun.die('⊥')), Pprint.pprint(Fun.die('⊥')));
+const tBoom = () => Testable.testable(Eq.eq(Fun.die('⊥')), Pprint.pprint(Fun.die('⊥')));
 
 const twoDifferentNumbers = fc.tuple(fc.integer(), fc.integer()).filter(([ a, b ]) => a !== b);
 

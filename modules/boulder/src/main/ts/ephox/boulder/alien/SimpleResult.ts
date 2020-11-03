@@ -17,9 +17,9 @@ export interface SimpleValue<A> {
 
 const fold = <B, E, A>(res: SimpleResult<E, A>, onError: (err: E) => B, onValue: (val: A) => B): B => res.stype === SimpleResultType.Error ? onError(res.serror) : onValue(res.svalue);
 
-const partition = <E, A>(results: Array<SimpleResult<E[], any>>): { values: any[]; errors: E[][] } => {
-  const values = [ ];
-  const errors = [ ];
+const partition = <E, A>(results: Array<SimpleResult<E[], A>>): { values: A[]; errors: E[][] } => {
+  const values: A[] = [ ];
+  const errors: E[][] = [ ];
   Arr.each(results, (obj) => {
     fold(
       obj,

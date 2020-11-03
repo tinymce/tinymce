@@ -32,7 +32,7 @@ export interface GeneralKeyingConfig {
   state: <C extends GeneralKeyingConfig>(spec: C) => Stateless | FlatgridState;
 }
 
-export interface TabbingConfigSpec<C extends TabbingConfig> extends GeneralKeyingConfigSpec {
+export interface TabbingConfigSpec extends GeneralKeyingConfigSpec {
   onEscape?: KeyHandlerApi;
   onEnter?: KeyHandlerApi;
   selector?: string;
@@ -51,11 +51,11 @@ export interface TabbingConfig extends GeneralKeyingConfig {
   cyclic: boolean;
 }
 
-export interface AcylicConfigSpec extends TabbingConfigSpec<AcyclicConfig> {
+export interface AcylicConfigSpec extends TabbingConfigSpec {
   mode: 'acyclic';
 }
 
-export interface CyclicConfigSpec extends TabbingConfigSpec<CyclicConfig> {
+export interface CyclicConfigSpec extends TabbingConfigSpec {
   mode: 'cyclic';
 }
 

@@ -39,7 +39,7 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
   };
 
   const enrichCustom = (item: StyleFormat): FormatterFormatItem => {
-    const formatName = Type.isString(item.name) ? item.name : Id.generate(item.title);;
+    const formatName = Type.isString(item.name) ? item.name : Id.generate(item.title);
     const formatNameWithPrefix = `custom-${formatName}`;
 
     const customSpec = {
