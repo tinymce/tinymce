@@ -13,6 +13,7 @@ Version 5.6.0 (TBD)
     Fixed an issue where some attributes in table cells were not copied over to new rows or columns #TINY-6485
     Fixed incorrectly removing formatting on adjacent spaces when removing formatting on a ranged selection #TINY-6268
     Fixed some incorrect types in the new TypeScript declaration file #TINY-6413
+    Fixed a regression whereby a fake offscreen selection element was incorrectly created for the editor root node #TINY-6555
     Fixed some minor memory leaks that prevented garbage collection for editor instances #TINY-6570
     Fixed an issue where spaces were not preserved in pre-blocks when getting text content #TINY-6448
 Version 5.5.1 (2020-10-01)

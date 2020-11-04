@@ -50,7 +50,9 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   let selectedElement;
 
   const isFakeSelectionElement = (node: Node) => dom.hasClass(node, 'mce-offscreen-selection');
-  const isFakeSelectionTargetElement = (node: Node): node is HTMLElement => isContentEditableFalse(node) || NodeType.isMedia(node);
+  // Note: isChildOf will return true if node === rootNode, so we need an additional check for that
+  const isFakeSelectionTargetElement = (node: Node): node is HTMLElement =>
+    node !== rootNode && (isContentEditableFalse(node) || NodeType.isMedia(node)) && dom.isChildOf(node, rootNode);
   const isNearFakeSelectionElement = (pos: CaretPosition) =>
     isBeforeContentEditableFalse(pos) || isAfterContentEditableFalse(pos) || isBeforeMedia(pos) || isAfterMedia(pos);
 
