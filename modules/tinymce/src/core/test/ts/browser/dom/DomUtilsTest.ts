@@ -361,6 +361,12 @@ UnitTest.test('browser.tinymce.core.dom.DOMUtils.getParents', () => {
   Assert.eq('', 1, DOM.getParents('test2', 'span.test').length);
   Assert.eq('', 0, DOM.getParents('test2', 'body', DOM.get('test')).length);
 
+  // getParents should stop at DocumentFragment
+  const frag = document.createDocumentFragment();
+  const inputElm = document.createElement('input');
+  frag.appendChild(inputElm);
+  Assert.eq('', 0, DOM.getParents(inputElm, (d) => d.nodeName === '#document-fragment').length);
+
   DOM.remove('test');
 });
 
