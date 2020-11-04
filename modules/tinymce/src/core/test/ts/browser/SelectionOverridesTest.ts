@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     } as MouseEvent);
 
     const offscreenElements = editor.dom.select('.mce-offscreen-selection');
-    ok(offscreenElements.length === 0, 'No offscreen element shown when');
+    ok(offscreenElements.length === 0, 'No offscreen element shown');
 
     editor.getBody().contentEditable = 'true';
   });
