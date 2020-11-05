@@ -4,9 +4,9 @@ import { cardImageSchema } from './CardImage';
 import { CardItem, CardItemSpec } from './CardItem';
 import { cardTextSchema } from './CardText';
 
-export type CardContainerDirection = 'vertical' | 'horizontal';
-export type CardContainerAlign = 'left' | 'right';
-export type CardContainerValign = 'top' | 'middle' | 'bottom';
+type CardContainerDirection = 'vertical' | 'horizontal';
+type CardContainerAlign = 'left' | 'right';
+type CardContainerValign = 'top' | 'middle' | 'bottom';
 
 export interface CardContainerSpec {
   type: 'cardcontainer';

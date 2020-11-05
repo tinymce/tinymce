@@ -4,8 +4,8 @@ import { Optional, Result } from '@ephox/katamari';
 export interface CardImageSpec {
   type: 'cardimage';
   src: string;
-  classes?: string[];
   alt?: string;
+  classes?: string[];
 }
 
 export interface CardImage {

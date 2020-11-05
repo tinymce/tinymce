@@ -100,8 +100,8 @@ const renderContainer = (container: Menu.CardContainer, components: Array<AlloyS
     ]).concat([
       container.align === 'left' ? ItemClasses.containerAlignLeftClass : ItemClasses.containerAlignRightClass
     ]).concat([
-      container.valign === 'top' ? ItemClasses.containerValignTopClass : (container.valign === 'middle' ?
-        ItemClasses.containerValignMiddleClass : ItemClasses.containerValignBottomClass)
+      container.valign === 'top' ? ItemClasses.containerValignTopClass :
+        (container.valign === 'middle' ? ItemClasses.containerValignMiddleClass : ItemClasses.containerValignBottomClass)
     ])
   },
   components
