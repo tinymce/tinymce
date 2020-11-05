@@ -45,6 +45,7 @@ interface BaseEditorSettings {
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
+  allow_svg_data_urls?: boolean;
   allow_unsafe_link_target?: boolean;
   anchor_bottom?: false | string;
   anchor_top?: false | string;

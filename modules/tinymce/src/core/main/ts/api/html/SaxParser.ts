@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Strings } from '@ephox/katamari';
+import { Arr, Obj, Strings, Type } from '@ephox/katamari';
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
@@ -97,13 +97,21 @@ const enum MatchType {
   Attribute = 9
 }
 
+const safeSvgDataUrlElements = [ 'img', 'video' ];
+
 const isValidPrefixAttrName = (name: string): boolean => name.indexOf('data-') === 0 || name.indexOf('aria-') === 0;
 
-const isInvalidUri = (settings: SaxParserSettings, uri: string) => {
+const blockSvgDataUris = (allowSvgDataUrls: boolean | undefined, tagName: string) => {
+  // Only allow SVGs by default on images/videos since the browser won't execute scripts on those elements
+  const allowed = Type.isNullable(allowSvgDataUrls) ? Arr.contains(safeSvgDataUrlElements, tagName) : allowSvgDataUrls;
+  return !allowed;
+};
+
+const isInvalidUri = (settings: SaxParserSettings, uri: string, tagName: string) => {
   if (settings.allow_html_data_urls) {
     return false;
   } else if (/^data:image\//i.test(uri)) {
-    return settings.allow_svg_data_urls === false && /^data:image\/svg\+xml/i.test(uri);
+    return blockSvgDataUris(settings.allow_svg_data_urls, tagName) && /^data:image\/svg\+xml/i.test(uri);
   } else {
     return /^data:/i.test(uri);
   }
@@ -208,11 +216,11 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
 
   const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
     const html = base64Extract.html;
-    let matches, index = 0, value, endRegExp;
+    let matches: RegExpExecArray, index = 0, value, endRegExp;
     const stack = [];
     let attrList, i, textData, name;
     let isInternalElement, isShortEnded;
-    let elementRule, isValidElement, attr, attribsValue, validAttributesMap, validAttributePatterns;
+    let elementRule, isValidElement, attr, attribsValue: string, validAttributesMap, validAttributePatterns;
     let attributesRequired, attributesDefault, attributesForced;
     let anyAttributesRequired, attrValue, idCount = 0;
     const decode = Entities.decode;
@@ -282,7 +290,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
       return endIndex + 1;
     };
 
-    const parseAttribute = (match: string, name: string, value?: string, val2?: string, val3?: string) => {
+    const parseAttribute = (tagName: string, name: string, value?: string, val2?: string, val3?: string) => {
       let attrRule, i;
       const trimRegExp = /[\s\u0000-\u001F]+/g;
 
@@ -336,7 +344,7 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
           return;
         }
 
-        if (isInvalidUri(settings, uri)) {
+        if (isInvalidUri(settings, uri, tagName)) {
           return;
         }
       }
@@ -451,7 +459,10 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
             attrList = [];
             attrList.map = {};
 
-            attribsValue.replace(attrRegExp, parseAttribute);
+            attribsValue.replace(attrRegExp, (match, name, val, val2, val3) => {
+              parseAttribute(value, name, val, val2, val3);
+              return '';
+            });
           } else {
             attrList = [];
             attrList.map = {};
