@@ -90,22 +90,34 @@ const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
-const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => ({
-  dom: {
-    tag: 'div',
-    classes: [
-      ItemClasses.containerClass
-    ].concat([
-      container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass
-    ]).concat([
-      container.align === 'left' ? ItemClasses.containerAlignLeftClass : ItemClasses.containerAlignRightClass
-    ]).concat([
-      container.valign === 'top' ? ItemClasses.containerValignTopClass :
-        (container.valign === 'middle' ? ItemClasses.containerValignMiddleClass : ItemClasses.containerValignBottomClass)
-    ])
-  },
-  components
-});
+const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => {
+  const directionClass = container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass;
+  const alignClass = container.align === 'left' ? ItemClasses.containerAlignLeftClass : ItemClasses.containerAlignRightClass;
+
+  const getValignClass = () => {
+    switch (container.valign) {
+      case 'top':
+        return ItemClasses.containerValignTopClass;
+      case 'middle':
+        return ItemClasses.containerValignMiddleClass;
+      case 'bottom':
+        return ItemClasses.containerValignBottomClass;
+    }
+  };
+
+  return {
+    dom: {
+      tag: 'div',
+      classes: [
+        ItemClasses.containerClass,
+        directionClass,
+        alignClass,
+        getValignClass()
+      ]
+    },
+    components
+  };
+};
 
 const renderImage = (src: string, classes: string[], alt: Optional<string>): AlloySpec => ({
   dom: {
