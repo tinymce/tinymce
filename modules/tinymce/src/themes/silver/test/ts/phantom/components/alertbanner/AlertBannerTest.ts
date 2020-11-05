@@ -13,7 +13,8 @@ UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
     },
     menuItems: () => <Record<string, any>> {},
     translate: I18n.translate,
-    isReadOnly: () => false
+    isReadOnly: () => false,
+    getSetting: (_settingName: string, defaultVal: any) => defaultVal
   };
 
   TestHelpers.GuiSetup.setup(
