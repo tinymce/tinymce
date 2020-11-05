@@ -568,7 +568,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     while (node) {
-      if (node === root || !node.nodeType || node.nodeType === 9) {
+      // TODO: Remove nullable check once TINY-6599 is complete
+      if (node === root || Type.isNullable(node.nodeType) || NodeType.isDocument(node) || NodeType.isDocumentFragment(node)) {
         break;
       }
 

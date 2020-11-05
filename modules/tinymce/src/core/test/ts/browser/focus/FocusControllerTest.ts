@@ -59,7 +59,14 @@ UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (s
     LegacyUnit.equal(FocusController.isEditorContentAreaElement(contentAreaElm2), true, 'Should be true since tox-edit-area__iframe is content area container element');
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  suite.test('isUIElement on editor sibling is false', (editor) => {
+    const inputElm = DOMUtils.DOM.create('input', { }, null);
+    editor.getContainer().parentNode.appendChild(inputElm);
+    LegacyUnit.equal(FocusController.isUIElement(editor, inputElm), false, 'Should be false as not sitting inside editor');
+    DOMUtils.DOM.remove(inputElm);
+  });
+
+  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
