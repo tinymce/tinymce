@@ -11,8 +11,8 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 
 interface Config {
   label: string;
-  setupEditor: () => Chain<Record<string, any>, Record<string, any>>;
-  cleanupEditor: () => Chain<any, any>;
+  setupEditor: () => Chain<any, Editor>;
+  cleanupEditor: () => Chain<Editor, any>;
 }
 
 const getContentContainer = (editor: Editor) =>
@@ -28,7 +28,7 @@ const cCloseOnlyWindow = Chain.label(
   })
 );
 
-const cWaitForDialog = (ariaLabel: string) =>
+const cWaitForDialog = (ariaLabel: string): Chain<Editor, Editor> =>
   Chain.label(
     'Looking for dialog with an aria-label: ' + ariaLabel,
     Chain.fromIsolatedChains([
@@ -59,7 +59,7 @@ const cAssertHtmlAndBodyState = (label: string, shouldExist: boolean) => {
   );
 };
 
-const cAsssertEditorContainerAndSinkState = (label: string, shouldExist: boolean) =>
+const cAsssertEditorContainerAndSinkState = (label: string, shouldExist: boolean): Chain<Editor, Editor> =>
   Chain.label(
     `${label}: Editor container and sink should ${shouldExist ? '' : 'not'} have "tox-fullscreen" class and z-index`,
     NamedChain.asChain([
@@ -82,7 +82,7 @@ const cAsssertEditorContainerAndSinkState = (label: string, shouldExist: boolean
     ])
   );
 
-const cAssertShadowHostState = (label: string, shouldExist: boolean) =>
+const cAssertShadowHostState = (label: string, shouldExist: boolean): Chain<Editor, Editor> =>
   Chain.label(
     `${label}: Shadow host should ${shouldExist ? '' : 'not'} have "tox-fullscreen" and "tox-shadowhost" classes and z-index`,
     Chain.op((editor: Editor) => {
@@ -97,7 +97,7 @@ const cAssertShadowHostState = (label: string, shouldExist: boolean) =>
     })
   );
 
-const cAssertPageState = (label: string, shouldExist: boolean) =>
+const cAssertPageState = (label: string, shouldExist: boolean): Chain<Editor, Editor> =>
   Chain.fromChains([
     cAssertHtmlAndBodyState(label, shouldExist),
     cAsssertEditorContainerAndSinkState(label, shouldExist),
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
 
   const lastEventArgs = Cell(null);
 
-  const cAssertApiAndLastEvent = (label: string, state: boolean) =>
+  const cAssertApiAndLastEvent = (label: string, state: boolean): Chain<Editor, Editor> =>
     Chain.label(
       `${label}: fullscreen API and event state should return ${state}`,
       Chain.fromChains([
@@ -152,11 +152,12 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
     },
     cleanupEditor: () => Chain.fromChains([
       Chain.op((editor: Editor) => {
-        SugarShadowDom.getShadowRoot(SugarElement.fromDom(editor.getElement()))
+        const elm = editor.getElement();
+        editor.remove();
+        SugarShadowDom.getShadowRoot(SugarElement.fromDom(elm))
           .map((root) => SugarShadowDom.getShadowHost(root))
           .each(Remove.remove);
-      }),
-      McEditor.cRemove
+      })
     ])
   };
 
