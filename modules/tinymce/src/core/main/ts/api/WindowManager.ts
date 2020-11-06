@@ -111,7 +111,7 @@ const WindowManager = function (editor: Editor): WindowManager {
     return dialog;
   };
 
-  const open = function <T> (args, params?): Dialog.DialogInstanceApi<T> {
+  const open = function <T> (args, params?: WindowParams): Dialog.DialogInstanceApi<T> {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 

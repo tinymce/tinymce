@@ -6,6 +6,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { WindowParams } from 'tinymce/core/api/WindowManager';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
@@ -38,7 +39,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       initialData: {}
     };
 
-    const sTestDialogLabelled = (params: { inline?: string }) =>
+    const sTestDialogLabelled = (params: WindowParams) =>
       Logger.t(
         `Dialog should have "aria-labelledby" for config "${JSON.stringify(params)}"`, GeneralSteps.sequence([
           DialogUtils.sOpen(editor, dialogSpec, params),
@@ -52,7 +53,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
       ]),
       sTestDialogLabelled({ inline: 'toolbar' }),
-      sTestDialogLabelled({ inline: 'not-inline!!' }),
+      sTestDialogLabelled({}),
       TestHelpers.GuiSetup.mRemoveStyles
     ], onSuccess, onFailure);
   },

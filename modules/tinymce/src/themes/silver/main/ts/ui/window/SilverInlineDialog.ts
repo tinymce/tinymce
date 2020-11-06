@@ -7,8 +7,23 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving, Reflecting,
-  SimpleSpec, SystemEvents
+  AddEventsBehaviour,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  Blocking,
+  Composing,
+  DomFactory,
+  Focusing,
+  GuiFactory,
+  Keying,
+  Memento,
+  NativeEvents,
+  Receiving,
+  Reflecting,
+  Replacing,
+  SimpleSpec,
+  SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
@@ -58,9 +73,33 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
     {
-      // TODO: Implement block and unblock for inline dialogs
-      onBlock: () => { },
-      onUnblock: () => { },
+      onBlock: (event) => {
+        Blocking.block(dialog, (bs) => ({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-dialog__busy-spinner' ],
+            attributes: {
+              'aria-label': event.message
+            },
+            styles: {
+              left: '0px',
+              right: '0px',
+              bottom: '0px',
+              top: '0px',
+              position: 'absolute'
+            }
+          },
+          behaviours: bs,
+          components: [
+            {
+              dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+            }
+          ]
+        }));
+      },
+      onUnblock: () => {
+        Blocking.unblock(dialog);
+      },
       onClose: () => extra.closeWindow()
     },
     backstage.shared.getSink
@@ -74,7 +113,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: `${dialogContentId}`
+        ['aria-describedby']: `${ dialogContentId }`
       }
     },
     eventOrder: {
@@ -100,7 +139,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         updateState,
         initialData: dialogInit
       }),
-      Focusing.config({ }),
+      Focusing.config({}),
       AddEventsBehaviour.config(
         'execute-on-form',
         dialogEvents.concat([
@@ -111,7 +150,9 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
           })
         ])
       ),
-      RepresentingConfigs.memory({ })
+      Blocking.config({ getRoot: () => Optional.some(dialog) }),
+      Replacing.config({}),
+      RepresentingConfigs.memory({})
     ]),
 
     components: [
