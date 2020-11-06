@@ -46,7 +46,11 @@ export const BlobCache = (): BlobCache => {
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
       'image/gif': 'gif',
-      'image/png': 'png'
+      'image/png': 'png',
+      'image/svg+xml': 'svg',
+      'image/webp': 'webp',
+      'image/bmp': 'bmp',
+      'image/tiff': 'tiff'
     };
 
     return mimes[mime.toLowerCase()] || 'dat';
