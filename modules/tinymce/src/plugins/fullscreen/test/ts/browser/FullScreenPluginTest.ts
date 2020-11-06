@@ -86,8 +86,9 @@ const cAssertShadowHostState = (label: string, shouldExist: boolean): Chain<Edit
   Chain.label(
     `${label}: Shadow host should ${shouldExist ? '' : 'not'} have "tox-fullscreen" and "tox-shadowhost" classes and z-index`,
     Chain.op((editor: Editor) => {
-      if (SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()))) {
-        const host = SugarShadowDom.getShadowRoot(SugarElement.fromDom(editor.getElement()))
+      const elm = SugarElement.fromDom(editor.getElement());
+      if (SugarShadowDom.isInShadowRoot(elm)) {
+        const host = SugarShadowDom.getShadowRoot(elm)
           .map(SugarShadowDom.getShadowHost)
           .getOrDie('Expected shadow host');
 
@@ -152,10 +153,10 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', (s
     },
     cleanupEditor: () => Chain.fromChains([
       Chain.op((editor: Editor) => {
-        const elm = editor.getElement();
+        const elm = SugarElement.fromDom(editor.getElement());
         editor.remove();
-        SugarShadowDom.getShadowRoot(SugarElement.fromDom(elm))
-          .map((root) => SugarShadowDom.getShadowHost(root))
+        SugarShadowDom.getShadowRoot(elm)
+          .map(SugarShadowDom.getShadowHost)
           .each(Remove.remove);
       })
     ])
