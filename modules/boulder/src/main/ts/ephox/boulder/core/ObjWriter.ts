@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-const wrap = function <K, V> (key: string, value: V): { [key: string]: V} {
+const wrap = function <V> (key: string, value: V): { [key: string]: V} {
   return { [key]: value };
 };
 

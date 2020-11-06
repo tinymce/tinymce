@@ -11,8 +11,8 @@ import { Result } from '@ephox/katamari';
 import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
-  formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormCancelEvent, FormChangeEvent, formChangeEvent,
-  FormCloseEvent, formCloseEvent, FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent
+  formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, formCancelEvent, FormChangeEvent, formChangeEvent, formCloseEvent,
+  FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent
 } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
@@ -22,18 +22,18 @@ export interface ExtraListeners {
   onClose: () => void;
 }
 
-const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f: Function) => any, extras: ExtraListeners) => [
+const initCommonEvents = (fireApiEvent: (name: string, f: Function) => any, extras: ExtraListeners) => [
   // When focus moves onto a tab-placeholder, skip to the next thing in the tab sequence
   AlloyEvents.runWithTarget(NativeEvents.focusin(), NavigableObject.onFocus),
 
   // TODO: Test if disabled first.
-  fireApiEvent<FormCloseEvent>(formCloseEvent, (_api, spec) => {
+  fireApiEvent(formCloseEvent, (_api, spec) => {
     extras.onClose();
     spec.onClose();
   }),
 
   // TODO: Test if disabled first.
-  fireApiEvent<FormCancelEvent>(formCancelEvent, (api, spec, _event, self) => {
+  fireApiEvent(formCancelEvent, (api, spec, _event, self) => {
     spec.onCancel(api);
     AlloyTriggers.emit(self, formCloseEvent);
   }),
@@ -43,7 +43,7 @@ const initCommonEvents = (fireApiEvent: <E extends CustomEvent>(name: string, f:
   AlloyEvents.run<FormBlockEvent>(formBlockEvent, (_c, se) => extras.onBlock(se.event))
 ];
 
-const initUrlDialog = <T>(getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
+const initUrlDialog = (getInstanceApi: () => Dialog.UrlDialogInstanceApi, extras: ExtraListeners) => {
   const fireApiEvent = <E extends CustomEvent>(eventName: string, f: (api: Dialog.UrlDialogInstanceApi, spec: Dialog.UrlDialog, e: E, c: AlloyComponent) => void) =>
     AlloyEvents.run<E>(eventName, (c, se) => {
       withSpec(c, (spec, _c) => {

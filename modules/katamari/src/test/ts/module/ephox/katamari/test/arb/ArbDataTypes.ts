@@ -14,7 +14,7 @@ export const arbResultValue = <A, E> (arbA: Arbitrary<A>): Arbitrary<Result<A, E
 export const arbResult = <A, E> (arbA: Arbitrary<A>, arbE: Arbitrary<E>): Arbitrary<Result<A, E>> =>
   fc.oneof(arbResultError<A, E>(arbE), arbResultValue<A, E>(arbA));
 
-export const arbOptionalNone = <T> () => fc.constant(Optional.none());
+export const arbOptionalNone = <T> () => fc.constant(Optional.none<T>());
 export const arbOptionalSome = <T> (at: Arbitrary<T>) => at.map(Optional.some);
 
 export const arbOptional = <T> (at: Arbitrary<T>) => fc.oneof(arbOptionalNone(), arbOptionalSome(at));

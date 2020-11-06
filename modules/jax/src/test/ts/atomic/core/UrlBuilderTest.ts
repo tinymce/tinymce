@@ -5,8 +5,8 @@ import { buildUrl } from 'ephox/jax/core/UrlBuilder';
 UnitTest.test('UrlBuilderTest', () => {
   const createRecord = (record: any) => Optional.some<Record<string, string>>(record);
 
-  // copied from agar, perhaps we shoud move it to bedrock
-  const assertEq = function <T> (label: string, expected: string, actual: string) {
+  // copied from agar, perhaps we should move it to bedrock
+  const assertEq = function (label: string, expected: string, actual: string) {
     assert.eq(expected, actual, `${label}.\n  Expected: ${expected} \n  Actual: ${actual}`);
   };
 

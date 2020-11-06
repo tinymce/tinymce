@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, VerticalDir } from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
 import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
@@ -108,16 +108,26 @@ const setup = (editor: Editor): RenderInfo => {
 
   const isHeaderDocked = () => header.isDocked(lazyHeader);
 
+  const resizeUiMothership = () => {
+    Css.set(uiMothership.element, 'width', document.body.clientWidth + 'px');
+  };
+
   const sink = GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'tox', 'tox-silver-sink', 'tox-tinymce-aux' ].concat(platformClasses).concat(deviceClasses),
+      styles: {
+        width: document.body.clientWidth + 'px'
+      },
       ...dirAttributes
     },
     behaviours: Behaviour.derive([
       Positioning.config({
         useFixed: () => isHeaderDocked()
       })
+    ]),
+    events: AlloyEvents.derive([
+      AlloyEvents.run(SystemEvents.windowResize(), resizeUiMothership)
     ])
   });
 

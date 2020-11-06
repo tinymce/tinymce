@@ -18,13 +18,13 @@ export type FormatCallbacks = Record<string, FormatChangeCallback[]>;
 export interface FormatData {
   similar?: boolean;
   callbacks: FormatChangeCallback[];
-};
+}
 
 export type RegisteredFormats = Record<string, FormatData>;
 
 export interface UnbindFormatChanged {
   unbind: () => void;
-};
+}
 
 const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
   const currentFormats = Cell<Record<string, FormatChangeCallback[]>>({ });

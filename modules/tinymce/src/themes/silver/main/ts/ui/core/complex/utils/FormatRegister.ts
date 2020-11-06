@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Id, Merger, Obj, Optional } from '@ephox/katamari';
+import { Arr, Id, Merger, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 import { FormatItem, FormatterFormatItem, PreviewSpec, SubMenuFormatItem } from '../BespokeSelect';
@@ -39,12 +39,14 @@ const register = (editor: Editor, formats, isSelectedFor: IsSelectedForType, get
   };
 
   const enrichCustom = (item: StyleFormat): FormatterFormatItem => {
-    const formatName = Id.generate(item.title);
+    const formatName = Type.isString(item.name) ? item.name : Id.generate(item.title);
+    const formatNameWithPrefix = `custom-${formatName}`;
+
     const customSpec = {
       type: 'formatter' as 'formatter',
-      format: formatName,
-      isSelected: isSelectedFor(formatName),
-      getStylePreview: getPreviewFor(formatName)
+      format: formatNameWithPrefix,
+      isSelected: isSelectedFor(formatNameWithPrefix),
+      getStylePreview: getPreviewFor(formatNameWithPrefix)
     };
 
     const newItem = Merger.deepMerge(item, customSpec);
