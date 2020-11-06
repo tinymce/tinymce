@@ -293,7 +293,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the Dialog to "Busy"',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (_d, bs) => ({
+          ModalDialog.setBusy(dialog, (bs) => ({
             dom: {
               tag: 'div',
               classes: [ 'test-busy-class' ],
@@ -333,7 +333,7 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
       Logger.t(
         'Set the dialog to busy again without setting it to idle first',
         Step.sync(() => {
-          ModalDialog.setBusy(dialog, (_d, _bs) => ({
+          ModalDialog.setBusy(dialog, (_bs) => ({
             dom: {
               tag: 'div',
               classes: [ 'test-busy-second-class' ],
