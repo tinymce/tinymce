@@ -68,7 +68,11 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
         isReadOnly: () => editor.mode.isReadOnly(),
-        getSetting: editor.getParam.bind(editor) // This bind is important to ensure we don't lose reference to the editor in getParam
+        /*
+          TODO: Remove bind when TINY-6621 is complete
+          This bind is important to ensure we don't lose reference to the editor in getParam
+        */
+        getSetting: editor.getParam.bind(editor)
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),
