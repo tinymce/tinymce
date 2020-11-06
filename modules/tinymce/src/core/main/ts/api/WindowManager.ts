@@ -33,8 +33,13 @@ import { Dialog } from './ui/Ui';
  * });
  */
 
+export interface WindowParams {
+  inline?: 'cursor' | 'toolbar';
+  ariaAttrs?: unknown;
+}
+
 interface WindowManager {
-  open: <T>(config: Dialog.DialogSpec<T>, params?) => Dialog.DialogInstanceApi<T>;
+  open: <T>(config: Dialog.DialogSpec<T>, params?: WindowParams) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback?: () => void, scope?) => void;
   confirm: (message: string, callback?: (state: boolean) => void, scope?) => void;
@@ -44,7 +49,7 @@ interface WindowManager {
 export type InstanceApi<T> = Dialog.UrlDialogInstanceApi | Dialog.DialogInstanceApi<T>;
 
 export interface WindowManagerImpl {
-  open: <T>(config: Dialog.DialogSpec<T>, params, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
+  open: <T>(config: Dialog.DialogSpec<T>, params: WindowParams, closeWindow: (dialog: Dialog.DialogInstanceApi<T>) => void) => Dialog.DialogInstanceApi<T>;
   openUrl: (config: Dialog.UrlDialogSpec, closeWindow: (dialog: Dialog.UrlDialogInstanceApi) => void) => Dialog.UrlDialogInstanceApi;
   alert: (message: string, callback: () => void) => void;
   confirm: (message: string, callback: (state: boolean) => void) => void;

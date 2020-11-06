@@ -6,7 +6,18 @@
  */
 
 import {
-  AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Reflecting, SystemEvents
+  AlloyComponent,
+  AlloyEvents,
+  AlloyParts,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  DomFactory,
+  GuiFactory,
+  ModalDialog,
+  Receiving,
+  Reflecting,
+  SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
@@ -38,10 +49,10 @@ const getHeader = (title: string, backstage: UiFactoryBackstage) => renderModalH
   draggable: backstage.dialog.isDraggableModal()
 }, backstage.shared.providers);
 
-const getEventExtras = (lazyDialog, extra: WindowExtra) => ({
+const getEventExtras = (lazyDialog: () => AlloyComponent, extra: WindowExtra) => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    ModalDialog.setBusy(lazyDialog(), (d, bs) => ({
+    ModalDialog.setBusy(lazyDialog(), (bs) => ({
       dom: {
         tag: 'div',
         classes: [ 'tox-dialog__busy-spinner' ],
@@ -89,7 +100,7 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
     },
     dialogEvents,
     eventOrder: {
-      [SystemEvents.receive()]: [ 'reflecting', 'receiving' ],
+      [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],
       [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'dialog-events', 'alloy.base.behaviour' ],
       [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock' ]
     }
