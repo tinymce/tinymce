@@ -47,6 +47,7 @@ export const BlobCache = (): BlobCache => {
       'image/jpg': 'jpg',
       'image/gif': 'gif',
       'image/png': 'png',
+      'image/apng': 'apng',
       'image/svg+xml': 'svg',
       'image/webp': 'webp',
       'image/bmp': 'bmp',
