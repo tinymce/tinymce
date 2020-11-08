@@ -8,8 +8,7 @@
     "paths": {
       "ephox/sugar/test/*": ["src/test/ts/module/ephox/sugar/test/*"],
       "ephox/sugar/demo/*": ["src/demo/ts/ephox/sugar/demo/*"],
-      "ephox/sugar/*": ["src/main/ts/ephox/sugar/*"],
-      "@ephox/sugar": ["src/main/ts/ephox/sugar/api/Main.ts"]
+      "ephox/sugar/*": ["src/main/ts/ephox/sugar/*"]
     }
   },
   "include": [

@@ -9,8 +9,7 @@
     "paths": {
       "ephox/jax/test/*": ["src/test/ts/module/ephox/jax/test/*"],
       "ephox/jax/demo/*": ["src/demo/ts/ephox/jax/demo/*"],
-      "ephox/jax/*": ["src/main/ts/ephox/jax/*"],
-      "@ephox/jax": ["src/main/ts/ephox/jax/api/Main.ts"]
+      "ephox/jax/*": ["src/main/ts/ephox/jax/*"]
     }
   },
   "include": [
