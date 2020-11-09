@@ -18,20 +18,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.EmptyRowTableTest', (success, 
         tinyApis.sSetContent(`
           <div>
             <table>
-              <colgroup>
-                <col>
-              </colgroup>
+              <colgroup><col></colgroup>
               <tbody>
-                <tr>
-                  <td rowspan="2" >TR 1</td>
-                </tr>
+                <tr><td rowspan="2" >TR 1</td></tr>
                 <tr></tr>
-                <tr>
-                  <td>TR 3</td>
-                </tr>
-                <tr >
-                  <td >TR 4</td>
-                </tr>
+                <tr><td>TR 3</td></tr>
+                <tr><td >TR 4</td></tr>
               </tbody>
             </table>
           </div>
