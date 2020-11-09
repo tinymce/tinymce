@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, Attachment, Boxes } from '@ephox/alloy';
+import { AlloyComponent, Attachment, Boxes, Disabling } from '@ephox/alloy';
 import { Cell, Singleton } from '@ephox/katamari';
 import { DomEvent, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -140,7 +140,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     },
     disable: () => {
       ReadOnly.broadcastReadonly(uiComponents, true);
-    }
+    },
+    isDisabled: () => Disabling.isDisabled(outerContainer)
   };
 
   return {

@@ -55,6 +55,15 @@
  */
 
 /**
+ * Returns true/false if the editor user interface is disabled or not.
+ * <br>
+ * <em>Added in TinyMCE 5.6</em>
+ *
+ * @method tinymce.editor.ui.isDisabled
+ * @return {Boolean} true/false if the editor user interface is disabled or not.
+ */
+
+/**
  * Editor UI stylesheet loader instance. StyleSheetLoader for styles in the editor UI. For content styles, use editor.dom.styleSheetLoader.
  * <br>
  * <em>Added in TinyMCE 5.4</em>
