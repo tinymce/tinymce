@@ -7,7 +7,7 @@
 
 import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableGridSize, TableResize } from '@ephox/snooker';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import * as Settings from '../api/Settings';
@@ -96,12 +96,14 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     });
   };
 
+  const canResize = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
+
   editor.on('init', function () {
     const rawWire = TableWire.get(editor);
     wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
-      const sz = TableResize.create(rawWire, resizing, lazySizing);
+      const sz = TableResize.create(rawWire, resizing, lazySizing, canResize);
       sz.on();
       sz.events.startDrag.bind(function (_event) {
         selectionRng = Optional.some(editor.selection.getRng());

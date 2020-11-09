@@ -36,7 +36,7 @@ export interface DragAdjustEvents {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (wire: ResizeWire) {
+export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElement<Element>) => boolean) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
