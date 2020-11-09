@@ -28,7 +28,7 @@ export interface UiFactoryBackstageProviders {
   icons: IconProvider;
   menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   translate: (any) => TranslatedString;
-  isReadOnly: () => boolean;
+  isDisabled: () => boolean;
 }
 
 type UiFactoryBackstageForStyleButton = SelectData;
@@ -66,7 +66,7 @@ const init = (sink: AlloyComponent, editor: Editor, lazyAnchorbar: () => AlloyCo
         icons: () => editor.ui.registry.getAll().icons,
         menuItems: () => editor.ui.registry.getAll().menuItems,
         translate: I18n.translate,
-        isReadOnly: () => editor.mode.isReadOnly() || editor.ui.isDisabled()
+        isDisabled: () => editor.mode.isReadOnly() || editor.ui.isDisabled()
       },
       interpreter: (s) => UiFactory.interpretWithoutForm(s, backstage),
       anchors: Anchors.getAnchors(editor, lazyAnchorbar, toolbar.isPositionedAtTop),

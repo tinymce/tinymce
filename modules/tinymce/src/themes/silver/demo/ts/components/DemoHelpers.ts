@@ -104,7 +104,7 @@ const setupDemo = () => {
         icons: () => <Record<string, string>> {},
         menuItems: () => <Record<string, any>> {},
         translate: I18n.translate,
-        isReadOnly: () => false
+        isDisabled: () => false
       },
       interpreter: (x) => x,
       getSink: () => Result.value(sink),
