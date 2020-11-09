@@ -1,7 +1,6 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Log, Pipeline } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Selectors, SugarElement } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -28,10 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.EmptyRowTableTest', (success, 
             </table>
           </div>
         `),
-        Step.sync(() => {
-          const trs = Selectors.all('tr', SugarElement.fromDom(editor.getBody()));
-          Assert.eq('', 4, trs.length);
-        })
+        tinyApis.sAssertContentPresence({ tr: 4 })
       ])
     ], success, failure);
   }, {
