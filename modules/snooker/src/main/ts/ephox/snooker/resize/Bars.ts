@@ -12,6 +12,24 @@ const resizeRowBar = Styles.resolve('resizer-rows');
 const resizeColBar = Styles.resolve('resizer-cols');
 const BAR_THICKNESS = 7;
 
+// const canResizeRow = (table: SugarElement<HTMLTableElement>, rowIndex: number, canResize: (elm: SugarElement<Element>) => boolean) => {
+//   const warehouse = Warehouse.fromTable(table);
+//   const rowOpt = Optional.from(warehouse.all[rowIndex]);
+//   const editableRow = rowOpt.map((row) => row.element).forall(canResize);
+//   const editableCells = rowOpt.map((row) => row.cells).forall((cells) => Arr.forall(cells, (cell) => canResize(cell.element)));
+//   return editableRow && editableCells;
+// };
+
+// // Should I also check colgroup element if it exists?
+// const canResizeColumn = (table: SugarElement<HTMLTableElement>, columnIndex: number, canResize: (elm: SugarElement<Element>) => boolean) => {
+//   const warehouse = Warehouse.fromTable(table);
+//   // const editableCol = Warehouse.getColumnAt(warehouse, columnIndex).map((col) => col.element).forall(canResize);
+//   const editableCol = Warehouse.getColumnAt(warehouse, columnIndex).map((col) => col.element).forall(canResize);
+//   const columnCells = Warehouse.filterItems(warehouse, (cell) => cell.column === columnIndex);
+//   const editableCells = Arr.forall(columnCells, (cell) => canResize(cell.element));
+//   return editableCol && editableCells;
+// };
+
 const destroy = function (wire: ResizeWire) {
   const previous = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
   Arr.each(previous, Remove.remove);
@@ -53,7 +71,7 @@ const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optio
   refreshCol(wire, colPositions, position, Height.getOuter(table));
 };
 
-const refresh = function (wire: ResizeWire, table: SugarElement) {
+const refresh = function (wire: ResizeWire, table: SugarElement, canResize: (elm: SugarElement<Element>) => boolean) {
   destroy(wire);
 
   const warehouse = Warehouse.fromTable(table);
