@@ -75,7 +75,13 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
+    /*
+    * Retrieve the table before the cells are modified
+    * as there is a case where cells are replaced and
+    * the reference will be lost when trying to fire events.
+    */
     const tableOpt = TableLookup.table(cells[0]);
+
     getSelectedCells(cells).each((selectedCells) => {
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
