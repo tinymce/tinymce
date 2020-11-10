@@ -141,7 +141,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
             },
             buttonBehaviours: Behaviour.derive([
               Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isReadOnly),
+              DisablingConfigs.button(providersBackstage.isDisabled),
               ReadOnly.receivingConfig()
             ])
           })

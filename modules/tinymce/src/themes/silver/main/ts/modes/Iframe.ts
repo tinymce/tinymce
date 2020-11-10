@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Attachment } from '@ephox/alloy';
+import { Attachment, Disabling } from '@ephox/alloy';
 import { Cell, Throttler } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, DomEvent, SugarElement, SugarPosition, SugarShadowDom } from '@ephox/sugar';
@@ -158,7 +158,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     },
     disable: () => {
       ReadOnly.broadcastReadonly(uiComponents, true);
-    }
+    },
+    isDisabled: () => Disabling.isDisabled(outerContainer)
   };
 
   return {

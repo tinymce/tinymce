@@ -82,7 +82,7 @@ const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.providers.isReadOnly),
+    DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
     ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups
