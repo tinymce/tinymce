@@ -106,8 +106,7 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
         })),
         Chain.asStep(blockRoot.get(comp).element, [
           UiFinder.cFindAllIn('div.put-spinner-here'),
-          Chain.mapper((xs) => xs.length),
-          Chain.op((count) => Assert.eq('Only one spinner', 1, count))
+          Chain.op((xs) => Assert.eq('Only one spinner', 1, xs.length))
         ]),
         sUnblock
       ])

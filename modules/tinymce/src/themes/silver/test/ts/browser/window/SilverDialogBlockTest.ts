@@ -1,7 +1,6 @@
 import { Chain, Log, Mouse, Pipeline } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Attribute, Height, SelectorFind, SugarElement, SugarLocation, Width } from '@ephox/sugar';
 
@@ -12,7 +11,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as DialogUtils from '../../module/DialogUtils';
 
-UnitTest.asyncTest('browser.silver.window.SilverDialogBlockTest', (success, failure) => {
+UnitTest.asyncTest('browser.tinymce.themes.silver.window.SilverDialogBlockTest', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight((editor: Editor, success, failure) => {
@@ -68,78 +67,54 @@ UnitTest.asyncTest('browser.silver.window.SilverDialogBlockTest', (success, fail
         const parent = SelectorFind.closest(button, '[aria-busy]');
         const isBlocked = parent
           .bind((parent) => Attribute.getOpt(parent, 'aria-busy'))
-          .fold(Fun.never, (busy) => busy === 'true');
+          .is('true');
         Assert.eq('Blocked state of the dialog', blocked, isBlocked);
       })
     ]);
     const cBlock = (message: string) => Chain.op<Dialog.DialogInstanceApi<{ fred: string }>>((api) => api.block(message));
     const cUnblock = Chain.op<Dialog.DialogInstanceApi<{ fred: string }>>((api) => api.unblock());
 
-    Pipeline.async({}, [
+    const doTest = (label: string, params: WindowParams) => [
       Log.chainsAsStep('TINY-6487', 'Ensure the button clicks when unblocked', [
         store.cClear,
-        cOpen({}),
+        cOpen(params),
         cClick,
-        store.cAssertEq('Ensure that it clicks (modal)', [ 'clicked' ]),
-        cClose,
-
-        store.cClear,
-        cOpen({ inline: 'toolbar' }),
-        cClick,
-        store.cAssertEq('Ensure that it clicks (inline)', [ 'clicked' ]),
+        store.cAssertEq(`Ensure that it clicks (${label})`, [ 'clicked' ]),
         cClose
       ]),
 
       Log.chainsAsStep('TINY-6487', 'Ensure the button does not click when blocked', [
         store.cClear,
-        cOpen({}),
-        cBlock('Block message'),
-        // Chain.op(() => console.clear()),
-        cClick,
-        store.cAssertEq('Ensure that it has not clicked (modal)', []),
-        cClose,
-
-        store.cClear,
-        cOpen({ inline: 'toolbar' }),
+        cOpen(params),
         cBlock('Block message'),
         cClick,
-        store.cAssertEq('Ensure that it has not clicked (inline)', []),
+        store.cAssertEq(`Ensure that it has not clicked (${label})`, []),
         cClose
       ]),
 
       Log.chainsAsStep('TINY-6487', 'Ensure that the button does click after unblocking', [
         store.cClear,
-        cOpen({}),
+        cOpen(params),
         cBlock('Block message'),
         cUnblock,
         cClick,
-        store.cAssertEq('Ensure that it has not clicked (modal)', [ 'clicked' ]),
-        cClose,
-
-        store.cClear,
-        cOpen({ inline: 'toolbar' }),
-        cBlock('Block message'),
-        cUnblock,
-        cClick,
-        store.cAssertEq('Ensure that it has not clicked (inline)', [ 'clicked' ]),
+        store.cAssertEq(`Ensure that it has not clicked (${label})`, [ 'clicked' ]),
         cClose
       ]),
 
       Log.chainsAsStep('TINY-6487', 'Ensure that the button gets blocked', [
-        cOpen({}),
-        cBlock('Block message'),
-        cAssertBlock(true),
-        cUnblock,
-        cAssertBlock(false),
-        cClose,
-
-        cOpen({ inline: 'toolbar' }),
+        cOpen(params),
         cBlock('Block message'),
         cAssertBlock(true),
         cUnblock,
         cAssertBlock(false),
         cClose
       ])
+    ];
+
+    Pipeline.async({}, [
+      ...doTest('modal', {}),
+      ...doTest('inline', { inline: 'toolbar' })
     ], success, failure);
   }, {
     theme: 'silver',

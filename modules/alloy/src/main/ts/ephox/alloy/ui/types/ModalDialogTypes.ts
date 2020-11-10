@@ -49,6 +49,7 @@ export interface ModalDialogSpec extends CompositeSketchSpec {
 }
 
 export type GetBusySpec = (
+  dlg: AlloyComponent,
   busyBehaviours: AlloyBehaviourRecord
 ) => AlloySpec;
 

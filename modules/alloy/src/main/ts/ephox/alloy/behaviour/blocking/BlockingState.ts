@@ -1,30 +1,25 @@
-import { Cell, Optional } from '@ephox/katamari';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import { Cell, Singleton } from '@ephox/katamari';
 import { BehaviourState, nuState } from '../common/BehaviourState';
 
 export interface BlockingState extends BehaviourState {
-  setBlocker: (actual: AlloyComponent, destroy: () => void) => void;
+  // We don't actually store the blocker, just a callback to delete it
+  setBlocker: (destroy: () => void) => void;
   clearBlocker: () => void;
   getBlocked: () => boolean;
   setBlocked: (blocked: boolean) => void;
 }
 
-const init = (): BlockingState => {
-  const blocker = Cell(Optional.none<{ actual: AlloyComponent; destroy: () => void }>());
+export const init = (): BlockingState => {
+  const blocker = Singleton.destroyable();
   const blocked = Cell(false);
 
   const readState = () => ({
-    blocker: blocker.get().map((comp) => comp.actual.element.dom as HTMLElement),
     blocked: blocked.get()
   });
-  const setBlocker = (actual: AlloyComponent, destroy: () => void) => {
-    clearBlocker();
-    blocker.set(Optional.some({ actual, destroy }));
+  const setBlocker = (destroy: () => void) => {
+    blocker.set({ destroy });
   };
-  const clearBlocker = () => {
-    blocker.get().each((blocker) => blocker.destroy());
-    blocker.set(Optional.none());
-  };
+  const clearBlocker = blocker.clear;
   const getBlocked = blocked.get;
   const setBlocked = blocked.set;
 
@@ -35,8 +30,4 @@ const init = (): BlockingState => {
     getBlocked,
     setBlocked
   });
-};
-
-export const BlockingState = {
-  init
 };

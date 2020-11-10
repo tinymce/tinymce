@@ -6,25 +6,8 @@
  */
 
 // DUPE with SilverDialog. Cleaning up.
-import {
-  AddEventsBehaviour,
-  AlloyEvents,
-  AlloyTriggers,
-  Behaviour,
-  Blocking,
-  Composing,
-  DomFactory,
-  Focusing,
-  GuiFactory,
-  Keying,
-  Memento,
-  NativeEvents,
-  Receiving,
-  Reflecting,
-  Replacing,
-  SimpleSpec,
-  SystemEvents
-} from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento,
+  NativeEvents, Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
@@ -74,28 +57,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
     () => instanceApi,
     {
       onBlock: (event) => {
-        Blocking.block(dialog, (bs) => ({
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-dialog__busy-spinner' ],
-            attributes: {
-              'aria-label': event.message
-            },
-            styles: {
-              left: '0px',
-              right: '0px',
-              bottom: '0px',
-              top: '0px',
-              position: 'absolute'
-            }
-          },
-          behaviours: bs,
-          components: [
-            {
-              dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
-            }
-          ]
-        }));
+        Blocking.block(dialog, (bs) => SilverDialogCommon.getBusySpec(event.message, bs));
       },
       onUnblock: () => {
         Blocking.unblock(dialog);
@@ -139,7 +101,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
         updateState,
         initialData: dialogInit
       }),
-      Focusing.config({}),
+      Focusing.config({ }),
       AddEventsBehaviour.config(
         'execute-on-form',
         dialogEvents.concat([

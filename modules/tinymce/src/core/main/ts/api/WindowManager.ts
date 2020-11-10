@@ -34,8 +34,8 @@ import { Dialog } from './ui/Ui';
  */
 
 export interface WindowParams {
-  inline?: 'cursor' | 'toolbar';
-  ariaAttrs?: unknown;
+  readonly inline?: 'cursor' | 'toolbar';
+  readonly ariaAttrs?: boolean;
 }
 
 interface WindowManager {

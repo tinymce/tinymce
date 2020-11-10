@@ -5,20 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import {
-  AlloyComponent,
-  AlloyEvents,
-  AlloyParts,
-  AlloySpec,
-  AlloyTriggers,
-  Behaviour,
-  DomFactory,
-  GuiFactory,
-  ModalDialog,
-  Receiving,
-  Reflecting,
-  SystemEvents
-} from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Receiving,
+  Reflecting, SystemEvents } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 
@@ -49,31 +37,31 @@ const getHeader = (title: string, backstage: UiFactoryBackstage) => renderModalH
   draggable: backstage.dialog.isDraggableModal()
 }, backstage.shared.providers);
 
+const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBehaviour<any, any, any>>) => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-dialog__busy-spinner' ],
+    attributes: {
+      'aria-label': message
+    },
+    styles: {
+      left: '0px',
+      right: '0px',
+      bottom: '0px',
+      top: '0px',
+      position: 'absolute'
+    }
+  },
+  behaviours: bs,
+  components: [{
+    dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+  }]
+});
+
 const getEventExtras = (lazyDialog: () => AlloyComponent, extra: WindowExtra) => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    ModalDialog.setBusy(lazyDialog(), (bs) => ({
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-dialog__busy-spinner' ],
-        attributes: {
-          'aria-label': blockEvent.message
-        },
-        styles: {
-          left: '0px',
-          right: '0px',
-          bottom: '0px',
-          top: '0px',
-          position: 'absolute'
-        }
-      },
-      behaviours: bs,
-      components: [
-        {
-          dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
-        }
-      ]
-    }));
+    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs));
   },
   onUnblock: () => {
     ModalDialog.setIdle(lazyDialog());
@@ -101,8 +89,8 @@ const renderModalDialog = (spec: DialogSpec, initialData, dialogEvents: AlloyEve
     dialogEvents,
     eventOrder: {
       [SystemEvents.receive()]: [ Reflecting.name(), Receiving.name() ],
-      [SystemEvents.attachedToDom()]: [ 'scroll-lock', 'reflecting', 'messages', 'dialog-events', 'alloy.base.behaviour' ],
-      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', 'reflecting', 'scroll-lock' ]
+      [SystemEvents.attachedToDom()]: [ 'scroll-lock', Reflecting.name(), 'messages', 'dialog-events', 'alloy.base.behaviour' ],
+      [SystemEvents.detachedFromDom()]: [ 'alloy.base.behaviour', 'dialog-events', 'messages', Reflecting.name(), 'scroll-lock' ]
     }
   }));
 };
@@ -143,6 +131,7 @@ const extractCellsToObject = (buttons: (StoragedMenuButton | Dialog.DialogFooter
   }, {});
 
 export {
+  getBusySpec,
   getHeader,
   getEventExtras,
   renderModalDialog,

@@ -17,6 +17,22 @@ export default () => {
   const body = SugarBody.body();
   Attachment.attachSystem(body, gui);
 
+  // Used below in specs
+  const spinnerDom = {
+    tag: 'div',
+    classes: [ 'tox-dialog__busy-spinner' ],
+    attributes: {
+      'aria-label': 'It blocked yo'
+    },
+    styles: {
+      left: '0px',
+      right: '0px',
+      bottom: '0px',
+      top: '0px',
+      position: 'absolute'
+    }
+  };
+
   HtmlDisplay.section(
     gui,
     'Blocking',
@@ -33,30 +49,15 @@ export default () => {
           },
           events: AlloyEvents.derive([
             AlloyEvents.run(NativeEvents.click(), (comp) => {
-              const parent = Result.fromOption(Traverse.parent(comp.element), new Error('No parent'));
-              const parentComp = parent.bind((parent) => comp.getSystem().getByDom(parent));
+              const parent = Traverse.parent(comp.element);
+              const parentComp = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
               parentComp.each((parent) => {
                 Blocking.block(parent, (bs) => ({
-                  dom: {
-                    tag: 'div',
-                    classes: [ 'tox-dialog__busy-spinner' ],
-                    attributes: {
-                      'aria-label': 'It blocked yo'
-                    },
-                    styles: {
-                      left: '0px',
-                      right: '0px',
-                      bottom: '0px',
-                      top: '0px',
-                      position: 'absolute'
-                    }
-                  },
+                  dom: spinnerDom,
                   behaviours: bs,
-                  components: [
-                    {
-                      dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
-                    }
-                  ]
+                  components: [{
+                    dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
+                  }]
                 }));
               });
             })
