@@ -8,36 +8,43 @@ import { SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 //       resize bars ('parent') and so will listen to events from both (eg, iframe mode)
 // origin: the offset for the point to display the bars in the appropriate position
 
+type CanResizeCallback = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean;
+
 export interface ResizeWire {
   parent: () => SugarElement;
   view: () => SugarElement;
   origin: () => SugarPosition;
+  canResize: CanResizeCallback;
 }
 
-const only = function (element: SugarElement): ResizeWire {
+
+const only = function (element: SugarElement, canResize: CanResizeCallback): ResizeWire {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
   const parent = Optional.from(element.dom.documentElement).map(SugarElement.fromDom).getOr(element);
   return {
     parent: Fun.constant(parent),
     view: Fun.constant(element),
-    origin: Fun.constant(SugarPosition(0, 0))
+    origin: Fun.constant(SugarPosition(0, 0)),
+    canResize
   };
 };
 
-const detached = function (editable: SugarElement, chrome: SugarElement): ResizeWire {
+const detached = function (editable: SugarElement, chrome: SugarElement, canResize: CanResizeCallback): ResizeWire {
   const origin = () => SugarLocation.absolute(chrome);
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
-    origin
+    origin,
+    canResize
   };
 };
 
-const body = function (editable: SugarElement, chrome: SugarElement): ResizeWire {
+const body = function (editable: SugarElement, chrome: SugarElement, canResize: CanResizeCallback): ResizeWire {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
-    origin: Fun.constant(SugarPosition(0, 0))
+    origin: Fun.constant(SugarPosition(0, 0)),
+    canResize
   };
 };
 

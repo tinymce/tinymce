@@ -126,7 +126,6 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       adjustment(table, out.grid, tableSizing);
       postAction(table);
       Bars.refresh(wire, table);
-      // Bars.refresh(wire, table, Fun.always);
       return Optional.some({
         cursor: out.cursor,
         newRows: newElements.newRows,

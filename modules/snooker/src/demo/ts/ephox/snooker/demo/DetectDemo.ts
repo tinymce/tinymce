@@ -1,4 +1,4 @@
-import { Obj, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
@@ -129,10 +129,11 @@ Ready.execute(function () {
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
   const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
-  const canResize = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeBehaviour.preserveTable(), lazyTableSize, canResize);
+  // const canResize = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
+  const canResize = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => Arr.forall([ table, elm ], (el) => Attribute.get(el, 'data-mce-resize') !== 'false');
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs, canResize), ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeBehaviour.preserveTable(), lazyTableSize, canResize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls, canResize), ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.
@@ -245,7 +246,7 @@ Ready.execute(function () {
         // wire, table, target, generators, direction
         const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
-        operation(ResizeWire.only(ephoxUi), table, target, generators, tableSize);
+        operation(ResizeWire.only(ephoxUi, canResize), table, target, generators, tableSize);
       });
     };
   };

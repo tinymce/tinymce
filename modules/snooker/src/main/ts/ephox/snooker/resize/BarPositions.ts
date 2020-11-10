@@ -4,11 +4,13 @@ import { Direction, Height, SugarElement, SugarLocation, Width } from '@ephox/su
 export interface RowInfo {
   readonly row: number;
   readonly y: number;
+  readonly cell: SugarElement<HTMLTableCellElement>;
 }
 
 export interface ColInfo {
   readonly col: number;
   readonly x: number;
+  readonly cell: SugarElement;
 }
 
 export interface BarPositions<T> {
@@ -17,14 +19,16 @@ export interface BarPositions<T> {
   readonly positions: (array: Optional<SugarElement>[], table: SugarElement) => Optional<T>[];
 }
 
-const rowInfo = (row: number, y: number): RowInfo => ({
+const rowInfo = (row: number, y: number, cell: SugarElement): RowInfo => ({
   row,
-  y
+  y,
+  cell
 });
 
-const colInfo = (col: number, x: number): ColInfo => ({
+const colInfo = (col: number, x: number, cell: SugarElement): ColInfo => ({
   col,
-  x
+  x,
+  cell
 });
 
 const rtlEdge = function (cell: SugarElement) {
@@ -37,11 +41,11 @@ const ltrEdge = function (cell: SugarElement) {
 };
 
 const getLeftEdge = function (index: number, cell: SugarElement) {
-  return colInfo(index, ltrEdge(cell));
+  return colInfo(index, ltrEdge(cell), cell);
 };
 
 const getRightEdge = function (index: number, cell: SugarElement) {
-  return colInfo(index, rtlEdge(cell));
+  return colInfo(index, rtlEdge(cell), cell);
 };
 
 const getTop = function (cell: SugarElement) {
@@ -49,11 +53,11 @@ const getTop = function (cell: SugarElement) {
 };
 
 const getTopEdge = function (index: number, cell: SugarElement) {
-  return rowInfo(index, getTop(cell));
+  return rowInfo(index, getTop(cell), cell);
 };
 
 const getBottomEdge = function (index: number, cell: SugarElement) {
-  return rowInfo(index, getTop(cell) + Height.getOuter(cell));
+  return rowInfo(index, getTop(cell) + Height.getOuter(cell), cell);
 };
 
 const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]) {
