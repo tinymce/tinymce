@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
@@ -125,8 +125,8 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
       adjustment(table, out.grid, tableSizing);
       postAction(table);
-      // Bars.refresh(wire, table);
-      Bars.refresh(wire, table, Fun.always);
+      Bars.refresh(wire, table);
+      // Bars.refresh(wire, table, Fun.always);
       return Optional.some({
         cursor: out.cursor,
         newRows: newElements.newRows,

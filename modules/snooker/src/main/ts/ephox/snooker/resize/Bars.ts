@@ -35,22 +35,29 @@ const destroy = function (wire: ResizeWire) {
   Arr.each(previous, Remove.remove);
 };
 
-const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement) {
+const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement | null) {
   const origin = wire.origin();
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
       const bar = create(origin, cp);
-      Class.add(bar, resizeBar);
-      Insert.append(wire.parent(), bar);
+      if (bar !== null) {
+        Class.add(bar, resizeBar);
+        Insert.append(wire.parent(), bar);
+      }
     });
   });
 };
 
-const refreshCol = function (wire: ResizeWire, colPositions: Optional<BarPositions.ColInfo>[], position: SugarPosition, tableHeight: number) {
+const refreshCol = function (wire: ResizeWire, colPositions: Optional<BarPositions.ColInfo>[], position: SugarPosition, tableHeight: number, ignore: number[]) {
   drawBar(wire, colPositions, function (origin, cp) {
-    const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
-    Class.add(colBar, resizeColBar);
-    return colBar;
+    // Maybe instead of just not including the class, don't render it at all
+    if (Arr.forall(ignore, (ignoreIndex) => ignoreIndex !== cp.col)) {
+      const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
+      Class.add(colBar, resizeColBar);
+      return colBar;
+    } else {
+      return null;
+    }
   });
 };
 
@@ -62,23 +69,34 @@ const refreshRow = function (wire: ResizeWire, rowPositions: Optional<BarPositio
   });
 };
 
-const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[]) {
+const refreshGrid = function (wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[], ignore?: Ignore) {
   const position = SugarLocation.absolute(table);
   const rowPositions = rows.length > 0 ? BarPositions.height.positions(rows, table) : [];
   refreshRow(wire, rowPositions, position, Width.getOuter(table));
 
+  // Filter colPositions
   const colPositions = cols.length > 0 ? BarPositions.width.positions(cols, table) : [];
-  refreshCol(wire, colPositions, position, Height.getOuter(table));
+  refreshCol(wire, colPositions, position, Height.getOuter(table), ignore?.columns || []);
 };
 
-const refresh = function (wire: ResizeWire, table: SugarElement, canResize: (elm: SugarElement<Element>) => boolean) {
+// Could I have an extra parameter to specify if any cols or rows should be ignored?
+interface Ignore {
+  rows: number[];
+  columns: number[];
+}
+
+const refresh = function (wire: ResizeWire, table: SugarElement, ignore?: Ignore) {
   destroy(wire);
 
   const warehouse = Warehouse.fromTable(table);
+  Warehouse.findItem(warehouse, );
   const rows = Blocks.rows(warehouse);
   const cols = Blocks.columns(warehouse);
 
-  refreshGrid(wire, table, rows, cols);
+  // How do I check/know which bar was hovered over?
+  // Need that to get the column index so I check those cells and see if they are resizable
+
+  refreshGrid(wire, table, rows, cols, ignore);
 };
 
 const each = function (wire: ResizeWire, f: (bar: SugarElement, idx: number) => void) {

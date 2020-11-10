@@ -1,5 +1,5 @@
 import { Dragger } from '@ephox/dragster';
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Optionals, Fun, Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Attribute, Class, Compare, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { findClosestContentEditable, isContentEditableTrue } from '../alien/ContentEditable';
@@ -46,7 +46,8 @@ const canResizeRow = (table: SugarElement<HTMLTableElement>, rowIndex: number, c
   return editableRow && editableCells;
 };
 
-// Should I also check colgroup element if it exists?
+// Should I also check colgroup element if it exists - NO?
+// Should it be one or of the other - col or all cells
 const canResizeColumn = (table: SugarElement<HTMLTableElement>, columnIndex: number, canResize: (elm: SugarElement<Element>) => boolean) => {
   const warehouse = Warehouse.fromTable(table);
   const editableCol = Warehouse.getColumnAt(warehouse, columnIndex).map((col) => col.element).forall(canResize);
@@ -60,7 +61,7 @@ export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElem
   const resizing = Dragger.transform(mutation, {});
 
   let hoverTable = Optional.none<SugarElement<HTMLTableElement>>();
-  // let hoverBar = Optional.none<SugarElement<HTMLDivElement>>();
+  let hoverBar = Optional.none<SugarElement<HTMLDivElement>>();
 
   const getResizer = function (element: SugarElement, type: string) {
     return Optional.from(Attribute.get(element, type));
@@ -101,7 +102,8 @@ export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElem
           events.trigger.adjustWidth(table, delta, parseInt(column, 10));
         });
 
-        Bars.refresh(wire, table, canResize);
+        // Bars.refresh(wire, table, canResize);
+        Bars.refresh(wire, table);
       });
     });
 
@@ -148,9 +150,9 @@ export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElem
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
   const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
-    // if (Bars.isRowBar(event.target) || Bars.isColBar(event.target)) {
-    //   hoverBar = Optional.some(event.target);
-    // }
+    if (Bars.isRowBar(event.target) || Bars.isColBar(event.target)) {
+      hoverBar = Optional.some(event.target);
+    }
     findClosestEditableTable(event.target).fold(
       () => {
         /*
@@ -164,7 +166,14 @@ export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElem
       },
       (table) => {
         hoverTable = Optional.some(table);
-        Bars.refresh(wire, table, canResize);
+        const ignoreColumns = hoverBar.filter((bar) => Bars.isColBar(bar) && !isColBarMoveable(bar, hoverTable)).bind((bar) => getResizer(bar, 'data-column').map((str) => parseInt(str, 10))).toArray();
+        console.log(ignoreColumns, hoverBar.getOrNull()?.dom);
+        const ignoreRows = hoverBar.filter((bar) => Bars.isRowBar(bar) && !isRowBarMoveable(bar, hoverTable)).bind((bar) => getResizer(bar, 'data-row').map((str) => parseInt(str, 10))).toArray();
+        const ignore = {
+          columns: ignoreColumns,
+          rows: ignoreRows
+        };
+        Bars.refresh(wire, table, ignore);
       }
     );
   });
@@ -177,7 +186,7 @@ export const BarManager = function (wire: ResizeWire, canResize: (elm: SugarElem
   };
 
   const refresh = function (tbl: SugarElement) {
-    Bars.refresh(wire, tbl, canResize);
+    Bars.refresh(wire, tbl);
   };
 
   const events = Events.create({

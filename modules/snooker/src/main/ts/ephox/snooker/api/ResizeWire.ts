@@ -41,6 +41,8 @@ const body = function (editable: SugarElement, chrome: SugarElement): ResizeWire
   };
 };
 
+// TODO: attach callback to wire?
+
 export const ResizeWire = {
   only,
   detached,
