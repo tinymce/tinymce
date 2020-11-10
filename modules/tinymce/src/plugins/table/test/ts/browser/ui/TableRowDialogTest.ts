@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
     events.push(event);
   };
 
-  const sClearEvents = () => Step.sync(() => events = []);
+  const sClearEvents = Step.sync(() => events = []);
 
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>'),
       sAssertEvents(),
-      sClearEvents()
+      sClearEvents
     ]);
 
     const captionTest = () => Log.stepsAsStep('TBA', 'Table: Caption should always stay the firstChild of the table (see TINY-1167)', [
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>'),
       sAssertEvents(),
-      sClearEvents()
+      sClearEvents
     ]);
 
     const advGetTest = () => Log.stepsAsStep('TBA', 'Table: Table row properties dialog (get data from complex row)', [
@@ -152,7 +152,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           '</table>'
       ),
       sAssertEvents(),
-      sClearEvents()
+      sClearEvents
     ]);
 
     const advRemoveTest = () => Log.stepsAsStep('TBA', 'Table: Remove all advanced styles through the style field', [
@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           '</table>'
       ),
       sAssertEvents(),
-      sClearEvents()
+      sClearEvents
     ]);
 
     const multiUpdateTest = () => {
@@ -240,7 +240,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(newHtml),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 
@@ -275,7 +275,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(expectedHtml),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 

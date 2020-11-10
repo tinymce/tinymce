@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
     events.push(event);
   };
 
-  const sClearEvents = () => Step.sync(() => events = []);
+  const sClearEvents = Step.sync(() => events = []);
 
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sApplyCellStyle(editor, { backgroundColor: 'zzz' }),
         sAssertTableCellStructure(),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing single style`, [
         sAssertEvents([]),
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
           'tablemodified',
           'tablemodified'
         ]),
-        sClearEvents()
+        sClearEvents
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing multiple styles`, [
         sAssertEvents([]),
@@ -151,7 +151,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
           'tablemodified',
           'tablemodified'
         ]),
-        sClearEvents()
+        sClearEvents
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing multiple styles with kebab-case`, [
         sAssertEvents([]),
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
           'tablemodified',
           'tablemodified'
         ]),
-        sClearEvents()
+        sClearEvents
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying and removing all valid styles`, [
         sAssertEvents([]),
@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
           'tablemodified',
           'tablemodified'
         ]),
-        sClearEvents()
+        sClearEvents
       ])
     ], onSuccess, onFailure);
   }, {

@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     events.push(event);
   };
 
-  const sClearEvents = () => Step.sync(() => events = []);
+  const sClearEvents = Step.sync(() => events = []);
 
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       TableTestUtils.sClickDialogButton('close dialog', true),
       tinyApis.sAssertContent('<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>'),
       sAssertEvents(),
-      sClearEvents()
+      sClearEvents
     ]);
 
     const advGetTest = () => {
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 
@@ -211,7 +211,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sClickDialogButton('submit', true),
         tinyApis.sAssertContent(newHtml),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 
@@ -257,7 +257,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(emptyTable),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 
@@ -314,7 +314,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('click cancel', false),
         sAssertEvents([]),
-        sClearEvents(),
+        sClearEvents,
         tinyApis.sAssertContent(noSelectBaseHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(baseAdvData, true, generalSelectors),
@@ -324,7 +324,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
         sAssertEvents(),
-        sClearEvents()
+        sClearEvents
       ]);
     };
 
