@@ -22,16 +22,22 @@
   top: 0;
   touch-action: pinch-zoom;
   width: 100%;
+}
 
-  .tox.tox-tinymce.tox-fullscreen .tox-statusbar__resize-handle {
-    display: none;
-  }
+.tox.tox-tinymce.tox-fullscreen .tox-statusbar__resize-handle {
+  display: none;
+}
 
-  .tox.tox-tinymce.tox-fullscreen {
-    z-index: @z-index-fullscreen;
-  }
+.tox.tox-tinymce.tox-fullscreen {
+  z-index: @z-index-fullscreen;
+}
 
-  .tox.tox-tinymce-aux {
-    z-index: @z-index-fullscreen + 1;
-  }
+.tox-shadowhost.tox-fullscreen {
+  z-index: @z-index-fullscreen;
+}
+
+// Body and ShadowDom support
+.tox-fullscreen .tox.tox-tinymce-aux,
+.tox-fullscreen ~ .tox.tox-tinymce-aux {
+  z-index: @z-index-fullscreen + 1;
 }
