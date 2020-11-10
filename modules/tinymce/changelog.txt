@@ -10,6 +10,7 @@ Version 5.6.0 (TBD)
     Fixed `DOMUtils.getParents` incorrectly including the shadow root in the array of elements returned #TINY-6540
     Fixed an issue where the root document could be scrolled while an editor dialog was open inside a shadow root #TINY-6363
     Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
+    Fixed nested tables with `colgroup` elements incorrectly always resizing the inner table #TINY-6623
     Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282
     Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541
     Fixed font size keywords such as `medium` not displaying correctly in font size menus #TINY-6291
