@@ -1,7 +1,8 @@
-import { ApproxStructure, Log, Pipeline, Step } from '@ephox/agar';
+import { ApproxStructure, Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -10,6 +11,18 @@ import * as TableTestUtils from '../../module/test/TableTestUtils';
 UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandTest', (success, failure) => {
   Plugin();
   SilverTheme();
+
+  let events = [];
+  const logEvent = (event: EditorEvent<{}>) => {
+    events.push(event.type);
+  };
+
+  const sClearEvents = () => Step.sync(() => events = []);
+
+  const defaultEvents = [ 'tablemodified' ];
+  const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
+    Assertions.assertEq('Expected events should have been fired', expectedEvents, events);
+  });
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -68,29 +81,39 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
     Pipeline.async({}, [
       tinyApis.sFocus(),
       Log.stepsAsStep('TINY-6004', `Apply command on empty editor`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(''),
         sApplyCellStyle(editor, { backgroundColor: 'red' }),
-        tinyApis.sAssertContent('')
+        tinyApis.sAssertContent(''),
+        sAssertEvents([])
       ]),
       Log.stepsAsStep('TINY-6004', `Apply command to a cell without any styles specified`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, {}),
-        sAssertTableCellStructure()
+        sAssertTableCellStructure(),
+        sAssertEvents([])
       ]),
       Log.stepsAsStep('TINY-6004', `Apply command to a cell with invalid style specified`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { zzzz: 'red' }),
-        sAssertTableCellStructure()
+        sAssertTableCellStructure(),
+        sAssertEvents([])
       ]),
       Log.stepsAsStep('TINY-6004', `Apply command to a cell with invalid style value specified`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { backgroundColor: 'zzz' }),
-        sAssertTableCellStructure()
+        sAssertTableCellStructure(),
+        sAssertEvents(),
+        sClearEvents()
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing single style`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { backgroundColor: 'red' }),
@@ -98,9 +121,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sApplyCellStyle(editor, { backgroundColor: 'blue' }),
         sAssertTableCellStructure({ 'background-color': 'blue' }),
         sApplyCellStyle(editor, { backgroundColor: '' }),
-        sAssertTableCellStructure()
+        sAssertTableCellStructure(),
+        sAssertEvents([
+          'tablemodified',
+          'tablemodified',
+          'tablemodified'
+        ]),
+        sClearEvents()
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing multiple styles`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { backgroundColor: 'red', borderColor: 'orange' }),
@@ -108,9 +138,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sApplyCellStyle(editor, { borderColor: 'blue' }),
         sAssertTableCellStructure({ 'background-color': 'red', 'border-color': 'blue' }),
         sApplyCellStyle(editor, { backgroundColor: '' }),
-        sAssertTableCellStructure({ 'border-color': 'blue' })
+        sAssertTableCellStructure({ 'border-color': 'blue' }),
+        sAssertEvents([
+          'tablemodified',
+          'tablemodified',
+          'tablemodified'
+        ]),
+        sClearEvents()
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying, changing and removing multiple styles with kebab-case`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { 'background-color': 'red', 'border-color': 'orange' }),
@@ -118,9 +155,16 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sApplyCellStyle(editor, { 'border-color': 'blue' }),
         sAssertTableCellStructure({ 'background-color': 'red', 'border-color': 'blue' }),
         sApplyCellStyle(editor, { 'background-color': '' }),
-        sAssertTableCellStructure({ 'border-color': 'blue' })
+        sAssertTableCellStructure({ 'border-color': 'blue' }),
+        sAssertEvents([
+          'tablemodified',
+          'tablemodified',
+          'tablemodified'
+        ]),
+        sClearEvents()
       ]),
       Log.stepsAsStep('TINY-6004', `Test applying and removing all valid styles`, [
+        sAssertEvents([]),
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
         sApplyCellStyle(editor, { backgroundColor: 'red', borderColor: 'orange', borderStyle: 'dashed', borderWidth: '5px' }),
@@ -128,13 +172,22 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sApplyCellStyle(editor, {}),
         sAssertTableCellStructure({ 'background-color': 'red', 'border-color': 'orange', 'border-style': 'dashed', 'border-width': '5px' }),
         sApplyCellStyle(editor, { backgroundColor: '', borderColor: '', borderStyle: '', borderWidth: '' }),
-        sAssertTableCellStructure()
+        sAssertTableCellStructure(),
+        sAssertEvents([
+          'tablemodified',
+          'tablemodified',
+          'tablemodified'
+        ]),
+        sClearEvents()
       ])
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
     theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor: Editor) => {
+      editor.on('tablemodified', logEvent);
+    }
   }, success, failure);
 });
 

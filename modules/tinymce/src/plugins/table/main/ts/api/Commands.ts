@@ -169,6 +169,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   // Remove cell style using command (an empty string indicates to remove the style)
   // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: '' })
   editor.addCommand('mceTableApplyCellStyle', (_ui: boolean, args: Record<string, string>) => {
+    const getFormatName = (style: string) => 'tablecell' + style.toLowerCase().replace('-', '');
+
     if (!Type.isObject(args)) {
       return;
     }
@@ -178,13 +180,17 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    Obj.each(args, (value, style) => {
-      const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
-      if (editor.formatter.has(formatName) && Type.isString(value)) {
-        Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell.dom).setFormat(formatName, value);
-        });
-      }
+    const validArgs = Obj.filter(args, (value, style) =>
+      editor.formatter.has(getFormatName(style)) && Type.isString(value)
+    );
+    if (Obj.isEmpty(validArgs)) {
+      return;
+    }
+
+    Obj.each(validArgs, (value, style) => {
+      Arr.each(cells, (cell) => {
+        DomModifier.normal(editor, cell.dom).setFormat(getFormatName(style), value);
+      });
     });
 
     Events.fireTableModified(editor, { structure: false, style: true });
@@ -193,4 +199,3 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 };
 
 export { registerCommands };
-
