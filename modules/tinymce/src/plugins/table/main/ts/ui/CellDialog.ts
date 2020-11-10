@@ -12,6 +12,7 @@ import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
+import { fireTableModified } from '../api/Events';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
@@ -74,7 +75,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
-    getSelectedCells(cells).each((selectedCells) =>
+    getSelectedCells(cells).each((selectedCells) => {
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
         const cellElement = item.element;
@@ -105,7 +106,9 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
         if (data.valign) {
           Styles.applyVAlign(editor, cellElm, data.valign);
         }
-      }));
+      });
+    });
+    fireTableModified(editor);
   }
 };
 
