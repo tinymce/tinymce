@@ -53,7 +53,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     behaviours: Behaviour.derive([
       ComposingConfigs.self(),
       Disabling.config({
-        disabled: () => spec.disabled || providerBackstage.isReadOnly()
+        disabled: () => spec.disabled || providerBackstage.isDisabled()
       }),
       Tabstopping.config({}),
       Focusing.config({ }),
@@ -119,7 +119,7 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     ],
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providerBackstage.isReadOnly(),
+        disabled: () => spec.disabled || providerBackstage.isDisabled(),
         disableClass: 'tox-checkbox--disabled',
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);

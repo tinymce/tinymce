@@ -72,6 +72,28 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     }
   });
 
+  suite.test('TINY-6555: click on ce=false body should not show offscreen selection', (editor) => {
+    const body = editor.getBody();
+    editor.setContent(
+      '<table contenteditable="true" style="width: 100%; table-layout: fixed">' +
+      '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+      '</table>'
+    );
+    editor.getBody().contentEditable = 'false';
+
+    const rect = editor.dom.getRect(body);
+    editor.fire('mousedown', {
+      target: body as EventTarget,
+      clientX: rect.x,
+      clientY: rect.y
+    } as MouseEvent);
+
+    const offscreenElements = editor.dom.select('.mce-offscreen-selection');
+    ok(offscreenElements.length === 0, 'No offscreen element shown');
+
+    editor.getBody().contentEditable = 'true';
+  });
+
   suite.test('set range after ce=false element but lean backwards', function (editor) {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 

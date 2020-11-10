@@ -49,7 +49,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: sharedBackstage.providers.isReadOnly
+        disabled: sharedBackstage.providers.isDisabled
       }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),

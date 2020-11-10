@@ -103,6 +103,7 @@ const walk = <E, D> (
 
     state = state
       .bind((state) => getNextStep(universe, viewport, state))
+      .filter(shouldContinue)
       .bind((traverse) => Gather.walk(universe, traverse.item, traverse.mode, Gather.walkers().right()))
       .filter(shouldContinue);
   }

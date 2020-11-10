@@ -22,6 +22,8 @@ export interface ResizeHandler {
   destroy: () => void;
 }
 
+const barResizerPrefix = 'bar-';
+
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Optional.none<Range>();
   let resize = Optional.none<TableResize>();
@@ -51,6 +53,12 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     // Origin will tell us which handle was clicked, eg corner-se or corner-nw
     // so check to see if it ends with `e` (eg east edge)
     const isRightEdgeResize = Strings.endsWith(origin, 'e');
+
+    // Responsive tables don't have a width so we need to convert it to a relative/percent
+    // table instead, as that's closer to responsive sizing than fixed sizing
+    if (startRawW === '') {
+      enforcePercentage(editor, table);
+    }
 
     // Adjust the column sizes and update the table width to use the right sizing, if the table changed size.
     // This is needed as core will always use pixels when setting the width.
@@ -101,7 +109,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
 
       sz.events.beforeResize.bind(function (event) {
         const rawTable = event.table.dom;
-        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), 'bar-' + event.type);
+        Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
       });
 
       sz.events.afterResize.bind(function (event) {
@@ -114,7 +122,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
           editor.focus();
         });
 
-        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), 'bar-' + event.type);
+        Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
         editor.undoManager.add();
       });
 
@@ -139,6 +147,12 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
         enforcePercentage(editor, table);
       }
 
+      // TINY-6601: If resizing using a bar, then snooker will base the resizing on the initial size. So
+      // when using a responsive table we need to ensure we convert to a relative table before resizing
+      if (Sizes.isNoneSizing(table) && Strings.startsWith(e.origin, barResizerPrefix)) {
+        enforcePercentage(editor, table);
+      }
+
       startW = e.width;
       startRawW = Settings.isResponsiveForced(editor) ? '' : Util.getRawWidth(editor, targetElm).getOr('');
     }
@@ -148,12 +162,6 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     const targetElm = e.target;
     if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
-
-      // Responsive tables don't have a width so we need to convert it to a relative/percent
-      // table instead, as that's closer to responsive sizing than fixed sizing
-      if (startRawW === '') {
-        enforcePercentage(editor, table);
-      }
 
       // Resize based on the snooker logic to adjust the individual col/rows if resized from a corner
       const origin = e.origin;

@@ -27,6 +27,7 @@ export interface NestedFormatting {
 }
 
 interface CommonStyleFormat {
+  name?: string;
   title: string;
   icon?: string;
 }

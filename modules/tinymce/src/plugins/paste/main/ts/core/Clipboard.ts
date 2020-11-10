@@ -127,7 +127,7 @@ const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement) => {
 };
 
 const extractFilename = (editor: Editor, str: string) => {
-  const m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
+  const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
   return m ? editor.dom.encode(m[1]) : null;
 };
 
@@ -282,7 +282,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  function insertClipboardContent(clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
+  function insertClipboardContent(editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
     let content;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
@@ -304,7 +304,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     pasteBin.remove();
 
     const isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
-    const isImage = SmartPaste.isImageUrl(content);
+    const isImage = SmartPaste.isImageUrl(editor, content);
 
     // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
     // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
@@ -389,10 +389,10 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
         internal = InternalHtml.isMarked(clipboardContent['text/html']);
       }
 
-      insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
+      insertClipboardContent(editor, clipboardContent, isKeyBoardPaste, plainTextMode, internal);
     } else {
       Delay.setEditorTimeout(editor, function () {
-        insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
+        insertClipboardContent(editor, clipboardContent, isKeyBoardPaste, plainTextMode, internal);
       }, 0);
     }
   });

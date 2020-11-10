@@ -13,7 +13,7 @@ import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/For
 import { bodySendMessageChannel } from './DialogChannels';
 
 const getUrlDialogApi = (root: AlloyComponent): Dialog.UrlDialogInstanceApi => {
-  const withRoot = <T>(f: (r: AlloyComponent) => void): void => {
+  const withRoot = (f: (r: AlloyComponent) => void): void => {
     if (root.getSystem().isConnected()) {
       f(root);
     }

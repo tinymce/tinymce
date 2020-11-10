@@ -1,10 +1,14 @@
-import { ApproxStructure, Chain, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Chain, Log, NamedChain, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Optional, OptionalInstances } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Class, Css, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import * as Readonly from 'tinymce/core/mode/Readonly';
+
+const tOptional = OptionalInstances.tOptional;
 
 UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
   Theme();
@@ -12,6 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
 
   TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
     const tinyApis = TinyApis(editor);
+    const eDoc = SugarElement.fromDom(editor.getDoc());
 
     const sSetMode = (mode: string) => Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
       editor.mode.set(mode);
@@ -75,6 +80,12 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         Assert.eq('Button should have expected disabled state', expectedState, Class.has(elm, 'tox-tbtn--disabled'));
       })
     ]);
+
+    const sAssertHrefOpt = (selector: string, expectedHref: Optional<string>) => Step.sync(() => {
+      const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
+      const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
+      Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
+    });
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Swiching to readonly mode while having cef selection should remove fake selection', [
@@ -223,6 +234,56 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         UiFinder.sWaitFor('Waited for menu', SugarBody.body(), '.tox-menu'),
         sSetMode('readonly'),
         UiFinder.sNotExists(SugarBody.body(), '.tox-menu')
+      ]),
+      Log.stepsAsStep('TINY-6248', 'getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', [
+        tinyApis.sSetContent('<p><a href="https://tiny.cloud">external link</a></p>'),
+        sAssertHrefOpt('a', Optional.some('https://tiny.cloud')),
+        tinyApis.sSetContent('<p><a>external link with no href</a></p>'),
+        sAssertHrefOpt('a', Optional.none()),
+        tinyApis.sSetContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>'),
+        sAssertHrefOpt('img', Optional.some('https://tiny.cloud'))
+      ]),
+      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with id', [
+        sSetMode('design'),
+        Step.sync(() => editor.resetContent()),
+        sSetMode('readonly'),
+        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>'),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.write(
+              'yPos',
+              Chain.mapper(() => Scroll.get(eDoc).top),
+            ),
+            NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
+            NamedChain.read('anchor', Mouse.cClick),
+            NamedChain.read('yPos', Chain.op((yPos) => {
+              const newPos = Scroll.get(eDoc).top;
+              Assert.eq('assert yPos has changed i.e. has scrolled', true, yPos !== newPos);
+            }))
+          ])
+        ])
+      ]),
+      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with name', [
+        sSetMode('design'),
+        Step.sync(() => editor.resetContent()),
+        sSetMode('readonly'),
+        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>'),
+        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
+          NamedChain.asChain([
+            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
+            NamedChain.write(
+              'yPos',
+              Chain.mapper(() => Scroll.get(eDoc).top),
+            ),
+            NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
+            NamedChain.read('anchor', Mouse.cClick),
+            NamedChain.read('yPos', Chain.op((yPos) => {
+              const newPos = Scroll.get(eDoc).top;
+              Assert.eq('assert yPos has changed i.e. has scrolled', true, yPos !== newPos);
+            }))
+          ])
+        ])
       ])
     ], onSuccess, onFailure);
   }, {

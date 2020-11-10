@@ -29,7 +29,7 @@ UnitTest.test('DomDefinitionTest', () => {
   // test became a lot less useful. Therefore, we'll just test a few
   // properties
 
-  const arbOptionOf = <T>(arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
+  const arbOptionOf = (arb: any) => Jsc.tuple([ Jsc.bool, arb ]).smap(
     (arr: [boolean, string]) => arr[0] ? Optional.some(arr[1]) : Optional.none(),
     (opt: Optional<string>) => opt.fold(
       () => [ false, '' ],

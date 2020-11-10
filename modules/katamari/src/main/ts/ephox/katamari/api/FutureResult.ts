@@ -73,27 +73,27 @@ const wrap = function <A = any, E = any> (delegate: Future<Result<A, E>>): Futur
   };
 };
 
-const nu = function <A = any, E = any> (worker: (completer: (result: Result<A, E>) => void) => void) {
+const nu = function <A = any, E = any> (worker: (completer: (result: Result<A, E>) => void) => void): FutureResult<A, E> {
   return wrap(Future.nu(worker));
 };
 
-const value = function <A, E = any> (value: A) {
+const value = function <A, E = any> (value: A): FutureResult<A, E> {
   return wrap(Future.pure(Result.value(value)));
 };
 
-const error = function <A = any, E = any> (error: E) {
+const error = function <A = any, E = any> (error: E): FutureResult<A, E> {
   return wrap(Future.pure(Result.error(error)));
 };
 
-const fromResult = function <A, E> (result: Result<A, E>) {
+const fromResult = function <A, E> (result: Result<A, E>): FutureResult<A, E> {
   return wrap(Future.pure(result));
 };
 
-const fromFuture = function <A, E = any> (future: Future<A>) {
+const fromFuture = function <A, E = any> (future: Future<A>): FutureResult<A, E> {
   return wrap(future.map(Result.value));
 };
 
-const fromPromise = function <T, E = any> (promise: Promise<T>) {
+const fromPromise = function <T, E = any> (promise: Promise<T>): FutureResult<T, E> {
   return nu(function (completer: (result: Result<T, E>) => void) {
     promise.then(function (value) {
       completer(Result.value(value));

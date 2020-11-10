@@ -70,6 +70,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
   return removeUndefined<DomParserSettings>({
     allow_conditional_comments: settings.allow_conditional_comments,
     allow_html_data_urls: settings.allow_html_data_urls,
+    allow_svg_data_urls: settings.allow_svg_data_urls,
     allow_html_in_named_anchor: settings.allow_html_in_named_anchor,
     allow_script_urls: settings.allow_script_urls,
     allow_unsafe_link_target: settings.allow_unsafe_link_target,
