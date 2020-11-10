@@ -175,7 +175,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         sAssertTableCellStructure(),
         sAssertEvents([
           'tablemodified',
-          'tablemodified',
           'tablemodified'
         ]),
         sClearEvents()

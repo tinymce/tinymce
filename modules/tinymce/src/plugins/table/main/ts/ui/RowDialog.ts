@@ -6,6 +6,8 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
+import { TableLookup } from '@ephox/snooker';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
@@ -56,7 +58,9 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
     }
   });
 
-  Events.fireTableModified(editor);
+  TableLookup.table(SugarElement.fromDom(rows[0])).each(
+    (table) => Events.fireTableModified(editor, table.dom)
+  );
 };
 
 const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, api) => {

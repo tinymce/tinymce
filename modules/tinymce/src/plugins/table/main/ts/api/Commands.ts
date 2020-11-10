@@ -66,7 +66,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     }
   });
 
-  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
@@ -193,7 +193,14 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       });
     });
 
-    Events.fireTableModified(editor, { structure: false, style: true });
+    /*
+      Use the first cell in the selection to get the table and fire the TableModified event.
+      If this command is applied over multiple tables, only the first table selected
+      will have a TableModified event thrown.
+    */
+    getTableFromCell(cells[0]).each(
+      (table) => Events.fireTableModified(editor, table.dom, { structure: false, style: true })
+    );
   });
 
 };

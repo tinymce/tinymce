@@ -87,7 +87,7 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   attrs.style = dom.serializeStyle({ ...getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 
-  Events.fireTableModified(editor);
+  Events.fireTableModified(editor, tableElm);
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.DialogInstanceApi<TableData>) => {

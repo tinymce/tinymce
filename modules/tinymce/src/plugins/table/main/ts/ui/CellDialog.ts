@@ -75,6 +75,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
+    const tableOpt = TableLookup.table(cells[0]);
     getSelectedCells(cells).each((selectedCells) => {
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
@@ -108,7 +109,10 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
         }
       });
     });
-    Events.fireTableModified(editor);
+
+    tableOpt.each(
+      (table) => Events.fireTableModified(editor, table.dom)
+    );
   }
 };
 
