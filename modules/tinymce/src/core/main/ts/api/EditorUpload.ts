@@ -8,13 +8,13 @@
 import { Arr } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
-import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
 import Editor from './Editor';
-import { BlobCache, BlobInfo } from './file/BlobCache';
-import * as Settings from './Settings';
 import Env from './Env';
+import { BlobCache, BlobInfo } from './file/BlobCache';
+import ImageUploader from './util/ImageUploader';
+import * as Settings from './Settings';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -43,7 +43,7 @@ interface EditorUpload {
 
 const EditorUpload = function (editor: Editor): EditorUpload {
   const blobCache = BlobCache();
-  let uploader: Uploader, imageScanner: ImageScanner;
+  let uploader: ImageUploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
@@ -97,15 +97,6 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  const openNotification = function () {
-    return editor.notificationManager.open({
-      text: editor.translate('Image uploading...'),
-      type: 'info',
-      timeout: -1,
-      progressBar: true
-    });
-  };
-
   const replaceImageUriInView = (image: HTMLImageElement, resultUri: string) => {
     const src = editor.convertURL(resultUri, 'src');
 
@@ -119,18 +110,13 @@ const EditorUpload = function (editor: Editor): EditorUpload {
 
   const uploadImages = (callback?: UploadCallback): Promise<UploadResult[]> => {
     if (!uploader) {
-      uploader = Uploader(uploadStatus, {
-        url: Settings.getImageUploadUrl(editor),
-        basePath: Settings.getImageUploadBasePath(editor),
-        credentials: Settings.getImagesUploadCredentials(editor),
-        handler: Settings.getImagesUploadHandler(editor)
-      });
+      uploader = ImageUploader(editor);
     }
 
     return scanForImages().then(aliveGuard((imageInfos) => {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
-      return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+      return uploader.upload(blobInfos, true).then(aliveGuard((result) => {
         const imagesToRemove: HTMLImageElement[] = [];
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {
