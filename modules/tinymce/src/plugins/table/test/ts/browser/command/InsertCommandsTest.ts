@@ -1,5 +1,6 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
@@ -19,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
 
   let events = [];
   const logEvent = (event: EditorEvent<{}>) => {
-    events.push(event.type);
+    events.push(event);
   };
 
   const clearEvents = () => events = [];
@@ -27,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
   const execCmdAndAssertEvent = (editor: Editor, cmdName: string) => {
     LegacyUnit.equal(events.length, 0);
     editor.execCommand(cmdName);
-    LegacyUnit.deepEqual(events, [ 'tablemodified' ]);
+    Arr.each(events, (event) => LegacyUnit.deepEqual(event.type, 'tablemodified'));
     clearEvents();
   };
 

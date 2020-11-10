@@ -1,7 +1,8 @@
 import { Assertions, Log, Pipeline, UiFinder, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Editor from 'tinymce/core/api/Editor';
@@ -21,14 +22,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
   let events = [];
   const logEvent = (event: EditorEvent<{}>) => {
-    events.push(event.type);
+    events.push(event);
   };
 
   const sClearEvents = () => Step.sync(() => events = []);
 
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
-    Assertions.assertEq('Expected events should have been fired', expectedEvents, events);
+    if (events.length > 0) {
+      Arr.each(events, (event) => {
+        const tableElm = SugarElement.fromDom(event.table);
+        Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
+      });
+    }
+    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));
   });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {

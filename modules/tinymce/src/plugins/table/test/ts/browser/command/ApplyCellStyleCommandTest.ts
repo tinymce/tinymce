@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -14,14 +15,20 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
 
   let events = [];
   const logEvent = (event: EditorEvent<{}>) => {
-    events.push(event.type);
+    events.push(event);
   };
 
   const sClearEvents = () => Step.sync(() => events = []);
 
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
-    Assertions.assertEq('Expected events should have been fired', expectedEvents, events);
+    if (events.length > 0) {
+      Arr.each(events, (event) => {
+        const tableElm = SugarElement.fromDom(event.table);
+        Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
+      });
+    }
+    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));
   });
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
