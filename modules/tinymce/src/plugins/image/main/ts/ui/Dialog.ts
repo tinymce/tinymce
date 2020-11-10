@@ -10,11 +10,10 @@ import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
-
+import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
 import { getStyleValue, ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
-import Uploader from '../core/Uploader';
 import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
@@ -40,6 +39,7 @@ interface Helpers {
   normalizeCss: (cssText: string) => string;
   parseStyle: (cssText: string) => StyleMap;
   serializeStyle: (stylesArg: StyleMap, name?: string) => string;
+  uploadImage: (blobInfo: BlobInfo) => Promise<UploadResult>;
 }
 
 interface ImageDialogState {
@@ -269,14 +269,6 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       api.unblock();
     }, (file) => {
       const blobUri: string = URL.createObjectURL(file);
-
-      const uploader = Uploader({
-        url: info.url,
-        basePath: info.basePath,
-        credentials: info.credentials,
-        handler: info.handler
-      });
-
       const finalize = () => {
         api.unblock();
         URL.revokeObjectURL(blobUri);
@@ -291,8 +283,8 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         if (info.automaticUploads) {
-          uploader.upload(blobInfo).then((url: string) => {
-            updateSrcAndSwitchTab(url);
+          helpers.uploadImage(blobInfo).then((result) => {
+            updateSrcAndSwitchTab(result.url);
             finalize();
           }).catch((err) => {
             finalize();
@@ -335,13 +327,13 @@ const closeHandler = (state: ImageDialogState) => () => {
 };
 
 const makeDialogBody = (info: ImageDialogInfo) => {
-  if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
+  if (info.hasAdvTab || info.hasUploadUrl) {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        info.hasUploadTab && (info.hasUploadUrl) ? [ UploadTab.makeTab(info) ] : []
       ])
     };
     return tabPanel;
@@ -415,6 +407,8 @@ const parseStyle = (editor: Editor) => (cssText: string): StyleMap => editor.dom
 
 const serializeStyle = (editor: Editor) => (stylesArg: StyleMap, name?: string): string => editor.dom.serializeStyle(stylesArg, name);
 
+const uploadImage = (editor: Editor) => (blobInfo: BlobInfo) => ImageUploader(editor).upload([ blobInfo ], false).then((results) => results[0]);
+
 export const Dialog = (editor: Editor) => {
   const helpers: Helpers = {
     onSubmit: submitHandler(editor),
@@ -424,7 +418,8 @@ export const Dialog = (editor: Editor) => {
     alertErr: alertErr(editor),
     normalizeCss: normalizeCss(editor),
     parseStyle: parseStyle(editor),
-    serializeStyle: serializeStyle(editor)
+    serializeStyle: serializeStyle(editor),
+    uploadImage: uploadImage(editor)
   };
   const open = () => {
     collect(editor)

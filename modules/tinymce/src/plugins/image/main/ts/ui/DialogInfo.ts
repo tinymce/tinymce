@@ -35,7 +35,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const hasAdvTab = Settings.hasAdvTab(editor);
   const hasUploadTab = Settings.hasUploadTab(editor);
   const hasUploadUrl = Settings.hasUploadUrl(editor);
-  const hasUploadHandler = Settings.hasUploadHandler(editor);
+  // const hasUploadHandler = Settings.hasUploadHandler(editor);
   const image = readImageDataFromSelection(editor);
   const hasDescription = Settings.hasDescription(editor);
   const hasImageTitle = Settings.hasImageTitle(editor);
@@ -45,7 +45,6 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const url = Settings.getUploadUrl(editor);
   const basePath = Settings.getUploadBasePath(editor);
   const credentials = Settings.getUploadCredentials(editor);
-  const handler = Settings.getUploadHandler(editor);
   const automaticUploads = Settings.isAutomaticUploadsEnabled(editor);
   const prependURL: Optional<string> = Optional.some(Settings.getPrependUrl(editor)).filter(
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
@@ -57,7 +56,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     hasAdvTab,
     hasUploadTab,
     hasUploadUrl,
-    hasUploadHandler,
+    // hasUploadHandler,
     hasDescription,
     hasImageTitle,
     hasDimensions,
@@ -65,7 +64,6 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     url,
     basePath,
     credentials,
-    handler,
     prependURL,
     hasAccessibilityOptions,
     automaticUploads

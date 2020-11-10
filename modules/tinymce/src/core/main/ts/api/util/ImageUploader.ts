@@ -21,7 +21,7 @@ interface ImageUploader {
 /**
  * This class handles uploading images to a backend server.
  *
- * @class tinymce.file.ImageUploader
+ * @class tinymce.util.ImageUploader
  */
 const ImageUploader = (editor: Editor): ImageUploader => {
   const uploadStatus = UploadStatus();
