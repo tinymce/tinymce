@@ -76,9 +76,9 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
 
   if (cells.length >= 1) {
     /*
-    * Retrieve the table before the cells are modified
-    * as there is a case where cells are replaced and
-    * the reference will be lost when trying to fire events.
+      Retrieve the table before the cells are modified
+      as there is a case where cells are replaced and
+      the reference will be lost when trying to fire events.
     */
     const tableOpt = TableLookup.table(cells[0]);
 
