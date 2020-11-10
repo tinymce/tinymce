@@ -35,7 +35,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const hasAdvTab = Settings.hasAdvTab(editor);
   const hasUploadTab = Settings.hasUploadTab(editor);
   const hasUploadUrl = Settings.hasUploadUrl(editor);
-  // const hasUploadHandler = Settings.hasUploadHandler(editor);
+  const hasUploadHandler = Settings.hasUploadHandler(editor);
   const image = readImageDataFromSelection(editor);
   const hasDescription = Settings.hasDescription(editor);
   const hasImageTitle = Settings.hasImageTitle(editor);
@@ -56,7 +56,7 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     hasAdvTab,
     hasUploadTab,
     hasUploadUrl,
-    // hasUploadHandler,
+    hasUploadHandler,
     hasDescription,
     hasImageTitle,
     hasDimensions,

@@ -27,6 +27,7 @@ export interface ImageDialogInfo {
   hasAdvTab: boolean;
   hasUploadTab: boolean;
   hasUploadUrl: boolean;
+  hasUploadHandler: boolean;
   hasDescription: boolean;
   hasImageTitle: boolean;
   hasDimensions: boolean;

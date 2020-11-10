@@ -27,8 +27,11 @@ const getImageList = (editor: Editor) => editor.getParam('image_list', false);
 
 const hasUploadUrl = (editor: Editor) => !!getUploadUrl(editor);
 
+const hasUploadHandler = (editor: Editor) => !!getUploadHandler(editor);
+
 const getUploadUrl = (editor: Editor) => editor.getParam('images_upload_url', '', 'string');
 
+const getUploadHandler = (editor: Editor) => editor.getParam('images_upload_handler', undefined, 'function');
 
 const getUploadBasePath = (editor: Editor) => editor.getParam('images_upload_base_path', undefined, 'string');
 
@@ -49,7 +52,9 @@ export {
   hasImageCaption,
   getImageList,
   hasUploadUrl,
+  hasUploadHandler,
   getUploadUrl,
+  getUploadHandler,
   getUploadBasePath,
   getUploadCredentials,
   showAccessibilityOptions,
