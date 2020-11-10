@@ -49,7 +49,7 @@ const cWaitForDialog = (ariaLabel: string): Chain<Editor, Editor> =>
 const cAssertHtmlAndBodyState = (label: string, shouldExist: boolean) => {
   const selector = shouldExist ? 'root:.tox-fullscreen' : 'root::not(.tox-fullscreen)';
   return Chain.label(
-    `${label}: Body and Html should ${shouldExist ? '' : 'not'} have "tox-fullscreen" class`,
+    `${label}: Body and Html should ${shouldExist ? 'have' : 'not have'} "tox-fullscreen" class`,
     Chain.fromIsolatedChains([
       Chain.inject(SugarBody.body()),
       UiFinder.cFindIn(selector),
@@ -61,7 +61,7 @@ const cAssertHtmlAndBodyState = (label: string, shouldExist: boolean) => {
 
 const cAsssertEditorContainerAndSinkState = (label: string, shouldExist: boolean): Chain<Editor, Editor> =>
   Chain.label(
-    `${label}: Editor container and sink should ${shouldExist ? '' : 'not'} have "tox-fullscreen" class and z-index`,
+    `${label}: Editor container and sink should ${shouldExist ? 'have' : 'not have'} "tox-fullscreen" class and z-index`,
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.direct('editor', Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getContainer())), 'editorContainer'),
@@ -84,7 +84,7 @@ const cAsssertEditorContainerAndSinkState = (label: string, shouldExist: boolean
 
 const cAssertShadowHostState = (label: string, shouldExist: boolean): Chain<Editor, Editor> =>
   Chain.label(
-    `${label}: Shadow host should ${shouldExist ? '' : 'not'} have "tox-fullscreen" and "tox-shadowhost" classes and z-index`,
+    `${label}: Shadow host should ${shouldExist ? 'have' : 'not have'} "tox-fullscreen" and "tox-shadowhost" classes and z-index`,
     Chain.op((editor: Editor) => {
       const elm = SugarElement.fromDom(editor.getElement());
       if (SugarShadowDom.isInShadowRoot(elm)) {
