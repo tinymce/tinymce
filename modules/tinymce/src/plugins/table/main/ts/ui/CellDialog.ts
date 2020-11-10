@@ -12,7 +12,7 @@ import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
-import { fireTableModified } from '../api/Events';
+import * as Events from '../api/Events';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
@@ -108,7 +108,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
         }
       });
     });
-    fireTableModified(editor);
+    Events.fireTableModified(editor);
   }
 };
 

@@ -11,7 +11,7 @@ import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { fireNewCell, fireNewRow, fireTableModified } from '../api/Events';
+import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
@@ -69,10 +69,10 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       const sizing = TableSize.get(editor, table);
       const rngOpt = guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
-          fireNewRow(editor, row.dom);
+          Events.fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells, (cell) => {
-          fireNewCell(editor, cell.dom);
+          Events.fireNewCell(editor, cell.dom);
         });
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
@@ -82,7 +82,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
           return rng;
         });
       }) : Optional.none<Range>();
-      fireTableModified(editor);
+      Events.fireTableModified(editor);
       return rngOpt;
     };
 

@@ -13,7 +13,7 @@ import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as InsertTable from '../actions/InsertTable';
 import * as Styles from '../actions/Styles';
-import { fireTableModified } from '../api/Events';
+import * as Events from '../api/Events';
 import { getDefaultAttributes, getDefaultStyles, getTableClassList, hasAdvancedTableTab, shouldStyleWithCss } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as Helpers from './Helpers';
@@ -87,7 +87,7 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   attrs.style = dom.serializeStyle({ ...getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 
-  fireTableModified(editor);
+  Events.fireTableModified(editor);
 };
 
 const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.DialogInstanceApi<TableData>) => {

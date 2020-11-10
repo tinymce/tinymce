@@ -13,7 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
-import { fireTableModified } from '../api/Events';
+import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -187,7 +187,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       }
     });
 
-    fireTableModified(editor, { structure: false, style: true });
+    Events.fireTableModified(editor, { structure: false, style: true });
   });
 
 };
