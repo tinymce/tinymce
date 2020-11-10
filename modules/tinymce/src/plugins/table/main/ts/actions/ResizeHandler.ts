@@ -23,7 +23,7 @@ export interface ResizeHandler {
 }
 
 const barResizerPrefix = 'bar-';
-const canResize = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => Arr.forall([ table, elm ], (el) => Attribute.get(el, 'data-mce-resize') !== 'false');
+const isResizable = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => Arr.forall([ table, elm ], (el) => Attribute.get(el, 'data-mce-resize') !== 'false');
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Optional.none<Range>();
@@ -39,7 +39,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   const lazyResize = () => resize;
 
   const lazyWire = () =>
-    wire.getOr(ResizeWire.only(SugarElement.fromDom(editor.getBody()), canResize));
+    wire.getOr(ResizeWire.only(SugarElement.fromDom(editor.getBody()), isResizable));
 
   const lazySizing = (table: SugarElement<HTMLTableElement>) =>
     TableSize.get(editor, table);
@@ -98,7 +98,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   editor.on('init', function () {
-    const rawWire = TableWire.get(editor, canResize);
+    const rawWire = TableWire.get(editor, isResizable);
     wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();

@@ -36,25 +36,6 @@ export interface DragAdjustEvents {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-// Checking cells could be an issue with a number column as that cell in the row will have the data-mce-resize set preventing any of the rows from being resized
-// const canResizeRow = (table: SugarElement<HTMLTableElement>, rowIndex: number, canResize: (elm: SugarElement<Element>) => boolean) => {
-//   const warehouse = Warehouse.fromTable(table);
-//   const rowOpt = Optional.from(warehouse.all[rowIndex]);
-//   const editableRow = rowOpt.map((row) => row.element).forall(canResize);
-//   const editableCells = rowOpt.map((row) => row.cells).forall((cells) => Arr.forall(cells, (cell) => canResize(cell.element)));
-//   return editableRow && editableCells;
-// };
-
-// // Should I also check colgroup element if it exists - NO?
-// // Should it be one or of the other - col or all cells
-// const canResizeColumn = (table: SugarElement<HTMLTableElement>, columnIndex: number, canResize: (elm: SugarElement<Element>) => boolean) => {
-//   const warehouse = Warehouse.fromTable(table);
-//   const editableCol = Warehouse.getColumnAt(warehouse, columnIndex).map((col) => col.element).forall(canResize);
-//   const columnCells = Warehouse.filterItems(warehouse, (cell) => cell.column === columnIndex);
-//   const editableCells = Arr.forall(columnCells, (cell) => canResize(cell.element));
-//   return editableCol && editableCells;
-// };
-
 export const BarManager = function (wire: ResizeWire) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
@@ -117,7 +98,6 @@ export const BarManager = function (wire: ResizeWire) {
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
   const mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
-    // Maybe have the canResize check here?
     if (Bars.isRowBar(event.target)) {
       handler(event.target, 'top');
     }

@@ -12,31 +12,30 @@ const resizeRowBar = Styles.resolve('resizer-rows');
 const resizeColBar = Styles.resolve('resizer-cols');
 const BAR_THICKNESS = 7;
 
-const resizableRows = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, canResize: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
+const resizableRows = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, isResizable: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
   const rows = warehouse.all;
-  // const resizableRows: number[] = [];
-  // Arr.each(rows, (row, i) => {
-  //   if (canResize(table, row.element)) {
-  //     resizableRows.push(i);
-  //   }
-  // });
-  // return resizableRows;
-  return Arr.foldl(rows, (acc, row) => canResize(table, row.element) ? acc.concat([ rows.indexOf(row) ]) : acc, [] as number[]);
+  const resizableRows: number[] = [];
+  Arr.each(rows, (row, i) => {
+    if (isResizable(table, row.element)) {
+      resizableRows.push(i);
+    }
+  });
+  return resizableRows;
 };
 
-const resizableColumns = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, canResize: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
+const resizableColumns = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, isResizable: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
   const resizableCols: number[] = [];
   // Check col elements and see if they are resizable
   Arr.range(warehouse.grid.columns, (index) => {
     // With use of forall, will return true if col doesn't exist meaning the cells will be checked below
-    if (Warehouse.getColumnAt(warehouse, index).map((col) => col.element).forall((col) => canResize(table, col))) {
+    if (Warehouse.getColumnAt(warehouse, index).map((col) => col.element).forall((col) => isResizable(table, col))) {
       resizableCols.push(index);
     }
   });
-  // Check column cells of the resizable col elements and make sure they are resizable
+  // Check cells of the resizable columnss and make sure they are resizable
   return Arr.filter(resizableCols, (colIndex) => {
     const columnCells = Warehouse.filterItems(warehouse, (cell) => cell.column === colIndex);
-    return Arr.forall(columnCells, (cell) => canResize(table, cell.element));
+    return Arr.forall(columnCells, (cell) => isResizable(table, cell.element));
   });
 };
 
@@ -50,10 +49,8 @@ const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
       const bar = create(origin, cp);
-      if (bar !== null) {
-        Class.add(bar, resizeBar);
-        Insert.append(wire.parent(), bar);
-      }
+      Class.add(bar, resizeBar);
+      Insert.append(wire.parent(), bar);
     });
   });
 };
@@ -76,37 +73,21 @@ const refreshRow = function (wire: ResizeWire, rowPositions: Optional<BarPositio
 
 const refreshGrid = function (warhouse: Warehouse, wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[]) {
   const position = SugarLocation.absolute(table);
-  const canResize = wire.canResize;
+  const isResizable = wire.isResizable;
   const rowPositions = rows.length > 0 ? BarPositions.height.positions(rows, table) : [];
-  const resizableRowBars = resizableRows(warhouse, table, canResize);
+  const resizableRowBars = rowPositions.length > 0 ? resizableRows(warhouse, table, isResizable) : [];
   const resizableRowPositions = Arr.filter(rowPositions, (_pos, i) => Arr.exists(resizableRowBars, (barIndex) => i === barIndex ));
-  // Need to check tr - having data-mce-resize on a tr will stop the upper resize bar from being rendered
-  // Could maybe use neighbour rows
-  // const resizableRowPositions = Arr.filter(rowPositions, (positionOpt) => positionOpt.bind((pos) => TableLookup.row(pos.cell)).exists((row) => canResize(table, row)));
-  // const resizableRowPositions = Arr.filter(rowPositions, (positionOpt) => positionOpt.bind((pos) => {
-  //   console.log(pos.cell.dom);
-  //   return TableLookup.row(pos.cell);
-  // }).exists((row) => canResize(table, row)));
-  // console.log(rowPositions.length, resizableRowPositions.length);
   refreshRow(wire, resizableRowPositions, position, Width.getOuter(table));
 
-  // Filter colPositions here
   const colPositions = cols.length > 0 ? BarPositions.width.positions(cols, table) : [];
-  const resizableColBars = resizableColumns(warhouse, table, canResize);
+  const resizableColBars = colPositions.length > 0 ? resizableColumns(warhouse, table, isResizable) : [];
   const resizableColPositions = Arr.filter(colPositions, (_pos, i) => Arr.exists(resizableColBars, (barIndex) => i === barIndex ));
-  // Need to be able to check col, just checking cells isn't enough - also the cells given by position do not necessarly
-  // Might have to make canResize callback implementation more powerful
-  // const resizableColPositions = Arr.filter(colPositions, (positionOpt) => positionOpt.exists((pos) =>
-  //   // console.log(pos.cell.dom);
-  //   canResize(table, pos.cell)
-  // ));
-  // console.log(colPositions.length, resizableRowPositions.length);
   refreshCol(wire, resizableColPositions, position, Height.getOuter(table));
 };
 
 const refresh = function (wire: ResizeWire, table: SugarElement) {
   destroy(wire);
-  if (wire.canResize(table, table)) {
+  if (wire.isResizable(table, table)) {
     const warehouse = Warehouse.fromTable(table);
     const rows = Blocks.rows(warehouse);
     const cols = Blocks.columns(warehouse);
