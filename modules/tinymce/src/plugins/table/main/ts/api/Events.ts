@@ -32,7 +32,7 @@ const fireTableSelectionClear = (editor: Editor) => {
   editor.fire('TableSelectionClear');
 };
 
-const fireTableModified = (editor: Editor, data?: { structure: boolean; styles: boolean }) => {
+const fireTableModified = (editor: Editor, data?: { structure: boolean; style: boolean }) => {
   editor.fire('TableModified', data);
 };
 

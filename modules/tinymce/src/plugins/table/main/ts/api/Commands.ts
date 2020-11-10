@@ -187,7 +187,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       }
     });
 
-    fireTableModified(editor, { structure: false, styles: true });
+    fireTableModified(editor, { structure: false, style: true });
   });
 
 };
