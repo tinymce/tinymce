@@ -33,9 +33,6 @@ export interface ImageDialogInfo {
   hasDimensions: boolean;
   hasImageCaption: boolean;
   hasAccessibilityOptions: boolean;
-  url: string;
-  basePath: string;
-  credentials: boolean;
   automaticUploads: boolean;
   prependURL: Optional<string>;
 }

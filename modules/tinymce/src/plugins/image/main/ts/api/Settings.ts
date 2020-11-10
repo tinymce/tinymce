@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 const hasDimensions = (editor: Editor) => editor.getParam('image_dimensions', true, 'boolean');
@@ -25,17 +26,11 @@ const hasImageCaption = (editor: Editor) => editor.getParam('image_caption', fal
 
 const getImageList = (editor: Editor) => editor.getParam('image_list', false);
 
-const hasUploadUrl = (editor: Editor) => !!getUploadUrl(editor);
+const hasUploadUrl = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_url'));
 
 const hasUploadHandler = (editor: Editor) => !!getUploadHandler(editor);
 
-const getUploadUrl = (editor: Editor) => editor.getParam('images_upload_url', '', 'string');
-
 const getUploadHandler = (editor: Editor) => editor.getParam('images_upload_handler', undefined, 'function');
-
-const getUploadBasePath = (editor: Editor) => editor.getParam('images_upload_base_path', undefined, 'string');
-
-const getUploadCredentials = (editor: Editor) => editor.getParam('images_upload_credentials', false, 'boolean');
 
 const showAccessibilityOptions = (editor: Editor) => editor.getParam('a11y_advanced_options', false, 'boolean');
 
@@ -53,10 +48,7 @@ export {
   getImageList,
   hasUploadUrl,
   hasUploadHandler,
-  getUploadUrl,
   getUploadHandler,
-  getUploadBasePath,
-  getUploadCredentials,
   showAccessibilityOptions,
   isAutomaticUploadsEnabled
 };
