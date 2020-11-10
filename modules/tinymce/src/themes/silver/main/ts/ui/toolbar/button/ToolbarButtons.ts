@@ -123,7 +123,7 @@ const renderCommonStructure = (
 
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.toolbarButton(providersBackstage.isReadOnly),
+        DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
         ReadOnly.receivingConfig(),
         AddEventsBehaviour.config('common-button-display-events', [
           AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (button, se) => {
@@ -187,7 +187,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           onControlAttached(specialisation, editorOffCell),
           onControlDetached(specialisation, editorOffCell)
         ]),
-        DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isReadOnly()),
+        DisablingConfigs.toolbarButton(() => spec.disabled || providersBackstage.isDisabled()),
         ReadOnly.receivingConfig()
       ].concat(specialisation.toolbarButtonBehaviours)
     )
@@ -308,7 +308,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (_a, _b, _c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      DisablingConfigs.splitButton(sharedBackstage.providers.isReadOnly),
+      DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
@@ -344,7 +344,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
         },
         buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.splitButton(sharedBackstage.providers.isReadOnly),
+          DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
           ReadOnly.receivingConfig()
         ])
       }),

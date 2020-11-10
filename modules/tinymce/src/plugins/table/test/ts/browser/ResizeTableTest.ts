@@ -386,6 +386,30 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
 
       NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6601', 'Test [table_column_resizing="resizetable"] with colgroup, adjusting an inner column should change the table width', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        plugins: 'table',
+        width: 400,
+        theme: 'silver',
+        base_url: '/project/tinymce/js/tinymce',
+        table_toolbar: '',
+        table_column_resizing: 'resizetable',
+        table_use_colgroups: true,
+        table_sizing_mode: 'responsive'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 100, 0), TableTestUtils.cInsertTable(2, 2)), 'widths'),
+      NamedChain.read('widths', cAssertUnitBeforeResize(null)),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      NamedChain.read('widths', cAssertWidthAfterResize(35, true)),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
     ])
   ], success, failure, TestLogs.init());
 });

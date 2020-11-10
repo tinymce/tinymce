@@ -4,6 +4,6 @@ export default {
   icons: () => <Record<string, string>> {},
   menuItems: () => <Record<string, any>> {},
   translate: I18n.translate,
-  isReadOnly: () => false,
+  isDisabled: () => false,
   getSetting: (_settingName: string, defaultVal: any) => defaultVal
 };

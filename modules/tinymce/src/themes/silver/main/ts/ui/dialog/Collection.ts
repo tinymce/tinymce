@@ -57,8 +57,8 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
-      const readonlyClass = providersBackstage.isReadOnly() ? ' tox-collection__item--state-disabled' : '';
-      return `<div class="tox-collection__item${readonlyClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
+      const disabledClass = providersBackstage.isDisabled() ? ' tox-collection__item--state-disabled' : '';
+      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
@@ -69,7 +69,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
 
   const onClick = runOnItem((comp, se, tgt, itemValue) => {
     se.stop();
-    if (!providersBackstage.isReadOnly()) {
+    if (!providersBackstage.isDisabled()) {
       AlloyTriggers.emitWith(comp, formActionEvent, {
         name: spec.name,
         value: itemValue
@@ -114,7 +114,7 @@ export const renderCollection = (spec: CollectionSpec, providersBackstage: UiFac
     factory: { sketch: Fun.identity },
     behaviours: Behaviour.derive([
       Disabling.config({
-        disabled: providersBackstage.isReadOnly,
+        disabled: providersBackstage.isDisabled,
         onDisabled: (comp) => {
           iterCollectionItems(comp, (childElm) => {
             Class.add(childElm, 'tox-collection__item--state-disabled');
