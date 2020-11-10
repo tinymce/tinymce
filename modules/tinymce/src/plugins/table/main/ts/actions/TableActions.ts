@@ -67,14 +67,13 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       const doc = SugarElement.fromDom(editor.getDoc());
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
-      return guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
+      const rngOpt = guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
           fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells, (cell) => {
           fireNewCell(editor, cell.dom);
         });
-        fireTableModified(editor);
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
@@ -82,7 +81,9 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
           rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
-      }) : Optional.none();
+      }) : Optional.none<Range>();
+      fireTableModified(editor);
+      return rngOpt;
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);
