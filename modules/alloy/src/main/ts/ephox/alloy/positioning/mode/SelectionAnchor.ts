@@ -11,21 +11,9 @@ import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';
 
-// TODO: This structure exists in a few places
-export interface ElementAndOffset<T> {
-  readonly element: SugarElement<T>;
-  readonly offset: number;
-}
-
-const point = <T> (element: SugarElement, offset: number): ElementAndOffset<T> => ({
-  element,
-  offset
-});
-
-// TODO: remove "any"
 // A range from (a, 1) to (body, end) was giving the wrong bounds.
-const descendOnce = (element: SugarElement, offset: number): ElementAndOffset<any> =>
-  SugarNode.isText(element) ? point(element, offset) : Descend.descendOnce(element, offset);
+const descendOnce = (element: SugarElement, offset: number): Descend.ElementAndOffset<Node> =>
+  SugarNode.isText(element) ? Descend.point(element, offset) : Descend.descendOnce(element, offset);
 
 const getAnchorSelection = (win: Window, anchorInfo: SelectionAnchor): Optional<SimRange> => {
   // FIX TEST Test both providing a getSelection and not providing a getSelection

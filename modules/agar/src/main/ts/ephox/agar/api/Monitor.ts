@@ -1,4 +1,4 @@
-interface Monitor<T> {
+export interface Monitor<T> {
   run: (...args: any[]) => T;
   get: () => number;
   clear: () => void;

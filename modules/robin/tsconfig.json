@@ -8,8 +8,7 @@
     "paths": {
       "ephox/robin/test/*": ["src/test/ts/module/ephox/robin/test/*"],
       "ephox/robin/demo/*": ["src/demo/ts/ephox/robin/demo/*"],
-      "ephox/robin/*": ["src/main/ts/ephox/robin/*"],
-      "@ephox/robin": ["src/main/ts/ephox/robin/api/Main.ts"]
+      "ephox/robin/*": ["src/main/ts/ephox/robin/*"]
     }
   },
   "include": [

@@ -12,8 +12,7 @@
     "paths": {
       "ephox/katamari-assertions/test/*": ["src/test/ts/module/ephox/katamari-assertions/test/*"],
       "ephox/katamari-assertions/demo/*": ["src/demo/ts/ephox/katamari-assertions/demo/*"],
-      "ephox/katamari-assertions/*": ["src/main/ts/ephox/katamari-assertions/*"],
-      "@ephox/katamari-assertions": ["src/main/ts/ephox/katamari-assertions/api/Main.ts"]
+      "ephox/katamari-assertions/*": ["src/main/ts/ephox/katamari-assertions/*"]
     }
   },
   "include": [

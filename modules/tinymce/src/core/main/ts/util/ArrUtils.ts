@@ -107,7 +107,7 @@ const indexOf = <T>(a: ArrayLike<T>, v: T): number => {
 const reduce: {
   <T, R>(collection: ArrayLike<T>, iteratee: (acc: R, item: T, index: number) => R, accumulator: R, thisArg?: any): R;
   <T>(collection: ArrayLike<T>, iteratee: (acc: T, item: T, index: number) => T, accumulator?: undefined, thisArg?: any): T;
-} = <T, R>(collection, iteratee, accumulator?, thisArg?): R => {
+} = <R>(collection, iteratee, accumulator?, thisArg?): R => {
   let acc: R = Type.isUndefined(accumulator) ? collection[0] : accumulator;
 
   for (let i = 0; i < collection.length; i++) {

@@ -28,7 +28,9 @@ const cell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => l
 
 const cells = (ancestor: SugarElement): SugarElement<HTMLTableCellElement>[] => LayerSelector.firstLayer(ancestor, 'th,td');
 
-const columns = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => LayerSelector.firstLayer(ancestor, 'col');
+const columns = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => Arr.bind(columnGroups(ancestor), (columnGroup) =>
+  SelectorFilter.children<HTMLTableColElement>(columnGroup, 'col')
+);
 
 const notCell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<Element>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
@@ -46,7 +48,10 @@ const row = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lo
 
 const rows = (ancestor: SugarElement): SugarElement<HTMLTableRowElement>[] => LayerSelector.firstLayer(ancestor, 'tr');
 
-const columnGroups = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => LayerSelector.firstLayer(ancestor, 'colgroup');
+const columnGroups = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => table(ancestor).fold(
+  Fun.constant([]),
+  (table) => SelectorFilter.children<HTMLTableColElement>(table, 'colgroup')
+);
 
 const attr = (element: SugarElement, property: string) => getAttrValue(element, property);
 
