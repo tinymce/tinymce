@@ -55,12 +55,12 @@
  */
 
 /**
- * Returns true/false if the editor user interface is disabled or not.
+ * Determines if the editor user interface is `disabled` (`true`) or not (`false`).
  * <br>
  * <em>Added in TinyMCE 5.6</em>
  *
  * @method tinymce.editor.ui.isDisabled
- * @return {Boolean} true/false if the editor user interface is disabled or not.
+ * @return {Boolean} true/false if the editor user interface is `disabled` (`true`) or not (`false`).
  */
 
 /**
