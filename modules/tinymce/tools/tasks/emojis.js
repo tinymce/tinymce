@@ -1,21 +1,15 @@
 const resolve = require('resolve');
 const twemoji = require('twemoji');
 
-const prettyPrint = (obj) => JSON.stringify(obj,null, 2);
+const prettyPrint = (obj) => JSON.stringify(obj, null, 2);
 
 const generateContent = (json, attribution) => {
-  const header = 'window.tinymce.Resource.add(\'tinymce.plugins.emoticons\', ';
-  const footer = ');';
-  return '// Source: npm package: emojilib' + attribution + '\n' + header + json + footer;
+  const content = `window.tinymce.Resource.add('tinymce.plugins.emoticons', ${json});`;
+  return '// Source: npm package: emojilib' + attribution + '\n' + content;
 };
 
 const getTwemojiOptions = (grunt, options) => {
-  const twemojiOptions = options.twemoji || { ext: '.png' };
-
-  const baseUrl = grunt.option('twemojiBaseUrl');
-  if (baseUrl) {
-    twemojiOptions.base = baseUrl;
-  }
+  const twemojiOptions = options.twemoji || { base: '', ext: '.png' };
 
   const type = grunt.option('twemojiType');
   if (type === 'svg') {
@@ -38,11 +32,16 @@ module.exports = function (grunt) {
     Object.keys(emojiDatabase).forEach((name) => {
       const item = emojiDatabase[name];
       // See https://github.com/twitter/twemoji#inline-styles for the inline styles
-      item.char = twemoji.parse(item.char, twemojiOptions).replace('class="emoji"', 'data-emoticon="true" style="width:1em;height:1em;margin:0 .05em 0 .1em;vertical-align:-.1em"');
+      item.char = twemoji.parse(item.char, twemojiOptions)
+        .replace('class="emoji"', 'data-emoticon="true" style="width:1em;height:1em;margin:0 .05em 0 .1em;vertical-align:-.1em"')
+        .replace(/src="([^"]+)"/, (match, url) => {
+          const fragments = url.split('/');
+          return `src="${fragments[fragments.length - 1]}"`;
+        });
       emojiImageDatabase[name] = item;
     });
 
     grunt.file.write('src/plugins/emoticons/main/js/emojis.js', generateContent(emojiJson, ', file:emojis.json'));
-    grunt.file.write('src/plugins/emoticons/main/js/twemoji.js', generateContent(prettyPrint(emojiImageDatabase), '\n// Images provided by twemoji: https://github.com/twitter/twemoji'));
+    grunt.file.write('src/plugins/emoticons/main/js/emojiimages.js', generateContent(prettyPrint(emojiImageDatabase), '\n// Images provided by twemoji: https://github.com/twitter/twemoji'));
   });
 };

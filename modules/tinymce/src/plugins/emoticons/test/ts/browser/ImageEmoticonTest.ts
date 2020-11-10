@@ -7,11 +7,11 @@ import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import { cFakeEvent } from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.emoticons.ImageEmoticonTest', (success, failure) => {
   EmoticonsPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = SugarDocument.getDocument();
@@ -20,9 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
       Log.steps('TBA', 'Emoticons: Open dialog, Search for "dog", Dog should be first option', [
         tinyApis.sFocus(),
         tinyUi.sClickOnToolbar('click emoticons', 'button'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
-        ]),
+        tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"]'),
         FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
         FocusTools.sSetActiveValue(doc, 'dog'),
         Chain.asStep(doc, [
@@ -61,6 +59,6 @@ UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, fai
     toolbar: 'emoticons',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
-    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/twemoji.js'
+    emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojiimages.js'
   }, success, failure);
 });

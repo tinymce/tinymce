@@ -168,6 +168,7 @@ module.exports = function (grunt) {
 
     emojis: {
       twemoji: {
+        base: '',
         ext: '.png'
       }
     },
@@ -199,7 +200,7 @@ module.exports = function (grunt) {
           },
           files: [
             { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.js' },
-            { src: 'src/plugins/emoticons/main/js/twemoji.js', dest: 'js/tinymce/plugins/emoticons/js/twemoji.js' }
+            { src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.js' }
           ]
         }
       },
@@ -207,7 +208,7 @@ module.exports = function (grunt) {
         var pluginExtras = {
           emoticons: [
             { src: 'src/plugins/emoticons/main/js/emojis.js', dest: 'js/tinymce/plugins/emoticons/js/emojis.min.js' },
-            { src: 'src/plugins/emoticons/main/js/twemoji.js', dest: 'js/tinymce/plugins/emoticons/js/twemoji.min.js' }
+            { src: 'src/plugins/emoticons/main/js/emojiimages.js', dest: 'js/tinymce/plugins/emoticons/js/emojiimages.min.js' }
           ]
         };
         return {

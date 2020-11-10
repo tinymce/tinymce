@@ -20,9 +20,12 @@ const getEmoticonDatabaseId = (editor: Editor): string => editor.getParam('emoti
 
 const getAppendedEmoticons = (editor: Editor) => editor.getParam('emoticons_append', {}, 'object');
 
+const getEmotionsImageUrl = (editor: Editor) => editor.getParam('emoticons_images_url', 'https://twemoji.maxcdn.com/v/13.0.1/72x72/', 'string');
+
 export {
   getEmoticonDatabase,
   getEmoticonDatabaseUrl,
   getEmoticonDatabaseId,
-  getAppendedEmoticons
+  getAppendedEmoticons,
+  getEmotionsImageUrl
 };
