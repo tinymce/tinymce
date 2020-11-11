@@ -12,30 +12,22 @@ const resizeRowBar = Styles.resolve('resizer-rows');
 const resizeColBar = Styles.resolve('resizer-cols');
 const BAR_THICKNESS = 7;
 
-const resizableRows = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, isResizable: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
-  const rows = warehouse.all;
-  const resizableRows: number[] = [];
-  Arr.each(rows, (row, i) => {
-    if (isResizable(table, row.element)) {
-      resizableRows.push(i);
-    }
-  });
-  return resizableRows;
-};
+const resizableRows = (warehouse: Warehouse, isResizable: (elm: SugarElement<Element>) => boolean): number[] =>
+  Arr.bind(warehouse.all, (row, i) => isResizable(row.element) ? [ i ] : []);
 
-const resizableColumns = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, isResizable: (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean): number[] => {
+const resizableColumns = (warehouse: Warehouse, isResizable: (elm: SugarElement<Element>) => boolean): number[] => {
   const resizableCols: number[] = [];
   // Check col elements and see if they are resizable
   Arr.range(warehouse.grid.columns, (index) => {
-    // With use of forall, will return true if col doesn't exist meaning the cells will be checked below
-    if (Warehouse.getColumnAt(warehouse, index).map((col) => col.element).forall((col) => isResizable(table, col))) {
+    // With use of forall, index will be included if col doesn't exist meaning the column cells will be checked below
+    if (Warehouse.getColumnAt(warehouse, index).map((col) => col.element).forall((col) => isResizable(col))) {
       resizableCols.push(index);
     }
   });
-  // Check cells of the resizable columnss and make sure they are resizable
+  // Check cells of the resizable columns and make sure they are resizable
   return Arr.filter(resizableCols, (colIndex) => {
     const columnCells = Warehouse.filterItems(warehouse, (cell) => cell.column === colIndex);
-    return Arr.forall(columnCells, (cell) => isResizable(table, cell.element));
+    return Arr.forall(columnCells, (cell) => isResizable(cell.element));
   });
 };
 
@@ -44,7 +36,7 @@ const destroy = function (wire: ResizeWire) {
   Arr.each(previous, Remove.remove);
 };
 
-const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement) {
+const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement<HTMLDivElement>) {
   const origin = wire.origin();
   Arr.each(positions, function (cpOption) {
     cpOption.each(function (cp) {
@@ -71,23 +63,23 @@ const refreshRow = function (wire: ResizeWire, rowPositions: Optional<BarPositio
   });
 };
 
-const refreshGrid = function (warhouse: Warehouse, wire: ResizeWire, table: SugarElement, rows: Optional<SugarElement>[], cols: Optional<SugarElement>[]) {
+const refreshGrid = function (warhouse: Warehouse, wire: ResizeWire, table: SugarElement<HTMLTableElement>, rows: Optional<SugarElement<HTMLTableCellElement>>[], cols: Optional<SugarElement<HTMLTableCellElement>>[]) {
   const position = SugarLocation.absolute(table);
   const isResizable = wire.isResizable;
   const rowPositions = rows.length > 0 ? BarPositions.height.positions(rows, table) : [];
-  const resizableRowBars = rowPositions.length > 0 ? resizableRows(warhouse, table, isResizable) : [];
+  const resizableRowBars = rowPositions.length > 0 ? resizableRows(warhouse, isResizable) : [];
   const resizableRowPositions = Arr.filter(rowPositions, (_pos, i) => Arr.exists(resizableRowBars, (barIndex) => i === barIndex ));
   refreshRow(wire, resizableRowPositions, position, Width.getOuter(table));
 
   const colPositions = cols.length > 0 ? BarPositions.width.positions(cols, table) : [];
-  const resizableColBars = colPositions.length > 0 ? resizableColumns(warhouse, table, isResizable) : [];
+  const resizableColBars = colPositions.length > 0 ? resizableColumns(warhouse, isResizable) : [];
   const resizableColPositions = Arr.filter(colPositions, (_pos, i) => Arr.exists(resizableColBars, (barIndex) => i === barIndex ));
   refreshCol(wire, resizableColPositions, position, Height.getOuter(table));
 };
 
-const refresh = function (wire: ResizeWire, table: SugarElement) {
+const refresh = function (wire: ResizeWire, table: SugarElement<HTMLTableElement>) {
   destroy(wire);
-  if (wire.isResizable(table, table)) {
+  if (wire.isResizable(table)) {
     const warehouse = Warehouse.fromTable(table);
     const rows = Blocks.rows(warehouse);
     const cols = Blocks.columns(warehouse);
@@ -95,8 +87,8 @@ const refresh = function (wire: ResizeWire, table: SugarElement) {
   }
 };
 
-const each = function (wire: ResizeWire, f: (bar: SugarElement, idx: number) => void) {
-  const bars = SelectorFilter.descendants(wire.parent(), '.' + resizeBar);
+const each = function (wire: ResizeWire, f: (bar: SugarElement<HTMLDivElement>, idx: number) => void) {
+  const bars = SelectorFilter.descendants<HTMLDivElement>(wire.parent(), '.' + resizeBar);
   Arr.each(bars, f);
 };
 

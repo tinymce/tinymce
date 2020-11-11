@@ -9,7 +9,7 @@ import { SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 // origin: the offset for the point to display the bars in the appropriate position
 // isResizable: a callback that determines if the table and the provided element can be resized using the resize bars
 
-type ResizeCallback = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => boolean;
+type ResizeCallback = (elm: SugarElement<Element>) => boolean;
 
 export interface ResizeWire {
   parent: () => SugarElement;

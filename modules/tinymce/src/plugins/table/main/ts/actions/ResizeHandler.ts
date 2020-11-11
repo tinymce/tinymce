@@ -23,7 +23,7 @@ export interface ResizeHandler {
 }
 
 const barResizerPrefix = 'bar-';
-const isResizable = (table: SugarElement<HTMLTableElement>, elm: SugarElement<Element>) => Arr.forall([ table, elm ], (el) => Attribute.get(el, 'data-mce-resize') !== 'false');
+const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
 
 export const getResizeHandler = function (editor: Editor): ResizeHandler {
   let selectionRng = Optional.none<Range>();
