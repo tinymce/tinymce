@@ -98,7 +98,7 @@ UnitTest.test('Bars.refresh and Bars.destroy with colgroup table', () => {
   setResizeAttr(container, 'td', 'true');
 });
 
-// TODO: Test other functions from Bars.ts
+// TODO: TINY-6641 - Test other functions from Bars.ts
 
 // UnitTest.test('Bars.show and Bars.hide', () => {});
 

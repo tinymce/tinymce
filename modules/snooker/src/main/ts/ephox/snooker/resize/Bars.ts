@@ -20,7 +20,8 @@ const resizableColumns = (warehouse: Warehouse, isResizable: (elm: SugarElement<
   // Check col elements and see if they are resizable
   Arr.range(warehouse.grid.columns, (index) => {
     // With use of forall, index will be included if col doesn't exist meaning the column cells will be checked below
-    if (Warehouse.getColumnAt(warehouse, index).map((col) => col.element).forall((col) => isResizable(col))) {
+    const colElmOpt = Warehouse.getColumnAt(warehouse, index).map((col) => col.element);
+    if (colElmOpt.forall(isResizable)) {
       resizableCols.push(index);
     }
   });
