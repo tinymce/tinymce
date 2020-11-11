@@ -1,10 +1,11 @@
 import { Chain, Log, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Optional, OptionalInstances } from '@ephox/katamari';
+import { Fun, Optional, OptionalInstances } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as Memento from 'ephox/alloy/api/component/Memento';
@@ -42,7 +43,9 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
   };
 
   GuiSetup.setup(makeComponent, (doc, body, gui, comp, store) => {
-    const sBlock = (fn?: (behaviour: Record<string, Behaviour.ConfiguredBehaviour<any, any>>) => AlloySpec) => Step.sync(() => Blocking.block(comp, fn));
+    const sBlock = (fn?: (comp: AlloyComponent, behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec) =>
+      Step.sync(() => Blocking.block(comp, fn === undefined ? Fun.constant({ dom: { tag: 'div' }}) : fn));
+
     const sUnblock = Step.sync(() => Blocking.unblock(comp));
 
     return [
@@ -77,7 +80,7 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
       ]),
 
       Log.stepsAsStep('TINY-6487', 'Blocker is created', [
-        sBlock((behaviours) => ({
+        sBlock((_comp, behaviours) => ({
           dom: {
             tag: 'div',
             classes: [ 'put-spinner-here' ]
@@ -90,14 +93,14 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
       ]),
 
       Log.stepsAsStep('TINY-6487', 'Only one blocker is created', [
-        sBlock((behaviours) => ({
+        sBlock((_comp, behaviours) => ({
           dom: {
             tag: 'div',
             classes: [ 'put-spinner-here' ]
           },
           behaviours
         })),
-        sBlock((behaviours) => ({
+        sBlock((_comp, behaviours) => ({
           dom: {
             tag: 'div',
             classes: [ 'put-spinner-here' ]

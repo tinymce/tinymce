@@ -3,10 +3,11 @@ import { Optional } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
 
 export default [
-  // The blocking behaviour optionally allows for a "blocker" component to be
-  // added to the DOM while the component is in the blocked state. If a function
-  // is provided here that returns Some, then blocker component will be added as
-  // a child of the returned component.
+  // The blocking behaviour places a blocking element over the DOM while the
+  // component is in the blocked state. If a function is provided here that
+  // returns Some, then the blocking element will be added as a child of the
+  // element returned. Otherwise, it will be added as a child of the main
+  // component.
   FieldSchema.defaultedFunction('getRoot', Optional.none),
   // This function, if provided, will be called any time the component is
   // blocked (unless it was already blocked).

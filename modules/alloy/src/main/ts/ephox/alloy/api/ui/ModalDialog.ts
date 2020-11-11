@@ -67,7 +67,7 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
   const getDialogFooter = (dialog: AlloyComponent) => AlloyParts.getPartOrDie(dialog, detail, 'footer');
 
   const setBusy = (dialog: AlloyComponent, getBusySpec: GetBusySpec) => {
-    Blocking.block(dialog, (bs) => getBusySpec(dialog, bs));
+    Blocking.block(dialog, getBusySpec);
   };
 
   const setIdle = (dialog: AlloyComponent) => {

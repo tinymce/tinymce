@@ -1,11 +1,17 @@
-import { AlloySpec, BehaviourState } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import * as Behaviour from 'src/main/ts/ephox/alloy/api/behaviour/Behaviour';
-import { AlloyComponent } from 'src/main/ts/ephox/alloy/api/component/ComponentApi';
-import { WrappedApiFunc } from 'src/main/ts/ephox/alloy/behaviour/common/Behaviour';
-import { AlloyBehaviour } from 'src/main/ts/ephox/alloy/behaviour/common/BehaviourTypes';
+import * as Behaviour from '../../api/behaviour/Behaviour';
+import { AlloyComponent } from '../../api/component/ComponentApi';
+import { AlloySpec } from '../../api/component/SpecTypes';
+import { WrappedApiFunc } from '../common/Behaviour';
+import { AlloyBehaviour } from '../common/BehaviourTypes';
+import { BehaviourState } from '../common/BehaviourState';
 
-export type BlockFn = (component: AlloyComponent, config: BlockingConfig, state: BlockingState, getBusySpec?: (behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec) => void;
+export type BlockFn = (
+  component: AlloyComponent,
+  config: BlockingConfig,
+  state: BlockingState,
+  getBusySpec: (root: AlloyComponent, behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec
+) => void;
 export type UnblockFn = (component: AlloyComponent, config: BlockingConfig, state: BlockingState) => void;
 
 export interface BlockingConfigSpec extends Behaviour.BehaviourConfigSpec {
@@ -22,10 +28,9 @@ export interface BlockingConfig extends Behaviour.BehaviourConfigDetail {
 
 export interface BlockingState extends BehaviourState {
   // We don't actually store the blocker, just a callback to delete it
-  readonly setBlocker: (destroy: () => void) => void;
-  readonly clearBlocker: () => void;
-  readonly getBlocked: () => boolean;
-  readonly setBlocked: (blocked: boolean) => void;
+  readonly blockWith: (destroy: () => void) => void;
+  readonly clear: () => void;
+  readonly isBlocked: () => boolean;
 }
 
 export interface BlockingBehaviour extends AlloyBehaviour<BlockingConfigSpec, BlockingConfig, BlockingState> {

@@ -52,7 +52,7 @@ export default () => {
               const parent = Traverse.parent(comp.element);
               const parentComp = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
               parentComp.each((parent) => {
-                Blocking.block(parent, (bs) => ({
+                Blocking.block(parent, (_comp, bs) => ({
                   dom: spinnerDom,
                   behaviours: bs,
                   components: [{
