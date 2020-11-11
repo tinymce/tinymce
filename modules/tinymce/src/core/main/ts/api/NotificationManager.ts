@@ -42,7 +42,7 @@ export interface NotificationApi {
 }
 
 interface NotificationManager {
-  open: (spec: NotificationSpec, fireEvent?: boolean) => NotificationApi;
+  open: (spec: NotificationSpec) => NotificationApi;
   close: () => void;
   getNotifications: () => NotificationApi[];
 }
