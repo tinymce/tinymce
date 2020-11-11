@@ -7,8 +7,8 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents, Receiving, Reflecting,
-  SimpleSpec, SystemEvents
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
+  Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents
 } from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
@@ -58,9 +58,12 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
     {
-      // TODO: Implement block and unblock for inline dialogs
-      onBlock: () => { },
-      onUnblock: () => { },
+      onBlock: (event) => {
+        Blocking.block(dialog, (_comp, bs) => SilverDialogCommon.getBusySpec(event.message, bs));
+      },
+      onUnblock: () => {
+        Blocking.unblock(dialog);
+      },
       onClose: () => extra.closeWindow()
     },
     backstage.shared.getSink
@@ -74,7 +77,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: `${dialogContentId}`
+        ['aria-describedby']: `${ dialogContentId }`
       }
     },
     eventOrder: {
@@ -111,7 +114,9 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
           })
         ])
       ),
-      RepresentingConfigs.memory({ })
+      Blocking.config({ getRoot: () => Optional.some(dialog) }),
+      Replacing.config({}),
+      RepresentingConfigs.memory({})
     ]),
 
     components: [

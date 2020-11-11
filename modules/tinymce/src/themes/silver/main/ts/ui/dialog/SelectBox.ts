@@ -38,7 +38,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     factory: AlloyHtmlSelect,
     selectBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isReadOnly()
+        disabled: () => spec.disabled || providersBackstage.isDisabled()
       }),
       Tabstopping.config({ }),
       AddEventsBehaviour.config('selectbox-change', [
@@ -74,7 +74,7 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ selectWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isReadOnly(),
+        disabled: () => spec.disabled || providersBackstage.isDisabled(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },

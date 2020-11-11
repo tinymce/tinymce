@@ -6,9 +6,10 @@
  */
 
 import PluginManager from 'tinymce/core/api/PluginManager';
+
 import * as Settings from './api/Settings';
 import { initDatabase } from './core/EmojiDatabase';
-
+import * as Filters from './core/Filters';
 import * as Autocompletion from './ui/Autocompletion';
 import * as Buttons from './ui/Buttons';
 
@@ -28,5 +29,6 @@ export default function () {
 
     Buttons.register(editor, database);
     Autocompletion.init(editor, database);
+    Filters.setup(editor);
   });
 }

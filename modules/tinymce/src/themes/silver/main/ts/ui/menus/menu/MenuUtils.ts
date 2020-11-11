@@ -1,13 +1,13 @@
 import { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { ValueSchema } from '@ephox/boulder';
-import { InlineContent, Toolbar } from '@ephox/bridge';
+import { InlineContent, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { components as menuComponents, dom as menuDom } from './MenuParts';
 
 import { forCollection, forHorizontalCollection, forSwatch, forToolbar } from './MenuStructures';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 
-export const menuHasIcons = (xs: Array<SingleMenuItemSpec | InlineContent.AutocompleterItemSpec>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
+export const menuHasIcons = (xs: Array<SingleMenuItemSpec | Menu.CardMenuItemSpec | InlineContent.AutocompleterItemSpec>) => Arr.exists(xs, (item) => 'icon' in item && item.icon !== undefined);
 
 export interface PartialMenuSpec {
   value: string;

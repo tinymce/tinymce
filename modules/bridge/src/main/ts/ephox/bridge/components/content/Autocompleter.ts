@@ -1,5 +1,6 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
+import { CardMenuItemSpec } from '../menu/CardMenuItem';
 
 import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
@@ -13,7 +14,7 @@ export interface AutocompleterItemSpec {
   meta?: Record<string, any>;
 }
 
-export type AutocompleterContents = SeparatorItemSpec | AutocompleterItemSpec;
+export type AutocompleterContents = SeparatorItemSpec | AutocompleterItemSpec | CardMenuItemSpec;
 
 export type SeparatorItem = SeparatorMenuItem;
 export interface AutocompleterItem {
@@ -35,6 +36,7 @@ export interface AutocompleterSpec {
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults?: number;
+  highlightOn?: string[];
 }
 
 export interface AutocompleterInstanceApi {
@@ -51,6 +53,7 @@ export interface Autocompleter {
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;
+  highlightOn: string[];
 }
 
 const autocompleterItemSchema = ValueSchema.objOf([
@@ -72,7 +75,8 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.defaultedNumber('maxResults', 10),
   FieldSchema.optionFunction('matches'),
   FieldSchema.strictFunction('fetch'),
-  FieldSchema.strictFunction('onAction')
+  FieldSchema.strictFunction('onAction'),
+  FieldSchema.defaultedArrayOf('highlightOn', [], ValueSchema.string)
 ]);
 
 export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>

@@ -38,7 +38,7 @@ const renderCommonSpec = (spec, actionOpt: Optional<(comp: AlloyComponent) => vo
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => spec.disabled || providersBackstage.isReadOnly()),
+      DisablingConfigs.button(() => spec.disabled || providersBackstage.isDisabled()),
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('button press', [
