@@ -61,7 +61,7 @@ UnitTest.test('Bars.refresh and Bars.destroy with standard table', () => {
   assertdBarCounts(container, 1, 1);
   Bars.destroy(resizeCallbackWire);
   assertdBarCounts(container, 0, 0);
-  setResizeAttr(container, 'tr', 'true');
+  setResizeAttr(container, 'td', 'true');
 
   Remove.remove(container);
 });
@@ -87,7 +87,7 @@ UnitTest.test('Bars.refresh and Bars.destroy with colgroup table', () => {
   assertdBarCounts(container, 1, 1);
   Bars.destroy(resizeCallbackWire);
   assertdBarCounts(container, 0, 0);
-  setResizeAttr(container, 'tr', 'true');
+  setResizeAttr(container, 'col', 'true');
 
   // Test with resize false attribute on td
   setResizeAttr(container, 'td', 'false');
@@ -95,7 +95,7 @@ UnitTest.test('Bars.refresh and Bars.destroy with colgroup table', () => {
   assertdBarCounts(container, 1, 1);
   Bars.destroy(resizeCallbackWire);
   assertdBarCounts(container, 0, 0);
-  setResizeAttr(container, 'tr', 'true');
+  setResizeAttr(container, 'td', 'true');
 });
 
 // TODO: Test other functions from Bars.ts

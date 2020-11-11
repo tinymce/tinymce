@@ -7,7 +7,7 @@ import { SugarElement, SugarLocation, SugarPosition } from '@ephox/sugar';
 //       or the document that is a common ancestor of both the content tables and the
 //       resize bars ('parent') and so will listen to events from both (eg, iframe mode)
 // origin: the offset for the point to display the bars in the appropriate position
-// isResizable: a callback that determines if the table and the provided element can be resized using the resize bars
+// isResizable: a callback that determines if the provided element can be resized using the resize bars
 
 type ResizeCallback = (elm: SugarElement<Element>) => boolean;
 
