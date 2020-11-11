@@ -28,9 +28,8 @@ const getImageList = (editor: Editor) => editor.getParam('image_list', false);
 
 const hasUploadUrl = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_url'));
 
-const hasUploadHandler = (editor: Editor) => !!getUploadHandler(editor);
+const hasUploadHandler = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_handler'));
 
-const getUploadHandler = (editor: Editor) => editor.getParam('images_upload_handler', undefined, 'function');
 
 const showAccessibilityOptions = (editor: Editor) => editor.getParam('a11y_advanced_options', false, 'boolean');
 
@@ -48,7 +47,6 @@ export {
   getImageList,
   hasUploadUrl,
   hasUploadHandler,
-  getUploadHandler,
   showAccessibilityOptions,
   isAutomaticUploadsEnabled
 };
