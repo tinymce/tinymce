@@ -99,7 +99,7 @@ export const createAutocompleteItems = (
   columns: 'auto' | number,
   itemResponse: ItemResponse,
   sharedBackstage: UiFactoryBackstageShared,
-  highlight: string[]
+  highlightOn: string[]
 ) => {
   // Render text and icons if we're using a single column, otherwise only render icons
   const renderText = columns === 1;
@@ -129,9 +129,9 @@ export const createAutocompleteItems = (
               sharedBackstage,
               {
                 itemBehaviours: tooltipBehaviour(d.meta, sharedBackstage),
-                title: {
+                cardText: {
                   matchText,
-                  highlight
+                  highlightOn
                 }
               }
             ))

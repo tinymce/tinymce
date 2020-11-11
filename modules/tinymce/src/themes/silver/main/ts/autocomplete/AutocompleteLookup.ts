@@ -23,7 +23,7 @@ export interface AutocompleteLookupData {
   items: InlineContent.AutocompleterContents[];
   columns: InlineContent.ColumnTypes;
   onAction: (autoApi: InlineContent.AutocompleterInstanceApi, rng: Range, value: string, meta: Record<string, any>) => void;
-  highlight: string[];
+  highlightOn: string[];
 }
 
 export interface AutocompleteLookupInfo {
@@ -71,7 +71,7 @@ const lookupWithContext = (editor: Editor, getDatabase: () => AutocompleterDatab
       items: results,
       columns: ac.columns,
       onAction: ac.onAction,
-      highlight: ac.highlight
+      highlightOn: ac.highlightOn
     }));
   }));
 

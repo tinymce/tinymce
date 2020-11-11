@@ -7,8 +7,8 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Disabling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { PredicateFilter } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SelectorFilter } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 import * as ItemClasses from '../ItemClasses';
@@ -19,10 +19,10 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 
 export interface CardExtras {
   itemBehaviours?: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
-  // Extras specific to title components
-  title: {
+  // Extras specific to cardText components
+  cardText: {
     matchText?: string;
-    highlight: string[];
+    highlightOn: string[];
   };
 }
 
@@ -36,8 +36,8 @@ const render = (items: Menu.CardItem[], extras: CardExtras): Array<AlloySpec> =>
 
     case 'cardtext':
       // Only highlight targeted text components
-      const shouldHighlight = item.name.exists((name) => Arr.contains(extras.title.highlight, name));
-      const matchText = shouldHighlight ? Optional.from(extras.title.matchText).getOr('') : '';
+      const shouldHighlight = item.name.exists((name) => Arr.contains(extras.cardText.highlightOn, name));
+      const matchText = shouldHighlight ? Optional.from(extras.cardText.matchText).getOr('') : '';
       return renderHtml(replaceText(item.text, matchText), item.classes);
   }
 });

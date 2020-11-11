@@ -36,7 +36,7 @@ export interface AutocompleterSpec {
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults?: number;
-  highlight?: string[];
+  highlightOn?: string[];
 }
 
 export interface AutocompleterInstanceApi {
@@ -53,7 +53,7 @@ export interface Autocompleter {
   fetch: (pattern: string, maxResults: number, fetchOptions: Record<string, any>) => Promise<AutocompleterContents[]>;
   onAction: (autocompleterApi: AutocompleterInstanceApi, rng, value: string, meta: Record<string, any>) => void;
   maxResults: number;
-  highlight: string[];
+  highlightOn: string[];
 }
 
 const autocompleterItemSchema = ValueSchema.objOf([
@@ -76,7 +76,7 @@ const autocompleterSchema = ValueSchema.objOf([
   FieldSchema.optionFunction('matches'),
   FieldSchema.strictFunction('fetch'),
   FieldSchema.strictFunction('onAction'),
-  FieldSchema.defaultedArrayOf('highlight', [], ValueSchema.string)
+  FieldSchema.defaultedArrayOf('highlightOn', [], ValueSchema.string)
 ]);
 
 export const createSeparatorItem = (spec: SeparatorItemSpec): Result<SeparatorItem, ValueSchema.SchemaError<any>> =>

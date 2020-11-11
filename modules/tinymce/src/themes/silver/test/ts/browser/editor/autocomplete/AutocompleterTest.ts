@@ -408,7 +408,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                         ],
                         children: [
                           s.element('div', {
-                            classes: [ arr.has('title_class') ],
+                            classes: [ arr.has('my_text_class') ],
                             html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
                           })
                         ]
@@ -619,7 +619,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           ch: '€',
           minChars: 1,
           columns: 1,
-          highlight: [ 'my_title_to_highlight' ],
+          highlightOn: [ 'my_text_to_highlight' ],
           fetch: (pattern, _maxResults) => {
             const filteredItems = Arr.filter([
               { text: 'equals sign', value: '=' },
@@ -636,14 +636,23 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
                     store.add('euro:AutocompleterContents->onAction');
                   },
                   items: [
-                    { type: 'cardimage', src: getGreenImageDataUrl(), classes: [ 'my_autocompleter_avatar_class' ] },
+                    {
+                      type: 'cardimage',
+                      src: getGreenImageDataUrl(),
+                      classes: [ 'my_autocompleter_avatar_class' ]
+                    },
                     {
                       type: 'cardcontainer',
                       direction: 'vertical',
                       align: 'right',
                       valign: 'bottom',
                       items: [
-                        { type: 'cardtext', text: item.text, classes: [ 'title_class' ], name: 'my_title_to_highlight' }
+                        {
+                          type: 'cardtext',
+                          text: item.text,
+                          classes: [ 'my_text_class' ],
+                          name: 'my_text_to_highlight'
+                        }
                       ]
                     }
                   ]
