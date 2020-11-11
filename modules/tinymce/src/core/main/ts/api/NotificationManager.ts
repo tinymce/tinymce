@@ -42,7 +42,7 @@ export interface NotificationApi {
 }
 
 interface NotificationManager {
-  open: (spec: NotificationSpec) => NotificationApi;
+  open: (spec: NotificationSpec, fireEvent?: boolean) => NotificationApi;
   close: () => void;
   getNotifications: () => NotificationApi[];
 }
@@ -95,10 +95,15 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const open = function (spec: NotificationSpec) {
+  const open = function (spec: NotificationSpec, fireEvent: boolean = true) {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
       return;
+    }
+
+    // fire event to allow notification spec to be mutated before display
+    if (fireEvent) {
+      editor.fire('BeforeOpenNotification', { notification: spec });
     }
 
     return Arr.find(notifications, function (notification) {
@@ -119,6 +124,9 @@ function NotificationManager(editor: Editor): NotificationManager {
 
       addNotification(notification);
       reposition();
+
+      // Ensure notification is not passed by reference to prevent mutation
+      editor.fire('OpenNotification', { ...notification });
       return notification;
     });
   };
@@ -140,11 +148,12 @@ function NotificationManager(editor: Editor): NotificationManager {
       const serviceMessage = Settings.getServiceMessage(editor);
 
       if (serviceMessage) {
+        // Ensure we pass false for fireEvent so that service message cannot be altered.
         open({
           text: serviceMessage,
           type: 'warning',
           timeout: 0
-        });
+        }, false);
       }
     });
 

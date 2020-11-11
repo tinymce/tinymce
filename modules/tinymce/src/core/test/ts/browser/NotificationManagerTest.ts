@@ -27,20 +27,26 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     const testMsg3: NotificationSpec = { type: 'error', text: 'test error message' };
     const testMsg4: NotificationSpec = { type: 'info', text: 'test info message' };
     const notifications = editor.notificationManager.getNotifications();
+    const openEvents = [];
+
+    editor.on('OpenNotification', (event) => openEvents.push(event));
 
     editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
+    LegacyUnit.equal(openEvents.length, 1, 'Should have one OpenNotification event.');
 
     editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 1, 'Should not add message if duplicate.');
+    LegacyUnit.equal(openEvents.length, 1, 'Should not fire additional OpenNotification for duplicate.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
     editor.notificationManager.open(testMsg4);
 
     LegacyUnit.equal(notifications.length, 4, 'Non duplicate messages should get added.');
+    LegacyUnit.equal(openEvents.length, 4, 'Should fire additional OpenNotification events for notifications.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
@@ -111,6 +117,90 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
 
     n1.close();
     LegacyUnit.equal(true, editor.hasFocus(), 'Focus should be on the editor');
+
+    teardown(editor);
+  });
+
+  suite.test('TINY-6528: Notification manager should throw events for notification modification', (editor) => {
+    const testMsg: NotificationSpec = {
+      type: 'warning',
+      text: 'unmodified notification text',
+      icon: 'warning',
+      progressBar: true,
+      timeout: 10,
+      closeButton: true
+    };
+    const notifications = editor.notificationManager.getNotifications();
+
+    // Unmodified notification
+    editor.notificationManager.open(testMsg);
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+    LegacyUnit.deepEqual(notifications[0].settings, testMsg, 'Entire notification should be unmodified');
+    teardown(editor);
+
+    editor.on('BeforeOpenNotification', (event) => {
+      event.notification.type = 'success';
+      event.notification.text = 'Modified notification text';
+      event.notification.icon = 'user';
+      event.notification.progressBar = false;
+      event.notification.timeout = 5;
+      event.notification.closeButton = false;
+    });
+
+    const openEvents = [];
+    editor.on('OpenNotification', (event) => openEvents.push(event));
+
+    editor.notificationManager.open(testMsg);
+    LegacyUnit.equal(openEvents.length, 1, 'Should fire OpenNotification event');
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+
+    // Modified notification
+    const modified = notifications[0].settings;
+    LegacyUnit.equal(modified.text, 'Modified notification text', 'Should have modified text');
+    LegacyUnit.equal(modified.type, 'success', 'Should have modified type');
+    LegacyUnit.equal(modified.icon, 'user', 'Should have modified icon');
+    LegacyUnit.equal(modified.progressBar, false, 'Should have modified progressBar');
+    LegacyUnit.equal(modified.timeout, 5, 'Should have modified timeout');
+    LegacyUnit.equal(modified.closeButton, false, 'Should have modified closeButton');
+    teardown(editor);
+  });
+
+  suite.test('TINY-6528: Notification manager should not fire BeforeOpenNotification when fireEvent is false', (editor) => {
+    const testMsg: NotificationSpec = {
+      type: 'warning',
+      text: 'unmodified notification text',
+      icon: 'warning',
+      progressBar: true,
+      timeout: 10,
+      closeButton: true
+    };
+
+    const notifications = editor.notificationManager.getNotifications();
+    editor.on('BeforeOpenNotification', (event) => {
+      event.notification.type = 'success';
+      event.notification.text = 'Modified notification text';
+      event.notification.icon = 'user';
+      event.notification.progressBar = false;
+      event.notification.timeout = 5;
+      event.notification.closeButton = false;
+    });
+
+    const openEvents = [];
+    editor.on('OpenNotification', (event) => openEvents.push(event));
+
+    // Pass false for fireEvent param
+    editor.notificationManager.open(testMsg, false);
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+    LegacyUnit.equal(openEvents.length, 1, 'Should fire OpenNotification event');
+
+    // Notification should be unmodified
+    const unmodified = notifications[0].settings;
+    LegacyUnit.equal(unmodified.text, 'unmodified notification text', 'Should have modified text');
+    LegacyUnit.equal(unmodified.type, 'warning', 'Should have modified type');
+    LegacyUnit.equal(unmodified.icon, 'warning', 'Should have modified icon');
+    LegacyUnit.equal(unmodified.progressBar, true, 'Should have modified progressBar');
+    LegacyUnit.equal(unmodified.timeout, 10, 'Should have modified timeout');
+    LegacyUnit.equal(unmodified.closeButton, true, 'Should have modified closeButton');
 
     teardown(editor);
   });
