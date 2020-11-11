@@ -100,4 +100,4 @@ const renderAutocompleteItem = (
   }, structure, itemResponse, sharedBackstage.providers);
 };
 
-export { renderAutocompleteItem };
+export { renderAutocompleteItem, replaceText, tooltipBehaviour };

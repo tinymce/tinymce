@@ -1,10 +1,15 @@
 Version 5.6.0 (TBD)
     Added new `BeforeOpenNotification` and `OpenNotification` events which allow internal notifications to be captured and modified before display #TINY-6528
+    Added support for `block` and `unblock` methods on inline dialogs #TINY-6487
+    Added new `TableModified` event which is fired whenever changes are made to a table #TINY-6629
     Added new `image_file_types` setting to determine which image file formats will be automatically processed into `img` tags on paste when using the `paste` plugin #TINY-6306
     Added support for `image_file_types` setting in the image file uploader to determine which image file extensions are valid for upload #TINY-6224
     Added new `format_empty_lines` setting to control if empty lines are formatted in a ranged selection #TINY-6483
+    Added template support to the autocompleter for customizing the autocompleter items #TINY-6505
     Added new user interface `enable`, `disable`, and `isDisabled` methods #TINY-6397
     Added new `closest` formatter API to get the closest matching selection format from a set of formats. #TINY-6479
+    Added new `emojiimages` emoticons database that uses the twemoji CDN by default #TINY-6021
+    Added new `emoticons_database` setting to configure which emoji database to use #TINY-6021
     Added new `name` field to the `style_formats` setting object to enable specifying a name for the format. #TINY-4239
     Changed `readonly` mode to allow hyperlinks to be clickable #TINY-6248
     Fixed layout issues when empty `tr` elements were incorrectly removed from tables #TINY-4679
@@ -12,6 +17,7 @@ Version 5.6.0 (TBD)
     Fixed `DOMUtils.getParents` incorrectly including the shadow root in the array of elements returned #TINY-6540
     Fixed an issue where the root document could be scrolled while an editor dialog was open inside a shadow root #TINY-6363
     Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
+    Fixed table column and row resizers not respecting the `data-mce-resize` attribute #TINY-6600
     Fixed nested tables with `colgroup` elements incorrectly always resizing the inner table #TINY-6623
     Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282
     Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541

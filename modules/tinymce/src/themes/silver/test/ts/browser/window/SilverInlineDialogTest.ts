@@ -5,14 +5,16 @@ import { Cell, Strings } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { WindowParams } from 'tinymce/core/api/WindowManager';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as DialogUtils from '../../module/DialogUtils';
 
 UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const store = TestHelpers.TestStore();
     const currentApi = Cell<Dialog.DialogInstanceApi<any>>({ } as any);
 
@@ -63,7 +65,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       }
     };
 
-    const sTestOpen = (params) => Chain.asStep({ }, [
+    const sTestOpen = (params: WindowParams) => Chain.asStep({ }, [
       DialogUtils.cOpenWithStore(editor, dialogSpec, params, store),
       Chain.op((dialogApi) => {
         Assertions.assertEq('Initial data', {
@@ -91,7 +93,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
       TestHelpers.GuiSetup.mAddStyles(SugarElement.fromDom(document), [
         '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
       ]),
-      sTestOpen({ inline: 'magic' }),
+      sTestOpen({}),
       FocusTools.sTryOnSelector(
         'Focus should start on the input',
         SugarElement.fromDom(document),

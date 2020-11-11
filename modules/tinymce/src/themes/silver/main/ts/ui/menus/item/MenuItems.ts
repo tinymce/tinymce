@@ -12,6 +12,7 @@ import { renderNestedItem } from './build/NestedMenuItem';
 import { renderNormalItem } from './build/NormalMenuItem';
 import { renderSeparatorItem } from './build/SeparatorItem';
 import { renderToggleMenuItem } from './build/ToggleMenuItem';
+import { renderCardMenuItem } from './build/CardMenuItem';
 
 const choice = renderChoiceItem;
 const autocomplete = renderAutocompleteItem;
@@ -20,6 +21,7 @@ const normal = renderNormalItem;
 const nested = renderNestedItem;
 const toggle = renderToggleMenuItem;
 const fancy = renderFancyMenuItem;
+const card = renderCardMenuItem;
 
 export {
   choice,
@@ -28,5 +30,6 @@ export {
   normal,
   nested,
   toggle,
-  fancy
+  fancy,
+  card
 };

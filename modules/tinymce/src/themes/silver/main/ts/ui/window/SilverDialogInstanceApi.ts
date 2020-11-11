@@ -60,7 +60,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     const root = access.getRoot();
     const valueComp = root.getSystem().isConnected() ? access.getFormWrapper() : root;
     const representedValues = Representing.getValue(valueComp);
-    const menuItemCurrentState = Obj.map(menuItemStates, (cell: any) => cell.get());
+    const menuItemCurrentState = Obj.map(menuItemStates, (cell) => cell.get());
     return {
       ...representedValues,
       ...menuItemCurrentState

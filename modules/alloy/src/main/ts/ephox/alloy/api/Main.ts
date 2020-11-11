@@ -35,6 +35,7 @@ import * as TieredMenuTypes from '../ui/types/TieredMenuTypes';
 import * as AddEventsBehaviour from './behaviour/AddEventsBehaviour';
 import { AllowBubbling } from './behaviour/AllowBubbling';
 import * as Behaviour from './behaviour/Behaviour';
+import { Blocking } from './behaviour/Blocking';
 import { Composing } from './behaviour/Composing';
 import { Coupling } from './behaviour/Coupling';
 import { Disabling } from './behaviour/Disabling';
@@ -130,6 +131,7 @@ export {
   AddEventsBehaviour,
   Behaviour,
   AllowBubbling,
+  Blocking,
   Composing,
   Coupling,
   Disabling,
