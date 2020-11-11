@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger, Obj, Optional } from '@ephox/katamari';
+import { Cell, Merger, Obj, Optional, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -59,6 +59,17 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   const categories = Cell<Optional<Record<string, EmojiEntry[]>>>(Optional.none());
   const all = Cell<Optional<EmojiEntry[]>>(Optional.none());
 
+  const emojiImagesUrl = Settings.getEmotionsImageUrl(editor);
+
+  const getEmoji = (lib: RawEmojiEntry) => {
+    // Note: This is a little hacky, but the database doesn't provide a way for us to tell what sort of database is being used
+    if (Strings.startsWith(lib.char, '<img')) {
+      return lib.char.replace(/src="([^"]+)"/, (match, url) => `src="${emojiImagesUrl}${url}"`);
+    } else {
+      return lib.char;
+    }
+  };
+
   const processEmojis = (emojis: Record<string, RawEmojiEntry>) => {
     const cats = {};
     const everything = [];
@@ -68,7 +79,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
         // Omitting fitzpatrick_scale
         title,
         keywords: lib.keywords,
-        char: lib.char,
+        char: getEmoji(lib),
         category: translateCategory(categoryNameMap, lib.category)
       };
       const current = cats[entry.category] !== undefined ? cats[entry.category] : [];
