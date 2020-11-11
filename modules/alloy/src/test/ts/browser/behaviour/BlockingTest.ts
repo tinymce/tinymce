@@ -122,6 +122,30 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
           Chain.op((xs) => Assert.eq('Only one spinner', 1, xs.length))
         ]),
         sUnblock
+      ]),
+
+      Log.stepsAsStep('TINY-6487', 'Changing the blocker affects the dom', [
+        sBlock((_comp, behaviours) => ({
+          dom: {
+            tag: 'div',
+            classes: [ 'spinner-1' ]
+          },
+          behaviours
+        })),
+        Assertions.sAssertPresence('Spinner 1 present', {
+          'div.spinner-1': 1
+        }, comp.element),
+        sBlock((_comp, behaviours) => ({
+          dom: {
+            tag: 'div',
+            classes: [ 'spinner-2' ]
+          },
+          behaviours
+        })),
+        Assertions.sAssertPresence('Spinner 2 present', {
+          'div.spinner-1': 0,
+          'div.spinner-2': 1
+        }, comp.element)
       ])
     ];
   }, success, failure);
