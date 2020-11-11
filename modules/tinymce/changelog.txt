@@ -1,4 +1,5 @@
 Version 5.6.0 (TBD)
+    Added a new `ImageUploder` API to allow image data to be uploaded #TINY-4601
     Added new `image_file_types` setting to determine which image file formats will be automatically processed into `img` tags on paste when using the `paste` plugin #TINY-6306
     Added support for `image_file_types` setting in the image file uploader to determine which image file extensions are valid for upload #TINY-6224
     Added new `format_empty_lines` setting to control if empty lines are formatted in a ranged selection #TINY-6483
