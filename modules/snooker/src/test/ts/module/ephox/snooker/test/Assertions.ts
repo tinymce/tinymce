@@ -70,7 +70,7 @@ const checkPaste = (
       // Impossible type! This might work in some restricted circumstances.
       generators: Bridge.generators as SimpleGenerators
     },
-    Bridge.generators,
+    Bridge.generators
   );
 
   assert.eq(expectedHtml, Html.getOuter(table));
@@ -86,7 +86,7 @@ const checkStructure = (
   operation: Op<TargetElement>,
   section: number,
   row: number,
-  column: number,
+  column: number
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -115,7 +115,7 @@ const checkDelete = (
   input: string,
   operation: Op<TargetSelection>,
   cells: { section: number; row: number; column: number }[],
-  platform: ReturnType<typeof PlatformDetection.detect>,
+  platform: ReturnType<typeof PlatformDetection.detect>
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);

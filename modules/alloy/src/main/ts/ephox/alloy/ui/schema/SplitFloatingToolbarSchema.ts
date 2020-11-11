@@ -15,7 +15,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.strict('lazySink'),
   FieldSchema.state('overflowGroups', () => Cell([ ]))
 ].concat(
-  SplitToolbarBase.schema(),
+  SplitToolbarBase.schema()
 ));
 
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([

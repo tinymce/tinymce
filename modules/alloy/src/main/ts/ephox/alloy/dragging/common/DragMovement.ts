@@ -40,7 +40,7 @@ const clampCoords = (component: AlloyComponent, coords: DragCoord.CoordAdt, scro
     () => {
       const fixed = DragCoord.asFixed(newCoords, scroll, origin);
       return DragCoord.fixed(fixed.left, fixed.top);
-    },
+    }
   );
 };
 

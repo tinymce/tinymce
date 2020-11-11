@@ -134,9 +134,18 @@ export default (): void => {
     return Type.isFunction((v as SliderValueY).y);
   }
 
+  const getColor = (hue: number) => {
+    if (hue < 0) {
+      return 'black';
+    } else if (hue > 360) {
+      return 'white';
+    } else {
+      return 'hsl(' + hue + ', 100%, 50%)';
+    }
+  };
+
   const setColor = (thumb: AlloyComponent, hue: number) => {
-    const color = (hue < 0) ? 'black' : (hue > 360) ? 'white' : 'hsl(' + hue + ', 100%, 50%)';
-    Css.set(thumb.element, 'background', color);
+    Css.set(thumb.element, 'background', getColor(hue));
   };
 
   HtmlDisplay.section(

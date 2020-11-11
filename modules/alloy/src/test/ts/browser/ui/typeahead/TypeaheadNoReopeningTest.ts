@@ -89,7 +89,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
       GeneralSteps.sequence([
         Logger.t(
           'Set some content in the typeahead',
-          UiControls.sSetValue(typeahead.element, 'Neo'),
+          UiControls.sSetValue(typeahead.element, 'Neo')
         ),
 
         Logger.t(

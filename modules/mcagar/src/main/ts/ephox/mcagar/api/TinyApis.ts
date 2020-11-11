@@ -172,7 +172,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     'Waiting for focus',
     sHasFocus(true),
     50,
-    waitTime,
+    waitTime
   );
 
   return {

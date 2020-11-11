@@ -108,7 +108,7 @@ UnitTest.asyncTest('atomic.robin.zone.InViewportTest', (success, failure) => {
       sAssertZones('a/p1', 'c/p4', 'a', 'c')
     ),
     Log.step('TINY-6412', 'Can it walk all nodes in a viewport',
-      sAssertZones('a/p1', 'c/p4', 'b', 'b'),
+      sAssertZones('a/p1', 'c/p4', 'b', 'b')
     ),
     Log.stepsAsStep('TINY-6412', 'Will it skip if the viewport and the start/end points have no overlap', [
       sAssertZones('b/p3', 'c/p4', 'a', 'a'),

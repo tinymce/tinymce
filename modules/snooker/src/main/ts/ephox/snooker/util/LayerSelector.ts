@@ -7,9 +7,11 @@ const firstLayer = function (scope: SugarElement, selector: string) {
 
 const filterFirstLayer = function (scope: SugarElement, selector: string, predicate: (e: SugarElement) => boolean): SugarElement[] {
   return Arr.bind(Traverse.children(scope), function (x) {
-    return Selectors.is(x, selector) ?
-      predicate(x) ? [ x ] : [ ]
-      : filterFirstLayer(x, selector, predicate);
+    if (Selectors.is(x, selector)) {
+      return predicate(x) ? [ x ] : [];
+    } else {
+      return filterFirstLayer(x, selector, predicate);
+    }
   });
 };
 

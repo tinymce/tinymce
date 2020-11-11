@@ -17,13 +17,21 @@
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
-    "comma-dangle": ["error", "never"],
+    "arrow-body-style": "off", // Disabled as it causes readability issues in more complex cases
+    "comma-dangle": ["error", {
+      "arrays": "only-multiline",
+      "objects": "only-multiline",
+      "imports": "never",
+      "exports": "never",
+      "functions": "never"
+    }],
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
     }],
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",
+    "no-nested-ternary": "error",
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",

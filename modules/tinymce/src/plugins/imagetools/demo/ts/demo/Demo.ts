@@ -15,7 +15,7 @@ $(
   '<p><img src="' + imgSrc + '" style="width: 20%">' +
   '<p><img src="' + imgSrc + '">' +
   '<p><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png">' +
-  '</textarea>',
+  '</textarea>'
 ).appendTo('#ephox-ui');
 
 tinymce.init({
