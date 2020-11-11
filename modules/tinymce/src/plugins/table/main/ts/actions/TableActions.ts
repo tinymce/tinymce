@@ -11,7 +11,7 @@ import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { fireNewCell, fireNewRow } from '../api/Events';
+import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
@@ -69,11 +69,12 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
-          fireNewRow(editor, row.dom);
+          Events.fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells, (cell) => {
-          fireNewCell(editor, cell.dom);
+          Events.fireNewCell(editor, cell.dom);
         });
+        Events.fireTableModified(editor, table.dom);
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
@@ -81,7 +82,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
           rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
-      }) : Optional.none();
+      }) : Optional.none<Range>();
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);

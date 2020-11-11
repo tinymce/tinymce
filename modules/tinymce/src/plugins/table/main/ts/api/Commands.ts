@@ -13,6 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
+import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -65,7 +66,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     }
   });
 
-  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
@@ -168,6 +169,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   // Remove cell style using command (an empty string indicates to remove the style)
   // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: '' })
   editor.addCommand('mceTableApplyCellStyle', (_ui: boolean, args: Record<string, string>) => {
+    const getFormatName = (style: string) => 'tablecell' + style.toLowerCase().replace('-', '');
+
     if (!Type.isObject(args)) {
       return;
     }
@@ -177,17 +180,29 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    Obj.each(args, (value, style) => {
-      const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
-      if (editor.formatter.has(formatName) && Type.isString(value)) {
-        Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell.dom).setFormat(formatName, value);
-        });
-      }
+    const validArgs = Obj.filter(args, (value, style) =>
+      editor.formatter.has(getFormatName(style)) && Type.isString(value)
+    );
+    if (Obj.isEmpty(validArgs)) {
+      return;
+    }
+
+    Obj.each(validArgs, (value, style) => {
+      Arr.each(cells, (cell) => {
+        DomModifier.normal(editor, cell.dom).setFormat(getFormatName(style), value);
+      });
     });
+
+    /*
+      Use the first cell in the selection to get the table and fire the TableModified event.
+      If this command is applied over multiple tables, only the first table selected
+      will have a TableModified event thrown.
+    */
+    getTableFromCell(cells[0]).each(
+      (table) => Events.fireTableModified(editor, table.dom, { structure: false, style: true })
+    );
   });
 
 };
 
 export { registerCommands };
-
