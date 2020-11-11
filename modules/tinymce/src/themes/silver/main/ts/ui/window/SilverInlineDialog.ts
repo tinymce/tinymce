@@ -6,8 +6,10 @@
  */
 
 // DUPE with SilverDialog. Cleaning up.
-import { AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento,
-  NativeEvents, Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents } from '@ephox/alloy';
+import {
+  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
+  Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents
+} from '@ephox/alloy';
 import { DialogManager } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';

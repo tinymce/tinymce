@@ -53,7 +53,7 @@ UnitTest.asynctest('WindowManager:inline-dialog Test', (success, failure) => {
         '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
       ]),
       sTestDialogLabelled({ inline: 'toolbar' }),
-      sTestDialogLabelled({}),
+      sTestDialogLabelled({ }),
       TestHelpers.GuiSetup.mRemoveStyles
     ], onSuccess, onFailure);
   },

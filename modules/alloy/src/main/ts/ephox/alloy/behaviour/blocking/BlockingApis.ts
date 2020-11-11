@@ -7,15 +7,6 @@ import { Replacing } from '../../api/behaviour/Replacing';
 import * as GuiFactory from '../../api/component/GuiFactory';
 import { BlockFn, UnblockFn } from './BlockingTypes';
 
-const blockerBehaviours = Behaviour.derive([
-  // Trap the "Tab" key and don't let it escape.
-  Keying.config({
-    mode: 'special',
-    onTab: () => Optional.some<boolean>(true),
-    onShiftTab: () => Optional.some<boolean>(true)
-  }),
-  Focusing.config({ })
-]);
 
 // Mark this component as busy, or blocked.
 export const block: BlockFn = (
@@ -31,6 +22,15 @@ export const block: BlockFn = (
   Attribute.set(component.element, 'aria-busy', true);
 
   const root = config.getRoot(component).getOr(component);
+  const blockerBehaviours = Behaviour.derive([
+    // Trap the "Tab" key and don't let it escape.
+    Keying.config({
+      mode: 'special',
+      onTab: () => Optional.some<boolean>(true),
+      onShiftTab: () => Optional.some<boolean>(true)
+    }),
+    Focusing.config({ })
+  ]);
   const blockSpec = getBusySpec(root, blockerBehaviours);
   const blocker = root.getSystem().build(blockSpec);
   Replacing.append(root, GuiFactory.premade(blocker));

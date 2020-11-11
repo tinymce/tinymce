@@ -56,8 +56,7 @@ UnitTest.asyncTest('browser.tinymce.themes.silver.window.SilverDialogBlockTest',
         const coords = SugarLocation.absolute(button);
         const centerX = coords.left + 0.5 * Width.get(button);
         const centerY = coords.top + 0.5 * Height.get(button);
-
-        return SugarElement.fromDom(document.elementFromPoint(centerX, centerY));
+        return SugarElement.fromPoint(SugarElement.fromDom(document), centerX, centerY).getOrDie();
       }),
       Mouse.cClickWith({ })
     ]);

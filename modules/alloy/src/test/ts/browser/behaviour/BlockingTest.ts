@@ -1,7 +1,7 @@
-import { Chain, Log, Step, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Fun, Optional, OptionalInstances } from '@ephox/katamari';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
@@ -13,7 +13,7 @@ import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestHelpers';
 
 UnitTest.asyncTest('BlockingTest', (success, failure) => {
-  const blockRoot = Memento.record({
+  const memBlockRoot = Memento.record({
     dom: {
       tag: 'div'
     },
@@ -28,11 +28,11 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        blockRoot.asSpec()
+        memBlockRoot.asSpec()
       ],
       behaviours: Behaviour.derive([
         Blocking.config({
-          getRoot: () => blockRoot.getOpt(component),
+          getRoot: () => memBlockRoot.getOpt(component),
           onBlock: store.adder('block'),
           onUnblock: store.adder('unblock')
         })
@@ -49,7 +49,7 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
     const sUnblock = Step.sync(() => Blocking.unblock(comp));
 
     return [
-      Log.stepsAsStep('TINY-6487', 'Blocking events are fired', [
+      Log.stepsAsStep('TINY-6487', 'Block handlers are called', [
         store.sClear,
         sBlock(),
         sUnblock,
@@ -70,12 +70,22 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
 
       Log.stepsAsStep('TINY-6487', 'Component is marked as busy / unusable', [
         sBlock(),
-        Step.sync(() =>
-          Assert.eq('Aria-blocked is set on the component', Optional.some('true'), Attribute.getOpt(comp.element, 'aria-busy'), OptionalInstances.tOptional())
+        Assertions.sAssertStructure('Aria-blocked is set',
+          ApproxStructure.build((struct, str, _arr) => struct.element('div', {
+            attrs: {
+              'aria-busy': str.is('true')
+            }
+          })),
+          comp.element
         ),
         sUnblock,
-        Step.sync(() =>
-          Assert.eq('Aria-blocked is set on the component', Optional.none<string>(), Attribute.getOpt(comp.element, 'aria-busy'), OptionalInstances.tOptional())
+        Assertions.sAssertStructure('Aria-blocked is unset',
+          ApproxStructure.build((struct, str, _arr) => struct.element('div', {
+            attrs: {
+              'aria-busy': str.none()
+            }
+          })),
+          comp.element
         )
       ]),
 
@@ -87,9 +97,9 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
           },
           behaviours
         })),
-        UiFinder.sExists(blockRoot.get(comp).element, 'div.put-spinner-here'),
+        UiFinder.sExists(memBlockRoot.get(comp).element, 'div.put-spinner-here'),
         sUnblock,
-        UiFinder.sNotExists(blockRoot.get(comp).element, 'div.put-spinner-here')
+        UiFinder.sNotExists(memBlockRoot.get(comp).element, 'div.put-spinner-here')
       ]),
 
       Log.stepsAsStep('TINY-6487', 'Only one blocker is created', [
@@ -107,7 +117,7 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
           },
           behaviours
         })),
-        Chain.asStep(blockRoot.get(comp).element, [
+        Chain.asStep(memBlockRoot.get(comp).element, [
           UiFinder.cFindAllIn('div.put-spinner-here'),
           Chain.op((xs) => Assert.eq('Only one spinner', 1, xs.length))
         ]),

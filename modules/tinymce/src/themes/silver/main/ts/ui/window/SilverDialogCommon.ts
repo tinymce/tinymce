@@ -5,8 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Receiving,
-  Reflecting, SystemEvents } from '@ephox/alloy';
+import {
+  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Receiving, Reflecting,
+  SystemEvents
+} from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 

@@ -3,7 +3,6 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { WrappedApiFunc } from '../common/Behaviour';
-import { AlloyBehaviour } from '../common/BehaviourTypes';
 import { BehaviourState } from '../common/BehaviourState';
 
 export type BlockFn = (
@@ -33,7 +32,7 @@ export interface BlockingState extends BehaviourState {
   readonly isBlocked: () => boolean;
 }
 
-export interface BlockingBehaviour extends AlloyBehaviour<BlockingConfigSpec, BlockingConfig, BlockingState> {
+export interface BlockingBehaviour extends Behaviour.AlloyBehaviour<BlockingConfigSpec, BlockingConfig, BlockingState> {
   readonly block: WrappedApiFunc<BlockFn>;
   readonly unblock: WrappedApiFunc<UnblockFn>;
 }
