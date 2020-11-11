@@ -19,7 +19,7 @@ interface ImageUploader {
 }
 
 /**
- * This class handles uploading images to a backend server.
+ * This class handles uploading images to a back-end server.
  *
  * @class tinymce.util.ImageUploader
  */
@@ -41,11 +41,11 @@ const ImageUploader = (editor: Editor): ImageUploader => {
 
   return {
     /**
-     * Uploads images to the configured image upload url or handler.
+     * Uploads images to the configured image upload URL (`images_upload_url`) or passes the images to the defined image upload handler function (`images_upload_handler`).
      *
      * @method upload
-     * @param {Array} blobInfos The blob info containing the image data to upload.
-     * @param {boolean} showNotification Optional flag for whether to show a notification during upload.
+     * @param {Array} blobInfos  A BlobInfo array containing the image data to upload. A BlobInfo can be created by calling `editor.editorUpload.blobCache.create()`.
+     * @param {boolean} showNotification (Optional) When set to true, a notification with a progress bar will be shown during image uploads.
      */
     upload: (blobInfos: BlobInfo[], showNotification: boolean = true) =>
       uploader.upload(blobInfos, showNotification ? openNotification : Fun.noop)
