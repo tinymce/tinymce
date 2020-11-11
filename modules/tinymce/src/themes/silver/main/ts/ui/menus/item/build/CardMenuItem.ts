@@ -7,8 +7,8 @@
 
 import { AlloyComponent, AlloySpec, Behaviour, Disabling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
-import { Selectors } from '@ephox/sugar';
+import { Arr, Fun, Optional } from '@ephox/katamari';
+import { PredicateFilter } from '@ephox/sugar';
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/structure/ItemStructure';
 import * as ItemClasses from '../ItemClasses';
@@ -54,7 +54,7 @@ export const renderCardMenuItem = (
       Disabling.set(component, state);
 
       // Disable sub components
-      Selectors.all('*', component.element).forEach((elm) => {
+      Arr.each(SelectorFilter.descendants(component.element, '*'), (elm) => {
         component.getSystem().getByDom(elm).each((comp: AlloyComponent) => {
           if (comp.hasConfigured(Disabling)) {
             Disabling.set(comp, state);
