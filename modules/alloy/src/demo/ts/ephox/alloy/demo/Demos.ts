@@ -1,5 +1,6 @@
 import AllowBubblingDemo from './AllowBubblingDemo';
 import AttachingDemo from './AttachingDemo';
+import BlockingDemo from './BlockingDemo';
 import ButtonDemo from './ButtonDemo';
 import CardMenuDemo from './CardMenuDemo';
 import * as DemoContent from './DemoContent';
@@ -37,6 +38,7 @@ window.demos = {
   AttachingDemo,
   AllowBubblingDemo,
   ButtonDemo,
+  BlockingDemo,
   CardMenuDemo,
   DemoContent,
   DemoDataset,
