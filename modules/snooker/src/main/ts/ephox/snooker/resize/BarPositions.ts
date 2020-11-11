@@ -4,63 +4,59 @@ import { Direction, Height, SugarElement, SugarLocation, Width } from '@ephox/su
 export interface RowInfo {
   readonly row: number;
   readonly y: number;
-  readonly cell: SugarElement<HTMLTableCellElement>;
 }
 
 export interface ColInfo {
   readonly col: number;
   readonly x: number;
-  readonly cell: SugarElement<HTMLTableCellElement>;
 }
 
 export interface BarPositions<T> {
-  readonly delta: (delta: number, table: SugarElement<HTMLTableElement>) => number;
+  readonly delta: (delta: number, table: SugarElement) => number;
   readonly edge: (e: SugarElement) => number;
-  readonly positions: (array: Optional<SugarElement>[], table: SugarElement<HTMLTableElement>) => Optional<T>[];
+  readonly positions: (array: Optional<SugarElement>[], table: SugarElement) => Optional<T>[];
 }
 
-const rowInfo = (row: number, y: number, cell: SugarElement<HTMLTableCellElement>): RowInfo => ({
+const rowInfo = (row: number, y: number): RowInfo => ({
   row,
-  y,
-  cell
+  y
 });
 
-const colInfo = (col: number, x: number, cell: SugarElement<HTMLTableCellElement>): ColInfo => ({
+const colInfo = (col: number, x: number): ColInfo => ({
   col,
-  x,
-  cell
+  x
 });
 
-const rtlEdge = function (cell: SugarElement<HTMLTableCellElement>) {
+const rtlEdge = function (cell: SugarElement) {
   const pos = SugarLocation.absolute(cell);
   return pos.left + Width.getOuter(cell);
 };
 
-const ltrEdge = function (cell: SugarElement<HTMLTableCellElement>) {
+const ltrEdge = function (cell: SugarElement) {
   return SugarLocation.absolute(cell).left;
 };
 
-const getLeftEdge = function (index: number, cell: SugarElement<HTMLTableCellElement>) {
-  return colInfo(index, ltrEdge(cell), cell);
+const getLeftEdge = function (index: number, cell: SugarElement) {
+  return colInfo(index, ltrEdge(cell));
 };
 
-const getRightEdge = function (index: number, cell: SugarElement<HTMLTableCellElement>) {
-  return colInfo(index, rtlEdge(cell), cell);
+const getRightEdge = function (index: number, cell: SugarElement) {
+  return colInfo(index, rtlEdge(cell));
 };
 
-const getTop = function (cell: SugarElement<HTMLTableCellElement>) {
+const getTop = function (cell: SugarElement) {
   return SugarLocation.absolute(cell).top;
 };
 
-const getTopEdge = function (index: number, cell: SugarElement<HTMLTableCellElement>) {
-  return rowInfo(index, getTop(cell), cell);
+const getTopEdge = function (index: number, cell: SugarElement) {
+  return rowInfo(index, getTop(cell));
 };
 
-const getBottomEdge = function (index: number, cell: SugarElement<HTMLTableCellElement>) {
-  return rowInfo(index, getTop(cell) + Height.getOuter(cell), cell);
+const getBottomEdge = function (index: number, cell: SugarElement) {
+  return rowInfo(index, getTop(cell) + Height.getOuter(cell));
 };
 
-const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement<HTMLTableCellElement>) => T, getOuterEdge: (idx: number, ele: SugarElement<HTMLTableCellElement>) => T, array: Optional<SugarElement<HTMLTableCellElement>>[]) {
+const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]) {
   if (array.length === 0 ) { return []; }
   const lines = Arr.map(array.slice(1), function (cellOption, index) {
     return cellOption.map(function (cell) {
@@ -81,27 +77,27 @@ const negate = function (step: number) {
 
 const height: BarPositions<RowInfo> = {
   delta: Fun.identity,
-  positions: (optElements: Optional<SugarElement<HTMLTableCellElement>>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getTopEdge, getBottomEdge, optElements),
   edge: getTop
 };
 
 const ltr: BarPositions<ColInfo> = {
   delta: Fun.identity,
   edge: ltrEdge,
-  positions: (optElements: Optional<SugarElement<HTMLTableCellElement>>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getLeftEdge, getRightEdge, optElements)
 };
 
 const rtl: BarPositions<ColInfo> = {
   delta: negate,
   edge: rtlEdge,
-  positions: (optElements: Optional<SugarElement<HTMLTableCellElement>>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
+  positions: (optElements: Optional<SugarElement>[]) => findPositions(getRightEdge, getLeftEdge, optElements)
 };
 
 const detect = Direction.onDirection(ltr, rtl);
 
 const width: BarPositions<ColInfo> = {
-  delta: (amount: number, table: SugarElement<HTMLTableElement>) => detect(table).delta(amount, table),
-  positions: (cols: Optional<SugarElement>[], table: SugarElement<HTMLTableElement>) => detect(table).positions(cols, table),
+  delta: (amount: number, table: SugarElement) => detect(table).delta(amount, table),
+  positions: (cols: Optional<SugarElement>[], table: SugarElement) => detect(table).positions(cols, table),
   edge: (cell: SugarElement) => detect(cell).edge(cell)
 };
 
