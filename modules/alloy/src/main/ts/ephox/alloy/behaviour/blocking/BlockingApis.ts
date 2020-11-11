@@ -7,11 +7,7 @@ import { Replacing } from '../../api/behaviour/Replacing';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as GuiFactory from '../../api/component/GuiFactory';
-import { BlockingConfig } from './BlockingSchema';
-import { BlockingState } from './BlockingState';
-
-export type BlockFn = (component: AlloyComponent, config: BlockingConfig, state: BlockingState, getBusySpec?: (behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec) => void;
-export type UnblockFn = (component: AlloyComponent, config: BlockingConfig, state: BlockingState) => void;
+import { BlockFn, UnblockFn } from './BlockingTypes';
 
 const createBlocker = (getBusySpec: (behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec, root: AlloyComponent): () => void => {
   const spec = getBusySpec(Behaviour.derive([

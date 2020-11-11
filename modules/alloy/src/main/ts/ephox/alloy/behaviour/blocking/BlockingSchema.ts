@@ -1,20 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 import * as Fields from '../../data/Fields';
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-
-export interface BlockingConfigSpec extends Behaviour.BehaviourConfigSpec {
-  getRoot?: (component: AlloyComponent) => Optional<AlloyComponent>;
-  onBlock?: (component: AlloyComponent) => void;
-  onUnblock?: (component: AlloyComponent) => void;
-}
-
-export interface BlockingConfig extends Behaviour.BehaviourConfigDetail {
-  getRoot: (component: AlloyComponent) => Optional<AlloyComponent>;
-  onBlock: (component: AlloyComponent) => void;
-  onUnblock: (component: AlloyComponent) => void;
-}
 
 export default [
   // The blocking behaviour optionally allows for a "blocker" component to be
