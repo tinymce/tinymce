@@ -1,4 +1,4 @@
-import { Chain, Log, Pipeline, RealMouse, Waiter } from '@ephox/agar';
+import { Log, Pipeline, RealMouse, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -22,16 +22,14 @@ UnitTest.asynctest('webdriver.tinymce.plugins.paste.CutTest', (success, failure)
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
-    // Cut doesn't seem to work in webdriver mode on ie, safari has broken webdriver elementClick in 13.0.1, edge fails if it's not observed
-    Pipeline.async({}, (platform.browser.isIE() || platform.browser.isSafari() || platform.browser.isEdge()) ? [] :
+    // Cut doesn't seem to work in webdriver mode on ie
+    Pipeline.async({}, platform.browser.isIE() ? [] :
       Log.steps('TBA', 'Paste: Set and select content, cut using edit menu and assert cut content', [
         api.sSetContent('<p>abc</p>'),
         api.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 2),
         ui.sClickOnMenu('Click Edit menu', 'button:contains("Edit")'),
-        Chain.asStep({}, [
-          ui.cWaitForUi('Wait for menu item', '[role="menuitem"]:contains("Cut")'),
-          RealMouse.cClick()
-        ]),
+        ui.sWaitForUi('Wait for dropdown', '*[role="menu"]'),
+        RealMouse.sClickOn('div[title="Cut"]'),
         Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'))
       ]), onSuccess, onFailure);
   }, {

@@ -9,8 +9,7 @@
     "paths": {
       "ephox/boulder/test/*": ["src/test/ts/module/ephox/boulder/test/*"],
       "ephox/boulder/demo/*": ["src/demo/ts/ephox/boulder/demo/*"],
-      "ephox/boulder/*": ["src/main/ts/ephox/boulder/*"],
-      "@ephox/boulder": ["src/main/ts/ephox/boulder/api/Main.ts"]
+      "ephox/boulder/*": ["src/main/ts/ephox/boulder/*"]
     }
   },
   "include": [

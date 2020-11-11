@@ -52,7 +52,7 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
         editor.nodeChanged();
       },
       buttonBehaviours: Behaviour.derive([
-        DisablingConfigs.button(providersBackstage.isReadOnly),
+        DisablingConfigs.button(providersBackstage.isDisabled),
         ReadOnly.receivingConfig()
       ])
     }));
@@ -115,7 +115,7 @@ const renderElementPath = (editor: Editor, settings, providersBackstage: UiFacto
         selector: 'div[role=button]'
       }),
       Disabling.config({
-        disabled: providersBackstage.isReadOnly
+        disabled: providersBackstage.isDisabled
       }),
       ReadOnly.receivingConfig(),
       Tabstopping.config({ }),

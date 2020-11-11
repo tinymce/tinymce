@@ -1,39 +1,39 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Compare, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import * as TableLookup from 'ephox/snooker/api/TableLookup';
 
-UnitTest.test('TableLookupTest', function () {
-  const testerFound = function (html: string, triggerSelector: string, resultSelector: string, label: string) {
-    const element = SugarElement.fromHtml(html);
-    Insert.append(SugarBody.body(), element);
+const testWithSelector = (html: string, selector: string, assert: (element: SugarElement<Element>) => void) => {
+  const element = SugarElement.fromHtml(html);
+  Insert.append(SugarBody.body(), element);
 
-    SelectorFind.descendant(SugarBody.body(), triggerSelector).fold(function () {
-      assert.fail('Could not find anything with ' + triggerSelector);
-    }, function (triggerElement) {
+  SelectorFind.descendant(SugarBody.body(), selector).fold(() => {
+    Assert.fail('Could not find anything with ' + selector);
+  }, (triggerElement) => {
+    assert(triggerElement);
+    Remove.remove(element);
+  });
+};
+
+UnitTest.test('TableLookupTest - cells', () => {
+  const testerFound = (html: string, triggerSelector: string, resultSelector: string, label: string) => {
+    testWithSelector(html, triggerSelector, (triggerElement) => {
       const result = TableLookup.cell(triggerElement);
       assert.eq(true, result.isSome(), label + ': Expected the result to find something');
       const expectedElement = SelectorFilter.descendants(SugarBody.body(), resultSelector);
       assert.eq(true, expectedElement.length === 1, label + ': Expected to find only one element in the DOM with the selector ' + resultSelector + ' found: ' + expectedElement.length);
       assert.eq(true, Compare.eq(expectedElement[0], result.getOrDie()), label + ': The result and the expectation should be the same element');
-      Remove.remove(element);
     });
   };
 
-  const testerShouldNotFind = function (html: string, selector: string, label: string) {
-    const element = SugarElement.fromHtml(html);
-    Insert.append(SugarBody.body(), element);
-
-    SelectorFind.descendant(SugarBody.body(), selector).fold(function () {
-      assert.fail('Could not find anything with ' + selector);
-    }, function (triggerElement) {
+  const testerShouldNotFind = (html: string, selector: string, label: string) => {
+    testWithSelector(html, selector, (triggerElement) => {
       const result = TableLookup.cell(triggerElement);
       assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
-      Remove.remove(element);
     });
   };
 
-  const htmlA =
+  const html =
   '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
   '<caption>Outer table<br></caption>' +
   '<tbody>' +
@@ -76,94 +76,54 @@ UnitTest.test('TableLookupTest', function () {
   '</tr>' +
   '</tbody>' +
   '</table>';
-  const testTableRoWClick = function () {
+
+  const testTableRoWClick = () => {
     const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > tbody > tr:nth-child(1)';
-    testerShouldNotFind(htmlA, triggerSelector, 'testTableRoWClick');
+    testerShouldNotFind(html, triggerSelector, 'testTableRoWClick');
   };
 
-  const testOuterTableCellClick = function () {
+  const testOuterTableCellClick = () => {
     const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3)';
     const resultSelector = triggerSelector;
-    testerFound(htmlA, triggerSelector, resultSelector, 'testOuterTableCellClick');
+    testerFound(html, triggerSelector, resultSelector, 'testOuterTableCellClick');
   };
 
-  const testInnerTableCaptionClick = function () {
+  const testInnerTableCaptionClick = () => {
     const triggerSelector = 'table > tbody > tr:nth-child(1) > td:nth-child(3) > table > caption';
-    testerShouldNotFind(htmlA, triggerSelector, 'testInnerTableCaptionClick');
+    testerShouldNotFind(html, triggerSelector, 'testInnerTableCaptionClick');
   };
 
-  const testOuterTableCaptionClick = function () {
+  const testOuterTableCaptionClick = () => {
     const triggerSelector = 'body > table > caption';
-    testerShouldNotFind(htmlA, triggerSelector, 'testOuterTableCaptionClick');
+    testerShouldNotFind(html, triggerSelector, 'testOuterTableCaptionClick');
   };
 
-  const htmlB =
-  '<table style="border-collapse: collapse; width: 1088px; float: none; height: 60px;" summary="Skin burns" border="1">' +
-  '<caption>Outer table<br></caption>' +
-  '<tbody>' +
-  '<tr style="height: 20px;">' +
-  '<td style="width: 242px; height: 20px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '<td style="height: 60px; width: 815px;">' +
-  '<table style="border-collapse: collapse; width: 400px; float: none; height: 200px;" border="1">' +
-  '<caption>Inner table</caption>' +
-  '<tbody>' +
-  '<tr style="height: 0px;">' +
-  '<td style="width: 399px; height: 0px;" colspan="3" rowspan="3">' +
-  '<span class="ephox-cram-annotation-wrap ephox-cram_4309642597121480569760068" ' +
-  'aria-invalid="spelling" data-ephox-cram-highlight-id="ephox-cram_4309642597121480569760068" ' +
-  'data-ephox-cram-annotation="eee" data-ephox-cram-lingo="en_us">eee</span>' +
-  '</td>' +
-  '</tr>' +
-  '<tr style="height: 0px;"></tr>' +
-  '<tr></tr>' +
-  '</tbody>' +
-  '</table>' +
-  '<br>' +
-  '</td>' +
-  '<td style="width: 11px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '</tr>' +
-  '<tr style="height: 20px;">' +
-  '<td style="width: 242px; height: 20px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '<td style="width: 815px;"><br></td>' +
-  '<td style="width: 11px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '</tr>' +
-  '<tr style="height: 20px;">' +
-  '<td style="width: 242px; height: 20px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '<td style="width: 815px;"><br></td>' +
-  '<td style="width: 11px;"><br></td>' +
-  '<td style="width: 10px; height: 20px;"><br></td>' +
-  '</tr>' +
-  '</tbody>' +
-  '</table>';
-  const testOuterTableMergedRowClick = function () {
+  const testOuterTableMergedRowClick = () => {
     const triggerSelector = 'body > table > tbody > tr:nth-child(3)';
-    testerShouldNotFind(htmlB, triggerSelector, 'testOuterTableMergedRowClick');
+    testerShouldNotFind(html, triggerSelector, 'testOuterTableMergedRowClick');
   };
 
-  const testOuterTableMergedCellClick = function () {
+  const testOuterTableMergedCellClick = () => {
     const triggerSelector = 'body > table > tbody > tr:nth-child(3) > td:nth-child(1)';
     const resultSelector = triggerSelector;
-    testerFound(htmlB, triggerSelector, resultSelector, 'testOuterTableMergedCellClick');
+    testerFound(html, triggerSelector, resultSelector, 'testOuterTableMergedCellClick');
   };
 
-  const testOuterTableMergedCaptionClick = function () {
+  const testOuterTableMergedCaptionClick = () => {
     const triggerSelector = 'body > table > caption';
-    testerShouldNotFind(htmlB, triggerSelector, 'testOuterTableMergedCaptionClick');
+    testerShouldNotFind(html, triggerSelector, 'testOuterTableMergedCaptionClick');
   };
 
-  const testCellShouldAlwaysReturnTheSameCell = function (html: string, label: string) {
+  const testCellShouldAlwaysReturnTheSameCell = (label: string) => {
 
     const element = SugarElement.fromHtml(html);
     Insert.append(SugarBody.body(), element);
 
     const cells = SelectorFilter.descendants(SugarBody.body(), 'td');
-    if (cells.length === 0) { assert.fail('Could not find any table cell element'); } else {
-      Arr.each(cells, function (cell) {
+    if (cells.length === 0) {
+      assert.fail('Could not find any table cell element');
+    } else {
+      Arr.each(cells, (cell) => {
         const result = TableLookup.cell(cell);
         assert.eq(true, result.isSome(), label + ': Expected the result to find something');
         assert.eq(true, Compare.eq(cell, result.getOrDie()), label + ': The result and the expectation should be the same element');
@@ -173,14 +133,16 @@ UnitTest.test('TableLookupTest', function () {
     }
   };
 
-  const testRowShouldNotReturn = function (html: string, label: string) {
+  const testRowShouldNotReturn = (label: string) => {
 
     const element = SugarElement.fromHtml(html);
     Insert.append(SugarBody.body(), element);
 
     const rows = SelectorFilter.descendants(SugarBody.body(), 'tr');
-    if (rows.length === 0) { assert.fail('Could not find any table row elements'); } else {
-      Arr.each(rows, function (row) {
+    if (rows.length === 0) {
+      assert.fail('Could not find any table row elements');
+    } else {
+      Arr.each(rows, (row) => {
         const result = TableLookup.cell(row);
         assert.eq(false, result.isSome(), label + ': Expected the result to find nothing');
       });
@@ -195,9 +157,52 @@ UnitTest.test('TableLookupTest', function () {
   testOuterTableMergedRowClick();
   testOuterTableMergedCellClick();
   testOuterTableMergedCaptionClick();
-  testCellShouldAlwaysReturnTheSameCell(htmlA, 'Testing cells in HTMLA');
-  testCellShouldAlwaysReturnTheSameCell(htmlB, 'Testing cells in HTMLB');
+  testCellShouldAlwaysReturnTheSameCell('Testing cells');
+  testRowShouldNotReturn('Testing rows');
+});
 
-  testRowShouldNotReturn(htmlA, 'Testing rows in HTMLA');
-  testRowShouldNotReturn(htmlB, 'Testing rows in HTMLB');
+UnitTest.test('TableLookupTest - columns', () => {
+  const html = '<table>' +
+    '<caption>Outer table</caption>' +
+    '<colgroup><col><col></colgroup>' +
+    '<tbody>' +
+    '<tr>' +
+    '<td><table>' +
+    '<caption>Inner table</caption>' +
+    '<colgroup><col></colgroup>' +
+    '<colgroup></colgroup>' +
+    '<tbody>' +
+    '<tr><td>A</td><td>B</td></tr>' +
+    '</tbody>' +
+    '</table></td>' +
+    '<td>C</td>' +
+    '</tr>' +
+    '</tbody>' +
+    '</table>';
+
+  const testColumnGroup = (label: string, triggerSelector: string, expectedCount: number) => {
+    testWithSelector(html, triggerSelector, (triggerElement) => {
+      const columnGroups = TableLookup.columnGroups(triggerElement);
+      Assert.eq(label, expectedCount, columnGroups.length);
+    });
+  };
+
+  const testColumn = (label: string, triggerSelector: string, expectedCount: number) => {
+    testWithSelector(html, triggerSelector, (triggerElement) => {
+      const columns = TableLookup.columns(triggerElement);
+      Assert.eq(label, expectedCount, columns.length);
+    });
+  };
+
+  testColumnGroup('Column group from table', 'body > table', 1);
+  testColumnGroup('Column group from table cell', 'body > table > tbody > tr > td', 1);
+  testColumnGroup('Column group from nested table', 'body > table > tbody > tr > td:nth-child(1) > table', 2);
+  testColumnGroup('Column group from nested table cell ', 'body > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td', 2);
+
+  testColumn('Column from table', 'body > table', 2);
+  testColumn('Column from table colgroup', 'body > table > colgroup', 2);
+  testColumn('Column from table cell', 'body > table > tbody > tr > td', 2);
+  testColumn('Column from nested table', 'body > table > tbody > tr > td:nth-child(1) > table', 1);
+  testColumn('Column from nested table colgroup', 'body > table > tbody > tr > td:nth-child(1) > table > colgroup', 1);
+  testColumn('Column from nested table cell ', 'body > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td', 1);
 });
