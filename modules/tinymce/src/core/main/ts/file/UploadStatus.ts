@@ -78,4 +78,4 @@ export const UploadStatus = (): UploadStatus => {
     removeFailed,
     destroy
   };
-}
+};

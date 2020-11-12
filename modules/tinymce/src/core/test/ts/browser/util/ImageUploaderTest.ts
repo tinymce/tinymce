@@ -27,26 +27,26 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
       Assert.eq('Number of results', expectedLength, uploadResults.length);
       Arr.each(uploadResults, (uploadResult) => {
         Assert.eq('Url is Image.png', url, uploadResult.url);
-        Assert.eq('Successful', true, uploadResult.status);
+        Assert.eq('Upload result status is true upon success', true, uploadResult.status);
       });
     });
 
     const cAssertUploadResultFailure = (expectedLength: number, url: string) => Chain.op((uploadResults: UploadResult[]) => {
       Assert.eq('Number of results', expectedLength, 0);
       Arr.each(uploadResults, (uploadResult) => {
-        Assert.eq('Url is ""', url, '');
-        Assert.eq('Failure', false, uploadResult.status);
+        Assert.eq('Url is empty string upon failure', url, '');
+        Assert.eq('Upload result status is false upon failure', false, uploadResult.status);
       });
     });
 
     Pipeline.async({}, [
-      Log.chainsAsStep('TINY-4601', 'Check if image is uploaded successfully', [
+      Log.chainsAsStep('TINY-4601', 'Image upload success', [
         Chain.inject(editor),
-        ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success) => success('Image.png')),
+        ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success) => success('https://tiny.cloud/image.png')),
         cUploadImages([ image1 ], true),
-        cAssertUploadResultSuccess(1, 'Image.png')
+        cAssertUploadResultSuccess(1, 'https://tiny.cloud/image.png')
       ]),
-      Log.chainsAsStep('TINY-4601', 'Check if image upload have failed', [
+      Log.chainsAsStep('TINY-4601', 'Image upload failure', [
         Chain.inject(editor),
         ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success, failure) => failure('Error')),
         cUploadImages([ image1 ], true),
