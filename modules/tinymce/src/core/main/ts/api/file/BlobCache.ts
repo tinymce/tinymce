@@ -35,7 +35,7 @@ export interface BlobInfo {
   blob: () => Blob;
   base64: () => string;
   blobUri: () => string;
-  uri: () => string;
+  uri: () => string | undefined;
 }
 
 export const BlobCache = (): BlobCache => {

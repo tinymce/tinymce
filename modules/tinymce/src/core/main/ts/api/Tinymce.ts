@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
@@ -61,6 +62,44 @@ import VK from './util/VK';
 import XHR from './util/XHR';
 import WindowManager from './WindowManager';
 
+interface DOMUtilsNamespace {
+  new (doc: Document, settings: Partial<DOMUtilsSettings>): DOMUtils;
+
+  DOM: DOMUtils;
+  nodeIndex: (node: Node, normalized?: boolean) => number;
+}
+
+interface RangeUtilsNamespace {
+  new (dom: DOMUtils): RangeUtils;
+
+  compareRanges: (rng1: RangeLikeObject, rng2: RangeLikeObject) => boolean;
+  getCaretRangeFromPoint: (clientX: number, clientY: number, doc: Document) => Range;
+  getSelectedNode: (range: Range) => Node;
+  getNode: (container: Node, offset: number) => Node;
+}
+
+interface AddOnManagerNamesapce {
+  new <T>(): AddOnManager<T>;
+
+  language: string;
+  languageLoad: boolean;
+  baseURL: string;
+  PluginManager: PluginManager;
+  ThemeManager: ThemeManager;
+}
+
+interface BookmarkManagerNamespace {
+  (selection: EditorSelection): BookmarkManager;
+
+  isBookmarkNode: (node: Node) => boolean;
+}
+
+interface SaxParserNamespace {
+  new (settings?: SaxParserSettings, schema?: Schema): SaxParser;
+
+  findEndTag: (schema: Schema, html: string, startIndex: number) => number;
+}
+
 interface TinyMCE extends EditorManager {
 
   geom: {
@@ -91,12 +130,12 @@ interface TinyMCE extends EditorManager {
     DomQuery: DomQueryConstructor;
     TreeWalker: DomTreeWalkerConstructor;
     TextSeeker: new (dom: DOMUtils, isBlockBoundary?: (node: Node) => boolean) => TextSeeker;
-    DOMUtils: new (doc: Document, settings: Partial<DOMUtilsSettings>) => DOMUtils;
+    DOMUtils: DOMUtilsNamespace;
     ScriptLoader: ScriptLoaderConstructor;
-    RangeUtils: new (dom: DOMUtils) => RangeUtils;
+    RangeUtils: RangeUtilsNamespace;
     Serializer: new (settings: DomSerializerSettings, editor?: Editor) => DomSerializer;
     ControlSelection: (selection: EditorSelection, editor: Editor) => ControlSelection;
-    BookmarkManager: (selection: EditorSelection) => BookmarkManager;
+    BookmarkManager: BookmarkManagerNamespace;
     Selection: new (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor) => EditorSelection;
     StyleSheetLoader: new (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings) => StyleSheetLoader;
     Event: EventUtils;
@@ -107,13 +146,13 @@ interface TinyMCE extends EditorManager {
     Entities: Entities;
     Node: AstNodeConstructor;
     Schema: new (settings?: SchemaSettings) => Schema;
-    SaxParser: new (settings?: SaxParserSettings, schema?: Schema) => SaxParser;
+    SaxParser: SaxParserNamespace;
     DomParser: new (settings?: DomParserSettings, schema?: Schema) => DomParser;
     Writer: new (settings?: WriterSettings) => Writer;
     Serializer: new (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
   };
 
-  AddOnManager: new <T>() => AddOnManager<T>;
+  AddOnManager: AddOnManagerNamesapce;
   Annotator: new (editor: Editor) => Annotator;
   Editor: EditorConstructor;
   EditorCommands: EditorCommandsConstructor;
@@ -293,6 +332,7 @@ const publicApi = {
 };
 
 const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);
+
 export {
   TinyMCE,
   tinymce
