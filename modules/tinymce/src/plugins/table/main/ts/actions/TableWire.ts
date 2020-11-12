@@ -28,11 +28,11 @@ const createContainer = function () {
   return container;
 };
 
-const get = function (editor: Editor, _container?) {
-  return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer()) : ResizeWire.only(SugarElement.fromDom(editor.getDoc()));
+const get = function (editor: Editor, isResizable: (elm: SugarElement<Element>) => boolean) {
+  return editor.inline ? ResizeWire.body(Util.getBody(editor), createContainer(), isResizable) : ResizeWire.only(SugarElement.fromDom(editor.getDoc()), isResizable);
 };
 
-const remove = function (editor: Editor, wire) {
+const remove = function (editor: Editor, wire: ResizeWire) {
   if (editor.inline) {
     Remove.remove(wire.parent());
   }

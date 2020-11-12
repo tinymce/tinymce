@@ -40,6 +40,8 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
+@collection-item-list-image-radius: 50%;
+
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
 @collection-group-label-font-size: @font-size-xs;
 @collection-group-label-font-style: normal;
@@ -280,6 +282,65 @@
   .tox-collection--horizontal .tox-collection__item-caret {
     margin-left: 4px;
   }
+
+  .tox-collection__item-container {
+    display: flex;
+  }
+
+  .tox-collection__item-container--row {
+    align-items: center;
+    flex: 1 1 auto;
+    flex-direction: row;
+
+    &.tox-collection__item-container--align-left {
+      margin-right: auto;
+    }
+
+    &.tox-collection__item-container--align-right {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    &.tox-collection__item-container--valign-top {
+      align-items: flex-start;
+      margin-bottom: auto;
+    }
+
+    &.tox-collection__item-container--valign-middle {
+      align-items: center;
+    }
+
+    &.tox-collection__item-container--valign-bottom {
+      align-items: flex-end;
+      margin-top: auto;
+    }
+  }
+
+  .tox-collection__item-container--column {
+    align-self: center;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    &.tox-collection__item-container--align-left {
+      align-items: flex-start;
+    }
+
+    &.tox-collection__item-container--align-right {
+      align-items: flex-end;
+    }
+
+    &.tox-collection__item-container--valign-top {
+      align-self: flex-start;
+    }
+
+    &.tox-collection__item-container--valign-middle {
+      align-self: center;
+    }
+
+    &.tox-collection__item-container--valign-bottom {
+      align-self: flex-end;
+    }
+  }
 }
 
 .tox:not([dir=rtl]) {
@@ -293,7 +354,7 @@
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
     margin-left: @pad-xs;
   }
 
@@ -319,7 +380,7 @@
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
     margin-right: @pad-xs;
   }
 

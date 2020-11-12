@@ -322,7 +322,7 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
         Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       }
     })
-  ]),
+  ])
 );
 
 const sSetInputValue = (label, selector, value) => Logger.t(label,
@@ -337,7 +337,7 @@ const sSetInputValue = (label, selector, value) => Logger.t(label,
         Value.set(element, value);
       }
     })
-  ]),
+  ])
 );
 
 const sGotoGeneralTab = Chain.asStep({}, [

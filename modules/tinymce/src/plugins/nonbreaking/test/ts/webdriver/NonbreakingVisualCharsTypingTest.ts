@@ -22,6 +22,15 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
   VisualCharsPlugin();
 
   const isIE = detection.browser.isIE();
+  const getNbspText = (text: string) => {
+    if (detection.browser.isFirefox()) {
+      return Unicode.zeroWidth + text + ' ';
+    } else if (isIE) {
+      return text + ' ';
+    } else {
+      return Unicode.zeroWidth + text + Unicode.nbsp;
+    }
+  };
 
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
@@ -127,7 +136,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     s.text(str.is(Unicode.nbsp))
                   ]
                 }),
-                s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + ' ' : (isIE ? ' ' : Unicode.zeroWidth + Unicode.nbsp)))
+                s.text(str.is(getNbspText('')))
               ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
             })
           ]
@@ -173,7 +182,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     s.text(str.is(Unicode.nbsp))
                   ]
                 }),
-                s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
+                s.text(str.is(getNbspText('test')))
               ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
             })
           ]
@@ -219,7 +228,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     s.text(str.is(Unicode.nbsp))
                   ]
                 }),
-                s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test ' : (isIE ? 'test ' : Unicode.zeroWidth + 'test\u00a0')))
+                s.text(str.is(getNbspText('test')))
               ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
             })
           ]
@@ -241,7 +250,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
                     s.text(str.is(Unicode.nbsp))
                   ]
                 }),
-                s.text(str.is(detection.browser.isFirefox() ? Unicode.zeroWidth + 'test test ' : (isIE ? 'test test ' : Unicode.zeroWidth + 'test test\u00a0')))
+                s.text(str.is(getNbspText('test test')))
               ].concat(detection.browser.isFirefox() ? [ s.element('br', {}) ] : [])
             })
           ]

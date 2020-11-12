@@ -17,6 +17,8 @@ export type ListItem = Dialog.ListBoxItemSpec;
 export interface UserListItem {
   text?: string;
   title?: string;
+  value?: string;
+  url?: string;
   menu?: UserListItem[];
 }
 

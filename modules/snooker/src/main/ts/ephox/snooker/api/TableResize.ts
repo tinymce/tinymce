@@ -52,7 +52,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
   const events = Events.create({
     beforeResize: Event([ 'table', 'type' ]),
     afterResize: Event([ 'table', 'type' ]),
-    startDrag: Event([])
+    startDrag: Event([]),
   }) as TableResizeEvents;
 
   manager.events.adjustHeight.bind((event) => {

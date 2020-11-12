@@ -48,7 +48,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(() => spec.disabled || providersbackstage.isReadOnly()),
+        DisablingConfigs.item(() => spec.disabled || providersbackstage.isDisabled()),
         ReadOnly.receivingConfig(),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)
@@ -75,7 +75,7 @@ const renderCommonChoice = (spec: CommonCollectionItemSpec, structure: ItemStruc
       AddEventsBehaviour.config('item-events', [
         AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
       ]),
-      DisablingConfigs.item(() => spec.disabled || providersbackstage.isReadOnly()),
+      DisablingConfigs.item(() => spec.disabled || providersbackstage.isDisabled()),
       ReadOnly.receivingConfig()
     ]
   ),

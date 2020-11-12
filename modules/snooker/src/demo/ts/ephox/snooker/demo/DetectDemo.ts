@@ -1,4 +1,4 @@
-import { Obj, Optional, Optionals } from '@ephox/katamari';
+import { Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, EventArgs, Insert, InsertAll, Ready, Replication, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
@@ -129,9 +129,10 @@ Ready.execute(function () {
   InsertAll.append(ephoxUi, [ ltrs, rtls ]);
 
   const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const isResizable = Fun.always;
+  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.
@@ -244,7 +245,7 @@ Ready.execute(function () {
         // wire, table, target, generators, direction
         const table = SelectorFind.ancestor(start, 'table').getOrDie() as SugarElement<HTMLTableElement>;
         const tableSize = TableSize.getTableSize(table);
-        operation(ResizeWire.only(ephoxUi), table, target, generators, tableSize);
+        operation(ResizeWire.only(ephoxUi, isResizable), table, target, generators, tableSize);
       });
     };
   };

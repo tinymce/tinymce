@@ -60,7 +60,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
       (position) => {
         updateVisibility(component, config, state, viewport, true);
         morphToCoord(component, config, position);
-      },
+      }
     );
   });
 };

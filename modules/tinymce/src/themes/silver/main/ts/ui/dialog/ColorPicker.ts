@@ -55,11 +55,11 @@ export const renderColorPicker = (_spec: ColorPickerSpec): SimpleSpec => {
   const colourPickerFactory = ColourPicker.makeFactory(translate, getClass);
 
   const onValidHex = (form) => {
-    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: true }, );
+    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: true });
   };
 
   const onInvalidHex = (form) => {
-    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: false } );
+    AlloyTriggers.emitWith(form, formActionEvent, { name: 'hex-valid', value: false });
   };
 
   const memPicker = Memento.record(

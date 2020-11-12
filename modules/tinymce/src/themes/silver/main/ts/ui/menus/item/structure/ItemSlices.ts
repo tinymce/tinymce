@@ -6,6 +6,8 @@
  */
 
 import { AlloySpec, GuiFactory } from '@ephox/alloy';
+import { Menu } from '@ephox/bridge';
+import { Optional } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 import { get as getIcon, IconProvider } from '../../../icons/Icons';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
@@ -27,10 +29,10 @@ const renderText = (text: string): AlloySpec => ({
   components: [ GuiFactory.text(I18n.translate(text)) ]
 });
 
-const renderHtml = (html: string): AlloySpec => ({
+const renderHtml = (html: string, classes: string[]): AlloySpec => ({
   dom: {
     tag: 'div',
-    classes: [ ItemClasses.textClass ],
+    classes,
     innerHtml: html
   }
 });
@@ -88,6 +90,46 @@ const renderDownwardsCaret = (icons: IconProvider): AlloySpec => ({
   }
 });
 
+const renderContainer = (container: Menu.CardContainer, components: Array<AlloySpec>): AlloySpec => {
+  const directionClass = container.direction === 'vertical' ? ItemClasses.containerColumnClass : ItemClasses.containerRowClass;
+  const alignClass = container.align === 'left' ? ItemClasses.containerAlignLeftClass : ItemClasses.containerAlignRightClass;
+
+  const getValignClass = () => {
+    switch (container.valign) {
+      case 'top':
+        return ItemClasses.containerValignTopClass;
+      case 'middle':
+        return ItemClasses.containerValignMiddleClass;
+      case 'bottom':
+        return ItemClasses.containerValignBottomClass;
+    }
+  };
+
+  return {
+    dom: {
+      tag: 'div',
+      classes: [
+        ItemClasses.containerClass,
+        directionClass,
+        alignClass,
+        getValignClass()
+      ]
+    },
+    components
+  };
+};
+
+const renderImage = (src: string, classes: string[], alt: Optional<string>): AlloySpec => ({
+  dom: {
+    tag: 'img',
+    classes,
+    attributes: {
+      src,
+      alt: alt.getOr('')
+    }
+  }
+});
+
 export {
   renderIcon,
   renderText,
@@ -96,5 +138,7 @@ export {
   renderShortcut,
   renderCheckmark,
   renderSubmenuCaret,
-  renderDownwardsCaret
+  renderDownwardsCaret,
+  renderImage,
+  renderContainer
 };

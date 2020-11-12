@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
         },
         { elementPath: [ 0 ], startOffset: 0, endOffset: 1 },
         '<p><img src="src" alt="alt" /></p>',
-        '<p><img role="presentation" src="src" alt="" /></p>',
+        '<p><img role="presentation" src="src" alt="" /></p>'
       ),
       testUiStateDisabled
     ];

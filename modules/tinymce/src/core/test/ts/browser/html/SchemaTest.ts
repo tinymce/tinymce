@@ -138,6 +138,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
 
     schema = Schema({ valid_elements: '#span' });
     LegacyUnit.deepEqual(schema.getElementRule('span'), { attributes: {}, attributesOrder: [], paddEmpty: true });
+
+    // Empty table rows should not be removed
+    schema = Schema();
+    LegacyUnit.equal(schema.getElementRule('tr').removeEmpty, undefined);
   });
 
   suite.test('addValidElements', function () {
