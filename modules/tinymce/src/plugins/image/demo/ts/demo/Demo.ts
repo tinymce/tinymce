@@ -26,7 +26,7 @@ tinymce.init({
     console.log(blobInfo);
     Delay.setTimeout(function () {
       success('https://www.google.com/logos/google.jpg');
-    }, 5000);
+    }, 50);
   },
   height: 600
 });

@@ -11,6 +11,7 @@ import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
 import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
+import Promise from 'tinymce/core/api/util/Promise';
 import { getStyleValue, ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
@@ -407,7 +408,15 @@ const parseStyle = (editor: Editor) => (cssText: string): StyleMap => editor.dom
 
 const serializeStyle = (editor: Editor) => (stylesArg: StyleMap, name?: string): string => editor.dom.serializeStyle(stylesArg, name);
 
-const uploadImage = (editor: Editor) => (blobInfo: BlobInfo) => ImageUploader(editor).upload([ blobInfo ], false).then((results) => results[0]);
+const uploadImage = (editor: Editor) => (blobInfo: BlobInfo) => ImageUploader(editor).upload([ blobInfo ], false).then((results) => {
+  if (results.length === 0) {
+    return Promise.reject('Failed to upload image');
+  } else if (results[0].status === false) {
+    return Promise.reject(results[0].error);
+  } else {
+    return results[0];
+  }
+});
 
 export const Dialog = (editor: Editor) => {
   const helpers: Helpers = {
