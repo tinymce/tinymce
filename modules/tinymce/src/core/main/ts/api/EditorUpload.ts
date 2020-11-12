@@ -8,13 +8,14 @@
 import { Arr } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
-import UploadStatus from '../file/UploadStatus';
+import { Uploader } from '../file/Uploader';
+import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
-import ImageUploader from './util/ImageUploader';
 import * as Settings from './Settings';
+import { createUploader, openNotification } from './util/ImageUploader';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -43,7 +44,7 @@ interface EditorUpload {
 
 const EditorUpload = function (editor: Editor): EditorUpload {
   const blobCache = BlobCache();
-  let uploader: ImageUploader, imageScanner: ImageScanner;
+  let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
 
@@ -110,13 +111,13 @@ const EditorUpload = function (editor: Editor): EditorUpload {
 
   const uploadImages = (callback?: UploadCallback): Promise<UploadResult[]> => {
     if (!uploader) {
-      uploader = ImageUploader(editor);
+      uploader = createUploader(editor, uploadStatus);
     }
 
     return scanForImages().then(aliveGuard((imageInfos) => {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
-      return uploader.upload(blobInfos, true).then(aliveGuard((result) => {
+      return uploader.upload(blobInfos, openNotification(editor)).then(aliveGuard((result) => {
         const imagesToRemove: HTMLImageElement[] = [];
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {

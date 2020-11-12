@@ -7,7 +7,7 @@
 
 import { Fun } from '@ephox/katamari';
 import * as Uploader from '../../file/Uploader';
-import UploadStatus from '../../file/UploadStatus';
+import { UploadStatus } from '../../file/UploadStatus';
 import Editor from '../Editor';
 import * as Settings from '../Settings';
 import { BlobInfo } from '../file/BlobCache';
@@ -18,6 +18,21 @@ interface ImageUploader {
   upload (blobInfos: BlobInfo[], showNotification?: boolean): Promise<UploadResult[]>;
 }
 
+export const openNotification = (editor: Editor) => () => editor.notificationManager.open({
+  text: editor.translate('Image uploading...'),
+  type: 'info',
+  timeout: -1,
+  progressBar: true
+});
+
+export const createUploader = (editor: Editor, uploadStatus: UploadStatus) =>
+  Uploader.Uploader(uploadStatus, {
+    url: Settings.getImageUploadUrl(editor),
+    basePath: Settings.getImageUploadBasePath(editor),
+    credentials: Settings.getImagesUploadCredentials(editor),
+    handler: Settings.getImagesUploadHandler(editor)
+  });
+
 /**
  * This class handles uploading images to a back-end server.
  *
@@ -25,19 +40,7 @@ interface ImageUploader {
  */
 const ImageUploader = (editor: Editor): ImageUploader => {
   const uploadStatus = UploadStatus();
-  const uploader = Uploader.Uploader(uploadStatus, {
-    url: Settings.getImageUploadUrl(editor),
-    basePath: Settings.getImageUploadBasePath(editor),
-    credentials: Settings.getImagesUploadCredentials(editor),
-    handler: Settings.getImagesUploadHandler(editor)
-  });
-
-  const openNotification = () => editor.notificationManager.open({
-    text: editor.translate('Image uploading...'),
-    type: 'info',
-    timeout: -1,
-    progressBar: true
-  });
+  const uploader = createUploader(editor, uploadStatus);
 
   return {
     /**
@@ -48,7 +51,7 @@ const ImageUploader = (editor: Editor): ImageUploader => {
      * @param {boolean} showNotification (Optional) When set to true, a notification with a progress bar will be shown during image uploads.
      */
     upload: (blobInfos: BlobInfo[], showNotification: boolean = true) =>
-      uploader.upload(blobInfos, showNotification ? openNotification : Fun.noop)
+      uploader.upload(blobInfos, showNotification ? openNotification(editor) : Fun.noop)
   };
 };
 
