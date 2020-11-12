@@ -23,9 +23,14 @@ const setClipboardElements = (setClipboard: (elems: Optional<SugarElement[]>) =>
   setClipboard(elmsOpt);
 };
 
+const insertTable = (editor: Editor) => (columns: number, rows: number, options: Record<string, number> = {}) => {
+  const table = insertTableWithDataValidation(editor, rows, columns, options, 'Invalid values for insertTable - rows and columns values are required to insert a table.');
+  editor.undoManager.add();
+  return table;
+};
+
 const getApi = (editor: Editor, clipboard: Clipboard, resizeHandler: ResizeHandler, selectionTargets: SelectionTargets) => ({
-  insertTable: (columns: number, rows: number, options: Record<string, number> = {}) =>
-    insertTableWithDataValidation(editor, rows, columns, options, 'Invalid values for insertTable - rows and columns values are required to insert a table.'),
+  insertTable: insertTable(editor),
   setClipboardRows: setClipboardElements(clipboard.setRows),
   getClipboardRows: getClipboardElements(clipboard.getRows),
   setClipboardCols: setClipboardElements(clipboard.setColumns),
