@@ -12,8 +12,7 @@ import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 import { EditorUiApi } from './ui/Ui';
 
-// Can take a list of named / numeric / raw values, delimited by '+' or ','
-export type EntityEncoding = 'named' | 'numeric' | 'raw' | string;
+export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   editorContainer: HTMLElement;
