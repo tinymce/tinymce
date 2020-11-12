@@ -57,7 +57,7 @@ const createState = (info: ImageDialogInfo) => ({
 const fromImageData = (image: ImageData): ImageDialogData => ({
   src: {
     value: image.src,
-    meta: { }
+    meta: {}
   },
   images: image.src,
   alt: image.alt,
@@ -109,7 +109,7 @@ const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Optional<string>
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   const data = api.getData();
   addPrependUrl2(info, data.src.value).each((srcURL) => {
-    api.setData({ src: { value: srcURL, meta: data.src.meta }});
+    api.setData({ src: { value: srcURL, meta: data.src.meta } });
   });
 };
 
@@ -283,7 +283,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       };
 
       const updateSrcAndSwitchTab = (url: string) => {
-        api.setData({ src: { value: url, meta: {}}});
+        api.setData({ src: { value: url, meta: {} } });
         api.showTab('general');
         changeSrc(helpers, info, state, api);
       };
@@ -339,9 +339,9 @@ const makeDialogBody = (info: ImageDialogInfo) => {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
-        [ MainTab.makeTab(info) ],
-        info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        [MainTab.makeTab(info)],
+        info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
       ])
     };
     return tabPanel;
@@ -383,9 +383,10 @@ const makeDialog = (helpers: Helpers) => (info: ImageDialogInfo): DialogType.Dia
 const submitHandler = (editor: Editor) => (info: ImageDialogInfo) => (api: API) => {
   const data: ImageDialogData = Merger.deepMerge(fromImageData(info.image), api.getData());
 
-  editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
-  editor.editorUpload.uploadImagesAuto();
-
+  if (data && data.src.value.length > 0) {
+    editor.execCommand('mceUpdateImage', false, toImageData(data, info.hasAccessibilityOptions));
+    editor.editorUpload.uploadImagesAuto();
+  }
   api.close();
 };
 
@@ -398,7 +399,7 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
   blob: file,
   blobUri,
   name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
-  base64: dataUrl.split(',')[ 1 ]
+  base64: dataUrl.split(',')[1]
 });
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo) => {
