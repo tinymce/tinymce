@@ -44,9 +44,15 @@ const searchFromPoint = (doc: SugarElement<Document>, x: number, y: number): Opt
       searchTextNodes(doc, elem, x, y).orThunk(fallback);
   });
 
-const availableSearch = document.caretPositionFromPoint ? caretPositionFromPoint :  // defined standard
-  document.caretRangeFromPoint ? caretRangeFromPoint :        // webkit implementation
-    searchFromPoint;                                            // fallback
+const availableSearch = (() => {
+  if (document.caretPositionFromPoint) {
+    return caretPositionFromPoint;  // defined standard
+  } else if (document.caretRangeFromPoint) {
+    return caretRangeFromPoint; // webkit implementation
+  } else {
+    return searchFromPoint; // fallback
+  }
+})();
 
 const fromPoint = (win: Window, x: number, y: number) => {
   const doc = SugarElement.fromDom(win.document);

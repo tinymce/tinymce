@@ -253,7 +253,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
             NamedChain.write(
               'yPos',
-              Chain.mapper(() => Scroll.get(eDoc).top),
+              Chain.mapper(() => Scroll.get(eDoc).top)
             ),
             NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
             NamedChain.read('anchor', Mouse.cClick),
@@ -274,7 +274,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
             NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
             NamedChain.write(
               'yPos',
-              Chain.mapper(() => Scroll.get(eDoc).top),
+              Chain.mapper(() => Scroll.get(eDoc).top)
             ),
             NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
             NamedChain.read('anchor', Mouse.cClick),
