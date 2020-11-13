@@ -171,6 +171,15 @@ const EditorUpload = function (editor: Editor): EditorUpload {
           }
         }
 
+        if (filteredResult.length > 0 || imagesToRemove.length > 0) {
+          const undoData = editor.undoManager.data;
+          editor.fire('change', {
+            // ensure undo state remains unchanged
+            level: undoData.length > 0 ? undoData[undoData.length - 1] : null,
+            lastLevel: undoData.length > 1 ? undoData[undoData.length - 2] : null
+          });
+        }
+
         if (callback) {
           callback(filteredResult);
         }
