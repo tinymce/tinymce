@@ -119,7 +119,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       ).toArray(),
       [
         Disabling.config({
-          disabled: () => spec.disabled || providersBackstage.isReadOnly()
+          disabled: () => spec.disabled || providersBackstage.isDisabled()
         }),
         Tabstopping.config({}),
         AddEventsBehaviour.config('urlinput-events', Arr.flatten([
@@ -215,7 +215,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
       components: [ pField, memStatus.asSpec() ],
       behaviours: Behaviour.derive([
         Disabling.config({
-          disabled: () => spec.disabled || providersBackstage.isReadOnly()
+          disabled: () => spec.disabled || providersBackstage.isDisabled()
         })
       ])
     }
@@ -264,7 +264,7 @@ export const renderUrlInput = (spec: UrlInputSpec, backstage: UiFactoryBackstage
     ]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => spec.disabled || providersBackstage.isReadOnly(),
+        disabled: () => spec.disabled || providersBackstage.isDisabled(),
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
           memUrlPickerButton.getOpt(comp).each(Disabling.disable);

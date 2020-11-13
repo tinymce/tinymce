@@ -52,7 +52,7 @@ export default (): void => {
           innerHtml: 'Wait for 5 seconds'
         },
         action: (_comp) => {
-          ModalDialog.setBusy(dialog, (dlg, busyBehaviours) => ({
+          ModalDialog.setBusy(dialog, (_comp, busyBehaviours) => ({
             dom: {
               tag: 'div',
               attributes: {

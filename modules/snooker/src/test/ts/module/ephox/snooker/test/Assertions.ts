@@ -1,5 +1,5 @@
 import { assert } from '@ephox/bedrock-client';
-import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -16,6 +16,8 @@ type Op<T> = (
   generators: Generators,
 ) => Optional<RunOperationOutput>;
 
+const isResizable = Fun.always;
+
 const checkOld = (
   expCell: { section: number; row: number; column: number },
   expectedHtml: string,
@@ -27,7 +29,7 @@ const checkOld = (
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
   }, Bridge.generators);
@@ -58,7 +60,7 @@ const checkPaste = (
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
 
   const pasteTable = SugarElement.fromHtml<HTMLTableElement>('<table><tbody>' + pasteHtml + '</tbody></table>');
   operation(
@@ -70,7 +72,7 @@ const checkPaste = (
       // Impossible type! This might work in some restricted circumstances.
       generators: Bridge.generators as SimpleGenerators
     },
-    Bridge.generators,
+    Bridge.generators
   );
 
   assert.eq(expectedHtml, Html.getOuter(table));
@@ -86,11 +88,11 @@ const checkStructure = (
   operation: Op<TargetElement>,
   section: number,
   row: number,
-  column: number,
+  column: number
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
     element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
   }, Bridge.generators);
@@ -115,11 +117,11 @@ const checkDelete = (
   input: string,
   operation: Op<TargetSelection>,
   cells: { section: number; row: number; column: number }[],
-  platform: ReturnType<typeof PlatformDetection.detect>,
+  platform: ReturnType<typeof PlatformDetection.detect>
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const cellz = Arr.map(cells, (cell) =>
     Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie('Could not find cell')
   );
@@ -173,7 +175,7 @@ const checkMerge = (
   Insert.append(SugarBody.body(), expectedDom);
   Insert.append(SugarBody.body(), table);
 
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const target = Bridge.targetStub(selection, bounds, table);
   const generators = Bridge.generators;
 
@@ -200,7 +202,7 @@ const checkUnmerge = (
 ) => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
-  const wire = ResizeWire.only(SugarBody.body());
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const unmergables = Arr.map(unmergablePaths, (path) =>
     Hierarchy.follow(table, [ path.section, path.row, path.column ])
   );

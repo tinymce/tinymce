@@ -45,7 +45,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
                       ]
                     })
                   ]
-                })),
+                }))
               )
             ])
           ])

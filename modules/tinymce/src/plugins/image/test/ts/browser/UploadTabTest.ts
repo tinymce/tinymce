@@ -31,10 +31,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]));
 
-    const sTriggerUpload = Logger.t('Trigger upload', Step.async((next, die) => {
+    const sTriggerUpload = (fileExtension: string = 'png') => Logger.t('Trigger upload', Step.async((next, die) => {
       Conversions.uriToBlob(b64).then((blob) => {
         Pipeline.async({}, [
-          FileInput.sRunOnPatchedFileInput([ Files.createFile('logo.png', 0, blob) ], Chain.asStep({}, [
+          FileInput.sRunOnPatchedFileInput([ Files.createFile(`logo.${fileExtension}`, 0, blob) ], Chain.asStep({}, [
             // cPopupToDialog('div[role="dialog"]'),
             ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
             UiFinder.cFindIn('button:contains("Browse for an image")'),
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload,
+      sTriggerUpload(),
       ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
       sAssertSrcTextValue('uploaded_image.jpg'),
       api.sDeleteSetting('images_upload_url'),
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload,
+      sTriggerUpload(),
       ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
       sAssertSrcTextValue('file.jpg'),
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload,
+      sTriggerUpload(),
       ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
       sAssertSrcTextValue(b64.split(',')[1]),
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
@@ -144,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload,
+      sTriggerUpload(),
       ui.sWaitForUi('Wait for an alert dialog to appear', '.tox-alert-dialog'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-alert-dialog .tox-button:contains("OK")'),
       UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog'),
@@ -158,11 +158,25 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload,
+      sTriggerUpload(),
       ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
       sAssertSrcTextValueStartsWith('blob:'),
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
       api.sDeleteSetting('automatic_uploads')
+    ]);
+
+    const uploadWithCustomImageFileTypes = Log.stepsAsStep('TINY-6224', 'Image: Image uploader respects `image_file_types` setting', [
+      api.sSetContent(''),
+      api.sSetSetting('images_upload_handler', (_blobInfo, success) => success('logo.svg')),
+      api.sSetSetting('image_file_types', 'svg'),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload('svg'),
+      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
+      sAssertSrcTextValue('logo.svg'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
+      api.sDeleteSetting('image_file_types')
     ]);
 
     Pipeline.async({}, [
@@ -174,7 +188,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadWithCustomHandler,
       uploadCustomHandlerBase64String,
       uploadWithError,
-      uploadWithAutomaticUploadsDisabled
+      uploadWithAutomaticUploadsDisabled,
+      uploadWithCustomImageFileTypes
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

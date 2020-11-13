@@ -6,12 +6,15 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling, FormField as AlloyFormField, Memento, NativeEvents,
-  Representing, SimpleSpec, SimulatedEvent, SystemEvents, Tabstopping, Toggling
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
+  FormField as AlloyFormField, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
+  SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
+import { Arr, Strings } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
+
+import Tools from 'tinymce/core/api/util/Tools';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -21,11 +24,13 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
-const extensionsAccepted = '.jpg,.jpeg,.png,.gif';
+const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jfif,png,gif,bmp,webp';
 
-const filterByExtension = function (files: FileList) {
-  const re = new RegExp('(' + extensionsAccepted.split(/\s*,\s*/).join('|') + ')$', 'i');
-  return Arr.filter(Arr.from(files), (file) => re.test(file.name));
+const filterByExtension = function (files: FileList, providersBackstage: UiFactoryBackstageProviders) {
+  const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('image_file_types', defaultImageFileTypes, 'string'));
+  const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name, `.${type}`));
+
+  return Arr.filter(Arr.from(files), isFileInAllowedTypes);
 };
 
 type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
@@ -57,7 +62,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   };
 
   const handleFiles = (component, files: FileList) => {
-    Representing.setValue(component, filterByExtension(files));
+    Representing.setValue(component, filterByExtension(files, providersBackstage));
     AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
   };
 
@@ -136,7 +141,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
             },
             buttonBehaviours: Behaviour.derive([
               Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isReadOnly),
+              DisablingConfigs.button(providersBackstage.isDisabled),
               ReadOnly.receivingConfig()
             ])
           })

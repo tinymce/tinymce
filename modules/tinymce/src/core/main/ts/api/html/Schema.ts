@@ -783,7 +783,7 @@ function Schema(settings?: SchemaSettings): Schema {
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
     // Remove these if they are empty by default
-    each(split('ol ul sub sup blockquote span font a table tbody tr strong em b i'), function (name) {
+    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), function (name) {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }

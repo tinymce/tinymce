@@ -166,7 +166,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
       Chain.op((element) => {
         Assertions.assertEq(`The input value for ${Label} should be: `, expected, Value.get(element));
       })
-    ]),
+    ])
   );
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

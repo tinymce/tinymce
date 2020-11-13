@@ -2,3 +2,4 @@
 # Format: [package_name]@[new_version]
 
 mcagar@5.1.0
+alloy@8.1.0

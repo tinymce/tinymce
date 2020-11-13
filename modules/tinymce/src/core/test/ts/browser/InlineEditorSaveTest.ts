@@ -33,8 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failur
       cSaveEditor,
       cAssertBogusExist,
       McEditor.cRemove
-    ]),
-    )
+    ]))
   ], function () {
     success();
   }, failure);

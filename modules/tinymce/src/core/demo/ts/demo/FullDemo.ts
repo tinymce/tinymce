@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
-declare let tinymce: any;
+declare let tinymce: TinyMCE;
 
 export default function () {
 
@@ -27,7 +28,7 @@ export default function () {
     });
   };
 
-  const settings = {
+  const settings: RawEditorSettings = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',

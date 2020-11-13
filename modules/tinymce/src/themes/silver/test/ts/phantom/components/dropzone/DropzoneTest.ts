@@ -42,8 +42,15 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
                 dataTransfer: {
                   files: [
                     { name: 'image1.png' },
-                    { name: 'image2.bmp' },
-                    { name: 'image3.jpg' }
+                    { name: 'image2.svg' },
+                    { name: 'image3.jpg' },
+                    { name: 'image4.jpeg' },
+                    { name: 'image5.jpe' },
+                    { name: 'image6.jfi' },
+                    { name: 'image7.jfif' },
+                    { name: 'image8.gif' },
+                    { name: 'image9.bmp' },
+                    { name: 'image10.webp' }
                   ]
                 }
               }
@@ -59,7 +66,14 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
         const filesValue = Representing.getValue(zone);
         Assertions.assertEq('Checking value of dropzone', [
           { name: 'image1.png' },
-          { name: 'image3.jpg' }
+          { name: 'image3.jpg' },
+          { name: 'image4.jpeg' },
+          { name: 'image5.jpe' },
+          { name: 'image6.jfi' },
+          { name: 'image7.jfif' },
+          { name: 'image8.gif' },
+          { name: 'image9.bmp' },
+          { name: 'image10.webp' }
         ], filesValue);
       })
     ],

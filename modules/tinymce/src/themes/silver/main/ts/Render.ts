@@ -5,13 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
+import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
 import { Arr, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+import * as ReadOnly from './ReadOnly';
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';
@@ -310,6 +311,10 @@ const setup = (editor: Editor): RenderInfo => {
       },
       components: containerComponents,
       behaviours: Behaviour.derive([
+        ReadOnly.receivingConfig(),
+        Disabling.config({
+          disableClass: 'tox-tinymce--disabled'
+        }),
         Keying.config({
           mode: 'cyclic',
           selector: '.tox-menubar, .tox-toolbar, .tox-toolbar__primary, .tox-toolbar__overflow--open, .tox-sidebar__overflow--open, .tox-statusbar__path, .tox-statusbar__wordcount, .tox-statusbar__branding a'

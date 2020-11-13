@@ -106,7 +106,7 @@ UnitTest.asynctest('GroupToolbarButtonTest', (success, failure) => {
             ]
           })
         ]
-      })),
+      }))
     )),
     Log.step('TINY-4616', 'Group toolbars are ignored when using wrap toolbar mode', Chain.asStep({}, [
       cTestWithEditor({

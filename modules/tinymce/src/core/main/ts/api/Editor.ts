@@ -332,7 +332,8 @@ class Editor implements EditorObservable {
       show: Fun.noop,
       hide: Fun.noop,
       enable: Fun.noop,
-      disable: Fun.noop
+      disable: Fun.noop,
+      isDisabled: Fun.never
     };
 
     const self = this;

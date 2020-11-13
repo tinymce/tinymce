@@ -18,13 +18,17 @@ UnitTest.test('Zip: unit tests', () => {
     const lt = -1;
     const gt = 1;
 
-    const sortTuples = (a: Array<{ k: string; v: string }>) => sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) => (
-      a.k === b.k ? a.v === b.v ? eq
-        : a.v > b.v ? gt
-          : lt
-        : a.k > b.k ? gt
-          : lt
-    ));
+    const sortTuples = (a: Array<{ k: string; v: string }>) => sort(a, (a: { k: string; v: string }, b: { k: string; v: string }) => {
+      if (a.k === b.k) {
+        if (a.v === b.v) {
+          return eq;
+        } else {
+          return a.v > b.v ? gt : lt;
+        }
+      } else {
+        return a.k > b.k ? gt : lt;
+      }
+    });
 
     expectedZipToObject.fold(() => {
       Assert.throws('boom', () => Zip.zipToObject(keys, values));

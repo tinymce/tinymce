@@ -207,7 +207,7 @@ export default (): void => {
           }
         })
       ]
-    }),
+    })
 
   );
 
