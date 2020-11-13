@@ -23,17 +23,17 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
       uploader.upload(images, notifications).then(next, die);
     });
 
-    const cAssertUploadResultSuccess = (expectedUrl: string, success: boolean) => Chain.op((uploadResults: UploadResult[]) => {
-      Arr.each(uploadResults, (uploadResult) => {
-        Assert.eq('Url is Image.png', expectedUrl, uploadResult.url);
-        Assert.eq('Upload result status is true upon success', success, uploadResult.status);
-      });
+    const cAssertUploadResultSuccess = (expectedUrl: string) => Chain.op((uploadResults: UploadResult[]) => {
+      Assert.eq('Url is Image.png', expectedUrl, uploadResults[0].url);
+      Assert.eq('Upload result status is true upon success', true, uploadResults[0].status);
     });
 
-    const cAssertUploadResultFailure = (expectedUrl: string, error: boolean) => Chain.op((uploadResults: UploadResult[]) => {
-      Arr.each(uploadResults, (uploadResult) => {
-        Assert.eq('Url is empty string upon failure', expectedUrl, '');
-        Assert.eq('Upload result status is false upon failure', error, uploadResult.status);
+    const cAssertUploadResultFailure = (expectedLength: number, expectedUrl?: string, errorMsg?: string) => Chain.op((uploadResults: UploadResult[]) => {
+      Assert.eq('Test', expectedLength, uploadResults.length);
+      Arr.each( uploadResults, (uploadResult) => {
+        Assert.eq('Url is empty string upon failure', expectedUrl, uploadResult.url);
+        Assert.eq('Upload result status is false upon failure', false, uploadResult.status);
+        Assert.eq('Upload result error message matches failure message', errorMsg, uploadResult.error.message);
       });
     });
 
@@ -42,13 +42,19 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
         Chain.inject(editor),
         ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success) => success('https://tiny.cloud/image.png')),
         cUploadImages([ image1 ], true),
-        cAssertUploadResultSuccess('https://tiny.cloud/image.png', true)
+        cAssertUploadResultSuccess('https://tiny.cloud/image.png')
       ]),
       Log.chainsAsStep('TINY-4601', 'Image upload failure', [
         Chain.inject(editor),
-        ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success, failure) => failure('')),
+        ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success, failure) => failure('Error msg')),
         cUploadImages([ image1 ], true),
-        cAssertUploadResultFailure('', false)
+        cAssertUploadResultFailure(1, '', 'Error msg')
+      ]),
+      Log.chainsAsStep('TINY-4601', 'Image upload failure for empty array', [
+        Chain.inject(editor),
+        ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success, failure) => failure('Error msg')),
+        cUploadImages([ ], true),
+        cAssertUploadResultFailure(0)
       ])
     ], onSuccess, onFailure);
   }, {
