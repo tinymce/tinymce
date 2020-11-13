@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
     });
 
     const cAssertUploadResultFailure = (expectedLength: number, url: string) => Chain.op((uploadResults: UploadResult[]) => {
-      Assert.eq('Number of results', expectedLength, 0);
+      Assert.eq('Number of results', expectedLength, uploadResults[0].url.length);
       Arr.each(uploadResults, (uploadResult) => {
         Assert.eq('Url is empty string upon failure', url, '');
         Assert.eq('Upload result status is false upon failure', false, uploadResult.status);
