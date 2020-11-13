@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -23,6 +24,11 @@ import * as Utils from './Utils';
 import * as Whitespace from './Whitespace';
 
 declare let window: any;
+
+interface FileResult {
+  readonly blob: File;
+  readonly uri: string;
+}
 
 const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean) => {
   const args = ProcessFilters.process(editor, content, internal);
@@ -128,15 +134,15 @@ const isValidDataUriImage = (editor: Editor, imgElm: HTMLImageElement) => {
 
 const extractFilename = (editor: Editor, str: string) => {
   const m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
-  return m ? editor.dom.encode(m[1]) : null;
+  return Type.isNonNullable(m) ? editor.dom.encode(m[1]) : null;
 };
 
 const uniqueId = Utils.createIdGenerator('mceclip');
 
-const pasteImage = (editor: Editor, imageItem) => {
+const pasteImage = (editor: Editor, imageItem: FileResult) => {
   const { data: base64, type } = parseDataUri(imageItem.uri);
   const id = uniqueId();
-  const name = Settings.getImagesReuseFilename(editor) && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
+  const file = imageItem.blob;
   const img = new Image();
 
   img.src = imageItem.uri;
@@ -144,11 +150,15 @@ const pasteImage = (editor: Editor, imageItem) => {
   // TODO: Move the bulk of the cache logic to EditorUpload
   if (isValidDataUriImage(editor, img)) {
     const blobCache = editor.editorUpload.blobCache;
-    let blobInfo;
+    let blobInfo: BlobInfo;
 
     const existingBlobInfo = blobCache.getByData(base64, type);
     if (!existingBlobInfo) {
-      blobInfo = blobCache.create(id, imageItem.blob, base64, name);
+      const useFileName = Settings.getImagesReuseFilename(editor) && Type.isNonNullable(file.name);
+      const name = useFileName ? extractFilename(editor, file.name) : id;
+      const filename = useFileName ? file.name : undefined;
+
+      blobInfo = blobCache.create(id, file, base64, name, filename);
       blobCache.add(blobInfo);
     } else {
       blobInfo = existingBlobInfo;
@@ -162,8 +172,10 @@ const pasteImage = (editor: Editor, imageItem) => {
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
-const readBlobsAsDataUris = (items: File[]) => Promise.all(Arr.map(items, (item: any) => new Promise((resolve) => {
-  const blob = item.getAsFile ? item.getAsFile() : item;
+const isDataTransferItem = (item: DataTransferItem | File): item is DataTransferItem => Type.isNonNullable((item as DataTransferItem).getAsFile);
+
+const readFilesAsDataUris = (items: Array<File | DataTransferItem>) => Promise.all(Arr.map(items, (item) => new Promise<FileResult>((resolve) => {
+  const blob = isDataTransferItem(item) ? item.getAsFile() : item;
 
   const reader = new window.FileReader();
   reader.onload = () => {
@@ -175,7 +187,7 @@ const readBlobsAsDataUris = (items: File[]) => Promise.all(Arr.map(items, (item:
   reader.readAsDataURL(blob);
 })));
 
-const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
+const getImagesFromDataTransfer = (dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.map(Arr.from(dataTransfer.items), (item) => item.getAsFile()) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
   const images = Arr.filter(items.length > 0 ? items : files, (file) => /^image\/(jpeg|png|gif|bmp)$/.test(file.type));
@@ -190,7 +202,7 @@ const getImagesFromDataTransfer = (dataTransfer: DataTransfer) => {
  * @param  {DOMRange} rng Rng object to move selection to.
  * @return {Boolean} true/false if the image data was found or not.
  */
-const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
+const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Range) => {
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Settings.getPasteDataImages(editor) && dataTransfer) {
@@ -199,12 +211,12 @@ const pasteImageData = (editor, e: ClipboardEvent | DragEvent, rng: Range) => {
     if (images.length > 0) {
       e.preventDefault();
 
-      readBlobsAsDataUris(images).then((blobResults) => {
+      readFilesAsDataUris(images).then((fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }
 
-        Arr.each(blobResults, (result) => {
+        Arr.each(fileResults, (result) => {
           pasteImage(editor, result);
         });
       });

@@ -5,10 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { BlobConversions, ImageTransformations, Proxy, ResultConversions } from '@ephox/imagetools';
-import { Optional } from '@ephox/katamari';
+import { BlobConversions, ImageResult, ImageTransformations, Proxy, ResultConversions } from '@ephox/imagetools';
+import { Optional, Type } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 
 import Delay from 'tinymce/core/api/util/Delay';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -19,6 +20,11 @@ import * as Settings from '../api/Settings';
 import * as ImageSize from './ImageSize';
 
 let count = 0;
+
+const enum FileExtractType {
+  Name = 2,
+  NameExt = 1
+}
 
 const getFigureImg = (elem) => SelectorFind.child(SugarElement.fromDom(elem), 'img');
 
@@ -51,12 +57,9 @@ const getSelectedImage = (editor: Editor): Optional<SugarElement> => {
   }
 };
 
-const extractFilename = function (editor: Editor, url: string) {
-  const m = url.match(/\/([^\/\?]+)?\.(?:jpeg|jpg|png|gif)(?:\?|$)/i);
-  if (m) {
-    return editor.dom.encode(m[1]);
-  }
-  return null;
+const extractFilename = function (editor: Editor, url: string, group: FileExtractType) {
+  const m = url.match(/(?:\/|^)(([^\/\?]+)\.(?:[a-z0-9.]+))(?:\?|$)/i);
+  return Type.isNonNullable(m) ? editor.dom.encode(m[group]) : null;
 };
 
 const createId = function () {
@@ -118,9 +121,9 @@ const cancelTimedUpload = function (imageUploadTimerState) {
   Delay.clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, imageUploadTimerState, selectedImage, size?) {
+const updateSelectedImage = function (editor: Editor, ir: ImageResult, uploadImmediately, imageUploadTimerState, selectedImage, size?) {
   return ir.toBlob().then(function (blob) {
-    let uri, name, blobInfo;
+    let uri: string, name: string, filename: string, blobInfo: BlobInfo;
 
     const blobCache = editor.editorUpload.blobCache;
     uri = selectedImage.src;
@@ -130,8 +133,10 @@ const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, ima
       if (blobInfo) {
         uri = blobInfo.uri();
         name = blobInfo.name();
+        filename = blobInfo.filename();
       } else {
-        name = extractFilename(editor, uri);
+        name = extractFilename(editor, uri, FileExtractType.Name);
+        filename = extractFilename(editor, uri, FileExtractType.NameExt);
       }
     }
 
@@ -140,7 +145,8 @@ const updateSelectedImage = function (editor: Editor, ir, uploadImmediately, ima
       blob,
       base64: ir.toBase64(),
       uri,
-      name
+      name,
+      filename
     });
 
     blobCache.add(blobInfo);
