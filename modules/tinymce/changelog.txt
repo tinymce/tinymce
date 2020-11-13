@@ -30,7 +30,7 @@ Version 5.6.0 (TBD)
     Fixed an issue where menus would incorrectly collapse in small containers #TINY-3321
     Fixed some minor memory leaks that prevented garbage collection for editor instances #TINY-6570
     Fixed resizing a `responsive` table not working when using the column resize handles #TINY-6601
-    Fixed incorrectly calculating table `col` widths resizing responsive tables #TINY-6646
+    Fixed incorrectly calculating table `col` widths when resizing responsive tables #TINY-6646
     Fixed an issue where spaces were not preserved in pre-blocks when getting text content #TINY-6448
 Version 5.5.1 (2020-10-01)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
