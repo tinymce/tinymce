@@ -8,28 +8,28 @@ import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 const { tNumber } = Testable;
 
 UnitTest.test('Arr.get: empty', () => {
-  Assert.eq('none', Optional.none<number>(), Arr.get<number>([], 0), tOptional(tNumber));
+  Assert.eq('none', Optional.none<number>(), Arr.get<number>([ ], 0), tOptional(tNumber));
 });
 
 UnitTest.test('Arr.get: empty with non zero index', () => {
-  Assert.eq('none', Optional.none<number>(), Arr.get<number>([], 5), tOptional(tNumber));
+  Assert.eq('none', Optional.none<number>(), Arr.get<number>([ ], 5), tOptional(tNumber));
 });
 
 UnitTest.test('Arr.get: invalid index', () => {
-  Assert.eq('none', Optional.none<number>(), Arr.get<number>([], -1), tOptional(tNumber));
+  Assert.eq('none', Optional.none<number>(), Arr.get<number>([ ], -1), tOptional(tNumber));
 });
 
 UnitTest.test('Arr.get: index out of bounds', () => {
-  Assert.eq('none', Optional.none<number>(), Arr.get<number>([10, 20, 30], 5), tOptional(tNumber));
+  Assert.eq('none', Optional.none<number>(), Arr.get<number>([ 10, 20, 30 ], 5), tOptional(tNumber));
 });
 
 UnitTest.test('Arr.get: valid index', () => {
-  Assert.eq('expected number', Optional.some(13), Arr.get<number>([10, 20, 30, 13], 3), tOptional(tNumber));
+  Assert.eq('expected number', Optional.some(13), Arr.get<number>([ 10, 20, 30, 13 ], 3), tOptional(tNumber));
 });
 
 UnitTest.test('Arr.get: fc valid index', () => {
   fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (h, m, t) => {
-    const arr = [h, m, t];
+    const arr = [ h, m, t ];
     Assert.eq('expected number', Optional.some(h), Arr.get(arr, 0), tOptional(tNumber));
     Assert.eq('expected number', Optional.some(m), Arr.get(arr, 1), tOptional(tNumber));
     Assert.eq('expected number', Optional.some(t), Arr.get(arr, 2), tOptional(tNumber));
