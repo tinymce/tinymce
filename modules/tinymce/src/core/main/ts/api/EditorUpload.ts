@@ -176,7 +176,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
           editor.setDirty(true);
           editor.fire('change', {
             // ensure undo state remains unchanged
-            level: Arr.get(undoData, undoData.length - 1).getOrNull(),
+            level: Arr.last(undoData).getOrNull(),
             lastLevel: Arr.get(undoData, undoData.length - 2).getOrNull()
           });
         }
