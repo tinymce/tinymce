@@ -5,11 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Actions from '../core/Actions';
 import * as Dialog from '../ui/Dialog';
 
-const register = function (editor, imageUploadTimerState) {
+const register = function (editor: Editor, imageUploadTimerState: Cell<number>) {
   Tools.each({
     mceImageRotateLeft: Actions.rotate(editor, imageUploadTimerState, -90),
     mceImageRotateRight: Actions.rotate(editor, imageUploadTimerState, 90),
