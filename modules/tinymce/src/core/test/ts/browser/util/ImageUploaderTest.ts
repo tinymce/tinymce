@@ -18,14 +18,17 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
 
     const image1 = cache.create({ blob, base64: 'test' });
 
-    const cUploadImages = (images: BlobInfo[], notifications: boolean) => Chain.async((_value, next, die) => {
+    const cUploadImages = (images: BlobInfo[], openNotification: boolean) => Chain.async((_value, next, die) => {
       const uploader = ImageUploader(editor);
-      uploader.upload(images, notifications).then(next, die);
+      uploader.upload(images, openNotification).then(next, die);
     });
 
-    const cAssertUploadResultSuccess = (expectedUrl: string) => Chain.op((uploadResults: UploadResult[]) => {
-      Assert.eq('Url is Image.png', expectedUrl, uploadResults[0].url);
-      Assert.eq('Upload result status is true upon success', true, uploadResults[0].status);
+    const cAssertUploadResultSuccess = (expectedLength: number, expectedUrl: string) => Chain.op((uploadResults: UploadResult[]) => {
+      Assert.eq('Test', expectedLength, uploadResults.length);
+      Arr.each(uploadResults, (uploadResult) => {
+        Assert.eq('Url is Image.png', expectedUrl, uploadResult.url);
+        Assert.eq('Upload result status is true upon success', true, uploadResult.status);
+      });
     });
 
     const cAssertUploadResultFailure = (expectedLength: number, expectedUrl?: string, errorMsg?: string) => Chain.op((uploadResults: UploadResult[]) => {
@@ -42,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.util.ImageUploaderTest', (success, fail
         Chain.inject(editor),
         ApiChains.cSetSetting('images_upload_handler', (_blobInfo: BlobInfo[], success) => success('https://tiny.cloud/image.png')),
         cUploadImages([ image1 ], true),
-        cAssertUploadResultSuccess('https://tiny.cloud/image.png')
+        cAssertUploadResultSuccess(1, 'https://tiny.cloud/image.png')
       ]),
       Log.chainsAsStep('TINY-4601', 'Image upload failure', [
         Chain.inject(editor),
