@@ -3,3 +3,4 @@
 
 mcagar@5.1.0
 alloy@8.1.0
+katamari@7.1.0
