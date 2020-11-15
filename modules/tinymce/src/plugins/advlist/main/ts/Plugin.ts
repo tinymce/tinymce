@@ -16,7 +16,7 @@ export default () => {
       Commands.register(editor);
     } else {
       // eslint-disable-next-line no-console
-      console.error('Please use the Lists Plugin together with the AdvList plugin.');
+      console.error('Please use the Lists plugin together with the AdvList plugin.');
     }
   });
 };
