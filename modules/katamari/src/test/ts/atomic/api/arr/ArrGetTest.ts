@@ -28,10 +28,13 @@ UnitTest.test('Arr.get: valid index', () => {
 });
 
 UnitTest.test('Arr.get: fc valid index', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (h, m, t) => {
-    const arr = [ h, m, t ];
+  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.integer(), (array, h, t) => {
+    const arr = [ h ].concat(array);
+    const length = arr.push(t);
+    const midIndex = Math.round(arr.length / 2);
+
     Assert.eq('expected number', Optional.some(h), Arr.get(arr, 0), tOptional(tNumber));
-    Assert.eq('expected number', Optional.some(m), Arr.get(arr, 1), tOptional(tNumber));
-    Assert.eq('expected number', Optional.some(t), Arr.get(arr, 2), tOptional(tNumber));
+    Assert.eq('expected number', Optional.some(arr[midIndex]), Arr.get(arr, midIndex), tOptional(tNumber));
+    Assert.eq('expected number', Optional.some(t), Arr.get(arr, length - 1), tOptional(tNumber));
   }));
 });
