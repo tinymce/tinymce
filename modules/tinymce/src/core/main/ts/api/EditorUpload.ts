@@ -157,6 +157,16 @@ const EditorUpload = function (editor: Editor): EditorUpload {
           };
         });
 
+        if (filteredResult.length > 0) {
+          const undoData = editor.undoManager.data;
+          editor.setDirty(true);
+          editor.fire('change', {
+            // ensure undo state remains unchanged
+            level: Arr.last(undoData).getOrNull(),
+            lastLevel: Arr.get(undoData, undoData.length - 2).getOrNull()
+          });
+        }
+
         if (imagesToRemove.length > 0) {
           if (Rtc.isRtc(editor)) {
             // To be replaced by RTC API to mirror DOM changes when such is implemented.
@@ -169,16 +179,6 @@ const EditorUpload = function (editor: Editor): EditorUpload {
               });
             });
           }
-        }
-
-        if (filteredResult.length > 0) {
-          const undoData = editor.undoManager.data;
-          editor.setDirty(true);
-          editor.fire('change', {
-            // ensure undo state remains unchanged
-            level: Arr.last(undoData).getOrNull(),
-            lastLevel: Arr.get(undoData, undoData.length - 2).getOrNull()
-          });
         }
 
         if (callback) {
