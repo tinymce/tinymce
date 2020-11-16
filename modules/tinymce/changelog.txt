@@ -33,12 +33,13 @@ Version 5.6.0 (TBD)
     Fixed some incorrect types in the new TypeScript declaration file #TINY-6413
     Fixed a regression whereby a fake offscreen selection element was incorrectly created for the editor root node #TINY-6555
     Fixed an issue where menus would incorrectly collapse in small containers #TINY-3321
-    Fixed an issue where only one table column at a time could be converted to a header #TINY-6326 
+    Fixed an issue where only one table column at a time could be converted to a header #TINY-6326
     Fixed some minor memory leaks that prevented garbage collection for editor instances #TINY-6570
     Fixed resizing a `responsive` table not working when using the column resize handles #TINY-6601
     Fixed incorrectly calculating table `col` widths when resizing responsive tables #TINY-6646
     Fixed an issue where spaces were not preserved in pre-blocks when getting text content #TINY-6448
     Fixed a regression that caused the selection to be difficult to see in tables with backgrounds #TINY-6495
+    Fixed content pasted multiple times in the editor when using Internet Explorer 11. Patch contributed by mattford #GH-4905
 Version 5.5.1 (2020-10-01)
     Fixed pressing the down key near the end of a document incorrectly raising an exception #TINY-6471
     Fixed incorrect Typescript types for the `Tools` API #TINY-6475

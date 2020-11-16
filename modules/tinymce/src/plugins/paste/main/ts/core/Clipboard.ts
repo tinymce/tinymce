@@ -247,17 +247,15 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   const keyboardPastePressed = Singleton.value();
   let keyboardPastePlainTextState;
 
-  editor.on('keyup', function () {
-    keyboardPastePressed.clear();
-  });
+  editor.on('keyup', keyboardPastePressed.clear);
 
   editor.on('keydown', function (e) {
-    function removePasteBinOnKeyUp(e) {
+    const removePasteBinOnKeyUp = (e: EditorEvent<KeyboardEvent>) => {
       // Ctrl+V or Shift+Insert
       if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
         pasteBin.remove();
       }
-    }
+    };
 
     // Ctrl+V or Shift+Insert
     if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
@@ -340,7 +338,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
 
     // If the content is the paste bin default HTML then it was
-    // impossible to get the cliboard data out.
+    // impossible to get the clipboard data out.
     if (pasteBin.isDefaultContent(content)) {
       if (!isKeyBoardPaste) {
         editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
@@ -361,8 +359,8 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
   };
 
   editor.on('paste', function (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) {
-    const isKeyBoardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
-    if (isKeyBoardPaste) {
+    const isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
+    if (isKeyboardPaste) {
       keyboardPasteEvent.clear();
     }
     const clipboardContent = getClipboardContent(editor, e);
@@ -383,12 +381,12 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
 
     // Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
-    if (!isKeyBoardPaste) {
+    if (!isKeyboardPaste) {
       e.preventDefault();
     }
 
     // Try IE only method if paste isn't a keyboard paste
-    if (Env.ie && (!isKeyBoardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
+    if (Env.ie && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
       pasteBin.create();
 
       editor.dom.bind(pasteBin.getEl(), 'paste', function (e) {
@@ -408,10 +406,10 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
         internal = InternalHtml.isMarked(clipboardContent['text/html']);
       }
 
-      insertClipboardContent(editor, clipboardContent, isKeyBoardPaste, plainTextMode, internal);
+      insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
     } else {
       Delay.setEditorTimeout(editor, function () {
-        insertClipboardContent(editor, clipboardContent, isKeyBoardPaste, plainTextMode, internal);
+        insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
       }, 0);
     }
   });
