@@ -68,7 +68,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const postExecute = (editor: Editor, table: SugarElement<HTMLTableElement>, rng: Range): void => {
+  const postExecute = (table: SugarElement<HTMLTableElement>) => (rng: Range): void => {
     editor.selection.setRng(rng);
     editor.focus();
     cellSelection.clear(table);
@@ -79,7 +79,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
-      execute(table, targets).each((rng) => postExecute(editor, table, rng));
+      execute(table, targets).each(postExecute(table));
     });
   });
 
@@ -104,7 +104,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
-          execute(table, targets).each((rng) => postExecute(editor, table, rng));
+          execute(table, targets).each(postExecute(table));
         })
       );
     });
@@ -137,22 +137,21 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
-  const logEventForSelection = (editor: Editor): void => {
-    getSelectionStartCell(editor).each((cell) => {
-      getTableFromCell(cell).each((table) => {
-        Events.fireTableModified(editor, table.dom);
-      });
+  const fireTableModifiedForSelection = (editor: Editor): void => {
+    // Due to a bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
+    TableLookup.table(Util.getSelectionStart(editor), isRoot).each((table) => {
+      Events.fireTableModified(editor, table.dom);
     });
   };
 
   Obj.each({
     mceTableCellType: (_ui, args) => {
       actions.setTableCellType(editor, args);
-      logEventForSelection(editor);
+      fireTableModifiedForSelection(editor);
     },
     mceTableRowType: (_ui, args) => {
       actions.setTableRowType(editor, args);
-      logEventForSelection(editor);
+      fireTableModifiedForSelection(editor);
     },
   }, (func, name) => editor.addCommand(name, func));
 
