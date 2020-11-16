@@ -74,7 +74,6 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
         Arr.each(result.newCells, (cell) => {
           Events.fireNewCell(editor, cell.dom);
         });
-        Events.fireTableModified(editor, table.dom);
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();

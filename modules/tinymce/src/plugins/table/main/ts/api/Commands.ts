@@ -68,15 +68,18 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
+  const postExecute = (editor: Editor, table: SugarElement<HTMLTableElement>, rng: Range): void => {
+    editor.selection.setRng(rng);
+    editor.focus();
+    cellSelection.clear(table);
+    Util.removeDataStyle(table);
+    Events.fireTableModified(editor, table.dom);
+  };
+
   const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
     getTableFromCell(cell).each((table) => {
       const targets = TableTargets.forMenu(selections, table, cell);
-      execute(table, targets).each((rng) => {
-        editor.selection.setRng(rng);
-        editor.focus();
-        cellSelection.clear(table);
-        Util.removeDataStyle(table);
-      });
+      execute(table, targets).each((rng) => postExecute(editor, table, rng));
     });
   });
 
@@ -101,11 +104,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
-          execute(table, targets).each((rng) => {
-            editor.selection.setRng(rng);
-            editor.focus();
-            cellSelection.clear(table);
-          });
+          execute(table, targets).each((rng) => postExecute(editor, table, rng));
         })
       );
     });
@@ -138,9 +137,23 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
+  const logEventForSelection = (editor: Editor): void => {
+    getSelectionStartCell(editor).each((cell) => {
+      getTableFromCell(cell).each((table) => {
+        Events.fireTableModified(editor, table.dom);
+      });
+    });
+  };
+
   Obj.each({
-    mceTableCellType: (_ui, args) => actions.setTableCellType(editor, args),
-    mceTableRowType: (_ui, args) => actions.setTableRowType(editor, args)
+    mceTableCellType: (_ui, args) => {
+      actions.setTableCellType(editor, args);
+      logEventForSelection(editor);
+    },
+    mceTableRowType: (_ui, args) => {
+      actions.setTableRowType(editor, args);
+      logEventForSelection(editor);
+    },
   }, (func, name) => editor.addCommand(name, func));
 
   editor.addCommand('mceTableColType', (_ui, args) =>
