@@ -1,8 +1,8 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Eq, Pprint, Testable } from '@ephox/dispute';
 import { Fun, Optional, Result } from '@ephox/katamari';
-import { KAssert } from '@ephox/katamari-assertions';
 import fc from 'fast-check';
+import * as KAssert from 'ephox/katamari-assertions/api/KAssert';
 
 const { tNumber } = Testable;
 

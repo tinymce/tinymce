@@ -6,9 +6,12 @@
  */
 
 import { Arr, Fun } from '@ephox/katamari';
+import { TableLookup } from '@ephox/snooker';
+import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
+import * as Events from '../api/Events';
 import { hasAdvancedRowTab } from '../api/Settings';
 import { switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
@@ -54,6 +57,10 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
       Styles.applyAlign(editor, rowElm, data.align);
     }
   });
+
+  TableLookup.table(SugarElement.fromDom(rows[0])).each(
+    (table) => Events.fireTableModified(editor, table.dom)
+  );
 };
 
 const onSubmitRowForm = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowData, api) => {

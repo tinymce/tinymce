@@ -8,8 +8,7 @@
     "paths": {
       "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
       "ephox/acid/demo/*": ["src/demo/ts/ephox/acid/demo/*"],
-      "ephox/acid/*": ["src/main/ts/ephox/acid/*"],
-      "@ephox/acid": ["src/main/ts/ephox/acid/api/Main.ts"]
+      "ephox/acid/*": ["src/main/ts/ephox/acid/*"]
     }
   },
   "include": [

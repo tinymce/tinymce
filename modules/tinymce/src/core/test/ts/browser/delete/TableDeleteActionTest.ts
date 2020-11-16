@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     Logger.t('select between two tables', Chain.asStep({}, [
       cFromHtml(
         '<div><table><tbody><tr><td>a</td></tr></tbody></table><table><tbody><tr><td>b</td></tr></tbody></table></div>',
-        [ 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 1,
+        [ 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 1
       ),
       cExtractTableFromDeleteAction,
       Assertions.cAssertEq('should be cell from first table only', '<table><tbody><tr><td>a</td></tr></tbody></table>')
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     Logger.t('select between two tables', Chain.asStep({}, [
       cFromHtml(
         '<div><table><tbody><tr><td>a</td></tr></tbody></table>b',
-        [ 0, 0, 0, 0, 0 ], 0, [ 1 ], 1,
+        [ 0, 0, 0, 0, 0 ], 0, [ 1 ], 1
       ),
       cExtractTableFromDeleteAction,
       Assertions.cAssertEq('should cells from partially selected table', '<table><tbody><tr><td>a</td></tr></tbody></table>')
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     Logger.t('select between two tables', Chain.asStep({}, [
       cFromHtml(
         '<div>a<table><tbody><tr><td>b</td></tr></tbody></table>',
-        [ 0 ], 0, [ 1, 0, 0, 0, 0 ], 1,
+        [ 0 ], 0, [ 1, 0, 0, 0, 0 ], 1
       ),
       cExtractTableFromDeleteAction,
       Assertions.cAssertEq('should cells from partially selected table', '<table><tbody><tr><td>b</td></tr></tbody></table>')
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
     Logger.t('single cell table with all content selected', Chain.asStep({}, [
       cFromHtml(
         '<table><tbody><tr><td>test</td></tr></tbody></table>',
-        [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 4,
+        [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 4
       ),
       cExtractDeleteSelectionCell,
       Assertions.cAssertEq('Should be cells', '<td>test</td>')

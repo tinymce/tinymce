@@ -11,7 +11,7 @@ import { DomDescent } from '@ephox/phoenix';
 import { CellMutations, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { fireNewCell, fireNewRow } from '../api/Events';
+import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
 import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
@@ -42,8 +42,8 @@ export interface TableActions {
   pasteRowsAfter: AdvancedPasteTableAction;
   setTableCellType: SimpleTableAction;
   setTableRowType: SimpleTableAction;
-  makeColumnHeader: ElementTableAction;
-  unmakeColumnHeader: ElementTableAction;
+  makeColumnsHeader: CombinedTargetsTableAction;
+  unmakeColumnsHeader: CombinedTargetsTableAction;
   getTableRowType: (editor: Editor) => string;
   getTableCellType: (editor: Editor) => string;
   getTableColType: (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
@@ -69,10 +69,10 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       const sizing = TableSize.get(editor, table);
       return guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
         Arr.each(result.newRows, (row) => {
-          fireNewRow(editor, row.dom);
+          Events.fireNewRow(editor, row.dom);
         });
         Arr.each(result.newCells, (cell) => {
-          fireNewCell(editor, cell.dom);
+          Events.fireNewCell(editor, cell.dom);
         });
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
@@ -81,7 +81,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
           rng.setEnd(des.element.dom, des.offset);
           return rng;
         });
-      }) : Optional.none();
+      }) : Optional.none<Range>();
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire);
@@ -124,8 +124,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
     });
 
-  const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
-  const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
+  const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, lazyWire);
+  const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, lazyWire);
 
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
     const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
@@ -169,8 +169,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
     pasteCells,
     setTableCellType,
     setTableRowType,
-    makeColumnHeader,
-    unmakeColumnHeader,
+    makeColumnsHeader,
+    unmakeColumnsHeader,
     getTableRowType,
     getTableCellType,
     getTableColType

@@ -8,8 +8,7 @@
     "paths": {
       "ephox/dragster/test/*": ["src/test/ts/module/ephox/dragster/test/*"],
       "ephox/dragster/demo/*": ["src/demo/ts/ephox/dragster/demo/*"],
-      "ephox/dragster/*": ["src/main/ts/ephox/dragster/*"],
-      "@ephox/dragster": ["src/main/ts/ephox/dragster/api/Main.ts"]
+      "ephox/dragster/*": ["src/main/ts/ephox/dragster/*"]
     }
   },
   "include": [

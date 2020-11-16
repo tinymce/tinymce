@@ -1,16 +1,16 @@
-import { ApproxStructure, Assertions, Chain, Guard, UiFinder, Waiter } from '@ephox/agar';
-import { Arr } from '@ephox/katamari';
+import { ApproxStructure, Assertions, Chain, Guard, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { Arr, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 interface AutocompleterListStructure {
   type: 'list';
-  hasIcons: boolean;
-  groups: { title: string; text: string; icon?: string; boldText?: string}[][];
+  hasIcons?: boolean;
+  groups: Array<{ title: string; text: string; icon?: string; boldText?: string} | ((s, str, arr) => StructAssert)>[];
 }
 
 interface AutocompleterGridStructure {
   type: 'grid';
-  groups: { title: string; icon?: string; boldText?: string }[][];
+  groups: Array<{ title: string; icon?: string; boldText?: string } | ((s, str, arr) => StructAssert)>[];
 }
 
 type AutocompleterStructure = AutocompleterListStructure | AutocompleterGridStructure;
@@ -85,7 +85,9 @@ const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Cha
               classes: [ arr.has('tox-collection__group') ],
               children: Arr.map(group, (d) => {
                 if (structure.type === 'list') {
-                  if (structure.hasIcons) {
+                  if (Type.isFunction(d)) {
+                    return d(s, str, arr);
+                  } else if (structure.hasIcons) {
                     return structWithTitleAndIconAndText(d)(s, str, arr);
                   } else {
                     return structWithTitleAndText(d)(s, str, arr);

@@ -21,6 +21,15 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   const pixelTable = '<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>';
   const percentTable = '<table style="width: 100%;"><tbody><tr><td style="width: 50%;"></td><td style="width: 50%;"></td></tr></tbody></table>';
   const responsiveTable = '<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>';
+  const responsiveTableWithContent = '<table><colgroup><col><col></colgroup><tbody><tr><td>Content</td><td><br></td></tr></tbody></table>';
+
+  const defaultSettings = {
+    plugins: 'table',
+    width: 400,
+    theme: 'silver',
+    base_url: '/project/tinymce/js/tinymce',
+    table_toolbar: ''
+  };
 
   const assertWithin = function (value, min, max) {
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
@@ -116,12 +125,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Test default config of [table_sizing_mode=unset], resize should detect current unit', [
-      NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce'
-      })),
+      NamedChain.write('editor', McEditor.cFromSettings(defaultSettings)),
 
       cClearResizeEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
@@ -142,10 +146,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TBA', 'Test default config of [table_sizing_mode="relative"], new tables should default to % and resize should force %', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
+        ...defaultSettings,
         table_sizing_mode: 'relative'
       })),
 
@@ -184,10 +185,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TBA', 'Test [table_sizing_mode="fixed"], new tables should default to px and resize should force px', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
+        ...defaultSettings,
         table_sizing_mode: 'fixed'
       })),
 
@@ -220,10 +218,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6051', 'Test [table_sizing_mode="responsive"], new tables should default to no widths and resize should force percentage', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
+        ...defaultSettings,
         table_sizing_mode: 'responsive'
       })),
 
@@ -257,11 +252,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6001', 'Test [table_column_resizing="preservetable"], adjusting an inner column should not change the table width', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_toolbar: '',
+        ...defaultSettings,
         table_column_resizing: 'preservetable',
         table_sizing_mode: 'fixed'
       })),
@@ -278,11 +269,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6001', 'Test [table_column_resizing="resizetable"], adjusting an inner column should change the table width', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_toolbar: '',
+        ...defaultSettings,
         table_column_resizing: 'resizetable',
         table_sizing_mode: 'fixed'
       })),
@@ -299,11 +286,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="preservetable"], adjusting the entire table should resize all columns', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_toolbar: '',
+        ...defaultSettings,
         table_column_resizing: 'preservetable',
         table_sizing_mode: 'fixed'
       })),
@@ -329,11 +312,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="resizetable"], adjusting the entire table should resize the last column', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_toolbar: '',
+        ...defaultSettings,
         table_column_resizing: 'resizetable',
         table_sizing_mode: 'fixed'
       })),
@@ -361,11 +340,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     Log.chainsAsStep('TINY-6242', 'Test [table_column_resizing="resizetable"], adjusting the entire table should not resize more than the last column width', [
       NamedChain.write('editor', McEditor.cFromSettings({
-        plugins: 'table',
-        width: 400,
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_toolbar: '',
+        ...defaultSettings,
         table_column_resizing: 'resizetable',
         table_sizing_mode: 'relative'
       })),
@@ -381,6 +356,49 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
         Assertions.assertEq('First column unit width', '%', firstColWidth.unit);
         Assertions.assertEq(`Last column raw width ${lastColWidth.raw + lastColWidth.unit} should be ~5%`, true, Math.abs(5 - lastColWidth.raw) <= percentDiffThreshold);
         Assertions.assertEq('Last column unit width', '%', lastColWidth.unit);
+      })),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6601', 'Test [table_column_resizing="resizetable"] with colgroup, adjusting an inner column should change the table width', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        ...defaultSettings,
+        table_column_resizing: 'resizetable',
+        table_use_colgroups: true,
+        table_sizing_mode: 'responsive'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 100, 0), TableTestUtils.cInsertTable(2, 2)), 'widths'),
+      NamedChain.read('widths', cAssertUnitBeforeResize(null)),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      NamedChain.read('widths', cAssertWidthAfterResize(35, true)),
+      cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
+      cAssertEventData(lastObjectResizedEvent, 'objectresized'),
+
+      NamedChain.read('editor', McEditor.cRemove)
+    ]),
+
+    Log.chainsAsStep('TINY-6646', 'Test [table_column_resizing="resizetable"] with responsive colgroup table, adjusting an inner column with content', [
+      NamedChain.write('editor', McEditor.cFromSettings({
+        ...defaultSettings,
+        table_column_resizing: 'resizetable'
+      })),
+
+      cClearResizeEventData,
+      NamedChain.read('editor', ApiChains.cSetContent('')),
+      NamedChain.direct('editor', cInsertResizeMeasure(TableTestUtils.cDragResizeBar('column', 0, 100, 0), TableTestUtils.cInsertRaw(responsiveTableWithContent)), 'widths'),
+      NamedChain.read('widths', cAssertUnitAfterResize('%')),
+      NamedChain.read('widths', cAssertWidthAfterResize(53, true)),
+      NamedChain.read('widths', Chain.op((widths: any) => {
+        const firstColWidth = widths.colWidthsAfter[0];
+        const lastColWidth = widths.colWidthsAfter[1];
+        Assertions.assertEq(`First column computed width ${firstColWidth.px}px should be ~157px`, true, Math.abs(157 - firstColWidth.px) <= pixelDiffThreshold);
+        Assertions.assertEq(`Last column computed width ${lastColWidth.px}px should be ~0px`, true, Math.abs(lastColWidth.px) <= pixelDiffThreshold);
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),

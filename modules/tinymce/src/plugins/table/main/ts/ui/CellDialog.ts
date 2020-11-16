@@ -12,6 +12,7 @@ import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
+import * as Events from '../api/Events';
 import { hasAdvancedCellTab } from '../api/Settings';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
@@ -74,7 +75,14 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
-    getSelectedCells(cells).each((selectedCells) =>
+    /*
+      Retrieve the table before the cells are modified
+      as there is a case where cells are replaced and
+      the reference will be lost when trying to fire events.
+    */
+    const tableOpt = TableLookup.table(cells[0]);
+
+    getSelectedCells(cells).each((selectedCells) => {
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
         const cellElement = item.element;
@@ -105,7 +113,12 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
         if (data.valign) {
           Styles.applyVAlign(editor, cellElm, data.valign);
         }
-      }));
+      });
+    });
+
+    tableOpt.each(
+      (table) => Events.fireTableModified(editor, table.dom)
+    );
   }
 };
 

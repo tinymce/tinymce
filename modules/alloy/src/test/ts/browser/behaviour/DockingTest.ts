@@ -143,7 +143,7 @@ UnitTest.asynctest('DockingTest', (success, failure) => {
             }
           })),
           absoluteBox.element
-        ),
+        )
       ),
       store.sAssertEq('When docked', [ 'static.onDocked', 'absolute.onDocked' ]),
       store.sClear,

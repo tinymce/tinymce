@@ -12,6 +12,8 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
   Theme();
 
   const suite = LegacyUnit.createSuite<Editor>();
+  let beforeOpenEvents = [];
+  let openEvents = [];
 
   const teardown = function (editor: Editor) {
     const notifications = [].concat(editor.notificationManager.getNotifications());
@@ -19,7 +21,26 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     Tools.each(notifications, function (notification) {
       notification.close();
     });
+
+    beforeOpenEvents = [];
+    openEvents = [];
   };
+
+  // IMPORTANT: This test must be first, as it asserts the service message on load
+  suite.test('TINY-6528: Notification manager should not fire BeforeOpenNotification for service messages', (editor) => {
+    const notifications = editor.notificationManager.getNotifications();
+    LegacyUnit.equal(beforeOpenEvents.length, 0, 'BeforeOpenNotification should not fire for service messages');
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+    LegacyUnit.equal(openEvents.length, 1, 'Should fire OpenNotification event');
+
+    // Notification should be unmodified
+    const unmodified = notifications[0].settings;
+    LegacyUnit.equal(unmodified.text, 'service notification text', 'Should have unmodified text');
+    LegacyUnit.equal(unmodified.type, 'warning', 'Should have unmodified type');
+    LegacyUnit.equal(unmodified.timeout, 0, 'Should have unmodified timeout');
+
+    teardown(editor);
+  });
 
   suite.test('TestCase-TBA: Should not add duplicate text message', function (editor) {
     const testMsg1: NotificationSpec = { type: 'success', text: 'test success message' };
@@ -31,16 +52,19 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 1, 'Should have one message after one added.');
+    LegacyUnit.equal(openEvents.length, 1, 'Should have one OpenNotification event.');
 
     editor.notificationManager.open(testMsg1);
 
     LegacyUnit.equal(notifications.length, 1, 'Should not add message if duplicate.');
+    LegacyUnit.equal(openEvents.length, 1, 'Should not fire additional OpenNotification for duplicate.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
     editor.notificationManager.open(testMsg4);
 
     LegacyUnit.equal(notifications.length, 4, 'Non duplicate messages should get added.');
+    LegacyUnit.equal(openEvents.length, 4, 'Should fire additional OpenNotification events for notifications.');
 
     editor.notificationManager.open(testMsg2);
     editor.notificationManager.open(testMsg3);
@@ -115,6 +139,47 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
     teardown(editor);
   });
 
+  suite.test('TINY-6528: Notification manager should throw events for notification modification', (editor) => {
+    const testMsg: NotificationSpec = {
+      type: 'warning',
+      text: 'unmodified notification text',
+      icon: 'warning',
+      progressBar: true,
+      timeout: 10,
+      closeButton: true
+    };
+    const notifications = editor.notificationManager.getNotifications();
+
+    // Unmodified notification
+    editor.notificationManager.open(testMsg);
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+    LegacyUnit.deepEqual(notifications[0].settings, testMsg, 'Entire notification should be unmodified');
+    teardown(editor);
+
+    editor.on('BeforeOpenNotification', (event) => {
+      event.notification.type = 'success';
+      event.notification.text = 'Modified notification text';
+      event.notification.icon = 'user';
+      event.notification.progressBar = false;
+      event.notification.timeout = 5;
+      event.notification.closeButton = false;
+    });
+
+    editor.notificationManager.open(testMsg);
+    LegacyUnit.equal(openEvents.length, 1, 'Should fire OpenNotification event');
+    LegacyUnit.equal(notifications.length, 1, 'Should add notification');
+
+    // Modified notification
+    const modified = notifications[0].settings;
+    LegacyUnit.equal(modified.text, 'Modified notification text', 'Should have modified text');
+    LegacyUnit.equal(modified.type, 'success', 'Should have modified type');
+    LegacyUnit.equal(modified.icon, 'user', 'Should have modified icon');
+    LegacyUnit.equal(modified.progressBar, false, 'Should have modified progressBar');
+    LegacyUnit.equal(modified.timeout, 5, 'Should have modified timeout');
+    LegacyUnit.equal(modified.closeButton, false, 'Should have modified closeButton');
+    teardown(editor);
+  });
+
   suite.test('TestCase-TBA: Should not open notification if editor is removed', function (editor) {
     const testMsg1: NotificationSpec = { type: 'warning', text: 'test progressBar message' };
 
@@ -133,11 +198,16 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', function (suc
   TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
     Pipeline.async({}, Log.steps('TBA', 'Testing the notifications api', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
+    service_message: 'service notification text',
     add_unload_trigger: false,
     disable_nodechange: true,
     theme: 'silver',
     indent: false,
     entities: 'raw',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor) => {
+      editor.on('BeforeOpenNotification', (event) => beforeOpenEvents.push(event));
+      editor.on('OpenNotification', (event) => openEvents.push(event));
+    }
   }, success, failure);
 });

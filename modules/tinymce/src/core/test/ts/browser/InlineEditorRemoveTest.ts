@@ -32,8 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, fail
       cRemoveEditor,
       cAssertBogusNotExist,
       McEditor.cRemove
-    ]),
-    )
+    ]))
   ], function () {
     success();
   }, failure);

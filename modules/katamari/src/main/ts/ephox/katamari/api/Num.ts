@@ -5,7 +5,13 @@
  */
 export const cycleBy = (value: number, delta: number, min: number, max: number): number => {
   const r = value + delta;
-  return r > max ? min : r < min ? max : r;
+  if (r > max) {
+    return min;
+  } else if (r < min) {
+    return max;
+  } else {
+    return r;
+  }
 };
 
 export const clamp = (value: number, min: number, max: number): number =>
