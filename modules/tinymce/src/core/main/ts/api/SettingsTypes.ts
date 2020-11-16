@@ -12,7 +12,7 @@ import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 import { EditorUiApi } from './ui/Ui';
 
-export type EntityEncoding = 'named' | 'numeric' | 'raw';
+export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   editorContainer: HTMLElement;
