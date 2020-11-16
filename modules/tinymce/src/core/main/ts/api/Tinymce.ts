@@ -78,7 +78,7 @@ interface RangeUtilsNamespace {
   getNode: (container: Node, offset: number) => Node;
 }
 
-interface AddOnManagerNamesapce {
+interface AddOnManagerNamespace {
   new <T>(): AddOnManager<T>;
 
   language: string;
@@ -152,7 +152,7 @@ interface TinyMCE extends EditorManager {
     Serializer: new (settings?: HtmlSerializerSettings, schema?: Schema) => HtmlSerializer;
   };
 
-  AddOnManager: AddOnManagerNamesapce;
+  AddOnManager: AddOnManagerNamespace;
   Annotator: new (editor: Editor) => Annotator;
   Editor: EditorConstructor;
   EditorCommands: EditorCommandsConstructor;
