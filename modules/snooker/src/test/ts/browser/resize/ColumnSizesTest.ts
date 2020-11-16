@@ -1,0 +1,53 @@
+import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { TableSize } from 'ephox/snooker/api/TableSize';
+import { Warehouse } from 'ephox/snooker/api/Warehouse';
+import * as BarPositions from 'ephox/snooker/resize/BarPositions';
+import * as ColumnSizes from 'ephox/snooker/resize/ColumnSizes';
+
+const noneTableHtml = '<table><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
+const pixelTableHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 200px;">A</td><td style="width: 200px;">A</td></tr></tbody></table>';
+const tableWithSpansHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 400px;" colspan="2">A</td></tr></tbody></table>';
+const noneTableWithColsHtml = '<table><colgroup><col><col></colgroup><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
+
+UnitTest.test('ColumnSizes.getPixelWidths', () => {
+  const sTest = (label: string, html: string, getExpectedWidths: (cellWidth: number) => number[]) => {
+    const table = SugarElement.fromHtml<HTMLTableElement>(html);
+    Insert.append(SugarBody.body(), table);
+
+    const cellWidth = SelectorFind.descendant<HTMLTableCellElement>(table, 'td')
+      .map((cell) => Math.round(parseFloat(Css.get(cell, 'width'))))
+      .getOrDie();
+
+    const pixelWidths = ColumnSizes.getPixelWidths(Warehouse.fromTable(table), table, TableSize.getTableSize(table));
+
+    // Round to account for precision issues
+    const roundedPixelWidths = Arr.map(pixelWidths, Math.round);
+    Assert.eq(label, getExpectedWidths(cellWidth), roundedPixelWidths);
+
+    Remove.remove(table);
+  };
+
+  sTest('Pixel Table - Cell widths should be the raw size of the cell', pixelTableHtml, () => [ 200, 200 ]);
+  sTest('Pixel Table - Cell width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
+  sTest('None Table - Cell widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
+  sTest('None Table - Cell widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
+});
+
+UnitTest.test('ColumnSizes.getPixelHeights', () => {
+  const table = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
+  Insert.append(SugarBody.body(), table);
+
+  const cellHeight = SelectorFind.descendant<HTMLTableCellElement>(table, 'td')
+    .map((cell) => Math.round(parseFloat(Css.get(cell, 'height'))))
+    .getOrDie();
+
+  const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table, BarPositions.height);
+
+  // Round to account for precision issues
+  const roundedPixelHeights = Arr.map(pixelHeights, Math.round);
+  Assert.eq('Cell heights should be the computed size of the cell', [ cellHeight ], roundedPixelHeights);
+
+  Remove.remove(table);
+});
