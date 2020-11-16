@@ -12,6 +12,7 @@ Version 5.6.0 (TBD)
     Added new `emoticons_database` setting to configure which emoji database to use #TINY-6021
     Added new `name` field to the `style_formats` setting object to enable specifying a name for the format. #TINY-4239
     Changed `readonly` mode to allow hyperlinks to be clickable #TINY-6248
+    Fixed missing `TableModified` events for `mceTableRowType` and `mceTableCellType` commands #TINY-6629
     Fixed layout issues when empty `tr` elements were incorrectly removed from tables #TINY-4679
     Fixed a security issue where URLs in attributes weren't correctly sanitized #TINY-6518
     Fixed `DOMUtils.getParents` incorrectly including the shadow root in the array of elements returned #TINY-6540
