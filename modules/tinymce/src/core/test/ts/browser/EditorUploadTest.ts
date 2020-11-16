@@ -478,6 +478,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     images_dataimg_filter: (img) => dataImgFilter ? dataImgFilter(img) : true,
-    setup: (ed) => ed.on('change', (event) => appendEvent(event))
+    setup: (ed: Editor) => ed.on('change', appendEvent)
   }, success, failure);
 });
