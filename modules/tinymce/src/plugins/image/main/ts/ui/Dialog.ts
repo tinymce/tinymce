@@ -181,6 +181,8 @@ const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: Imag
         api.setData({ dimensions: size });
       }
     });
+  } else {
+    api.setData({ dimensions: { width: '', height: '' }});
   }
 };
 
