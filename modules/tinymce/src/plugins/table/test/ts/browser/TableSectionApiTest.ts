@@ -1,8 +1,9 @@
-import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Selectors, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -156,6 +157,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
 </tbody>
 </table>`;
 
+  let events = [];
+  const logEvent = (event: EditorEvent<{}>) => {
+    events.push(event);
+  };
+
   const cSelectAllCells = (type: 'td' | 'th') =>
     Chain.op((editor: Editor) => {
       const searchingForType = type === 'th' ? 'td' : 'th';
@@ -177,7 +183,11 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
         editor.selection.select(row.dom);
+        events = [];
         editor.execCommand(command, false, { type });
+        Assertions.assertEq('TINY-6629: Assert table modified events length', 1, events.length);
+        Assertions.assertEq('TINY-6629: Assert table modified event', 'tablemodified', events[0].type);
+        events = [];
       }),
       ApiChains.cAssertContent(expectedContent)
     ]));
@@ -196,7 +206,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
         plugins: 'table',
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
-        table_header_type: tableHeaderType
+        table_header_type: tableHeaderType,
+        setup: (ed: Editor) => ed.on('tablemodified', logEvent)
       }),
       cSwitchType(startContent, expectedContent, command, type, selector),
       McEditor.cRemove
@@ -227,7 +238,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
       McEditor.cFromSettings({
         plugins: 'table',
         theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce'
+        base_url: '/project/tinymce/js/tinymce',
+        setup: (ed: Editor) => ed.on('tablemodified', logEvent)
       }),
       Chain.fromParent(Chain.identity, [
         // Basic tests to switch between row section types
