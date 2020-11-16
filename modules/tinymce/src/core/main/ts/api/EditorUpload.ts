@@ -171,7 +171,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
           }
         }
 
-        if (filteredResult.length > 0 || imagesToRemove.length > 0) {
+        if (filteredResult.length > 0) {
           const undoData = editor.undoManager.data;
           editor.setDirty(true);
           editor.fire('change', {
