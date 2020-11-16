@@ -8,6 +8,7 @@ import { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -23,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
   }
 
   let changeEvents = [];
-  const appendEvent = (event) => changeEvents.push(event);
+  const appendEvent = (event: EditorEvent<{}>) => changeEvents.push(event);
   const clearEvents = () => changeEvents = [];
 
   const teardown = (editor: Editor) =>
