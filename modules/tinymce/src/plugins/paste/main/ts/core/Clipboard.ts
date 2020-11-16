@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
+import { Arr, Cell, Singleton, Strings, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -187,11 +187,17 @@ const readFilesAsDataUris = (items: Array<File | DataTransferItem>) => Promise.a
   reader.readAsDataURL(blob);
 })));
 
-const getImagesFromDataTransfer = (dataTransfer: DataTransfer): File[] => {
+const isImage = (editor: Editor) => {
+  const allowedExtensions = Settings.getAllowedImageFileTypes(editor);
+  return (file: File) => Strings.startsWith(file.type, 'image/') && Arr.exists(allowedExtensions, (extension) => {
+    return Utils.getImageMimeType(extension) === file.type;
+  });
+};
+
+const getImagesFromDataTransfer = (editor: Editor, dataTransfer: DataTransfer): File[] => {
   const items = dataTransfer.items ? Arr.map(Arr.from(dataTransfer.items), (item) => item.getAsFile()) : [];
   const files = dataTransfer.files ? Arr.from(dataTransfer.files) : [];
-  const images = Arr.filter(items.length > 0 ? items : files, (file) => /^image\/(jpeg|png|gif|bmp)$/.test(file.type));
-  return images;
+  return Arr.filter(items.length > 0 ? items : files, isImage(editor));
 };
 
 /**
@@ -206,7 +212,7 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
   const dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
 
   if (Settings.getPasteDataImages(editor) && dataTransfer) {
-    const images = getImagesFromDataTransfer(dataTransfer);
+    const images = getImagesFromDataTransfer(editor, dataTransfer);
 
     if (images.length > 0) {
       e.preventDefault();
