@@ -138,21 +138,24 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
-  const fireTableModifiedForSelection = (editor: Editor): void => {
-    // Due to a bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
-    TableLookup.table(Util.getSelectionStart(editor), isRoot).each((table) => {
+  // Due to a bug, we need to pass through a reference to the table obtained before the modification
+  const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
+    // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
+    tableOpt.each((table) => {
       Events.fireTableModified(editor, table.dom);
     });
   };
 
   Obj.each({
     mceTableCellType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
       actions.setTableCellType(editor, args);
-      fireTableModifiedForSelection(editor);
+      fireTableModifiedForSelection(editor, tableOpt);
     },
     mceTableRowType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
       actions.setTableRowType(editor, args);
-      fireTableModifiedForSelection(editor);
+      fireTableModifiedForSelection(editor, tableOpt);
     },
   }, (func, name) => editor.addCommand(name, func));
 
