@@ -140,6 +140,8 @@ const getImageMimeType = (ext: string): string => {
   const mimeOverrides = {
     jpg: 'jpeg',
     jpe: 'jpeg',
+    jfi: 'jpeg',
+    jif: 'jpeg',
     jfif: 'jpeg',
     pjpeg: 'jpeg',
     pjp: 'jpeg',
