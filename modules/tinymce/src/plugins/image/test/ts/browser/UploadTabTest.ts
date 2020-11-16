@@ -179,6 +179,18 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sDeleteSetting('image_file_types')
     ]);
 
+    const uploadWithAlternativeExtension = Log.stepsAsStep('TINY-6622', 'Image: Image uploader retains the file name/extension', [
+      api.sSetContent(''),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.filename())),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload('jfif'),
+      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
+      sAssertSrcTextValue('logo.jfif'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
+    ]);
+
     Pipeline.async({}, [
       uploadTabNotPresent,
       uploadTabPresentOnUploadUrl,
@@ -189,7 +201,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadCustomHandlerBase64String,
       uploadWithError,
       uploadWithAutomaticUploadsDisabled,
-      uploadWithCustomImageFileTypes
+      uploadWithCustomImageFileTypes,
+      uploadWithAlternativeExtension
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

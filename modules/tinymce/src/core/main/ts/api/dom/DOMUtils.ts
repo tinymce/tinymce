@@ -154,9 +154,8 @@ const findNodeIndex = function (node: Node, normalized?: boolean) {
 export interface DOMUtilsSettings {
   schema: Schema;
   url_converter: URLConverter;
-  url_converter_scope: {};
+  url_converter_scope: any;
   ownEvents: boolean;
-  proxy: any;
   keep_values: boolean;
   hex_colors: boolean;
   update_styles: boolean;

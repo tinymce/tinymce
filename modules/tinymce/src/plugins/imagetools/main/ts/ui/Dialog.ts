@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Actions from '../core/Actions';
@@ -21,7 +22,7 @@ const createState = (blob: Blob): ImageToolsState => ({
   url: URL.createObjectURL(blob)
 });
 
-const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
+const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => () => {
   const getLoadedSpec = (currentState: ImageToolsState): Dialog.DialogSpec<{ imagetools: ImageToolsState }> => ({
     title: 'Edit Image',
     size: 'large',
@@ -83,8 +84,7 @@ const makeOpen = (editor: Editor, imageUploadTimerState) => () => {
   const originalImgOpt = Actions.getSelectedImage(editor);
   const originalSizeOpt = originalImgOpt.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom));
 
-  const imgOpt = Actions.getSelectedImage(editor);
-  imgOpt.each((img) => {
+  originalImgOpt.each((img) => {
     Actions.getEditableImage(editor, img.dom).each((_) => {
       Actions.findBlob(editor, img.dom).then((blob) => {
         const state = createState(blob);

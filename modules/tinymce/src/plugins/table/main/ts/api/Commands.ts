@@ -68,17 +68,18 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
-    getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
-      execute(table, targets).each((rng) => {
-        editor.selection.setRng(rng);
-        editor.focus();
-        cellSelection.clear(table);
-        Util.removeDataStyle(table);
+  const actOnSelection = (execute: CombinedTargetsTableAction): void =>
+    getSelectionStartCell(editor).each((cell) => {
+      getTableFromCell(cell).each((table) => {
+        const targets = TableTargets.forMenu(selections, table, cell);
+        execute(table, targets).each((rng) => {
+          editor.selection.setRng(rng);
+          editor.focus();
+          cellSelection.clear(table);
+          Util.removeDataStyle(table);
+        });
       });
     });
-  });
 
   const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
@@ -145,7 +146,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   editor.addCommand('mceTableColType', (_ui, args) =>
     Obj.get(args, 'type').each((type) =>
-      actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
+      actOnSelection(type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader)
     ));
 
   // Register dialog commands
