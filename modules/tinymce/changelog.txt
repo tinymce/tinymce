@@ -18,6 +18,7 @@ Version 5.6.0 (TBD)
     Fixed an issue where the root document could be scrolled while an editor dialog was open inside a shadow root #TINY-6363
     Fixed `getContent` with text format returning a new line when the editor is empty #TINY-6281
     Fixed table column and row resizers not respecting the `data-mce-resize` attribute #TINY-6600
+    Fixed inserting a table via the `mceInsertTable` command incorrectly creating 2 undo levels #TINY-6656
     Fixed nested tables with `colgroup` elements incorrectly always resizing the inner table #TINY-6623
     Fixed the `visualchars` plugin causing the editor to steal focus when initialized #TINY-6282
     Fixed `fullpage` plugin altering text content in `editor.getContent()` #TINY-6541
