@@ -5,12 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Cell } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import UploadStatus from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
+import { UndoLevel } from '../undo/UndoManagerTypes';
+import * as Levels from '../undo/Levels';
 import Editor from './Editor';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
@@ -41,11 +43,37 @@ interface EditorUpload {
   destroy (): void;
 }
 
+const UploadChangeHandler = (editor: Editor) => {
+  const lastChangedLevel = Cell<UndoLevel>(null);
+
+  editor.on('change AddUndo', (e) => {
+    lastChangedLevel.set({ ...e.level });
+  });
+
+  const fireIfChanged = () => {
+    const data = editor.undoManager.data;
+    Arr.last(data).filter((level) => {
+      return !Levels.isEq(lastChangedLevel.get(), level);
+    }).each((level) => {
+      editor.setDirty(true);
+      editor.fire('change', {
+        level,
+        lastLevel: Arr.get(data, data.length - 2).getOrNull()
+      });
+    });
+  };
+
+  return {
+    fireIfChanged
+  };
+};
+
 const EditorUpload = function (editor: Editor): EditorUpload {
   const blobCache = BlobCache();
   let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
+  const changeHandler = UploadChangeHandler(editor);
 
   const aliveGuard = function <T, R> (callback?: (result: T) => R) {
     return function (result: T) {
@@ -158,13 +186,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
         });
 
         if (filteredResult.length > 0) {
-          const undoData = editor.undoManager.data;
-          editor.setDirty(true);
-          editor.fire('change', {
-            // ensure undo state remains unchanged
-            level: Arr.last(undoData).getOrNull(),
-            lastLevel: Arr.get(undoData, undoData.length - 2).getOrNull()
-          });
+          changeHandler.fireIfChanged();
         }
 
         if (imagesToRemove.length > 0) {
