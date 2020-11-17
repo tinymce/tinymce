@@ -5,6 +5,7 @@ import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { TableGridSize } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
@@ -55,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       lastObjectResizedEvent.set(e);
     };
 
-    const tableModified = (e) => {
+    const tableModified = (e: EditorEvent<{}>) => {
       tableModifiedEvents.push(e);
     };
 
