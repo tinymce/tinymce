@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
 
     input.editor.on('ObjectResizeStart', objectResizeStart);
     input.editor.on('ObjectResized', objectResized);
-    input.editor.on('tablemodified', tableModified);
+    input.editor.on('TableModified', tableModified);
 
     return {
       objectResizeStart,
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
   const cUnbindResizeEvents = Chain.mapper(function (input: any) {
     input.editor.off('ObjectResizeStart', input.events.objectResizeStart);
     input.editor.off('ObjectResized', input.events.objectResized);
-    input.editor.off('tablemodified', input.events.tableModified);
+    input.editor.off('TableModified', input.events.tableModified);
     return {};
   });
 

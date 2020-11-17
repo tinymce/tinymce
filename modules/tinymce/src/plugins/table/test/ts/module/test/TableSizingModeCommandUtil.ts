@@ -60,12 +60,11 @@ const generateTable = (mode: SizingMode, width: number, rows: number, cols: numb
 
 const sTableSizingModeScenarioTest = (editor, tinyApis: TinyApis, title: string, description: string, withColGroups: boolean, scenario: Scenario, expectedEventsLength: number = 1) => {
   let events = [];
-  editor.on('tablemodified', (e: EditorEvent<{}>) => events.push(e));
+  editor.on('TableModified', (e: EditorEvent<{}>) => events.push(e));
   const clearEvents = Step.sync(() => events = []);
 
   return Log.stepsAsStep(title, description, [
     clearEvents,
-    Step.sync(() => Assertions.assertEq('Number of events starts at 0', 0, events.length)),
     tinyApis.sSetContent(generateTable(scenario.mode, scenario.tableWidth, scenario.rows, scenario.cols, withColGroups)),
     tinyApis.sSetSelection([ 0, withColGroups ? 1 : 0, 0, 0 ], 0, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0),
     tinyApis.sExecCommand('mceTableSizingMode', scenario.newMode),
