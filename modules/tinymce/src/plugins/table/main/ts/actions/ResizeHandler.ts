@@ -124,6 +124,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
         });
 
         Events.fireObjectResized(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
+        Events.fireTableModified(editor, rawTable);
         editor.undoManager.add();
       });
 

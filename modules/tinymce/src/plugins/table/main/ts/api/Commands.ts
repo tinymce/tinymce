@@ -62,6 +62,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
           enforceNone(table);
         }
         Util.removeDataStyle(table);
+        Events.fireTableModified(editor, table.dom);
       });
     }
   });
