@@ -130,10 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq('Should be expected resize event', expectedEventName, state.get().type);
     Assertions.assertEq('Should have width', 'number', typeof state.get().width);
     Assertions.assertEq('Should have height', 'number', typeof state.get().height);
-  });
-
-  const cAssertTableModifiedEventLength = (expectedLength: number = 1) => Chain.op((_) => {
-    Assertions.assertEq('Should have a table modified event', expectedLength, tableModifiedEvents.length);
+    Assertions.assertEq('Should have a table modified event', 1, tableModifiedEvents.length);
   });
 
   Pipeline.async({}, [
@@ -146,7 +143,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       cClearEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
@@ -154,7 +150,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -170,7 +165,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertWidths),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       cClearEventData,
       NamedChain.read('editor', ApiChains.cSetContent('')),
@@ -179,7 +173,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force % on unset tables with [table_sizing_mode="relative"]
       cClearEventData,
@@ -188,7 +181,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force % on tables with that are initially set to px with [table_sizing_mode="relative"]
       cClearEventData,
@@ -197,8 +189,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
-
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -216,7 +206,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force px on unset tables with [table_sizing_mode="fixed"]
       cClearEventData,
@@ -225,7 +214,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force px on tables with that are initially set to % with [table_sizing_mode="fixed"]
       cClearEventData,
@@ -234,7 +222,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('px')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -253,7 +240,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertWidthBeforeResize(null)),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force % on unset tables with [table_sizing_mode="responsive"]
       cClearEventData,
@@ -262,7 +248,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       // Force % on tables with that are initially set to px with [table_sizing_mode="responsive"]
       cClearEventData,
@@ -271,7 +256,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertUnitAfterResize('%')),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -289,7 +273,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertWidthAfterResize(200)),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -307,7 +290,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertWidthAfterResize(220)),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -334,7 +316,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -363,7 +344,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -389,7 +369,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -410,7 +389,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       NamedChain.read('widths', cAssertWidthAfterResize(35, true)),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ]),
@@ -434,7 +412,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
       })),
       cAssertEventData(lastObjectResizeStartEvent, 'objectresizestart'),
       cAssertEventData(lastObjectResizedEvent, 'objectresized'),
-      cAssertTableModifiedEventLength(1),
 
       NamedChain.read('editor', McEditor.cRemove)
     ])
