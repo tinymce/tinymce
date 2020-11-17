@@ -192,6 +192,27 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
+  suite.asyncTest('TestCase-TINY-6306: Paste: pasteImages with custom file types', (editor, done, die) => {
+    const clipboard = Clipboard(editor, Cell('html'));
+
+    editor.settings.paste_data_images = true;
+    editor.settings.image_file_types = 'svg,tiff';
+    const rng = setupContent(editor);
+
+    const event = mockEvent('paste', [
+      base64ToBlob(base64ImgSrc, 'image/tiff', 'image.tiff')
+    ]) as ClipboardEvent;
+    clipboard.pasteImageData(event, rng);
+
+    waitForSelector(editor, 'img').then(() => {
+      LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" />a</p>');
+      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
+
+      delete editor.settings.image_file_types;
+      done();
+    }).catch(die);
+  });
+
   suite.asyncTest('TestCase-TBA: Paste: dropImages - images_dataimg_filter', function (editor, done, die) {
     const clipboard = Clipboard(editor, Cell('html'));
 
