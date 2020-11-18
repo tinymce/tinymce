@@ -1,3 +1,5 @@
+Version 5.7.0 (TBD)
+
 Version 5.6.0 (2020-11-18)
     Added new `BeforeOpenNotification` and `OpenNotification` events which allow internal notifications to be captured and modified before display #TINY-6528
     Added support for `block` and `unblock` methods on inline dialogs #TINY-6487
