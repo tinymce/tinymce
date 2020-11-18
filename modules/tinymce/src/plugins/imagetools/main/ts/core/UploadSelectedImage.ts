@@ -5,23 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Cell } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import * as Actions from './Actions';
 
-const setup = function (editor, imageUploadTimerState, lastSelectedImageState) {
+const setup = function (editor: Editor, imageUploadTimerState: Cell<number>, lastSelectedImageState: Cell<HTMLImageElement | null>) {
   editor.on('NodeChange', function (e) {
     const lastSelectedImage = lastSelectedImageState.get();
+    const selectedImage = Actions.getEditableImage(editor, e.element);
 
     // If the last node we selected was an image
     // And had a source that doesn't match the current blob url
     // We need to attempt to upload it
-    if (lastSelectedImage && lastSelectedImage.src !== e.element.src) {
+    if (lastSelectedImage && !selectedImage.exists((img) => lastSelectedImage.src === img.src)) {
       Actions.cancelTimedUpload(imageUploadTimerState);
       editor.editorUpload.uploadImagesAuto();
       lastSelectedImageState.set(null);
     }
 
     // Set up the lastSelectedImage
-    Actions.getEditableImage(editor, e.element).each(lastSelectedImageState.set);
+    selectedImage.each(lastSelectedImageState.set);
   });
 };
 

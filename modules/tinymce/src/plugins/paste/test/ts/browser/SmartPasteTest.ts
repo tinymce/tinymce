@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(SmartPaste.isImageUrl(editor, ''), false);
   });
 
-  suite.test('TINY-6306: New image_file_types defaults', (editor) => {
+  suite.test('TINY-6306: New images_file_types defaults', (editor) => {
     Arr.map([
       'jpeg',
       'jpg',
@@ -81,17 +81,17 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     );
   });
 
-  suite.test('TINY-6306: New image_file_types settings', (editor) => {
-    editor.settings.image_file_types = 'svg';
+  suite.test('TINY-6306: New images_file_types settings', (editor) => {
+    editor.settings.images_file_types = 'svg';
     LegacyUnit.equal(
       SmartPaste.isImageUrl(editor, 'https://www.site.com/file.svg'),
       true,
       'File type "svg" is valid when set by settings'
     );
-    delete editor.settings.image_file_types;
+    delete editor.settings.images_file_types;
   });
 
-  suite.test('TINY-6306: Smart paste enabled (with custom image_file_types settings)', function (editor) {
+  suite.test('TINY-6306: Smart paste enabled (with custom images_file_types settings)', function (editor) {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p></p>');
@@ -109,11 +109,11 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     editor.undoManager.add();
 
     // svg detected as image
-    editor.settings.image_file_types = 'svg';
+    editor.settings.images_file_types = 'svg';
     editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.svg' });
     LegacyUnit.equal(editor.getContent(), '<p><img src="http://www.site.com/my.svg" /></p>');
 
-    delete editor.settings.image_file_types;
+    delete editor.settings.images_file_types;
   });
 
   suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste url on selection', function (editor) {

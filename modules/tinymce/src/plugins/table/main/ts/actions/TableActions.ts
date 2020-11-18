@@ -42,8 +42,8 @@ export interface TableActions {
   pasteRowsAfter: AdvancedPasteTableAction;
   setTableCellType: SimpleTableAction;
   setTableRowType: SimpleTableAction;
-  makeColumnHeader: ElementTableAction;
-  unmakeColumnHeader: ElementTableAction;
+  makeColumnsHeader: CombinedTargetsTableAction;
+  unmakeColumnsHeader: CombinedTargetsTableAction;
   getTableRowType: (editor: Editor) => string;
   getTableCellType: (editor: Editor) => string;
   getTableColType: (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
@@ -74,7 +74,6 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
         Arr.each(result.newCells, (cell) => {
           Events.fireNewCell(editor, cell.dom);
         });
-        Events.fireTableModified(editor, table.dom);
         return result.cursor.map((cell) => {
           const des = DomDescent.freefallRtl(cell);
           const rng = editor.dom.createRng();
@@ -125,8 +124,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       Arr.map(getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected), (row) => switchSectionType(editor, row.dom, type));
     });
 
-  const makeColumnHeader = execute(TableOperations.makeColumnHeader, Fun.always, Fun.noop, lazyWire);
-  const unmakeColumnHeader = execute(TableOperations.unmakeColumnHeader, Fun.always, Fun.noop, lazyWire);
+  const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, lazyWire);
+  const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, lazyWire);
 
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
     const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
@@ -170,8 +169,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
     pasteCells,
     setTableCellType,
     setTableRowType,
-    makeColumnHeader,
-    unmakeColumnHeader,
+    makeColumnsHeader,
+    unmakeColumnsHeader,
     getTableRowType,
     getTableCellType,
     getTableColType

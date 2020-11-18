@@ -47,7 +47,7 @@ const adjustWidth = (table: SugarElement, delta: number, index: number, resizing
 
 const adjustHeight = (table: SugarElement, delta: number, index: number, direction: BarPositions<RowInfo>) => {
   const warehouse = Warehouse.fromTable(table);
-  const heights = ColumnSizes.getPixelHeights(warehouse, direction);
+  const heights = ColumnSizes.getPixelHeights(warehouse, table, direction);
 
   const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
 

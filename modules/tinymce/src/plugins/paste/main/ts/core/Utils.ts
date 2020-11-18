@@ -136,9 +136,24 @@ function createIdGenerator(prefix: string) {
   };
 }
 
+const getImageMimeType = (ext: string): string => {
+  const mimeOverrides = {
+    jpg: 'jpeg',
+    jpe: 'jpeg',
+    jfi: 'jpeg',
+    jif: 'jpeg',
+    jfif: 'jpeg',
+    pjpeg: 'jpeg',
+    pjp: 'jpeg',
+    svg: 'svg+xml'
+  };
+  return Tools.hasOwn(mimeOverrides, ext) ? 'image/' + mimeOverrides[ext] : 'image/' + ext;
+};
+
 export {
   filter,
   innerText,
   trimHtml,
-  createIdGenerator
+  createIdGenerator,
+  getImageMimeType
 };
