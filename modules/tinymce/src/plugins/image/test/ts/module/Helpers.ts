@@ -108,6 +108,8 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
 
 const cFakeEvent = (name: string) => Chain.control(
   Chain.op(function (elm: SugarElement) {
+    // eslint-disable-next-line
+    console.log(elm);
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
     elm.dom.dispatchEvent(evt);
