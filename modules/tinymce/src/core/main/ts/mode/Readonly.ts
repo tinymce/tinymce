@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
-import { Attribute, Class, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
@@ -120,13 +120,34 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
-const isInAnchor = (editor: Editor, target: HTMLElement) => editor.dom.getParent(target, 'a') !== null;
+/*
+* This function is exported for unit testing purposes only
+*/
+const getAnchorHrefOpt = (editor: Editor, elm: SugarElement): Optional<string> => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
+  return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
+};
 
-const preventReadOnlyEvents = (editor: Editor, e: Event) => {
-  const target = e.target as HTMLElement;
-
-  if (isClickEvent(e) && !VK.metaKeyPressed(e) && isInAnchor(editor, target)) {
-    e.preventDefault();
+const processReadonlyEvents = (editor: Editor, e: Event) => {
+  /*
+    If an event is a click event on or within an anchor, and the CMD/CTRL key is
+    not held, then we want to prevent default behaviour and either:
+      a) scroll to the relevant bookmark
+      b) open the link using default browser behaviour
+  */
+  if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
+    const elm = SugarElement.fromDom(e.target as Node);
+    getAnchorHrefOpt(editor, elm).each((href) => {
+      e.preventDefault();
+      if (/^#/.test(href)) {
+        const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
+        if (targetEl.length) {
+          editor.selection.scrollIntoView(targetEl[0], true);
+        }
+      } else {
+        window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
+      }
+    });
   }
 };
 
@@ -146,8 +167,9 @@ const registerReadOnlySelectionBlockers = (editor: Editor) => {
 
 export {
   isReadOnly,
+  getAnchorHrefOpt,
   toggleReadOnly,
   registerReadOnlyContentFilters,
-  preventReadOnlyEvents,
+  processReadonlyEvents,
   registerReadOnlySelectionBlockers
 };

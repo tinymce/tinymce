@@ -93,6 +93,12 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                 children: Arr.map(items, (itemText) => {
                   // itemText can have a trailing >, which means it has a caret
                   const hasCaret = Strings.endsWith(itemText, '>');
+                  const caretOrCheckmark = hasCaret || hasCheckmark ? [
+                    s.element('div', {
+                      classes: [ arr.has(hasCaret ? 'tox-collection__item-caret' : 'tox-collection__item-checkmark') ]
+                    })
+                  ] : [];
+
                   return s.element('div', {
                     classes: [ arr.has('tox-collection__item') ],
                     children: [
@@ -101,9 +107,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                         classes: [ arr.has('tox-collection__item-label') ],
                         html: str.is(hasCaret ? itemText.substring(0, itemText.length - 1) : itemText)
                       })
-                    ].concat(hasCaret ? [
-                      s.element('div', { classes: [ arr.has('tox-collection__item-caret') ] })
-                    ] : hasCheckmark ? [ s.element('div', { classes: [ arr.has('tox-collection__item-checkmark') ] }) ] : [])
+                    ].concat(caretOrCheckmark)
                   });
                 })
               }))

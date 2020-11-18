@@ -5,16 +5,18 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
+import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { Format, FormatVars, SelectorFormat } from '../api/fmt/Format';
+import { FormatVars, SelectorFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
 const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name: string) {
-  const formatList = ed.formatter.get(name);
+  // TODO: Is this safe? it doesn't look like it is this could be a block or inline format
+  const formatList = ed.formatter.get(name) as SelectorFormat[];
 
   if (formatList) {
     for (let i = 0; i < formatList.length; i++) {
@@ -178,8 +180,16 @@ const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
   return matchedFormatNames;
 };
 
+const closest = (editor: Editor, names: string[]): string | null => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
+  const match = (elm: SugarElement<Node>, name: string): Optional<string> => matchNode(editor, elm.dom, name) ? Optional.some(name) : Optional.none();
+  return Optional.from(editor.selection.getStart(true)).bind((rawElm) =>
+    TransformFind.closest(SugarElement.fromDom(rawElm), (elm) => Arr.findMap(names, (name) => match(elm, name)), isRoot)
+  ).getOrNull();
+};
+
 const canApply = function (editor: Editor, name: string) {
-  const formatList = editor.formatter.get(name) as Format[];
+  const formatList = editor.formatter.get(name);
   let startNode, parents, i, x, selector;
   const dom = editor.dom;
 
@@ -224,6 +234,7 @@ export {
   matchNode,
   matchName,
   match,
+  closest,
   matchAll,
   matchAllOnNode,
   canApply,

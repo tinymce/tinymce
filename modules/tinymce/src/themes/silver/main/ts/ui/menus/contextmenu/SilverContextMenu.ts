@@ -148,7 +148,7 @@ export const setup = (editor: Editor, lazySink: () => Result<AlloyComponent, Err
           })
         ])
       ])
-    }),
+    })
   );
 
   const hideContextMenu = (_e) => InlineView.hide(contextmenu);

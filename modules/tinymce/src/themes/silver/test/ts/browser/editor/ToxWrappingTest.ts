@@ -7,7 +7,7 @@ import { Attribute, Class, SugarBody, SugarElement, Traverse } from '@ephox/suga
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
+UnitTest.asynctest('Editor (Silver) tox wrapping test', (success, failure) => {
   Theme();
 
   TinyLoader.setupLight(

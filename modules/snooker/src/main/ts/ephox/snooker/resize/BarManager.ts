@@ -40,7 +40,7 @@ export const BarManager = function (wire: ResizeWire) {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
-  let hoverTable = Optional.none<SugarElement>();
+  let hoverTable = Optional.none<SugarElement<HTMLTableElement>>();
 
   const getResizer = function (element: SugarElement, type: string) {
     return Optional.from(Attribute.get(element, type));

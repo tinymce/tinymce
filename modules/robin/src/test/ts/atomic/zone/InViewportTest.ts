@@ -2,7 +2,8 @@ import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
-import { ZonePosition, ZoneViewports } from '@ephox/robin';
+import { ZonePosition } from 'ephox/robin/api/general/ZonePosition';
+import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
 import { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
 import * as ZoneWalker from 'ephox/robin/zone/ZoneWalker';
@@ -107,7 +108,7 @@ UnitTest.asyncTest('atomic.robin.zone.InViewportTest', (success, failure) => {
       sAssertZones('a/p1', 'c/p4', 'a', 'c')
     ),
     Log.step('TINY-6412', 'Can it walk all nodes in a viewport',
-      sAssertZones('a/p1', 'c/p4', 'b', 'b'),
+      sAssertZones('a/p1', 'c/p4', 'b', 'b')
     ),
     Log.stepsAsStep('TINY-6412', 'Will it skip if the viewport and the start/end points have no overlap', [
       sAssertZones('b/p3', 'c/p4', 'a', 'a'),

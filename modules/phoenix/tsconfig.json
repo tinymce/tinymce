@@ -8,8 +8,7 @@
     "paths": {
       "ephox/phoenix/test/*": ["src/test/ts/module/ephox/phoenix/test/*"],
       "ephox/phoenix/demo/*": ["src/demo/ts/ephox/phoenix/demo/*"],
-      "ephox/phoenix/*": ["src/main/ts/ephox/phoenix/*"],
-      "@ephox/phoenix": ["src/main/ts/ephox/phoenix/api/Main.ts"]
+      "ephox/phoenix/*": ["src/main/ts/ephox/phoenix/*"]
     }
   },
   "include": [
@@ -22,5 +21,6 @@
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
     { "path": "../polaris" },
+    { "path": "../sugar" }
   ]
 }

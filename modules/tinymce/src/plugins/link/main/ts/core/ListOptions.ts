@@ -10,12 +10,22 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 import { ListItem, UserListItem } from '../ui/DialogTypes';
 
-const getValue = (item): string => Type.isString(item.value) ? item.value : '';
+const getValue = (item: UserListItem): string => Type.isString(item.value) ? item.value : '';
 
-const sanitizeList = (list: UserListItem[], extractValue: (item) => string): ListItem[] => {
+const getText = (item: UserListItem): string => {
+  if (Type.isString(item.text)) {
+    return item.text;
+  } else if (Type.isString(item.title)) {
+    return item.title;
+  } else {
+    return '';
+  }
+};
+
+const sanitizeList = (list: UserListItem[], extractValue: (item: UserListItem) => string): ListItem[] => {
   const out: ListItem[] = [];
   Tools.each(list, (item) => {
-    const text: string = Type.isString(item.text) ? item.text : Type.isString(item.title) ? item.title : '';
+    const text = getText(item);
     if (item.menu !== undefined) {
       const items = sanitizeList(item.menu, extractValue);
       out.push({ text, items }); // list group
@@ -27,7 +37,7 @@ const sanitizeList = (list: UserListItem[], extractValue: (item) => string): Lis
   return out;
 };
 
-const sanitizeWith = (extracter: (item: any) => string = getValue) => (list: UserListItem[]): Optional<ListItem[]> =>
+const sanitizeWith = (extracter: (item: UserListItem) => string = getValue) => (list: UserListItem[]): Optional<ListItem[]> =>
   Optional.from(list).map((list) => sanitizeList(list, extracter));
 
 const sanitize = (list: UserListItem[]): Optional<ListItem[]> => sanitizeWith(getValue)(list);

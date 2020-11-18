@@ -1,5 +1,6 @@
 import { Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -18,7 +19,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 // |Paste as text turned off  | paste image URL -> image | paste image URL -> text |
 // |Paste as text turned on   | paste image URL -> text  | paste image URL -> text |
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.SmartPasteTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
@@ -35,19 +36,84 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.SmartPasteTest', (success, fai
     LegacyUnit.equal(SmartPaste.isAbsoluteUrl(''), false);
   });
 
-  suite.test('TestCase-TBA: Paste: isImageUrl', function () {
-    LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com'), false);
-    LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com'), false);
-    LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.jpeg'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.jpg'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.png'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('http://www.site.com/dir-name/file.gif'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com/~dir-name/file.gif'), true);
-    LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.gif?query=%42'), false);
-    LegacyUnit.equal(SmartPaste.isImageUrl('https://www.site.com/dir-name/file.html?query=%42'), false);
-    LegacyUnit.equal(SmartPaste.isImageUrl('file.gif'), false);
-    LegacyUnit.equal(SmartPaste.isImageUrl(''), false);
+  suite.test('TestCase-TBA: Paste: isImageUrl', function (editor) {
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com'), false);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com'), false);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com/dir-name/file.jpeg'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com/dir-name/file.jpg'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com/dir-name/file.png'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com/dir-name/file.gif'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com/dir-name/file.gif'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com/~dir-name/file.gif'), true);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com/dir-name/file.gif?query=%42'), false);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com/dir-name/file.html?query=%42'), false);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'file.gif'), false);
+    LegacyUnit.equal(SmartPaste.isImageUrl(editor, ''), false);
+  });
+
+  suite.test('TINY-6306: New images_file_types defaults', (editor) => {
+    Arr.map([
+      'jpeg',
+      'jpg',
+      'jpe',
+      'jfi',
+      'jfif',
+      'png',
+      'gif',
+      'bmp',
+      'webp'
+    ], (image_file_type) => LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, `https://www.site.com/file.${image_file_type}`),
+      true,
+      `File type "${image_file_type}" is valid`
+    ));
+
+    LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, 'https://www.site.com/file.svg'),
+      false,
+      'File type "svg" is invalid by default'
+    );
+
+    LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, 'https://www.site.com/filejpeg'),
+      false,
+      'Missing "." but valid extension'
+    );
+  });
+
+  suite.test('TINY-6306: New images_file_types settings', (editor) => {
+    editor.settings.images_file_types = 'svg';
+    LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, 'https://www.site.com/file.svg'),
+      true,
+      'File type "svg" is valid when set by settings'
+    );
+    delete editor.settings.images_file_types;
+  });
+
+  suite.test('TINY-6306: Smart paste enabled (with custom images_file_types settings)', function (editor) {
+    editor.focus();
+    editor.undoManager.clear();
+    editor.setContent('<p></p>');
+    LegacyUnit.setSelection(editor, 'p', 0);
+    editor.undoManager.add();
+    editor.settings.smart_paste = true;
+
+    // svg not detected as an image
+    editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.svg' });
+    LegacyUnit.equal(editor.getContent(), '<p>http://www.site.com/my.svg</p>');
+
+    editor.undoManager.clear();
+    editor.setContent('<p></p>');
+    LegacyUnit.setSelection(editor, 'p', 0);
+    editor.undoManager.add();
+
+    // svg detected as image
+    editor.settings.images_file_types = 'svg';
+    editor.execCommand('mceInsertClipboardContent', false, { content: 'http://www.site.com/my.svg' });
+    LegacyUnit.equal(editor.getContent(), '<p><img src="http://www.site.com/my.svg" /></p>');
+
+    delete editor.settings.images_file_types;
   });
 
   suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste url on selection', function (editor) {

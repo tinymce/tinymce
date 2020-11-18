@@ -109,7 +109,8 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
         },
         columns,
         ItemResponse.BUBBLE_TO_SANDBOX,
-        sharedBackstage
+        sharedBackstage,
+        match.highlightOn
       );
     });
   };
@@ -214,7 +215,9 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared) => 
     getView: () => InlineView.getContent(autocompleter)
   };
 
-  AutocompleterEditorEvents.setup(autocompleterUiApi, editor);
+  if (editor.hasPlugin('rtc') === false) {
+    AutocompleterEditorEvents.setup(autocompleterUiApi, editor);
+  }
 };
 
 export const Autocompleter = {

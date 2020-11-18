@@ -12,9 +12,19 @@ import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';
 
 export type FormatChangeCallback = (state: boolean, data: { node: Node; format: string; parents: any }) => void;
-type FormatCallbacks = Record<string, FormatChangeCallback[]>;
-type FormatData = { similar?: boolean; callbacks: FormatChangeCallback[] };
-type RegisteredFormats = Record<string, FormatData>;
+
+export type FormatCallbacks = Record<string, FormatChangeCallback[]>;
+
+export interface FormatData {
+  similar?: boolean;
+  callbacks: FormatChangeCallback[];
+}
+
+export type RegisteredFormats = Record<string, FormatData>;
+
+export interface UnbindFormatChanged {
+  unbind: () => void;
+}
 
 const setup = (registeredFormatListeners: Cell<RegisteredFormats>, editor: Editor) => {
   const currentFormats = Cell<Record<string, FormatChangeCallback[]>>({ });
@@ -108,7 +118,7 @@ const removeListeners = (registeredFormatListeners: Cell<RegisteredFormats>, for
   registeredFormatListeners.set(formatChangeItems);
 };
 
-const formatChanged = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean) => {
+const formatChangedInternal = (editor: Editor, registeredFormatListeners: Cell<RegisteredFormats>, formats: string, callback: FormatChangeCallback, similar?: boolean): UnbindFormatChanged => {
   if (registeredFormatListeners.get() === null) {
     setup(registeredFormatListeners, editor);
   }
@@ -121,5 +131,5 @@ const formatChanged = (editor: Editor, registeredFormatListeners: Cell<Registere
 };
 
 export {
-  formatChanged
+  formatChangedInternal
 };

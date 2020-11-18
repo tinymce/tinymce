@@ -10,7 +10,7 @@ import { Clipboard } from 'tinymce/plugins/paste/api/Clipboard';
 import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
@@ -43,7 +43,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     });
   };
 
-  const base64ToBlob = function (base64, type) {
+  const base64ToBlob = function (base64: string, type: string, filename: string): File {
     const buff = atob(base64);
     const bytes = new Uint8Array(buff.length);
 
@@ -51,7 +51,10 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
       bytes[i] = buff.charCodeAt(i);
     }
 
-    return new Blob([ bytes ], { type });
+    // Note: We need to mock creating a File due to IE not supporting the File constructor
+    const file = new Blob([ bytes ], { type }) as any;
+    file.name = filename;
+    return file;
   };
 
   const noop = function () {
@@ -110,8 +113,8 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     const rng = setupContent(editor);
 
     const event = mockEvent('paste', [
-      base64ToBlob(base64ImgSrc, 'image/gif'),
-      base64ToBlob(base64ImgSrc2, 'image/gif')
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif'),
+      base64ToBlob(base64ImgSrc2, 'image/gif', 'image.gif')
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 
@@ -134,7 +137,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     const rng = setupContent(editor);
 
     const event = mockEvent('drop', [
-      base64ToBlob(base64ImgSrc, 'image/gif')
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
     ]) as DragEvent;
     clipboard.pasteImageData(event, rng);
 
@@ -153,7 +156,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     const rng = setupContent(editor);
 
     const event = mockEvent('paste', [
-      base64ToBlob(base64ImgSrc, 'image/gif')
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 
@@ -161,6 +164,51 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
+      done();
+    }).catch(die);
+  });
+
+  suite.asyncTest('TestCase-TINY-6622: Paste: pasteImages with reuse filename', (editor, done, die) => {
+    const clipboard = Clipboard(editor, Cell('html'));
+
+    editor.settings.paste_data_images = true;
+    editor.settings.images_reuse_filename = true;
+    const rng = setupContent(editor);
+
+    const event = mockEvent('paste', [
+      base64ToBlob(base64ImgSrc, 'image/jpeg', 'image.jfif')
+    ]) as ClipboardEvent;
+    clipboard.pasteImageData(event, rng);
+
+    waitForSelector(editor, 'img').then(() => {
+      LegacyUnit.equal(editor.getContent(), '<p><img src="data:image/jpeg;base64,' + base64ImgSrc + '" />a</p>');
+      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
+
+      const blobInfo = editor.editorUpload.blobCache.getByData(base64ImgSrc, 'image/jpeg');
+      LegacyUnit.strictEqual(blobInfo.filename(), 'image.jfif');
+
+      delete editor.settings.images_reuse_filename;
+      done();
+    }).catch(die);
+  });
+
+  suite.asyncTest('TestCase-TINY-6306: Paste: pasteImages with custom file types', (editor, done, die) => {
+    const clipboard = Clipboard(editor, Cell('html'));
+
+    editor.settings.paste_data_images = true;
+    editor.settings.images_file_types = 'svg,tiff';
+    const rng = setupContent(editor);
+
+    const event = mockEvent('paste', [
+      base64ToBlob(base64ImgSrc, 'image/tiff', 'image.tiff')
+    ]) as ClipboardEvent;
+    clipboard.pasteImageData(event, rng);
+
+    waitForSelector(editor, 'img').then(() => {
+      LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" />a</p>');
+      LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
+
+      delete editor.settings.images_file_types;
       done();
     }).catch(die);
   });
@@ -176,7 +224,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     const rng = setupContent(editor);
 
     const event = mockEvent('drop', [
-      base64ToBlob(base64ImgSrc, 'image/gif')
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
     ]) as DragEvent;
     clipboard.pasteImageData(event, rng);
 
@@ -199,7 +247,7 @@ UnitTest.asynctest('tinymce.plugins.paste.browser.ImagePasteTest', (success, fai
     const rng = setupContent(editor);
 
     const event = mockEvent('paste', [
-      base64ToBlob(base64ImgSrc, 'image/gif')
+      base64ToBlob(base64ImgSrc, 'image/gif', 'image.gif')
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 

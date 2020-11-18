@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as PluginAssert from '../module/PluginAssert';
 import { selectors } from '../module/Selectors';
 
-UnitTest.asynctest('browser.plugin.PluginTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.help.PluginTest', (success, failure) => {
 
   Theme();
   HelpPlugin();

@@ -6,8 +6,8 @@
  */
 
 import Editor from '../api/Editor';
-import { FormatVars } from '../api/fmt/Format';
 import * as ApplyFormat from './ApplyFormat';
+import { FormatVars } from './FormatTypes';
 import * as MatchFormat from './MatchFormat';
 import * as RemoveFormat from './RemoveFormat';
 

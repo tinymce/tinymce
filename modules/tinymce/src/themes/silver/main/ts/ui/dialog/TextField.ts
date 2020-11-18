@@ -23,7 +23,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const baseInputBehaviours = [
     Disabling.config({
-      disabled: () => spec.disabled || providersBackstage.isReadOnly()
+      disabled: () => spec.disabled || providersBackstage.isDisabled()
     }),
     ReadOnly.receivingConfig(),
     Keying.config({
@@ -88,7 +88,7 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
 
   const extraBehaviours = [
     Disabling.config({
-      disabled: () => spec.disabled || providersBackstage.isReadOnly(),
+      disabled: () => spec.disabled || providersBackstage.isDisabled(),
       onDisabled: (comp) => {
         AlloyFormField.getField(comp).each(Disabling.disable);
       },

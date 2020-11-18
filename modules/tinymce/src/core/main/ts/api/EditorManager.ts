@@ -15,7 +15,7 @@ import Editor from './Editor';
 import Env from './Env';
 import { EditorManagerEventMap } from './EventTypes';
 import { RawEditorSettings } from './SettingsTypes';
-import I18n from './util/I18n';
+import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Observable from './util/Observable';
 import Promise from './util/Promise';
 import Tools from './util/Tools';
@@ -142,7 +142,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   remove (selector: string | Editor): Editor | void;
   setActive (editor: Editor): void;
   setup (): void;
-  translate (text: string): string;
+  translate (text: Untranslated): TranslatedString;
   triggerSave (): void;
   _setBaseUrl (baseUrl: string): void;
 }

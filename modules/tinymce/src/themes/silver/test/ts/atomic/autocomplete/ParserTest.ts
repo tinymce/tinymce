@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as AutocompleteContext from 'tinymce/themes/silver/autocomplete/AutocompleteContext';
 
-UnitTest.test('atomic - AutocompleteContext', () => {
+UnitTest.test('atomic.tinymce.themes.silver.autocomplete.AutocompleteContext', () => {
   const testFindChar = () => {
     assert.eq(-1, AutocompleteContext.findChar('', 0, '@').getOr(null));
     assert.eq(-1, AutocompleteContext.findChar('abc', 0, '@').getOr(null));

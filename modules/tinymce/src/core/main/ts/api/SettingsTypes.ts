@@ -12,7 +12,7 @@ import { AllowedFormat } from './fmt/StyleFormat';
 import { SchemaType } from './html/Schema';
 import { EditorUiApi } from './ui/Ui';
 
-export type EntityEncoding = 'named' | 'numeric' | 'raw';
+export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 
 export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   editorContainer: HTMLElement;
@@ -45,6 +45,7 @@ interface BaseEditorSettings {
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
+  allow_svg_data_urls?: boolean;
   allow_unsafe_link_target?: boolean;
   anchor_bottom?: false | string;
   anchor_top?: false | string;

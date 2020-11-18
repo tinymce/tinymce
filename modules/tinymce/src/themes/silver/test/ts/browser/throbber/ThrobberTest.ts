@@ -4,7 +4,7 @@ import { TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('tinymce.themes.silver.test.browser.throbber.ThrobberTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.themes.silver.throbber.ThrobberTest', (success, failure) => {
   Theme();
 
   const sAssertThrobberHiddenStructure = Chain.asStep(SugarBody.body(), [

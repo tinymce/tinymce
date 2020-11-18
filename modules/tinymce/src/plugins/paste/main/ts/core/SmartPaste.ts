@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
+
 
 const pasteHtml = (editor: Editor, html: string) => {
   editor.insertContent(html, {
@@ -31,8 +33,8 @@ const isAbsoluteUrl = function (url: string) {
   return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 };
 
-const isImageUrl = function (url: string) {
-  return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
+const isImageUrl = function (editor: Editor, url: string) {
+  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url, `.${type}`));
 };
 
 const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
@@ -60,7 +62,7 @@ const linkSelection = function (editor: Editor, html: string, pasteHtmlFn: typeo
 };
 
 const insertImage = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
-  return isImageUrl(html) ? createImage(editor, html, pasteHtmlFn) : false;
+  return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
 const smartInsertContent = function (editor: Editor, html: string) {

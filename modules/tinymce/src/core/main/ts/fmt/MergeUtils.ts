@@ -7,11 +7,11 @@
 
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
-import { FormatVars } from '../api/fmt/Format';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import { isCaretNode } from './FormatContainer';
+import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const each = Tools.each;

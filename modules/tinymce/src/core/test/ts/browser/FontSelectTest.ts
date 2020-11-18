@@ -1,4 +1,4 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -26,12 +26,12 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
-      Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on initial page load', [
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
-      ])),
+      ]),
 
-      Logger.t('Font family and font size on paragraph with no styles', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on paragraph with no styles', [
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 0, 0 ], 0),
@@ -39,9 +39,9 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         // p content style is 12px which does not match any pt values in the font size select values
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
-      ])),
+      ]),
 
-      Logger.t('Font family and font size on heading with no styles', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on heading with no styles', [
         tinyApis.sSetContent('<h1>a</h1>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 0, 0 ], 0),
@@ -49,9 +49,9 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         // h1 content style is 32px which matches 24pt in the font size select values so it should be converted
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '24pt'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
-      ])),
+      ]),
 
-      Logger.t('Font family and font size on paragraph with styles that do match font size select values', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on paragraph with styles that do match font size select values', [
         tinyApis.sSetContent('<p style="font-family: Times; font-size: 17px;">a</p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 0, 0 ], 0),
@@ -59,9 +59,9 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         // the following should be converted and pick up 12.75pt, although there's a rounded 13pt in the dropdown as well
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12.75pt'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
-      ])),
+      ]),
 
-      Logger.t('Font family and font size on paragraph with styles that do not match font size select values', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on paragraph with styles that do not match font size select values', [
         tinyApis.sSetContent('<p style="font-family: Times; font-size: 18px;">a</p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 0, 0 ], 0),
@@ -69,18 +69,37 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
         // the following should stay as 18px because there's no matching pt value in the font size select values
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '18px'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
-      ])),
+      ]),
 
-      Logger.t('Font family and font size on paragraph with legacy font elements', GeneralSteps.sequence([
+      Log.stepsAsStep('TBA', 'Font family and font size on paragraph with legacy font elements', [
         tinyApis.sSetRawContent('<p><font face="Times" size="1">a</font></p>'),
         tinyApis.sFocus(),
         tinyApis.sSetCursor([ 0, 0, 0 ], 0),
         tinyApis.sNodeChanged(),
         sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
         sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
-      ])),
+      ]),
 
-      Logger.t('System font stack variants on a paragraph show "System Font" as the font name', GeneralSteps.sequence([
+      // https://websemantics.uk/articles/font-size-conversion/
+      Log.stepsAsStep('TINY-6291', 'Font size on paragraph with keyword font size is translated to default size', [
+        tinyApis.sSetContent('<p style="font-family: Times; font-size: medium;">a</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        tinyApis.sNodeChanged(),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12pt'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ]),
+
+      Log.stepsAsStep('TINY-6291', 'xx-small will fall back to showing raw font size due to missing 7pt fontsize_format', [
+        tinyApis.sSetContent('<p style="font-family: Times; font-size: xx-small;">a</p>'),
+        tinyApis.sFocus(),
+        tinyApis.sSetCursor([ 0, 0 ], 0),
+        tinyApis.sNodeChanged(),
+        sAssertSelectBoxDisplayValue(editor, 'Font sizes', 'xx-small'),
+        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Times')
+      ]),
+
+      Log.stepsAsStep('TBA', 'System font stack variants on a paragraph show "System Font" as the font name', [
         tinyApis.sSetContent(Arr.foldl(systemFontStackVariants, (acc, font) => acc + '<p style="font-family: ' + font.replace(/"/g, `'`) + '"></p>', '')),
         tinyApis.sFocus(),
         ...Arr.bind(systemFontStackVariants, (_, idx) => [
@@ -88,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
           tinyApis.sNodeChanged(),
           sAssertSelectBoxDisplayValue(editor, 'Fonts', 'System Font')
         ])
-      ]))
+      ])
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

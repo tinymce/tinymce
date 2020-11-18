@@ -74,7 +74,7 @@ const sAssertInputValue = (label, selector, expected) => Logger.t(label,
         Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
       }
     })
-  ]),
+  ])
 );
 
 const sAssertDialogContents = (expected: Record<string, any>) => {

@@ -4,14 +4,14 @@ import { SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';
 
-UnitTest.test('StyleSheetLoaderRegistry - same element gets same instance (document)', () => {
+UnitTest.test('browser.tinymce.core.dom.StyleSheetLoaderRegistry - same element gets same instance (document)', () => {
   const sslr = StyleSheetLoaderRegistry.create();
   const ssl1: StyleSheetLoader = sslr.forElement(SugarDocument.getDocument(), {});
   const ssl2: StyleSheetLoader = sslr.forElement(SugarDocument.getDocument(), {});
   Assert.eq('Should be the same', ssl1, ssl2, Testable.tStrict);
 });
 
-UnitTest.test('StyleSheetLoaderRegistry - same element gets same instance (ShadowRoot)', () => {
+UnitTest.test('browser.tinymce.core.dom.StyleSheetLoaderRegistry - same element gets same instance (ShadowRoot)', () => {
   if (!SugarShadowDom.isSupported()) {
     return;
   }

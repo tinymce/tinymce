@@ -17,6 +17,7 @@ import { NodeChange } from '../NodeChange';
 import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
+import * as VisualAids from '../view/VisualAids';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import DomQuery, { DomQueryConstructor } from './dom/DomQuery';
@@ -329,7 +330,10 @@ class Editor implements EditorObservable {
       registry: registry(),
       styleSheetLoader: undefined,
       show: Fun.noop,
-      hide: Fun.noop
+      hide: Fun.noop,
+      enable: Fun.noop,
+      disable: Fun.noop,
+      isDisabled: Fun.never
     };
 
     const self = this;
@@ -447,7 +451,7 @@ class Editor implements EditorObservable {
   /**
    * Checks that the plugin is in the editor configuration and can optionally check if the plugin has been loaded.
    * <br>
-   * <em>Added in TinyMCE 5.4</em>
+   * <em>Added in TinyMCE 5.5</em>
    *
    * @method hasPlugin
    * @param {String} name The name of the plugin, as specified for the TinyMCE `plugins` option.
@@ -1082,50 +1086,7 @@ class Editor implements EditorObservable {
    * @param {Element} elm Optional root element to loop though to find tables etc that needs the visual aid.
    */
   public addVisual(elm?: HTMLElement) {
-    const self = this;
-    const settings = self.settings;
-    const dom: DOMUtils = self.dom;
-    let cls;
-
-    elm = elm || self.getBody();
-
-    if (self.hasVisual === undefined) {
-      self.hasVisual = settings.visual;
-    }
-
-    each(dom.select('table,a', elm), function (elm) {
-      let value;
-
-      switch (elm.nodeName) {
-        case 'TABLE':
-          cls = settings.visual_table_class || 'mce-item-table';
-          value = dom.getAttrib(elm, 'border');
-
-          if ((!value || value === '0') && self.hasVisual) {
-            dom.addClass(elm, cls);
-          } else {
-            dom.removeClass(elm, cls);
-          }
-
-          return;
-
-        case 'A':
-          if (!dom.getAttrib(elm, 'href')) {
-            value = dom.getAttrib(elm, 'name') || elm.id;
-            cls = settings.visual_anchor_class || 'mce-item-anchor';
-
-            if (value && self.hasVisual) {
-              dom.addClass(elm, cls);
-            } else {
-              dom.removeClass(elm, cls);
-            }
-          }
-
-          return;
-      }
-    });
-
-    self.fire('VisualAid', { element: elm, hasVisual: self.hasVisual });
+    VisualAids.addVisual(this, elm);
   }
 
   /**

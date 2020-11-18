@@ -6,6 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
+import Tools from 'tinymce/core/api/util/Tools';
 
 const shouldBlockDrop = (editor: Editor): boolean => editor.getParam('paste_block_drop', false);
 
@@ -61,6 +62,11 @@ const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root
 
 const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 'number');
 
+const getAllowedImageFileTypes = (editor: Editor): string[] => {
+  const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
+  return Tools.explode(editor.getParam('images_file_types', defaultImageFileTypes, 'string'));
+};
+
 export {
   shouldBlockDrop,
   shouldPasteDataImages,
@@ -83,5 +89,6 @@ export {
   getImagesReuseFilename,
   getForcedRootBlock,
   getForcedRootBlockAttrs,
-  getTabSpaces
+  getTabSpaces,
+  getAllowedImageFileTypes
 };

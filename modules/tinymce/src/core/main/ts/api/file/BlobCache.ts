@@ -9,7 +9,7 @@ import { Arr, Fun, Type } from '@ephox/katamari';
 import * as Uuid from '../../util/Uuid';
 
 export interface BlobCache {
-  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, filename?: string) => BlobInfo;
+  create: (o: string | BlobInfoData, blob?: Blob, base64?: string, name?: string, filename?: string) => BlobInfo;
   add: (blobInfo: BlobInfo) => void;
   get: (id: string) => BlobInfo | undefined;
   getByUri: (blobUri: string) => BlobInfo | undefined;
@@ -22,6 +22,7 @@ export interface BlobCache {
 export interface BlobInfoData {
   id?: string;
   name?: string;
+  filename?: string;
   blob: Blob;
   base64: string;
   blobUri?: string;
@@ -35,7 +36,7 @@ export interface BlobInfo {
   blob: () => Blob;
   base64: () => string;
   blobUri: () => string;
-  uri: () => string;
+  uri: () => string | undefined;
 }
 
 export const BlobCache = (): BlobCache => {
@@ -46,19 +47,26 @@ export const BlobCache = (): BlobCache => {
       'image/jpeg': 'jpg',
       'image/jpg': 'jpg',
       'image/gif': 'gif',
-      'image/png': 'png'
+      'image/png': 'png',
+      'image/apng': 'apng',
+      'image/avif': 'avif',
+      'image/svg+xml': 'svg',
+      'image/webp': 'webp',
+      'image/bmp': 'bmp',
+      'image/tiff': 'tiff'
     };
 
     return mimes[mime.toLowerCase()] || 'dat';
   };
 
-  const create = (o: BlobInfoData | string, blob?: Blob, base64?: string, filename?: string): BlobInfo => {
+  const create = (o: BlobInfoData | string, blob?: Blob, base64?: string, name?: string, filename?: string): BlobInfo => {
     if (Type.isString(o)) {
       const id = o;
 
       return toBlobInfo({
         id,
-        name: filename,
+        name,
+        filename,
         blob,
         base64
       });
@@ -76,14 +84,15 @@ export const BlobCache = (): BlobCache => {
 
     const id = o.id || Uuid.uuid('blobid');
     const name = o.name || id;
+    const blob = o.blob;
 
     return {
       id: Fun.constant(id),
       name: Fun.constant(name),
-      filename: Fun.constant(name + '.' + mimeToExt(o.blob.type)),
-      blob: Fun.constant(o.blob),
+      filename: Fun.constant(o.filename || name + '.' + mimeToExt(blob.type)),
+      blob: Fun.constant(blob),
       base64: Fun.constant(o.base64),
-      blobUri: Fun.constant(o.blobUri || URL.createObjectURL(o.blob)),
+      blobUri: Fun.constant(o.blobUri || URL.createObjectURL(blob)),
       uri: Fun.constant(o.uri)
     };
   };

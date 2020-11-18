@@ -187,7 +187,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
     });
   };
 
-  Promise.all = function <U> (...values: any[]): PromisePolyfill<any> {
+  Promise.all = function (...values: any[]): PromisePolyfill<any> {
     const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise(function (resolve, reject) {

@@ -107,7 +107,7 @@ const revertToOriginal = (elem: SugarElement<HTMLElement>, box: Boxes.Bounds, st
           Obj.get(position.style, 'left').map((_left) => box.x - offsetBox.x),
           Obj.get(position.style, 'top').map((_top) => box.y - offsetBox.y),
           Obj.get(position.style, 'right').map((_right) => offsetBox.right - box.right),
-          Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom),
+          Obj.get(position.style, 'bottom').map((_bottom) => offsetBox.bottom - box.bottom)
         )));
 
       default:

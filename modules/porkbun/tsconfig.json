@@ -8,16 +8,15 @@
     "paths": {
       "ephox/porkbun/test/*": ["src/test/ts/module/ephox/porkbun/test/*"],
       "ephox/porkbun/demo/*": ["src/demo/ts/ephox/porkbun/demo/*"],
-      "ephox/porkbun/*": ["src/main/ts/ephox/porkbun/*"],
-      "@ephox/porkbun": ["src/main/ts/ephox/porkbun/api/Main.ts"]
+      "ephox/porkbun/*": ["src/main/ts/ephox/porkbun/*"]
     }
   },
   "include": [
     "src/demo/ts",
     "src/main/ts",
-    "src/test/ts",
+    "src/test/ts"
   ],
   "references": [
-    { "path": "../katamari" },
+    { "path": "../katamari" }
   ]
 }

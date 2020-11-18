@@ -13,6 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
+import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
@@ -61,23 +62,28 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
           enforceNone(table);
         }
         Util.removeDataStyle(table);
+        Events.fireTableModified(editor, table.dom);
       });
     }
   });
 
-  const getTableFromCell = (cell: SugarElement): Optional<SugarElement> => TableLookup.table(cell, isRoot);
+  const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
-    getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
-      execute(table, targets).each((rng) => {
-        editor.selection.setRng(rng);
-        editor.focus();
-        cellSelection.clear(table);
-        Util.removeDataStyle(table);
+  const postExecute = (table: SugarElement<HTMLTableElement>) => (rng: Range): void => {
+    editor.selection.setRng(rng);
+    editor.focus();
+    cellSelection.clear(table);
+    Util.removeDataStyle(table);
+    Events.fireTableModified(editor, table.dom);
+  };
+
+  const actOnSelection = (execute: CombinedTargetsTableAction): void =>
+    getSelectionStartCell(editor).each((cell) => {
+      getTableFromCell(cell).each((table) => {
+        const targets = TableTargets.forMenu(selections, table, cell);
+        execute(table, targets).each(postExecute(table));
       });
     });
-  });
 
   const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
@@ -100,11 +106,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
-          execute(table, targets).each((rng) => {
-            editor.selection.setRng(rng);
-            editor.focus();
-            cellSelection.clear(table);
-          });
+          execute(table, targets).each(postExecute(table));
         })
       );
     });
@@ -137,14 +139,30 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
+  // Due to a bug, we need to pass through a reference to the table obtained before the modification
+  const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
+    // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
+    tableOpt.each((table) => {
+      Events.fireTableModified(editor, table.dom);
+    });
+  };
+
   Obj.each({
-    mceTableCellType: (_ui, args) => actions.setTableCellType(editor, args),
-    mceTableRowType: (_ui, args) => actions.setTableRowType(editor, args)
+    mceTableCellType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
+      actions.setTableCellType(editor, args);
+      fireTableModifiedForSelection(editor, tableOpt);
+    },
+    mceTableRowType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
+      actions.setTableRowType(editor, args);
+      fireTableModifiedForSelection(editor, tableOpt);
+    },
   }, (func, name) => editor.addCommand(name, func));
 
   editor.addCommand('mceTableColType', (_ui, args) =>
     Obj.get(args, 'type').each((type) =>
-      actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
+      actOnSelection(type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader)
     ));
 
   // Register dialog commands
@@ -168,6 +186,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   // Remove cell style using command (an empty string indicates to remove the style)
   // tinyMCE.activeEditor.execCommand('mceTableApplyCellStyle', false, { backgroundColor: '' })
   editor.addCommand('mceTableApplyCellStyle', (_ui: boolean, args: Record<string, string>) => {
+    const getFormatName = (style: string) => 'tablecell' + style.toLowerCase().replace('-', '');
+
     if (!Type.isObject(args)) {
       return;
     }
@@ -177,17 +197,29 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       return;
     }
 
-    Obj.each(args, (value, style) => {
-      const formatName = 'tablecell' + style.toLowerCase().replace('-', '');
-      if (editor.formatter.has(formatName) && Type.isString(value)) {
-        Arr.each(cells, (cell) => {
-          DomModifier.normal(editor, cell.dom).setFormat(formatName, value);
-        });
-      }
+    const validArgs = Obj.filter(args, (value, style) =>
+      editor.formatter.has(getFormatName(style)) && Type.isString(value)
+    );
+    if (Obj.isEmpty(validArgs)) {
+      return;
+    }
+
+    Obj.each(validArgs, (value, style) => {
+      Arr.each(cells, (cell) => {
+        DomModifier.normal(editor, cell.dom).setFormat(getFormatName(style), value);
+      });
     });
+
+    /*
+      Use the first cell in the selection to get the table and fire the TableModified event.
+      If this command is applied over multiple tables, only the first table selected
+      will have a TableModified event thrown.
+    */
+    getTableFromCell(cells[0]).each(
+      (table) => Events.fireTableModified(editor, table.dom, { structure: false, style: true })
+    );
   });
 
 };
 
 export { registerCommands };
-

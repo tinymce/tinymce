@@ -43,8 +43,13 @@ const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E
 
 const transformEdges = function <E> (leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) {
   return function <D> (universe: Universe<E, D>, element: E) {
-    return universe.eq(element, leftEdge.item) ? leftEdge :
-      universe.eq(element, rightEdge.item) ? rightEdge : WordDecision.detail(universe, element);
+    if (universe.eq(element, leftEdge.item)) {
+      return leftEdge;
+    } else if (universe.eq(element, rightEdge.item)) {
+      return rightEdge;
+    } else {
+      return WordDecision.detail(universe, element);
+    }
   };
 };
 

@@ -7,6 +7,7 @@ import { SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import SilverTheme from 'tinymce/themes/silver/Theme';
+import { getGreenImageDataUrl } from '../../../module/Assets';
 import {
   AutocompleterStructure, sAssertAutocompleterStructure, sWaitForAutocompleteToClose, sWaitForAutocompleteToOpen
 } from '../../../module/AutocompleterUtils';
@@ -376,6 +377,55 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         sWaitForAutocompleteToClose
       ]);
 
+      const sTextAutocompleteWithCardItems = sTestAutocompleter({
+        triggerChar: '€',
+        initialContent: '€equ',
+        additionalContent: 'als s',
+        structure: {
+          type: 'list',
+          groups: [
+            [
+              (s, str, arr) => s.element('div', {
+                classes: [ arr.has('tox-collection__item') ],
+                attrs: {
+                  title: str.is('equals sign')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-collection__item-container--row'),
+                      arr.has('tox-collection__item-container')
+                    ],
+                    children: [
+                      s.element('img', {
+                        classes: [ arr.has('my_autocompleter_avatar_class') ]
+                      }),
+                      s.element('div', {
+                        classes: [
+                          arr.has('tox-collection__item-container--column'),
+                          arr.has('tox-collection__item-container--align-right'),
+                          arr.has('tox-collection__item-container--valign-bottom')
+                        ],
+                        children: [
+                          s.element('div', {
+                            classes: [ arr.has('my_text_class') ],
+                            html: str.is('<span class="tox-autocompleter-highlight">equals s</span>ign')
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          ]
+        },
+        choice: GeneralSteps.sequence([
+          tinyActions.sContentKeydown(Keys.enter(), { })
+        ]),
+        assertion: store.sAssertEq('Euro-= should fire', [ 'euro:AutocompleterContents->onAction', 'euro:euro-=' ])
+      });
+
       Pipeline.async({ }, Logger.ts(
         'Trigger autocompleter',
         [
@@ -389,7 +439,8 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           Logger.t('Checking sixth autocomplete, (columns = 1), trigger: "#", content has spaces', sTestSixthAutocomplete),
           Logger.t('Checking autocomplete activation based on content', sTestAutocompleteActivation),
           Logger.t('Checking autocomplete start of word detection', sTestAutocompleteStartOfWord),
-          Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText)
+          Logger.t('Checking autocomplete over fragmented text', sTestAutocompleteFragmentedText),
+          Logger.t('Checking autocomplete over fragmented text', sTextAutocompleteWithCardItems)
         ]
       ), onSuccess, onFailure);
     },
@@ -558,6 +609,59 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
           },
           onAction: (autocompleteApi, rng, value) => {
             store.adder('hash:' + value)();
+            ed.selection.setRng(rng);
+            ed.insertContent(value);
+            autocompleteApi.hide();
+          }
+        });
+
+        ed.ui.registry.addAutocompleter('Card items', {
+          ch: '€',
+          minChars: 1,
+          columns: 1,
+          highlightOn: [ 'my_text_to_highlight' ],
+          fetch: (pattern, _maxResults) => {
+            const filteredItems = Arr.filter([
+              { text: 'equals sign', value: '=' },
+              { text: 'plus sign', value: '+' }
+            ], (item) => item.text.indexOf(pattern) !== -1);
+            return new Promise((resolve) => {
+              resolve(
+                Arr.map(filteredItems, (item) => ({
+                  value: `euro-${item.value}`,
+                  ariaLabel: item.text,
+                  type: 'cardmenuitem',
+                  label: item.text,
+                  onAction: () => {
+                    store.add('euro:AutocompleterContents->onAction');
+                  },
+                  items: [
+                    {
+                      type: 'cardimage',
+                      src: getGreenImageDataUrl(),
+                      classes: [ 'my_autocompleter_avatar_class' ]
+                    },
+                    {
+                      type: 'cardcontainer',
+                      direction: 'vertical',
+                      align: 'right',
+                      valign: 'bottom',
+                      items: [
+                        {
+                          type: 'cardtext',
+                          text: item.text,
+                          classes: [ 'my_text_class' ],
+                          name: 'my_text_to_highlight'
+                        }
+                      ]
+                    }
+                  ]
+                }))
+              );
+            });
+          },
+          onAction: (autocompleteApi, rng, value) => {
+            store.adder('euro:' + value)();
             ed.selection.setRng(rng);
             ed.insertContent(value);
             autocompleteApi.hide();

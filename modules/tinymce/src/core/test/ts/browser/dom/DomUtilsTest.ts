@@ -8,7 +8,7 @@ import * as HtmlUtils from '../../module/test/HtmlUtils';
 
 const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
-UnitTest.test('DOMUtils.parseStyle', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.parseStyle', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   const dom = DOMUtils(document, {
@@ -53,7 +53,7 @@ UnitTest.test('DOMUtils.parseStyle', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.addClass', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.addClass', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').className = '';
@@ -73,7 +73,7 @@ UnitTest.test('DOMUtils.addClass', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.removeClass', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.removeClass', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').className = 'abc 123 xyz';
@@ -95,7 +95,7 @@ UnitTest.test('DOMUtils.removeClass', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.hasClass', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.hasClass', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').className = 'abc 123 xyz';
@@ -116,7 +116,7 @@ UnitTest.test('DOMUtils.hasClass', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.add', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.add', () => {
   let e;
 
   DOM.add(document.body, 'div', { id: 'test' });
@@ -144,7 +144,7 @@ UnitTest.test('DOMUtils.add', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.create', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.create', () => {
   const e = DOM.create('span', { class: 'abc 123' }, 'content <b>abc</b>');
 
   Assert.eq('incorrect nodeName', 'SPAN', e.nodeName);
@@ -152,7 +152,7 @@ UnitTest.test('DOMUtils.create', () => {
   Assert.eq('innerHTML was wrong', 'content <b>abc</b>', e.innerHTML.toLowerCase());
 });
 
-UnitTest.test('DOMUtils.createHTML', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.createHTML', () => {
   Assert.eq('', '<span id="id1" class="abc 123">content <b>abc</b></span>', DOM.createHTML('span', {
     id: 'id1',
     class: 'abc 123'
@@ -163,13 +163,13 @@ UnitTest.test('DOMUtils.createHTML', () => {
   Assert.eq('', '<span>content <b>abc</b></span>', DOM.createHTML('span', null, 'content <b>abc</b>'));
 });
 
-UnitTest.test('DOMUtils.uniqueId', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.uniqueId', () => {
   Assert.eq('', 'mce_0', DOM.uniqueId());
   Assert.eq('', 'mce_1', DOM.uniqueId());
   Assert.eq('', 'mce_2', DOM.uniqueId());
 });
 
-UnitTest.test('DOMUtils.showHide', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.showHide', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.show('test');
@@ -186,7 +186,7 @@ UnitTest.test('DOMUtils.showHide', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.select', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.select', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<div>test 1</div><div>test 2 <div>test 3</div></div><div>test 4</div>');
@@ -203,7 +203,7 @@ UnitTest.test('DOMUtils.select', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.is', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.is', () => {
   DOM.add(document.body, 'div', { id: 'test' });
   DOM.setHTML('test', '<div id="textX" class="test">test 1</div>');
 
@@ -220,11 +220,11 @@ UnitTest.test('DOMUtils.is', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.encode', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.encode', () => {
   Assert.eq('', 'abc&lt;&gt;&quot;&amp;&#39;\u00e5\u00e4\u00f6', DOM.encode(`abc<>"&'\u00e5\u00e4\u00f6`));
 });
 
-UnitTest.test('DOMUtils.setGetAttrib', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.setGetAttrib', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setAttrib('test', 'class', 'test 123');
@@ -260,12 +260,12 @@ UnitTest.test('DOMUtils.setGetAttrib', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.setGetAttrib on null', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.setGetAttrib on null', () => {
   Assert.eq('', '', DOM.getAttrib(null, 'test'));
   DOM.setAttrib(null, 'test', null);
 });
 
-UnitTest.test('DOMUtils.getAttribs', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getAttribs', () => {
   const check = (obj: NamedNodeMap | Attr[], val: string) => {
     let count = 0;
 
@@ -291,7 +291,7 @@ UnitTest.test('DOMUtils.getAttribs', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.setGetStyles', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.setGetStyles', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setStyle('test', 'font-size', '20px');
@@ -321,7 +321,7 @@ UnitTest.test('DOMUtils.setGetStyles', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.getPos', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getPos', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setStyles('test', { position: 'absolute', left: 100, top: 110 });
@@ -335,7 +335,7 @@ UnitTest.test('DOMUtils.getPos', () => {
 
 const eqNodeName = (name) => (n) => n.nodeName === name;
 
-UnitTest.test('DOMUtils.getParent', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getParent', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').innerHTML = '<div><span>ab<a id="test2" href="">abc</a>c</span></div>';
@@ -352,7 +352,7 @@ UnitTest.test('DOMUtils.getParent', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.getParents', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getParents', () => {
   DOM.add(document.body, 'div', { id: 'test' });
   DOM.get('test').innerHTML = '<div><span class="test">ab<span><a id="test2" href="">abc</a>c</span></span></div>';
 
@@ -361,10 +361,16 @@ UnitTest.test('DOMUtils.getParents', () => {
   Assert.eq('', 1, DOM.getParents('test2', 'span.test').length);
   Assert.eq('', 0, DOM.getParents('test2', 'body', DOM.get('test')).length);
 
+  // getParents should stop at DocumentFragment
+  const frag = document.createDocumentFragment();
+  const inputElm = document.createElement('input');
+  frag.appendChild(inputElm);
+  Assert.eq('', 0, DOM.getParents(inputElm, (d) => d.nodeName === '#document-fragment').length);
+
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.getViewPort', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getViewPort', () => {
   const wp = DOM.getViewPort();
   Assert.eq('', 0, wp.x);
   Assert.eq('', 0, wp.y);
@@ -372,7 +378,7 @@ UnitTest.test('DOMUtils.getViewPort', () => {
   Assert.eq('', true, wp.h > 0);
 });
 
-UnitTest.test('DOMUtils.getRect', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getRect', () => {
   let r;
 
   DOM.add(document.body, 'div', { id: 'test' });
@@ -393,7 +399,7 @@ UnitTest.test('DOMUtils.getRect', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.getSize', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getSize', () => {
   let r;
 
   DOM.add(document.body, 'div', { id: 'test' });
@@ -410,7 +416,7 @@ UnitTest.test('DOMUtils.getSize', () => {
 });
 
 // TODO: Add test comments
-UnitTest.test('DOMUtils.getNext', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getNext', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
@@ -423,7 +429,7 @@ UnitTest.test('DOMUtils.getNext', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.getPrev', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getPrev', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.get('test').innerHTML = '<strong>A</strong><span>B</span><em>C</em>';
@@ -436,7 +442,7 @@ UnitTest.test('DOMUtils.getPrev', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.loadCSS', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.loadCSS', () => {
   let c = 0;
 
   DOM.loadCSS('tinymce/dom/test.css?a=1,tinymce/dom/test.css?a=2,tinymce/dom/test.css?a=3');
@@ -450,7 +456,7 @@ UnitTest.test('DOMUtils.loadCSS', () => {
   Assert.eq('', 3, c);
 });
 
-UnitTest.test('DOMUtils.loadCSS contentCssCors enabled', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.loadCSS contentCssCors enabled', () => {
   let c = 0;
 
   // The crossorigin attribute isn't supported in IE11
@@ -481,7 +487,7 @@ UnitTest.test('DOMUtils.loadCSS contentCssCors enabled', () => {
   Assert.eq('', 3, c);
 });
 
-UnitTest.test('DOMUtils.insertAfter', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.insertAfter', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<span id="test2"></span>');
@@ -495,14 +501,14 @@ UnitTest.test('DOMUtils.insertAfter', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.isBlock', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isBlock', () => {
   Assert.eq('', true, DOM.isBlock(DOM.create('div')));
   Assert.eq('', true, DOM.isBlock('DIV'));
   Assert.eq('', false, DOM.isBlock('SPAN'));
   Assert.eq('', true, DOM.isBlock('div'));
 });
 
-UnitTest.test('DOMUtils.remove', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.remove', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -515,7 +521,7 @@ UnitTest.test('DOMUtils.remove', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.replace', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.replace', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -529,7 +535,7 @@ UnitTest.test('DOMUtils.replace', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.toHex', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.toHex', () => {
   Assert.eq('', '#00ffff', DOM.toHex('rgb(0, 255, 255)'));
   Assert.eq('', '#ff0000', DOM.toHex('rgb(255, 0, 0)'));
   Assert.eq('', '#0000ff', DOM.toHex('rgb(0, 0, 255)'));
@@ -537,7 +543,7 @@ UnitTest.test('DOMUtils.toHex', () => {
   Assert.eq('', '#0000ff', DOM.toHex('   RGB  (  0  , 0  , 255  )  '));
 });
 
-UnitTest.test('DOMUtils.getOuterHTML', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.getOuterHTML', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   DOM.setHTML('test', '<span id="test2"><span>test</span><span>test2</span></span>');
@@ -557,12 +563,12 @@ UnitTest.test('DOMUtils.getOuterHTML', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.encodeDecode', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.encodeDecode', () => {
   Assert.eq('', '\u00e5\u00e4\u00f6&amp;&lt;&gt;&quot;', DOM.encode('\u00e5\u00e4\u00f6&<>"'));
   Assert.eq('', '\u00e5\u00e4\u00f6&<>"', DOM.decode('&aring;&auml;&ouml;&amp;&lt;&gt;&quot;'));
 });
 
-UnitTest.test('DOMUtils.split', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.split', () => {
   let point: Element;
   let parent: Element;
   DOM.add(document.body, 'div', { id: 'test' });
@@ -612,7 +618,7 @@ UnitTest.test('DOMUtils.split', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.nodeIndex', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.nodeIndex', () => {
   DOM.add(document.body, 'div', { id: 'test' }, 'abc<b>abc</b>abc');
 
   Assert.eq('', 0, DOM.nodeIndex(DOM.get('test').childNodes[0]));
@@ -628,7 +634,7 @@ UnitTest.test('DOMUtils.nodeIndex', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.isEmpty without defined schema', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty without defined schema', () => {
   DOM.add(document.body, 'div', { id: 'test' }, '');
 
   const domUtils = DOMUtils(document);
@@ -642,7 +648,7 @@ UnitTest.test('DOMUtils.isEmpty without defined schema', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.isEmpty', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty', () => {
   DOM.schema = Schema(); // A schema will be added when used within a editor instance
   DOM.add(document.body, 'div', { id: 'test' }, '');
 
@@ -714,34 +720,34 @@ UnitTest.test('DOMUtils.isEmpty', () => {
   DOM.remove('test');
 });
 
-UnitTest.test('DOMUtils.isEmpty with list of elements considered non-empty', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty with list of elements considered non-empty', () => {
   const elm = DOM.create('p', null, '<img>');
   Assert.eq('', DOM.isEmpty(elm, { img: true }), false);
 });
 
-UnitTest.test('DOMUtils.isEmpty on pre', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty on pre', () => {
   const elm = DOM.create('pre', null, '  ');
   Assert.eq('', DOM.isEmpty(elm), false);
 });
 
-UnitTest.test('DOMUtils.isEmpty with list of elements considered non-empty without schema', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty with list of elements considered non-empty without schema', () => {
   const domWithoutSchema = DOMUtils(document, { keep_values: true });
 
   const elm = domWithoutSchema.create('p', null, '<img>');
   Assert.eq('', domWithoutSchema.isEmpty(elm, { img: true }), false);
 });
 
-UnitTest.test('DOMUtils.isEmpty on P with BR in EM', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty on P with BR in EM', () => {
   const elm = DOM.create('p', null, '<em><br></em>');
   Assert.eq('', true, DOM.isEmpty(elm));
 });
 
-UnitTest.test('DOMUtils.isEmpty on P with two BR in EM', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.isEmpty on P with two BR in EM', () => {
   const elm = DOM.create('p', null, '<em><br><br></em>');
   Assert.eq('', DOM.isEmpty(elm), false);
 });
 
-UnitTest.test('DOMUtils.bind/unbind/fire', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.bind/unbind/fire', () => {
   let count = 0;
 
   DOM.bind(document, 'click', () => {
@@ -767,7 +773,7 @@ UnitTest.test('DOMUtils.bind/unbind/fire', () => {
   Assert.eq('', 0, count);
 });
 
-UnitTest.test('DOMUtils.get - by id in head', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.get - by id in head', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   const meta: HTMLMetaElement = document.createElement('meta');
@@ -778,7 +784,7 @@ UnitTest.test('DOMUtils.get - by id in head', () => {
   document.head.removeChild(meta);
 });
 
-UnitTest.test('DOMUtils.get - does not find element by name in head', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.get - does not find element by name in head', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   const meta: HTMLMetaElement = document.createElement('meta');
@@ -789,7 +795,7 @@ UnitTest.test('DOMUtils.get - does not find element by name in head', () => {
   document.head.removeChild(meta);
 });
 
-UnitTest.test('DOMUtils.get - does not find element by name in body', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.get - does not find element by name in body', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   const meta: HTMLMetaElement = document.createElement('meta');
@@ -800,7 +806,7 @@ UnitTest.test('DOMUtils.get - does not find element by name in body', () => {
   document.body.removeChild(meta);
 });
 
-UnitTest.test('DOMUtils.get - finds element by id in body, not element by name in head', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.get - finds element by id in body, not element by name in head', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
 
   const meta = document.createElement('meta');
@@ -816,7 +822,7 @@ UnitTest.test('DOMUtils.get - finds element by id in body, not element by name i
   document.body.removeChild(div);
 });
 
-UnitTest.test('DOMUtils.get - returns element', () => {
+UnitTest.test('browser.tinymce.core.dom.DOMUtils.get - returns element', () => {
   const DOM = DOMUtils(document, { keep_values: true, schema: Schema() });
   const e = document.createElement('div');
   Assert.eq('get', e, DOM.get(e), Testable.tStrict);

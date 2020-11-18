@@ -8,20 +8,18 @@
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import * as InsertTable from '../actions/InsertTable';
 import { hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets } from '../selection/SelectionTargets';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
-  const cmd = (command) => () => editor.execCommand(command);
+  const cmd = (command: string) => () => editor.execCommand(command);
 
-  const insertTableAction = ({ numRows, numColumns }) => {
-    editor.undoManager.transact(function () {
-      InsertTable.insert(editor, numColumns, numRows, 0, 0);
+  const insertTableAction = (data: { numRows: number; numColumns: number }) => {
+    editor.execCommand('mceInsertTable', false, {
+      rows: data.numRows,
+      columns: data.numColumns
     });
-
-    editor.addVisual();
   };
 
   const tableProperties = {

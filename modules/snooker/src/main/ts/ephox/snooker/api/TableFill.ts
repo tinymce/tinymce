@@ -2,6 +2,13 @@ import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, CursorPosition, Insert, Replication, SelectorFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { CellSpan, Generators, SimpleGenerators } from './Generators';
 
+const transferableAttributes: Record<string, string[]> = {
+  scope: [
+    'row',
+    'col'
+  ]
+};
+
 // NOTE: This may create a td instead of a th, but it is for irregular table handling.
 const createCell = function () {
   const td = SugarElement.fromTag('td');
@@ -55,6 +62,14 @@ const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, for
   }).getOr(newCell);
 };
 
+const cloneAppropriateAttributes = <T extends HTMLElement> (original: SugarElement<T>, clone: SugarElement<T>): void => {
+  Obj.each(transferableAttributes, (validAttributes, attributeName) =>
+    Attribute.getOpt(original, attributeName)
+      .filter((attribute) => Arr.contains(validAttributes, attribute))
+      .each((attribute) => Attribute.set(clone, attributeName, attribute))
+  );
+};
+
 const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators {
   const cloneCss = <T extends HTMLElement> (prev: CellSpan, clone: SugarElement<T>) => {
     // inherit the style and width, dont inherit the row height
@@ -77,6 +92,7 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
     Insert.append(lastNode, SugarElement.fromTag('br'));
 
     cloneCss(prev, td);
+    cloneAppropriateAttributes(prev.element, td);
     mutate(prev.element, td);
     return td;
   };

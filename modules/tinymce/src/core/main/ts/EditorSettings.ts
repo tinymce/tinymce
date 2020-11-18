@@ -9,6 +9,7 @@ import { Arr, Fun, Merger, Obj, Optional, Strings, Type } from '@ephox/katamari'
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
+import Env from './api/Env';
 import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
 import Tools from './api/util/Tools';
 
@@ -159,6 +160,19 @@ const combinePlugins = function (forcedPlugins: string[], plugins: string[]): st
   return [].concat(normalizePlugins(forcedPlugins)).concat(normalizePlugins(plugins));
 };
 
+const getPlatformPlugins = (isMobileDevice: boolean, sectionResult: SectionResult, desktopPlugins: string[], mobilePlugins: string[]): string[] => {
+  // is a mobile device with mobile theme
+  if (isMobileDevice && isSectionTheme(sectionResult, 'mobile', 'mobile')) {
+    return filterLegacyMobilePlugins(mobilePlugins);
+  // is a mobile device with any mobile settings
+  } else if (isMobileDevice && hasSection(sectionResult, 'mobile')) {
+    return mobilePlugins;
+  // is desktop
+  } else {
+    return desktopPlugins;
+  }
+};
+
 const processPlugins = function (isMobileDevice: boolean, sectionResult: SectionResult, defaultOverrideSettings: RawEditorSettings, settings: RawEditorSettings & { external_plugins: Record<string, string> }): EditorSettings {
   const forcedPlugins = normalizePlugins(defaultOverrideSettings.forced_plugins);
   const desktopPlugins = normalizePlugins(settings.plugins);
@@ -166,15 +180,13 @@ const processPlugins = function (isMobileDevice: boolean, sectionResult: Section
   const mobileConfig = getSectionConfig(sectionResult, 'mobile');
   const mobilePlugins = mobileConfig.plugins ? normalizePlugins(mobileConfig.plugins) : desktopPlugins;
 
-  const platformPlugins =
-    // is a mobile device with mobile theme
-    isMobileDevice && isSectionTheme(sectionResult, 'mobile', 'mobile') ? filterLegacyMobilePlugins(mobilePlugins) :
-    // is a mobile device with any mobile settings
-      isMobileDevice && hasSection(sectionResult, 'mobile') ? mobilePlugins :
-      // is desktop
-        desktopPlugins;
+  const platformPlugins = getPlatformPlugins(isMobileDevice, sectionResult, desktopPlugins, mobilePlugins);
 
   const combinedPlugins = combinePlugins(forcedPlugins, platformPlugins);
+
+  if (Env.browser.isIE() && Arr.contains(combinedPlugins, 'rtc')) {
+    throw new Error('RTC plugin is not supported on IE 11.');
+  }
 
   return Tools.extend(settings, {
     plugins: combinedPlugins.join(' ')

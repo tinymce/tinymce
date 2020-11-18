@@ -15,6 +15,7 @@ import { Optional, Singleton } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 import * as Settings from '../../api/Settings';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
@@ -56,7 +57,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
   }
 };
 
-const setup = (extras: WindowManagerSetup) => {
+const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
   const backstage = extras.backstage;
   const editor = extras.editor;
   const isStickyToolbar = Settings.isStickyToolbar(editor);
@@ -64,7 +65,7 @@ const setup = (extras: WindowManagerSetup) => {
   const alertDialog = AlertDialog.setup(extras);
   const confirmDialog = ConfirmDialog.setup(extras);
 
-  const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
+  const open = <T extends Dialog.DialogData>(config: Dialog.DialogSpec<T>, params: WindowParams, closeWindow: (dialogApi: Dialog.DialogInstanceApi<T>) => void): Dialog.DialogInstanceApi<T> => {
     if (params !== undefined && params.inline === 'toolbar') {
       return openInlineDialog(config, backstage.shared.anchors.inlineDialog(), closeWindow, params.ariaAttrs);
     } else if (params !== undefined && params.inline === 'cursor') {

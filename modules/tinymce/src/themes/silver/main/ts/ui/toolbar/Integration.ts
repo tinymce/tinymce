@@ -70,7 +70,7 @@ const types = {
     Toolbar.createToolbarButton,
     (s: Toolbar.ToolbarButton, extras) => renderToolbarButton(
       s,
-      extras.backstage.shared.providers,
+      extras.backstage.shared.providers
     )
   ),
 
@@ -78,7 +78,7 @@ const types = {
     Toolbar.createToggleButton,
     (s: Toolbar.ToolbarToggleButton, extras) => renderToolbarToggleButton(
       s,
-      extras.backstage.shared.providers,
+      extras.backstage.shared.providers
     )
   ),
 

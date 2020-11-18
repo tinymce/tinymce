@@ -8,11 +8,12 @@
 import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
-import { findNearest, getCurrentSelectionParents } from './utils/FormatDetection';
+import { findNearest } from './utils/FormatDetection';
 import { onActionToggleFormat } from './utils/Utils';
 
 const defaultBlocks = (
@@ -27,32 +28,27 @@ const defaultBlocks = (
 );
 
 const getSpec = (editor: Editor): SelectSpec => {
-  const getMatchingValue = (nodeChangeEvent) => findNearest(editor, () => dataset.data, nodeChangeEvent);
-
   const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
   const getPreviewFor = (format: string) => () => {
     const fmt = editor.formatter.get(format);
     return Optional.some({
-      tag: fmt.length > 0 ? fmt[0].inline || fmt[0].block || 'div' : 'div',
+      tag: fmt.length > 0 ? (fmt[0] as InlineFormat).inline || (fmt[0] as BlockFormat).block || 'div' : 'div',
       styles: editor.dom.parseStyle(editor.formatter.getCssText(format))
     });
   };
 
-  const updateSelectMenuText = (parents: Element[], comp: AlloyComponent) => {
-    const detectedFormat = getMatchingValue(parents);
+  const updateSelectMenuText = (comp: AlloyComponent) => {
+    const detectedFormat = findNearest(editor, () => dataset.data);
     const text = detectedFormat.fold(() => 'Paragraph', (fmt) => fmt.title);
     AlloyTriggers.emitWith(comp, updateMenuText, {
       text
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => (e) => updateSelectMenuText(e.parents, comp));
+  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
 
-  const setInitialValue = Optional.some((comp: AlloyComponent) => {
-    const parents = getCurrentSelectionParents(editor);
-    updateSelectMenuText(parents, comp);
-  });
+  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
 
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
 
