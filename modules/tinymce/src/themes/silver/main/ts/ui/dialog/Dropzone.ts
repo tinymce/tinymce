@@ -27,7 +27,7 @@ import { formChangeEvent } from '../general/FormEvents';
 const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
 
 const filterByExtension = function (files: FileList, providersBackstage: UiFactoryBackstageProviders) {
-  const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('image_file_types', defaultImageFileTypes, 'string'));
+  const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('images_file_types', defaultImageFileTypes, 'string'));
   const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name, `.${type}`));
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
