@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, f
         cAssertCleanHtml('Checking output', '<p><img src="#2" /></p>')
       ]),
 
-      Log.chainsAsStep('TBA', 'Update an image source by setting src to empty should remove the existing dimensions settings', [
+      Log.chainsAsStep('TINY-6611', 'Setting src to empty should remove the existing dimensions settings', [
         Chain.inject(editor),
         ApiChains.cSetContent('<p><img src="https://www.google.com/logos/google.jpg"  width="200" height="200"/></p>'),
         ApiChains.cSetSelection([ 0 ], 0, [ 0 ], 1),
