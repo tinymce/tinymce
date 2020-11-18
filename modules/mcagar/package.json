@@ -1,6 +1,6 @@
 {
   "name": "@ephox/mcagar",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Tinymce agar wrapper",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/agar": "^5.0.1",
-    "@ephox/katamari": "^7.0.1",
-    "@ephox/sand": "^4.0.1",
-    "@ephox/sugar": "^7.0.1",
+    "@ephox/agar": "^5.1.0",
+    "@ephox/katamari": "^7.1.0",
+    "@ephox/sand": "^4.0.2",
+    "@ephox/sugar": "^7.0.2",
     "@ephox/wrap-jsverify": "^2.0.1",
     "tslib": "^2.0.0"
   },
