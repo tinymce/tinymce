@@ -64,7 +64,7 @@ const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 
 
 const getAllowedImageFileTypes = (editor: Editor): string[] => {
   const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
-  return Tools.explode(editor.getParam('image_file_types', defaultImageFileTypes, 'string'));
+  return Tools.explode(editor.getParam('images_file_types', defaultImageFileTypes, 'string'));
 };
 
 export {

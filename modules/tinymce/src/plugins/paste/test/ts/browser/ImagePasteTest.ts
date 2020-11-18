@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
-    editor.settings.image_file_types = 'svg,tiff';
+    editor.settings.images_file_types = 'svg,tiff';
     const rng = setupContent(editor);
 
     const event = mockEvent('paste', [
@@ -208,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/tiff;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
-      delete editor.settings.image_file_types;
+      delete editor.settings.images_file_types;
       done();
     }).catch(die);
   });
