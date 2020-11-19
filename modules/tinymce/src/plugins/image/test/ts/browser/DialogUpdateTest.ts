@@ -3,16 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, TinyLoader } from '@ephox/mcagar';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
-import {
-  cAssertCleanHtml,
-  cAssertInputValue,
-  cFillActiveDialog,
-  cSubmitDialog,
-  cWaitForDialog,
-  generalTabSelectors,
-  cSetInputValue,
-  cFakeEvent
-} from '../module/Helpers';
+import { cAssertCleanHtml, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors, cSetInputValue, cFakeEvent } from '../module/Helpers';
 
 
 UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, failure) => {
@@ -51,14 +42,15 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, f
           cAssertInputValue(generalTabSelectors.height, '200'),
           cAssertInputValue(generalTabSelectors.width, '200')
         ]),
-        cSetInputValue(generalTabSelectors.src, ''),
-        cFakeEvent('change'),
+        Chain.fromIsolatedChains([
+          cSetInputValue(generalTabSelectors.src, ''),
+          cFakeEvent('change'),
+        ]),
         Chain.fromParent(Chain.identity, [
           cAssertInputValue(generalTabSelectors.height, ''),
           cAssertInputValue(generalTabSelectors.width, '')
         ]),
         cSubmitDialog(),
-        Chain.inject(editor),
         cAssertCleanHtml('Checking output', '')
       ])
     ], onSuccess, onFailure);
