@@ -109,7 +109,7 @@ const addPrependUrl2 = (info: ImageDialogInfo, srcURL: string): Optional<string>
 const addPrependUrl = (info: ImageDialogInfo, api: API) => {
   const data = api.getData();
   addPrependUrl2(info, data.src.value).each((srcURL) => {
-    api.setData({ src: { value: srcURL, meta: data.src.meta } });
+    api.setData({ src: { value: srcURL, meta: data.src.meta }});
   });
 };
 
@@ -283,7 +283,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
       };
 
       const updateSrcAndSwitchTab = (url: string) => {
-        api.setData({ src: { value: url, meta: {} } });
+        api.setData({ src: { value: url, meta: {}}});
         api.showTab('general');
         changeSrc(helpers, info, state, api);
       };
@@ -339,9 +339,9 @@ const makeDialogBody = (info: ImageDialogInfo) => {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
-        [MainTab.makeTab(info)],
-        info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
+        [ MainTab.makeTab(info) ],
+        info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
       ])
     };
     return tabPanel;
