@@ -14,6 +14,9 @@ export default () => {
     if (editor.hasPlugin('lists')) {
       Buttons.register(editor);
       Commands.register(editor);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('Please use the Lists plugin together with the Advanced List plugin.');
     }
   });
 };
