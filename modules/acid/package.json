@@ -1,16 +1,16 @@
 {
   "name": "@ephox/acid",
   "description": "Color library including Alloy UI component for a color picker",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce"
   },
   "dependencies": {
-    "@ephox/alloy": "^8.0.1",
-    "@ephox/boulder": "^5.0.1",
-    "@ephox/katamari": "^7.0.1",
-    "@ephox/sugar": "^7.0.1",
+    "@ephox/alloy": "^8.1.1",
+    "@ephox/boulder": "^5.0.3",
+    "@ephox/katamari": "^7.1.1",
+    "@ephox/sugar": "^7.0.3",
     "tslib": "^2.0.0"
   },
   "author": "Ephox Corporation",
