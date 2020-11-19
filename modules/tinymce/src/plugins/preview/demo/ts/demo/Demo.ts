@@ -7,13 +7,6 @@ tinymce.init({
   plugins: 'preview code',
   toolbar: 'preview code',
   height: 600,
-  content_css: 'writer',
-  content_style: `
-		body {
-			max-width: 600px;
-		}
-
-	`
 });
 
 export {};
