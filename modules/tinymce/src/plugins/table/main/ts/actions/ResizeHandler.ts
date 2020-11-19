@@ -171,6 +171,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
       }
 
       Util.removeDataStyle(table);
+      Events.fireTableModified(editor, table.dom);
     }
   });
 

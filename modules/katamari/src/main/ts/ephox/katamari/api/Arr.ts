@@ -243,9 +243,11 @@ export const sort = <T>(xs: ArrayLike<T>, comparator?: Comparator<T>): T[] => {
   return copy;
 };
 
-export const head = <T>(xs: ArrayLike<T>): Optional<T> => xs.length === 0 ? Optional.none() : Optional.some(xs[0]);
+export const get = <T>(xs: ArrayLike<T>, i: number): Optional<T> => i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
 
-export const last = <T>(xs: ArrayLike<T>): Optional<T> => xs.length === 0 ? Optional.none() : Optional.some(xs[xs.length - 1]);
+export const head = <T>(xs: ArrayLike<T>): Optional<T> => get(xs, 0);
+
+export const last = <T>(xs: ArrayLike<T>): Optional<T> => get(xs, xs.length - 1);
 
 export const from: <T>(x: ArrayLike<T>) => T[] = Type.isFunction(Array.from) ? Array.from : (x) => nativeSlice.call(x);
 

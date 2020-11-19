@@ -165,10 +165,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       api.sDeleteSetting('automatic_uploads')
     ]);
 
-    const uploadWithCustomImageFileTypes = Log.stepsAsStep('TINY-6224', 'Image: Image uploader respects `image_file_types` setting', [
+    const uploadWithCustomImageFileTypes = Log.stepsAsStep('TINY-6224', 'Image: Image uploader respects `images_file_types` setting', [
       api.sSetContent(''),
       api.sSetSetting('images_upload_handler', (_blobInfo, success) => success('logo.svg')),
-      api.sSetSetting('image_file_types', 'svg'),
+      api.sSetSetting('images_file_types', 'svg'),
       ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
       ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
       ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
@@ -176,7 +176,19 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
       sAssertSrcTextValue('logo.svg'),
       ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
-      api.sDeleteSetting('image_file_types')
+      api.sDeleteSetting('images_file_types')
+    ]);
+
+    const uploadWithAlternativeExtension = Log.stepsAsStep('TINY-6622', 'Image: Image uploader retains the file name/extension', [
+      api.sSetContent(''),
+      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.filename())),
+      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
+      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
+      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
+      sTriggerUpload('jfif'),
+      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
+      sAssertSrcTextValue('logo.jfif'),
+      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
     ]);
 
     Pipeline.async({}, [
@@ -189,7 +201,8 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, fa
       uploadCustomHandlerBase64String,
       uploadWithError,
       uploadWithAutomaticUploadsDisabled,
-      uploadWithCustomImageFileTypes
+      uploadWithCustomImageFileTypes,
+      uploadWithAlternativeExtension
     ], onSuccess, onFailure);
   }, {
     theme: 'silver',

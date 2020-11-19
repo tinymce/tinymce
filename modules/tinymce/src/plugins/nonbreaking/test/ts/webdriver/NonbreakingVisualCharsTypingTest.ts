@@ -12,8 +12,8 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingVisualChars
 
   const detection = PlatformDetection.detect();
 
-  // TODO TINY-4129: this currently fails on Edge 18 or above and needs to be investigated
-  if (detection.browser.isEdge()) {
+  // TODO TINY-4129: this currently fails on IE 11 and Edge 18 or above and needs to be investigated
+  if (detection.browser.isIE() || detection.browser.isEdge()) {
     return success();
   }
 

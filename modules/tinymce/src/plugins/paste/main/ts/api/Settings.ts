@@ -62,9 +62,9 @@ const getForcedRootBlockAttrs = (editor: Editor) => editor.getParam('forced_root
 
 const getTabSpaces = (editor: Editor) => editor.getParam('paste_tab_spaces', 4, 'number');
 
-const allowedImageFileTypes = (editor: Editor): string[] => {
-  const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jfif,png,gif,bmp,webp';
-  return Tools.explode(editor.getParam('image_file_types', defaultImageFileTypes, 'string'));
+const getAllowedImageFileTypes = (editor: Editor): string[] => {
+  const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
+  return Tools.explode(editor.getParam('images_file_types', defaultImageFileTypes, 'string'));
 };
 
 export {
@@ -90,5 +90,5 @@ export {
   getForcedRootBlock,
   getForcedRootBlockAttrs,
   getTabSpaces,
-  allowedImageFileTypes
+  getAllowedImageFileTypes
 };

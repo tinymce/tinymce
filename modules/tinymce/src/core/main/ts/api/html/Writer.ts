@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { EntityEncoding } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import Entities from './Entities';
 import { Attributes } from './Node';
@@ -27,7 +28,7 @@ const makeMap = Tools.makeMap;
 export interface WriterSettings {
   element_format?: 'xhtml' | 'html';
   entities?: string;
-  entity_encoding?: string;
+  entity_encoding?: EntityEncoding;
   indent?: boolean;
   indent_after?: string;
   indent_before?: string;
