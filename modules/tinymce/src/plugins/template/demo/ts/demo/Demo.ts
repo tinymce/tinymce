@@ -5,6 +5,13 @@ tinymce.init({
   plugins: 'template',
   toolbar: 'template',
   height: 600,
+  content_css: 'writer',
+  content_style: `
+		body {
+			max-width: 600px;
+		}
+
+	`,
   template_preview_replace_values: {
     username: '<em>username here</em>'
   },

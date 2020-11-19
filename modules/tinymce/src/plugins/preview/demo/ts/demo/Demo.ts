@@ -6,7 +6,14 @@ tinymce.init({
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',
   plugins: 'preview code',
   toolbar: 'preview code',
-  height: 600
+  height: 600,
+  content_css: 'writer',
+  content_style: `
+		body {
+			max-width: 600px;
+		}
+
+	`
 });
 
 export {};

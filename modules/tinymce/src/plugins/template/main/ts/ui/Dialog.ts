@@ -51,11 +51,6 @@ const getPreviewContent = (editor: Editor, html: string) => {
   if (html.indexOf('<html>') === -1) {
     let contentCssEntries = '';
 
-    const contentStyle = Settings.getContentStyle(editor);
-    if (contentStyle) {
-      contentCssEntries += '<style type="text/css">' + contentStyle + '</style>';
-    }
-
     const cors = Settings.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
 
     Tools.each(editor.contentCSS, (url) => {
@@ -63,6 +58,11 @@ const getPreviewContent = (editor: Editor, html: string) => {
         editor.documentBaseURI.toAbsolute(url) +
         '"' + cors + '>';
     });
+
+    const contentStyle = Settings.getContentStyle(editor);
+    if (contentStyle) {
+      contentCssEntries += '<style type="text/css">' + contentStyle + '</style>';
+    }
 
     const bodyClass = Settings.getBodyClass(editor);
 
