@@ -6,7 +6,7 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { TableLookup, Warehouse } from '@ephox/snooker';
 import { Compare, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -70,11 +70,13 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
 // how as part of this, it doesn't remove any original alignment before
 // applying any specified alignment.
 
-const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], data: CellData) => {
+const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, data: CellData) => {
   const dom = editor.dom;
   const isSingleCell = cells.length === 1;
 
-  if (cells.length >= 1) {
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
+
+  if (Obj.size(modifiedData) > 0 && cells.length >= 1) {
     /*
       Retrieve the table before the cells are modified
       as there is a case where cells are replaced and
@@ -116,18 +118,22 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
       });
     });
 
+    const cellTypeModified = Obj.has(modifiedData, 'celltype');
+    // style modified if there's at least one other change apart from 'celltype'
+    const styleModified = cellTypeModified ? Obj.size(modifiedData) > 1 : true;
+
     tableOpt.each(
-      (table) => Events.fireTableModified(editor, table.dom)
+      (table) => Events.fireTableModified(editor, table.dom, { structure: cellTypeModified, style: styleModified })
     );
   }
 };
 
-const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], api) => {
+const onSubmitCellForm = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], oldData: CellData, api) => {
   const data: CellData = api.getData();
   api.close();
 
   editor.undoManager.transact(() => {
-    applyCellData(editor, cells, data);
+    applyCellData(editor, cells, oldData, data);
     editor.focus();
   });
 };
@@ -191,7 +197,7 @@ const open = (editor: Editor, selections: Selections) => {
       }
     ],
     initialData: data,
-    onSubmit: Fun.curry(onSubmitCellForm, editor, cells)
+    onSubmit: Fun.curry(onSubmitCellForm, editor, cells, data)
   });
 };
 

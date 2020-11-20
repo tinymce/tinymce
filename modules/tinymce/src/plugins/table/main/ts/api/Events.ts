@@ -7,6 +7,7 @@
 
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { TableEventData } from '../actions/TableActions';
 
 const fireNewRow = (editor: Editor, row: HTMLElement) => editor.fire('newrow', { node: row });
 const fireNewCell = (editor: Editor, cell: HTMLElement) => editor.fire('newcell', { node: cell });
@@ -32,9 +33,12 @@ const fireTableSelectionClear = (editor: Editor) => {
   editor.fire('TableSelectionClear');
 };
 
-const fireTableModified = (editor: Editor, table: HTMLTableElement, data?: { structure: boolean; style: boolean }) => {
+const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableEventData) => {
   editor.fire('TableModified', { ...data, table });
 };
+
+const styleModified = { structure: false, style: true };
+const structureModified = { structure: true, style: false };
 
 export {
   fireNewRow,
@@ -43,5 +47,7 @@ export {
   fireObjectResized,
   fireTableSelectionChange,
   fireTableSelectionClear,
-  fireTableModified
+  fireTableModified,
+  styleModified,
+  structureModified
 };
