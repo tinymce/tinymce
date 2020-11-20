@@ -1,5 +1,5 @@
 Version 5.7.0 (TBD)
-    Fixed an issue where image dimensions were trying to be calculated for an empty image URL #TINY-6611
+    Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
 Version 5.6.0 (2020-11-18)
     Added new `BeforeOpenNotification` and `OpenNotification` events which allow internal notifications to be captured and modified before display #TINY-6528
