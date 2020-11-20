@@ -60,6 +60,9 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogUpdateTest', (success, f
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    image_title: true
+    image_title: true,
+    file_picker_callback(callback, _value, _meta) {
+      callback('https://www.google.com/logos/google.jpg', { width: '100' });
+    },
   }, success, failure);
 });
