@@ -187,6 +187,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
         editor.execCommand(command, false, { type });
         Assertions.assertEq('TINY-6629: Assert table modified events length', 1, events.length);
         Assertions.assertEq('TINY-6629: Assert table modified event', 'tablemodified', events[0].type);
+        Assertions.assertEq('TINY-6643: Should have structure modified', true, events[0].structure);
+        Assertions.assertEq('TINY-6643: Should not have style modified', false, events[0].style);
         events = [];
       }),
       ApiChains.cAssertContent(expectedContent)

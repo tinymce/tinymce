@@ -28,6 +28,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.ApplyCellStyleCommandT
         Assertions.assertEq('Cell style commands do not modify table structure', event.structure, false);
         Assertions.assertEq('Cell style commands modify table style', event.style, true);
         Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
+        Assertions.assertEq('Should not have structure modified', false, events[0].structure);
+        Assertions.assertEq('Should have style modified', true, events[0].style);
       });
     }
     Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));

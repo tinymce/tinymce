@@ -27,15 +27,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
 
   const sClearEvents = Step.sync(() => events = []);
 
-  const defaultEvents = [ 'tablemodified' ];
-  const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
+  const defaultEvents = [{ type: 'tablemodified', structure: false, style: true }];
+  const sAssertEvents = (expectedEvents: {type: string; structure: boolean; style: boolean}[] = defaultEvents) => Step.sync(() => {
     if (events.length > 0) {
       Arr.each(events, (event) => {
         const tableElm = SugarElement.fromDom(event.table);
         Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
       });
     }
-    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));
+    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => ({
+      type: event.type,
+      structure: event.structure,
+      style: event.style,
+    })));
   });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
@@ -88,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table style="border: 1px solid black; border-collapse: collapse;" border="1"><thead><tr style="height: 10px; text-align: right;"><td scope="col">X</td></tr></thead></table>'),
-      sAssertEvents(),
+      sAssertEvents([{ type: 'tablemodified', structure: true, style: true }]),
       sClearEvents
     ]);
 
@@ -105,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
       }, false, generalSelectors),
       TableTestUtils.sClickDialogButton('clicking save', true),
       tinyApis.sAssertContent('<table><caption>CAPTION</caption><thead><tr><td scope="col">X</td></tr></thead><tbody><tr><td>Y</td></tr></tbody></table>'),
-      sAssertEvents(),
+      sAssertEvents([{ type: 'tablemodified', structure: true, style: false }]),
       sClearEvents
     ]);
 
@@ -180,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
           '</tbody>' +
           '</table>'
       ),
-      sAssertEvents(),
+      sAssertEvents([{ type: 'tablemodified', structure: true, style: true }]),
       sClearEvents
     ]);
 
@@ -274,7 +278,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableRowDialogTest', (success,
         }, true, generalSelectors),
         TableTestUtils.sClickDialogButton('clicking save', true),
         tinyApis.sAssertContent(expectedHtml),
-        sAssertEvents(),
+        sAssertEvents([{ type: 'tablemodified', structure: true, style: false }]),
         sClearEvents
       ]);
     };

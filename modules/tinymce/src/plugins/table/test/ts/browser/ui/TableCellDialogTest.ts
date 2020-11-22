@@ -29,15 +29,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
 
   const sClearEvents = Step.sync(() => events = []);
 
-  const defaultEvents = [ 'tablemodified' ];
-  const sAssertEvents = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
+  const defaultEvents = [{ type: 'tablemodified', structure: false, style: true }];
+  const sAssertEvents = (expectedEvents: {type: string; structure: boolean; style: boolean}[] = defaultEvents) => Step.sync(() => {
     if (events.length > 0) {
       Arr.each(events, (event) => {
         const tableElm = SugarElement.fromDom(event.table);
         Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
       });
     }
-    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));
+    Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => ({
+      type: event.type,
+      structure: event.structure,
+      style: event.style,
+    })));
   });
 
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
@@ -164,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         TableTestUtils.sSetDialogValues(advData, true, generalSelectors),
         TableTestUtils.sClickDialogButton('submit dialog', true),
         tinyApis.sAssertContent(advHtml),
-        sAssertEvents(),
+        sAssertEvents([{ type: 'tablemodified', structure: true, style: true }]),
         sClearEvents
       ]);
     };
@@ -323,7 +327,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sAssertContent(advHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
-        sAssertEvents(),
+        sAssertEvents([{ type: 'tablemodified', structure: true, style: true }]),
         sClearEvents
       ]);
     };
