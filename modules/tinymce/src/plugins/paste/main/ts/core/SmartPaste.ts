@@ -34,7 +34,7 @@ const isAbsoluteUrl = function (url: string) {
 };
 
 const isImageUrl = function (editor: Editor, url: string) {
-  return isAbsoluteUrl(url) && Arr.exists(Settings.allowedImageFileTypes(editor), (type) => Strings.endsWith(url, `.${type}`));
+  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url, `.${type}`));
 };
 
 const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {

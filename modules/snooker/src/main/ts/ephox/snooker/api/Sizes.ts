@@ -53,7 +53,7 @@ const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight
   optWidth.each((newWidth) => {
     const widthUnit = getUnit(newWidth);
     const totalWidth = Width.get(table);
-    const oldWidths = ColumnSizes.getRawWidths(warehouse, tableSize);
+    const oldWidths = ColumnSizes.getRawWidths(warehouse, table, tableSize);
     const nuWidths = Redistribution.redistribute(oldWidths, totalWidth, newWidth);
 
     if (Warehouse.hasColumns(warehouse)) {
@@ -68,7 +68,7 @@ const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight
   optHeight.each((newHeight) => {
     const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
-    const oldHeights = ColumnSizes.getRawHeights(warehouse, BarPositions.height);
+    const oldHeights = ColumnSizes.getRawHeights(warehouse, table, BarPositions.height);
     const nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
     redistributeToH(nuHeights, rows, cells, hUnit);
     Css.set(table, 'height', newHeight);

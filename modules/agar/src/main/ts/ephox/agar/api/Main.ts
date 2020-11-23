@@ -5,6 +5,7 @@ import * as Assertions from './Assertions';
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Cleaner } from './Cleaner';
+import * as Clipboard from './Clipboard';
 import * as Cursors from './Cursors';
 import * as DragnDrop from './DragnDrop';
 import * as FileInput from './FileInput';
@@ -41,6 +42,7 @@ export {
   Chain,
   ChainSequence,
   Cleaner,
+  Clipboard,
   Cursors,
   FocusTools,
   GeneralSteps,

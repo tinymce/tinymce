@@ -22,12 +22,15 @@ const noneSize = (table: SugarElement<HTMLTableElement>): TableSize => {
   const getWidth = () => Width.get(table);
   const zero = Fun.constant(0);
 
+  const getWidths = (warehouse: Warehouse, tableSize: TableSize) =>
+    ColumnSizes.getPixelWidths(warehouse, table, tableSize);
+
   // Note: The 3 delta functions below return 0 to signify a change shouldn't be made
   // however this is currently not used, so may need changing if ever used
   return {
     width: getWidth,
     pixelWidth: getWidth,
-    getWidths: ColumnSizes.getPixelWidths,
+    getWidths,
     getCellDelta: zero,
     singleColumnWidth: Fun.constant([ 0 ]),
     minCellWidth: zero,
@@ -46,6 +49,7 @@ const percentageSize = (initialWidth: string, table: SugarElement<HTMLTableEleme
   const singleColumnWidth = (w: number, _delta: number) => [ 100 - w ];
   // Get the width of a 10 pixel wide cell over the width of the table as a percentage
   const minCellWidth = () => CellUtils.minWidth() / pixelWidth.get() * 100;
+
   const adjustTableWidth = (delta: number) => {
     const currentWidth = floatWidth.get();
     const change = delta / 100 * currentWidth;
@@ -55,10 +59,13 @@ const percentageSize = (initialWidth: string, table: SugarElement<HTMLTableEleme
     pixelWidth.set(Width.get(table));
   };
 
+  const getWidths = (warehouse: Warehouse, tableSize: TableSize) =>
+    ColumnSizes.getPercentageWidths(warehouse, table, tableSize);
+
   return {
     width: floatWidth.get,
     pixelWidth: pixelWidth.get,
-    getWidths: ColumnSizes.getPercentageWidths,
+    getWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth,
@@ -73,20 +80,25 @@ const pixelSize = (initialWidth: number, table: SugarElement<HTMLTableElement>):
   const width = Cell(initialWidth);
   const getWidth = width.get;
   const getCellDelta = Fun.identity;
+
   const singleColumnWidth = (w: number, delta: number) => {
     const newNext = Math.max(CellUtils.minWidth(), w + delta);
     return [ newNext - w ];
   };
+
   const adjustTableWidth = (delta: number) => {
     const newWidth = getWidth() + delta;
     Sizes.setPixelWidth(table, newWidth);
     width.set(newWidth);
   };
 
+  const getWidths = (warehouse: Warehouse, tableSize: TableSize) =>
+    ColumnSizes.getPixelWidths(warehouse, table, tableSize);
+
   return {
     width: getWidth,
     pixelWidth: getWidth,
-    getWidths: ColumnSizes.getPixelWidths,
+    getWidths,
     getCellDelta,
     singleColumnWidth,
     minCellWidth: CellUtils.minWidth,

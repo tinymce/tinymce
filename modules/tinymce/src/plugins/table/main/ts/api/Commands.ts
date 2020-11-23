@@ -62,23 +62,28 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
           enforceNone(table);
         }
         Util.removeDataStyle(table);
+        Events.fireTableModified(editor, table.dom);
       });
     }
   });
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const actOnSelection = (execute: CombinedTargetsTableAction): void => getSelectionStartCell(editor).each((cell) => {
-    getTableFromCell(cell).each((table) => {
-      const targets = TableTargets.forMenu(selections, table, cell);
-      execute(table, targets).each((rng) => {
-        editor.selection.setRng(rng);
-        editor.focus();
-        cellSelection.clear(table);
-        Util.removeDataStyle(table);
+  const postExecute = (table: SugarElement<HTMLTableElement>) => (rng: Range): void => {
+    editor.selection.setRng(rng);
+    editor.focus();
+    cellSelection.clear(table);
+    Util.removeDataStyle(table);
+    Events.fireTableModified(editor, table.dom);
+  };
+
+  const actOnSelection = (execute: CombinedTargetsTableAction): void =>
+    getSelectionStartCell(editor).each((cell) => {
+      getTableFromCell(cell).each((table) => {
+        const targets = TableTargets.forMenu(selections, table, cell);
+        execute(table, targets).each(postExecute(table));
       });
     });
-  });
 
   const copyRowSelection = () => getSelectionStartCell(editor).map((cell) =>
     getTableFromCell(cell).bind((table) => {
@@ -101,11 +106,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         getTableFromCell(cell).each((table) => {
           const generators = TableFill.paste(SugarElement.fromDom(editor.getDoc()));
           const targets = TableTargets.pasteRows(selections, cell, clonedRows, generators);
-          execute(table, targets).each((rng) => {
-            editor.selection.setRng(rng);
-            editor.focus();
-            cellSelection.clear(table);
-          });
+          execute(table, targets).each(postExecute(table));
         })
       );
     });
@@ -138,14 +139,30 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
+  // Due to a bug, we need to pass through a reference to the table obtained before the modification
+  const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
+    // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
+    tableOpt.each((table) => {
+      Events.fireTableModified(editor, table.dom);
+    });
+  };
+
   Obj.each({
-    mceTableCellType: (_ui, args) => actions.setTableCellType(editor, args),
-    mceTableRowType: (_ui, args) => actions.setTableRowType(editor, args)
+    mceTableCellType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
+      actions.setTableCellType(editor, args);
+      fireTableModifiedForSelection(editor, tableOpt);
+    },
+    mceTableRowType: (_ui, args) => {
+      const tableOpt = TableLookup.table(Util.getSelectionStart(editor), isRoot);
+      actions.setTableRowType(editor, args);
+      fireTableModifiedForSelection(editor, tableOpt);
+    },
   }, (func, name) => editor.addCommand(name, func));
 
   editor.addCommand('mceTableColType', (_ui, args) =>
     Obj.get(args, 'type').each((type) =>
-      actOnSelection(type === 'th' ? actions.makeColumnHeader : actions.unmakeColumnHeader)
+      actOnSelection(type === 'th' ? actions.makeColumnsHeader : actions.unmakeColumnsHeader)
     ));
 
   // Register dialog commands

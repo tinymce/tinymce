@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 
 UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
-  const uriToBlob = function (base64, type) {
+  const uriToBlob = function (base64: string, type: string) {
     let i;
     const str = atob(base64);
     const arr = new Uint8Array(str.length);
@@ -20,26 +20,26 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
   const blob = uriToBlob(base64, type);
   const name = 'blank';
   const filename = 'blank.png';
+  const specifiedFilename = 'blank.jfif';
   const uri = 'http://localhost/blank.png';
 
-  let blobInfo;
   const blobCache = BlobCache();
 
-  blobInfo = blobCache.create(id, blob, base64, name);
+  const blobInfo1 = blobCache.create(id, blob, base64, name);
   Assertions.assertEq('Testing original version of create() method',
     [ id, base64, filename ],
-    [ blobInfo.id(), blobInfo.base64(), blobInfo.filename() ]
+    [ blobInfo1.id(), blobInfo1.base64(), blobInfo1.filename() ]
   );
 
-  blobCache.add(blobInfo);
+  blobCache.add(blobInfo1);
 
-  Assertions.assertEq('Testing get()', blobInfo, blobCache.get(id));
-  Assertions.assertEq('BlobInfo instance has blobUri() accessor', true, blobInfo.blobUri().indexOf('blob:') === 0);
-  Assertions.assertEq('Testing getByUri(), findFirst()', blobInfo, blobCache.getByUri(blobInfo.blobUri()));
-  Assertions.assertEq('Testing getByData()', blobInfo, blobCache.getByData(base64, type));
+  Assertions.assertEq('Testing get()', blobInfo1, blobCache.get(id));
+  Assertions.assertEq('BlobInfo instance has blobUri() accessor', true, blobInfo1.blobUri().indexOf('blob:') === 0);
+  Assertions.assertEq('Testing getByUri(), findFirst()', blobInfo1, blobCache.getByUri(blobInfo1.blobUri()));
+  Assertions.assertEq('Testing getByData()', blobInfo1, blobCache.getByData(base64, type));
 
-  blobCache.removeByUri(blobInfo.blobUri());
-  Assertions.assertEq('Testing removeByUri()', undefined, blobCache.getByUri(blobInfo.blobUri()));
+  blobCache.removeByUri(blobInfo1.blobUri());
+  Assertions.assertEq('Testing removeByUri()', undefined, blobCache.getByUri(blobInfo1.blobUri()));
 
   try {
     blobCache.create({ blob } as BlobInfoData);
@@ -48,7 +48,7 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
     Assertions.assertEq('Exception should be thrown if BlobInfo is created without blob or base64 entries', true, true);
   }
 
-  blobInfo = blobCache.create({
+  const blobInfo2 = blobCache.create({
     id,
     blob,
     base64,
@@ -58,6 +58,27 @@ UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
 
   Assertions.assertEq('Testing if create() method accepts object',
     [ id, base64, filename, uri ],
-    [ blobInfo.id(), blobInfo.base64(), blobInfo.filename(), blobInfo.uri() ]
+    [ blobInfo2.id(), blobInfo2.base64(), blobInfo2.filename(), blobInfo2.uri() ]
+  );
+
+  const blobInfo3 = blobCache.create(id, blob, base64, name, specifiedFilename);
+
+  Assertions.assertEq('Testing original version of create() method with specified filename',
+    [ id, base64, name, specifiedFilename ],
+    [ blobInfo3.id(), blobInfo3.base64(), blobInfo3.name(), blobInfo3.filename() ]
+  );
+
+  const blobInfo4 = blobCache.create({
+    id,
+    blob,
+    base64,
+    name,
+    uri,
+    filename: specifiedFilename
+  });
+
+  Assertions.assertEq('Testing if create() method with specified filename',
+    [ id, base64, specifiedFilename, uri ],
+    [ blobInfo4.id(), blobInfo4.base64(), blobInfo4.filename(), blobInfo4.uri() ]
   );
 });
