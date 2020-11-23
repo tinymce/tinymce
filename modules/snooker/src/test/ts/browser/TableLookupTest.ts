@@ -194,6 +194,14 @@ UnitTest.test('TableLookupTest - columns', () => {
     });
   };
 
+  const testDetachedColumn = (label: string, triggerSelector: string, expectedCount: number) => {
+    testWithSelector(html, triggerSelector, (triggerElement) => {
+      Remove.remove(triggerElement);
+      const columns = TableLookup.columns(triggerElement);
+      Assert.eq(label, expectedCount, columns.length);
+    });
+  };
+
   testColumnGroup('Column group from table', 'body > table', 1);
   testColumnGroup('Column group from table cell', 'body > table > tbody > tr > td', 1);
   testColumnGroup('Column group from nested table', 'body > table > tbody > tr > td:nth-child(1) > table', 2);
@@ -205,4 +213,6 @@ UnitTest.test('TableLookupTest - columns', () => {
   testColumn('Column from nested table', 'body > table > tbody > tr > td:nth-child(1) > table', 1);
   testColumn('Column from nested table colgroup', 'body > table > tbody > tr > td:nth-child(1) > table > colgroup', 1);
   testColumn('Column from nested table cell ', 'body > table > tbody > tr > td:nth-child(1) > table > tbody > tr > td', 1);
+
+  testDetachedColumn('Column from detached table colgroup', 'body > table > colgroup', 2);
 });

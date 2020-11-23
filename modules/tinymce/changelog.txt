@@ -1,5 +1,6 @@
 Version 5.6.1 (TBD)
     Fixed the HTML5 `s` element not recognized when editing or clearing text formatting #TINY-6681
+    Fixed an issue where copying and pasting table columns resulted in invalid HTML when using colgroups #TINY-6684
 Version 5.6.0 (2020-11-18)
     Added new `BeforeOpenNotification` and `OpenNotification` events which allow internal notifications to be captured and modified before display #TINY-6528
     Added support for `block` and `unblock` methods on inline dialogs #TINY-6487
