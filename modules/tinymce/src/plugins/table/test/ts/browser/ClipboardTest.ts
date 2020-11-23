@@ -550,9 +550,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '</table>'
     );
 
-    selectOne(editor, 'tr td:nth-child(1)');
-    editor.execCommand('mceTableCopyCol');
     selectOne(editor, 'tr td:nth-child(2)');
+    editor.execCommand('mceTableCopyCol');
+    selectOne(editor, 'tr td:nth-child(1)');
     editor.execCommand('mceTablePasteColBefore');
 
     LegacyUnit.equal(
@@ -561,14 +561,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table>' +
       '<colgroup><col /><col /><col /></colgroup>' +
       '<tbody>' +
-      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>1</td><td>2</td></tr>' +
+      '<tr><td>3</td><td>2</td><td>3</td></tr>' +
       '</tbody>' +
       '</table>'
     );
   });
 
-  suite.test('TestCase-TINY-6684: Table: mceTablePasteColBefore command with colgroups', (editor) => {
+  suite.test('TestCase-TINY-6684: Table: mceTablePasteColAfter command with colgroups', (editor) => {
     editor.setContent(
       '<table>' +
       '<colgroup><col><col></colgroup>' +
@@ -582,7 +582,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     selectOne(editor, 'tr td:nth-child(1)');
     editor.execCommand('mceTableCopyCol');
     selectOne(editor, 'tr td:nth-child(1)');
-    editor.execCommand('mceTablePasteColBefore');
+    editor.execCommand('mceTablePasteColAfter');
 
     LegacyUnit.equal(
       cleanTableHtml(editor.getContent()),
