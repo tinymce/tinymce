@@ -61,7 +61,11 @@ const generateTable = (mode: SizingMode, width: number, rows: number, cols: numb
 type TableModifiedEvent = { type: string; structure: boolean; style: boolean };
 const sTableSizingModeScenarioTest = (editor, tinyApis: TinyApis, title: string, description: string, withColGroups: boolean, scenario: Scenario, expectedEvents: TableModifiedEvent[] = [{ type: 'tablemodified', structure: true, style: false }]) => {
   let events = [];
-  editor.on('TableModified', (e: EditorEvent<{}>) => events.push(e));
+  editor.on('TableModified', (event: EditorEvent<{ structure: boolean; style: boolean }>) => events.push({
+    type: event.type,
+    structure: event.structure,
+    style: event.style,
+  }));
   const clearEvents = Step.sync(() => events = []);
 
   return Log.stepsAsStep(title, description, [
@@ -70,11 +74,7 @@ const sTableSizingModeScenarioTest = (editor, tinyApis: TinyApis, title: string,
     tinyApis.sSetSelection([ 0, withColGroups ? 1 : 0, 0, 0 ], 0, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0),
     tinyApis.sExecCommand('mceTableSizingMode', scenario.newMode),
     sAssertTableStructureWithSizes(editor, scenario.cols, scenario.rows, getUnit(scenario.newMode), scenario.expectedTableWidth, scenario.expectedWidths, withColGroups),
-    Step.sync(() => Assertions.assertEq('Expected events fired', expectedEvents, Arr.map(events, (event) => ({
-      type: event.type,
-      structure: event.structure,
-      style: event.style,
-    })))),
+    Step.sync(() => Assertions.assertEq('Expected events fired', expectedEvents, events)),
     clearEvents,
   ]);
 };
