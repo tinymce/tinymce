@@ -70,12 +70,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table>' +
       '<tr><td>1</td><td>2</td></tr>' +
       '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>3</td><td>4</td></tr>' +
       '</table>'
     );
 
     selectOne(editor, 'tr:nth-child(1) td');
     editor.execCommand('mceTableCopyRow');
-    selectOne(editor, 'tr:nth-child(2) td');
+    selectOne(editor, 'tr:nth-child(3) td');
     editor.execCommand('mceTablePasteRowBefore');
 
     LegacyUnit.equal(
@@ -84,13 +85,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>1</td><td>2</td></tr>' +
       '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td></tr>' +
+      '<tr><td>3</td><td>4</td></tr>' +
       '</tbody>' +
       '</table>'
     );
 
-    selectOne(editor, 'tr:nth-child(2) td');
+    selectOne(editor, 'tr:nth-child(3) td');
     editor.execCommand('mceTablePasteRowBefore');
 
     LegacyUnit.equal(
@@ -99,9 +101,10 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table>' +
       '<tbody>' +
       '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>1</td><td>2</td></tr>' +
       '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td></tr>' +
+      '<tr><td>1</td><td>2</td></tr>' +
+      '<tr><td>3</td><td>4</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -424,14 +427,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   suite.test('TestCase-TINY-6006: Table: mceTablePasteColBefore command', (editor) => {
     editor.setContent(
       '<table>' +
-      '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>4</td></tr>' +
       '</table>'
     );
 
     selectOne(editor, 'tr td:nth-child(1)');
     editor.execCommand('mceTableCopyCol');
-    selectOne(editor, 'tr td:nth-child(2)');
+    selectOne(editor, 'tr td:nth-child(3)');
     editor.execCommand('mceTablePasteColBefore');
 
     LegacyUnit.equal(
@@ -439,8 +442,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
 
       '<table>' +
       '<tbody>' +
-      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>1</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>2</td><td>4</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -449,14 +452,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   suite.test('TestCase-TINY-6006: Table: mceTablePasteColAfter command', (editor) => {
     editor.setContent(
       '<table>' +
-      '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>4</td></tr>' +
       '</table>'
     );
 
     selectOne(editor, 'tr td:nth-child(2)');
     editor.execCommand('mceTableCopyCol');
-    selectOne(editor, 'tr td:nth-child(2)');
+    selectOne(editor, 'tr td:nth-child(3)');
     editor.execCommand('mceTablePasteColAfter');
 
     LegacyUnit.equal(
@@ -464,8 +467,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
 
       '<table>' +
       '<tbody>' +
-      '<tr><td>1</td><td>2</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>3</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>3</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>4</td><td>3</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -571,27 +574,27 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
   suite.test('TestCase-TINY-6684: Table: mceTablePasteColAfter command with colgroups', (editor) => {
     editor.setContent(
       '<table>' +
-      '<colgroup><col><col></colgroup>' +
+      '<colgroup><col><col><col></colgroup>' +
       '<tbody>' +
-      '<tr><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>4</td></tr>' +
       '</tbody>' +
       '</table>'
     );
 
     selectOne(editor, 'tr td:nth-child(1)');
     editor.execCommand('mceTableCopyCol');
-    selectOne(editor, 'tr td:nth-child(1)');
+    selectOne(editor, 'tr td:nth-child(2)');
     editor.execCommand('mceTablePasteColAfter');
 
     LegacyUnit.equal(
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
-      '<colgroup><col /><col /><col /></colgroup>' +
+      '<colgroup><col /><col /><col /><col /></colgroup>' +
       '<tbody>' +
-      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>1</td><td>3</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>2</td><td>4</td></tr>' +
       '</tbody>' +
       '</table>'
     );
