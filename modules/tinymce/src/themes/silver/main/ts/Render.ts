@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, SugarNode, SugarShadowDom } from '@ephox/sugar';
+import { Compare, Css, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
@@ -90,9 +90,7 @@ const setup = (editor: Editor): RenderInfo => {
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
   const isToolbarBottom = Settings.isToolbarLocationBottom(editor);
-  const container = Settings.getUiContainer(editor);
-
-  const toolbarIsInRoot = SugarNode.isTag('body')(container) || SugarShadowDom.isShadowRoot(container);
+  const isUiContainerInBody = Compare.eq(SugarBody.body(), Settings.getUiContainer(editor));
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -139,7 +137,7 @@ const setup = (editor: Editor): RenderInfo => {
       ])
     };
 
-    return Merger.deepMerge(sinkSpec, toolbarIsInRoot ? reactiveWidthSpec : {});
+    return Merger.deepMerge(sinkSpec, isUiContainerInBody ? reactiveWidthSpec : {});
   };
 
   const sink = GuiFactory.build(makeSinkDefinition());
