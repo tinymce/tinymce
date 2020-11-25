@@ -1,4 +1,4 @@
-Version 5.6.1 (TBD)
+Version 5.6.1 (2020-11-25)
     Fixed the `mceTableRowType` and `mceTableCellType` commands were not firing the `newCell` event #TINY-6692
     Fixed the HTML5 `s` element was not recognized when editing or clearing text formatting #TINY-6681
     Fixed an issue where copying and pasting table columns resulted in invalid HTML when using colgroups #TINY-6684

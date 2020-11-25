@@ -567,7 +567,7 @@ module.exports = function (grunt) {
                 'url': 'https://github.com/tinymce/tinymce-dist.git'
               },
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'author': 'Ephox Corporation',
+              'author': 'Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
               'license': 'LGPL-2.1',
@@ -656,15 +656,15 @@ module.exports = function (grunt) {
         options: {
           id: 'TinyMCE',
           version: packageData.version,
-          authors: 'Ephox Corp',
-          owners: 'Ephox Corp',
+          authors: 'Tiny Technologies, Inc',
+          owners: 'Tiny Technologies, Inc',
           description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Ephox Corp. TinyMCE has the ability to convert HTML ' +
+          'control released as Open Source under LGPL by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
           'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
           'into other Content Management Systems.',
           releaseNotes: 'Release notes for my package.',
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under LGPL by Ephox Corp.',
+          'control released as Open Source under LGPL by Tiny Technologies, Inc.',
           projectUrl: 'http://www.tinymce.com/',
           iconUrl: 'http://www.tinymce.com/favicon.ico',
           licenseUrl: 'http://www.tinymce.com/license',
@@ -704,8 +704,8 @@ module.exports = function (grunt) {
           id: 'TinyMCE.jQuery',
           title: 'TinyMCE.jQuery [Deprecated]',
           version: packageData.version,
-          authors: 'Ephox Corp',
-          owners: 'Ephox Corp',
+          authors: 'Tiny Technologies, Inc',
+          owners: 'Tiny Technologies, Inc',
           description: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
           releaseNotes: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
           summary: 'This package has been deprecated use https://www.nuget.org/packages/TinyMCE/',
