@@ -1,5 +1,6 @@
 Version 5.7.0 (TBD)
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
+    Fixed the plugin documentation links in the help plugin #DOC-703
 Version 5.6.1 (2020-11-25)
     Fixed the `mceTableRowType` and `mceTableCellType` commands were not firing the `newCell` event #TINY-6692
     Fixed the HTML5 `s` element was not recognized when editing or clearing text formatting #TINY-6681
