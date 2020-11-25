@@ -10,18 +10,20 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
-  type MergeCellTest = {
-    message: string;
-    before: string;
-    after: string;
-    expectedEvents: {}[];
-  };
+  type TableModifiedEvent = EditorEvent<{ type: string; structure: boolean; style: boolean }>;
+
+  interface MergeCellTest {
+    readonly message: string;
+    readonly before: string;
+    readonly after: string;
+    readonly expectedEvents: TableModifiedEvent[];
+  }
 
   Plugin();
   SilverTheme();
 
   let modifiedEvents = [];
-  const logModifiedEvent = (event: EditorEvent<{ structure: boolean; style: boolean }>) => {
+  const logModifiedEvent = (event: TableModifiedEvent) => {
     modifiedEvents.push({
       type: event.type,
       structure: event.structure,
@@ -30,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
   };
 
   const clearEvents = () => modifiedEvents = [];
-  const defaultEvent = { type: 'tablemodified', structure: true, style: false };
+  const defaultEvent = { type: 'tablemodified', structure: true, style: false } as TableModifiedEvent;
 
   const testCommand = function (editor: Editor, command: string, tests: MergeCellTest[]) {
     Tools.each(tests, (test) => {

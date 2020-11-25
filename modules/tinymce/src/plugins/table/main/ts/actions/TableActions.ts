@@ -19,7 +19,8 @@ import * as TableSize from '../queries/TableSize';
 import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
-type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<{rng: Range; effect: TableEventData}>;
+type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<TableActionResult>;
+export type TableActionResult = { rng: Range; effect: TableEventData };
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
@@ -62,7 +63,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   const cloneFormats = getCloneElements(editor);
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire, effect: TableEventData) =>
-    (table: SugarElement<HTMLTableElement>, target: T): Optional<{rng: Range; effect: TableEventData}> => {
+    (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
       const doc = SugarElement.fromDom(editor.getDoc());
@@ -85,7 +86,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
             effect
           };
         });
-      }) : Optional.none<{rng: Range; effect: TableEventData}>();
+      }) : Optional.none<TableActionResult>();
     };
 
   const deleteRow = execute(TableOperations.eraseRows, lastRowGuard, Fun.noop, lazyWire, Events.structureModified);

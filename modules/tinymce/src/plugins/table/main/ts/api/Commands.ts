@@ -12,7 +12,7 @@ import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableEventData, TableActions } from '../actions/TableActions';
+import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
@@ -69,7 +69,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const postExecute = (table: SugarElement<HTMLTableElement>) => (data: {rng: Range; effect: TableEventData}): void => {
+  const postExecute = (table: SugarElement<HTMLTableElement>) => (data: TableActionResult): void => {
     editor.selection.setRng(data.rng);
     editor.focus();
     cellSelection.clear(table);
