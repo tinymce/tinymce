@@ -13,7 +13,7 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 import { getCloneElements } from '../api/Settings';
-import { getRowType, switchCellType, switchSectionType } from '../core/TableSections';
+import { getRowType, switchCellsType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
 import { ephemera } from '../selection/Ephemera';
@@ -120,7 +120,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   const setTableCellType = (editor: Editor, args: Record<string, any>) =>
     extractType(args, [ 'td', 'th' ]).each((type) => {
       const cells = Arr.map(getCellsFromSelection(Util.getSelectionStart(editor), selections), (c) => c.dom);
-      switchCellType(editor.dom, cells, type, null);
+      switchCellsType(editor, cells, type, null);
     });
 
   const setTableRowType = (editor: Editor, args: Record<string, any>) =>

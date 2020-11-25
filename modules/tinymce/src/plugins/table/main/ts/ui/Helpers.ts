@@ -277,7 +277,7 @@ export type CellData = {
   width: string;
   height: string;
   scope: string;
-  celltype: string;
+  celltype: 'td' | 'th';
   class: string;
   halign: string;
   valign: string;
@@ -287,7 +287,7 @@ export type CellData = {
   backgroundcolor?: string;
 };
 
-const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellElement, hasAdvancedCellTab: boolean, column: Optional<HTMLTableColElement>): CellData => {
+const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, hasAdvancedCellTab: boolean, column: Optional<HTMLTableColElement>): CellData => {
   const dom = editor.dom;
   const colElm = column.getOr(cell);
 
@@ -297,7 +297,7 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableDataCellEleme
     width: getStyle(colElm, 'width'),
     height: getStyle(cell, 'height'),
     scope: dom.getAttrib(cell, 'scope'),
-    celltype: Util.getNodeName(cell),
+    celltype: Util.getNodeName(cell) as 'td' | 'th',
     class: dom.getAttrib(cell, 'class', ''),
     halign: getHAlignment(editor, cell),
     valign: getVAlignment(editor, cell),

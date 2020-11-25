@@ -28,9 +28,15 @@ const cell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => l
 
 const cells = (ancestor: SugarElement): SugarElement<HTMLTableCellElement>[] => LayerSelector.firstLayer(ancestor, 'th,td');
 
-const columns = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => Arr.bind(columnGroups(ancestor), (columnGroup) =>
-  SelectorFilter.children<HTMLTableColElement>(columnGroup, 'col')
-);
+const columns = (ancestor: SugarElement): SugarElement<HTMLTableColElement>[] => {
+  if (Selectors.is(ancestor, 'colgroup')) {
+    return SelectorFilter.children<HTMLTableColElement>(ancestor, 'col');
+  } else {
+    return Arr.bind(columnGroups(ancestor), (columnGroup) =>
+      SelectorFilter.children<HTMLTableColElement>(columnGroup, 'col')
+    );
+  }
+};
 
 const notCell = (element: SugarElement, isRoot?: (e: SugarElement) => boolean) => lookup<Element>([ 'caption', 'tr', 'tbody', 'tfoot', 'thead' ], element, isRoot);
 
