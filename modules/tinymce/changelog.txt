@@ -1,6 +1,11 @@
 Version 5.7.0 (TBD)
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
+Version 5.6.1 (2020-11-25)
+    Fixed the `mceTableRowType` and `mceTableCellType` commands were not firing the `newCell` event #TINY-6692
+    Fixed the HTML5 `s` element was not recognized when editing or clearing text formatting #TINY-6681
+    Fixed an issue where copying and pasting table columns resulted in invalid HTML when using colgroups #TINY-6684
+    Fixed an issue where the toolbar would render with the wrong width for inline editors in some situations #TINY-6683
 Version 5.6.0 (2020-11-18)
     Added new `BeforeOpenNotification` and `OpenNotification` events which allow internal notifications to be captured and modified before display #TINY-6528
     Added support for `block` and `unblock` methods on inline dialogs #TINY-6487
