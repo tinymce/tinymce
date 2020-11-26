@@ -118,6 +118,12 @@ const getContentCss = (editor: Editor): string[] => {
   }
 };
 
+const getFontCss = (editor: Editor): string[] => {
+  const fontCss = editor.getParam('fonts_css', []);
+
+  return Type.isArray(fontCss) ? fontCss : Arr.map(fontCss.split(','), Strings.trim);
+};
+
 const getDirectionality = (editor: Editor): string | undefined => editor.getParam('directionality', I18n.isRtl() ? 'rtl' : undefined);
 
 const getInlineBoundarySelector = (editor: Editor): string => editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
@@ -263,5 +269,6 @@ export {
   shouldBlockUnsupportedDrop,
   isVisualAidsEnabled,
   getVisualAidsTableClass,
+  getFontCss,
   getVisualAidsAnchorClass
 };

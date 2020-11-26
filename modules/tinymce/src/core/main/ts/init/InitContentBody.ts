@@ -273,12 +273,16 @@ const loadContentCss = (editor: Editor, css: string[]) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
 
   const loaded = () => {
-    editor.on('remove', () => styleSheetLoader.unloadAll(css));
+    editor.on('remove', () => {
+      styleSheetLoader.unloadAll(css);
+      styleSheetLoader.removeCustomFontsFromTheGreatContainerOfOurBelovedTinyMce(Settings.getFontCss(editor));
+    });
     initEditor(editor);
   };
 
   // Load all stylesheets
   styleSheetLoader.loadAll(css, loaded, loaded);
+  styleSheetLoader.appendFontsToTheGreatContainerOfOurBelovedTinyMce(Settings.getFontCss(editor));
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
