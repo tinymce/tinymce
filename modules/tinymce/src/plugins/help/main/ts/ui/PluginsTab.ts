@@ -47,18 +47,16 @@ const tab = (editor: Editor): Dialog.TabSpec => {
       '</div>';
   };
 
-  const makeLink = (p: {name: string; url: string}): string =>
+  const makeLink = (p: { name: string; url: string }): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
-  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, function (x: PluginUrls.PluginUrlType) {
+  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, (x) => {
     return x.key === key;
-  }).fold(function () {
+  }).fold(() => {
     const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
-  }, function (x) {
-    const urlSlug = x.slug || x.key;
-    const type = x.type || 'opensource';
-    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + type + '/' + urlSlug });
+  }, (x) => {
+    return makeLink({ name: x.name, url: `https://www.tiny.cloud/docs/plugins/${x.type}/${x.slug}` });
   });
 
   const getPluginKeys = (editor: Editor) => {
