@@ -33,6 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function (success, failu
     LegacyUnit.equal(new URI('http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
     ok(new URI('http://a2bc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI() !== 'http://abc:123@www.site.com:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
     LegacyUnit.equal(new URI('chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash').getURI(), 'chrome-extension://abcdefghijklmnopqrstuvwzyz1234567890:8080/path/dir/file.ext?key1=val1&key2=val2#hash');
+    LegacyUnit.equal(new URI('http://admin:supersecret@[3c62:5655:8695:0f39:b065:1654:2d23:9f34]:9999/bar/index.html#foo').getURI(), 'http://admin:supersecret@[3c62:5655:8695:0f39:b065:1654:2d23:9f34]:9999/bar/index.html#foo');
   });
 
   suite.test('parseRelativeURLs', function () {
