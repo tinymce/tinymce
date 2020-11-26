@@ -6,10 +6,10 @@
  */
 
 export interface PluginUrlType {
-  key: string;
-  name: string;
-  type?: 'opensource' | 'premium';
-  slug?: string;
+  readonly key: string;
+  readonly name: string;
+  readonly type?: 'opensource' | 'premium';
+  readonly slug?: string;
 }
 
 const urls: PluginUrlType[] = [
