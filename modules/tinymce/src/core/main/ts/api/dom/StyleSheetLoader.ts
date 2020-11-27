@@ -69,7 +69,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     }));
 
   /**
-   * Loads the specified CSS files and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   * Loads the specified CSS file and calls the `success` callback if successfully loaded, otherwise calls `failure`.
    *
    * @method load
    * @param {String} url Url to be loaded.
