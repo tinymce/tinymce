@@ -37,7 +37,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
     tableModifiedEvents = [];
   });
 
-
   const defaultEvents = [ 'tablemodified' ];
   const sAssertEventsOrder = (expectedEvents: string[] = defaultEvents) => Step.sync(() => {
     Assertions.assertEq('Expected events should have been fired in order', expectedEvents, events);
