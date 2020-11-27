@@ -45,7 +45,6 @@ const noneTable =
   '</tbody>' +
   '</table>';
 
-
 UnitTest.test('TableConversions.convertToPixelSize', () => {
   const container = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 500px; position: relative;"></div>');
   Insert.append(SugarBody.body(), container);

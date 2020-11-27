@@ -63,7 +63,6 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
   ];
 };
 
-
 const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => renderToolbar({
   type: toolbarType,
   uid: Id.generate('context-toolbar'),

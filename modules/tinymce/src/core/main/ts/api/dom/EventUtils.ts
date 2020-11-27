@@ -84,7 +84,6 @@ const removeEvent = function (target, name, callback, capture?) {
   }
 };
 
-
 const isMouseEvent = (event: any): event is MouseEvent => mouseEventRe.test(event.type);
 
 /**

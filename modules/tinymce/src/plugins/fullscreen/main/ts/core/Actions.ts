@@ -145,7 +145,6 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
       }
     });
 
-
     const newFullScreenInfo = {
       scrollPos: getScrollPos(),
       containerWidth: editorContainerStyle.width,

@@ -15,7 +15,6 @@ type Carets = Carets.Carets;
 
 const MAX_RETRIES = 20;
 
-
 const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection) {
   return bridge.getSelection().bind(function (sel) {
     return BrTags.tryBr(isRoot, sel.finish, sel.foffset, direction).fold(function () {

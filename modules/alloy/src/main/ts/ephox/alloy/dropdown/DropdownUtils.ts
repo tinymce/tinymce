@@ -46,7 +46,6 @@ const getAnchor = (
   );
 };
 
-
 const fetch = (
   detail: CommonDropdownDetail<TieredData>,
   mapFetch: MapFetch,

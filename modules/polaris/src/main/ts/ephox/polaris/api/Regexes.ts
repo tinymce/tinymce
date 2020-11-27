@@ -55,7 +55,6 @@ const link = (): RegExp =>
   // eslint-disable-next-line max-len
   /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~=%.()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
 
-
 const autolink = (): RegExp => {
   /*
    * Takes the link regex, and makes two additions:
@@ -80,7 +79,6 @@ const tokens = (value: string, parameters: string[]): string =>
     }
     return parameters[index];
   });
-
 
 export {
   tokens,

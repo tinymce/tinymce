@@ -30,7 +30,6 @@ const hasUploadUrl = (editor: Editor) => Type.isNonNullable(editor.getParam('ima
 
 const hasUploadHandler = (editor: Editor) => Type.isNonNullable(editor.getParam('images_upload_handler'));
 
-
 const showAccessibilityOptions = (editor: Editor) => editor.getParam('a11y_advanced_options', false, 'boolean');
 
 const isAutomaticUploadsEnabled = (editor: Editor): boolean => editor.getParam('automatic_uploads', true, 'boolean');

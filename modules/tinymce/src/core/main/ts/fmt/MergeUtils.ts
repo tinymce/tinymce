@@ -67,7 +67,6 @@ const mergeSiblingsNodes = (dom: DOMUtils, prev: Node, next: Node) => {
   return next;
 };
 
-
 const mergeSiblings = (dom: DOMUtils, format, vars: FormatVars, node: Node) => {
   // Merge next and previous siblings if they are similar <b>text</b><b>text</b> becomes <b>texttext</b>
   if (node && format.merge_siblings !== false) {

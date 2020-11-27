@@ -69,7 +69,6 @@ const normalizePosition = (forward: boolean, pos: CaretPosition): CaretPosition 
   }
 };
 
-
 const normalizeForwards = Fun.curry(normalizePosition, true);
 const normalizeBackwards = Fun.curry(normalizePosition, false);
 

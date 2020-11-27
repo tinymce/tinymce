@@ -7,7 +7,6 @@ import { Replacing } from '../../api/behaviour/Replacing';
 import * as GuiFactory from '../../api/component/GuiFactory';
 import { BlockFn, UnblockFn } from './BlockingTypes';
 
-
 // Mark this component as busy, or blocked.
 export const block: BlockFn = (
   component,

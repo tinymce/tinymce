@@ -135,7 +135,6 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement, oldData: 
     editor.focus();
     editor.addVisual();
 
-
     if (Obj.size(modifiedData) > 0) {
       const captionModified = Obj.has(modifiedData, 'caption');
       // style modified if there's at least one other change apart from 'caption'

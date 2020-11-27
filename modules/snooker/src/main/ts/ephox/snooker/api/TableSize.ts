@@ -131,7 +131,6 @@ const getTableSize = (table: SugarElement<HTMLTableElement>) => {
   );
 };
 
-
 export const TableSize = {
   getTableSize,
   pixelSize,
