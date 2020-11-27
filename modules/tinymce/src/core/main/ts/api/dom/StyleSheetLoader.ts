@@ -51,21 +51,12 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     settings.referrerPolicy = referrerPolicy;
   };
 
-  /**
-   * Add the provided style element to the dom.
-   * @param element The element to add to the dom.
-   */
   const addStyle = (element: SugarElement<HTMLStyleElement>) => {
     Insert.append(SugarShadowDom.getStyleContainer(edos), element);
   };
 
-  /**
-   * Remove the provided style element from the dom.
-   * @param id The id of the element we want to remove from the dom.
-   */
   const removeStyle = (id: string) => {
     const styleContainer = SugarShadowDom.getStyleContainer(edos);
-
     SelectorFind.descendant(styleContainer, '#' + id).each(Remove.remove);
   };
 
@@ -78,10 +69,12 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     }));
 
   /**
-   * Load the provided URL and add it to the editor
-   * @param url URL of the css to add.
-   * @param success Called if URL is successfully added
-   * @param failure Called if the URL fails to be added as intended
+   * Loads the specified CSS files and calls the `success` callback if successfully loaded, otherwise calls `failure`.
+   *
+   * @method load
+   * @param {String} url Url to be loaded.
+   * @param {Function} success Callback to be executed when loaded.
+   * @param {Function} failure Callback to be executed when failed loading.
    */
   const load = (url: string, success: () => void, failure?: () => void) => {
     let link: HTMLLinkElement;

@@ -286,20 +286,21 @@ const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFont
 
 const loadContentCss = (editor: Editor, css: string[]) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
+  const fontCss = Settings.getFontCss(editor);
 
   const loaded = () => {
     editor.on('remove', () => {
       styleSheetLoader.unloadAll(css);
 
       if (!editor.inline) {
-        editor.ui.styleSheetLoader.unloadAll(Settings.getFontCss(editor));
+        editor.ui.styleSheetLoader.unloadAll(fontCss);
       }
     });
     initEditor(editor);
   };
 
   // Load all stylesheets
-  Promise.all(makeStylesheetLoadingPromises(editor, css, Settings.getFontCss(editor))).then(loaded).catch(loaded);
+  Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {
