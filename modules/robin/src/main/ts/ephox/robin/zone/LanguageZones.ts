@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Maybe, Maybes, Optional } from '@ephox/katamari';
 import { WordDecisionItem } from '../words/WordDecision';
 
 export interface ZoneDetails<E> {
@@ -8,12 +8,12 @@ export interface ZoneDetails<E> {
 }
 
 export interface LanguageZones<E> {
-  openInline: (optLang: Optional<string>, elem: E) => void;
-  closeInline: (optLang: Optional<string>, elem: E) => void;
+  openInline: (optLang: Maybe<string>, elem: E) => void;
+  closeInline: (optLang: Maybe<string>, elem: E) => void;
   addDetail: (detail: WordDecisionItem<E>) => void;
   addEmpty: (empty: E) => void;
-  openBoundary: (optLang: Optional<string>, elem: E) => void;
-  closeBoundary: (optLang: Optional<string>, elem: E) => void;
+  openBoundary: (optLang: Maybe<string>, elem: E) => void;
+  closeBoundary: (optLang: Maybe<string>, elem: E) => void;
   done: () => ZoneDetails<E>[];
 }
 
@@ -25,20 +25,18 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
   let zone: WordDecisionItem<E>[] = [];
   let zoneLang = defaultLang;
 
-  const push = function (optLang: Optional<string>) {
-    optLang.each(function (l) {
-      stack.push(l);
-    });
+  const push = function (optLang: Maybe<string>) {
+    Maybes.each(optLang, stack.push);
   };
 
-  const pop = function (optLang: Optional<string>) {
-    optLang.each(function (_l) {
+  const pop = function (optLang: Maybe<string>) {
+    Maybes.each(optLang, () => {
       stack = stack.slice(0, stack.length - 1);
     });
   };
 
   const topOfStack = function () {
-    return Optional.from(stack[stack.length - 1]);
+    return Maybes.from(stack[stack.length - 1]);
   };
 
   const pushZone = function () {
@@ -57,11 +55,14 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
     zoneLang = newLang;
   };
 
-  const getLang = function (optLang: Optional<string>) {
-    return optLang.or(topOfStack()).getOr(defaultLang);
+  const getLang = function (optLang: Maybe<string>) {
+    return Fun.pipe(optLang,
+      (m) => Maybes.or(m, topOfStack()),
+      (m) => Maybes.getOr(m, defaultLang)
+    );
   };
 
-  const openInline = function (optLang: Optional<string>, _elem: E) {
+  const openInline = function (optLang: Maybe<string>, _elem: E) {
     const lang = getLang(optLang);
     // If the inline tag being opened is different from the current top of the stack,
     // then we don't want to create a new zone.
@@ -71,12 +72,12 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
     push(optLang);
   };
 
-  const closeInline = function (optLang: Optional<string>, _elem: E) {
+  const closeInline = function (optLang: Maybe<string>, _elem: E) {
     pop(optLang);
   };
 
   const addDetail = function (detail: WordDecisionItem<E>) {
-    const lang = getLang(Optional.none());
+    const lang = getLang(Maybes.nothing);
     // If the top of the stack is not the same as zoneLang, then we need to spawn again.
     if (lang !== zoneLang) {
       spawn(lang);
@@ -85,17 +86,17 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
   };
 
   const addEmpty = function (_empty: E) {
-    const lang = getLang(Optional.none());
+    const lang = getLang(Maybes.nothing);
     spawn(lang);
   };
 
-  const openBoundary = function (optLang: Optional<string>, _elem: E) {
+  const openBoundary = function (optLang: Maybe<string>, _elem: E) {
     push(optLang);
     const lang = getLang(optLang);
     spawn(lang);
   };
 
-  const closeBoundary = function (optLang: Optional<string>, _elem: E) {
+  const closeBoundary = function (optLang: Maybe<string>, _elem: E) {
     pop(optLang);
     const lang = getLang(optLang);
     spawn(lang);
@@ -117,7 +118,7 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
   };
 };
 
-// Returns: Optional(string) of the LANG attribute of the closest ancestor element or None.
+// Returns: Maybe(string) of the LANG attribute of the closest ancestor element or None.
 //  - uses Fun.never for isRoot parameter to search even the top HTML element
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
@@ -135,10 +136,10 @@ const strictBounder = function (envLang: string, onlyLang: string) {
   };
 };
 
-const softBounder = function (optLang: Optional<string>) {
+const softBounder = function (optLang: Maybe<string>) {
   return function <E, D> (universe: Universe<E, D>, item: E) {
     const itemLang = calculate(universe, item);
-    return !optLang.equals(itemLang);
+    return !Maybes.equals(optLang, itemLang.fold(() => Maybes.nothing, Maybes.just));
   };
 };
 

@@ -1,3 +1,5 @@
+import * as Type from './Type';
+
 const noop: (...args: any[]) => void
 = () => { };
 
@@ -70,6 +72,50 @@ const always = constant<true>(true) as (...args: any[]) => true;
 /* Used to weaken types */
 const weaken = <A, B extends A>(b: B): A => b;
 
+type Fun<X, Y> = (x: X) => Y;
+const pipe: {
+  <A, B>(a: A, ab: Fun<A, B>): B;
+  <A, B, C>(a: A, ab: Fun<A, B>, bc: Fun<B, C>): C;
+  <A, B, C, D>(a: A, ab: Fun<A, B>, bc: Fun<B, C>, cd: Fun<C, D>): D;
+  <A, B, C, D, E>(a: A, ab: Fun<A, B>, bc: Fun<B, C>, cd: Fun<C, D>, de: Fun<D, E>): E;
+  <A, B, C, D, E, F>(a: A, ab: Fun<A, B>, bc: Fun<B, C>, cd: Fun<C, D>, de: Fun<D, E>, ef: Fun<E, F>): F;
+  <A, B, C, D, E, F, G>(a: A, ab: Fun<A, B>, bc: Fun<B, C>, cd: Fun<C, D>, de: Fun<D, E>, ef: Fun<E, F>, fg: Fun<F, G>): G;
+  <A, B, C, D, E, F, G, H>(a: A, ab: Fun<A, B>, bc: Fun<B, C>, cd: Fun<C, D>, de: Fun<D, E>, ef: Fun<E, F>, fg: Fun<F, G>, gh: Fun<G, H>): H;
+} =
+<A, B, C, D, E, F, G, H>(a: A, ab: Fun<A, B>, bc?: Fun<B, C>, cd?: Fun<C, D>, de?: Fun<D, E>, ef?: Fun<E, F>, fg?: Fun<F, G>, gh?: Fun<G, H>): B | C | D | E | F | G | H => {
+  const b = ab(a);
+  if (Type.isNullable(bc)) {
+    return b;
+  }
+
+  const c = bc(b);
+  if (Type.isNullable(cd)) {
+    return c;
+  }
+
+  const d = cd(c);
+  if (Type.isNullable(de)) {
+    return d;
+  }
+
+  const e = de(d);
+  if (Type.isNullable(ef)) {
+    return e;
+  }
+
+  const f = ef(e);
+  if (Type.isNullable(fg)) {
+    return f;
+  }
+
+  const g = fg(f);
+  if (Type.isNullable(gh)) {
+    return g;
+  }
+
+  return gh(g);
+};
+
 export {
   noop,
   noarg,
@@ -85,5 +131,6 @@ export {
   call,
   never,
   always,
-  weaken
+  weaken,
+  pipe
 };

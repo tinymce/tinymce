@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Maybes, Optional } from '@ephox/katamari';
 import { LanguageZones } from '../zone/LanguageZones';
 import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
@@ -61,7 +61,7 @@ interface Grouping<E> {
 // to create a cluster of the same language.
 const byLanguage = function <E, D> (universe: Universe<E, D>, item: E): Grouping<E> {
   const optLang = LanguageZones.calculate(universe, item);
-  const isLanguageBoundary = LanguageZones.softBounder(optLang);
+  const isLanguageBoundary = LanguageZones.softBounder(optLang.fold(() => Maybes.nothing, Maybes.just));
 
   const toLeft = ClusterSearch.creepLeft(universe, item, isLanguageBoundary);
   const toRight = ClusterSearch.creepRight(universe, item, isLanguageBoundary);
