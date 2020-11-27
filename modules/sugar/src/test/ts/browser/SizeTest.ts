@@ -13,7 +13,6 @@ interface SizeApi {
   set: (element: SugarElement<HTMLElement>, value: number | string) => void;
 }
 
-
 UnitTest.test('SizeTest', () => {
   const c = Div();
 

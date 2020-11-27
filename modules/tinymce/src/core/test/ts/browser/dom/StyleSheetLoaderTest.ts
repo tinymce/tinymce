@@ -12,7 +12,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, fa
     referrerPolicy: 'origin'
   });
 
-
   const sBaseLinkExists = (url: string, head: SugarElement<HTMLHeadElement>) =>
     Step.sync(() => {
       const links = SelectorFilter.descendants(head, `link[href="${url}"]`);

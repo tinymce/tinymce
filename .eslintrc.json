@@ -31,11 +31,13 @@
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
     "no-nested-ternary": "error",
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "max-len": ["warn", 260]
+    "max-len": ["warn", 260],
+    "valid-typeof": "error"
   },
   "settings": {
     "import/internal-regex": "^(ephox|tinymce)/.*"
