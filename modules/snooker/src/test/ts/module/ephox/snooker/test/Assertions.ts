@@ -1,3 +1,4 @@
+import { Assertions } from '@ephox/agar';
 import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -232,7 +233,7 @@ const checkMerge = (
   assert.eq('1', Attribute.get(table, 'border'));
   // Get around ordering of attribute differences.
   Attribute.remove(table, 'border');
-  assert.eq(expected, Html.getOuter(table));
+  Assertions.assertHtmlStructure(label, expected, Html.getOuter(table));
 
   Remove.remove(table);
   Remove.remove(expectedDom);
@@ -240,6 +241,7 @@ const checkMerge = (
 };
 
 const checkUnmerge = (
+  label: string,
   expected: string,
   input: string,
   unmergablePaths: { section: number; row: number; column: number }[]
@@ -260,7 +262,7 @@ const checkUnmerge = (
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
-  assert.eq(expected, Html.getOuter(table));
+  Assertions.assertEq(label, expected, Html.getOuter(table));
   Remove.remove(table);
   Bars.destroy(wire);
 };
