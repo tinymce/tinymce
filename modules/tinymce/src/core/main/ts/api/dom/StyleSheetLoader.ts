@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Future, Futures, Obj, Result, Results, Type } from '@ephox/katamari';
+import { Arr, Fun, Future, Futures, Obj, Result, Results } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFind, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import Delay from '../util/Delay';
 import Tools from '../util/Tools';
@@ -22,8 +22,6 @@ export interface StyleSheetLoader {
   unload: (url: string) => void;
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
-  appendFontsToTheGreatContainerOfOurBelovedTinyMce: (fonts: string[]) => void;
-  removeCustomFontsFromTheGreatContainerOfOurBelovedTinyMce: (fonts: string[]) => void;
 }
 
 export interface StyleSheetLoaderSettings {
@@ -54,21 +52,20 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
   };
 
   /**
-   * Add the provided style element to the target dom.
+   * Add the provided style element to the dom.
    * @param element The element to add to the dom.
-   * @param targetDom The dom we wish to add the element to.
    */
-  const addStyle = (element: SugarElement<HTMLStyleElement>, targetDom: SugarElement<Document | ShadowRoot>) => {
-    Insert.append(SugarShadowDom.getStyleContainer(targetDom), element);
+  const addStyle = (element: SugarElement<HTMLStyleElement>) => {
+    Insert.append(SugarShadowDom.getStyleContainer(edos), element);
   };
 
   /**
-   * Remove the provided style element from the target dom.
+   * Remove the provided style element from the dom.
    * @param id The id of the element we want to remove from the dom.
-   * @param targetDom The dom we wish to add the element to.
    */
-  const removeStyle = (id: string, targetDom: SugarElement<Document | ShadowRoot>) => {
-    const styleContainer = SugarShadowDom.getStyleContainer(targetDom);
+  const removeStyle = (id: string) => {
+    const styleContainer = SugarShadowDom.getStyleContainer(edos);
+
     SelectorFind.descendant(styleContainer, '#' + id).each(Remove.remove);
   };
 
@@ -81,21 +78,18 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     }));
 
   /**
-   * Load the provided URL and attach it to the provided hostRoot.
+   * Load the provided URL and add it to the editor
    * @param url URL of the css to add.
-   * @param success Called if URL is successfully added.
-   * @param failure Called if the URL fails to be added as intended.
-   * @param currentRoot The root of the editor document.
-   * @param hostRoot The root of the host.
-   * @param generateId Generate an ID based on the url.
+   * @param success Called if URL is successfully added
+   * @param failure Called if the URL fails to be added as intended
    */
-  const baseLoad = (url: string, success: () => void, failure: () => void, currentRoot: SugarElement<Document | ShadowRoot>, hostRoot: SugarElement<Document>, generateId: (url: string) => string) => {
+  const load = (url: string, success: () => void, failure?: () => void) => {
     let link: HTMLLinkElement;
 
     const urlWithSuffix = Tools._addCacheSuffix(url);
 
     const state = getOrCreateState(urlWithSuffix);
-    loadedStates[generateId(urlWithSuffix)] = state;
+    loadedStates[urlWithSuffix] = state;
     state.count++;
 
     const resolve = (callbacks: Array<() => void>, status: number) => {
@@ -177,7 +171,7 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
 
     // Start loading
     state.status = 1;
-    const linkElem = SugarElement.fromTag('link', hostRoot.dom);
+    const linkElem = SugarElement.fromTag('link', doc.dom);
     Attribute.setAll(linkElem, {
       rel: 'stylesheet',
       type: 'text/css',
@@ -198,21 +192,8 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     link.onload = waitForWebKitLinkLoaded;
     link.onerror = failed;
 
-    addStyle(linkElem, currentRoot);
+    addStyle(linkElem);
     Attribute.set(linkElem, 'href', urlWithSuffix);
-  };
-
-  /**
-   * Load the provided URL and add it to the editor
-   * @param url URL of the css to add.
-   * @param success Called if URL is successfully added
-   * @param failure Called if the URL fails to be added as intended
-   * @param currentRoot The root of the editor document
-   * @param hostRoot The root of the host
-   * @param generateId Generate an ID based on the url
-   */
-  const load = (url: string, success: () => void, failure?: () => void) => {
-    baseLoad(url, success, Type.isFunction(failure) ? failure : Fun.noop, edos, doc, Fun.identity);
   };
 
   const loadF = (url: string): Future<Result<string, string>> =>
@@ -245,22 +226,6 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
   };
 
   /**
-   * Unloads the specified css file if no resources currently depend on it.
-   * @param url the url to the css to unload.
-   * @param generateId Generates an id based on the url.
-   */
-  const baseUnload = (url: string, generateId: (url: string) => string, targetDom: SugarElement<Document | ShadowRoot>) => {
-    const urlWithSuffix = generateId(Tools._addCacheSuffix(url));
-    Obj.get(loadedStates, urlWithSuffix).each((state) => {
-      const count = --state.count;
-      if (count === 0) {
-        delete loadedStates[urlWithSuffix];
-        removeStyle(state.id, targetDom);
-      }
-    });
-  };
-
-  /**
    * Unloads the specified CSS file if no resources currently depend on it.
    * <br>
    * <em>Added in TinyMCE 5.5</em>
@@ -268,8 +233,16 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
    * @method unload
    * @param {String} url URL to unload or remove.
    */
-  const unload = (url: string) =>
-    baseUnload(url, Fun.identity, edos);
+  const unload = (url: string) => {
+    const urlWithSuffix = Tools._addCacheSuffix(url);
+    Obj.get(loadedStates, urlWithSuffix).each((state) => {
+      const count = --state.count;
+      if (count === 0) {
+        delete loadedStates[urlWithSuffix];
+        removeStyle(state.id);
+      }
+    });
+  };
 
   /**
    * Unloads each specified CSS file if no resources currently depend on it.
@@ -285,37 +258,11 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     });
   };
 
-  /**
-   * Append a series of fonts to the container of the editor. It is assumed that these do not already exist.
-   * @param fonts The fonts we wish to add to the document containing the editor.
-   */
-  const appendFontsToTheGreatContainerOfOurBelovedTinyMce = (fonts: string[]) => {
-    Arr.each(fonts, (font) => {
-      const sweetDocument = SugarElement.fromDom(document);
-
-      baseLoad(font, Fun.noop, Fun.noop, sweetDocument, sweetDocument, generateIdForFontsAttachedToTheGreatContainerOfOurBelovedTinyMce);
-    });
-  };
-
-  /**
-   * Remove a series of fonts from the container of the editor.
-   * @param fonts The fonts we wish to remove from the document containing the editor.
-   */
-  const removeCustomFontsFromTheGreatContainerOfOurBelovedTinyMce = (fonts: string[]) => {
-    Arr.each(fonts, (font) =>
-      baseUnload(font, generateIdForFontsAttachedToTheGreatContainerOfOurBelovedTinyMce, SugarElement.fromDom(document))
-    );
-  };
-
   return {
     load,
     loadAll,
     unload,
     unloadAll,
-    appendFontsToTheGreatContainerOfOurBelovedTinyMce,
-    removeCustomFontsFromTheGreatContainerOfOurBelovedTinyMce,
     _setReferrerPolicy
   };
 }
-
-const generateIdForFontsAttachedToTheGreatContainerOfOurBelovedTinyMce = (url: string) => url + '-mainbody';

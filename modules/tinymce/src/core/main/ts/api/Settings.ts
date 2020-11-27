@@ -119,7 +119,7 @@ const getContentCss = (editor: Editor): string[] => {
 };
 
 const getFontCss = (editor: Editor): string[] => {
-  const fontCss = editor.getParam('fonts_css', []);
+  const fontCss = editor.getParam('font_css', []);
 
   return Type.isArray(fontCss) ? fontCss : Arr.map(fontCss.split(','), Strings.trim);
 };

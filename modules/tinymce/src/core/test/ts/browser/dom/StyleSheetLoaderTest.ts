@@ -1,4 +1,4 @@
-import { Log, Pipeline, Step, StepSequence, UiFinder } from '@ephox/agar';
+import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
 import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
@@ -24,17 +24,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, fa
   const sLinkExists = (url: string) =>
     sBaseLinkExists(url, SugarHead.head());
 
-  const sLinkExistsEverywhere = (url: string) =>
-    StepSequence.sequenceSame([
-      sBaseLinkExists(url, SugarHead.head()),
-      sBaseLinkExists(url, SugarElement.fromDom(document.head))
-    ]);
-
   const sLinkNotExists = (url: string) =>
-    StepSequence.sequenceSame([
-      UiFinder.sNotExists(SugarHead.head(), `link[href="${url}"]`),
-      UiFinder.sNotExists(SugarElement.fromDom(document.head), `link[href="${url}"]`)
-    ]);
+    UiFinder.sNotExists(SugarHead.head(), `link[href="${url}"]`);
 
   const sLoadUrl = (url: string) => Step.async((next, die) => {
     loader.load(url, next, () => die('Failed to load url: ' + url));
@@ -51,16 +42,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, fa
   const sUnloadAllUrls = (urls: string[]) => Step.sync(() => {
     loader.unloadAll(urls);
   });
-
-  const sAppendFontsToTheGreatContainerOfOurBelovedTinyMce = (urls: string[]) =>
-    Step.sync(() => {
-      loader.appendFontsToTheGreatContainerOfOurBelovedTinyMce(urls);
-    });
-
-  const sRemoveCustomFontsFromTheGreatContainerOfOurBelovedTinyMce = (urls: string[]) =>
-    Step.sync(() => {
-      loader.removeCustomFontsFromTheGreatContainerOfOurBelovedTinyMce(urls);
-    });
 
   Pipeline.async({}, [
     Log.stepsAsStep('TINY-3926', 'Load and then unload removes the loaded stylesheet', [
@@ -87,13 +68,6 @@ UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, fa
       sLinkExists(contentCss),
       // Unload a second time should remove since the stylesheet was loaded twice
       sUnloadUrl(contentCss),
-      sLinkNotExists(contentCss)
-    ]),
-    Log.stepsAsStep('TINY-6199', 'Load and then unload css to both documents', [
-      // Load 2 links and ensure only one link is loaded
-      sAppendFontsToTheGreatContainerOfOurBelovedTinyMce([ contentCss ]),
-      sLinkExistsEverywhere(contentCss),
-      sRemoveCustomFontsFromTheGreatContainerOfOurBelovedTinyMce([ contentCss ]),
       sLinkNotExists(contentCss)
     ])
   ], success, failure);
