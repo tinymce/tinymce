@@ -1,4 +1,6 @@
 import { Maybe } from './Maybe';
+import { Optional } from './Optional';
+import * as Type from './Type';
 
 export interface Just<T> {
   readonly tag: 'JUST';
@@ -20,11 +22,7 @@ export const nothing: Maybe<any> = {
 };
 
 export const from = <T>(value: T | null | undefined): Maybe<NonNullable<T>> => {
-
-  const isNotNull = <U>(val: U | null | undefined): val is NonNullable<U> =>
-    val !== null && val !== undefined;
-
-  if (isNotNull(value)) {
+  if (Type.isNonNullable(value)) {
     return just(value);
   } else {
     return nothing;
@@ -96,6 +94,9 @@ export const bind = <T, U>(self: Maybe<T>, f: (input: T) => Maybe<U>): Maybe<U> 
 
 export const bind2 = <T, U>(self: Maybe<T>, f: (input: T) => U | null | undefined): Maybe<NonNullable<U>> =>
   bind(self, (inner) => from(f(inner)));
+
+export const bindO = <T, U>(self: Maybe<T>, f: (input: T) => Optional<U>): Maybe<U> =>
+  bind(self, (inner) => f(inner).fold(() => nothing, just));
 
 export const flatten = <T>(self: Maybe<Maybe<T>>): Maybe<T> => {
   switch (self.tag) {
@@ -177,8 +178,8 @@ export const forAll = <T>(self: Maybe<T>, pred: (input: T) => boolean): boolean 
   self.tag === 'NOTHING' || pred(self.value);
 
 export const filter: {
-  <T>(self: Maybe<T>, pred: (input: T) => boolean): Maybe<T>;
   <T, U extends T>(self: Maybe<T>, pred: (input: T) => input is U): Maybe<U>;
+  <T>(self: Maybe<T>, pred: (input: T) => boolean): Maybe<T>;
 } = (self, pred) => {
   if (self.tag === 'JUST' && pred(self.value)) {
     return self;
