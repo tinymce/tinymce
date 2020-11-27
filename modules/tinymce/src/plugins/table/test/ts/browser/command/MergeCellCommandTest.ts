@@ -5,12 +5,13 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Tools from 'tinymce/core/api/util/Tools';
+import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
-  type TableModifiedEvent = EditorEvent<{ type: string; structure: boolean; style: boolean }>;
+  type TableModifiedEvent = EditorEvent<TableEventData>;
 
   interface MergeCellTest {
     readonly message: string;

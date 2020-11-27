@@ -20,13 +20,15 @@ import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection, getRowsFromSelection } from '../selection/TableSelection';
 
 type TableAction<T> = (table: SugarElement<HTMLTableElement>, target: T) => Optional<TableActionResult>;
-export type TableActionResult = { rng: Range; effect: TableEventData };
+export type TableActionResult = {
+  readonly rng: Range;
+  readonly effect: Events.TableEventData;
+};
 export type SimpleTableAction = (editor: Editor, args: Record<string, any>) => void;
 export type CombinedTargetsTableAction = TableAction<RunOperation.CombinedTargets>;
 export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
 export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
 export type ElementTableAction = TableAction<RunOperation.TargetElement>;
-export type TableEventData = { structure: boolean; style: boolean };
 
 export interface TableActions {
   deleteRow: CombinedTargetsTableAction;
@@ -62,7 +64,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
-  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire, effect: TableEventData) =>
+  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();
