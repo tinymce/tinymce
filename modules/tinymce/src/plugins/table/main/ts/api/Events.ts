@@ -8,10 +8,10 @@
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-export type TableEventData = {
+export interface TableEventData {
   readonly structure: boolean;
   readonly style: boolean;
-};
+}
 
 const fireNewRow = (editor: Editor, row: HTMLElement) => editor.fire('newrow', { node: row });
 const fireNewCell = (editor: Editor, cell: HTMLElement) => editor.fire('newcell', { node: cell });
