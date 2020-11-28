@@ -16,7 +16,7 @@ const readChildren = (elem: SugarElement<Node>): SimpleOrSketchSpec[] => {
     return readText(elem);
   } else if (SugarNode.isComment(elem)) {
     return [ ];
-  } else {
+  } else if (SugarNode.isElement(elem)) {
     const attributes = getAttrs(elem);
     const classes = getClasses(elem);
     const children = Traverse.children(elem);
@@ -31,10 +31,12 @@ const readChildren = (elem: SugarElement<Node>): SimpleOrSketchSpec[] => {
       },
       components
     }];
+  } else {
+    return [ ];
   }
 };
 
-const read = (elem: SugarElement<Node>): SimpleOrSketchSpec => {
+const read = (elem: SugarElement<Element>): SimpleOrSketchSpec => {
   const attributes = getAttrs(elem);
   const classes = getClasses(elem);
 
@@ -54,9 +56,9 @@ const read = (elem: SugarElement<Node>): SimpleOrSketchSpec => {
 
 const readHtml = (html: string): Result<SimpleOrSketchSpec, string> => {
   const elem = SugarElement.fromHtml(html);
-  return SugarNode.isText(elem) ? Result.error('Template text must contain an element!') : Result.value(
+  return SugarNode.isElement(elem) ? Result.value(
     read(elem)
-  );
+  ) : Result.error('Template text must contain an element!');
 };
 
 export {

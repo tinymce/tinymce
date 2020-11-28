@@ -52,7 +52,7 @@ const createGroupRow = (columns: number) => {
 const createRows = (rows: number, columns: number, rowHeaders: number, columnHeaders: number) =>
   Arr.range(rows, (r) => createRow(columns, rowHeaders, columnHeaders, r));
 
-const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, headerType: string, renderOpts: RenderOptions = DefaultRenderOptions) => {
+const render = (rows: number, columns: number, rowHeaders: number, columnHeaders: number, headerType: string, renderOpts: RenderOptions = DefaultRenderOptions): SugarElement<HTMLTableElement> => {
   const table = SugarElement.fromTag('table');
   const rowHeadersGoInThead = headerType !== 'cells';
 

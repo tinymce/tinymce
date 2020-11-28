@@ -91,7 +91,7 @@ const nu = (width: number, yoffset: number, classes: BubbleAlignments): Bubble =
   };
 };
 
-const fallback = () => nu(0, 0, { });
+const fallback = (): Bubble => nu(0, 0, { });
 
 export {
   nu,

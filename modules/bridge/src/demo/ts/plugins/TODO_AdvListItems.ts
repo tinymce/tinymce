@@ -29,7 +29,7 @@ const editor = {
   on: (_s, _f) => { }
 };
 
-export const registerAdvListItems = () => {
+export const registerAdvListItems = (): void => {
   getDemoRegistry().addSplitButton('bullist', {
     type: 'splitbutton',
     tooltip: 'Unordered Lists',

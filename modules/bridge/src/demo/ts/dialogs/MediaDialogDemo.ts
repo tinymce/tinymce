@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createMediaDialog = () => {
+export const createMediaDialog = (): void => {
   openDemoDialog(
     {
       title: 'Insert/edit media',

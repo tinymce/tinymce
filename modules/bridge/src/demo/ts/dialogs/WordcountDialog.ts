@@ -1,6 +1,6 @@
 import { createTable } from '../../../main/ts/ephox/bridge/components/dialog/Table';
 
-export const createWordcountDialog = () => {
+export const createWordcountDialog = (): void => {
   createTable({
     type: 'table',
     header: [ 'hello', 'world' ],

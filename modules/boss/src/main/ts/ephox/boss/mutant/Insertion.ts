@@ -4,7 +4,7 @@ import * as Detach from './Detach';
 import * as Locator from './Locator';
 import * as Up from './Up';
 
-const before = function (anchor: Gene, item: Gene) {
+const before = function (anchor: Gene, item: Gene): void {
   anchor.parent.each(function (parent) {
     const index = Locator.indexIn(parent, anchor);
 
@@ -16,7 +16,7 @@ const before = function (anchor: Gene, item: Gene) {
   });
 };
 
-const after = function (anchor: Gene, item: Gene) {
+const after = function (anchor: Gene, item: Gene): void {
   anchor.parent.each(function (parent) {
     const index = Locator.indexIn(parent, anchor);
 
@@ -28,20 +28,20 @@ const after = function (anchor: Gene, item: Gene) {
   });
 };
 
-const append = function (parent: Gene, item: Gene) {
+const append = function (parent: Gene, item: Gene): void {
   const detached = Detach.detach(Up.top(parent), item).getOr(item);
   parent.children = parent.children || [];
   parent.children = parent.children.concat([ detached ]);
   detached.parent = Optional.some(parent);
 };
 
-const appendAll = function (parent: Gene, items: Gene[]) {
+const appendAll = function (parent: Gene, items: Gene[]): void {
   Arr.map(items, function (item) {
     append(parent, item);
   });
 };
 
-const afterAll = function (anchor: Gene, items: Gene[]) {
+const afterAll = function (anchor: Gene, items: Gene[]): void {
   anchor.parent.each(function (parent) {
     const index = Locator.indexIn(parent, anchor);
 
@@ -56,14 +56,14 @@ const afterAll = function (anchor: Gene, items: Gene[]) {
   });
 };
 
-const prepend = function (parent: Gene, item: Gene) {
+const prepend = function (parent: Gene, item: Gene): void {
   const detached = Detach.detach(Up.top(parent), item).getOr(item);
   parent.children = parent.children || [];
   parent.children = [ detached ].concat(parent.children);
   detached.parent = Optional.some(parent);
 };
 
-const wrap = function (anchor: Gene, wrapper: Gene) {
+const wrap = function (anchor: Gene, wrapper: Gene): void {
   // INVESTIGATE: At this stage, mutation is necessary to act like the DOM
   anchor.parent.each(function (parent) {
     wrapper.parent = Optional.some(parent);

@@ -1,14 +1,18 @@
 import { EventArgs } from '@ephox/sugar';
 import { DragMode } from '../api/DragApis';
-import InDrag from './InDrag';
-import NoDrag from './NoDrag';
+import { DragEvents, DragState } from './DragTypes';
+import { InDrag } from './InDrag';
+import { NoDrag } from './NoDrag';
 
-interface DragState {
-  onEvent: (event: EventArgs, mode: DragMode) => void;
-  reset: () => void;
+export interface Movement {
+  readonly on: () => void;
+  readonly off: () => void;
+  readonly isOn: () => boolean;
+  readonly onEvent: (event: EventArgs, mode: DragMode) => void;
+  readonly events: DragEvents['registry'];
 }
 
-export default function () {
+export const Movement = (): Movement => {
   const noDragState = NoDrag();
   const inDragState = InDrag();
   let dragState: DragState = noDragState;
@@ -38,4 +42,4 @@ export default function () {
     onEvent,
     events: inDragState.events
   };
-}
+};

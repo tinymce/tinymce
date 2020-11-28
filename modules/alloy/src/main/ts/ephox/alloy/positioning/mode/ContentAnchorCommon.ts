@@ -6,7 +6,7 @@ import * as CssPosition from '../../alien/CssPosition';
 import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
-import { NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
+import { Anchoring, NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
 const capRect = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {
@@ -24,47 +24,48 @@ const capRect = (left: number, top: number, width: number, height: number): Opti
   return Optional.some(Boxes.pointed(point, newWidth, newHeight));
 };
 
-const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement) => optBox.map((box) => {
-  const points = [ rootPoint, box.point ];
-  const topLeft = Origins.cata(origin,
-    () => CssPosition.sumAsAbsolute(points),
-    () => CssPosition.sumAsAbsolute(points),
-    () => CssPosition.sumAsFixed(points)
-  );
+const calcNewAnchor = (optBox: Optional<Boxes.BoxByPoint>, rootPoint: CssPosition.CssPositionAdt, anchorInfo: SelectionAnchor | NodeAnchor, origin: Origins.OriginAdt, elem: SugarElement): Optional<Anchoring> =>
+  optBox.map((box) => {
+    const points = [ rootPoint, box.point ];
+    const topLeft = Origins.cata(origin,
+      () => CssPosition.sumAsAbsolute(points),
+      () => CssPosition.sumAsAbsolute(points),
+      () => CssPosition.sumAsFixed(points)
+    );
 
-  const anchorBox = Boxes.rect(
-    topLeft.left,
-    topLeft.top,
-    box.width,
-    box.height
-  );
+    const anchorBox = Boxes.rect(
+      topLeft.left,
+      topLeft.top,
+      box.width,
+      box.height
+    );
 
-  const layoutsLtr = anchorInfo.showAbove ?
-    Layout.aboveOrBelow() :
-    Layout.belowOrAbove();
+    const layoutsLtr = anchorInfo.showAbove ?
+      Layout.aboveOrBelow() :
+      Layout.belowOrAbove();
 
-  const layoutsRtl = anchorInfo.showAbove ?
-    Layout.aboveOrBelowRtl() :
-    Layout.belowOrAboveRtl();
+    const layoutsRtl = anchorInfo.showAbove ?
+      Layout.aboveOrBelowRtl() :
+      Layout.belowOrAboveRtl();
 
-  const layouts = AnchorLayouts.get(
-    elem,
-    anchorInfo,
-    layoutsLtr,
-    layoutsRtl,
-    layoutsLtr,
-    layoutsRtl,
-    Optional.none()
-  );
+    const layouts = AnchorLayouts.get(
+      elem,
+      anchorInfo,
+      layoutsLtr,
+      layoutsRtl,
+      layoutsLtr,
+      layoutsRtl,
+      Optional.none()
+    );
 
-  return NuAnchor({
-    anchorBox,
-    bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
-    overrides: anchorInfo.overrides,
-    layouts,
-    placer: Optional.none()
+    return NuAnchor({
+      anchorBox,
+      bubble: anchorInfo.bubble.getOr(Bubble.fallback()),
+      overrides: anchorInfo.overrides,
+      layouts,
+      placer: Optional.none()
+    });
   });
-});
 
 export {
   capRect,

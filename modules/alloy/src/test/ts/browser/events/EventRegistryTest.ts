@@ -4,7 +4,7 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import { Attribute, Compare, Html, Insert, SelectorFilter, SugarElement, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
-import EventRegistry, { ElementAndHandler } from 'ephox/alloy/events/EventRegistry';
+import { ElementAndHandler, EventRegistry } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
 type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string };

@@ -26,10 +26,11 @@ const adt: {
 ]);
 
 // Probably don't need this given that we now have "match"
-const cata = <U> (subject: Situ, onBefore: (element: SugarElement<Node>) => U, onOn: (element: SugarElement<Node>, offset: number) => U, onAfter: (element: SugarElement<Node>) => U) =>
+const cata = <U> (subject: Situ, onBefore: (element: SugarElement<Node>) => U, onOn: (element: SugarElement<Node>, offset: number) => U, onAfter: (element: SugarElement<Node>) => U): U =>
   subject.fold(onBefore, onOn, onAfter);
 
-const getStart = (situ: Situ) => situ.fold(Fun.identity, Fun.identity, Fun.identity);
+const getStart = (situ: Situ): SugarElement<Node> =>
+  situ.fold(Fun.identity, Fun.identity, Fun.identity);
 
 const before = adt.before;
 const on = adt.on;

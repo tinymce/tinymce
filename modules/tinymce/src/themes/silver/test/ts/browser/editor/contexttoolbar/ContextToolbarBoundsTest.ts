@@ -23,7 +23,7 @@ UnitTest.asynctest('ContextToolbarBoundsTest', (success, failure) => {
   const getBounds = (editor: Editor): TestBounds => {
     const container = SugarElement.fromDom(editor.getContainer());
     const contentAreaContainer = SugarElement.fromDom(editor.getContentAreaContainer());
-    const header = SelectorFind.descendant(SugarBody.body(), '.tox-editor-header').getOrDie();
+    const header = SelectorFind.descendant<HTMLElement>(SugarBody.body(), '.tox-editor-header').getOrDie();
 
     return {
       viewport: Boxes.win(),

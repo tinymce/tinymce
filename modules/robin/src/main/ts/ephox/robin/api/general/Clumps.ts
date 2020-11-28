@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Split } from '@ephox/phoenix';
 import * as Clumps from '../../clumps/Clumps';
 import * as EntryPoints from '../../clumps/EntryPoints';
@@ -11,12 +11,12 @@ import * as Fractures from '../../clumps/Fractures';
  *    clumps based on boundary tags. Each clump (which will NOT HAVE block elements) is
  *    then fractured via *fracture* and the resulting list/array is returned.
  */
-const same = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, foffset: number, ceiling?: (e: E) => E) {
+const same = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, foffset: number, ceiling?: (e: E) => E): Optional<E[]> {
   const middle = Split.splitByPair(universe, start, soffset, foffset);
   return Fractures.fracture(universe, isRoot, middle, middle, ceiling);
 };
 
-const diff = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E) {
+const diff = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E): Optional<E[]> {
   const rightSide = EntryPoints.toRight(universe, isRoot, finish, foffset);
   const leftSide = EntryPoints.toLeft(universe, isRoot, start, soffset);
   return Fractures.fracture(universe, isRoot, leftSide, rightSide, ceiling);
@@ -31,12 +31,12 @@ const diff = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
  *
  *    This may not need to be exposed, and is currently exposed just for testing.
  */
-const fracture = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E) {
+const fracture = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E): Optional<E[]> {
   const sameText = universe.property().isText(start) && universe.eq(start, finish);
   return sameText ? same(universe, isRoot, start, soffset, foffset, ceiling) : diff(universe, isRoot, start, soffset, finish, foffset, ceiling);
 };
 
-const fractures = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E) {
+const fractures = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number, ceiling?: (e: E) => E): E[][] {
   const clumps = Clumps.collect(universe, isRoot, start, soffset, finish, foffset);
   return Arr.bind(clumps, function (clump) {
     return fracture(universe, isRoot, clump.start, clump.soffset, clump.finish, clump.foffset, ceiling).toArray();

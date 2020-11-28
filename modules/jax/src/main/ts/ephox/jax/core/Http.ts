@@ -83,7 +83,7 @@ const getData = (body: RequestBody): Optional<string | FormData | Blob> =>
     }
   });
 
-const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) => FutureResult.nu<ResponseTypeMap[T], HttpError>((callback) => {
+const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>): FutureResult<ResponseTypeMap[T], HttpError> => FutureResult.nu((callback) => {
   const request = new XMLHttpRequest();
   request.open(init.method, buildUrl(init.url, Optional.from(init.query)), true); // enforced async! enforced type as String!
 
@@ -119,13 +119,17 @@ const send = <T extends keyof ResponseTypeMap>(init: HttpTypes.HttpRequest<T>) =
 
 const empty = () => textData('');
 
-const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Post });
+const post = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+  send({ ...init, method: HttpTypes.HttpMethod.Post });
 
-const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Put });
+const put = <T extends keyof ResponseTypeMap>(init: HttpTypes.PostPutInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+  send({ ...init, method: HttpTypes.HttpMethod.Put });
 
-const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
+const get = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+  send({ ...init, method: HttpTypes.HttpMethod.Get, body: empty() });
 
-const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>) => send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
+const del = <T extends keyof ResponseTypeMap>(init: HttpTypes.GetDelInit<T>): FutureResult<ResponseTypeMap[T], HttpError> =>
+  send({ ...init, method: HttpTypes.HttpMethod.Delete, body: empty() });
 
 const sendProgress = (init: HttpTypes.DownloadHttpRequest, loaded: number) => {
   if (Type.isFunction(init.progress)) {

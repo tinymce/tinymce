@@ -17,31 +17,38 @@ const cTrigger = (selector: string, action: (ele: SugarElement<any>) => void) =>
 
 const sTriggerWith = <T>(container: SugarElement<any>, selector: string, action: (ele: SugarElement<any>) => void) => Chain.asStep<T, SugarElement>(container, [ cTrigger(selector, action) ]);
 
-const trueTap = (elem: SugarElement<any>) => {
+const trueTap = (elem: SugarElement<any>): void => {
   // The closest event queue to a true tap event
   Focus.focus(elem);
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const tap = (elem: SugarElement<any>) => {
+const tap = (elem: SugarElement<any>): void => {
   Touches.touchstart(elem);
   Touches.touchend(elem);
 };
 
-const sTap = <T>(element: SugarElement<any>) => Step.sync<T>(() => tap(element));
+const sTap = <T>(element: SugarElement<any>): Step<T, T> =>
+  Step.sync<T>(() => tap(element));
 
-const sTrueTapOn = <T>(container: SugarElement<any>, selector: string) => sTriggerWith<T>(container, selector, trueTap);
+const sTrueTapOn = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
+  sTriggerWith<T>(container, selector, trueTap);
 
-const sTapOn = <T>(container: SugarElement<any>, selector: string) => sTriggerWith<T>(container, selector, tap);
+const sTapOn = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
+  sTriggerWith<T>(container, selector, tap);
 
-const cTapOn = (selector: string): Chain<SugarElement, SugarElement> => cTrigger(selector, tap);
+const cTapOn = (selector: string): Chain<SugarElement, SugarElement> =>
+  cTrigger(selector, tap);
 
-const cTouchStartAt = (dx: number, dy: number) => Chain.op(Touches.touchstartAt(dx, dy));
+const cTouchStartAt = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
+  Chain.op(Touches.touchstartAt(dx, dy));
 
-const cTouchEndAt = (dx: number, dy: number) => Chain.op(Touches.touchendAt(dx, dy));
+const cTouchEndAt = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
+  Chain.op(Touches.touchendAt(dx, dy));
 
-const cTouchMoveTo = (dx: number, dy: number) => Chain.op(Touches.touchmoveTo(dx, dy));
+const cTouchMoveTo = (dx: number, dy: number): Chain<SugarElement, SugarElement> =>
+  Chain.op(Touches.touchmoveTo(dx, dy));
 
 const point = Touches.point;
 

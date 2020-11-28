@@ -23,7 +23,7 @@ const traverseJson = (json: any, path: string[]): Optional<any> => {
 const isServiceErrorCode = (code: number, blob: Blob | null): blob is Blob =>
   blob?.type === 'application/json' && (code === 400 || code === 403 || code === 404 || code === 500);
 
-const getHttpErrorMsg = (status: number) => {
+const getHttpErrorMsg = (status: number): string => {
   const message = Arr.find(friendlyHttpErrors, (error) => status === error.code).fold(
     Fun.constant('Unknown ImageProxy error'),
     (error) => error.message
@@ -32,13 +32,13 @@ const getHttpErrorMsg = (status: number) => {
   return 'ImageProxy HTTP error: ' + message;
 };
 
-const handleHttpError = (status: number) => {
+const handleHttpError = (status: number): Promise<never> => {
   const message = getHttpErrorMsg(status);
 
   return Promise.reject(message);
 };
 
-const getServiceErrorMsg = (type: string) =>
+const getServiceErrorMsg = (type: string): string =>
   Arr.find(friendlyServiceErrors, (error) => error.type === type).fold(
     Fun.constant('Unknown service error'),
     (error) => error.message
@@ -59,7 +59,7 @@ const handleServiceError = (blob: Blob) =>
     return Promise.reject(serviceError);
   });
 
-const handleServiceErrorResponse = (status: number, blob: Blob | null) =>
+const handleServiceErrorResponse = (status: number, blob: Blob | null): Promise<never> =>
   isServiceErrorCode(status, blob) ? handleServiceError(blob) : handleHttpError(status);
 
 export {

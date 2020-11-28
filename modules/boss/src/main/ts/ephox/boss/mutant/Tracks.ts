@@ -1,7 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
-const track = function (current: Gene, parent: Optional<Gene>) {
+const track = function (current: Gene, parent: Optional<Gene>): Gene {
   const r: Gene = { ...current, parent };
 
   r.children = Arr.map(current.children || [], function (child) {

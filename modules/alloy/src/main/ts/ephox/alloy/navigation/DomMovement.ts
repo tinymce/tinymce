@@ -9,22 +9,24 @@ export type ElementMover <C, S> = (elem: SugarElement, focused: SugarElement, co
 
 // Looks up direction (considering LTR and RTL), finds the focused element,
 // and tries to move. If it succeeds, triggers focus and kills the event.
-const useH = <C extends GeneralKeyingConfig, S>(movement: (elem: SugarElement) => ElementMover<C, S>): KeyRuleHandler<C, S> => (component, simulatedEvent, config, state) => {
-  const move = movement(component.element);
-  return use(move, component, simulatedEvent, config, state);
-};
+const useH = <C extends GeneralKeyingConfig, S>(movement: (elem: SugarElement) => ElementMover<C, S>): KeyRuleHandler<C, S> =>
+  (component, simulatedEvent, config, state) => {
+    const move = movement(component.element);
+    return use(move, component, simulatedEvent, config, state);
+  };
 
 const west = <C extends GeneralKeyingConfig, S>(moveLeft: ElementMover<C, S>, moveRight: ElementMover<C, S>): KeyRuleHandler<C, S> => {
   const movement = Direction.onDirection(moveLeft, moveRight);
   return useH(movement);
 };
 
-const east = <C extends GeneralKeyingConfig, S>(moveLeft: ElementMover<C, S>, moveRight: ElementMover<C, S>) => {
+const east = <C extends GeneralKeyingConfig, S>(moveLeft: ElementMover<C, S>, moveRight: ElementMover<C, S>): KeyRuleHandler<C, S> => {
   const movement = Direction.onDirection(moveRight, moveLeft);
   return useH(movement);
 };
 
-const useV = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>): KeyRuleHandler<C, S> => (component, simulatedEvent, config, state) => use(move, component, simulatedEvent, config, state);
+const useV = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>): KeyRuleHandler<C, S> =>
+  (component, simulatedEvent, config, state) => use(move, component, simulatedEvent, config, state);
 
 const use = <C extends GeneralKeyingConfig, S>(move: ElementMover<C, S>, component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, config: C, state: S): Optional<boolean> => {
   const outcome = config.focusManager.get(component).bind((focused) => move(component.element, focused, config, state));

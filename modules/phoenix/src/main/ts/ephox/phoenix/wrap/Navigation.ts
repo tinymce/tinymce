@@ -16,7 +16,7 @@ const toLast = function <E, D> (universe: Universe<E, D>, node: E): SpotPoint<E>
   }
 };
 
-const toLower = function <E, D> (universe: Universe<E, D>, node: E) {
+const toLower = function <E, D> (universe: Universe<E, D>, node: E): SpotPoint<E> {
   const lastOffset = universe.property().isText(node) ?
     universe.property().getText(node).length :
     universe.property().children(node).length;
@@ -58,7 +58,7 @@ const freefallLtr = function <E, D> (universe: Universe<E, D>, element: E): Spot
   return children.length > 0 ? freefallLtr(universe, children[0]) : Spot.point(candidate, 0);
 };
 
-const toEnd = function <E, D> (universe: Universe<E, D>, element: E) {
+const toEnd = function <E, D> (universe: Universe<E, D>, element: E): number {
   if (universe.property().isText(element)) { return universe.property().getText(element).length; }
   const children = universe.property().children(element);
   return children.length;

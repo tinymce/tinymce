@@ -55,7 +55,7 @@ const sSendKeysOn = <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> =>
     keys: toSimpleFormat(keys)
   });
 
-const combo = (modifiers: MixedKeyModifiers, letter: string) => {
+const combo = (modifiers: MixedKeyModifiers, letter: string): KeyPressAdt => {
   const mods = modifierList(newModifiers(modifiers));
   return adt.combo(mods, letter);
 };

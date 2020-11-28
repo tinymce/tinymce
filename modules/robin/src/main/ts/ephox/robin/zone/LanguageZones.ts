@@ -121,7 +121,7 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
 //  - uses Fun.never for isRoot parameter to search even the top HTML element
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
-const calculate = function <E, D> (universe: Universe<E, D>, item: E) {
+const calculate = function <E, D> (universe: Universe<E, D>, item: E): Optional<string> {
   return universe.up().closest(item, '[lang]', Fun.never).bind(function (el) {
     const lang = universe.attrs().get(el, 'lang');
     return lang === undefined ? Optional.none<string>() : Optional.some(lang);
@@ -129,14 +129,14 @@ const calculate = function <E, D> (universe: Universe<E, D>, item: E) {
 };
 
 const strictBounder = function (envLang: string, onlyLang: string) {
-  return function <E, D> (universe: Universe<E, D>, item: E) {
+  return function <E, D> (universe: Universe<E, D>, item: E): boolean {
     const itemLang = calculate(universe, item).getOr(envLang);
     return onlyLang !== itemLang;
   };
 };
 
 const softBounder = function (optLang: Optional<string>) {
-  return function <E, D> (universe: Universe<E, D>, item: E) {
+  return function <E, D> (universe: Universe<E, D>, item: E): boolean {
     const itemLang = calculate(universe, item);
     return !optLang.equals(itemLang);
   };

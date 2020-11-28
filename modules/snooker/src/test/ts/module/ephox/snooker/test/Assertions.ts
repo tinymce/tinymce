@@ -40,7 +40,7 @@ const checkOld = (
   section: number,
   row: number,
   column: number
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
@@ -69,7 +69,7 @@ const checkOldMultiple = (
   input: string,
   operation: OperationMultiple<TargetSelection>,
   paths: TargetLocation[]
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
@@ -102,7 +102,7 @@ const checkPaste = (
   section: number,
   row: number,
   column: number
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
@@ -134,7 +134,7 @@ const checkStructure = (
   section: number,
   row: number,
   column: number
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
@@ -163,7 +163,7 @@ const checkDelete = (
   operation: OperationSingle<TargetSelection>,
   cells: { section: number; row: number; column: number }[],
   platform: ReturnType<typeof PlatformDetection.detect>
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
@@ -213,7 +213,7 @@ const checkMerge = (
   input: string,
   selection: {section: number; row: number; column: number}[],
   bounds: {startRow: number; startCol: number; finishRow: number; finishCol: number}
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   const expectedDom = SugarElement.fromHtml(expected);
 
@@ -245,7 +245,7 @@ const checkUnmerge = (
   expected: string,
   input: string,
   unmergablePaths: { section: number; row: number; column: number }[]
-) => {
+): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);

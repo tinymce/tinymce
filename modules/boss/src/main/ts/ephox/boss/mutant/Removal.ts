@@ -4,7 +4,7 @@ import * as Comparator from './Comparator';
 import * as Detach from './Detach';
 import * as Up from './Up';
 
-const unwrap = function (item: Gene) {
+const unwrap = function (item: Gene): void {
   item.parent.each(function (parent) {
     const children = item.children;
     Arr.each(children, function (child) {
@@ -23,11 +23,11 @@ const unwrap = function (item: Gene) {
   });
 };
 
-const remove = function (item: Gene) {
+const remove = function (item: Gene): void {
   detach(item);
 };
 
-const detach = function (item: Gene) {
+const detach = function (item: Gene): void {
   Detach.detach(Up.top(item), item);
 };
 

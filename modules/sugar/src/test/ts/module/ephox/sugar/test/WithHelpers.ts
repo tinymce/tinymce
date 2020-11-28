@@ -26,7 +26,7 @@ export const setupShadowRoot = (mode: 'open' | 'closed'): { shadowRoot: SugarEle
   return { shadowHost, innerDiv, shadowRoot };
 };
 
-export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: SugarElement<ShadowRoot>, innerDiv: SugarElement<HTMLElement>, shadowHost: SugarElement<HTMLElement>) => void) => {
+export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: SugarElement<ShadowRoot>, innerDiv: SugarElement<HTMLElement>, shadowHost: SugarElement<HTMLElement>) => void): void => {
   if (SugarShadowDom.isSupported()) {
     const { shadowRoot, innerDiv, shadowHost } = setupShadowRoot(mode);
     f(shadowRoot, innerDiv, shadowHost);

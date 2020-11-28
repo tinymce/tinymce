@@ -40,7 +40,7 @@ const all = <T extends Element = Element> (selector: string, scope?: SugarElemen
   return bypassSelector(base) ? [] : Arr.map((base as Element | Document).querySelectorAll<T>(selector), SugarElement.fromDom);
 };
 
-const one = <T extends Element = Element> (selector: string, scope?: SugarElement<Node>) => {
+const one = <T extends Element = Element> (selector: string, scope?: SugarElement<Node>): Optional<SugarElement<T>> => {
   const base = scope === undefined ? document : scope.dom;
   return bypassSelector(base) ? Optional.none<SugarElement<T>>() : Optional.from((base as Element | Document).querySelector<T>(selector)).map(SugarElement.fromDom);
 };

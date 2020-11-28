@@ -7,8 +7,13 @@ import { SugarElement } from '../node/SugarElement';
 import * as SugarLocation from './SugarLocation';
 import { SugarPosition } from './SugarPosition';
 
+interface ScrollCapture {
+  readonly save: () => void;
+  readonly restore: () => void;
+}
+
 // get scroll position (x,y) relative to document _doc (or global if not supplied)
-const get = (_DOC?: SugarElement<Document>) => {
+const get = (_DOC?: SugarElement<Document>): SugarPosition => {
   const doc = _DOC !== undefined ? _DOC.dom : document;
 
   // ASSUMPTION: This is for cross-browser support, body works for Safari & EDGE, and when we have an iframe body scroller
@@ -18,7 +23,7 @@ const get = (_DOC?: SugarElement<Document>) => {
 };
 
 // Scroll content to (x,y) relative to document _doc (or global if not supplied)
-const to = (x: number, y: number, _DOC?: SugarElement<Document>) => {
+const to = (x: number, y: number, _DOC?: SugarElement<Document>): void => {
   const doc = _DOC !== undefined ? _DOC.dom : document;
   const win = doc.defaultView;
   if (win) {
@@ -27,7 +32,7 @@ const to = (x: number, y: number, _DOC?: SugarElement<Document>) => {
 };
 
 // Scroll content by (x,y) relative to document _doc (or global if not supplied)
-const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
+const by = (x: number, y: number, _DOC?: SugarElement<Document>): void => {
   const doc = _DOC !== undefined ? _DOC.dom : document;
   const win = doc.defaultView;
   if (win) {
@@ -36,14 +41,14 @@ const by = (x: number, y: number, _DOC?: SugarElement<Document>) => {
 };
 
 // Set the window scroll position to the element
-const setToElement = (win: Window, element: SugarElement<Element>) => {
+const setToElement = (win: Window, element: SugarElement<Element>): void => {
   const pos = SugarLocation.absolute(element);
   const doc = SugarElement.fromDom(win.document);
   to(pos.left, pos.top, doc);
 };
 
 // call f() preserving the original scroll position relative to document doc
-const preserve = (doc: SugarElement<Document>, f: () => void) => {
+const preserve = (doc: SugarElement<Document>, f: () => void): void => {
   const before = get(doc);
   f();
   const after = get(doc);
@@ -53,7 +58,7 @@ const preserve = (doc: SugarElement<Document>, f: () => void) => {
 };
 
 // capture the current scroll location and provide save and restore methods
-const capture = (doc: SugarElement<Document>) => {
+const capture = (doc: SugarElement<Document>): ScrollCapture => {
   let previous = Optional.none<SugarPosition>();
 
   const save = () => {
@@ -75,7 +80,7 @@ const capture = (doc: SugarElement<Document>) => {
 };
 
 // TBIO-4472 Safari 10 - Scrolling typeahead with keyboard scrolls page
-const intoView = (element: SugarElement<Element>, alignToTop: boolean) => {
+const intoView = (element: SugarElement<Element>, alignToTop: boolean): void => {
   const isSafari = PlatformDetection.detect().browser.isSafari();
   // this method isn't in TypeScript
   if (isSafari && Type.isFunction((element.dom as any).scrollIntoViewIfNeeded)) {
@@ -86,7 +91,7 @@ const intoView = (element: SugarElement<Element>, alignToTop: boolean) => {
 };
 
 // If the element is above the container, or below the container, then scroll to the top or bottom
-const intoViewIfNeeded = (element: SugarElement<Element>, container: SugarElement<Element>) => {
+const intoViewIfNeeded = (element: SugarElement<Element>, container: SugarElement<Element>): void => {
   const containerBox = container.dom.getBoundingClientRect();
   const elementBox = element.dom.getBoundingClientRect();
   if (elementBox.top < containerBox.top) {
@@ -99,7 +104,7 @@ const intoViewIfNeeded = (element: SugarElement<Element>, container: SugarElemen
 };
 
 // Return the scroll bar width (calculated by temporarily inserting an element into the dom)
-const scrollBarWidth = () => {
+const scrollBarWidth = (): number => {
   // From https://davidwalsh.name/detect-scrollbar-width
   const scrollDiv = SugarElement.fromHtml<HTMLDivElement>('<div style="width: 100px; height: 100px; overflow: scroll; position: absolute; top: -9999px;"></div>');
   Insert.after(SugarBody.body(), scrollDiv);

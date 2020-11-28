@@ -1,12 +1,13 @@
 import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Arrays, Splitting } from '@ephox/polaris';
+import { TypedItem } from '../api/data/TypedItem';
 import * as Extract from '../api/general/Extract';
 
 /**
  * Return an array of arrays split by boundaries (exclude) or empty tags (include).
  */
-const group = function <E, D> (universe: Universe<E, D>, items: E[], optimise?: (e: E) => boolean) {
+const group = function <E, D> (universe: Universe<E, D>, items: E[], optimise?: (e: E) => boolean): TypedItem<E, D>[][] {
   const extractions = Arr.bind(items, function (item) {
     return Extract.from(universe, item, optimise);
   });

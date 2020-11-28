@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createDocumentPropsDialog = () => {
+export const createDocumentPropsDialog = (): void => {
   openDemoDialog(
     {
       title: 'Document properties',

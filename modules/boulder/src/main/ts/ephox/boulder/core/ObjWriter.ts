@@ -4,8 +4,8 @@ const wrap = function <V> (key: string, value: V): { [key: string]: V} {
   return { [key]: value };
 };
 
-const wrapAll = function (keyvalues) {
-  const r = {};
+const wrapAll = function <K extends string | number, T> (keyvalues: Array<{ key: K; value: T }>): Record<K, T> {
+  const r = {} as Record<K, T>;
   Arr.each(keyvalues, function (kv) {
     r[kv.key] = kv.value;
   });

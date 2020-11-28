@@ -20,7 +20,7 @@ export interface Browser {
   readonly isSafari: () => boolean;
 }
 
-const unknown = function () {
+const unknown = function (): Browser {
   return nu({
     current: undefined,
     version: Version.unknown()

@@ -47,7 +47,7 @@ UnitTest.test('SelectorTest', () => {
   Checkers.checkOpt(Optional.some(TestPage.container), SelectorFind.ancestor(TestPage.s4, 'div'));
   Checkers.checkOpt(Optional.some(TestPage.s2), SelectorFind.descendant(TestPage.p2, 'span'));
   Checkers.checkOpt(Optional.some(TestPage.s3), SelectorFind.descendant(TestPage.p2, 'span span'));
-  Checkers.checkOpt(Optional.none(), SelectorFind.child(TestPage.p2, 'li'));
+  Checkers.checkOpt(Optional.none<SugarElement<Element>>(), SelectorFind.child(TestPage.p2, 'li'));
   Checkers.checkOpt(Optional.some(TestPage.s1), SelectorFind.child(TestPage.p1, 'span'));
   Checkers.checkOpt(Optional.none<SugarElement<Element>>(), SelectorFind.closest(TestPage.p1, 'span'));
   Checkers.checkOpt(Optional.some(TestPage.p1), SelectorFind.closest(TestPage.p1, 'p'));

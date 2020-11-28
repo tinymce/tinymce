@@ -1,8 +1,8 @@
 import { Obj, Optional } from '@ephox/katamari';
 import { Promise } from '../util/Promise';
 
-const sendRequest = (url: string, headers: Record<string, string>, withCredentials: boolean = false) =>
-  new Promise<{ status: number; blob: Blob }>((resolve) => {
+const sendRequest = (url: string, headers: Record<string, string>, withCredentials: boolean = false): Promise<{ status: number; blob: Blob }> =>
+  new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = () => {

@@ -2,7 +2,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { EventArgs, Situ, SugarElement } from '@ephox/sugar';
 import * as KeySelection from '../keyboard/KeySelection';
 import * as VerticalMovement from '../keyboard/VerticalMovement';
-import MouseSelection from '../mouse/MouseSelection';
+import { MouseSelection } from '../mouse/MouseSelection';
 import * as KeyDirection from '../navigation/KeyDirection';
 import * as CellSelection from '../selection/CellSelection';
 import { Response } from '../selection/Response';
@@ -15,9 +15,17 @@ interface RC {
   readonly cols: number;
 }
 
+export type MouseHandler = MouseSelection;
+export type ExternalHandler = (start: SugarElement<Node>, finish: SugarElement<Node>) => void;
+
+export interface KeyboardHandler {
+  readonly keydown: (event: EventArgs<KeyboardEvent>, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number, direction: typeof SelectionKeys.ltr) => Optional<Response>;
+  readonly keyup: (event: EventArgs<KeyboardEvent>, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => Optional<Response>;
+}
+
 const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
-const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) {
+const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseHandler {
   const bridge = WindowBridge(win);
 
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
@@ -30,7 +38,7 @@ const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarE
   };
 };
 
-const keyboard = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) {
+const keyboard = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): KeyboardHandler {
   const bridge = WindowBridge(win);
 
   const clearToNavigate = function () {
@@ -120,7 +128,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
   };
 };
 
-const external = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) => {
+const external = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): ExternalHandler => {
   const bridge = WindowBridge(win);
 
   return (start: SugarElement, finish: SugarElement) => {

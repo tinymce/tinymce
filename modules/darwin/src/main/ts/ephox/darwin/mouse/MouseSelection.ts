@@ -4,10 +4,17 @@ import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
 import * as CellSelection from '../selection/CellSelection';
 
+export interface MouseSelection {
+  readonly clearstate: () => void;
+  readonly mousedown: (event: EventArgs<MouseEvent>) => void;
+  readonly mouseover: (event: EventArgs<MouseEvent>) => void;
+  readonly mouseup: (event?: EventArgs<MouseEvent>) => void;
+}
+
 const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
   SelectorFind.closest(target, 'td,th', isRoot);
 
-export default (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation) => {
+export const MouseSelection = (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseSelection => {
   const cursor = Singleton.value<SugarElement>();
   const clearstate = cursor.clear;
 

@@ -215,7 +215,7 @@ export const forall = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): boolean =>
   return true;
 };
 
-export const equal = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+export const equal = <T>(a1: ArrayLike<T>, a2: ArrayLike<T>, eq: Eq.Eq<T> = Eq.eqAny): boolean =>
   Eq.eqArray(eq).eq(a1, a2);
 
 export const reverse = <T>(xs: ArrayLike<T>): T[] => {

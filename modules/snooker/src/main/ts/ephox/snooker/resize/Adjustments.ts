@@ -30,7 +30,7 @@ const recalculateAndApply = (warehouse: Warehouse, widths: number[], tableSize: 
   });
 };
 
-const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize) => {
+const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize): void => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, tableSize);
@@ -45,7 +45,7 @@ const adjustWidth = (table: SugarElement, delta: number, index: number, resizing
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
-const adjustHeight = (table: SugarElement, delta: number, index: number, direction: BarPositions<RowInfo>) => {
+const adjustHeight = (table: SugarElement, delta: number, index: number, direction: BarPositions<RowInfo>): void => {
   const warehouse = Warehouse.fromTable(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, table, direction);
 
@@ -67,7 +67,7 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], tableSize: TableSize) => {
+const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], tableSize: TableSize): void => {
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, tableSize);
 

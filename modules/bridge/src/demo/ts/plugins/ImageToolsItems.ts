@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerImageToolsItems = () => {
+export const registerImageToolsItems = (): void => {
   // Example, they are all the same.
   getDemoRegistry().addButton('rotateleft', {
     type: 'button',

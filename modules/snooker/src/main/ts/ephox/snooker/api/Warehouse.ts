@@ -10,16 +10,16 @@ export interface Warehouse {
   readonly columns: Record<string, Structs.ColumnExt>;
 }
 
-const key = function (row: number, column: number) {
+const key = function (row: number, column: number): string {
   return row + ',' + column;
 };
 
-const getAt = function (warehouse: Warehouse, row: number, column: number) {
+const getAt = function (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> {
   const raw = warehouse.access[key(row, column)];
   return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
 };
 
-const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean) {
+const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> {
   const filtered = filterItems(warehouse, function (detail) {
     return comparator(item, detail.element);
   });
@@ -27,12 +27,12 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
   return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none<Structs.DetailExt>();
 };
 
-const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean) {
+const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] {
   const all = Arr.bind(warehouse.all, function (r) { return r.cells; });
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>) => {
+const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
@@ -117,7 +117,7 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
   };
 };
 
-const fromTable = (table: SugarElement<HTMLTableElement>) => {
+const fromTable = (table: SugarElement<HTMLTableElement>): Warehouse => {
   const list = DetailsList.fromTable(table);
   return generate(list);
 };
@@ -128,7 +128,7 @@ const justCells = (warehouse: Warehouse): Structs.DetailExt[] =>
 const justColumns = (warehouse: Warehouse): Structs.ColumnExt[] =>
   Obj.values(warehouse.columns);
 
-const hasColumns = (warehouse: Warehouse) =>
+const hasColumns = (warehouse: Warehouse): boolean =>
   Obj.keys(warehouse.columns).length > 0;
 
 const getColumnAt = (warehouse: Warehouse, columnIndex: number): Optional<Structs.ColumnExt> =>

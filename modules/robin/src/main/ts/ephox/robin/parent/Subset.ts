@@ -1,11 +1,17 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
-const eq = function <E, D> (universe: Universe<E, D>, item: E) {
+interface SubsetAncestors<E> {
+  readonly firstpath: E[];
+  readonly secondpath: E[];
+  readonly shared: Optional<E>;
+}
+
+const eq = function <E, D> (universe: Universe<E, D>, item: E): (e: E) => boolean {
   return Fun.curry(universe.eq, item);
 };
 
-const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]) {
+const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]): Optional<E[]> {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
     return Optional.some([ ps1[0] ]);
@@ -42,7 +48,7 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
 };
 
 // Note: this can be exported if it is required in the future.
-const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never) {
+const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never): SubsetAncestors<E> {
   // Inefficient if no isRoot is supplied.
   // TODO: Andy knows there is a graph-based algorithm to find a common parent, but can't remember it
   //        This also includes something to get the subset after finding the common parent
@@ -77,7 +83,7 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  *
  * Then return all children of the common element such that start and end are included.
  */
-const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E) {
+const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E): Optional<E[]> {
   const ancs = ancestors(universe, start, end);
   return ancs.shared.bind(function (shared) {
     return unsafeSubset(universe, shared, ancs.firstpath, ancs.secondpath);

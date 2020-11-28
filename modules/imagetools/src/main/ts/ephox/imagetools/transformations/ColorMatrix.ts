@@ -86,7 +86,7 @@ function adjust(matrix: Matrix, adjustValue: number): Matrix {
   }) as Matrix;
 }
 
-function adjustContrast(matrix: Matrix, value: number) {
+function adjustContrast(matrix: Matrix, value: number): Matrix {
   let x: number;
 
   value = clamp(value, -1, 1);

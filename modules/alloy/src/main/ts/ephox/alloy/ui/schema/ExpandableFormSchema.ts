@@ -109,7 +109,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const name = () => 'ExpandableForm';
+const name = Fun.constant('ExpandableForm');
 
 export {
   name,

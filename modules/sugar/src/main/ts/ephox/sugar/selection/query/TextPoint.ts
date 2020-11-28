@@ -3,7 +3,7 @@ import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarText from '../../api/node/SugarText';
 import * as Geometry from '../alien/Geometry';
 
-const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>, x: number, y: number, rect: ClientRect | DOMRect) => {
+const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>, x: number, y: number, rect: ClientRect | DOMRect): Range => {
   const rangeForOffset = (o: number) => {
     const r = doc.dom.createRange();
     r.setStart(textnode.dom, o);
@@ -21,7 +21,7 @@ const locateOffset = (doc: SugarElement<Document>, textnode: SugarElement<Text>,
   return rangeForOffset(offset);
 };
 
-const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number, y: number) => {
+const locate = (doc: SugarElement<Document>, node: SugarElement<Text>, x: number, y: number): Optional<Range> => {
   const r = doc.dom.createRange();
   r.selectNode(node.dom);
   const rects = r.getClientRects();

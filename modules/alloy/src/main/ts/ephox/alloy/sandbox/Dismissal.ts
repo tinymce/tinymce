@@ -9,7 +9,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
-import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
+import { ReceivingChannelSpec, ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 interface DismissalReceivingDetail {
   isExtraPart: (sandbox: AlloyComponent, target: SugarElement) => boolean;
@@ -39,7 +39,7 @@ const receivingConfig = (rawSpec: DismissalReceivingSpec): NamedConfiguredBehavi
   });
 };
 
-const receivingChannel = (rawSpec: DismissalReceivingSpec) => {
+const receivingChannel = (rawSpec: DismissalReceivingSpec): Record<string, ReceivingChannelSpec> => {
   const detail: DismissalReceivingDetail = ValueSchema.asRawOrDie('Dismissal', schema, rawSpec);
   return {
     [Channels.dismissPopups()]: {

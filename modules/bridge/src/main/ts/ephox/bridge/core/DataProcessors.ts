@@ -17,7 +17,12 @@ import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMe
 import { urlInputDataProcessor } from '../components/dialog/UrlInput';
 import { getAllObjects } from './ObjUtils';
 
-const isNamedItem = (obj) => Type.isString(obj.type) && Type.isString(obj.name);
+interface NamedItem {
+  readonly name: string;
+  readonly type: string;
+}
+
+const isNamedItem = (obj: any): obj is NamedItem => Type.isString(obj.type) && Type.isString(obj.name);
 
 const dataProcessors = {
   checkbox: checkboxDataProcessor,
@@ -37,9 +42,11 @@ const dataProcessors = {
   togglemenuitem: dialogToggleMenuItemDataProcessor
 };
 
-const getDataProcessor = (item): Optional<Processor> => Optional.from(dataProcessors[item.type]);
+const getDataProcessor = (item: { type: string }): Optional<Processor> =>
+  Optional.from(dataProcessors[item.type]);
 
-const getNamedItems = (structure) => Arr.filter(getAllObjects(structure), isNamedItem);
+const getNamedItems = (structure: any): NamedItem[] =>
+  Arr.filter(getAllObjects(structure), isNamedItem);
 
 export {
   getDataProcessor,

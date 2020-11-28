@@ -55,7 +55,7 @@ const op = <T>(fx: (value: T) => void): Chain<T, T> =>
     next(input, logs);
   });
 
-const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void) =>
+const async = <T, U>(fx: (input: T, next: (v: U) => void, die: (err) => void) => void): Chain<T, U> =>
   on<T, U>((v, n, d, logs) => fx(v, (v) => n(v, logs), (err) => d(err, logs)));
 
 const inject = <T, U>(value: U): Chain<T, U> =>
@@ -197,7 +197,7 @@ const wait = <T>(amount: number): Chain<T, T> =>
     AsyncActions.delay(amount)(() => next(input, logs), die);
   });
 
-const pipeline = (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs) => {
+const pipeline = (chains: Chain<any, any>[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs?: TestLogs): void => {
   Pipeline.async({}, Arr.map(chains, extract), (output, logs) => {
     onSuccess(output, logs);
   }, onFailure, TestLogs.getOrInit(initLogs));

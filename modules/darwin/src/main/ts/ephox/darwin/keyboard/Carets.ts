@@ -60,7 +60,7 @@ const getBottom = function (caret: Carets): number {
   return caret.bottom;
 };
 
-const toString = function (caret: Carets) {
+const toString = function (caret: Carets): string {
   return '(' + caret.left + ', ' + caret.top + ') -> (' + caret.right + ', ' + caret.bottom + ')';
 };
 

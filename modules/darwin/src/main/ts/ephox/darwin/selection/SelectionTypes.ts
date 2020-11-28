@@ -25,7 +25,7 @@ const type: {
   { single: [ 'element' ] }
 ]);
 
-export const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<Element>[]) => T, onSingle: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => T) =>
+export const cata = <T> (subject: SelectionType, onNone: () => T, onMultiple: (multiple: SugarElement<Element>[]) => T, onSingle: (element: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => T): T =>
   subject.fold(onNone, onMultiple, onSingle);
 
 export const none = type.none;

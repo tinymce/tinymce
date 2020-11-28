@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerPrintItems = () => {
+export const registerPrintItems = (): void => {
   getDemoRegistry().addButton('print', {
     type: 'button',
     disabled: false,

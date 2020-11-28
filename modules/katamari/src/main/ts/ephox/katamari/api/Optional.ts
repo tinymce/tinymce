@@ -74,7 +74,7 @@ export interface Optional<T> {
   readonly toString: () => string;
 }
 
-const none = <T>() => <Optional<T>> NONE;
+const none = <T>(): Optional<T> => NONE;
 
 const NONE: Optional<any> = (() => {
   const eq = function (o) {

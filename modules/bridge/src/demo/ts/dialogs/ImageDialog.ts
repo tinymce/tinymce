@@ -2,7 +2,7 @@ import { openDemoDialog } from './DemoDialogHelpers';
 
 /* eslint-disable no-console */
 
-export const createImageDialog = () => {
+export const createImageDialog = (): void => {
   openDemoDialog(
     {
       title: 'Insert/edit image',

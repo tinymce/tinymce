@@ -4,13 +4,13 @@ import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/model/Fitment';
 
-const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
+const mapToStructGrid = function (grid: Structs.ElementNew[][]): Structs.RowCells[] {
   return Arr.map(grid, function (row) {
     return Structs.rowcells(row, 'tbody');
   });
 };
 
-const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
+const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]): void {
   assert.eq(expected.length, actual.length);
   Arr.each(expected, function (row, i) {
     Arr.each(row.cells, function (cell, j) {
@@ -21,7 +21,8 @@ const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowC
   });
 };
 
-const measureTest = function (expected: { error: string } | {rowDelta: number; colDelta: number }, startAddress: Structs.Address, gridA: Structs.ElementNew[][], gridB: Structs.ElementNew[][]) {
+const measureTest = function (expected: { error: string } | { rowDelta: number; colDelta: number }, startAddress: Structs.Address,
+                              gridA: Structs.ElementNew[][], gridB: Structs.ElementNew[][]): void {
   // Try put gridB into gridA at the startAddress
   // returns a delta,
   // colDelta = -3 means gridA is 3 columns too short
@@ -43,7 +44,8 @@ const measureTest = function (expected: { error: string } | {rowDelta: number; c
   });
 };
 
-const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Structs.Address, gridA: Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
+const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Structs.Address, gridA: Structs.ElementNew[][],
+                             delta: Fitment.Delta, generator: () => SimpleGenerators): void {
   // Based on the Fitment.measure
   // Increase gridA by the row/col delta values
   // The result is a new grid that will perfectly fit gridB into gridA
@@ -51,7 +53,8 @@ const tailorTest = function (expected: Structs.ElementNew[][], startAddress: Str
   assertGrids(mapToStructGrid(expected), tailoredGrid);
 };
 
-const tailorIVTest = function (expected: { rows: number; cols: number }, startAddress: Structs.Address, gridA: Structs.ElementNew[][], delta: Fitment.Delta, generator: () => SimpleGenerators) {
+const tailorIVTest = function (expected: { rows: number; cols: number }, startAddress: Structs.Address, gridA: Structs.ElementNew[][],
+                               delta: Fitment.Delta, generator: () => SimpleGenerators): void {
   const tailoredGrid = Fitment.tailor(mapToStructGrid(gridA), delta, generator());
   const rows = tailoredGrid.length;
   const cols = tailoredGrid[0].cells.length;

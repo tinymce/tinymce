@@ -155,7 +155,7 @@ export const addStackTrace = (logs: TestLogs, err: { stack: any }): TestLogs => 
 
 const init = (): TestLogs => initLogsWith([ ]);
 
-const initLogsWith = (history: TestLogEntry[]) => ({
+const initLogsWith = (history: TestLogEntry[]): TestLogs => ({
   history
 });
 

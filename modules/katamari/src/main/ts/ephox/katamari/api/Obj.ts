@@ -10,7 +10,7 @@ export const keys = Object.keys;
 
 export const hasOwnProperty = Object.hasOwnProperty;
 
-export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) => void) {
+export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) => void): void {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
@@ -19,7 +19,7 @@ export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) =>
   }
 };
 
-export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R): {[k in keyof T]: R} {
   return tupleMap<{[k in keyof T]: R}, T>(obj, (x, i) => ({
     k: i,
     v: f(x, i)
@@ -60,7 +60,7 @@ export const filter = function <V> (obj: Record<string, V>, pred: (value: V, key
   return t;
 };
 
-export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R) {
+export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R): R[] {
   const r: R[] = [];
   each(obj, function (value, name) {
     r.push(f(value, name));
@@ -80,13 +80,13 @@ export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string,
   return Optional.none();
 };
 
-export const values = function <T> (obj: T) {
+export const values = function <T> (obj: T): Array<T[keyof T]> {
   return mapToArray(obj, function (v) {
     return v;
   });
 };
 
-export const size = function (obj: {}) {
+export const size = function (obj: {}): number {
   return keys(obj).length;
 };
 
@@ -109,5 +109,5 @@ export const isEmpty = (r: Record<any, any>): boolean => {
   return true;
 };
 
-export const equal = <T>(a1: Record<string, T>, a2: Record<string, T>, eq: Eq.Eq<T> = Eq.eqAny) =>
+export const equal = <T>(a1: Record<string, T>, a2: Record<string, T>, eq: Eq.Eq<T> = Eq.eqAny): boolean =>
   Eq.eqRecord(eq).eq(a1, a2);
