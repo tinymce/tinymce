@@ -15,11 +15,11 @@ const hone = function <E, D> (universe: Universe<E, D>, item: E, predicate: (e: 
   });
 };
 
-const left = function <E, D> (universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean) {
+const left = function <E, D> (universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean): Optional<E> {
   return hone(universe, item, predicate, Walker.sidestep, Walkers.left(), isRoot);
 };
 
-const right = function <E, D> (universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean) {
+const right = function <E, D> (universe: Universe<E, D>, item: E, predicate: (e: E) => boolean, isRoot: (e: E) => boolean): Optional<E> {
   return hone(universe, item, predicate, Walker.sidestep, Walkers.right(), isRoot);
 };
 

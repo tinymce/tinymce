@@ -1,7 +1,7 @@
 import { Fun, Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-const describedBy = (describedElement: SugarElement, describeElement: SugarElement) => {
+const describedBy = (describedElement: SugarElement, describeElement: SugarElement): void => {
   const describeId = Optional.from(Attribute.get(describedElement, 'id'))
     .fold(() => {
       const id = Id.generate('dialog-describe');

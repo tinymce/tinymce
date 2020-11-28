@@ -1,7 +1,7 @@
 import { Arr, Global } from '@ephox/katamari';
 import { Editor } from '../alien/EditorTypes';
 
-const isSilver = () => {
+const isSilver = (): boolean => {
   const tinymce = Global.tinymce;
   if (!tinymce) {
     throw new Error('Failed to get global tinymce');
@@ -9,7 +9,7 @@ const isSilver = () => {
   return tinymce.activeEditor.hasOwnProperty('ui');
 };
 
-const isModern = () => !isSilver();
+const isModern = (): boolean => !isSilver();
 
 export interface ThemeSelectors {
   toolBarSelector: (editor: Editor) => string;

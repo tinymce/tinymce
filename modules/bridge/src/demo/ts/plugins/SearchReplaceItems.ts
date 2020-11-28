@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerSearchReplaceItems = () => {
+export const registerSearchReplaceItems = (): void => {
   getDemoRegistry().addButton('searchreplace', {
     type: 'button',
     disabled: false,

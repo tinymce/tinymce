@@ -1,11 +1,13 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 
+export interface Group<E> {
+  parent: E;
+  children: E[];
+}
+
 interface Data<E> {
-  groups: {
-    parent: E;
-    children: E[];
-  }[];
+  groups: Group<E>[];
   current: E[];
   parent: E | null;
 }
@@ -41,7 +43,7 @@ const inspect = function <E, D> (universe: Universe<E, D>, rest: Data<E>, item: 
   }).getOr(nextlist);
 };
 
-const textnodes = function <E, D> (universe: Universe<E, D>, items: E[]) {
+const textnodes = function <E, D> (universe: Universe<E, D>, items: E[]): Group<E>[] {
   const init: Data<E> = { groups: [], current: [], parent: null };
 
   const result = Arr.foldl(items, function (rest, item) {

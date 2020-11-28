@@ -2,7 +2,7 @@ import { openDemoDialog } from './DemoDialogHelpers';
 
 /* eslint-disable no-console */
 
-export const createCharmapDialog = () => {
+export const createCharmapDialog = (): void => {
   openDemoDialog(
     {
       title: 'Special character',

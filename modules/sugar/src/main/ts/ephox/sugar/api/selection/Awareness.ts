@@ -4,15 +4,15 @@ import * as SugarNode from '../node/SugarNode';
 import * as SugarText from '../node/SugarText';
 import * as Traverse from '../search/Traverse';
 
-const getEnd = (element: SugarElement<Node>) =>
+const getEnd = (element: SugarElement<Node>): number =>
   SugarNode.name(element) === 'img' ? 1 : SugarText.getOption(element).fold(
     () => Traverse.children(element).length,
     (v) => v.length
   );
 
-const isEnd = (element: SugarElement<Node>, offset: number) => getEnd(element) === offset;
+const isEnd = (element: SugarElement<Node>, offset: number): boolean => getEnd(element) === offset;
 
-const isStart = (element: SugarElement<Node>, offset: number) => offset === 0;
+const isStart = (element: SugarElement<Node>, offset: number): boolean => offset === 0;
 
 const isTextNodeWithCursorPosition = (el: SugarElement<Node>) => SugarText.getOption(el).filter((text) =>
   // For the purposes of finding cursor positions only allow text nodes with content,
@@ -21,7 +21,7 @@ const isTextNodeWithCursorPosition = (el: SugarElement<Node>) => SugarText.getOp
 ).isSome();
 
 const elementsWithCursorPosition = [ 'img', 'br' ];
-const isCursorPosition = (elem: SugarElement<Node>) => {
+const isCursorPosition = (elem: SugarElement<Node>): boolean => {
   const hasCursorPosition = isTextNodeWithCursorPosition(elem);
   return hasCursorPosition || Arr.contains(elementsWithCursorPosition, SugarNode.name(elem));
 };

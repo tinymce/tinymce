@@ -6,7 +6,7 @@ const editor = {
   isDirty: () => true
 };
 
-export const registerSaveItems = () => {
+export const registerSaveItems = (): void => {
   getDemoRegistry().addButton('save', {
     type: 'button',
     disabled: false,

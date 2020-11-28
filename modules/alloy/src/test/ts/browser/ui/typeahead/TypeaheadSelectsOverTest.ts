@@ -150,12 +150,10 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoSelectsOverTest', (su
     return [
       GuiSetup.mAddStyles(doc, [
         '.selected-item { background-color: #cadbee; }'
-      ])
-    ].concat(
-      testWithSelector(),
-      testWithoutSelector()
-    ).concat([
+      ]),
+      ...testWithSelector(),
+      ...testWithoutSelector(),
       GuiSetup.mRemoveStyles
-    ]);
+    ];
   }, success, failure);
 });

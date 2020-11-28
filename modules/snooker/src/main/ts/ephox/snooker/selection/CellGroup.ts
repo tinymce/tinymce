@@ -1,9 +1,10 @@
+import { Optional } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 import * as CellBounds from './CellBounds';
 
-const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailExt) {
+const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailExt): Structs.Bounds {
   return Structs.bounds(
     Math.min(detailA.row, detailB.row),
     Math.min(detailA.column, detailB.column),
@@ -12,7 +13,7 @@ const getBounds = function (detailA: Structs.DetailExt, detailB: Structs.DetailE
   );
 };
 
-const getAnyBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement) {
+const getAnyBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement): Optional<Structs.Bounds> {
   const startCoords = Warehouse.findItem(warehouse, startCell, Compare.eq);
   const finishCoords = Warehouse.findItem(warehouse, finishCell, Compare.eq);
   return startCoords.bind(function (sc) {
@@ -22,8 +23,8 @@ const getAnyBox = function (warehouse: Warehouse, startCell: SugarElement, finis
   });
 };
 
-const getBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement) {
-  return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds: Structs.Bounds) {
+const getBox = function (warehouse: Warehouse, startCell: SugarElement, finishCell: SugarElement): Optional<Structs.Bounds> {
+  return getAnyBox(warehouse, startCell, finishCell).bind(function (bounds) {
     return CellBounds.isRectangular(warehouse, bounds);
   });
 };

@@ -27,7 +27,7 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
   return Bounder.attempts(options.preference, anchorBox, elementBox, bubbles, options.bounds);
 };
 
-const setClasses = (element: SugarElement, decision: RepositionDecision) => {
+const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
@@ -39,19 +39,19 @@ const setClasses = (element: SugarElement, decision: RepositionDecision) => {
  *
  * There are a few cases where we specifically don't want a max-height, which is why it's optional.
  */
-const setHeight = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions) => {
+const setHeight = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   // The old API enforced MaxHeight.anchored() for fixed position. That no longer seems necessary.
   const maxHeightFunction = options.maxHeightFunction;
 
   maxHeightFunction(element, decision.maxHeight);
 };
 
-const setWidth = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions) => {
+const setWidth = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   const maxWidthFunction = options.maxWidthFunction;
   maxWidthFunction(element, decision.maxWidth);
 };
 
-const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions) => {
+const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
   applyPositionCss(element, Origins.reposition(options.origin, decision));

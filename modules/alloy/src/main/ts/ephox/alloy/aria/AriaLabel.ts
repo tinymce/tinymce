@@ -1,7 +1,7 @@
 import { Fun, Id } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 
-export const labelledBy = (labelledElement: SugarElement, labelElement: SugarElement) => {
+export const labelledBy = (labelledElement: SugarElement, labelElement: SugarElement): void => {
   const labelId = Attribute.getOpt(labelledElement, 'id')
     .fold(() => {
       const id = Id.generate('dialog-label');

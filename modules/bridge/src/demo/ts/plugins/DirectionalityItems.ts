@@ -5,7 +5,7 @@ const editor = {
   off: (_s, _f) => { }
 };
 
-export const registerDirectionalityItems = () => {
+export const registerDirectionalityItems = (): void => {
   getDemoRegistry().addToggleButton('dir', {
     type: 'togglebutton',
     disabled: false,

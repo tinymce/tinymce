@@ -7,7 +7,7 @@ import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEv
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { ReflectingConfig, ReflectingState } from './ReflectingTypes';
 
-const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>) => {
+const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState: ReflectingState<S>): AlloyEvents.AlloyEventRecord => {
   const update = (component: AlloyComponent, data: I) => {
     reflectingConfig.updateState.each((updateState) => {
       const newState = updateState(component, data);
@@ -23,7 +23,6 @@ const events = <I, S>(reflectingConfig: ReflectingConfig<I, S>, reflectingState:
   };
 
   return AlloyEvents.derive([
-
     AlloyEvents.run<ReceivingEvent>(SystemEvents.receive(), (component, message) => {
       // NOTE: Receiving event ignores the whole simulated event part.
       // TODO: Think about the types for this, or find a better way for this to rely on receiving.

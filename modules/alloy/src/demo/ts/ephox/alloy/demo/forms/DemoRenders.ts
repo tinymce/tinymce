@@ -1,12 +1,13 @@
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
-import { AlloySpec, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import { AlloySpec, RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import { ItemDataTuple, ItemSpec, SeparatorItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
 
 export interface DemoItem {
   type: 'item';
@@ -89,7 +90,7 @@ const demoGridMenu = ValueSchema.objOf([
 
 const demoChoice = ValueSchema.objOf([ ]);
 
-const choice = (choiceSpec: { value: string; text: string }) => {
+const choice = (choiceSpec: { value: string; text: string }): { dom: RawDomSchema; value: string } => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.choice', demoChoice, choiceSpec);
   return {
     dom: DomFactory.fromHtml(
@@ -193,7 +194,7 @@ const widgetItem = (itemSpec: DemoWidgetItem): WidgetItemSpec => {
   };
 };
 
-const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }) => {
+const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }): PartialMenuSpec => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.gridMenu', demoGridMenu, menuSpec);
   return {
     movement: {
@@ -214,10 +215,10 @@ const gridMenu = (menuSpec: DemoMenu & { columns: number; rows: number }) => {
       Menu.parts.items({ })
     ],
     items: spec.items
-  } as PartialMenuSpec;
+  };
 };
 
-const menu = (menuSpec: DemoMenu) => {
+const menu = (menuSpec: DemoMenu): PartialMenuSpec => {
   const spec = ValueSchema.asRawOrDie('DemoRenders.menu', demoMenu, menuSpec);
   return {
     dom: {
@@ -259,7 +260,7 @@ const orb = (spec: DemoItem): ItemSpec => {
   };
 };
 
-const toolbarItem = (spec: { text: string; action: () => void }) => ({
+const toolbarItem = (spec: { text: string; action: () => void }): AlloySpec => ({
   dom: {
     tag: 'span',
     classes: [ 'demo-alloy-toolbar-item' ],
@@ -267,7 +268,7 @@ const toolbarItem = (spec: { text: string; action: () => void }) => ({
   }
 });
 
-const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
+const toolbarGroup = (group: { label?: string; items: AlloySpec[] }): ToolbarGroupSpec => {
   const spec = group;
   return {
     dom: {
@@ -286,12 +287,12 @@ const toolbarGroup = (group: { label?: string; items: AlloySpec[] }) => {
   };
 };
 
-const orbMarkers = () => ({
+const orbMarkers = (): Record<'item' | 'selectedItem', string> => ({
   item: 'demo-alloy-orb',
   selectedItem: 'demo-alloy-orb-selected'
 });
 
-const tieredMarkers = () => ({
+const tieredMarkers = (): Record<'item' | 'selectedItem' | 'menu' | 'selectedMenu' | 'backgroundMenu', string> => ({
   item: 'demo-alloy-item',
   selectedItem: 'demo-alloy-item-selected',
   menu: 'demo-alloy-menu',

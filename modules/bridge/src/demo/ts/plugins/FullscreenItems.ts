@@ -5,7 +5,7 @@ const editor = {
   off: (_s, _f) => { }
 };
 
-export const registerFullscreenItems = () => {
+export const registerFullscreenItems = (): void => {
   getDemoRegistry().addToggleButton('fullscreen', {
     type: 'togglebutton',
     disabled: false,

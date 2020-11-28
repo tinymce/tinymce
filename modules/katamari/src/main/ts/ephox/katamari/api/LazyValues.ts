@@ -4,7 +4,7 @@ import { LazyValue } from './LazyValue';
 import { Optional } from './Optional';
 
 /** par :: [LazyValue a] -> LazyValue [a] */
-export const par = function <T> (lazyValues: LazyValue<T>[]) {
+export const par = function <T> (lazyValues: LazyValue<T>[]): LazyValue<T[]> {
   return AsyncValues.par(lazyValues, LazyValue.nu);
 };
 

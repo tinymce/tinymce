@@ -20,13 +20,13 @@ const goLeft = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
   }).getOr([]);
 };
 
-const run = function <E, D> (strategy: Walks, universe: Universe<E, D>, item: E) {
+const run = function <E, D> (strategy: Walks, universe: Universe<E, D>, item: E): E[] {
   const lefts = goLeft(universe, item, Gather.sidestep, strategy);
   return Arr.reverse(lefts).concat([ item ]);
 };
 
-const top = <E, D> (universe: Universe<E, D>, item: E) => run(Walks.top, universe, item);
-const all = <E, D> (universe: Universe<E, D>, item: E) => run(Walks.all, universe, item);
+const top = <E, D> (universe: Universe<E, D>, item: E): E[] => run(Walks.top, universe, item);
+const all = <E, D> (universe: Universe<E, D>, item: E): E[] => run(Walks.all, universe, item);
 
 export {
   top,

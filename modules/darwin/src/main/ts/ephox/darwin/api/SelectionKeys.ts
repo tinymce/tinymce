@@ -1,12 +1,12 @@
 const isKey = function (key: number) {
-  return function (keycode: number) {
+  return function (keycode: number): boolean {
     return keycode === key;
   };
 };
 
 const isUp = isKey(38);
 const isDown = isKey(40);
-const isNavigation = function (keycode: number) {
+const isNavigation = function (keycode: number): boolean {
   return keycode >= 37 && keycode <= 40;
 };
 

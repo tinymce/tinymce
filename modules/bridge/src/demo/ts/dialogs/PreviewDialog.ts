@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createPreviewDialog = () => {
+export const createPreviewDialog = (): void => {
   openDemoDialog(
     {
       title: 'Preview',

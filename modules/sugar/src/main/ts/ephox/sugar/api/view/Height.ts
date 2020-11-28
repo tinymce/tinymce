@@ -1,4 +1,4 @@
-import Dimension from '../../impl/Dimension';
+import { Dimension } from '../../impl/Dimension';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';
@@ -9,13 +9,13 @@ const api = Dimension('height', (element: SugarElement<HTMLElement>) => {
   return SugarBody.inBody(element) ? dom.getBoundingClientRect().height : dom.offsetHeight;
 });
 
-const set = (element: SugarElement<HTMLElement>, h: number | string) => api.set(element, h);
+const set = (element: SugarElement<HTMLElement>, h: number | string): void => api.set(element, h);
 
-const get = (element: SugarElement<HTMLElement>) => api.get(element);
+const get = (element: SugarElement<HTMLElement>): number => api.get(element);
 
-const getOuter = (element: SugarElement<HTMLElement>) => api.getOuter(element);
+const getOuter = (element: SugarElement<HTMLElement>): number => api.getOuter(element);
 
-const setMax = (element: SugarElement<HTMLElement>, value: number) => {
+const setMax = (element: SugarElement<HTMLElement>, value: number): void => {
   // These properties affect the absolute max-height, they are not counted natively, we want to include these properties.
   const inclusions = [ 'margin-top', 'border-top-width', 'padding-top', 'padding-bottom', 'border-bottom-width', 'margin-bottom' ];
   const absMax = api.max(element, value, inclusions);

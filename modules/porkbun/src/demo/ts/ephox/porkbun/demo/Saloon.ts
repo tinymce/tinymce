@@ -28,9 +28,9 @@ const create = function (): Saloon {
     return saloon;
   };
 
-  const events = Events.create({
+  const events: SaloonEvents = Events.create({
     shooting: Event([ 'shooter', 'target' ])
-  }) as SaloonEvents;
+  });
 
   const binder = Binder.create();
 

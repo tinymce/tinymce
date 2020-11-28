@@ -6,13 +6,13 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 
-const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
+const mapToStructGrid = function (grid: Structs.ElementNew[][]): Structs.RowCells[] {
   return Arr.map(grid, function (row) {
     return Structs.rowcells(row, 'tbody');
   });
 };
 
-const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
+const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]): void {
   assert.eq(expected.length, actual.length);
   Arr.each(expected, function (row, i) {
     Arr.each(row.cells, function (cell, j) {
@@ -30,7 +30,7 @@ const mergeTest = function (
   gridB: Structs.ElementNew[][],
   generator: () => SimpleGenerators,
   comparator: (a: SugarElement, b: SugarElement) => boolean
-) {
+): void {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
     startAddress,
@@ -62,7 +62,7 @@ const mergeIVTest = function (
   gridSpecB: Spec,
   generator: () => SimpleGenerators,
   comparator: (a: SugarElement, b: SugarElement) => boolean
-) {
+): void {
   // The last step, merge cells from gridB into gridA
   const nuGrid = TableMerge.merge(
     startAddress,
@@ -84,7 +84,7 @@ const suite = function (
   expectedMeasure: { rowDelta: number; colDelta: number },
   expectedTailor: Structs.ElementNew[][],
   expectedMergeGrids: Structs.ElementNew[][]
-) {
+): void {
   Fitment.measureTest(expectedMeasure, startAddress, gridA, gridB);
   Fitment.tailorTest(expectedTailor, startAddress, gridA, expectedMeasure, generator);
   mergeTest(expectedMergeGrids, startAddress, gridA, gridB, generator, comparator);

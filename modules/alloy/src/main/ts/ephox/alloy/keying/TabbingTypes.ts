@@ -12,7 +12,7 @@ import * as KeyRules from '../navigation/KeyRules';
 import { KeyRuleHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
-const create = (cyclicField: FieldProcessorAdt) => {
+const create = (cyclicField: FieldProcessorAdt): KeyingType.KeyingType<TabbingConfig, Stateless> => {
   const schema: FieldProcessorAdt[] = [
     FieldSchema.option('onEscape'),
     FieldSchema.option('onEnter'),

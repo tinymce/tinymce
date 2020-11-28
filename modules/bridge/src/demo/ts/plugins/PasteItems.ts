@@ -4,7 +4,7 @@ const editor = {
   on: (_s, _f) => { }
 };
 
-export const registerPasteItems = () => {
+export const registerPasteItems = (): void => {
   getDemoRegistry().addToggleButton('pastetext', {
     type: 'togglebutton',
     disabled: false,

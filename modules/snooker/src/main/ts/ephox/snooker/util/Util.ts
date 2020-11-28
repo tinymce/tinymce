@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 
-const unique = <T> (xs: T[], eq: (a: T, b: T) => boolean) => {
+const unique = <T> (xs: T[], eq: (a: T, b: T) => boolean): T[] => {
   const result: T[] = [];
   Arr.each(xs, (x, i) => {
     if (i < xs.length - 1 && !eq(x, xs[i + 1])) {
@@ -12,7 +12,7 @@ const unique = <T> (xs: T[], eq: (a: T, b: T) => boolean) => {
   return result;
 };
 
-const deduce = (xs: Optional<number>[], index: number) => {
+const deduce = (xs: Optional<number>[], index: number): Optional<number> => {
   if (index < 0 || index >= xs.length - 1) {
     return Optional.none<number>();
   }

@@ -21,7 +21,7 @@ const getHorizontalBounds = (contentAreaBox: Bounds, viewportBounds: Bounds): { 
 
 const getVerticalBounds = (editor: Editor, contentAreaBox: Bounds, viewportBounds: Bounds, isToolbarLocationTop: boolean): { y: number; bottom: number } => {
   const container = SugarElement.fromDom(editor.getContainer());
-  const header = SelectorFind.descendant(container, '.tox-editor-header').getOr(container);
+  const header = SelectorFind.descendant<HTMLElement>(container, '.tox-editor-header').getOr(container);
   const headerBox = Boxes.box(header);
   const isToolbarBelowContentArea = headerBox.y >= contentAreaBox.bottom;
   const isToolbarAbove = isToolbarLocationTop && !isToolbarBelowContentArea;

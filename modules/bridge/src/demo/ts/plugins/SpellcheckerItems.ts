@@ -5,7 +5,7 @@ const editor = {
   isDirty: () => true
 };
 
-export const registerSpellcheckerItems = () => {
+export const registerSpellcheckerItems = (): void => {
   getDemoRegistry().addSplitButton('spellchecker', {
     type: 'splitbutton',
     // disabled: false,

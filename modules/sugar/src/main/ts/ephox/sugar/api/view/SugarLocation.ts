@@ -2,13 +2,13 @@ import { inBody } from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import { SugarPosition } from './SugarPosition';
 
-const boxPosition = (dom: Element) => {
+const boxPosition = (dom: Element): SugarPosition => {
   const box = dom.getBoundingClientRect();
   return SugarPosition(box.left, box.top);
 };
 
 // Avoids falsy false fallthrough
-const firstDefinedOrZero = (a?: number, b?: number) => {
+const firstDefinedOrZero = (a?: number, b?: number): number => {
   if (a !== undefined) {
     return a;
   } else {
@@ -16,7 +16,7 @@ const firstDefinedOrZero = (a?: number, b?: number) => {
   }
 };
 
-const absolute = (element: SugarElement<Element>) => {
+const absolute = (element: SugarElement<Element>): SugarPosition => {
   const doc = element.dom.ownerDocument;
   const body = doc.body;
   const win = doc.defaultView;
@@ -40,14 +40,14 @@ const absolute = (element: SugarElement<Element>) => {
 // This is the old $.position(), but JQuery does nonsense calculations.
 // We're only 1 <-> 1 with the old value in the single place we use this function
 // (ego.api.Dragging) so the rest can bite me.
-const relative = (element: SugarElement<HTMLElement>) => {
+const relative = (element: SugarElement<HTMLElement>): SugarPosition => {
   const dom = element.dom;
   // jquery-ism: when style="position: fixed", this === boxPosition()
   // but tests reveal it returns the same thing anyway
   return SugarPosition(dom.offsetLeft, dom.offsetTop);
 };
 
-const viewport = (element: SugarElement<Element>) => {
+const viewport = (element: SugarElement<Element>): SugarPosition => {
   const dom = element.dom;
 
   const doc = dom.ownerDocument;

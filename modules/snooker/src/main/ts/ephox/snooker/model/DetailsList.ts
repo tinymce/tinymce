@@ -4,7 +4,7 @@ import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import { getAttrValue } from '../util/CellUtils';
 
-const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section) =>
+const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], getSection: (group: SugarElement<HTMLElement>) => Structs.Section): Structs.RowData<Structs.Detail>[] =>
   Arr.map(elems, (row) => {
     if (SugarNode.name(row) === 'colgroup') {
       const cells = Arr.map(TableLookup.columns(row), (column) => {
@@ -23,7 +23,7 @@ const fromRowsOrColGroups = (elems: SugarElement<HTMLTableRowElement | HTMLTable
     }
   });
 
-const getParentSection = (group: SugarElement<HTMLElement>) =>
+const getParentSection = (group: SugarElement<HTMLElement>): Structs.Section =>
   Traverse.parent(group).map((parent) => {
     const parentName = SugarNode.name(parent);
     return Structs.isValidSection(parentName) ? parentName : 'tbody';
@@ -34,7 +34,7 @@ const getParentSection = (group: SugarElement<HTMLElement>) =>
    element: row element
    cells: (id, rowspan, colspan) structs
  */
-const fromTable = (table: SugarElement<HTMLTableElement>) => {
+const fromTable = (table: SugarElement<HTMLTableElement>): Structs.RowData<Structs.Detail>[] => {
   const rows = TableLookup.rows(table);
   const columnGroups = TableLookup.columnGroups(table);
 
@@ -42,7 +42,8 @@ const fromTable = (table: SugarElement<HTMLTableElement>) => {
   return fromRowsOrColGroups(elems, getParentSection);
 };
 
-const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section) => fromRowsOrColGroups(elems, () => section);
+const fromPastedRows = (elems: SugarElement<HTMLTableRowElement | HTMLTableColElement>[], section: Structs.Section): Structs.RowData<Structs.Detail>[] =>
+  fromRowsOrColGroups(elems, () => section);
 
 export {
   fromTable,

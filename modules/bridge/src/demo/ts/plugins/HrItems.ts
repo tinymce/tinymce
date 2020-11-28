@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerHrItems = () => {
+export const registerHrItems = (): void => {
   getDemoRegistry().addButton('hr', {
     type: 'button',
     onAction: (_buttonApi) => {

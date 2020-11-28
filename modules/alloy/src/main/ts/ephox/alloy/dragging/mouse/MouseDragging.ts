@@ -2,7 +2,7 @@ import { FieldProcessorAdt } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
-import DelayedFunction from '../../alien/DelayedFunction';
+import { DelayedFunction } from '../../alien/DelayedFunction';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
@@ -16,7 +16,7 @@ import * as MouseBlockerEvents from './MouseBlockerEvents';
 import * as MouseData from './MouseData';
 import { MouseDraggingConfig } from './MouseDraggingTypes';
 
-const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [
+const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs<MouseEvent>>> => [
   AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
     const raw = simulatedEvent.event.raw;
     if (raw.button !== 0) { return; }

@@ -47,7 +47,7 @@ const bounds = (x: number, y: number, width: number, height: number): Bounds => 
   bottom: y + height
 });
 
-const box = (element: SugarElement): Bounds => {
+const box = (element: SugarElement<HTMLElement>): Bounds => {
   const xy = SugarLocation.absolute(element);
   const w = Width.getOuter(element);
   const h = Height.getOuter(element);
@@ -56,7 +56,7 @@ const box = (element: SugarElement): Bounds => {
 
 // NOTE: We used to use AriaFocus.preserve here, but there is no reason to do that now that
 // we are not changing the visibility of the element. Hopefully (2015-09-29).
-const absolute = (element: SugarElement): Bounds => {
+const absolute = (element: SugarElement<HTMLElement>): Bounds => {
   const position = OuterPosition.find(element);
   const width = Width.getOuter(element);
   const height = Height.getOuter(element);

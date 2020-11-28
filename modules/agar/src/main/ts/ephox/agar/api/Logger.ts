@@ -37,7 +37,7 @@ const ts = <T, U>(label: string, fs: Step<T, U>[]): Step<T, U>[] => {
   return Arr.map(fs, (f: Step<T, U>, i: number) => t(label + '(' + i + ')', f));
 };
 
-const spec = (msg): void => {
+const spec = (msg: string): void => {
   // TMP, WIP
   // eslint-disable-next-line no-console
   console.log(msg);

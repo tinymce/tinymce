@@ -10,6 +10,7 @@
   "rules": {
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/consistent-type-definitions": "off", // leave off
+    "@typescript-eslint/explicit-module-boundary-types": [ "error", { "allowArgumentsExplicitlyTypedAsAny": true } ],
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-this-alias": "off",

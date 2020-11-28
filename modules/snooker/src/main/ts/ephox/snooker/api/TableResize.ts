@@ -49,11 +49,11 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
   const vdirection = BarPositions.width;
   const manager = BarManager(wire);
 
-  const events = Events.create({
+  const events: TableResizeEvents = Events.create({
     beforeResize: Event([ 'table', 'type' ]),
     afterResize: Event([ 'table', 'type' ]),
     startDrag: Event([]),
-  }) as TableResizeEvents;
+  });
 
   manager.events.adjustHeight.bind((event) => {
     const table = event.table;

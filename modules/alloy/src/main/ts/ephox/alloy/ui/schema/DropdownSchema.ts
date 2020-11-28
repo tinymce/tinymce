@@ -48,7 +48,8 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   InternalSink.partType()
 ]);
 
-const name = () => 'Dropdown';
+const name = Fun.constant('Dropdown');
+
 export {
   name,
   schema,

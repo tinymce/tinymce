@@ -14,8 +14,8 @@ export interface DragMode {
 }
 
 export interface DragSink {
-  element: () => SugarElement;
-  start: (parent: SugarElement) => void;
+  element: () => SugarElement<HTMLElement>;
+  start: (parent: SugarElement<Node>) => void;
   stop: () => void;
   destroy: () => void;
 }

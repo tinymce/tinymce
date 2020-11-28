@@ -31,7 +31,7 @@ const byItem = function (item: Gene, target: Gene): Optional<Gene> {
   }
 };
 
-const indexIn = function (parent: Gene, item: Gene) {
+const indexIn = function (parent: Gene, item: Gene): Optional<number> {
   return Arr.findIndex(parent.children, function (x) {
     return Comparator.eq(x, item);
   });

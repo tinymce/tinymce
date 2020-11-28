@@ -8,7 +8,7 @@ const selector = function (item: Gene, query: string): Optional<Gene> {
   });
 };
 
-const closest = function (scope: Gene, query: string) {
+const closest = function (scope: Gene, query: string): Optional<Gene> {
   return Comparator.is(scope, query) ? Optional.some(scope) : selector(scope, query);
 };
 

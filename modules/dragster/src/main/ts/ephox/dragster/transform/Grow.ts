@@ -24,9 +24,9 @@ type GrowthFn = (x: number, y: number) => Growth;
 
 const grower = function (f: GrowthFn) {
   return function (element: SugarElement) {
-    const events = Events.create({
+    const events: GrowEvents = Events.create({
       grow: Event([ 'x', 'y' ])
-    }) as GrowEvents;
+    });
 
     const mutate = function (x: number, y: number) {
       const growth = f(x, y);

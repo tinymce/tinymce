@@ -13,7 +13,7 @@ const write = (label: string, elem: SugarElement): string => {
   return id;
 };
 
-const writeOnly = (elem: SugarElement, uid: string | null) => {
+const writeOnly = (elem: SugarElement, uid: string | null): void => {
   Object.defineProperty(elem.dom, idAttr, {
     value: uid,
     writable: true

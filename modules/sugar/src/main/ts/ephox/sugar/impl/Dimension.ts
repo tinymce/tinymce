@@ -3,7 +3,15 @@ import { SugarElement } from '../api/node/SugarElement';
 import * as Css from '../api/properties/Css';
 import * as Style from './Style';
 
-export default (name: string, getOffset: (e: SugarElement<HTMLElement>) => number) => {
+export interface Dimension {
+  readonly get: (element: SugarElement<HTMLElement>) => number;
+  readonly set: (element: SugarElement<Node>, value: number | string) => void;
+  readonly getOuter: (element: SugarElement<HTMLElement>) => number;
+  readonly aggregate: (element: SugarElement<Element>, properties: string[]) => number;
+  readonly max: (element: SugarElement<Element>, value: number, properties: string[]) => number;
+}
+
+export const Dimension = (name: string, getOffset: (e: SugarElement<HTMLElement>) => number): Dimension => {
   const set = (element: SugarElement<Node>, h: number | string) => {
     if (!Type.isNumber(h) && !h.match(/^[0-9]+$/)) {
       throw new Error(name + '.set accepts only positive integer values. Value was ' + h);

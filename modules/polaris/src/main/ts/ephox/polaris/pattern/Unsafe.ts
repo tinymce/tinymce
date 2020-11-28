@@ -1,11 +1,12 @@
 import { Fun, Optional } from '@ephox/katamari';
 import * as Chars from './Chars';
 import { Custom } from './Custom';
+import { PRegExp } from './Types';
 
 /**
  * Tokens have no prefix or suffix
  */
-const token = function (input: string) {
+const token = function (input: string): PRegExp {
   return Custom(input, Fun.constant(0), Fun.constant(0), Optional.none());
 };
 
@@ -14,7 +15,7 @@ const token = function (input: string) {
  *
  * These are consumed by the regex and then excluded by prefix/suffix lengths.
  */
-const word = function (input: string) {
+const word = function (input: string): PRegExp {
   const regex = `((?:^'?)|(?:` + Chars.wordbreak() + `+'?))` + input + `((?:'?$)|(?:'?` + Chars.wordbreak() + '+))';
 
   // ASSUMPTION: There are no groups in their input

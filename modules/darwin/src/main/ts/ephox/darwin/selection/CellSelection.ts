@@ -78,7 +78,7 @@ const retrieve = function <T extends Element> (container: SugarElement<Node>, se
   return sels.length > 0 ? Optional.some(sels) : Optional.none<SugarElement<T>[]>();
 };
 
-const getLast = function (boxes: SugarElement[], lastSelectedSelector: string) {
+const getLast = function (boxes: SugarElement<Element>[], lastSelectedSelector: string): Optional<SugarElement<Element>> {
   return Arr.find(boxes, function (box) {
     return Selectors.is(box, lastSelectedSelector);
   });
@@ -114,7 +114,8 @@ const expandTo = function (finish: SugarElement, firstSelectedSelector: string):
   });
 };
 
-const shiftSelection = function (boxes: SugarElement[], deltaRow: number, deltaColumn: number, firstSelectedSelector: string, lastSelectedSelector: string) {
+const shiftSelection = function (boxes: SugarElement[], deltaRow: number, deltaColumn: number,
+                                 firstSelectedSelector: string, lastSelectedSelector: string): Optional<IdentifiedExt> {
   return getLast(boxes, lastSelectedSelector).bind(function (last) {
     return TablePositions.moveBy(last, deltaRow, deltaColumn).bind(function (finish) {
       return expandTo(finish, firstSelectedSelector);

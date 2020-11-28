@@ -1,6 +1,10 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
 
-export type FunctionWithAnnotation<T extends Function> = T & { toFunctionAnnotation?: () => { name: string; parameters: string[] } };
+interface Annotation {
+  readonly name: string;
+  readonly parameters: string[];
+}
+export type FunctionWithAnnotation<T extends Function> = T & { toFunctionAnnotation?: () => Annotation };
 
 const markAsBehaviourApi = <T extends Function>(f: T, apiName: string, apiFunction: Function): FunctionWithAnnotation<T> => {
   const delegate = apiFunction.toString();
@@ -44,9 +48,8 @@ const markAsSketchApi = <T extends Function>(f: T, apiFunction: Function): Funct
   return f;
 };
 
-const getAnnotation = <T extends Function>(f: FunctionWithAnnotation<T>) => Optional.from(
-  f.toFunctionAnnotation?.()
-);
+const getAnnotation = <T extends Function>(f: FunctionWithAnnotation<T>): Optional<Annotation> =>
+  Optional.from(f.toFunctionAnnotation?.());
 
 export {
   markAsBehaviourApi,

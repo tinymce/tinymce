@@ -9,7 +9,7 @@ import * as WordUtil from './WordUtil';
  * that there were no breaks in the respective direction from position in text. The before and the
  * after values will be equal if position is at the start or the end of a word.
  */
-const around = function (text: string, position: number) {
+const around = function (text: string, position: number): BeforeAfter {
   const first = text.substring(0, position);
   const before = WordUtil.leftBreak(first).map(function (index) {
     return index + 1;

@@ -5,7 +5,7 @@ const editor = {
   off: (_s, _f) => { }
 };
 
-export const registerImageItems = () => {
+export const registerImageItems = (): void => {
   getDemoRegistry().addToggleButton('image', {
     type: 'togglebutton',
     onSetup: (buttonApi) => {

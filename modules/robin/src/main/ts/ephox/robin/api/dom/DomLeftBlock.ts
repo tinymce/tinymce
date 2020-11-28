@@ -4,11 +4,11 @@ import * as LeftBlock from '../general/LeftBlock';
 
 const universe = DomUniverse();
 
-const top = function (item: SugarElement) {
+const top = function (item: SugarElement): SugarElement[] {
   return LeftBlock.top(universe, item);
 };
 
-const all = function (item: SugarElement) {
+const all = function (item: SugarElement): SugarElement[] {
   return LeftBlock.all(universe, item);
 };
 

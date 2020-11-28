@@ -75,7 +75,7 @@ const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void)
 };
 
 /** a -> Future a */
-const pure = function <T> (a: T) {
+const pure = function <T> (a: T): Future<T> {
   return make(() => Promise.resolve(a));
 };
 

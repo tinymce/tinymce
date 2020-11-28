@@ -7,7 +7,7 @@ export enum AttributeValue {
 
 export const Attribute = 'data-alloy-vertical-dir';
 
-const isBottomToTopDir = (el: SugarElement) => PredicateExists.closest(el, (current) =>
+const isBottomToTopDir = (el: SugarElement): boolean => PredicateExists.closest(el, (current) =>
   SugarNode.isElement(current) && Attrib.get(current, 'data-alloy-vertical-dir') === AttributeValue.BottomToTop);
 
 export {

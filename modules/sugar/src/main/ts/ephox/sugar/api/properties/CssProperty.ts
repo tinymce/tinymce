@@ -1,7 +1,13 @@
 import { SugarElement } from '../node/SugarElement';
 import * as Css from './Css';
 
-export default (property: string, value: string) => {
+export interface CssProperty {
+  readonly is: (element: SugarElement<Element>) => boolean;
+  readonly remove: (element: SugarElement<Element>) => void;
+  readonly set: (element: SugarElement<Element>) => void;
+}
+
+export const CssProperty = (property: string, value: string): CssProperty => {
   const is = (element: SugarElement<Element>): boolean =>
     Css.get(element, property) === value;
 

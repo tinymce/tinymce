@@ -3,6 +3,7 @@ import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
 import { Chain } from './Chain';
+import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 // Custom event creation
@@ -17,10 +18,10 @@ const cMouseOutWith = Fun.compose(Chain.op, Clicks.mouseOut);
 // With delta position (shifted relative to top-left of component)
 /**
  * @deprecated use cMouseUpWith({ dx, dy }) instead */
-const cMouseUpTo = (dx: number, dy: number) => cMouseUpWith({ dx, dy });
+const cMouseUpTo = (dx: number, dy: number): Chain<SugarElement<Node>, SugarElement<Node>> => cMouseUpWith({ dx, dy });
 /**
  * @deprecated use cMouseMoveWith({ dx, dy }) instead */
-const cMouseMoveTo = (dx: number, dy: number) => cMouseMoveWith({ dx, dy });
+const cMouseMoveTo = (dx: number, dy: number): Chain<SugarElement<Node>, SugarElement<Node>> => cMouseMoveWith({ dx, dy });
 
 // No extra settings
 /**
@@ -57,12 +58,13 @@ const sTriggerOn = <T>(container: SugarElement, selector: string, action: (ele: 
     );
   }) ]);
 
-const sClickOn = <T>(container: SugarElement, selector: string) => sTriggerOn<T>(container, selector, Clicks.trigger);
+const sClickOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
+  sTriggerOn<T>(container, selector, Clicks.trigger);
 
-const sHoverOn = <T>(container: SugarElement, selector: string) =>
+const sHoverOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
   sTriggerOn<T>(container, selector, Clicks.mouseOver({ }));
 
-const sContextMenuOn = <T>(container: SugarElement, selector: string) =>
+const sContextMenuOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
   sTriggerOn<T>(container, selector, Clicks.contextMenu({ }));
 
 const cClickOn = (selector: string): Chain<SugarElement, SugarElement> => Chain.fromIsolatedChains([
@@ -79,7 +81,8 @@ const trueClick = (elem: SugarElement) => {
   Clicks.trigger(elem);
 };
 const cTrueClick = Chain.op(trueClick);
-const sTrueClickOn = <T>(container: SugarElement, selector: string) => sTriggerOn<T>(container, selector, trueClick);
+const sTrueClickOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
+  sTriggerOn<T>(container, selector, trueClick);
 
 // Low level exports
 const leftClickButton = Clicks.leftClickButton ;

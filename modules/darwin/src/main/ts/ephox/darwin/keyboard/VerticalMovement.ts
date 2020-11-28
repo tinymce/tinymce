@@ -9,7 +9,13 @@ import * as Util from '../selection/Util';
 import * as KeySelection from './KeySelection';
 import * as TableKeys from './TableKeys';
 
-const inSameTable = function (elem: SugarElement, table: SugarElement) {
+interface Simulated {
+  readonly start: SugarElement;
+  readonly finish: SugarElement;
+  readonly range: SimRange;
+}
+
+const inSameTable = function (elem: SugarElement, table: SugarElement): boolean {
   return PredicateExists.ancestor(elem, function (e) {
     return Traverse.parent(e).exists(function (p) {
       return Compare.eq(p, table);
@@ -17,15 +23,9 @@ const inSameTable = function (elem: SugarElement, table: SugarElement) {
   });
 };
 
-interface Simulated {
-  readonly start: SugarElement;
-  readonly finish: SugarElement;
-  readonly range: SimRange;
-}
-
 // Note: initial is the finishing element, because that's where the cursor starts from
 // Anchor is the starting element, and is only used to work out if we are in the same table
-const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement) {
+const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement): Optional<Simulated> {
   return SelectorFind.closest(initial, 'td,th', isRoot).bind(function (start) {
     return SelectorFind.closest(start, 'table', isRoot).bind(function (table) {
       if (!inSameTable(anchor, table)) {
@@ -45,7 +45,7 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
 };
 
 const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
-                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>) {
+                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>): Optional<Response> {
   // Do not override the up/down keys on IE.
   if (PlatformDetection.detect().browser.isIE()) {
     return Optional.none<Response>();
@@ -62,7 +62,7 @@ const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   }
 };
 
-const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean) {
+const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
     return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -83,7 +83,7 @@ const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) 
   });
 };
 
-const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean) {
+const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> {
   return SelectorFind.closest(initial, 'tr', isRoot).bind(function (startRow) {
     return SelectorFind.closest(startRow, 'table', isRoot).bind(function (table) {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -104,7 +104,7 @@ const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement)
 };
 
 const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
-                         anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
+                         anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void): Optional<Response> {
   return simulate(bridge, isRoot, direction, initial, anchor).bind(function (info) {
     return KeySelection.detect(container, isRoot, info.start, info.finish, selectRange);
   });

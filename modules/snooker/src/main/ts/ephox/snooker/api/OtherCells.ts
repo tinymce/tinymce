@@ -1,10 +1,15 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import { Warehouse } from './Warehouse';
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
+
+export interface OtherCells {
+  readonly upOrLeftCells: SugarElement<HTMLTableCellElement>[];
+  readonly downOrRightCells: SugarElement<HTMLTableCellElement>[];
+}
 
 const getUpOrLeftCells = (grid: RowCells[], selectedCells: DetailExt[], generators: Generators): SugarElement[] => {
   // Get rows up or at the row of the bottom right cell
@@ -28,7 +33,7 @@ const getDownOrRightCells = (grid: RowCells[], selectedCells: DetailExt[], gener
   });
 };
 
-const getOtherCells = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators) => {
+const getOtherCells = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators): Optional<OtherCells> => {
   const warehouse = Warehouse.fromTable(table);
   const details = onCells(warehouse, target);
 

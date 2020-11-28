@@ -9,11 +9,6 @@ export interface ElementAndHandler {
   readonly descHandler: CurriedHandler;
 }
 
-const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
-  element,
-  descHandler
-});
-
 export interface CurriedHandler {
   readonly purpose: string;
   readonly cHandler: Function;
@@ -29,6 +24,18 @@ export interface UidAndHandler {
   readonly descHandler: CurriedHandler;
 }
 
+export interface EventRegistry {
+  readonly registerId: (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => void;
+  readonly unregisterId: (id: string) => void;
+  readonly filterByType: (type: string) => UidAndHandler[];
+  readonly find: (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement) => Optional<ElementAndHandler>;
+}
+
+const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
+  element,
+  descHandler
+});
+
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => ({
   id,
   descHandler: handler
@@ -37,7 +44,7 @@ const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler =>
 export type EventName = string;
 export type Uid = string;
 
-export default () => {
+export const EventRegistry = (): EventRegistry => {
   const registry: Record<EventName, Record<Uid, CurriedHandler>> = { };
 
   const registerId = (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => {

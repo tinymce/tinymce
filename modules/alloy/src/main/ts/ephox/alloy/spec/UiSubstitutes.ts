@@ -5,10 +5,10 @@ import { CompositeSketchDetail } from '../api/ui/Sketcher';
 import { ConfiguredPart } from '../parts/AlloyParts';
 
 interface Replacement {
-  name: () => string;
-  required: () => boolean;
-  used: () => boolean;
-  replace: () => UiSubstitutesAdt;
+  readonly name: () => string;
+  readonly required: () => boolean;
+  readonly used: () => boolean;
+  readonly replace: () => UiSubstitutesAdt;
 }
 
 type ValueThunkFn<R> = <D extends CompositeSketchDetail>(detail: D, spec?: Record<string, any>, partValidated?: Record<string, any>) => R;
@@ -113,7 +113,7 @@ const oneReplace = (label: string, replacements: UiSubstitutesAdt): Replacement 
   };
 };
 
-const substitutePlaces = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>) => {
+const substitutePlaces = <D extends CompositeSketchDetail>(owner: Optional<string>, detail: D, components: AlloySpec[], placeholders: Record<string, UiSubstitutesAdt>): AlloySpec[] => {
   const ps = Obj.map(placeholders, (ph, name) => oneReplace(name, ph));
 
   const outcome = substituteAll(owner, detail, components, ps);
@@ -130,7 +130,8 @@ const substitutePlaces = <D extends CompositeSketchDetail>(owner: Optional<strin
   return outcome;
 };
 
-const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt) => p.fold((req, valueThunk) => [ valueThunk(detail) ], (req, valuesThunk) => valuesThunk(detail));
+const singleReplace = <D extends CompositeSketchDetail>(detail: D, p: UiSubstitutesAdt): AlloySpec[] =>
+  p.fold((req, valueThunk) => [ valueThunk(detail) ], (req, valuesThunk) => valuesThunk(detail));
 
 const single = adt.single;
 const multiple = adt.multiple;

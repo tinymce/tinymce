@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerPageBreakItems = () => {
+export const registerPageBreakItems = (): void => {
   getDemoRegistry().addButton('pagebreak', {
     type: 'button',
     disabled: false,

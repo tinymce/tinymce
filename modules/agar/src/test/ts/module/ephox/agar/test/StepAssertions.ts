@@ -8,7 +8,7 @@ import { Step } from 'ephox/agar/api/Step';
 const sPreserved = '..preserved..';
 
 // We expect it to fail, and we are checking that the error is the right one
-const assertError = (label: string, expectedError: any, actualError: any): Result<any, any> => {
+const assertError = (label: string, expectedError: any, actualError: any): Result<any, Error> => {
   const errMessage = actualError.message !== undefined ? actualError.message : actualError;
   try {
     Assert.eq(
@@ -22,7 +22,7 @@ const assertError = (label: string, expectedError: any, actualError: any): Resul
   }
 };
 
-const assertPprintError = (label: string, expectedExpectedValue: any, expectedActualValue: any, actualError: any): Result<any, any> => {
+const assertPprintError = <T>(label: string, expectedExpectedValue: T, expectedActualValue: T, actualError: any): Result<T, Error> => {
   try {
     Assert.eq('checking expected diff of error', actualError.diff, {
       actual: expectedActualValue,
@@ -39,7 +39,7 @@ const failOnSuccess = (label: string, expectedError: any, unexpectedSuccess: any
     'Received success: ' + unexpectedSuccess;
 
 // We expect it to pass, so we are checking that the passing value is the right one
-const assertSuccess = (label: string, expected: any, actual: any): Result<any, any> => {
+const assertSuccess = <T>(label: string, expected: T, actual: T): Result<T, Error> => {
   try {
     Assert.eq(label + ': checking successful value', expected, actual);
     return Result.value(actual);
@@ -54,7 +54,7 @@ const failOnError = (label: string, expectedSuccess: any, unexpectedError: any):
   return label + '\nExpected success: ' + expectedSuccess + '.\nInstead, failed: ' + errMessage;
 };
 
-const failed = (label, expected, step: Step<any, any>) =>
+const failed = <T>(label: string, expected: T, step: Step<T, T>): Step<T, T> =>
   Step.raw((value, next, die, initLogs) => {
     step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess(label, expected, v);
@@ -67,7 +67,7 @@ const failed = (label, expected, step: Step<any, any>) =>
     }, initLogs);
   });
 
-const passed = (label, expected, step: Step<any, any>) =>
+const passed = <T>(label: string, expected: T | string, step: Step<T, T>): Step<T, T> =>
   Step.raw((value, next, die, initLogs) => {
     step.runStep(value, (v, newLogs) => {
       const exp = expected === sPreserved ? value : expected;
@@ -81,7 +81,7 @@ const passed = (label, expected, step: Step<any, any>) =>
     }, initLogs);
   });
 
-const testStepsPass = (expected, steps: Array<Step<any, any>>) =>
+const testStepsPass = <T>(expected: T, steps: Array<Step<any, any>>): Step<any, any> =>
   Step.raw((v, next, die, initLogs) => Pipeline.async(v, steps, (v2, newLogs) => {
     assertSuccess('Checking final step value', expected, v2).fold(
       (err) => die(err, newLogs),
@@ -94,7 +94,7 @@ const testStepsPass = (expected, steps: Array<Step<any, any>>) =>
     die(msg, newLogs);
   }, initLogs));
 
-const testStepsFail = (expected, steps: Array<Step<any, any>>) =>
+const testStepsFail = <E>(expected: E, steps: Array<Step<any, any>>): Step<any, any> =>
   Step.raw((initValue, next, die, initLogs) => Pipeline.async(initValue, steps, (v, newLogs) => {
     const msg = failOnSuccess('testStepsFail', expected, v);
     die(msg, newLogs);
@@ -105,7 +105,7 @@ const testStepsFail = (expected, steps: Array<Step<any, any>>) =>
     );
   }, initLogs));
 
-const testStepFail = (expected, step: Step<any, any>) =>
+const testStepFail = <T, E>(expected: E, step: Step<T, any>): Step<T, T> =>
   Step.raw((value, next, die, initLogs) => {
     step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess('testStepFail', expected, v);
@@ -117,7 +117,7 @@ const testStepFail = (expected, step: Step<any, any>) =>
     }, initLogs);
   });
 
-const testStepFailPprintError = (expectedExpectedValue, expectedActualValue, step: Step<any, any>) =>
+const testStepFailPprintError = <E, T>(expectedExpectedValue: E, expectedActualValue: E, step: Step<T, T>): Step<T, T> =>
   Step.raw((value, next, die, initLogs) => {
     step.runStep(value, (v, newLogs) => {
       const msg = failOnSuccess('testStepFail', expectedExpectedValue, v);
@@ -129,7 +129,7 @@ const testStepFailPprintError = (expectedExpectedValue, expectedActualValue, ste
     }, initLogs);
   });
 
-const testChain = (expected, chain: Chain<any, any>) =>
+const testChain = <T>(expected: T, chain: Chain<T, T>): Step<T, T> =>
   Step.raw((value, next, die, initLogs) => {
     chain.runChain(value, (actual, newLogs) => {
       assertSuccess('testChain', expected, actual).fold(
@@ -142,7 +142,7 @@ const testChain = (expected, chain: Chain<any, any>) =>
     }, initLogs);
   });
 
-const testChainFail = (expected, initial, chain: Chain<any, any>) =>
+const testChainFail = <T, E>(expected: E, initial: T, chain: Chain<any, any>): Step<T, any> =>
   Step.raw((initValue, next, die, initLogs) => {
     chain.runChain(
       initial,
@@ -160,25 +160,26 @@ const testChainFail = (expected, initial, chain: Chain<any, any>) =>
     );
   });
 
-const testChainsFail = (expected, initial, chains: Array<Chain<any, any>>) => Step.raw((initValue, next, die, initLogs) => {
-  Chain.pipeline(
-    Arr.flatten([
-      [ Chain.inject(initial) ],
-      chains
-    ]),
-    (v, newLogs) => {
-      const msg = failOnSuccess('testChainsFail', expected, v);
-      die(msg, newLogs);
-    },
-    (err, newLogs) => {
-      assertError('testChainsFail', expected, err).fold(
-        (err) => die(err, newLogs),
-        (_) => next(initValue, newLogs)
-      );
-    },
-    initLogs
-  );
-});
+const testChainsFail = <T, E>(expected: E, initial: T, chains: Array<Chain<any, any>>): Step<T, any> =>
+  Step.raw((initValue, next, die, initLogs) => {
+    Chain.pipeline(
+      Arr.flatten([
+        [ Chain.inject(initial) ],
+        chains
+      ]),
+      (v, newLogs) => {
+        const msg = failOnSuccess('testChainsFail', expected, v);
+        die(msg, newLogs);
+      },
+      (err, newLogs) => {
+        assertError('testChainsFail', expected, err).fold(
+          (err) => die(err, newLogs),
+          (_) => next(initValue, newLogs)
+        );
+      },
+      initLogs
+    );
+  });
 
 const preserved = Fun.constant(sPreserved);
 

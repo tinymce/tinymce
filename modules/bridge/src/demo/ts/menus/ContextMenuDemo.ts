@@ -2,7 +2,7 @@ import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 /* eslint-disable no-console */
 
-export const registerDemoContextMenus = () => {
+export const registerDemoContextMenus = (): void => {
   getDemoRegistry().addContextMenu('regular', {
     update: () => [ 'bold', 'italic', '|', 'table' ]
   });

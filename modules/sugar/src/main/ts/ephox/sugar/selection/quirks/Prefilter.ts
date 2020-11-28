@@ -4,7 +4,7 @@ import * as SugarNode from '../../api/node/SugarNode';
 import { SimSelection } from '../../api/selection/SimSelection';
 import { Situ } from '../../api/selection/Situ';
 
-const beforeSpecial = (element: SugarElement<Node>, offset: number) => {
+const beforeSpecial = (element: SugarElement<Node>, offset: number): Situ => {
   // From memory, we don't want to use <br> directly on Firefox because it locks the keyboard input.
   // It turns out that <img> directly on IE locks the keyboard as well.
   // If the offset is 0, use before. If the offset is 1, use after.
@@ -19,19 +19,19 @@ const beforeSpecial = (element: SugarElement<Node>, offset: number) => {
   }
 };
 
-const preprocessRelative = (startSitu: Situ, finishSitu: Situ) => {
+const preprocessRelative = (startSitu: Situ, finishSitu: Situ): SimSelection => {
   const start = startSitu.fold(Situ.before, beforeSpecial, Situ.after);
   const finish = finishSitu.fold(Situ.before, beforeSpecial, Situ.after);
   return SimSelection.relative(start, finish);
 };
 
-const preprocessExact = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => {
+const preprocessExact = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): SimSelection => {
   const startSitu = beforeSpecial(start, soffset);
   const finishSitu = beforeSpecial(finish, foffset);
   return SimSelection.relative(startSitu, finishSitu);
 };
 
-const preprocess = (selection: SimSelection) => selection.match({
+const preprocess = (selection: SimSelection): SimSelection => selection.match({
   domRange(rng) {
     const start = SugarElement.fromDom(rng.startContainer);
     const finish = SugarElement.fromDom(rng.endContainer);

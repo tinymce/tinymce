@@ -7,20 +7,24 @@ export interface ReceivingBehaviour extends Behaviour.AlloyBehaviour<ReceivingCo
   config: (config: ReceivingConfigSpec) => Behaviour.NamedConfiguredBehaviour<ReceivingConfigSpec, ReceivingConfig>;
 }
 
+export interface ReceivingChannelSpec {
+  schema?: Processor;
+  onReceive: (comp: AlloyComponent, message: any) => void;
+}
+
+export interface ReceivingChannel {
+  schema: Processor;
+  onReceive: (comp: AlloyComponent, message: any) => void;
+}
+
 export interface ReceivingConfig extends Behaviour.BehaviourConfigDetail {
   channels: {
-    [ key: string ]: {
-      schema: Processor;
-      onReceive: (comp: AlloyComponent, message: any) => void;
-    };
+    [ key: string ]: ReceivingChannel;
   };
 }
 
 export interface ReceivingConfigSpec extends Behaviour.BehaviourConfigSpec {
   channels: {
-    [ key: string]: {
-      onReceive: (comp: AlloyComponent, message: any) => void;
-      schema?: Processor;
-    };
+    [ key: string]: ReceivingChannelSpec;
   };
 }

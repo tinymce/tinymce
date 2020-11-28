@@ -44,7 +44,7 @@ const isEmpty = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return universe.property().isText(item) ? false : universe.down().predicate(item, universe.property().isText).length === 0;
 };
 
-const flatten = function <E, D> (universe: Universe<E, D>, item: E) {
+const flatten = function <E, D> (universe: Universe<E, D>, item: E): WordDecisionItem<E>[] {
   return universe.property().isText(item) ? [ WordDecision.detail(universe, item) ] : Arr.map(
     universe.down().predicate(item, universe.property().isText),
     function (e) {

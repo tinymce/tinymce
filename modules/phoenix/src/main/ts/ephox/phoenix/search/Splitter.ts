@@ -2,13 +2,14 @@ import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { PositionArray, Strings } from '@ephox/polaris';
 import * as Spot from '../api/data/Spot';
+import { SpotRange } from '../api/data/Types';
 
 /**
  * Re-generates an item's text nodes, split as defined by the positions array.
  *
  * Returns a PositionArray of the result.
  */
-const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]) {
+const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] {
   const text = universe.property().getText(item);
   const pieces = Arr.filter(Strings.splits(text, positions), function (section) {
     return section.length > 0;

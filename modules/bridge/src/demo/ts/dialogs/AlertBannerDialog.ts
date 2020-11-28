@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createAlertBannerDialog = () => {
+export const createAlertBannerDialog = (): void => {
   openDemoDialog(
     {
       title: 'Alert Banner',

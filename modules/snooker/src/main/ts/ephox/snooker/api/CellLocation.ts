@@ -40,7 +40,7 @@ const adt: {
   { last: [ 'current' ] }
 ]);
 
-const none = (current: SugarElement | undefined = undefined) => adt.none(current);
+const none = (current: SugarElement | undefined = undefined): CellLocation => adt.none(current);
 
 export const CellLocation = {
   ...adt,

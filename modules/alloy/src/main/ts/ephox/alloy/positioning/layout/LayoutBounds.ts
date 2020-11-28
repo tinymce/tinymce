@@ -43,7 +43,7 @@ export const boundsRestriction = (
   )
 );
 
-export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: SugarPosition) => {
+export const adjustBounds = (bounds: Boxes.Bounds, boundsRestrictions: BoundsRestriction, bubbleOffsets: SugarPosition): Boxes.Bounds => {
   const applyRestriction = (dir: BoundsRestrictionKeys, current: number) => {
     const bubbleOffset = dir === 'top' || dir === 'bottom' ? bubbleOffsets.top : bubbleOffsets.left;
     return Obj.get(boundsRestrictions, dir).bind(Fun.identity)

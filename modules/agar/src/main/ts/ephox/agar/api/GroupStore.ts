@@ -1,6 +1,11 @@
 import { Merger } from '@ephox/katamari';
 
-export const GroupStore = <T = any>() => {
+export interface GroupStore<T> {
+  readonly record: (prop: string, elem: T) => void;
+  readonly get: () => Record<string, T[]>;
+}
+
+export const GroupStore = <T = any>(): GroupStore<T> => {
   const data: Record<string, T[]> = {};
 
   const record = (prop: string, elem: T) => {

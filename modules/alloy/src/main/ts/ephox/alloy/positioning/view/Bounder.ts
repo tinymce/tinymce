@@ -20,6 +20,15 @@ export interface BounderAttemptAdt {
   log: (label: string) => void;
 }
 
+interface RepositionResult {
+  readonly originInBounds: boolean;
+  readonly sizeInBounds: boolean;
+  readonly limitX: number;
+  readonly limitY: number;
+  readonly deltaW: number;
+  readonly deltaH: number;
+}
+
 const adt: {
   fit: (reposition: RepositionDecision) => BounderAttemptAdt;
   nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
@@ -28,7 +37,7 @@ const adt: {
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 
-const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Boxes.Bounds) => {
+const calcReposition = (newX: number, newY: number, width: number, height: number, bounds: Boxes.Bounds): RepositionResult => {
   const boundsX = bounds.x;
   const boundsY = bounds.y;
   const boundsWidth = bounds.width;

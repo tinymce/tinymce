@@ -38,11 +38,11 @@ const adt = Adt.generate<{
       { not: [ 'stringMatch' ] }
     ]);
 
-const caseInsensitive = function (val: string) {
+const caseInsensitive = function (val: string): string {
   return val.toLowerCase();
 };
 
-const caseSensitive = function (val: string) {
+const caseSensitive = function (val: string): string {
   return val;
 };
 
@@ -71,7 +71,7 @@ const cata = function <T> (
   e: (value: string, f: StringMapper) => T,
   a: () => T,
   n: (other: StringMatch) => T
-) {
+): T {
   return subject.fold<T>(s, p, c, e, a, n);
 };
 

@@ -5,7 +5,7 @@ const editor = {
   off: (_s, _f) => { }
 };
 
-export const registerAnchorItems = () => {
+export const registerAnchorItems = (): void => {
   getDemoRegistry().addToggleButton('anchor', {
     type: 'togglebutton',
     disabled: false,

@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { DomStructure } from '@ephox/robin';
 import { Compare, CursorPosition, InsertAll, PredicateFind, Remove, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-const merge = function (cells: SugarElement[]) {
+const merge = function (cells: SugarElement[]): void {
   const isBr = function (el: SugarElement) {
     return SugarNode.name(el) === 'br';
   };

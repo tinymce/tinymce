@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createCodeDialog = () => {
+export const createCodeDialog = (): void => {
   openDemoDialog(
     {
       title: 'Source code',

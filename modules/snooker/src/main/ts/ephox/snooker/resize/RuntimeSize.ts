@@ -1,19 +1,20 @@
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 
-const needManualCalc = () => {
+const needManualCalc = (): boolean => {
   const browser = PlatformDetection.detect().browser;
   return browser.isIE() || browser.isEdge();
 };
 
-const toNumber = (px: string, fallback: number) => {
+const toNumber = (px: string, fallback: number): number => {
   const num = parseFloat(px); // parseFloat removes suffixes like px
   return isNaN(num) ? fallback : num;
 };
 
-const getProp = (elm: SugarElement, name: string, fallback: number) => toNumber(Css.get(elm, name), fallback);
+const getProp = (elm: SugarElement, name: string, fallback: number): number =>
+  toNumber(Css.get(elm, name), fallback);
 
-const getCalculatedHeight = (cell: SugarElement<HTMLElement>) => {
+const getCalculatedHeight = (cell: SugarElement<HTMLElement>): number => {
   const height = cell.dom.getBoundingClientRect().height;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
@@ -29,7 +30,7 @@ const getCalculatedHeight = (cell: SugarElement<HTMLElement>) => {
   }
 };
 
-const getCalculatedWidth = (cell: SugarElement<HTMLElement>) => {
+const getCalculatedWidth = (cell: SugarElement<HTMLElement>): number => {
   const width = cell.dom.getBoundingClientRect().width;
   const boxSizing = Css.get(cell, 'box-sizing');
   if (boxSizing === 'border-box') {
@@ -45,9 +46,11 @@ const getCalculatedWidth = (cell: SugarElement<HTMLElement>) => {
   }
 };
 
-const getHeight = (cell: SugarElement<HTMLElement>) => needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
+const getHeight = (cell: SugarElement<HTMLElement>): number =>
+  needManualCalc() ? getCalculatedHeight(cell) : getProp(cell, 'height', Height.get(cell));
 
-const getWidth = (cell: SugarElement<HTMLElement>) => needManualCalc() ? getCalculatedWidth(cell) : getProp(cell, 'width', Width.get(cell));
+const getWidth = (cell: SugarElement<HTMLElement>): number =>
+  needManualCalc() ? getCalculatedWidth(cell) : getProp(cell, 'width', Width.get(cell));
 
 export {
   getHeight,

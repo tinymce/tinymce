@@ -4,8 +4,13 @@ import { Obj } from '@ephox/katamari';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
-const helper = (component: AlloyComponent) => {
-  const sAssertRep = (expected: Record<string, string>) => Step.sync(() => {
+interface TestForm {
+  readonly sAssertRep: <T>(expected: Record<string, string>) => Step<T, T>;
+  readonly sSetRep: <T>(newValues: Record<string, string>) => Step<T, T>;
+}
+
+const helper = (component: AlloyComponent): TestForm => {
+  const sAssertRep = <T>(expected: Record<string, string>) => Step.sync<T>(() => {
     const val = Representing.getValue(component);
     Assertions.assertEq(
       'Checking form value',
@@ -15,7 +20,7 @@ const helper = (component: AlloyComponent) => {
     );
   });
 
-  const sSetRep = (newValues: Record<string, string>) => Step.sync(() => {
+  const sSetRep = <T>(newValues: Record<string, string>) => Step.sync<T>(() => {
     Representing.setValue(component, newValues);
   });
 

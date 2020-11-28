@@ -18,12 +18,18 @@ import { FocusInsideModes, GeneralKeyingConfig } from './KeyingModeTypes';
 
 type GetRulesFunc<C extends GeneralKeyingConfig, S extends BehaviourState> = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>, keyingConfig: C, keyingState: S) => Array<KeyRules.KeyRule<C, S>>;
 
+export interface KeyingType <C extends GeneralKeyingConfig, S extends BehaviourState> {
+  readonly schema: () => FieldProcessorAdt[];
+  readonly processKey: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S) => Optional<boolean>;
+  readonly toEvents: (keyingConfig: C, keyingState: S) => AlloyEvents.AlloyEventRecord;
+}
+
 const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
   infoSchema: FieldProcessorAdt[],
   stateInit: (config: C) => BehaviourState,
   getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
   getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
-  optFocusIn: (config: C) => Optional<(comp: AlloyComponent, config: C, state: S) => void>) => {
+  optFocusIn: (config: C) => Optional<(comp: AlloyComponent, config: C, state: S) => void>): KeyingType<C, S> => {
   const schema = () => infoSchema.concat([
     FieldSchema.defaulted('focusManager', FocusManagers.dom()),
     FieldSchema.defaultedOf('focusInside', 'onFocus', ValueSchema.valueOf((val) => Arr.contains([ 'onFocus', 'onEnterOrSpace', 'onApi' ], val) ? Result.value(val) : Result.error('Invalid value for focusInside'))),

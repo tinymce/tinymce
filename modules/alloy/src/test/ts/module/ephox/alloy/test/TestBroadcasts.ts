@@ -3,7 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
-const dismiss = (gui: GuiSystem, element: SugarElement) => {
+const dismiss = (gui: GuiSystem, element: SugarElement): void => {
   gui.broadcastOn([
     'dismiss.popups'
   ], {
@@ -11,40 +11,43 @@ const dismiss = (gui: GuiSystem, element: SugarElement) => {
   });
 };
 
-const reposition = (gui: GuiSystem) => {
+const reposition = (gui: GuiSystem): void => {
   gui.broadcastOn([
     'reposition.popups'
   ], { });
 };
 
-const sDismiss = (label: string, gui: GuiSystem, element: SugarElement) => Logger.t(
-  'Broadcast dismiss: ' + label,
-  GeneralSteps.sequence([
-    Step.sync(() => {
-      dismiss(gui, element);
-    })
-  ])
-);
+const sDismiss = <T>(label: string, gui: GuiSystem, element: SugarElement): Step<T, T> =>
+  Logger.t(
+    'Broadcast dismiss: ' + label,
+    GeneralSteps.sequence([
+      Step.sync(() => {
+        dismiss(gui, element);
+      })
+    ])
+  );
 
-const sDismissOn = (label: string, gui: GuiSystem, selector: string) => Logger.t(
-  'Broadcast dismiss: ' + label,
-  GeneralSteps.sequence([
-    Step.sync(() => {
-      const item = UiFinder.findIn(gui.element, selector).getOrDie();
+const sDismissOn = <T>(label: string, gui: GuiSystem, selector: string): Step<T, T> =>
+  Logger.t(
+    'Broadcast dismiss: ' + label,
+    GeneralSteps.sequence([
+      Step.sync(() => {
+        const item = UiFinder.findIn(gui.element, selector).getOrDie();
 
-      dismiss(gui, item);
-    })
-  ])
-);
+        dismiss(gui, item);
+      })
+    ])
+  );
 
-const sReposition = (label: string, gui: GuiSystem) => Logger.t(
-  'Broadcast reposition: ' + label,
-  GeneralSteps.sequence([
-    Step.sync(() => {
-      reposition(gui);
-    })
-  ])
-);
+const sReposition = <T>(label: string, gui: GuiSystem): Step<T, T> =>
+  Logger.t(
+    'Broadcast reposition: ' + label,
+    GeneralSteps.sequence([
+      Step.sync(() => {
+        reposition(gui);
+      })
+    ])
+  );
 
 export {
   sDismissOn,

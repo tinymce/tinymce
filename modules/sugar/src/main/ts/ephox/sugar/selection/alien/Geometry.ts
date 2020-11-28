@@ -1,4 +1,4 @@
-const searchForPoint = (rectForOffset: (number: number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number) => {
+const searchForPoint = (rectForOffset: (number: number) => (ClientRect | DOMRect), x: number, y: number, maxX: number, length: number): number => {
   // easy cases
   if (length === 0) {
     return 0;
@@ -29,7 +29,7 @@ const searchForPoint = (rectForOffset: (number: number) => (ClientRect | DOMRect
   return 0; // always return something, even if it's not the exact offset it'll be better than nothing
 };
 
-const inRect = (rect: ClientRect | DOMRect, x: number, y: number) =>
+const inRect = (rect: ClientRect | DOMRect, x: number, y: number): boolean =>
   x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 
 export {

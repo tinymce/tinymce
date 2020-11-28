@@ -24,7 +24,7 @@ export interface ApiChains {
   cAssertSelection: <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Chain<T, T>;
 }
 
-const lazyBody = function (editor: Editor) {
+const lazyBody = function (editor: Editor): SugarElement<HTMLElement> {
   return SugarElement.fromDom(editor.getBody());
 };
 
@@ -85,19 +85,19 @@ const cGetContent: Chain<Editor, string> = Chain.mapper(function (editor: Editor
   return editor.getContent();
 });
 
-const cExecCommand = function <T extends Editor> (command: string, value?: any) {
+const cExecCommand = function <T extends Editor> (command: string, value?: any): Chain<T, T> {
   return Chain.op(function (editor: T) {
     editor.execCommand(command, false, value);
   });
 };
 
-const cAssertContent = function <T extends Editor> (expected: string) {
+const cAssertContent = function <T extends Editor> (expected: string): Chain<T, T> {
   return Chain.op(function (editor: T) {
     Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
   });
 };
 
-const cAssertContentPresence = function <T extends Editor> (expected: Presence) {
+const cAssertContentPresence = function <T extends Editor> (expected: Presence): Chain<T, T> {
   return Chain.op(function (editor: T) {
     Assertions.assertPresence(
       () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
@@ -107,7 +107,7 @@ const cAssertContentPresence = function <T extends Editor> (expected: Presence) 
   });
 };
 
-const cAssertContentStructure = function <T extends Editor> (expected: StructAssert) {
+const cAssertContentStructure = function <T extends Editor> (expected: StructAssert): Chain<T, T> {
   return Chain.op(function (editor: T) {
     return Assertions.assertStructure(
       'Asserting the structure of tiny content.',
@@ -128,7 +128,7 @@ const assertPath = function (label: string, root: SugarElement, expPath: number[
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
-const cAssertSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+const cAssertSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> {
   return Chain.op(function (editor: T) {
     const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);

@@ -1,19 +1,19 @@
-function create(width: number, height: number) {
+const create = (width: number, height: number): HTMLCanvasElement => {
   return resize(document.createElement('canvas'), width, height);
-}
+};
 
-function clone(canvas: HTMLCanvasElement) {
+const clone = (canvas: HTMLCanvasElement): HTMLCanvasElement => {
   const tCanvas = create(canvas.width, canvas.height);
   const ctx = get2dContext(tCanvas);
   ctx.drawImage(canvas, 0, 0);
   return tCanvas;
-}
+};
 
-function get2dContext(canvas: HTMLCanvasElement) {
+const get2dContext = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
   return canvas.getContext('2d') as CanvasRenderingContext2D;
-}
+};
 
-function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
+const get3dContext = (canvas: HTMLCanvasElement): WebGLRenderingContext | null => {
   let gl = null;
   try {
     gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl') as WebGLRenderingContext;
@@ -25,14 +25,14 @@ function get3dContext(canvas: HTMLCanvasElement): WebGLRenderingContext | null {
     gl = null;
   }
   return gl;
-}
+};
 
-function resize(canvas: HTMLCanvasElement, width: number, height: number) {
+const resize = (canvas: HTMLCanvasElement, width: number, height: number): HTMLCanvasElement => {
   canvas.width = width;
   canvas.height = height;
 
   return canvas;
-}
+};
 
 export {
   create,

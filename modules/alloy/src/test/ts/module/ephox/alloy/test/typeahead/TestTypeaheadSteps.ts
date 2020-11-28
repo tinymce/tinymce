@@ -6,8 +6,17 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
-export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: AlloyComponent) => {
-  const sWaitForMenu = (label: string) => Logger.t(
+interface TestTypeaheadSteps {
+  readonly sWaitForMenu: <T>(label: string) => Step<T, T>;
+  readonly sWaitForNoMenu: <T>(label: string) => Step<T, T>;
+  readonly sAssertTextSelection: <T>(label: string, start: number, finish: number) => Step<T, T>;
+  readonly sAssertFocusOnTypeahead: <T>(label: string) => Step<T, T>;
+  readonly sTriggerInputEvent: <T>(label: string) => Step<T, T>;
+  readonly sAssertValue: <T>(label: string, expected: string) => Step<T, T>;
+}
+
+export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: AlloyComponent): TestTypeaheadSteps => {
+  const sWaitForMenu = <T>(label: string) => Logger.t<T, T>(
     label,
     Waiter.sTryUntil(
       'Waiting for menu to appear',
@@ -17,7 +26,7 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
     )
   );
 
-  const sAssertTextSelection = (label: string, start: number, finish: number) => Logger.t(
+  const sAssertTextSelection = <T>(label: string, start: number, finish: number) => Logger.t<T, T>(
     label + ' sAssertTextSelection',
     Step.sync(() => {
       const node = typeahead.element.dom as HTMLInputElement;
@@ -26,14 +35,14 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
     })
   );
 
-  const sTriggerInputEvent = (label: string) => Logger.t(
+  const sTriggerInputEvent = <T>(label: string) => Logger.t<T, T>(
     label + ' sTriggerInputEvent',
     Step.sync(() => {
       AlloyTriggers.emit(typeahead, NativeEvents.input());
     })
   );
 
-  const sWaitForNoMenu = (label: string) => Logger.t(
+  const sWaitForNoMenu = <T>(label: string) => Logger.t<T, T>(
     label,
     Waiter.sTryUntil(
       'Waiting for menu to go away',
@@ -43,7 +52,7 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
     )
   );
 
-  const sAssertFocusOnTypeahead = (label: string) => Logger.t(
+  const sAssertFocusOnTypeahead = <T>(label: string) => Logger.t<T, T>(
     label,
     FocusTools.sTryOnSelector(
       'Focus should be on typeahead',
@@ -52,7 +61,7 @@ export default (doc: SugarElement<HTMLDocument>, gui: GuiSystem, typeahead: Allo
     )
   );
 
-  const sAssertValue = (label: string, expected: string) => Logger.t(
+  const sAssertValue = <T>(label: string, expected: string) => Logger.t<T, T>(
     label + ' sAssertValue',
     Chain.asStep(typeahead.element, [
       Chain.mapper(Value.get),

@@ -1,7 +1,7 @@
 import { Cell, Optional } from '@ephox/katamari';
 import { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
 
-import { nuState } from '../common/BehaviourState';
+import { nuState, Stateless } from '../common/BehaviourState';
 
 interface RowsCols {
   readonly numRows: number;
@@ -35,7 +35,8 @@ const flatgrid = (): FlatgridState => {
   });
 };
 
-const init = (spec: GeneralKeyingConfig) => spec.state(spec);
+const init = (spec: GeneralKeyingConfig): Stateless | FlatgridState =>
+  spec.state(spec);
 
 export {
   flatgrid,

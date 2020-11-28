@@ -1,6 +1,6 @@
 import { Universe } from '@ephox/boss';
 import { Adt, Arr, Optional } from '@ephox/katamari';
-import { Descent, Gather, Spot, Transition } from '@ephox/phoenix';
+import { Descent, Gather, Spot, SpotPoint, Transition } from '@ephox/phoenix';
 import * as Structure from '../api/general/Structure';
 
 export interface Clump<E> {
@@ -50,7 +50,7 @@ const clump = <E> (start: E, soffset: number, finish: E, foffset: number): Clump
   foffset
 });
 
-const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E) {
+const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E): SpotPoint<E> {
   const leaf = Descent.toLeaf(universe, block, 0);
   if (!skip(universe, leaf.element)) {
     return leaf;
@@ -61,17 +61,17 @@ const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) =
   }
 };
 
-const isBlock = function <E, D> (universe: Universe<E, D>, item: E) {
+const isBlock = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return Structure.isFrame(universe, item) || Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
 };
 
-const skipToRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E) {
+const skipToRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E): Optional<E> {
   return Gather.seekRight(universe, item, function (i) {
     return !skip(universe, i) && !isBlock(universe, i);
   }, isRoot);
 };
 
-const skip = function <E, D> (universe: Universe<E, D>, item: E) {
+const skip = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   if (!universe.property().isText(item)) {
     return false;
   }
@@ -82,7 +82,7 @@ const skip = function <E, D> (universe: Universe<E, D>, item: E) {
   });
 };
 
-const walk = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, element: E, target: E) {
+const walk = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, element: E, target: E): ClumpsScan<E> {
   const next = Gather.walk(universe, element, mode, Gather.walkers().right());
   return next.fold(function () {
     return adt.none(element, Gather.sidestep);
@@ -120,7 +120,7 @@ const resume = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
   });
 };
 
-const isParent = function <E, D> (universe: Universe<E, D>, child: E, parent: E) {
+const isParent = function <E, D> (universe: Universe<E, D>, child: E, parent: E): boolean {
   return universe.property().parent(child).exists(function (p) {
     return universe.eq(p, parent);
   });
@@ -163,7 +163,7 @@ const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
   });
 };
 
-const getEnd = function <E, D> (universe: Universe<E, D>, item: E) {
+const getEnd = function <E, D> (universe: Universe<E, D>, item: E): number {
   return universe.property().isText(item) ? universe.property().getText(item).length : universe.property().children(item).length;
 };
 
@@ -182,7 +182,7 @@ const drop = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   }
 };
 
-const skipInBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, offset: number) {
+const skipInBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, offset: number): E {
   const dropped = drop(universe, item, offset);
   if (!skip(universe, dropped)) {
     return dropped;
@@ -190,7 +190,7 @@ const skipInBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) =>
   return skipToRight(universe, isRoot, dropped).getOr(dropped);
 };
 
-const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number) {
+const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] {
   // We can't wrap block elements, so descend if we start on a block.
   const droppedStart = skipInBlock(universe, isRoot, start, soffset);
   const droppedFinish = skipInBlock(universe, isRoot, finish, foffset);
@@ -219,7 +219,7 @@ const single = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
     : [ clump(start.element, start.offset, finish.element, finish.offset) ];
 };
 
-const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number) {
+const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] {
   return universe.eq(start, finish) ?
     single(universe, isRoot, start, soffset, foffset) :
     doCollect(universe, isRoot, start, soffset, finish, foffset);

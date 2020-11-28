@@ -19,7 +19,7 @@ const detect = function (current: SugarElement, isRoot?: (e: SugarElement) => bo
 /*
  * Identify the CellLocation of the cell when navigating forward from current
  */
-const next = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean) {
+const next = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation {
   const detection = detect(current, isRoot);
   return detection.fold(function () {
     return CellLocation.none(current);

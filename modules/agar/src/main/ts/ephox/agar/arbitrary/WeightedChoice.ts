@@ -1,6 +1,8 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 interface WeightedItem {
   weight: number;
 }
@@ -35,14 +37,15 @@ const choose = <T extends WeightedItem>(candidates: T[]) => {
   return weighted(result.list, result.total);
 };
 
-const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) => Jsc.number(0, weighted.total).generator.map((w) => {
-  const raw = Arr.find(weighted.list, (d) =>
-    w <= d.accWeight
-  );
+const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>) =>
+  Jsc.number(0, weighted.total).generator.map((w) => {
+    const raw = Arr.find(weighted.list, (d) =>
+      w <= d.accWeight
+    );
 
-  const keys = raw.map(Obj.keys).getOr([]);
-  return keys.length === [ 'weight', 'accWeight' ].length ? Optional.none() : raw;
-});
+    const keys = raw.map(Obj.keys).getOr([]);
+    return keys.length === [ 'weight', 'accWeight' ].length ? Optional.none() : raw;
+  });
 
 const generator = <T extends WeightedItem>(candidates: T[]) => {
   const list = choose(candidates);

@@ -51,10 +51,10 @@ const create = function (name: string): Outlaw {
     actions.append(button);
   };
 
-  const events = Events.create({
+  const events: OutlawEvents = Events.create({
     shoot: Event([ 'target' ]),
     die:   Event([])
-  }) as OutlawEvents;
+  });
 
   const establishment = Singleton.value<Saloon>();
   const enter = function (saloon: Saloon) {
