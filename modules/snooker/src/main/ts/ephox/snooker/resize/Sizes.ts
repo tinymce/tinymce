@@ -139,7 +139,7 @@ export const getPixelTableHeight = (table: SugarElement<HTMLTableElement>): stri
 export const getPercentTableWidth = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Width.get) + '%';
 export const getPercentTableHeight = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Height.get) + '%';
 
-export const isPercentSizing = (table: SugarElement<HTMLTableElement>): boolean =>getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
+export const isPercentSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
 export const isPixelSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPixelBasedSizeRegex.test(size));
 export const isNoneSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).isNone();
 

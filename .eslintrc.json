@@ -20,6 +20,7 @@
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unbound-method": "off",
     "arrow-body-style": "off", // Disabled as it causes readability issues in more complex cases
+    "arrow-spacing": "error",
     "comma-dangle": ["error", {
       "arrays": "only-multiline",
       "objects": "only-multiline",
@@ -40,6 +41,7 @@
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260],
+    "space-before-blocks": "error",
     "valid-typeof": "error"
   },
   "settings": {
