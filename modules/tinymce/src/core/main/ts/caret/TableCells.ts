@@ -77,14 +77,14 @@ const getClosestCellAbove = Fun.curry(getClosestCell, getBottomValue, isAbove);
 const getClosestCellBelow = Fun.curry(getClosestCell, getTopValue, isBelow);
 
 const findClosestPositionInAboveCell = (table: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>
-  Arr.head(pos.getClientRects()).
-    bind((rect) => getClosestCellAbove(table, rect.left, rect.top)).
-    bind((cell) => findClosestHorizontalPosition(getLastLinePositions(cell), pos));
+  Arr.head(pos.getClientRects())
+    .bind((rect) => getClosestCellAbove(table, rect.left, rect.top))
+    .bind((cell) => findClosestHorizontalPosition(getLastLinePositions(cell), pos));
 
 const findClosestPositionInBelowCell = (table: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>
-  Arr.last(pos.getClientRects()).
-    bind((rect) => getClosestCellBelow(table, rect.left, rect.top)).
-    bind((cell) => findClosestHorizontalPosition(getFirstLinePositions(cell), pos));
+  Arr.last(pos.getClientRects())
+    .bind((rect) => getClosestCellBelow(table, rect.left, rect.top))
+    .bind((cell) => findClosestHorizontalPosition(getFirstLinePositions(cell), pos));
 
 export {
   getClosestCellAbove,

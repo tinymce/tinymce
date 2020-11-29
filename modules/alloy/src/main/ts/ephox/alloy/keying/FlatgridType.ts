@@ -39,15 +39,15 @@ const execute = (
   gridConfig: FlatgridConfig,
   _gridState: FlatgridState
 ): Optional<boolean> =>
-  findCurrent(component, gridConfig).
-    bind((focused) => gridConfig.execute(component, simulatedEvent, focused));
+  findCurrent(component, gridConfig)
+    .bind((focused) => gridConfig.execute(component, simulatedEvent, focused));
 
 const doMove = (
   cycle: WrapArrNavigation.ArrNavigationFunc<SugarElement<HTMLElement>>
 ): DomMovement.ElementMover<FlatgridConfig, FlatgridState> =>
   (element, focused, gridConfig, gridState) =>
-    DomPinpoint.locateVisible(element, focused, gridConfig.selector).
-      bind((identified) => cycle(
+    DomPinpoint.locateVisible(element, focused, gridConfig.selector)
+      .bind((identified) => cycle(
         identified.candidates,
         identified.index,
         gridState.getNumRows().getOr(gridConfig.initSize.numRows),

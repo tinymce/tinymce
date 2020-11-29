@@ -187,11 +187,11 @@ const getSink = (
   anyInSystem: AlloyComponent,
   sinkDetail: SinkDetail
 ): () => ReturnType<LazySink> =>
-  anyInSystem.
-    getSystem().
-    getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).
-    map((internalSink) => () => Result.value(internalSink)).
-    getOrThunk(
+  anyInSystem
+    .getSystem()
+    .getByUid(sinkDetail.uid + '-' + InternalSink.suffix())
+    .map((internalSink) => () => Result.value(internalSink))
+    .getOrThunk(
       () => sinkDetail.lazySink.fold(
         () => () => Result.error(new Error(
           'No internal sink is specified, nor could an external sink be found'

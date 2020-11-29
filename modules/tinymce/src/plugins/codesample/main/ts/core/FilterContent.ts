@@ -13,9 +13,9 @@ const setup = function (editor: Editor) {
   const $ = editor.$;
 
   editor.on('PreProcess', function (e) {
-    $('pre[contenteditable=false]', e.node).
-      filter(Utils.trimArg(Utils.isCodeSample)).
-      each(function (idx, elm) {
+    $('pre[contenteditable=false]', e.node)
+      .filter(Utils.trimArg(Utils.isCodeSample))
+      .each(function (idx, elm) {
         const $elm = $(elm), code = elm.textContent;
 
         $elm.attr('class', $.trim($elm.attr('class')));

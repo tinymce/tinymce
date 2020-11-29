@@ -27,8 +27,8 @@ UnitTest.test('DragCoordTest', () => {
   ]);
 
   const arbPosition = (name: string) =>
-    Jsc.tuple([ Jsc.integer, Jsc.integer ]).
-      smap(
+    Jsc.tuple([ Jsc.integer, Jsc.integer ])
+      .smap(
         (arr: [ number, number ]) => SugarPosition(arr[0], arr[1]),
         (pos: SugarPosition) => [ pos.left, pos.top ],
         (pos: SugarPosition) => name + ': { left: ' + pos.left + ', top: ' + pos.top + '}'
