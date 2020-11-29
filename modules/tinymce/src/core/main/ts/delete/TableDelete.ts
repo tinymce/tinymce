@@ -57,8 +57,8 @@ const deleteTableElement = (editor: Editor, table: SugarElement<HTMLTableElement
 };
 
 const deleteCellRange = (editor: Editor, rootElm: SugarElement<Node>, rng: Range) =>
-  TableDeleteAction.getActionFromRange(rootElm, rng).
-    map((action) => action.fold(
+  TableDeleteAction.getActionFromRange(rootElm, rng)
+    .map((action) => action.fold(
       Fun.curry(deleteTableElement, editor),
       Fun.curry(emptyCells, editor),
       Fun.curry(deleteCellContents, editor)
@@ -88,10 +88,10 @@ const getParentCaption = (rootElm: SugarElement<Node>, elm: SugarElement<Node>):
   Arr.find(Parents.parentsAndSelf(elm, rootElm), (elm) => SugarNode.name(elm) === 'caption');
 
 const deleteBetweenCells = (editor: Editor, rootElm: SugarElement<Node>, forward: boolean, fromCell: SugarElement<HTMLTableCellElement>, from: CaretPosition) =>
-  CaretFinder.navigate(forward, editor.getBody(), from).
-    bind(
-      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode())).
-        map((toCell) => Compare.eq(toCell, fromCell) === false)
+  CaretFinder.navigate(forward, editor.getBody(), from)
+    .bind(
+      (to) => getParentCell(rootElm, SugarElement.fromDom(to.getNode()))
+        .map((toCell) => Compare.eq(toCell, fromCell) === false)
     );
 
 const emptyElement = (editor: Editor, elm: SugarElement<Node>) => {
@@ -111,8 +111,8 @@ const isDeleteOfLastCharPos = (fromCaption: SugarElement<HTMLTableCaptionElement
 const emptyCaretCaption = (editor: Editor, elm: SugarElement<Node>) => emptyElement(editor, elm);
 
 const validateCaretCaption = (rootElm: SugarElement<Node>, fromCaption: SugarElement<HTMLTableCaptionElement>, to: CaretPosition) =>
-  getParentCaption(rootElm, SugarElement.fromDom(to.getNode())).
-    map((toCaption) => Compare.eq(toCaption, fromCaption) === false);
+  getParentCaption(rootElm, SugarElement.fromDom(to.getNode()))
+    .map((toCaption) => Compare.eq(toCaption, fromCaption) === false);
 
 const deleteCaretInsideCaption = (editor: Editor, rootElm: SugarElement<Node>, forward: boolean, fromCaption: SugarElement<HTMLTableCaptionElement>, from: CaretPosition) =>
   CaretFinder.navigate(forward, editor.getBody(), from).bind(

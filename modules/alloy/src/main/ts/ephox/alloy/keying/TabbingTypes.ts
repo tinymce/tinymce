@@ -27,9 +27,9 @@ const create = (cyclicField: FieldProcessorAdt): KeyingType.KeyingType<TabbingCo
 
   // TODO: Test this
   const isVisible = (tabbingConfig: TabbingConfig, element: SugarElement<HTMLElement>): boolean => {
-    const target = tabbingConfig.visibilitySelector.
-      bind((sel) => SelectorFind.closest<HTMLElement>(element, sel)).
-      getOr(element);
+    const target = tabbingConfig.visibilitySelector
+      .bind((sel) => SelectorFind.closest<HTMLElement>(element, sel))
+      .getOr(element);
 
     // NOTE: We can't use Visibility.isVisible, because the toolbar has width when it has closed, just not height.
     return Height.get(target) > 0;
@@ -43,8 +43,8 @@ const create = (cyclicField: FieldProcessorAdt): KeyingType.KeyingType<TabbingCo
   };
 
   const findCurrent = (component: AlloyComponent, tabbingConfig: TabbingConfig): Optional<SugarElement> =>
-    tabbingConfig.focusManager.get(component).
-      bind((elem) => SelectorFind.closest(elem, tabbingConfig.selector));
+    tabbingConfig.focusManager.get(component)
+      .bind((elem) => SelectorFind.closest(elem, tabbingConfig.selector));
 
   const isTabstop = (tabbingConfig: TabbingConfig, element: SugarElement): boolean =>
     isVisible(tabbingConfig, element) && tabbingConfig.useTabstopAt(element);
@@ -63,8 +63,8 @@ const create = (cyclicField: FieldProcessorAdt): KeyingType.KeyingType<TabbingCo
     tabbingConfig: TabbingConfig,
     cycle: ArrNavigation.ArrCycle<SugarElement>
   ): Optional<boolean> =>
-    cycle(tabstops, stopIndex, (elem: SugarElement) => isTabstop(tabbingConfig, elem)).
-      fold(
+    cycle(tabstops, stopIndex, (elem: SugarElement) => isTabstop(tabbingConfig, elem))
+      .fold(
         // Even if there is only one, still capture the event if cycling
         () => tabbingConfig.cyclic ? Optional.some<boolean>(true) : Optional.none(),
         (target) => {

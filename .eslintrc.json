@@ -27,6 +27,7 @@
       "exports": "never",
       "functions": "never"
     }],
+    "dot-location": ["error", "property"],
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
     }],

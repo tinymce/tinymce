@@ -72,8 +72,8 @@ const navigateIgnore = (
   root: Element,
   from: CaretPosition,
   ignoreFilter: (pos: CaretPosition) => boolean
-) => navigate(forward, root, from).
-  bind((pos) => ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Optional.some(pos));
+) => navigate(forward, root, from)
+  .bind((pos) => ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Optional.some(pos));
 
 const positionIn = (forward: boolean, element: Node): Optional<CaretPosition> => {
   const startNode = forward ? element.firstChild : element.lastChild;

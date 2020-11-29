@@ -78,11 +78,11 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
 
   const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): Promise<Optional<SugarElement>> => {
     block(anyInSystem);
-    return ResultConversions.blobToImageResult(blob).
-      then(filter).
-      then(imageResultToBlob).
-      then(action).
-      then((url) => updateSrc(anyInSystem, url).then((oImg) => {
+    return ResultConversions.blobToImageResult(blob)
+      .then(filter)
+      .then(imageResultToBlob)
+      .then(action)
+      .then((url) => updateSrc(anyInSystem, url).then((oImg) => {
         updateButtonUndoStates(anyInSystem);
         swap();
         unblock(anyInSystem);
