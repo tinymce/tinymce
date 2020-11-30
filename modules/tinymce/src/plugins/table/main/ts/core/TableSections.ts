@@ -5,11 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
+import * as Events from '../api/Events';
 import { getTableHeaderType } from '../api/Settings';
 import * as Util from './Util';
 
@@ -80,11 +81,27 @@ const switchRowSection = (dom: DOMUtils, rowElm: HTMLElement, newSectionName: st
   }
 };
 
-const switchCellType = (dom: DOMUtils, cells: ArrayLike<HTMLTableCellElement>, newCellType: string, scope: 'col' | null) =>
-  Arr.each(cells, (c) => {
-    const newCell = Util.getNodeName(c) !== newCellType ? dom.rename(c, newCellType) : c;
+const renameCell = (editor: Editor, cell: HTMLTableCellElement, newCellType?: 'td' | 'th'): HTMLTableCellElement => {
+  if (Type.isNonNullable(newCellType) && Util.getNodeName(cell) !== newCellType) {
+    const newCellElm = editor.dom.rename(cell, newCellType) as HTMLTableCellElement;
+    Events.fireNewCell(editor, newCellElm);
+    return newCellElm;
+  } else {
+    return cell;
+  }
+};
+
+const switchCellType = (editor: Editor, cell: HTMLTableCellElement, newCellType?: 'td' | 'th', scope?: 'col' | null): HTMLTableCellElement => {
+  const dom = editor.dom;
+  const newCell = renameCell(editor, cell, newCellType);
+  if (!Type.isUndefined(scope)) {
     dom.setAttrib(newCell, 'scope', scope); // mutates
-  });
+  }
+  return newCell;
+};
+
+const switchCellsType = (editor: Editor, cells: ArrayLike<HTMLTableCellElement>, newCellType?: 'td' | 'th', scope?: 'col' | null) =>
+  Arr.each(cells, (c) => switchCellType(editor, c, newCellType, scope));
 
 const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType: string) => {
   const determineHeaderRowType = (): 'section' | 'cells' | 'sectionCells' => {
@@ -108,13 +125,13 @@ const switchSectionType = (editor: Editor, rowElm: HTMLTableRowElement, newType:
 
     // We're going to always enforce the right td/th and thead/tbody/tfoot type.
     // switchRowSection will short circuit if not necessary to save computation
-    switchCellType(dom, rowElm.cells, headerRowType === 'section' ? 'td' : 'th', 'col');
+    switchCellsType(editor, rowElm.cells, headerRowType === 'section' ? 'td' : 'th', 'col');
     switchRowSection(dom, rowElm, headerRowType === 'cells' ? 'tbody' : 'thead');
   } else {
-    switchCellType(dom, rowElm.cells, 'td', null); // if switching from header to other, may need to switch th to td
+    switchCellsType(editor, rowElm.cells, 'td', null); // if switching from header to other, may need to switch th to td
     switchRowSection(dom, rowElm, newType === 'footer' ? 'tfoot' : 'tbody');
   }
 };
 
-export { getRowType, detectHeaderRow, switchCellType, switchSectionType };
+export { getRowType, detectHeaderRow, switchCellType, switchCellsType, switchSectionType };
 

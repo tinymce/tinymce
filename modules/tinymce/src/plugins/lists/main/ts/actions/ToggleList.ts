@@ -106,7 +106,7 @@ const getSelectedTextBlocks = function (editor: Editor, rng, root) {
 
     const nextSibling = node.nextSibling;
     if (BookmarkManager.isBookmarkNode(node)) {
-      if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
+      if (NodeType.isListNode(nextSibling) || NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
         block = null;
         return;
       }
@@ -233,6 +233,7 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
   if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     flattenListSelection(editor);
   } else {
+    applyList(editor, listName, detail);
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
 
     Tools.each([ parentList ].concat(lists), function (elm) {

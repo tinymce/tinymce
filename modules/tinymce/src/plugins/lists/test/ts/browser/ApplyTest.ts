@@ -921,7 +921,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
         '<tbody>' +
           '<tr>' +
             '<td>' +
-              '<br />' +
+              '<br>' +
             '</td>' +
           '</tr>' +
         '</tbody>' +
@@ -978,6 +978,72 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
     editor.settings.forced_root_block = 'p';
     delete editor.settings.forced_root_block_attrs;
+  });
+
+  suite.test('TINY-3755: Lists: Apply list on mix of existing lists and other text blocks', (editor) => {
+    editor.getBody().innerHTML = (
+      '<ol>' +
+        '<li>a</li>' +
+        '<li>b' +
+        '<ol>' +
+          '<li>c</li>' +
+          '<li>d</li>' +
+          '<li>e</li>' +
+        '</ol>' +
+        '</li>' +
+        '<li>f</li>' +
+        '<li>g</li>' +
+      '</ol>' +
+      '<p>text1<br>text2<br>text3</p>' +
+      '<p>text4<br>text5<br>text6</p>' +
+      '<ul>' +
+        '<li>h</li>' +
+        '<li>i<br>j' +
+        '<ul>' +
+          '<li>k' +
+            '<ul>' +
+              '<li>l</li>' +
+            '</ul>' +
+          '</li>' +
+          '<li>m</li>' +
+        '</ul>' +
+        '</li>' +
+        '<li>n</li>' +
+      '</ul>'
+    );
+    editor.execCommand('SelectAll');
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    const expected = (
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b' +
+        '<ul>' +
+          '<li>c</li>' +
+          '<li>d</li>' +
+          '<li>e</li>' +
+        '</ul>' +
+        '</li>' +
+        '<li>f</li>' +
+        '<li>g</li>' +
+      '</ul>' +
+      '<ul>' +
+        '<li>text1<br>text2<br>text3</li>' +
+        '<li>text4<br>text5<br>text6</li>' +
+        '<li>h</li>' +
+        '<li>i<br>j' +
+        '<ul>' +
+          '<li>k' +
+            '<ul>' +
+              '<li>l</li>' +
+            '</ul>' +
+          '</li>' +
+          '<li>m</li>' +
+        '</ul>' +
+        '</li>' +
+        '<li>n</li>' +
+      '</ul>'
+    );
+    LegacyUnit.equal(editor.getBody().innerHTML, expected);
   });
 
   TinyLoader.setupLight(function (editor, onSuccess, onFailure) {

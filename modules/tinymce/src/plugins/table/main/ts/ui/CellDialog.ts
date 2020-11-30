@@ -14,6 +14,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';
 import { hasAdvancedCellTab } from '../api/Settings';
+import { switchCellType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
@@ -71,7 +72,6 @@ const updateAdvancedProps = (modifier: DomModifier, data: CellData) => {
 // applying any specified alignment.
 
 const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[], data: CellData) => {
-  const dom = editor.dom;
   const isSingleCell = cells.length === 1;
 
   if (cells.length >= 1) {
@@ -85,8 +85,7 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
     getSelectedCells(cells).each((selectedCells) => {
       Arr.each(selectedCells, (item) => {
         // Switch cell type if applicable
-        const cellElement = item.element;
-        const cellElm = data.celltype && Util.getNodeName(cellElement) !== data.celltype ? (dom.rename(cellElement, data.celltype) as HTMLTableCellElement) : cellElement;
+        const cellElm = switchCellType(editor, item.element, data.celltype);
         const modifier = isSingleCell ? DomModifier.normal(editor, cellElm) : DomModifier.ifTruthy(editor, cellElm);
         const colModifier = item.column.map((col) =>
           isSingleCell ? DomModifier.normal(editor, col) : DomModifier.ifTruthy(editor, col)
