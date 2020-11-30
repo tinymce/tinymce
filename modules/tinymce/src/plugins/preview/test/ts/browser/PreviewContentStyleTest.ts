@@ -30,18 +30,15 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
     const tinyApis = TinyApis(editor);
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
 
-    Pipeline.async({},
-      Log.steps('TBA', 'Preview: Set content, set style setting and assert content and style. Delete style and assert style is removed', [
+    Pipeline.async({}, [
+      Log.stepsAsStep('TBA', 'Preview: Set content, set style setting and assert content and style. Delete style and assert style is removed', [
         tinyApis.sSetContent('<p>hello world</p>'),
         tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
         sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
         tinyApis.sDeleteSetting('content_style'),
         sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-      ])
-      , onSuccess, onFailure);
-
-    Pipeline.async({},
-      Log.steps('TINY-6529', 'Preview: Set content, set style settings and assert content and styles. content_style should take precedence. Delete style and assert style is removed', [
+      ]),
+      Log.stepsAsStep('TINY-6529', 'Preview: Set content, set style settings and assert content and styles. content_style should take precedence. Delete style and assert style is removed', [
         tinyApis.sSetContent('<p>hello world</p>'),
         tinyApis.sSetSetting('content_css_cors', true),
         tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
@@ -50,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
         tinyApis.sDeleteSetting('content_style'),
         sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
       ])
-      , onSuccess, onFailure);
+    ], onSuccess, onFailure);
   }, {
     theme: 'silver',
     plugins: 'preview',

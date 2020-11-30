@@ -71,19 +71,16 @@ UnitTest.asynctest('browser.tinymce.plugins.template.Dialog.getPreviewContent', 
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: No CORS or content style, no previous HTML', [
         sCheckPreview(noCorsNoStyle)
       ]),
-
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: CORS but no content style, no previous HTML', [
         tinyApis.sSetSetting('content_css_cors', true),
         sCheckPreview(corsNoStyle),
         tinyApis.sDeleteSetting('content_css_cors')
       ]),
-
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: No CORS but content style, no previous HTML', [
         tinyApis.sSetSetting('content_style', 'This is the style inserted into the document'),
         sCheckPreview(noCorsStyle),
         tinyApis.sDeleteSetting('content_style')
       ]),
-
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: CORS and content style, no previous HTML', [
         tinyApis.sSetSetting('content_style', 'This is the style inserted into the document'),
         tinyApis.sSetSetting('content_css_cors', true),
@@ -91,7 +88,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.Dialog.getPreviewContent', 
         tinyApis.sDeleteSetting('content_style'),
         tinyApis.sDeleteSetting('content_css_cors')
       ]),
-
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: with provided content', [
         tinyApis.sSetSetting('content_style', 'This is the style inserted into the document'),
         tinyApis.sSetSetting('content_css_cors', true),
@@ -99,7 +95,6 @@ UnitTest.asynctest('browser.tinymce.plugins.template.Dialog.getPreviewContent', 
         tinyApis.sDeleteSetting('content_style'),
         tinyApis.sDeleteSetting('content_css_cors')
       ]),
-
       Log.stepsAsStep('TINY-6115', 'Dialog.getPreviewcontent: with provided html', [
         tinyApis.sSetSetting('content_style', 'This is the style inserted into the document'),
         tinyApis.sSetSetting('content_css_cors', true),
