@@ -12,12 +12,6 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Settings from '../api/Settings';
 import * as PluginUrls from '../data/PluginUrls';
 
-export interface PluginUrlType {
-  key: string;
-  name: string;
-  slug?: string;
-}
-
 const tab = (editor: Editor): Dialog.TabSpec => {
   const availablePlugins = () => {
     const premiumPlugins = [
@@ -28,6 +22,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
       // 'Autocorrect',
       'Case Change',
       'Checklist',
+      'Export',
       'Tiny Comments',
       'Tiny Drive',
       'Enhanced Media Embed',
@@ -52,17 +47,16 @@ const tab = (editor: Editor): Dialog.TabSpec => {
       '</div>';
   };
 
-  const makeLink = (p: {name: string; url: string}): string =>
+  const makeLink = (p: { name: string; url: string }): string =>
     `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
 
-  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, function (x: PluginUrlType) {
+  const maybeUrlize = (editor: Editor, key: string) => Arr.find(PluginUrls.urls, (x) => {
     return x.key === key;
-  }).fold(function () {
+  }).fold(() => {
     const getMetadata = editor.plugins[key].getMetadata;
     return typeof getMetadata === 'function' ? makeLink(getMetadata()) : key;
-  }, function (x) {
-    const urlSlug = x.slug || x.key;
-    return makeLink({ name: x.name, url: 'https://www.tiny.cloud/docs/plugins/' + urlSlug });
+  }, (x) => {
+    return makeLink({ name: x.name, url: `https://www.tiny.cloud/docs/plugins/${x.type}/${x.slug}` });
   });
 
   const getPluginKeys = (editor: Editor) => {

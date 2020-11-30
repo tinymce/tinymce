@@ -5,7 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const urls = [
+import { Arr } from '@ephox/katamari';
+
+type PluginType = 'opensource' | 'premium';
+
+interface PartialPluginUrl {
+  readonly key: string;
+  readonly name: string;
+  readonly type?: PluginType;
+  readonly slug?: string;
+}
+
+export interface PluginUrl extends PartialPluginUrl {
+  readonly type: PluginType;
+  readonly slug: string;
+}
+
+const premiumType: PluginType = 'premium';
+const openSourceType: PluginType = 'opensource';
+
+const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'advlist', name: 'Advanced List' },
   { key: 'anchor', name: 'Anchor' },
   { key: 'autolink', name: 'Autolink' },
@@ -49,23 +68,29 @@ const urls = [
   { key: 'visualchars', name: 'Visual Characters' },
   { key: 'wordcount', name: 'Word Count' },
   // TODO: Add other premium plugins when they are included in the website
-  { key: 'advcode', name: 'Advanced Code Editor*' },
-  { key: 'formatpainter', name: 'Format Painter*' },
-  { key: 'powerpaste', name: 'PowerPaste*' },
-  { key: 'tinydrive', name: 'Tiny Drive*', slug: 'drive' },
-  { key: 'tinymcespellchecker', name: 'Spell Checker Pro*' },
-  { key: 'a11ychecker', name: 'Accessibility Checker*' },
-  { key: 'linkchecker', name: 'Link Checker*' },
-  { key: 'mentions', name: 'Mentions*' },
-  { key: 'mediaembed', name: 'Enhanced Media Embed*' },
-  { key: 'checklist', name: 'Checklist*' },
-  { key: 'casechange', name: 'Case Change*' },
-  { key: 'permanentpen', name: 'Permanent Pen*' },
-  { key: 'pageembed', name: 'Page Embed*' },
-  { key: 'tinycomments', name: 'Tiny Comments*', slug: 'comments' },
-  { key: 'advtable', name: 'Advanced Tables*' },
-  { key: 'autocorrect', name: 'Autocorrect*' }
-];
+  { key: 'advcode', name: 'Advanced Code Editor*', type: premiumType },
+  { key: 'formatpainter', name: 'Format Painter*', type: premiumType },
+  { key: 'powerpaste', name: 'PowerPaste*', type: premiumType },
+  { key: 'tinydrive', name: 'Tiny Drive*', type: premiumType },
+  { key: 'tinymcespellchecker', name: 'Spell Checker Pro*', type: premiumType },
+  { key: 'a11ychecker', name: 'Accessibility Checker*', type: premiumType },
+  { key: 'linkchecker', name: 'Link Checker*', type: premiumType },
+  { key: 'mentions', name: 'Mentions*', type: premiumType },
+  { key: 'mediaembed', name: 'Enhanced Media Embed*', type: premiumType },
+  { key: 'checklist', name: 'Checklist*', type: premiumType },
+  { key: 'casechange', name: 'Case Change*', type: premiumType },
+  { key: 'permanentpen', name: 'Permanent Pen*', type: premiumType },
+  { key: 'pageembed', name: 'Page Embed*', type: premiumType },
+  { key: 'tinycomments', name: 'Tiny Comments*', type: premiumType, slug: 'comments' },
+  { key: 'advtable', name: 'Advanced Tables*', type: premiumType },
+  { key: 'autocorrect', name: 'Autocorrect*', type: premiumType },
+  { key: 'export', name: 'Export*', type: premiumType }
+], (item) => ({
+  ...item,
+  // Set the defaults/fallbacks for the plugin urls
+  type: item.type || openSourceType,
+  slug: item.slug || item.key
+}));
 
 export {
   urls
