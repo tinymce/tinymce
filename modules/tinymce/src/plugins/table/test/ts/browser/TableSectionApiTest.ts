@@ -159,8 +159,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
 
   let events = [];
   const logEvent = (event: EditorEvent<{}>) => {
-    events.push(event);
+    events.push(event.type);
   };
+
+  const cClearEvents = Chain.op(() => events = []);
+  const cAssertEvents = (label: string, expectedEvents: string[]) => Chain.op(() => {
+    Assertions.assertEq(label, expectedEvents, events);
+  });
 
   const cSelectAllCells = (type: 'td' | 'th') =>
     Chain.op((editor: Editor) => {
@@ -177,39 +182,43 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
     editor.fire('mouseup', { target: endTd, button: 0 } as MouseEvent);
   };
 
-  const cSwitchType = (startContent: string, expectedContent: string, command: string, type: string, selector = 'tr#one td') =>
+  const defaultEvents = [ 'tablemodified' ];
+  const cSwitchType = (startContent: string, expectedContent: string, command: string, type: string, expectedEvents: string[] = defaultEvents, selector = 'tr#one td') =>
     Log.chain('TINY-6150', `Switch to ${type}, command = ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(startContent),
       Chain.op((editor: Editor) => {
         const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), selector).getOrDie();
         editor.selection.select(row.dom);
-        events = [];
-        editor.execCommand(command, false, { type });
-        Assertions.assertEq('TINY-6629: Assert table modified events length', 1, events.length);
-        Assertions.assertEq('TINY-6629: Assert table modified event', 'tablemodified', events[0].type);
-        events = [];
       }),
+      cClearEvents,
+      ApiChains.cExecCommand(command, { type }),
+      cAssertEvents('TINY-6629: Assert table modified events', expectedEvents),
       ApiChains.cAssertContent(expectedContent)
     ]));
 
-  const cSwitchMultipleColumnsType = (startContent: string, expectedContent: string, command: string, type: 'td' | 'th') =>
+  const cSwitchMultipleColumnsType = (startContent: string, expectedContent: string, command: string, type: 'td' | 'th', expectedEvents: string[] = defaultEvents) =>
     Log.chain('TINY-6326', `Switch to ${type}, command = ${command}`, Chain.fromParent(Chain.identity, [
       ApiChains.cSetContent(startContent),
       cSelectAllCells(type),
+      cClearEvents,
       ApiChains.cExecCommand(command, { type }),
+      cAssertEvents('TINY-6692: Assert table modified events', expectedEvents),
       ApiChains.cAssertContent(expectedContent)
     ]));
 
-  const sSwitchTypeAndConfig = (tableHeaderType: string, startContent: string, expectedContent: string, command: string, type: string, selector = 'tr#one td') =>
+  const sSwitchTypeAndConfig = (tableHeaderType: string, startContent: string, expectedContent: string, command: string, type: string, expectedEvents: string[] = defaultEvents, selector = 'tr#one td') =>
     Log.chainsAsStep('TINY-6150', `Switch to ${type}, command = ${command}, table_header_type = ${tableHeaderType}`, [
       McEditor.cFromSettings({
         plugins: 'table',
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
         table_header_type: tableHeaderType,
-        setup: (ed: Editor) => ed.on('tablemodified', logEvent)
+        setup: (ed: Editor) => {
+          ed.on('tablemodified', logEvent);
+          ed.on('newcell', logEvent);
+        }
       }),
-      cSwitchType(startContent, expectedContent, command, type, selector),
+      cSwitchType(startContent, expectedContent, command, type, expectedEvents, selector),
       McEditor.cRemove
     ]);
 
@@ -228,18 +237,21 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
   Pipeline.async({}, [
     // Tests to switch between row section types that require changing the editor content
     sSwitchTypeAndConfig('section', bodyContent, theadContent, 'mceTableRowType', 'header'),
-    sSwitchTypeAndConfig('cells', bodyContent, thsContent, 'mceTableRowType', 'header'),
-    sSwitchTypeAndConfig('sectionCells', bodyContent, theadThsContent, 'mceTableRowType', 'header'),
+    sSwitchTypeAndConfig('cells', bodyContent, thsContent, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ]),
+    sSwitchTypeAndConfig('sectionCells', bodyContent, theadThsContent, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ]),
     sSwitchTypeAndConfig('section', tfootContent, theadContent, 'mceTableRowType', 'header'),
-    sSwitchTypeAndConfig('cells', tfootContent, thsContentReversed, 'mceTableRowType', 'header'),
-    sSwitchTypeAndConfig('sectionCells', tfootContent, theadThsContent, 'mceTableRowType', 'header'),
+    sSwitchTypeAndConfig('cells', tfootContent, thsContentReversed, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ]),
+    sSwitchTypeAndConfig('sectionCells', tfootContent, theadThsContent, 'mceTableRowType', 'header', [ 'newcell', 'tablemodified' ]),
     sSwitchTypeAndConfig('foo', bodyContent, theadContent, 'mceTableRowType', 'header'), // setting value is invalid so default to section
     Chain.asStep({}, [
       McEditor.cFromSettings({
         plugins: 'table',
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
-        setup: (ed: Editor) => ed.on('tablemodified', logEvent)
+        setup: (ed: Editor) => {
+          ed.on('tablemodified', logEvent);
+          ed.on('newcell', logEvent);
+        }
       }),
       Chain.fromParent(Chain.identity, [
         // Basic tests to switch between row section types
@@ -248,13 +260,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
         cSwitchType(bodyContent, tfootContent, 'mceTableRowType', 'footer'),
         cSwitchType(tfootContent, theadContent, 'mceTableRowType', 'header'),
         // Basic tests to switch between column section types
-        cSwitchType(bodyColumnContent, headerColumnContent, 'mceTableColType', 'th'),
-        cSwitchMultipleColumnsType(bodyMultipleChangesColumnContent, headerMultipleChangesColumnContent, 'mceTableColType', 'th'),
-        cSwitchType(headerColumnContent, bodyColumnContent, 'mceTableColType', 'td', 'tr#one th'),
-        cSwitchMultipleColumnsType(headerMultipleChangesColumnContent, bodyMultipleChangesColumnContent, 'mceTableColType', 'td'),
+        cSwitchType(bodyColumnContent, headerColumnContent, 'mceTableColType', 'th', [ 'newcell', 'newcell', 'tablemodified' ]),
+        cSwitchMultipleColumnsType(bodyMultipleChangesColumnContent, headerMultipleChangesColumnContent, 'mceTableColType', 'th', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ]),
+        cSwitchType(headerColumnContent, bodyColumnContent, 'mceTableColType', 'td', [ 'newcell', 'newcell', 'tablemodified' ], 'tr#one th'),
+        cSwitchMultipleColumnsType(headerMultipleChangesColumnContent, bodyMultipleChangesColumnContent, 'mceTableColType', 'td', [ 'newcell', 'newcell', 'newcell', 'newcell', 'tablemodified' ]),
         // Basic tests to switch between cell section types
-        cSwitchType(bodyContent, headerCellContent, 'mceTableCellType', 'th'),
-        cSwitchType(headerCellContent, bodyContent, 'mceTableCellType', 'td', 'tr#one th'),
+        cSwitchType(bodyContent, headerCellContent, 'mceTableCellType', 'th', [ 'newcell', 'tablemodified' ]),
+        cSwitchType(headerCellContent, bodyContent, 'mceTableCellType', 'td', [ 'newcell', 'tablemodified' ], 'tr#one th'),
         // Tests to get the type from the API
         cGetType(bodyContent, 'mceTableRowType', 'body'),
         cGetType(theadContent, 'mceTableRowType', 'header'),

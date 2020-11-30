@@ -147,7 +147,8 @@ const get = function (dom: DOMUtils) {
 
     strikethrough: [
       { inline: 'span', styles: { textDecoration: 'line-through' }, exact: true },
-      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
+      { inline: 'strike', remove: 'all', preserve_attributes: [ 'class', 'style' ] },
+      { inline: 's', remove: 'all', preserve_attributes: [ 'class', 'style' ] }
     ],
 
     forecolor: { inline: 'span', styles: { color: '%value' }, links: true, remove_similar: true, clear_child_styles: true },
@@ -176,7 +177,7 @@ const get = function (dom: DOMUtils) {
 
     removeformat: [
       {
-        selector: 'b,strong,em,i,font,u,strike,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
+        selector: 'b,strong,em,i,font,u,strike,s,sub,sup,dfn,code,samp,kbd,var,cite,mark,q,del,ins',
         remove: 'all',
         split: true,
         expand: false,
