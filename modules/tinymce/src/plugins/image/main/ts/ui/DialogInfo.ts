@@ -42,10 +42,6 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
   const hasDimensions = Settings.hasDimensions(editor);
   const hasImageCaption = Settings.hasImageCaption(editor);
   const hasAccessibilityOptions = Settings.showAccessibilityOptions(editor);
-  const url = Settings.getUploadUrl(editor);
-  const basePath = Settings.getUploadBasePath(editor);
-  const credentials = Settings.getUploadCredentials(editor);
-  const handler = Settings.getUploadHandler(editor);
   const automaticUploads = Settings.isAutomaticUploadsEnabled(editor);
   const prependURL: Optional<string> = Optional.some(Settings.getPrependUrl(editor)).filter(
     (preUrl) => Type.isString(preUrl) && preUrl.length > 0);
@@ -62,10 +58,6 @@ const collect = (editor: Editor): Promise<ImageDialogInfo> => {
     hasImageTitle,
     hasDimensions,
     hasImageCaption,
-    url,
-    basePath,
-    credentials,
-    handler,
     prependURL,
     hasAccessibilityOptions,
     automaticUploads

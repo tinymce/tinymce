@@ -9,7 +9,6 @@ import { Optional } from '@ephox/katamari';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import { ImageData } from '../core/ImageData';
-import { UploadHandler } from '../core/Uploader';
 
 export type ListValue = Dialog.ListBoxSingleItemSpec;
 export type ListGroup = Dialog.ListBoxNestedItemSpec;
@@ -36,10 +35,6 @@ export interface ImageDialogInfo {
   hasDimensions: boolean;
   hasImageCaption: boolean;
   hasAccessibilityOptions: boolean;
-  url: string;
-  basePath: string;
-  credentials: boolean;
-  handler: UploadHandler;
   automaticUploads: boolean;
   prependURL: Optional<string>;
 }
