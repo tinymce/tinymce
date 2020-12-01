@@ -150,29 +150,34 @@ const applyList = function (editor: Editor, listName: string, detail = {}) {
   }
 
   const bookmark = Bookmark.createBookmark(rng);
+  const selectedTextBlocks = getSelectedTextBlocks(editor, rng, root);
 
-  Tools.each(getSelectedTextBlocks(editor, rng, root), function (block) {
+  Tools.each(selectedTextBlocks, function (block) {
     let listBlock;
 
     const sibling = block.previousSibling;
-    if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
-      listBlock = sibling;
-      block = dom.rename(block, listItemName);
-      sibling.appendChild(block);
-    } else {
-      listBlock = dom.create(listName);
-      block.parentNode.insertBefore(listBlock, block);
-      listBlock.appendChild(block);
-      block = dom.rename(block, listItemName);
+    const parent = block.parentNode;
+
+    if (!NodeType.isListItemNode(parent)) {
+      if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
+        listBlock = sibling;
+        block = dom.rename(block, listItemName);
+        sibling.appendChild(block);
+      } else {
+        listBlock = dom.create(listName);
+        block.parentNode.insertBefore(listBlock, block);
+        listBlock.appendChild(block);
+        block = dom.rename(block, listItemName);
+      }
+
+      removeStyles(dom, block, [
+        'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
+        'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top'
+      ]);
+
+      updateListWithDetails(dom, listBlock, detail);
+      mergeWithAdjacentLists(editor.dom, listBlock);
     }
-
-    removeStyles(dom, block, [
-      'margin', 'margin-right', 'margin-bottom', 'margin-left', 'margin-top',
-      'padding', 'padding-right', 'padding-bottom', 'padding-left', 'padding-top'
-    ]);
-
-    updateListWithDetails(dom, listBlock, detail);
-    mergeWithAdjacentLists(editor.dom, listBlock);
   });
 
   editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
@@ -262,6 +267,7 @@ const toggleSingleList = function (editor, parentList, listName, detail) {
       const newList = editor.dom.rename(parentList, listName);
       mergeWithAdjacentLists(editor.dom, newList);
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      applyList(editor, listName, detail);
       fireListEvent(editor, listToggleActionFromListName(listName), newList);
     }
   } else {
