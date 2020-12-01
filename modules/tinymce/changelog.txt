@@ -1,8 +1,10 @@
 Version 5.7.0 (TBD)
+    Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
     Fixed the order of CSS precedence of `content_style` and `content_css` in the `preview` and `template` plugins. `content_style` now has precedence #TINY-6529
+    Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
     Fixed an issue where `scope` attributes on table cells would not change as expected when merging or unmerging cells #TINY-6486
     Fixed the plugin documentation links in the `help` plugin #DOC-703
 Version 5.6.1 (2020-11-25)

@@ -5,7 +5,7 @@ import Env from 'tinymce/core/api/Env';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import { ImageScanner } from 'tinymce/core/file/ImageScanner';
-import UploadStatus from 'tinymce/core/file/UploadStatus';
+import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 import ViewBlock from '../../module/test/ViewBlock';
 
 UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (success, failure) {
