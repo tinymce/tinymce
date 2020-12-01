@@ -27,6 +27,7 @@ import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
+import ImageUploader from './util/ImageUploader';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import Rect from './geom/Rect';
@@ -122,6 +123,7 @@ interface TinyMCE extends EditorManager {
     JSONP: JSONP;
     LocalStorage: Storage;
     Color: ColorConstructor;
+    ImageUploader: ImageUploader;
   };
 
   dom: {
@@ -252,7 +254,8 @@ const publicApi = {
     JSONRequest,
     JSONP,
     LocalStorage,
-    Color
+    Color,
+    ImageUploader
   },
 
   dom: {

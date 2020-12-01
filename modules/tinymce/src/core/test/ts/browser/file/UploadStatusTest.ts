@@ -1,7 +1,7 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
-import UploadStatus from 'tinymce/core/file/UploadStatus';
+import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 
 UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function (success, failure) {
   const suite = LegacyUnit.createSuite();
