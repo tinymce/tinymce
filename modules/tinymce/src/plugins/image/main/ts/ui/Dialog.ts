@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Merger, Optional, Type } from '@ephox/katamari';
+import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import { StyleMap } from 'tinymce/core/api/html/Styles';
@@ -175,12 +175,17 @@ const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: Imag
   const data = api.getData();
   const url = data.src.value;
   const meta = data.src.meta || {};
+
   if (!meta.width && !meta.height && info.hasDimensions) {
-    helpers.imageSize(url).then((size) => {
-      if (state.open) {
-        api.setData({ dimensions: size });
-      }
-    });
+    if (Strings.isNotEmpty(url)) {
+      helpers.imageSize(url).then((size) => {
+        if (state.open) {
+          api.setData({ dimensions: size });
+        }
+      });
+    } else {
+      api.setData({ dimensions: { width: '', height: '' }});
+    }
   }
 };
 
