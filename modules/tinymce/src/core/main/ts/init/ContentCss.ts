@@ -12,13 +12,20 @@ import * as Settings from '../api/Settings';
 const isContentCssSkinName = (url: string) => /^[a-z0-9\-]+$/i.test(url);
 
 const getContentCssUrls = (editor: Editor): string[] => {
-  const contentCss = Settings.getContentCss(editor);
+  return transformToUrls(editor, Settings.getContentCss(editor));
+};
+
+const getFontCssUrls = (editor: Editor): string[] => {
+  return transformToUrls(editor, Settings.getFontCss(editor));
+};
+
+const transformToUrls = (editor: Editor, cssLinks: string[]): string[] => {
   const skinUrl = editor.editorManager.baseURL + '/skins/content';
   const suffix = editor.editorManager.suffix;
   const contentCssFile = `content${suffix}.css`;
   const inline = editor.inline === true;
 
-  return Arr.map(contentCss, (url) => {
+  return Arr.map(cssLinks, (url) => {
     if (isContentCssSkinName(url) && !inline) {
       return `${skinUrl}/${url}/${contentCssFile}`;
     } else {
@@ -28,7 +35,7 @@ const getContentCssUrls = (editor: Editor): string[] => {
 };
 
 const appendContentCssFromSettings = (editor: Editor) => {
-  editor.contentCSS = editor.contentCSS.concat(getContentCssUrls(editor));
+  editor.contentCSS = editor.contentCSS.concat(getContentCssUrls(editor), getFontCssUrls(editor));
 };
 
 export {
