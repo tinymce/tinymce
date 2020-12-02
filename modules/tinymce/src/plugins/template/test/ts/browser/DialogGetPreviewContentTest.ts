@@ -27,9 +27,9 @@ const corsNoStyle = '<!DOCTYPE html><html><head>' +
 
 const noCorsStyle = '<!DOCTYPE html><html><head>' +
   '<base href=\"http://localhost:8000/\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\">' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\">' +
+  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
@@ -37,9 +37,9 @@ const noCorsStyle = '<!DOCTYPE html><html><head>' +
 
 const corsStyle = '<!DOCTYPE html><html><head>' +
   '<base href=\"http://localhost:8000/\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\" crossorigin=\"anonymous\">' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\" crossorigin=\"anonymous\">' +
+  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +
@@ -47,9 +47,9 @@ const corsStyle = '<!DOCTYPE html><html><head>' +
 
 const corsStyleAndContent = '<!DOCTYPE html><html><head>' +
   '<base href=\"http://localhost:8000/\">' +
-  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/ui/oxide/content.min.css\" crossorigin=\"anonymous\">' +
   '<link type=\"text/css\" rel=\"stylesheet\" href=\"http://localhost:8000/project/tinymce/js/tinymce/skins/content/default/content.css\" crossorigin=\"anonymous\">' +
+  '<style type=\"text/css\">This is the style inserted into the document</style>' +
   '<script>document.addEventListener && document.addEventListener(\"click\", function(e) {for (var elm = e.target; elm; elm = elm.parentNode) {if (elm.nodeName === \"A\" && !(' +
   metaKey +
   ')) {e.preventDefault();}}}, false);</script> ' +

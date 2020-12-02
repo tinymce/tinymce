@@ -9,6 +9,7 @@ import { Type } from '@ephox/katamari';
 import { BlobInfo } from '../api/file/BlobCache';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
+import { UploadStatus } from './UploadStatus';
 
 /**
  * Upload blobs or blob infos to the specified URL or handler.
@@ -52,7 +53,7 @@ export interface Uploader {
   upload (blobInfos: BlobInfo[], openNotification: () => void): Promise<UploadResult[]>;
 }
 
-export function Uploader(uploadStatus, settings): Uploader {
+export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
   const pendingPromises: Record<string, ResolveFn<UploadResult>[]> = {};
 
   const pathJoin = (path1, path2) => {

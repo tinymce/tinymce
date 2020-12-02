@@ -79,4 +79,156 @@ UnitTest.test('MergeOperationsTest', function () {
     ],
     { startRow: 2, startCol: 0, finishRow: 3, finishCol: 0 }
   );
+
+  Assertions.checkMerge(
+    'TINY-6484 - merge cells where there is one or more row-scopes, resulting in a rowgroup scope.',
+    // Border = 1 would be here, but it is removed so that we can assert html
+    '<table style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="rowgroup" rowspan="2">A1<br>A2<br></td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+
+    '<table border="1" style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="row">A1</td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>A2</td>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+    [
+      { section: 0, row: 0, column: 0 },
+      { section: 0, row: 1, column: 0 }
+    ],
+    { startRow: 0, startCol: 0, finishRow: 1, finishCol: 0 }
+  );
+
+  Assertions.checkMerge(
+    'TINY-6484 - merge cells where there is one or more col-scopes, resulting in a colgroup scope.',
+    // Border = 1 would be here, but it is removed so that we can assert html
+    '<table style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="colgroup" colspan="2">A1<br>B1<br></td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>A2</td>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+
+    '<table border="1" style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="col">A1</td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>A2</td>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+    [
+      { section: 0, row: 0, column: 0 },
+      { section: 0, row: 0, column: 1 }
+    ],
+    { startRow: 0, startCol: 0, finishRow: 0, finishCol: 1 }
+  );
+
+  Assertions.checkMerge(
+    'TINY-6484 - merge cells where there is one or more row-scopes and one or more col-scopes, resulting in the scope attribute being removed.',
+    // Border = 1 would be here, but it is removed so that we can assert html
+    '<table style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td rowspan="2">A1<br>A2<br></td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+
+    '<table border="1" style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="row">A1</td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td scope="col">A2</td>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+    [
+      { section: 0, row: 0, column: 0 },
+      { section: 0, row: 1, column: 0 }
+    ],
+    { startRow: 0, startCol: 0, finishRow: 1, finishCol: 0 }
+  );
+
+  Assertions.checkMerge(
+    'TINY-6484 - merge cells where there is one or more row-scopes and one or more col-scopes, resulting in the scope attribute being removed, reverse order.',
+    // Border = 1 would be here, but it is removed so that we can assert html
+    '<table style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td rowspan="2">A1<br>A2<br></td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+
+    '<table border="1" style="border-collapse: collapse;">' +
+      '<tbody>' +
+        '<tr>' +
+          '<td scope="col">A1</td>' +
+          '<td>B1</td>' +
+          '<td>C1</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td scope="row">A2</td>' +
+          '<td>B2</td>' +
+          '<td>C2</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>',
+    [
+      { section: 0, row: 0, column: 0 },
+      { section: 0, row: 1, column: 0 }
+    ],
+    { startRow: 0, startCol: 0, finishRow: 1, finishCol: 0 }
+  );
 });

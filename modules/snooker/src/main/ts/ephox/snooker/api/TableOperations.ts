@@ -227,15 +227,20 @@ const opEraseRows = (grid: Structs.RowCells[], details: Structs.DetailExt[], _co
   return outcome(newGrid, cursor);
 };
 
-const opMergeCells = (grid: Structs.RowCells[], mergable: ExtractMergable, comparator: CompElm, _genWrappers: GeneratorsMerging) => {
+const opMergeCells = (grid: Structs.RowCells[], mergable: ExtractMergable, comparator: CompElm, genWrappers: GeneratorsMerging) => {
   const cells = mergable.cells;
   TableContent.merge(cells);
-  const newGrid = MergingOperations.merge(grid, mergable.bounds, comparator, Fun.constant(cells[0]));
+
+  const newGrid = MergingOperations.merge(grid, mergable.bounds, comparator, genWrappers.merge(cells));
+
   return outcome(newGrid, Optional.from(cells[0]));
 };
 
 const opUnmergeCells = (grid: Structs.RowCells[], unmergable: SugarElement[], comparator: CompElm, genWrappers: GeneratorsMerging) => {
-  const newGrid = Arr.foldr(unmergable, (b, cell) => MergingOperations.unmerge(b, cell, comparator, genWrappers.combine(cell)), grid);
+  const unmerge = (b: Structs.RowCells[], cell: SugarElement) =>
+    MergingOperations.unmerge(b, cell, comparator, genWrappers.unmerge(cell));
+
+  const newGrid = Arr.foldr(unmergable, unmerge, grid);
   return outcome(newGrid, Optional.from(unmergable[0]));
 };
 
