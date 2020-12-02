@@ -227,9 +227,9 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         );
         const parserArgs: ParserArgs = { ...contextArgs, insert: true };
         const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, parserArgs);
+        const parser = tinymceEditor.parser;
 
         if (parserArgs.invalid) {
-          const parser = tinymceEditor.parser;
           FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), fragment);
         }
 
