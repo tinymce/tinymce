@@ -337,8 +337,64 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
         tinyApis.sAssertContent(advHtml),
         TableTestUtils.sOpenTableDialog(tinyUi),
         TableTestUtils.sAssertDialogValues(advData, true, generalSelectors),
+        TableTestUtils.sClickDialogButton('close dialog', false),
         sAssertEventsOrder([ 'newcell', 'tablemodified' ]),
         sAssertTableModifiedEvent({ structure: true, style: true }),
+        sClearEvents
+      ]);
+    };
+
+    const scopeSetTest = () => {
+      const html = (
+        '<table>' +
+          '<thead>' +
+            '<tr>' +
+              '<th>1</th>' +
+              '<th>2</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td data-mce-selected="1">a</td>' +
+              '<td>b</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
+      );
+      const expectedhtml = (
+        '<table>' +
+          '<thead>' +
+            '<tr>' +
+              '<th>1</th>' +
+              '<th>2</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td scope="row">a</td>' +
+              '<td>b</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
+      );
+      return Log.stepsAsStep('TINY-6643', 'Changing only scope should modify neither style or structure', [
+        sAssertEventsOrder([]),
+        tinyApis.sSetSetting('table_cell_advtab', false),
+        tinyApis.sSetContent(html),
+        tinyApis.sSelect('td', [ 0 ]),
+        TableTestUtils.sOpenTableDialog(tinyUi),
+        TableTestUtils.sSetDialogValues({
+          width: '',
+          height: '',
+          celltype: 'td',
+          scope: 'row',
+          halign: '',
+          valign: ''
+        }, false, generalSelectors),
+        TableTestUtils.sClickDialogButton('submit dialog', true),
+        tinyApis.sAssertContent(expectedhtml),
+        sAssertEventsOrder([ 'tablemodified' ]),
+        sAssertTableModifiedEvent({ structure: false, style: false }),
         sClearEvents
       ]);
     };
@@ -352,7 +408,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellDialogTest', (success
       multiUpdate(),
       removeAllTest(),
       execCommandTest(),
-      okCancelTest()
+      okCancelTest(),
+      scopeSetTest(),
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',

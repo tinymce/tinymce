@@ -117,12 +117,14 @@ const applyCellData = (editor: Editor, cells: SugarElement<HTMLTableCellElement>
       });
     });
 
-    const cellTypeModified = Obj.has(modifiedData, 'celltype');
-    // style modified if there's at least one other change apart from 'celltype'
-    const styleModified = cellTypeModified ? Obj.size(modifiedData) > 1 : true;
+    // style modified if there's at least one other change apart from 'celltype' and 'scope'
+    const styleModified = Obj.size(Obj.filter(modifiedData, (_value, key) => key !== 'scope' && key !== 'celltype')) > 0;
 
     tableOpt.each(
-      (table) => Events.fireTableModified(editor, table.dom, { structure: cellTypeModified, style: styleModified })
+      (table) => Events.fireTableModified(editor, table.dom, {
+        structure: Obj.has(modifiedData, 'celltype'),
+        style: styleModified,
+      })
     );
   }
 };

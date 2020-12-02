@@ -66,7 +66,10 @@ const applyRowData = (editor: Editor, rows: HTMLTableRowElement[], oldData: RowD
     const styleModified = typeModified ? Obj.size(modifiedData) > 1 : true;
 
     TableLookup.table(SugarElement.fromDom(rows[0])).each(
-      (table) => Events.fireTableModified(editor, table.dom, { structure: typeModified, style: styleModified })
+      (table) => Events.fireTableModified(editor, table.dom, {
+        structure: typeModified,
+        style: styleModified
+      })
     );
   }
 };
