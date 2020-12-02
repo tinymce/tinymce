@@ -235,13 +235,14 @@ const updateList = function (editor: Editor, list, listName, detail) {
 };
 
 const toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
-  if (parentList.nodeName === listName && !hasListStyleDetail(detail)) {
+  if (NodeType.isListNode(parentList) && parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     flattenListSelection(editor);
   } else {
     applyList(editor, listName, detail);
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+    const allLists = NodeType.isListNode(parentList) ? [ parentList, ...lists ] : [ ...lists ];
 
-    Tools.each([ parentList ].concat(lists), function (elm) {
+    Tools.each(allLists, (elm) => {
       updateList(editor, elm, listName, detail);
     });
 
@@ -282,7 +283,7 @@ const toggleList = function (editor, listName, detail) {
 
   detail = detail ? detail : {};
 
-  if (parentList && selectedSubLists.length > 0) {
+  if (selectedSubLists.length > 0) {
     toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
   } else {
     toggleSingleList(editor, parentList, listName, detail);
