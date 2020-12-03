@@ -8,10 +8,10 @@ export interface DragEvent {
 
 export interface DragEvents {
   readonly registry: {
-    move: Bindable<DragEvent>;
+    readonly move: Bindable<DragEvent>;
   };
   readonly trigger: {
-    move: (info: SugarPosition) => void;
+    readonly move: (info: SugarPosition) => void;
   };
 }
 

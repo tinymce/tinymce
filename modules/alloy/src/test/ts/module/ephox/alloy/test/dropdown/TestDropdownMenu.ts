@@ -112,7 +112,7 @@ const itemMarkers = {
   backgroundMenu: 'background-menu'
 };
 
-const markers = (): Record<'item' | 'selectedItem' | 'menu' | 'selectedMenu' | 'backgroundMenu', string> => itemMarkers;
+const markers = (): TieredMenuSpec['markers'] => itemMarkers;
 
 export {
   assertLazySinkArgs,

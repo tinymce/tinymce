@@ -5,19 +5,19 @@ import Jsc from '@ephox/wrap-jsverify';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
 export interface ArbTextIds {
-  startId: string;
-  textIds: string[];
+  readonly startId: string;
+  readonly textIds: string[];
 }
 
 export interface ArbIds {
-  startId: string;
-  ids: string[];
+  readonly startId: string;
+  readonly ids: string[];
 }
 
 export interface ArbRangeIds {
-  startId: string;
-  finishId: string;
-  ids: string[];
+  readonly startId: string;
+  readonly finishId: string;
+  readonly ids: string[];
 }
 
 const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {

@@ -8,10 +8,10 @@ export interface RelocateEvent {
 
 interface RelocateEvents {
   readonly registry: {
-    relocate: Bindable<RelocateEvent>;
+    readonly relocate: Bindable<RelocateEvent>;
   };
   readonly trigger: {
-    relocate: (x: number, y: number) => void;
+    readonly relocate: (x: number, y: number) => void;
   };
 }
 
