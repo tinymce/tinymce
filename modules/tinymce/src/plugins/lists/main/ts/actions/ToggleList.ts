@@ -241,7 +241,7 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
   } else {
     applyList(editor, listName, detail);
     const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
-    const allLists = parentIsList ? [ parentList, ...lists ] : [ ...lists ];
+    const allLists = parentIsList ? [ parentList, ...lists ] : lists;
 
     Tools.each(allLists, (elm) => {
       updateList(editor, elm, listName, detail);
