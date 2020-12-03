@@ -9,6 +9,7 @@ export interface ContractCondition {
   validate: (value: any, key: string) => boolean;
 }
 
+type IdentityFn = <T>(obj: T) => T;
 type HandleFn = (required: string[], keys: string[]) => void;
 
 // Ensure that the object has all required fields. They must be functions.
@@ -20,7 +21,7 @@ const base = function (handleUnsupported: HandleFn, required: string[]) {
 };
 
 // Ensure that the object has all required fields. They must satisy predicates.
-const baseWith = function (handleUnsupported: HandleFn, required: string[], pred: ContractCondition) {
+const baseWith = function (handleUnsupported: HandleFn, required: string[], pred: ContractCondition): IdentityFn {
   if (required.length === 0) {
     throw new Error('You must specify at least one required field.');
   }
@@ -67,6 +68,6 @@ const handleExact = function (required: string[], keys: string[]) {
 
 const allowExtra = Fun.noop;
 
-export const exactly = (required: string[]): <T>(obj: T) => T => base(handleExact, required);
-export const ensure = (required: string[]): <T>(obj: T) => T => base(allowExtra, required);
-export const ensureWith = (required: string[], condition: ContractCondition): <T>(obj: T) => T => baseWith(allowExtra, required, condition);
+export const exactly = (required: string[]): IdentityFn => base(handleExact, required);
+export const ensure = (required: string[]): IdentityFn => base(allowExtra, required);
+export const ensureWith = (required: string[], condition: ContractCondition): IdentityFn => baseWith(allowExtra, required, condition);

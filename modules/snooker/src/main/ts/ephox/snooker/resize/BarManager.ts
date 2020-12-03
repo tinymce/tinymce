@@ -22,15 +22,15 @@ export interface DragAdjustWidthEvent {
 }
 
 export interface DragAdjustEvents {
-  registry: {
-    adjustHeight: Bindable<DragAdjustHeightEvent>;
-    adjustWidth: Bindable<DragAdjustWidthEvent>;
-    startAdjust: Bindable<{}>;
+  readonly registry: {
+    readonly adjustHeight: Bindable<DragAdjustHeightEvent>;
+    readonly adjustWidth: Bindable<DragAdjustWidthEvent>;
+    readonly startAdjust: Bindable<{}>;
   };
-  trigger: {
-    adjustHeight: (table: SugarElement<HTMLTableElement>, delta: number, row: number) => void;
-    adjustWidth: (table: SugarElement<HTMLTableElement>, delta: number, column: number) => void;
-    startAdjust: () => void;
+  readonly trigger: {
+    readonly adjustHeight: (table: SugarElement<HTMLTableElement>, delta: number, row: number) => void;
+    readonly adjustWidth: (table: SugarElement<HTMLTableElement>, delta: number, column: number) => void;
+    readonly startAdjust: () => void;
   };
 }
 

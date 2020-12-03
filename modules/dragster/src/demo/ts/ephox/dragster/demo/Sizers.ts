@@ -5,6 +5,8 @@ interface Box {
   readonly element: () => SugarElement<HTMLDivElement>;
   readonly show: () => void;
   readonly hide: () => void;
+  readonly set: (x: number, y: number) => void;
+  readonly destroy: () => void;
 }
 
 export interface Sizers {
@@ -17,7 +19,7 @@ export interface Sizers {
 }
 
 export const Sizers = (): Sizers => {
-  const box = function () {
+  const box = function (): Box {
     const r = SugarElement.fromTag('div');
     Width.set(r, 8);
     Height.set(r, 8);

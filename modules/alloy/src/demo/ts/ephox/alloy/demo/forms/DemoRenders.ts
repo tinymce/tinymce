@@ -6,16 +6,17 @@ import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import { ItemDataTuple, ItemSpec, SeparatorItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { PartialMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
+import { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 import { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
 
 export interface DemoItem {
-  type: 'item';
-  text?: string;
-  data: {
-    value: string;
-    meta?: {
-      text: string;
+  readonly type: 'item';
+  readonly text?: string;
+  readonly data: {
+    readonly value: string;
+    readonly meta?: {
+      readonly text: string;
 
       [key: string]: string;
     };
@@ -25,29 +26,29 @@ export interface DemoItem {
 }
 
 export interface DemoSeparatorItem {
-  type: 'separator';
-  text?: string;
-  data?: {
-    value: string;
-    meta?: {
-      text: string;
+  readonly type: 'separator';
+  readonly text?: string;
+  readonly data?: {
+    readonly value: string;
+    readonly meta?: {
+      readonly text: string;
       [key: string]: string;
     };
   };
 }
 
 export interface DemoWidgetItem {
-  type: 'widget';
-  data: ItemDataTuple;
-  autofocus: boolean;
-  widget: SketchSpec;
+  readonly type: 'widget';
+  readonly data: ItemDataTuple;
+  readonly autofocus: boolean;
+  readonly widget: SketchSpec;
 }
 
 export type DemoItems = DemoWidgetItem | DemoItem | DemoSeparatorItem;
 
 export interface DemoMenu {
-  value: string;
-  items: ItemSpec[];
+  readonly value: string;
+  readonly items: ItemSpec[];
 
   [key: string]: any;
 }
@@ -287,12 +288,12 @@ const toolbarGroup = (group: { label?: string; items: AlloySpec[] }): ToolbarGro
   };
 };
 
-const orbMarkers = (): Record<'item' | 'selectedItem', string> => ({
+const orbMarkers = (): MenuSpec['markers'] => ({
   item: 'demo-alloy-orb',
   selectedItem: 'demo-alloy-orb-selected'
 });
 
-const tieredMarkers = (): Record<'item' | 'selectedItem' | 'menu' | 'selectedMenu' | 'backgroundMenu', string> => ({
+const tieredMarkers = (): TieredMenuSpec['markers'] => ({
   item: 'demo-alloy-item',
   selectedItem: 'demo-alloy-item-selected',
   menu: 'demo-alloy-menu',

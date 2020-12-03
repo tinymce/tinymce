@@ -46,7 +46,7 @@ const setGroups = (tb: AlloyComponent, gs: Array<{ items: AlloySpec[] }>): void 
 const createGroups = (gs: Array<{ items: AlloySpec[] }>): SketchSpec[] =>
   Arr.map(gs, Fun.compose(ToolbarGroup.sketch, munge));
 
-const markers = (): Record<'itemSelector', string> => itemMarkers;
+const markers = (): ToolbarGroupSpec['markers'] => itemMarkers;
 
 export {
   markers,

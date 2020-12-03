@@ -6,27 +6,27 @@ import * as NativeRange from './NativeRange';
 type SelectionDirectionHandler<U> = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => U;
 
 export interface SelectionDirection {
-  fold: <U> (
+  readonly fold: <U> (
     ltr: SelectionDirectionHandler<U>,
     rtl: SelectionDirectionHandler<U>
   ) => U;
-  match: <U> (branches: {
+  readonly match: <U> (branches: {
     ltr: SelectionDirectionHandler<U>;
     rtl: SelectionDirectionHandler<U>;
   }) => U;
-  log: (label: string) => void;
+  readonly log: (label: string) => void;
 }
 
 type SelectionDirectionConstructor = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => SelectionDirection;
 
 interface LtrRtlRanges {
-  ltr: () => Range;
-  rtl: () => Optional<Range>;
+  readonly ltr: () => Range;
+  readonly rtl: () => Optional<Range>;
 }
 
 const adt: {
-  ltr: SelectionDirectionConstructor;
-  rtl: SelectionDirectionConstructor;
+  readonly ltr: SelectionDirectionConstructor;
+  readonly rtl: SelectionDirectionConstructor;
 } = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }

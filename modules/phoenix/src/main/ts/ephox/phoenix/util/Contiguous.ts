@@ -2,14 +2,14 @@ import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 
 export interface Group<E> {
-  parent: E;
-  children: E[];
+  readonly parent: E;
+  readonly children: E[];
 }
 
 interface Data<E> {
-  groups: Group<E>[];
-  current: E[];
-  parent: E | null;
+  readonly groups: Group<E>[];
+  readonly current: E[];
+  readonly parent: E | null;
 }
 type AccOrSkip = <E>(rest: Data<E>, parent: E, item: E) => Data<E>;
 
