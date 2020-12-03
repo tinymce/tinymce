@@ -16,7 +16,7 @@ interface Observable<T> {
 }
 
 /**
- * This mixin will add event binding logic to classes.
+ * This mixin adds event binding logic to classes. Adapts the EventDispatcher class.
  *
  * @mixin tinymce.util.Observable
  */
@@ -47,7 +47,7 @@ const Observable: Observable<any> = {
    * @param {Boolean?} bubble True/false if the event is to be bubbled.
    * @return {Object} Event args instance passed in.
    * @example
-   * instance.fire('event', {...});
+   * editor.fire('event', {...});
    */
   fire(name, args?, bubble?) {
     const self = this;
@@ -82,7 +82,7 @@ const Observable: Observable<any> = {
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.on('event', function(e) {
+   * editor.on('event', function(e) {
    *     // Callback logic
    * });
    */
@@ -100,13 +100,13 @@ const Observable: Observable<any> = {
    * @return {Object} Current class instance.
    * @example
    * // Unbind specific callback
-   * instance.off('event', handler);
+   * editor.off('event', handler);
    *
    * // Unbind all listeners by name
-   * instance.off('event');
+   * editor.off('event');
    *
    * // Unbind all events
-   * instance.off();
+   * editor.off();
    */
   off(name?, callback?) {
     return getEventDispatcher(this).off(name, callback);

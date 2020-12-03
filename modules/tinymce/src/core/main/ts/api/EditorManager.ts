@@ -32,6 +32,7 @@ declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
  * @class tinymce.EditorManager
  * @mixes tinymce.util.Observable
  * @static
+ * @private
  */
 
 const DOM = DOMUtils.DOM;

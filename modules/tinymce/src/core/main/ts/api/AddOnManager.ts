@@ -12,69 +12,71 @@ import Editor from './Editor';
 import I18n from './util/I18n';
 
 /**
- * This class handles the loading of themes/plugins or other add-ons and their language packs.
+ * TinyMCE theme manager class. Subclass of AddOnManager. Allows for a custom theme to be used with TinyMCE.
+ *
+ * @summary <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
+ * Creating a custom theme may require implementing this functionality.
+ * To change TinyMCE's appearance, Tiny recommends changing the Skin instead.
+ *
+ * @class tinymce.ThemeManager
+ * @example
+ * tinymce.ThemeManager.add('MyTheme', function(editor) {
+ *     // Setup up custom UI elements in the dom
+ *     const div = document.createElement('div');
+ *     const iframe = document.createElement('iframe');
+ *     document.body.appendChild(div);
+ *     document.body.appendChild(iframe);
+ *
+ *     // Themes should fire the SkinLoaded event once the UI has been created
+ *     editor.on('init', () => editor.fire('SkinLoaded'));
+ *
+ *     // Themes must return a renderUI function that returns the editorContainer and iframeContainer
+ *     const renderUI = function() {
+ *         return {
+ *             editorContainer: div,
+ *             iframeContainer: iframe
+ *         };
+ *     };
+ *
+ *     // Return the renderUI function
+ *     return { renderUI };
+ * });
+ */
+
+/**
+ * TinyMCE plugin manager class. Subclass of AddOnManager. Allows for custom plugins to be added to TinyMCE.
+ *
+ * @class tinymce.PluginManager
+ * @example
+ * tinymce.PluginManager.add('MyPlugin', function(editor, url) {
+ *     // Register a toolbar button that triggers an alert when clicked
+ *     // To show this button in the editor, include it in the toolbar setting
+ *     editor.ui.registry.addButton('myCustomToolbarButton', {
+ *         text: 'My Custom Button',
+ *         onAction: function () {
+ *             alert('Button clicked!');
+ *         }
+ *     });
+ *
+ *     // Register a menu item that triggers an alert when clicked
+ *     // To show this menu item in the editor, include it in the menu setting
+ *     editor.ui.registry.addMenuItem('myCustomMenuItem', {
+ *         text: 'My Custom Menu Item',
+ *         onAction: function() {
+ *             alert('Menu item clicked');
+ *         }
+ *     });
+ *
+ *     // Return plugin metadata
+ *     return {name: 'MyPlugin', url: 'https://mydocs.com/myplugin};
+ * });
+ */
+
+/**
+ * This class handles the loading of themes, plugins and other add-ons and their language packs.
+ * Superclass of ThemeManager and PluginManager.
  *
  * @class tinymce.AddOnManager
- */
-
-/**
- * TinyMCE theme class.
- *
- * @class tinymce.Theme
- */
-
-/**
- * This method is responsible for rendering/generating the overall user interface with toolbars, buttons, iframe containers etc.
- *
- * @method renderUI
- * @param {Object} obj Object parameter containing the targetNode DOM node that will be replaced visually with an editor instance.
- * @return {Object} an object with items like iframeContainer, editorContainer, sizeContainer.
- */
-
-/**
- * Plugin base class, this is a pseudo class that describes how a plugin is to be created for TinyMCE. The methods below are all optional.
- *
- * @class tinymce.Plugin
- * @example
- * tinymce.PluginManager.add('example', function(editor, url) {
- *     // Add a button that opens a window
- *     editor.addButton('example', {
- *         text: 'My button',
- *         icon: false,
- *         onclick: function() {
- *             // Open window
- *             editor.windowManager.open({
- *                 title: 'Example plugin',
- *                 body: [
- *                     {type: 'textbox', name: 'title', label: 'Title'}
- *                 ],
- *                 onsubmit: function(e) {
- *                     // Insert content when the window form is submitted
- *                     editor.insertContent('Title: ' + e.data.title);
- *                 }
- *             });
- *         }
- *     });
- *
- *     // Adds a menu item to the tools menu
- *     editor.addMenuItem('example', {
- *         text: 'Example plugin',
- *         context: 'tools',
- *         onclick: function() {
- *             // Open window with a specific url
- *             editor.windowManager.open({
- *                 title: 'TinyMCE site',
- *                 url: 'http://www.tinymce.com',
- *                 width: 800,
- *                 height: 600,
- *                 buttons: [{
- *                     text: 'Close',
- *                     onclick: 'close'
- *                 }]
- *             });
- *         }
- *     });
- * });
  */
 
 export interface UrlObject { prefix: string; resource: string; suffix: string }
@@ -92,7 +94,7 @@ interface AddOnManager<T> {
   lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
   _listeners: { name: string; state: WaitState; callback: () => void }[];
   get (name: string): AddOnConstructor<T>;
-  dependencies (name: string): string[];
+  dependencies (name: string): string[]; // TODO: deprecated in 5.7
   requireLangPack (name: string, languages: string): void;
   add (id: string, addOn: AddOnCallback<T>, dependencies?: string[]): AddOnConstructor<T>;
   remove (name: string): void;
@@ -242,7 +244,7 @@ function AddOnManager<T>(): AddOnManager<T> {
      *
      * @method get
      * @param {String} name Add-on to look for.
-     * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.
+     * @return {tinymce.PluginManager} Theme or plugin add-on instance or undefined.
      */
     get,
 
@@ -262,8 +264,8 @@ function AddOnManager<T>(): AddOnManager<T> {
      *
      * @method add
      * @param {String} id Short name/id for the add-on.
-     * @param {tinymce.Theme/tinymce.Plugin} addOn Theme or plugin to add.
-     * @return {tinymce.Theme/tinymce.Plugin} The same theme or plugin instance that got passed in.
+     * @param {tinymce.PluginManager} addOn Theme or plugin to add.
+     * @return {tinymce.PluginManager} The same theme or plugin instance that got passed in.
      * @example
      * // Create a simple plugin
      * tinymce.create('tinymce.plugins.TestPlugin', {
@@ -293,10 +295,13 @@ function AddOnManager<T>(): AddOnManager<T> {
      * Add a set of components that will make up the add-on. Using the url of the add-on name as the base url.
      * This should be used in development mode.  A new compressor/javascript munger process will ensure that the
      * components are put together into the plugin.js file and compressed correctly.
+     * <br>
+     * <em>Deprecated in TinyMCE 5.7</em>
      *
      * @method addComponents
      * @param {String} pluginName name of the plugin to load scripts from (will be used to get the base url for the plugins).
      * @param {Array} scripts Array containing the names of the scripts to load.
+     * @deprecated in 5.7
      */
     addComponents,
 

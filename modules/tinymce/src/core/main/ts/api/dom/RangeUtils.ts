@@ -32,10 +32,10 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    *
    * @private
    * @method walk
-   * @param {Object} rng Range like object.
-   * @param {function} callback Callback function to execute for each sibling collection.
+   * @param {RangeObject} rng Range like object.
+   * @param {Function} callback Callback function to execute for each sibling collection.
    */
-  const walk = function (rng, callback) {
+  const walk = function (rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
     return RangeWalk.walk(dom, rng, callback);
   };
 
@@ -43,8 +43,8 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    * Splits the specified range at it's start/end points.
    *
    * @private
-   * @param {Range/RangeObject} rng Range to split.
-   * @return {Object} Range position object.
+   * @param {RangeObject} rng Range to split.
+   * @return {RangeObject} Range position object.
    */
   const split = SplitRange.split;
 
@@ -53,7 +53,7 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    *
    * @private
    * @param {Range} rng Range to normalize.
-   * @return {Boolean} True/false if the specified range was normalized or not.
+   * @return {Boolean} True or false if the specified range was normalized or not.
    */
   const normalize = function (rng: Range): boolean {
     return NormalizeRange.normalize(dom, rng).fold(
@@ -79,9 +79,9 @@ namespace RangeUtils {
    *
    * @static
    * @method compareRanges
-   * @param {DOMRange} rng1 First range to compare.
-   * @param {DOMRange} rng2 First range to compare.
-   * @return {Boolean} true/false if the ranges are equal.
+   * @param {RangeObject} rng1 First range to compare.
+   * @param {RangeObject} rng2 First range to compare.
+   * @return {Boolean} True or false if the ranges are equal.
    */
   export const compareRanges = RangeCompare.isEq;
 
@@ -92,8 +92,8 @@ namespace RangeUtils {
    * @method getCaretRangeFromPoint
    * @param {Number} clientX X coordinate for range
    * @param {Number} clientY Y coordinate for range
-   * @param {Document} doc Document that x/y are relative to
-   * @returns {Range} caret range
+   * @param {Document} doc Document that the x and y coordinates are relative to
+   * @returns {Range} Caret range
    */
   export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (clientX: number, clientY: number, doc: Document) => Range;
 

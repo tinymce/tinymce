@@ -4,14 +4,15 @@
  * @static
  * @class tinymce
  * @borrow-members tinymce.EditorManager
+ * @borrow-members tinymce.EditorObservable
  * @borrow-members tinymce.util.Tools
  */
 
 /**
  * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
  * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
- * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.
- * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.
+ * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance. Subclass of AddOnManager.
+ * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance. Subclass of AddOnManager.
  */
 
 /**

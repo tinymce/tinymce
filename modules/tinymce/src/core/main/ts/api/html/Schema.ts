@@ -925,7 +925,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getShortEndedElements = (): SchemaMap => shortEndedElementsMap;
 
   /**
-   * Returns a map with self closing tags such as <li>.
+   * Returns a map with self closing tags such as LI.
    *
    * @method getSelfClosingElements
    * @return {Object} Name/value lookup map for self closing tags elements.

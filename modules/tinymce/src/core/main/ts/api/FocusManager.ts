@@ -13,6 +13,7 @@
  * It will also handle the restore of selection when the focus is lost and returned.
  *
  * @class tinymce.FocusManager
+ * @private
  */
 
 interface FocusManager {

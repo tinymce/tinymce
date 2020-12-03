@@ -139,7 +139,7 @@ class EventDispatcher<T> {
    * @param {Object?} args Event arguments.
    * @return {Object} Event args instance passed in.
    * @example
-   * instance.fire('event', {...});
+   * editor.fire('event', {...});
    */
   public fire <K extends string, U extends MappedEvent<T, K>>(nameIn: K, argsIn?: U): EditorEvent<U> {
     const name = nameIn.toLowerCase();
@@ -214,7 +214,7 @@ class EventDispatcher<T> {
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.on('event', function(e) {
+   * editor.on('event', function(e) {
    *     // Callback logic
    * });
    */
@@ -262,13 +262,13 @@ class EventDispatcher<T> {
    * @return {Object} Current class instance.
    * @example
    * // Unbind specific callback
-   * instance.off('event', handler);
+   * editor.off('event', handler);
    *
    * // Unbind all listeners by name
-   * instance.off('event');
+   * editor.off('event');
    *
    * // Unbind all events
-   * instance.off();
+   * editor.off();
    */
   public off <K extends string>(name?: K, callback?: (event: EditorEvent<MappedEvent<T, K>>) => void): this {
     if (name) {
@@ -330,7 +330,7 @@ class EventDispatcher<T> {
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * instance.once('event', function(e) {
+   * editor.once('event', function(e) {
    *     // Callback logic
    * });
    */
