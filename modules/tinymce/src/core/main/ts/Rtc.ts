@@ -25,6 +25,7 @@ import { getSelectedContentInternal, GetSelectionContentArgs } from './selection
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
+import { ParserArgs } from './api/html/DomParser';
 
 const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
@@ -224,7 +225,14 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
           () => ({ }),
           (context) => ({ context })
         );
-        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, { ...contextArgs, insert: true });
+        const parserArgs: ParserArgs = { ...contextArgs, insert: true };
+        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, parserArgs);
+        const parser = tinymceEditor.parser;
+
+        if (parserArgs.invalid) {
+          FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), fragment);
+        }
+
         rtcEditor.insertContent(fragment);
       },
       addVisual: (_elm) => {}
