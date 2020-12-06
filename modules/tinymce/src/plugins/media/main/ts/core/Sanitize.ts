@@ -24,15 +24,21 @@ const sanitize = function (editor: Editor, html: string) {
     allow_conditional_comments: false,
 
     comment(text) {
-      writer.comment(text);
+      if (!blocked) {
+        writer.comment(text);
+      }
     },
 
     cdata(text) {
-      writer.cdata(text);
+      if (!blocked) {
+        writer.cdata(text);
+      }
     },
 
     text(text, raw) {
-      writer.text(text, raw);
+      if (!blocked) {
+        writer.text(text, raw);
+      }
     },
 
     start(name, attrs, empty) {
