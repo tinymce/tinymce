@@ -15,7 +15,7 @@ export interface TableSize {
   readonly setElementWidth: (element: SugarElement<HTMLElement>, width: number) => void;
   readonly adjustTableWidth: (delta: number) => void;
   readonly isRelative: boolean;
-  readonly label: string;
+  readonly label: 'none' | 'pixel' | 'percent';
 }
 
 const noneSize = (table: SugarElement<HTMLTableElement>): TableSize => {

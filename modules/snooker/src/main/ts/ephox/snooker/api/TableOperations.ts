@@ -363,3 +363,4 @@ export const pasteColsAfter = run(opPasteColsAfter, onPasteByEditor, Fun.noop, F
 export const pasteRowsBefore = run(opPasteRowsBefore, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
 export const pasteRowsAfter = run(opPasteRowsAfter, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
 export const getColumnType = opGetColumnType;
+export const getUniqueColumns = uniqueColumns;

@@ -8,17 +8,17 @@
 import { Selections, SelectionTypes } from '@ephox/darwin';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
-import { Replication, SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import { TableActions } from './TableActions';
 
-const extractSelected = function (cells) {
+const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
-  return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {
-    return [ CopySelected.extract(replica, Ephemera.attributeSelector) ];
-  });
+  return TableLookup.table(cells[0]).map(
+    (table) => ([ CopySelected.extract(table, Ephemera.attributeSelector) ])
+  );
 };
 
 const serializeElements = (editor: Editor, elements: SugarElement[]): string => Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom, {})).join('');
