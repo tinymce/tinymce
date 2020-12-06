@@ -5,8 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Type } from '@ephox/katamari';
+import { Fun, Optional, Type } from '@ephox/katamari';
 import { BlobInfo } from '../api/file/BlobCache';
+import { NotificationApi } from '../api/NotificationManager';
 import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import { UploadStatus } from './UploadStatus';
@@ -50,7 +51,7 @@ export interface UploadResult {
 }
 
 export interface Uploader {
-  upload (blobInfos: BlobInfo[], openNotification: () => void): Promise<UploadResult[]>;
+  upload (blobInfos: BlobInfo[], openNotification?: () => NotificationApi): Promise<UploadResult[]>;
 }
 
 export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
@@ -128,20 +129,17 @@ export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
     delete pendingPromises[blobUri];
   };
 
-  const uploadBlobInfo = (blobInfo: BlobInfo, handler: UploadHandler, openNotification): Promise<UploadResult> => {
+  const uploadBlobInfo = (blobInfo: BlobInfo, handler: UploadHandler, openNotification?: () => NotificationApi): Promise<UploadResult> => {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise((resolve) => {
       let notification, progress;
 
-      const noop = () => {
-      };
-
       try {
         const closeNotification = () => {
           if (notification) {
             notification.close();
-            progress = noop; // Once it's closed it's closed
+            progress = Fun.noop; // Once it's closed it's closed
           }
         };
 
@@ -161,16 +159,17 @@ export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
           resolve(handlerFailure(blobInfo, error, failureOptions));
         };
 
-        progress = (percent) => {
+        progress = (percent: number) => {
           if (percent < 0 || percent > 100) {
             return;
           }
 
-          if (!notification) {
-            notification = openNotification();
-          }
-
-          notification.progressBar.value(percent);
+          Optional.from(notification)
+            .orThunk(() => Optional.from(openNotification).map(Fun.apply))
+            .each((n) => {
+              notification = n;
+              n.progressBar.value(percent);
+            });
         };
 
         handler(blobInfo, success, failure, progress);
@@ -192,7 +191,7 @@ export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
     });
   };
 
-  const uploadBlobs = (blobInfos: BlobInfo[], openNotification): Promise<UploadResult[]> => {
+  const uploadBlobs = (blobInfos: BlobInfo[], openNotification?: () => NotificationApi): Promise<UploadResult[]> => {
     blobInfos = Tools.grep(blobInfos, (blobInfo) =>
       !uploadStatus.isUploaded(blobInfo.blobUri())
     );
@@ -203,7 +202,7 @@ export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
     ));
   };
 
-  const upload = (blobInfos, openNotification) =>
+  const upload = (blobInfos: BlobInfo[], openNotification?: () => NotificationApi) =>
     (!settings.url && isDefaultHandler(settings.handler)) ? noUpload() : uploadBlobs(blobInfos, openNotification);
 
   if (Type.isFunction(settings.handler) === false) {

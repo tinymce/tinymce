@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
 import * as Uploader from '../../file/Uploader';
 import { UploadStatus } from '../../file/UploadStatus';
 import Editor from '../Editor';
+import { NotificationApi } from '../NotificationManager';
 import * as Settings from '../Settings';
 import { BlobInfo } from '../file/BlobCache';
 
@@ -18,7 +18,7 @@ interface ImageUploader {
   upload (blobInfos: BlobInfo[], showNotification?: boolean): Promise<UploadResult[]>;
 }
 
-export const openNotification = (editor: Editor) => () => editor.notificationManager.open({
+export const openNotification = (editor: Editor) => (): NotificationApi => editor.notificationManager.open({
   text: editor.translate('Image uploading...'),
   type: 'info',
   timeout: -1,
@@ -53,7 +53,7 @@ const ImageUploader = (editor: Editor): ImageUploader => {
      * @param {boolean} showNotification (Optional) When set to true, a notification with a progress bar will be shown during image uploads.
      */
     upload: (blobInfos: BlobInfo[], showNotification: boolean = true) =>
-      uploader.upload(blobInfos, showNotification ? openNotification(editor) : Fun.noop)
+      uploader.upload(blobInfos, showNotification ? openNotification(editor) : undefined)
   };
 };
 
