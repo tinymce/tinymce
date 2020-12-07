@@ -121,6 +121,21 @@ const createDummyUndoLevel = (): UndoLevel => ({
   beforeBookmark: null
 });
 
+const createSerializer = (editor: Editor, inner?: boolean) => {
+  const settings = editor.settings;
+  return HtmlSerializer({
+    inner,
+
+    // Writer settings
+    element_format: settings.element_format,
+    entities: settings.entities,
+    entity_encoding: settings.entity_encoding,
+    indent: settings.indent,
+    indent_after: settings.indent_after,
+    indent_before: settings.indent_before
+  });
+};
+
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   undoManager: {
     beforeChange: (locks, beforeBookmark) => Operations.beforeChange(editor, locks, beforeBookmark),
@@ -204,7 +219,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (args, format) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getContent();
-          const serializer = HtmlSerializer({ inner: true });
+          const serializer = createSerializer(tinymceEditor, true);
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
@@ -241,7 +256,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       getContent: (format, args) => {
         if (format === 'html' || format === 'tree') {
           const fragment = rtcEditor.getSelectedContent();
-          const serializer = HtmlSerializer({});
+          const serializer = createSerializer(tinymceEditor);
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
 
