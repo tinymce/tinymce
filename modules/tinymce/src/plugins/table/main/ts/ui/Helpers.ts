@@ -153,7 +153,7 @@ const getAlignment = (formats: string[], formatName: string, editor: Editor, elm
 const getHAlignment = Fun.curry(getAlignment, [ 'left', 'center', 'right' ], 'align');
 const getVAlignment = Fun.curry(getAlignment, [ 'top', 'middle', 'bottom' ], 'valign');
 
-export interface TableData {
+export type TableData = {
   height: string;
   width: string;
   cellspacing: string;
@@ -167,7 +167,7 @@ export interface TableData {
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
-}
+};
 
 const extractDataFromSettings = (editor: Editor, hasAdvTableTab: boolean): TableData => {
   const style = getDefaultStyles(editor);
@@ -250,7 +250,7 @@ const extractDataFromTableElement = (editor: Editor, elm: Element, hasAdvTableTa
   };
 };
 
-export interface RowData {
+export type RowData = {
   height: string;
   scope: string;
   class: string;
@@ -259,7 +259,7 @@ export interface RowData {
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
-}
+};
 
 const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, hasAdvancedRowTab: boolean): RowData => {
   const dom = editor.dom;
@@ -273,7 +273,7 @@ const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, has
   };
 };
 
-export interface CellData {
+export type CellData = {
   width: string;
   height: string;
   scope: string;
@@ -285,7 +285,7 @@ export interface CellData {
   borderstyle?: string;
   bordercolor?: string;
   backgroundcolor?: string;
-}
+};
 
 const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, hasAdvancedCellTab: boolean, column: Optional<HTMLTableColElement>): CellData => {
   const dom = editor.dom;

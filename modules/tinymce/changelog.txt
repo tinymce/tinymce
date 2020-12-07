@@ -1,4 +1,5 @@
 Version 5.7.0 (TBD)
+    Added new data to the `TableModified` event to describe whether the table's `structure`, `style`, or both were modified #TINY-6643
     Added `video` and `audio` live embed support for the `media` plugin #TINY-6229
     Added the ability to resize `video` and `iframe` media elements #TINY-6229
     Added new `font_css` setting for fonts to be added to both containing document and the editor #TINY-6199
