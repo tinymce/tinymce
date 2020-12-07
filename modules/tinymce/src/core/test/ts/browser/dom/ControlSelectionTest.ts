@@ -1,4 +1,4 @@
-import { Assertions, Chain, GeneralSteps, Log, Mouse, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, GeneralSteps, Log, Mouse, NamedChain, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell, Obj, Strings } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -60,6 +60,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
     NamedChain.read('elementHeight', cAssertElementDimension('Assert element height', height)),
     NamedChain.outputInput
   ]);
+
+  const cWaitForDragHandles = (resizeSelector: string) => UiFinder.cWaitForVisible('Wait for resize handlers to show', resizeSelector);
+
+  const sWaitForDragHandles = (editorBody: SugarElement<HTMLElement>, resizeSelector: string) =>
+    Chain.asStep(editorBody, [ cWaitForDragHandles(resizeSelector) ]);
 
   const sResizeAndAssertDimensions = (editorBody: SugarElement, targetSelector: string, resizeSelector: string, deltaX: number, deltaY: number, width: number, height: number) => {
     const expectedWidth = Strings.endsWith(resizeSelector, 'sw') || Strings.endsWith(resizeSelector, 'nw') ? width - deltaX : width + deltaX;
@@ -140,7 +145,30 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
         tinyApis.sSetContent('<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black" width="400" height="200" src="' + Env.transparentSrc + '" allowfullscreen></iframe></span></p>'),
         tinyApis.sSelect('span', [ ]),
         sResizeAndAssertDimensions(editorBody, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202)
-      ])
+      ]),
+      Log.stepsAsStep('TINY-6229', 'data-mce-selected attribute value retained when selecting the same element', [
+        tinyApis.sSetContent('<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span><strong>Test</strong></p>'),
+        // Select to set the initial selected element in ControlSelection, change and then come back
+        tinyApis.sSelect('span', [ ]),
+        sWaitForDragHandles(editorBody, '#mceResizeHandlenw'),
+        tinyApis.sAssertContentPresence({
+          'span[data-mce-selected=1] video': 1
+        }),
+        tinyApis.sSetCursor([ 0, 1, 0 ], 2),
+        Waiter.sTryUntil('Wait for resize handles to disappear', UiFinder.sNotExists(editorBody, '#mceResizeHandlenw')),
+        tinyApis.sAssertContentPresence({
+          'span[data-mce-selected] video': 0
+        }),
+        Step.sync(() => {
+          const previewSpan = editor.dom.select('span')[0];
+          editor.dom.setAttrib(previewSpan, 'data-mce-selected', '2');
+        }),
+        tinyApis.sSelect('span', [ ]),
+        sWaitForDragHandles(editorBody, '#mceResizeHandlenw'),
+        tinyApis.sAssertContentPresence({
+          'span[data-mce-selected=2] video': 1
+        })
+      ]),
     ], onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

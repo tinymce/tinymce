@@ -273,7 +273,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   };
 
   const showResizeRect = (targetElm: Element) => {
-    hideResizeRect();
     unbindResizeHandleEvents();
 
     // Get position and size of target
@@ -286,6 +285,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     // Reset width/height if user selects a new image/table
     if (selectedElm !== targetElm) {
+      hideResizeRect();
       selectedElm = targetElm;
       width = height = 0;
     }
