@@ -10,6 +10,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import { TableActions } from './TableActions';
@@ -17,7 +18,11 @@ import { TableActions } from './TableActions';
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
   return TableLookup.table(cells[0]).map(
-    (table) => ([ CopySelected.extract(table, Ephemera.attributeSelector) ])
+    (table) => {
+      const replica = CopySelected.extract(table, Ephemera.attributeSelector);
+      Util.removeDataStyle(replica);
+      return ([ replica ]);
+    }
   );
 };
 

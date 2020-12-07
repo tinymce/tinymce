@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Replication, Selectors, SugarElement, Width } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import * as LayerSelector from '../util/LayerSelector';
@@ -85,7 +85,7 @@ const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct,
   }
 };
 
-const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widthOpt: Optional<number>): void => {
+const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widthDelta: number): void => {
   // can't use :empty selector as that will not include TRs made up of whitespace
   const emptyRows = Arr.filter(LayerSelector.firstLayer(replica, 'tr'), (row) =>
     // there is no sugar method for this, and Traverse.children() does too much processing
@@ -101,27 +101,17 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widt
     });
   }
 
-  widthOpt.each((width) => {
-    const tableSize = TableSize.getTableSize(replica);
-    tableSize.adjustTableWidth(width);
-  });
+  const replicaTableSize = TableSize.getTableSize(replica);
+  replicaTableSize.adjustTableWidth(widthDelta);
 };
 
-const getNewTableWidth = (tableSize: TableSize, stats: StatsStruct): Optional<number> => {
+const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number => {
   const uniqueCols = getUniqueColumns(stats.selectedCells);
-
   const selectedColsWidth = uniqueCols.reduce((acc, col) => {
     return acc + Width.getOuter(col.element);
   }, 0);
-
-  switch (tableSize.label) {
-    case 'none':
-      return Optional.none();
-    case 'pixel':
-      return Optional.some(selectedColsWidth - tableSize.pixelWidth());
-    case 'percent':
-      return Optional.some(selectedColsWidth / tableSize.pixelWidth());
-  }
+  const delta = selectedColsWidth - tableSize.pixelWidth();
+  return tableSize.getCellDelta(delta);
 };
 
 const extract = (table: SugarElement, selectedSelector: string): SugarElement => {
@@ -140,8 +130,8 @@ const extract = (table: SugarElement, selectedSelector: string): SugarElement =>
 
   fillInGaps(list, house, stats, isSelected);
 
-  const widthOpt = getNewTableWidth(tableSize, stats);
-  clean(replica, stats, widthOpt);
+  const widthDelta = getTableWidthDelta(tableSize, stats);
+  clean(replica, stats, widthDelta);
 
   return replica;
 };
