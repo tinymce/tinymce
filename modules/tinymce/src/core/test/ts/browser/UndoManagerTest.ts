@@ -451,9 +451,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
           die('Dirty flag should not be set on first AddUndo.');
         }
       } else {
-        if (editor.isDirty()) {
-          done();
-        } else {
+        if (!editor.isDirty()) {
           die('Dirty flag should be set after second AddUndo.');
         }
       }
@@ -466,6 +464,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     KeyUtils.type(editor, '\n');
 
     editor.off('AddUndo', test);
+    done();
   });
 
   suite.test('ExecCommand while typing should produce undo level', function (editor) {
