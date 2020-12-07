@@ -895,7 +895,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
     editor.execCommand('SelectAll');
     LegacyUnit.execCommand(editor, 'InsertUnorderedList');
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a</li></ul><ol><li>b</li></ol><ul><li>c</li></ul>');
+    LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a</li></ul><ul><li>b</li></ul><ul><li>c</li></ul>');
   });
 
   suite.test('TestCase-TBA: Lists: Apply unordered list on children on a fully selected ordered list', function (editor) {
@@ -1041,6 +1041,42 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
         '</ul>' +
         '</li>' +
         '<li>n</li>' +
+      '</ul>'
+    );
+    LegacyUnit.equal(editor.getBody().innerHTML, expected);
+  });
+
+  suite.test('TINY-3755: Lists: Apply lists with selection start and end on text blocks', (editor) => {
+    editor.getBody().innerHTML = (
+      '<p>&nbsp;</p>' +
+      '<ul>' +
+        '<li>one</li>' +
+        '<li>two</li>' +
+        '<li>three</li>' +
+      '</ul>' +
+      '<ol>' +
+        '<li>four</li>' +
+        '<li>five</li>' +
+        '<li>six</li>' +
+      '</ol>' +
+      '<p>After</p>'
+    );
+    editor.execCommand('SelectAll');
+    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    const expected = (
+      '<ul>' +
+        '<li>&nbsp;</li>' +
+        '<li>one</li>' +
+        '<li>two</li>' +
+        '<li>three</li>' +
+      '</ul>' +
+      '<ul>' +
+        '<li>four</li>' +
+        '<li>five</li>' +
+        '<li>six</li>' +
+      '</ul>' +
+      '<ul>' +
+        '<li>After</li>' +
       '</ul>'
     );
     LegacyUnit.equal(editor.getBody().innerHTML, expected);
