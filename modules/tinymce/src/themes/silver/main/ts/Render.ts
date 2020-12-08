@@ -90,7 +90,7 @@ const setup = (editor: Editor): RenderInfo => {
   const touchPlatformClass = 'tox-platform-touch';
   const deviceClasses = isTouch ? [ touchPlatformClass ] : [];
   const isToolbarBottom = Settings.isToolbarLocationBottom(editor);
-  const isUiContainerInBody = Compare.eq(SugarBody.body(), Settings.getUiContainer(editor));
+  const uiContainer = Settings.getUiContainer(editor);
 
   const dirAttributes = I18n.isRtl() ? {
     attributes: {
@@ -115,6 +115,9 @@ const setup = (editor: Editor): RenderInfo => {
   };
 
   const makeSinkDefinition = (): AlloySpec => {
+    // TINY-3321: When the body is using a grid layout, we need to ensure the sink width is manually set
+    const isGridUiContainer = Compare.eq(SugarBody.body(), uiContainer) && Css.get(uiContainer, 'display') === 'grid';
+
     const sinkSpec = {
       dom: {
         tag: 'div',
@@ -137,7 +140,7 @@ const setup = (editor: Editor): RenderInfo => {
       ])
     };
 
-    return Merger.deepMerge(sinkSpec, isUiContainerInBody ? reactiveWidthSpec : {});
+    return Merger.deepMerge(sinkSpec, isGridUiContainer ? reactiveWidthSpec : {});
   };
 
   const sink = GuiFactory.build(makeSinkDefinition());
