@@ -8,7 +8,7 @@ import { setTinymceBaseUrl } from '../loader/Urls';
 type FailureCallback = Loader.FailureCallback;
 type SuccessCallback = Loader.SuccessCallback;
 
-const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
+const setupBaseUrl = (tinymce: any, settings: Record<string, any>): void => {
   if (settings.base_url) {
     setTinymceBaseUrl(tinymce, settings.base_url);
   } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
@@ -16,7 +16,7 @@ const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   }
 };
 
-const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   const nuSettings: Record<string, any> = {
     toolbar: '',
     menubar: false,
@@ -32,7 +32,7 @@ const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>,
   }, nuSettings, Optional.none());
 };
 
-const setup = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setup = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   Loader.setup({
     preInit: setupBaseUrl,
     run: callback,
@@ -41,7 +41,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
   }, settings, Optional.none());
 };
 
-const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   Loader.setup({
     preInit: setupBaseUrl,
     run: callback,
@@ -50,7 +50,7 @@ const setupFromElement = (callback: Loader.RunCallback, settings: Record<string,
   }, settings, Optional.some(element));
 };
 
-const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<ShadowRoot>, success: SuccessCallback, failure: FailureCallback) => void, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   if (!SugarShadowDom.isSupported()) {
     return success();
   }
@@ -76,7 +76,7 @@ const setupInShadowRoot = (callback: (editor: any, shadowRoot: SugarElement<Shad
 };
 
 /** Runs the callback with an editor in the body, and then with an editor in a shadow root. Lets you test both scenarios. */
-const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   setup(
     callback,
     settings,

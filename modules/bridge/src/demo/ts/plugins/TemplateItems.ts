@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerTemplateItems = () => {
+export const registerTemplateItems = (): void => {
   getDemoRegistry().addButton('template', {
     type: 'button',
     disabled: false,

@@ -35,39 +35,39 @@ const blockList = [
   'address'
 ];
 
-const isList = function <E, D> (universe: Universe<E, D>, item: E) {
+const isList = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   const tagName = universe.property().name(item);
   return Arr.contains([ 'ol', 'ul' ], tagName);
 };
 
-const isBlock = function <E, D> (universe: Universe<E, D>, item: E) {
+const isBlock = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   const tagName = universe.property().name(item);
   return Arr.contains(blockList, tagName);
 };
 
-const isFormatting = function <E, D> (universe: Universe<E, D>, item: E) {
+const isFormatting = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   const tagName = universe.property().name(item);
   return Arr.contains([ 'address', 'pre', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
 };
 
-const isHeading = function <E, D> (universe: Universe<E, D>, item: E) {
+const isHeading = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   const tagName = universe.property().name(item);
   return Arr.contains([ 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ], tagName);
 };
 
-const isContainer = function <E, D> (universe: Universe<E, D>, item: E) {
+const isContainer = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return Arr.contains([ 'div', 'li', 'td', 'th', 'blockquote', 'body', 'caption' ], universe.property().name(item));
 };
 
-const isEmptyTag = function <E, D> (universe: Universe<E, D>, item: E) {
+const isEmptyTag = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return Arr.contains([ 'br', 'img', 'hr', 'input' ], universe.property().name(item));
 };
 
-const isFrame = function <E, D> (universe: Universe<E, D>, item: E) {
+const isFrame = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return universe.property().name(item) === 'iframe';
 };
 
-const isInline = function <E, D> (universe: Universe<E, D>, item: E) {
+const isInline = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   return !(isBlock(universe, item) || isEmptyTag(universe, item)) && universe.property().name(item) !== 'li';
 };
 

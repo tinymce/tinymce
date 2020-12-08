@@ -4,7 +4,7 @@ const editor = {
   on: (_s, _f) => { }
 };
 
-export const registerMediaItems = () => {
+export const registerMediaItems = (): void => {
   getDemoRegistry().addToggleButton('media', {
     type: 'togglebutton',
     disabled: false,

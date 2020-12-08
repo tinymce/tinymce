@@ -21,27 +21,27 @@ const decision = <E> (items: WordDecisionItem<E>[], abort: boolean): WordDecisio
   items, abort
 });
 
-const detail = function <E, D> (universe: Universe<E, D>, item: E) {
+const detail = function <E, D> (universe: Universe<E, D>, item: E): WordDecisionItem<E> {
   const text = universe.property().getText(item);
   return make(item, 0, text.length, text);
 };
 
-const fromItem = function <E, D> (universe: Universe<E, D>, item: E) {
+const fromItem = function <E, D> (universe: Universe<E, D>, item: E): WordDecisionItem<E> {
   return universe.property().isText(item) ? detail(universe, item) : make(item, 0, 0, '');
 };
 
-const onEdge = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Optional<[number, number]>) {
+const onEdge = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Optional<[number, number]>): WordDecision<E> {
   return decision<E>([], true);
 };
 
-const onOther = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Optional<[number, number]>) {
+const onOther = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (text: string) => Optional<[number, number]>): WordDecision<E> {
   return decision<E>([], false);
 };
 
 // Returns: a 'decision' Struct with the items slot containing an empty array if None
 //   or  a zero-width [start, end] range was returned by slicer, or 1-element array of the
 //   [start, end] substring otherwise.
-const onText = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Optional<[number, number]>) {
+const onText = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Optional<[number, number]>): WordDecision<E> {
   const text = universe.property().getText(item);
   return slicer(text).fold(function () {
     return decision([ make(item, 0, text.length, text) ], false);
@@ -53,7 +53,7 @@ const onText = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text
 
 // Return decision struct with one or zero 'make' Struct items. If present the make struct item is the entire item node text,
 // or a substring of it with the [left, right] bounds as determined by the result of slicer(item).
-const decide = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Optional<[number, number]>, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean) {
+const decide = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Optional<[number, number]>, isCustomBoundary: (universe: Universe<E, D>, item: E) => boolean): WordDecision<E> {
   const f = (function () {
     if (universe.property().isBoundary(item)) {
       return onEdge;

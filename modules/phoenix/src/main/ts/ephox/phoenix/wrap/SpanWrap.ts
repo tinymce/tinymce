@@ -63,11 +63,12 @@ const scan = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
   });
 };
 
-const isUnicode = function <E, D> (universe: Universe<E, D>, element: E) {
+const isUnicode = function <E, D> (universe: Universe<E, D>, element: E): boolean {
   return universe.property().isText(element) && universe.property().getText(element) === Unicode.zeroWidth;
 };
 
-const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E) => universe.property().name(elem) === 'span' && exclusions(elem) === false;
+const isSpan = <E, D>(universe: Universe<E, D>, exclusions: (e: E) => boolean) => (elem: E): boolean =>
+  universe.property().name(elem) === 'span' && exclusions(elem) === false;
 
 const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean): Optional<SpanWrapRange<E>> {
   const doc = universe.property().document(start);
@@ -91,11 +92,11 @@ const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
   });
 };
 
-const isCollapsed = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number) {
+const isCollapsed = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number): boolean {
   return universe.eq(start, finish) && soffset === foffset;
 };
 
-const spans = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean = Fun.never) {
+const spans = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, finish: E, foffset: number, exclusions: (e: E) => boolean = Fun.never): Optional<SpanWrapRange<E>> {
   const wrapper = isCollapsed(universe, start, soffset, finish, foffset) ? point : wrap;
   return wrapper(universe, start, soffset, finish, foffset, exclusions);
 };

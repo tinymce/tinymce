@@ -11,7 +11,7 @@ import { Warehouse } from './Warehouse';
 
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
-const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string) {
+const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string): void {
   Arr.each(cells, function (cell) {
     const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
@@ -19,14 +19,14 @@ const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit:
   });
 };
 
-const redistributeToColumns = (newWidths: string[], columns: Column[], unit: string) => {
+const redistributeToColumns = (newWidths: string[], columns: Column[], unit: string): void => {
   Arr.each(columns, (column, index: number) => {
     const width = Redistribution.sum([ newWidths[index] ], CellUtils.minWidth());
     Css.set(column.element, 'width', width + unit);
   });
 };
 
-const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string) {
+const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void {
   Arr.each(cells, function (cell) {
     const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
@@ -38,13 +38,13 @@ const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], 
   });
 };
 
-const getUnit = function (newSize: string) {
+const getUnit = function (newSize: string): 'px' | '%' {
   return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
 };
 
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
-const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize) => {
+const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight: Optional<string>, tableSize: TableSize): void => {
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);

@@ -6,25 +6,25 @@ import * as Parent from '../general/Parent';
 
 const universe = DomUniverse();
 
-const sharedOne = function (look: (e: SugarElement) => Optional<SugarElement>, elements: SugarElement[]) {
+const sharedOne = function (look: (e: SugarElement) => Optional<SugarElement>, elements: SugarElement[]): Optional<SugarElement> {
   return Parent.sharedOne(universe, function (_universe, element) {
     return look(element);
   }, elements);
 };
 
-const subset = function (start: SugarElement, finish: SugarElement) {
+const subset = function (start: SugarElement, finish: SugarElement): Optional<SugarElement[]> {
   return Parent.subset(universe, start, finish);
 };
 
-const ancestors = function (start: SugarElement, finish: SugarElement, isRoot?: (x: SugarElement) => boolean) {
+const ancestors = function (start: SugarElement, finish: SugarElement, isRoot?: (x: SugarElement) => boolean): Parent.AncestorsFnResult<SugarElement> {
   return Parent.ancestors(universe, start, finish, isRoot);
 };
 
-const breakToLeft = function (parent: SugarElement, child: SugarElement) {
+const breakToLeft = function (parent: SugarElement, child: SugarElement): Optional<LeftRight<SugarElement>> {
   return Parent.breakToLeft(universe, parent, child);
 };
 
-const breakToRight = function (parent: SugarElement, child: SugarElement) {
+const breakToRight = function (parent: SugarElement, child: SugarElement): Optional<LeftRight<SugarElement>> {
   return Parent.breakToRight(universe, parent, child);
 };
 

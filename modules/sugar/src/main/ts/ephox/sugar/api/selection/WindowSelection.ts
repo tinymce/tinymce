@@ -27,8 +27,8 @@ const doSetRange = (win: Window, start: SugarElement<Node>, soffset: number, fin
   doSetNativeRange(win, rng);
 };
 
-const findWithin = (win: Window, selection: SimSelection, selector: string): SugarElement<Element>[] =>
-  Within.find(win, selection, selector);
+const findWithin = <T extends Element>(win: Window, selection: SimSelection, selector: string): SugarElement<T>[] =>
+  Within.find<T>(win, selection, selector);
 
 const setLegacyRtlRange = (win: Window, selection: Selection, start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): void => {
   selection.collapse(start.dom, soffset);
@@ -85,7 +85,7 @@ const toNative = (selection: SimSelection): Range => {
 // NOTE: We are still reading the range because it gives subtly different behaviour
 // than using the anchorNode and focusNode. I'm not sure if this behaviour is any
 // better or worse; it's just different.
-const readRange = (selection: Selection) => {
+const readRange = (selection: Selection): Optional<SimRange> => {
   if (selection.rangeCount > 0) {
     const firstRng = selection.getRangeAt(0);
     const lastRng = selection.getRangeAt(selection.rangeCount - 1);
@@ -101,7 +101,7 @@ const readRange = (selection: Selection) => {
   }
 };
 
-const doGetExact = (selection: Selection) => {
+const doGetExact = (selection: Selection): Optional<SimRange> => {
   if (selection.anchorNode === null || selection.focusNode === null) {
     return readRange(selection);
   } else {
@@ -120,12 +120,12 @@ const doGetExact = (selection: Selection) => {
   }
 };
 
-const setToElement = (win: Window, element: SugarElement<Node>) => {
+const setToElement = (win: Window, element: SugarElement<Node>): void => {
   const rng = NativeRange.selectNodeContents(win, element);
   doSetNativeRange(win, rng);
 };
 
-const forElement = (win: Window, element: SugarElement<Node>) => {
+const forElement = (win: Window, element: SugarElement<Node>): SimRange => {
   const rng = NativeRange.selectNodeContents(win, element);
   return SimRange.create(
     SugarElement.fromDom(rng.startContainer), rng.startOffset,
@@ -133,14 +133,14 @@ const forElement = (win: Window, element: SugarElement<Node>) => {
   );
 };
 
-const getExact = (win: Window) =>
+const getExact = (win: Window): Optional<SimRange> =>
   // We want to retrieve the selection as it is.
   getNativeSelection(win)
     .filter((sel) => sel.rangeCount > 0)
     .bind(doGetExact);
 
 // TODO: Test this.
-const get = (win: Window) =>
+const get = (win: Window): Optional<SimSelection> =>
   getExact(win).map((range) => SimSelection.exact(range.start, range.soffset, range.finish, range.foffset));
 
 const getFirstRect = (win: Window, selection: SimSelection): Optional<RawRect> => {
@@ -153,34 +153,35 @@ const getBounds = (win: Window, selection: SimSelection): Optional<RawRect> => {
   return NativeRange.getBounds(rng);
 };
 
-const getAtPoint = (win: Window, x: number, y: number) => CaretRange.fromPoint(win, x, y);
+const getAtPoint = (win: Window, x: number, y: number): Optional<SimRange> =>
+  CaretRange.fromPoint(win, x, y);
 
-const getAsString = (win: Window, selection: SimSelection) => {
+const getAsString = (win: Window, selection: SimSelection): string => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.toString(rng);
 };
 
-const clear = (win: Window) => {
+const clear = (win: Window): void => {
   getNativeSelection(win).each((selection) => selection.removeAllRanges());
 };
 
-const clone = (win: Window, selection: SimSelection) => {
+const clone = (win: Window, selection: SimSelection): SugarElement<DocumentFragment> => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   return NativeRange.cloneFragment(rng);
 };
 
-const replace = (win: Window, selection: SimSelection, elements: SugarElement<Node>[]) => {
+const replace = (win: Window, selection: SimSelection, elements: SugarElement<Node>[]): void => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   const fragment = SugarFragment.fromElements(elements, win.document);
   NativeRange.replaceWith(rng, fragment);
 };
 
-const deleteAt = (win: Window, selection: SimSelection) => {
+const deleteAt = (win: Window, selection: SimSelection): void => {
   const rng = SelectionDirection.asLtrRange(win, selection);
   NativeRange.deleteContents(rng);
 };
 
-const isCollapsed = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) =>
+const isCollapsed = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): boolean =>
   Compare.eq(start, finish) && soffset === foffset;
 
 export {

@@ -6,6 +6,8 @@ import * as ArbChildrenSchema from './ArbChildrenSchema';
 import * as ArbNodes from './ArbNodes';
 import { WeightedChoice } from './WeightedChoice';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 const toTags = (detail) =>
   Obj.mapToArray(detail.tags, (v, k) => Merger.deepMerge(v, { tag: k }));
 

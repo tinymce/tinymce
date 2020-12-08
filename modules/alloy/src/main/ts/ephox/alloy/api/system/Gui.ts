@@ -6,7 +6,7 @@ import * as DescribedHandler from '../../events/DescribedHandler';
 import * as GuiEvents from '../../events/GuiEvents';
 import { FocusingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as Triggers from '../../events/Triggers';
-import Registry from '../../registry/Registry';
+import { Registry } from '../../registry/Registry';
 import * as Tagger from '../../registry/Tagger';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';

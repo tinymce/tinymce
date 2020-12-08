@@ -1,7 +1,7 @@
-export const cached = <T extends (...args: any[]) => any>(f: T) => {
+export const cached = <T extends (...args: any[]) => any>(f: T): (...args: Parameters<T>) => ReturnType<T> => {
   let called = false;
   let r: any;
-  return (...args: Parameters<T>): ReturnType<T> => {
+  return (...args) => {
     if (!called) {
       called = true;
       r = f.apply(null, args);

@@ -7,21 +7,23 @@ import * as EdgePoint from './EdgePoint';
 
 declare const document: any;
 
-const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from((doc.dom as any).caretPositionFromPoint(x, y))
-  .bind((pos) => {
-    // It turns out that Firefox can return null for pos.offsetNode
-    if (pos.offsetNode === null) {
-      return Optional.none<Range>();
-    }
-    const r = doc.dom.createRange();
-    r.setStart(pos.offsetNode, pos.offset);
-    r.collapse();
-    return Optional.some(r);
-  });
+const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
+  Optional.from((doc.dom as any).caretPositionFromPoint(x, y))
+    .bind((pos) => {
+      // It turns out that Firefox can return null for pos.offsetNode
+      if (pos.offsetNode === null) {
+        return Optional.none<Range>();
+      }
+      const r = doc.dom.createRange();
+      r.setStart(pos.offsetNode, pos.offset);
+      r.collapse();
+      return Optional.some(r);
+    });
 
-const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number) => Optional.from(doc.dom.caretRangeFromPoint(x, y));
+const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
+  Optional.from(doc.dom.caretRangeFromPoint(x, y));
 
-const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) => {
+const searchTextNodes = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> => {
   const r = doc.dom.createRange();
   r.selectNode(node.dom);
   const rect = r.getBoundingClientRect();
@@ -54,7 +56,7 @@ const availableSearch = (() => {
   }
 })();
 
-const fromPoint = (win: Window, x: number, y: number) => {
+const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
   const doc = SugarElement.fromDom(win.document);
   return availableSearch(doc, x, y).map((rng) => SimRange.create(
     SugarElement.fromDom(rng.startContainer),

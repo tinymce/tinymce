@@ -1,22 +1,10 @@
 import { Optional } from '@ephox/katamari';
-import { Bindable, Event, Events } from '@ephox/porkbun';
+import { Event, Events } from '@ephox/porkbun';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
 import { DragMode } from '../api/DragApis';
+import { DragEvents, DragState } from './DragTypes';
 
-export interface InDragEvent {
-  readonly info: SugarPosition;
-}
-
-interface InDragEvents {
-  registry: {
-    move: Bindable<InDragEvent>;
-  };
-  trigger: {
-    move: (info: SugarPosition) => void;
-  };
-}
-
-export default function () {
+export const InDrag = (): DragState => {
 
   let previous = Optional.none<SugarPosition>();
 
@@ -48,13 +36,13 @@ export default function () {
     });
   };
 
-  const events = Events.create({
+  const events: DragEvents = Events.create({
     move: Event([ 'info' ])
-  }) as InDragEvents;
+  });
 
   return {
     onEvent,
     reset,
     events: events.registry
   };
-}
+};

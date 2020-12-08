@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createTableRowDialog = () => {
+export const createTableRowDialog = (): void => {
   openDemoDialog(
     {
       title: 'Row properties',

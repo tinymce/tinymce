@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerCharmapItems = () => {
+export const registerCharmapItems = (): void => {
   getDemoRegistry().addButton('charmap', {
     type: 'button',
     disabled: false,

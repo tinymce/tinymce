@@ -18,9 +18,9 @@ interface TestEvents {
 
 UnitTest.test('Events', function () {
   (function () {
-    const events = Events.create({
+    const events: TestEvents = Events.create({
       myEvent: Event([ 'name' ])
-    }) as TestEvents;
+    });
 
     let called = false;
     let calledEvent: MyEvent | Record<string, () => any> = {};

@@ -28,7 +28,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
     });
   };
 
-  const changeTableSections = (table: SugarElement<any>, rowIndex: number, newSection: Structs.Section) => {
+  const changeTableSections = (table: SugarElement<HTMLTableElement>, rowIndex: number, newSection: Structs.Section) => {
     const updatedModelData = Arr.map(getRowData(table), (row, i) =>
       i === rowIndex ? Structs.rowdatanew(row.element, row.cells, newSection, row.isNew) : row);
     Redraw.render(table, updatedModelData);
@@ -50,7 +50,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
 
   Pipeline.async({}, [
     Logger.t('Assert that changing section types maintains correct section order', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>two</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>three</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml<HTMLTableElement>(`<table><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>two</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>three</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [
@@ -123,7 +123,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       })), table);
     })),
     Logger.t('Assert that theads go after colgroup elements', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><colgroup><col style="width: 20%"><col style="width: 40%"><col style="width: 40%"></colgroup><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml<HTMLTableElement>(`<table><colgroup><col style="width: 20%"><col style="width: 40%"><col style="width: 40%"></colgroup><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table with a colgroup', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [
@@ -162,7 +162,7 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
       })), table);
     })),
     Logger.t('Assert that theads go after caption elements', Step.sync(() => {
-      const table = SugarElement.fromHtml(`<table><caption>some caption</caption><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+      const table = SugarElement.fromHtml<HTMLTableElement>(`<table><caption>some caption</caption><tbody><tr><td>one</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
 
       Assertions.assertStructure('Should be a basic table with a caption', ApproxStructure.build((s, str, _arr) => s.element('table', {
         children: [

@@ -48,7 +48,7 @@ const bind = (element: SugarElement<HTMLElement>, handler: () => void): void => 
   }, 100);
 };
 
-const unbind = (element: SugarElement<Node>, handler: () => void) => {
+const unbind = (element: SugarElement<Node>, handler: () => void): void => {
   // remove any monitors on this element
   Monitors.end(element);
   const index = findElem(element);

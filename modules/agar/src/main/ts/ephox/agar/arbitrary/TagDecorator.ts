@@ -3,6 +3,8 @@ import Jsc from '@ephox/wrap-jsverify';
 
 import { WeightedChoice } from './WeightedChoice';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 interface Decorator {
   weight: number;
   property: string;
@@ -19,7 +21,7 @@ const gOne = (wDecorations: Decorator[]) =>
       return r;
     })));
 
-const gEnforce = (decorations) => Jsc.constant(decorations).generator;
+const gEnforce = (decorations: Decorator[]) => Jsc.constant(decorations).generator;
 
 export {
   gOne,

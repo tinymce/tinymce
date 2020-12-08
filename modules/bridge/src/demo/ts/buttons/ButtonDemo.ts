@@ -1,7 +1,7 @@
 import { getDemoRegistry } from './DemoRegistry';
 
 /* eslint-disable no-console */
-export const registerDemoButtons = () => {
+export const registerDemoButtons = (): void => {
   getDemoRegistry().addButton('code', {
     icon: 'code',
     tooltip: 'Source code',

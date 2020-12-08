@@ -9,11 +9,6 @@ export interface ElementAndHandler {
   readonly descHandler: CurriedHandler;
 }
 
-const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
-  element,
-  descHandler
-});
-
 export interface CurriedHandler {
   readonly purpose: string;
   readonly cHandler: Function;
@@ -29,6 +24,18 @@ export interface UidAndHandler {
   readonly descHandler: CurriedHandler;
 }
 
+export interface EventRegistry {
+  readonly registerId: (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => void;
+  readonly unregisterId: (id: string) => void;
+  readonly filterByType: (type: string) => UidAndHandler[];
+  readonly find: (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement) => Optional<ElementAndHandler>;
+}
+
+const eventHandler = (element: SugarElement, descHandler: CurriedHandler): ElementAndHandler => ({
+  element,
+  descHandler
+});
+
 const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler => ({
   id,
   descHandler: handler
@@ -37,7 +44,7 @@ const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler =>
 export type EventName = string;
 export type Uid = string;
 
-export default () => {
+export const EventRegistry = (): EventRegistry => {
   const registry: Record<EventName, Record<Uid, CurriedHandler>> = { };
 
   const registerId = (extraArgs: any[], id: string, events: Record<EventName, UncurriedHandler>) => {
@@ -51,15 +58,15 @@ export default () => {
   const findHandler = (handlers: Optional<Record<Uid, CurriedHandler>>, elem: SugarElement): Optional<ElementAndHandler> =>
     Tagger.read(elem).fold(
       () => Optional.none(),
-      (id) => handlers.bind((h) => Obj.get(h, id)).
-        map((descHandler: CurriedHandler) => eventHandler(elem, descHandler))
+      (id) => handlers.bind((h) => Obj.get(h, id))
+        .map((descHandler: CurriedHandler) => eventHandler(elem, descHandler))
     );
 
   // Given just the event type, find all handlers regardless of element
   const filterByType = (type: string): UidAndHandler[] =>
-    Obj.get(registry, type).
-      map((handlers) => Obj.mapToArray(handlers, (f, id) => broadcastHandler(id, f))).
-      getOr([ ]);
+    Obj.get(registry, type)
+      .map((handlers) => Obj.mapToArray(handlers, (f, id) => broadcastHandler(id, f)))
+      .getOr([ ]);
 
   // Given event type, and element, find the handler.
   const find = (isAboveRoot: (elem: SugarElement) => boolean, type: string, target: SugarElement): Optional<ElementAndHandler> => {

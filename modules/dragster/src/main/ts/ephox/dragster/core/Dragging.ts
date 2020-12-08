@@ -3,26 +3,35 @@ import { Bindable, Event, Events } from '@ephox/porkbun';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 import { DragApi, DragMode, DragMutation } from '../api/DragApis';
 import { BlockerOptions } from '../detect/Blocker';
-import Movement from '../detect/Movement';
+import { Movement } from '../detect/Movement';
 
 interface DragActionEvents {
-  registry: {
+  readonly registry: {
     start: Bindable<{}>;
     stop: Bindable<{}>;
   };
-  trigger: {
+  readonly trigger: {
     start: () => void;
     stop: () => void;
   };
 }
 
-const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>) {
+export interface Dragging {
+  readonly element: () => SugarElement<HTMLElement>;
+  readonly go: (parent: SugarElement<Node>) => void;
+  readonly on: () => void;
+  readonly off: () => void;
+  readonly destroy: () => void;
+  readonly events: DragActionEvents['registry'];
+}
+
+const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>): Dragging {
   let active = false;
 
-  const events = Events.create({
+  const events: DragActionEvents = Events.create({
     start: Event([]),
     stop: Event([])
-  }) as DragActionEvents;
+  });
 
   const movement = Movement();
 
@@ -36,7 +45,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
 
   const throttledDrop = Throttler.last(drop, 200);
 
-  const go = function (parent: SugarElement) {
+  const go = function (parent: SugarElement<Node>) {
     sink.start(parent);
     movement.on();
     events.trigger.start();

@@ -27,9 +27,9 @@ const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
 
 // Write merges in its output into input because it knows that it was
 // given a complete input.
-const write = (name: string, chain: Chain<NamedData, any>) =>
-  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
-    chain.runChain(input, (output: any, newLogs: TestLogs) => {
+const write = (name: string, chain: Chain<NamedData, any>): Chain<NamedData, NamedData> =>
+  Chain.on((input, next, die, initLogs) => {
+    chain.runChain(input, (output, newLogs) => {
       const self = wrapSingle(name, output);
       return next(
         { ...input, ...self },
@@ -40,9 +40,9 @@ const write = (name: string, chain: Chain<NamedData, any>) =>
 
 // Partial write does not try and merge in input, because it knows that it
 // might not be getting the full input
-const partialWrite = (name: string, chain: Chain<any, any>) =>
-  Chain.on((input: any, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
-    chain.runChain(input, (output: any, newLogs: TestLogs) => {
+const partialWrite = <T>(name: string, chain: Chain<T, any>): Chain<T, NamedData> =>
+  Chain.on((input, next, die, initLogs) => {
+    chain.runChain(input, (output, newLogs) => {
       const self = wrapSingle(name, output);
       return next(self, newLogs);
     }, die, initLogs);
@@ -59,11 +59,11 @@ const wrapSingle = (name: string, value: any): NamedData => {
 
 const combine = (input: NamedData, name: string, value: any): NamedData => ({ ...input, ...wrapSingle(name, value) });
 
-const process = (name: string, chain: Chain<any, any>) =>
-  Chain.on((input: NamedData, next: NextFn<NamedData>, die, initLogs: TestLogs) => {
+const process = (name: string, chain: Chain<any, any>): Chain<NamedData, NamedData> =>
+  Chain.on((input, next, die, initLogs) => {
     if (Object.prototype.hasOwnProperty.call(input, name)) {
       const part = input[name];
-      chain.runChain(part, (other, newLogs: TestLogs) => {
+      chain.runChain(part, (other, newLogs) => {
         const merged: NamedData = { ...input, ...other };
         next(merged, newLogs);
       }, die, initLogs);
@@ -72,24 +72,24 @@ const process = (name: string, chain: Chain<any, any>) =>
     }
   });
 
-const direct = (inputName: string, chain: Chain<any, any>, outputName: string) =>
+const direct = (inputName: string, chain: Chain<any, any>, outputName: string): Chain<NamedData, NamedData> =>
   process(inputName, partialWrite(outputName, chain));
 
-const overwrite = (inputName: string, chain: Chain<any, any>) =>
+const overwrite = (inputName: string, chain: Chain<any, any>): Chain<NamedData, NamedData> =>
   direct(inputName, chain, inputName);
 
-const writeValue = (name: string, value: any) =>
-  Chain.mapper((input: NamedData) => combine(input, name, value));
+const writeValue = (name: string, value: any): Chain<NamedData, NamedData> =>
+  Chain.mapper((input) => combine(input, name, value));
 
-const read = (name: string, chain: Chain<any, any>) =>
-  Chain.on((input: NamedData, next: NextFn<NamedData>, die: DieFn, initLogs: TestLogs) => {
+const read = (name: string, chain: Chain<any, any>): Chain<NamedData, NamedData> =>
+  Chain.on((input, next, die, initLogs) => {
     chain.runChain(input[name], (_, newLogs) =>
       next(input, newLogs), die, initLogs
     );
   });
 
-const merge = (names: string[], combinedName: string) =>
-  Chain.mapper((input: NamedData) => {
+const merge = (names: string[], combinedName: string): Chain<NamedData, NamedData> =>
+  Chain.mapper((input) => {
     const r: NamedData = {};
     Arr.each(names, (name) => {
       r[name] = input[name];
@@ -97,23 +97,23 @@ const merge = (names: string[], combinedName: string) =>
     return combine(input, combinedName, r);
   });
 
-const bundle = <T, E>(f: (input: NamedData) => Result<T, E>) =>
+const bundle = <T, E>(f: (input: NamedData) => Result<T, E>): Chain<NamedData, NamedData> =>
   write(outputNameId, Chain.binder(f));
 
-const output = (name: string) =>
+const output = (name: string): Chain<NamedData, NamedData> =>
   direct(name, Chain.identity, outputNameId);
 
 const outputInput = output(inputNameId);
 
-const pipeline = (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs: TestLogs) => {
+const pipeline = (namedChains: NamedChain[], onSuccess: NextFn<any>, onFailure: DieFn, initLogs: TestLogs): void => {
   Chain.pipeline([ asChain(namedChains) ], onSuccess, onFailure, initLogs);
 };
 
-const inputName = () => inputNameId;
+const inputName = (): string => inputNameId;
 
 // tests need these values but other users should not
-export const _outputName = () => outputNameId;
-export const _outputUnset = () => outputUnset;
+export const _outputName = (): string => outputNameId;
+export const _outputUnset = (): string => outputUnset;
 
 export const NamedChain = {
   inputName,

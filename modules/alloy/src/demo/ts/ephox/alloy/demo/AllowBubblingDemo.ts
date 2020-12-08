@@ -18,7 +18,7 @@ const getItemSpec = (): AlloySpec => ({
   }
 });
 
-export default () => {
+export default (): void => {
   const gui = Gui.create();
   const body = SugarElement.fromDom(document.body);
   Attachment.attachSystem(body, gui);

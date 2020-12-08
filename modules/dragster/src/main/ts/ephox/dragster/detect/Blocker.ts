@@ -2,12 +2,12 @@ import { Attribute, Class, Css, Remove, SugarElement } from '@ephox/sugar';
 import * as Styles from '../style/Styles';
 
 export interface BlockerOptions {
-  layerClass: string;
+  readonly layerClass: string;
 }
 
 export interface Blocker {
-  element: () => SugarElement;
-  destroy: () => void;
+  readonly element: () => SugarElement<HTMLElement>;
+  readonly destroy: () => void;
 }
 
 export const Blocker = function (options: Partial<BlockerOptions>): Blocker {

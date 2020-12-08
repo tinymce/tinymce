@@ -51,15 +51,15 @@ const cClickOnWithin = function <T> (label: string, selector: string, cContext: 
   ]);
 };
 
-const cClickOnUi = function <T> (label: string, selector: string) {
+const cClickOnUi = function <T> (label: string, selector: string): Chain<T, T> {
   return cClickOnWithin<T>(label, selector, cDialogRoot);
 };
 
-const cClickOnToolbar = function <T extends Editor> (label: string, selector: string) {
+const cClickOnToolbar = function <T extends Editor> (label: string, selector: string): Chain<T, T> {
   return cClickOnWithin<T>(label, selector, cGetToolbarRoot);
 };
 
-const cClickOnMenu = function <T extends Editor> (label: string, selector: string) {
+const cClickOnMenu = function <T extends Editor> (label: string, selector: string): Chain<T, T> {
   return cClickOnWithin<T>(label, selector, cGetMenuRoot);
 };
 
@@ -75,22 +75,22 @@ const cWaitForState = function <T> (hasState: (element: SugarElement) => boolean
   };
 };
 
-const cWaitForVisible = function (label: string, selector: string) {
+const cWaitForVisible = function <T> (label: string, selector: string): Chain<T, T> {
   return Chain.fromChains([
     cDialogRoot,
     UiFinder.cWaitForState(label, selector, Visibility.isVisible)
   ]);
 };
 
-const cWaitForPopup = function <T> (label: string, selector: string) {
+const cWaitForPopup = function <T> (label: string, selector: string): Chain<T, T> {
   return cWaitForState<T>(Visibility.isVisible)(label, selector);
 };
 
-const cWaitForUi = function <T> (label: string, selector: string) {
+const cWaitForUi = function <T> (label: string, selector: string): Chain<T, T> {
   return cWaitForState<T>(Fun.always)(label, selector);
 };
 
-const cTriggerContextMenu = function (label: string, target: string, menu: string) {
+const cTriggerContextMenu = function <T> (label: string, target: string, menu: string): Chain<T, T> {
   return Chain.fromChains([
     cEditorRoot,
     UiFinder.cFindIn(target),
@@ -101,7 +101,7 @@ const cTriggerContextMenu = function (label: string, target: string, menu: strin
   ]);
 };
 
-const cClickPopupButton = function (btnType: 'dialogCloseSelector' | 'dialogSubmitSelector', selector?: string) {
+const cClickPopupButton = function <T> (btnType: 'dialogCloseSelector' | 'dialogSubmitSelector', selector?: string): Chain<T, T> {
   const popupSelector = selector ? selector : '[role="dialog"]';
 
   return NamedChain.asChain([
@@ -112,9 +112,11 @@ const cClickPopupButton = function (btnType: 'dialogCloseSelector' | 'dialogSubm
   ]);
 };
 
-const cCloseDialog = (selector: string) => cClickPopupButton('dialogCloseSelector', selector);
+const cCloseDialog = <T> (selector: string): Chain<T, T> =>
+  cClickPopupButton('dialogCloseSelector', selector);
 
-const cSubmitDialog = (selector?: string) => cClickPopupButton('dialogSubmitSelector', selector);
+const cSubmitDialog = <T> (selector?: string): Chain<T, T> =>
+  cClickPopupButton('dialogSubmitSelector', selector);
 
 export const UiChains: UiChains = {
   cClickOnToolbar,

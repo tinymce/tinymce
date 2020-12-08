@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createFindReplaceDialog = () => {
+export const createFindReplaceDialog = (): void => {
   openDemoDialog(
     {
       title: 'Find and replace',

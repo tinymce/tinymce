@@ -17,7 +17,7 @@ let platform = Thunk.cached(() => PlatformDetection.detect(navigator.userAgent, 
 
 export const detect = (): PlatformDetection => platform();
 
-export const override = (overrides: Partial<PlatformDetection>) => {
+export const override = (overrides: Partial<PlatformDetection>): void => {
   platform = Fun.constant({
     ...detect(),
     ...overrides

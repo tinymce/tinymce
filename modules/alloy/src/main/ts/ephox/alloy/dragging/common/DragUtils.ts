@@ -18,7 +18,7 @@ const calcStartData = <E>(dragConfig: DraggingConfig<E>, comp: AlloyComponent): 
   width: Width.getOuter(comp.element)
 });
 
-const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, SugarPosition>, event: EventArgs<ET>) => {
+const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: DraggingConfig<E>, dragState: DraggingState, dragMode: DragModeDeltas<ET, SugarPosition>, event: EventArgs<ET>): void => {
   const delta = dragState.update(dragMode, event);
   const dragStartData = dragState.getStartData().getOrThunk(() => calcStartData(dragConfig, component));
   delta.each((dlt) => {
@@ -26,7 +26,7 @@ const move = <E, ET extends Event>(component: AlloyComponent, dragConfig: Draggi
   });
 };
 
-const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState) => {
+const stop = <E>(component: AlloyComponent, blocker: Optional<AlloyComponent>, dragConfig: DraggingConfig<E>, dragState: DraggingState): void => {
   blocker.each(BlockerUtils.discard);
   dragConfig.snaps.each((snapInfo) => {
     Snappables.stopDrag(component, snapInfo);

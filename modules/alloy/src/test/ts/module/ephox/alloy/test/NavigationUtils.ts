@@ -2,12 +2,12 @@ import { FocusTools, GeneralSteps, Keyboard, Step, UiFinder, Waiter } from '@eph
 import { Arr } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
-const range = <T, R>(num: number, f: (v: T, i: number) => R[]) => {
+const range = <T, R>(num: number, f: (v: T, i: number) => R[]): R[] => {
   const array = new Array(num);
   return Arr.bind(array, f);
 };
 
-const sequence = (doc: SugarElement<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
+const sequence = <T>(doc: SugarElement<HTMLDocument>, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
   const array = range(identifiers.length, (_, i) => [
     Keyboard.sKeydown(doc, key, modifiers),
     FocusTools.sTryOnSelector(
@@ -22,7 +22,7 @@ const sequence = (doc: SugarElement<HTMLDocument>, key: number, modifiers: { }, 
 };
 
 // Selector based
-const highlights = (container: SugarElement, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>) => {
+const highlights = <T>(container: SugarElement, key: number, modifiers: { }, identifiers: Array<{ label: string; selector: string }>): Step<T, T> => {
   const array = range(identifiers.length, (_, i) => {
     const msg = 'Highlight should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label;
     const doc = Traverse.owner(container);

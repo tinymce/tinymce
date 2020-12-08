@@ -5,19 +5,19 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 
-const fireDetaching = (component: AlloyComponent) => {
+const fireDetaching = (component: AlloyComponent): void => {
   AlloyTriggers.emit(component, SystemEvents.detachedFromDom());
   const children = component.components();
   Arr.each(children, fireDetaching);
 };
 
-const fireAttaching = (component: AlloyComponent) => {
+const fireAttaching = (component: AlloyComponent): void => {
   const children = component.components();
   Arr.each(children, fireAttaching);
   AlloyTriggers.emit(component, SystemEvents.attachedToDom());
 };
 
-const attach = (parent: AlloyComponent, child: AlloyComponent) => {
+const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
   Insert.append(parent.element, child.element);
 };
 
@@ -29,7 +29,7 @@ const detachChildren = (component: AlloyComponent): void => {
   component.syncComponents();
 };
 
-const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[]) => {
+const replaceChildren = (component: AlloyComponent, newChildren: AlloyComponent[]): void => {
   // Detach all existing children
   const subs = component.components();
   detachChildren(component);

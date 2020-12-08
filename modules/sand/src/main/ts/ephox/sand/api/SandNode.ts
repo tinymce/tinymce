@@ -13,11 +13,11 @@ const compareDocumentPosition = function (a: Node, b: Node, match: number) {
   return (a.compareDocumentPosition(b) & match) !== 0;
 };
 
-const documentPositionPreceding = function (a: Node, b: Node) {
+const documentPositionPreceding = function (a: Node, b: Node): boolean {
   return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_PRECEDING);
 };
 
-const documentPositionContainedBy = function (a: Node, b: Node) {
+const documentPositionContainedBy = function (a: Node, b: Node): boolean {
   return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_CONTAINED_BY);
 };
 

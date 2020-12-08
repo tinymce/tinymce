@@ -3,7 +3,28 @@ import * as Arr from './Arr';
 import * as Fun from './Fun';
 import { Result } from './Result';
 
-const comparison = Adt.generate([
+interface ComparisonAdt<A, B> {
+  readonly fold: <T> (
+    bothErrors: (error1: B, error2: B) => T,
+    firstError: (error1: B, value2: A) => T,
+    secondError: (value1: A, error2: B) => T,
+    bothValues: (value1: A, value2: A) => T,
+  ) => T;
+  readonly match: <T> (branches: {
+    bothErrors: (error1: B, error2: B) => T;
+    firstError: (error1: B, value2: A) => T;
+    secondError: (value1: A, error2: B) => T;
+    bothValues: (value1: A, value2: A) => T;
+  }) => T;
+  readonly log: (label: string) => void;
+}
+
+const comparison: {
+  readonly bothErrors: <A, B>(error1: B, error2: B) => ComparisonAdt<A, B>;
+  readonly firstError: <A, B>(error1: B, value2: A) => ComparisonAdt<A, B>;
+  readonly secondError: <A, B>(value1: A, error2: B) => ComparisonAdt<A, B>;
+  readonly bothValues: <A, B>(value1: A, value2: A) => ComparisonAdt<A, B>;
+} = Adt.generate([
   { bothErrors: [ 'error1', 'error2' ] },
   { firstError: [ 'error1', 'value2' ] },
   { secondError: [ 'value1', 'error2' ] },
@@ -25,7 +46,7 @@ export const partition = function <T, E> (results: Result<T, E>[]): { values: T[
   return { errors, values };
 };
 
-export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A, B>) {
+export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A, B>): ComparisonAdt<A, B> {
   return result1.fold(function (err1) {
     return result2.fold(function (err2) {
       return comparison.bothErrors(err1, err2);

@@ -123,14 +123,13 @@ const chooseSize = (element: SugarElement<HTMLTableElement>, width: string) => {
   return pixelSize(fallbackWidth, element);
 };
 
-const getTableSize = (table: SugarElement<HTMLTableElement>) => {
+const getTableSize = (table: SugarElement<HTMLTableElement>): TableSize => {
   const width = Sizes.getRawWidth(table);
   return width.fold(
     () => noneSize(table),
     (w) => chooseSize(table, w)
   );
 };
-
 
 export const TableSize = {
   getTableSize,

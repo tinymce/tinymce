@@ -17,6 +17,14 @@ import {
 export type WrappedApiFunc<T extends (comp: AlloyComponent, config: any, state: any, ...args: any[]) => any> = T extends (comp: AlloyComponent, config: any, state: any, ...args: infer P) => infer R ? (comp: AlloyComponent, ...args: P) => R : never;
 type Executor<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bconfig: D, bState: S) => void;
 
+export type AlloyBehaviourWithApis<
+  C extends BehaviourConfigSpec,
+  D extends BehaviourConfigDetail,
+  S extends BehaviourState,
+  A extends BehaviourApisRecord<D, S>,
+  E extends BehaviourExtraRecord<E>
+> = AlloyBehaviour<C, D, S> & { [K in keyof A]: WrappedApiFunc<A[K]> } & E;
+
 const executeEvent = <C extends BehaviourConfigSpec, S extends BehaviourState>(bConfig: C, bState: S, executor: Executor<C, S>): AlloyEvents.AlloyEventKeyAndHandler<CustomEvent> => AlloyEvents.runOnExecute((component) => {
   executor(component, bConfig, bState);
 });
@@ -31,7 +39,7 @@ const create = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(schema: FieldProcessorAdt[], name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>) => {
+>(schema: FieldProcessorAdt[], name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const configSchema = ValueSchema.objOfOnly(schema);
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionObjOfOnly('config', schema)
@@ -45,7 +53,7 @@ const createModes = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(modes: Processor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>) => {
+>(modes: Processor, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const configSchema = modes;
   const schemaSchema = FieldSchema.optionObjOf(name, [
     FieldSchema.optionOf('config', modes)
@@ -83,7 +91,7 @@ const doCreate = <
   S extends BehaviourState,
   A extends BehaviourApisRecord<D, S>,
   E extends BehaviourExtraRecord<E>
->(configSchema: Processor, schemaSchema: FieldProcessorAdt, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>) => {
+>(configSchema: Processor, schemaSchema: FieldProcessorAdt, name: string, active: BehaviourActiveSpec<D, S>, apis: A, extra: E, state: BehaviourStateInitialiser<D, S>): AlloyBehaviourWithApis<C, D, S, A, E> => {
   const getConfig = (info: BehaviourInfo<D, S>) => Obj.hasNonNullableKey(info, name) ? info[name]() : Optional.none<BehaviourConfigAndState<D, S>>();
 
   const wrappedApis = Obj.map(apis, (apiF, apiName) => wrapApi(name, apiF, apiName)) as { [K in keyof A]: WrappedApiFunc<A[K]> };

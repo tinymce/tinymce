@@ -3,6 +3,8 @@ import Jsc from '@ephox/wrap-jsverify';
 
 import { WeightedChoice } from './WeightedChoice';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 const skipChild = '_';
 
 const toComponents = (detail) =>

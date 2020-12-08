@@ -7,7 +7,7 @@ import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Css from 'ephox/sugar/api/properties/Css';
 import * as Height from 'ephox/sugar/api/view/Height';
 import * as Width from 'ephox/sugar/api/view/Width';
-import Dimension from 'ephox/sugar/impl/Dimension';
+import { Dimension } from 'ephox/sugar/impl/Dimension';
 import Div from 'ephox/sugar/test/Div';
 import MathElement from 'ephox/sugar/test/MathElement';
 

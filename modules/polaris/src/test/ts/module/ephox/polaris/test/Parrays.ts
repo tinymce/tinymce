@@ -7,8 +7,8 @@ export interface PArrayTestItem {
   item: string;
 }
 
-const generator = function (item: string, start: number) {
-  return Optional.some<PArrayTestItem>({
+const generator = function (item: string, start: number): Optional<PArrayTestItem> {
+  return Optional.some({
     start,
     finish: start + item.length,
     item
@@ -18,7 +18,7 @@ const generator = function (item: string, start: number) {
 const make = (values: string[]): PArrayTestItem[] =>
   PositionArray.generate(values, generator);
 
-const dump = function (parray: PArrayTestItem[]) {
+const dump = function (parray: PArrayTestItem[]): string[] {
   return Arr.map(parray, function (unit) {
     return unit.start + '->' + unit.finish + '@ ' + unit.item;
   });

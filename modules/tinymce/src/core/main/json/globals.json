@@ -46,6 +46,7 @@
       "tinymce.core.api.util.Delay",
       "tinymce.core.api.util.EventDispatcher",
       "tinymce.core.api.util.I18n",
+      "tinymce.core.api.util.ImageUploader",
       "tinymce.core.api.util.JSON",
       "tinymce.core.api.util.JSONP",
       "tinymce.core.api.util.JSONRequest",

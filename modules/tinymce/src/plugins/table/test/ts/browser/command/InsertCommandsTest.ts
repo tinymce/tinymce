@@ -29,6 +29,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     editor.execCommand(cmdName);
     LegacyUnit.equal(events.length, 1);
     LegacyUnit.equal(events[0].type, 'tablemodified');
+    LegacyUnit.equal(events[0].structure, true);
+    LegacyUnit.equal(events[0].style, false);
     clearEvents();
   };
 

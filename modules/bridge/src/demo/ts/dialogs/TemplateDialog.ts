@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createTemplateDialog = () => {
+export const createTemplateDialog = (): void => {
   openDemoDialog(
     {
       title: 'Insert template',

@@ -18,8 +18,8 @@ const getOffset = <I extends SelectionAnchor | NodeAnchor>(component: AlloyCompo
     return Compare.eq(frameOwner, compOwner);
   };
 
-  return Optional.from(win.frameElement as HTMLFrameElement).map(SugarElement.fromDom).
-    filter(hasSameOwner).map(SugarLocation.absolute);
+  return Optional.from(win.frameElement as HTMLFrameElement).map(SugarElement.fromDom)
+    .filter(hasSameOwner).map(SugarLocation.absolute);
 };
 
 const getRootPoint = <I extends SelectionAnchor | NodeAnchor>(component: AlloyComponent, origin: OriginAdt, anchorInfo: I): CssPosition.CssPositionAdt => {

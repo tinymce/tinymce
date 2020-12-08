@@ -153,7 +153,7 @@ const getScopeAttribute = (cell: SugarElement) =>
     // As col and colgroup are to be treated as if they are the same, lob off everything after the first three characters and there is no difference.
   );
 
-const merging = (generators: Generators) => {
+const merging = (generators: Generators): GeneratorsMerging => {
   const position = Cell(Optional.none<SugarElement>());
 
   const unmerge = (cell: SugarElement) => {

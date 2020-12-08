@@ -1,8 +1,25 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Css, Height, InsertAll, Remove, SelectorFind, SugarElement, SugarLocation, Visibility, Width } from '@ephox/sugar';
 
-export default function () {
-  const box = function () {
+interface Box {
+  readonly element: () => SugarElement<HTMLDivElement>;
+  readonly show: () => void;
+  readonly hide: () => void;
+  readonly set: (x: number, y: number) => void;
+  readonly destroy: () => void;
+}
+
+export interface Sizers {
+  readonly northeast: () => Box;
+  readonly southeast: () => Box;
+  readonly hide: () => void;
+  readonly show: () => void;
+  readonly update: (target: SugarElement) => void;
+  readonly destroy: () => void;
+}
+
+export const Sizers = (): Sizers => {
+  const box = function (): Box {
     const r = SugarElement.fromTag('div');
     Width.set(r, 8);
     Height.set(r, 8);
@@ -85,4 +102,4 @@ export default function () {
     update,
     destroy
   };
-}
+};

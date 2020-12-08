@@ -1,5 +1,5 @@
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarElement, SugarLocation, SugarNode, SugarPosition } from '@ephox/sugar';
+import { SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
 // The 'button' field of the mouse event - which button was pressed to create the event. Pick only one value. Not defined for mouseenter,
 // mouseleave, mouseover, mouseout or mousemove.
@@ -32,7 +32,7 @@ interface Settings {
 type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu';
 
 // Fire an event
-const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>) => {
+const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {
   const location = (SugarNode.isElement(element) ? SugarLocation.absolute(element) : SugarPosition(0, 0)).translate(dx || 0, dy || 0);
   // IE doesn't support MouseEvent constructor
   if (typeof MouseEvent === 'function') {
@@ -66,7 +66,7 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
   }
 };
 
-const click = (settings: Settings) => (element: SugarElement<Node>) => {
+const click = (settings: Settings) => (element: SugarElement<Node>): void => {
   const dom = element.dom;
   Obj.get(dom as any, 'click').fold(() => event('click', settings)(element), Fun.call);
 };
@@ -75,22 +75,23 @@ const mouseUp = Fun.curry(event, 'mouseup');
 const mouseMove = Fun.curry(event, 'mousemove');
 const mouseOver = Fun.curry(event, 'mouseover');
 const mouseOut = Fun.curry(event, 'mouseout');
-const contextMenu = (settings: Settings) => event('contextmenu', { button: rightClickButton, ...settings });
+const contextMenu = (settings: Settings): (element: SugarElement<Node>) => void =>
+  event('contextmenu', { button: rightClickButton, ...settings });
 
 // Note: This can be used for phantomjs.
-const trigger = function (element: SugarElement<any>): any {
-  const ele: HTMLElement = element.dom;
+const trigger = function (element: SugarElement<HTMLElement>): void {
+  const ele = element.dom;
   if (ele.click !== undefined) {
     return ele.click();
   }
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
   point('click', leftClickButton, element, 0, 0);
-  return undefined;
+  return;
 };
 
-const point = (type: string, button: number, element: SugarElement<any>, x: number, y: number): void => {
+const point = (type: string, button: number, element: SugarElement<Node>, x: number, y: number): void => {
   // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-  const ev: MouseEvent = (<Document> element.dom.ownerDocument).createEvent('MouseEvents');
+  const ev: MouseEvent = Traverse.owner(element).dom.createEvent('MouseEvents');
   ev.initMouseEvent(
     type,
     true /* bubble */, true /* cancelable */,

@@ -36,7 +36,7 @@ UnitTest.test('ObjectsTest', () => {
     });
 
     // Sanity test.
-    const actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c', 'e' ]);
+    const actual = Objects.narrow({ a: 'a', b: 'b', c: 'c' }, [ 'a', 'c' ]);
     Assert.eq('eq', { a: 'a', c: 'c' }, actual);
   };
 

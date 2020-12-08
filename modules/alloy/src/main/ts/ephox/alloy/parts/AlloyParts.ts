@@ -108,7 +108,7 @@ const getAllParts = <D extends CompositeSketchDetail>(component: AlloyComponent,
   return Obj.map(detail.partUids, (pUid, _k) => Fun.constant(system.getByUid(pUid)));
 };
 
-const getAllPartNames = <D extends CompositeSketchDetail>(detail: D) => Obj.keys(detail.partUids);
+const getAllPartNames = <D extends CompositeSketchDetail>(detail: D): string[] => Obj.keys(detail.partUids);
 
 const getPartsOrDie = <D extends CompositeSketchDetail>(component: AlloyComponent, detail: D, partKeys: string[]): Record<string, () => AlloyComponent> => {
   const r: Record<string, () => AlloyComponent> = { };

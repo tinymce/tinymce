@@ -7,10 +7,10 @@ import { SimSelection } from '../../api/selection/SimSelection';
 import * as NativeRange from '../core/NativeRange';
 import * as SelectionDirection from '../core/SelectionDirection';
 
-const withinContainer = (win: Window, ancestor: SugarElement<Element>, outerRange: Range, selector: string) => {
+const withinContainer = <T extends Element>(win: Window, ancestor: SugarElement<Element>, outerRange: Range, selector: string): SugarElement<T>[] => {
   const innerRange = NativeRange.create(win);
-  const self = Selectors.is(ancestor, selector) ? [ ancestor ] : [];
-  const elements = self.concat(SelectorFilter.descendants(ancestor, selector));
+  const self = Selectors.is<T>(ancestor, selector) ? [ ancestor ] : [];
+  const elements = self.concat(SelectorFilter.descendants<T>(ancestor, selector));
   return Arr.filter(elements, (elem) => {
     // Mutate the selection to save creating new ranges each time
     NativeRange.selectNodeContentsUsing(innerRange, elem);
@@ -18,7 +18,7 @@ const withinContainer = (win: Window, ancestor: SugarElement<Element>, outerRang
   });
 };
 
-const find = (win: Window, selection: SimSelection, selector: string) => {
+const find = <T extends Element>(win: Window, selection: SimSelection, selector: string): SugarElement<T>[] => {
   // Reverse the selection if it is RTL when doing the comparison
   const outerRange = SelectionDirection.asLtrRange(win, selection);
   const ancestor = SugarElement.fromDom(outerRange.commonAncestorContainer);

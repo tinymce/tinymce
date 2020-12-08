@@ -7,7 +7,7 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Container } from 'ephox/alloy/api/ui/Container';
 
-const fixedSink = () => GuiFactory.build(
+const fixedSink = (): AlloyComponent => GuiFactory.build(
   Container.sketch({
     dom: {
       styles: {
@@ -23,7 +23,7 @@ const fixedSink = () => GuiFactory.build(
   })
 );
 
-const relativeSink = () => GuiFactory.build(
+const relativeSink = (): AlloyComponent => GuiFactory.build(
   Container.sketch({
     dom: {
       tag: 'div',
@@ -40,7 +40,7 @@ const relativeSink = () => GuiFactory.build(
   })
 );
 
-const popup = () => GuiFactory.build(
+const popup = (): AlloyComponent => GuiFactory.build(
   Container.sketch({
     dom: {
       innerHtml: 'Demo day',
@@ -54,7 +54,7 @@ const popup = () => GuiFactory.build(
   })
 );
 
-const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent) => {
+const isInside = (sinkComponent: AlloyComponent, popupComponent: AlloyComponent): boolean => {
   const isSink = (el: SugarElement) => Compare.eq(el, sinkComponent.element);
 
   return PredicateExists.closest(popupComponent.element, isSink);

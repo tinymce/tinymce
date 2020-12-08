@@ -20,8 +20,10 @@ const w = <T> (fType: TaskConstructor<T>, element: SugarElement, eventType: stri
   }, timeout);
 });
 
-const cWaitFor = (element: SugarElement, eventType: string, timeout: number) => w(LazyValue.nu, element, eventType, timeout);
+const cWaitFor = (element: SugarElement, eventType: string, timeout: number): LazyValue<Result<EventArgs, string>> =>
+  w(LazyValue.nu, element, eventType, timeout);
 
-const waitFor = (element: SugarElement, eventType: string, timeout: number) => w(Future.nu, element, eventType, timeout);
+const waitFor = (element: SugarElement, eventType: string, timeout: number): Future<Result<EventArgs, string>> =>
+  w(Future.nu, element, eventType, timeout);
 
 export { cWaitFor, waitFor };

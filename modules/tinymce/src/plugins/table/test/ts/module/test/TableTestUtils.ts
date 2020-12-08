@@ -301,7 +301,6 @@ const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control
   Guard.addLogging('Get cell width')
 );
 
-
 const cGetInput = (selector: string) => Chain.control(
   Chain.fromChains([
     Chain.inject(SugarBody.body()),

@@ -1,6 +1,6 @@
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerDemoMenuItems = () => {
+export const registerDemoMenuItems = (): void => {
   getDemoRegistry().addMenuItem('code', {
     icon: 'code',
     text: 'Code',

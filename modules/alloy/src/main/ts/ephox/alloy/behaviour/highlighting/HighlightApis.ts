@@ -56,7 +56,7 @@ const highlightLast = (component: AlloyComponent, hConfig: HighlightingConfig, h
 
 const highlightAt = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): void => {
   getByIndex(component, hConfig, hState, index).fold((err) => {
-    throw new Error(err);
+    throw err;
   }, (firstComp) => {
     highlight(component, hConfig, hState, firstComp);
   });
@@ -75,10 +75,10 @@ const isHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, h
 const getHighlighted = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
   SelectorFind.descendant(component.element, '.' + hConfig.highlightClass).bind((e) => component.getSystem().getByDom(e).toOptional());
 
-const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, string> => {
+const getByIndex = (component: AlloyComponent, hConfig: HighlightingConfig, hState: Stateless, index: number): Result<AlloyComponent, Error> => {
   const items = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
 
-  return Optional.from(items[index]).fold(() => Result.error<AlloyComponent, any>('No element found with index ' + index), component.getSystem().getByDom);
+  return Optional.from(items[index]).fold(() => Result.error(new Error('No element found with index ' + index)), component.getSystem().getByDom);
 };
 
 const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> =>
@@ -86,7 +86,7 @@ const getFirst = (component: AlloyComponent, hConfig: HighlightingConfig, _hStat
 
 const getLast = (component: AlloyComponent, hConfig: HighlightingConfig, _hState: Stateless): Optional<AlloyComponent> => {
   const items: SugarElement[] = SelectorFilter.descendants(component.element, '.' + hConfig.itemClass);
-  const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none<SugarElement<any>>();
+  const last = items.length > 0 ? Optional.some(items[items.length - 1]) : Optional.none<SugarElement>();
   return last.bind((c) => component.getSystem().getByDom(c).toOptional());
 };
 

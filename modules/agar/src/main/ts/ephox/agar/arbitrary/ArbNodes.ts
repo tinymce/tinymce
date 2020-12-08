@@ -1,7 +1,9 @@
 import { SugarComment, SugarElement, SugarNode, SugarText, Truncate } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-const createTag = (name): SugarElement<any> => {
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+const createTag = (name: string): SugarElement<any> => {
   const partial = name.split('-');
   const tag = partial.length > 0 ? partial[0] : name;
   return SugarElement.fromTag(tag);
@@ -25,7 +27,7 @@ const elementOf = (tag) =>
 const textOfArb = (arb) =>
   arb.smap(SugarElement.fromText, SugarText.get, SugarText.get);
 
-const textOf = (s) =>
+const textOf = (s: string) =>
   SugarElement.fromText(s);
 
 export {

@@ -29,7 +29,7 @@ const getNodes = <T extends Node> (texas: TreeWalker): SugarElement<T>[] => {
 // Weird, but oh well
 const noFilter = Fun.constant(Fun.always);
 
-const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) => boolean>) => {
+const find = (node: SugarElement<Node>, filterOpt: Optional<(n: string | null) => boolean>): SugarElement<Comment>[] => {
 
   const vmlFilter: any = filterOpt.fold(noFilter, (filter) => (comment: Node) => filter(comment.nodeValue));
 

@@ -121,7 +121,7 @@ const addEmbedHtml = function (api: Dialog.DialogInstanceApi<MediaDialogData>, e
 };
 
 const selectPlaceholder = function (editor: Editor, beforeObjects: HTMLElement[]) {
-  const afterObjects = editor.dom.select('img[data-mce-object]');
+  const afterObjects = editor.dom.select('*[data-mce-object]');
 
   // Find new image placeholder so we can select it
   for (let i = 0; i < beforeObjects.length; i++) {
@@ -136,7 +136,7 @@ const selectPlaceholder = function (editor: Editor, beforeObjects: HTMLElement[]
 };
 
 const handleInsert = function (editor: Editor, html: string) {
-  const beforeObjects = editor.dom.select('img[data-mce-object]');
+  const beforeObjects = editor.dom.select('*[data-mce-object]');
 
   editor.insertContent(html);
   selectPlaceholder(editor, beforeObjects);

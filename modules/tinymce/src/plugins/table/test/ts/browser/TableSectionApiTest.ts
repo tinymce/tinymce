@@ -1,5 +1,6 @@
 import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
 import { Selectors, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -158,13 +159,23 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableSectionApiTest', (success
 </table>`;
 
   let events = [];
-  const logEvent = (event: EditorEvent<{}>) => {
-    events.push(event.type);
+  const logEvent = (event: EditorEvent<{ structure?: boolean; style?: boolean }>) => {
+    events.push({
+      type: event.type,
+      structure: event.structure,
+      style: event.style,
+    });
   };
 
   const cClearEvents = Chain.op(() => events = []);
   const cAssertEvents = (label: string, expectedEvents: string[]) => Chain.op(() => {
-    Assertions.assertEq(label, expectedEvents, events);
+    Assertions.assertEq(label, expectedEvents, Arr.map(events, (event) => event.type));
+    if (Arr.contains(expectedEvents, 'tablemodified')) {
+      const tableModifiedEvents = Arr.filter(events, (event) => event.type === 'tablemodified');
+      Assertions.assertEq('TINY-6629: Assert table modified events length', 1, tableModifiedEvents.length);
+      Assertions.assertEq('TINY-6643: Should have structure modified', true, tableModifiedEvents[0].structure);
+      Assertions.assertEq('TINY-6643: Should not have style modified', false, tableModifiedEvents[0].style);
+    }
   });
 
   const cSelectAllCells = (type: 'td' | 'th') =>

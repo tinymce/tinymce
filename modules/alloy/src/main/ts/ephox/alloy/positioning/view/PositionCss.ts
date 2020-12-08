@@ -23,7 +23,7 @@ const NuPositionCss = (
   bottom
 });
 
-const applyPositionCss = (element: SugarElement, position: PositionCss) => {
+const applyPositionCss = (element: SugarElement, position: PositionCss): void => {
   const addPx = (num: number) => num + 'px';
 
   Css.setOptions(element, {

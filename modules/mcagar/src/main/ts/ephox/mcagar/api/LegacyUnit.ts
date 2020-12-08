@@ -6,8 +6,14 @@ type SyncTestCallback<T> = (initValue: T) => void;
 type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
 type Offset = 'after' | 'afterNextCharacter' | number;
 
+interface Suite<T> {
+  readonly test: (message: string, fn: SyncTestCallback<T>) => void;
+  readonly asyncTest: (message: string, fn: AsyncTestCallback<T>) => void;
+  readonly toSteps: (initValue: T) => Step<any, any>[];
+}
+
 const test = function <T> (message: string, fn: SyncTestCallback<T>) {
-  return function (initValue: T) {
+  return function (initValue: T): Step<T, T> {
     return Logger.t(
       message,
       Step.sync(function () {
@@ -18,7 +24,7 @@ const test = function <T> (message: string, fn: SyncTestCallback<T>) {
 };
 
 const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
-  return function (initValue: T) {
+  return function (initValue: T): Step<T, T> {
     return Logger.t(
       message,
       Step.async(function (done, die) {
@@ -28,7 +34,7 @@ const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
   };
 };
 
-const createSuite = function <T = any> () {
+const createSuite = function <T = any> (): Suite<T> {
   const tests: Array<(initValue: T) => Step<any, any>> = [];
 
   return {
@@ -48,7 +54,7 @@ const createSuite = function <T = any> () {
   };
 };
 
-const execCommand = function <T extends Editor = Editor> (editor: T, cmd: string, ui?: boolean, value?: any) {
+const execCommand = function <T extends Editor = Editor> (editor: T, cmd: string, ui?: boolean, value?: any): void {
   if (editor.editorCommands.hasCustomCommand(cmd)) {
     editor.execCommand(cmd, ui, value);
   }
@@ -70,7 +76,7 @@ const findContainer = function <T extends Editor = Editor> (editor: T, selector:
   return container;
 };
 
-const setSelection = function <T extends Editor = Editor> (editor: T, startSelector: string, startOffset: Offset, endSelector?: string, endOffset?: Offset) {
+const setSelection = function <T extends Editor = Editor> (editor: T, startSelector: string, startOffset: Offset, endSelector?: string, endOffset?: Offset): void {
   const startContainer = findContainer(editor, startSelector);
   const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   const rng = editor.dom.createRng();
@@ -103,15 +109,15 @@ const setSelection = function <T extends Editor = Editor> (editor: T, startSelec
   editor.selection.setRng(rng);
 };
 
-const trimBrs = function (html: string) {
+const trimBrs = function (html: string): string {
   return html.toLowerCase().replace(/<br[^>]*>|[\r\n]+/gi, '');
 };
 
-const equalDom = function <T extends Node> (actual: T, expected: T, message?: string) {
+const equalDom = function <T extends Node> (actual: T, expected: T, message?: string): void {
   Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
 };
 
-const equal = function <T> (actual: T, expected: T, message?: string) {
+const equal = function <T> (actual: T, expected: T, message?: string): void {
   Assertions.assertEq(typeof message !== 'undefined' ? message : 'No message specified', expected, actual);
 };
 

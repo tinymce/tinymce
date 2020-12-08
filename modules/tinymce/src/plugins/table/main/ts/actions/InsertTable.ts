@@ -35,7 +35,7 @@ const fireEvents = (editor: Editor, table) => {
 
 const isPercentage = (width: string) => Type.isString(width) && width.indexOf('%') !== -1;
 
-const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLElement => {
+const insert = (editor: Editor, columns: number, rows: number, colHeaders: number, rowHeaders: number): HTMLTableElement => {
   const defaultStyles = getDefaultStyles(editor);
   const options: TableRender.RenderOptions = {
     styles: defaultStyles,

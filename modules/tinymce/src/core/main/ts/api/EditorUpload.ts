@@ -9,14 +9,15 @@ import { Arr, Cell } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
-import UploadStatus from '../file/UploadStatus';
+import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
 import { UndoLevel } from '../undo/UndoManagerTypes';
 import * as Levels from '../undo/Levels';
 import Editor from './Editor';
+import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
 import * as Settings from './Settings';
-import Env from './Env';
+import { createUploader, openNotification } from './util/ImageUploader';
 
 /**
  * Handles image uploads, updates undo stack and patches over various internal functions.
@@ -125,15 +126,6 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  const openNotification = function () {
-    return editor.notificationManager.open({
-      text: editor.translate('Image uploading...'),
-      type: 'info',
-      timeout: -1,
-      progressBar: true
-    });
-  };
-
   const replaceImageUriInView = (image: HTMLImageElement, resultUri: string) => {
     const src = editor.convertURL(resultUri, 'src');
 
@@ -147,18 +139,13 @@ const EditorUpload = function (editor: Editor): EditorUpload {
 
   const uploadImages = (callback?: UploadCallback): Promise<UploadResult[]> => {
     if (!uploader) {
-      uploader = Uploader(uploadStatus, {
-        url: Settings.getImageUploadUrl(editor),
-        basePath: Settings.getImageUploadBasePath(editor),
-        credentials: Settings.getImagesUploadCredentials(editor),
-        handler: Settings.getImagesUploadHandler(editor)
-      });
+      uploader = createUploader(editor, uploadStatus);
     }
 
     return scanForImages().then(aliveGuard((imageInfos) => {
       const blobInfos = Arr.map(imageInfos, (imageInfo) => imageInfo.blobInfo);
 
-      return uploader.upload(blobInfos, openNotification).then(aliveGuard((result) => {
+      return uploader.upload(blobInfos, openNotification(editor)).then(aliveGuard((result) => {
         const imagesToRemove: HTMLImageElement[] = [];
 
         const filteredResult: UploadResult[] = Arr.map(result, (uploadInfo, index) => {

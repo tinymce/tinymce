@@ -40,6 +40,7 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
+import Promise from '../api/util/Promise';
 
 declare const escape: any;
 
@@ -269,16 +270,37 @@ const initEditor = function (editor: Editor) {
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
   editor.inline ? editor.ui.styleSheetLoader : editor.dom.styleSheetLoader;
 
+const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFonts: string[]): Promise<unknown>[] => {
+  const promises = [
+    new Promise((resolve, reject) => getStyleSheetLoader(editor).loadAll(css, resolve, reject)),
+  ];
+
+  if (editor.inline) {
+    return promises;
+  } else {
+    return promises.concat([
+      new Promise((resolve, reject) => editor.ui.styleSheetLoader.loadAll(framedFonts, resolve, reject)),
+    ]);
+  }
+};
+
 const loadContentCss = (editor: Editor, css: string[]) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
+  const fontCss = Settings.getFontCss(editor);
 
   const loaded = () => {
-    editor.on('remove', () => styleSheetLoader.unloadAll(css));
+    editor.on('remove', () => {
+      styleSheetLoader.unloadAll(css);
+
+      if (!editor.inline) {
+        editor.ui.styleSheetLoader.unloadAll(fontCss);
+      }
+    });
     initEditor(editor);
   };
 
   // Load all stylesheets
-  styleSheetLoader.loadAll(css, loaded, loaded);
+  Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
 };
 
 const preInit = (editor: Editor, rtcMode: boolean) => {

@@ -103,5 +103,3 @@ UnitTest.test('Bars.refresh and Bars.destroy with colgroup table', () => {
 // UnitTest.test('Bars.show and Bars.hide', () => {});
 
 // UnitTest.test('Bars.isColBar and Bars.isRowBar', () => {});
-
-

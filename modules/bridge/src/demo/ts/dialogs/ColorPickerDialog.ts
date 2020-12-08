@@ -2,7 +2,7 @@ import { openDemoDialog } from './DemoDialogHelpers';
 
 /* eslint-disable no-console */
 
-export const createColorPickerDialog = () => {
+export const createColorPickerDialog = (): void => {
   openDemoDialog(
     {
       title: 'colorbox',

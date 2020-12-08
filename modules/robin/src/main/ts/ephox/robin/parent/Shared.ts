@@ -3,7 +3,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 
 export type Looker<E, D> = (universe: Universe<E, D>, elem: E) => Optional<E>;
 
-const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[], f: (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) => Optional<E>) {
+const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[], f: (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) => Optional<E>): Optional<E> {
   const head = elements[0];
   const tail = elements.slice(1);
   return f(universe, look, head, tail);
@@ -12,13 +12,13 @@ const all = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, eleme
 /**
  * Check if look returns the same element for all elements, and return it if it exists.
  */
-const oneAll = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) {
+const oneAll = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]): Optional<E> {
   return elements.length > 0 ?
     all(universe, look, elements, unsafeOne) :
     Optional.none<E>();
 };
 
-const unsafeOne = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]) {
+const unsafeOne = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]): Optional<E> {
   const start = look(universe, head);
   return Arr.foldr(tail, function (b, a) {
     const current = look(universe, a);

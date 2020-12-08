@@ -10,7 +10,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import Editor from './api/Editor';
 import Env from './api/Env';
-import { EditorSettings, RawEditorSettings } from './api/SettingsTypes';
+import { EditorSettings, RawEditorSettings, ToolbarMode } from './api/SettingsTypes';
 import Tools from './api/util/Tools';
 
 export interface ParamTypeMap {
@@ -83,12 +83,11 @@ const getSectionConfig = function (sectionResult: SectionResult, name: string) {
   return hasSection(sectionResult, name) ? sectionResult.sections()[name] : {};
 };
 
-const getToolbarMode = (settings: RawEditorSettings, defaultVal) =>
+const getToolbarMode = (settings: RawEditorSettings, defaultVal: ToolbarMode) =>
   // If toolbar_mode is unset by the user, fall back to:
   Obj.get(settings, 'toolbar_mode')
     .orThunk(() => Obj.get(settings, 'toolbar_drawer').map((val) => val === false ? 'wrap' : val))     // #1 toolbar_drawer
     .getOr(defaultVal);                                // #2 defaultVal
-
 
 const getDefaultSettings = function (settings: RawEditorSettings, id: string, documentBaseUrl: string, isTouch: boolean, editor: Editor): RawEditorSettings {
   const baseDefaults: RawEditorSettings = {

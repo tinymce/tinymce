@@ -2,7 +2,7 @@ import { Assert } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
 
-const addStyles = () => {
+const addStyles = (): { remove: () => void } => {
   const style = SugarElement.fromHtml('<style>table { border-collapse: collapse; } td { border: 1px solid #333; min-width: 25px; }</style>');
   Insert.append(SugarHead.head(), style);
 
@@ -11,7 +11,7 @@ const addStyles = () => {
   };
 };
 
-const reducePrecision = (value: string, precision: number = 1) => {
+const reducePrecision = (value: string, precision: number = 1): string => {
   const floatValue = parseFloat(value);
   if (!floatValue) {
     return value;
@@ -23,7 +23,7 @@ const reducePrecision = (value: string, precision: number = 1) => {
   }
 };
 
-const readWidth = (element: SugarElement) => {
+const readWidth = (element: SugarElement): (string | null)[][] => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');
@@ -33,7 +33,7 @@ const readWidth = (element: SugarElement) => {
   });
 };
 
-const readHeight = (element: SugarElement) => {
+const readHeight = (element: SugarElement): (string | null)[][] => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');
@@ -43,7 +43,7 @@ const readHeight = (element: SugarElement) => {
   });
 };
 
-const assertApproxCellSizes = (expectedSizes: (string | null)[][], actualSizes: (string | null)[][], diff: number = 2) => {
+const assertApproxCellSizes = (expectedSizes: (string | null)[][], actualSizes: (string | null)[][], diff: number = 2): void => {
   Arr.each(expectedSizes, (row, rowIdx) => {
     Arr.each(row, (expectedSize, colIdx) => {
       const actualSize = actualSizes[rowIdx][colIdx];

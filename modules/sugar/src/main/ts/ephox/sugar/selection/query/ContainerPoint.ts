@@ -28,10 +28,10 @@ const searchInChildren = (doc: SugarElement<Document>, node: SugarElement<Node>,
   });
 };
 
-const locateNode = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) =>
+const locateNode = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> =>
   SugarNode.isText(node) ? TextPoint.locate(doc, node, x, y) : searchInChildren(doc, node, x, y);
 
-const locate = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number) => {
+const locate = (doc: SugarElement<Document>, node: SugarElement<Node>, x: number, y: number): Optional<Range> => {
   const r = doc.dom.createRange();
   r.selectNode(node.dom);
   const rect = r.getBoundingClientRect();

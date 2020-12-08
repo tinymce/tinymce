@@ -27,36 +27,36 @@ const colInfo = (col: number, x: number): ColInfo => ({
   x
 });
 
-const rtlEdge = function (cell: SugarElement) {
+const rtlEdge = function (cell: SugarElement): number {
   const pos = SugarLocation.absolute(cell);
   return pos.left + Width.getOuter(cell);
 };
 
-const ltrEdge = function (cell: SugarElement) {
+const ltrEdge = function (cell: SugarElement): number {
   return SugarLocation.absolute(cell).left;
 };
 
-const getLeftEdge = function (index: number, cell: SugarElement) {
+const getLeftEdge = function (index: number, cell: SugarElement): ColInfo {
   return colInfo(index, ltrEdge(cell));
 };
 
-const getRightEdge = function (index: number, cell: SugarElement) {
+const getRightEdge = function (index: number, cell: SugarElement): ColInfo {
   return colInfo(index, rtlEdge(cell));
 };
 
-const getTop = function (cell: SugarElement) {
+const getTop = function (cell: SugarElement): number {
   return SugarLocation.absolute(cell).top;
 };
 
-const getTopEdge = function (index: number, cell: SugarElement) {
+const getTopEdge = function (index: number, cell: SugarElement): RowInfo {
   return rowInfo(index, getTop(cell));
 };
 
-const getBottomEdge = function (index: number, cell: SugarElement) {
+const getBottomEdge = function (index: number, cell: SugarElement): RowInfo {
   return rowInfo(index, getTop(cell) + Height.getOuter(cell));
 };
 
-const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]) {
+const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]): Optional<T>[] {
   if (array.length === 0 ) { return []; }
   const lines = Arr.map(array.slice(1), function (cellOption, index) {
     return cellOption.map(function (cell) {
@@ -71,7 +71,7 @@ const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElemen
   return lines.concat([ lastLine ]);
 };
 
-const negate = function (step: number) {
+const negate = function (step: number): number {
   return -step;
 };
 

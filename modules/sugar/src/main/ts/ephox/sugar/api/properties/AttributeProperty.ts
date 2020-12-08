@@ -1,7 +1,13 @@
 import { SugarElement } from '../node/SugarElement';
 import * as Attribute from './Attribute';
 
-export default (attribute: string, value: string) => {
+export interface AttributeProperty {
+  readonly is: (element: SugarElement<Element>) => boolean;
+  readonly remove: (element: SugarElement<Element>) => void;
+  readonly set: (element: SugarElement<Element>) => void;
+}
+
+export const AttributeProperty = (attribute: string, value: string): AttributeProperty => {
   const is = (element: SugarElement<Element>): boolean =>
     Attribute.get(element, attribute) === value;
 

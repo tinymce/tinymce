@@ -5,15 +5,15 @@ import { ZoneViewports } from '../general/ZoneViewports';
 
 const universe = DomUniverse();
 
-const single = function (element: SugarElement, envLang: string, viewport: ZoneViewports<SugarElement>) {
+const single = function (element: SugarElement, envLang: string, viewport: ZoneViewports<SugarElement>): TextZones.Zones<SugarElement> {
   return TextZones.single(universe, element, envLang, viewport);
 };
 
-const range = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number, envLang: string, viewport: ZoneViewports<SugarElement>) {
+const range = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number, envLang: string, viewport: ZoneViewports<SugarElement>): TextZones.Zones<SugarElement> {
   return TextZones.range(universe, start, soffset, finish, foffset, envLang, viewport);
 };
 
-const empty = function () {
+const empty = function (): TextZones.Zones<SugarElement> {
   return TextZones.empty<SugarElement>();
 };
 

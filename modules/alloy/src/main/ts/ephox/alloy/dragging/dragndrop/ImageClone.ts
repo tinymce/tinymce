@@ -10,7 +10,7 @@ export interface DragnDropImageClone {
   readonly y: number;
 }
 
-const createGhostClone = (image: DragnDropImageClone) => {
+const createGhostClone = (image: DragnDropImageClone): SugarElement => {
   const ghost = Replication.deep(image.element);
 
   // Firefox will scale down non ghost images to 175px so lets limit the size to 175px in general
@@ -29,7 +29,7 @@ const createGhostClone = (image: DragnDropImageClone) => {
 // Fire dragDrop on that image
 // remove the image in a setTimeout( 0 )
 // http://jsfiddle.net/stevendwood/akScu/21/
-const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, image: DragnDropImageClone) => {
+const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, image: DragnDropImageClone): void => {
   const ghost = createGhostClone(image);
 
   Insert.append(parent, ghost);
@@ -41,7 +41,7 @@ const setDragImageFromClone = (transfer: DataTransfer, parent: SugarElement, ima
 };
 
 // IE and Edge doesn't support setDragImage so this fallback will hide the target from being used as a ghost
-const blockDefaultGhost = (target: SugarElement) => {
+const blockDefaultGhost = (target: SugarElement): void => {
   const targetClone = Replication.deep(target);
   const oldStyles = Arr.map([ 'position', 'visibility' ], (name) => ({ name, value: Css.getRaw(target, name) }));
 
@@ -65,7 +65,7 @@ const blockDefaultGhost = (target: SugarElement) => {
 
 // Edge doesn't have setDragImage support and just hiding the target element will position the drop icon incorrectly so we need custom ghost
 // TODO: Get rid of this once Edge switches to Chromium we feature detect setDragImage support so once they have it should use that instead
-const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: SugarElement, target: SugarElement) => {
+const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: SugarElement, target: SugarElement): void => {
   const ghostState = Cell(Optional.none<SugarElement<any>>());
 
   const drag = DomEvent.bind(target, 'drag', (evt) => {
@@ -106,7 +106,7 @@ const setDragImageFromCloneEdgeFallback = (image: DragnDropImageClone, parent: S
   blockDefaultGhost(target);
 };
 
-const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: SugarElement, target: SugarElement) => {
+const setImageClone = (transfer: DataTransfer, image: DragnDropImageClone, parent: SugarElement, target: SugarElement): void => {
   if (DataTransfers.hasDragImageSupport(transfer)) {
     setDragImageFromClone(transfer, parent, image);
   } else if (PlatformDetection.detect().browser.isEdge()) {

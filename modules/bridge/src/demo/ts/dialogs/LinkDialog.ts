@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createLinkDialog = () => {
+export const createLinkDialog = (): void => {
   openDemoDialog(
     {
       title: 'Insert link',
