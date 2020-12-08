@@ -71,14 +71,14 @@ UnitTest.test('CopySelectedTest', function () {
   const check = function (label: string, expected: TestData[][], input: TestData[][]) {
     const table = generateInput(input);
 
-    CopySelected.extract(table, '.' + SEL_CLASS);
+    const replica = CopySelected.extract(table, '.' + SEL_CLASS);
 
-    // Now verify that the table matches the nested array structure of expected
+    // Now verify that the replica table matches the nested array structure of expected
     const assertWithInfo = function <T> (exp: T, actual: T, info: string) {
-      assert.eq(exp, actual, () => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(table));
+      assert.eq(exp, actual, () => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(replica));
     };
 
-    const domRows = traverseChildElements(table);
+    const domRows = traverseChildElements(replica);
     assertWithInfo(expected.length, domRows.length, 'number of rows');
     Arr.each(expected, function (row, i) {
       const domCells = traverseChildElements(domRows[i]);
