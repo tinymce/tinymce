@@ -117,12 +117,12 @@ const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number =>
 const extract = (table: SugarElement, selectedSelector: string): SugarElement => {
   const isSelected = (detail: DetailExt) => Selectors.is(detail.element, selectedSelector);
 
-  const list = DetailsList.fromTable(table);
+  const replica = Replication.deep(table);
+  const list = DetailsList.fromTable(replica);
   const house = Warehouse.generate(list);
   const tableSize = TableSize.getTableSize(table);
   const stats = findSelectedStats(house, isSelected);
 
-  const replica = Replication.deep(table);
   // remove unselected cells
   const selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
   const unselectedCells = LayerSelector.filterFirstLayer(replica, 'th,td', (cell) => Selectors.is(cell, selector));
