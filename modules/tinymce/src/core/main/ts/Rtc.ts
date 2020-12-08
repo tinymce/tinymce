@@ -26,6 +26,7 @@ import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
 import { ParserArgs } from './api/html/DomParser';
+import Promise from './api/util/Promise';
 
 const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
@@ -272,6 +273,45 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
   };
 };
 
+const makeNoopAdaptor = (): RtcAdaptor => ({
+  undoManager: {
+    beforeChange: () => {},
+    addUndoLevel: () => null,
+    undo: () => null,
+    redo: () => null,
+    clear: () => {},
+    reset: () => {},
+    hasUndo: () => false,
+    hasRedo: () => false,
+    transact: () => null,
+    ignore: () => {},
+    extra: () => {}
+  },
+  formatter: {
+    match: () => false,
+    matchAll: () => [],
+    matchNode: () => false,
+    canApply: () => false,
+    closest: () => '',
+    apply: () => {},
+    remove: () => {},
+    toggle: () => {},
+    formatChanged: () => ({ unbind: () => {} })
+  },
+  editor: {
+    getContent: () => '',
+    setContent: () => '',
+    insertContent: () => {},
+    addVisual: () => {}
+  },
+  selection: {
+    getContent: () => ''
+  },
+  raw: {
+    getModel: () => Optional.none()
+  }
+});
+
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
 export const setup = (editor: Editor): Optional<Promise<boolean>> => {
@@ -285,6 +325,10 @@ export const setup = (editor: Editor): Optional<Promise<boolean>> => {
       rtc.setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
         return rtcEditor.isRemote;
+      }, (err) => {
+        // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
+        editorCast.rtcInstance = makeNoopAdaptor();
+        return Promise.reject<boolean>(err);
       })
     )
   );
