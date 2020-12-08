@@ -135,6 +135,8 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', function (success, failu
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'http:', host: 'localhost', pathname: '/' }), 'http://localhost/');
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'applewebdata:', href: 'applewebdata://something//dir/path1#hash' }), 'applewebdata://something//dir/');
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'applewebdata:', href: 'applewebdata://something//dir/path1' }), 'applewebdata://something//dir/');
+    LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'https:', host: '[::1]', pathname: '/dir/path1/path2/' }), 'https://[::1]/dir/path1/path2/');
+    LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'http:', host: '[::1]:8080', pathname: '/dir/path1/path2' }), 'http://[::1]:8080/dir/path1/');
   });
 
   Pipeline.async({}, suite.toSteps({}), function () {
