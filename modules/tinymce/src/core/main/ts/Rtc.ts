@@ -273,44 +273,49 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
   };
 };
 
-const makeNoopAdaptor = (): RtcAdaptor => ({
-  undoManager: {
-    beforeChange: () => {},
-    addUndoLevel: () => null,
-    undo: () => null,
-    redo: () => null,
-    clear: () => {},
-    reset: () => {},
-    hasUndo: () => false,
-    hasRedo: () => false,
-    transact: () => null,
-    ignore: () => {},
-    extra: () => {}
-  },
-  formatter: {
-    match: () => false,
-    matchAll: () => [],
-    matchNode: () => false,
-    canApply: () => false,
-    closest: () => '',
-    apply: () => {},
-    remove: () => {},
-    toggle: () => {},
-    formatChanged: () => ({ unbind: () => {} })
-  },
-  editor: {
-    getContent: () => '',
-    setContent: () => '',
-    insertContent: () => {},
-    addVisual: () => {}
-  },
-  selection: {
-    getContent: () => ''
-  },
-  raw: {
-    getModel: () => Optional.none()
-  }
-});
+const makeNoopAdaptor = (): RtcAdaptor => {
+  const nul = Fun.constant(null);
+  const empty = Fun.constant('');
+
+  return {
+    undoManager: {
+      beforeChange: Fun.noop,
+      addUndoLevel: nul,
+      undo: nul,
+      redo: nul,
+      clear: Fun.noop,
+      reset: Fun.noop,
+      hasUndo: Fun.never,
+      hasRedo: Fun.never,
+      transact: nul,
+      ignore: Fun.noop,
+      extra: Fun.noop
+    },
+    formatter: {
+      match: Fun.never,
+      matchAll: Fun.constant([]),
+      matchNode: Fun.never,
+      canApply: Fun.never,
+      closest: empty,
+      apply: Fun.noop,
+      remove: Fun.noop,
+      toggle: Fun.noop,
+      formatChanged: Fun.constant({ unbind: Fun.noop })
+    },
+    editor: {
+      getContent: empty,
+      setContent: empty,
+      insertContent: Fun.noop,
+      addVisual: Fun.noop
+    },
+    selection: {
+      getContent: empty
+    },
+    raw: {
+      getModel: Fun.constant(Optional.none())
+    }
+  };
+};
 
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
