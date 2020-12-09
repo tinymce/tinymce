@@ -12,14 +12,16 @@ interface StatsStruct {
   readonly minCol: number;
   readonly maxRow: number;
   readonly maxCol: number;
+  readonly allCells: DetailExt[];
   readonly selectedCells: DetailExt[];
 }
 
-const statsStruct = (minRow: number, minCol: number, maxRow: number, maxCol: number, selectedCells: DetailExt[]): StatsStruct => ({
+const statsStruct = (minRow: number, minCol: number, maxRow: number, maxCol: number, allCells: DetailExt[], selectedCells: DetailExt[]): StatsStruct => ({
   minRow,
   minCol,
   maxRow,
   maxCol,
+  allCells,
   selectedCells,
 });
 
@@ -32,8 +34,10 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
   let minCol = totalColumns;
   let maxRow = 0;
   let maxCol = 0;
-  const selectedCells: any[] = [];
+  const allCells: DetailExt[] = [];
+  const selectedCells: DetailExt[] = [];
   Obj.each(house.access, (detail) => {
+    allCells.push(detail);
     if (isSelected(detail)) {
       selectedCells.push(detail);
       const startRow = detail.row;
@@ -53,7 +57,7 @@ const findSelectedStats = (house: Warehouse, isSelected: (detail: DetailExt) => 
       }
     }
   });
-  return statsStruct(minRow, minCol, maxRow, maxCol, selectedCells);
+  return statsStruct(minRow, minCol, maxRow, maxCol, allCells, selectedCells);
 };
 
 const makeCell = <T>(list: RowData<T>[], seenSelected: boolean, rowIndex: number): void => {
@@ -105,12 +109,36 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widt
   replicaTableSize.adjustTableWidth(widthDelta);
 };
 
+
 const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number => {
-  const uniqueCols = getUniqueColumns(stats.selectedCells);
-  const selectedColsWidth = uniqueCols.reduce((acc, col) => {
-    return acc + Width.getOuter(col.element);
-  }, 0);
-  const delta = selectedColsWidth - tableSize.pixelWidth();
+  /*
+    Calulate new width by comparing width of selected columns to
+    width of all columns, which is the ratio to apply to the full table width.
+
+    We have to do this due to padding/margin etc.
+    (e.g. a 1000px wide table might have 3 x 320px wide columns)
+
+    Note: We will be off by a few pixels due to borders
+  */
+  const getColsWidth = (cols: DetailExt[]) => {
+    return cols.reduce((acc, col) => {
+      return acc + Width.getOuter(col.element);
+    }, 0);
+  };
+
+  const uniqueCols = getUniqueColumns(stats.allCells);
+  const uniqueSelectedCols = getUniqueColumns(stats.selectedCells);
+
+  // short circuit entire table selected
+  if (uniqueSelectedCols.length === uniqueCols.length) {
+    return 0;
+  }
+
+  const allColsWidth = getColsWidth(uniqueCols);
+  const selectedColsWidth = getColsWidth(uniqueSelectedCols);
+
+  const newWidth = (selectedColsWidth / allColsWidth) * tableSize.pixelWidth();
+  const delta = newWidth - tableSize.pixelWidth();
   return tableSize.getCellDelta(delta);
 };
 
