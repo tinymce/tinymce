@@ -1,4 +1,5 @@
 Version 5.7.0 (TBD)
+    Changed copying table columns or entire tables will now retain an appropriate width when pasted #TINY-6664
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
