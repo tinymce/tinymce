@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { ValueSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
+import { Fun } from '@ephox/katamari';
 
 UnitTest.test('Custom Editor Schema Test', () => {
   const schema = Dialog.customEditorSchema;
@@ -36,9 +37,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
     ...base,
     init(_el) {
       return {
-        setValue: (_value: string) => {},
-        getValue: () => '',
-        destroy: () => {}
+        setValue: Fun.noop,
+        getValue: Fun.constant(''),
+        destroy: Fun.noop
       };
     }
   }).isValue());
@@ -49,9 +50,9 @@ UnitTest.test('Custom Editor Schema Test', () => {
     scriptUrl: 'scriptUrl',
     init(_el) {
       return {
-        setValue: (_value: string) => {},
-        getValue: () => '',
-        destroy: () => {}
+        setValue: Fun.noop,
+        getValue: Fun.constant(''),
+        destroy: Fun.noop
       };
     }
   }).isError());
@@ -84,7 +85,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
     settings: {
-      func: () => {}
+      func: Fun.noop
     }
   }).isError());
 });

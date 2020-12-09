@@ -1,5 +1,5 @@
 import { Processor, ValueSchema } from '@ephox/boulder';
-import { Cell } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 import { DialogManager } from '../../../main/ts/ephox/bridge/api/DialogManager';
 import { Dialog, DialogInstanceApi, DialogSpec } from '../../../main/ts/ephox/bridge/components/dialog/Dialog';
 
@@ -20,22 +20,14 @@ const createDemoApi = <T>(internalStructure: Dialog<T>, initalData: T, dataValid
       const newInternalData = ValueSchema.getOrDie(ValueSchema.asRaw('data', dataValidator, mergedData));
       data.set(newInternalData);
     },
-    redial: () => {
-    },
-    focus: (_name: string) => {
-    },
-    showTab: (_title: string) => {
-    },
-    disable: (_name: string) => {
-    },
-    enable: (_name: string) => {
-    },
-    block: (_message: string) => {
-    },
-    unblock: () => {
-    },
-    close: () => {
-    }
+    redial: Fun.noop,
+    focus: (_name: string) => {},
+    showTab: (_title: string) => {},
+    disable: (_name: string) => {},
+    enable: (_name: string) => {},
+    block: (_message: string) => {},
+    unblock: Fun.noop,
+    close: Fun.noop
   };
 };
 

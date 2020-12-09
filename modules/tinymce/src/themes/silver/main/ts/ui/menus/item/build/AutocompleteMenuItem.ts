@@ -7,7 +7,7 @@
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
-import { Obj, Optional } from '@ephox/katamari';
+import { Fun, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -92,9 +92,9 @@ const renderAutocompleteItem = (
   return renderCommonItem({
     data: buildData(spec),
     disabled: spec.disabled,
-    getApi: () => ({}),
+    getApi: Fun.constant({}),
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
-    onSetup: () => () => { },
+    onSetup: Fun.constant(Fun.noop),
     triggersSubmenu: false,
     itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage)
   }, structure, itemResponse, sharedBackstage.providers);

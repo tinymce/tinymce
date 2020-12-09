@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir } from '@ephox/alloy';
-import { Arr, Merger, Obj, Optional, Result } from '@ephox/katamari';
+import { Arr, Fun, Merger, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -364,7 +364,7 @@ const setup = (editor: Editor): RenderInfo => {
     const channels = {
       broadcastAll: uiMothership.broadcast,
       broadcastOn: uiMothership.broadcastOn,
-      register: () => {}
+      register: Fun.noop
     };
 
     return { channels };

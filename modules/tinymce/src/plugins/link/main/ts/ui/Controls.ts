@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
@@ -75,7 +75,7 @@ const setupContextToolbars = function (editor: Editor) {
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
     buttonApi.setDisabled(!Utils.getAnchorElement(editor, node));
-    return () => { };
+    return Fun.noop;
   };
 
   editor.ui.registry.addContextForm('quicklink', {
@@ -107,7 +107,7 @@ const setupContextToolbars = function (editor: Editor) {
           const anchor = Utils.getAnchorElement(editor);
           const value = formApi.getValue();
           if (!anchor) {
-            const attachState = { href: value, attach: () => { } };
+            const attachState = { href: value, attach: Fun.noop };
             const onlyText = Utils.isOnlyTextSelected(editor);
             const text: Optional<string> = onlyText ? Optional.some(Utils.getAnchorText(editor.selection, anchor)).filter((t) => t.length > 0).or(Optional.from(value)) : Optional.none();
             Utils.link(editor, attachState, {

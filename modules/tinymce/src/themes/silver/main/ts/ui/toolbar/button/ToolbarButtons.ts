@@ -244,7 +244,7 @@ const fetchChoices = (getApi, spec: ChoiceFetcher, providersBackstage: UiFactory
       spec.columns,
       spec.presets,
       ItemResponse.CLOSE_ON_EXECUTE,
-      spec.select.getOr(() => false),
+      spec.select.getOr(Fun.never),
       providersBackstage
     ),
     {

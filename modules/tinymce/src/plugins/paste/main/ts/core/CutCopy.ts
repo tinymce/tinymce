@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -112,7 +113,7 @@ const cut = (editor: Editor) => (evt: ClipboardEvent) => {
 
 const copy = (editor: Editor) => (evt: ClipboardEvent) => {
   if (hasSelectedContent(editor)) {
-    setClipboardData(evt, getData(editor), fallback(editor), () => {});
+    setClipboardData(evt, getData(editor), fallback(editor), Fun.noop);
   }
 };
 

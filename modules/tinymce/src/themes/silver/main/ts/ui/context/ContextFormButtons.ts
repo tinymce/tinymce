@@ -35,7 +35,7 @@ const renderContextButton = (memInput: MementoRecord, button: InlineContent.Cont
     Toolbar.createToolbarButton({
       ...rest,
       type: 'button',
-      onAction: () => { }
+      onAction: Fun.noop
     })
   );
 
@@ -50,7 +50,7 @@ const renderContextToggleButton = (memInput: MementoRecord, button: InlineConten
     Toolbar.createToggleButton({
       ...rest,
       type: 'togglebutton',
-      onAction: () => { }
+      onAction: Fun.noop
     })
   );
 

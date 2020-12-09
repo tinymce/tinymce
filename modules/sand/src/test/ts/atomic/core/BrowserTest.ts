@@ -1,10 +1,11 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import * as PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
 UnitTest.test('BrowserTest', function () {
   function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {
-    const platform = PlatformDetection.detect(userAgent, () => false);
+    const platform = PlatformDetection.detect(userAgent, Fun.never);
     assert.eq(expectedBrowser, platform.browser.current);
     assert.eq(expectedOs, platform.os.current);
 
@@ -19,7 +20,7 @@ UnitTest.test('BrowserTest', function () {
   }
 
   const checkOSVersion = function (expectedMajor: number, expectedMinor: number, userAgent: string) {
-    const platform = PlatformDetection.detect(userAgent, () => false);
+    const platform = PlatformDetection.detect(userAgent, Fun.never);
     assert.eq(expectedMajor, platform.os.version.major, 'invalid major OS version ' + platform.os.version.major + ' for agent: ' + userAgent);
     assert.eq(expectedMinor, platform.os.version.minor, 'invalid minor OS version ' + platform.os.version.minor + ' for agent: ' + userAgent);
   };

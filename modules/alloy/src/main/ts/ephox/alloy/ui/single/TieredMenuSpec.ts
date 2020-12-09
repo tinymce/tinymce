@@ -233,7 +233,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
     (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> =>
       SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item)
         .bind((target) => container.getSystem().getByDom(target).toOptional().bind(
-          (item: AlloyComponent) => f(container, item).map((): boolean => true)
+          (item: AlloyComponent) => f(container, item).map<boolean>(Fun.always)
         ));
 
   const events = AlloyEvents.derive([
@@ -266,7 +266,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
           () => {
             detail.onExecute(component, item);
           },
-          () => { }
+          Fun.noop
         );
       });
     }),

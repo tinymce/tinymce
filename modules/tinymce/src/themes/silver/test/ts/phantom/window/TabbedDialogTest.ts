@@ -1,5 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Mouse, NamedChain, Pipeline, Step, StructAssert, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
@@ -90,10 +91,8 @@ UnitTest.asynctest('WindowManager:tabbed-dialog Test', (success, failure) => {
           const target = a.name === 'gotoBasic' ? 'basic' : 'advanced';
           api.showTab(target);
         },
-        onSubmit: () => {
-
-        }
-      }, {}, () => {});
+        onSubmit: Fun.noop
+      }, {}, Fun.noop);
     }),
 
     Chain.asStep({ }, [

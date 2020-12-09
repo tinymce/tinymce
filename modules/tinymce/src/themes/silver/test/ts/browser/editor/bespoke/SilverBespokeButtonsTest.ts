@@ -2,7 +2,7 @@ import {
   ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, Step, UiFinder
 } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -126,21 +126,21 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
 
         sCheckItemsAtLocation(
           'First paragraph after "Andale Mono"',
-          [ true ].concat(range(16, () => false)),
+          [ true ].concat(range(16, Fun.never)),
           'Andale Mono',
           [ 0, 0, 0 ], 'Fi'.length
         ),
 
         sCheckItemsAtLocation(
           'Second paragraph with no set font',
-          range(14, () => false).concat([ true ]).concat(range(2, () => false)),
+          range(14, Fun.never).concat([ true ]).concat(range(2, Fun.never)),
           'Verdana',
           [ 1, 0 ], 'Se'.length
         ),
 
         sCheckItemsAtLocation(
           'First paragraph with the font set to "Andale Mono" previously',
-          [ true ].concat(range(16, () => false)),
+          [ true ].concat(range(16, Fun.never)),
           'Andale Mono',
           [ 0, 0, 0 ], 'Fi'.length
         )
@@ -156,21 +156,21 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
 
         sCheckItemsAtLocation(
           'First paragraph after "8pt',
-          [ true ].concat(range(6, () => false)),
+          [ true ].concat(range(6, Fun.never)),
           '8pt',
           [ 0, 0, 0 ], 'Fi'.length
         ),
 
         sCheckItemsAtLocation(
           'Second paragraph with no set font size',
-          range(2, () => false).concat([ true ]).concat(range(4, () => false)),
+          range(2, Fun.never).concat([ true ]).concat(range(4, Fun.never)),
           '12pt',
           [ 1, 0 ], 'Se'.length
         ),
 
         sCheckItemsAtLocation(
           'First paragraph with the font set to "8pt" previously',
-          [ true ].concat(range(6, () => false)),
+          [ true ].concat(range(6, Fun.never)),
           '8pt',
           [ 0, 0, 0 ], 'Fi'.length
         )
@@ -188,21 +188,21 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
 
         sCheckItemsAtLocation(
           'First block after "h1',
-          [ false, true ].concat(range(6, () => false)),
+          [ false, true ].concat(range(6, Fun.never)),
           'Heading 1:first',
           [ 0, 0 ], 'Fi'.length
         ),
 
         sCheckItemsAtLocation(
           'Second paragraph with no set format',
-          [ true ].concat(range(7, () => false)),
+          [ true ].concat(range(7, Fun.never)),
           'Paragraph:first',
           [ 1, 0 ], 'Se'.length
         ),
 
         sCheckItemsAtLocation(
           'First block with the "h1" set previously',
-          [ false, true ].concat(range(6, () => false)),
+          [ false, true ].concat(range(6, Fun.never)),
           'Heading 1:first',
           [ 0, 0 ], 'Fi'.length
         ),
@@ -229,7 +229,7 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnItem('Paragraph'),
         sAssertItemTicks('Checking blocks in menu', [ false, true ].concat(
-          range(6, () => false)
+          range(6, Fun.never)
         )),
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         Keyboard.sKeydown(doc, Keys.escape(), { })
@@ -247,21 +247,21 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
 
         sCheckSubItemsAtLocation('Heading 1')(
           'First block after "h1',
-          [ true ].concat(range(5, () => false)),
+          [ true ].concat(range(5, Fun.never)),
           'Heading 1:last',
           [ 0, 0 ], 'Fi'.length
         ),
 
         sCheckSubItemsAtLocation('Heading 1')(
           'Second paragraph with no set format',
-          range(6, () => false),
+          range(6, Fun.never),
           'Paragraph:last',
           [ 1, 0 ], 'Se'.length
         ),
 
         sCheckSubItemsAtLocation('Heading 1')(
           'First block with the "h1" set previously',
-          [ true ].concat(range(5, () => false)),
+          [ true ].concat(range(5, Fun.never)),
           'Heading 1:last',
           [ 0, 0 ], 'Fi'.length
         ),
@@ -288,7 +288,7 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
         Keyboard.sKeydown(doc, Keys.right(), { }),
         sAssertFocusOnItem('Heading 1'),
         sAssertItemTicks('Checking headings in menu', [ true ].concat(
-          range(5, () => false)
+          range(5, Fun.never)
         )),
         Keyboard.sKeydown(doc, Keys.escape(), { }),
         Keyboard.sKeydown(doc, Keys.escape(), { }),

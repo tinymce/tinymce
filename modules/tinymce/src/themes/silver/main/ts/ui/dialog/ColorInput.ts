@@ -10,7 +10,7 @@ import {
   Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Future, Id, Optional, Result } from '@ephox/katamari';
+import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
 import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
@@ -45,7 +45,7 @@ export const renderColorInput = (spec: ColorInputSpec, sharedBackstage: UiFactor
     factory: Input,
     inputClasses: [ 'tox-textfield' ],
 
-    onSetValue: (c) => Invalidating.run(c).get(() => { }),
+    onSetValue: (c) => Invalidating.run(c).get(Fun.noop),
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({

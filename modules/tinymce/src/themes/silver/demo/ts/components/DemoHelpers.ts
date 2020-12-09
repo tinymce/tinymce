@@ -104,7 +104,7 @@ const setupDemo = () => {
         icons: () => <Record<string, string>> {},
         menuItems: () => <Record<string, any>> {},
         translate: I18n.translate,
-        isDisabled: () => false,
+        isDisabled: Fun.never,
         getSetting: (_settingName: string, defaultVal: any) => defaultVal
       },
       interpreter: (x) => x,

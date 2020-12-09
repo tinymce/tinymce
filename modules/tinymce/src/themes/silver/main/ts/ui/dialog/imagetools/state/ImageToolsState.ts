@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import UndoStack from '../UndoStack';
 
@@ -73,12 +73,14 @@ const makeState = (initialState: BlobState) => {
     return newState.url;
   };
 
-  const applyTempState = (postApply: () => void): void => tempState.get().fold(() => {
+  const applyTempState = (postApply: () => void): void => tempState.get().fold(
     // TODO: Inform the user of failures somehow
-  }, (temp) => {
-    addBlobState(temp.blob);
-    postApply();
-  });
+    Fun.noop,
+    (temp) => {
+      addBlobState(temp.blob);
+      postApply();
+    }
+  );
 
   const undo = (): string => {
     const currentState = undoStack.undo();

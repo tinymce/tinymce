@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Unicode } from '@ephox/katamari';
+import { Fun, Unicode } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { Spot } from '@ephox/phoenix';
 import { Pattern } from '@ephox/polaris';
@@ -42,8 +42,7 @@ UnitTest.test('DomTextSearchTest', function () {
     });
   };
   const checkAbort = function (result: TextSeekerOutcome<SugarElement>) {
-    result.fold(function () {
-    }, function () {
+    result.fold(Fun.noop, function () {
       Assert.fail('Unexpected edge');
     }, function () {
       Assert.fail('Unexpected info found');

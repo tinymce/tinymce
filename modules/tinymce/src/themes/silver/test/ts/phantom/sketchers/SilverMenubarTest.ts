@@ -185,7 +185,7 @@ UnitTest.asynctest('SilverMenubar Test', (success, failure) => {
                             type: 'menuitem',
                             icon: 'drop',
                             text: 'Nested menu x 3',
-                            onAction: () => { }
+                            onAction: Fun.noop
                           }
                         ]
                       }

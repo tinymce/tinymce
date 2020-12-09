@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -200,8 +201,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
   suite.test('Transact no change', function (editor) {
     editor.undoManager.add();
 
-    const level = editor.undoManager.transact(function () {
-    });
+    const level = editor.undoManager.transact(Fun.noop);
 
     LegacyUnit.equal(level, null);
   });

@@ -49,7 +49,7 @@ const create = (): GuiSystem => {
 
 const takeover = (root: AlloyComponent): GuiSystem => {
   const isAboveRoot = (el: SugarElement): boolean => Traverse.parent(root.element).fold(
-    () => true,
+    Fun.always,
     (parent) => Compare.eq(el, parent)
   );
 

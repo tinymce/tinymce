@@ -6,7 +6,7 @@
  */
 
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Container, GuiFactory, Memento, Replacing } from '@ephox/alloy';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
@@ -201,7 +201,7 @@ const renderImagePanel = (initialUrl: string) => {
                   { x: 0, y: 0, w: 200, h: 200 },
                   { x: 0, y: 0, w: 200, h: 200 },
                   el,
-                  () => { } // TODO: Add back keyboard handling for cropping
+                  Fun.noop // TODO: Add back keyboard handling for cropping
                 );
                 cRect.toggleVisibility(false);
                 cRect.on('updateRect', (e) => {

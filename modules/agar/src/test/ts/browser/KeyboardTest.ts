@@ -1,4 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { DomEvent, Focus, SugarElement } from '@ephox/sugar';
 import * as Assertions from 'ephox/agar/api/Assertions';
 import * as Guard from 'ephox/agar/api/Guard';
@@ -41,7 +42,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
           sAssertEvent(type, code, modifiers, raw).runStep(value, next, die, logs);
         });
 
-        f(SugarElement.fromDom(document), code, modifiers).runStep(value, () => {}, die);
+        f(SugarElement.fromDom(document), code, modifiers).runStep(value, Fun.noop, die);
       }),
       Guard.timeout('Key event did not fire in time: ' + type, 1000)
     );
@@ -63,7 +64,7 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
         });
       });
 
-      Keyboard.sKeystroke(SugarElement.fromDom(document), code, modifiers).runStep(value, () => {}, die, TestLogs.init());
+      Keyboard.sKeystroke(SugarElement.fromDom(document), code, modifiers).runStep(value, Fun.noop, die, TestLogs.init());
     }),
     Guard.timeout('keystroke (keydown + keyup) did not fire', 1000)
   );

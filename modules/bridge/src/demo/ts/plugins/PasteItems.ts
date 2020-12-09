@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 const editor = {
@@ -12,7 +13,7 @@ export const registerPasteItems = (): void => {
       editor.on('PastePlainTextToggle', (e) => {
         buttonApi.setActive(e.state);
       });
-      return () => { };
+      return Fun.noop;
     },
     onAction: (_buttonApi) => {
       // toggles setting

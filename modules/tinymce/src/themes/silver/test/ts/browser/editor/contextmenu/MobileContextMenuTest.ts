@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarElement } from '@ephox/sugar';
@@ -28,7 +28,7 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
   PlatformDetection.override({
     deviceType: {
       ...detection.deviceType,
-      isTouch: () => true
+      isTouch: Fun.always
     }
   });
 

@@ -1,8 +1,9 @@
+import { Fun } from '@ephox/katamari';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 const editor = {
   on: (_s, _f) => { },
-  isDirty: () => true
+  isDirty: Fun.always
 };
 
 export const registerTocItems = (): void => {
@@ -13,7 +14,7 @@ export const registerTocItems = (): void => {
       editor.on('LoadContent SetContent change', (e) => {
         buttonApi.setDisabled(e);
       });
-      return () => { };
+      return Fun.noop;
     },
     onAction: (_buttonApi) => {
       // insert Table of contents

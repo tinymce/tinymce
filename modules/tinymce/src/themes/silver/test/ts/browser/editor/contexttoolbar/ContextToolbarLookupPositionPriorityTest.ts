@@ -1,7 +1,7 @@
 import { Log, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
 import { filterByPositionForAncestorNode, filterByPositionForStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
@@ -9,7 +9,7 @@ UnitTest.asynctest('Context toolbar lookup priority by position test', (success,
   const createToolbars = (positions: string[]): ContextTypes[] => Arr.map(positions, (p) => ({
     type: 'contexttoolbar',
     items: 'bold italic',
-    predicate: () => true,
+    predicate: Fun.always,
     position: p,
     scope: 'node'
   } as InlineContent.ContextToolbar));

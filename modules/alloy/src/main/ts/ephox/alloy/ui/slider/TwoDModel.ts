@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarPosition, Width } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -44,7 +44,8 @@ const moveBy = (direction: number, isVerticalMovement: boolean, spectrum: AlloyC
   return Optional.some(xValue);
 };
 
-const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<boolean> => moveBy(direction, isVerticalMovement, spectrum, detail).map((): boolean => true);
+const handleMovement = (direction: number, isVerticalMovement: boolean) => (spectrum: AlloyComponent, detail: TwoDSliderDetail): Optional<boolean> =>
+  moveBy(direction, isVerticalMovement, spectrum, detail).map<boolean>(Fun.always);
 
 // fire a slider change event with the minimum value
 const setToMin = (spectrum: AlloyComponent, detail: TwoDSliderDetail): void => {

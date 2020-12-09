@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
 import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
@@ -14,7 +15,7 @@ UnitTest.asynctest('Checkbox component Test', (success, failure) => {
     },
     menuItems: () => <Record<string, any>> {},
     translate: I18n.translate,
-    isDisabled: () => false,
+    isDisabled: Fun.never,
     getSetting: (_settingName: string, defaultVal: any) => defaultVal
   };
 

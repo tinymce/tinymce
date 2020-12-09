@@ -1,4 +1,4 @@
-import { Adt, Arr, Cell, Optional } from '@ephox/katamari';
+import { Adt, Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
 import { DebuggerLogger } from '../debugging/Debugging';
@@ -71,11 +71,11 @@ const doTriggerHandler = (lookup: LookupEvent, eventType: string, rawEvent: Even
 const doTriggerOnUntilStopped = (lookup: LookupEvent, eventType: string, rawEvent: EventFormat, rawTarget: SugarElement, source: Cell<SugarElement>, logger: DebuggerLogger): boolean =>
   doTriggerHandler(lookup, eventType, rawEvent, rawTarget, source, logger).fold(
     // stopped.
-    () => true,
+    Fun.always,
     // Go again.
     (parent) => doTriggerOnUntilStopped(lookup, eventType, rawEvent, parent, source, logger),
     // completed
-    () => false
+    Fun.never
   );
 
 const triggerHandler = <T extends EventFormat>(lookup: LookupEvent, eventType: string, rawEvent: T, target: SugarElement, logger: DebuggerLogger): TriggerAdt => {

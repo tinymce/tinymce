@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import ButtonSetupDemo from './ButtonSetupDemo';
 
@@ -133,7 +134,7 @@ export default function () {
         },
         onSetup: (api) => {
           console.log(api.element());
-          return () => {};
+          return Fun.noop;
         }
       });
       ed.ui.registry.addContextToolbar('custom', {

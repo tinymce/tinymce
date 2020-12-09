@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as MockDemo from './MockDemo';
 
@@ -59,7 +60,7 @@ export default function () {
           const state = DemoState.get();
           console.log(state);
           comp.setActive(state);
-          return () => { };
+          return Fun.noop;
         },
         onAction(comp) {
           DemoState.toggle();
@@ -105,7 +106,7 @@ export default function () {
               const state = DemoState2.get();
               console.log(state);
               comp.setActive(state);
-              return () => { };
+              return Fun.noop;
             },
             onAction(comp) {
               DemoState2.toggle();
