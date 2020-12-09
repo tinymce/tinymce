@@ -108,7 +108,7 @@ const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUn
 const getPositionsBelow = Fun.curry(getAdjacentLinePositions, 1, getPositionsUntilNextLine);
 
 const getFirstLinePositions = (scope: HTMLElement) =>
-  CaretFinder.firstPositionIn(scope).map((pos) =>[ pos ].concat(getPositionsUntilNextLine(scope, pos).positions)).getOr([]);
+  CaretFinder.firstPositionIn(scope).map((pos) => [ pos ].concat(getPositionsUntilNextLine(scope, pos).positions)).getOr([]);
 
 const getLastLinePositions = (scope: HTMLElement) =>
   CaretFinder.lastPositionIn(scope).map((pos) => getPositionsUntilPreviousLine(scope, pos).positions.concat(pos)).getOr([]);

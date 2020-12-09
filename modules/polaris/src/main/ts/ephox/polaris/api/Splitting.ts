@@ -31,11 +31,10 @@ const cata = function <T, U> (
   onInclude: SplittingHandler<T, U>,
   onExcludeWith: SplittingHandler<T, U>,
   onExcludeWithout: SplittingHandler<T, U>
-) {
+): U {
   return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
 };
 
-// tslint:disable-next-line:variable-name
 export const Splitting = {
   include: adt.include,
   excludeWith: adt.excludeWith,

@@ -10,8 +10,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 export const getFullscreenRoot = (editor: Editor): SugarElement<Element> => {
   const elem = SugarElement.fromDom(editor.getElement());
-  return SugarShadowDom.getShadowRoot(elem).map(SugarShadowDom.getShadowHost).
-    getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
+  return SugarShadowDom.getShadowRoot(elem).map(SugarShadowDom.getShadowHost)
+    .getOrThunk(() => SugarBody.getBody(Traverse.owner(elem)));
 };
 
 export const getFullscreenElement = (root: DocumentOrShadowRoot): Element | null => {

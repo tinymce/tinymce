@@ -1,14 +1,14 @@
 import { Cell } from '@ephox/katamari';
-import { BehaviourState } from './BehaviourState';
+import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
 export interface BehaviourCellState<T> extends BehaviourState {
-  get: () => T;
-  set: (newState: T) => void;
-  clear: () => void;
-  readState: () => any;
+  readonly get: () => T;
+  readonly set: (newState: T) => void;
+  readonly clear: () => void;
+  readonly readState: () => any;
 }
 
-export const SetupBehaviourCellState = <T>(initialState: T) => {
+export const SetupBehaviourCellState = <T>(initialState: T): BehaviourStateInitialiser<any, BehaviourCellState<T>> => {
   const init = (): BehaviourCellState<T> => {
     const cell = Cell<T>(initialState);
 

@@ -13,7 +13,7 @@ export interface Label {
   items: BodyComponent[];
 }
 
-export const createLabelFields = (itemsField: FieldProcessorAdt) => [
+export const createLabelFields = (itemsField: FieldProcessorAdt): FieldProcessorAdt[] => [
   FieldSchema.strictString('type'),
   FieldSchema.strictString('label'),
   itemsField

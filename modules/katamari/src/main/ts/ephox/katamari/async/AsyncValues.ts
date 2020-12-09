@@ -9,7 +9,7 @@ import * as Arr from '../api/Arr';
  *   get: function (callback) { callback(10); }
  * }
  */
-export const par = function <A, T, C> (asyncValues: ArrayLike<(A & {get: (callback: (value: T) => void) => void})>, nu: (worker: (callback: (values: T[]) => void) => void) => C) {
+export const par = function <A, T, C> (asyncValues: ArrayLike<(A & {get: (callback: (value: T) => void) => void})>, nu: (worker: (callback: (values: T[]) => void) => void) => C): C {
   return nu(function (callback) {
     const r: T[] = [];
     let count = 0;

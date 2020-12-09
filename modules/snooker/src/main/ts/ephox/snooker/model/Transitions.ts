@@ -5,7 +5,7 @@ import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 import * as TableGrid from './TableGrid';
 
-const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean) => {
+const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowDetails[] => {
   const seen: boolean[][] = Arr.map(grid, (row) =>
     Arr.map(row.cells, Fun.never)
   );
@@ -33,7 +33,7 @@ const toDetails = (grid: Structs.RowCells[], comparator: (a: SugarElement, b: Su
   });
 };
 
-const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean) => {
+const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): Structs.RowCells[] => {
   const grid: Structs.RowCells[] = [];
 
   if (Warehouse.hasColumns(warehouse)) {

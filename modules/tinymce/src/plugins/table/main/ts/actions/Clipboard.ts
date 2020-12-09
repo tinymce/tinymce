@@ -62,8 +62,8 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
             const doc = SugarElement.fromDom(editor.getDoc());
             const generators = TableFill.paste(doc);
             const targets = TableTargets.paste(cell, elements[0], generators);
-            actions.pasteCells(table, targets).each(function (rng) {
-              editor.selection.setRng(rng);
+            actions.pasteCells(table, targets).each((data) => {
+              editor.selection.setRng(data.rng);
               editor.focus();
               cellSelection.clear(table);
             });

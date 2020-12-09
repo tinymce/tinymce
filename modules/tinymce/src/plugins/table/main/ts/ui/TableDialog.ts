@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Type, Unicode } from '@ephox/katamari';
+import { Fun, Obj, Type, Unicode } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -87,13 +87,13 @@ const applyDataToElement = (editor: Editor, tableElm, data: TableData) => {
   attrs.style = dom.serializeStyle({ ...getDefaultStyles(editor), ...styles });
   dom.setAttribs(tableElm, { ...getDefaultAttributes(editor), ...attrs });
 
-  Events.fireTableModified(editor, tableElm);
 };
 
-const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.DialogInstanceApi<TableData>) => {
+const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement, oldData: TableData, api: Dialog.DialogInstanceApi<TableData>) => {
   const dom = editor.dom;
   let captionElm;
   const data = api.getData();
+  const modifiedData = Obj.filter(data, (value, key) => oldData[key] !== value);
 
   api.close();
 
@@ -109,29 +109,39 @@ const onSubmitTableForm = (editor: Editor, tableElm: Element, api: Dialog.Dialog
       tableElm = InsertTable.insert(editor, cols, rows, 0, 0);
     }
 
-    applyDataToElement(editor, tableElm, data);
+    if (Obj.size(modifiedData) > 0) {
+      applyDataToElement(editor, tableElm, data);
 
-    // Toggle caption on/off
-    captionElm = dom.select('caption', tableElm)[0];
+      // Toggle caption on/off
+      captionElm = dom.select('caption', tableElm)[0];
 
-    if (captionElm && !data.caption) {
-      dom.remove(captionElm);
-    }
+      if (captionElm && !data.caption) {
+        dom.remove(captionElm);
+      }
 
-    if (!captionElm && data.caption) {
-      captionElm = dom.create('caption');
-      captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
-      tableElm.insertBefore(captionElm, tableElm.firstChild);
-    }
+      if (!captionElm && data.caption) {
+        captionElm = dom.create('caption');
+        captionElm.innerHTML = !Env.ie ? '<br data-mce-bogus="1"/>' : Unicode.nbsp;
+        tableElm.insertBefore(captionElm, tableElm.firstChild);
+      }
 
-    if (data.align === '') {
-      Styles.unApplyAlign(editor, tableElm);
-    } else {
-      Styles.applyAlign(editor, tableElm, data.align);
+      if (data.align === '') {
+        Styles.unApplyAlign(editor, tableElm);
+      } else {
+        Styles.applyAlign(editor, tableElm, data.align);
+      }
     }
 
     editor.focus();
     editor.addVisual();
+
+    if (Obj.size(modifiedData) > 0) {
+      const captionModified = Obj.has(modifiedData, 'caption');
+      // style modified if there's at least one other change apart from 'caption'
+      const styleModified = captionModified ? Obj.size(modifiedData) > 1 : true;
+
+      Events.fireTableModified(editor, tableElm, { structure: captionModified, style: styleModified });
+    }
   });
 };
 
@@ -207,7 +217,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
     title: 'Table Properties',
     size: 'normal',
     body: dialogBody,
-    onSubmit: Fun.curry(onSubmitTableForm, editor, tableElm),
+    onSubmit: Fun.curry(onSubmitTableForm, editor, tableElm, data),
     buttons: [
       {
         type: 'cancel',

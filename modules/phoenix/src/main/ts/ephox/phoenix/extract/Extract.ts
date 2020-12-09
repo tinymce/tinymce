@@ -2,6 +2,7 @@ import { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';
+import { SpotPoint } from '../api/data/Types';
 import * as TypedList from './TypedList';
 
 /**
@@ -38,7 +39,7 @@ const typed = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e:
 /**
  * Returns just the actual elements from a call to typed().
  */
-const items = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
+const items = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): E[] {
   const typedItemList = typed(universe, item, optimise);
 
   const raw = function (item: E, _universe: Universe<E, D>) { return item; };
@@ -48,7 +49,7 @@ const items = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e:
   });
 };
 
-const extractToElem = function <E, D> (universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean) {
+const extractToElem = function <E, D> (universe: Universe<E, D>, child: E, offset: number, item: E, optimise?: (e: E) => boolean): SpotPoint<E> {
   const extractions = typed(universe, item, optimise);
   const prior = TypedList.dropUntil(extractions, child);
   const count = TypedList.count(prior);
@@ -61,7 +62,7 @@ const extractToElem = function <E, D> (universe: Universe<E, D>, child: E, offse
  *
  * To find the exact reference later, use Find.
  */
-const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean) {
+const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean): SpotPoint<E> {
   return universe.property().parent(child).fold(function () {
     return Spot.point(child, offset);
   }, function (parent) {
@@ -75,7 +76,7 @@ const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: num
  *
  * To find the exact reference later, use Find.
  */
-const extractTo = function <E, D> (universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean) {
+const extractTo = function <E, D> (universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean): SpotPoint<E> {
   return universe.up().predicate(child, pred).fold(function () {
     return Spot.point(child, offset);
   }, function (v) {

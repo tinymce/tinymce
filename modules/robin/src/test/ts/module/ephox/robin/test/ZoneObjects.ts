@@ -23,18 +23,18 @@ const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   };
 };
 
-const raw = function (universe: TestUniverse, zones: Zone<Gene>[]) {
+const raw = function (universe: TestUniverse, zones: Zone<Gene>[]): RawZone[] {
   return Arr.map(zones, function (zone) {
     return rawOne(universe, zone);
   });
 };
 
-const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: Zone<Gene>[]) {
+const assertZones = function (label: string, universe: TestUniverse, expected: RawZone[], zones: Zone<Gene>[]): void {
   const rawActual = raw(universe, zones);
   Assert.eq(label + '\nChecking zones: ', expected, rawActual);
 };
 
-const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]) {
+const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]): void {
   Arr.each(zones, function (zone) {
     const elements = zone.elements;
     if (elements.length === 0) {

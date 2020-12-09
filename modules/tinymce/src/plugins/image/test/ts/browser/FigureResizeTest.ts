@@ -1,6 +1,7 @@
 import { Assertions, Chain, Guard, Log, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { ApiChains, Editor as McEditor, TinyDom, UiChains } from '@ephox/mcagar';
+import { Css, SugarElement } from '@ephox/sugar';
 
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -19,9 +20,10 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
   );
 
   const cGetElementSize = Chain.control(
-    Chain.mapper(function (elm: any) {
-      const elmStyle = elm.dom.style;
-      return { w: elmStyle.width, h: elmStyle.height };
+    Chain.mapper((elm: SugarElement<HTMLImageElement>) => {
+      const width = Css.get(elm, 'width');
+      const height = Css.get(elm, 'height');
+      return { width, height };
     }),
     Guard.addLogging('Get element size')
   );
@@ -83,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
         NamedChain.direct('editorBody', UiFinder.cFindIn('#mceResizeHandlese'), 'resizeSE'),
         NamedChain.write('_', cDragHandleRight(100)),
         NamedChain.direct('img', cGetElementSize, 'imgSize'),
-        NamedChain.direct('imgSize', Assertions.cAssertEq('asserting image size after resize', { w: '200px', h: '200px' }), '_'),
+        NamedChain.direct('imgSize', Assertions.cAssertEq('asserting image size after resize', { width: '200px', height: '200px' }), '_'),
         NamedChain.output('editor')
       ]),
       McEditor.cRemove

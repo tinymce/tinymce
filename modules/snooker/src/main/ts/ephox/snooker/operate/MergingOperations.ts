@@ -7,7 +7,7 @@ type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 type Subst = () => SugarElement;
 
 // substitution: () -> item
-const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: CompElm, substitution: Subst) {
+const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
   const rows = GridRow.extractGridDetails(grid).rows;
   // Mutating. Do we care about the efficiency gain?
   if (rows.length === 0) {
@@ -23,7 +23,7 @@ const merge = function (grid: Structs.RowCells[], bounds: Structs.Bounds, compar
 };
 
 // substitution: () -> item
-const unmerge = function (grid: Structs.RowCells[], target: SugarElement, comparator: CompElm, substitution: Subst) {
+const unmerge = function (grid: Structs.RowCells[], target: SugarElement, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
   const rows = GridRow.extractGridDetails(grid).rows;
   // Mutating. Do we care about the efficiency gain?
   let first = true;
@@ -43,7 +43,7 @@ const unmerge = function (grid: Structs.RowCells[], target: SugarElement, compar
   return grid;
 };
 
-const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm) {
+const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm): Structs.ElementNew[] {
   return Arr.foldl(row, function (rest, cell) {
     return Arr.exists(rest, function (currentCell) {
       return comparator(currentCell.element, cell.element);
@@ -51,7 +51,7 @@ const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm) {
   }, [] as Structs.ElementNew[]);
 };
 
-const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) => {
+const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
   // We don't need to split rows if we're inserting at the first or last row of the old table
   if (index > 0 && index < grid[0].cells.length) {
     Arr.each(grid, (row) => {
@@ -68,7 +68,7 @@ const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm,
   return grid;
 };
 
-const splitRows = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst) {
+const splitRows = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
   // We don't need to split rows if we're inserting at the first or last row of the old table
   const rows = GridRow.extractGridDetails(grid).rows;
   if (index > 0 && index < rows.length) {

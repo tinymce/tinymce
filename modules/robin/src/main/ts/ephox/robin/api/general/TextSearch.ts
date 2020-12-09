@@ -7,8 +7,8 @@ import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstruc
 type CharPos = TextSearchBase.CharPos;
 
 export interface TextSearchSeeker {
-  regex: () => RegExp;
-  attempt: <E> (phase: TextSeekerPhaseConstructor, item: E, text: string, index: number) => TextSeekerPhase<E>;
+  readonly regex: () => RegExp;
+  readonly attempt: <E> (phase: TextSeekerPhaseConstructor, item: E, text: string, index: number) => TextSeekerPhase<E>;
 }
 
 const seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
@@ -40,7 +40,7 @@ const repeatRight: RepeatRightFn = TextSeeker.repeatRight;
 // successfully found using a regular expression (rawSeeker object) on the text content.
 // 'edge' returns the text element where the search stopped due to being adjacent to a
 // block boundary.
-const expandLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, rawSeeker: TextSearchSeeker) {
+const expandLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: number, rawSeeker: TextSearchSeeker): TextSeekerOutcome<E> {
   const seeker = seekerSig(rawSeeker);
 
   const process: TextSeekerPhaseProcessor<E, D> = function (uni, phase, pItem, pText, pOffset) {
@@ -60,7 +60,7 @@ const expandLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: n
 // successfully found using a regular expression (rawSeeker object) on the text content.
 // 'edge' returns the text element where the search stopped due to being adjacent to a
 // block boundary.
-const expandRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, rawSeeker: TextSearchSeeker) {
+const expandRight = function <E, D> (universe: Universe<E, D>, item: E, offset: number, rawSeeker: TextSearchSeeker): TextSeekerOutcome<E> {
   const seeker = seekerSig(rawSeeker);
 
   const process: TextSeekerPhaseProcessor<E, D> = function (uni, phase, pItem, pText, pOffset) {

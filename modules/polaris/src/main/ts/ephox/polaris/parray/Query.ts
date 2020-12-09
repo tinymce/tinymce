@@ -4,26 +4,26 @@ import { PRange } from '../pattern/Types';
 /**
  * Simple "is position within unit" utility function
  */
-const inUnit = function (unit: PRange, position: number) {
+const inUnit = function (unit: PRange, position: number): boolean {
   return position >= unit.start && position <= unit.finish;
 };
 
 /**
  * Finds the unit in the PositionArray that contains this offset (if there is one)
  */
-const get = function <T extends PRange> (parray: T[], offset: number) {
+const get = function <T extends PRange> (parray: T[], offset: number): Optional<T> {
   return Arr.find(parray, function (x) {
     return inUnit(x, offset);
   });
 };
 
-const startindex = function (parray: PRange[], offset: number) {
+const startindex = function (parray: PRange[], offset: number): Optional<number> {
   return Arr.findIndex(parray, function (unit) {
     return unit.start === offset;
   });
 };
 
-const tryend = function (parray: PRange[], finish: number) {
+const tryend = function (parray: PRange[], finish: number): number {
   const finishes = parray[parray.length - 1] && parray[parray.length - 1].finish === finish;
   return finishes ? parray.length + 1 : -1;
 };
@@ -31,7 +31,7 @@ const tryend = function (parray: PRange[], finish: number) {
 /**
  * Extracts the pieces of the PositionArray that are bounded *exactly* on the start and finish offsets
  */
-const sublist = function <T extends PRange> (parray: T[], start: number, finish: number) {
+const sublist = function <T extends PRange> (parray: T[], start: number, finish: number): T[] {
   const first = startindex(parray, start);
   const rawlast = startindex(parray, finish);
   return first.bind(function (fIndex): Optional<T[]> {

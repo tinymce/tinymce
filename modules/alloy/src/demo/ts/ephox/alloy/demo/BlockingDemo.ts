@@ -12,7 +12,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 
-export default () => {
+export default (): void => {
   const gui = Gui.create();
   const body = SugarBody.body();
   Attachment.attachSystem(body, gui);

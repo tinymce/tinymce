@@ -5,7 +5,7 @@ const editor = {
   isDirty: () => true
 };
 
-export const registerTocItems = () => {
+export const registerTocItems = (): void => {
   getDemoRegistry().addButton('toc', {
     type: 'button',
     disabled: false,

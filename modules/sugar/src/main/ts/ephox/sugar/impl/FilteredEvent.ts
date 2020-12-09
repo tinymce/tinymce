@@ -19,7 +19,7 @@ const mkEvent = <T extends Event>(target: SugarElement, x: number, y: number, st
  * The returned EventArgs structure has its target set to the "original" target if possible.
  * See SugarShadowDom.getOriginalEventTarget
  */
-const fromRawEvent = <T extends Event>(rawEvent: T) => {
+const fromRawEvent = <T extends Event>(rawEvent: T): EventArgs<T> => {
   const target = SugarElement.fromDom(SugarShadowDom.getOriginalEventTarget(rawEvent).getOr(rawEvent.target) as Node);
 
   const stop = () => rawEvent.stopPropagation();
@@ -48,10 +48,10 @@ const binder = <T extends Event>(element: SugarElement, event: string, filter: E
   };
 };
 
-const bind = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+const bind = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>): EventUnbinder =>
   binder<T>(element, event, filter, handler, false);
 
-const capture = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>) =>
+const capture = <T extends Event>(element: SugarElement, event: string, filter: EventFilter<T>, handler: EventHandler<T>): EventUnbinder =>
   binder<T>(element, event, filter, handler, true);
 
 const unbind = <T extends Event>(element: SugarElement, event: string, handler: WrappedHandler<T>, useCapture: boolean) => {

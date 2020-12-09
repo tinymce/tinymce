@@ -17,9 +17,10 @@ const polls: Polling[] = [];
 
 const poll = (element: SugarElement<Node>, unbind: () => void): Polling => ({ element, unbind });
 
-const findPoller = (element: SugarElement<Node>) => Arr.findIndex(polls, (p) => Compare.eq(p.element, element)).getOr(-1);
+const findPoller = (element: SugarElement<Node>): number =>
+  Arr.findIndex(polls, (p) => Compare.eq(p.element, element)).getOr(-1);
 
-const begin = (element: SugarElement<Node>, f: () => (() => void)) => {
+const begin = (element: SugarElement<Node>, f: () => (() => void)): void => {
   const index = findPoller(element);
   if (index === -1) {
     const unbind = f();
@@ -27,13 +28,13 @@ const begin = (element: SugarElement<Node>, f: () => (() => void)) => {
   }
 };
 
-const query = (element: SugarElement<Node>) => {
+const query = (element: SugarElement<Node>): Optional<Polling> => {
   // Used in tests to determine whether an element is still being monitored
   const index = findPoller(element);
   return index === -1 ? Optional.none<Polling>() : Optional.some(polls[index]);
 };
 
-const end = (element: SugarElement<Node>) => {
+const end = (element: SugarElement<Node>): void => {
   const index = findPoller(element);
 
   // This function is called speculatively, so just do nothing if there is no monitor for the element

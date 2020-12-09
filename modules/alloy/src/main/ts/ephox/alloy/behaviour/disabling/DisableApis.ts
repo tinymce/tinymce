@@ -63,7 +63,7 @@ const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disabl
 const isDisabled = (component: AlloyComponent, disableConfig: DisableConfig): boolean =>
   hasNative(component, disableConfig) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 
-const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean) => {
+const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean): void => {
   const f = disabled ? disable : enable;
   f(component, disableConfig, disableState);
 };

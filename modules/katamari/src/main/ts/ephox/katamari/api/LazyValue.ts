@@ -58,7 +58,7 @@ const nu = <T>(baseFn: (completer: (value: T) => void) => void): LazyValue<T> =>
   };
 };
 
-const pure = <T>(a: T) =>
+const pure = <T>(a: T): LazyValue<T> =>
   nu((callback: (value: T) => void) => {
     callback(a);
   });

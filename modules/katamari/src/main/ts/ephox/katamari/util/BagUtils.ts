@@ -1,19 +1,19 @@
 import * as Arr from '../api/Arr';
 import * as Type from '../api/Type';
 
-export const sort = function <T> (arr: T[]) {
+export const sort = function <T> (arr: T[]): T[] {
   return arr.slice(0).sort();
 };
 
-export const reqMessage = function (required: string[], keys: string[]) {
+export const reqMessage = function (required: string[], keys: string[]): never {
   throw new Error('All required keys (' + sort(required).join(', ') + ') were not specified. Specified keys were: ' + sort(keys).join(', ') + '.');
 };
 
-export const unsuppMessage = function (unsupported: string[]) {
+export const unsuppMessage = function (unsupported: string[]): never {
   throw new Error('Unsupported keys for object: ' + sort(unsupported).join(', '));
 };
 
-export const validateStrArr = function (label: string, array: any) {
+export const validateStrArr = function (label: string, array: any): void {
   if (!Type.isArray(array)) {
     throw new Error('The ' + label + ' fields must be an array. Was: ' + array + '.');
   }
@@ -24,11 +24,11 @@ export const validateStrArr = function (label: string, array: any) {
   });
 };
 
-export const invalidTypeMessage = function (incorrect: string[], type: string) {
+export const invalidTypeMessage = function (incorrect: string[], type: string): never {
   throw new Error('All values need to be of type: ' + type + '. Keys (' + sort(incorrect).join(', ') + ') were not.');
 };
 
-export const checkDupes = function (everything: string[]) {
+export const checkDupes = function (everything: string[]): void {
   const sorted = sort(everything);
   const dupe = Arr.find(sorted, function (s, i) {
     return i < sorted.length - 1 && s === sorted[i + 1];

@@ -6,13 +6,13 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { TypeaheadModelDetail } from '../types/TypeaheadTypes';
 
 // When showing a value in an input field, which part of the item do we use?
-const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent) => {
+const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): void => {
   const itemData = Representing.getValue(item);
   Representing.setValue(input, itemData);
   setCursorAtEnd(input);
 };
 
-const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void) => {
+const setSelectionOn = (input: AlloyComponent, f: (node: HTMLInputElement, value: string) => void): void => {
   const el = input.element;
   const value = Value.get(el);
   const node = el.dom as HTMLInputElement;

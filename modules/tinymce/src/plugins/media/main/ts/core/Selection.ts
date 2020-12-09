@@ -25,7 +25,7 @@ const setup = (editor: Editor) => {
   editor.on('ObjectSelected', (e) => {
     const objectType = e.target.getAttribute('data-mce-object');
 
-    if (objectType === 'audio' || objectType === 'script') {
+    if (objectType === 'script') {
       e.preventDefault();
     }
   });

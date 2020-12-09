@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createTableDialog = () => {
+export const createTableDialog = (): void => {
   openDemoDialog(
     {
       title: 'Table properties',

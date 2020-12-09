@@ -132,6 +132,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq('Should have width', 'number', typeof state.get().width);
     Assertions.assertEq('Should have height', 'number', typeof state.get().height);
     Assertions.assertEq('Should have a table modified event', 1, tableModifiedEvents.length);
+    Assertions.assertEq('Should not have structure modified', false, tableModifiedEvents[0].structure);
+    Assertions.assertEq('Should have style modified', true, tableModifiedEvents[0].style);
   });
 
   Pipeline.async({}, [

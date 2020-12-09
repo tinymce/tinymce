@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { ToolbarSplitButtonItemTypes } from '../../../main/ts/ephox/bridge/components/toolbar/ToolbarSplitButton';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
-export const registerInsertDateTimeItems = () => {
+export const registerInsertDateTimeItems = (): void => {
   // Example, they are all the same.
   getDemoRegistry().addSplitButton('insertdatetime', {
     type: 'splitbutton',

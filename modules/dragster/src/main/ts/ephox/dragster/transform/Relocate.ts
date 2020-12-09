@@ -7,15 +7,20 @@ export interface RelocateEvent {
 }
 
 interface RelocateEvents {
-  registry: {
-    relocate: Bindable<RelocateEvent>;
+  readonly registry: {
+    readonly relocate: Bindable<RelocateEvent>;
   };
-  trigger: {
-    relocate: (x: number, y: number) => void;
+  readonly trigger: {
+    readonly relocate: (x: number, y: number) => void;
   };
 }
 
-const both = function (element: SugarElement) {
+interface Relocate {
+  readonly mutate: (x: number, y: number) => void;
+  readonly events: RelocateEvents['registry'];
+}
+
+const both = function (element: SugarElement): Relocate {
   const mutate = function (x: number, y: number) {
     const location = SugarLocation.absolute(element);
     Css.setAll(element, {
@@ -25,9 +30,9 @@ const both = function (element: SugarElement) {
     events.trigger.relocate(x, y);
   };
 
-  const events = Events.create({
+  const events: RelocateEvents = Events.create({
     relocate: Event([ 'x', 'y' ])
-  }) as RelocateEvents;
+  });
 
   return {
     mutate,

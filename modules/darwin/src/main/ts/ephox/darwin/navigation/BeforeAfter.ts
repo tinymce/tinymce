@@ -1,4 +1,4 @@
-import { Adt } from '@ephox/katamari';
+import { Adt, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { Awareness, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 import { WindowBridge } from '../api/WindowBridge';
@@ -39,17 +39,18 @@ const adt: {
 ]);
 
 // Let's get some bounding rects, and see if they overlap (x-wise)
-const isOverlapping = function (bridge: WindowBridge, before: SugarElement, after: SugarElement) {
+const isOverlapping = function (bridge: WindowBridge, before: SugarElement, after: SugarElement): boolean {
   const beforeBounds = bridge.getRect(before);
   const afterBounds = bridge.getRect(after);
   return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
 };
 
-const isRow = function (elem: SugarElement) {
+const isRow = function (elem: SugarElement): Optional<SugarElement<HTMLTableRowElement>> {
   return SelectorFind.closest(elem, 'tr');
 };
 
-const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number, failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean) {
+const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number,
+                         failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean): BeforeAfter {
   // Identify the cells that the before and after are in.
   return SelectorFind.closest(after, 'td,th', isRoot).bind(function (afterCell) {
     return SelectorFind.closest(before, 'td,th', isRoot).map(function (beforeCell) {
@@ -69,7 +70,8 @@ const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffse
   }).getOr(adt.none('default'));
 };
 
-const cata = function <T> (subject: BeforeAfter, onNone: NoneHandler<T>, onSuccess: SuccessHandler<T>, onFailedUp: FailedUpHandler<T>, onFailedDown: FailedDownHandler<T>) {
+const cata = function <T> (subject: BeforeAfter, onNone: NoneHandler<T>, onSuccess: SuccessHandler<T>,
+                           onFailedUp: FailedUpHandler<T>, onFailedDown: FailedDownHandler<T>): T {
   return subject.fold(onNone, onSuccess, onFailedUp, onFailedDown);
 };
 

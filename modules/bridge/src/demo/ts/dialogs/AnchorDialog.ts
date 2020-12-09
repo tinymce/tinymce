@@ -1,6 +1,6 @@
 import { openDemoDialog } from './DemoDialogHelpers';
 
-export const createAnchorDialog = () => {
+export const createAnchorDialog = (): void => {
   openDemoDialog(
     {
       title: 'Anchor',

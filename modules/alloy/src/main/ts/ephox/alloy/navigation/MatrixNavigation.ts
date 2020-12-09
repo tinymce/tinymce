@@ -43,21 +43,29 @@ const moveVertical = <A>(matrix: A[][], colIndex: number, startRow: number, delt
 };
 
 // return address(Math.floor(index / columns), index % columns);
-const cycleRight = <A>(matrix: A[][], startRow: number, startCol: number) => cycleHorizontal(matrix, startRow, startCol, +1);
+const cycleRight = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  cycleHorizontal(matrix, startRow, startCol, +1);
 
-const cycleLeft = <A>(matrix: A[][], startRow: number, startCol: number) => cycleHorizontal(matrix, startRow, startCol, -1);
+const cycleLeft = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  cycleHorizontal(matrix, startRow, startCol, -1);
 
-const cycleUp = <A>(matrix: A[][], startRow: number, startCol: number) => cycleVertical(matrix, startCol, startRow, -1);
+const cycleUp = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  cycleVertical(matrix, startCol, startRow, -1);
 
-const cycleDown = <A>(matrix: A[][], startRow: number, startCol: number) => cycleVertical(matrix, startCol, startRow, +1);
+const cycleDown = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  cycleVertical(matrix, startCol, startRow, +1);
 
-const moveLeft = <A>(matrix: A[][], startRow: number, startCol: number) => moveHorizontal(matrix, startRow, startCol, -1);
+const moveLeft = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  moveHorizontal(matrix, startRow, startCol, -1);
 
-const moveRight = <A>(matrix: A[][], startRow: number, startCol: number) => moveHorizontal(matrix, startRow, startCol, +1);
+const moveRight = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  moveHorizontal(matrix, startRow, startCol, +1);
 
-const moveUp = <A>(matrix: A[][], startRow: number, startCol: number) => moveVertical(matrix, startCol, startRow, -1);
+const moveUp = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  moveVertical(matrix, startCol, startRow, -1);
 
-const moveDown = <A>(matrix: A[][], startRow: number, startCol: number) => moveVertical(matrix, startCol, startRow, +1);
+const moveDown = <A>(matrix: A[][], startRow: number, startCol: number): Optional<MatrixNavigationOutcome<A>> =>
+  moveVertical(matrix, startCol, startRow, +1);
 
 export {
   cycleRight,

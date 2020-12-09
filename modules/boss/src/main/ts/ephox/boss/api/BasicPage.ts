@@ -6,6 +6,7 @@ const nu = function (tag: string, id: string) {
   return r;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function () {
 
   const container = nu('div', 'root');

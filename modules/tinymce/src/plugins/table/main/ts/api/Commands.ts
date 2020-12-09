@@ -12,7 +12,7 @@ import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActions } from '../actions/TableActions';
+import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
@@ -62,19 +62,19 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
           enforceNone(table);
         }
         Util.removeDataStyle(table);
-        Events.fireTableModified(editor, table.dom);
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
       });
     }
   });
 
   const getTableFromCell = (cell: SugarElement<HTMLTableCellElement>) => TableLookup.table(cell, isRoot);
 
-  const postExecute = (table: SugarElement<HTMLTableElement>) => (rng: Range): void => {
-    editor.selection.setRng(rng);
+  const postExecute = (table: SugarElement<HTMLTableElement>) => (data: TableActionResult): void => {
+    editor.selection.setRng(data.rng);
     editor.focus();
     cellSelection.clear(table);
     Util.removeDataStyle(table);
-    Events.fireTableModified(editor, table.dom);
+    Events.fireTableModified(editor, table.dom, data.effect);
   };
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void =>
@@ -143,7 +143,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const fireTableModifiedForSelection = (editor: Editor, tableOpt: Optional<SugarElement<HTMLTableElement>>): void => {
     // Due to the same bug, the selection may incorrectly be on a row so we can't use getSelectionStartCell here
     tableOpt.each((table) => {
-      Events.fireTableModified(editor, table.dom);
+      Events.fireTableModified(editor, table.dom, Events.structureModified);
     });
   };
 
@@ -216,7 +216,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       will have a TableModified event thrown.
     */
     getTableFromCell(cells[0]).each(
-      (table) => Events.fireTableModified(editor, table.dom, { structure: false, style: true })
+      (table) => Events.fireTableModified(editor, table.dom, Events.styleModified)
     );
   });
 

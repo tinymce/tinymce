@@ -1,7 +1,7 @@
 import * as ClassList from '../../impl/ClassList';
 import { SugarElement } from '../node/SugarElement';
 import * as Attribute from './Attribute';
-import Toggler from './Toggler';
+import { Toggler } from './Toggler';
 
 /*
  * ClassList is IE10 minimum:
@@ -42,7 +42,7 @@ const remove = (element: SugarElement<Element>, clazz: string): void => {
 const toggle = (element: SugarElement<Element>, clazz: string): boolean =>
   ClassList.supports(element) ? element.dom.classList.toggle(clazz) : ClassList.toggle(element, clazz);
 
-const toggler = (element: SugarElement<Element>, clazz: string) => {
+const toggler = (element: SugarElement<Element>, clazz: string): Toggler => {
   const hasClasslist = ClassList.supports(element);
   const classList = element.dom.classList;
   const off = () => {

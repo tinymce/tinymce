@@ -231,8 +231,8 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   type KeyHandler = (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => Optional<boolean>;
   const keyOnItem = (f: (container: AlloyComponent, item: AlloyComponent) => Optional<AlloyComponent>): KeyHandler =>
     (container: AlloyComponent, simulatedEvent: NativeSimulatedEvent): Optional<boolean> =>
-      SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item).
-        bind((target) => container.getSystem().getByDom(target).toOptional().bind(
+      SelectorFind.closest(simulatedEvent.getSource(), '.' + detail.markers.item)
+        .bind((target) => container.getSystem().getByDom(target).toOptional().bind(
           (item: AlloyComponent) => f(container, item).map((): boolean => true)
         ));
 

@@ -24,8 +24,8 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 const tooltipBehaviour = (
   meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
 ): Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>[] =>
-  Obj.get(meta, 'tooltipWorker').
-    map((tooltipWorker: TooltipWorker) => [
+  Obj.get(meta, 'tooltipWorker')
+    .map((tooltipWorker: TooltipWorker) => [
       Tooltipping.config({
         lazySink: sharedBackstage.getSink,
         tooltipDom: {
@@ -51,8 +51,8 @@ const tooltipBehaviour = (
           });
         }
       })
-    ]).
-    getOr([]);
+    ])
+    .getOr([]);
 
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);

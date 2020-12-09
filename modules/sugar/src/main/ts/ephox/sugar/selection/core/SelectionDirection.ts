@@ -6,34 +6,34 @@ import * as NativeRange from './NativeRange';
 type SelectionDirectionHandler<U> = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => U;
 
 export interface SelectionDirection {
-  fold: <U> (
+  readonly fold: <U> (
     ltr: SelectionDirectionHandler<U>,
     rtl: SelectionDirectionHandler<U>
   ) => U;
-  match: <U> (branches: {
+  readonly match: <U> (branches: {
     ltr: SelectionDirectionHandler<U>;
     rtl: SelectionDirectionHandler<U>;
   }) => U;
-  log: (label: string) => void;
+  readonly log: (label: string) => void;
 }
 
 type SelectionDirectionConstructor = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => SelectionDirection;
 
+interface LtrRtlRanges {
+  readonly ltr: () => Range;
+  readonly rtl: () => Optional<Range>;
+}
+
 const adt: {
-  ltr: SelectionDirectionConstructor;
-  rtl: SelectionDirectionConstructor;
+  readonly ltr: SelectionDirectionConstructor;
+  readonly rtl: SelectionDirectionConstructor;
 } = Adt.generate([
   { ltr: [ 'start', 'soffset', 'finish', 'foffset' ] },
   { rtl: [ 'start', 'soffset', 'finish', 'foffset' ] }
 ]);
 
-const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range) =>
+const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Range): SelectionDirection =>
   type(SugarElement.fromDom(range.startContainer), range.startOffset, SugarElement.fromDom(range.endContainer), range.endOffset);
-
-interface LtrRtlRanges {
-  ltr: () => Range;
-  rtl: () => Optional<Range>;
-}
 
 const getRanges = (win: Window, selection: SimSelection): LtrRtlRanges => selection.match<LtrRtlRanges>({
   domRange(rng) {
@@ -56,7 +56,7 @@ const getRanges = (win: Window, selection: SimSelection): LtrRtlRanges => select
   }
 });
 
-const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
+const doDiagnose = (win: Window, ranges: LtrRtlRanges): SelectionDirection => {
   // If we cannot create a ranged selection from start > finish, it could be RTL
   const rng = ranges.ltr();
   if (rng.collapsed) {
@@ -75,12 +75,12 @@ const doDiagnose = (win: Window, ranges: LtrRtlRanges) => {
   }
 };
 
-const diagnose = (win: Window, selection: SimSelection) => {
+const diagnose = (win: Window, selection: SimSelection): SelectionDirection => {
   const ranges = getRanges(win, selection);
   return doDiagnose(win, ranges);
 };
 
-const asLtrRange = (win: Window, selection: SimSelection) => {
+const asLtrRange = (win: Window, selection: SimSelection): Range => {
   const diagnosis = diagnose(win, selection);
   return diagnosis.match({
     ltr: (start, soffset, finish, foffset): Range => {

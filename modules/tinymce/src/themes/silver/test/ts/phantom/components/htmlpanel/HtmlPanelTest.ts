@@ -4,7 +4,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 
 import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
-UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
+UnitTest.asynctest('HtmlPanel component Test - presentation', (success, failure) => {
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
@@ -31,7 +31,9 @@ UnitTest.asynctest('HtmlPanel component Test', (success, failure) => {
     success,
     failure
   );
+});
 
+UnitTest.asynctest('HtmlPanel component Test - document', (success, failure) => {
   TestHelpers.GuiSetup.setup(
     (_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({

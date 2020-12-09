@@ -36,7 +36,7 @@ const create = <
   S extends BehaviourState,
   A extends BehaviourTypes.BehaviourApisRecord<D, S>,
   E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
->(data: AlloyBehaviourConfig<D, S, A, E>) => {
+>(data: AlloyBehaviourConfig<D, S, A, E>): CommonBehaviour.AlloyBehaviourWithApis<C, D, S, A, E> => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, simpleSchema, data);
   return CommonBehaviour.create<C, D, S, A, E>(value.fields, value.name, value.active, value.apis, value.extra, value.state);
 };
@@ -57,7 +57,7 @@ const createModes = <
   S extends BehaviourState,
   A extends BehaviourTypes.BehaviourApisRecord<D, S>,
   E extends BehaviourTypes.BehaviourExtraRecord<E> = {}
->(data: BehaviourModeSpec<D, S, A, E>) => {
+>(data: BehaviourModeSpec<D, S, A, E>): CommonBehaviour.AlloyBehaviourWithApis<C, D, S, A, E> => {
   const value = ValueSchema.asRawOrDie('Creating behaviour: ' + data.name, modeSchema, data);
   return CommonBehaviour.createModes<C, D, S, A, E>(
     ValueSchema.choose(value.branchKey, value.branches),

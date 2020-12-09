@@ -5,7 +5,7 @@ const editor = {
   isDirty: () => true
 };
 
-export const registerVisualBlocksItems = () => {
+export const registerVisualBlocksItems = (): void => {
   getDemoRegistry().addToggleButton('visualblocks', {
     type: 'togglebutton',
     disabled: false,

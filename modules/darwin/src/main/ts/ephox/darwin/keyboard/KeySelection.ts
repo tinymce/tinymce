@@ -8,7 +8,7 @@ import * as Util from '../selection/Util';
 
 // Based on a start and finish, select the appropriate box of cells
 const sync = function (container: SugarElement, isRoot: (element: SugarElement) => boolean, start: SugarElement, soffset: number, finish: SugarElement,
-                       foffset: number, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
+                       foffset: number, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void): Optional<Response> {
   if (!(Compare.eq(start, finish) && soffset === foffset)) {
     return SelectorFind.closest(start, 'td,th', isRoot).bind(function (s) {
       return SelectorFind.closest(finish, 'td,th', isRoot).bind(function (f) {
@@ -22,7 +22,7 @@ const sync = function (container: SugarElement, isRoot: (element: SugarElement) 
 
 // If the cells are different, and there is a rectangle to connect them, select the cells.
 const detect = function (container: SugarElement, isRoot: (element: SugarElement) => boolean, start: SugarElement, finish: SugarElement,
-                         selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void) {
+                         selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void): Optional<Response> {
   if (!Compare.eq(start, finish)) {
     return CellSelection.identify(start, finish, isRoot).bind(function (cellSel) {
       const boxes = cellSel.boxes.getOr([]);
@@ -41,7 +41,7 @@ const detect = function (container: SugarElement, isRoot: (element: SugarElement
   }
 };
 
-const update = function (rows: number, columns: number, container: SugarElement, selected: SugarElement[], annotations: SelectionAnnotation) {
+const update = function (rows: number, columns: number, container: SugarElement, selected: SugarElement[], annotations: SelectionAnnotation): Optional<SugarElement[]> {
   const updateSelection = function (newSels: IdentifiedExt) {
     annotations.clearBeforeUpdate(container);
     annotations.selectRange(container, newSels.boxes, newSels.start, newSels.finish);

@@ -1,5 +1,6 @@
 import { Insert, InsertAll, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const Page = function () {
 
   const container = SugarElement.fromTag('div');

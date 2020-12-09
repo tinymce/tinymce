@@ -1,7 +1,12 @@
 import { SimpleResult } from '../alien/SimpleResult';
 import { formatObj } from '../format/PrettyPrinter';
 
-const nu = function (path, getErrorInfo) {
+export interface SchemaError {
+  readonly path: string[];
+  readonly getErrorInfo: () => string;
+}
+
+const nu = function <T> (path: string[], getErrorInfo: () => string): SimpleResult<SchemaError[], T> {
   return SimpleResult.serror([{
     path,
     // This is lazy so that it isn't calculated unnecessarily
@@ -9,35 +14,35 @@ const nu = function (path, getErrorInfo) {
   }]);
 };
 
-const missingStrict = function (path, key, obj) {
+const missingStrict = function <T> (path: string[], key: string, obj: any): SimpleResult<SchemaError[], T> {
   return nu(path, function () {
     return 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj);
   });
 };
 
-const missingKey = function (path, key) {
+const missingKey = function <T> (path: string[], key: string): SimpleResult<SchemaError[], T> {
   return nu(path, function () {
     return 'Choice schema did not contain choice key: "' + key + '"';
   });
 };
 
-const missingBranch = function (path, branches, branch) {
+const missingBranch = function <T> (path: string[], branches: Record<string, any>, branch: string): SimpleResult<SchemaError[], T> {
   return nu(path, function () {
     return 'The chosen schema: "' + branch + '" did not exist in branches: ' + formatObj(branches);
   });
 };
 
-const unsupportedFields = function (path, unsupported) {
+const unsupportedFields = function <T> (path: string[], unsupported: string[]): SimpleResult<SchemaError[], T> {
   return nu(path, function () {
     return 'There are unsupported fields: [' + unsupported.join(', ') + '] specified';
   });
 };
 
-const custom = function (path, err) {
+const custom = function <T> (path: string[], err: string): SimpleResult<SchemaError[], T> {
   return nu(path, function () { return err; });
 };
 
-const toString = function (error) {
+const toString = function (error: SchemaError): string {
   return 'Failed path: (' + error.path.join(' > ') + ')\n' + error.getErrorInfo();
 };
 

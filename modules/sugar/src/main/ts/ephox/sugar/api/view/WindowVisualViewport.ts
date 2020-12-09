@@ -1,6 +1,6 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { fromRawEvent } from '../../impl/FilteredEvent';
-import { EventHandler } from '../events/Types';
+import { EventHandler, EventUnbinder } from '../events/Types';
 import { SugarElement } from '../node/SugarElement';
 import * as Scroll from './Scroll';
 
@@ -64,16 +64,17 @@ const getBounds = (_win?: Window): Bounds => {
   );
 };
 
-const bind = (name: string, callback: EventHandler, _win?: Window) => get(_win).map((visualViewport) => {
-  const handler = (e: Event) => callback(fromRawEvent(e));
-  visualViewport.addEventListener(name, handler);
+const bind = (name: string, callback: EventHandler, _win?: Window): EventUnbinder =>
+  get(_win).map((visualViewport) => {
+    const handler = (e: Event) => callback(fromRawEvent(e));
+    visualViewport.addEventListener(name, handler);
 
-  return {
-    unbind: () => visualViewport.removeEventListener(name, handler)
-  };
-}).getOrThunk(() => ({
-  unbind: Fun.noop
-}));
+    return {
+      unbind: () => visualViewport.removeEventListener(name, handler)
+    };
+  }).getOrThunk(() => ({
+    unbind: Fun.noop
+  }));
 
 export {
   bind,

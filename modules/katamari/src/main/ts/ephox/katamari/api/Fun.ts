@@ -51,7 +51,7 @@ const not = <T> (f: (t: T) => boolean) => (t: T): boolean =>
   !f(t);
 
 const die = function (msg: string) {
-  return function () {
+  return function (): never {
     throw new Error(msg);
   };
 };
@@ -60,7 +60,7 @@ const apply = function <T> (f: () => T): T {
   return f();
 };
 
-const call = function (f: () => any) {
+const call = function (f: () => any): void {
   f();
 };
 

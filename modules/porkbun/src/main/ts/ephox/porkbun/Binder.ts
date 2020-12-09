@@ -1,11 +1,17 @@
 import { Arr } from '@ephox/katamari';
 import { Bindable, EventHandler } from './Event';
 
-const create = function () {
+export interface Binder {
+  readonly bind: <T>(registration: Bindable<T>, handler: EventHandler<T>) => void;
+  readonly unbind: <T>(registration: Bindable<T>) => void;
+  readonly unbindAll: () => void;
+}
+
+const create = function (): Binder {
   const registrations: Bindable<any>[] = [];
   const handlers: EventHandler<any>[] = [];
 
-  const bind = function (registration: Bindable<any>, handler: EventHandler<any>) {
+  const bind = function <T> (registration: Bindable<T>, handler: EventHandler<T>) {
     if (Arr.contains(registrations, registration)) {
       throw new Error('Invalid key, key already exists.');
     } else {
@@ -15,7 +21,7 @@ const create = function () {
     }
   };
 
-  const unbind = function (registration: Bindable<any>) {
+  const unbind = function <T> (registration: Bindable<T>) {
     const index = Arr.indexOf(registrations, registration);
     index.fold(function () {
       throw new Error('Invalid key, does not exist.');

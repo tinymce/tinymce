@@ -4,17 +4,18 @@ import { breakPath as xBreakPath, breakToLeft as xBreakToLeft, breakToRight as x
 import { Looker, oneAll } from '../../parent/Shared';
 import * as SubsetFn from '../../parent/Subset';
 
+export interface AncestorsFnResult<E> {
+  readonly firstpath: E[];
+  readonly secondpath: E[];
+  readonly shared: Optional<E>;
+}
+
 type SharedOneFn = <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) => Optional<E>;
 const sharedOne: SharedOneFn = oneAll;
 
 type SubsetFn = <E, D>(universe: Universe<E, D>, start: E, end: E) => Optional<E[]>;
 const subset: SubsetFn = SubsetFn.subset;
 
-type AncestorsFnResult<E> = {
-  readonly firstpath: E[];
-  readonly secondpath: E[];
-  readonly shared: Optional<E>;
-};
 type AncestorsFn = <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: ((x: E) => boolean) | undefined) => AncestorsFnResult<E>;
 const ancestors: AncestorsFn = SubsetFn.ancestors;
 

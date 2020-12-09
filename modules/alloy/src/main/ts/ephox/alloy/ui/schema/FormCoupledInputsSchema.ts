@@ -77,7 +77,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   })
 ]);
 
-const name = () => 'CoupledInputs';
+const name = Fun.constant('CoupledInputs');
 
 export {
   name,

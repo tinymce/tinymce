@@ -7,17 +7,20 @@ import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
 
+type SchemaError = SchemaError.SchemaError;
+
 // TODO: Handle the fact that strength shouldn't be pushed outside this project.
-export type ValueValidator = (a, strength?: () => any) => SimpleResult<string, any>;
-export type PropExtractor = (path: string[], strength, val: any) => SimpleResult<any, any>;
-export type ValueExtractor = (label: string, prop: Processor, strength: () => any, obj: any) => SimpleResult<any, string>;
+export type Strength = (res: any) => any;
+export type ValueValidator = (a, strength?: Strength) => SimpleResult<string, any>;
+export type PropExtractor = (path: string[], strength: Strength, val: any) => SimpleResult<SchemaError[], any>;
+export type ValueExtractor = (label: string, prop: Processor, strength: Strength, obj: any) => SimpleResult<SchemaError[], string>;
 export interface Processor {
   extract: PropExtractor;
   toString: () => string;
 }
 
 export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceAdt, prop: Processor) => T;
-export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => any) => T;
+export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => Optional<unknown>) => T;
 
 export interface ValueProcessorAdt {
   fold: <T>(
@@ -43,48 +46,48 @@ const adt: ValueProcessor = Adt.generate([
   { state: [ 'okey', 'instantiator' ] }
 ]);
 
-const output = function (okey, value): ValueProcessorAdt {
+const output = function (okey: string, value: any): ValueProcessorAdt {
   return adt.state(okey, Fun.constant(value));
 };
 
-const snapshot = function (okey): ValueProcessorAdt {
+const snapshot = function (okey: string): ValueProcessorAdt {
   return adt.state(okey, Fun.identity);
 };
 
-const strictAccess = function (path, obj, key) {
+const strictAccess = function <T> (path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> {
   // In strict mode, if it undefined, it is an error.
-  return Obj.get(obj, key).fold(function () {
+  return Obj.get(obj, key).fold<SimpleResult<SchemaError[], any>>(function () {
     return SchemaError.missingStrict(path, key, obj);
   }, SimpleResult.svalue);
 };
 
-const fallbackAccess = function (obj, key, fallbackThunk) {
+const fallbackAccess = function <T> (obj: Record<string, T>, key: string, fallbackThunk: (obj: Record<string, T>) => T): SimpleResult<SchemaError[], T> {
   const v = Obj.get(obj, key).fold(function () {
     return fallbackThunk(obj);
   }, Fun.identity);
   return SimpleResult.svalue(v);
 };
 
-const optionAccess = function (obj, key) {
+const optionAccess = function <T> (obj: Record<string, T>, key: string): SimpleResult<SchemaError[], Optional<T>> {
   return SimpleResult.svalue(Obj.get(obj, key));
 };
 
-const optionDefaultedAccess = function (obj, key, fallback) {
+const optionDefaultedAccess = function <T> (obj: Record<string, T | true>, key: string, fallback: (obj: Record<string, T | true>) => T): SimpleResult<SchemaError[], Optional<T>> {
   const opt = Obj.get(obj, key).map(function (val) {
     return val === true ? fallback(obj) : val;
   });
   return SimpleResult.svalue(opt);
 };
 
-const cExtractOne = function (path, obj, field, strength) {
+const cExtractOne = function <T> (path: string[], obj: Record<string, T>, field: FieldProcessorAdt, strength: Strength): SimpleResult<SchemaError[], T> {
   return field.fold(
     function (key, okey, presence, prop) {
-      const bundle = function (av) {
+      const bundle = function (av: any): SimpleResult<SchemaError[], any> {
         const result = prop.extract(path.concat([ key ]), strength, av);
         return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
-      const bundleAsOption = function (optValue) {
+      const bundleAsOption = function (optValue: Optional<any>): SimpleResult<SchemaError[], Record<string, Optional<any>>> {
         return optValue.fold(function () {
           const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
@@ -135,7 +138,7 @@ const cExtractOne = function (path, obj, field, strength) {
   );
 };
 
-const cExtract = function (path, obj, fields, strength) {
+const cExtract = function <T> (path: string[], obj: Record<string, T>, fields: FieldProcessorAdt[], strength: Strength): SimpleResult<SchemaError[], T> {
   const results = Arr.map(fields, function (field) {
     return cExtractOne(path, obj, field, strength);
   });
@@ -208,7 +211,7 @@ const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
 };
 
 const objOf = function (fields: ValueProcessorAdt[]): Processor {
-  const extract = function (path, strength, o) {
+  const extract = function (path: string[], strength: Strength, o: Record<string, any>) {
     return cExtract(path, o, fields, strength);
   };
 
@@ -248,8 +251,8 @@ const arrOf = function (prop: Processor): Processor {
 };
 
 const oneOf = function (props: Processor[]): Processor {
-  const extract = function (path: string[], strength, val: any): SimpleResult<any, any> {
-    const errors: Array<SimpleResult<string[], any>> = [];
+  const extract = function (path: string[], strength, val: any): SimpleResult<SchemaError[], any> {
+    const errors: Array<SimpleResult<SchemaError[], any>> = [];
 
     // Return on first match
     for (const prop of props) {
@@ -302,7 +305,7 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 };
 
 // retriever is passed in. See funcOrDie in ValueSchema
-const func = function (args: string[], schema: Processor, retriever): Processor {
+const func = function (args: string[], schema: Processor, retriever: (obj: any, strength: Strength) => any): Processor {
   const delegate = value(function (f, strength) {
     return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>(function () {
       const gArgs = Array.prototype.slice.call(arguments, 0);

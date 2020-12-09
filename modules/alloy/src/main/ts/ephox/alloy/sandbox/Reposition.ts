@@ -8,7 +8,7 @@ import { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import * as Channels from '../api/messages/Channels';
-import { ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
+import { ReceivingChannelSpec, ReceivingConfig, ReceivingConfigSpec } from '../behaviour/receiving/ReceivingTypes';
 
 export interface RepositionReceivingDetail {
   doReposition: (sandbox: AlloyComponent) => void;
@@ -38,7 +38,7 @@ const receivingConfig = (rawSpec: RepositionReceivingSpec): NamedConfiguredBehav
   });
 };
 
-const receivingChannel = (rawSpec: RepositionReceivingSpec) => {
+const receivingChannel = (rawSpec: RepositionReceivingSpec): Record<string, ReceivingChannelSpec> => {
   const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie('Reposition', schema, rawSpec);
   return {
     [ Channels.repositionPopups() ]: {

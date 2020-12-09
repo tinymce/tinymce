@@ -3,7 +3,7 @@ import { PRange, PRegExp } from '../pattern/Types';
 /**
  * Returns the offset pairs of all matches of pattern on the input string, adjusting for prefix and suffix offsets
  */
-const all = function (input: string, pattern: PRegExp) {
+const all = function (input: string, pattern: PRegExp): PRange[] {
   const term = pattern.term();
   const r: PRange[] = [];
   let match = term.exec(input);

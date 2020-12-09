@@ -9,7 +9,7 @@ const onEmpty = function <E, D> (item: E, universe: Universe<E, D>) {
   return universe.property().name(item) === 'img' ? space : newline;
 };
 
-const from = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) {
+const from = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): string {
   const typed = Extract.typed(universe, item, optimise);
   return Arr.map(typed, function (t) {
     return t.fold(Fun.constant(newline), onEmpty, universe.property().getText, universe.property().getText);

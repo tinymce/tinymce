@@ -12,7 +12,7 @@ import { Sandboxing } from '../api/behaviour/Sandboxing';
 import { LazySink } from '../api/component/CommonTypes';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { SketchBehaviours } from '../api/component/SketchBehaviours';
-import { SketchSpec } from '../api/component/SpecTypes';
+import { AlloySpec, SketchSpec } from '../api/component/SpecTypes';
 import { TieredData, tieredMenu as TieredMenu } from '../api/ui/TieredMenu';
 import * as AriaOwner from '../aria/AriaOwner';
 import * as InternalSink from '../parts/InternalSink';
@@ -45,7 +45,6 @@ const getAnchor = (
     (layouts) => ({ anchor, hotspot, overrides, layouts })
   );
 };
-
 
 const fetch = (
   detail: CommonDropdownDetail<TieredData>,
@@ -120,7 +119,7 @@ const open = (
   externals: any,
   onOpenSync: OnOpenSyncFunc,
   highlightOnOpen: HighlightOnOpen
-) => {
+): Future<AlloyComponent> => {
   const anchor = getAnchor(detail, hotspot);
   const processed = openF(detail, mapFetch, anchor, hotspot, sandbox, externals, highlightOnOpen);
   return processed.map((tdata) => {
@@ -149,7 +148,7 @@ const close = (
   _externals: any,
   _onOpenSync: OnOpenSyncFunc,
   _highlightOnOpen: HighlightOnOpen
-) => {
+): Future<AlloyComponent> => {
   Sandboxing.close(sandbox);
   return Future.pure(sandbox);
 };
@@ -161,7 +160,7 @@ const togglePopup = (
   externals: any,
   onOpenSync: OnOpenSyncFunc,
   highlightOnOpen: HighlightOnOpen
-) => {
+): Future<AlloyComponent> => {
   const sandbox = Coupling.getCoupled(hotspot, 'sandbox');
   const showing = Sandboxing.isOpen(sandbox);
 
@@ -169,7 +168,7 @@ const togglePopup = (
   return action(detail, mapFetch, hotspot, sandbox, externals, onOpenSync, highlightOnOpen);
 };
 
-const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean) => {
+const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWidth: boolean): void => {
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element);
   if (useMinWidth) {
@@ -188,11 +187,11 @@ const getSink = (
   anyInSystem: AlloyComponent,
   sinkDetail: SinkDetail
 ): () => ReturnType<LazySink> =>
-  anyInSystem.
-    getSystem().
-    getByUid(sinkDetail.uid + '-' + InternalSink.suffix()).
-    map((internalSink) => () => Result.value(internalSink)).
-    getOrThunk(
+  anyInSystem
+    .getSystem()
+    .getByUid(sinkDetail.uid + '-' + InternalSink.suffix())
+    .map((internalSink) => () => Result.value(internalSink))
+    .getOrThunk(
       () => sinkDetail.lazySink.fold(
         () => () => Result.error(new Error(
           'No internal sink is specified, nor could an external sink be found'
@@ -200,7 +199,7 @@ const getSink = (
         (lazySinkFn) => () => lazySinkFn(anyInSystem))
     );
 
-const doRepositionMenus = (sandbox: AlloyComponent) => {
+const doRepositionMenus = (sandbox: AlloyComponent): void => {
   Sandboxing.getState(sandbox).each((tmenu) => {
     TieredMenu.repositionMenus(tmenu);
   });
@@ -210,7 +209,7 @@ const makeSandbox = (
   detail: CommonDropdownDetail<TieredData>,
   hotspot: AlloyComponent,
   extras?: SandboxExtras
-) => {
+): AlloySpec => {
   const ariaOwner = AriaOwner.manager();
 
   const onOpen = (component: AlloyComponent, menu: AlloyComponent) => {
@@ -283,7 +282,7 @@ const makeSandbox = (
   };
 };
 
-const repositionMenus = (comp: AlloyComponent) => {
+const repositionMenus = (comp: AlloyComponent): void => {
   const sandbox = Coupling.getCoupled(comp, 'sandbox');
   doRepositionMenus(sandbox);
 };

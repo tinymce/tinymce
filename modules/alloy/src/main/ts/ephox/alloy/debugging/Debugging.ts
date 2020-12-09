@@ -130,7 +130,7 @@ const path = [
   'alloy/debugging/Debugging'
 ];
 
-const getTrace = () => {
+const getTrace = (): string => {
   if (debugging === false) { return unknown; }
   const err = new Error();
   if (err.stack !== undefined) {
@@ -141,7 +141,7 @@ const getTrace = () => {
   }
 };
 
-const logHandler = (_label: string, _handlerName: string, _trace: any) => {
+const logHandler = (_label: string, _handlerName: string, _trace: any): void => {
   // if (debugging) console.log(label + ' [' + handlerName + ']', trace);
 };
 
@@ -154,7 +154,8 @@ const ignoreEvent = {
   write: Fun.noop
 };
 
-const monitorEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor): boolean => processEvent(eventName, initialTarget, f);
+const monitorEvent = (eventName: string, initialTarget: SugarElement, f: EventProcessor): boolean =>
+  processEvent(eventName, initialTarget, f);
 
 const inspectorInfo = (comp: AlloyComponent) => {
   const go = (c: AlloyComponent): InspectorInfo => {
@@ -178,7 +179,7 @@ const inspectorInfo = (comp: AlloyComponent) => {
   return go(comp);
 };
 
-const getOrInitConnection = () => {
+const getOrInitConnection = (): Inspector => {
   const win: AlloyGlobal = Global;
   // The format of the global is going to be:
   // lookup(uid) -> Optional { name => data }
@@ -221,7 +222,7 @@ const getOrInitConnection = () => {
   }
 };
 
-const registerInspector = (name: string, gui: GuiSystem) => {
+const registerInspector = (name: string, gui: GuiSystem): void => {
   const connection = getOrInitConnection();
   connection.systems[name] = gui;
 };

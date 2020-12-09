@@ -1,6 +1,6 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Attribute, SelectorFilter, SugarHead } from '@ephox/sugar';
+import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
 import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
 
 UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, failure) => {
@@ -12,14 +12,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, fa
     referrerPolicy: 'origin'
   });
 
-  const sLinkExists = (url: string) => Step.sync(() => {
-    const head = SugarHead.head();
-    const links = SelectorFilter.descendants(head, `link[href="${url}"]`);
-    Assert.eq('Should have one link loaded', true, links.length === 1);
-    Assert.eq('Should have referrer policy attribute', 'origin', Attribute.get(links[0], 'referrerPolicy'));
-    Assert.eq('Should have crossorigin attribute', 'anonymous', Attribute.get(links[0], 'crossorigin'));
-  });
-  const sLinkNotExists = (url: string) => UiFinder.sNotExists(SugarHead.head(), `link[href="${url}"]`);
+  const sBaseLinkExists = (url: string, head: SugarElement<HTMLHeadElement>) =>
+    Step.sync(() => {
+      const links = SelectorFilter.descendants(head, `link[href="${url}"]`);
+      Assert.eq('Should have one link loaded', true, links.length === 1);
+      Assert.eq('Should have referrer policy attribute', 'origin', Attribute.get(links[0], 'referrerPolicy'));
+      Assert.eq('Should have crossorigin attribute', 'anonymous', Attribute.get(links[0], 'crossorigin'));
+    });
+
+  const sLinkExists = (url: string) =>
+    sBaseLinkExists(url, SugarHead.head());
+
+  const sLinkNotExists = (url: string) =>
+    UiFinder.sNotExists(SugarHead.head(), `link[href="${url}"]`);
 
   const sLoadUrl = (url: string) => Step.async((next, die) => {
     loader.load(url, next, () => die('Failed to load url: ' + url));

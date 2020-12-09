@@ -1,13 +1,15 @@
 import { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 
+export interface Group<E> {
+  readonly parent: E;
+  readonly children: E[];
+}
+
 interface Data<E> {
-  groups: {
-    parent: E;
-    children: E[];
-  }[];
-  current: E[];
-  parent: E | null;
+  readonly groups: Group<E>[];
+  readonly current: E[];
+  readonly parent: E | null;
 }
 type AccOrSkip = <E>(rest: Data<E>, parent: E, item: E) => Data<E>;
 
@@ -41,7 +43,7 @@ const inspect = function <E, D> (universe: Universe<E, D>, rest: Data<E>, item: 
   }).getOr(nextlist);
 };
 
-const textnodes = function <E, D> (universe: Universe<E, D>, items: E[]) {
+const textnodes = function <E, D> (universe: Universe<E, D>, items: E[]): Group<E>[] {
   const init: Data<E> = { groups: [], current: [], parent: null };
 
   const result = Arr.foldl(items, function (rest, item) {

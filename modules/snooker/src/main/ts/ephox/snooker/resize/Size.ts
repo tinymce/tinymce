@@ -24,13 +24,13 @@ const adt: {
   { percent: [ 'value' ] }
 ]);
 
-const validateFor = function (suffix: string, type: (value: number) => Size, value: string) {
+const validateFor = function (suffix: string, type: (value: number) => Size, value: string): Size {
   const rawAmount = value.substring(0, value.length - suffix.length);
   const amount = parseFloat(rawAmount);
   return rawAmount === amount.toString() ? type(amount) : adt.invalid(value);
 };
 
-const from = function (value: string) {
+const from = function (value: string): Size {
   if (Strings.endsWith(value, '%')) {
     return validateFor('%', adt.percent, value);
   }

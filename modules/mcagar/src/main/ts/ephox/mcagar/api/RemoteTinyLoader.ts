@@ -37,7 +37,7 @@ const loadScripts = (urls: string[], success: () => void, failure: Loader.Failur
   });
 };
 
-const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   loadScripts(urls, () => {
     Loader.setup({
       preInit: setupBaseUrl,
@@ -48,7 +48,7 @@ const setup = (callback: Loader.RunCallback, urls: string[], settings: Record<st
   }, failure);
 };
 
-const setupFromElement = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback) => {
+const setupFromElement = (callback: Loader.RunCallback, urls: string[], settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   loadScripts(urls, () => {
     Loader.setup({
       preInit: setupBaseUrl,

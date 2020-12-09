@@ -11,14 +11,15 @@ import * as AlloyParts from '../parts/AlloyParts';
 import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
 import * as Overflows from './Overflows';
 
-const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]) => {
+const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]): void => {
   const bGroups = Arr.map(storedGroups, (g) => GuiFactory.premade(g));
   Toolbar.setGroups(toolbar, bGroups);
 };
 
-const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> => Arr.findMap(comps, (comp) => Focus.search(comp.element).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
+const findFocusedComp = (comps: AlloyComponent[]): Optional<AlloyComponent> =>
+  Arr.findMap(comps, (comp) => Focus.search(comp.element).bind((focusedElm) => comp.getSystem().getByDom(focusedElm).toOptional()));
 
-const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void) => {
+const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOverflow: (groups: AlloyComponent[]) => void): void => {
   const primary = AlloyParts.getPartOrDie(toolbar, detail, 'primary');
   const overflowGroup = Coupling.getCoupled(toolbar, 'overflowGroup');
 

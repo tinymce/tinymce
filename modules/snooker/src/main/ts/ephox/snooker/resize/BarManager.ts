@@ -10,33 +10,43 @@ import { BarMutation } from './BarMutation';
 import * as Bars from './Bars';
 
 export interface DragAdjustHeightEvent {
-  readonly table: SugarElement;
+  readonly table: SugarElement<HTMLTableElement>;
   readonly delta: number;
   readonly row: number;
 }
 
 export interface DragAdjustWidthEvent {
-  readonly table: SugarElement;
+  readonly table: SugarElement<HTMLTableElement>;
   readonly delta: number;
   readonly column: number;
 }
 
 export interface DragAdjustEvents {
-  registry: {
-    adjustHeight: Bindable<DragAdjustHeightEvent>;
-    adjustWidth: Bindable<DragAdjustWidthEvent>;
-    startAdjust: Bindable<{}>;
+  readonly registry: {
+    readonly adjustHeight: Bindable<DragAdjustHeightEvent>;
+    readonly adjustWidth: Bindable<DragAdjustWidthEvent>;
+    readonly startAdjust: Bindable<{}>;
   };
-  trigger: {
-    adjustHeight: (table: SugarElement, delta: number, row: number) => void;
-    adjustWidth: (table: SugarElement, delta: number, column: number) => void;
-    startAdjust: () => void;
+  readonly trigger: {
+    readonly adjustHeight: (table: SugarElement<HTMLTableElement>, delta: number, row: number) => void;
+    readonly adjustWidth: (table: SugarElement<HTMLTableElement>, delta: number, column: number) => void;
+    readonly startAdjust: () => void;
   };
+}
+
+export interface BarManager {
+  readonly destroy: () => void;
+  readonly refresh: (table: SugarElement<HTMLTableElement>) => void;
+  readonly on: () => void;
+  readonly off: () => void;
+  readonly hideBars: () => void;
+  readonly showBars: () => void;
+  readonly events: DragAdjustEvents['registry'];
 }
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (wire: ResizeWire) {
+export const BarManager = function (wire: ResizeWire): BarManager {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
@@ -140,15 +150,15 @@ export const BarManager = function (wire: ResizeWire) {
     Bars.destroy(wire);
   };
 
-  const refresh = function (tbl: SugarElement) {
+  const refresh = function (tbl: SugarElement<HTMLTableElement>) {
     Bars.refresh(wire, tbl);
   };
 
-  const events = Events.create({
+  const events: DragAdjustEvents = Events.create({
     adjustHeight: Event([ 'table', 'delta', 'row' ]),
     adjustWidth: Event([ 'table', 'delta', 'column' ]),
     startAdjust: Event([])
-  }) as DragAdjustEvents;
+  });
 
   return {
     destroy,

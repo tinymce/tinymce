@@ -2,6 +2,24 @@ import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
+export interface ArbTextIds {
+  readonly startId: string;
+  readonly textIds: string[];
+}
+
+export interface ArbIds {
+  readonly startId: string;
+  readonly ids: string[];
+}
+
+export interface ArbRangeIds {
+  readonly startId: string;
+  readonly finishId: string;
+  readonly ids: string[];
+}
+
 const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
   const rest = Arr.bind(item.children || [], function (id) { return getIds(id, predicate); });
   const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
@@ -11,11 +29,6 @@ const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] 
 const textIds = function (universe: TestUniverse) {
   return getIds(universe.get(), universe.property().isText);
 };
-
-export interface ArbTextIds {
-  startId: string;
-  textIds: string[];
-}
 
 const arbTextIds = function (universe: TestUniverse) {
   const ids = textIds(universe);
@@ -28,11 +41,6 @@ const arbTextIds = function (universe: TestUniverse) {
     return obj.startId;
   });
 };
-
-export interface ArbIds {
-  startId: string;
-  ids: string[];
-}
 
 const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
   const ids = getIds(universe.get(), predicate);
@@ -48,12 +56,6 @@ const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean
     return '[id :: ' + obj.startId + ']';
   });
 };
-
-export interface ArbRangeIds {
-  startId: string;
-  finishId: string;
-  ids: string[];
-}
 
 const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
   const ids = getIds(universe.get(), predicate);

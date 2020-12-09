@@ -35,6 +35,17 @@ export interface ForeignGuiDetail {
   readonly insertion: (root: SugarElement, system: Gui.GuiSystem) => void;
 }
 
+interface DispatcherMission {
+  readonly target: SugarElement;
+  readonly dispatcher: Dispatcher;
+}
+
+export interface ForeignGuiConnection {
+  readonly dispatchTo: (type: string, event: EventArgs) => void;
+  readonly unproxy: (component: AlloyComponent) => void;
+  readonly disengage: () => void;
+}
+
 const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('root'),
   FieldSchema.strictArrayOfObj('dispatchers', [
@@ -86,17 +97,13 @@ const supportedEvents = [
   'click', 'mousedown', 'mousemove', 'touchstart', 'touchend', 'gesturestart', 'touchmove'
 ];
 
-interface DispatcherMission {
-  target: SugarElement;
-  dispatcher: Dispatcher;
-}
-
 // Find the dispatcher information for the target if available. Note, the
 // dispatcher may also change the target.
-const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Optional<DispatcherMission> => Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
-  target: newTarget,
-  dispatcher
-})));
+const findDispatcher = (dispatchers: Dispatcher[], target: SugarElement): Optional<DispatcherMission> =>
+  Arr.findMap(dispatchers, (dispatcher: Dispatcher) => dispatcher.getTarget(target).map((newTarget) => ({
+    target: newTarget,
+    dispatcher
+  })));
 
 const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarElement) => {
   // Setup the component wrapping for the target element
@@ -112,7 +119,7 @@ const getProxy = <T extends SimulatedEvent.EventFormat>(event: T, target: SugarE
   };
 };
 
-const engage = (spec: ForeignGuiSpec) => {
+const engage = (spec: ForeignGuiSpec): ForeignGuiConnection => {
   const detail: ForeignGuiDetail = ValueSchema.asRawOrDie('ForeignGui', schema, spec);
 
   // Creates an inner GUI and inserts it appropriately. This will be used

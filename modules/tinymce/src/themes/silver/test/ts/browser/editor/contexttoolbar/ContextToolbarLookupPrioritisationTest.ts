@@ -16,7 +16,7 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
     scope: 'node'
   });
 
-  const createForm = (): InlineContent.ContextForm =>({
+  const createForm = (): InlineContent.ContextForm => ({
     type: 'contextform',
     initValue: () => 'test',
     label: Optional.none(),

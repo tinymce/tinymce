@@ -18,7 +18,7 @@ const morphToCoord = (component: AlloyComponent, config: DockingConfig, position
   method(component);
 };
 
-const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false) => {
+const updateVisibility = (component: AlloyComponent, config: DockingConfig, state: DockingState, viewport: Boxes.Bounds, morphToDocked: boolean = false): void => {
   config.contextual.each((contextInfo) => {
     // Make the dockable component disappear if the context is outside the viewport
     contextInfo.lazyContext(component).each((box) => {
@@ -41,7 +41,7 @@ const updateVisibility = (component: AlloyComponent, config: DockingConfig, stat
   });
 };
 
-const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+const refreshInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Absolute coordinates (considers scroll)
   const viewport = config.lazyViewport(component);
   // If docked then check if we need to hide/show the component
@@ -65,7 +65,7 @@ const refreshInternal = (component: AlloyComponent, config: DockingConfig, state
   });
 };
 
-const resetInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+const resetInternal = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Morph back to the original position
   const elem = component.element;
   state.setDocked(false);
@@ -88,7 +88,7 @@ const resetInternal = (component: AlloyComponent, config: DockingConfig, state: 
   refresh(component, config, state);
 };
 
-const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+const refresh = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // Ensure the component is attached to the document/world, if not then do nothing as we can't
   // check if the component should be docked or not when in a detached state
   if (component.getSystem().isConnected()) {
@@ -96,7 +96,7 @@ const refresh = (component: AlloyComponent, config: DockingConfig, state: Dockin
   }
 };
 
-const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState) => {
+const reset = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   // If the component is not docked then there's no need to reset the state,
   // so only reset when docked
   if (state.isDocked()) {
@@ -104,10 +104,13 @@ const reset = (component: AlloyComponent, config: DockingConfig, state: DockingS
   }
 };
 
-const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.isDocked();
+const isDocked = (component: AlloyComponent, config: DockingConfig, state: DockingState): boolean =>
+  state.isDocked();
 
-const setModes = (component: AlloyComponent, config: DockingConfig, state: DockingState, modes: DockingMode[]) => state.setModes(modes);
+const setModes = (component: AlloyComponent, config: DockingConfig, state: DockingState, modes: DockingMode[]): void =>
+  state.setModes(modes);
 
-const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState) => state.getModes();
+const getModes = (component: AlloyComponent, config: DockingConfig, state: DockingState): DockingMode[] =>
+  state.getModes();
 
 export { refresh, reset, isDocked, getModes, setModes };

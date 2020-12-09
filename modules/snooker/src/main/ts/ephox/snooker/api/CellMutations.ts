@@ -1,7 +1,7 @@
 import { SugarElement } from '@ephox/sugar';
 import * as Sizes from '../resize/Sizes';
 
-const halve = function (main: SugarElement, other: SugarElement) {
+const halve = function (main: SugarElement, other: SugarElement): void {
   const width = Sizes.getGenericWidth(main);
   width.each(function (w) {
     const newWidth = w.value / 2;

@@ -3,6 +3,8 @@ import { Merger, Obj } from '@ephox/katamari';
 import * as ArbSchema from './ArbSchema';
 import * as ArbSchemaTypes from './ArbSchemaTypes';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 const unknownDepth = undefined;
 
 const makeArbOf = (component, schema, depth): any => {

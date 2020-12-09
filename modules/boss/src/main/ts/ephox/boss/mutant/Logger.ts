@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 
-const basic = function (item: Gene) {
+const basic = function (item: Gene): string {
   return custom(item, function (i: Gene) {
     return i.id;
   });

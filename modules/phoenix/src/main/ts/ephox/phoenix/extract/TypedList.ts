@@ -4,13 +4,13 @@ import * as Spot from '../api/data/Spot';
 import { TypedItem } from '../api/data/TypedItem';
 import { SpotRange } from '../api/data/Types';
 
-const count = function <E, D> (parray: TypedItem<E, D>[]) {
+const count = function <E, D> (parray: TypedItem<E, D>[]): number {
   return Arr.foldr(parray, function (b, a) {
     return a.len() + b;
   }, 0);
 };
 
-const dropUntil = function <E, D> (parray: TypedItem<E, D>[], target: E) {
+const dropUntil = function <E, D> (parray: TypedItem<E, D>[], target: E): TypedItem<E, D>[] {
   return Arrays.sliceby(parray, function (x) {
     return x.is(target);
   });
@@ -31,7 +31,7 @@ const gen = function <E, D> (unit: TypedItem<E, D>, start: number): Optional<Spo
 
 const empty = Fun.constant([]);
 
-const justText = function <E, D> (parray: TypedItem<E, D>[]) {
+const justText = function <E, D> (parray: TypedItem<E, D>[]): E[] {
   return Arr.bind(parray, function (x): E[] {
     return x.fold(empty, empty, function (i) { return [ i ]; }, empty);
   });

@@ -8,30 +8,30 @@ import * as RuntimeSize from './RuntimeSize';
 const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
 const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 
-const getPercentSize = (elm: SugarElement, getter: (e: SugarElement) => number) => {
+const getPercentSize = (elm: SugarElement, getter: (e: SugarElement) => number): number => {
   const relativeParent = Traverse.offsetParent(elm).getOr(SugarBody.getBody(Traverse.owner(elm)));
   return getter(elm) / getter(relativeParent) * 100;
 };
 
-export const setPixelWidth = function (cell: SugarElement, amount: number) {
+export const setPixelWidth = function (cell: SugarElement, amount: number): void {
   Css.set(cell, 'width', amount + 'px');
 };
 
-export const setPercentageWidth = function (cell: SugarElement, amount: number) {
+export const setPercentageWidth = function (cell: SugarElement, amount: number): void {
   Css.set(cell, 'width', amount + '%');
 };
 
-export const setHeight = function (cell: SugarElement, amount: number) {
+export const setHeight = function (cell: SugarElement, amount: number): void {
   Css.set(cell, 'height', amount + 'px');
 };
 
-const getHeightValue = function (cell: SugarElement) {
+const getHeightValue = function (cell: SugarElement): string {
   return Css.getRaw(cell, 'height').getOrThunk(function () {
     return RuntimeSize.getHeight(cell) + 'px';
   });
 };
 
-const convert = function (cell: SugarElement, number: number, getter: (e: SugarElement) => number, setter: (e: SugarElement, value: number) => void) {
+const convert = function (cell: SugarElement, number: number, getter: (e: SugarElement) => number, setter: (e: SugarElement, value: number) => void): number {
   const newSize = TableLookup.table(cell).map(function (table) {
     const total = getter(table);
     return Math.floor((number / 100.0) * total);
@@ -40,12 +40,12 @@ const convert = function (cell: SugarElement, number: number, getter: (e: SugarE
   return newSize;
 };
 
-const normalizePixelSize = function (value: string, cell: SugarElement, getter: (e: SugarElement) => number, setter: (e: SugarElement, value: number) => void) {
+const normalizePixelSize = function (value: string, cell: SugarElement, getter: (e: SugarElement) => number, setter: (e: SugarElement, value: number) => void): number {
   const number = parseInt(value, 10);
   return Strings.endsWith(value, '%') && SugarNode.name(cell) !== 'table' ? convert(cell, number, getter, setter) : number;
 };
 
-const getTotalHeight = function (cell: SugarElement) {
+const getTotalHeight = function (cell: SugarElement): number {
   const value = getHeightValue(cell);
   if (!value) {
     return Height.get(cell);
@@ -53,13 +53,13 @@ const getTotalHeight = function (cell: SugarElement) {
   return normalizePixelSize(value, cell, Height.get, setHeight);
 };
 
-const get = function (cell: SugarElement, type: 'rowspan' | 'colspan', f: (e: SugarElement) => number) {
+const get = function (cell: SugarElement, type: 'rowspan' | 'colspan', f: (e: SugarElement) => number): number {
   const v = f(cell);
   const span = getSpan(cell, type);
   return v / span;
 };
 
-export const getRawWidth = function (element: SugarElement) {
+export const getRawWidth = function (element: SugarElement): Optional<string> {
   // Try to use the style width first, otherwise attempt to get attribute width
   const cssWidth = Css.getRaw(element, 'width');
   return cssWidth.fold(function () {
@@ -69,11 +69,11 @@ export const getRawWidth = function (element: SugarElement) {
   });
 };
 
-const normalizePercentageWidth = function (cellWidth: number, tableSize: TableSize) {
+const normalizePercentageWidth = function (cellWidth: number, tableSize: TableSize): number {
   return cellWidth / tableSize.pixelWidth() * 100;
 };
 
-const choosePercentageSize = function (element: SugarElement, width: string, tableSize: TableSize) {
+const choosePercentageSize = function (element: SugarElement, width: string, tableSize: TableSize): number {
   const percentMatch = rPercentageBasedSizeRegex.exec(width);
   if (percentMatch !== null) {
     return parseFloat(percentMatch[1]);
@@ -84,7 +84,7 @@ const choosePercentageSize = function (element: SugarElement, width: string, tab
 };
 
 // Get a percentage size for a percentage parent table
-export const getPercentageWidth = function (cell: SugarElement, tableSize: TableSize) {
+export const getPercentageWidth = function (cell: SugarElement, tableSize: TableSize): number {
   const width = getRawWidth(cell);
   return width.fold(function () {
     const intWidth = Width.get(cell);
@@ -94,11 +94,11 @@ export const getPercentageWidth = function (cell: SugarElement, tableSize: Table
   });
 };
 
-const normalizePixelWidth = function (cellWidth: number, tableSize: TableSize) {
+const normalizePixelWidth = function (cellWidth: number, tableSize: TableSize): number {
   return cellWidth / 100 * tableSize.pixelWidth();
 };
 
-const choosePixelSize = function (element: SugarElement, width: string, tableSize: TableSize) {
+const choosePixelSize = function (element: SugarElement, width: string, tableSize: TableSize): number {
   const pixelMatch = rPixelBasedSizeRegex.exec(width);
   if (pixelMatch !== null) {
     return parseInt(pixelMatch[1], 10);
@@ -120,7 +120,7 @@ export const getPixelWidth = function (cell: SugarElement, tableSize: TableSize)
   });
 };
 
-export const getHeight = function (cell: SugarElement) {
+export const getHeight = function (cell: SugarElement): number {
   return get(cell, 'rowspan', getTotalHeight);
 };
 
@@ -129,7 +129,7 @@ export const getGenericWidth = function (cell: SugarElement): Optional<Dimension
   return width.bind((w) => Dimension.parse(w, [ 'fixed', 'relative', 'empty' ]));
 };
 
-export const setGenericWidth = function (cell: SugarElement, amount: number, unit: string) {
+export const setGenericWidth = function (cell: SugarElement, amount: number, unit: string): void {
   Css.set(cell, 'width', amount + unit);
 };
 
@@ -139,9 +139,9 @@ export const getPixelTableHeight = (table: SugarElement<HTMLTableElement>): stri
 export const getPercentTableWidth = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Width.get) + '%';
 export const getPercentTableHeight = (table: SugarElement<HTMLTableElement>): string => getPercentSize(table, Height.get) + '%';
 
-export const isPercentSizing = (table: SugarElement<HTMLTableElement>) => getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
-export const isPixelSizing = (table: SugarElement<HTMLTableElement>) => getRawWidth(table).exists((size) => rPixelBasedSizeRegex.test(size));
-export const isNoneSizing = (table: SugarElement<HTMLTableElement>) => getRawWidth(table).isNone();
+export const isPercentSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPercentageBasedSizeRegex.test(size));
+export const isPixelSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).exists((size) => rPixelBasedSizeRegex.test(size));
+export const isNoneSizing = (table: SugarElement<HTMLTableElement>): boolean => getRawWidth(table).isNone();
 
 export const percentageBasedSizeRegex = Fun.constant(rPercentageBasedSizeRegex);
 export const pixelBasedSizeRegex = Fun.constant(rPixelBasedSizeRegex);

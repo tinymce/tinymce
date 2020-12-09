@@ -24,7 +24,7 @@ const adt: {
   { belowView: [ 'item' ] }
 ]);
 
-const cata = function <E, T> (subject: ZonePosition<E>, onAbove: (item: E) => T, onIn: (item: E) => T, onBelow: (item: E) => T) {
+const cata = function <E, T> (subject: ZonePosition<E>, onAbove: (item: E) => T, onIn: (item: E) => T, onBelow: (item: E) => T): T {
   return subject.fold(onAbove, onIn, onBelow);
 };
 
