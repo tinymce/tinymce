@@ -109,10 +109,9 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widt
   replicaTableSize.adjustTableWidth(widthDelta);
 };
 
-
 const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number => {
   /*
-    Calulate new width by comparing width of selected columns to
+    Calculate new width by comparing width of selected columns to
     width of all columns, which is the ratio to apply to the full table width.
 
     We have to do this due to padding/margin etc.
