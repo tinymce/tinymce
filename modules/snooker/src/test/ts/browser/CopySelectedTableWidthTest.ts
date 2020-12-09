@@ -5,11 +5,11 @@ import * as CopySelected from 'ephox/snooker/api/CopySelected';
 
 const SEL_CLASS = 'copy-selected';
 
-type TestCase = {
+interface TestCase {
   label: string;
   expectedWidth: string;
   table: string;
-};
+}
 
 const assertWidth = (testCase: TestCase) => () => {
   const table = SugarElement.fromHtml<HTMLTableElement>(testCase.table);
