@@ -14,9 +14,9 @@ const make = function <T, R extends { finish: number }> (xs: T[], f: (x: T, offs
     list: [] as R[]
   };
 
-  const r = Arr.foldl(xs, function (acc, item) {
+  const r = Arr.foldl(xs, (acc, item) => {
     const value = f(item, acc.len);
-    return value.fold(Fun.constant(acc), function (v) {
+    return value.fold(Fun.constant(acc), (v) => {
       return {
         len: v.finish,
         list: acc.list.concat([ v ])

@@ -27,7 +27,7 @@ const typed = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e:
   } else if (universe.property().isElement(item)) {
     const children = universe.property().children(item);
     const boundary = universe.property().isBoundary(item) ? [ TypedItem.boundary(item, universe) ] : [];
-    const rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, function (child) {
+    const rest = optimise !== undefined && optimise(item) ? [] : Arr.bind(children, (child) => {
       return typed(universe, child, optimise);
     });
     return boundary.concat(rest).concat(boundary);
@@ -44,7 +44,7 @@ const items = function <E, D> (universe: Universe<E, D>, item: E, optimise?: (e:
 
   const raw = function (item: E, _universe: Universe<E, D>) { return item; };
 
-  return Arr.map(typedItemList, function (typedItem: TypedItem<E, D>) {
+  return Arr.map(typedItemList, (typedItem: TypedItem<E, D>) => {
     return typedItem.fold(raw, raw, raw, raw);
   });
 };
@@ -63,9 +63,9 @@ const extractToElem = function <E, D> (universe: Universe<E, D>, child: E, offse
  * To find the exact reference later, use Find.
  */
 const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: number, optimise?: (e: E) => boolean): SpotPoint<E> {
-  return universe.property().parent(child).fold(function () {
+  return universe.property().parent(child).fold(() => {
     return Spot.point(child, offset);
-  }, function (parent) {
+  }, (parent) => {
     return extractToElem(universe, child, offset, parent, optimise);
   });
 };
@@ -77,9 +77,9 @@ const extract = function <E, D> (universe: Universe<E, D>, child: E, offset: num
  * To find the exact reference later, use Find.
  */
 const extractTo = function <E, D> (universe: Universe<E, D>, child: E, offset: number, pred: (e: E) => boolean, optimise?: (e: E) => boolean): SpotPoint<E> {
-  return universe.up().predicate(child, pred).fold(function () {
+  return universe.up().predicate(child, pred).fold(() => {
     return Spot.point(child, offset);
-  }, function (v) {
+  }, (v) => {
     return extractToElem(universe, child, offset, v, optimise);
   });
 };

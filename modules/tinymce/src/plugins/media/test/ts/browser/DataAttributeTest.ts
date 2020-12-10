@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', (success, failure) => {
   Plugin();
   Theme();
 
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', function (
     ]));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
     const api = TinyApis(editor);
 

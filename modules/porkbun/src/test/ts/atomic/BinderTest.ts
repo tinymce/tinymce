@@ -3,7 +3,7 @@ import * as Binder from 'ephox/porkbun/Binder';
 import { Event } from 'ephox/porkbun/Event';
 import * as Events from 'ephox/porkbun/Events';
 
-UnitTest.test('Binder', function () {
+UnitTest.test('Binder', () => {
   const events = Events.create({
     myEvent: Event([]),
     secondEvent: Event([])
@@ -13,12 +13,12 @@ UnitTest.test('Binder', function () {
 
   let called = false;
 
-  binder.bind(events.registry.myEvent, function (_event) {
+  binder.bind(events.registry.myEvent, (_event) => {
     called = true;
   });
 
-  assert.throws(function () {
-    binder.bind(events.registry.myEvent, function (_event) {
+  assert.throws(() => {
+    binder.bind(events.registry.myEvent, (_event) => {
       called = true;
     });
   });
@@ -33,17 +33,17 @@ UnitTest.test('Binder', function () {
   events.trigger.myEvent();
   assert.eq(false, called);
 
-  assert.throws(function () {
+  assert.throws(() => {
     binder.unbind(events.registry.myEvent);
   });
 
   let count = 0;
 
-  binder.bind(events.registry.myEvent, function (_event) {
+  binder.bind(events.registry.myEvent, (_event) => {
     count++;
   });
 
-  binder.bind(events.registry.secondEvent, function (_event) {
+  binder.bind(events.registry.secondEvent, (_event) => {
     count++;
   });
 

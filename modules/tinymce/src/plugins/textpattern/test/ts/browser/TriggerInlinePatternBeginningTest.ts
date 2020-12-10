@@ -13,7 +13,7 @@ UnitTest.asynctest(
     Theme();
     TextpatternPlugin();
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       // var tinyActions = TinyActions(editor);
 
@@ -22,7 +22,7 @@ UnitTest.asynctest(
           tinyApis.sSetContent('<p>*a*</p>'),
           tinyApis.sFocus(),
           tinyApis.sSetCursor([ 0, 0 ], 1),
-          Step.sync(function () {
+          Step.sync(() => {
             editor.fire('keydown', { keyCode: 13 });
           }),
           tinyApis.sAssertContent('<p>*</p><p>a*</p>')
@@ -31,7 +31,7 @@ UnitTest.asynctest(
           tinyApis.sSetContent('<p><strong>a</strong>*b*</p>'),
           tinyApis.sFocus(),
           tinyApis.sSetCursor([ 0, 1 ], 1),
-          Step.sync(function () {
+          Step.sync(() => {
             editor.fire('keydown', { keyCode: 13 });
           }),
           tinyApis.sAssertContent('<p><strong>a</strong>*</p><p>b*</p>')

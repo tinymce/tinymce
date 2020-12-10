@@ -6,31 +6,31 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as DeleteUtils from 'tinymce/core/delete/DeleteUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cGetParentTextBlock = function (elementPath) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       return DeleteUtils.getParentBlock(SugarElement.fromDom(viewBlock.get()), element);
     });
   };
 
   const cAssertBlock = function (elementPath) {
-    return Chain.op(function (actualBlock: Optional<any>) {
+    return Chain.op((actualBlock: Optional<any>) => {
       const expectedBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
   };
 
   const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
-    return Chain.injectThunked(function () {
+    return Chain.injectThunked(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const caretNode = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), caretPath).getOrDie();
 
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (succ
     });
   };
 
-  const cAssertNone = Chain.op(function (actualBlock: Optional<any>) {
+  const cAssertNone = Chain.op((actualBlock: Optional<any>) => {
     Assertions.assertEq('Should be the none but got some', true, actualBlock.isNone());
   });
 
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', function (succ
         ]))
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

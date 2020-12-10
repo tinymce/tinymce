@@ -83,7 +83,7 @@ Insert.append(cloneDiv, clone);
 Insert.append(SugarBody.body(), cloneDiv);
 
 Insert.append(SugarBody.body(), SugarElement.fromHtml('<span id="coords">(0, 0)</span>'));
-DomEvent.bind(SugarBody.body(), 'mousemove', function (event) {
+DomEvent.bind(SugarBody.body(), 'mousemove', (event) => {
   Optional.from(document.querySelector('#coords')).getOrDie('Could not find ID "coords"').innerHTML = '(' + event.raw.clientX + ', ' + event.raw.clientY + ')';
 });
 
@@ -99,7 +99,7 @@ const handleResponse = function (event: EventArgs, response: Response) {
   if (response.kill) {
     event.kill();
   }
-  response.selection.each(function (ns) {
+  response.selection.each((ns) => {
     const relative = SimSelection.relative(ns.start, ns.finish);
     const range = Util.convertToRange(window, relative);
     WindowSelection.setExact(window, range.start, range.soffset, range.finish, range.foffset);
@@ -107,23 +107,23 @@ const handleResponse = function (event: EventArgs, response: Response) {
   });
 };
 
-DomEvent.bind(ephoxUi, 'keyup', function (event) {
+DomEvent.bind(ephoxUi, 'keyup', (event) => {
   // Note, this is an optimisation.
   if (event.raw.shiftKey && event.raw.which >= 37 && event.raw.which <= 40) {
-    WindowSelection.getExact(window).each(function (sel) {
-      keyHandlers.keyup(event, sel.start, sel.soffset, sel.finish, sel.foffset).each(function (response) {
+    WindowSelection.getExact(window).each((sel) => {
+      keyHandlers.keyup(event, sel.start, sel.soffset, sel.finish, sel.foffset).each((response) => {
         handleResponse(event, response);
       });
     });
   }
 });
 
-DomEvent.bind(ephoxUi, 'keydown', function (event) {
+DomEvent.bind(ephoxUi, 'keydown', (event) => {
   // This might get expensive.
-  WindowSelection.getExact(window).each(function (sel) {
+  WindowSelection.getExact(window).each((sel) => {
     const target = (SugarNode.isText(sel.start) ? Traverse.parentNode(sel.start) : Optional.some(sel.start)).filter(SugarNode.isElement);
     const direction = target.map(Direction.getDirection).getOr('ltr');
-    keyHandlers.keydown(event, sel.start, sel.soffset, sel.finish, sel.foffset, direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each(function (response) {
+    keyHandlers.keydown(event, sel.start, sel.soffset, sel.finish, sel.foffset, direction === 'ltr' ? SelectionKeys.ltr : SelectionKeys.rtl).each((response) => {
       handleResponse(event, response);
     });
   });

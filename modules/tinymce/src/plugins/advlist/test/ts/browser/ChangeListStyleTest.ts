@@ -6,7 +6,7 @@ import AdvlistPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.advlist.ChangeListStyleTest', (success, failure) => {
   Theme();
   ListsPlugin();
   AdvlistPlugin();

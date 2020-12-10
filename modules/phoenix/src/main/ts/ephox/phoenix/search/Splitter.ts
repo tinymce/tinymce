@@ -11,7 +11,7 @@ import { SpotRange } from '../api/data/Types';
  */
 const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] {
   const text = universe.property().getText(item);
-  const pieces = Arr.filter(Strings.splits(text, positions), function (section) {
+  const pieces = Arr.filter(Strings.splits(text, positions), (section) => {
     return section.length > 0;
   });
 
@@ -20,13 +20,13 @@ const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions:
   }
   universe.property().setText(item, pieces[0]);
 
-  const others = PositionArray.generate(pieces.slice(1), function (a, start) {
+  const others = PositionArray.generate(pieces.slice(1), (a, start) => {
     const nu = universe.create().text(a);
     const result = Spot.range(nu, start, start + a.length);
     return Optional.some(result);
   }, pieces[0].length);
 
-  const otherElements = Arr.map(others, function (a) { return a.element; });
+  const otherElements = Arr.map(others, (a) => { return a.element; });
   universe.insert().afterAll(item, otherElements);
 
   return [ Spot.range(item, 0, pieces[0].length) ].concat(others);

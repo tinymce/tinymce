@@ -65,7 +65,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   if (merge) {
     const root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
-    Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
+    Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
         if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
           dom.remove(node, true);
@@ -318,7 +318,7 @@ export const insertHtmlAtCaret = function (editor: Editor, value: string, detail
     value = serializer.serialize(
       parser.parse(
         // Need to replace by using a function since $ in the contents would otherwise be a problem
-        value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, function () {
+        value.replace(/<span (id="mce_marker"|id=mce_marker).+?<\/span>/i, () => {
           return serializer.serialize(fragment);
         })
       )

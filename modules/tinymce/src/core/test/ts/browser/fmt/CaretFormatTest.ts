@@ -8,24 +8,24 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as TypeText from '../../module/test/TypeText';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', (success, failure) => {
 
   Theme();
 
   const sApplyCaretFormat = function (editor, name, vars) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       CaretFormat.applyCaretFormat(editor, name, vars);
     });
   };
 
   const sRemoveCaretFormat = function (editor, name, vars, similar?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       CaretFormat.removeCaretFormat(editor, name, vars, similar);
     });
   };
 
   const sAssertNormalizedContentStructure = function (editor, expected) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const rawBody = editor.getBody().cloneNode(true);
       rawBody.normalize();
 
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         tinyApis.sSetCursor([ 0, 0 ], 1),
         sApplyCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p><strong>ab</strong></p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -96,7 +96,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         tinyApis.sSetCursor([ 0, 0, 0 ], 1),
         sRemoveCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p>ab</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -145,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>ax</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -170,7 +170,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p><strong>a</strong><strong>x</strong></p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -202,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sApplyCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>a<strong>x</strong></p>'),
-        sAssertNormalizedContentStructure(editor, ApproxStructure.build(function (s, str) {
+        sAssertNormalizedContentStructure(editor, ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -235,7 +235,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         sRemoveCaretFormat(editor, 'bold', {}),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p><strong>a</strong>x</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -260,7 +260,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         tinyApis.sSetCursor([ 1, 0, 0 ], 0),
         sRemoveCaretFormat(editor, 'bold', {}),
         tinyApis.sAssertContent('<p>a</p>\n<p>&nbsp;</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -285,7 +285,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         tinyApis.sSetCursor([ 0, 0 ], 1),
         TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'x'),
         tinyApis.sAssertContent('<p>ax</p>\n<p>&nbsp;</p>'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -347,7 +347,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         )),
         tinyApis.sAssertSelection([ 0, 0, 0 ], 2, [ 0, 1 ], 2)
       ])),
-      Logger.t('isCaretNode', Step.sync(function () {
+      Logger.t('isCaretNode', Step.sync(() => {
         Assertions.assertEq('Should be false since it is not a caret node', false, isCaretNode(editor.dom.create('b')));
         Assertions.assertEq('Should be true since it is a caret node', true, isCaretNode(editor.dom.create('span', { id: '_mce_caret' })));
       })),
@@ -356,7 +356,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         tinyApis.sSetCursor([ 0 ], 0),
         tinyApis.sExecCommand('fontname', 'Arial'),
         tinyApis.sAssertContent(''),
-        sAssertNormalizedContentStructure(editor, ApproxStructure.build(function (s, str) {
+        sAssertNormalizedContentStructure(editor, ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -385,7 +385,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
           });
         }))
       ])),
-      Logger.t('getParentCaretContainer', Step.sync(function () {
+      Logger.t('getParentCaretContainer', Step.sync(() => {
         const body = SugarElement.fromHtml('<div><span id="_mce_caret">a</span></div>');
         const caret = SugarElement.fromDom(body.dom.firstChild);
 
@@ -394,7 +394,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
         Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(body.dom, SugarElement.fromTag('span').dom));
         Assertions.assertEq('Should not be caret element', null, getParentCaretContainer(caret.dom, caret.dom));
       })),
-      Logger.t('replaceWithCaretFormat', Step.sync(function () {
+      Logger.t('replaceWithCaretFormat', Step.sync(() => {
         const body = SugarElement.fromHtml('<div><br /></div>');
         const formats = [
           SugarElement.fromTag('b').dom,
@@ -408,7 +408,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
 
         Assertions.assertStructure(
           'Asserting the normalized structure of tiny content.',
-          ApproxStructure.build(function (s, str) {
+          ApproxStructure.build((s, str) => {
             return s.element('div', {
               children: [
                 s.element('span', {
@@ -434,7 +434,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', function (success
           body
         );
       })),
-      Logger.t('isFormatElement', Step.sync(function () {
+      Logger.t('isFormatElement', Step.sync(() => {
         Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, SugarElement.fromTag('b')));
         Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, SugarElement.fromTag('i')));
         Assertions.assertEq('Should be format element', true, CaretFormat.isFormatElement(editor, SugarElement.fromTag('u')));

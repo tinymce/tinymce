@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/fullpage/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     editor.getBody().rtl = '';
   };
 
-  suite.test('TestCase-TBA: FullPage: Keep header/footer intact', function (editor) {
+  suite.test('TestCase-TBA: FullPage: Keep header/footer intact', (editor) => {
     const normalizeHTML = function (html) {
       return html.replace(/\s/g, '');
     };
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     LegacyUnit.equal(normalizeHTML(editor.getContent()), '<html><body><p>Test</p></body></html>', 'Header/footer is intact.');
   });
 
-  suite.test('TestCase-TBA: FullPage: Default header/footer', function (editor) {
+  suite.test('TestCase-TBA: FullPage: Default header/footer', (editor) => {
     editor.setContent('<p>Test</p>');
     LegacyUnit.equal(
       editor.getContent(),
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     );
   });
 
-  suite.test('TestCase-TBA: FullPage: Parse body attributes', function (editor) {
+  suite.test('TestCase-TBA: FullPage: Parse body attributes', (editor) => {
     editor.setContent('<html><body><p>Test</p></body></html>');
     LegacyUnit.equal(editor.getBody().style.color, '', 'No color on body.');
     LegacyUnit.equal(editor.getBody().dir, '', 'No dir on body.');
@@ -55,19 +55,19 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     LegacyUnit.equal(editor.dom.getStyle(editor.getBody().firstChild, 'display', true), 'block', 'No styles added to iframe document');
   });
 
-  suite.test('TestCase-TBA: FullPage: fullpage_hide_in_source_view: false', function (editor) {
+  suite.test('TestCase-TBA: FullPage: fullpage_hide_in_source_view: false', (editor) => {
     editor.settings.fullpage_hide_in_source_view = false;
     editor.setContent('<html><body><p>1</p></body></html>');
     LegacyUnit.equal(editor.getContent({ source_view: true }), '<html><body>\n<p>1</p>\n</body></html>');
   });
 
-  suite.test('TestCase-TBA: FullPage: fullpage_hide_in_source_view: false', function (editor) {
+  suite.test('TestCase-TBA: FullPage: fullpage_hide_in_source_view: false', (editor) => {
     editor.settings.fullpage_hide_in_source_view = true;
     editor.setContent('<html><body><p>1</p></body></html>');
     LegacyUnit.equal(editor.getContent({ source_view: true }), '<p>1</p>');
   });
 
-  suite.test('TestCase-TBA: FullPage: link elements', function (editor) {
+  suite.test('TestCase-TBA: FullPage: link elements', (editor) => {
     editor.setContent('<html><head><link rel="stylesheet" href="a.css"><link rel="something"></head><body><p>c</p></body></html>');
     LegacyUnit.equal(
       editor.getContent(),
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     );
   });
 
-  suite.test('TestCase-TBA: FullPage: add/remove stylesheets', function (editor) {
+  suite.test('TestCase-TBA: FullPage: add/remove stylesheets', (editor) => {
     const hasLink = function hasink(href) {
       const links = editor.getDoc().getElementsByTagName('link');
 
@@ -125,12 +125,12 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
 
   const sParseStyles = function (editor) {
     return Logger.t('Parse styles', GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         editor.setContent('<html><head><style>p {text-transform: uppercase}</style></head><body dir="rtl"><p>Test</p></body></html>');
       }),
       Waiter.sTryUntil(
         'Expected styles were added',
-        Step.sync(function () {
+        Step.sync(() => {
           Assertions.assertEq('Styles added to iframe document', 'uppercase', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', true));
           Assertions.assertEq('Styles not added to actual element', '', editor.dom.getStyle(editor.getBody().firstChild, 'text-transform', false));
         }
@@ -140,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
 
   const sProtectConditionalCommentsInHeadFoot = function (editor) {
     return Logger.t('Set and assert styles were added to iframe document', GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         editor.setContent([
           '<!DOCTYPE html>',
           '<html>',
@@ -154,7 +154,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
           '</html>'
         ].join('\n'));
       }),
-      Step.sync(function () {
+      Step.sync(() => {
         const expectedContent = [
           '<!DOCTYPE html>',
           '<html>',
@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', functi
     ]));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'FullPage: Test full page header, footer, body attributes, hide in source view and adding and removing stylesheets',
         [

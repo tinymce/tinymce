@@ -74,7 +74,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
       this._deferreds.push(deferred);
       return;
     }
-    asap(function () {
+    asap(() => {
       const cb = me._state ? deferred.onFulfilled : deferred.onRejected;
       if (cb === null) {
         (me._state ? deferred.resolve : deferred.reject)(me._value);
@@ -149,13 +149,13 @@ const promise = <T>(): PromisePolyfillConstructor => {
   ) {
     let done = false;
     try {
-      fn(function (value) {
+      fn((value) => {
         if (done) {
           return;
         }
         done = true;
         onFulfilled(value as T);
-      }, function (reason) {
+      }, (reason) => {
         if (done) {
           return;
         }
@@ -182,7 +182,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
     onRejected?: Callback<any, TResult2> | null
   ): PromisePolyfill<TResult1 | TResult2> {
     const me = this;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       handle.call(me, new (Handler as any)(onFulfilled, onRejected, resolve, reject));
     });
   };
@@ -190,7 +190,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
   Promise.all = function (...values: any[]): PromisePolyfill<any> {
     const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (args.length === 0) {
         return resolve([]);
       }
@@ -200,7 +200,7 @@ const promise = <T>(): PromisePolyfillConstructor => {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, function (val: any) { res(i, val); }, reject);
+              then.call(val, (val: any) => { res(i, val); }, reject);
               return;
             }
           }
@@ -223,19 +223,19 @@ const promise = <T>(): PromisePolyfillConstructor => {
       return value as PromisePolyfill<U | void>;
     }
 
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       resolve(value);
     });
   };
 
   Promise.reject = function <U = never> (reason?: any): PromisePolyfill<U> {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       reject(reason);
     });
   };
 
   Promise.race = function <U> (values: PromiseLike<U>[]): PromisePolyfill<U> {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       for (const value of values) {
         value.then(resolve, reject);
       }

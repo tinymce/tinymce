@@ -57,13 +57,13 @@ export const BarManager = function (wire: ResizeWire): BarManager {
   };
 
   /* Reposition the bar as the user drags */
-  mutation.events.drag.bind(function (event) {
-    getResizer(event.target, 'data-row').each(function (_dataRow) {
+  mutation.events.drag.bind((event) => {
+    getResizer(event.target, 'data-row').each((_dataRow) => {
       const currentRow = CellUtils.getCssValue(event.target, 'top');
       Css.set(event.target, 'top', currentRow + event.yDelta + 'px');
     });
 
-    getResizer(event.target, 'data-column').each(function (_dataCol) {
+    getResizer(event.target, 'data-column').each((_dataCol) => {
       const currentCol = CellUtils.getCssValue(event.target, 'left');
       Css.set(event.target, 'left', currentCol + event.xDelta + 'px');
     });
@@ -76,16 +76,16 @@ export const BarManager = function (wire: ResizeWire): BarManager {
   };
 
   /* Resize the column once the user releases the mouse */
-  resizing.events.stop.bind(function () {
-    mutation.get().each(function (target) {
-      hoverTable.each(function (table) {
-        getResizer(target, 'data-row').each(function (row) {
+  resizing.events.stop.bind(() => {
+    mutation.get().each((target) => {
+      hoverTable.each((table) => {
+        getResizer(target, 'data-row').each((row) => {
           const delta = getDelta(target, 'top');
           Attribute.remove(target, 'data-initial-top');
           events.trigger.adjustHeight(table, delta, parseInt(row, 10));
         });
 
-        getResizer(target, 'data-column').each(function (column) {
+        getResizer(target, 'data-column').each((column) => {
           const delta = getDelta(target, 'left');
           Attribute.remove(target, 'data-initial-left');
           events.trigger.adjustWidth(table, delta, parseInt(column, 10));
@@ -107,7 +107,7 @@ export const BarManager = function (wire: ResizeWire): BarManager {
   };
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
-  const mousedown = DomEvent.bind(wire.parent(), 'mousedown', function (event) {
+  const mousedown = DomEvent.bind(wire.parent(), 'mousedown', (event) => {
     if (Bars.isRowBar(event.target)) {
       handler(event.target, 'top');
     }
@@ -124,7 +124,7 @@ export const BarManager = function (wire: ResizeWire): BarManager {
   const findClosestEditableTable = (target: SugarElement): Optional<SugarElement> => SelectorFind.closest(target, 'table', isRoot).filter((table) => findClosestContentEditable(table, isRoot).exists(isContentEditableTrue));
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
-  const mouseover = DomEvent.bind(wire.view(), 'mouseover', function (event) {
+  const mouseover = DomEvent.bind(wire.view(), 'mouseover', (event) => {
     findClosestEditableTable(event.target).fold(
       () => {
         /*

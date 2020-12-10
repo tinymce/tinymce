@@ -5,7 +5,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', (success, failure) => {
   Theme();
 
   const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', function (succes
     ]);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

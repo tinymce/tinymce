@@ -19,6 +19,7 @@ export interface CoordAdt<T = number> {
   log: (label: string) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type StylesCoord = {
   left: Optional<string>;
   right: Optional<string>;

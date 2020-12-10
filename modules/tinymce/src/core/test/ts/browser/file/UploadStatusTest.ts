@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 
-UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('hasBlobUri/markPending', function () {
+  suite.test('hasBlobUri/markPending', () => {
     const status = UploadStatus();
 
     LegacyUnit.strictEqual(status.hasBlobUri('nonexisting_uri'), false);
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', function (succe
     LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

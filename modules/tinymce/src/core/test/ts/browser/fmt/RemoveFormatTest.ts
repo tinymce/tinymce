@@ -8,14 +8,14 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failur
   SilverTheme();
 
   const sRemoveFormat = function (editor, format) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.formatter.register('format', format);
       RemoveFormat.remove(editor, 'format');
       editor.formatter.unregister('format');
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const removeFormat = [{
       selector: 'strong, em',

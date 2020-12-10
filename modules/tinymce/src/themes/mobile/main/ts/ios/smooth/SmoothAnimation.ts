@@ -36,12 +36,12 @@ const create = function () {
       finish(v);
     };
 
-    interval = Delay.setInterval(function () {
+    interval = Delay.setInterval(() => {
       const value = getCurrent();
-      adjust(value, destination, amount).fold(function () {
+      adjust(value, destination, amount).fold(() => {
         Delay.clearInterval(interval);
         finish(destination);
-      }, function (s) {
+      }, (s) => {
         increment(s, abort);
         if (!finished) {
           const newValue = getCurrent();

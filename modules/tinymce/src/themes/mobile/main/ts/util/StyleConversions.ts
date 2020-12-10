@@ -47,7 +47,7 @@ const getFromItem = function (item) {
 
 // Takes items, and consolidates them into its return value
 const expand = function (items) {
-  return Arr.foldr(items, function (acc, item) {
+  return Arr.foldr(items, (acc, item) => {
     const newData = getFromItem(item);
     return {
       menus: Merger.deepMerge(acc.menus, newData.menus),

@@ -3,12 +3,12 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as TrimNode from 'tinymce/core/dom/TrimNode';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) => {
 
   const dom = DOMUtils(document, {});
 
   const sTestTrim = function (inputHtml: string, expectedTrimmedHtml: string) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
       TrimNode.trimNode(dom, elm.firstChild);
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
     });
   };
 
-  const sTestTrimDocumentNode = Step.sync(function () {
+  const sTestTrimDocumentNode = Step.sync(() => {
     const expected = document.implementation.createHTMLDocument('test');
     const actual = TrimNode.trimNode(dom, expected);
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', function (success, f
     sTestTrim('<pre><strong>x</strong>\n<em>y</em></pre>', '<pre><strong>x</strong>\n<em>y</em></pre>'),
     sTestTrimFragmentedTextNode,
     sTestTrimDocumentNode
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

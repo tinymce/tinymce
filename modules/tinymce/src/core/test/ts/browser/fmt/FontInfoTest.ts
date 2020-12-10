@@ -4,7 +4,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   const assertComputedFontProp = function (fontProp, html, path, expected) {
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     div.parentNode.removeChild(div);
   };
 
-  suite.test('toPt', function () {
+  suite.test('toPt', () => {
     LegacyUnit.equal(FontInfo.toPt('10px'), '8pt');
     LegacyUnit.equal(FontInfo.toPt('10px', 1), '7.5pt');
     LegacyUnit.equal(FontInfo.toPt('11px'), '8pt');
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     LegacyUnit.equal(FontInfo.toPt('36px'), '27pt');
   });
 
-  suite.test('getFontSize', function () {
+  suite.test('getFontSize', () => {
     assertComputedFontProp('fontSize', '<mark></mark>', [ 0 ], '10px');
     assertComputedFontProp('fontSize', '<span><mark></mark></span>', [ 0, 0 ], '10px');
     assertSpecificFontProp('fontSize', '<mark style="font-size: 10px"></mark>', [ 0 ], '10px');
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     assertSpecificFontProp('fontSize', '<font size="4"><mark></mark></font>', [ 0, 0 ], '4');
   });
 
-  suite.test('getFontFamily', function () {
+  suite.test('getFontFamily', () => {
     assertComputedFontProp('fontFamily', '<mark></mark>', [ 0 ], 'Arial,Verdana');
     assertComputedFontProp('fontFamily', '<span><mark></mark></span>', [ 0, 0 ], 'Arial,Helvetica,Verdana');
     assertSpecificFontProp('fontFamily', '<mark style="font-family: Arial, Verdana"></mark>', [ 0 ], 'Arial,Verdana');
@@ -95,12 +95,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     assertSpecificFontProp('fontFamily', '<font face="Arial, Verdana"><mark></mark></font>', [ 0, 0 ], 'Arial,Verdana');
   });
 
-  suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', function (_, done) {
+  suite.asyncTest('getFontFamily should always return string even if display: none (firefox specific bug)', (_, done) => {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
 
-    iframe.addEventListener('load', function () {
+    iframe.addEventListener('load', () => {
       const fontFamily = FontInfo.getFontFamily(iframe.contentDocument.body, iframe.contentDocument.body.firstChild);
       LegacyUnit.equal(typeof fontFamily, 'string', 'Should always be a string');
       iframe.parentNode.removeChild(iframe);
@@ -113,12 +113,12 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     iframe.contentDocument.close();
   });
 
-  suite.asyncTest('getFontFamily should return a string when run on element in removed iframe', function (_, done, die) {
+  suite.asyncTest('getFontFamily should return a string when run on element in removed iframe', (_, done, die) => {
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
 
-    iframe.addEventListener('load', function () {
+    iframe.addEventListener('load', () => {
       const body = iframe.contentDocument.body;
       const firstChildElement = iframe.contentDocument.body.firstChild;
 
@@ -138,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     iframe.contentDocument.close();
   });
 
-  suite.test('comments should always return empty string', function () {
+  suite.test('comments should always return empty string', () => {
     assertComputedFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
     assertComputedFontProp('fontSize', '<!-- comment -->', [ 0 ], '');
     assertSpecificFontProp('fontFamily', '<!-- comment -->', [ 0 ], '');
@@ -154,7 +154,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', function (success, f
     LegacyUnit.equal('string', typeof actual, 'should return always string');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

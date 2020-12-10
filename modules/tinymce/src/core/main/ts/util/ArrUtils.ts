@@ -70,7 +70,7 @@ const map: {
 } = <T, R>(array, callback): R[] => {
   const out: R[] = [];
 
-  each<T>(array, function (item, index) {
+  each<T>(array, (item, index) => {
     out.push(callback(item, index, array));
   });
 
@@ -83,7 +83,7 @@ const filter: {
 } = <T>(a, f?): T[] => {
   const o: T[] = [];
 
-  each<T>(a, function (v, index) {
+  each<T>(a, (v, index) => {
     if (!f || f(v, index, a)) {
       o.push(v);
     }

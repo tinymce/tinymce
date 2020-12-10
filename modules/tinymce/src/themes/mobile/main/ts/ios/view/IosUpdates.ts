@@ -27,16 +27,16 @@ const updateScrollingFixed = function (element, winY, offsetY) {
 };
 
 const updateFixture = function (fixture, winY) {
-  return fixture.fold(function (element, property, offsetY) {
+  return fixture.fold((element, property, offsetY) => {
     return updateFixed(element, property, winY, offsetY);
-  }, function (element, offsetY) {
+  }, (element, offsetY) => {
     return updateScrollingFixed(element, winY, offsetY);
   });
 };
 
 const updatePositions = function (container, winY) {
   const fixtures = IosViewport.findFixtures(container);
-  const updates = Arr.map(fixtures, function (fixture) {
+  const updates = Arr.map(fixtures, (fixture) => {
     return updateFixture(fixture, winY);
   });
   return Futures.par(updates);

@@ -10,15 +10,15 @@ UnitTest.asynctest('browser.tinymce.core.init.ContentStylePositionTest', (succes
 
   const contentStyle = '.class {color: blue;}';
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
     Pipeline.async({}, [
-      Step.sync(function () {
+      Step.sync(() => {
         const headStuff: NodeListOf<HTMLElement> = editor.getDoc().head.querySelectorAll('link, style');
-        const linkIndex = Arr.findIndex(headStuff, function (elm) {
+        const linkIndex = Arr.findIndex(headStuff, (elm) => {
           return SugarNode.name(SugarElement.fromDom(elm)) === 'link';
         }).getOrDie('could not find link elemnt');
-        const styleIndex = Arr.findIndex(headStuff, function (elm) {
+        const styleIndex = Arr.findIndex(headStuff, (elm) => {
           return elm.innerText === contentStyle;
         }).getOrDie('could not find content style tag');
 

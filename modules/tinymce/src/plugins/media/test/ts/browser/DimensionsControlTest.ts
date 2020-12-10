@@ -7,11 +7,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.DimensionsControlTest', (success, failure) => {
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Media: Open dialog, assert dimensions fields are not present while media_dimensions is false. Close dialog and assert dialog is not present', [

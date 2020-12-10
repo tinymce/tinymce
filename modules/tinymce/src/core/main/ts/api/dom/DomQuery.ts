@@ -315,7 +315,7 @@ const each = function (obj, callback) {
 const grep = function (array, callback) {
   const out = [];
 
-  each(array, function (i, item) {
+  each(array, (i, item) => {
     if (callback(item, i)) {
       out.push(item);
     }
@@ -489,7 +489,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     let hook;
 
     if (typeof name === 'object') {
-      each(name, function (name, value) {
+      each(name, (name, value) => {
         self.attr(name, value);
       });
     } else if (isDefined(value)) {
@@ -559,7 +559,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     name = propFix[name] || name;
 
     if (typeof name === 'object') {
-      each(name, function (name, value) {
+      each(name, (name, value) => {
         self.prop(name, value);
       });
     } else if (isDefined(value)) {
@@ -592,19 +592,19 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
     let elm, hook;
 
     const camel = function (name) {
-      return name.replace(/-(\D)/g, function (a, b) {
+      return name.replace(/-(\D)/g, (a, b) => {
         return b.toUpperCase();
       });
     };
 
     const dashed = function (name) {
-      return name.replace(/[A-Z]/g, function (a) {
+      return name.replace(/[A-Z]/g, (a) => {
         return '-' + a;
       });
     };
 
     if (typeof name === 'object') {
-      each(name, function (name, value) {
+      each(name, (name, value) => {
         self.css(name, value);
       });
     } else {
@@ -978,7 +978,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
         self.toggleClass(this, state);
       });
     } else {
-      self.each(function (index, node) {
+      self.each((index, node) => {
         const classState = hasClass(node, className);
         if (classState !== state) {
           const existingClassName = node.className;
@@ -1156,7 +1156,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
    */
   filter(selector) {
     if (typeof selector === 'function') {
-      return DomQuery(grep(this.toArray(), function (item, i) {
+      return DomQuery(grep(this.toArray(), (item, i) => {
         return selector(i, item);
       }));
     }
@@ -1178,7 +1178,7 @@ DomQueryConstructor.fn = DomQueryConstructor.prototype = {
       selector = selector[0];
     }
 
-    this.each(function (i, node) {
+    this.each((i, node) => {
       while (node) {
         if (typeof selector === 'string' && DomQuery(node).is(selector)) {
           result.push(node);
@@ -1484,7 +1484,7 @@ each({
   contents(node) {
     return Tools.toArray((node.nodeName === 'iframe' ? node.contentDocument || node.contentWindow.document : node).childNodes);
   }
-}, function (name, fn) {
+}, (name, fn) => {
   DomQueryConstructor.fn[name] = function (selector?) {
     const self = this;
     let result = [];
@@ -1559,7 +1559,7 @@ each({
   prevUntil(node, until) {
     return sibling(node, 'previousSibling', 1, until).slice(1);
   }
-}, function (name, fn) {
+}, (name, fn) => {
   DomQueryConstructor.fn[name] = function (selector, filter?) {
     const self = this;
     let result = [];

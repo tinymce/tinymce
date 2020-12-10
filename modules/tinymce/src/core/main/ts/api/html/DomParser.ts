@@ -264,7 +264,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
   const addNodeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
-    each(explode(name), function (name) {
+    each(explode(name), (name) => {
       let list = nodeFilters[name];
 
       if (!list) {
@@ -302,7 +302,7 @@ const DomParser = function (settings?: DomParserSettings, schema = Schema()): Do
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
   const addAttributeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
-    each(explode(name), function (name) {
+    each(explode(name), (name) => {
       let i;
 
       for (i = 0; i < attributeFilters.length; i++) {

@@ -20,11 +20,11 @@ import * as Buttons from './ui/Buttons';
  */
 
 export default function () {
-  PluginManager.add('autosave', function (editor) {
+  PluginManager.add('autosave', (editor) => {
     BeforeUnload.setup(editor);
     Buttons.register(editor);
 
-    editor.on('init', function () {
+    editor.on('init', () => {
       if (Settings.shouldRestoreWhenEmpty(editor) && editor.dom.isEmpty(editor.getBody())) {
         Storage.restoreDraft(editor);
       }

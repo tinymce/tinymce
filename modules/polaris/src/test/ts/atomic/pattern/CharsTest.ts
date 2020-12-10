@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import * as Chars from 'ephox/polaris/pattern/Chars';
 
-UnitTest.test('CharsTest', function () {
+UnitTest.test('CharsTest', () => {
   const supported = [ 'fr', 'en_au', 'pt', 'it', 'nl', 'en_uk', 'pt_pt', 'de', 'nb', 'en_br', 'sv', 'da', 'en', 'es', 'en_gb', 'fi', 'en_us' ];
 
   interface Extra {
@@ -105,7 +105,7 @@ UnitTest.test('CharsTest', function () {
 
   const checkAllKnown = function (label: string, str: string) {
     const chars = str.split('');
-    const breaks = Arr.filter(chars, function (c) {
+    const breaks = Arr.filter(chars, (c) => {
       return !regex.test(c);
     });
 
@@ -117,7 +117,7 @@ UnitTest.test('CharsTest', function () {
     );
   };
 
-  Arr.each(supported, function (code) {
+  Arr.each(supported, (code) => {
     const info = extras[code];
     checkAllKnown(info.label, info.chars);
   });

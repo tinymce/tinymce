@@ -10,13 +10,13 @@ UnitTest.asynctest('browser.tinymce.plugins.fullscreen.HrSanitytest', (success, 
   HrPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'HorizontalRule: Click on the horizontal rule toolbar button and assert hr is added to the editor', [
       tinyUi.sClickOnToolbar('click on hr button', 'button[aria-label="Horizontal line"]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, _str) {
+      tinyApis.sAssertContentStructure(ApproxStructure.build((s, _str) => {
         return s.element('body', {
           children: [
             s.element('hr', {}),

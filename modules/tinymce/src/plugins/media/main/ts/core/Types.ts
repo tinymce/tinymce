@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type MediaData = {
   allowFullscreen?: boolean;
   source: string;

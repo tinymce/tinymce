@@ -18,7 +18,7 @@ import * as Buttons from './ui/Buttons';
  */
 
 export default function () {
-  PluginManager.add('nonbreaking', function (editor) {
+  PluginManager.add('nonbreaking', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     Keyboard.setup(editor);

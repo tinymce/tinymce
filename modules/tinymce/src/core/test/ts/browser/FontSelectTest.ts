@@ -5,7 +5,7 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement, TextContent } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.FontSelectTest', (success, failure) => {
   Theme();
 
   const systemFontStackVariants = [
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', function (success, fai
     ]);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

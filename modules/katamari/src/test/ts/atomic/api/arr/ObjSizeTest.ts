@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-UnitTest.test('Obj.size: unit tests', function () {
+UnitTest.test('Obj.size: unit tests', () => {
   const check = function (expected, input) {
     Assert.eq('eq', expected, Obj.size(input));
   };

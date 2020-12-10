@@ -4,7 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
-UnitTest.test('api.PositionArray.find', function () {
+UnitTest.test('api.PositionArray.find', () => {
   const check = function (expected: Optional<string>, input: string[], value: string | null) {
     const pred = function (unit: Parrays.PArrayTestItem) {
       return unit.item === value;

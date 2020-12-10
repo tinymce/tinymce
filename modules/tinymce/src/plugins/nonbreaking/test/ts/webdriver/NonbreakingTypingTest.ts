@@ -14,7 +14,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
   const isGecko = Env.browser.isFirefox();
   const isGeckoOrIE = isGecko || Env.browser.isIE();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
             RealKeys.text('test')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -46,7 +46,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
         tinyApis.sSetContent('test'),
         tinyApis.sSetCursor([ 0, 0 ], 4),
         tinyUi.sClickOnToolbar('click on nbsp button', 'button[aria-label="Nonbreaking space"]'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -71,7 +71,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
             RealKeys.text('test')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -94,7 +94,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
             RealKeys.text(' ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {
@@ -117,7 +117,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest'
             RealKeys.text('test ')
           ]
         ),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', {

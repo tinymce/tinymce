@@ -70,7 +70,7 @@ const tab = (editor: Editor): Dialog.TabSpec => {
 
   const pluginLister = (editor) => {
     const pluginKeys = getPluginKeys(editor);
-    const pluginLis = Arr.map(pluginKeys, function (key) {
+    const pluginLis = Arr.map(pluginKeys, (key) => {
       return '<li>' + maybeUrlize(editor, key) + '</li>';
     });
     const count = pluginLis.length;

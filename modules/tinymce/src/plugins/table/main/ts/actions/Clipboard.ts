@@ -16,7 +16,7 @@ import { TableActions } from './TableActions';
 
 const extractSelected = function (cells) {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
-  return TableLookup.table(cells[0]).map(Replication.deep).map(function (replica) {
+  return TableLookup.table(cells[0]).map(Replication.deep).map((replica) => {
     return [ CopySelected.extract(replica, Ephemera.attributeSelector) ];
   });
 };
@@ -26,10 +26,10 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string => 
 const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom.innerText).join('');
 
 const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
-  editor.on('BeforeGetContent', function (e) {
+  editor.on('BeforeGetContent', (e) => {
     const multiCellContext = function (cells) {
       e.preventDefault();
-      extractSelected(cells).each(function (elements) {
+      extractSelected(cells).each((elements) => {
         e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);
       });
     };
@@ -39,14 +39,14 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
     }
   });
 
-  editor.on('BeforeSetContent', function (e) {
+  editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
       const cellOpt = Optional.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-      cellOpt.each(function (domCell) {
+      cellOpt.each((domCell) => {
         const cell = SugarElement.fromDom(domCell);
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(SugarElements.fromHtml(e.content), function (content) {
+          const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 

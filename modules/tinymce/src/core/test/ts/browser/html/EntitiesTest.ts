@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import Entities from 'tinymce/core/api/html/Entities';
 
-UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('encodeRaw', function () {
+  suite.test('encodeRaw', () => {
     LegacyUnit.equal(
       Entities.encodeRaw(`<>"'&\u00e5\u00e4\u00f6\u0060`),
       `&lt;&gt;"'&amp;\u00e5\u00e4\u00f6\u0060`,
@@ -19,11 +19,11 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     );
   });
 
-  suite.test('encodeAllRaw', function () {
+  suite.test('encodeAllRaw', () => {
     LegacyUnit.equal(Entities.encodeAllRaw(`<>"'&\u00e5\u00e4\u00f6`), '&lt;&gt;&quot;&#39;&amp;\u00e5\u00e4\u00f6', 'Raw encoding all');
   });
 
-  suite.test('encodeNumeric', function () {
+  suite.test('encodeNumeric', () => {
     LegacyUnit.equal(
       Entities.encodeNumeric(`<>"'&\u00e5\u00e4\u00f6\u03b8\u2170\ufa11`),
       `&lt;&gt;"'&amp;&#229;&#228;&#246;&#952;&#8560;&#64017;`,
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     );
   });
 
-  suite.test('encodeNamed', function () {
+  suite.test('encodeNamed', () => {
     LegacyUnit.equal(Entities.encodeNamed(`<>"'&\u00e5\u00e4\u00f6`), `&lt;&gt;"'&amp;&aring;&auml;&ouml;`, 'Named encoding text');
     LegacyUnit.equal(
       Entities.encodeNamed(`<>"'&\u00e5\u00e4\u00f6`, true),
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     );
   });
 
-  suite.test('getEncodeFunc', function () {
+  suite.test('getEncodeFunc', () => {
     let encodeFunc;
 
     encodeFunc = Entities.getEncodeFunc('raw');
@@ -104,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     LegacyUnit.equal(encodeFunc('\ud87e\udc04', true), '&#194564;', 'Named+numeric high-byte encoding attribute');
   });
 
-  suite.test('decode', function () {
+  suite.test('decode', () => {
     LegacyUnit.equal(
       Entities.decode('&lt;&gt;&quot;&#39;&amp;&aring;&auml;&ouml;&unknown;'),
       `<>"'&\u00e5\u00e4\u00f6&unknown;`,
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', function (success, 
     LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', 'High byte non western character.');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

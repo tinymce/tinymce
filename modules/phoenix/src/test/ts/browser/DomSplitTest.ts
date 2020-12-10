@@ -4,7 +4,7 @@ import { SugarElement, SugarText, Traverse } from '@ephox/sugar';
 import * as DomSplit from 'ephox/phoenix/api/dom/DomSplit';
 import { Page } from '../module/ephox/phoenix/test/Page';
 
-UnitTest.test('DomSplitTest', function () {
+UnitTest.test('DomSplitTest', () => {
   /*
       <container><div1><p1>{t1:First paragraph}<p2>{t2:Second }<s1>{t3:here}<s2>{t4: is }<s3>{t5:something}
   <p3>{t6:More data}
@@ -13,9 +13,9 @@ UnitTest.test('DomSplitTest', function () {
 
   const check = function (expected: string[], element: SugarElement<Text>) {
     const parent = Traverse.parent(element);
-    parent.fold(function () {
+    parent.fold(() => {
       throw new Error('Element must have parent for test to work');
-    }, function (v) {
+    }, (v) => {
       const children = Traverse.children(v) as SugarElement<Text>[];
       const text = Arr.map(children, SugarText.get);
       assert.eq(expected, text);

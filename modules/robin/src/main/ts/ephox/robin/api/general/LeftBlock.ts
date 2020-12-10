@@ -8,7 +8,7 @@ const walkers = Gather.walkers();
 const goLeft = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, strategy: Walks): E[] {
   // Walk the DOM to the left using the appropriate rules.
   const next = Gather.walk(universe, item, mode, walkers.left(), strategy.rules);
-  return next.map(function (n) {
+  return next.map((n) => {
     // If we hit a block, then we stop.
     const isBlock = universe.property().isEmptyTag(n.item) || universe.property().isBoundary(n.item);
     if (isBlock) {

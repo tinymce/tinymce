@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.GetTextTest', (success, fa
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const sAssertGetText = (node: Node, expected) => Step.sync(() => {
       const actual = getText(node, editor.schema);
 

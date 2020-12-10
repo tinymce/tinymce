@@ -28,13 +28,13 @@ const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, 
 ]));
 
 const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
-  return Arr.bind(steps, function (step) {
+  return Arr.bind(steps, (step) => {
     return [ step, teardownStep ];
   });
 };
 
 const bodyStruct = function (children: StructAssert[]) {
-  return ApproxStructure.build(function (s, _str) {
+  return ApproxStructure.build((s, _str) => {
     return s.element('body', {
       children
     });
@@ -42,7 +42,7 @@ const bodyStruct = function (children: StructAssert[]) {
 };
 
 const inlineStructHelper = function (tag: string, content: string) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
         children: [
@@ -59,7 +59,7 @@ const inlineStructHelper = function (tag: string, content: string) {
 };
 
 const inlineBlockStructHelper = function (tag: string, content: string) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
         children: [
@@ -77,7 +77,7 @@ const inlineBlockStructHelper = function (tag: string, content: string) {
 };
 
 const blockStructHelper = function (tag: string, content: string) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
         children: [
@@ -90,7 +90,7 @@ const blockStructHelper = function (tag: string, content: string) {
 };
 
 const forcedRootBlockInlineStructHelper = function (tag: string, content: string) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
         children: [
@@ -105,7 +105,7 @@ const forcedRootBlockInlineStructHelper = function (tag: string, content: string
 };
 
 const forcedRootBlockStructHelper = function (tag: string, content: string) {
-  return ApproxStructure.build(function (s, str) {
+  return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
         children: [

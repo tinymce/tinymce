@@ -45,10 +45,10 @@ const expandLeft = function <E, D> (universe: Universe<E, D>, item: E, offset: n
 
   const process: TextSeekerPhaseProcessor<E, D> = function (uni, phase, pItem, pText, pOffset) {
     const lastOffset = pOffset.getOr(pText.length);
-    return TextSearchBase.rfind(pText.substring(0, lastOffset), seeker.regex()).fold(function () {
+    return TextSearchBase.rfind(pText.substring(0, lastOffset), seeker.regex()).fold(() => {
       // Did not find a word break, so continue;
       return phase.kontinue<E>();
-    }, function (index) {
+    }, (index) => {
       return seeker.attempt(phase, pItem, pText, index);
     });
   };
@@ -66,10 +66,10 @@ const expandRight = function <E, D> (universe: Universe<E, D>, item: E, offset: 
   const process: TextSeekerPhaseProcessor<E, D> = function (uni, phase, pItem, pText, pOffset) {
     const firstOffset = pOffset.getOr(0);
     const optPos = TextSearchBase.lfind(pText.substring(firstOffset), seeker.regex());
-    return optPos.fold(function () {
+    return optPos.fold(() => {
       // Did not find a word break, so continue;
       return phase.kontinue();
-    }, function (index) {
+    }, (index) => {
       return seeker.attempt(phase, pItem, pText, firstOffset + index);
     });
   };
@@ -87,7 +87,7 @@ const scanRight = function <E, D> (universe: Universe<E, D>, item: E, originalOf
   if (originalOffset <= text.length) {
     return Optional.some(Spot.point(item, originalOffset));
   } else {
-    return Gather.seekRight(universe, item, universe.property().isText, isRoot).bind(function (next) {
+    return Gather.seekRight(universe, item, universe.property().isText, isRoot).bind((next) => {
       return scanRight(universe, next, originalOffset - text.length);
     });
   }

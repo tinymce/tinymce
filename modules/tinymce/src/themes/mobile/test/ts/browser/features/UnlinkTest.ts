@@ -6,7 +6,7 @@ import { SugarBody, Traverse } from '@ephox/sugar';
 import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
 
-UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: features.UnlinkTest', (success, failure) => {
 
   /* This test is going to create a toolbar with bold, italic, underline in it */
   const body = SugarBody.body();
@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', function (success, failu
     container: body,
     items: [ 'link', 'unlink' ]
   }, success, failure).use(
-    function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
+    (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) => {
 
       const sSetS1 = apis.sSetSelection([ 0, 0 ], 'n'.length, [ 0, 0 ], 'n'.length);
       const sSetS2 = apis.sSetSelection([ 0, 1, 0 ], 'tin'.length, [ 0, 1, 0 ], 'tin'.length);

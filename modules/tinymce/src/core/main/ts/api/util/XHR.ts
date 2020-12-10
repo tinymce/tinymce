@@ -273,7 +273,7 @@ const XHR: XHR = {
     }
 
     if (settings.requestheaders) {
-      Tools.each(settings.requestheaders, function (header) {
+      Tools.each(settings.requestheaders, (header) => {
         xhr.setRequestHeader(header.key, header.value);
       });
     }

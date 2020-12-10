@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in middle of OL in LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in middle of OL in LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in end of OL in LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in end of OL in LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
 
   // Nested lists in OL elements
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -138,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in middle of OL in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in middle of OL in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -172,7 +172,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside first/last LI in inner OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside first/last LI in inner OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>1' +
@@ -202,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getRng().endContainer.nodeValue, '3');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside LI in end of OL in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside LI in end of OL in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -262,7 +262,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent inside only child LI in OL in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent inside only child LI in OL in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -287,7 +287,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent multiple LI in OL and nested OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent multiple LI in OL and nested OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -310,7 +310,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent on li with inner block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent on li with inner block element', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li><p>a</p></li>' +
@@ -334,7 +334,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent on nested li with inner block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent on nested li with inner block element', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
         '<li>' +
@@ -358,7 +358,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     );
   });
 
-  suite.test('Outdent nested ul in ol', function (editor) {
+  suite.test('Outdent nested ul in ol', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
         '<li style="list-style-type: none;">' +
@@ -380,7 +380,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     );
   });
 
-  suite.test('Outdenting an item should not affect its attributes', function (editor) {
+  suite.test('Outdenting an item should not affect its attributes', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
         '<li style="color: red;" class="xyz">a' +
@@ -463,7 +463,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.OutdentTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Outdent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

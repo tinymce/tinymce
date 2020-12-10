@@ -56,7 +56,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
     movement.onEvent(event, mode);
   };
 
-  movement.events.move.bind(function (event) {
+  movement.events.move.bind((event) => {
     mode.mutate(mutation, event.info);
   });
 

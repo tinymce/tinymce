@@ -4,7 +4,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as Blocks from 'ephox/snooker/lookup/Blocks';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
-UnitTest.test('BlocksTest', function () {
+UnitTest.test('BlocksTest', () => {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
   const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section);
   const warehouse = Warehouse.generate([
@@ -14,5 +14,5 @@ UnitTest.test('BlocksTest', function () {
     f('r3', [ s('h', 1, 1), s('i', 1, 2) ], 'tfoot')
   ]);
 
-  assert.eq([ 'a', 'd', 'e' ], Blocks.columns(warehouse).map(function (c) { return c.getOrDie(); }));
+  assert.eq([ 'a', 'd', 'e' ], Blocks.columns(warehouse).map((c) => { return c.getOrDie(); }));
 });

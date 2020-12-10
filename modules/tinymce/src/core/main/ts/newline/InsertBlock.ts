@@ -378,7 +378,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   };
 
   // Setup range items and newBlockName
-  NormalizeRange.normalize(dom, rng).each(function (normRng) {
+  NormalizeRange.normalize(dom, rng).each((normRng) => {
     rng.setStart(normRng.startContainer, normRng.startOffset);
     rng.setEnd(normRng.endContainer, normRng.endOffset);
   });

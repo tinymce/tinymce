@@ -26,13 +26,13 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
   let zoneLang = defaultLang;
 
   const push = function (optLang: Optional<string>) {
-    optLang.each(function (l) {
+    optLang.each((l) => {
       stack.push(l);
     });
   };
 
   const pop = function (optLang: Optional<string>) {
-    optLang.each(function (_l) {
+    optLang.each((_l) => {
       stack = stack.slice(0, stack.length - 1);
     });
   };
@@ -122,7 +122,7 @@ const nu = function <E> (defaultLang: string): LanguageZones<E> {
 //    (regardless of 'classic'/iframe or 'inline'/div mode).
 // Note: there may be descendant elements with a different language
 const calculate = function <E, D> (universe: Universe<E, D>, item: E): Optional<string> {
-  return universe.up().closest(item, '[lang]', Fun.never).bind(function (el) {
+  return universe.up().closest(item, '[lang]', Fun.never).bind((el) => {
     const lang = universe.attrs().get(el, 'lang');
     return lang === undefined ? Optional.none<string>() : Optional.some(lang);
   });

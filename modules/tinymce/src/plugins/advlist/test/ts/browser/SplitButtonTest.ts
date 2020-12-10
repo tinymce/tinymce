@@ -6,7 +6,7 @@ import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', (success, failure) => {
   AdvListPlugin();
   ListsPlugin();
   Theme();
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', function (
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
 
       clickOnSplitBtnFor('Numbered list'),

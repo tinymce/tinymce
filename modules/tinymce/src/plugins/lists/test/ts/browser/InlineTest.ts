@@ -12,14 +12,14 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.InlineTest', (success, failure
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Remove UL in inline body element contained in LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL in inline body element contained in LI', (editor) => {
     editor.setContent('<ul><li>a</li></ul>');
     editor.selection.setCursorLocation();
     editor.execCommand('InsertUnorderedList');
     LegacyUnit.equal(editor.getContent(), '<p>a</p>');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace in LI in UL in inline body element contained within LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace in LI in UL in inline body element contained within LI', (editor) => {
     editor.setContent('<ul><li>a</li></ul>');
     editor.focus();
     editor.selection.select(editor.getBody(), true);
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.InlineTest', (success, failure
     LegacyUnit.equal(editor.getContent(), '<p>a</p>');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Inline tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     inline: true,

@@ -36,7 +36,7 @@ const getInsertedElement = function (editor: Editor) {
 };
 
 const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     editor.insertContent(createTableHtml(cols, rows));
 
     const tableElm = getInsertedElement(editor);

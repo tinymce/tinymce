@@ -46,7 +46,7 @@ UnitTest.test('FitmentIVTest', () => {
   const rand = (min: number, max: number) =>
     Math.floor(Math.random() * (max - min + 1)) + min;
 
-  type InvTest = { test: () => void };
+  interface InvTest { test: () => void }
   const inVariantRunner = <T extends InvTest> (label: string, mvTest: () => T, timelimit: number): number => {
     let times = 0;
     const startTime = Date.now();
@@ -172,7 +172,7 @@ UnitTest.test('FitmentIVTest', () => {
       }
     };
 
-    type Spec = { rows: number; cols: number; grid: Structs.ElementNew[][] };
+    interface Spec { rows: number; cols: number; grid: Structs.ElementNew[][] }
 
     const queryliser2000 = (
       result: Result<Structs.RowCells[], string>,

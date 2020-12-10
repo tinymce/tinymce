@@ -86,9 +86,9 @@ function NotificationManager(editor: Editor): NotificationManager {
   };
 
   const closeNotification = function (notification: NotificationApi) {
-    Arr.findIndex(notifications, function (otherNotification) {
+    Arr.findIndex(notifications, (otherNotification) => {
       return otherNotification === notification;
-    }).each(function (index) {
+    }).each((index) => {
       // Mutate here since third party might have stored away the window array
       // TODO: Consider breaking this api
       notifications.splice(index, 1);
@@ -106,12 +106,12 @@ function NotificationManager(editor: Editor): NotificationManager {
       editor.fire('BeforeOpenNotification', { notification: spec });
     }
 
-    return Arr.find(notifications, function (notification) {
+    return Arr.find(notifications, (notification) => {
       return isEqual(getImplementation().getArgs(notification), spec);
-    }).getOrThunk(function () {
+    }).getOrThunk(() => {
       editor.editorManager.setActive(editor);
 
-      const notification = getImplementation().open(spec, function () {
+      const notification = getImplementation().open(spec, () => {
         closeNotification(notification);
         reposition();
         // Move focus back to editor when the last notification is closed,
@@ -132,7 +132,7 @@ function NotificationManager(editor: Editor): NotificationManager {
   };
 
   const close = function () {
-    getTopNotification().each(function (notification) {
+    getTopNotification().each((notification) => {
       getImplementation().close(notification);
       closeNotification(notification);
       reposition();
@@ -144,7 +144,7 @@ function NotificationManager(editor: Editor): NotificationManager {
   };
 
   const registerEvents = function (editor: Editor) {
-    editor.on('SkinLoaded', function () {
+    editor.on('SkinLoaded', () => {
       const serviceMessage = Settings.getServiceMessage(editor);
 
       if (serviceMessage) {
@@ -159,12 +159,12 @@ function NotificationManager(editor: Editor): NotificationManager {
 
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
-    editor.on('ResizeEditor ResizeWindow NodeChange', function () {
+    editor.on('ResizeEditor ResizeWindow NodeChange', () => {
       Delay.requestAnimationFrame(reposition);
     });
 
-    editor.on('remove', function () {
-      Arr.each(notifications.slice(), function (notification) {
+    editor.on('remove', () => {
+      Arr.each(notifications.slice(), (notification) => {
         getImplementation().close(notification);
       });
     });

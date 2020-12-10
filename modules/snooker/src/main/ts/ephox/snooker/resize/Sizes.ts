@@ -26,13 +26,13 @@ export const setHeight = function (cell: SugarElement, amount: number): void {
 };
 
 const getHeightValue = function (cell: SugarElement): string {
-  return Css.getRaw(cell, 'height').getOrThunk(function () {
+  return Css.getRaw(cell, 'height').getOrThunk(() => {
     return RuntimeSize.getHeight(cell) + 'px';
   });
 };
 
 const convert = function (cell: SugarElement, number: number, getter: (e: SugarElement) => number, setter: (e: SugarElement, value: number) => void): number {
-  const newSize = TableLookup.table(cell).map(function (table) {
+  const newSize = TableLookup.table(cell).map((table) => {
     const total = getter(table);
     return Math.floor((number / 100.0) * total);
   }).getOr(number);
@@ -62,9 +62,9 @@ const get = function (cell: SugarElement, type: 'rowspan' | 'colspan', f: (e: Su
 export const getRawWidth = function (element: SugarElement): Optional<string> {
   // Try to use the style width first, otherwise attempt to get attribute width
   const cssWidth = Css.getRaw(element, 'width');
-  return cssWidth.fold(function () {
+  return cssWidth.fold(() => {
     return Optional.from(Attribute.get(element, 'width'));
-  }, function (width) {
+  }, (width) => {
     return Optional.some(width);
   });
 };
@@ -86,10 +86,10 @@ const choosePercentageSize = function (element: SugarElement, width: string, tab
 // Get a percentage size for a percentage parent table
 export const getPercentageWidth = function (cell: SugarElement, tableSize: TableSize): number {
   const width = getRawWidth(cell);
-  return width.fold(function () {
+  return width.fold(() => {
     const intWidth = Width.get(cell);
     return normalizePercentageWidth(intWidth, tableSize);
-  }, function (w) {
+  }, (w) => {
     return choosePercentageSize(cell, w, tableSize);
   });
 };
@@ -113,9 +113,9 @@ const choosePixelSize = function (element: SugarElement, width: string, tableSiz
 
 export const getPixelWidth = function (cell: SugarElement, tableSize: TableSize): number {
   const width = getRawWidth(cell);
-  return width.fold(function () {
+  return width.fold(() => {
     return RuntimeSize.getWidth(cell);
-  }, function (w) {
+  }, (w) => {
     return choosePixelSize(cell, w, tableSize);
   });
 };

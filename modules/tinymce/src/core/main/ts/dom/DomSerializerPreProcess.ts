@@ -23,7 +23,7 @@ const preProcess = function (editor: Editor, node: Element, args) {
     doc = impl.createHTMLDocument('');
 
     // Add the element or it's children if it's a body element to the new document
-    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [ node ], function (node) {
+    Tools.each(node.nodeName === 'BODY' ? node.childNodes : [ node ], (node) => {
       doc.body.appendChild(doc.importNode(node, true));
     });
 

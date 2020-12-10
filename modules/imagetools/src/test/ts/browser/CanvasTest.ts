@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Canvas from 'ephox/imagetools/util/Canvas';
 
-UnitTest.test('CanvasTest', function () {
+UnitTest.test('CanvasTest', () => {
   const assertDimensions = function (label: string, w: number, h: number, canvas: HTMLCanvasElement) {
     Assertion.assertEq(w, canvas.width, label + ' width');
     Assertion.assertEq(h, canvas.height, label + ' height');

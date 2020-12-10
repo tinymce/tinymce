@@ -4,7 +4,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { oneAll } from 'ephox/robin/parent/Shared';
 
-UnitTest.test('SharedTest', function () {
+UnitTest.test('SharedTest', () => {
   const data = TestUniverse(Gene('root', 'root', [
     Gene('1', 'div', [
       Gene('1.1', 'p', [
@@ -34,7 +34,7 @@ UnitTest.test('SharedTest', function () {
   ]));
 
   const checker = function (target: string, ids: string[], f: (look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>, items: Gene[]) => void) {
-    const items = Arr.map(ids, function (id) {
+    const items = Arr.map(ids, (id) => {
       return data.find(data.get(), id).getOrDie();
     });
 
@@ -46,14 +46,14 @@ UnitTest.test('SharedTest', function () {
   };
 
   const checkNone = function (target: string, ids: string[]) {
-    checker(target, ids, function (look, items) {
+    checker(target, ids, (look, items) => {
       const actual = oneAll(data, look, items);
       KAssert.eqNone('eq', actual);
     });
   };
 
   const check = function (expected: string, target: string, ids: string[]) {
-    checker(target, ids, function (look, items) {
+    checker(target, ids, (look, items) => {
       const actual = oneAll(data, look, items).map((x) => x.id);
       KAssert.eqSome('eq', expected, actual);
     });

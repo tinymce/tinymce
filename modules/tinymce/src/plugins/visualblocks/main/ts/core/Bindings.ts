@@ -12,13 +12,13 @@ import * as VisualBlocks from './VisualBlocks';
 
 const setup = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
   // Prevents the visualblocks from being presented in the preview of formats when that is computed
-  editor.on('PreviewFormats AfterPreviewFormats', function (e) {
+  editor.on('PreviewFormats AfterPreviewFormats', (e) => {
     if (enabledState.get()) {
       editor.dom.toggleClass(editor.getBody(), 'mce-visualblocks', e.type === 'afterpreviewformats');
     }
   });
 
-  editor.on('init', function () {
+  editor.on('init', () => {
     if (Settings.isEnabledByDefault(editor)) {
       VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
     }

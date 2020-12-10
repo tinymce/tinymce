@@ -11,11 +11,11 @@ import * as WordUtil from './WordUtil';
  */
 const around = function (text: string, position: number): BeforeAfter {
   const first = text.substring(0, position);
-  const before = WordUtil.leftBreak(first).map(function (index) {
+  const before = WordUtil.leftBreak(first).map((index) => {
     return index + 1;
   });
   const last = text.substring(position);
-  const after = WordUtil.rightBreak(last).map(function (index) {
+  const after = WordUtil.rightBreak(last).map((index) => {
     return position + index;
   });
 

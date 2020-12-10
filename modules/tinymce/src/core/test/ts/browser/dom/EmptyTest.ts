@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import * as Empty from 'tinymce/core/dom/Empty';
 
-UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', (success, failure) => {
 
   const sTestEmpty = function (html, expected) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = SugarElement.fromHtml(html);
       const expectedLabel = expected ? 'empty' : 'not empty';
       Assertions.assertEq(html + ' should be treated as ' + expectedLabel, expected, Empty.isEmpty(elm));
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', function (success, fail
       sTestEmpty('<span contenteditable="false"></span>', false),
       sTestEmpty('<a id="anchor"></a>', false)
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

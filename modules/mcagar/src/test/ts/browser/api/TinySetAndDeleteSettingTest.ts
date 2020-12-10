@@ -7,7 +7,7 @@ import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
   const sAssertSetting = function (editor: Editor, key: string, expected: any) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actual = editor.settings[key];
 
       return Assertions.assertEq('should have expected val at key', expected, actual);
@@ -15,7 +15,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
   };
 
   const sAssertSettingType = function (editor: Editor, key: string, expected: any) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actual = typeof editor.settings[key];
 
       return Assertions.assertEq('should have expected type', expected, actual);
@@ -34,7 +34,7 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
       ])),
 
       Logger.t('set setting to function', GeneralSteps.sequence([
-        apis.sSetSetting('a', function (a: any) {
+        apis.sSetSetting('a', (a: any) => {
           return a;
         }),
         sAssertSettingType(editor, 'a', 'function')

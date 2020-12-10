@@ -22,14 +22,14 @@ const range = function <E, D> (universe: Universe<E, D>, item1: E, delta1: numbe
     return [ item1 ];
   }
 
-  return Parents.common(universe, item1, item2).fold<E[]>(function () {
+  return Parents.common(universe, item1, item2).fold<E[]>(() => {
     return []; // no common parent, therefore no intervening path. How does this clash with Path in robin?
-  }, function (parent) {
+  }, (parent) => {
     const items = [ parent ].concat(Extract.all<E, D>(universe, parent, Fun.never));
     const start = index(universe, items, item1);
     const finish = index(universe, items, item2);
-    const result = start.bind(function (startIndex) {
-      return finish.map(function (finishIndex) {
+    const result = start.bind((startIndex) => {
+      return finish.map((finishIndex) => {
         return order(items, startIndex, delta1, finishIndex, delta2);
       });
     }).getOr([]);

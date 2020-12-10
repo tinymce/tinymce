@@ -12,17 +12,17 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: NonEditable: noneditable class', function (editor) {
+  suite.test('TestCase-TBA: NonEditable: noneditable class', (editor) => {
     editor.setContent('<p><span class="mceNonEditable">abc</span></p>');
     LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, 'false');
   });
 
-  suite.test('TestCase-TBA: NonEditable: editable class', function (editor) {
+  suite.test('TestCase-TBA: NonEditable: editable class', (editor) => {
     editor.setContent('<p><span class="mceEditable">abc</span></p>');
     LegacyUnit.equal(editor.dom.select('span')[0].contentEditable, 'true');
   });
 
-  suite.test('TestCase-TBA: NonEditable: noneditable regexp', function (editor) {
+  suite.test('TestCase-TBA: NonEditable: noneditable regexp', (editor) => {
     editor.setContent('<p>{test1}{test2}</p>');
 
     LegacyUnit.equal(editor.dom.select('span').length, 2);
@@ -31,12 +31,12 @@ UnitTest.asynctest('browser.tinymce.plugins.noneditable.NonEditablePluginTest', 
     LegacyUnit.equal(editor.getContent(), '<p>{test1}{test2}</p>');
   });
 
-  suite.test('TestCase-TBA: NonEditable: noneditable regexp inside cE=false', function (editor) {
+  suite.test('TestCase-TBA: NonEditable: noneditable regexp inside cE=false', (editor) => {
     editor.setContent('<span contenteditable="false">{test1}</span>');
     LegacyUnit.equal(editor.dom.select('span').length, 1);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'NonEditable: Test noneditable class and regexp', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

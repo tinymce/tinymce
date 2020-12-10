@@ -31,10 +31,10 @@ import * as EventHandler from './EventHandler';
 
 type Info = Record<string, () => Optional<BehaviourBlob.BehaviourConfigAndState<any, BehaviourState>>>;
 
-type BehaviourTuple<T extends EventFormat> = {
+interface BehaviourTuple<T extends EventFormat> {
   readonly name: string;
   readonly handler: AlloyEventHandler<T>;
-};
+}
 
 const behaviourTuple = <T extends EventFormat>(name: string, handler: AlloyEventHandler<T>): BehaviourTuple<T> => ({
   name,

@@ -12,7 +12,7 @@ import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('fullpage', function (editor) {
+  PluginManager.add('fullpage', (editor) => {
     const headState = Cell(''), footState = Cell('');
 
     Commands.register(editor, headState);

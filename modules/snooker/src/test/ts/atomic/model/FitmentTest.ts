@@ -6,7 +6,7 @@ import * as Fitment from 'ephox/snooker/test/Fitment';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
-UnitTest.test('FitmentTest', function () {
+UnitTest.test('FitmentTest', () => {
   const generator = TestGenerator;
   const start = Structs.address;
   const measureTest = Fitment.measureTest;

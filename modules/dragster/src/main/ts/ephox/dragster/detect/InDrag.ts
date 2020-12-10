@@ -15,7 +15,7 @@ export const InDrag = (): DragState => {
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
   const update = function (mode: DragMode, nu: SugarPosition) {
-    const result = previous.map(function (old) {
+    const result = previous.map((old) => {
       return mode.compare(old, nu);
     });
 
@@ -28,9 +28,9 @@ export const InDrag = (): DragState => {
 
     // Dragster move events require a position delta. The moveevent is only triggered
     // on the second and subsequent dragster move events. The first is dropped.
-    dataOption.each(function (data) {
+    dataOption.each((data) => {
       const offset = update(mode, data);
-      offset.each(function (d) {
+      offset.each((d) => {
         events.trigger.move(d);
       });
     });

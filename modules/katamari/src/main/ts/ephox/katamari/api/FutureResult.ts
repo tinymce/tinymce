@@ -45,7 +45,7 @@ const wrap = function <A = any, E = any> (delegate: Future<Result<A, E>>): Futur
   };
 
   const withTimeout = function (timeout: number, errorThunk: () => E) {
-    return wrap(Future.nu(function (callback: (value: Result<A, E>) => void) {
+    return wrap(Future.nu((callback: (value: Result<A, E>) => void) => {
       let timedOut = false;
       const timer = setTimeout(() => {
         timedOut = true;
@@ -94,10 +94,10 @@ const fromFuture = function <A, E = any> (future: Future<A>): FutureResult<A, E>
 };
 
 const fromPromise = function <T, E = any> (promise: Promise<T>): FutureResult<T, E> {
-  return nu(function (completer: (result: Result<T, E>) => void) {
-    promise.then(function (value) {
+  return nu((completer: (result: Result<T, E>) => void) => {
+    promise.then((value) => {
       completer(Result.value(value));
-    }, function (error: E) {
+    }, (error: E) => {
       completer(Result.error(error));
     });
   });

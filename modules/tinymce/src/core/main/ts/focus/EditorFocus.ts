@@ -22,7 +22,7 @@ const getContentEditableHost = (editor: Editor, node: Node): Element =>
 
 const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> => rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
 
-const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarElement<any>> => getCollapsedNode(rng).bind(function (node) {
+const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarElement<any>> => getCollapsedNode(rng).bind((node) => {
   if (ElementType.isTableSection(node)) {
     return Optional.some(node);
   } else if (Compare.contains(root, node) === false) {
@@ -33,7 +33,7 @@ const getFocusInElement = (root: SugarElement<any>, rng: Range): Optional<SugarE
 });
 
 const normalizeSelection = (editor: Editor, rng: Range): void => {
-  getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind(function (elm) {
+  getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind((elm) => {
     return CaretFinder.firstPositionIn(elm.dom);
   }).fold(
     () => { editor.selection.normalize(); return; },
@@ -81,7 +81,7 @@ const focusEditor = (editor: Editor) => {
   editor.quirks.refreshContentEditable();
 
   if (editor.bookmark !== undefined && hasFocus(editor) === false) {
-    SelectionBookmark.getRng(editor).each(function (bookmarkRng) {
+    SelectionBookmark.getRng(editor).each((bookmarkRng) => {
       editor.selection.setRng(bookmarkRng);
       rng = bookmarkRng;
     });

@@ -8,52 +8,52 @@ import {
 } from 'tinymce/core/caret/TableCells';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html.trim());
     });
   };
 
-  const cAssertCell = (path) => Chain.op(function (cellOption: Optional<any>) {
+  const cAssertCell = (path) => Chain.op((cellOption: Optional<any>) => {
     const cell = cellOption.getOrDie('x');
     const expectedContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     Assertions.assertDomEq('Should be the expected element', expectedContainer, SugarElement.fromDom(cell));
   });
 
-  const cAssertNone = Chain.op(function (pos: Optional<any>) {
+  const cAssertNone = Chain.op((pos: Optional<any>) => {
     Assertions.assertEq('Should be the none but got some', true, pos.isNone());
   });
 
-  const cGetClosestCellAbove = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
+  const cGetClosestCellAbove = (x: number, y: number) => Chain.mapper((viewBlock: any) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
     return getClosestCellAbove(table, rect.left + x, rect.top + y);
   });
 
-  const cGetClosestCellBelow = (x: number, y: number) => Chain.mapper(function (viewBlock: any) {
+  const cGetClosestCellBelow = (x: number, y: number) => Chain.mapper((viewBlock: any) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
     return getClosestCellBelow(table, rect.left + x, rect.top + y);
   });
 
-  const cFindClosestPositionInAboveCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
+  const cFindClosestPositionInAboveCell = (path: number[], offset: number) => Chain.mapper((viewBlock: any) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return findClosestPositionInAboveCell(table, pos);
   });
 
-  const cFindClosestPositionInBelowCell = (path: number[], offset: number) => Chain.mapper(function (viewBlock: any) {
+  const cFindClosestPositionInBelowCell = (path: number[], offset: number) => Chain.mapper((viewBlock: any) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return findClosestPositionInBelowCell(table, pos);
   });
 
-  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Optional<any>) {
+  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op((posOption: Optional<any>) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = posOption.getOrDie('Needs to return a caret');
 
@@ -251,7 +251,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', function (succes
         cAssertCaretPosition([ 0, 0, 1, 1, 0 ], 1)
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

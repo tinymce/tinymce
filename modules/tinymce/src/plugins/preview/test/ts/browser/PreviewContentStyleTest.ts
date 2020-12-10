@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
     return Logger.t('Assert Iframe Html does not contain ' + text, sAssertIframeContains(editor, text, false));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
 

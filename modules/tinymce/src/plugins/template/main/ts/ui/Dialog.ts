@@ -40,10 +40,10 @@ interface InternalTemplate {
   };
 }
 
-type DialogData = {
+interface DialogData {
   template: string;
   preview: string;
-};
+}
 
 type UpdateDialogCallback = (dialogApi: Dialog.DialogInstanceApi<DialogData>, template: InternalTemplate, previewHtml: string) => void;
 

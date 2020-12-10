@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 const cFakeEvent = function (name) {
   return Chain.label('Fake event',
-    Chain.op(function (elm: SugarElement) {
+    Chain.op((elm: SugarElement) => {
       const evt = document.createEvent('HTMLEvents');
       evt.initEvent(name, true, true);
       elm.dom.dispatchEvent(evt);
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.UrlInputTest', (success, failur
   Theme();
   LinkPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [

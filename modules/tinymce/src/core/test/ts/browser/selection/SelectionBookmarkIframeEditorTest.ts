@@ -7,17 +7,17 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
-  function (success, failure) {
+  (success, failure) => {
 
     Theme();
     const testDivId = 'testDiv1234';
 
-    const sRemoveTestDiv = Step.sync(function () {
+    const sRemoveTestDiv = Step.sync(() => {
       const input = document.querySelector('#' + testDivId);
       input.parentNode.removeChild(input);
     });
 
-    const sAddTestDiv = Step.sync(function () {
+    const sAddTestDiv = Step.sync(() => {
       const div = document.createElement('div');
       div.innerHTML = 'xxx';
       div.contentEditable = 'true';
@@ -59,11 +59,11 @@ UnitTest.asynctest(
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const browser = PlatformDetection.detect().browser;
       Pipeline.async({}, browser.isIE() ? [ // Only run on IE
         sAddTestDiv,
-        Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
+        Logger.t('assert selection after no nodechanged, should not restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -74,7 +74,7 @@ UnitTest.asynctest(
 
           assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
-        Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
+        Logger.t('assert selection after nodechanged, should restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0 ], 0, [ 0 ], 0);
@@ -86,7 +86,7 @@ UnitTest.asynctest(
 
           assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
-        Logger.t('assert selection after keyup, should restore', Step.sync(function () {
+        Logger.t('assert selection after keyup, should restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0 ], 0, [ 0 ], 0);
@@ -98,7 +98,7 @@ UnitTest.asynctest(
 
           assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
-        Logger.t('assert selection after mouseup, should restore', Step.sync(function () {
+        Logger.t('assert selection after mouseup, should restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0 ], 0, [ 0 ], 0);
@@ -116,7 +116,7 @@ UnitTest.asynctest(
       plugins: '',
       toolbar: '',
       base_url: '/project/tinymce/js/tinymce'
-    }, function () {
+    }, () => {
       success();
     }, failure);
   }

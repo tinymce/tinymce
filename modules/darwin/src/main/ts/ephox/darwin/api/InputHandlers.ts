@@ -51,7 +51,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
 
-    const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(function () {
+    const handler = CellSelection.retrieve(container, annotations.selectedSelector).fold(() => {
       // Shift down should predict the movement and set the selection.
       if (SelectionKeys.isDown(keycode) && shiftKey) {
         return Fun.curry(VerticalMovement.select, bridge, container, isRoot, KeyDirection.down, finish, start, annotations.selectRange);
@@ -64,25 +64,25 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
       } else {
         return Optional.none;
       }
-    }, function (selected) {
+    }, (selected) => {
 
       const update = function (attempts: RC[]) {
         return function () {
-          const navigation = Arr.findMap(attempts, function (delta) {
+          const navigation = Arr.findMap(attempts, (delta) => {
             return KeySelection.update(delta.rows, delta.cols, container, selected, annotations);
           });
 
           // Shift the selected rows and update the selection.
-          return navigation.fold(function () {
+          return navigation.fold(() => {
             // The cell selection went outside the table, so clear it and bridge from the first box to before/after
             // the table
-            return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map(function (edges) {
+            return CellSelection.getEdges(container, annotations.firstSelectedSelector, annotations.lastSelectedSelector).map((edges) => {
               const relative = SelectionKeys.isDown(keycode) || direction.isForward(keycode) ? Situ.after : Situ.before;
               bridge.setRelativeSelection(Situ.on(edges.first, 0), relative(edges.table));
               annotations.clear(container);
               return Response.create(Optional.none(), true);
             });
-          }, function (_) {
+          }, (_) => {
             return Optional.some(Response.create(Optional.none(), true));
           });
         };
@@ -107,7 +107,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
   };
 
   const keyup = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
-    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(function () {
+    return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(() => {
       const realEvent = event.raw;
       const keycode = realEvent.which;
       const shiftKey = realEvent.shiftKey === true;
@@ -133,7 +133,7 @@ const external = (win: Window, container: SugarElement, isRoot: (e: SugarElement
 
   return (start: SugarElement, finish: SugarElement) => {
     annotations.clearBeforeUpdate(container);
-    CellSelection.identify(start, finish, isRoot).each(function (cellSel) {
+    CellSelection.identify(start, finish, isRoot).each((cellSel) => {
       const boxes = cellSel.boxes.getOr([]);
       annotations.selectRange(container, boxes, cellSel.start, cellSel.finish);
 

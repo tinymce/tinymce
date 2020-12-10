@@ -10,7 +10,7 @@ import * as Commands from './api/Commands';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('save', function (editor) {
+  PluginManager.add('save', (editor) => {
     Buttons.register(editor);
     Commands.register(editor);
   });

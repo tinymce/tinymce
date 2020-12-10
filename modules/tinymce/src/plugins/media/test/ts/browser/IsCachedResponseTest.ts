@@ -7,7 +7,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', (success, failure) => {
 
   Theme();
   MediaPlugin();
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', functio
     ]);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 

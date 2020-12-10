@@ -5,7 +5,7 @@ import { Compare, SugarElement, SugarText } from '@ephox/sugar';
 import * as DomExtract from 'ephox/phoenix/api/dom/DomExtract';
 import { Page } from 'ephox/phoenix/test/Page';
 
-UnitTest.test('DomExtractTest', function () {
+UnitTest.test('DomExtractTest', () => {
 
   // IMPORTANT: Otherwise CSS display does not work.
   const page = Page();
@@ -20,7 +20,7 @@ UnitTest.test('DomExtractTest', function () {
       Assert.eq('eq', eOffset, actual.offset);
     };
 
-    check(page.div1, 'First paragraphSecond here'.length + 1, page.t4, 1, function (element) {
+    check(page.div1, 'First paragraphSecond here'.length + 1, page.t4, 1, (element) => {
       return Compare.eq(element, page.div1);
     });
   })();
@@ -63,14 +63,14 @@ UnitTest.test('DomExtractTest', function () {
     // Test from
     const check = function (expected: string, input: SugarElement) {
       const rawActual = DomExtract.from(input, optimise);
-      const actual = Arr.map(rawActual, function (x) {
-        return x.fold(function () {
+      const actual = Arr.map(rawActual, (x) => {
+        return x.fold(() => {
           return '\\w';
-        }, function () {
+        }, () => {
           return '-';
-        }, function (t) {
+        }, (t) => {
           return SugarText.get(t);
-        }, function (t) {
+        }, (t) => {
           return SugarText.get(t);
         });
       }).join('');

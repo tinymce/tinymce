@@ -8,18 +8,18 @@ import * as Settings from 'tinymce/plugins/spellchecker/api/Settings';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (success, failure) => {
 
   SilverTheme();
   SpellcheckerPlugin();
 
   const sTestDefaultLanguage = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       Assert.eq('should be same', Settings.getLanguage(editor), 'en');
     });
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const doc = SugarElement.fromDom(document);
 
     const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});

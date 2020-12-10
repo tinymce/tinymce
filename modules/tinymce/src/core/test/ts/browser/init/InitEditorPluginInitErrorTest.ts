@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (s
     throw new Error('Failed to initialize plugin');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

@@ -5,7 +5,7 @@ import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 
-UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
+UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
@@ -41,7 +41,7 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   const checkAll = function (expected: string[], initial: string) {
     const start = Finder.get(doc, initial);
     const actual = Extract.all(doc, start);
-    assert.eq(expected, Arr.map(actual, function (a) {
+    assert.eq(expected, Arr.map(actual, (a) => {
       return a.id;
     }));
   };
@@ -91,7 +91,7 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', function () {
   }, '1.2.5', 0);
   checkExtract({ id: '1.1', offset: 1 }, '1.1.2', 0);
 
-  checkExtractTo({ id: '1.2', offset: 'This is textinside a spanMore text'.length + 2 }, '1.2.4.1', 2, function (item) {
+  checkExtractTo({ id: '1.2', offset: 'This is textinside a spanMore text'.length + 2 }, '1.2.4.1', 2, (item) => {
     return item.name === 'p';
   });
 });

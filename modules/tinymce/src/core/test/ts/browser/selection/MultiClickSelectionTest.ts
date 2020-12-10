@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     editor.fire('click', { detail: clickCount } as MouseEvent);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const testXClicksNormalisation = (clickCount) => GeneralSteps.sequence([
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (su
     plugins: '',
     toolbar: '',
     base_url: '/project/tinymce/js/tinymce'
-  }, function () {
+  }, () => {
     success();
   }, failure);
 }

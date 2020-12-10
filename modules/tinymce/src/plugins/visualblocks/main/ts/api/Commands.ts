@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as VisualBlocks from '../core/VisualBlocks';
 
 const register = function (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>) {
-  editor.addCommand('mceVisualBlocks', function () {
+  editor.addCommand('mceVisualBlocks', () => {
     VisualBlocks.toggleVisualBlocks(editor, pluginUrl, enabledState);
   });
 };

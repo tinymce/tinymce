@@ -70,19 +70,19 @@ export const Sizers = (): Sizers => {
     southeast.set(maxx, maxy);
 
     const body = SelectorFind.first('body');
-    body.each(function (b) {
+    body.each((b) => {
       InsertAll.append(b, [ southeast.element() ]);
     });
   };
 
   const hide = function () {
-    Arr.each([ northwest, north, northeast, southeast ], function (x) {
+    Arr.each([ northwest, north, northeast, southeast ], (x) => {
       x.hide();
     });
   };
 
   const show = function () {
-    Arr.each([ northwest, north, northeast, southeast ], function (x) {
+    Arr.each([ northwest, north, northeast, southeast ], (x) => {
       x.show();
     });
   };

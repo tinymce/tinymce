@@ -56,13 +56,13 @@ const snapshot = function (okey: string): ValueProcessorAdt {
 
 const strictAccess = function <T> (path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> {
   // In strict mode, if it undefined, it is an error.
-  return Obj.get(obj, key).fold<SimpleResult<SchemaError[], any>>(function () {
+  return Obj.get(obj, key).fold<SimpleResult<SchemaError[], any>>(() => {
     return SchemaError.missingStrict(path, key, obj);
   }, SimpleResult.svalue);
 };
 
 const fallbackAccess = function <T> (obj: Record<string, T>, key: string, fallbackThunk: (obj: Record<string, T>) => T): SimpleResult<SchemaError[], T> {
-  const v = Obj.get(obj, key).fold(function () {
+  const v = Obj.get(obj, key).fold(() => {
     return fallbackThunk(obj);
   }, Fun.identity);
   return SimpleResult.svalue(v);
@@ -73,7 +73,7 @@ const optionAccess = function <T> (obj: Record<string, T>, key: string): SimpleR
 };
 
 const optionDefaultedAccess = function <T> (obj: Record<string, T | true>, key: string, fallback: (obj: Record<string, T | true>) => T): SimpleResult<SchemaError[], Optional<T>> {
-  const opt = Obj.get(obj, key).map(function (val) {
+  const opt = Obj.get(obj, key).map((val) => {
     return val === true ? fallback(obj) : val;
   });
   return SimpleResult.svalue(opt);
@@ -81,47 +81,47 @@ const optionDefaultedAccess = function <T> (obj: Record<string, T | true>, key: 
 
 const cExtractOne = function <T> (path: string[], obj: Record<string, T>, field: FieldProcessorAdt, strength: Strength): SimpleResult<SchemaError[], T> {
   return field.fold(
-    function (key, okey, presence, prop) {
+    (key, okey, presence, prop) => {
       const bundle = function (av: any): SimpleResult<SchemaError[], any> {
         const result = prop.extract(path.concat([ key ]), strength, av);
         return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
       };
 
       const bundleAsOption = function (optValue: Optional<any>): SimpleResult<SchemaError[], Record<string, Optional<any>>> {
-        return optValue.fold(function () {
+        return optValue.fold(() => {
           const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
-        }, function (ov) {
+        }, (ov) => {
           const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
-          return SimpleResult.map(result, function (res) {
+          return SimpleResult.map(result, (res) => {
             return ObjWriter.wrap(okey, strength(Optional.some(res)));
           });
         });
       };
 
       return (function () {
-        return presence.fold(function () {
+        return presence.fold(() => {
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
           );
-        }, function (fallbackThunk) {
+        }, (fallbackThunk) => {
           return SimpleResult.bind(
             fallbackAccess(obj, key, fallbackThunk),
             bundle
           );
-        }, function () {
+        }, () => {
           return SimpleResult.bind(
             optionAccess(obj, key),
             bundleAsOption
           );
-        }, function (fallbackThunk) {
+        }, (fallbackThunk) => {
           // Defaulted option access
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, fallbackThunk),
             bundleAsOption
           );
-        }, function (baseThunk) {
+        }, (baseThunk) => {
           const base = baseThunk(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
@@ -131,7 +131,7 @@ const cExtractOne = function <T> (path: string[], obj: Record<string, T>, field:
         });
       })();
     },
-    function (okey, instantiator) {
+    (okey, instantiator) => {
       const state = instantiator(obj);
       return SimpleResult.svalue(ObjWriter.wrap(okey, strength(state)));
     }
@@ -139,7 +139,7 @@ const cExtractOne = function <T> (path: string[], obj: Record<string, T>, field:
 };
 
 const cExtract = function <T> (path: string[], obj: Record<string, T>, fields: FieldProcessorAdt[], strength: Strength): SimpleResult<SchemaError[], T> {
-  const results = Arr.map(fields, function (field) {
+  const results = Arr.map(fields, (field) => {
     return cExtractOne(path, obj, field, strength);
   });
 
@@ -166,7 +166,7 @@ const value = function (validator: ValueValidator): Processor {
     return SimpleResult.bindError(
       // NOTE: Intentionally allowing strength to be passed through internally
       validator(val, strength),
-      function (err) {
+      (err) => {
         return SchemaError.custom(path, err);
       }
     );
@@ -188,15 +188,15 @@ const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefi
 const objOfOnly = function (fields: ValueProcessorAdt[]): Processor {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(fields, function (acc, f: ValueProcessorAdt) {
-    return f.fold(function (key) {
+  const fieldNames = Arr.foldr<ValueProcessorAdt, Record<string, string>>(fields, (acc, f: ValueProcessorAdt) => {
+    return f.fold((key) => {
       return Merger.deepMerge(acc, Objects.wrap(key, true));
     }, Fun.constant(acc));
   }, { });
 
   const extract = function (path, strength, o) {
     const keys = Type.isBoolean(o) ? [ ] : getSetKeys(o);
-    const extra = Arr.filter(keys, function (k) {
+    const extra = Arr.filter(keys, (k) => {
       return !Obj.hasNonNullableKey(fieldNames, k);
     });
 
@@ -216,10 +216,10 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
   };
 
   const toString = function () {
-    const fieldStrings = Arr.map(fields, function (field) {
-      return field.fold(function (key, okey, presence, prop) {
+    const fieldStrings = Arr.map(fields, (field) => {
+      return field.fold((key, okey, presence, prop) => {
         return key + ' -> ' + prop.toString();
-      }, function (okey, _instantiator) {
+      }, (okey, _instantiator) => {
         return 'state(' + okey + ')';
       });
     });
@@ -234,7 +234,7 @@ const objOf = function (fields: ValueProcessorAdt[]): Processor {
 
 const arrOf = function (prop: Processor): Processor {
   const extract = function (path, strength, array) {
-    const results = Arr.map(array, function (a, i) {
+    const results = Arr.map(array, (a, i) => {
       return prop.extract(path.concat([ '[' + i + ']' ]), strength, a);
     });
     return ResultCombine.consolidateArr(results);
@@ -285,8 +285,8 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
     //
     const keys = Obj.keys(o);
     const validatedKeys = validateKeys(path, keys);
-    return SimpleResult.bind(validatedKeys, function (validKeys) {
-      const schema = Arr.map(validKeys, function (vk) {
+    return SimpleResult.bind(validatedKeys, (validKeys) => {
+      const schema = Arr.map(validKeys, (vk) => {
         return adt.field(vk, vk, FieldPresence.strict(), prop);
       });
 
@@ -306,7 +306,7 @@ const setOf = function (validator: ValueValidator, prop: Processor): Processor {
 
 // retriever is passed in. See funcOrDie in ValueSchema
 const func = function (args: string[], schema: Processor, retriever: (obj: any, strength: Strength) => any): Processor {
-  const delegate = value(function (f, strength) {
+  const delegate = value((f, strength) => {
     return Type.isFunction(f) ? SimpleResult.svalue<any, () => any>(function () {
       const gArgs = Array.prototype.slice.call(arguments, 0);
       const allowedArgs = gArgs.slice(0, args.length);
@@ -324,7 +324,7 @@ const func = function (args: string[], schema: Processor, retriever: (obj: any, 
 };
 
 const thunk = function (desc: string, processor: () => Processor): Processor {
-  const getP = Thunk.cached(function () {
+  const getP = Thunk.cached(() => {
     return processor();
   });
 

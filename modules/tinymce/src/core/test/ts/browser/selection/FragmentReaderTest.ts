@@ -5,17 +5,17 @@ import { Hierarchy, Html, Insert, SugarElement } from '@ephox/sugar';
 import * as FragmentReader from 'tinymce/core/selection/FragmentReader';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cReadFragment = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -28,8 +28,8 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
   };
 
   const cReadFragmentCells = function (paths) {
-    return Chain.mapper(function (viewBlock: any) {
-      const ranges = Arr.map(paths, function (path) {
+    return Chain.mapper((viewBlock: any) => {
+      const ranges = Arr.map(paths, (path) => {
         const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
         const rng = document.createRange();
         rng.selectNode(container.dom);
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
   };
 
   const cAssertFragmentHtml = function (expectedHtml) {
-    return Chain.mapper(function (fragment) {
+    return Chain.mapper((fragment) => {
       const actualHtml = getFragmentHtml(fragment);
       Assertions.assertHtml('Should be expected fragment html', expectedHtml, actualHtml);
       return fragment;
@@ -214,7 +214,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', function
         cAssertFragmentHtml('<table><tbody><tr><td>B</td></tr><tr><td>D</td></tr></tbody></table>')
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

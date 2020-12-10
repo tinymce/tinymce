@@ -58,13 +58,13 @@ const getBottomEdge = function (index: number, cell: SugarElement): RowInfo {
 
 const findPositions = function <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]): Optional<T>[] {
   if (array.length === 0 ) { return []; }
-  const lines = Arr.map(array.slice(1), function (cellOption, index) {
-    return cellOption.map(function (cell) {
+  const lines = Arr.map(array.slice(1), (cellOption, index) => {
+    return cellOption.map((cell) => {
       return getInnerEdge(index, cell);
     });
   });
 
-  const lastLine = array[array.length - 1].map(function (cell) {
+  const lastLine = array[array.length - 1].map((cell) => {
     return getOuterEdge(array.length - 1, cell);
   });
 

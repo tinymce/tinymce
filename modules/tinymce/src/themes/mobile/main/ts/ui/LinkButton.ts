@@ -14,7 +14,7 @@ import * as Buttons from './Buttons';
 import * as Inputs from './Inputs';
 import * as SerialisedDialog from './SerialisedDialog';
 
-const getGroups = Thunk.cached(function (realm, editor) {
+const getGroups = Thunk.cached((realm, editor) => {
   return [
     {
       label: 'the link group',
@@ -49,7 +49,7 @@ const getGroups = Thunk.cached(function (realm, editor) {
 });
 
 const sketch = function (realm, editor): SketchSpec {
-  return Buttons.forToolbarStateAction(editor, 'link', 'link', function () {
+  return Buttons.forToolbarStateAction(editor, 'link', 'link', () => {
     const groups = getGroups(realm, editor);
 
     realm.setContextToolbar(groups);
@@ -59,11 +59,11 @@ const sketch = function (realm, editor): SketchSpec {
     // end of the word (http://fiddle.tinymce.com/xNfaab/3 or 4). This is actually dependent
     // on your keyboard (Google Keyboard) and is probably considered a feature. It does
     // not happen on Samsung (for example).
-    RangePreserver.forAndroid(editor, function () {
+    RangePreserver.forAndroid(editor, () => {
       realm.focusToolbar();
     });
 
-    LinkBridge.query(editor).each(function (link) {
+    LinkBridge.query(editor).each((link) => {
       editor.selection.select(link.dom);
     });
   });

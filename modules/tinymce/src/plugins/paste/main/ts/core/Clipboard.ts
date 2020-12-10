@@ -255,7 +255,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
   editor.on('keyup', keyboardPastePressed.clear);
 
-  editor.on('keydown', function (e) {
+  editor.on('keydown', (e) => {
     const removePasteBinOnKeyUp = (e: EditorEvent<KeyboardEvent>) => {
       // Ctrl+V or Shift+Insert
       if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
@@ -296,7 +296,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       // Remove pastebin if we get a keyup and no paste event
       // For example pasting a file in IE 11 will not produce a paste event
       editor.once('keyup', removePasteBinOnKeyUp);
-      editor.once('paste', function () {
+      editor.once('paste', () => {
         editor.off('keyup', removePasteBinOnKeyUp);
       });
     }
@@ -364,7 +364,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 
-  editor.on('paste', function (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) {
+  editor.on('paste', (e: EditorEvent<ClipboardEvent & { ieFake: boolean }>) => {
     const isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
     if (isKeyboardPaste) {
       keyboardPasteEvent.clear();
@@ -395,7 +395,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     if (Env.ie && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
       pasteBin.create();
 
-      editor.dom.bind(pasteBin.getEl(), 'paste', function (e) {
+      editor.dom.bind(pasteBin.getEl(), 'paste', (e) => {
         e.stopPropagation();
       });
 
@@ -414,7 +414,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
       insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
     } else {
-      Delay.setEditorTimeout(editor, function () {
+      Delay.setEditorTimeout(editor, () => {
         insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
       }, 0);
     }

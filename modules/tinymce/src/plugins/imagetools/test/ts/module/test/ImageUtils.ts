@@ -4,13 +4,13 @@ import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 const sExecCommand = function (editor: Editor, cmd: string, value?: string) {
-  return Logger.t(`Execute ${cmd}`, Step.sync(function () {
+  return Logger.t(`Execute ${cmd}`, Step.sync(() => {
     editor.execCommand(cmd, false, value);
   }));
 };
 
 const sLoadImage = function (editor: Editor, url: string, size?: { width: number; height: number }) {
-  return Logger.t(`Load image ${url}`, Step.async(function (done, die) {
+  return Logger.t(`Load image ${url}`, Step.async((done, die) => {
     const img = new Image();
 
     img.onload = function () {
@@ -26,13 +26,13 @@ const sLoadImage = function (editor: Editor, url: string, size?: { width: number
 };
 
 const sUploadImages = function (editor: Editor) {
-  return Logger.t('Upload images', Step.async(function (done) {
+  return Logger.t('Upload images', Step.async((done) => {
     editor.uploadImages(done);
   }));
 };
 
 const sWaitForBlobImage = function (editor: Editor) {
-  return Waiter.sTryUntil('Did not find a blobimage', Step.sync(function () {
+  return Waiter.sTryUntil('Did not find a blobimage', Step.sync(() => {
     Assert.eq('Should be one blob image', true, editor.dom.select('img[src^=blob]').length === 1);
   }), 10, 3000);
 };
@@ -51,12 +51,12 @@ const createStateContainer = function () {
   };
 
   const sResetState = Logger.t('Reset state',
-    Step.sync(function () {
+    Step.sync(() => {
       state.set(null);
     })
   );
 
-  const sWaitForState = Waiter.sTryUntil('Did not get a state change', Step.sync(function () {
+  const sWaitForState = Waiter.sTryUntil('Did not get a state change', Step.sync(() => {
     Assert.eq('Should be true when we have the state', true, state.get() !== null);
   }), 10, 3000);
 

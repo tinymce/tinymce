@@ -4,7 +4,7 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { SpotPoint } from 'ephox/phoenix/api/data/Types';
 import * as DomDescent from 'ephox/phoenix/api/dom/DomDescent';
 
-UnitTest.test('DomDescentTest', function () {
+UnitTest.test('DomDescentTest', () => {
 
   const root = SugarElement.fromHtml(
     '<div>\n' +

@@ -6,11 +6,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { MediaData, MediaDialogData } from '../../../main/ts/core/Types';
 import * as Dialog from '../../../main/ts/ui/Dialog';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.core.DataUnwrapTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.DataUnwrapTest', (success, failure) => {
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (_editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((_editor, onSuccess, onFailure) => {
     const inputData: MediaDialogData = {
       source: {
         value: 'www.test.com',

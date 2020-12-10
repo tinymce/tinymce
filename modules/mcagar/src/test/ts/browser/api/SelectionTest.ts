@@ -39,7 +39,7 @@ UnitTest.asynctest('SelectionTest', (success, failure) => {
 
   Pipeline.async({}, [
     sTestStep
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

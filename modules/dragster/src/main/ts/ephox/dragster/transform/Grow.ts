@@ -44,21 +44,21 @@ const grower = function (f: GrowthFn) {
   };
 };
 
-const both = grower(function (x, y): Growth {
+const both = grower((x, y): Growth => {
   return {
     x,
     y
   };
 });
 
-const horizontal = grower(function (x, _y): Growth {
+const horizontal = grower((x, _y): Growth => {
   return {
     x,
     y: 0
   };
 });
 
-const vertical = grower(function (x, y): Growth {
+const vertical = grower((x, y): Growth => {
   return {
     x: 0,
     y

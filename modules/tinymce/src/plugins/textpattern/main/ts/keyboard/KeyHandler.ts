@@ -70,11 +70,11 @@ const checkKeyEvent = (codes, event, predicate) => {
   }
 };
 
-const checkKeyCode = (codes, event) => checkKeyEvent(codes, event, function (code, event) {
+const checkKeyCode = (codes, event) => checkKeyEvent(codes, event, (code, event) => {
   return code === event.keyCode && VK.modifierPressed(event) === false;
 });
 
-const checkCharCode = (chars, event) => checkKeyEvent(chars, event, function (chr, event) {
+const checkCharCode = (chars, event) => checkKeyEvent(chars, event, (chr, event) => {
   return chr.charCodeAt(0) === event.charCode;
 });
 

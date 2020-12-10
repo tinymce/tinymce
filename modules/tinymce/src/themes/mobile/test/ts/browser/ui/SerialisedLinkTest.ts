@@ -47,7 +47,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
   const sAssertNavigation = function (label, prevEnabled, nextEnabled) {
     return Logger.t(
       label,
-      Step.sync(function () {
+      Step.sync(() => {
         const active = Focus.active().getOrDie();
         // The buttons are next and previous siblings
         const prev = Traverse.parent(active).bind(Traverse.prevSibling).getOrDie('Could not find button to left');
@@ -56,7 +56,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         const assertNavButton = function (buttonLabel, expected, button) {
           Assertions.assertStructure(
             'Checking ' + buttonLabel + ' button should be enabled = ' + expected,
-            ApproxStructure.build(function (s, str, arr) {
+            ApproxStructure.build((s, str, arr) => {
               return s.element('span', {
                 attrs: {
                   role: str.is('button')
@@ -202,7 +202,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     sAssertNavigation('Checking initial navigation on text node', false, true),
 
     sTestNavigation,
-    Step.sync(function () {
+    Step.sync(() => {
       realm.restoreToolbar();
     }),
 
@@ -338,7 +338,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       fields: { },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
               href: str.is('http://prepared-url')
@@ -357,7 +357,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -376,7 +376,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -396,7 +396,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       },
       expected: [ ],
       mutations(node) {
-        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build(function (s, str, _arr) {
+        return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
               href: str.is('http://new-url')
@@ -406,7 +406,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         }), node);
       }
     })
-  ] : [], function () {
+  ] : [], () => {
     unload(); success();
   }, failure);
 });

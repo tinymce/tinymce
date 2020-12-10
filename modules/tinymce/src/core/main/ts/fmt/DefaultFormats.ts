@@ -189,7 +189,7 @@ const get = function (dom: DOMUtils) {
     ]
   };
 
-  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), function (name) {
+  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre div dt dd samp'.split(/\s/), (name) => {
     formats[name] = { block: name, remove: 'all' };
   });
 

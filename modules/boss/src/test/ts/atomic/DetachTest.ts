@@ -6,7 +6,7 @@ import * as Detach from 'ephox/boss/mutant/Detach';
 import * as Logger from 'ephox/boss/mutant/Logger';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('DetachTest', function () {
+UnitTest.test('DetachTest', () => {
 
   const check = function (expectedRemain: string, expectedDetach: Optional<string>, input: Gene, id: string) {
     const family = Tracks.track(input, Optional.none());

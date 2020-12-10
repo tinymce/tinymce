@@ -18,7 +18,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.paste.CutTest', (success, failure)
     return success();
   }
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 

@@ -12,7 +12,7 @@ import TestEditor from '../../module/test/ui/TestEditor';
 import * as TestStyles from '../../module/test/ui/TestStyles';
 import * as TestUi from '../../module/test/ui/TestUi';
 
-UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: ui.ButtonsTest', (success, failure) => {
 
   /*
    * PURPOSE
@@ -50,7 +50,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
   );
 
   const memGamma = Memento.record(
-    Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', function () {
+    Buttons.forToolbarStateAction(tEditor.editor(), 'gamma-class', 'gamma-query', () => {
       tEditor.adder('gamma-action')();
     })
   );
@@ -144,7 +144,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', function (success, failure) {
     sTestAlpha,
     sTestBeta,
     sTestGamma
-  ], function () {
+  ], () => {
     unload(); success();
   }, failure);
 });

@@ -7,7 +7,7 @@ import * as TableLookup from './TableLookup';
 import { Warehouse } from './Warehouse';
 
 const moveBy = function (cell: SugarElement, deltaRow: number, deltaColumn: number): Optional<SugarElement> {
-  return TableLookup.table(cell).bind(function (table) {
+  return TableLookup.table(cell).bind((table) => {
     const warehouse = getWarehouse(table);
     return CellFinder.moveBy(warehouse, cell, deltaRow, deltaColumn);
   });

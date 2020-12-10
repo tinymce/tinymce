@@ -5,17 +5,17 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, failure) => {
   const ZWSP = Zwsp.ZWSP;
 
   const cCreateElement = function (html) {
-    return Chain.injectThunked(function () {
+    return Chain.injectThunked(() => {
       return SugarElement.fromHtml(html);
     });
   };
 
   const cNormalizePosition = function (forward, path, offset) {
-    return Chain.mapper(function (elm: any) {
+    return Chain.mapper((elm: any) => {
       const container = Hierarchy.follow(elm, path).getOrDie();
       const pos = CaretPosition(container.dom, offset);
       return { pos: InlineUtils.normalizePosition(forward, pos), elm };
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   };
 
   const cAssertPosition = function (path, expectedOffset) {
-    return Chain.mapper(function (elmPos: any) {
+    return Chain.mapper((elmPos: any) => {
       const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
       Assertions.assertDomEq('Should be expected container', SugarElement.fromDom(elmPos.pos.container()), expectedContainer);
       Assertions.assertEq('Should be expected offset', elmPos.pos.offset(), expectedOffset);
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   };
 
   const cSplitAt = function (path, offset) {
-    return Chain.mapper(function (elm: any) {
+    return Chain.mapper((elm: any) => {
       const textNode = Hierarchy.follow(elm, path).filter(SugarNode.isText).getOrDie();
       textNode.dom.splitText(offset);
       return elm;
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
   };
 
   Pipeline.async({}, [
-    Logger.t('isInlineTarget with various editor settings', Step.sync(function () {
+    Logger.t('isInlineTarget with various editor settings', Step.sync(() => {
       Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a href="a">').dom));
       Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<code>').dom));
       Assertions.assertEq('Annotations should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<span class="mce-annotation"></span>').dom));
@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', function (su
         cAssertPosition([], 2)
       ]))
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

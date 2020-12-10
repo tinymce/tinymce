@@ -152,7 +152,7 @@ const some = <T>(a: T): Optional<T> => {
     equals_<T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) {
       return o.fold(
         Fun.never,
-        function (b) { return elementEq(a, b); }
+        (b) => { return elementEq(a, b); }
       );
     }
   };

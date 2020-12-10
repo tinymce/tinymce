@@ -13,12 +13,12 @@ import * as Dialog from './ui/Dialog';
 import * as Utils from './util/Utils';
 
 export default function () {
-  PluginManager.add('codesample', function (editor) {
+  PluginManager.add('codesample', (editor) => {
     FilterContent.setup(editor);
     Buttons.register(editor);
     Commands.register(editor);
 
-    editor.on('dblclick', function (ev) {
+    editor.on('dblclick', (ev) => {
       if (Utils.isCodeSample(ev.target)) {
         Dialog.open(editor);
       }

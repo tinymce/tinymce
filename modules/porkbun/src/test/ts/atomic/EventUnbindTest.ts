@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Event } from 'ephox/porkbun/Event';
 
-UnitTest.test('EventUnbindTest', function () {
+UnitTest.test('EventUnbindTest', () => {
   const event = Event([]);
 
   const first = () => event.unbind(first);

@@ -2,8 +2,8 @@ import { Arr, Optional } from '@ephox/katamari';
 import { WordScope } from '../data/WordScope';
 
 const quoteList = [ `'`, '\u2018', '\u2019' ];
-const whitelist = Arr.bind(quoteList, function (q) {
-  return Arr.map([ 'twas' ], function (t) {
+const whitelist = Arr.bind(quoteList, (q) => {
+  return Arr.map([ 'twas' ], (t) => {
     return q + t;
   });
 });
@@ -30,7 +30,7 @@ const rhs = function (ws: WordScope): WordScope {
 
 const lhs = function (ws: WordScope): WordScope {
   const word = ws.word;
-  const whitelisted = Arr.exists(whitelist, function (x) {
+  const whitelisted = Arr.exists(whitelist, (x) => {
     return word.indexOf(x) > -1;
   });
 

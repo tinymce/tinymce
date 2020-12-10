@@ -6,7 +6,7 @@ import * as DomParent from 'ephox/robin/api/dom/DomParent';
 
 UnitTest.test(
   'DomParentTest',
-  function () {
+  () => {
     const check = function (expected: string, p: string, c: string) {
       const container = SugarElement.fromTag('div');
       container.dom.innerHTML =

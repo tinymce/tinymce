@@ -47,10 +47,10 @@ export default ValueSchema.objOf([
   FieldSchema.strict('toolbar'),
   FieldSchema.strict('container'),
   FieldSchema.strict('alloy'),
-  FieldSchema.state('win', function (spec) {
+  FieldSchema.state('win', (spec) => {
     return Traverse.owner(spec.socket).dom.defaultView;
   }),
-  FieldSchema.state('body', function (spec) {
+  FieldSchema.state('body', (spec) => {
     return SugarElement.fromDom(
       spec.socket.dom.ownerDocument.body
     );

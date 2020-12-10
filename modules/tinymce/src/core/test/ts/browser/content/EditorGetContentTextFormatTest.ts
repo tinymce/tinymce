@@ -7,13 +7,13 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTextFormatTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('get text format content should trim zwsp', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>' + Zwsp.ZWSP + 'a</p>'),
-        Step.sync(function () {
+        Step.sync(() => {
           const html = editor.getContent({ format: 'text' });
           Assertions.assertEq('Should be expected html', 'a', html);
         })

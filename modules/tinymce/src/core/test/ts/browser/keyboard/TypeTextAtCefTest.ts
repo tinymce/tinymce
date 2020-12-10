@@ -5,11 +5,11 @@ import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as TypeText from '../../module/test/TypeText';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', (success, failure) => {
 
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

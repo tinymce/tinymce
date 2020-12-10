@@ -47,7 +47,7 @@ tinymce.init({
     console.log('blob upload [started]', 'id:', data.id(), 'filename:', data.filename());
     progress(0);
 
-    Delay.setTimeout(function () {
+    Delay.setTimeout(() => {
       console.log('blob upload [ended]', data.id());
       success(data.id() + '.png');
       progress(100);
@@ -56,7 +56,7 @@ tinymce.init({
 });
 
 function send() {
-  tinymce.activeEditor.uploadImages(function () {
+  tinymce.activeEditor.uploadImages(() => {
     console.log('saving:', tinymce.activeEditor.getContent());
   });
 }
@@ -64,7 +64,7 @@ function send() {
 function upload() {
   console.log('upload [started]');
 
-  tinymce.activeEditor.uploadImages(function (success) {
+  tinymce.activeEditor.uploadImages((success) => {
     console.log('upload [ended]', success);
   });
 }

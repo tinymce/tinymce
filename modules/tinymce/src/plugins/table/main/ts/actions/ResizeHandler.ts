@@ -88,37 +88,37 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   };
 
   const destroy = function () {
-    resize.each(function (sz) {
+    resize.each((sz) => {
       sz.destroy();
     });
 
-    wire.each(function (w) {
+    wire.each((w) => {
       TableWire.remove(editor, w);
     });
   };
 
-  editor.on('init', function () {
+  editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
     wire = Optional.some(rawWire);
     if (Settings.hasObjectResizing(editor) && Settings.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
       const sz = TableResize.create(rawWire, resizing, lazySizing);
       sz.on();
-      sz.events.startDrag.bind(function (_event) {
+      sz.events.startDrag.bind((_event) => {
         selectionRng = Optional.some(editor.selection.getRng());
       });
 
-      sz.events.beforeResize.bind(function (event) {
+      sz.events.beforeResize.bind((event) => {
         const rawTable = event.table.dom;
         Events.fireObjectResizeStart(editor, rawTable, Util.getPixelWidth(rawTable), Util.getPixelHeight(rawTable), barResizerPrefix + event.type);
       });
 
-      sz.events.afterResize.bind(function (event) {
+      sz.events.afterResize.bind((event) => {
         const table = event.table;
         const rawTable = table.dom;
         Util.removeDataStyle(table);
 
-        selectionRng.each(function (rng) {
+        selectionRng.each((rng) => {
           editor.selection.setRng(rng);
           editor.focus();
         });
@@ -132,7 +132,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   });
 
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
-  editor.on('ObjectResizeStart', function (e) {
+  editor.on('ObjectResizeStart', (e) => {
     const targetElm = e.target;
     if (isTable(targetElm)) {
       const table = SugarElement.fromDom(targetElm);
@@ -176,7 +176,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
   });
 
   editor.on('SwitchMode', () => {
-    lazyResize().each(function (resize) {
+    lazyResize().each((resize) => {
       if (editor.mode.isReadOnly()) {
         resize.hideBars();
       } else {

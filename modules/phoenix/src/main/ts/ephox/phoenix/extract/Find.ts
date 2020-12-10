@@ -14,7 +14,7 @@ const find = function <E, D> (universe: Universe<E, D>, parent: E, offset: numbe
 
   const parray = PositionArray.generate(extractions, TypedList.gen);
   const spot = PositionArray.get(parray, offset);
-  return spot.map(function (v) {
+  return spot.map((v) => {
     return Spot.point(v.element, offset - v.start);
   });
 };

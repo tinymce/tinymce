@@ -93,7 +93,7 @@ class EditorCommands {
     }
 
     // Plugin commands
-    each(this.editor.plugins, function (p) {
+    each(this.editor.plugins, (p) => {
       if (p.execCommand && p.execCommand(command, ui, value)) {
         self.editor.fire('ExecCommand', { command, ui, value });
         state = true;
@@ -194,8 +194,8 @@ class EditorCommands {
   public addCommands(commandList: Commands[keyof Commands], type: 'exec' | 'state' | 'query' = 'exec') {
     const self = this;
 
-    each(commandList, function (callback, command) {
-      each(command.toLowerCase().split(','), function (command) {
+    each(commandList, (callback, command) => {
+      each(command.toLowerCase().split(','), (command) => {
         self.commands[type][command] = callback;
       });
     });
@@ -344,7 +344,7 @@ class EditorCommands {
         }
 
         // Remove all other alignments first
-        each('left,center,right,justify'.split(','), function (name) {
+        each('left,center,right,justify'.split(','), (name) => {
           if (align !== name) {
             editor.formatter.remove('align' + name);
           }
@@ -432,7 +432,7 @@ class EditorCommands {
       'mceSelectNodeDepth'(command, ui, value) {
         let counter = 0;
 
-        editor.dom.getParent(editor.selection.getNode(), function (node) {
+        editor.dom.getParent(editor.selection.getNode(), (node) => {
           if (node.nodeType === 1 && counter++ === value) {
             editor.selection.select(node);
             return false;
@@ -528,7 +528,7 @@ class EditorCommands {
     const alignStates = (name: string) => () => {
       const selection = editor.selection;
       const nodes = selection.isCollapsed() ? [ editor.dom.getParent(selection.getNode(), editor.dom.isBlock) ] : selection.getSelectedBlocks();
-      const matches = map(nodes, function (node) {
+      const matches = map(nodes, (node) => {
         return !!editor.formatter.matchNode(node, name);
       });
       return inArray(matches, true) !== -1;

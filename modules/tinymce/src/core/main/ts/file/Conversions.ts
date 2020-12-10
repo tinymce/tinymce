@@ -16,7 +16,7 @@ import Promise from '../api/util/Promise';
  */
 
 const blobUriToBlob = function (url: string): Promise<Blob> {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
 
     const rejectWithError = function () {
       reject('Cannot convert ' + url + ' to Blob. Resource might not exist or is inaccessible.');
@@ -107,7 +107,7 @@ const uriToBlob = function (url: string): Promise<Blob> {
 };
 
 const blobToDataUri = function (blob: Blob): Promise<string> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
 
     reader.onloadend = function () {

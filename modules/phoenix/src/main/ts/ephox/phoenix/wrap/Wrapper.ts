@@ -24,11 +24,11 @@ const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () 
     return wrapped;
   }
 
-  const filtered = Arr.filter(wrapped, function (x) {
+  const filtered = Arr.filter(wrapped, (x) => {
     return universe.property().isText(x) && universe.property().getText(x).length > 0;
   });
 
-  return Arr.map(filtered, function (w) {
+  return Arr.map(filtered, (w) => {
     const container = nu();
     universe.insert().before(w, container.element);
     container.wrap(w);
@@ -40,7 +40,7 @@ const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () 
  * Return the cursor positions at the start and end of a collection of wrapper elements
  */
 const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]): Optional<SpotPoints<E>> {
-  return Optional.from(wrapped[0]).map(function (first) {
+  return Optional.from(wrapped[0]).map((first) => {
     // INVESTIGATE: Should this one navigate to the next child when first isn't navigating down a level?
     const last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
     return Spot.points(
@@ -87,7 +87,7 @@ const reuse = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: nu
     return container.element;
   };
 
-  return Arr.map(groups, function (group) {
+  return Arr.map(groups, (group) => {
     // return parent if it can be reused (e.g. span with no other children), otherwise make a new one.
     const builder = canReuse(group) ? recycle : create;
     return builder(group);

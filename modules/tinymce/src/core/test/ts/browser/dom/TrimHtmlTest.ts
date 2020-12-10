@@ -5,7 +5,7 @@ import { DomSerializerImpl } from 'tinymce/core/dom/DomSerializerImpl';
 import * as TrimHtml from 'tinymce/core/dom/TrimHtml';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', function () {
+UnitTest.test('browser.tinymce.core.dom.TrimHtmlTest', () => {
   const serializer = DomSerializerImpl({}, new Editor('id', {}, EditorManager));
 
   Assert.eq('Should be unchanged', '<p id="a" data-mce-abc="1">a</p>', TrimHtml.trimInternal(serializer, '<p id="a" data-mce-abc="1">a</p>'));

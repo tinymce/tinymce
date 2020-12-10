@@ -16,9 +16,9 @@ import * as NavigableObject from '../general/NavigableObject';
 import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
-type WindowBodySpec = {
+interface WindowBodySpec {
   body: Dialog.Dialog<unknown>['body'];
-};
+}
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'

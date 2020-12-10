@@ -45,7 +45,7 @@ Css.setAll(div, {
 // will need closers.
 const sizers = Sizers();
 
-DomEvent.bind(div, 'mousedown', function () {
+DomEvent.bind(div, 'mousedown', () => {
   sizers.show();
   sizers.update(div);
   relocater.on();
@@ -55,33 +55,33 @@ const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 Insert.append(ephoxUi, div);
 
 const neGrow = Grow.both(div);
-neGrow.events.grow.bind(function () {
+neGrow.events.grow.bind(() => {
   sizers.hide();
   relocater.off();
 });
 
 const relocate = Relocate.both(div);
-relocate.events.relocate.bind(function () {
+relocate.events.relocate.bind(() => {
   sizers.hide();
 });
 
 const grower = Dragger.transform(neGrow);
-grower.events.stop.bind(function () {
+grower.events.stop.bind(() => {
   sizers.update(div);
   sizers.show();
   relocater.on();
 });
 grower.on();
-DomEvent.bind(sizers.southeast().element(), 'mousedown', function () {
+DomEvent.bind(sizers.southeast().element(), 'mousedown', () => {
   grower.go(ephoxUi);
 });
 
 const relocater = Dragger.transform(relocate);
-relocater.events.stop.bind(function () {
+relocater.events.stop.bind(() => {
   sizers.update(div);
   sizers.show();
 });
-DomEvent.bind(div, 'mousedown', function () {
+DomEvent.bind(div, 'mousedown', () => {
   relocater.go(SugarElement.fromDom(document.body));
 });
 relocater.off();

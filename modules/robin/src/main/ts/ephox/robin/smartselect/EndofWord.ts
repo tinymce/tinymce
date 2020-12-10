@@ -38,10 +38,10 @@ const all = function <E> (cluster: WordDecisionItem<E>[]): Optional<WordRange<E>
 
 const scan = function <E, D> (universe: Universe<E, D>, item: E, offset: number): ScanResult<E> {
   const text = universe.property().getText(item);
-  const preLength = Arr.filter(text.substring(0, offset), function (s) {
+  const preLength = Arr.filter(text.substring(0, offset), (s) => {
     return s !== Unicode.zeroWidth;
   }).length;
-  const postLength = Arr.filter(text.substring(offset, text.length), function (c) {
+  const postLength = Arr.filter(text.substring(offset, text.length), (c) => {
     return c === Unicode.zeroWidth;
   }).length;
 

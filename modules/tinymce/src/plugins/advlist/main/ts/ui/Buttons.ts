@@ -30,7 +30,7 @@ const findIndex = function (list, predicate) {
 
 // <ListStyles>
 const styleValueToText = function (styleValue) {
-  return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, function (chr) {
+  return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, (chr) => {
     return chr.toUpperCase();
   });
 };

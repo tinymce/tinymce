@@ -4,7 +4,7 @@ import { Unicode } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 
-UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', function () {
+UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', () => {
   const testReplaceWithSpans = function () {
     Assertions.assertHtml(
       'should return span around shy and nbsp',

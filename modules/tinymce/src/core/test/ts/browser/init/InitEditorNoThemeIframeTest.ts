@@ -3,9 +3,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', (success, failure) => {
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', func
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sAssertContent('<p>a</p>')
       ])),
-      Logger.t('Editor element properties', Step.sync(function () {
+      Logger.t('Editor element properties', Step.sync(() => {
         const body = SugarElement.fromDom(document.body);
         const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
         const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');

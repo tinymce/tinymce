@@ -5,12 +5,12 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as TypeText from '../module/test/TypeText';
 
-UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', (success, failure) => {
 
   Theme();
 
   const sClickMiddleOf = function (editor, elementPath) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom as HTMLElement;
       const rect = element.getBoundingClientRect();
       const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', functio
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

@@ -12,7 +12,7 @@ import { Promise } from '../util/Promise';
  * @returns {Promise}
  */
 function scale(image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCanvasElement> {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const sW = ImageSize.getWidth(image);
     const sH = ImageSize.getHeight(image);
     const wRatio = dW / sW;

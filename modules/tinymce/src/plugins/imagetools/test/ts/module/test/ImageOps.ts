@@ -8,7 +8,7 @@ export default function (editor) {
 
   const cHasState = function (predicate) {
     return Chain.control(
-      Chain.binder(function (element) {
+      Chain.binder((element) => {
         return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
       }),
       Guard.addLogging('Assert element has state')
@@ -90,7 +90,7 @@ export default function (editor) {
     return Chain.control(
       Chain.fromChains([
         cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
-        cWaitForState(function (el) {
+        cWaitForState((el) => {
           return Attribute.get(el, 'disabled') === undefined;
         }),
         Mouse.cClick
@@ -103,7 +103,7 @@ export default function (editor) {
     return Chain.control(
       Chain.fromChains([
         UiFinder.cFindIn('button[aria-label="' + label + '"]'),
-        cWaitForState(function (el) {
+        cWaitForState((el) => {
           return Attribute.get(el, 'disabled') === undefined;
         }),
         Mouse.cClick
@@ -114,14 +114,14 @@ export default function (editor) {
 
   const sWaitForUrlChange = function (imgEl, origUrl) {
     return Logger.t('Wait for url change', Chain.asStep(imgEl, [
-      cWaitForState(function (el) {
+      cWaitForState((el) => {
         return Attribute.get(el, 'src') !== origUrl;
       })
     ]));
   };
 
   const sExec = function (execFromToolbar, label) {
-    return Logger.t(`Execute ${label}`, Step.async(function (next, die) {
+    return Logger.t(`Execute ${label}`, Step.async((next, die) => {
       const imgEl = TinyDom.fromDom(editor.selection.getNode());
       const origUrl = Attribute.get(imgEl, 'src');
 
@@ -132,7 +132,7 @@ export default function (editor) {
           execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
         ]),
         sWaitForUrlChange(imgEl, origUrl)
-      ], function () {
+      ], () => {
         next();
       }, die);
     }));

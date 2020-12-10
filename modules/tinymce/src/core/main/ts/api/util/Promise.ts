@@ -46,7 +46,7 @@ const promise = function () {
       this._deferreds.push(deferred);
       return;
     }
-    asap(function () {
+    asap(() => {
       const cb = me._state ? deferred.onFulfilled : deferred.onRejected;
       if (cb === null) {
         (me._state ? deferred.resolve : deferred.reject)(me._value);
@@ -108,11 +108,11 @@ const promise = function () {
   function doResolve(fn, onFulfilled, onRejected) {
     let done = false;
     try {
-      fn(function (value) {
+      fn((value) => {
         if (done) { return; }
         done = true;
         onFulfilled(value);
-      }, function (reason) {
+      }, (reason) => {
         if (done) { return; }
         done = true;
         onRejected(reason);
@@ -130,7 +130,7 @@ const promise = function () {
 
   Promise.prototype.then = function (onFulfilled, onRejected) {
     const me = this;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       handle.call(me, new Handler(onFulfilled, onRejected, resolve, reject));
     });
   };
@@ -138,7 +138,7 @@ const promise = function () {
   Promise.all = function () {
     const args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
 
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       if (args.length === 0) { return resolve([]); }
       let remaining = args.length;
       function res(i, val) {
@@ -146,7 +146,7 @@ const promise = function () {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, function (val) { res(i, val); }, reject);
+              then.call(val, (val) => { res(i, val); }, reject);
               return;
             }
           }
@@ -169,19 +169,19 @@ const promise = function () {
       return value;
     }
 
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       resolve(value);
     });
   };
 
   Promise.reject = function (value) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       reject(value);
     });
   };
 
   Promise.race = function (values) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       for (let i = 0, len = values.length; i < len; i++) {
         values[i].then(resolve, reject);
       }

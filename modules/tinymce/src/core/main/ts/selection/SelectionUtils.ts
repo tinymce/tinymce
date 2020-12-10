@@ -38,7 +38,7 @@ const getEndNode = function (rng) {
 const getFirstChildren = function (node) {
   return Traverse.firstChild(node).fold(
     Fun.constant([ node ]),
-    function (child) {
+    (child) => {
       return [ node ].concat(getFirstChildren(child));
     }
   );
@@ -47,9 +47,9 @@ const getFirstChildren = function (node) {
 const getLastChildren = function (node) {
   return Traverse.lastChild(node).fold(
     Fun.constant([ node ]),
-    function (child) {
+    (child) => {
       if (SugarNode.name(child) === 'br') {
-        return Traverse.prevSibling(child).map(function (sibling) {
+        return Traverse.prevSibling(child).map((sibling) => {
           return [ node ].concat(getLastChildren(sibling));
         }).getOr([]);
       } else {
@@ -60,7 +60,7 @@ const getLastChildren = function (node) {
 };
 
 const hasAllContentsSelected = function (elm, rng) {
-  return Optionals.lift2(getStartNode(rng), getEndNode(rng), function (startNode, endNode) {
+  return Optionals.lift2(getStartNode(rng), getEndNode(rng), (startNode, endNode) => {
     const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));
     return start.isSome() && end.isSome();

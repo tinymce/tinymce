@@ -4,21 +4,21 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const sSetContent = function (html) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       viewBlock.update(html);
     });
   };
 
-  const mNormalizeRange = Step.stateful(function (value: any, next, _die) {
+  const mNormalizeRange = Step.stateful((value: any, next, _die) => {
     next(RangeNormalizer.normalize(value));
   });
 
   const mCreateRange = function (startPath, startOffset, endPath, endOffset) {
-    return Step.stateful(function (_value, next, _die) {
+    return Step.stateful((_value, next, _die) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
   };
 
   const mAssertRange = function (startPath, startOffset, endPath, endOffset) {
-    return Step.stateful(function (value: any, next, _die) {
+    return Step.stateful((value: any, next, _die) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
 
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', functio
       mNormalizeRange,
       mAssertRange([ 0, 0 ], 0, [ 1, 0 ], 0)
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

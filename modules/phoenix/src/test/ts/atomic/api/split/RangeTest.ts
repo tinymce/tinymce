@@ -4,7 +4,7 @@ import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 
-UnitTest.test('IdentifyTest', function () {
+UnitTest.test('IdentifyTest', () => {
   const check = function (all: string[], expected: string[], baseid: string, baseoffset: number, endid: string, endoffset: number, input: Gene) {
     const universe = TestUniverse(input);
     const base = Finder.get(universe, baseid);

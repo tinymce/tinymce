@@ -6,7 +6,7 @@ import * as Split from '../api/general/Split';
 const insertAtText = function <E, D> (universe: Universe<E, D>, element: E, offset: number): InjectPosition<E> {
   const split = Split.split(universe, element, offset);
   const position = Split.position(universe, split);
-  return position.fold(function () {
+  return position.fold(() => {
     return InjectPosition.invalid(element, offset);
   }, InjectPosition.before, (before, _after) => InjectPosition.after(before), InjectPosition.after);
 };

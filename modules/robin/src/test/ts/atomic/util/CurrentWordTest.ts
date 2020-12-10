@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import * as CurrentWord from 'ephox/robin/util/CurrentWord';
 
-UnitTest.test('CurrentWordTest', function () {
+UnitTest.test('CurrentWordTest', () => {
   const check = function (expected: { before: Optional<number>; after: Optional<number> }, text: string, position: number) {
     const actual = CurrentWord.around(text, position);
     Assert.eq(

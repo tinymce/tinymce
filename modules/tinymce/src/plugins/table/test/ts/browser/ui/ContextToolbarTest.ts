@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success,
   Theme();
   Plugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = SugarElement.fromDom(document);

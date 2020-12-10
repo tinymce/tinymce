@@ -86,7 +86,7 @@ const toDomFragment = function (dom, serializer, fragment) {
 };
 
 const listItems = function (elm: Element) {
-  return Tools.grep(elm.childNodes, function (child) {
+  return Tools.grep(elm.childNodes, (child) => {
     return child.nodeName === 'LI';
   });
 };
@@ -150,7 +150,7 @@ const insertMiddle = function (target, elms, rootNode, rng) {
   const parentElm = target.parentNode;
 
   parentElm.insertBefore(parts[0], target);
-  Tools.each(elms, function (li) {
+  Tools.each(elms, (li) => {
     parentElm.insertBefore(li, target);
   });
   parentElm.insertBefore(parts[1], target);
@@ -162,7 +162,7 @@ const insertMiddle = function (target, elms, rootNode, rng) {
 const insertBefore = function (target, elms, rootNode) {
   const parentElm = target.parentNode;
 
-  Tools.each(elms, function (elm) {
+  Tools.each(elms, (elm) => {
     parentElm.insertBefore(elm, target);
   });
 

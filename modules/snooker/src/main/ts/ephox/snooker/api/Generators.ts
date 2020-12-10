@@ -92,9 +92,9 @@ const modification = function (generators: Generators, toData = elementToData): 
 
   let recent = Optional.none<Recent>();
   const getOrInit = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
-    return recent.fold(function () {
+    return recent.fold(() => {
       return add(element);
-    }, function (p) {
+    }, (p) => {
       return comparator(element, p.item) ? p.replacement : add(element);
     });
   };
@@ -111,7 +111,7 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
     const list: Item[] = [];
 
     const find = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
-      return Arr.find(list, function (x) {
+      return Arr.find(list, (x) => {
         return comparator(x.item, element);
       });
     };
@@ -132,9 +132,9 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
     };
 
     const replaceOrInit = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
-      return find(element, comparator).fold(function () {
+      return find(element, comparator).fold(() => {
         return makeNew(element);
-      }, function (p) {
+      }, (p) => {
         return comparator(element, p.item) ? p.sub : makeNew(element);
       });
     };

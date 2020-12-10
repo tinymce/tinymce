@@ -160,7 +160,7 @@ UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.selectorToHtml', ()
   ].join('')), selectorToHtml('p li[title="Some Title"][alt="Some Alt"]'));
 });
 
-UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', (success, failure) => {
   Theme();
 
   const ok = function (value: boolean, label: string) {
@@ -232,10 +232,10 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', f
         'ul li ol li previewed properly.');
     }));
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Arr.flatten([
       [
-        Step.sync(function () {
+        Step.sync(() => {
           editor.setContent('<p class="preview">x</p>');
         }),
         Waiter.sTryUntil(

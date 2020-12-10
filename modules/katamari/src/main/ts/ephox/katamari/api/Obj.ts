@@ -28,7 +28,7 @@ export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) 
 
 export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string) => {k: string; v: any}): R {
   const r: Record<string, any> = {};
-  each(obj, function (x, i) {
+  each(obj, (x, i) => {
     const tuple = f(x, i);
     r[tuple.k] = tuple.v;
   });
@@ -41,7 +41,7 @@ const objAcc = <K extends number | string | symbol, V> (r: Record<K, V>) => (x: 
 
 const internalFilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean, onTrue: (value: V, key: string) => void, onFalse: (value: V, key: string) => void) {
   const r: Record<string, V> = {};
-  each(obj, function (x, i) {
+  each(obj, (x, i) => {
     (pred(x, i) ? onTrue : onFalse)(x, i);
   });
   return r;
@@ -62,7 +62,7 @@ export const filter = function <V> (obj: Record<string, V>, pred: (value: V, key
 
 export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R): R[] {
   const r: R[] = [];
-  each(obj, function (value, name) {
+  each(obj, (value, name) => {
     r.push(f(value, name));
   });
   return r;
@@ -81,7 +81,7 @@ export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string,
 };
 
 export const values = function <T> (obj: T): Array<T[keyof T]> {
-  return mapToArray(obj, function (v) {
+  return mapToArray(obj, (v) => {
     return v;
   });
 };

@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 
-UnitTest.test('UnmergeOperationsTest', function () {
+UnitTest.test('UnmergeOperationsTest', () => {
   Assertions.checkUnmerge(
     'TBA',
     '<table><tbody>' +

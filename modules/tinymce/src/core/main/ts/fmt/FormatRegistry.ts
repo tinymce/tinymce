@@ -31,7 +31,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
   const register = function (name: string | Formats, format?: Format | Format[]) {
     if (name) {
       if (typeof name !== 'string') {
-        Tools.each(name, function (format, name) {
+        Tools.each(name, (format, name) => {
           register(name, format);
         });
       } else {
@@ -40,7 +40,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
           format = [ format ];
         }
 
-        Tools.each(format, function (format: any) {
+        Tools.each(format, (format: any) => {
           // Set deep to false by default on selector formats this to avoid removing
           // alignment on images inside paragraphs when alignment is changed on paragraphs
           if (typeof format.deep === 'undefined') {

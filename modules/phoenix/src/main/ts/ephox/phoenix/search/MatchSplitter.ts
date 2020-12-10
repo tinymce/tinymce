@@ -10,7 +10,7 @@ import * as Splitter from './Splitter';
  * Each match is then mapped to the word it matched and the elements that make up the word.
  */
 const separate = function <E, D, M extends PRange & { word: string }> (universe: Universe<E, D>, list: SpotRange<E>[], matches: M[]): SearchResult<E>[] {
-  const allPositions = Arr.bind(matches, function (match) {
+  const allPositions = Arr.bind(matches, (match) => {
     return [ match.start, match.finish ];
   });
 
@@ -23,7 +23,7 @@ const separate = function <E, D, M extends PRange & { word: string }> (universe:
   const collate = function (match: M): SearchResult<E> {
     const sub = PositionArray.sublist(structure, match.start, match.finish);
 
-    const elements = Arr.map(sub, function (unit) { return unit.element; });
+    const elements = Arr.map(sub, (unit) => { return unit.element; });
 
     const exact = Arr.map(elements, universe.property().getText).join('');
     return {

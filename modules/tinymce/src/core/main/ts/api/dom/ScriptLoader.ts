@@ -231,7 +231,7 @@ class ScriptLoader {
 
     const execCallbacks = function (name, url) {
       // Execute URL callback functions
-      each(self.scriptLoadedCallbacks[url], function (callback) {
+      each(self.scriptLoadedCallbacks[url], (callback) => {
         if (Type.isFunction(callback[name])) {
           callback[name].call(callback.scope);
         }
@@ -253,7 +253,7 @@ class ScriptLoader {
       scripts.length = 0;
 
       // Load scripts that needs to be loaded
-      each(loadingScripts, function (url) {
+      each(loadingScripts, (url) => {
         // Script is already loaded then execute script callbacks directly
         if (self.states[url] === LOADED) {
           execCallbacks('success', url);
@@ -270,7 +270,7 @@ class ScriptLoader {
           self.states[url] = LOADING;
           self.loading++;
 
-          self.loadScript(url, function () {
+          self.loadScript(url, () => {
             self.states[url] = LOADED;
             self.loading--;
 
@@ -278,7 +278,7 @@ class ScriptLoader {
 
             // Load more scripts if they where added by the recently loaded script
             loadScripts();
-          }, function () {
+          }, () => {
             self.states[url] = FAILED;
             self.loading--;
 
@@ -297,7 +297,7 @@ class ScriptLoader {
         const notifyCallbacks = self.queueLoadedCallbacks.slice(0);
         self.queueLoadedCallbacks.length = 0;
 
-        each(notifyCallbacks, function (callback) {
+        each(notifyCallbacks, (callback) => {
           if (failures.length === 0) {
             if (Type.isFunction(callback.success)) {
               callback.success.call(callback.scope);

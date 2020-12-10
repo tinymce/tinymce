@@ -6,7 +6,7 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     return Assert.eq(label, true, value);
   };
 
-  suite.test('InsertHorizontalRule', function (editor) {
+  suite.test('InsertHorizontalRule', (editor) => {
     let rng;
 
     editor.setContent('<p>123</p>');
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
   });
 
   if (Env.ceFalse) {
-    suite.test('SelectAll', function (editor) {
+    suite.test('SelectAll', (editor) => {
       editor.setContent('<p>a</p><div contenteditable="false"><div contenteditable="true">b</div><p>c</p>');
       LegacyUnit.setSelection(editor, 'div div', 0);
       editor.execCommand('SelectAll');
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     });
   }
 
-  suite.test('InsertLineBreak', function (editor) {
+  suite.test('InsertLineBreak', (editor) => {
     editor.setContent('<p>123</p>');
     LegacyUnit.setSelection(editor, 'p', 2);
     editor.execCommand('InsertLineBreak');
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', function (success, f
     Assert.eq('', '<p>123<br><br></p>', HtmlUtils.cleanHtml(editor.getBody().innerHTML));
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

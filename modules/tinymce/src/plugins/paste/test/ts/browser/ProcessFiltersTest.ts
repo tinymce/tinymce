@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ProcessFiltersTest', (success,
 
   const cProcessPre = function (html, internal, preProcess) {
     return Chain.control(
-      Chain.mapper(function (editor: any) {
+      Chain.mapper((editor: any) => {
         editor.on('PastePreProcess', preProcess);
 
         const result = ProcessFilters.process(editor, html, internal);
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ProcessFiltersTest', (success,
 
   const cProcessPrePost = function (html, internal, preProcess, postProcess) {
     return Chain.control(
-      Chain.mapper(function (editor: any) {
+      Chain.mapper((editor: any) => {
         editor.on('PastePreProcess', preProcess);
         editor.on('PastePostProcess', postProcess);
 
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ProcessFiltersTest', (success,
     };
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre process only', [
         cProcessPre('a', true, preProcessHandler),

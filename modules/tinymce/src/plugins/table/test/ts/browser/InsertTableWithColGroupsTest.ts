@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertTableWithColGroupTest', 
   Plugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

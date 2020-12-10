@@ -58,7 +58,7 @@ const generateTable = (mode: SizingMode, width: number, rows: number, cols: numb
   return `<table border="1" style="border-collapse: collapse;${tableWidth}">${getColumns()}<tbody>${renderedRows}</tbody></table>`;
 };
 
-type TableModifiedEvent = { type: string; structure: boolean; style: boolean };
+interface TableModifiedEvent { type: string; structure: boolean; style: boolean }
 const sTableSizingModeScenarioTest = (editor, tinyApis: TinyApis, title: string, description: string, withColGroups: boolean, scenario: Scenario, expectedEvents: TableModifiedEvent[] = [{ type: 'tablemodified', structure: true, style: false }]) => {
   let events = [];
   editor.on('TableModified', (event: EditorEvent<{ structure: boolean; style: boolean }>) => events.push({

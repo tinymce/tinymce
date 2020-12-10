@@ -9,7 +9,7 @@ const zero = Fun.constant(0);
  * Returns optional text after the last word break character
  */
 const lastWord = function (text: string): Optional<string> {
-  return leftBreak(text).map(function (index) {
+  return leftBreak(text).map((index) => {
     return text.substring(index);
   });
 };
@@ -18,7 +18,7 @@ const lastWord = function (text: string): Optional<string> {
  * Returns optional text up to the first word break character
  */
 const firstWord = function (text: string): Optional<string> {
-  return rightBreak(text).map(function (index) {
+  return rightBreak(text).map((index) => {
     return text.substring(0, index + 1);
   });
 };
@@ -28,7 +28,7 @@ const firstWord = function (text: string): Optional<string> {
  */
 const leftBreak = function (text: string): Optional<number> {
   const indices = Search.findall(text, Pattern.custom(Pattern.wordbreak(), zero, zero, Optional.none()));
-  return Optional.from(indices[indices.length - 1]).map(function (match) {
+  return Optional.from(indices[indices.length - 1]).map((match) => {
     return match.start;
   });
 };

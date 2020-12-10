@@ -25,7 +25,7 @@ const getText = (item: UserListItem): string => {
 
 const sanitizeList = (list: UserListItem[], extractValue: ListExtractor): ListItem[] => {
   const out: ListItem[] = [];
-  Tools.each(list, function (item) {
+  Tools.each(list, (item) => {
     const text = getText(item);
     if (item.menu !== undefined) {
       const items = sanitizeList(item.menu, extractValue);

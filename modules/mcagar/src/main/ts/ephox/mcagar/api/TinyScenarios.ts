@@ -4,9 +4,9 @@ import Jsc from '@ephox/wrap-jsverify';
 import { Editor } from '../alien/EditorTypes';
 
 type ContentGenerator = any;
-type SelectionExclusions = { containers: (container: SugarElement) => boolean };
-type ArbScenarioOptions = { exclusions: SelectionExclusions };
-type AsyncPropertyOptions = { scenario: ArbScenarioOptions; property: Record<string, any> };
+interface SelectionExclusions { containers: (container: SugarElement) => boolean }
+interface ArbScenarioOptions { exclusions: SelectionExclusions }
+interface AsyncPropertyOptions { scenario: ArbScenarioOptions; property: Record<string, any> }
 
 interface Scenario {
   input: string;
@@ -25,10 +25,10 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
   // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
   const genScenario = function (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) {
-    return genContent.flatMap(function (structure: SugarElement) {
+    return genContent.flatMap((structure: SugarElement) => {
       const html = Html.getOuter(structure);
       editor.setContent(html);
-      return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map(function (selection: SimRange) {
+      return Generators.selection(SugarElement.fromDom(editor.getBody()), selectionExclusions).map((selection: SimRange) => {
         const win = editor.selection.win;
         const rng = win.document.createRange();
         rng.setStart(selection.start.dom, selection.soffset);

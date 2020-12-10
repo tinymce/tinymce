@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableGrid from 'ephox/snooker/model/TableGrid';
 
-UnitTest.test('TableGrid.subgrid test', function () {
+UnitTest.test('TableGrid.subgrid test', () => {
   const r = Structs.rowcells;
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 

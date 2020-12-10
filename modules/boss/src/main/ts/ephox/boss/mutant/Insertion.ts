@@ -5,24 +5,24 @@ import * as Locator from './Locator';
 import * as Up from './Up';
 
 const before = function (anchor: Gene, item: Gene): void {
-  anchor.parent.each(function (parent) {
+  anchor.parent.each((parent) => {
     const index = Locator.indexIn(parent, anchor);
 
     const detached = Detach.detach(Up.top(anchor), item).getOr(item);
     detached.parent = Optional.some(parent);
-    index.each(function (ind) {
+    index.each((ind) => {
       parent.children = parent.children.slice(0, ind).concat([ detached ]).concat(parent.children.slice(ind));
     });
   });
 };
 
 const after = function (anchor: Gene, item: Gene): void {
-  anchor.parent.each(function (parent) {
+  anchor.parent.each((parent) => {
     const index = Locator.indexIn(parent, anchor);
 
     const detached = Detach.detach(Up.top(anchor), item).getOr(item);
     detached.parent = Optional.some(parent);
-    index.each(function (ind) {
+    index.each((ind) => {
       parent.children = parent.children.slice(0, ind + 1).concat([ detached ]).concat(parent.children.slice(ind + 1));
     });
   });
@@ -36,21 +36,21 @@ const append = function (parent: Gene, item: Gene): void {
 };
 
 const appendAll = function (parent: Gene, items: Gene[]): void {
-  Arr.map(items, function (item) {
+  Arr.map(items, (item) => {
     append(parent, item);
   });
 };
 
 const afterAll = function (anchor: Gene, items: Gene[]): void {
-  anchor.parent.each(function (parent) {
+  anchor.parent.each((parent) => {
     const index = Locator.indexIn(parent, anchor);
 
-    const detached = Arr.map(items, function (item) {
+    const detached = Arr.map(items, (item) => {
       const ditem = Detach.detach(Up.top(anchor), item).getOr(item);
       ditem.parent = Optional.some(parent);
       return ditem;
     });
-    index.each(function (ind) {
+    index.each((ind) => {
       parent.children = parent.children.slice(0, ind + 1).concat(detached).concat(parent.children.slice(ind + 1));
     });
   });
@@ -65,9 +65,9 @@ const prepend = function (parent: Gene, item: Gene): void {
 
 const wrap = function (anchor: Gene, wrapper: Gene): void {
   // INVESTIGATE: At this stage, mutation is necessary to act like the DOM
-  anchor.parent.each(function (parent) {
+  anchor.parent.each((parent) => {
     wrapper.parent = Optional.some(parent);
-    parent.children = Arr.map(parent.children || [], function (c) {
+    parent.children = Arr.map(parent.children || [], (c) => {
       return c === anchor ? wrapper : c;
     });
     wrapper.children = [ anchor ];

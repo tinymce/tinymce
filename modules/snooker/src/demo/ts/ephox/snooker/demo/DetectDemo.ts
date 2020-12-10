@@ -8,7 +8,7 @@ import { TableResize } from 'ephox/snooker/api/TableResize';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { RunOperationOutput, TargetElement, TargetSelection } from 'ephox/snooker/model/RunOperation';
 
-Ready.execute(function () {
+Ready.execute(() => {
 
   const tester = SugarElement.fromHtml<HTMLTableElement>(
     '<table border=1>' +
@@ -136,7 +136,7 @@ Ready.execute(function () {
   rtlManager.on();
 
   // For firefox.
-  Ready.execute(function () {
+  Ready.execute(() => {
     // document.execCommand("enableInlineTableEditing", null, false);
     // document.execCommand("enableObjectResizing", false, "false");
   });
@@ -216,7 +216,7 @@ Ready.execute(function () {
 
   const replace: Generators['replace'] = function (cell, tag, attrs) {
     const replica = Replication.copy(cell, tag);
-    Obj.each(attrs, function (v, k) {
+    Obj.each(attrs, (v, k) => {
       if (v !== null) { Attribute.set(replica, k, v); }
     });
     return replica;
@@ -236,7 +236,7 @@ Ready.execute(function () {
 
   const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, tableSize: TableSize) => Optional<RunOperationOutput>) {
     return function (_event: EventArgs) {
-      detection().each(function (start) {
+      detection().each((start) => {
         const target = {
           element: start,
           selection: [ start ]

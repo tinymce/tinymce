@@ -48,7 +48,7 @@ export default (): void => {
         })
       ]),
 
-      components: Arr.map([ 'alpha', 'beta', 'gamma' ], function (n) {
+      components: Arr.map([ 'alpha', 'beta', 'gamma' ], (n) => {
         return <AlloySpec> {
           dom: {
             tag: 'button',

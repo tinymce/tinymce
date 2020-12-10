@@ -14,7 +14,7 @@ const DOM = DOMUtils.DOM;
 
 const splitList = function (editor, ul, li) {
   const removeAndKeepBookmarks = function (targetNode) {
-    Tools.each(bookmarks, function (node) {
+    Tools.each(bookmarks, (node) => {
       targetNode.parentNode.insertBefore(node, li.parentNode);
     });
 

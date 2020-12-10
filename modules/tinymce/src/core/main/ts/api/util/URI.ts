@@ -348,7 +348,7 @@ class URI {
     const normalizedPath = path.split('/');
 
     // Remove empty chunks
-    each(normalizedBase, function (k) {
+    each(normalizedBase, (k) => {
       if (k) {
         o.push(k);
       }

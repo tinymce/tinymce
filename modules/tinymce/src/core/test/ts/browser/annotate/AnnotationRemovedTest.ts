@@ -9,7 +9,7 @@ import { sAnnotate, sAssertGetAll, sAssertHtmlContent } from '../../module/test/
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationRemovedTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sSetupData = GeneralSteps.sequence([

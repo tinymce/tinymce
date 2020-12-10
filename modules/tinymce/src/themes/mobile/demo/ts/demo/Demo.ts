@@ -13,7 +13,7 @@ export default function () {
     skin_url: '../../../../../js/tinymce/skins/ui/oxide',
 
     setup(ed) {
-      ed.on('skinLoaded', function () {
+      ed.on('skinLoaded', () => {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
           text: 'You will not see this because the mobile theme has no notifications',

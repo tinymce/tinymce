@@ -60,7 +60,7 @@ const loadTheme = function (scriptLoader: ScriptLoader, editor: Editor, suffix, 
       }
     }
 
-    scriptLoader.loadQueue(function () {
+    scriptLoader.loadQueue(() => {
       ThemeManager.waitFor(theme, callback);
     });
   } else {
@@ -116,7 +116,7 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 
         const dependencies = PluginManager.dependencies(plugin);
 
-        Tools.each(dependencies, function (depPlugin) {
+        Tools.each(dependencies, (depPlugin) => {
           const defaultSettings = {
             prefix: 'plugins/',
             resource: depPlugin,
@@ -146,16 +146,16 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 const loadScripts = function (editor: Editor, suffix: string) {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
-  loadTheme(scriptLoader, editor, suffix, function () {
+  loadTheme(scriptLoader, editor, suffix, () => {
     loadLanguage(scriptLoader, editor);
     loadIcons(scriptLoader, editor, suffix);
     loadPlugins(editor, suffix);
 
-    scriptLoader.loadQueue(function () {
+    scriptLoader.loadQueue(() => {
       if (!editor.removed) {
         Init.init(editor);
       }
-    }, editor, function () {
+    }, editor, () => {
       if (!editor.removed) {
         Init.init(editor);
       }
@@ -235,7 +235,7 @@ const render = function (editor: Editor) {
     DOM.bind(form, 'submit reset', editor.formEventDelegate);
 
     // Reset contents in editor when the form is reset
-    editor.on('reset', function () {
+    editor.on('reset', () => {
       editor.resetContent();
     });
 
@@ -255,7 +255,7 @@ const render = function (editor: Editor) {
   editor.notificationManager = NotificationManager(editor);
 
   if (Settings.isEncodingXml(editor)) {
-    editor.on('GetContent', function (e) {
+    editor.on('GetContent', (e) => {
       if (e.save) {
         e.content = DOM.encode(e.content);
       }
@@ -263,7 +263,7 @@ const render = function (editor: Editor) {
   }
 
   if (Settings.shouldAddFormSubmitTrigger(editor)) {
-    editor.on('submit', function () {
+    editor.on('submit', () => {
       if (editor.initialized) {
         editor.save();
       }

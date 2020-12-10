@@ -7,22 +7,22 @@ import FocusManager from 'tinymce/core/api/FocusManager';
 import * as FocusController from 'tinymce/core/focus/FocusController';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('isEditorUIElement on valid element', function () {
+  suite.test('isEditorUIElement on valid element', () => {
     const uiElm = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);
     LegacyUnit.equal(FocusController.isEditorUIElement(uiElm), true, 'Should be true since mce- is a ui prefix');
   });
 
-  suite.test('isEditorUIElement on invalid element', function () {
+  suite.test('isEditorUIElement on invalid element', () => {
     const noUiElm = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
     LegacyUnit.equal(FocusController.isEditorUIElement(noUiElm), false, 'Should be true since mcex- is not a ui prefix');
   });
 
-  suite.test('isEditorUIElement when api predicate is overwritten', function () {
+  suite.test('isEditorUIElement when api predicate is overwritten', () => {
     const customUiElm = DOMUtils.DOM.create('div', { class: 'abc' }, null);
     const customNoUiElm = DOMUtils.DOM.create('div', { class: 'x' }, null);
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (s
     LegacyUnit.equal(FocusController.isEditorUIElement(customUiElm), false, 'Should be false since the predicate is restored');
   });
 
-  suite.test('isUIElement on valid element', function (editor) {
+  suite.test('isUIElement on valid element', (editor) => {
     const uiElm1 = DOMUtils.DOM.create('div', { class: 'mce-abc' }, null);
     const uiElm2 = DOMUtils.DOM.create('div', { class: 'mcex-abc' }, null);
     const uiElm3 = DOMUtils.DOM.create('div', { class: 'tox-dialog' }, null);
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (s
     delete editor.settings.custom_ui_selector;
   });
 
-  suite.test('isEditorContentAreaElement on valid element', function () {
+  suite.test('isEditorContentAreaElement on valid element', () => {
     const contentAreaElm1 = DOMUtils.DOM.create('div', { class: 'mce-content-body' }, null);
     const contentAreaElm2 = DOMUtils.DOM.create('div', { class: 'tox-edit-area__iframe' }, null);
     LegacyUnit.equal(FocusController.isEditorContentAreaElement(contentAreaElm1), true, 'Should be true since mce-content-body is a content area container element');
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', function (s
     DOMUtils.DOM.remove(inputElm);
   });
 
-  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

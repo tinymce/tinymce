@@ -12,10 +12,10 @@ import * as Actions from '../core/Actions';
 import * as ImageSize from '../core/ImageSize';
 import * as ImageToolsEvents from './ImageToolsEvents';
 
-type ImageToolsState = {
+interface ImageToolsState {
   blob: Blob;
   url: string;
-};
+}
 
 const createState = (blob: Blob): ImageToolsState => ({
   blob,

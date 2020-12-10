@@ -9,18 +9,18 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest',
-  function (success, failure) {
+  (success, failure) => {
 
     Theme();
 
     const testDivId = 'testDiv1234';
 
-    const sRemoveTestDiv = Step.sync(function () {
+    const sRemoveTestDiv = Step.sync(() => {
       const input = document.querySelector('#' + testDivId);
       input.parentNode.removeChild(input);
     });
 
-    const sAddTestDiv = Step.sync(function () {
+    const sAddTestDiv = Step.sync(() => {
       const div = document.createElement('div');
       div.innerHTML = 'xxx';
       div.contentEditable = 'true';
@@ -29,7 +29,7 @@ UnitTest.asynctest(
     });
 
     const sWaitForBookmark = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
-      return Waiter.sTryUntil('wait for selection', Step.sync(function () {
+      return Waiter.sTryUntil('wait for selection', Step.sync(() => {
         assertBookmark(editor, startPath, startOffset, endPath, endOffset);
       }));
     };
@@ -75,12 +75,12 @@ UnitTest.asynctest(
       assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
     };
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const browser = PlatformDetection.detect().browser;
 
       Pipeline.async({}, browser.isIE() || browser.isEdge() ? [ // On edge and ie it restores on focusout only
         sAddTestDiv,
-        Logger.t('restore even without second nodechange, restores on focusout', Step.sync(function () {
+        Logger.t('restore even without second nodechange, restores on focusout', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -91,7 +91,7 @@ UnitTest.asynctest(
 
           assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
-        Logger.t('restore with second nodechange, restores on focusout', Step.sync(function () {
+        Logger.t('restore with second nodechange, restores on focusout', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -105,7 +105,7 @@ UnitTest.asynctest(
         })),
         sRemoveTestDiv
       ] : [ // On the other browsers we test for bookmark saved on nodechange, keyup, mouseup and touchend events
-        Logger.t('assert selection after no nodechanged, should not restore', Step.sync(function () {
+        Logger.t('assert selection after no nodechanged, should not restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
           editor.undoManager.add();
           // In FireFox blurring the editor adds an undo level that triggers a nodechange that creates a bookmark,
@@ -118,7 +118,7 @@ UnitTest.asynctest(
           setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
           assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
         })),
-        Logger.t('assert selection after nodechanged, should restore', Step.sync(function () {
+        Logger.t('assert selection after nodechanged, should restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -128,7 +128,7 @@ UnitTest.asynctest(
           editor.nodeChanged();
           assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
-        Logger.t('assert selection after keyup, should restore', Step.sync(function () {
+        Logger.t('assert selection after keyup, should restore', Step.sync(() => {
           editor.setContent('<p>a</p><p>b</p>');
 
           setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -139,7 +139,7 @@ UnitTest.asynctest(
           assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
         })),
         Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             editor.setContent('<p>a</p><p>b</p>');
 
             setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -151,7 +151,7 @@ UnitTest.asynctest(
           sWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1)
         ])),
         Logger.t('assert selection after touchend, should restore', GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             editor.setContent('<p>a</p><p>b</p>');
 
             setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
@@ -163,7 +163,7 @@ UnitTest.asynctest(
           sWaitForBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1)
         ])),
         Logger.t('selection with mouseup outside editor body', GeneralSteps.sequence([
-          Step.sync(function () {
+          Step.sync(() => {
             editor.setContent('<p>ab</p>');
             setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
             DOMUtils.DOM.fire(document, 'mouseup');
@@ -199,7 +199,7 @@ UnitTest.asynctest(
       plugins: '',
       toolbar: '',
       base_url: '/project/tinymce/js/tinymce'
-    }, function () {
+    }, () => {
       success();
     }, failure);
   }

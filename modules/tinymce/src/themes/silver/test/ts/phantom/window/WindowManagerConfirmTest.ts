@@ -211,7 +211,7 @@ UnitTest.asynctest('WindowManager:confirm Test', (success, failure) => {
     sShouldFocusOnYesButton,
     sClickShouldFocusOnFirstButton,
     sCloseButtonShouldWork
-  ], function () {
+  ], () => {
     helpers.destroy();
     success();
   }, failure);

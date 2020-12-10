@@ -3,7 +3,7 @@ import * as ImageResult from '../util/ImageResult';
 import * as ImageResizerCanvas from './ImageResizerCanvas';
 
 function rotate(ir: ImageResult.ImageResult, angle: number): Promise<ImageResult.ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return applyRotate(canvas, ir.getType(), angle);
   });
 }
@@ -35,7 +35,7 @@ function applyRotate(image: HTMLImageElement | HTMLCanvasElement, type: string, 
 }
 
 function flip(ir: ImageResult.ImageResult, axis: 'v' | 'h'): Promise<ImageResult.ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return applyFlip(canvas, ir.getType(), axis);
   });
 }
@@ -55,7 +55,7 @@ function applyFlip(image: HTMLImageElement | HTMLCanvasElement, type: string, ax
 }
 
 function crop(ir: ImageResult.ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult.ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return applyCrop(canvas, ir.getType(), x, y, w, h);
   });
 }
@@ -69,9 +69,9 @@ function applyCrop(image: HTMLImageElement | HTMLCanvasElement, type: string, x:
 }
 
 function resize(ir: ImageResult.ImageResult, w: number, h: number): Promise<ImageResult.ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return ImageResizerCanvas.scale(canvas, w, h)
-      .then(function (newCanvas) {
+      .then((newCanvas) => {
         return ImageResult.fromCanvas(newCanvas, ir.getType());
       });
   });

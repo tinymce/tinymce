@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrMode
     Assertions.assertHtml('Not expected body html', expected, editor.getBody().innerHTML);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

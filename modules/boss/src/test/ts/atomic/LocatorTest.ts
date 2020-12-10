@@ -7,7 +7,7 @@ import * as Creator from 'ephox/boss/mutant/Creator';
 import * as Locator from 'ephox/boss/mutant/Locator';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('LocatorTest', function () {
+UnitTest.test('LocatorTest', () => {
   const family = Tracks.track(
     Gene('A', '.', [
       Gene('B', '.'),

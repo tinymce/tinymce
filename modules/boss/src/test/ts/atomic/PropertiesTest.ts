@@ -4,7 +4,7 @@ import { Gene } from 'ephox/boss/api/Gene';
 import { TextGene } from 'ephox/boss/api/TextGene';
 import * as Properties from 'ephox/boss/mutant/Properties';
 
-UnitTest.test('PropertiesTest', function () {
+UnitTest.test('PropertiesTest', () => {
   const g = Gene('root', 'root', []);
   const t = TextGene('-gene-', 'post-image text');
   const c = CommentGene('-comment-', 'comment');

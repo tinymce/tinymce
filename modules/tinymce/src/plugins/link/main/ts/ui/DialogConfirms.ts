@@ -19,8 +19,8 @@ import { LinkDialogOutput } from './DialogTypes';
 const delayedConfirm = function (editor: Editor, message: string, callback: (state: boolean) => void) {
   const rng = editor.selection.getRng();
 
-  Delay.setEditorTimeout(editor, function () {
-    editor.windowManager.confirm(message, function (state) {
+  Delay.setEditorTimeout(editor, () => {
+    editor.windowManager.confirm(message, (state) => {
       editor.selection.setRng(rng);
       callback(state);
     });

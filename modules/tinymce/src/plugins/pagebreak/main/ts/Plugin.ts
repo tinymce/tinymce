@@ -12,7 +12,7 @@ import * as ResolveName from './core/ResolveName';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('pagebreak', function (editor) {
+  PluginManager.add('pagebreak', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     FilterContent.setup(editor);

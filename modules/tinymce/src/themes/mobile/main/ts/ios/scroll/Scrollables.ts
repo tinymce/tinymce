@@ -47,8 +47,8 @@ const hasScroll = function (container) {
  * scrollable areas are defined by selector.
  */
 const exclusive = function (scope, selector) {
-  return DomEvent.bind(scope, 'touchmove', function (event) {
-    SelectorFind.closest(event.target, selector).filter(hasScroll).fold(function () {
+  return DomEvent.bind(scope, 'touchmove', (event) => {
+    SelectorFind.closest(event.target, selector).filter(hasScroll).fold(() => {
       event.prevent();
     }, Fun.noop);
   });

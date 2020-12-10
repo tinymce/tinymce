@@ -22,7 +22,7 @@ const getRanges = function (selection) {
 };
 
 const getSelectedNodes = function (ranges) {
-  return Arr.bind(ranges, function (range) {
+  return Arr.bind(ranges, (range) => {
     const node = RangeNodes.getSelectedNode(range);
     return node ? [ SugarElement.fromDom(node) ] : [];
   });

@@ -6,7 +6,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.selection.DetailsElementTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

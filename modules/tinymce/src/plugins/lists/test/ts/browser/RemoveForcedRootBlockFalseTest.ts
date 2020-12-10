@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Remove UL with single LI in BR mode', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL with single LI in BR mode', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'BODY');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<div>a</div>' +
       '<ul>' +
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'BR');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

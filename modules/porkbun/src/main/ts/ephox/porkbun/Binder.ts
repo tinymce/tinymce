@@ -23,9 +23,9 @@ const create = function (): Binder {
 
   const unbind = function <T> (registration: Bindable<T>) {
     const index = Arr.indexOf(registrations, registration);
-    index.fold(function () {
+    index.fold(() => {
       throw new Error('Invalid key, does not exist.');
-    }, function (ind) {
+    }, (ind) => {
       registrations.splice(ind, 1);
       const handler = handlers.splice(ind, 1)[0];
       registration.unbind(handler);
@@ -33,7 +33,7 @@ const create = function (): Binder {
   };
 
   const unbindAll = function () {
-    Arr.each(registrations, function (registration, i) {
+    Arr.each(registrations, (registration, i) => {
       const handler = handlers[i];
       registration.unbind(handler);
     });

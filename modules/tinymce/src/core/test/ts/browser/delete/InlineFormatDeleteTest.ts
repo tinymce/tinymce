@@ -5,39 +5,39 @@ import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', (success, failure) => {
 
   Theme();
 
   const sDelete = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sDeleteNoop = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
   const sBackspace = function (editor, _forward?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sBackspaceNoop = function (editor, _forward?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
           sDeleteNoop(editor),
           tinyApis.sAssertSelection([ 0, 1 ], 0, [ 0, 1 ], 0),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build(function (s, str, _arr) {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element('p', {
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
           tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
           sBackspace(editor),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build(function (s, str, _arr) {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element('p', {
@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
           tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
           sDelete(editor),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build(function (s, str, _arr) {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element('p', {
@@ -193,7 +193,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
           tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 1),
           sBackspace(editor),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build(function (s, str, _arr) {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element('p', {
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', function (s
           tinyApis.sSetCursor([ 0, 0, 1, 0, 0 ], 0),
           sDelete(editor),
           tinyApis.sAssertContentStructure(
-            ApproxStructure.build(function (s, str, _arr) {
+            ApproxStructure.build((s, str, _arr) => {
               return s.element('body', {
                 children: [
                   s.element('p', {

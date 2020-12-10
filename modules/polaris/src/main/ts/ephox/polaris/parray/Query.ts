@@ -12,13 +12,13 @@ const inUnit = function (unit: PRange, position: number): boolean {
  * Finds the unit in the PositionArray that contains this offset (if there is one)
  */
 const get = function <T extends PRange> (parray: T[], offset: number): Optional<T> {
-  return Arr.find(parray, function (x) {
+  return Arr.find(parray, (x) => {
     return inUnit(x, offset);
   });
 };
 
 const startindex = function (parray: PRange[], offset: number): Optional<number> {
-  return Arr.findIndex(parray, function (unit) {
+  return Arr.findIndex(parray, (unit) => {
     return unit.start === offset;
   });
 };
@@ -34,7 +34,7 @@ const tryend = function (parray: PRange[], finish: number): number {
 const sublist = function <T extends PRange> (parray: T[], start: number, finish: number): T[] {
   const first = startindex(parray, start);
   const rawlast = startindex(parray, finish);
-  return first.bind(function (fIndex): Optional<T[]> {
+  return first.bind((fIndex): Optional<T[]> => {
     const last = rawlast.getOr(tryend(parray, finish));
     return last > -1 ? Optional.some(parray.slice(fIndex, last)) : Optional.none();
   }).getOr([]);

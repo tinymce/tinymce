@@ -12,17 +12,17 @@ UnitTest.asynctest('browser.tinymce.plugins.table.NewCellRowEventsTest', (succes
   Plugin();
   SilverTheme();
 
-  suite.test('TestCase-TBA: Table: Table newcell/newrow events', function (editor) {
+  suite.test('TestCase-TBA: Table: Table newcell/newrow events', (editor) => {
     const cells = [];
     const rows = [];
     let counter = 0;
 
-    editor.on('newcell', function (e) {
+    editor.on('newcell', (e) => {
       cells.push(e.node);
       e.node.setAttribute('data-counter', counter++);
     });
 
-    editor.on('newrow', function (e) {
+    editor.on('newrow', (e) => {
       rows.push(e.node);
       e.node.setAttribute('data-counter', counter++);
     });
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.NewCellRowEventsTest', (succes
     LegacyUnit.equal(rows[rows.length - 1].getAttribute('data-counter'), '6');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test new cell/new row events', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

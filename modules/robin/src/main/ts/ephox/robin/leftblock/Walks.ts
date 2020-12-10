@@ -23,7 +23,7 @@ const top: Walks = {
     // even though mode was sidestep. Therefore, to see if a node is something that was
     // the parent of a previously traversed item, we have to do this. Very hacky... find a
     // better way.
-    const isParent = universe.property().parent(item).exists(function (p) {
+    const isParent = universe.property().parent(item).exists((p) => {
       return universe.eq(p, next.item);
     });
     return !isParent;

@@ -3,11 +3,11 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/mobile/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.themes.mobile.SkinFalseTest', (success, failure) => {
 
   Theme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
 
     // This is a weird test that only checks that the skinloaded event is fired even if skin is set to false
     Pipeline.async({}, [

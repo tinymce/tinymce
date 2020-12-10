@@ -6,7 +6,7 @@ const get = function (universe: TestUniverse, id: string): Gene {
 };
 
 const getAll = function (universe: TestUniverse, ids: string[]): Gene[] {
-  return Arr.map(ids, function (id) {
+  return Arr.map(ids, (id) => {
     return get(universe, id);
   });
 };

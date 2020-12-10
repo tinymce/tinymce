@@ -18,7 +18,7 @@ const isExternalPasteBin = (editor: Editor) => getPasteBinParent(editor) !== edi
 
 const delegatePasteEvents = (editor: Editor, pasteBinElm: Element, pasteBinDefaultContent: string) => {
   if (isExternalPasteBin(editor)) {
-    editor.dom.bind(pasteBinElm, 'paste keyup', function (_e) {
+    editor.dom.bind(pasteBinElm, 'paste keyup', (_e) => {
       if (!isDefault(editor, pasteBinDefaultContent)) {
         editor.fire('paste');
       }
@@ -51,7 +51,7 @@ const create = (editor: Editor, lastRngCell, pasteBinDefaultContent: string) => 
   }
 
   // Prevent focus events from bubbeling fixed FocusManager issues
-  dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function (e) {
+  dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', (e) => {
     e.stopPropagation();
   });
 
@@ -103,13 +103,13 @@ const getHtml = (editor: Editor): string => {
   };
 
   // find only top level elements (there might be more nested inside them as well, see TINY-1162)
-  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, function (elm: ChildNode) {
+  const pasteBinClones = Tools.grep(getPasteBinParent(editor).childNodes, (elm: ChildNode) => {
     return (elm as HTMLElement).id === 'mcepastebin';
   }) as HTMLElement[];
   const pasteBinElm = pasteBinClones.shift();
 
   // if clones were found, move their content into the first bin
-  Tools.each(pasteBinClones, function (pasteBinClone) {
+  Tools.each(pasteBinClones, (pasteBinClone) => {
     copyAndRemove(pasteBinElm, pasteBinClone);
   });
 

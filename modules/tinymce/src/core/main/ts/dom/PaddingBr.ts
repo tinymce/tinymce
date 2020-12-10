@@ -43,8 +43,8 @@ const isPaddedElement = function (elm) {
 };
 
 const trimBlockTrailingBr = function (elm) {
-  Traverse.lastChild(elm).each(function (lastChild) {
-    Traverse.prevSibling(lastChild).each(function (lastChildPrevSibling) {
+  Traverse.lastChild(elm).each((lastChild) => {
+    Traverse.prevSibling(lastChild).each((lastChildPrevSibling) => {
       if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {
         Remove.remove(lastChild);
       }

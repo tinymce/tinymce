@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import * as Features from 'tinymce/themes/mobile/features/Features';
 
-UnitTest.test('features.IdentifyToolbarTest', function () {
+UnitTest.test('features.IdentifyToolbarTest', () => {
   const check = function (label: string, expected: string[], input: string | string[] | string[][] | undefined) {
     const dummyEditor = {
       getParam: (_name: string, defaultValue: any) => input !== undefined ? input : defaultValue

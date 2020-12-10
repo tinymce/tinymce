@@ -61,10 +61,10 @@ const setup = function (outerWindow, cWin) {
     ResumeEditing.resume(cWin);
   };
 
-  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', () => {
 
-    findDelta(outerWindow, cBody).each(function (delta) {
-      getBounds(cWin).each(function (bounds) {
+    findDelta(outerWindow, cBody).each((delta) => {
+      getBounds(cWin).each((bounds) => {
         // If the top is offscreen, scroll it into view.
         const cScrollBy = calculate(cWin, bounds, delta);
         if (cScrollBy !== 0) {

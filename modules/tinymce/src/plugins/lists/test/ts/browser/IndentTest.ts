@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Indent single LI in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent single LI in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent middle LI in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent middle LI in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent single LI in OL and retain OLs list style in the new OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent single LI in OL and retain OLs list style in the new OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol style="list-style-type: lower-alpha;">' +
       '<li>a</li>' +
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Indent last LI in OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent last LI in OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -112,7 +112,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent in table cell in table inside of list should not do anything', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent in table cell in table inside of list should not do anything', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>' +
@@ -144,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'TD');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent last LI to same level as middle LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent last LI to same level as middle LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -174,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent first LI and nested LI OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent first LI and nested LI OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -206,7 +206,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent second LI to same level as nested LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent second LI to same level as nested LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -236,7 +236,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent second LI to same level as nested LI 2', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent second LI to same level as nested LI 2', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -271,7 +271,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent second and third LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent second and third LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -296,7 +296,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Indent second second li with next sibling to nested li', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent second second li with next sibling to nested li', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -326,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Indent on second li with inner block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent on second li with inner block element', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li><p>a</p></li>' +
@@ -350,7 +350,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     );
   });
 
-  suite.test('Indent already indented last li, ul in ol', function (editor) {
+  suite.test('Indent already indented last li, ul in ol', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
         '<li>a' +
@@ -404,7 +404,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent first LI and nested LI OL with start attributes', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent first LI and nested LI OL with start attributes', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol start="2">' +
       '<li>a</li>' +
@@ -434,7 +434,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.IndentTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: List indent tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

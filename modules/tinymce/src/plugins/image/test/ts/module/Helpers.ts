@@ -4,7 +4,7 @@ import { TinyUi } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
-export type ImageDialogData = {
+export interface ImageDialogData {
   src: {
     value: string;
   };
@@ -22,7 +22,7 @@ export type ImageDialogData = {
   style: string;
   vspace: string;
   borderstyle: string;
-};
+}
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
@@ -107,7 +107,7 @@ const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) 
 };
 
 const cFakeEvent = (name: string) => Chain.control(
-  Chain.op(function (elm: SugarElement) {
+  Chain.op((elm: SugarElement) => {
     const evt = document.createEvent('HTMLEvents');
     evt.initEvent(name, true, true);
     elm.dom.dispatchEvent(evt);

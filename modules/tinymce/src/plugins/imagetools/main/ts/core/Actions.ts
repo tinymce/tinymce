@@ -117,7 +117,7 @@ const findBlob = function (editor: Editor, img: HTMLImageElement): Promise<Blob>
 };
 
 const startTimedUpload = function (editor: Editor, imageUploadTimerState: Cell<number>) {
-  const imageUploadTimer = Delay.setEditorTimeout(editor, function () {
+  const imageUploadTimer = Delay.setEditorTimeout(editor, () => {
     editor.editorUpload.uploadImagesAuto();
   }, Settings.getUploadTimeout(editor));
 
@@ -220,7 +220,7 @@ const rotate = function (editor: Editor, imageUploadTimerState: Cell<number>, an
       return size ? { w: size.h, h: size.w } : null;
     });
 
-    return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
+    return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.rotate(imageResult, angle);
     }, flippedSize)();
   };
@@ -228,7 +228,7 @@ const rotate = function (editor: Editor, imageUploadTimerState: Cell<number>, an
 
 const flip = function (editor: Editor, imageUploadTimerState: Cell<number>, axis: 'v' | 'h') {
   return function () {
-    return selectedImageOperation(editor, imageUploadTimerState, function (imageResult) {
+    return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.flip(imageResult, axis);
     })();
   };

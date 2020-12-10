@@ -10,7 +10,7 @@ import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 
-  const sAssertion = (editor: Editor, body: SugarElement) => Step.sync(function () {
+  const sAssertion = (editor: Editor, body: SugarElement) => Step.sync(() => {
     const strongs = UiFinder.findAllIn(body, 'strong');
     Assertions.assertEq('There should be no strong tags', 0, strongs.length);
     const editorContent1 = editor.getContent();

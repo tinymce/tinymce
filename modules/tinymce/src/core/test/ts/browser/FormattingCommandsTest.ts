@@ -4,7 +4,7 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     return LegacyUnit.equal(value, true, label);
   };
 
-  suite.test('Justify - multiple block elements selected - queryCommandState', function (editor) {
+  suite.test('Justify - multiple block elements selected - queryCommandState', (editor) => {
     editor.setContent(
       '<div style="text-align: left;"><div id="a" style="text-align: right;">' +
       'one</div><div id="b" style="text-align: right;">two</div></div>'
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     ok(editor.queryCommandState('JustifyRight'));
   });
 
-  suite.test('Formatting commands (xhtmlTextStyles)', function (editor) {
+  suite.test('Formatting commands (xhtmlTextStyles)', (editor) => {
     editor.focus();
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
@@ -109,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><span style="color: #ff0000; font-family: Arial;">test 123</span></p>');
   });
 
-  suite.test('Formatting commands (alignInline)', function (editor) {
+  suite.test('Formatting commands (alignInline)', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('JustifyLeft');
@@ -153,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><img style="float: right;" src="tinymce/ui/img/raster.gif" /></p>');
   });
 
-  suite.test('mceBlockQuote', function (editor) {
+  suite.test('mceBlockQuote', (editor) => {
     editor.focus();
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
@@ -166,7 +166,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent().replace(/\s+/g, ''), '<blockquote><p>test123</p><p>test123</p></blockquote>');
   });
 
-  suite.test('FormatBlock', function (editor) {
+  suite.test('FormatBlock', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('FormatBlock', false, 'h1');
@@ -211,49 +211,49 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<pre>test 123</pre>');
   });
 
-  suite.test('mceInsertLink (relative)', function (editor) {
+  suite.test('mceInsertLink (relative)', (editor) => {
     editor.setContent('test 123');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'test');
     LegacyUnit.equal(editor.getContent(), '<p><a href="test">test 123</a></p>');
   });
 
-  suite.test('mceInsertLink (link absolute)', function (editor) {
+  suite.test('mceInsertLink (link absolute)', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'http://www.site.com');
     LegacyUnit.equal(editor.getContent(), '<p><a href="http://www.site.com">test 123</a></p>');
   });
 
-  suite.test('mceInsertLink (link encoded)', function (editor) {
+  suite.test('mceInsertLink (link encoded)', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, '"&<>');
     LegacyUnit.equal(editor.getContent(), '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
   });
 
-  suite.test('mceInsertLink (link encoded and with class)', function (editor) {
+  suite.test('mceInsertLink (link encoded and with class)', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
     LegacyUnit.equal(editor.getContent(), '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
   });
 
-  suite.test('mceInsertLink (link with space)', function (editor) {
+  suite.test('mceInsertLink (link with space)', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
     LegacyUnit.equal(editor.getContent(), '<p><a href="foo%20bar">test 123</a></p>');
   });
 
-  suite.test('mceInsertLink (link floated img)', function (editor) {
+  suite.test('mceInsertLink (link floated img)', (editor) => {
     editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertLink', false, 'link');
     LegacyUnit.equal(editor.getContent(), '<p><a href="link"><img style="float: right;" src="about:blank" /></a></p>');
   });
 
-  suite.test('mceInsertLink (link adjacent text)', function (editor) {
+  suite.test('mceInsertLink (link adjacent text)', (editor) => {
     editor.setContent('<p><a href="#">a</a>b</p>');
 
     const rng = editor.dom.createRng();
@@ -265,7 +265,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><a href="#">a</a><a href="link">b</a></p>');
   });
 
-  suite.test('mceInsertLink (link text inside text)', function (editor) {
+  suite.test('mceInsertLink (link text inside text)', (editor) => {
     editor.setContent('<p><a href="#"><em>abc</em></a></p>');
     LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
 
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><a href="link"><em>abc</em></a></p>');
   });
 
-  suite.test('mceInsertLink (link around existing links)', function (editor) {
+  suite.test('mceInsertLink (link around existing links)', (editor) => {
     editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
     editor.execCommand('SelectAll');
 
@@ -281,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><a href="link">12</a></p>');
   });
 
-  suite.test('mceInsertLink (link around existing links with different attrs)', function (editor) {
+  suite.test('mceInsertLink (link around existing links with different attrs)', (editor) => {
     editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
     editor.execCommand('SelectAll');
 
@@ -289,7 +289,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><a href="link">12</a></p>');
   });
 
-  suite.test('mceInsertLink (link around existing complex contents with links)', function (editor) {
+  suite.test('mceInsertLink (link around existing complex contents with links)', (editor) => {
     editor.setContent(
       '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
       '<em><a id="b" href="#2"><strong>2</strong></a></em></span></p>'
@@ -304,7 +304,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     );
   });
 
-  suite.test('mceInsertLink (link text inside link)', function (editor) {
+  suite.test('mceInsertLink (link text inside link)', (editor) => {
     editor.setContent('<p><a href="#">test</a></p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.execCommand('SelectAll');
@@ -313,7 +313,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p><a href="link">test</a></p>');
   });
 
-  suite.test('mceInsertLink bug #7331', function (editor) {
+  suite.test('mceInsertLink bug #7331', (editor) => {
     editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.$('td')[1].firstChild, 0);
@@ -323,21 +323,21 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td>A</td></tr><tr><td><a href=\"x\">B</a></td></tr></tbody></table>');
   });
 
-  suite.test('unlink', function (editor) {
+  suite.test('unlink', (editor) => {
     editor.setContent('<p><a href="test">test</a> <a href="test">123</a></p>');
     editor.execCommand('SelectAll');
     editor.execCommand('unlink');
     LegacyUnit.equal(editor.getContent(), '<p>test 123</p>');
   });
 
-  suite.test('unlink - unselected a[href] with childNodes', function (editor) {
+  suite.test('unlink - unselected a[href] with childNodes', (editor) => {
     editor.setContent('<p><a href="test"><strong><em>test</em></strong></a></p>');
     LegacyUnit.setSelection(editor, 'em', 0);
     editor.execCommand('unlink');
     LegacyUnit.equal(editor.getContent(), '<p><strong><em>test</em></strong></p>');
   });
 
-  suite.test('subscript/superscript', function (editor) {
+  suite.test('subscript/superscript', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('subscript');
@@ -361,7 +361,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p>test 123</p>');
   });
 
-  suite.test('indent/outdent', function (editor) {
+  suite.test('indent/outdent', (editor) => {
     editor.setContent('<p>test 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
@@ -386,7 +386,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p>test 123</p>');
   });
 
-  suite.test('indent/outdent table always uses margin', function (editor) {
+  suite.test('indent/outdent table always uses margin', (editor) => {
     editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
     editor.execCommand('SelectAll');
     editor.execCommand('Indent');
@@ -411,7 +411,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td>test</td></tr></tbody></table>');
   });
 
-  suite.test('RemoveFormat', function (editor) {
+  suite.test('RemoveFormat', (editor) => {
     editor.setContent('<p><em>test</em> <strong>123</strong> <a href="123">123</a> 123</p>');
     editor.execCommand('SelectAll');
     editor.execCommand('RemoveFormat');
@@ -437,7 +437,7 @@ UnitTest.asynctest('browser.tinymce.core.FormattingCommandsTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag strike tag s tag</p>');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

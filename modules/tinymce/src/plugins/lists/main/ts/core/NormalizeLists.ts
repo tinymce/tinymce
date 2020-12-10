@@ -39,7 +39,7 @@ const normalizeList = function (dom, ul) {
 };
 
 const normalizeLists = function (dom, element) {
-  Tools.each(Tools.grep(dom.select('ol,ul', element)), function (ul) {
+  Tools.each(Tools.grep(dom.select('ol,ul', element)), (ul) => {
     normalizeList(dom, ul);
   });
 };

@@ -36,7 +36,7 @@ export default function () {
   };
 
   const paintClientRects = function (rects, color) {
-    tinymce.util.Tools.each(rects, function (rect, index) {
+    tinymce.util.Tools.each(rects, (rect, index) => {
       paintClientRect(rect, color, color + index);
     });
   };

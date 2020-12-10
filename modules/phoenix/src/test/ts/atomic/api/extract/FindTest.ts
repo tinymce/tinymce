@@ -4,7 +4,7 @@ import { Optional } from '@ephox/katamari';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('api.Extract.find', function () {
+UnitTest.test('api.Extract.find', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [
@@ -30,12 +30,12 @@ UnitTest.test('api.Extract.find', function () {
   const check = function (expected: Optional<{ id: string; offset: number }>, topId: string, offset: number) {
     const top = Finder.get(doc, topId);
     const actual = Extract.find(doc, top, offset);
-    expected.fold(function () {
+    expected.fold(() => {
       assert.eq(actual.isNone(), true, 'Expected none, actual: some');
-    }, function (exp) {
-      actual.fold(function () {
+    }, (exp) => {
+      actual.fold(() => {
         assert.fail('Expected some, actual: none');
-      }, function (act) {
+      }, (act) => {
         assert.eq(exp.id, act.element.id);
         assert.eq(exp.offset, act.offset);
       });

@@ -59,11 +59,11 @@ const mergeSubSup = function (dom: DOMUtils, format, vars: FormatVars, node: Nod
 
 const mergeWithChildren = function (editor: Editor, formatList, vars: FormatVars, node: Node) {
   // Remove/merge children
-  each(formatList, function (format: any) {
+  each(formatList, (format: any) => {
     // Merge all children of similar type will move styles from child to parent
     // this: <span style="color:red"><b><span style="color:red; font-size:10px">text</span></b></span>
     // will become: <span style="color:red"><b><span style="font-size:10px">text</span></b></span>
-    each(editor.dom.select(format.inline, node), function (child) {
+    each(editor.dom.select(format.inline, node), (child) => {
       if (!isElementNode(child)) {
         return;
       }
@@ -85,7 +85,7 @@ const mergeWithParents = function (editor: Editor, format, name: string, vars: F
 
   // Remove format if any ancestor already has the same format
   if (format.merge_with_parents) {
-    editor.dom.getParent(node.parentNode, function (parent) {
+    editor.dom.getParent(node.parentNode, (parent) => {
       if (MatchFormat.matchNode(editor, parent, name, vars)) {
         RemoveFormat.removeFormat(editor, format, vars, node);
         return true;

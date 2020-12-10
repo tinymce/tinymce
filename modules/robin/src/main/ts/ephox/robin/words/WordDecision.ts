@@ -43,9 +43,9 @@ const onOther = function <E, D> (_universe: Universe<E, D>, _item: E, _slicer: (
 //   [start, end] substring otherwise.
 const onText = function <E, D> (universe: Universe<E, D>, item: E, slicer: (text: string) => Optional<[number, number]>): WordDecision<E> {
   const text = universe.property().getText(item);
-  return slicer(text).fold(function () {
+  return slicer(text).fold(() => {
     return decision([ make(item, 0, text.length, text) ], false);
-  }, function (splits) {
+  }, (splits) => {
     const items = splits[0] === splits[1] ? [] : [ make(item, splits[0], splits[1], text.substring(splits[0], splits[1])) ];
     return decision(items, true);
   });

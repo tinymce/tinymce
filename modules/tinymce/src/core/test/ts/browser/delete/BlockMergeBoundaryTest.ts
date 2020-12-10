@@ -7,17 +7,17 @@ import ViewBlock from '../../module/test/ViewBlock';
 
 type BlockBoundary = BlockMergeBoundary.BlockBoundary;
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom, cursorOffset);
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
   };
 
   const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
-    return Chain.op(function (blockBoundaryOption: Optional<BlockMergeBoundary.BlockBoundary>) {
+    return Chain.op((blockBoundaryOption: Optional<BlockMergeBoundary.BlockBoundary>) => {
       const fromContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromPath).getOrDie();
       const toContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
   };
 
   const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
-    return Chain.op(function (blockBoundaryOption: Optional<BlockBoundary>) {
+    return Chain.op((blockBoundaryOption: Optional<BlockBoundary>) => {
       const expectedFromBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
       const expectedToBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toBlockPath).getOrDie();
       const blockBoundary = blockBoundaryOption.getOrDie();
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
     });
   };
 
-  const cAssertBlockBoundaryNone = Chain.op(function (blockBoundaryOption: Optional<BlockBoundary >) {
+  const cAssertBlockBoundaryNone = Chain.op((blockBoundaryOption: Optional<BlockBoundary >) => {
     Assertions.assertEq('BlockBoundary should be none', true, blockBoundaryOption.isNone());
   });
 
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', function (s
         cAssertBlockBoundaryBlocks([ 0 ], [ 1 ])
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

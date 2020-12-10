@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
   ImagePlugin();
 
   const cGetBody = Chain.control(
-    Chain.mapper(function (editor: any) {
+    Chain.mapper((editor: any) => {
       return TinyDom.fromDom(editor.getBody());
     }),
     Guard.addLogging('Get body')
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
 
   const cDragHandleRight = function (px) {
     return Chain.control(
-      Chain.op(function (input: any) {
+      Chain.op((input: any) => {
         const dom = input.editor.dom;
         const target = input.resizeSE.dom;
         const pos = dom.getPos(target);
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
       ]),
       McEditor.cRemove
     ])
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

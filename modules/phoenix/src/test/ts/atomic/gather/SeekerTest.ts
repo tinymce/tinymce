@@ -5,7 +5,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import * as Gather from 'ephox/phoenix/api/general/Gather';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('Seeker Test', function () {
+UnitTest.test('Seeker Test', () => {
   const some = Optional.some;
 
   const universe = TestUniverse(

@@ -8,7 +8,7 @@ import * as DetectProPlugin from 'tinymce/plugins/spellchecker/alien/DetectProPl
 
 UnitTest.test(
   'browser.tinymce.plugins.spellchecker.alien.DetectProPluginTest',
-  function () {
+  () => {
     // Fake loading of tinymcespellchecker
     PluginManager.add('tinymcespellchecker', Fun.noop);
 

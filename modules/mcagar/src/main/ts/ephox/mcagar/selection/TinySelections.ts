@@ -39,19 +39,19 @@ const createDomSelectionOf = function (container: SugarElement, start: SugarElem
 };
 
 const cCreateDomSelection = function (sPath: number[], soffset: number, fPath: number[], foffset: number): Chain<SugarElement, Range> {
-  return Chain.mapper(function (container) {
+  return Chain.mapper((container) => {
     return createDomSelection(container, sPath, soffset, fPath, foffset);
   });
 };
 
 const cCreateDomCursor = function (elementPath: number[], offset: number): Chain<SugarElement, Range> {
-  return Chain.mapper(function (container) {
+  return Chain.mapper((container) => {
     return createDomCursor(container, elementPath, offset);
   });
 };
 
 const cCreateDomSelectionOf = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Chain<SugarElement, Range> {
-  return Chain.mapper(function (container) {
+  return Chain.mapper((container) => {
     return createDomSelectionOf(container, start, soffset, finish, foffset);
   });
 };

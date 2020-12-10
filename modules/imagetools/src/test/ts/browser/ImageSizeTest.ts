@@ -3,7 +3,7 @@ import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Conversions from 'ephox/imagetools/util/Conversions';
 import * as ImageSize from 'ephox/imagetools/util/ImageSize';
 
-UnitTest.asynctest('ImageSizeTest', function (success, failure) {
+UnitTest.asynctest('ImageSizeTest', (success, failure) => {
 
   //   QUnit.asyncTest('getWidth', function() {
   //   imagetools.Conversions.blobToImage(testBlob).then(function(image) {
@@ -15,8 +15,8 @@ UnitTest.asynctest('ImageSizeTest', function (success, failure) {
   canvas.height = 200;
 
   const uriToBlobPromise = Conversions.uriToBlob(canvas.toDataURL()) as Promise<Blob>;
-  uriToBlobPromise.then(function (blob) {
-    Conversions.blobToImage(blob).then(function (image) {
+  uriToBlobPromise.then((blob) => {
+    Conversions.blobToImage(blob).then((image) => {
       const actualWidth = ImageSize.getWidth(image);
       const actualHeight = ImageSize.getHeight(image);
 

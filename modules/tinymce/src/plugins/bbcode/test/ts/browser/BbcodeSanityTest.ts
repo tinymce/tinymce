@@ -9,12 +9,12 @@ UnitTest.asynctest('browser.tinymce.plugins.bbcode.BbcodeSanityTest', (success, 
   BbcodePlugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'BBCode: Set bbcode content and assert the equivalent html structure is present', [
       tinyApis.sSetContent('[b]a[/b]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+      tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
         return s.element('body', {
           children: [
             s.element('p', {

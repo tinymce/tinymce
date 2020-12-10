@@ -11,8 +11,8 @@ declare const escape: any;
 declare const unescape: any;
 
 const protectHtml = function (protect, html) {
-  Tools.each(protect, function (pattern) {
-    html = html.replace(pattern, function (str) {
+  Tools.each(protect, (pattern) => {
+    html = html.replace(pattern, (str) => {
       return '<!--mce:protected ' + escape(str) + '-->';
     });
   });
@@ -21,7 +21,7 @@ const protectHtml = function (protect, html) {
 };
 
 const unprotectHtml = function (html) {
-  return html.replace(/<!--mce:protected ([\s\S]*?)-->/g, function (a, m) {
+  return html.replace(/<!--mce:protected ([\s\S]*?)-->/g, (a, m) => {
     return unescape(m);
   });
 };

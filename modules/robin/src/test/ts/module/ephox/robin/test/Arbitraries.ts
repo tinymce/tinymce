@@ -21,7 +21,7 @@ export interface ArbRangeIds {
 }
 
 const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
-  const rest = Arr.bind(item.children || [], function (id) { return getIds(id, predicate); });
+  const rest = Arr.bind(item.children || [], (id) => { return getIds(id, predicate); });
   const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
   return self.concat(rest);
 };
@@ -32,12 +32,12 @@ const textIds = function (universe: TestUniverse) {
 
 const arbTextIds = function (universe: TestUniverse) {
   const ids = textIds(universe);
-  return Jsc.elements(textIds(universe)).smap(function (id: string): ArbTextIds {
+  return Jsc.elements(textIds(universe)).smap((id: string): ArbTextIds => {
     return {
       startId: id,
       textIds: ids
     };
-  }, function (obj: ArbTextIds) {
+  }, (obj: ArbTextIds) => {
     return obj.startId;
   });
 };
@@ -45,14 +45,14 @@ const arbTextIds = function (universe: TestUniverse) {
 const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
   const ids = getIds(universe.get(), predicate);
 
-  return Jsc.elements(ids).smap(function (id: string): ArbIds {
+  return Jsc.elements(ids).smap((id: string): ArbIds => {
     return {
       startId: id,
       ids
     };
-  }, function (obj: ArbIds) {
+  }, (obj: ArbIds) => {
     return obj.startId;
-  }, function (obj: ArbIds) {
+  }, (obj: ArbIds) => {
     return '[id :: ' + obj.startId + ']';
   });
 };
@@ -60,8 +60,8 @@ const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean
 const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
   const ids = getIds(universe.get(), predicate);
 
-  const generator = Jsc.integer(0, ids.length - 1).generator.flatMap(function (startIndex: number) {
-    return Jsc.integer(startIndex, ids.length - 1).generator.map(function (finishIndex: number): ArbRangeIds {
+  const generator = Jsc.integer(0, ids.length - 1).generator.flatMap((startIndex: number) => {
+    return Jsc.integer(startIndex, ids.length - 1).generator.map((finishIndex: number): ArbRangeIds => {
       return {
         startId: ids[startIndex],
         finishId: ids[finishIndex],

@@ -60,7 +60,7 @@ const overrideFormats = (editor: Editor) => {
   });
 
   // Check that deprecated elements are allowed if not add them
-  Tools.each('b,i,u,strike'.split(','), function (name) {
+  Tools.each('b,i,u,strike'.split(','), (name) => {
     schema.addValidElements(name + '[*]');
   });
 
@@ -70,7 +70,7 @@ const overrideFormats = (editor: Editor) => {
   }
 
   // Add the missing and deprecated align attribute for the serialization engine
-  Tools.each(alignElements.split(','), function (name) {
+  Tools.each(alignElements.split(','), (name) => {
     const rule = schema.getElementRule(name);
 
     if (rule) {

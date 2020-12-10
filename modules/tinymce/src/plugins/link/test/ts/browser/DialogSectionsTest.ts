@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogSectionsTest', (success, 
     exists: boolean;
   }
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

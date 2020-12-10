@@ -4,78 +4,78 @@ import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.EditorApiTest', (success, failure) => {
 
   Theme();
 
   const sRemoveEditor = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.remove();
     });
   };
 
   const sExecCallback = function (editor, name, arg) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.execCallback(name, arg);
     });
   };
 
   const sTryAccess = function (editor, name, expectedValue) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const result = editor[name]();
       Assertions.assertEq('Should be expected value on a removed editor', expectedValue, result);
     });
   };
 
   const sShow = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.show();
     });
   };
 
   const sHide = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.hide();
     });
   };
 
   const sLoad = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.load();
     });
   };
 
   const sSave = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.save();
     });
   };
 
   const sQueryCommandState = function (editor, name) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.queryCommandState(name);
     });
   };
 
   const sQueryCommandValue = function (editor, name) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.queryCommandValue(name);
     });
   };
 
   const sQueryCommandSupported = function (editor, name) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.queryCommandSupported(name);
     });
   };
 
   const sUploadImages = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.uploadImages(Fun.noop);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

@@ -31,7 +31,7 @@ UnitTest.test('SizeInputConverterTest', () => {
   Jsc.property(
     'ratioSizeConversion is equalivent to multipling when the units match',
     Jsc.nat(100), Jsc.nat(100), Jsc.oneof(Jsc.elements(units)),
-    function (scale: number, value: number, unit: SizeUnit) {
+    (scale: number, value: number, unit: SizeUnit) => {
       const v = ratioSizeConversion(scale, unit)({ value, unit }).getOrNull();
       return Jsc.eq({ value: scale * value, unit }, v);
     }
@@ -40,7 +40,7 @@ UnitTest.test('SizeInputConverterTest', () => {
   Jsc.property(
     'noSizeConversion always returns none',
     Jsc.number(0, largeSensible), Jsc.oneof(Jsc.elements(units)),
-    function (value: number, unit: SizeUnit) {
+    (value: number, unit: SizeUnit) => {
       return Jsc.eq(true, noSizeConversion({ value, unit }).isNone());
     }
   );

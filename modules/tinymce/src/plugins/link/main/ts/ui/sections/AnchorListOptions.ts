@@ -12,7 +12,7 @@ import { ListItem } from '../DialogTypes';
 
 const getAnchors = (editor): Optional<ListItem[]> => {
   const anchorNodes = editor.dom.select('a:not([href])');
-  const anchors = Arr.bind(anchorNodes, function (anchor: HTMLAnchorElement) {
+  const anchors = Arr.bind(anchorNodes, (anchor: HTMLAnchorElement) => {
     const id = anchor.name || anchor.id;
     return id ? [{ text: id, value: '#' + id }] : [ ];
   });

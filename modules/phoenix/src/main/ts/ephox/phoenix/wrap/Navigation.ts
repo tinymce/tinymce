@@ -41,8 +41,8 @@ const scan = function <E, D> (universe: Universe<E, D>, element: E, direction: (
   // if a comment or zero-length text, scan the siblings
   if ((universe.property().isText(element) && universe.property().getText(element).trim().length === 0)
     || universe.property().isComment(element)) {
-    return direction(element).bind(function (elem) {
-      return scan(universe, elem, direction).orThunk(function () {
+    return direction(element).bind((elem) => {
+      return scan(universe, elem, direction).orThunk(() => {
         return Optional.some(elem);
       });
     });

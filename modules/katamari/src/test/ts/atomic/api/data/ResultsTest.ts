@@ -5,7 +5,7 @@ import { Result } from 'ephox/katamari/api/Result';
 import * as Results from 'ephox/katamari/api/Results';
 import { arbResult, arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
 
-UnitTest.test('ResultsTest', function () {
+UnitTest.test('ResultsTest', () => {
   const actual = Results.partition([
     Result.value('a'),
     Result.value('b'),
@@ -26,7 +26,7 @@ UnitTest.test('ResultsTest', function () {
 UnitTest.test('Check that values should be empty and  errors should be all if we only generate errors', () => {
   fc.assert(fc.property(
     fc.array(arbResultError(fc.integer())),
-    function (resErrors) {
+    (resErrors) => {
       const actual = Results.partition(resErrors);
       if (actual.values.length !== 0) {
         Assert.fail('Values length should be 0');
@@ -41,7 +41,7 @@ UnitTest.test('Check that values should be empty and  errors should be all if we
 UnitTest.test('Check that errors should be empty and values should be all if we only generate values', () => {
   fc.assert(fc.property(
     fc.array(arbResultValue(fc.integer())),
-    function (resValues) {
+    (resValues) => {
       const actual = Results.partition(resValues);
       if (actual.errors.length !== 0) {
         Assert.fail('Errors length should be 0');
@@ -56,7 +56,7 @@ UnitTest.test('Check that errors should be empty and values should be all if we 
 UnitTest.test('Check that the total number of values and errors matches the input size', () => {
   fc.assert(fc.property(
     fc.array(arbResult(fc.integer(), fc.string())),
-    function (results) {
+    (results) => {
       const actual = Results.partition(results);
       Assert.eq('Total number should match size of input', results.length, actual.errors.length + actual.values.length);
     }
@@ -67,7 +67,7 @@ UnitTest.test('Check that two errors always equal comparison.bothErrors', () => 
   fc.assert(fc.property(
     arbResultError(fc.integer()),
     arbResultError(fc.integer()),
-    function (r1, r2) {
+    (r1, r2) => {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.always,
@@ -83,7 +83,7 @@ UnitTest.test('Check that error, value always equal comparison.firstError', () =
   fc.assert(fc.property(
     arbResultError(fc.integer()),
     arbResultValue(fc.string()),
-    function (r1, r2) {
+    (r1, r2) => {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.never,
@@ -99,7 +99,7 @@ UnitTest.test('Check that value, error always equal comparison.secondError', () 
   fc.assert(fc.property(
     arbResultValue(fc.integer()),
     arbResultError(fc.string()),
-    function (r1, r2) {
+    (r1, r2) => {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.never,
@@ -115,7 +115,7 @@ UnitTest.test('Check that value, value always equal comparison.bothValues', () =
   fc.assert(fc.property(
     arbResultValue(fc.integer()),
     arbResultValue(fc.integer()),
-    function (r1, r2) {
+    (r1, r2) => {
       const comparison = Results.compare(r1, r2);
       return comparison.match({
         bothErrors: Fun.never,

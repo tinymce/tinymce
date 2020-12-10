@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Strings from 'ephox/katamari/api/Strings';
 
-UnitTest.test('supplant', function () {
+UnitTest.test('supplant', () => {
   function check(expected, str, obj) {
     const actual = Strings.supplant(str, obj);
     Assert.eq('eq', expected, actual);

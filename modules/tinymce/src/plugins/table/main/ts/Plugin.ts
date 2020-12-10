@@ -42,19 +42,19 @@ function Plugin(editor: Editor) {
   Buttons.addButtons(editor, selectionTargets, clipboard);
   Buttons.addToolbars(editor);
 
-  editor.on('PreInit', function () {
+  editor.on('PreInit', () => {
     editor.serializer.addTempAttr(ephemera.firstSelected);
     editor.serializer.addTempAttr(ephemera.lastSelected);
     TableFormats.registerFormats(editor);
   });
 
   if (hasTabNavigation(editor)) {
-    editor.on('keydown', function (e: KeyboardEvent) {
+    editor.on('keydown', (e: KeyboardEvent) => {
       TabContext.handle(e, editor, actions);
     });
   }
 
-  editor.on('remove', function () {
+  editor.on('remove', () => {
     resizeHandler.destroy();
   });
 

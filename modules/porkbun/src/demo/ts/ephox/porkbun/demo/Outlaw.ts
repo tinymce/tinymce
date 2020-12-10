@@ -44,7 +44,7 @@ const create = function (name: string): Outlaw {
   const addAction = function (text: string, action: () => void) {
     const button = $('<button />');
     button.text(text);
-    button.bind('click', function () {
+    button.bind('click', () => {
       action();
       button.detach();
     });

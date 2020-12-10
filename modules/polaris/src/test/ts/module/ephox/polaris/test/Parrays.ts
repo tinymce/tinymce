@@ -19,7 +19,7 @@ const make = (values: string[]): PArrayTestItem[] =>
   PositionArray.generate(values, generator);
 
 const dump = function (parray: PArrayTestItem[]): string[] {
-  return Arr.map(parray, function (unit) {
+  return Arr.map(parray, (unit) => {
     return unit.start + '->' + unit.finish + '@ ' + unit.item;
   });
 };

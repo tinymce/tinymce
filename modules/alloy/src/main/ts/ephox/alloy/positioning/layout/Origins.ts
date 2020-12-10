@@ -61,11 +61,11 @@ const positionWithDirection = (posName: string, decision: RepositionDecision, x:
   );
 };
 
-const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => origin.fold(function () {
+const reposition = (origin: OriginAdt, decision: RepositionDecision): PositionCss => origin.fold(() => {
   return NuPositionCss('absolute', Optional.some(decision.x), Optional.some(decision.y), Optional.none(), Optional.none());
-}, function (x, y, width, height) {
+}, (x, y, width, height) => {
   return positionWithDirection('absolute', decision, x, y, width, height);
-}, function (x, y, width, height) {
+}, (x, y, width, height) => {
   return positionWithDirection('fixed', decision, x, y, width, height);
 });
 

@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { getPatternSet } from 'tinymce/plugins/textpattern/api/Settings';
 import { findPattern } from 'tinymce/plugins/textpattern/core/BlockPattern';
 
-UnitTest.test('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', function () {
+UnitTest.test('atomic.tinymce.plugins.textpattern.FindBlockPatternsTest', () => {
   const mockEditor = {
     getParam: (_term: string, default_pattern: any, _type: string) => (default_pattern)
   };

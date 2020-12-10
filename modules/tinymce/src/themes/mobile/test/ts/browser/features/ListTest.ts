@@ -6,7 +6,7 @@ import { SugarBody, Traverse } from '@ephox/sugar';
 import * as TestTheme from '../../module/test/theme/TestTheme';
 import * as TestUi from '../../module/test/ui/TestUi';
 
-UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: features.ListTest', (success, failure) => {
 
   /* This test is going to create a toolbar with both list items on it */
   const body = SugarBody.body();
@@ -15,7 +15,7 @@ UnitTest.asynctest('Browser Test: features.ListTest', function (success, failure
     container: body,
     items: [ 'bullist', 'numlist' ]
   }, success, failure).use(
-    function (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) {
+    (realm, apis, toolbar, socket, buttons, onSuccess, onFailure) => {
 
       const sSetP1 = apis.sSetSelection([ 0, 0, 0 ], 'Thi'.length, [ 0, 0, 0 ], 'Thi'.length);
       const sSetP2 = apis.sSetSelection([ 1, 0 ], 'Norma'.length, [ 1, 0 ], 'Norma'.length);

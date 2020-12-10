@@ -4,7 +4,7 @@ import { ApiChains } from 'ephox/mcagar/api/ApiChains';
 import * as Editor from 'ephox/mcagar/api/Editor';
 
 UnitTest.asynctest('EditorTest', (success, failure) => {
-  const cAssertEditorExists = Chain.op(function (editor) {
+  const cAssertEditorExists = Chain.op((editor) => {
     Assertions.assertEq('asserting that editor is truthy', true, !!editor);
   });
 

@@ -16,7 +16,7 @@ declare const unescape: any;
 
 const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: DOMUtils) => {
   // Convert tabindex back to elements when serializing contents
-  htmlParser.addAttributeFilter('data-mce-tabindex', function (nodes, name) {
+  htmlParser.addAttributeFilter('data-mce-tabindex', (nodes, name) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -27,7 +27,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   // Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
-  htmlParser.addAttributeFilter('src,href,style', function (nodes, name) {
+  htmlParser.addAttributeFilter('src,href,style', (nodes, name) => {
     let i = nodes.length, node, value;
     const internalName = 'data-mce-' + name;
     const urlConverter = settings.url_converter;
@@ -57,7 +57,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   // Remove internal classes mceItem<..> or mceSelected
-  htmlParser.addAttributeFilter('class', function (nodes) {
+  htmlParser.addAttributeFilter('class', (nodes) => {
     let i = nodes.length, node, value;
 
     while (i--) {
@@ -72,7 +72,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   // Remove bookmark elements
-  htmlParser.addAttributeFilter('data-mce-type', function (nodes, name, args) {
+  htmlParser.addAttributeFilter('data-mce-type', (nodes, name, args) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -90,7 +90,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
-  htmlParser.addNodeFilter('noscript', function (nodes) {
+  htmlParser.addNodeFilter('noscript', (nodes) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -103,7 +103,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   // Force script into CDATA sections and remove the mce- prefix also add comments around styles
-  htmlParser.addNodeFilter('script,style', function (nodes, name) {
+  htmlParser.addNodeFilter('script,style', (nodes, name) => {
     let i = nodes.length, node, value, type;
 
     const trim = function (value) {
@@ -139,7 +139,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   });
 
   // Convert comments to cdata and handle protected comments
-  htmlParser.addNodeFilter('#comment', function (nodes) {
+  htmlParser.addNodeFilter('#comment', (nodes) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -158,7 +158,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
-  htmlParser.addNodeFilter('xml:namespace,input', function (nodes, name) {
+  htmlParser.addNodeFilter('xml:namespace,input', (nodes, name) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -173,8 +173,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
-  htmlParser.addAttributeFilter('data-mce-type', function (nodes) {
-    Arr.each(nodes, function (node) {
+  htmlParser.addAttributeFilter('data-mce-type', (nodes) => {
+    Arr.each(nodes, (node) => {
       if (node.attr('data-mce-type') === 'format-caret') {
         if (node.isEmpty(htmlParser.schema.getNonEmptyElements())) {
           node.remove();
@@ -191,7 +191,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     'data-mce-selected,data-mce-expando,' +
     'data-mce-type,data-mce-resize,data-mce-placeholder',
 
-    function (nodes, name) {
+    (nodes, name) => {
       let i = nodes.length;
 
       while (i--) {

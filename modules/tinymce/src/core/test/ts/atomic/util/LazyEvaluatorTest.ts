@@ -3,9 +3,9 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import * as LazyEvaluator from 'tinymce/core/util/LazyEvaluator';
 
-UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function (success, failure) {
+UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', (success, failure) => {
 
-  const sTestEvaluateUntil = Step.sync(function () {
+  const sTestEvaluateUntil = Step.sync(() => {
     const operations = [
       function (a, b) {
         return a === 1 && b === 'a' ? Optional.some(1) : Optional.none();
@@ -26,7 +26,7 @@ UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', function (succe
 
   Pipeline.async({}, [
     sTestEvaluateUntil
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

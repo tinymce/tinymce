@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
   TablePlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableGridFalse', (success, fai
         Waiter.sTryUntil('click table menu', tinyUi.sClickOnUi('click table menu', 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')),
         Chain.asStep({}, [
           tinyUi.cWaitForPopup('wait for popup', 'div.tox-dialog:has(div.tox-dialog__title:contains("Table Properties"))'),
-          Chain.op(function (x) {
+          Chain.op((x) => {
             Assertions.assertPresence(
               'assert presence of col and row input',
               {

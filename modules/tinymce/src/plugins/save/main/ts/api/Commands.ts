@@ -8,11 +8,11 @@
 import * as Actions from '../core/Actions';
 
 const register = function (editor) {
-  editor.addCommand('mceSave', function () {
+  editor.addCommand('mceSave', () => {
     Actions.save(editor);
   });
 
-  editor.addCommand('mceCancel', function () {
+  editor.addCommand('mceCancel', () => {
     Actions.cancel(editor);
   });
 };

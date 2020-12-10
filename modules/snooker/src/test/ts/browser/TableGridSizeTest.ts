@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Remove, SugarElement } from '@ephox/sugar';
 import * as TableGridSize from 'ephox/snooker/api/TableGridSize';
 
-UnitTest.test('Table grid size test', function () {
+UnitTest.test('Table grid size test', () => {
   const testGridSize = function (html: string, expectedColumnCount: number, expectedRowCount: number) {
     const tbl = SugarElement.fromHtml(html);
     const size = TableGridSize.getGridSize(tbl);

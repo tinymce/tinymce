@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 const setup = function (editor: Editor) {
-  editor.on('ResolveName', function (e) {
+  editor.on('ResolveName', (e) => {
     let name;
 
     if (e.target.nodeType === 1 && (name = e.target.getAttribute('data-mce-object'))) {

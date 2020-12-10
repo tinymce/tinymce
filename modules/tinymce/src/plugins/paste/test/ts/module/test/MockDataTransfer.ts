@@ -31,7 +31,7 @@ const create = function (inputData) {
   const setData = function (mime, content) {
     data[mime] = content;
     result.types = Obj.keys(data);
-    result.items = Arr.map(result.types, function (type) {
+    result.items = Arr.map(result.types, (type) => {
       return createDataTransferItem(type, data[type]);
     });
   };
@@ -49,7 +49,7 @@ const create = function (inputData) {
     addElement: notImplemented
   };
 
-  Obj.each(inputData, function (value, key) {
+  Obj.each(inputData, (value, key) => {
     setData(key, value);
   });
 

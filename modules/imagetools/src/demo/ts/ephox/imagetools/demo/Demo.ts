@@ -17,10 +17,10 @@ function getValue(el: HTMLSelectElement | HTMLButtonElement): string {
 }
 
 function modify(image: HTMLImageElement, op: string, args: any[]) {
-  ResultConversions.imageToImageResult(image).then(function (ir) {
+  ResultConversions.imageToImageResult(image).then((ir) => {
     args.unshift(ir);
     return (ImageTransformations as any)[op].apply(null, args)
-      .then(function (imageResult: ImageResult) {
+      .then((imageResult: ImageResult) => {
         image.src = imageResult.toDataURL();
       });
   });
@@ -35,10 +35,10 @@ for (let i = 0; i < forms.length; i++) {
       const currOp = getValue(selector);
       const image = document.getElementById('editor') as HTMLImageElement;
       modify(image, currOp, [].slice.call((<HTMLFormElement> this).elements)
-        .filter(function (el: HTMLElement) {
+        .filter((el: HTMLElement) => {
           return el.tagName !== 'BUTTON';
         })
-        .map(function (el: HTMLButtonElement) {
+        .map((el: HTMLButtonElement) => {
           return getValue(el);
         })
       );

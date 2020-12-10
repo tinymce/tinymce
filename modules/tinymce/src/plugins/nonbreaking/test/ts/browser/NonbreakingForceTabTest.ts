@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
   NonbreakingPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
@@ -18,13 +18,13 @@ UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest'
       Log.stepsAsStep('TBA', 'NonBreaking: Undo level on insert tab', [
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         tinyApis.sAssertContent('<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>'),
-        Step.sync(function () {
+        Step.sync(() => {
           editor.undoManager.undo();
         }),
         tinyApis.sAssertContent('')
       ]),
       Log.step('TBA', 'NonBreaking: Prevent default and other handlers on insert tab',
-        Step.sync(function () {
+        Step.sync(() => {
           const args = editor.fire('keydown', { keyCode: VK.TAB });
           Assert.eq('Default should be prevented', true, args.isDefaultPrevented());
           Assert.eq('Should not propagate', true, args.isImmediatePropagationStopped());

@@ -10,7 +10,7 @@ interface TestData {
   colspan?: string;
 }
 
-UnitTest.test('CopySelectedTest', function () {
+UnitTest.test('CopySelectedTest', () => {
   // normally this is darwin ephemera, but doesn't actually matter what it is
   const SEL_CLASS = 'copy-selected';
 
@@ -42,8 +42,8 @@ UnitTest.test('CopySelectedTest', function () {
   // generate a table structure from a nested array
   const generateInput = function (input: TestData[][]) {
     const table = SugarElement.fromTag('table');
-    const rows = Arr.map(input, function (row) {
-      const cells = Arr.map(row, function (cell) {
+    const rows = Arr.map(input, (row) => {
+      const cells = Arr.map(row, (cell) => {
         const td = SugarElement.fromTag('td');
         if (cell.rowspan !== undefined) {
           Attribute.set(td, 'rowspan', cell.rowspan);
@@ -61,7 +61,7 @@ UnitTest.test('CopySelectedTest', function () {
       InsertAll.append(tr, cells);
       return tr;
     });
-    const withNewlines = Arr.bind(rows, function (row) {
+    const withNewlines = Arr.bind(rows, (row) => {
       return [ SugarElement.fromText('\n'), row ];
     });
     InsertAll.append(table, withNewlines.concat(SugarElement.fromText('\n')));
@@ -80,10 +80,10 @@ UnitTest.test('CopySelectedTest', function () {
 
     const domRows = traverseChildElements(table);
     assertWithInfo(expected.length, domRows.length, 'number of rows');
-    Arr.each(expected, function (row, i) {
+    Arr.each(expected, (row, i) => {
       const domCells = traverseChildElements(domRows[i]);
       assertWithInfo(row.length, domCells.length, 'number of cells in output row ' + i + ' to be ');
-      Arr.each(row, function (cell, j) {
+      Arr.each(row, (cell, j) => {
         const domCell = domCells[j];
         assertWithInfo(cell.html, Html.get(domCell), 'cell text');
         assertWithInfo(cell.rowspan, Attribute.get(domCell, 'rowspan'), 'rowspan');

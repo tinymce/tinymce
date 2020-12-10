@@ -22,7 +22,7 @@ const setSelectionAtTouch = function (editorApi: PlatformEditor, touchEvent: Eve
   // cursor into view, in this case it wants to scroll down so the text is centered on the screen,
   // we have to live with this until we control selection
   const touch = touchEvent.raw.changedTouches[0];
-  WindowSelection.getAtPoint(editorApi.win, touch.pageX, touch.pageY).each(function (raw) {
+  WindowSelection.getAtPoint(editorApi.win, touch.pageX, touch.pageY).each((raw) => {
     editorApi.setSelection(raw.start, raw.soffset, raw.finish, raw.foffset);
   });
 };
@@ -34,7 +34,7 @@ const onOrientationReady = function (outerWindow, refreshView) {
   // wait for the toolbar to recover before refreshing the view and scrolling cursor into view
   // done here instead of nomad toolbar fixup since that is tied to window scroll, which does not
   // fire on landscape
-  const scrollNotZero = Delay.setInterval(function () {
+  const scrollNotZero = Delay.setInterval(() => {
     if (outerWindow.pageYOffset === 0) {
       Delay.clearInterval(scrollNotZero);
       refreshView();

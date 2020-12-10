@@ -12,11 +12,11 @@ interface EventLog {
   index: number;
 }
 
-UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', (success, failure) => {
   const store = TestHelpers.TestStore();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     const sClickAndAssertEvents = function (tooltip, expected: EventLog[]) {

@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
 const register = function (editor: Editor) {
-  editor.addCommand('mcePrint', function () {
+  editor.addCommand('mcePrint', () => {
     // TINY-3762 IE will print the current window instead of the iframe window
     // however using execCommand appears to make it print from the correct window
     if (Env.browser.isIE()) {

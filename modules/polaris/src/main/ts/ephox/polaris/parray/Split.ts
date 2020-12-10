@@ -17,8 +17,8 @@ const divide = function <T extends PRange> (unit: T, positions: number[], subdiv
 const splits = function <T extends PRange> (parray: T[], positions: number[], subdivide: (unit: T, positions: number[]) => T[]): T[] {
   if (positions.length === 0) { return parray; }
 
-  return Arr.bind(parray, function (unit) {
-    const relevant = Arr.bind(positions, function (pos) {
+  return Arr.bind(parray, (unit) => {
+    const relevant = Arr.bind(positions, (pos) => {
       return Query.inUnit(unit, pos) ? [ pos - unit.start ] : [];
     });
 

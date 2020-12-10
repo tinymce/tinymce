@@ -61,7 +61,7 @@ const leftClickedOnAHref = (editor: Editor) => function (elm) {
 };
 
 const setupGotoLinks = (editor: Editor) => {
-  editor.on('click', function (e) {
+  editor.on('click', (e) => {
     const link = getLink(editor, e.target);
     if (link && VK.metaKeyPressed(e)) {
       e.preventDefault();
@@ -69,7 +69,7 @@ const setupGotoLinks = (editor: Editor) => {
     }
   });
 
-  editor.on('keydown', function (e) {
+  editor.on('keydown', (e) => {
     const link = getSelectedLink(editor);
     if (link && e.keyCode === 13 && hasOnlyAltModifier(e)) {
       e.preventDefault();
