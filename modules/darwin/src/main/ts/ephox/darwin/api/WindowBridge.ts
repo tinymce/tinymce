@@ -20,42 +20,42 @@ export interface WindowBridge {
   scrollBy: (x: number, y: number) => void;
 }
 
-export const WindowBridge = function (win: Window): WindowBridge {
-  const elementFromPoint = function (x: number, y: number) {
+export const WindowBridge = (win: Window): WindowBridge => {
+  const elementFromPoint = (x: number, y: number) => {
     return SugarElement.fromPoint(SugarElement.fromDom(win.document), x, y);
   };
 
-  const getRect = function (element: SugarElement<Element>) {
+  const getRect = (element: SugarElement<Element>) => {
     return element.dom.getBoundingClientRect();
   };
 
-  const getRangedRect = function (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> {
+  const getRangedRect = (start: SugarElement, soffset: number, finish: SugarElement, foffset: number): Optional<RawRect> => {
     const sel = SimSelection.exact(start, soffset, finish, foffset);
     return WindowSelection.getFirstRect(win, sel);
   };
 
-  const getSelection = function () {
+  const getSelection = () => {
     return WindowSelection.get(win).map((exactAdt) => {
       return Util.convertToRange(win, exactAdt);
     });
   };
 
-  const fromSitus = function (situs: Situs) {
+  const fromSitus = (situs: Situs) => {
     const relative = SimSelection.relative(situs.start, situs.finish);
     return Util.convertToRange(win, relative);
   };
 
-  const situsFromPoint = function (x: number, y: number) {
+  const situsFromPoint = (x: number, y: number) => {
     return WindowSelection.getAtPoint(win, x, y).map((exact) => {
       return Situs.create(exact.start, exact.soffset, exact.finish, exact.foffset);
     });
   };
 
-  const clearSelection = function () {
+  const clearSelection = () => {
     WindowSelection.clear(win);
   };
 
-  const collapseSelection = function (toStart: boolean = false) {
+  const collapseSelection = (toStart: boolean = false) => {
     WindowSelection.get(win).each((sel) => sel.fold(
       (rng) => rng.collapse(toStart),
       (startSitu, finishSitu) => {
@@ -70,28 +70,28 @@ export const WindowBridge = function (win: Window): WindowBridge {
     ));
   };
 
-  const selectContents = function (element: SugarElement) {
+  const selectContents = (element: SugarElement) => {
     WindowSelection.setToElement(win, element);
   };
 
-  const setSelection = function (sel: SimRange) {
+  const setSelection = (sel: SimRange) => {
     WindowSelection.setExact(win, sel.start, sel.soffset, sel.finish, sel.foffset);
   };
 
-  const setRelativeSelection = function (start: Situ, finish: Situ) {
+  const setRelativeSelection = (start: Situ, finish: Situ) => {
     WindowSelection.setRelative(win, start, finish);
   };
 
-  const getInnerHeight = function () {
+  const getInnerHeight = () => {
     return win.innerHeight;
   };
 
-  const getScrollY = function () {
+  const getScrollY = () => {
     const pos = Scroll.get(SugarElement.fromDom(win.document));
     return pos.top;
   };
 
-  const scrollBy = function (x: number, y: number) {
+  const scrollBy = (x: number, y: number) => {
     Scroll.by(x, y, SugarElement.fromDom(win.document));
   };
 

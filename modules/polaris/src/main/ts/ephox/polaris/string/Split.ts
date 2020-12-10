@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 /**
  * Splits a string into multiple chunks
  */
-const splits = function (value: string, indices: number[]): string[] {
+const splits = (value: string, indices: number[]): string[] => {
   if (indices.length === 0) { return [ value ]; }
 
   const divisions = Arr.foldl(indices, (acc, x) => {

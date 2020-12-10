@@ -20,11 +20,11 @@ export interface TinyScenarios {
   sAsyncProperty: <T, X, Y>(label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) => Step<T, T>;
 }
 
-export const TinyScenarios = function (editor: Editor): TinyScenarios {
+export const TinyScenarios = (editor: Editor): TinyScenarios => {
 
   // We can't just generate a scenario because normalisation is going to cause issues
   // with getting a selection.
-  const genScenario = function (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) {
+  const genScenario = (genContent: ContentGenerator, selectionExclusions: SelectionExclusions) => {
     return genContent.flatMap((structure: SugarElement) => {
       const html = Html.getOuter(structure);
       editor.setContent(html);
@@ -42,10 +42,10 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     });
   };
 
-  const arbScenario = function (genContent: ContentGenerator, options: ArbScenarioOptions) {
+  const arbScenario = (genContent: ContentGenerator, options: ArbScenarioOptions) => {
     return Jsc.bless({
       generator: genScenario(genContent, options.exclusions),
-      show(scenario: Scenario) {
+      show: (scenario: Scenario) => {
         const root = SugarElement.fromDom(editor.getBody());
         return JSON.stringify({
           input: scenario.input,
@@ -55,7 +55,7 @@ export const TinyScenarios = function (editor: Editor): TinyScenarios {
     });
   };
 
-  const sAsyncProperty = function <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) {
+  const sAsyncProperty = <T, X, Y> (label: string, generator: ContentGenerator, step: Step<X, Y>, options: AsyncPropertyOptions) => {
     return PropertySteps.sAsyncProperty<T, X, Y>(
       label,
       [

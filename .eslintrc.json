@@ -38,7 +38,7 @@
     "no-multiple-empty-lines": ["error", { "max": 1 }],
     "no-nested-ternary": "error",
     "one-var": "off",
-    "prefer-arrow-callback": "error",
+    "prefer-arrow/prefer-arrow-functions": "error",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260],

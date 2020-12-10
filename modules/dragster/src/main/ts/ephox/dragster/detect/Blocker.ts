@@ -10,7 +10,7 @@ export interface Blocker {
   readonly destroy: () => void;
 }
 
-export const Blocker = function (options: Partial<BlockerOptions>): Blocker {
+export const Blocker = (options: Partial<BlockerOptions>): Blocker => {
   const settings: BlockerOptions = {
     layerClass: Styles.resolve('blocker'),
     ...options
@@ -29,11 +29,11 @@ export const Blocker = function (options: Partial<BlockerOptions>): Blocker {
   Class.add(div, Styles.resolve('blocker'));
   Class.add(div, settings.layerClass);
 
-  const element = function () {
+  const element = () => {
     return div;
   };
 
-  const destroy = function () {
+  const destroy = () => {
     Remove.remove(div);
   };
 

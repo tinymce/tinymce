@@ -12,7 +12,7 @@ UnitTest.test('ContractsTest', () => {
 
   const baggerMin10 = Contracts.ensureWith([ 'mustBe10', 'any' ], {
     label: '10 if mustBe10',
-    validate(v, k) {
+    validate: (v, k) => {
       return k === 'mustBe10' ? v === 10 : true;
     }
   });

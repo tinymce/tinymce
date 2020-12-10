@@ -3,7 +3,7 @@ import { Gene } from '../api/Gene';
 import * as Properties from './Properties';
 import * as Up from './Up';
 
-const extract = function (item: Gene): string[] {
+const extract = (item: Gene): string[] => {
   const self = item.id;
   const rest = item.children && item.children.length > 0 ? Arr.bind(item.children, extract) : [];
   return [ self ].concat(rest);
@@ -11,7 +11,7 @@ const extract = function (item: Gene): string[] {
 
 // TODO: This is broken. See TINY-6501, but the gist is that the behaviour of this function should match
 //  https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition and it doesn't.
-const comparePosition = function (item: Gene, other: Gene): number {
+const comparePosition = (item: Gene, other: Gene): number => {
   // horribly inefficient
   const top = Up.top(item);
   const all = extract(top);
@@ -29,7 +29,7 @@ const comparePosition = function (item: Gene, other: Gene): number {
   }).getOr(0);
 };
 
-const prevSibling = function (item: Gene): Optional<Gene> {
+const prevSibling = (item: Gene): Optional<Gene> => {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
   const itemIndex = Arr.findIndex(kin, (x) => { return item.id === x.id; });
@@ -38,7 +38,7 @@ const prevSibling = function (item: Gene): Optional<Gene> {
   });
 };
 
-const nextSibling = function (item: Gene): Optional<Gene> {
+const nextSibling = (item: Gene): Optional<Gene> => {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
   const itemIndex = Arr.findIndex(kin, (x) => { return item.id === x.id; });

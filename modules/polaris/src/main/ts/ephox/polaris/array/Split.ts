@@ -4,7 +4,7 @@ import { Splitting } from '../api/Splitting';
 /**
  * Split an array into chunks matched by the predicate
  */
-const splitby = function <T> (xs: T[], pred: (x: T) => boolean): T[][] {
+const splitby = <T>(xs: T[], pred: (x: T) => boolean): T[][] => {
   return splitbyAdv(xs, (x) => {
     return pred(x) ? Splitting.excludeWithout(x) : Splitting.include(x);
   });
@@ -13,7 +13,7 @@ const splitby = function <T> (xs: T[], pred: (x: T) => boolean): T[][] {
 /**
  * Split an array into chunks matched by the predicate
  */
-const splitbyAdv = function <T> (xs: T[], pred: (x: T) => Splitting<T>): T[][] {
+const splitbyAdv = <T>(xs: T[], pred: (x: T) => Splitting<T>): T[][] => {
   const r: T[][] = [];
   let part: T[] = [];
   Arr.each(xs, (x) => {

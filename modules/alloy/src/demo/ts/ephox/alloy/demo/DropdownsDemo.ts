@@ -96,7 +96,7 @@ export default (): void => {
         }),
         SplitDropdown.parts.sink({ })
       ],
-      fetch() {
+      fetch: () => {
         const wMenu = DemoRenders.menu({
           value: 'demo.1.widget.menu',
           items: [ wDoubleInput ]
@@ -107,10 +107,10 @@ export default (): void => {
         );
       },
       lazySink,
-      onExecute() {
+      onExecute: () => {
         console.log('split-dropdown button clicked');
       },
-      onItemExecute() {
+      onItemExecute: () => {
         console.log('split-dropdown menuitem clicked');
       },
       parts: {
@@ -146,7 +146,7 @@ export default (): void => {
         }
       },
 
-      fetch() {
+      fetch: () => {
         const menu = DemoRenders.menu({
           value: 'demo.2.widget',
           items: [ wDoubleInput ]
@@ -197,7 +197,7 @@ export default (): void => {
             }
           },
 
-          fetch() {
+          fetch: () => {
             const menu = DemoRenders.menu({
               value: 'demo.2.widget',
               items: [ wDoubleInput ]
@@ -233,7 +233,7 @@ export default (): void => {
           }
         }
       },
-      fetch() {
+      fetch: () => {
         const data = Arr.map([
           makeItem('alpha', '+Alpha'),
           makeItem('beta', '+Beta'),
@@ -283,7 +283,7 @@ export default (): void => {
 
       matchWidth: true,
 
-      fetch() {
+      fetch: () => {
         const data = Arr.map([
           makeItem('alpha', 'Alpha', 'class-alpha'),
           makeItem('beta', 'Beta', 'class-beta'),
@@ -301,7 +301,7 @@ export default (): void => {
           return Optional.some(TieredMenu.singleData('basic-list', menu));
         });
       },
-      onExecute(sandbox, item) {
+      onExecute: (sandbox, item) => {
         console.log('*** dropdown demo execute on: ' + Representing.getValue(item));
       }
     })
@@ -330,11 +330,11 @@ export default (): void => {
 
       toggleClass: 'demo-selected',
 
-      onExecute(sandbox, item) {
+      onExecute: (sandbox, item) => {
         console.trace();
         console.log('*** dropdown menu demo execute on: ' + Representing.getValue(item).value + ' ***');
       },
-      fetch() {
+      fetch: () => {
         const future = Future.pure({
           primary: 'tools-menu',
           menus: Obj.map({
@@ -370,14 +370,18 @@ export default (): void => {
                       Container.sketch({
                         components: [
                           Button.sketch({
-                            action(...args) { console.log('clicked on a button', ...args); },
+                            action: (...args) => {
+                              console.log('clicked on a button', ...args);
+                            },
                             dom: {
                               tag: 'button',
                               innerHtml: '-'
                             }
                           }),
                           Button.sketch({
-                            action(...args) { console.log('clicked on a button', ...args); },
+                            action: (...args) => {
+                              console.log('clicked on a button', ...args);
+                            },
                             dom: {
                               tag: 'button',
                               innerHtml: '+'

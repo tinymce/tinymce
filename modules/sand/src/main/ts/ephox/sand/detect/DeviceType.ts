@@ -14,7 +14,7 @@ export interface DeviceType {
   isDesktop: () => boolean;
 }
 
-export const DeviceType = function (os: OperatingSystem, browser: Browser, userAgent: string, mediaMatch: (query: string) => boolean): DeviceType {
+export const DeviceType = (os: OperatingSystem, browser: Browser, userAgent: string, mediaMatch: (query: string) => boolean): DeviceType => {
   const isiPad = os.isiOS() && /ipad/i.test(userAgent) === true;
   const isiPhone = os.isiOS() && !isiPad;
   const isMobile = os.isiOS() || os.isAndroid();

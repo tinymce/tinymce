@@ -27,7 +27,7 @@ UnitTest.test('ExtractTextTest', () => {
     ])
   );
 
-  const check = function (expected: string, extract: <E, D>(universe: Universe<E, D>, item: E) => string, initial: string) {
+  const check = (expected: string, extract: <E, D>(universe: Universe<E, D>, item: E) => string, initial: string) => {
     const start = Finder.get(doc, initial);
     const actual = extract(doc, start);
     assert.eq(expected, actual.trim());

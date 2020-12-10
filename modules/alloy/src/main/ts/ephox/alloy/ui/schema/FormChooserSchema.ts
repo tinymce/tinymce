@@ -23,7 +23,7 @@ const schema: () => FieldProcessorAdt[] = Fun.constant([
 const parts: () => PartType.PartTypeAdt[] = Fun.constant([
   PartType.required<FormChooserDetail>({
     name: 'legend',
-    defaults() {
+    defaults: () => {
       return {
         dom: {
           tag: 'legend'
@@ -34,13 +34,13 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 
   PartType.group<FormChooserDetail, SimpleOrSketchSpec & { value: string }>({
     factory: {
-      sketch(spec) {
+      sketch: (spec) => {
         return Objects.exclude(spec, [ 'value' ]);
       }
     },
     name: 'choices',
     unit: 'choice',
-    overrides(detail, choiceSpec) {
+    overrides: (detail, choiceSpec) => {
       return {
         dom: {
           // Consider making a domModification, although we probably do not want it overwritten.

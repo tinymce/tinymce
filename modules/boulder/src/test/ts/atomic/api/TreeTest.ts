@@ -17,7 +17,7 @@ UnitTest.test('Atomic Test: api.TreeTest', () => {
     )
   ]);
 
-  const check = function (label, expected, input) {
+  const check = (label: string, expected, input) => {
     const actual = ValueSchema.asRawOrDie(label, schema, input);
     Assert.eq(label, expected, actual);
   };

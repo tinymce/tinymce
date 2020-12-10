@@ -19,7 +19,7 @@ interface TransitionInfo {
 }
 
 // TYPIFY
-const findRoute = function (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Optional<TransitionProperties> {
+const findRoute = (component: AlloyComponent, transConfig: TransitioningConfig, transState: Stateless, route: TransitionRoute): Optional<TransitionProperties> => {
   return Obj.get(transConfig.routes, route.start).bind((sConfig) => Obj.get(sConfig, route.destination));
 };
 

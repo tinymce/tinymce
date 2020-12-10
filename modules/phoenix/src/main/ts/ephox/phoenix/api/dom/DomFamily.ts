@@ -5,11 +5,11 @@ import * as Family from '../general/Family';
 
 const universe = DomUniverse();
 
-const range = function (start: SugarElement, startDelta: number, finish: SugarElement, finishDelta: number): SugarElement[] {
+const range = (start: SugarElement, startDelta: number, finish: SugarElement, finishDelta: number): SugarElement[] => {
   return Family.range(universe, start, startDelta, finish, finishDelta);
 };
 
-const group = function (elements: SugarElement[], optimise?: (e: SugarElement) => boolean): TypedItem<SugarElement, Document>[][] {
+const group = (elements: SugarElement[], optimise?: (e: SugarElement) => boolean): TypedItem<SugarElement, Document>[][] => {
   return Family.group(universe, elements, optimise);
 };
 

@@ -15,7 +15,7 @@ interface Simulated {
   readonly range: SimRange;
 }
 
-const inSameTable = function (elem: SugarElement, table: SugarElement): boolean {
+const inSameTable = (elem: SugarElement, table: SugarElement): boolean => {
   return PredicateExists.ancestor(elem, (e) => {
     return Traverse.parent(e).exists((p) => {
       return Compare.eq(p, table);
@@ -25,7 +25,7 @@ const inSameTable = function (elem: SugarElement, table: SugarElement): boolean 
 
 // Note: initial is the finishing element, because that's where the cursor starts from
 // Anchor is the starting element, and is only used to work out if we are in the same table
-const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement): Optional<Simulated> {
+const simulate = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement, anchor: SugarElement): Optional<Simulated> => {
   return SelectorFind.closest(initial, 'td,th', isRoot).bind((start) => {
     return SelectorFind.closest(start, 'table', isRoot).bind((table) => {
       if (!inSameTable(anchor, table)) {
@@ -44,8 +44,8 @@ const simulate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   });
 };
 
-const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
-                           anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>): Optional<Response> {
+const navigate = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                  anchor: SugarElement, precheck: (initial: SugarElement, isRoot: (e: SugarElement) => boolean) => Optional<Response>): Optional<Response> => {
   // Do not override the up/down keys on IE.
   if (PlatformDetection.detect().browser.isIE()) {
     return Optional.none<Response>();
@@ -62,7 +62,7 @@ const navigate = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   }
 };
 
-const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> {
+const firstUpCheck = (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> => {
   return SelectorFind.closest(initial, 'tr', isRoot).bind((startRow) => {
     return SelectorFind.closest(startRow, 'table', isRoot).bind((table) => {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -83,7 +83,7 @@ const firstUpCheck = function (initial: SugarElement, isRoot: (e: SugarElement) 
   });
 };
 
-const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> {
+const lastDownCheck = (initial: SugarElement, isRoot: (e: SugarElement) => boolean): Optional<Response> => {
   return SelectorFind.closest(initial, 'tr', isRoot).bind((startRow) => {
     return SelectorFind.closest(startRow, 'table', isRoot).bind((table) => {
       const rows = SelectorFilter.descendants(table, 'tr');
@@ -103,8 +103,8 @@ const lastDownCheck = function (initial: SugarElement, isRoot: (e: SugarElement)
   });
 };
 
-const select = function (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
-                         anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void): Optional<Response> {
+const select = (bridge: WindowBridge, container: SugarElement, isRoot: (e: SugarElement) => boolean, direction: KeyDirection, initial: SugarElement,
+                anchor: SugarElement, selectRange: (container: SugarElement, boxes: SugarElement[], start: SugarElement, finish: SugarElement) => void): Optional<Response> => {
   return simulate(bridge, isRoot, direction, initial, anchor).bind((info) => {
     return KeySelection.detect(container, isRoot, info.start, info.finish, selectRange);
   });

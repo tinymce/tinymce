@@ -1,5 +1,5 @@
 /** intersperseThunk :: ([a], (_ -> a)) -> [a] */
-export const intersperseThunk = function <T> (array: T[], delimiterThunk: () => T): T[] {
+export const intersperseThunk = <T>(array: T[], delimiterThunk: () => T): T[] => {
   if (array === undefined) {
     throw new Error('Cannot intersperse undefined');
   }
@@ -18,8 +18,8 @@ export const intersperseThunk = function <T> (array: T[], delimiterThunk: () => 
 };
 
 /** intersperse :: ([a], a) -> [a] */
-export const intersperse = function <T> (array: T[], delimiter: T): T[] {
-  const thunk = function () {
+export const intersperse = <T>(array: T[], delimiter: T): T[] => {
+  const thunk = () => {
     return delimiter;
   };
 

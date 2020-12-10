@@ -14,17 +14,17 @@ export interface SchemaError<T> {
 
 const _anyValue: Processor = value(SimpleResult.svalue);
 
-const arrOfObj = function (objFields: ValueProcessorAdt[]): Processor {
+const arrOfObj = (objFields: ValueProcessorAdt[]): Processor => {
   return _arrOfObj(objFields);
 };
 
-const arrOfVal = function (): Processor {
+const arrOfVal = (): Processor => {
   return arrOf(_anyValue);
 };
 
 const valueThunkOf = valueThunk;
 
-const valueOf = function (validator: (a: any) => Result<any, any>): Processor {
+const valueOf = (validator: (a: any) => Result<any, any>): Processor => {
   return value((v) =>
     // Intentionally not exposing "strength" at the API level
     validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue)
@@ -33,24 +33,24 @@ const valueOf = function (validator: (a: any) => Result<any, any>): Processor {
 
 const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
-const extract = function (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> {
+const extract = (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> => {
   const res = prop.extract([ label ], strength, obj);
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
-const asStruct = function <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asStruct = <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> => {
   return SimpleResult.toResult(
     extract(label, prop, Fun.constant, obj)
   );
 };
 
-const asRaw = function <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> {
+const asRaw = <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> => {
   return SimpleResult.toResult(
     extract(label, prop, Fun.identity, obj)
   );
 };
 
-const getOrDie = function (extraction: Result<any, any>): any {
+const getOrDie = (extraction: Result<any, any>): any => {
   return extraction.fold(
     (errInfo) => {
       // A readable version of the error.
@@ -62,33 +62,33 @@ const getOrDie = function (extraction: Result<any, any>): any {
   );
 };
 
-const asRawOrDie = function (label: string, prop: Processor, obj: any): any {
+const asRawOrDie = (label: string, prop: Processor, obj: any): any => {
   return getOrDie(asRaw(label, prop, obj));
 };
 
-const asStructOrDie = function (label: string, prop: Processor, obj: any): any {
+const asStructOrDie = (label: string, prop: Processor, obj: any): any => {
   return getOrDie(asStruct(label, prop, obj));
 };
 
-const formatError = function (errInfo: SchemaError<any>): string {
+const formatError = (errInfo: SchemaError<any>): string => {
   return 'Errors: \n' + formatErrors(errInfo.errors).join('\n') +
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
-const chooseProcessor = function (key: string, branches: Record<string, Processor>): Processor {
+const chooseProcessor = (key: string, branches: Record<string, Processor>): Processor => {
   return _choose(key, branches);
 };
 
-const choose = function (key: string, branches: Record<string, FieldProcessorAdt[]>): Processor {
+const choose = (key: string, branches: Record<string, FieldProcessorAdt[]>): Processor => {
   return _choose(key, Obj.map(branches, objOf));
 };
 
-const thunkOf = function (desc: string, schema: () => Processor): Processor {
+const thunkOf = (desc: string, schema: () => Processor): Processor => {
   return thunk(desc, schema);
 };
 
-const funcOrDie = function (args: any[], prop: Processor): Processor {
-  const retriever = function (output, strength) {
+const funcOrDie = (args: any[], prop: Processor): Processor => {
+  const retriever = (output, strength) => {
     return getOrDie(
       SimpleResult.toResult(extract('()', prop, strength, output))
     );

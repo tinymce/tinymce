@@ -3,19 +3,19 @@ import { DomEvent, EventArgs, Insert, Remove, SugarElement, SugarPosition } from
 import { Blocker, BlockerOptions } from '../detect/Blocker';
 import { DragApi, DragMode, DragMutation, DragSink } from './DragApis';
 
-const compare = function (old: SugarPosition, nu: SugarPosition) {
+const compare = (old: SugarPosition, nu: SugarPosition) => {
   return SugarPosition(nu.left - old.left, nu.top - old.top);
 };
 
-const extract = function (event: EventArgs) {
+const extract = (event: EventArgs) => {
   return Optional.some(SugarPosition(event.x, event.y));
 };
 
-const mutate = function (mutation: DragMutation, info: SugarPosition) {
+const mutate = (mutation: DragMutation, info: SugarPosition) => {
   mutation.mutate(info.left, info.top);
 };
 
-const sink = function (dragApi: DragApi, settings: Partial<BlockerOptions>) {
+const sink = (dragApi: DragApi, settings: Partial<BlockerOptions>) => {
   const blocker = Blocker(settings);
 
   // Included for safety. If the blocker has stayed on the screen, get rid of it on a click.
@@ -25,7 +25,7 @@ const sink = function (dragApi: DragApi, settings: Partial<BlockerOptions>) {
   const mmove = DomEvent.bind(blocker.element(), 'mousemove', dragApi.move);
   const mout = DomEvent.bind(blocker.element(), 'mouseout', dragApi.delayDrop);
 
-  const destroy = function () {
+  const destroy = () => {
     blocker.destroy();
     mup.unbind();
     mmove.unbind();
@@ -33,11 +33,11 @@ const sink = function (dragApi: DragApi, settings: Partial<BlockerOptions>) {
     mdown.unbind();
   };
 
-  const start = function (parent: SugarElement) {
+  const start = (parent: SugarElement) => {
     Insert.append(parent, blocker.element());
   };
 
-  const stop = function () {
+  const stop = () => {
     Remove.remove(blocker.element());
   };
 

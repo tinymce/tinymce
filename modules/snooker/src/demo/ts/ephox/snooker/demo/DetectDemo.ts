@@ -173,7 +173,7 @@ Ready.execute(() => {
   Insert.append(eraseColumn, SugarElement.fromText('Erase column'));
   Insert.append(ephoxUi, eraseColumn);
 
-  const makeButton = function (desc: string) {
+  const makeButton = (desc: string) => {
     const button = SugarElement.fromTag('button');
     Insert.append(button, SugarElement.fromText(desc));
     Insert.append(ephoxUi, button);
@@ -196,7 +196,7 @@ Ready.execute(() => {
       }
     });
 
-  const newCell: Generators['cell'] = function (prev) {
+  const newCell: Generators['cell'] = (prev) => {
     const td = SugarElement.fromTag('td');
     Insert.append(td, SugarElement.fromText('?'));
     if (prev.colspan === 1) { Css.set(td, 'width', Css.get(prev.element, 'width')); }
@@ -204,17 +204,17 @@ Ready.execute(() => {
     return td;
   };
 
-  const gap: Generators['gap'] = function () {
+  const gap: Generators['gap'] = () => {
     const td = SugarElement.fromTag('td');
     Insert.append(td, SugarElement.fromText('?'));
     return td;
   };
 
-  const newRow: Generators['row'] = function () {
+  const newRow: Generators['row'] = () => {
     return SugarElement.fromTag('tr');
   };
 
-  const replace: Generators['replace'] = function (cell, tag, attrs) {
+  const replace: Generators['replace'] = (cell, tag, attrs) => {
     const replica = Replication.copy(cell, tag);
     Obj.each(attrs, (v, k) => {
       if (v !== null) { Attribute.set(replica, k, v); }
@@ -234,8 +234,8 @@ Ready.execute(() => {
     colgroup
   };
 
-  const runOperation = function (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, tableSize: TableSize) => Optional<RunOperationOutput>) {
-    return function (_event: EventArgs) {
+  const runOperation = (operation: (wire: ResizeWire, table: SugarElement, target: TargetElement & TargetSelection, generators: Generators, tableSize: TableSize) => Optional<RunOperationOutput>) => {
+    return (_event: EventArgs) => {
       detection().each((start) => {
         const target = {
           element: start,

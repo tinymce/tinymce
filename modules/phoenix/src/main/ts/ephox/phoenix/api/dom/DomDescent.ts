@@ -4,18 +4,18 @@ import { SpotPoint } from '../data/Types';
 import * as Descent from '../general/Descent';
 
 const universe = DomUniverse();
-const toLeaf = function (element: SugarElement, offset: number): SpotPoint<SugarElement> {
+const toLeaf = (element: SugarElement, offset: number): SpotPoint<SugarElement> => {
   return Descent.toLeaf(universe, element, offset);
 };
 
 /* The purpose of freefall is that they will land on an element that is not whitespace text. This
  * can be very useful inside beautified content
  */
-const freefallLtr = function (element: SugarElement): SpotPoint<SugarElement> {
+const freefallLtr = (element: SugarElement): SpotPoint<SugarElement> => {
   return Descent.freefallLtr(universe, element);
 };
 
-const freefallRtl = function (element: SugarElement): SpotPoint<SugarElement> {
+const freefallRtl = (element: SugarElement): SpotPoint<SugarElement> => {
   return Descent.freefallRtl(universe, element);
 };
 

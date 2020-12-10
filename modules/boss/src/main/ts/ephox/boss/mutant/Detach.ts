@@ -3,7 +3,7 @@ import { Gene } from '../api/Gene';
 import * as Comparator from './Comparator';
 import * as Locator from './Locator';
 
-const detach = function (root: Gene, target: Gene): Optional<Gene> {
+const detach = (root: Gene, target: Gene): Optional<Gene> => {
   return Locator.byItem(root, target).bind((item) => {
     return item.parent.bind((parent) => {
       const index = Arr.findIndex(parent.children || [], (child) => {

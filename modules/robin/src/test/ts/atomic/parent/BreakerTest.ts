@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { breakPath, breakToRight } from 'ephox/robin/parent/Breaker';
 
 UnitTest.test('BreakerTest', () => {
-  const generator = function () {
+  const generator = () => {
     return TestUniverse(Gene('root', 'root', [
       Gene('d1', 'div', [
         TextGene('d1_t1', 'List: '),

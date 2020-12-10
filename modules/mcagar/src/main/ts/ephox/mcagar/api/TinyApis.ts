@@ -31,29 +31,29 @@ export interface TinyApis {
   cGetContent: <T> () => Chain<T, string>;
 }
 
-export const TinyApis = function (editor: Editor): TinyApis {
-  const setContent = function (html: string): void {
+export const TinyApis = (editor: Editor): TinyApis => {
+  const setContent = (html: string): void => {
     editor.setContent(html);
   };
 
-  const sSetContent = function <T> (html: string) {
+  const sSetContent = <T>(html: string) => {
     return Step.sync<T>(() => {
       setContent(html);
     });
   };
 
-  const sSetRawContent = function <T> (html: string) {
+  const sSetRawContent = <T>(html: string) => {
     return Step.sync<T>(() => {
       editor.getBody().innerHTML = html;
     });
   };
 
-  const lazyBody = function (): SugarElement {
+  const lazyBody = (): SugarElement => {
     return SugarElement.fromDom(editor.getBody());
   };
 
   // Has to be thunked, so it can remain polymorphic
-  const cNodeChanged = <T> () => Chain.op<T>(() => {
+  const cNodeChanged = <T>() => Chain.op<T>(() => {
     editor.nodeChanged();
   });
 
@@ -65,16 +65,16 @@ export const TinyApis = function (editor: Editor): TinyApis {
     editor.selection.select(target.dom);
   });
 
-  const sSetSelectionFrom = function <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) {
+  const sSetSelectionFrom = <T>(spec: Cursors.CursorSpec | Cursors.RangeSpec) => {
     const path = Cursors.pathFrom(spec);
     return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
   };
 
-  const sSetCursor = function <T> (elementPath: number[], offset: number) {
+  const sSetCursor = <T>(elementPath: number[], offset: number) => {
     return sSetSelection<T>(elementPath, offset, elementPath, offset);
   };
 
-  const sSetSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> {
+  const sSetSelection = <T>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> => {
     return Chain.asStep<T, SugarElement>(lazyBody(), [
       TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
       cSetDomSelection,
@@ -82,19 +82,19 @@ export const TinyApis = function (editor: Editor): TinyApis {
     ]);
   };
 
-  const sSetSetting = function <T> (key: string, value: any): Step<T, T> {
+  const sSetSetting = <T>(key: string, value: any): Step<T, T> => {
     return Step.sync(() => {
       editor.settings[key] = value;
     });
   };
 
-  const sDeleteSetting = function <T> (key: string): Step<T, T> {
+  const sDeleteSetting = <T>(key: string): Step<T, T> => {
     return Step.sync<T>(() => {
       delete editor.settings[key];
     });
   };
 
-  const sSelect = function <T> (selector: string, path: number[]) {
+  const sSelect = <T> (selector: string, path: number[]) => {
     return Chain.asStep<T, SugarElement>(lazyBody(), [
       UiFinder.cFindIn(selector),
       Cursors.cFollow(path),
@@ -102,22 +102,22 @@ export const TinyApis = function (editor: Editor): TinyApis {
     ]);
   };
 
-  const cGetContent = <T> () => Chain.injectThunked<T, string>(() => editor.getContent());
+  const cGetContent = <T>() => Chain.injectThunked<T, string>(() => editor.getContent());
 
-  const sExecCommand = function <T> (command: string, value?: any) {
+  const sExecCommand = <T>(command: string, value?: any) => {
     return Step.sync<T>(() => {
       editor.execCommand(command, false, value);
     });
   };
 
-  const sAssertContent = function <T> (expected: string) {
+  const sAssertContent = <T>(expected: string) => {
     return Chain.asStep<T, any>({}, [
       cGetContent(),
       Assertions.cAssertHtml('Checking TinyMCE content', expected)
     ]);
   };
 
-  const sAssertContentPresence = function <T> (expected: Presence) {
+  const sAssertContentPresence = <T>(expected: Presence) => {
     return Assertions.sAssertPresence<T>(
       () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
@@ -125,7 +125,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     );
   };
 
-  const sAssertContentStructure = function <T> (expected: StructAssert) {
+  const sAssertContentStructure = <T>(expected: StructAssert) => {
     return Assertions.sAssertStructure<T>(
       'Asserting the structure of tiny content.',
       expected,
@@ -133,13 +133,13 @@ export const TinyApis = function (editor: Editor): TinyApis {
     );
   };
 
-  // const sAssertSelectionFrom = function (expected) {
+  // const sAssertSelectionFrom = (expected) => {
   // TODO
   // };
 
-  const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
+  const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
     const expected = Cursors.calculateOne(root, expPath);
-    const message = function () {
+    const message = () => {
       const actual = SugarElement.fromDom(actElement);
       const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
       return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
@@ -148,7 +148,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
   };
 
-  const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const sAssertSelection = <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
     return Step.sync<T>(() => {
       const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
@@ -156,19 +156,19 @@ export const TinyApis = function (editor: Editor): TinyApis {
     });
   };
 
-  const sFocus = <T> () => Step.sync<T>(() => {
+  const sFocus = <T>() => Step.sync<T>(() => {
     editor.focus();
   });
 
-  const sHasFocus = <T> (expected: boolean) => Step.sync<T>(() => {
+  const sHasFocus = <T>(expected: boolean) => Step.sync<T>(() => {
     Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
   });
 
-  const sNodeChanged = <T> () => Step.sync<T>(() => {
+  const sNodeChanged = <T>() => Step.sync<T>(() => {
     editor.nodeChanged();
   });
 
-  const sTryAssertFocus = <T> (waitTime?: number) => Waiter.sTryUntil<T, T>(
+  const sTryAssertFocus = <T>(waitTime?: number) => Waiter.sTryUntil<T, T>(
     'Waiting for focus',
     sHasFocus(true),
     50,

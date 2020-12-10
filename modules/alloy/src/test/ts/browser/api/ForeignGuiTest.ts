@@ -20,7 +20,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
 
   const connection = ForeignGui.engage({
     root,
-    insertion(parent, system) {
+    insertion: (parent, system) => {
       Insert.append(parent, system.element);
     },
     dispatchers: [

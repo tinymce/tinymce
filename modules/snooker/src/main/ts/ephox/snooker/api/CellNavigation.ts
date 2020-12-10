@@ -7,7 +7,7 @@ import * as TableLookup from './TableLookup';
  * Identify the index of the current cell within all the cells, and
  * a list of the cells within its table.
  */
-const detect = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): Optional<{ all: SugarElement[]; index: number }> {
+const detect = (current: SugarElement, isRoot?: (e: SugarElement) => boolean): Optional<{ all: SugarElement[]; index: number }> => {
   return TableLookup.table(current, isRoot).bind((table) => {
     const all = TableLookup.cells(table);
     const index = Arr.findIndex(all, (x) => Compare.eq(current, x));
@@ -19,7 +19,7 @@ const detect = function (current: SugarElement, isRoot?: (e: SugarElement) => bo
 /*
  * Identify the CellLocation of the cell when navigating forward from current
  */
-const next = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation {
+const next = (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation => {
   const detection = detect(current, isRoot);
   return detection.fold(() => {
     return CellLocation.none(current);
@@ -31,7 +31,7 @@ const next = function (current: SugarElement, isRoot?: (e: SugarElement) => bool
 /*
  * Identify the CellLocation of the cell when navigating back from current
  */
-const prev = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation {
+const prev = (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation => {
   const detection = detect(current, isRoot);
   return detection.fold(() => {
     return CellLocation.none();

@@ -4,7 +4,7 @@ import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import { PArrayTestItem } from '../../module/ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.generate', () => {
-  const generator = function (item: string, start: number): Optional<PArrayTestItem> {
+  const generator = (item: string, start: number): Optional<PArrayTestItem> => {
     const firstletter = item[0];
     if (firstletter === 'a') { return Optional.none(); }
     return Optional.some({
@@ -14,7 +14,7 @@ UnitTest.test('api.PositionArray.generate', () => {
     });
   };
 
-  const check = function (expected: string[], input: string[], start?: number) {
+  const check = (expected: string[], input: string[], start?: number) => {
     const result = PositionArray.generate(input, generator, start);
     assert.eq(expected, Arr.map(result, (item) => {
       return item.start + '->' + item.finish + '@ ' + item.item;

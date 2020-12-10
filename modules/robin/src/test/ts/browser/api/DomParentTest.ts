@@ -7,7 +7,7 @@ import * as DomParent from 'ephox/robin/api/dom/DomParent';
 UnitTest.test(
   'DomParentTest',
   () => {
-    const check = function (expected: string, p: string, c: string) {
+    const check = (expected: string, p: string, c: string) => {
       const container = SugarElement.fromTag('div');
       container.dom.innerHTML =
         '<ol class="one-nine" style="list-style-type: decimal;">' +
@@ -75,7 +75,7 @@ UnitTest.test(
       '</ol>' +
       '</ol>', 'one-nine', 'six');
 
-    const checkPath = function (expected: string, input: string, p: number[], c: number[]) {
+    const checkPath = (expected: string, input: string, p: number[], c: number[]) => {
       const container = SugarElement.fromTag('div');
       container.dom.innerHTML = input;
 
@@ -194,8 +194,8 @@ UnitTest.test(
       '</div>',
       [ 0, 0 ], [ 0, 0, 1, 0 ]);
 
-    (function () {
-      const check = function (expected: Optional<string[]>, s: string, f: string) {
+    (() => {
+      const check = (expected: Optional<string[]>, s: string, f: string) => {
         const container = SugarElement.fromTag('div');
         container.dom.innerHTML =
           '<ol class="one-nine" style="list-style-type: decimal;">' +

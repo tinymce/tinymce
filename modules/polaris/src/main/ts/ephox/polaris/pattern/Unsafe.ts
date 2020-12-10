@@ -6,7 +6,7 @@ import { PRegExp } from './Types';
 /**
  * Tokens have no prefix or suffix
  */
-const token = function (input: string): PRegExp {
+const token = (input: string): PRegExp => {
   return Custom(input, Fun.constant(0), Fun.constant(0), Optional.none());
 };
 
@@ -15,15 +15,15 @@ const token = function (input: string): PRegExp {
  *
  * These are consumed by the regex and then excluded by prefix/suffix lengths.
  */
-const word = function (input: string): PRegExp {
+const word = (input: string): PRegExp => {
   const regex = `((?:^'?)|(?:` + Chars.wordbreak() + `+'?))` + input + `((?:'?$)|(?:'?` + Chars.wordbreak() + '+))';
 
   // ASSUMPTION: There are no groups in their input
-  const prefix = function (match: RegExpExecArray) {
+  const prefix = (match: RegExpExecArray) => {
     return match.length > 1 ? match[1].length : 0;
   };
 
-  const suffix = function (match: RegExpExecArray) {
+  const suffix = (match: RegExpExecArray) => {
     return match.length > 2 ? match[2].length : 0;
   };
 

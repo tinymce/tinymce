@@ -26,12 +26,12 @@ const adt: {
   { excludeWithout: [ 'item' ] }
 ]);
 
-const cata = function <T, U> (
+const cata = <T, U>(
   subject: Splitting<T>,
   onInclude: SplittingHandler<T, U>,
   onExcludeWith: SplittingHandler<T, U>,
   onExcludeWithout: SplittingHandler<T, U>
-): U {
+): U => {
   return subject.fold(onInclude, onExcludeWith, onExcludeWithout);
 };
 

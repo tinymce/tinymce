@@ -29,15 +29,13 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints() {
-              return [
-                Dragging.snap({
-                  sensor: DragCoord.fixed(300, 10),
-                  range: SugarPosition(1000, 30),
-                  output: DragCoord.fixed(Optional.none<number>(), Optional.some(10))
-                })
-              ];
-            },
+            getSnapPoints: () => [
+              Dragging.snap({
+                sensor: DragCoord.fixed(300, 10),
+                range: SugarPosition(1000, 30),
+                output: DragCoord.fixed(Optional.none<number>(), Optional.some(10))
+              })
+            ],
             leftAttr: 'data-snap-left',
             topAttr: 'data-snap-top'
           },

@@ -31,19 +31,19 @@ UnitTest.test('NavigationTest', () => {
     offset: number;
   }
 
-  const checkLast = function (expected: CheckItem, id: string) {
+  const checkLast = (expected: CheckItem, id: string) => {
     const actual = Navigation.toLast(doc, Finder.get(doc, id));
     assert.eq(expected.element, actual.element.id);
     assert.eq(expected.offset, actual.offset);
   };
 
-  const checkLower = function (expected: CheckItem, id: string) {
+  const checkLower = (expected: CheckItem, id: string) => {
     const actual = Navigation.toLower(doc, Finder.get(doc, id));
     assert.eq(expected.element, actual.element.id);
     assert.eq(expected.offset, actual.offset);
   };
 
-  const checkLeaf = function (expected: CheckItem, id: string, offset: number) {
+  const checkLeaf = (expected: CheckItem, id: string, offset: number) => {
     const actual = Navigation.toLeaf(doc, Finder.get(doc, id), offset);
     assert.eq(expected.element, actual.element.id);
     assert.eq(expected.offset, actual.offset);
@@ -60,7 +60,7 @@ UnitTest.test('NavigationTest', () => {
   checkLeaf({ element: '1.2.2.1', offset: 0 }, '1.2', 1);
   checkLeaf({ element: '1.2.5', offset: 'Last piece of text'.length }, '1.2', 5);
 
-  const checkFreeFallLtr = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+  const checkFreeFallLtr = (expected: CheckItem, universe: TestUniverse, elementId: string) => {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallLtr(universe, element);
     assert.eq(element.id, elementId);
@@ -68,7 +68,7 @@ UnitTest.test('NavigationTest', () => {
     assert.eq(expected.offset, actual.offset);
   };
 
-  const checkFreeFallRtl = function (expected: CheckItem, universe: TestUniverse, elementId: string) {
+  const checkFreeFallRtl = (expected: CheckItem, universe: TestUniverse, elementId: string) => {
     const element = Finder.get(doc, elementId);
     const actual = Navigation.freefallRtl(universe, element);
     assert.eq(element.id, elementId);

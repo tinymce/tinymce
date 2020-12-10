@@ -8,18 +8,18 @@ import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 
 UnitTest.test('DomTextSearchTest', () => {
-  const wordbreaker = function () {
+  const wordbreaker = () => {
     return new RegExp(Pattern.wordbreak(), 'i');
   };
-  const wordfinder = function () {
+  const wordfinder = () => {
     return new RegExp(Pattern.wordchar(), 'i');
   };
 
-  const stopAtGap = function <E> (phase: TextSeekerPhaseConstructor, element: E, text: string, index: number) {
+  const stopAtGap = <E>(phase: TextSeekerPhaseConstructor, element: E, text: string, index: number) => {
     return phase.finish(Spot.point(element, index));
   };
 
-  const checkInfo = function (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement, expectedOffset: number) {
+  const checkInfo = (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement, expectedOffset: number) => {
     result.fold(() => {
       Assert.fail('Unexpected abort');
     }, () => {
@@ -31,7 +31,7 @@ UnitTest.test('DomTextSearchTest', () => {
     });
   };
 
-  const checkEdge = function (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement) {
+  const checkEdge = (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement) => {
     result.fold(() => {
       Assert.fail('Unexpected abort');
     }, (edge) => {
@@ -41,7 +41,7 @@ UnitTest.test('DomTextSearchTest', () => {
       Assert.fail('Unexpected info');
     });
   };
-  const checkAbort = function (result: TextSeekerOutcome<SugarElement>) {
+  const checkAbort = (result: TextSeekerOutcome<SugarElement>) => {
     result.fold(Fun.noop, () => {
       Assert.fail('Unexpected edge');
     }, () => {
@@ -184,7 +184,7 @@ UnitTest.test('DomTextSearchTest', () => {
   //
   // scanRight returns Optional({element, offset})
   //
-  (function () {
+  (() => {
     const container = SugarElement.fromTag('div');
     const alphaText = SugarElement.fromText('alpha');
     const betaSpan = SugarElement.fromTag('span');
@@ -197,11 +197,11 @@ UnitTest.test('DomTextSearchTest', () => {
     InsertAll.append(container, [ alphaText, betaSpan, gammaText, deltaText, epsilonText ]);
     InsertAll.append(betaSpan, [ betaText1, betaText2 ]);
 
-    const checkNoneScan = function (label: string, start: SugarElement, offset: number) {
+    const checkNoneScan = (label: string, start: SugarElement, offset: number) => {
       KAssert.eqNone('There should be no scanning (' + label + ')', DomTextSearch.scanRight(start, offset));
     };
 
-    const checkScan = function (label: string, expected: { element: SugarElement; offset: number }, start: SugarElement, offset: number) {
+    const checkScan = (label: string, expected: { element: SugarElement; offset: number }, start: SugarElement, offset: number) => {
       const actual = DomTextSearch.scanRight(start, offset).getOrDie('Could not find scan result for: ' + label);
       Assert.eq('eq', expected.offset, actual.offset);
       Assert.eq('Element did not match scan: (' + label + ')', true, Compare.eq(expected.element, actual.element));

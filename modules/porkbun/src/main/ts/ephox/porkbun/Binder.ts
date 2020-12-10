@@ -7,11 +7,11 @@ export interface Binder {
   readonly unbindAll: () => void;
 }
 
-const create = function (): Binder {
+const create = (): Binder => {
   const registrations: Bindable<any>[] = [];
   const handlers: EventHandler<any>[] = [];
 
-  const bind = function <T> (registration: Bindable<T>, handler: EventHandler<T>) {
+  const bind = <T>(registration: Bindable<T>, handler: EventHandler<T>) => {
     if (Arr.contains(registrations, registration)) {
       throw new Error('Invalid key, key already exists.');
     } else {
@@ -21,7 +21,7 @@ const create = function (): Binder {
     }
   };
 
-  const unbind = function <T> (registration: Bindable<T>) {
+  const unbind = <T>(registration: Bindable<T>) => {
     const index = Arr.indexOf(registrations, registration);
     index.fold(() => {
       throw new Error('Invalid key, does not exist.');
@@ -32,7 +32,7 @@ const create = function (): Binder {
     });
   };
 
-  const unbindAll = function () {
+  const unbindAll = () => {
     Arr.each(registrations, (registration, i) => {
       const handler = handlers[i];
       registration.unbind(handler);

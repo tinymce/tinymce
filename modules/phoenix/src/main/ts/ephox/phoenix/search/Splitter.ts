@@ -9,7 +9,7 @@ import { SpotRange } from '../api/data/Types';
  *
  * Returns a PositionArray of the result.
  */
-const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] {
+const subdivide = <E, D>(universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] => {
   const text = universe.property().getText(item);
   const pieces = Arr.filter(Strings.splits(text, positions), (section) => {
     return section.length > 0;

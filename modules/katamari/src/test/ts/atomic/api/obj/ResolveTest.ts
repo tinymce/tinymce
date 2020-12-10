@@ -14,7 +14,7 @@ UnitTest.test('Resolve.namespace', () => {
     didgy: null
   };
 
-  const run = function (path, target) {
+  const run = (path: string, target: {}) => {
     const r = Resolve.namespace(path, target);
     r.token = token;
   };
@@ -31,7 +31,7 @@ UnitTest.test('Resolve.namespace', () => {
 });
 
 UnitTest.test('Resolve.resolve', () => {
-  const check = function (expected, path, scope) {
+  const check = (expected, path, scope) => {
     const actual = Resolve.resolve(path, scope);
     Assert.eq('eq', expected, actual);
   };

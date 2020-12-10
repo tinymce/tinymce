@@ -7,7 +7,7 @@ import { assertProps, assertZones, RawZone } from 'ephox/robin/test/ZoneObjects'
 import * as TextZones from 'ephox/robin/zone/TextZones';
 
 UnitTest.test('BoundedZoneTest', () => {
-  const check = function (universe: TestUniverse, expected: RawZone[], id: string) {
+  const check = (universe: TestUniverse, expected: RawZone[], id: string) => {
     const item = universe.find(universe.get(), id).getOrDie();
     const actual = TextZones.fromBounded(universe, item, item, 'en', ZoneViewports.anything());
     assertZones('Starting from: ' + id, universe, expected, actual.zones);

@@ -26,26 +26,26 @@ export interface TestUniverse extends Universe<Gene, undefined> {
   shortlog: (f?: (e: Gene) => string) => string;
 }
 
-export const TestUniverse = function (raw: Gene): TestUniverse {
+export const TestUniverse = (raw: Gene): TestUniverse => {
   let content = Tracks.track(raw, Optional.none());
 
   // NOTE: The top point might change when we are wrapping.
-  const wrap = function (anchor: Gene, wrapper: Gene) {
+  const wrap = (anchor: Gene, wrapper: Gene) => {
     Insertion.wrap(anchor, wrapper);
     content.parent.fold(Fun.noop, (p) => {
       content = p;
     });
   };
 
-  const find = function (root: Gene, id: string) {
+  const find = (root: Gene, id: string) => {
     return Locator.byId(root, id);
   };
 
-  const get = function () {
+  const get = () => {
     return content;
   };
 
-  const shortlog = function (f?: (e: Gene) => string) {
+  const shortlog = (f?: (e: Gene) => string) => {
     return f !== undefined ? Logger.custom(content, f) : Logger.basic(content);
   };
 

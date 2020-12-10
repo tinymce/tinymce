@@ -7,11 +7,11 @@ interface SubsetAncestors<E> {
   readonly shared: Optional<E>;
 }
 
-const eq = function <E, D> (universe: Universe<E, D>, item: E): (e: E) => boolean {
+const eq = <E, D>(universe: Universe<E, D>, item: E): (e: E) => boolean => {
   return Fun.curry(universe.eq, item);
 };
 
-const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]): Optional<E[]> {
+const unsafeSubset = <E, D>(universe: Universe<E, D>, common: E, ps1: E[], ps2: E[]): Optional<E[]> => {
   const children = universe.property().children(common);
   if (universe.eq(common, ps1[0])) {
     return Optional.some([ ps1[0] ]);
@@ -20,7 +20,7 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
     return Optional.some([ ps2[0] ]);
   }
 
-  const finder = function (ps: E[]) {
+  const finder = (ps: E[]) => {
     // ps is calculated bottom-up, but logically we're searching top-down
     const topDown = Arr.reverse(ps);
 
@@ -48,14 +48,14 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
 };
 
 // Note: this can be exported if it is required in the future.
-const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never): SubsetAncestors<E> {
+const ancestors = <E, D>(universe: Universe<E, D>, start: E, end: E, isRoot: (x: E) => boolean = Fun.never): SubsetAncestors<E> => {
   // Inefficient if no isRoot is supplied.
   // TODO: Andy knows there is a graph-based algorithm to find a common parent, but can't remember it
   //        This also includes something to get the subset after finding the common parent
   const ps1 = [ start ].concat(universe.up().all(start));
   const ps2 = [ end ].concat(universe.up().all(end));
 
-  const prune = function (path: E[]) {
+  const prune = (path: E[]) => {
     const index = Arr.findIndex(path, isRoot);
     return index.fold(() => {
       return path;
@@ -83,7 +83,7 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  *
  * Then return all children of the common element such that start and end are included.
  */
-const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E): Optional<E[]> {
+const subset = <E, D>(universe: Universe<E, D>, start: E, end: E): Optional<E[]> => {
   const ancs = ancestors(universe, start, end);
   return ancs.shared.bind((shared) => {
     return unsafeSubset(universe, shared, ancs.firstpath, ancs.secondpath);

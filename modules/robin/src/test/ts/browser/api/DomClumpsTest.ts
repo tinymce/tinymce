@@ -10,15 +10,15 @@ UnitTest.test('DomClumpsTest', () => {
 
   Insert.append(body, container);
 
-  const find = function (path: number[]) {
+  const find = (path: number[]) => {
     return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
-  const isRoot = function (elem: SugarElement) {
+  const isRoot = (elem: SugarElement) => {
     return Compare.eq(elem, container);
   };
 
-  const mark = function (res: SugarElement[]) {
+  const mark = (res: SugarElement[]) => {
     if (res.length > 0) {
       const strong = SugarElement.fromTag('strong');
       Insert.before(res[0], strong);
@@ -26,12 +26,12 @@ UnitTest.test('DomClumpsTest', () => {
     }
   };
 
-  const checkFracture = function (expected: string, start: number[], soffset: number, finish: number[], foffset: number) {
+  const checkFracture = (expected: string, start: number[], soffset: number, finish: number[], foffset: number) => {
     DomClumps.fracture(isRoot, find(start), soffset, find(finish), foffset).each(mark);
     assert.eq(expected, Html.get(container));
   };
 
-  const checkFractures = function (expected: string, start: number[], soffset: number, finish: number[], foffset: number) {
+  const checkFractures = (expected: string, start: number[], soffset: number, finish: number[], foffset: number) => {
     const sections = DomClumps.fractures(isRoot, find(start), soffset, find(finish), foffset);
     Arr.each(sections, mark);
     assert.eq(expected, Html.get(container));

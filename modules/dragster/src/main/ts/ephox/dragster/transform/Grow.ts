@@ -22,13 +22,13 @@ interface Growth {
 
 type GrowthFn = (x: number, y: number) => Growth;
 
-const grower = function (f: GrowthFn) {
-  return function (element: SugarElement) {
+const grower = (f: GrowthFn) => {
+  return (element: SugarElement) => {
     const events: GrowEvents = Events.create({
       grow: Event([ 'x', 'y' ])
     });
 
-    const mutate = function (x: number, y: number) {
+    const mutate = (x: number, y: number) => {
       const growth = f(x, y);
       const width = Width.get(element);
       const height = Height.get(element);

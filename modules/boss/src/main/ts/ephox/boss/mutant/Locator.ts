@@ -3,7 +3,7 @@ import { Gene } from '../api/Gene';
 import * as Comparator from './Comparator';
 import * as Creator from './Creator';
 
-const byId = function (item: Gene, id: string): Optional<Gene> {
+const byId = (item: Gene, id: string): Optional<Gene> => {
   if (id === undefined) {
     throw new Error('Id value not specified for byId');
   }
@@ -16,7 +16,7 @@ const byId = function (item: Gene, id: string): Optional<Gene> {
   }
 };
 
-const byItem = function (item: Gene, target: Gene): Optional<Gene> {
+const byItem = (item: Gene, target: Gene): Optional<Gene> => {
   const itemNu = Creator.isNu(item);
   const targetNu = Creator.isNu(target);
   const sameId = item.id !== undefined && item.id === target.id;
@@ -31,7 +31,7 @@ const byItem = function (item: Gene, target: Gene): Optional<Gene> {
   }
 };
 
-const indexIn = function (parent: Gene, item: Gene): Optional<number> {
+const indexIn = (parent: Gene, item: Gene): Optional<number> => {
   return Arr.findIndex(parent.children, (x) => {
     return Comparator.eq(x, item);
   });

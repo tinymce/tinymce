@@ -6,7 +6,7 @@ import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
-  const checkErr = function (label, expectedPart, v, processor) {
+  const checkErr = (label, expectedPart, v, processor) => {
     // NOTE: v is not a function here.
     ValueSchema.asRaw(label, processor, v).fold((err) => {
       const message = ValueSchema.formatError(err);
@@ -16,7 +16,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     });
   };
 
-  const checkRawErrIs = function (label, expectedPart, applicator, f, processor) {
+  const checkRawErrIs = (label, expectedPart, applicator, f, processor) => {
     Logger.sync(label, () => {
       const newF = ValueSchema.asRaw<any>(label, processor, f).getOrDie();
       let passed = null;
@@ -33,7 +33,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     });
   };
 
-  const checkRawResultIs = function (label, expected, applicator, f, processor) {
+  const checkRawResultIs = (label, expected, applicator, f, processor) => {
     Logger.sync(label, () => {
       const actual = ValueSchema.asRawOrDie(label, processor, f);
       const result = applicator(actual);
@@ -41,8 +41,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     });
   };
 
-  const getter1 = function (_a, _b, _c) {
-    const args = Array.prototype.slice.call(arguments, 0);
+  const getter1 = (...args: string[]) => {
     return args.join('.');
   };
 
@@ -77,7 +76,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     }))
   );
 
-  const getter2 = function (a) {
+  const getter2 = (a) => {
     return Objects.wrapAll([
       { key: a, value: a + '-value' },
       { key: 'other', value: 'other-value' }
@@ -98,7 +97,7 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
     ]))
   );
 
-  const getter3 = function (one, two, three) {
+  const getter3 = (one, two, three) => {
     return [
       { firstname: one + '.1', middlename: one + '.2', surname: one + '.3' },
       { firstname: two + '.1', middlename: two + '.2', surname: two + '.3' },

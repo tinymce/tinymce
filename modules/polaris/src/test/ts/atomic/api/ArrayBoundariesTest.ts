@@ -2,11 +2,11 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Boundaries from 'ephox/polaris/array/Boundaries';
 
 UnitTest.test('BoundariesTest', () => {
-  const comparator = function (a: string, b: string) {
+  const comparator = (a: string, b: string) => {
     return a === b;
   };
 
-  const check = function (items: string[], l: string, r: string, pred: (a: string, b: string) => boolean, expected: string[]) {
+  const check = (items: string[], l: string, r: string, pred: (a: string, b: string) => boolean, expected: string[]) => {
     assert.eq(Boundaries.boundAt(items, l, r, pred), expected);
   };
 

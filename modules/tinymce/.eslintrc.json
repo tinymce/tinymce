@@ -1,5 +1,7 @@
 {
   "rules": {
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "prefer-arrow-callback": "error",
+    "prefer-arrow/prefer-arrow-functions": "off"
   }
 }

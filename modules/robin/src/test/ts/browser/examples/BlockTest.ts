@@ -7,7 +7,7 @@ import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 import * as BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
 UnitTest.test('BlockTest', () => {
-  const check = function (expected: string, input: string, look: (e: SugarElement) => Optional<SugarElement>) {
+  const check = (expected: string, input: string, look: (e: SugarElement) => Optional<SugarElement>) => {
     BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.fold(() => {
@@ -18,7 +18,7 @@ UnitTest.test('BlockTest', () => {
     });
   };
 
-  const checkNone = function (input: string, look: (e: SugarElement) => Optional<SugarElement>) {
+  const checkNone = (input: string, look: (e: SugarElement) => Optional<SugarElement>) => {
     BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
       actual.each((a) => {

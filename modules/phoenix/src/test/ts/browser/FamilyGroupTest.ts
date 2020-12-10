@@ -7,7 +7,7 @@ import { TypedItem } from 'ephox/phoenix/api/Main';
 
 UnitTest.test('FamilyGroupTest', () => {
   const universe = DomUniverse();
-  const toStr = function (subject: TypedItem<SugarElement, Document>) {
+  const toStr = (subject: TypedItem<SugarElement, Document>) => {
     return subject.fold(() => {
       return '|';
     }, () => {
@@ -22,7 +22,7 @@ UnitTest.test('FamilyGroupTest', () => {
   // Family.group is used to break a list of elements in a list of list of elements, where each sublist
   // is a section that is bounded by blocks.
 
-  const check = function (expected: string[][], input: SugarElement[]) {
+  const check = (expected: string[][], input: SugarElement[]) => {
     const rawActual = Family.group(universe, input, Fun.never as (e: SugarElement) => boolean);
     const actual = Arr.map(rawActual, (a) => {
       return Arr.map(a, toStr);

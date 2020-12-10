@@ -11,7 +11,7 @@ import { Promise } from '../util/Promise';
  * @param dH {Number} Height that the image should be scaled to
  * @returns {Promise}
  */
-function scale(image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCanvasElement> {
+const scale = (image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCanvasElement> => {
   return new Promise((resolve, reject) => {
     const sW = ImageSize.getWidth(image);
     const sH = ImageSize.getHeight(image);
@@ -29,7 +29,7 @@ function scale(image: HTMLImageElement, dW: number, dH: number): Promise<HTMLCan
 
     resolve(canvas);
   });
-}
+};
 
 interface Shaders {
   bilinear: {
@@ -113,7 +113,7 @@ const shaders: Shaders = {
   }
 };
 
-function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void {
+const _drawImage = (canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: number, hRatio: number): void => {
   const gl = Canvas.get3dContext(canvas);
   if (!gl) {
     throw new Error(`Your environment doesn't support WebGL.`);
@@ -160,18 +160,18 @@ function _drawImage(canvas: HTMLCanvasElement, image: HTMLImageElement, wRatio: 
 
   // lets draw...
   gl.drawArrays(gl.TRIANGLES, 0, 6);
-}
+};
 
-function _loadFloatBuffer(gl: WebGLRenderingContext, program: WebGLProgram, attrName: string, bufferData: ArrayLike<number> | ArrayBufferLike) {
+const _loadFloatBuffer = (gl: WebGLRenderingContext, program: WebGLProgram, attrName: string, bufferData: ArrayLike<number> | ArrayBufferLike) => {
   const attr = gl.getAttribLocation(program, attrName);
   const buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferData), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(attr);
   gl.vertexAttribPointer(attr, 2, gl.FLOAT, false, 0, 0);
-}
+};
 
-function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
+const _createProgram = (gl: WebGLRenderingContext): WebGLProgram => {
   const program = gl.createProgram() as WebGLProgram;
 
   for (const type in shaders.bilinear) {
@@ -187,9 +187,9 @@ function _createProgram(gl: WebGLRenderingContext): WebGLProgram {
     throw new Error('Cannot create a program: ' + err);
   }
   return program;
-}
+};
 
-function _loadShader(gl: WebGLRenderingContext, source: string, type: string): Optional<WebGLShader> {
+const _loadShader = (gl: WebGLRenderingContext, source: string, type: string): Optional<WebGLShader> => {
   return Optional.from(gl.createShader((gl as any)[type])).map((shader) => {
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -201,7 +201,7 @@ function _loadShader(gl: WebGLRenderingContext, source: string, type: string): O
     }
     return shader;
   });
-}
+};
 
 export {
   scale

@@ -8,7 +8,7 @@ UnitTest.test('Result.fromOption tests', () => {
     () => Optional.none()
   );
 
-  const testSanity = function () {
+  const testSanity = () => {
     const err = Result.fromOption(Optional.none(), 'err');
     Assert.eq('eq', 'err', extractError(err).getOrDie('Could not get error value'));
 

@@ -7,7 +7,7 @@ export interface UaString {
   version: Version;
 }
 
-const detect = function (candidates: PlatformInfo[], userAgent: any): Optional<PlatformInfo> {
+const detect = (candidates: PlatformInfo[], userAgent: any): Optional<PlatformInfo> => {
   const agent = String(userAgent).toLowerCase();
   return Arr.find(candidates, (candidate) => {
     return candidate.search(agent);
@@ -16,7 +16,7 @@ const detect = function (candidates: PlatformInfo[], userAgent: any): Optional<P
 
 // They (browser and os) are the same at the moment, but they might
 // not stay that way.
-const detectBrowser = function (browsers: PlatformInfo[], userAgent: any): Optional<UaString> {
+const detectBrowser = (browsers: PlatformInfo[], userAgent: any): Optional<UaString> => {
   return detect(browsers, userAgent).map((browser): UaString => {
     const version = Version.detect(browser.versionRegexes, userAgent);
     return {
@@ -26,7 +26,7 @@ const detectBrowser = function (browsers: PlatformInfo[], userAgent: any): Optio
   });
 };
 
-const detectOs = function (oses: PlatformInfo[], userAgent: any): Optional<UaString> {
+const detectOs = (oses: PlatformInfo[], userAgent: any): Optional<UaString> => {
   return detect(oses, userAgent).map((os): UaString => {
     const version = Version.detect(os.versionRegexes, userAgent);
     return {

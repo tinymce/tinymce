@@ -70,22 +70,22 @@ const makeEventLogger = (eventName: string, initialTarget: SugarElement): Debugg
   const startTime = new Date().getTime();
 
   return {
-    logEventCut(_name: string, target: SugarElement, purpose: string) {
+    logEventCut: (_name: string, target: SugarElement, purpose: string) => {
       sequence.push({ outcome: 'cut', target, purpose });
     },
-    logEventStopped(_name: string, target: SugarElement, purpose: string) {
+    logEventStopped: (_name: string, target: SugarElement, purpose: string) => {
       sequence.push({ outcome: 'stopped', target, purpose });
     },
-    logNoParent(_name: string, target: SugarElement, purpose: string) {
+    logNoParent: (_name: string, target: SugarElement, purpose: string) => {
       sequence.push({ outcome: 'no-parent', target, purpose });
     },
-    logEventNoHandlers(_name: string, target: SugarElement) {
+    logEventNoHandlers: (_name: string, target: SugarElement) => {
       sequence.push({ outcome: 'no-handlers-left', target });
     },
-    logEventResponse(_name: string, target: SugarElement, purpose: string) {
+    logEventResponse: (_name: string, target: SugarElement, purpose: string) => {
       sequence.push({ outcome: 'response', purpose, target });
     },
-    write() {
+    write: () => {
       const finishTime = new Date().getTime();
       if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
       // eslint-disable-next-line no-console
@@ -195,7 +195,7 @@ const getOrInitConnection = (): Inspector => {
 
     win[CHROME_INSPECTOR_GLOBAL] = {
       systems: { },
-      lookup(uid: string) {
+      lookup: (uid: string) => {
         const systems = win[CHROME_INSPECTOR_GLOBAL].systems;
         const connections: string[] = Obj.keys(systems);
         return Arr.findMap(connections, (conn) => {

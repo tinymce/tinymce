@@ -131,7 +131,7 @@ export default (): void => {
       ],
 
       lazySink,
-      onEscape() {
+      onEscape: () => {
         console.log('escaping');
         return Optional.some<boolean>(true);
       },

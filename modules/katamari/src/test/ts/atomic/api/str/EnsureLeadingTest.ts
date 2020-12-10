@@ -3,10 +3,10 @@ import fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('ensureLeading', () => {
-  function check(expected, str, prefix) {
+  const check = (expected: string, str: string, prefix: string) => {
     const actual = Strings.ensureLeading(str, prefix);
     Assert.eq('ensureLeading', expected, actual);
-  }
+  };
 
   check('', '', '');
   check('a', 'a', 'a');

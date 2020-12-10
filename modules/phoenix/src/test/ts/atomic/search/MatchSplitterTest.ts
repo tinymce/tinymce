@@ -8,7 +8,7 @@ import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 
 UnitTest.test('MatchSplitterTest', () => {
-  const data = function () {
+  const data = () => {
     return Gene('root', 'root', [
       TextGene('1', 'AB'),
       TextGene('2', 'C'),
@@ -24,7 +24,7 @@ UnitTest.test('MatchSplitterTest', () => {
     word: string;
   }
 
-  const check = function (all: string[], expected: CheckExpect[], ids: string[], matches: (PRange & { word: string })[], input: Gene) {
+  const check = (all: string[], expected: CheckExpect[], ids: string[], matches: (PRange & { word: string })[], input: Gene) => {
     const universe = TestUniverse(input);
     const items = Finder.getAll(universe, ids);
     const list = PositionArray.generate(items, (item, start) => {
@@ -46,7 +46,7 @@ UnitTest.test('MatchSplitterTest', () => {
 
   };
 
-  const match = function (start: number, finish: number, word: string): PRange & { word: string } {
+  const match = (start: number, finish: number, word: string): PRange & { word: string } => {
     return {
       start,
       finish,

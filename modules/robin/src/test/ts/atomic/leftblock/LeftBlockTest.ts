@@ -17,7 +17,7 @@ UnitTest.test('LeftBlockTest', () => {
     ])
   ]));
 
-  const check = function (expected: string[], id: string, method: (u: TestUniverse, i: Gene) => Gene[]) {
+  const check = (expected: string[], id: string, method: (u: TestUniverse, i: Gene) => Gene[]) => {
     const actual = method(universe, universe.find(universe.get(), id).getOrDie());
     assert.eq(expected, Arr.map(actual, (x) => { return x.id; }));
   };

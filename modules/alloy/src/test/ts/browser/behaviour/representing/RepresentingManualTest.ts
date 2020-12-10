@@ -17,11 +17,11 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
       Representing.config({
         store: {
           mode: 'manual',
-          getValue(comp) {
+          getValue: (comp) => {
             store.adder('getValue')();
             return Html.get(comp.element);
           },
-          setValue(comp, v) {
+          setValue: (comp, v) => {
             Html.set(comp.element, v);
             store.adder('setValue(' + v + ')')();
           },

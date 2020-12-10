@@ -8,7 +8,7 @@ UnitTest.test('ClumpsTest', () => {
   /* The purpose of this test is to take a large section of html and test dividing it into
    * inline clumps
    */
-  const find = function (path: number[]) {
+  const find = (path: number[]) => {
     return Hierarchy.follow(container, path).getOrDie('Could not find the path: ' + path.join(','));
   };
 
@@ -23,7 +23,7 @@ UnitTest.test('ClumpsTest', () => {
 
   Insert.append(body, container);
 
-  const isRoot = function (elem: SugarElement) {
+  const isRoot = (elem: SugarElement) => {
     return Compare.eq(elem, container);
   };
 
@@ -32,7 +32,7 @@ UnitTest.test('ClumpsTest', () => {
     end: number[];
   }
 
-  const check = function (expected: Expected[], start: number[], soffset: number, finish: number[], foffset: number) {
+  const check = (expected: Expected[], start: number[], soffset: number, finish: number[], foffset: number) => {
     const actual = Clumps.collect(DomUniverse(), isRoot, find(start), soffset, find(finish), foffset);
     assert.eq(expected.length, actual.length, 'The length of Clumps was different. Expected: ' + expected.length + ', actual: ' + actual.length);
     Arr.each(expected, (exp, i) => {

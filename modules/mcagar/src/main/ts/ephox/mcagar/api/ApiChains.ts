@@ -24,36 +24,36 @@ export interface ApiChains {
   cAssertSelection: <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Chain<T, T>;
 }
 
-const lazyBody = function (editor: Editor): SugarElement<HTMLElement> {
+const lazyBody = (editor: Editor): SugarElement<HTMLElement> => {
   return SugarElement.fromDom(editor.getBody());
 };
 
-const cNodeChanged = <T extends Editor> (): Chain<T, T> => Chain.op((editor: T) => {
+const cNodeChanged = <T extends Editor>(): Chain<T, T> => Chain.op((editor: T) => {
   editor.nodeChanged();
 });
 
-const cSetContent = function <T extends Editor> (html: string): Chain<T, T> {
+const cSetContent = <T extends Editor>(html: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
     editor.setContent(html);
   });
 };
 
-const cSetRawContent = function <T extends Editor> (html: string): Chain<T, T> {
+const cSetRawContent = <T extends Editor>(html: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
     editor.getBody().innerHTML = html;
   });
 };
 
-const cSetSelectionFrom = function <T extends Editor> (spec: Cursors.CursorSpec | Cursors.RangeSpec): Chain<T, T> {
+const cSetSelectionFrom = <T extends Editor>(spec: Cursors.CursorSpec | Cursors.RangeSpec): Chain<T, T> => {
   const path = Cursors.pathFrom(spec);
   return cSetSelection(path.startPath, path.soffset, path.finishPath, path.foffset);
 };
 
-const cSetCursor = function <T extends Editor> (elementPath: number[], offset: number): Chain<T, T> {
+const cSetCursor = <T extends Editor>(elementPath: number[], offset: number): Chain<T, T> => {
   return cSetSelection(elementPath, offset, elementPath, offset);
 };
 
-const cSetSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> {
+const cSetSelection = <T extends Editor>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> => {
   return Chain.op((editor: T) => {
     const range = TinySelections.createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
     editor.selection.setRng(range);
@@ -61,19 +61,19 @@ const cSetSelection = function <T extends Editor> (startPath: number[], soffset:
   });
 };
 
-const cSetSetting = function <T extends Editor> (key: string, value: any): Chain<T, T> {
+const cSetSetting = <T extends Editor>(key: string, value: any): Chain<T, T> => {
   return Chain.op((editor: T) => {
     editor.settings[key] = value;
   });
 };
 
-const cDeleteSetting = function <T extends Editor> (key: string): Chain<T, T> {
+const cDeleteSetting = <T extends Editor>(key: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
     delete editor.settings[key];
   });
 };
 
-const cSelect = function <T extends Editor> (selector: string, path: number[]): Chain<T, T> {
+const cSelect = <T extends Editor>(selector: string, path: number[]): Chain<T, T> => {
   return Chain.op((editor: T) => {
     const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     const target = Cursors.calculateOne(container, path);
@@ -85,19 +85,19 @@ const cGetContent: Chain<Editor, string> = Chain.mapper((editor: Editor) => {
   return editor.getContent();
 });
 
-const cExecCommand = function <T extends Editor> (command: string, value?: any): Chain<T, T> {
+const cExecCommand = <T extends Editor>(command: string, value?: any): Chain<T, T> => {
   return Chain.op((editor: T) => {
     editor.execCommand(command, false, value);
   });
 };
 
-const cAssertContent = function <T extends Editor> (expected: string): Chain<T, T> {
+const cAssertContent = <T extends Editor>(expected: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
     Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
   });
 };
 
-const cAssertContentPresence = function <T extends Editor> (expected: Presence): Chain<T, T> {
+const cAssertContentPresence = <T extends Editor>(expected: Presence): Chain<T, T> => {
   return Chain.op((editor: T) => {
     Assertions.assertPresence(
       () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
@@ -107,7 +107,7 @@ const cAssertContentPresence = function <T extends Editor> (expected: Presence):
   });
 };
 
-const cAssertContentStructure = function <T extends Editor> (expected: StructAssert): Chain<T, T> {
+const cAssertContentStructure = <T extends Editor>(expected: StructAssert): Chain<T, T> => {
   return Chain.op((editor: T) => {
     return Assertions.assertStructure(
       'Asserting the structure of tiny content.',
@@ -117,9 +117,9 @@ const cAssertContentStructure = function <T extends Editor> (expected: StructAss
   });
 };
 
-const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
+const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
   const expected = Cursors.calculateOne(root, expPath);
-  const message = function () {
+  const message = () => {
     const actual = SugarElement.fromDom(actElement);
     const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
     return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
@@ -128,7 +128,7 @@ const assertPath = function (label: string, root: SugarElement, expPath: number[
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
-const cAssertSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> {
+const cAssertSelection = <T extends Editor>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> => {
   return Chain.op((editor: T) => {
     const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);

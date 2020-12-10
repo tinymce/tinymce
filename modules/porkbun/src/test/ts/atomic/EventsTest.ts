@@ -17,7 +17,7 @@ interface TestEvents {
 }
 
 UnitTest.test('Events', () => {
-  (function () {
+  (() => {
     const events: TestEvents = Events.create({
       myEvent: Event([ 'name' ])
     });
@@ -25,7 +25,7 @@ UnitTest.test('Events', () => {
     let called = false;
     let calledEvent: MyEvent | Record<string, () => any> = {};
 
-    const handler = function (event: MyEvent) {
+    const handler = (event: MyEvent) => {
       calledEvent = event;
       called = true;
     };
@@ -50,7 +50,7 @@ UnitTest.test('Events', () => {
     events.registry.myEvent.unbind(handler);
   })();
 
-  (function () {
+  (() => {
     const events = Events.create({
       emptyEvent: Event([])
     });
@@ -61,7 +61,7 @@ UnitTest.test('Events', () => {
     );
   })();
 
-  (function () {
+  (() => {
     const ea = Events.create({
       chook: Event([ 'a', 'b', 'c' ])
     });
@@ -90,7 +90,7 @@ UnitTest.test('Events', () => {
 
   })();
 
-  (function () {
+  (() => {
     const ea = Events.create({
       chook: Event([ 'a', 'b', 'c', 'd', 'e' ]) // superset of arguments
     });

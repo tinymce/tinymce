@@ -38,7 +38,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    defaults(detail) {
+    defaults: (detail) => {
       return {
         onExecute: detail.onExecute
       };

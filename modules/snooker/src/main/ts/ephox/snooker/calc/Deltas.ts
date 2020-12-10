@@ -6,7 +6,7 @@ import { ColumnContext } from './ColumnContext';
 /*
  * Based on the column index, identify the context
  */
-const neighbours = function (input: number[], index: number) {
+const neighbours = (input: number[], index: number) => {
   if (input.length === 0) {
     return ColumnContext.none();
   }
@@ -29,7 +29,7 @@ const neighbours = function (input: number[], index: number) {
  * Calculate the offsets to apply to each column width (not the absolute widths themselves)
  * based on a resize at column: column of step: step
  */
-const determine = function (input: number[], column: number, step: number, tableSize: TableSize, resize: ResizeBehaviour): number[] {
+const determine = (input: number[], column: number, step: number, tableSize: TableSize, resize: ResizeBehaviour): number[] => {
   const result = input.slice(0);
   const context = neighbours(input, column);
 

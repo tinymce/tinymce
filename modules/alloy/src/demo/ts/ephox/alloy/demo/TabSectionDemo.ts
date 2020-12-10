@@ -60,20 +60,16 @@ export default (): void => {
         {
           value: 'alpha',
           text: 'Alpha',
-          view() {
-            return [
-              GuiFactory.text('Alpha panel text')
-            ];
-          }
+          view: () => [
+            GuiFactory.text('Alpha panel text')
+          ]
         },
         {
           value: 'beta',
           text: 'Beta',
-          view() {
-            return [
-              GuiFactory.text('Beta panel text')
-            ];
-          }
+          view: () => [
+            GuiFactory.text('Beta panel text')
+          ]
         }
       ], makeTab)
     })

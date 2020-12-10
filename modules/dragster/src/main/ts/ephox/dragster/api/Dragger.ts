@@ -7,7 +7,7 @@ export interface DraggerOptions extends BlockerOptions {
   readonly mode: DragMode;
 }
 
-const transform = function (mutation: DragMutation, settings: Partial<DraggerOptions> = {}): Dragging.Dragging {
+const transform = (mutation: DragMutation, settings: Partial<DraggerOptions> = {}): Dragging.Dragging => {
   const mode: DragMode = settings.mode !== undefined ? settings.mode : MouseDrag;
   return Dragging.setup(mutation, mode, settings);
 };

@@ -8,7 +8,7 @@ export interface Walks {
     next: Transition;
     fallback: Optional<Transition>;
   }[];
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, item: E) => boolean;
+  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, item: E) => boolean;
 }
 
 const top: Walks = {
@@ -18,7 +18,7 @@ const top: Walks = {
     { current: Gather.sidestep, next: Gather.sidestep, fallback: Optional.some(Gather.backtrack) },
     { current: Gather.advance, next: Gather.sidestep, fallback: Optional.some(Gather.sidestep) }
   ],
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, item: E) => {
+  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, item: E) => {
     // You can't just check the mode, because it may have fallen back to backtracking,
     // even though mode was sidestep. Therefore, to see if a node is something that was
     // the parent of a previously traversed item, we have to do this. Very hacky... find a
@@ -33,7 +33,7 @@ const top: Walks = {
 const all: Walks = {
   // rules === undefined, so use default.
   rules: undefined,
-  inclusion: <E, D> (universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item)
+  inclusion: <E, D>(universe: Universe<E, D>, next: Traverse<E>, _item: E) => universe.property().isText(next.item)
 };
 
 export const Walks = {

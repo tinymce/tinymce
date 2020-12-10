@@ -36,19 +36,19 @@ const fromRange = (win: Window, type: SelectionDirectionConstructor, range: Rang
   type(SugarElement.fromDom(range.startContainer), range.startOffset, SugarElement.fromDom(range.endContainer), range.endOffset);
 
 const getRanges = (win: Window, selection: SimSelection): LtrRtlRanges => selection.match<LtrRtlRanges>({
-  domRange(rng) {
+  domRange: (rng) => {
     return {
       ltr: Fun.constant(rng),
       rtl: Optional.none
     };
   },
-  relative(startSitu, finishSitu) {
+  relative: (startSitu, finishSitu) => {
     return {
       ltr: Thunk.cached(() => NativeRange.relativeToNative(win, startSitu, finishSitu)),
       rtl: Thunk.cached(() => Optional.some(NativeRange.relativeToNative(win, finishSitu, startSitu)))
     };
   },
-  exact(start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) {
+  exact: (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number) => {
     return {
       ltr: Thunk.cached(() => NativeRange.exactToNative(win, start, soffset, finish, foffset)),
       rtl: Thunk.cached(() => Optional.some(NativeRange.exactToNative(win, finish, foffset, start, soffset)))

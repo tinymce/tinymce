@@ -13,7 +13,7 @@ type IdentityFn = <T>(obj: T) => T;
 type HandleFn = (required: string[], keys: string[]) => void;
 
 // Ensure that the object has all required fields. They must be functions.
-const base = function (handleUnsupported: HandleFn, required: string[]) {
+const base = (handleUnsupported: HandleFn, required: string[]) => {
   return baseWith(handleUnsupported, required, {
     validate: Type.isFunction,
     label: 'function'
@@ -21,7 +21,7 @@ const base = function (handleUnsupported: HandleFn, required: string[]) {
 };
 
 // Ensure that the object has all required fields. They must satisy predicates.
-const baseWith = function (handleUnsupported: HandleFn, required: string[], pred: ContractCondition): IdentityFn {
+const baseWith = (handleUnsupported: HandleFn, required: string[], pred: ContractCondition): IdentityFn => {
   if (required.length === 0) {
     throw new Error('You must specify at least one required field.');
   }
@@ -30,7 +30,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
 
   BagUtils.checkDupes(required);
 
-  return function <T> (obj: T) {
+  return <T>(obj: T) => {
     const keys: string[] = Obj.keys(obj);
 
     // Ensure all required keys are present.
@@ -56,7 +56,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
   };
 };
 
-const handleExact = function (required: string[], keys: string[]) {
+const handleExact = (required: string[], keys: string[]) => {
   const unsupported = Arr.filter(keys, (key) => {
     return !Arr.contains(required, key);
   });

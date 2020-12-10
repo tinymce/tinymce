@@ -33,7 +33,7 @@ const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partNam
 const coupledPart = (selfName: string, otherName: string) => PartType.required<FormCoupledInputsDetail, FormFieldSpec>({
   factory: FormField,
   name: selfName,
-  overrides(detail) {
+  overrides: (detail) => {
     return {
       fieldBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('coupled-input-behaviour', [
@@ -61,7 +61,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       FieldSchema.strict('dom')
     ],
     name: 'lock',
-    overrides(detail) {
+    overrides: (detail) => {
       return {
         buttonBehaviours: Behaviour.derive([
           Toggling.config({

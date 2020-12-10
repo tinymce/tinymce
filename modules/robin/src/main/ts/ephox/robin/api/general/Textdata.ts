@@ -15,7 +15,7 @@ export interface Textdata<E> extends TextdataGet<E> {
 /**
  * Create a PositionArray of textnodes and returns the array along with the concatenated text.
  */
-const get = function <E, D> (universe: Universe<E, D>, elements: E[]): TextdataGet<E> {
+const get = <E, D>(universe: Universe<E, D>, elements: E[]): TextdataGet<E> => {
   const list = PositionArray.generate(elements, (x, start) => {
     return universe.property().isText(x) ?
       Optional.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
@@ -32,7 +32,7 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]): TextdataG
   };
 };
 
-const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
+const cursor = <E, D>(universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> => {
   const position = PositionArray.find(data.list, (item) => {
     return universe.eq(item.element, current);
   }).map((element) => {
@@ -52,7 +52,7 @@ const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, 
  * - the text found, as a string
  * - the cursor position of 'offset' in the text
  */
-const from = function <E, D> (universe: Universe<E, D>, elements: E[], current: E, offset: number): Textdata<E> {
+const from = <E, D>(universe: Universe<E, D>, elements: E[], current: E, offset: number): Textdata<E> => {
   const data = get(universe, elements);
   return cursor(universe, data, current, offset);
 };

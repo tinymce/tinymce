@@ -2,7 +2,7 @@ import { Gene } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { TypedItem } from 'ephox/phoenix/api/Main';
 
-const typeditem = function (a: TypedItem<Gene, undefined>): string {
+const typeditem = (a: TypedItem<Gene, undefined>): string => {
   return a.fold((item) => {
     return 'boundary(' + item.id + ')';
   }, (item) => {
@@ -14,23 +14,23 @@ const typeditem = function (a: TypedItem<Gene, undefined>): string {
   });
 };
 
-const typeditems = function (items: TypedItem<Gene, undefined>[]): string[] {
+const typeditems = (items: TypedItem<Gene, undefined>[]): string[] => {
   return Arr.map(items, typeditem);
 };
 
-const ids = function (items: Gene[]): string[] {
+const ids = (items: Gene[]): string[] => {
   return Arr.map(items, id);
 };
 
-const id = function (item: Gene): string {
+const id = (item: Gene): string => {
   return item.id;
 };
 
-const texts = function (items: Gene[]): string[] {
+const texts = (items: Gene[]): string[] => {
   return Arr.map(items, text);
 };
 
-const text = function (item: Gene): string {
+const text = (item: Gene): string => {
   return Optional.from(item.text).getOr('');
 };
 

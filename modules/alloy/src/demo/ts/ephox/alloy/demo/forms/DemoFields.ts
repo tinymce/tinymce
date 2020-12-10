@@ -30,7 +30,7 @@ interface TextMungerSpec {
 const invalidation = (validate: (v: string) => Result<Record<string, string>, string>, invalidUid: string) => Invalidating.config({
   invalidClass: 'invalid-input',
   notify: {
-    getContainer(input) {
+    getContainer: (input) => {
       return ComponentUtil.getByUid(input, invalidUid).map(ComponentUtil.toElem);
     }
   },
@@ -153,7 +153,7 @@ const coupledTextMunger = (spec: { field1: TextMungerSpec; field2: TextMungerSpe
     markers: {
       lockClass: 'demo-selected'
     },
-    onLockedChange(current, other) {
+    onLockedChange: (current, other) => {
       const cValue = Representing.getValue(current);
       Representing.setValue(other, cValue);
     },
@@ -180,7 +180,7 @@ const typeaheadMunger = (spec: { label: string; lazySink: LazySink; dataset: any
 
     lazySink: spec.lazySink,
 
-    fetch(input: AlloyComponent) {
+    fetch: (input: AlloyComponent) => {
 
       const text = Value.get(input.element);
       const matching: DemoRenders.DemoItems[] = Arr.bind(spec.dataset, (d) => {

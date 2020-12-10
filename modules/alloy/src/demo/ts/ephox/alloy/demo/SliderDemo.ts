@@ -76,17 +76,21 @@ export default (): void => {
       stepSize: 40,
       snapStart: 35,
       snapToGrid: true,
-      onDragStart(_, thumb) { Toggling.on(thumb); },
-      onDragEnd(_, thumb) { Toggling.off(thumb); },
+      onDragStart: (_, thumb) => {
+        Toggling.on(thumb);
+      },
+      onDragEnd: (_, thumb) => {
+        Toggling.off(thumb);
+      },
 
-      onChange(_slider, thumb, value: SliderValue) {
+      onChange: (_slider, thumb, value: SliderValue) => {
         if (isValueY(value)) {
           Replacing.set(thumb, [
             GuiFactory.text(value.y.toString())
           ]);
         }
       },
-      onInit(_slider, thumb, _spectrum, value: SliderValue) {
+      onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
         if (isValueY(value)) {
           Replacing.set(thumb, [
             GuiFactory.text(value.y.toString())
@@ -126,13 +130,13 @@ export default (): void => {
     })
   );
 
-  function isValueX(v: SliderValue): v is SliderValueX {
+  const isValueX = (v: SliderValue): v is SliderValueX => {
     return Type.isFunction((v as SliderValueX).x);
-  }
+  };
 
-  function isValueY(v: SliderValue): v is SliderValueY {
+  const isValueY = (v: SliderValue): v is SliderValueY => {
     return Type.isFunction((v as SliderValueY).y);
-  }
+  };
 
   const getColor = (hue: number) => {
     if (hue < 0) {
@@ -165,13 +169,13 @@ export default (): void => {
       },
       stepSize: 10,
 
-      onChange(_slider, thumb, value: SliderValue) {
+      onChange: (_slider, thumb, value: SliderValue) => {
         if (isValueX(value)) {
           setColor(thumb, value.x);
         }
       },
 
-      onInit(_slider, thumb, _spectrum, value: SliderValue) {
+      onInit: (_slider, thumb, _spectrum, value: SliderValue) => {
         if (isValueX(value)) {
           setColor(thumb, value.x);
         }

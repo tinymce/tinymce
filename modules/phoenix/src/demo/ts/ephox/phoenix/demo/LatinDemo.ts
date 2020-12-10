@@ -14,13 +14,13 @@ const button = SugarElement.fromTag('button');
 Attribute.set(button, 'type', 'button');
 Insert.append(button, SugarElement.fromText('New'));
 
-const underline = function () {
+const underline = () => {
   const c = SugarElement.fromTag('span');
   Css.set(c, 'text-decoration', 'underline');
   return DomWrapping.nu(c);
 };
 
-const allWords = (function () {
+const allWords = (() => {
   const duplicates = SugarText.get(text).split(/\W/);
   const set: Record<string, string> = {};
   Arr.each(duplicates, (x) => {
@@ -36,7 +36,7 @@ DomEvent.bind(button, 'click', (_event) => {
   highlight(allWords, underline);
 });
 
-const highlight = function (words: string[], nu: () => Wrapter<SugarElement>) {
+const highlight = (words: string[], nu: () => Wrapter<SugarElement>) => {
   const matches = DomSearch.safeWords([ p ], words);
   Arr.each(matches, (x) => {
     DomWrapping.wrapper(x.elements, nu);

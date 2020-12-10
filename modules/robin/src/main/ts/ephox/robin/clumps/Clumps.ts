@@ -27,10 +27,10 @@ interface ClumpsScan<E> {
 }
 
 const adt: {
-  none: <E> (last: E, mode: Transition) => ClumpsScan<E>;
-  running: <E> (next: E, mode: Transition) => ClumpsScan<E>;
-  split: <E> (boundary: E, last: E, mode: Transition) => ClumpsScan<E>;
-  finished: <E> (element: E, mode: Transition) => ClumpsScan<E>;
+  none: <E>(last: E, mode: Transition) => ClumpsScan<E>;
+  running: <E>(next: E, mode: Transition) => ClumpsScan<E>;
+  split: <E>(boundary: E, last: E, mode: Transition) => ClumpsScan<E>;
+  finished: <E>(element: E, mode: Transition) => ClumpsScan<E>;
 } = Adt.generate([
   { none: [ 'last', 'mode' ] },
   { running: [ 'next', 'mode' ] },
@@ -43,14 +43,14 @@ interface ClumpRange<E> {
   finish: E;
 }
 
-const clump = <E> (start: E, soffset: number, finish: E, foffset: number): Clump<E> => ({
+const clump = <E>(start: E, soffset: number, finish: E, foffset: number): Clump<E> => ({
   start,
   soffset,
   finish,
   foffset
 });
 
-const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E): SpotPoint<E> {
+const descendBlock = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, block: E): SpotPoint<E> => {
   const leaf = Descent.toLeaf(universe, block, 0);
   if (!skip(universe, leaf.element)) {
     return leaf;
@@ -61,17 +61,17 @@ const descendBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) =
   }
 };
 
-const isBlock = function <E, D> (universe: Universe<E, D>, item: E): boolean {
+const isBlock = <E, D>(universe: Universe<E, D>, item: E): boolean => {
   return Structure.isFrame(universe, item) || Structure.isBlock(universe, item) || Arr.contains([ 'li' ], universe.property().name(item));
 };
 
-const skipToRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E): Optional<E> {
+const skipToRight = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E): Optional<E> => {
   return Gather.seekRight(universe, item, (i) => {
     return !skip(universe, i) && !isBlock(universe, i);
   }, isRoot);
 };
 
-const skip = function <E, D> (universe: Universe<E, D>, item: E): boolean {
+const skip = <E, D>(universe: Universe<E, D>, item: E): boolean => {
   if (!universe.property().isText(item)) {
     return false;
   }
@@ -82,7 +82,7 @@ const skip = function <E, D> (universe: Universe<E, D>, item: E): boolean {
   });
 };
 
-const walk = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, element: E, target: E): ClumpsScan<E> {
+const walk = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, element: E, target: E): ClumpsScan<E> => {
   const next = Gather.walk(universe, element, mode, Gather.walkers().right());
   return next.fold(() => {
     return adt.none(element, Gather.sidestep);
@@ -102,7 +102,7 @@ const walk = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
  * to hit the target or a leaf. Note, resuming should not start again from the same
  * boundary that the previous clump finished within.
  */
-const resume = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, boundary: E, target: E): Optional<E> {
+const resume = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, boundary: E, target: E): Optional<E> => {
   // I have to sidestep here so I don't descend down the same boundary.
   const next = skipToRight(universe, isRoot, boundary);
   return next.fold(() => {
@@ -120,13 +120,13 @@ const resume = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
   });
 };
 
-const isParent = function <E, D> (universe: Universe<E, D>, child: E, parent: E): boolean {
+const isParent = <E, D>(universe: Universe<E, D>, child: E, parent: E): boolean => {
   return universe.property().parent(child).exists((p) => {
     return universe.eq(p, parent);
   });
 };
 
-const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, beginning: E, element: E, target: E): ClumpRange<E>[] {
+const scan = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, mode: Transition, beginning: E, element: E, target: E): ClumpRange<E>[] => {
   // Keep walking the tree.
   const step = walk(universe, isRoot, mode, element, target);
   return step.fold((last, _mode) => {
@@ -138,7 +138,7 @@ const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
   }, (boundary, last, _mode) => {
     const current = { start: beginning, finish: last };
     // Logic .. if this boundary was a parent, then sidestep.
-    const resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (function () {
+    const resumption = isParent(universe, element, boundary) ? resume(universe, isRoot, boundary, target) : (() => {
       const leaf = descendBlock(universe, isRoot, boundary);
       return !universe.eq(leaf.element, boundary) ?
         Optional.some(leaf.element) :
@@ -163,11 +163,11 @@ const scan = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolea
   });
 };
 
-const getEnd = function <E, D> (universe: Universe<E, D>, item: E): number {
+const getEnd = <E, D>(universe: Universe<E, D>, item: E): number => {
   return universe.property().isText(item) ? universe.property().getText(item).length : universe.property().children(item).length;
 };
 
-const drop = function <E, D> (universe: Universe<E, D>, item: E, offset: number): E {
+const drop = <E, D>(universe: Universe<E, D>, item: E, offset: number): E => {
   if (isBlock(universe, item)) {
     const children = universe.property().children(item);
     if (offset >= 0 && offset < children.length) {
@@ -182,7 +182,7 @@ const drop = function <E, D> (universe: Universe<E, D>, item: E, offset: number)
   }
 };
 
-const skipInBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, offset: number): E {
+const skipInBlock = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, offset: number): E => {
   const dropped = drop(universe, item, offset);
   if (!skip(universe, dropped)) {
     return dropped;
@@ -190,7 +190,7 @@ const skipInBlock = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) =>
   return skipToRight(universe, isRoot, dropped).getOr(dropped);
 };
 
-const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] {
+const doCollect = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] => {
   // We can't wrap block elements, so descend if we start on a block.
   const droppedStart = skipInBlock(universe, isRoot, start, soffset);
   const droppedFinish = skipInBlock(universe, isRoot, finish, foffset);
@@ -205,7 +205,7 @@ const doCollect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => b
   });
 };
 
-const single = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, soffset: number, foffset: number): Clump<E>[] {
+const single = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, item: E, soffset: number, foffset: number): Clump<E>[] => {
   // If we aren't on blocks, just span a clump from start to finish.
   if (!isBlock(universe, item)) {
     return [ clump(item, soffset, item, foffset) ];
@@ -219,7 +219,7 @@ const single = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
     : [ clump(start.element, start.offset, finish.element, finish.offset) ];
 };
 
-const collect = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] {
+const collect = <E, D>(universe: Universe<E, D>, isRoot: (e: E) => boolean, start: E, soffset: number, finish: E, foffset: number): Clump<E>[] => {
   return universe.eq(start, finish) ?
     single(universe, isRoot, start, soffset, foffset) :
     doCollect(universe, isRoot, start, soffset, finish, foffset);

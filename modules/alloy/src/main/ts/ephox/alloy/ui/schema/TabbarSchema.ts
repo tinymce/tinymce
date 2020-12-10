@@ -27,7 +27,7 @@ const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
   factory: TabButton,
   name: 'tabs',
   unit: 'tab',
-  overrides(barDetail) {
+  overrides: (barDetail) => {
     const dismissTab = (tabbar: AlloyComponent, button: AlloyComponent) => {
       Highlighting.dehighlight(tabbar, button);
       AlloyTriggers.emitWith(tabbar, SystemEvents.dismissTab(), {
@@ -45,7 +45,7 @@ const tabsPart = PartType.group<TabbarDetail, TabButtonSpec>({
     };
 
     return {
-      action(button: AlloyComponent) {
+      action: (button: AlloyComponent) => {
         const tabbar = button.getSystem().getByUid(barDetail.uid).getOrDie();
         const activeButton = Highlighting.isHighlighted(tabbar, button);
 

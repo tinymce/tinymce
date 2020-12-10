@@ -63,7 +63,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       FormCoupledInputs.parts.field2(coupledSpec('field2')),
       FormCoupledInputs.parts.lock(lockSpec)
     ],
-    onLockedChange(current, other) {
+    onLockedChange: (current, other) => {
       Representing.setValueFrom(other, current);
     },
     markers: {

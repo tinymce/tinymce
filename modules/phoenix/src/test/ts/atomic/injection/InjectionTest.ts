@@ -4,7 +4,7 @@ import * as Injection from 'ephox/phoenix/injection/Injection';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
 UnitTest.test('InsertAtTest', () => {
-  const makeUniverse = function () {
+  const makeUniverse = () => {
     return TestUniverse(
       Gene('root', 'root', [
         Gene('a', 'node', [
@@ -22,7 +22,7 @@ UnitTest.test('InsertAtTest', () => {
     );
   };
 
-  const check = function (expected: string, element: string, offset: number, injection: Gene) {
+  const check = (expected: string, element: string, offset: number, injection: Gene) => {
     const universe = makeUniverse();
     const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);

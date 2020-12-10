@@ -4,12 +4,12 @@ import * as Strings from 'ephox/polaris/api/Strings';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.splits', () => {
-  const subdivide = function (unit: Parrays.PArrayTestItem, positions: number[]) {
+  const subdivide = (unit: Parrays.PArrayTestItem, positions: number[]) => {
     const tokens = Strings.splits(unit.item, positions);
     return Parrays.make(tokens);
   };
 
-  const check = function (expected: string[], input: string[], positions: number[]) {
+  const check = (expected: string[], input: string[], positions: number[]) => {
     const parray = Parrays.make(input);
     const actual = PositionArray.splits(parray, positions, subdivide);
     assert.eq(expected, Parrays.dump(actual));

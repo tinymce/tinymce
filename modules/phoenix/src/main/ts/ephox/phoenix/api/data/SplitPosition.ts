@@ -22,10 +22,10 @@ export interface SplitPosition<E> {
 }
 
 const adt: {
-  none: <E> () => SplitPosition<E>;
-  start: <E> (element: E) => SplitPosition<E>;
-  middle: <E> (before: E, after: E) => SplitPosition<E>;
-  end: <E> (element: E) => SplitPosition<E>;
+  none: <E>() => SplitPosition<E>;
+  start: <E>(element: E) => SplitPosition<E>;
+  middle: <E>(before: E, after: E) => SplitPosition<E>;
+  end: <E>(element: E) => SplitPosition<E>;
 } = Adt.generate([
   { none: [] },
   { start: [ 'element' ] },

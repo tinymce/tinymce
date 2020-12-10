@@ -13,7 +13,7 @@ const logNoPromises = Thunk.cached(() => {
 
 const fakePromise = (): PromiseLike<true> => {
   const self = {
-    then(fs: (result: any) => void) {
+    then: (fs: (result: any) => void) => {
       logNoPromises();
       fs(true);
       return self;

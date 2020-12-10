@@ -1,14 +1,14 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-const formatObj = function (input: any): string {
+const formatObj = (input: any): string => {
   return Type.isObject(input) && Obj.keys(input).length > 100 ? ' removed due to size' : JSON.stringify(input, null, 2);
 };
 
-const formatErrors = function (errors: Array<{ path: string[]; getErrorInfo: () => string }>): string[] {
+const formatErrors = (errors: Array<{ path: string[]; getErrorInfo: () => string }>): string[] => {
   const es = errors.length > 10 ? errors.slice(0, 10).concat([
     {
       path: [ ],
-      getErrorInfo() {
+      getErrorInfo: () => {
         return '... (only showing first ten failures)';
       }
     }

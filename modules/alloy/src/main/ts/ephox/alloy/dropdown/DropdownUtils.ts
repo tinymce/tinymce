@@ -77,13 +77,13 @@ const openF = (
 
     highlightImmediately: highlightOnOpen === HighlightOnOpen.HighlightFirst,
 
-    onOpenMenu(tmenu, menu) {
+    onOpenMenu: (tmenu, menu) => {
       const sink = getLazySink().getOrDie();
       Positioning.position(sink, anchor, menu);
       Sandboxing.decloak(sandbox);
     },
 
-    onOpenSubmenu(tmenu, item, submenu) {
+    onOpenSubmenu: (tmenu, item, submenu) => {
       const sink = getLazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -92,7 +92,7 @@ const openF = (
       Sandboxing.decloak(sandbox);
     },
 
-    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
+    onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
       const sink = getLazySink().getOrDie();
       Positioning.position(sink, anchor, primaryMenu);
       Arr.each(submenuTriggers, (st) => {
@@ -100,7 +100,7 @@ const openF = (
       });
     },
 
-    onEscape() {
+    onEscape: () => {
       // Focus the triggering component after escaping the menu
       Focusing.focus(component);
       Sandboxing.close(sandbox);
@@ -255,15 +255,15 @@ const makeSandbox = (
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean {
+          isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean => {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(hotspot, queryElem);
           },
-          getAttachPoint() {
+          getAttachPoint: () => {
             return lazySink().getOrDie();
           }
         }),
         Composing.config({
-          find(sandbox: AlloyComponent): Optional<AlloyComponent> {
+          find: (sandbox: AlloyComponent): Optional<AlloyComponent> => {
             return Sandboxing.getState(sandbox).bind((menu) => Composing.getCurrent(menu));
           }
         }),

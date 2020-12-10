@@ -111,7 +111,7 @@ UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
               tag: 'button',
               innerHtml: 'Shrink!'
             },
-            action(_button) {
+            action: (_button) => {
               ExpandableForm.collapseFormImmediately(me);
             },
             buttonBehaviours: Behaviour.derive([

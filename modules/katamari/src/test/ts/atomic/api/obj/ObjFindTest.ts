@@ -5,12 +5,12 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('ObjFindTest', () => {
-  const checkNone = function (input, pred) {
+  const checkNone = (input, pred) => {
     const actual = Obj.find(input, pred);
     return actual.isNone();
   };
 
-  const checkObj = function (expected, input, pred) {
+  const checkObj = (expected, input, pred) => {
     const actual = Obj.find(input, pred).getOrDie('should have value');
     Assert.eq('eq', expected, actual);
   };

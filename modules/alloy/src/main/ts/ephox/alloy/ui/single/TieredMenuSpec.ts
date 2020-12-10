@@ -353,7 +353,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
           onRight: keyOnItem(onRight),
           onLeft: keyOnItem(onLeft),
           onEscape: keyOnItem(onEscape),
-          focusIn(container, _keyInfo) {
+          focusIn: (container, _keyInfo) => {
             layeredState.getPrimary().each((primary) => {
               AlloyTriggers.dispatch(container, primary.element, SystemEvents.focusItem());
             });
@@ -365,7 +365,7 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
           itemClass: detail.markers.menu
         }),
         Composing.config({
-          find(container) {
+          find: (container) => {
             return Highlighting.getHighlighted(container);
           }
         }),

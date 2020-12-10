@@ -10,7 +10,7 @@ import * as ZoneWalker from './ZoneWalker';
 
 type Zones<E> = Zones.Zones<E>;
 
-const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>): Optional<ZoneDetails<E>[]> {
+const rangeOn = <E, D>(universe: Universe<E, D>, first: E, last: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>): Optional<ZoneDetails<E>[]> => {
   const ancestor = universe.eq(first, last) ? Optional.some(first) : universe.property().parent(first);
   return ancestor.map((parent) => {
     const defaultLang = LanguageZones.calculate(universe, parent).getOr(envLang);
@@ -18,7 +18,7 @@ const rangeOn = function <E, D> (universe: Universe<E, D>, first: E, last: E, en
   });
 };
 
-const fromBoundedWith = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>): Zones<E> {
+const fromBoundedWith = <E, D>(universe: Universe<E, D>, left: E, right: E, envLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>, viewport: ZoneViewports<E>): Zones<E> => {
   const groups: ZoneDetails<E>[] = Parent.subset(universe, left, right).bind((children) => {
     if (children.length === 0) {
       return Optional.none<ZoneDetails<E>[]>();
@@ -31,18 +31,18 @@ const fromBoundedWith = function <E, D> (universe: Universe<E, D>, left: E, righ
   return Zones.fromWalking(universe, groups);
 };
 
-const fromBounded = function <E, D> (universe: Universe<E, D>, left: E, right: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> {
+const fromBounded = <E, D>(universe: Universe<E, D>, left: E, right: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> => {
   return fromBoundedWith(universe, left, right, envLang, WordDecision.detail, viewport);
 };
 
-const fromRange = function <E, D> (universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> {
+const fromRange = <E, D>(universe: Universe<E, D>, start: E, finish: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> => {
   const edges = Clustering.getEdges(universe, start, finish, Fun.never);
   const transform = transformEdges(edges.left, edges.right);
   return fromBoundedWith(universe, edges.left.item, edges.right.item, envLang, transform, viewport);
 };
 
-const transformEdges = function <E> (leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) {
-  return function <D> (universe: Universe<E, D>, element: E): WordDecisionItem<E> {
+const transformEdges = <E>(leftEdge: WordDecisionItem<E>, rightEdge: WordDecisionItem<E>) => {
+  return <D> (universe: Universe<E, D>, element: E): WordDecisionItem<E> => {
     if (universe.eq(element, leftEdge.item)) {
       return leftEdge;
     } else if (universe.eq(element, rightEdge.item)) {
@@ -53,7 +53,7 @@ const transformEdges = function <E> (leftEdge: WordDecisionItem<E>, rightEdge: W
   };
 };
 
-const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> {
+const fromInline = <E, D>(universe: Universe<E, D>, element: E, envLang: string, viewport: ZoneViewports<E>): Zones<E> => {
   // Create a cluster that branches to the edge of words, and then apply the zones. We will move
   // past language boundaries, because we might need to be retokenizing words post a language
   // change
@@ -62,7 +62,7 @@ const fromInline = function <E, D> (universe: Universe<E, D>, element: E, envLan
   return bounded.isEmpty ? empty<E>() : fromBoundedWith(universe, bounded.left.item, bounded.right.item, envLang, transform, viewport);
 };
 
-const empty = function <E> (): Zones<E> {
+const empty = <E>(): Zones<E> => {
   return {
     zones: []
   };

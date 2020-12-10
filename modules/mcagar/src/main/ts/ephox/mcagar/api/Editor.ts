@@ -5,7 +5,7 @@ import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
-const cFromElement = function <T extends EditorType = EditorType> (element: SugarElement, settings: Record<string, any>): Chain<any, T> {
+const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, settings: Record<string, any>): Chain<any, T> => {
   return Chain.async<any, T>((_, next, die) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
@@ -32,7 +32,7 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Suga
     tinymce.init({
       ...nuSettings,
       ...targetSettings,
-      setup(editor: T) {
+      setup: (editor: T) => {
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
         }
@@ -50,12 +50,12 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Suga
   });
 };
 
-const cFromHtml = function <T extends EditorType = EditorType> (html: string | null, settings: Record<string, any>): Chain<any, T> {
+const cFromHtml = <T extends EditorType = EditorType>(html: string | null, settings: Record<string, any>): Chain<any, T> => {
   const element = html ? SugarElement.fromHtml(html) : SugarElement.fromTag(settings.inline ? 'div' : 'textarea');
   return cFromElement(element, settings);
 };
 
-const cFromSettings = function <T extends EditorType = EditorType> (settings: Record<string, any>): Chain<any, T> {
+const cFromSettings = <T extends EditorType = EditorType>(settings: Record<string, any>): Chain<any, T> => {
   return cFromHtml(null, settings);
 };
 

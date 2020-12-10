@@ -63,7 +63,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       [
         Coupling.config({
           others: {
-            overflowGroup() {
+            overflowGroup: () => {
               return ToolbarGroup.sketch({
                 ...externals['overflow-group'](),
                 items: [
@@ -76,7 +76,7 @@ const factory: CompositeSketchFactory<SplitFloatingToolbarDetail, SplitFloatingT
       ]
     ),
     apis: {
-      setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
+      setGroups: (toolbar: AlloyComponent, groups: AlloySpec[]) => {
         detail.builtGroups.set(Arr.map(groups, toolbar.getSystem().build));
         refresh(toolbar, memFloatingToolbarButton, detail);
       },

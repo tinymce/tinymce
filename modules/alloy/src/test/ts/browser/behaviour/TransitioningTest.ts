@@ -27,10 +27,10 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
             transitionClass: 'transitioning'
           }
         }),
-        onTransition(_comp, route) {
+        onTransition: (_comp, route) => {
           store.adder(route.start + '->' + route.destination)();
         },
-        onFinish(_comp, finishState) {
+        onFinish: (_comp, finishState) => {
           store.adder('finish: ' + finishState)();
         }
       })

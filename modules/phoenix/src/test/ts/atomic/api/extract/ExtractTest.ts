@@ -28,17 +28,17 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
     ])
   );
 
-  const check = function (expected: string[], extract: typeof Extract.from, initial: string) {
+  const check = (expected: string[], extract: typeof Extract.from, initial: string) => {
     const start = Finder.get(doc, initial);
     const actual = extract(doc, start);
     assert.eq(expected, Arr.map(actual, TestRenders.typeditem));
   };
 
-  const checkFrom = function (expected: string[], initial: string) {
+  const checkFrom = (expected: string[], initial: string) => {
     check(expected, Extract.from, initial);
   };
 
-  const checkAll = function (expected: string[], initial: string) {
+  const checkAll = (expected: string[], initial: string) => {
     const start = Finder.get(doc, initial);
     const actual = Extract.all(doc, start);
     assert.eq(expected, Arr.map(actual, (a) => {
@@ -47,15 +47,15 @@ UnitTest.test('api.Extract.(from,all,extract,extractTo)', () => {
   };
 
   //
-  // const extract = function (universe, child, offset) {
-  const checkExtract = function (expected: {id: string; offset: number}, childId: string, offset: number) {
+  // const extract = (universe, child, offset) => {
+  const checkExtract = (expected: {id: string; offset: number}, childId: string, offset: number) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extract(doc, child, offset);
     assert.eq(expected.id, actual.element.id);
     assert.eq(expected.offset, actual.offset);
   };
 
-  const checkExtractTo = function (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) {
+  const checkExtractTo = (expected: {id: string; offset: number}, childId: string, offset: number, pred: (e: any) => boolean) => {
     const child = Finder.get(doc, childId);
     const actual = Extract.extractTo(doc, child, offset, pred);
     assert.eq(expected.id, actual.element.id);

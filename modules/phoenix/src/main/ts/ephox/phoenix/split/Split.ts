@@ -3,7 +3,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Strings } from '@ephox/polaris';
 import { TextSplit } from '../api/data/TextSplit';
 
-const tokens = function <E, D> (universe: Universe<E, D>, item: E, ps: number[]) {
+const tokens = <E, D>(universe: Universe<E, D>, item: E, ps: number[]) => {
   const text = universe.property().getText(item);
   return Strings.splits(text, ps);
 };
@@ -16,7 +16,7 @@ const tokens = function <E, D> (universe: Universe<E, D>, item: E, ps: number[])
  *   pos at end:        (some(item), none)
  *   item is not text:  (none, some(item))
  */
-const split = function <E, D> (universe: Universe<E, D>, item: E, position: number): TextSplit<E> {
+const split = <E, D>(universe: Universe<E, D>, item: E, position: number): TextSplit<E> => {
   if (!universe.property().isText(item)) {
     return TextSplit(Optional.none(), Optional.some(item));
   }
@@ -39,7 +39,7 @@ const split = function <E, D> (universe: Universe<E, D>, item: E, position: numb
  *
  * If no split is required, return the item.
  */
-const splitByPair = function <E, D> (universe: Universe<E, D>, item: E, start: number, end: number): E {
+const splitByPair = <E, D>(universe: Universe<E, D>, item: E, start: number, end: number): E => {
   if (!universe.property().isText(item) || start === end) {
     return item;
   }

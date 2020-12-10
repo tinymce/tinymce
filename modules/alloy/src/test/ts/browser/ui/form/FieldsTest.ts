@@ -125,7 +125,7 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
         })
       ],
 
-      onLockedChange(current, other) {
+      onLockedChange: (current, other) => {
         Representing.setValueFrom(other, current);
       },
       markers: {

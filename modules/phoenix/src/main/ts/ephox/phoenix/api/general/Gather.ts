@@ -8,12 +8,12 @@ import { Direction, Successor, Transition, Traverse } from '../data/Types';
 const isLeaf = <E, D>(universe: Universe<E, D>) => (element: E) => universe.property().children(element).length === 0;
 
 type BeforeApi = <E, D>(universe: Universe<E, D>, item: E, isRoot: (e: E) => boolean) => Optional<E>;
-const before: BeforeApi = function (universe, item, isRoot) {
+const before: BeforeApi = (universe, item, isRoot) => {
   return seekLeft(universe, item, isLeaf(universe), isRoot);
 };
 
 type AfterApi = <E, D>(universe: Universe<E, D>, item: E, isRoot: (e: E) => boolean) => Optional<E>;
-const after: AfterApi = function (universe, item, isRoot) {
+const after: AfterApi = (universe, item, isRoot) => {
   return seekRight(universe, item, isLeaf(universe), isRoot);
 };
 

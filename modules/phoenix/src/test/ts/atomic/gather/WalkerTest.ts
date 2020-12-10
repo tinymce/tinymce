@@ -17,12 +17,12 @@ UnitTest.test('WalkerTest', () => {
     ])
   );
 
-  const checkNone = function (id: string, traverse: Transition, direction: Direction) {
+  const checkNone = (id: string, traverse: Transition, direction: Direction) => {
     const item = Finder.get(universe, id);
     KAssert.eqNone('eq', traverse(universe, item, direction));
   };
 
-  const check = function (expected: string, id: string, traverse: Transition, direction: Direction) {
+  const check = (expected: string, id: string, traverse: Transition, direction: Direction) => {
     const item = Finder.get(universe, id);
     const actual = traverse(universe, item, direction).map((x) => x.item.id);
     KAssert.eqSome('eq', expected, actual);

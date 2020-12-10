@@ -79,7 +79,7 @@ const contextMenu = (settings: Settings): (element: SugarElement<Node>) => void 
   event('contextmenu', { button: rightClickButton, ...settings });
 
 // Note: This can be used for phantomjs.
-const trigger = function (element: SugarElement<HTMLElement>): void {
+const trigger = (element: SugarElement<HTMLElement>): void => {
   const ele = element.dom;
   if (ele.click !== undefined) {
     return ele.click();

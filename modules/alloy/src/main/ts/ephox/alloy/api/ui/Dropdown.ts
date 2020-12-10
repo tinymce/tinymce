@@ -79,10 +79,10 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
         }),
         Coupling.config({
           others: {
-            sandbox(hotspot) {
+            sandbox: (hotspot) => {
               return DropdownUtils.makeSandbox(detail, hotspot, {
-                onOpen() { Toggling.on(hotspot); },
-                onClose() { Toggling.off(hotspot); }
+                onOpen: () => Toggling.on(hotspot),
+                onClose: () => Toggling.off(hotspot)
               });
             }
           }

@@ -35,7 +35,7 @@ UnitTest.test('ParentsTest', () => {
     ])
   );
 
-  const check = function (expected: string, first: string, last: string) {
+  const check = (expected: string, first: string, last: string) => {
     const start = Finder.get(doc, first);
     const finish = Finder.get(doc, last);
     const actual = Parents.common(doc, start, finish);

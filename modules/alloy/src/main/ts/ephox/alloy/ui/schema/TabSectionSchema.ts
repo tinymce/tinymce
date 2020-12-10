@@ -28,7 +28,7 @@ const barPart = PartType.required<TabSectionDetail, TabbarSpec>({
     ])
   ],
   name: 'tabbar',
-  defaults(detail: TabSectionDetail) {
+  defaults: (detail: TabSectionDetail) => {
     return {
       tabs: detail.tabs
     };
