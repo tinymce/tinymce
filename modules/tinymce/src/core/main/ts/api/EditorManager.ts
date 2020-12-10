@@ -270,7 +270,7 @@ const EditorManager: EditorManager = {
       // We didn't find any baseURL by looking at the script elements
       // Try to use the document.currentScript as a fallback
       if (!baseURL && document.currentScript) {
-        const src = (<any> document.currentScript).src;
+        const src = (document.currentScript as HTMLScriptElement).src;
 
         if (src.indexOf('.min') !== -1) {
           suffix = '.min';

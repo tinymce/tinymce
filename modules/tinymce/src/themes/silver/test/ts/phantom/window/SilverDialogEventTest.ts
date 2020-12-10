@@ -82,8 +82,8 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
             shared: {
               getSink: () => Result.value(sink),
               providers: {
-                icons: () => <Record<string, string>> {},
-                menuItems: () => <Record<string, any>> {},
+                icons: (): Record<string, string> => ({}),
+                menuItems: (): Record<string, any> => ({}),
                 translate: I18n.translate,
                 isDisabled: Fun.never,
                 getSetting: (_settingName: string, defaultVal: any) => defaultVal

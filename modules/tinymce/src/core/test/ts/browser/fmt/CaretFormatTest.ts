@@ -404,7 +404,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', (success, failure
         const pos = CaretFormat.replaceWithCaretFormat(body.dom.firstChild, formats);
 
         Assertions.assertEq('Should be at first offset', 0, pos.offset());
-        Assertions.assertEq('Should the zwsp text node', Zwsp.ZWSP, (<Text> pos.container()).data);
+        Assertions.assertEq('Should the zwsp text node', Zwsp.ZWSP, (pos.container() as Text).data);
 
         Assertions.assertStructure(
           'Asserting the normalized structure of tiny content.',

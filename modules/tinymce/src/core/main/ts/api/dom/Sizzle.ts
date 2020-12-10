@@ -24,7 +24,7 @@ import { Arr } from '@ephox/katamari';
 
 /* eslint-enable */
 
-/* eslint-disable no-bitwise, prefer-const, no-nested-ternary */
+/* eslint-disable no-bitwise, prefer-const, no-nested-ternary, @typescript-eslint/consistent-type-assertions */
 
 let support,
   Expr,

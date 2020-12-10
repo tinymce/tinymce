@@ -28,7 +28,7 @@ UnitTest.test('GetTest', () => {
   Assert.eq(
     'Unknown key does not exist',
     Optional.none(),
-    Obj.get(<any> { a: 1 }, 'b'),
+    Obj.get( { a: 1 } as Record<string, number>, 'b'),
     tOptional()
   );
   Assert.eq(

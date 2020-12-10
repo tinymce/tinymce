@@ -48,7 +48,7 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
     element.dom.dispatchEvent(event);
   } else {
     // Adapted from: http://stackoverflow.com/questions/17468611/triggering-click-event-phantomjs
-    const event: MouseEvent = (<Document> element.dom.ownerDocument).createEvent('MouseEvents');
+    const event: MouseEvent = element.dom.ownerDocument.createEvent('MouseEvents');
     event.initMouseEvent(
       type,
       true, /* bubble */ true, /* cancelable */

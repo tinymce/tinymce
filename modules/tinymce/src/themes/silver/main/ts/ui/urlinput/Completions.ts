@@ -59,7 +59,7 @@ const joinMenuLists = function (items: BridgeMenu.MenuItemSpec[][]) {
   return Arr.foldl(items, (a, b) => {
     const bothEmpty = a.length === 0 || b.length === 0;
     return bothEmpty ? a.concat(b) : a.concat(separator, b);
-  }, <SingleMenuItemSpec[]> []);
+  }, [] as SingleMenuItemSpec[]);
 };
 
 const filterByQuery = function (term: string, menuItems: BridgeMenu.MenuItemSpec[]) {

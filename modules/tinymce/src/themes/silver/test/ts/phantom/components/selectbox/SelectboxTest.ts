@@ -13,9 +13,9 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
 
   const providers = {
     ...TestProviders,
-    icons: () => <Record<string, string>> {
+    icons: (): Record<string, string> => ({
       'chevron-down': '<svg></svg>' // details don't matter, just needs an SVG for the test
-    }
+    })
   };
 
   TestHelpers.GuiSetup.setup(

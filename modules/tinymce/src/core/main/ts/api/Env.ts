@@ -223,7 +223,7 @@ const Env: Env = {
    * @property documentMode
    * @type Number
    */
-  documentMode: browser.isIE() ? ((<any> document).documentMode || 7) : 10,
+  documentMode: browser.isIE() ? ((document as any).documentMode || 7) : 10,
 
   /**
    * Constant that is <code>true</code> if the browser has a modern file API.

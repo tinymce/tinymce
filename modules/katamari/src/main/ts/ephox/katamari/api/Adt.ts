@@ -108,7 +108,7 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
     };
   });
 
-  return <any> adt;
+  return adt as any;
 };
 
 export const Adt = {
