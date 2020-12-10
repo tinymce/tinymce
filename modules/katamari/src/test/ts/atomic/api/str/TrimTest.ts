@@ -6,11 +6,11 @@ import * as Strings from 'ephox/katamari/api/Strings';
 const { tString } = Testable;
 
 UnitTest.test('Strings.trim: unit tests', () => {
-  function check(expectedL, expectedR, expected, input) {
+  const check = (expectedL: string, expectedR: string, expected: string, input: string) => {
     Assert.eq('trim', expected, Strings.trim(input), tString);
     Assert.eq('lTrim', expectedL, Strings.lTrim(input), tString);
     Assert.eq('rTrim', expectedR, Strings.rTrim(input), tString);
-  }
+  };
 
   check('', '', '', '');
   check('', '', '', ' ');

@@ -42,7 +42,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
               }
             },
 
-            fetch(input) {
+            fetch: (input) => {
               const text = Value.get(input.element).toLowerCase();
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
@@ -63,7 +63,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (succ
               });
             },
 
-            lazySink(c) {
+            lazySink: (c) => {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },

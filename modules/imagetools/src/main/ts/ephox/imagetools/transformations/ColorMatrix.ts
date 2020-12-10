@@ -12,7 +12,7 @@ export type ConvolutionMatrix = [
   number, number, number
 ];
 
-function clamp(value: string | number, min: number, max: number): number {
+const clamp = (value: string | number, min: number, max: number): number => {
   let parsedValue = typeof value === 'string' ? parseFloat(value) : value;
 
   if (parsedValue > max) {
@@ -22,17 +22,15 @@ function clamp(value: string | number, min: number, max: number): number {
   }
 
   return parsedValue;
-}
+};
 
-function identity(): Matrix {
-  return [
-    1, 0, 0, 0, 0,
-    0, 1, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 1, 0,
-    0, 0, 0, 0, 1
-  ];
-}
+const identity = (): Matrix => [
+  1, 0, 0, 0, 0,
+  0, 1, 0, 0, 0,
+  0, 0, 1, 0, 0,
+  0, 0, 0, 1, 0,
+  0, 0, 0, 0, 1
+];
 
 const DELTA_INDEX = [
   0, 0.01, 0.02, 0.04, 0.05, 0.06, 0.07, 0.08, 0.1, 0.11,
@@ -48,7 +46,7 @@ const DELTA_INDEX = [
   10.0
 ];
 
-function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
+const multiply = (matrix1: Matrix, matrix2: Matrix): Matrix => {
   const col: number[] = [];
   const out: Matrix = new Array(25) as Matrix;
   let val;
@@ -70,9 +68,9 @@ function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
   }
 
   return out;
-}
+};
 
-function adjust(matrix: Matrix, adjustValue: number): Matrix {
+const adjust = (matrix: Matrix, adjustValue: number): Matrix => {
   adjustValue = clamp(adjustValue, 0, 1);
 
   return matrix.map((value, index): number => {
@@ -84,9 +82,9 @@ function adjust(matrix: Matrix, adjustValue: number): Matrix {
 
     return clamp(value, 0, 1);
   }) as Matrix;
-}
+};
 
-function adjustContrast(matrix: Matrix, value: number): Matrix {
+const adjustContrast = (matrix: Matrix, value: number): Matrix => {
   let x: number;
 
   value = clamp(value, -1, 1);
@@ -114,9 +112,9 @@ function adjustContrast(matrix: Matrix, value: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ]);
-}
+};
 
-function adjustSaturation(matrix: Matrix, value: number): Matrix {
+const adjustSaturation = (matrix: Matrix, value: number): Matrix => {
   value = clamp(value, -1, 1);
   const x = 1 + ((value > 0) ? 3 * value : value);
   const lumR = 0.3086;
@@ -130,9 +128,9 @@ function adjustSaturation(matrix: Matrix, value: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ]);
-}
+};
 
-function adjustHue(matrix: Matrix, angle: number): Matrix {
+const adjustHue = (matrix: Matrix, angle: number): Matrix => {
   angle = clamp(angle, -180, 180) / 180 * Math.PI;
   const cosVal = Math.cos(angle);
   const sinVal = Math.sin(angle);
@@ -150,9 +148,9 @@ function adjustHue(matrix: Matrix, angle: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ]);
-}
+};
 
-function adjustBrightness(matrix: Matrix, value: number): Matrix {
+const adjustBrightness = (matrix: Matrix, value: number): Matrix => {
   value = clamp(255 * value, -255, 255);
 
   return multiply(matrix, [
@@ -162,9 +160,9 @@ function adjustBrightness(matrix: Matrix, value: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ]);
-}
+};
 
-function adjustColors(matrix: Matrix, adjustR: number, adjustG: number, adjustB: number): Matrix {
+const adjustColors = (matrix: Matrix, adjustR: number, adjustG: number, adjustB: number): Matrix => {
   adjustR = clamp(adjustR, 0, 2);
   adjustG = clamp(adjustG, 0, 2);
   adjustB = clamp(adjustB, 0, 2);
@@ -176,9 +174,9 @@ function adjustColors(matrix: Matrix, adjustR: number, adjustG: number, adjustB:
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ]);
-}
+};
 
-function adjustSepia(matrix: Matrix, value: number): Matrix {
+const adjustSepia = (matrix: Matrix, value: number): Matrix => {
   value = clamp(value, 0, 1);
 
   return multiply(matrix, adjust([
@@ -188,9 +186,9 @@ function adjustSepia(matrix: Matrix, value: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ], value));
-}
+};
 
-function adjustGrayscale(matrix: Matrix, value: number): Matrix {
+const adjustGrayscale = (matrix: Matrix, value: number): Matrix => {
   value = clamp(value, 0, 1);
 
   return multiply(matrix, adjust([
@@ -200,7 +198,7 @@ function adjustGrayscale(matrix: Matrix, value: number): Matrix {
     0, 0, 0, 1, 0,
     0, 0, 0, 0, 1
   ], value));
-}
+};
 
 export {
   identity,

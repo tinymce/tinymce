@@ -12,7 +12,7 @@ const Dragging: DraggingBehaviour<any> = Behaviour.createModes({
   branches: DraggingBranches,
   name: 'dragging',
   active: {
-    events(dragConfig, dragState) {
+    events: (dragConfig, dragState) => {
       const dragger = dragConfig.dragger;
       return dragger.handlers(dragConfig, dragState);
     }

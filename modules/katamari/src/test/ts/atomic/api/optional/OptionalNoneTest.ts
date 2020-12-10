@@ -26,8 +26,8 @@ UnitTest.test('Optional.none: unit tests', () => {
   Assert.eq('none to array is empty array', [], Optional.none().toArray());
 
   Assert.eq('fold #1', 'zz', Optional.none().fold(() => 'zz', Fun.die('boom')));
-  Assert.eq('fold #2', [], Optional.none().fold(function () {
-    return Array.prototype.slice.call(arguments);
+  Assert.eq('fold #2', [], Optional.none().fold((...args: any[]) => {
+    return args;
   }, Fun.die('boom')));
 
   Assert.eq('fold #3', 'b', Optional.none().fold(Fun.constant('b'), Fun.die('boom')));

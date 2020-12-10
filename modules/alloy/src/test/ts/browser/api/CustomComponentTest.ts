@@ -23,7 +23,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       fields: [ ],
       name: 'behaviourA',
       active: {
-        exhibit(_base, _info) {
+        exhibit: (_base, _info) => {
           return DomModification.nu({
             classes: [ 'behaviour-a-exhibit' ]
           });
@@ -35,7 +35,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
         )
       },
       apis: {
-        behaveA(_comp) {
+        behaveA: (_comp) => {
           store.adder('behaveA')();
         }
       }
@@ -49,7 +49,7 @@ UnitTest.asynctest('CustomComponentTest', (success, failure) => {
       ],
       name: 'behaviourB',
       active: {
-        exhibit(_base, info: { attr: string}) {
+        exhibit: (_base, info: { attr: string}) => {
           const extra = {
             attributes: {
               'behaviour-b-exhibit': info.attr

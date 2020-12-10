@@ -10,8 +10,8 @@ UnitTest.test('MergeOperationsTest', () => {
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
   // Test basic merge.
-  (function () {
-    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], bounds: Structs.Bounds, lead: string) {
+  (() => {
+    const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], bounds: Structs.Bounds, lead: string) => {
       const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as SugarElement));
       assert.eq(expected.length, actual.length);
       Arr.each(expected, (row, i) => {
@@ -81,8 +81,8 @@ UnitTest.test('MergeOperationsTest', () => {
   })();
 
   // Test basic unmerge.
-  (function () {
-    const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], target: string) {
+  (() => {
+    const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], target: string) => {
       const actual = MergingOperations.unmerge(grid, target as unknown as SugarElement, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
       Arr.each(expected, (row, i) => {

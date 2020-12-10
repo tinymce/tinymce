@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Size } from './Size';
 
 // Convert all column widths to percent.
-const redistributeToPercent = function (widths: string[], totalWidth: number): string[] {
+const redistributeToPercent = (widths: string[], totalWidth: number): string[] => {
   return Arr.map(widths, (w) => {
     const colType = Size.from(w);
     return colType.fold(() => {
@@ -16,7 +16,7 @@ const redistributeToPercent = function (widths: string[], totalWidth: number): s
   });
 };
 
-const redistributeToPx = function (widths: string[], totalWidth: number, newTotalWidth: number): string[] {
+const redistributeToPx = (widths: string[], totalWidth: number, newTotalWidth: number): string[] => {
   const scale = newTotalWidth / totalWidth;
   return Arr.map(widths, (w) => {
     const colType = Size.from(w);
@@ -46,7 +46,7 @@ const redistributeEmpty = (newWidthType: Size, columns: number): string[] => {
   return Arr.range(columns, f);
 };
 
-const redistributeValues = function (newWidthType: Size, widths: string[], totalWidth: number): string[] {
+const redistributeValues = (newWidthType: Size, widths: string[], totalWidth: number): string[] => {
   return newWidthType.fold(() => {
     return widths;
   }, (px) => {
@@ -56,13 +56,13 @@ const redistributeValues = function (newWidthType: Size, widths: string[], total
   });
 };
 
-const redistribute = function (widths: string[], totalWidth: number, newWidth: string): string[] {
+const redistribute = (widths: string[], totalWidth: number, newWidth: string): string[] => {
   const newType = Size.from(newWidth);
   const floats = Arr.forall(widths, (s) => { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
   return normalize(floats);
 };
 
-const sum = function (values: string[], fallback: number): number {
+const sum = (values: string[], fallback: number): number => {
   if (values.length === 0) {
     return fallback;
   }
@@ -71,12 +71,12 @@ const sum = function (values: string[], fallback: number): number {
   }, 0);
 };
 
-const roundDown = function (num: number, unit: string): { value: string; remainder: number } {
+const roundDown = (num: number, unit: string): { value: string; remainder: number } => {
   const floored = Math.floor(num);
   return { value: floored + unit, remainder: num - floored };
 };
 
-const add = function (value: string, amount: number): string {
+const add = (value: string, amount: number): string => {
   return Size.from(value).fold(Fun.constant(value), (px) => {
     return (px + amount) + 'px';
   }, (pc) => {
@@ -84,7 +84,7 @@ const add = function (value: string, amount: number): string {
   });
 };
 
-const normalize = function (values: string[]): string[] {
+const normalize = (values: string[]): string[] => {
   if (values.length === 0) {
     return values;
   }

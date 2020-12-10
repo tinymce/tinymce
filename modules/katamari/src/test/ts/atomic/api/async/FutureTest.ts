@@ -87,7 +87,7 @@ promiseTest('Future: parallel spec', () =>
 
 promiseTest('Future: mapM', () => {
   return new Promise((resolve, reject) => {
-    const fn = function (a) {
+    const fn = (a: string) => {
       return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
       });
@@ -115,13 +115,13 @@ promiseTest('Future: mapM spec', () =>
 
 promiseTest('Future: compose', () => {
   return new Promise((resolve, reject) => {
-    const f = function (a) {
+    const f = (a: string) => {
       return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' f'), 10);
       });
     };
 
-    const g = function (a) {
+    const g = (a: string) => {
       return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' g'), 10);
       });

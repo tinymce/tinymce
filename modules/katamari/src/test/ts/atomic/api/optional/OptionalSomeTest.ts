@@ -33,8 +33,8 @@ UnitTest.test('OptionSomeTest', () => {
 
   Assert.eq('fold 1', 11, s.fold(boom, (v) => v + 6));
   Assert.eq('fold 2', 'a', Optional.some('a').fold(Fun.die('boom'), Fun.identity));
-  Assert.eq('fold 3', [ 'z' ], Optional.some('z').fold(Fun.die('boom'), function () {
-    return Array.prototype.slice.call(arguments);
+  Assert.eq('fold 3', [ 'z' ], Optional.some('z').fold(Fun.die('boom'), (...args: any[]) => {
+    return args;
   }));
   Assert.eq('fold 4', 'az', Optional.some('a').fold(Fun.die('boom'), (x) => x + 'z'));
 });

@@ -5,7 +5,7 @@ import * as Carets from './Carets';
 
 type Carets = Carets.Carets;
 
-const getPartialBox = function (bridge: WindowBridge, element: SugarElement, offset: number) {
+const getPartialBox = (bridge: WindowBridge, element: SugarElement, offset: number) => {
   if (offset >= 0 && offset < Awareness.getEnd(element)) {
     return bridge.getRangedRect(element, offset, element, offset + 1);
   } else if (offset > 0) {
@@ -21,11 +21,11 @@ const toCaret = (rect: RawRect): Carets => ({
   bottom: rect.bottom
 });
 
-const getElemBox = function (bridge: WindowBridge, element: SugarElement) {
+const getElemBox = (bridge: WindowBridge, element: SugarElement) => {
   return Optional.some(bridge.getRect(element));
 };
 
-const getBoxAt = function (bridge: WindowBridge, element: SugarElement, offset: number): Optional<Carets> {
+const getBoxAt = (bridge: WindowBridge, element: SugarElement, offset: number): Optional<Carets> => {
   // Note, we might need to consider this offset and descend.
   if (SugarNode.isElement(element)) {
     return getElemBox(bridge, element).map(toCaret);
@@ -36,7 +36,7 @@ const getBoxAt = function (bridge: WindowBridge, element: SugarElement, offset: 
   }
 };
 
-const getEntireBox = function (bridge: WindowBridge, element: SugarElement): Optional<Carets> {
+const getEntireBox = (bridge: WindowBridge, element: SugarElement): Optional<Carets> => {
   if (SugarNode.isElement(element)) {
     return getElemBox(bridge, element).map(toCaret);
   } else if (SugarNode.isText(element)) {

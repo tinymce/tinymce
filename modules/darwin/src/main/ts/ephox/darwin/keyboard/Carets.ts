@@ -5,7 +5,7 @@ export interface Carets {
   readonly bottom: number;
 }
 
-const moveDown = function (caret: Carets, amount: number): Carets {
+const moveDown = (caret: Carets, amount: number): Carets => {
   return {
     left: caret.left,
     top: caret.top + amount,
@@ -14,7 +14,7 @@ const moveDown = function (caret: Carets, amount: number): Carets {
   };
 };
 
-const moveUp = function (caret: Carets, amount: number): Carets {
+const moveUp = (caret: Carets, amount: number): Carets => {
   return {
     left: caret.left,
     top: caret.top - amount,
@@ -23,7 +23,7 @@ const moveUp = function (caret: Carets, amount: number): Carets {
   };
 };
 
-const moveBottomTo = function (caret: Carets, bottom: number): Carets {
+const moveBottomTo = (caret: Carets, bottom: number): Carets => {
   const height = caret.bottom - caret.top;
   return {
     left: caret.left,
@@ -33,7 +33,7 @@ const moveBottomTo = function (caret: Carets, bottom: number): Carets {
   };
 };
 
-const moveTopTo = function (caret: Carets, top: number): Carets {
+const moveTopTo = (caret: Carets, top: number): Carets => {
   const height = caret.bottom - caret.top;
   return ({
     left: caret.left,
@@ -43,7 +43,7 @@ const moveTopTo = function (caret: Carets, top: number): Carets {
   });
 };
 
-const translate = function (caret: Carets, xDelta: number, yDelta: number): Carets {
+const translate = (caret: Carets, xDelta: number, yDelta: number): Carets => {
   return {
     left: caret.left + xDelta,
     top: caret.top + yDelta,
@@ -52,15 +52,15 @@ const translate = function (caret: Carets, xDelta: number, yDelta: number): Care
   };
 };
 
-const getTop = function (caret: Carets): number {
+const getTop = (caret: Carets): number => {
   return caret.top;
 };
 
-const getBottom = function (caret: Carets): number {
+const getBottom = (caret: Carets): number => {
   return caret.bottom;
 };
 
-const toString = function (caret: Carets): string {
+const toString = (caret: Carets): string => {
   return '(' + caret.left + ', ' + caret.top + ') -> (' + caret.right + ', ' + caret.bottom + ')';
 };
 

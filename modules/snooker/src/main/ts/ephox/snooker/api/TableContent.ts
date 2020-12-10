@@ -2,22 +2,22 @@ import { Arr } from '@ephox/katamari';
 import { DomStructure } from '@ephox/robin';
 import { Compare, CursorPosition, InsertAll, PredicateFind, Remove, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-const merge = function (cells: SugarElement[]): void {
-  const isBr = function (el: SugarElement) {
+const merge = (cells: SugarElement[]): void => {
+  const isBr = (el: SugarElement) => {
     return SugarNode.name(el) === 'br';
   };
 
-  const advancedBr = function (children: SugarElement[]) {
+  const advancedBr = (children: SugarElement[]) => {
     return Arr.forall(children, (c) => {
       return isBr(c) || (SugarNode.isText(c) && SugarText.get(c).trim().length === 0);
     });
   };
 
-  const isListItem = function (el: SugarElement) {
+  const isListItem = (el: SugarElement) => {
     return SugarNode.name(el) === 'li' || PredicateFind.ancestor(el, DomStructure.isList).isSome();
   };
 
-  const siblingIsBlock = function (el: SugarElement) {
+  const siblingIsBlock = (el: SugarElement) => {
     return Traverse.nextSibling(el).map((rightSibling) => {
       if (DomStructure.isBlock(rightSibling)) {
         return true;
@@ -29,7 +29,7 @@ const merge = function (cells: SugarElement[]): void {
     }).getOr(false);
   };
 
-  const markCell = function (cell: SugarElement) {
+  const markCell = (cell: SugarElement) => {
     return CursorPosition.last(cell).bind((rightEdge) => {
       const rightSiblingIsBlock = siblingIsBlock(rightEdge);
       return Traverse.parent(rightEdge).map((parent) => {
@@ -38,7 +38,7 @@ const merge = function (cells: SugarElement[]): void {
     }).getOr([]);
   };
 
-  const markContent = function () {
+  const markContent = () => {
     const content = Arr.bind(cells, (cell) => {
       const children = Traverse.children(cell);
       return advancedBr(children) ? [ ] : children.concat(markCell(cell));

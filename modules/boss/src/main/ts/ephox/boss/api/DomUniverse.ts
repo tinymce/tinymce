@@ -6,14 +6,14 @@ import {
 import TagBoundaries from '../common/TagBoundaries';
 import { Universe } from './Universe';
 
-export default function (): Universe<SugarElement, Document> {
-  const clone = function (element: SugarElement<Node>) {
+export default (): Universe<SugarElement, Document> => {
+  const clone = (element: SugarElement<Node>) => {
     return SugarElement.fromDom(element.dom.cloneNode(false));
   };
 
   const document = (element: SugarElement<Node>) => Traverse.documentOrOwner(element).dom;
 
-  const isBoundary = function (element: SugarElement) {
+  const isBoundary = (element: SugarElement) => {
     if (!SugarNode.isElement(element)) {
       return false;
     }
@@ -23,7 +23,7 @@ export default function (): Universe<SugarElement, Document> {
     return Arr.contains(TagBoundaries, SugarNode.name(element));
   };
 
-  const isEmptyTag = function (element: SugarElement) {
+  const isEmptyTag = (element: SugarElement) => {
     if (!SugarNode.isElement(element)) {
       return false;
     }
@@ -32,11 +32,11 @@ export default function (): Universe<SugarElement, Document> {
 
   const isNonEditable = (element: SugarElement) => SugarNode.isElement(element) && Attribute.get(element, 'contenteditable') === 'false';
 
-  const comparePosition = function (element: SugarElement<Node>, other: SugarElement<Node>) {
+  const comparePosition = (element: SugarElement<Node>, other: SugarElement<Node>) => {
     return element.dom.compareDocumentPosition(other.dom);
   };
 
-  const copyAttributesTo = function (source: SugarElement, destination: SugarElement) {
+  const copyAttributesTo = (source: SugarElement, destination: SugarElement) => {
     const as = Attribute.clone(source);
     Attribute.setAll(destination, as);
   };
@@ -104,4 +104,4 @@ export default function (): Universe<SugarElement, Document> {
     eq: Compare.eq,
     is: Compare.is
   };
-}
+};

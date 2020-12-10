@@ -8,7 +8,7 @@ import * as Tracks from 'ephox/boss/mutant/Tracks';
 
 UnitTest.test('DetachTest', () => {
 
-  const check = function (expectedRemain: string, expectedDetach: Optional<string>, input: Gene, id: string) {
+  const check = (expectedRemain: string, expectedDetach: Optional<string>, input: Gene, id: string) => {
     const family = Tracks.track(input, Optional.none());
     const actualDetach = Detach.detach(family, Gene(id, '.'));
     Assert.eq('expectedRemain', expectedRemain, Logger.basic(family));

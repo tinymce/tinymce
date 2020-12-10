@@ -10,7 +10,7 @@ export interface AncestorsFnResult<E> {
   readonly shared: Optional<E>;
 }
 
-type SharedOneFn = <E, D> (universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) => Optional<E>;
+type SharedOneFn = <E, D>(universe: Universe<E, D>, look: Looker<E, D>, elements: E[]) => Optional<E>;
 const sharedOne: SharedOneFn = oneAll;
 
 type SubsetFn = <E, D>(universe: Universe<E, D>, start: E, end: E) => Optional<E[]>;

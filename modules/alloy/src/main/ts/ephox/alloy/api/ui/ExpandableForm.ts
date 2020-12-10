@@ -28,13 +28,13 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
         Representing.config({
           store: {
             mode: 'manual',
-            getValue(form) {
+            getValue: (form) => {
               const parts = getParts(form);
               const minimalValues = Representing.getValue(parts.minimal());
               const extraValues = Representing.getValue(parts.extra());
               return { ...minimalValues, ...extraValues };
             },
-            setValue(form, values) {
+            setValue: (form, values) => {
               const parts = getParts(form);
               // ASSUMPTION: Form ignore values that it does not have.
               Representing.setValue(parts.minimal(), values);
@@ -50,7 +50,7 @@ const factory: CompositeSketchFactory<ExpandableFormDetail, ExpandableFormSpec> 
       collapseForm: runOnExtra(detail, Sliding.shrink),
       collapseFormImmediately: runOnExtra(detail, Sliding.immediateShrink),
       expandForm: runOnExtra(detail, Sliding.grow),
-      getField(form: AlloyComponent, key: string) {
+      getField: (form: AlloyComponent, key: string) => {
         return AlloyParts.getPart(form, detail, 'minimal').bind((minimal) => Form.getField(minimal, key)).orThunk(() => AlloyParts.getPart(form, detail, 'extra').bind((extra) => Form.getField(extra, key)));
       }
     }

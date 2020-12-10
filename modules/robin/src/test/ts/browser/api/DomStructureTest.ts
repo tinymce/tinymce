@@ -6,7 +6,7 @@ import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 UnitTest.test('DomStructureTest', () => {
   const expectInlineElements = [ 'span', 'em', 'strong', 'b', 'i', 'a' ];
 
-  const getInline = function (el: string) {
+  const getInline = (el: string) => {
     const element = SugarElement.fromTag(el);
     return DomStructure.isInline(element);
   };

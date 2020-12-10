@@ -34,7 +34,7 @@ export default (): void => {
         mode: 'drop',
         type: 'text/plain',
         dropEffect,
-        onDrop(_component, dropEvent) {
+        onDrop: (_component, dropEvent) => {
           // eslint-disable-next-line no-console
           console.log('onDrop', {
             data: dropEvent.data,
@@ -75,10 +75,10 @@ export default (): void => {
         type: 'text/plain',
         phoneyTypes: [ '-x-alloy/something' ],
         effectAllowed,
-        getData(_component) {
+        getData: (_component) => {
           return data;
         },
-        getImage(component) {
+        getImage: (component) => {
           const clone = Replication.deep(component.element);
           Css.set(clone, 'background-color', 'blue');
           return {

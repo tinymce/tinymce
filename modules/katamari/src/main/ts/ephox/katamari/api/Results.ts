@@ -32,7 +32,7 @@ const comparison: {
 ]);
 
 /** partition :: [Result a] -> { errors: [String], values: [a] } */
-export const partition = function <T, E> (results: Result<T, E>[]): { values: T[]; errors: E[] } {
+export const partition = <T, E>(results: Result<T, E>[]): { values: T[]; errors: E[] } => {
   const errors: E[] = [];
   const values: T[] = [];
 
@@ -46,7 +46,7 @@ export const partition = function <T, E> (results: Result<T, E>[]): { values: T[
   return { errors, values };
 };
 
-export const compare = function<A, B> (result1: Result<A, B>, result2: Result<A, B>): ComparisonAdt<A, B> {
+export const compare = <A, B>(result1: Result<A, B>, result2: Result<A, B>): ComparisonAdt<A, B> => {
   return result1.fold((err1) => {
     return result2.fold((err2) => {
       return comparison.bothErrors(err1, err2);

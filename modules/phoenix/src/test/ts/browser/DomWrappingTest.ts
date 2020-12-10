@@ -9,13 +9,13 @@ UnitTest.test('DomWrappingTest', () => {
   Insert.append(body, root);
 
   const t = SugarElement.fromText;
-  const s = function (tag: string, xs: SugarElement[]) {
+  const s = (tag: string, xs: SugarElement[]) => {
     const element = SugarElement.fromTag(tag);
     InsertAll.append(element, xs);
     return element;
   };
 
-  const check = function (input: SugarElement[], f: (e: SugarElement) => void) {
+  const check = (input: SugarElement[], f: (e: SugarElement) => void) => {
     const container = SugarElement.fromTag('div');
     Insert.append(root, container);
     InsertAll.append(container, input);
@@ -23,7 +23,7 @@ UnitTest.test('DomWrappingTest', () => {
     Remove.remove(container);
   };
 
-  const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: SugarElement[], initial: string) {
+  const checker = (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: SugarElement[], initial: string) => {
     check(input, (container: SugarElement) => {
       assert.eq(initial, Html.get(container));
       const first = c(container, p1);
@@ -38,7 +38,7 @@ UnitTest.test('DomWrappingTest', () => {
     });
   };
 
-  const c = function (element: SugarElement, paths: number[]): SugarElement {
+  const c = (element: SugarElement, paths: number[]): SugarElement => {
     const children = Traverse.children(element);
     return paths.length === 0 ? element : c(children[paths[0]], paths.slice(1));
   };

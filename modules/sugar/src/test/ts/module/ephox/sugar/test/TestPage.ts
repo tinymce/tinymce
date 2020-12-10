@@ -66,7 +66,7 @@ InsertAll.append(s4, [ t5 ]);
 InsertAll.append(d1, [ p3 ]);
 InsertAll.append(p3, [ t6 ]);
 
-const connect = function (): void {
+const connect = (): void => {
   const body = SugarBody.body();
   Insert.append(body, container);
 };

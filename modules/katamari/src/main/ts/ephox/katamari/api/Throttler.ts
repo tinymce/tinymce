@@ -6,17 +6,17 @@ export interface Throttler<A extends any[]> {
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
-export const adaptable = function <A extends any[]> (fn: (...a: A) => void, rate: number): Throttler<A> {
+export const adaptable = <A extends any[]>(fn: (...a: A) => void, rate: number): Throttler<A> => {
   let timer: number | null = null;
   let args: A | null = null;
-  const cancel = function () {
+  const cancel = () => {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
       args = null;
     }
   };
-  const throttle = function (...newArgs: A) {
+  const throttle = (...newArgs: A) => {
     args = newArgs;
     if (timer === null) {
       timer = setTimeout(() => {
@@ -36,15 +36,15 @@ export const adaptable = function <A extends any[]> (fn: (...a: A) => void, rate
 
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, ignore it completely.
-export const first = function <A extends any[]> (fn: (...a: A) => void, rate: number): Throttler<A> {
+export const first = <A extends any[]>(fn: (...a: A) => void, rate: number): Throttler<A> => {
   let timer: number | null = null;
-  const cancel = function () {
+  const cancel = () => {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
     }
   };
-  const throttle = function (...args) {
+  const throttle = (...args) => {
     if (timer === null) {
       timer = setTimeout(() => {
         fn.apply(null, args);
@@ -62,15 +62,15 @@ export const first = function <A extends any[]> (fn: (...a: A) => void, rate: nu
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, reschedule the function again
 // with the new arguments.
-export const last = function <A extends any[]> (fn: (...a: A) => void, rate: number): Throttler<A> {
+export const last = <A extends any[]>(fn: (...a: A) => void, rate: number): Throttler<A> => {
   let timer: number | null = null;
-  const cancel = function () {
+  const cancel = () => {
     if (timer !== null) {
       clearTimeout(timer);
       timer = null;
     }
   };
-  const throttle = function (...args) {
+  const throttle = (...args) => {
     if (timer !== null) {
       clearTimeout(timer);
     }

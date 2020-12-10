@@ -66,10 +66,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
       Fields.tieredMenuMarkers()
     ],
     name: 'menu',
-    overrides(detail) {
+    overrides: (detail) => {
       return {
         fakeFocus: true,
-        onHighlight(menu: AlloyComponent, item: AlloyComponent): void {
+        onHighlight: (menu: AlloyComponent, item: AlloyComponent): void => {
           if (!detail.previewing.get()) {
             menu.getSystem().getByUid(detail.uid).each((input) => {
 
@@ -99,7 +99,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         // firing so that the typeahead doesn't lose focus. This is the handler
         // for clicking on an item. We need to close the sandbox, update the typeahead
         // to show the item clicked on, and fire an execute.
-        onExecute(menu: AlloyComponent, item: AlloyComponent): Optional<boolean> {
+        onExecute: (menu: AlloyComponent, item: AlloyComponent): Optional<boolean> => {
           // Note: This will only work when the typeahead and menu are in the same system.
           return menu.getSystem().getByUid(detail.uid).toOptional().map((typeahead): boolean => {
             AlloyTriggers.emitWith(typeahead, TypeaheadEvents.itemExecute(), { item });
@@ -107,7 +107,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
           });
         },
 
-        onHover(menu: AlloyComponent, item: AlloyComponent): void {
+        onHover: (menu: AlloyComponent, item: AlloyComponent): void => {
           // Hovering is also a user-initiated action, so previewing mode is over.
           // TODO: Have a better API for managing state in between parts.
           detail.previewing.set(false);

@@ -7,19 +7,19 @@ const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
   mode
 });
 
-const backtrack: Transition = function (universe, item, _direction, transition = sidestep) {
+const backtrack: Transition = (universe, item, _direction, transition = sidestep) => {
   return universe.property().parent(item).map((p) => {
     return traverse(p, transition);
   });
 };
 
-const sidestep: Transition = function (universe, item, direction, transition = advance) {
+const sidestep: Transition = (universe, item, direction, transition = advance) => {
   return direction.sibling(universe, item).map((p) => {
     return traverse(p, transition);
   });
 };
 
-const advance: Transition = function (universe, item, direction, transition = advance) {
+const advance: Transition = (universe, item, direction, transition = advance) => {
   const children = universe.property().children(item);
   const result = direction.first(children);
   return result.map((r) => {
@@ -40,7 +40,7 @@ const successors: Successor[] = [
   { current: advance, next: advance, fallback: Optional.some(sidestep) }
 ];
 
-const go = function <E, D> (universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Optional<Traverse<E>> {
+const go = <E, D>(universe: Universe<E, D>, item: E, mode: Transition, direction: Direction, rules: Successor[] = successors): Optional<Traverse<E>> => {
   // INVESTIGATE: Find a way which doesn't require an array search first to identify the current mode.
   const ruleOpt = Arr.find(rules, (succ) => {
     return succ.current === mode;

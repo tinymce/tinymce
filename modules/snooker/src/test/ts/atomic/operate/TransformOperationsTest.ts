@@ -9,13 +9,13 @@ import TestGenerator from 'ephox/snooker/test/TestGenerator';
 UnitTest.test('TransformOperationsTest', () => {
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
-  const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
+  const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
       return Structs.rowcells(row, 'tbody');
     });
   };
 
-  const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
+  const assertGrids = (expected: Structs.RowCells[], actual: Structs.RowCells[]) => {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, (row, i) => {
       Arr.each(row.cells, (cell, j) => {
@@ -27,8 +27,8 @@ UnitTest.test('TransformOperationsTest', () => {
   };
 
   // Test basic changing to header (column)
-  (function () {
-    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
+  (() => {
+    const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
@@ -85,8 +85,8 @@ UnitTest.test('TransformOperationsTest', () => {
   })();
 
   // Test basic changing to header (row)
-  (function () {
-    const check = function (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) {
+  (() => {
+    const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);

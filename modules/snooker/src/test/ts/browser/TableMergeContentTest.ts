@@ -4,7 +4,7 @@ import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as TableContent from 'ephox/snooker/api/TableContent';
 
 UnitTest.test('TableMergeContentTest', () => {
-  const mergeContentTest = function (specs: { label: string; html: string; expected: string }[]) {
+  const mergeContentTest = (specs: { label: string; html: string; expected: string }[]) => {
     const table = SugarElement.fromTag('table');
     const row = SugarElement.fromTag('tr');
     Insert.append(table, row);

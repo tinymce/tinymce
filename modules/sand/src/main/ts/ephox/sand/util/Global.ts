@@ -1,10 +1,10 @@
 import { Resolve } from '@ephox/katamari';
 
-const unsafe = function <T> (name: string, scope?: {}): T | undefined {
+const unsafe = <T>(name: string, scope?: {}): T | undefined => {
   return Resolve.resolve(name, scope);
 };
 
-const getOrDie = function <T> (name: string, scope?: {}): T {
+const getOrDie = <T>(name: string, scope?: {}): T => {
   const actual = unsafe<T>(name, scope);
 
   if (actual === undefined || actual === null) {

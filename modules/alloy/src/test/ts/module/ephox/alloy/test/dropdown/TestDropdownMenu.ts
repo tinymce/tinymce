@@ -63,7 +63,7 @@ const part = (store: TestStore): Partial<TieredMenuSpec> => ({
     tag: 'div'
   },
   markers: itemMarkers,
-  onExecute(_dropdown: AlloyComponent, item: AlloyComponent) {
+  onExecute: (_dropdown: AlloyComponent, item: AlloyComponent) => {
     const v = Representing.getValue(item);
     return store.adderH('dropdown.menu.execute: ' + v.value)();
   }

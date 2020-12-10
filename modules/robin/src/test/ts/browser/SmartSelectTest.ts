@@ -23,7 +23,7 @@ UnitTest.test('SmartSelectTest', () => {
    *  "yes"
    * </p>
    */
-  const populate = function () {
+  const populate = () => {
     const we = SugarElement.fromText('We ');
     const p1 = SugarElement.fromTag('p');
     const are = SugarElement.fromText('are ');
@@ -45,7 +45,7 @@ UnitTest.test('SmartSelectTest', () => {
     Insert.append(SugarBody.body(), editor);
   };
 
-  const cleanup = function () {
+  const cleanup = () => {
     Remove.remove(editor);
   };
 
@@ -60,7 +60,7 @@ UnitTest.test('SmartSelectTest', () => {
     finish: ExpectedPos;
   }
 
-  const check = function (expected: Expected, path: number[], offset: number) {
+  const check = (expected: Expected, path: number[], offset: number) => {
     const start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
     const actual = DomSmartSelect.word(start, offset);
     actual.fold(() => {

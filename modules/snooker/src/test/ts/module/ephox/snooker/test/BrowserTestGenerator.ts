@@ -1,7 +1,7 @@
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
-export default function (): SimpleGenerators {
+export default (): SimpleGenerators => {
   let cellCounter = 0;
   let colCounter = 0;
   let replaceCounter = 0;
@@ -15,7 +15,7 @@ export default function (): SimpleGenerators {
     return elem;
   };
 
-  const cell = function () {
+  const cell = () => {
     const r = '?_' + cellCounter;
     cellCounter++;
     return makeElem('td', r);
@@ -27,7 +27,7 @@ export default function (): SimpleGenerators {
     return makeElem('col', r);
   };
 
-  const replace = function <T extends HTMLElement> (cell: SugarElement<HTMLTableCellElement>): SugarElement<T> {
+  const replace = <T extends HTMLElement>(cell: SugarElement<HTMLTableCellElement>): SugarElement<T> => {
     const tag = SugarNode.name(cell);
     const r = 'h(' + tag + ')_' + replaceCounter;
     replaceCounter++;
@@ -42,4 +42,4 @@ export default function (): SimpleGenerators {
     col,
     replace
   };
-}
+};

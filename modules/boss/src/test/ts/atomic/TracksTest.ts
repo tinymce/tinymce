@@ -23,7 +23,7 @@ UnitTest.test('TracksTest', () => {
   const e = result.children[1].children[0].children[0];
   const f = result.children[1].children[1];
 
-  const p = function (item: Gene) {
+  const p = (item: Gene) => {
     return item.parent.getOrDie('Expected to have parent').id;
   };
 

@@ -103,7 +103,7 @@ UnitTest.test('CharsTest', () => {
 
   const regex = new RegExp(Chars.wordchar(), '');
 
-  const checkAllKnown = function (label: string, str: string) {
+  const checkAllKnown = (label: string, str: string) => {
     const chars = str.split('');
     const breaks = Arr.filter(chars, (c) => {
       return !regex.test(c);

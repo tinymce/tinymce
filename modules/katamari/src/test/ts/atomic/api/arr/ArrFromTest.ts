@@ -2,8 +2,8 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Arr from 'ephox/katamari/api/Arr';
 
 UnitTest.test('ArrFromTest', () => {
-  const func = function (..._x: any[]) {
-    Assert.eq('eq', [ 1, 2, 3 ], Arr.from(arguments));
+  const func = (...args: any[]) => {
+    Assert.eq('eq', [ 1, 2, 3 ], Arr.from(args));
   };
   func(1, 2, 3);
 

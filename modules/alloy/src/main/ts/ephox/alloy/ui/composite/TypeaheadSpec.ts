@@ -108,7 +108,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         delay: detail.responseTime,
         stopEvent: false
       },
-      onStream(component, _simulatedEvent) {
+      onStream: (component, _simulatedEvent) => {
 
         const sandbox = Coupling.getCoupled(component, 'sandbox');
         const focusInInput = Focusing.isFocused(component);
@@ -148,11 +148,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
     Keying.config({
       mode: 'special',
-      onDown(comp, simulatedEvent) {
+      onDown: (comp, simulatedEvent) => {
         navigateList(comp, simulatedEvent, Highlighting.highlightFirst);
         return Optional.some<boolean>(true);
       },
-      onEscape(comp): Optional<boolean> {
+      onEscape: (comp): Optional<boolean> => {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         if (Sandboxing.isOpen(sandbox)) {
           Sandboxing.close(sandbox);
@@ -160,11 +160,11 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
         }
         return Optional.none();
       },
-      onUp(comp, simulatedEvent) {
+      onUp: (comp, simulatedEvent) => {
         navigateList(comp, simulatedEvent, Highlighting.highlightLast);
         return Optional.some<boolean>(true);
       },
-      onEnter(comp) {
+      onEnter: (comp) => {
         const sandbox = Coupling.getCoupled(comp, 'sandbox');
         const sandboxIsOpen = Sandboxing.isOpen(sandbox);
 
@@ -199,7 +199,7 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
 
     Coupling.config({
       others: {
-        sandbox(hotspot) {
+        sandbox: (hotspot) => {
           return DropdownUtils.makeSandbox(detail, hotspot, {
             onOpen: () => Toggling.on(hotspot),
             onClose: () => Toggling.off(hotspot)

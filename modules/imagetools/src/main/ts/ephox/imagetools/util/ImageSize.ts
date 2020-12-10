@@ -1,10 +1,10 @@
-function getWidth(image: HTMLImageElement | HTMLCanvasElement): number {
+const getWidth = (image: HTMLImageElement | HTMLCanvasElement): number => {
   return (image as HTMLImageElement).naturalWidth || image.width;
-}
+};
 
-function getHeight(image: HTMLImageElement | HTMLCanvasElement): number {
+const getHeight = (image: HTMLImageElement | HTMLCanvasElement): number => {
   return (image as HTMLImageElement).naturalHeight || image.height;
-}
+};
 
 export {
   getWidth,

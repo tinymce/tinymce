@@ -93,10 +93,10 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
         Sandboxing.config({
           onOpen,
           onClose,
-          isPartOf(container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean {
+          isPartOf: (container: AlloyComponent, data: AlloyComponent, queryElem: SugarElement): boolean => {
             return ComponentStructure.isPartOf(data, queryElem) || ComponentStructure.isPartOf(button, queryElem);
           },
-          getAttachPoint() {
+          getAttachPoint: () => {
             return detail.lazySink(button).getOrDie();
           }
         }),
@@ -123,7 +123,7 @@ const makeSandbox = (button: AlloyComponent, spec: FloatingToolbarButtonSpec, de
 const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolbarButtonSpec> = (detail, components, spec, externals): SketchSpec => ({
   ...Button.sketch({
     ...externals.button(),
-    action(button) {
+    action: (button) => {
       toggle(button, externals);
     },
     buttonBehaviours: SketchBehaviours.augment(
@@ -131,7 +131,7 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
       [
         Coupling.config({
           others: {
-            toolbarSandbox(button) {
+            toolbarSandbox: (button) => {
               return makeSandbox(button, spec, detail);
             }
           }
@@ -140,23 +140,23 @@ const factory: CompositeSketchFactory<FloatingToolbarButtonDetail, FloatingToolb
     )
   }),
   apis: {
-    setGroups(button: AlloyComponent, groups: AlloySpec[]) {
+    setGroups: (button: AlloyComponent, groups: AlloySpec[]) => {
       Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
         setGroups(button, toolbar, detail, spec.layouts, groups);
       });
     },
-    reposition(button: AlloyComponent) {
+    reposition: (button: AlloyComponent) => {
       Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox')).each((toolbar) => {
         position(button, toolbar, detail, spec.layouts);
       });
     },
-    toggle(button: AlloyComponent) {
+    toggle: (button: AlloyComponent) => {
       toggle(button, externals);
     },
-    getToolbar(button: AlloyComponent) {
+    getToolbar: (button: AlloyComponent) => {
       return Sandboxing.getState(Coupling.getCoupled(button, 'toolbarSandbox'));
     },
-    isOpen(button: AlloyComponent) {
+    isOpen: (button: AlloyComponent) => {
       return Sandboxing.isOpen(Coupling.getCoupled(button, 'toolbarSandbox'));
     }
   }

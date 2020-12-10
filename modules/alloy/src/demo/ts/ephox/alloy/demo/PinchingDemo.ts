@@ -31,10 +31,10 @@ export default (): void => {
     },
     behaviours: Behaviour.derive([
       Pinching.config({
-        onPinch(span, changeX, changeY) {
+        onPinch: (span, changeX, changeY) => {
           resize(span, changeX, changeY);
         },
-        onPunch(span, changeX, changeY) {
+        onPunch: (span, changeX, changeY) => {
           resize(span, changeX, changeY);
         }
       })

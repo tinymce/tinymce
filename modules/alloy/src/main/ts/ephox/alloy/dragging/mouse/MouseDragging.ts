@@ -32,7 +32,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
       drop: stop,
       delayDrop: delayDrop.schedule,
       forceDrop: stop,
-      move(event) {
+      move: (event) => {
         // Stop any pending drops caused by mouseout
         delayDrop.cancel();
         DragUtils.move(component, dragConfig, dragState, MouseData, event);

@@ -83,7 +83,7 @@ export default (): void => {
     initialData: { value: 'bison', meta: { text: 'Bison' }},
     model,
 
-    fetch(input) {
+    fetch: (input) => {
       const inputValue = Value.get(input.element);
       console.log('text', inputValue);
       const matching: DemoRenders.DemoItems[] = Arr.bind(dataset, (d) => {
@@ -125,7 +125,7 @@ export default (): void => {
         return Optional.some(TieredMenu.singleData('blah', menu));
       });
     },
-    onExecute(sandbox, item, _itemValue) {
+    onExecute: (sandbox, item, _itemValue) => {
       const value = Representing.getValue(item);
       console.log('*** typeahead menu demo execute on: ', value, ' ***');
       return Optional.some(true);

@@ -11,7 +11,7 @@ export interface Future<T> {
   get: (callback: (v: T) => void) => void;
 }
 
-const errorReporter = function (err: any) {
+const errorReporter = (err: any) => {
   // we can not throw the error in the reporter as it will just be black-holed
   // by the Promise so we use a setTimeout to escape the Promise.
   setTimeout(() => {
@@ -19,34 +19,34 @@ const errorReporter = function (err: any) {
   }, 0);
 };
 
-const make = function <T = any> (run: () => Promise<T>): Future<T> {
+const make = <T = any>(run: () => Promise<T>): Future<T> => {
 
-  const get = function (callback: (value: T) => void) {
+  const get = (callback: (value: T) => void) => {
     run().then(callback, errorReporter);
   };
 
   /** map :: this Future a -> (a -> b) -> Future b */
-  const map = function <U> (fab: (v: T) => U) {
+  const map = <U>(fab: (v: T) => U) => {
     return make(() => run().then(fab));
   };
 
   /** bind :: this Future a -> (a -> Future b) -> Future b */
-  const bind = function <U> (aFutureB: (v: T) => Future<U>) {
+  const bind = <U>(aFutureB: (v: T) => Future<U>) => {
     return make(() => run().then((v) => aFutureB(v).toPromise()));
   };
 
   /** anonBind :: this Future a -> Future b -> Future b
    *  Returns a future, which evaluates the first future, ignores the result, then evaluates the second.
    */
-  const anonBind = function <U> (futureB: Future<U>) {
+  const anonBind = <U>(futureB: Future<U>) => {
     return make(() => run().then(() => futureB.toPromise()));
   };
 
-  const toLazy = function () {
+  const toLazy = () => {
     return LazyValue.nu(get);
   };
 
-  const toCached = function () {
+  const toCached = () => {
     let cache: Promise<T> | null = null;
     return make(() => {
       if (cache === null) {
@@ -70,12 +70,12 @@ const make = function <T = any> (run: () => Promise<T>): Future<T> {
 
 };
 
-const nu = function <T = any> (baseFn: (completer: (value?: T) => void) => void): Future<T> {
+const nu = <T = any>(baseFn: (completer: (value?: T) => void) => void): Future<T> => {
   return make(() => new Promise(baseFn));
 };
 
 /** a -> Future a */
-const pure = function <T> (a: T): Future<T> {
+const pure = <T>(a: T): Future<T> => {
   return make(() => Promise.resolve(a));
 };
 

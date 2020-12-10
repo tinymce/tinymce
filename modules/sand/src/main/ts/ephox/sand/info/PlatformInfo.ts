@@ -8,8 +8,8 @@ export interface PlatformInfo {
 
 const normalVersionRegex = /.*?version\/\ ?([0-9]+)\.([0-9]+).*/;
 
-const checkContains = function (target: string) {
-  return function (uastring: string) {
+const checkContains = (target: string) => {
+  return (uastring: string) => {
     return Strings.contains(uastring, target);
   };
 };
@@ -18,21 +18,21 @@ const browsers: PlatformInfo[] = [
   {
     name : 'Edge',
     versionRegexes: [ /.*?edge\/ ?([0-9]+)\.([0-9]+)$/ ],
-    search(uastring) {
+    search: (uastring) => {
       return Strings.contains(uastring, 'edge/') && Strings.contains(uastring, 'chrome') && Strings.contains(uastring, 'safari') && Strings.contains(uastring, 'applewebkit');
     }
   },
   {
     name : 'Chrome',
     versionRegexes: [ /.*?chrome\/([0-9]+)\.([0-9]+).*/, normalVersionRegex ],
-    search(uastring) {
+    search: (uastring) => {
       return Strings.contains(uastring, 'chrome') && !Strings.contains(uastring, 'chromeframe');
     }
   },
   {
     name : 'IE',
     versionRegexes: [ /.*?msie\ ?([0-9]+)\.([0-9]+).*/, /.*?rv:([0-9]+)\.([0-9]+).*/ ],
-    search(uastring) {
+    search: (uastring) => {
       return Strings.contains(uastring, 'msie') || Strings.contains(uastring, 'trident');
     }
   },
@@ -50,7 +50,7 @@ const browsers: PlatformInfo[] = [
   {
     name : 'Safari',
     versionRegexes: [ normalVersionRegex, /.*?cpu os ([0-9]+)_([0-9]+).*/ ],
-    search(uastring) {
+    search: (uastring) => {
       return (Strings.contains(uastring, 'safari') || Strings.contains(uastring, 'mobile/')) && Strings.contains(uastring, 'applewebkit');
     }
   }
@@ -64,7 +64,7 @@ const oses: PlatformInfo[] = [
   },
   {
     name : 'iOS',
-    search(uastring) {
+    search: (uastring) => {
       return Strings.contains(uastring, 'iphone') || Strings.contains(uastring, 'ipad');
     },
     versionRegexes: [ /.*?version\/\ ?([0-9]+)\.([0-9]+).*/, /.*cpu os ([0-9]+)_([0-9]+).*/, /.*cpu iphone os ([0-9]+)_([0-9]+).*/ ]

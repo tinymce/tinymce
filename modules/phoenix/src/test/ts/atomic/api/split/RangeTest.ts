@@ -5,7 +5,7 @@ import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 
 UnitTest.test('IdentifyTest', () => {
-  const check = function (all: string[], expected: string[], baseid: string, baseoffset: number, endid: string, endoffset: number, input: Gene) {
+  const check = (all: string[], expected: string[], baseid: string, baseoffset: number, endid: string, endoffset: number, input: Gene) => {
     const universe = TestUniverse(input);
     const base = Finder.get(universe, baseid);
     const end = Finder.get(universe, endid);

@@ -10,7 +10,7 @@ import { Promise } from '../util/Promise';
  * @param dH {Number} Height that the image should be scaled to
  * @returns {Promise}
  */
-function scale(image: HTMLImageElement | HTMLCanvasElement, dW: number, dH: number): Promise<HTMLCanvasElement> {
+const scale = (image: HTMLImageElement | HTMLCanvasElement, dW: number, dH: number): Promise<HTMLCanvasElement> => {
   const sW = ImageSize.getWidth(image);
   const sH = ImageSize.getHeight(image);
   let wRatio = dW / sW;
@@ -31,9 +31,9 @@ function scale(image: HTMLImageElement | HTMLCanvasElement, dW: number, dH: numb
   return !scaleCapped ? scaled : scaled.then((tCanvas) => {
     return scale(tCanvas, dW, dH);
   });
-}
+};
 
-function _scale(image: HTMLImageElement | HTMLCanvasElement, wRatio: number, hRatio: number): Promise<HTMLCanvasElement> {
+const _scale = (image: HTMLImageElement | HTMLCanvasElement, wRatio: number, hRatio: number): Promise<HTMLCanvasElement> => {
   return new Promise((resolve) => {
     const sW = ImageSize.getWidth(image);
     const sH = ImageSize.getHeight(image);
@@ -46,7 +46,7 @@ function _scale(image: HTMLImageElement | HTMLCanvasElement, wRatio: number, hRa
 
     resolve(canvas);
   });
-}
+};
 
 export {
   scale

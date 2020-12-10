@@ -62,7 +62,7 @@ UnitTest.asynctest('ScrollTest', (success, failure) => {
           html,
           rtl: iframeDoc.body.dir === 'rtl',
           dir: Attribute.get(body, 'dir') || 'ltr',
-          byId(str) {
+          byId: (str) => {
             return Optional.from(iframeDoc.getElementById(str))
               .map(SugarElement.fromDom)
               .getOrDie('cannot find element with id ' + str);

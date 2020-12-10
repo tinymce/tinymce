@@ -2,16 +2,16 @@ import * as Canvas from '../util/Canvas';
 import { fromCanvas, ImageResult } from '../util/ImageResult';
 import * as ColorMatrix from './ColorMatrix';
 
-function colorFilter(ir: ImageResult, matrix: ColorMatrix.Matrix): Promise<ImageResult> {
+const colorFilter = (ir: ImageResult, matrix: ColorMatrix.Matrix): Promise<ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return applyColorFilter(canvas, ir.getType(), matrix);
   });
-}
+};
 
-function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResult> {
+const applyColorFilter = (canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.Matrix): Promise<ImageResult> => {
   const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pixelsData: ImageData, m: ColorMatrix.Matrix) {
+  const applyMatrix = (pixelsData: ImageData, m: ColorMatrix.Matrix) => {
     // tslint:disable-next-line:one-variable-per-declaration
     let r, g, b, a;
     // tslint:disable-next-line:one-variable-per-declaration
@@ -34,25 +34,25 @@ function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: Color
     }
 
     return pixelsData;
-  }
+  };
 
   const pixels = applyMatrix(context.getImageData(0, 0, canvas.width, canvas.height), matrix);
   context.putImageData(pixels, 0, 0);
 
   return fromCanvas(canvas, type);
-}
+};
 
-function convoluteFilter(ir: ImageResult, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResult> {
+const convoluteFilter = (ir: ImageResult, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return applyConvoluteFilter(canvas, ir.getType(), matrix);
   });
-}
+};
 
-function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResult> {
+const applyConvoluteFilter = (canvas: HTMLCanvasElement, type: string, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResult> => {
   const context = Canvas.get2dContext(canvas);
 
-  function applyMatrix(pIn: ImageData, pOut: ImageData, aMatrix: ColorMatrix.ConvolutionMatrix): ImageData {
-    function clamp(value: number, min: number, max: number): number {
+  const applyMatrix = (pIn: ImageData, pOut: ImageData, aMatrix: ColorMatrix.ConvolutionMatrix): ImageData => {
+    const clamp = (value: number, min: number, max: number): number => {
       if (value > max) {
         value = max;
       } else if (value < min) {
@@ -60,7 +60,7 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
       }
 
       return value;
-    }
+    };
 
     // Calc side and half side of matrix
     const side = Math.round(Math.sqrt(aMatrix.length));
@@ -101,7 +101,7 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
     }
 
     return pOut;
-  }
+  };
 
   const pixelsIn = context.getImageData(0, 0, canvas.width, canvas.height);
   let pixelsOut = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -109,14 +109,14 @@ function applyConvoluteFilter(canvas: HTMLCanvasElement, type: string, matrix: C
   context.putImageData(pixelsOut, 0, 0);
 
   return fromCanvas(canvas, type);
-}
+};
 
-function functionColorFilter(colorFn: (color: number, value: number) => number): (ir: ImageResult, value: number) => Promise<ImageResult> {
-  const filterImpl = function (canvas: HTMLCanvasElement, type: string, value: number) {
+const functionColorFilter = (colorFn: (color: number, value: number) => number): (ir: ImageResult, value: number) => Promise<ImageResult> => {
+  const filterImpl = (canvas: HTMLCanvasElement, type: string, value: number) => {
     const context = Canvas.get2dContext(canvas);
     const lookup = new Array(256);
 
-    function applyLookup(pixelsData: ImageData, lookupData: number[]) {
+    const applyLookup = (pixelsData: ImageData, lookupData: number[]) => {
       const data = pixelsData.data;
 
       for (let i = 0; i < data.length; i += 4) {
@@ -126,7 +126,7 @@ function functionColorFilter(colorFn: (color: number, value: number) => number):
       }
 
       return pixelsData;
-    }
+    };
 
     for (let i = 0; i < lookup.length; i++) {
       lookup[i] = colorFn(i, value);
@@ -138,30 +138,30 @@ function functionColorFilter(colorFn: (color: number, value: number) => number):
     return fromCanvas(canvas, type);
   };
 
-  return function (ir: ImageResult, value: number) {
+  return (ir: ImageResult, value: number) => {
     return ir.toCanvas().then((canvas) => {
       return filterImpl(canvas, ir.getType(), value);
     });
   };
-}
+};
 
-function complexAdjustableColorFilter(matrixAdjustFn: (matrix: ColorMatrix.Matrix, adjust: number) => ColorMatrix.Matrix): (ir: ImageResult, adjust: number) => Promise<ImageResult> {
-  return function (ir: ImageResult, adjust: number) {
+const complexAdjustableColorFilter = (matrixAdjustFn: (matrix: ColorMatrix.Matrix, adjust: number) => ColorMatrix.Matrix): (ir: ImageResult, adjust: number) => Promise<ImageResult> => {
+  return (ir: ImageResult, adjust: number) => {
     return colorFilter(ir, matrixAdjustFn(ColorMatrix.identity(), adjust));
   };
-}
+};
 
-function basicColorFilter(matrix: ColorMatrix.Matrix): (ir: ImageResult) => Promise<ImageResult> {
-  return function (ir: ImageResult) {
+const basicColorFilter = (matrix: ColorMatrix.Matrix): (ir: ImageResult) => Promise<ImageResult> => {
+  return (ir: ImageResult) => {
     return colorFilter(ir, matrix);
   };
-}
+};
 
-function basicConvolutionFilter(kernel: ColorMatrix.ConvolutionMatrix): (ir: ImageResult) => Promise<ImageResult> {
-  return function (ir: ImageResult) {
+const basicConvolutionFilter = (kernel: ColorMatrix.ConvolutionMatrix): (ir: ImageResult) => Promise<ImageResult> => {
+  return (ir: ImageResult) => {
     return convoluteFilter(ir, kernel);
   };
-}
+};
 
 const invert = basicColorFilter([
   -1, 0, 0, 0, 255,
@@ -177,7 +177,7 @@ const saturate = complexAdjustableColorFilter(ColorMatrix.adjustSaturation);
 const contrast = complexAdjustableColorFilter(ColorMatrix.adjustContrast);
 const grayscale = complexAdjustableColorFilter(ColorMatrix.adjustGrayscale);
 const sepia = complexAdjustableColorFilter(ColorMatrix.adjustSepia);
-const colorize = function (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> {
+const colorize = (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> => {
   return colorFilter(ir, ColorMatrix.adjustColors(ColorMatrix.identity(), adjustR, adjustG, adjustB));
 };
 const sharpen = basicConvolutionFilter([

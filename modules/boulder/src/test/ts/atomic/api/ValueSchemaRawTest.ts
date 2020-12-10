@@ -9,7 +9,7 @@ import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
 UnitTest.test('ValueSchemaRawTest', () => {
-  const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
+  const checkErr = (label: string, expectedPart: string, input: any, processor: Processor) => {
     ValueSchema.asRaw(label, processor, input).fold((err) => {
       const message = ValueSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
@@ -18,12 +18,12 @@ UnitTest.test('ValueSchemaRawTest', () => {
     });
   };
 
-  const check = function (label: string, input: any, processor: Processor) {
+  const check = (label: string, input: any, processor: Processor) => {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
     Assert.eq(label, input, actual);
   };
 
-  const checkIs = function (label: string, expected: any, input: any, processor: Processor) {
+  const checkIs = (label: string, expected: any, input: any, processor: Processor) => {
     const actual = ValueSchema.asRawOrDie(label, processor, input);
     Assert.eq(label, expected, actual);
   };

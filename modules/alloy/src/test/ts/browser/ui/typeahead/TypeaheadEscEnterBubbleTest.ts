@@ -39,7 +39,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
               selectsOver: false
             },
 
-            fetch() {
+            fetch: () => {
               const items = [
                 { type: 'item', data: { value: '1', meta: { text: '1' }}},
                 { type: 'item', data: { value: '2', meta: { text: '2' }}}
@@ -51,7 +51,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadEscEnterBubbleTest', (s
               }))));
             },
 
-            lazySink(c) {
+            lazySink: (c) => {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },

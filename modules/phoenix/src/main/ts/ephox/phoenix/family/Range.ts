@@ -4,11 +4,11 @@ import * as Extract from '../api/general/Extract';
 import { OrphanText } from '../wrap/OrphanText';
 import * as Parents from './Parents';
 
-const index = function <E, D> (universe: Universe<E, D>, items: E[], item: E) {
+const index = <E, D>(universe: Universe<E, D>, items: E[], item: E) => {
   return Arr.findIndex(items, Fun.curry(universe.eq, item));
 };
 
-const order = function <E> (items: E[], a: number, delta1: number, b: number, delta2: number) {
+const order = <E>(items: E[], a: number, delta1: number, b: number, delta2: number) => {
   return a < b ? items.slice(a + delta1, b + delta2) : items.slice(b + delta2, a + delta1);
 };
 
@@ -17,7 +17,7 @@ const order = function <E> (items: E[], a: number, delta1: number, b: number, de
  *
  * Deltas are a broken concept. They control whether the item passed is included in the result.
  */
-const range = function <E, D> (universe: Universe<E, D>, item1: E, delta1: number, item2: E, delta2: number): E[] {
+const range = <E, D>(universe: Universe<E, D>, item1: E, delta1: number, item2: E, delta2: number): E[] => {
   if (universe.eq(item1, item2)) {
     return [ item1 ];
   }

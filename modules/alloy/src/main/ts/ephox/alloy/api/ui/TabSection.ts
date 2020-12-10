@@ -69,12 +69,12 @@ const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detai
     ),
 
     apis: {
-      getViewItems(section: AlloyComponent) {
+      getViewItems: (section: AlloyComponent) => {
         return AlloyParts.getPart(section, detail, 'tabview').map((tabview) => Replacing.contents(tabview)).getOr([ ]);
       },
 
       // How should "clickToDismiss" interact with this? At the moment, it will never dismiss
-      showTab(section: AlloyComponent, tabKey: string) {
+      showTab: (section: AlloyComponent, tabKey: string) => {
         // We only change the tab if it isn't currently active because that takes
         // the whole "dismiss" issue out of the equation.
         const getTabIfNotActive = (tabbar: AlloyComponent) => {

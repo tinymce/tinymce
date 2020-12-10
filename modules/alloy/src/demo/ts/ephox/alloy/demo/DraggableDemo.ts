@@ -22,7 +22,7 @@ export default (): void => {
   Css.set(body, 'margin-bottom', '2000px');
 
   const snapData = {
-    getSnapPoints() {
+    getSnapPoints: () => {
       return [
         Dragging.snap({
           sensor: DragCoord.fixed(300, 10),

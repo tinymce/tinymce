@@ -10,9 +10,9 @@ UnitTest.test('TableCounterTest', () => {
   const rd = Structs.rowdetails;
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
-  const check = function (expected: Structs.RowDetails[], input: Structs.RowCells[]) {
+  const check = (expected: Structs.RowDetails[], input: Structs.RowCells[]) => {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);
-    const cleaner = function (obj: Structs.RowDetails[]) {
+    const cleaner = (obj: Structs.RowDetails[]) => {
       return Arr.map(obj, (row) => row.details);
     };
     assert.eq(cleaner(expected), cleaner(actual));

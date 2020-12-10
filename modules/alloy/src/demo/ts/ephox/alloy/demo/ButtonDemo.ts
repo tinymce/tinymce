@@ -20,7 +20,7 @@ export default (): void => {
     fields: [ ],
     name: 'red.behaviour',
     active: {
-      exhibit() {
+      exhibit: () => {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -38,7 +38,7 @@ export default (): void => {
     fields: [ ],
     name: 'cat.behaviour',
     active: {
-      exhibit() {
+      exhibit: () => {
         return DomModification.nu({
           classes: [ 'cat' ],
           attributes: {
@@ -65,7 +65,7 @@ export default (): void => {
           'height': '20px'
         }
       },
-      action() {
+      action: () => {
         console.log('*** Image ButtonDemo click ***');
       }
     })
@@ -83,7 +83,7 @@ export default (): void => {
           display: 'inline-block'
         }
       },
-      action() {
+      action: () => {
         console.log('*** Font ButtonDemo click ***');
       },
       buttonBehaviours: Behaviour.derive([
@@ -108,7 +108,7 @@ export default (): void => {
         tag: 'span',
         innerHtml: 'Button.with.Text'
       },
-      action() {
+      action: () => {
         console.log('*** ButtonDemo click ***');
       },
 

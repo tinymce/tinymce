@@ -3,12 +3,7 @@ import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 
 UnitTest.test('HeaderOperationsTest', () => {
-  testSingleRowHeader();
-  testMultipleRowHeader();
-  testSingleColumnHeader();
-  testMultipleColumnHeader();
-
-  function testSingleRowHeader() {
+  const testSingleRowHeader = () => {
     Assertions.checkOld({ section: 0, row: 0, column: 1 },
       '<table><tbody>' +
         '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
@@ -170,9 +165,9 @@ UnitTest.test('HeaderOperationsTest', () => {
 
       TableOperations.makeRowHeader, 0, 0, 1
     );
-  }
+  };
 
-  function testMultipleRowHeader() {
+  const testMultipleRowHeader = () => {
     Assertions.checkOldMultiple({ section: 0, row: 0, column: 1 },
       '<table><tbody>' +
         '<tr><th scope="col">A1</th><th scope="col">B1</th><th scope="col">C1</th><th scope="col">D1</th></tr>' +
@@ -468,9 +463,9 @@ UnitTest.test('HeaderOperationsTest', () => {
         }
       ]
     );
-  }
+  };
 
-  function testSingleColumnHeader() {
+  const testSingleColumnHeader = () => {
     Assertions.checkOld({ section: 0, row: 1, column: 0 },
       '<table><tbody>' +
         '<tr><th scope="row">A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -582,9 +577,9 @@ UnitTest.test('HeaderOperationsTest', () => {
 
       TableOperations.unmakeColumnHeader, 1, 0, 0
     );
-  }
+  };
 
-  function testMultipleColumnHeader() {
+  const testMultipleColumnHeader = () => {
     Assertions.checkOldMultiple({ section: 0, row: 1, column: 0 },
       '<table><tbody>' +
         '<tr><th scope="row">A1</th><td>B1</td><td>C1</td><td>D1</td></tr>' +
@@ -826,5 +821,10 @@ UnitTest.test('HeaderOperationsTest', () => {
         }
       ]
     );
-  }
+  };
+
+  testSingleRowHeader();
+  testMultipleRowHeader();
+  testSingleColumnHeader();
+  testMultipleColumnHeader();
 });

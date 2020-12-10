@@ -37,19 +37,19 @@ const adt: {
   { mergeWithThunk: [ 'baseThunk' ] }
 ]);
 
-const defaulted = function <T> (fallback: T): FieldPresenceAdt {
+const defaulted = <T>(fallback: T): FieldPresenceAdt => {
   return adt.defaultedThunk(
     Fun.constant(fallback)
   );
 };
 
-const asDefaultedOption = function <T> (fallback: T): FieldPresenceAdt {
+const asDefaultedOption = <T>(fallback: T): FieldPresenceAdt => {
   return adt.asDefaultedOptionThunk(
     Fun.constant(fallback)
   );
 };
 
-const mergeWith = function (base: {}): FieldPresenceAdt {
+const mergeWith = (base: {}): FieldPresenceAdt => {
   return adt.mergeWithThunk(
     Fun.constant(base)
   );

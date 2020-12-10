@@ -37,7 +37,7 @@ UnitTest.test('RangeTest', () => {
     ])
   );
 
-  const check = function (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) {
+  const check = (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) => {
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
     const actual = Family.range(doc, start, delta1, finish, delta2);

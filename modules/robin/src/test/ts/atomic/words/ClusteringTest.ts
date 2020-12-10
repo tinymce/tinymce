@@ -9,14 +9,14 @@ import { WordDecisionItem } from 'ephox/robin/words/WordDecision';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('ClusteringTest', () => {
-  const checkWords = function (universe: TestUniverse, words: WordDecisionItem<Gene>[]) {
+  const checkWords = (universe: TestUniverse, words: WordDecisionItem<Gene>[]) => {
     return Arr.map(words, (a) => {
       const text = universe.property().getText(a.item);
       return text.substring(a.start, a.finish);
     });
   };
 
-  const check = function (label: string, universe: TestUniverse, expLeft: string[], expMiddle: string[], expRight: string[], expLang: Optional<string>, id: string) {
+  const check = (label: string, universe: TestUniverse, expLeft: string[], expMiddle: string[], expRight: string[], expLang: Optional<string>, id: string) => {
     Logger.sync(
       id + ' => check: ' + label,
       () => {
@@ -34,7 +34,7 @@ UnitTest.test('ClusteringTest', () => {
     );
   };
 
-  const testSanity = function () {
+  const testSanity = () => {
     const universe = TestUniverse(
       Gene('root', 'root', [
         TextGene('root.text1.id', 'z0a'),
@@ -184,8 +184,8 @@ UnitTest.test('ClusteringTest', () => {
     readonly lang: Optional<string>;
   }
 
-  const checkProps = function (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) {
-    const checkGroup = function (label: string, group: WordDecisionItem<Gene>[]) {
+  const checkProps = (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) => {
+    const checkGroup = (label: string, group: WordDecisionItem<Gene>[]) => {
       const items = Arr.map(group, (g) => { return g.item; });
       Arr.each(items, (x) => {
         Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang.getOr('none'));
@@ -224,7 +224,7 @@ UnitTest.test('ClusteringTest', () => {
     });
   };
 
-  const propertyTest = function (label: string, universe: TestUniverse) {
+  const propertyTest = (label: string, universe: TestUniverse) => {
     Logger.sync(
       label,
       () => {

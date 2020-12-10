@@ -105,12 +105,12 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         ],
 
         dragBlockClass: 'drag-blocker',
-        lazySink(comp) {
+        lazySink: (comp) => {
           Assertions.assertEq('Checking dialog passed through to lazySink', true, Compare.eq(comp.element, dialog.element));
           return Result.value(sink);
         },
 
-        useTabstopAt(elem) {
+        useTabstopAt: (elem) => {
           return !Class.has(elem, 'untabbable');
         },
 

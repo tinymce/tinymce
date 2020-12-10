@@ -14,7 +14,7 @@ interface SaloonEvents {
 
 declare const $: any;
 
-const create = function (): Saloon {
+const create = (): Saloon => {
   const saloon = $('<div />');
   saloon.css({
     border: '3px solid brown',
@@ -24,7 +24,7 @@ const create = function (): Saloon {
     float: 'left'
   });
 
-  const getElement = function () {
+  const getElement = () => {
     return saloon;
   };
 
@@ -34,21 +34,21 @@ const create = function (): Saloon {
 
   const binder = Binder.create();
 
-  const seat = function (patron: Outlaw) {
+  const seat = (patron: Outlaw) => {
     const chair = $('<div />');
     chair.css({ border: '1px dashed green', float: 'right', clear: 'both' });
     chair.append(patron.getElement());
     saloon.append(chair);
   };
 
-  const unseat = function (patron: Outlaw) {
+  const unseat = (patron: Outlaw) => {
     const element = patron.getElement();
     const chair = element.parent();
     element.detach();
     chair.remove();
   };
 
-  const enter = function (patron: Outlaw) {
+  const enter = (patron: Outlaw) => {
     seat(patron);
 
     binder.bind(patron.events.shoot, (event) => {
@@ -60,12 +60,12 @@ const create = function (): Saloon {
     });
   };
 
-  const leave = function (patron: Outlaw) {
+  const leave = (patron: Outlaw) => {
     unseat(patron);
     stopListening(patron);
   };
 
-  const stopListening = function (outlaw: Outlaw) {
+  const stopListening = (outlaw: Outlaw) => {
     binder.unbind(outlaw.events.shoot);
     binder.unbind(outlaw.events.die);
   };

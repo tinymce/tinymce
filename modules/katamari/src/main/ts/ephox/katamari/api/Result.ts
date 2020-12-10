@@ -38,48 +38,48 @@ export interface Result<T, E> {
  * getOrDie :: this Result a -> a (or throws error)
 */
 
-const value = function <T, E = any> (o: T): Result<T, E> {
-  const is = function (v: T) {
+const value = <T, E = any>(o: T): Result<T, E> => {
+  const is = (v: T) => {
     return o === v;
   };
 
-  const or = function (_opt: Result<T, E>) {
+  const or = (_opt: Result<T, E>) => {
     return value(o);
   };
 
-  const orThunk = function (_f: () => Result<T, E>) {
+  const orThunk = (_f: () => Result<T, E>) => {
     return value(o);
   };
 
-  const map = function <U> (f: (value: T) => U) {
+  const map = <U>(f: (value: T) => U) => {
     return value(f(o));
   };
 
-  const mapError = function <U> (_f: (error: E) => U) {
+  const mapError = <U>(_f: (error: E) => U) => {
     return value(o);
   };
 
-  const each = function (f: (value: T) => void) {
+  const each = (f: (value: T) => void) => {
     f(o);
   };
 
-  const bind = function <U> (f: (value: T) => Result<U, E>) {
+  const bind = <U>(f: (value: T) => Result<U, E>) => {
     return f(o);
   };
 
-  const fold = function <U> (_: (err: E) => U, onValue: (value: T) => U) {
+  const fold = <U>(_: (err: E) => U, onValue: (value: T) => U) => {
     return onValue(o);
   };
 
-  const exists = function (f: (value: T) => boolean) {
+  const exists = (f: (value: T) => boolean) => {
     return f(o);
   };
 
-  const forall = function (f: (value: T) => boolean) {
+  const forall = (f: (value: T) => boolean) => {
     return f(o);
   };
 
-  const toOptional = function () {
+  const toOptional = () => {
     return Optional.some(o);
   };
 
@@ -103,36 +103,36 @@ const value = function <T, E = any> (o: T): Result<T, E> {
   };
 };
 
-const error = function <T = any, E = any> (message: E): Result<T, E> {
-  const getOrThunk = function (f: () => T) {
+const error = <T = any, E = any>(message: E): Result<T, E> => {
+  const getOrThunk = (f: () => T) => {
     return f();
   };
 
-  const getOrDie = function (): T {
+  const getOrDie = (): T => {
     return Fun.die(String(message))();
   };
 
-  const or = function (opt: Result<T, E>) {
+  const or = (opt: Result<T, E>) => {
     return opt;
   };
 
-  const orThunk = function (f: () => Result<T, E>) {
+  const orThunk = (f: () => Result<T, E>) => {
     return f();
   };
 
-  const map = function <U> (_f: (value: T) => U) {
+  const map = <U>(_f: (value: T) => U) => {
     return error<U, E>(message);
   };
 
-  const mapError = function <U> (f: (error: E) => U) {
+  const mapError = <U> (f: (error: E) => U) => {
     return error(f(message));
   };
 
-  const bind = function <U> (_f: (value: T) => Result<U, E>) {
+  const bind = <U>(_f: (value: T) => Result<U, E>) => {
     return error<U, E>(message);
   };
 
-  const fold = function <U> (onError: (err: E) => U, _: (value: T) => U) {
+  const fold = <U>(onError: (err: E) => U, _: (value: T) => U) => {
     return onError(message);
   };
 

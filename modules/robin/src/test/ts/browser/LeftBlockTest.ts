@@ -9,19 +9,19 @@ UnitTest.test('LeftBlockTest', () => {
 
   const editor = SugarElement.fromTag('div');
 
-  const reset = function () {
+  const reset = () => {
     editor.dom.innerHTML = '<p>alpha<span>cat</span><b>hello<i>word</i>hi</b>there</p>';
   };
 
-  const setup = function () {
+  const setup = () => {
     Insert.append(SugarBody.body(), editor);
   };
 
-  const cleanup = function () {
+  const cleanup = () => {
     Remove.remove(editor);
   };
 
-  const check = function (expected: string, path: number[], method: <E, D>(universe: Universe<E, D>, item: E) => E[]) {
+  const check = (expected: string, path: number[], method: <E, D>(universe: Universe<E, D>, item: E) => E[]) => {
     reset();
     const ele = Hierarchy.follow(editor, path);
     assert.eq(true, ele.isSome(), 'Could not find element at path: ' + path);

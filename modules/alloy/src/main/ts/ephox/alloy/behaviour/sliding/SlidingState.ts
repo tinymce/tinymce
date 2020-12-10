@@ -9,8 +9,8 @@ const init = (spec: SlidingConfig): SlidingState => {
   const readState = () => 'expanded: ' + state.get();
 
   return nuState({
-    isExpanded() { return state.get() === true; },
-    isCollapsed() { return state.get() === false; },
+    isExpanded: () => state.get() === true,
+    isCollapsed: () => state.get() === false,
     setCollapsed: Fun.curry(state.set, false),
     setExpanded: Fun.curry(state.set, true),
     readState

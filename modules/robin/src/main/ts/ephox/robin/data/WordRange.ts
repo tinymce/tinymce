@@ -5,7 +5,7 @@ export interface WordRange<E> {
   readonly endOffset: number;
 }
 
-export const WordRange = <E> (startContainer: E, startOffset: number, endContainer: E, endOffset: number): WordRange<E> => ({
+export const WordRange = <E>(startContainer: E, startOffset: number, endContainer: E, endOffset: number): WordRange<E> => ({
   startContainer,
   startOffset,
   endContainer,

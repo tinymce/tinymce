@@ -122,7 +122,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
 
         components: [ ],
 
-        lazySink(c) {
+        lazySink: (c) => {
           TestDropdownMenu.assertLazySinkArgs('div', 'dropdown-button', c);
           return Result.value(sink.get(c));
         },
@@ -131,7 +131,7 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch() {
+        fetch: () => {
           return Future.pure(testData).map((d) => Optional.from(TieredMenu.tieredData(d.primary, d.menus, d.expansions)));
         }
       })

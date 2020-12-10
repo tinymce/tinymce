@@ -49,14 +49,14 @@ UnitTest.test('TextZonesTest', () => {
     ], {}, { lang: 'fr' })
   ]));
 
-  const checkSingle = function (info: ArbIds) {
+  const checkSingle = (info: ArbIds) => {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZones.single(doc1, item, 'en', ZoneViewports.anything());
     assertProps('Testing zones for single(' + info.startId + ')', doc1, actual.zones);
     return true;
   };
 
-  const checkRange = function (info: ArbRangeIds) {
+  const checkRange = (info: ArbRangeIds) => {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZones.range(doc1, item1, 0, item2, 0, 'en', ZoneViewports.anything());

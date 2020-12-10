@@ -4,7 +4,7 @@ import * as Pathway from '../general/Pathway';
 
 const universe = DomUniverse();
 
-const simplify = function (elements: SugarElement[]): SugarElement[] {
+const simplify = (elements: SugarElement[]): SugarElement[] => {
   return Pathway.simplify(universe, elements);
 };
 

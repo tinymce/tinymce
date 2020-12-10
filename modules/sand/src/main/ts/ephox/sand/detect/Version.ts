@@ -3,7 +3,7 @@ export interface Version {
   minor: number;
 }
 
-const firstMatch = function (regexes: RegExp[], s: string): RegExp | undefined {
+const firstMatch = (regexes: RegExp[], s: string): RegExp | undefined => {
   for (let i = 0; i < regexes.length; i++) {
     const x = regexes[i];
     if (x.test(s)) {
@@ -13,18 +13,18 @@ const firstMatch = function (regexes: RegExp[], s: string): RegExp | undefined {
   return undefined;
 };
 
-const find = function (regexes: RegExp[], agent: string): Version {
+const find = (regexes: RegExp[], agent: string): Version => {
   const r = firstMatch(regexes, agent);
   if (!r) {
     return { major : 0, minor : 0 };
   }
-  const group = function (i: number) {
+  const group = (i: number) => {
     return Number(agent.replace(r, '$' + i));
   };
   return nu(group(1), group(2));
 };
 
-const detect = function (versionRegexes: RegExp[], agent: any): Version {
+const detect = (versionRegexes: RegExp[], agent: any): Version => {
   const cleanedAgent = String(agent).toLowerCase();
 
   if (versionRegexes.length === 0) {
@@ -33,11 +33,11 @@ const detect = function (versionRegexes: RegExp[], agent: any): Version {
   return find(versionRegexes, cleanedAgent);
 };
 
-const unknown = function (): Version {
+const unknown = (): Version => {
   return nu(0, 0);
 };
 
-const nu = function (major: number, minor: number): Version {
+const nu = (major: number, minor: number): Version => {
   return { major, minor };
 };
 

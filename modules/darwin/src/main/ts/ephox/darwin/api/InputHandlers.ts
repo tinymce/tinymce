@@ -25,7 +25,7 @@ export interface KeyboardHandler {
 
 const rc = (rows: number, cols: number): RC => ({ rows, cols });
 
-const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseHandler {
+const mouse = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): MouseHandler => {
   const bridge = WindowBridge(win);
 
   const handlers = MouseSelection(bridge, container, isRoot, annotations);
@@ -38,15 +38,15 @@ const mouse = function (win: Window, container: SugarElement, isRoot: (e: SugarE
   };
 };
 
-const keyboard = function (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): KeyboardHandler {
+const keyboard = (win: Window, container: SugarElement, isRoot: (e: SugarElement) => boolean, annotations: SelectionAnnotation): KeyboardHandler => {
   const bridge = WindowBridge(win);
 
-  const clearToNavigate = function () {
+  const clearToNavigate = () => {
     annotations.clear(container);
     return Optional.none<Response>();
   };
 
-  const keydown = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) {
+  const keydown = (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number, direction: typeof SelectionKeys.ltr) => {
     const realEvent = event.raw;
     const keycode = realEvent.which;
     const shiftKey = realEvent.shiftKey === true;
@@ -66,8 +66,8 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
       }
     }, (selected) => {
 
-      const update = function (attempts: RC[]) {
-        return function () {
+      const update = (attempts: RC[]) => {
+        return () => {
           const navigation = Arr.findMap(attempts, (delta) => {
             return KeySelection.update(delta.rows, delta.cols, container, selected, annotations);
           });
@@ -106,7 +106,7 @@ const keyboard = function (win: Window, container: SugarElement, isRoot: (e: Sug
     return handler();
   };
 
-  const keyup = function (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) {
+  const keyup = (event: EventArgs<KeyboardEvent>, start: SugarElement, soffset: number, finish: SugarElement, foffset: number) => {
     return CellSelection.retrieve(container, annotations.selectedSelector).fold<Optional<Response>>(() => {
       const realEvent = event.raw;
       const keycode = realEvent.which;

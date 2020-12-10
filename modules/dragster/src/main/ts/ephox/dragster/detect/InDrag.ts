@@ -8,13 +8,13 @@ export const InDrag = (): DragState => {
 
   let previous = Optional.none<SugarPosition>();
 
-  const reset = function () {
+  const reset = () => {
     previous = Optional.none();
   };
 
   // Return position delta between previous position and nu position,
   // or None if this is the first. Set the previous position to nu.
-  const update = function (mode: DragMode, nu: SugarPosition) {
+  const update = (mode: DragMode, nu: SugarPosition) => {
     const result = previous.map((old) => {
       return mode.compare(old, nu);
     });
@@ -23,7 +23,7 @@ export const InDrag = (): DragState => {
     return result;
   };
 
-  const onEvent = function (event: EventArgs, mode: DragMode) {
+  const onEvent = (event: EventArgs, mode: DragMode) => {
     const dataOption = mode.extract(event);
 
     // Dragster move events require a position delta. The moveevent is only triggered

@@ -50,7 +50,7 @@ UnitTest.asynctest('Browser Test: behaviour.KeyingAndFocusingTest', (success, fa
           Focusing.config({ }),
           Keying.config({
             mode: 'special',
-            focusIn(comp) {
+            focusIn: (comp) => {
               const child = memChild.get(comp);
               Focusing.focus(child);
             }

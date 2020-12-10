@@ -69,13 +69,13 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
       [
         Coupling.config({
           others: {
-            overflowGroup(toolbar) {
+            overflowGroup: (toolbar) => {
               return ToolbarGroup.sketch({
                 ...externals['overflow-group'](),
                 items: [
                   Button.sketch({
                     ...externals['overflow-button'](),
-                    action(_button) {
+                    action: (_button) => {
                       AlloyTriggers.emit(toolbar, toolbarToggleEvent);
                     }
                   })
@@ -92,7 +92,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
       ]
     ),
     apis: {
-      setGroups(toolbar: AlloyComponent, groups: AlloySpec[]) {
+      setGroups: (toolbar: AlloyComponent, groups: AlloySpec[]) => {
         doSetGroups(toolbar, groups);
         refresh(toolbar, detail);
       },

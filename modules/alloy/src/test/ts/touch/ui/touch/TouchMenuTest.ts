@@ -92,7 +92,7 @@ UnitTest.asynctest('Browser Test: ui.touch.TouchMenuTest', (success, failure) =>
           }
         },
 
-        fetch() {
+        fetch: () => {
           return Future.pure(
             Optional.from(Arr.map([
               { type: 'item', data: { value: 'dog', meta: { text: 'Dog' }}},

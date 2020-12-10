@@ -7,7 +7,7 @@ import { WordDecisionItem } from '../words/WordDecision';
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 
 // Figure out which direction to take the next step in. Returns None if the traversal should stop.
-const getNextStep = <E, D> (
+const getNextStep = <E, D>(
   universe: Universe<E, D>,
   viewport: ZoneViewports<E>,
   traverse: Traverse<E>
@@ -33,7 +33,7 @@ const getNextStep = <E, D> (
 };
 
 // Visit a position, and make a corresponding entry on the stack.
-const visit = <E, D> (
+const visit = <E, D>(
   universe: Universe<E, D>,
   stack: LanguageZones<E>,
   transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>,
@@ -73,7 +73,7 @@ const visit = <E, D> (
   }
 };
 
-const walk = <E, D> (
+const walk = <E, D>(
   universe: Universe<E, D>,
   start: E,
   finish: E,

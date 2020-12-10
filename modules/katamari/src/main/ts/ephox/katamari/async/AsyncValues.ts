@@ -6,16 +6,16 @@ import * as Arr from '../api/Arr';
  *
  * e.g
  * {
- *   get: function (callback) { callback(10); }
+ *   get: (callback) => { callback(10); }
  * }
  */
-export const par = function <A, T, C> (asyncValues: ArrayLike<(A & {get: (callback: (value: T) => void) => void})>, nu: (worker: (callback: (values: T[]) => void) => void) => C): C {
+export const par = <A, T, C> (asyncValues: ArrayLike<(A & {get: (callback: (value: T) => void) => void})>, nu: (worker: (callback: (values: T[]) => void) => void) => C): C => {
   return nu((callback) => {
     const r: T[] = [];
     let count = 0;
 
-    const cb = function (i: number) {
-      return function (value: T) {
+    const cb = (i: number) => {
+      return (value: T) => {
         r[i] = value;
         count++;
         if (count >= asyncValues.length) {

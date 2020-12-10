@@ -9,7 +9,7 @@ const is = <T> (a: T) => (b: T) => a === b;
 
 UnitTest.test('sliceby: unit tests', () => {
 
-  const check = function (expected: number[], input: number[], pred: (x: number, i: number) => boolean) {
+  const check = (expected: number[], input: number[], pred: (x: number, i: number) => boolean) => {
     const actual = Arrays.sliceby(input, pred);
     Assert.eq('sliceby', expected, actual, tArray(tNumber));
   };

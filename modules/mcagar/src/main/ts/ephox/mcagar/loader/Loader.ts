@@ -72,7 +72,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
     tinymce.init({
       ...settings,
       ...targetSettings,
-      setup(editor: Editor) {
+      setup: (editor: Editor) => {
         // Execute the setup called by the test.
         settingsSetup(editor);
 

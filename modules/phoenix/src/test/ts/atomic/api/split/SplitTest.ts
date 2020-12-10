@@ -5,7 +5,7 @@ import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
 UnitTest.test('api.Split.(split,splitByPair)', () => {
-  const generate = function (text: string) {
+  const generate = (text: string) => {
     const universe = TestUniverse(
       Gene('root', 'root', [
         TextGene('generate_text', text)
@@ -16,7 +16,7 @@ UnitTest.test('api.Split.(split,splitByPair)', () => {
     return { universe, item };
   };
 
-  const isEq = function (opt1: Optional<string>, opt2: Optional<Gene>) {
+  const isEq = (opt1: Optional<string>, opt2: Optional<Gene>) => {
     return opt1.fold(() => {
       return opt2.isNone();
     }, (a) => {
@@ -26,14 +26,14 @@ UnitTest.test('api.Split.(split,splitByPair)', () => {
     });
   };
 
-  const checkSplit = function (before: Optional<string>, after: Optional<string>, text: string, position: number) {
+  const checkSplit = (before: Optional<string>, after: Optional<string>, text: string, position: number) => {
     const input = generate(text);
     const actual = Split.split(input.universe, input.item, position);
     assert.eq(true, isEq(before, actual.before));
     assert.eq(true, isEq(after, actual.after));
   };
 
-  const checkPair = function (expected: string, middle: string, text: string, start: number, finish: number) {
+  const checkPair = (expected: string, middle: string, text: string, start: number, finish: number) => {
     const input = generate(text);
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);

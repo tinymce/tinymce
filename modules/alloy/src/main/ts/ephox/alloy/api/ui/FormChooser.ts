@@ -35,11 +35,11 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
           mode: 'flow',
           selector: '.' + detail.markers.choiceClass,
           executeOnMove: true,
-          getInitial(chooser) {
+          getInitial: (chooser) => {
             return Highlighting.getHighlighted(chooser).map((choice) => choice.element);
           },
           // TODO CLEANUP: See if this execute handler can be removed, because execute is handled by bubbling to formchooser root
-          execute(chooser, simulatedEvent, focused) {
+          execute: (chooser, simulatedEvent, focused) => {
             return chooser.getSystem().getByDom(focused).map((choice) => {
               Highlighting.highlight(chooser, choice);
               return true;
@@ -50,10 +50,10 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         Highlighting.config({
           itemClass: detail.markers.choiceClass,
           highlightClass: detail.markers.selectedClass,
-          onHighlight(chooser, choice) {
+          onHighlight: (chooser, choice) => {
             Attribute.set(choice.element, 'aria-checked', 'true');
           },
-          onDehighlight(chooser, choice) {
+          onDehighlight: (chooser, choice) => {
             Attribute.set(choice.element, 'aria-checked', 'false');
           }
         }),
@@ -65,12 +65,12 @@ const factory: CompositeSketchFactory<FormChooserDetail, FormChooserSpec> = (det
         Representing.config({
           store: {
             mode: 'manual',
-            setValue(chooser, value) {
+            setValue: (chooser, value) => {
               findByValue(chooser, value).each((choiceWithValue) => {
                 Highlighting.highlight(chooser, choiceWithValue);
               });
             },
-            getValue(chooser) {
+            getValue: (chooser) => {
               return Highlighting.getHighlighted(chooser).map(Representing.getValue);
             }
           }

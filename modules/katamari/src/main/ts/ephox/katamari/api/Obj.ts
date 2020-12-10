@@ -10,7 +10,7 @@ export const keys = Object.keys;
 
 export const hasOwnProperty = Object.hasOwnProperty;
 
-export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) => void): void {
+export const each = <T>(obj: T, f: (value: T[keyof T], key: string) => void): void => {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
@@ -19,14 +19,14 @@ export const each = function <T> (obj: T, f: (value: T[keyof T], key: string) =>
   }
 };
 
-export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R): {[k in keyof T]: R} {
+export const map = <T, R>(obj: T, f: (value: T[keyof T], key: string) => R): {[k in keyof T]: R} => {
   return tupleMap<{[k in keyof T]: R}, T>(obj, (x, i) => ({
     k: i,
     v: f(x, i)
   }));
 };
 
-export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string) => {k: string; v: any}): R {
+export const tupleMap = <R, T>(obj: T, f: (value: T[keyof T], key: string) => {k: string; v: any}): R => {
   const r = {} as R;
   each(obj, (x, i) => {
     const tuple = f(x, i);
@@ -35,11 +35,11 @@ export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: str
   return r;
 };
 
-const objAcc = <K extends number | string | symbol, V> (r: Record<K, V>) => (x: V, i: K): void => {
+const objAcc = <K extends number | string | symbol, V>(r: Record<K, V>) => (x: V, i: K): void => {
   r[i] = x;
 };
 
-const internalFilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean, onTrue: (value: V, key: string) => void, onFalse: (value: V, key: string) => void) {
+const internalFilter = <V>(obj: Record<string, V>, pred: (value: V, key: string) => boolean, onTrue: (value: V, key: string) => void, onFalse: (value: V, key: string) => void) => {
   const r: Record<string, V> = {};
   each(obj, (x, i) => {
     (pred(x, i) ? onTrue : onFalse)(x, i);
@@ -47,20 +47,20 @@ const internalFilter = function <V> (obj: Record<string, V>, pred: (value: V, ke
   return r;
 };
 
-export const bifilter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean): {t: Record<string, V>; f: Record<string, V>} {
+export const bifilter = <V>(obj: Record<string, V>, pred: (value: V, key: string) => boolean): {t: Record<string, V>; f: Record<string, V>} => {
   const t: Record<string, V> = {};
   const f: Record<string, V> = {};
   internalFilter(obj, pred, objAcc(t), objAcc(f));
   return { t, f };
 };
 
-export const filter = function <V> (obj: Record<string, V>, pred: (value: V, key: string) => boolean): Record<string, V> {
+export const filter = <V>(obj: Record<string, V>, pred: (value: V, key: string) => boolean): Record<string, V> => {
   const t: Record<string, V> = {};
   internalFilter(obj, pred, objAcc(t), Fun.noop);
   return t;
 };
 
-export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: string) => R): R[] {
+export const mapToArray = <T, R>(obj: T, f: (value: T[keyof T], key: string) => R): R[] => {
   const r: R[] = [];
   each(obj, (value, name) => {
     r.push(f(value, name));
@@ -68,7 +68,7 @@ export const mapToArray = function <T, R> (obj: T, f: (value: T[keyof T], key: s
   return r;
 };
 
-export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Optional<T[keyof T]> {
+export const find = <T>(obj: T, pred: (value: T[keyof T], key: string, obj: T) => boolean): Optional<T[keyof T]> => {
   const props = keys(obj);
   for (let k = 0, len = props.length; k < len; k++) {
     const i = props[k];
@@ -80,17 +80,17 @@ export const find = function <T> (obj: T, pred: (value: T[keyof T], key: string,
   return Optional.none();
 };
 
-export const values = function <T> (obj: T): Array<T[keyof T]> {
+export const values = <T>(obj: T): Array<T[keyof T]> => {
   return mapToArray(obj, (v) => {
     return v;
   });
 };
 
-export const size = function (obj: {}): number {
+export const size = (obj: {}): number => {
   return keys(obj).length;
 };
 
-export const get = function <T, K extends keyof T> (obj: T, key: K): Optional<NonNullable<T[K]>> {
+export const get = <T, K extends keyof T>(obj: T, key: K): Optional<NonNullable<T[K]>> => {
   return has(obj, key) ? Optional.from(obj[key] as NonNullable<T[K]>) : Optional.none();
 };
 

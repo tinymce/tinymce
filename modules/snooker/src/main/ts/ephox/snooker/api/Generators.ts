@@ -53,7 +53,7 @@ interface Item {
   readonly sub: SugarElement;
 }
 
-const elementToData = function (element: SugarElement): CellSpan {
+const elementToData = (element: SugarElement): CellSpan => {
   const colspan = getAttrValue(element, 'colspan', 1);
   const rowspan = getAttrValue(element, 'rowspan', 1);
   return {
@@ -64,10 +64,10 @@ const elementToData = function (element: SugarElement): CellSpan {
 };
 
 // note that `toData` seems to be only for testing
-const modification = function (generators: Generators, toData = elementToData): GeneratorsModification {
+const modification = (generators: Generators, toData = elementToData): GeneratorsModification => {
   const position = Cell(Optional.none<SugarElement>());
 
-  const nu = function (data: CellSpan) {
+  const nu = (data: CellSpan) => {
     switch (SugarNode.name(data.element)) {
       case 'col':
         return generators.col(data);
@@ -76,12 +76,12 @@ const modification = function (generators: Generators, toData = elementToData): 
     }
   };
 
-  const nuFrom = function (element: SugarElement) {
+  const nuFrom = (element: SugarElement) => {
     const data = toData(element);
     return nu(data);
   };
 
-  const add = function (element: SugarElement) {
+  const add = (element: SugarElement) => {
     const replacement = nuFrom(element);
     if (position.get().isNone()) {
       position.set(Optional.some(replacement));
@@ -91,7 +91,7 @@ const modification = function (generators: Generators, toData = elementToData): 
   };
 
   let recent = Optional.none<Recent>();
-  const getOrInit = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
+  const getOrInit = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
     return recent.fold(() => {
       return add(element);
     }, (p) => {
@@ -105,18 +105,18 @@ const modification = function (generators: Generators, toData = elementToData): 
   };
 };
 
-const transform = function <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) {
-  return function (generators: Generators): GeneratorsTransform {
+const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null, tag: K) => {
+  return (generators: Generators): GeneratorsTransform => {
     const position = Cell(Optional.none<SugarElement>());
     const list: Item[] = [];
 
-    const find = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
+    const find = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
       return Arr.find(list, (x) => {
         return comparator(x.item, element);
       });
     };
 
-    const makeNew = function (element: SugarElement) {
+    const makeNew = (element: SugarElement) => {
       const attrs: Record<string, string | number | boolean | null> = {
         scope
       };
@@ -131,7 +131,7 @@ const transform = function <K extends keyof HTMLElementTagNameMap> (scope: strin
       return cell;
     };
 
-    const replaceOrInit = function (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) {
+    const replaceOrInit = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
       return find(element, comparator).fold(() => {
         return makeNew(element);
       }, (p) => {

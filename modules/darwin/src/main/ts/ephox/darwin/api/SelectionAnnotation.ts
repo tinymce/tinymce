@@ -11,16 +11,16 @@ export interface SelectionAnnotation {
   lastSelectedSelector: string;
 }
 
-const byClass = function (ephemera: Ephemera): SelectionAnnotation {
+const byClass = (ephemera: Ephemera): SelectionAnnotation => {
   const addSelectionClass = OnNode.addClass(ephemera.selected);
   const removeSelectionClasses = OnNode.removeClasses([ ephemera.selected, ephemera.lastSelected, ephemera.firstSelected ]);
 
-  const clear = function (container: SugarElement) {
+  const clear = (container: SugarElement) => {
     const sels = SelectorFilter.descendants(container, ephemera.selectedSelector);
     Arr.each(sels, removeSelectionClasses);
   };
 
-  const selectRange = function (container: SugarElement, cells: SugarElement[], start: SugarElement, finish: SugarElement) {
+  const selectRange = (container: SugarElement, cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
     clear(container);
     Arr.each(cells, addSelectionClass);
     Class.add(start, ephemera.firstSelected);
@@ -37,14 +37,14 @@ const byClass = function (ephemera: Ephemera): SelectionAnnotation {
   };
 };
 
-const byAttr = function (ephemera: Ephemera, onSelection: (cells: SugarElement[], start: SugarElement, finish: SugarElement) => void, onClear: () => void): SelectionAnnotation {
-  const removeSelectionAttributes = function (element: SugarElement) {
+const byAttr = (ephemera: Ephemera, onSelection: (cells: SugarElement[], start: SugarElement, finish: SugarElement) => void, onClear: () => void): SelectionAnnotation => {
+  const removeSelectionAttributes = (element: SugarElement) => {
     Attribute.remove(element, ephemera.selected);
     Attribute.remove(element, ephemera.firstSelected);
     Attribute.remove(element, ephemera.lastSelected);
   };
 
-  const addSelectionAttribute = function (element: SugarElement) {
+  const addSelectionAttribute = (element: SugarElement) => {
     Attribute.set(element, ephemera.selected, '1');
   };
 
@@ -58,7 +58,7 @@ const byAttr = function (ephemera: Ephemera, onSelection: (cells: SugarElement[]
     Arr.each(sels, removeSelectionAttributes);
   };
 
-  const selectRange = function (container: SugarElement, cells: SugarElement[], start: SugarElement, finish: SugarElement) {
+  const selectRange = (container: SugarElement, cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
     clear(container);
     Arr.each(cells, addSelectionAttribute);
     Attribute.set(start, ephemera.firstSelected, '1');

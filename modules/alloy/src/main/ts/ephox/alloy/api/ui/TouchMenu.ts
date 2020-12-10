@@ -81,7 +81,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
         // Menu that shows up
         Coupling.config({
           others: {
-            sandbox(hotspot) {
+            sandbox: (hotspot) => {
               return InlineView.sketch({
                 ...externals.view(),
                 lazySink: DropdownUtils.getSink(hotspot, detail),
@@ -109,7 +109,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
                       } as TransitionPropertiesSpec)).getOr({ })
                     ),
 
-                    onFinish(view, destination) {
+                    onFinish: (view, destination) => {
                       if (destination === 'closed') {
                         InlineView.hide(view);
                         detail.onClosed(hotspot, view);
@@ -119,7 +119,7 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
 
                 ]),
 
-                onShow(view: AlloyComponent) {
+                onShow: (view: AlloyComponent) => {
                   Transitioning.progressTo(view, 'open');
                 }
               });

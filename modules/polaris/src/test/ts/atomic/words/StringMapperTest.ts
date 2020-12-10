@@ -22,7 +22,7 @@ UnitTest.test('Words.StringMapperTest', () => {
 
   const classify = StringMapper.classify;
 
-  const testClassify = function () {
+  const testClassify = () => {
     assert.eq([ ALETTER, ALETTER, ALETTER ], classify('abc'.split('')));
     assert.eq([ ALETTER, ALETTER, ALETTER ], classify('åäö'.split('')));
     assert.eq([ ALETTER, NUMERIC, ALETTER ], classify('a2c'.split('')));

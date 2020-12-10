@@ -67,7 +67,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Show popup inside editor'
         },
-        action(button) {
+        action: (button) => {
           Attachment.attach(sink, popup);
           Positioning.position(sink, {
             anchor: 'node',

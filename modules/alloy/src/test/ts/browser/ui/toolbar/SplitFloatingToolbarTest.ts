@@ -46,7 +46,7 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
             outline: '2px solid blue'
           }
         },
-        lazySink(_comp) {
+        lazySink: (_comp) => {
           return Result.value(sinkComp);
         },
         components: [

@@ -6,11 +6,11 @@ import * as WordSanitiser from 'ephox/robin/util/WordSanitiser';
 UnitTest.test('Word Sanitiser', () => {
   const some = Optional.some;
 
-  const ss = function (word: string, v1: string, v2: string) {
+  const ss = (word: string, v1: string, v2: string) => {
     return WordScope(word, some(v1), some(v2));
   };
 
-  const check = function (expected: WordScope, input: WordScope) {
+  const check = (expected: WordScope, input: WordScope) => {
     const actual = WordSanitiser.scope(input);
     assert.eq(expected.word, actual.word);
     assert.eq(true, expected.left.equals(actual.left));

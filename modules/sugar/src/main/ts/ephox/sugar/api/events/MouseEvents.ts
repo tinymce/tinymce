@@ -30,7 +30,7 @@ const isRealClick = (raw: any): boolean => {
 };
 
 const filtered = (event: string, filter: EventFilter<MouseEvent>) => ({
-  bind(element: SugarElement, f: EventHandler<MouseEvent>) {
+  bind: (element: SugarElement, f: EventHandler<MouseEvent>) => {
     return FilteredEvent.bind(element, event, filter, f);
   }
 });

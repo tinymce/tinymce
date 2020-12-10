@@ -102,7 +102,7 @@ const doCreate = <
     ...wrappedExtra,
     ...wrappedApis,
     revoke: Fun.curry(revokeBehaviour, name),
-    config(spec) {
+    config: (spec) => {
       const prepared = ValueSchema.asRawOrDie(name + '-config', configSchema, spec);
 
       return {
@@ -117,19 +117,15 @@ const doCreate = <
       };
     },
 
-    schema() {
-      return schemaSchema;
-    },
+    schema: Fun.constant(schemaSchema),
 
-    exhibit(info: BehaviourInfo<D, S>, base: DomDefinitionDetail) {
+    exhibit: (info: BehaviourInfo<D, S>, base: DomDefinitionDetail) => {
       return getConfig(info).bind((behaviourInfo) => Obj.get(active, 'exhibit').map((exhibitor) => exhibitor(base, behaviourInfo.config, behaviourInfo.state))).getOr(DomModification.nu({ }));
     },
 
-    name() {
-      return name;
-    },
+    name: Fun.constant(name),
 
-    handlers(info: BehaviourInfo<D, S>) {
+    handlers: (info: BehaviourInfo<D, S>) => {
       return getConfig(info).map((behaviourInfo) => {
         const getEvents = Obj.get(active, 'events').getOr(() => ({ }));
         return getEvents(behaviourInfo.config, behaviourInfo.state);

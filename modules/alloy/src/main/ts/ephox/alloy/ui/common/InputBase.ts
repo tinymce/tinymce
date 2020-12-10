@@ -8,7 +8,7 @@ import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { RawDomSchema } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
-import { InputDetail } from '../../ui/types/InputTypes';
+import { InputDetail } from '../types/InputTypes';
 
 const schema: () => FieldProcessorAdt[] = Fun.constant([
   FieldSchema.option('data'),
@@ -43,10 +43,10 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
           mode: 'manual',
           // Propagating its Optional
           ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
-          getValue(input) {
+          getValue: (input) => {
             return Value.get(input.element);
           },
-          setValue(input, data) {
+          setValue: (input, data) => {
             const current = Value.get(input.element);
             // Only set it if it has changed ... otherwise the cursor goes to the end.
             if (current !== data) {

@@ -3,7 +3,7 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Fractures from 'ephox/robin/clumps/Fractures';
 
 UnitTest.test('FracturesTest', () => {
-  const regen = function () {
+  const regen = () => {
     return TestUniverse(Gene('root', 'root', [
       Gene('a', 'span', [
         Gene('aa', 'span', [
@@ -36,11 +36,11 @@ UnitTest.test('FracturesTest', () => {
     ]));
   };
 
-  const isRoot = function (item: Gene) {
+  const isRoot = (item: Gene) => {
     return item.name === 'root';
   };
 
-  const check = function (expected: string, startId: string, finishId: string, doc: TestUniverse = regen()) {
+  const check = (expected: string, startId: string, finishId: string, doc: TestUniverse = regen()) => {
     const start = doc.find(doc.get(), startId).getOrDie();
     const finish = doc.find(doc.get(), finishId).getOrDie();
     const actual = Fractures.fracture(doc, isRoot, start, finish);

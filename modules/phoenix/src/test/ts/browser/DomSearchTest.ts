@@ -9,7 +9,7 @@ UnitTest.test('DomSearchTest', () => {
   const container = SugarElement.fromTag('div');
   Insert.append(body, container);
 
-  const check = function (expected: string, rawTexts: string[], words: string[]) {
+  const check = (expected: string, rawTexts: string[], words: string[]) => {
     const elements = Arr.map(rawTexts, (x) => {
       return SugarElement.fromText(x);
     });

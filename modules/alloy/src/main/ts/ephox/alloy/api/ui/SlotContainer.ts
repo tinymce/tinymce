@@ -33,7 +33,7 @@ const sketch = (sSpec: SlotContainerSpecBuilder): SketchSpec => {
 
     return {
       slot,
-      record() { return record; }
+      record: () => record
     };
   })();
 

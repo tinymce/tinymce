@@ -1,7 +1,7 @@
 import { Global } from './Global';
 
 /** path :: ([String], JsObj?) -> JsObj */
-export const path = function <T> (parts: string[], scope?: {}): T | undefined {
+export const path = <T>(parts: string[], scope?: {}): T | undefined => {
   let o = scope !== undefined && scope !== null ? scope : Global;
   for (let i = 0; i < parts.length && o !== undefined && o !== null; ++i) {
     o = o[parts[i]];
@@ -10,13 +10,13 @@ export const path = function <T> (parts: string[], scope?: {}): T | undefined {
 };
 
 /** resolve :: (String, JsObj?) -> JsObj */
-export const resolve = function <T> (p: string, scope?: {}): T | undefined {
+export const resolve = <T>(p: string, scope?: {}): T | undefined => {
   const parts = p.split('.');
   return path(parts, scope);
 };
 
 /** step :: (JsObj, String) -> JsObj */
-export const step = function <T extends Record<string, any>> (o: {}, part: string): T {
+export const step = <T extends Record<string, any>>(o: {}, part: string): T => {
   if (o[part] === undefined || o[part] === null) {
     o[part] = {};
   }
@@ -24,7 +24,7 @@ export const step = function <T extends Record<string, any>> (o: {}, part: strin
 };
 
 /** forge :: ([String], JsObj?) -> JsObj */
-export const forge = function <T extends string[]> (parts: T, target?: {}): {[ K in T[number]]: {}} {
+export const forge = <T extends string[]>(parts: T, target?: {}): {[ K in T[number]]: {}} => {
   let o = target !== undefined ? target : Global;
   for (let i = 0; i < parts.length; ++i) {
     o = step(o, parts[i]);
@@ -33,7 +33,7 @@ export const forge = function <T extends string[]> (parts: T, target?: {}): {[ K
 };
 
 /** namespace :: (String, JsObj?) -> JsObj */
-export const namespace = function (name: string, target?: {}): { [key: string]: {} } {
+export const namespace = (name: string, target?: {}): { [key: string]: {} } => {
   const parts = name.split('.');
   return forge(parts, target);
 };

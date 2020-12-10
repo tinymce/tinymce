@@ -16,7 +16,7 @@ const Invalidating: InvalidatingBehaviour = Behaviour.create({
 
   extra: {
     // Note, this requires representing to be on the validatee
-    validation <T>(validator: (v: string) => Result<T, string>) {
+    validation: <T>(validator: (v: string) => Result<T, string>) => {
       return (component: AlloyComponent) => {
         const v = Representing.getValue(component);
         return Future.pure(validator(v));

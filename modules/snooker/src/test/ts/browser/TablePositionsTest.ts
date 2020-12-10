@@ -72,7 +72,7 @@ UnitTest.test('RectangularTest', () => {
 
   InsertAll.append(div, [ table, table2 ] );
 
-  const check = function (tableTarget: SugarElement, from: string, to: string, expected: boolean) {
+  const check = (tableTarget: SugarElement, from: string, to: string, expected: boolean) => {
     [].forEach.call(tableTarget.dom.querySelectorAll('td'), (td: HTMLElement) => {
       td.style.background = '';
     });

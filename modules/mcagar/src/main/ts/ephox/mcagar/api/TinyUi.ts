@@ -25,7 +25,7 @@ export interface TinyUi {
   cTriggerContextMenu: (label: string, target: string, menu: string) => Chain<SugarElement, SugarElement>;
 }
 
-export const TinyUi = function (editor: Editor): TinyUi {
+export const TinyUi = (editor: Editor): TinyUi => {
   const dialogRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
   const toolstripRoot = SugarElement.fromDom(editor.getContainer());
   const editorRoot = SugarElement.fromDom(editor.getBody());
@@ -42,63 +42,63 @@ export const TinyUi = function (editor: Editor): TinyUi {
 
   const cEditorRoot = Chain.inject(editorRoot);
 
-  const cFindIn = function (cRoot: Chain<SugarElement, SugarElement>, selector: string) {
+  const cFindIn = (cRoot: Chain<SugarElement, SugarElement>, selector: string) => {
     return Chain.fromChains([
       cRoot,
       UiFinder.cFindIn(selector)
     ]);
   };
 
-  const sClickOnToolbar = function <T> (label: string, selector: string) {
+  const sClickOnToolbar = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cFindIn(cGetToolbarRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  const sClickOnMenu = function <T> (label: string, selector: string) {
+  const sClickOnMenu = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cFindIn(cGetMenuRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  const sClickOnUi = function <T> (label: string, selector: string) {
+  const sClickOnUi = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cFindIn(cDialogRoot, selector),
       Mouse.cClick
     ]);
   };
 
-  const sWaitForUi = function <T> (label: string, selector: string) {
+  const sWaitForUi = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cWaitForUi(label, selector)
     ]);
   };
 
-  const sWaitForPopup = function <T> (label: string, selector: string) {
+  const sWaitForPopup = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cWaitForPopup(label, selector)
     ]);
   };
 
-  const cWaitForState = function <T> (hasState: (element: SugarElement) => boolean) {
-    return function (label: string, selector: string) {
+  const cWaitForState = <T>(hasState: (element: SugarElement) => boolean) => {
+    return (label: string, selector: string) => {
       return Chain.fromChainsWith<SugarElement, T, SugarElement>(dialogRoot, [
         UiFinder.cWaitForState(label, selector, hasState)
       ]);
     };
   };
 
-  const cWaitForPopup = function (label: string, selector: string) {
+  const cWaitForPopup = (label: string, selector: string) => {
     return cWaitForState(Visibility.isVisible)(label, selector);
   };
 
-  const cWaitForUi = function (label: string, selector: string) {
+  const cWaitForUi = (label: string, selector: string) => {
     return cWaitForState(Fun.always)(label, selector);
   };
 
-  const cTriggerContextMenu = function (label: string, target: string, menu: string) {
+  const cTriggerContextMenu = (label: string, target: string, menu: string) => {
     return Chain.fromChains<SugarElement, SugarElement>([
       cFindIn(cEditorRoot, target),
       Mouse.cContextMenu,
@@ -108,13 +108,13 @@ export const TinyUi = function (editor: Editor): TinyUi {
     ]);
   };
 
-  const getDialogByElement = function (element: SugarElement) {
+  const getDialogByElement = (element: SugarElement) => {
     return Arr.find(editor.windowManager.getWindows(), (win) => {
       return element.dom.id === win._id;
     });
   };
 
-  const cAssertDialogContents = function (data: Record<string, any>) {
+  const cAssertDialogContents = (data: Record<string, any>) => {
     return Chain.async<SugarElement, SugarElement>((element, next, die) => {
       getDialogByElement(element).fold(() => die('Can not find dialog'), (win) => {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
@@ -123,7 +123,7 @@ export const TinyUi = function (editor: Editor): TinyUi {
     });
   };
 
-  const cFillDialogWith = function (data: Record<string, any>) {
+  const cFillDialogWith = (data: Record<string, any>) => {
     return Chain.async<SugarElement, SugarElement>((element, next, die) => {
       getDialogByElement(element).fold(() => die('Can not find dialog'), (win) => {
         win.fromJSON({ ...win.toJSON(), ...data });
@@ -132,21 +132,21 @@ export const TinyUi = function (editor: Editor): TinyUi {
     });
   };
 
-  const sFillDialogWith = function <T> (data: Record<string, any>, selector: string) {
+  const sFillDialogWith = <T>(data: Record<string, any>, selector: string) => {
     return Chain.asStep<T, any>({}, [
       cFindIn(cDialogRoot, selector),
       cFillDialogWith(data)
     ]);
   };
 
-  const cSubmitDialog = function () {
+  const cSubmitDialog = () => {
     return Chain.fromChains<SugarElement, SugarElement>([
       Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector)),
       Mouse.cClick
     ]);
   };
 
-  const sSubmitDialog = function <T> (selector: string) {
+  const sSubmitDialog = <T>(selector: string) => {
     return Chain.asStep<T, any>({}, [
       cFindIn(cDialogRoot, selector),
       cSubmitDialog()

@@ -35,7 +35,7 @@ UnitTest.test('SimplifyTest', () => {
     ])
   ]));
 
-  const check = function (expected: string[], raw: string[]) {
+  const check = (expected: string[], raw: string[]) => {
     const path = Arr.map(raw, (r) => {
       return doc.find(doc.get(), r).getOrDie('Could not find: ' + r);
     });

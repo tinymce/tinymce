@@ -22,11 +22,11 @@ export interface InjectPosition<E> {
 }
 
 const adt: {
-  before: <E> (element: E) => InjectPosition<E>;
-  after: <E> (element: E) => InjectPosition<E>;
-  rest: <E> (element: E) => InjectPosition<E>;
-  last: <E> (element: E) => InjectPosition<E>;
-  invalid: <E> (element: E, offset: number) => InjectPosition<E>;
+  before: <E>(element: E) => InjectPosition<E>;
+  after: <E>(element: E) => InjectPosition<E>;
+  rest: <E>(element: E) => InjectPosition<E>;
+  last: <E>(element: E) => InjectPosition<E>;
+  invalid: <E>(element: E, offset: number) => InjectPosition<E>;
 } = Adt.generate([
   { before: [ 'element' ] },
   { after: [ 'element' ] },

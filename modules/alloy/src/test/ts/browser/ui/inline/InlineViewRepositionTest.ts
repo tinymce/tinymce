@@ -41,7 +41,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink() {
+        lazySink: () => {
           return Result.value(component);
         },
 
@@ -64,7 +64,7 @@ UnitTest.asynctest('InlineViewRepositionTest', (success, failure) => {
           classes: [ 'test-inline2' ]
         },
 
-        lazySink() {
+        lazySink: () => {
           return Result.value(component);
         }
       })

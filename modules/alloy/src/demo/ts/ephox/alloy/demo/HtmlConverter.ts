@@ -39,7 +39,7 @@ export default (): void => {
           tag: 'button',
           innerHtml: 'Convert'
         },
-        action(button) {
+        action: (button) => {
           const textarea = button.getSystem().getByUid('textarea-input').getOrDie();
           const value = Representing.getValue(textarea);
           const output = GuiTemplate.readHtml(value).getOrDie();

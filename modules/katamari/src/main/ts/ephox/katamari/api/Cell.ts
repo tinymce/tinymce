@@ -6,11 +6,11 @@ export interface Cell<T> {
 export const Cell = <T>(initial: T): Cell<T> => {
   let value = initial;
 
-  const get = function () {
+  const get = () => {
     return value;
   };
 
-  const set = function (v: T) {
+  const set = (v: T) => {
     value = v;
   };
 

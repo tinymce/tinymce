@@ -8,7 +8,7 @@ import * as EndofWord from './EndofWord';
  *  word that (item, offset) is on. The start of the word and the end of the word is NOT considered
  *  on that word. Returns none if no word can be identified containing offset.
  */
-const word = function <E, D> (universe: Universe<E, D>, item: E, offset: number): Optional<WordRange<E>> {
+const word = <E, D>(universe: Universe<E, D>, item: E, offset: number): Optional<WordRange<E>> => {
   if (!universe.property().isText(item)) {
     return Optional.none();
   }

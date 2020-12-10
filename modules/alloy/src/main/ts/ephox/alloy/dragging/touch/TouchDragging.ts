@@ -35,7 +35,7 @@ const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState,
         // delayDrop is not used by touch
         delayDrop: Fun.noop,
         forceDrop: stop,
-        move(event) {
+        move: (event) => {
           DragUtils.move(component, dragConfig, dragState, TouchData, event);
         }
       };
