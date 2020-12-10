@@ -19,7 +19,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
               getValue(_component) {
                 return detail.data;
               },
-              setValue() { }
+              setValue: Fun.noop
             }
           })
         ])

@@ -7,7 +7,7 @@
 
 import { ItemTypes, ItemWidget, Menu as AlloyMenu, MenuTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Id } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -30,7 +30,7 @@ export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFac
     columns,
     presets,
     ItemResponse.CLOSE_ON_EXECUTE,
-    () => false,
+    Fun.never,
     backstage.shared.providers
   );
 

@@ -1,7 +1,7 @@
 import { Log, Logger, Step } from '@ephox/agar';
 import { Behaviour, GuiFactory, Replacing, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Cell } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
 import { SimpleBehaviours } from 'tinymce/themes/silver/ui/alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
@@ -28,7 +28,7 @@ UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
           store.adder('onSetup.1')();
           return onDestroy1;
         },
-        getApi: () => { }
+        getApi: Fun.noop
       };
 
       const cellWithoutDestroy = Cell(store.adder('fallbackWithoutDestroy'));
@@ -36,7 +36,7 @@ UnitTest.asynctest('ControlOnSetup Test', (success, failure) => {
         onSetup: () => {
           store.adder('onSetup.2')();
         },
-        getApi: () => { }
+        getApi: Fun.noop
       } as any; // "any" cast to get around Typescript asking for a return function
 
       return [

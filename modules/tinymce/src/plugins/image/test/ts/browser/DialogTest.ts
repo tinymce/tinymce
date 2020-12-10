@@ -1,5 +1,6 @@
 import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 
@@ -62,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure
       ]),
 
       Log.stepsAsStep('TBA', 'Insert Image Dialog with all options', [
-        api.sSetSetting('file_picker_callback', () => {}),
+        api.sSetSetting('file_picker_callback', Fun.noop),
         api.sSetSetting('image_class_list', [{ title: 'sample', value: 'sample' }]),
         api.sSetSetting('image_list', [{ title: 'sample', value: 'sample' }]),
         api.sSetSetting('image_caption', true),

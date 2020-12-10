@@ -64,8 +64,8 @@ const call = function (f: () => any): void {
   f();
 };
 
-const never = constant<false>(false) as (...args: any[]) => false;
-const always = constant<true>(true) as (...args: any[]) => true;
+const never: (...args: any[]) => false = constant<false>(false);
+const always: (...args: any[]) => true = constant<true>(true);
 
 /* Used to weaken types */
 const weaken = <A, B extends A>(b: B): A => b;

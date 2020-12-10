@@ -1,5 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -70,8 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (success, fail
 
   const sUploadImages = function (editor) {
     return Step.sync(function () {
-      editor.uploadImages(function () {
-      });
+      editor.uploadImages(Fun.noop);
     });
   };
 
@@ -104,7 +104,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', function (success, fail
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',
-    test_callback() {
-    }
+    test_callback: Fun.noop
   }, success, failure);
 });

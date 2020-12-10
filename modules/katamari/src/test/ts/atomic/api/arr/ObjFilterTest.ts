@@ -5,7 +5,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('Obj.filter: filter const true is identity', () => {
   fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
-    Assert.eq('id', obj, Obj.filter(obj, () => true));
+    Assert.eq('id', obj, Obj.filter(obj, Fun.always));
   }));
 });
 

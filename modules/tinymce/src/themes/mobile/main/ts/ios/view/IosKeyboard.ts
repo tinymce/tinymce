@@ -69,9 +69,8 @@ const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: W
     }
   });
 
-  const onToolbarTouch = function (/* event */) {
-    // Do nothing
-  };
+  // Do nothing
+  const onToolbarTouch = Fun.noop;
 
   const destroy = function () {
     captureInput.unbind();

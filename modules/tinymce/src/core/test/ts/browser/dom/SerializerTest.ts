@@ -1,6 +1,6 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomSerializer from 'tinymce/core/api/dom/Serializer';
@@ -797,8 +797,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', function (success,
 
   suite.test('addNodeFilter/addAttributeFilter', () => {
     const ser = DomSerializer({ });
-    const nodeFilter = () => {};
-    const attrFilter = () => {};
+    const nodeFilter = Fun.noop;
+    const attrFilter = Fun.noop;
 
     ser.addNodeFilter('some-tag', nodeFilter);
     ser.addAttributeFilter('data-something', attrFilter);

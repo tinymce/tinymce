@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Optional } from '@ephox/katamari';
 
 import { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
@@ -30,9 +30,7 @@ const memory = (): MemoryRepresentingState => {
 };
 
 const manual = (): ManualRepresentingState => {
-  const readState = () => {
-
-  };
+  const readState = Fun.noop;
 
   return nuState({
     readState

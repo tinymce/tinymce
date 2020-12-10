@@ -1,5 +1,6 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -436,7 +437,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
 
     const sCheckWithManager = (title: string, plugins: string, plugin: string, addToManager: boolean, expected: boolean) => Step.sync(() => {
       if (addToManager) {
-        PluginManager.add('ParticularPlugin', () => {});
+        PluginManager.add('ParticularPlugin', Fun.noop);
       }
 
       editor.settings.plugins = plugins;

@@ -6,7 +6,7 @@
  */
 
 import { Dialog } from '@ephox/bridge';
-import { Future, Obj, Optional, Type } from '@ephox/katamari';
+import { Fun, Future, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -69,9 +69,9 @@ const getPickerTypes = (editor: Editor): boolean | Record<string, boolean> => {
   const optLegacyTypes = Optional.some(Settings.getFileBrowserCallbackTypes(editor)).filter(isTruthy);
   const optTypes = optFileTypes.or(optLegacyTypes).map(makeMap);
   return getPicker(editor).fold(
-    () => false,
+    Fun.never,
     (_picker) => optTypes.fold<boolean | Record<string, boolean>>(
-      () => true,
+      Fun.always,
       (types) => Obj.keys(types).length > 0 ? types : false)
   );
 };

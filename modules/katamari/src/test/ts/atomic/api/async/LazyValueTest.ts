@@ -125,8 +125,7 @@ promiseTest('LazyValue: TINY-6106: LazyValue should only use the value from the 
 }));
 
 promiseTest('LazyValue: TINY-6107: LazyValues.withTimeout - never returns', () => new Promise((resolve, reject) => {
-  LazyValues.withTimeout(() => {
-  }, 1).get((actual) => {
+  LazyValues.withTimeout(Fun.noop, 1).get((actual) => {
     eqAsync('should time out', Optional.none(), actual, reject, tOptional());
     resolve();
   });

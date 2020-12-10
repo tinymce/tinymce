@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
 
@@ -53,14 +53,10 @@ const hasIsDefaultPrevented = function (event) {
 };
 
 // Dummy function that gets replaced on the delegation state functions
-const returnFalse = function () {
-  return false;
-};
+const returnFalse = Fun.never;
 
 // Dummy function that gets replaced on the delegation state functions
-const returnTrue = function () {
-  return true;
-};
+const returnTrue = Fun.always;
 
 /**
  * Binds a native event to a callback on the speified target.

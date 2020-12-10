@@ -1,6 +1,6 @@
 import { Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import EventUtils from 'tinymce/core/api/dom/EventUtils';
 
@@ -340,8 +340,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
   */
 
   suite.test('bind unbind fire clean on null', function () {
-    eventUtils.bind(null, 'click', function () {});
-    eventUtils.unbind(null, 'click', function () {});
+    eventUtils.bind(null, 'click', Fun.noop);
+    eventUtils.unbind(null, 'click', Fun.noop);
     eventUtils.fire(null, 'click', {});
     eventUtils.clean(null);
     LegacyUnit.equal(true, true, 'No exception');

@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 
@@ -49,7 +50,7 @@ UnitTest.test('Arr.find: finds a value in the array', () => {
 
 UnitTest.test('Arr.find: value not found', () => {
   fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-    const result = Arr.find(arr, () => false);
+    const result = Arr.find(arr, Fun.never);
     Assert.eq('Element not found in array', Optional.none(), result, tOptional(tNumber));
   }));
 });

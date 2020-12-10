@@ -1,6 +1,6 @@
 import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Obj } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import Editor from 'tinymce/core/api/Editor';
@@ -418,7 +418,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           num: 2,
           obj: { a: 1 },
           arr: [ 'a' ],
-          fun: () => {},
+          fun: Fun.noop,
           strArr: [ 'a', 'b' ],
           mixedArr: [ 'a', 3 ]
         }, EditorManager);

@@ -1,6 +1,6 @@
 import { Chain, Guard, NamedChain, Touch, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Optional, Result } from '@ephox/katamari';
+import { Fun, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Scroll, SugarPosition } from '@ephox/sugar';
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('TouchDraggingTest', (success, failure) => {
   PlatformDetection.override({
     deviceType: {
       ...origPlatform.deviceType,
-      isTouch: () => true
+      isTouch: Fun.always
     }
   });
 

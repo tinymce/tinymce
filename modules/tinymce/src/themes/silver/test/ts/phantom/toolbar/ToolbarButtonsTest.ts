@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Logger, Mouse, Step, Waiter } from '@ephox
 import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFind } from '@ephox/sugar';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
@@ -37,7 +37,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 text: Optional.some('button1'),
                 onSetup: (_api: Toolbar.ToolbarButtonInstanceApi) => {
                   store.adder('onSetup.1')();
-                  return () => { };
+                  return Fun.noop;
                 },
                 onAction: (api: Toolbar.ToolbarButtonInstanceApi) => {
                   store.adder('onAction.1')();
@@ -62,7 +62,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 text: Optional.some('button2'),
                 onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                   store.adder('onSetup.2')();
-                  return () => { };
+                  return Fun.noop;
                 },
                 onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                   store.adder('onToggleAction.2')();
@@ -97,7 +97,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 },
                 onSetup: (_api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                   store.adder('onSetup.3')();
-                  return () => { };
+                  return Fun.noop;
                 },
                 onAction: (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
                   store.adder('onToggleAction.3')();
@@ -135,7 +135,7 @@ UnitTest.asynctest('Toolbar Buttons Test', (success, failure) => {
                 },
                 onSetup: (_api: Toolbar.ToolbarMenuButtonInstanceApi) => {
                   store.adder('onSetup.4')();
-                  return () => { };
+                  return Fun.noop;
                 }
               }, 'tox-mbtn', helpers.backstage, Optional.none())
             ]

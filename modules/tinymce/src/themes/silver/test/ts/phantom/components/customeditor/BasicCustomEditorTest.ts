@@ -2,7 +2,7 @@
 import { ApproxStructure, Assertions, Cleaner, Logger, Step, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Cell, Global } from '@ephox/katamari';
+import { Cell, Fun, Global } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -37,7 +37,7 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
         resolve({
           setValue(s: string) { customEditorValue.set(s); },
           getValue() { return customEditorValue.get(); },
-          destroy() {}
+          destroy: Fun.noop
         });
       }
     }, 100);

@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Pprint, Testable } from '@ephox/dispute';
 import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import * as Type from 'ephox/katamari/api/Type';
 
 const { tNumber } = Testable;
@@ -17,7 +18,7 @@ UnitTest.test('Type.is*: Unit tests', () => {
 
   // eslint-disable-next-line no-new-wrappers
   const objectString = new String('ball');
-  const noop = () => {};
+  const noop = Fun.noop;
 
   const checkIsNull = check(Type.isNull, 'isNull');
   const checkIsUndefined = check(Type.isUndefined, 'isUndefined');

@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 import { Css, Height } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -68,7 +68,8 @@ const moveBy = (direction: number, spectrum: AlloyComponent, detail: VerticalSli
   return Optional.some(yValue);
 };
 
-const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<boolean> => moveBy(direction, spectrum, detail).map((): boolean => true);
+const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail: VerticalSliderDetail): Optional<boolean> =>
+  moveBy(direction, spectrum, detail).map<boolean>(Fun.always);
 
 // get y offset from event
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {

@@ -85,12 +85,12 @@ UnitTest.asynctest('SilverDialog Event Test', (success, failure) => {
                 icons: () => <Record<string, string>> {},
                 menuItems: () => <Record<string, any>> {},
                 translate: I18n.translate,
-                isDisabled: () => false,
+                isDisabled: Fun.never,
                 getSetting: (_settingName: string, defaultVal: any) => defaultVal
               }
             },
             dialog: {
-              isDraggableModal: () => false
+              isDraggableModal: Fun.never
             }
           }
         );

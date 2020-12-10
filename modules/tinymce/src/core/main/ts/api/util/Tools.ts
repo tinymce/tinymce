@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 
@@ -189,7 +190,7 @@ const create = function (s, p, root?) {
 
   // Create default constructor
   if (!p[cn]) {
-    p[cn] = function () { };
+    p[cn] = Fun.noop;
     de = 1;
   }
 

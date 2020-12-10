@@ -77,7 +77,7 @@ const backspaceDeleteRange = (editor: Editor, forward: boolean) => {
         DeleteUtils.paddEmptyBody(editor);
         return true;
       },
-      () => true
+      Fun.always
     );
   }
   return false;

@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarElement } from '@ephox/sugar';
@@ -229,7 +230,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
 
         ed.ui.registry.addContextToolbar('test-toolbar', {
-          predicate: () => false,
+          predicate: Fun.never,
           items: 'form:test-form'
         });
       }

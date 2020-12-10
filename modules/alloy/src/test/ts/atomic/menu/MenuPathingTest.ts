@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import Jsc from '@ephox/wrap-jsverify';
 
 import * as MenuPathing from 'ephox/alloy/menu/layered/MenuPathing';
@@ -46,6 +47,6 @@ UnitTest.test('MenuPathingTest', () => {
 
   Jsc.property(
     '*** No property checking anything for MenuPathing yet',
-    () => true
+    Fun.always
   );
 });

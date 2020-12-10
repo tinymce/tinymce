@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Settings from '../api/Settings';
@@ -755,9 +756,8 @@ const Quirks = function (editor: Editor): Quirks {
     });
   };
 
-  const refreshContentEditable = function () {
-    // No-op since Mozilla seems to have fixed the caret repaint issues
-  };
+  // No-op since Mozilla seems to have fixed the caret repaint issues
+  const refreshContentEditable = Fun.noop;
 
   const isHidden = function (): boolean {
     if (!isGecko || editor.removed) {
