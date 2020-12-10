@@ -11,17 +11,32 @@ interface TestCase {
   table: string;
 }
 
+// Adapted from SizeUtils.reducePrecision
+const matchWithReducedPrecision = (label: string, expected: string, tableWidth: string) => {
+  const floatValue = parseFloat(tableWidth);
+  const match = /^\d+(\.\d+)?(px|%)$/.exec(tableWidth);
+  const unit = match ? match[2] : '';
+  const p = Math.pow(10, 1);
+  const roundedWidth = (Math.round(floatValue * p ) / p) + unit;
+  Assert.eq(label, expected, roundedWidth);
+};
+
 const assertWidth = (testCase: TestCase) => () => {
   const table = SugarElement.fromHtml<HTMLTableElement>(testCase.table);
   const replica = CopySelected.extract(table, `.${SEL_CLASS}`);
   const tableWidth = Css.get(replica, 'width');
-  Assert.eq(testCase.label, testCase.expectedWidth, tableWidth);
+
+  if (testCase.expectedWidth === '') {
+    Assert.eq(testCase.label, testCase.expectedWidth, tableWidth);
+  } else {
+    matchWithReducedPrecision(testCase.label, testCase.expectedWidth, tableWidth);
+  }
 };
 
 const testCases: TestCase[] = [
   {
     label: 'TINY-6664: Assert table width - pixel width single column',
-    expectedWidth: '473.66px',
+    expectedWidth: '473.7px',
     table: (
       `<table style="border-collapse: collapse; width: 1036px; height: 235px;" border="1">
         <tbody>
@@ -41,7 +56,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - pixel width multiple columns',
-    expectedWidth: '691.71px',
+    expectedWidth: '691.7px',
     table: (
       `<table style="border-collapse: collapse; width: 1036px; height: 235px;" border="1">
         <tbody>
@@ -81,7 +96,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - relative width single column',
-    expectedWidth: '21.1173%',
+    expectedWidth: '21.1%',
     table: (
       `<table style="border-collapse: collapse; width: 63.352%; height: 258px;" border="1">
         <tbody>
@@ -106,7 +121,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - relative width multiple columns',
-    expectedWidth: '42.2347%',
+    expectedWidth: '42.2%',
     table: (
       `<table style="border-collapse: collapse; width: 63.352%; height: 258px;" border="1">
         <tbody>
@@ -131,7 +146,7 @@ const testCases: TestCase[] = [
   },
   {
     label: 'TINY-6664: Assert table width - relative width entire table',
-    expectedWidth: '63.352%',
+    expectedWidth: '63.4%',
     table: (
       `<table style="border-collapse: collapse; width: 63.352%; height: 258px;" border="1">
         <tbody>
