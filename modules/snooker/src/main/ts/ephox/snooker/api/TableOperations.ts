@@ -67,7 +67,7 @@ const uniqueRows = (details: Structs.DetailExt[]) => {
   );
 };
 
-const uniqueColumns = (details: Structs.DetailExt[]) => {
+const uniqueColumns = (details: Structs.DetailExt[]): Structs.DetailExt[] => {
   const uniqueCheck = (rest: Structs.DetailExt[], detail: Structs.DetailExt) => {
     const columnExists = Arr.exists(rest, (currentDetail) => currentDetail.column === detail.column);
 
