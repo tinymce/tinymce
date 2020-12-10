@@ -57,5 +57,6 @@ export {
   addStyles,
   assertApproxCellSizes,
   readHeight,
-  readWidth
+  readWidth,
+  reducePrecision
 };

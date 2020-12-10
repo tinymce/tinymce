@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
+import { reducePrecision } from 'ephox/snooker/test/SizeUtils';
 
 const SEL_CLASS = 'copy-selected';
 
@@ -11,13 +12,8 @@ interface TestCase {
   table: string;
 }
 
-// Adapted from SizeUtils.reducePrecision
 const matchWithReducedPrecision = (label: string, expected: string, tableWidth: string) => {
-  const floatValue = parseFloat(tableWidth);
-  const match = /^\d+(\.\d+)?(px|%)$/.exec(tableWidth);
-  const unit = match ? match[2] : '';
-  const p = Math.pow(10, 1);
-  const roundedWidth = (Math.round(floatValue * p ) / p) + unit;
+  const roundedWidth = reducePrecision(tableWidth, 1);
   Assert.eq(label, expected, roundedWidth);
 };
 
