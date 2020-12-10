@@ -14,8 +14,8 @@ UnitTest.asynctest('Redraw Section Order Test', (success, failure) => {
     const findRow = (details: Structs.DetailNew[]) => {
       const rowOfCells = Arr.findMap(details, (detail) =>
         Traverse.parent(detail.element).map((row) =>
-          Structs.elementnew(row, false)));
-      return rowOfCells.getOrThunk(() => Structs.elementnew(Bridge.generators.row(), true));
+          Structs.elementnew(row, false, false)));
+      return rowOfCells.getOrThunk(() => Structs.elementnew(Bridge.generators.row(), true, false));
     };
 
     const warehouse = Warehouse.fromTable(table);

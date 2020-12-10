@@ -44,7 +44,7 @@ const generateRows = (house: Warehouse, minColRange: number, maxColRange: number
 
 const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
   const house = Warehouse.fromTable(table);
-  const details = onCells(house, target);
+  const details = onCells(house, target).map((details) => Arr.filter(details, (detail) => !detail.isLocked)).filter((details) => details.length > 0);
   return details.map((selectedCells): SugarElement<HTMLTableRowElement | HTMLTableColElement>[] => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column;

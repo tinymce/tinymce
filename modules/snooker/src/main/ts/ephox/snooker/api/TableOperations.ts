@@ -1,10 +1,9 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Compare, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';
-import {
-  ExtractMergable, ExtractPaste, ExtractPasteRows, onCell, onCells, onMergable, onPaste, onPasteByEditor, onUnmergable, run, TargetSelection
-} from '../model/RunOperation';
+import * as RunOperation from '../model/RunOperation';
+
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
 import * as MergingOperations from '../operate/MergingOperations';
@@ -22,6 +21,11 @@ export interface TableOperationResult {
   readonly grid: Structs.RowCells[];
   readonly cursor: Optional<SugarElement>;
 }
+
+type ExtractMergable = RunOperation.ExtractMergable;
+type ExtractPaste = RunOperation.ExtractPaste;
+type ExtractPasteRows = RunOperation.ExtractPasteRows;
+type TargetSelection = RunOperation.TargetSelection;
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
@@ -107,8 +111,9 @@ const opInsertColumnBefore = (grid: Structs.RowCells[], detail: Structs.DetailEx
 
 const opInsertColumnsBefore = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
   const columns = ColUtils.uniqueColumns(details);
-  const example = columns[0].column;
-  const targetIndex = columns[0].column;
+  const target = columns[0];
+  const example = target.column;
+  const targetIndex = target.column;
   const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
   return bundle(newGrid, details[0].row, targetIndex);
 };
@@ -121,8 +126,9 @@ const opInsertColumnAfter = (grid: Structs.RowCells[], detail: Structs.DetailExt
 };
 
 const opInsertColumnsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
-  const example = details[details.length - 1].column;
-  const targetIndex = details[details.length - 1].column + details[details.length - 1].colspan;
+  const target = details[details.length - 1];
+  const example = target.column;
+  const targetIndex = target.column + target.colspan;
   const columns = ColUtils.uniqueColumns(details);
   const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
   return bundle(newGrid, details[0].row, targetIndex);
@@ -202,9 +208,10 @@ const opSplitCellIntoRows = (grid: Structs.RowCells[], detail: Structs.DetailExt
 
 const opEraseColumns = (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) => {
   const columns = ColUtils.uniqueColumns(details);
+  const columnNums = Arr.map(columns, (column) => column.column);
 
-  const newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column, columns[columns.length - 1].column);
-  const cursor = elementFromGrid(newGrid, details[0].row, details[0].column);
+  const newGrid = ModificationOperations.deleteColumnsAt(grid, columnNums);
+  const cursor = elementFromGrid(newGrid, columns[0].row, columns[0].column);
   return outcome(newGrid, cursor);
 };
 
@@ -234,7 +241,7 @@ const opUnmergeCells = (grid: Structs.RowCells[], unmergable: SugarElement[], co
 };
 
 const opPasteCells = (grid: Structs.RowCells[], pasteDetails: ExtractPaste, comparator: CompElm, _genWrappers: GeneratorsModification) => {
-  const gridify = (table: SugarElement, generators: SimpleGenerators) => {
+  const gridify = (table: SugarElement<HTMLTableElement>, generators: SimpleGenerators) => {
     const wh = Warehouse.fromTable(table);
     return Transitions.toGrid(wh, generators, true);
   };
@@ -299,7 +306,7 @@ const opPasteRowsAfter = (grid: Structs.RowCells[], pasteDetails: ExtractPasteRo
 
 const opGetColumnType = (table: SugarElement, target: TargetSelection): string => {
   const house = Warehouse.fromTable(table);
-  const details = onCells(house, target);
+  const details = RunOperation.onCells(house, target);
   return details.bind((selectedCells): Optional<string> => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column;
@@ -324,31 +331,72 @@ export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Opti
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
 
-export const insertRowBefore = run(opInsertRowBefore, onCell, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowsBefore = run(opInsertRowsBefore, onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowAfter = run(opInsertRowAfter, onCell, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowsAfter = run(opInsertRowsAfter, onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = run(opInsertColumnBefore, onCell, resize, Fun.noop, Generators.modification);
-export const insertColumnsBefore = run(opInsertColumnsBefore, onCells, resize, Fun.noop, Generators.modification);
-export const insertColumnAfter = run(opInsertColumnAfter, onCell, resize, Fun.noop, Generators.modification);
-export const insertColumnsAfter = run(opInsertColumnsAfter, onCells, resize, Fun.noop, Generators.modification);
-export const splitCellIntoColumns = run(opSplitCellIntoColumns, onCell, resize, Fun.noop, Generators.modification);
-export const splitCellIntoRows = run(opSplitCellIntoRows, onCell, Fun.noop, Fun.noop, Generators.modification);
-export const eraseColumns = run(opEraseColumns, onCells, resize, prune, Generators.modification);
-export const eraseRows = run(opEraseRows, onCells, Fun.noop, prune, Generators.modification);
-export const makeColumnHeader = run(opMakeColumnHeader, onCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
-export const makeColumnsHeader = run(opMakeColumnsHeader, onCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
-export const unmakeColumnHeader = run(opUnmakeColumnHeader, onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const unmakeColumnsHeader = run(opUnmakeColumnsHeader, onCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const makeRowHeader = run(opMakeRowHeader, onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
-export const makeRowsHeader = run(opMakeRowsHeader, onCells, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
-export const unmakeRowHeader = run(opUnmakeRowHeader, onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const unmakeRowsHeader = run(opUnmakeRowsHeader, onCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const mergeCells = run(opMergeCells, onMergable, Fun.noop, Fun.noop, Generators.merging);
-export const unmergeCells = run(opUnmergeCells, onUnmergable, resize, Fun.noop, Generators.merging);
-export const pasteCells = run(opPasteCells, onPaste, resize, Fun.noop, Generators.modification);
-export const pasteColsBefore = run(opPasteColsBefore, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
-export const pasteColsAfter = run(opPasteColsAfter, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
-export const pasteRowsBefore = run(opPasteRowsBefore, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
-export const pasteRowsAfter = run(opPasteRowsAfter, onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
+// Custom selection extractors
+
+const onUnlockedCell = (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<Structs.DetailExt> =>
+  RunOperation.onCell(warehouse, target).filter((detail) => !detail.isLocked);
+
+const onUnlockedCells = (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+  RunOperation.onCells(warehouse, target).map((details) => Arr.filter(details, (detail) => !detail.isLocked)).filter((details) => details.length > 0);
+
+/**
+ * before: true - If a locked column is the first column in the selection, then inserting/pasting columns before should be a noop.
+ * before: false - If a locked column is the last column in the selection, then inserting/pasting columns after should be a noop.
+ * Note: If there are locked columns contained in the selection then they should not count towards the count of the number of columns inserted before (this doesn't have any affect when pasting)
+ */
+const unlockedColumns = (before: boolean, details: Structs.DetailExt[]): Optional<Structs.DetailExt[]> => {
+  const getter = before ? Arr.head : Arr.last;
+  const isLocked = getter(details).exists((col) => col.isLocked);
+
+  if (isLocked) {
+    return Optional.none();
+  } else {
+    const unlockedColumns = Arr.filter(details, (column) => !column.isLocked);
+    return Optional.some(unlockedColumns).filter((arr) => arr.length > 0);
+  }
+};
+
+const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+  RunOperation.onCells(warehouse, target).bind((details) => unlockedColumns(before, details));
+
+const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
+  RunOperation.onPasteByEditor(warehouse, target).bind((details) => {
+    return unlockedColumns(before, details.cells).map((unlockedCells) => ({ ...details, cells: unlockedCells }));
+  });
+
+// If any locked columns are present in the selection, then don't want to be able to merge
+const mergeCellsExtractor = (warehouse: Warehouse, target: RunOperation.TargetMergable): Optional<ExtractMergable> =>
+  RunOperation.onMergable(warehouse, target).filter((mergeable) => Arr.forall(mergeable.cells, (cell) => Warehouse.findItem(warehouse, cell, Compare.eq).exists((detail) => !detail.isLocked)));
+
+// If any locked columns are present in the selection, then don't want to be able to unmerge
+const unmergeCellsExtractor = (warehouse: Warehouse, target: RunOperation.TargetUnmergable): Optional<SugarElement[]> =>
+  RunOperation.onUnmergable(warehouse, target).filter((cells) => Arr.forall(cells, (cell) => Warehouse.findItem(warehouse, cell, Compare.eq).exists((detail) => !detail.isLocked)));
+
+export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
+export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
+export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), resize, Fun.noop, Generators.modification);
+export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), resize, Fun.noop, Generators.modification);
+export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
+export const eraseColumns = RunOperation.run(opEraseColumns, onUnlockedCells, resize, prune, Generators.modification);
+export const eraseRows = RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification);
+export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
+export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
+export const unmakeColumnHeader = RunOperation.run(opUnmakeColumnHeader, onUnlockedCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const unmakeColumnsHeader = RunOperation.run(opUnmakeColumnsHeader, onUnlockedCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const makeRowHeader = RunOperation.run(opMakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
+export const makeRowsHeader = RunOperation.run(opMakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
+export const unmakeRowHeader = RunOperation.run(opUnmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const unmakeRowsHeader = RunOperation.run(opUnmakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const mergeCells = RunOperation.run(opMergeCells, mergeCellsExtractor, Fun.noop, Fun.noop, Generators.merging);
+export const unmergeCells = RunOperation.run(opUnmergeCells, unmergeCellsExtractor, resize, Fun.noop, Generators.merging);
+export const pasteCells = RunOperation.run(opPasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification);
+export const pasteColsBefore = RunOperation.run(opPasteColsBefore, pasteColumnsExtractor(true), Fun.noop, Fun.noop, Generators.modification);
+export const pasteColsAfter = RunOperation.run(opPasteColsAfter, pasteColumnsExtractor(false), Fun.noop, Fun.noop, Generators.modification);
+export const pasteRowsBefore = RunOperation.run(opPasteRowsBefore, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
+export const pasteRowsAfter = RunOperation.run(opPasteRowsAfter, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
 export const getColumnType = opGetColumnType;

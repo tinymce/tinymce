@@ -1,5 +1,5 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
-import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Structs from '../api/Structs';
@@ -9,6 +9,7 @@ import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import * as Bars from '../resize/Bars';
+import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import * as Transitions from './Transitions';
 
 type DetailExt = Structs.DetailExt;
@@ -77,9 +78,9 @@ const deriveRows = (rendered: Structs.RowDetails[], generators: Generators) => {
     const rowOfCells = Arr.findMap(details, (detail) => Traverse.parent(detail.element).map((row) => {
       // If the row has a parent, it's within the existing table, otherwise it's a copied row
       const isNew = Traverse.parent(row).isNone();
-      return Structs.elementnew(row, isNew);
+      return Structs.elementnew(row, isNew, false);
     }));
-    return rowOfCells.getOrThunk(() => Structs.elementnew(generators.row(), true));
+    return rowOfCells.getOrThunk(() => Structs.elementnew(generators.row(), true, false));
   };
 
   return Arr.map(rendered, (details) => {
@@ -108,30 +109,39 @@ export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTa
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
 (operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: SugarElement, target: RAW, generators: Generators, sizing?: TableSize): Optional<RunOperationOutput> => {
+  (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: RAW, generators: Generators, sizing?: TableSize): Optional<RunOperationOutput> => {
     const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
       const result = operation(model, info, Compare.eq, genWrappers(generators));
+      const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(result.grid);
       const grid = toDetailList(result.grid, generators);
       return {
         grid,
-        cursor: result.cursor
+        cursor: result.cursor,
+        lockedColumns
       };
     });
 
-    return output.fold(() => Optional.none<RunOperationOutput>(), (out) => {
-      const newElements = Redraw.render(table, out.grid);
-      const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
-      adjustment(table, out.grid, tableSizing);
-      postAction(table);
-      Bars.refresh(wire, table);
-      return Optional.some({
-        cursor: out.cursor,
-        newRows: newElements.newRows,
-        newCells: newElements.newCells
+    return output.fold(
+      () => Optional.none<RunOperationOutput>(),
+      (out) => {
+        const newElements = Redraw.render(table, out.grid);
+        const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
+        adjustment(table, out.grid, tableSizing);
+        postAction(table);
+        Bars.refresh(wire, table);
+        // Update locked cols attribute
+        Attribute.remove(table, LockedColumnUtils.LOCKED_COL_ATTR);
+        if (out.lockedColumns.length > 0) {
+          Attribute.set(table, LockedColumnUtils.LOCKED_COL_ATTR, out.lockedColumns.join(','));
+        }
+        return Optional.some({
+          cursor: out.cursor,
+          newRows: newElements.newRows,
+          newCells: newElements.newCells
+        });
       });
-    });
   };
 
 const onCell = (warehouse: Warehouse, target: TargetElement): Optional<DetailExt> => TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell));
@@ -169,5 +179,14 @@ const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<Detail
   return cells.length > 0 ? Optional.some(cells) : Optional.none();
 };
 
-export { run, toDetailList, onCell, onCells, onPaste, onPasteByEditor, onMergable, onUnmergable };
+export {
+  run,
+  toDetailList,
+  onCell,
+  onCells,
+  onPaste,
+  onPasteByEditor,
+  onMergable,
+  onUnmergable
+};
 

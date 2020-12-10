@@ -7,7 +7,7 @@ import * as TransformOperations from 'ephox/snooker/operate/TransformOperations'
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
 UnitTest.test('TransformOperationsTest', () => {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
 
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {

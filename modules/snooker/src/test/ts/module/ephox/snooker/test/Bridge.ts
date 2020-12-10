@@ -1,6 +1,6 @@
 import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode } from '@ephox/sugar';
-import { Generators } from 'ephox/snooker/api/Generators';
+import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 
@@ -51,7 +51,24 @@ const generators: Generators = {
   colgroup: () => SugarElement.fromTag('colgroup')
 };
 
+const createCell = (): SugarElement<HTMLTableDataCellElement> => {
+  const tag = SugarElement.fromTag('td');
+  Insert.append(tag, SugarElement.fromText('?'));
+  return tag;
+};
+
+// Added this for testing pasting and merging as Fitmet.tailor expects cell to not rely on previous cell
+const pasteGenerators: SimpleGenerators = {
+  col: () => SugarElement.fromTag('col'),
+  colgroup: () => SugarElement.fromTag('colgroup'),
+  row: () => SugarElement.fromTag('tr'),
+  cell: createCell,
+  replace: (cell: SugarElement) => cell,
+  gap: createCell
+};
+
 export {
   targetStub,
-  generators
+  generators,
+  pasteGenerators
 };

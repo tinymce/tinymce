@@ -86,21 +86,21 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Insert column before',
     onAction: cmd('mceTableInsertColBefore'),
     icon: 'table-insert-column-before',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn
   });
 
   editor.ui.registry.addButton('tableinsertcolafter', {
     tooltip: 'Insert column after',
     onAction: cmd('mceTableInsertColAfter'),
     icon: 'table-insert-column-after',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn
   });
 
   editor.ui.registry.addButton('tabledeletecol', {
     tooltip: 'Delete column',
     onAction: cmd('mceTableDeleteCol'),
     icon: 'table-delete-column',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn
   });
 
   editor.ui.registry.addButton('tablecutrow', {
@@ -121,42 +121,42 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Paste row before',
     icon: 'paste-row-before',
     onAction: cmd('mceTablePasteRowBefore'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows, 'row')
   });
 
   editor.ui.registry.addButton('tablepasterowafter', {
     tooltip: 'Paste row after',
     icon: 'paste-row-after',
     onAction: cmd('mceTablePasteRowAfter'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows)
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getRows, 'row')
   });
 
   editor.ui.registry.addButton('tablecutcol', {
     tooltip: 'Cut column',
     icon: 'cut-column',
     onAction: cmd('mceTableCutCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn
   });
 
   editor.ui.registry.addButton('tablecopycol', {
     tooltip: 'Copy column',
     icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn
   });
 
   editor.ui.registry.addButton('tablepastecolbefore', {
     tooltip: 'Paste column before',
     icon: 'paste-column-before',
     onAction: cmd('mceTablePasteColBefore'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns, 'column')
   });
 
   editor.ui.registry.addButton('tablepastecolafter', {
     tooltip: 'Paste column after',
     icon: 'paste-column-after',
     onAction: cmd('mceTablePasteColAfter'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns, 'column')
   });
 
   editor.ui.registry.addButton('tableinsertdialog', {

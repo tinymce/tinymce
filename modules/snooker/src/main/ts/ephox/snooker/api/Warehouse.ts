@@ -1,7 +1,9 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
+import * as LockedColumnUtils from '../util/LockedColumnUtils';
+import * as TableLookup from './TableLookup';
 
 export interface Warehouse {
   readonly grid: Structs.Grid;
@@ -19,7 +21,7 @@ const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Stru
   return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
 };
 
-const findItem = <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
+const findItem = <T>(warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
   const filtered = filterItems(warehouse, (detail) => {
     return comparator(item, detail.element);
   });
@@ -34,7 +36,7 @@ const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: 
   return Arr.filter(all, predicate);
 };
 
-const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>): Record<number, Structs.ColumnExt> => {
+const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>): Record<number, Structs.ColumnExt> => {
   const columnsGroup: Record<number, Structs.ColumnExt> = {};
   let index = 0;
 
@@ -52,13 +54,16 @@ const generateColumns = <T extends Structs.Detail> (rowData: Structs.RowData<T>)
   return columnsGroup;
 };
 
+// This is used to protect against atomic tests
+const isSugarElement = (elm: any): elm is SugarElement => Type.isNonNullable(elm.dom?.nodeType);
+
 /*
  * From a list of list of Detail, generate three pieces of information:
  *  1. the grid size
  *  2. a data structure which can efficiently identify which cell is in which row,column position
  *  3. a list of all cells in order left-to-right, top-to-bottom
  */
-const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Warehouse => {
+const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehouse => {
   // list is an array of objects, made by cells and elements
   // elements: is the TR
   // cells: is an array of objects representing the cells in the row.
@@ -69,6 +74,9 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
   const access: Record<string, Structs.DetailExt> = {};
   const cells: Structs.RowData<Structs.DetailExt>[] = [];
   let columns: Record<number, Structs.ColumnExt> = {};
+
+  const tableOpt = Arr.head(list).map((rowData) => rowData.element).filter(isSugarElement).bind(TableLookup.table);
+  const lockedColumns: Record<number, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
 
   let maxRows = 0;
   let maxColumns = 0;
@@ -87,7 +95,8 @@ const generate = <T extends Structs.Detail> (list: Structs.RowData<T>[]): Wareho
           start++;
         }
 
-        const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start);
+        const isLocked = Obj.hasNonNullableKey(lockedColumns, start);
+        const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
 
         // Occupy all the (row, column) positions that this cell spans for.
         for (let occupiedColumnPosition = 0; occupiedColumnPosition < rowCell.colspan; occupiedColumnPosition++) {
