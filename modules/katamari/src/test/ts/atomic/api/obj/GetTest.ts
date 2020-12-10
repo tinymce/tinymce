@@ -6,7 +6,7 @@ import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 
 const { tArray, tNumber } = Testable;
 
-UnitTest.test('GetTest', function () {
+UnitTest.test('GetTest', () => {
   Assert.eq(
     'Key exists',
     Optional.some(3),

@@ -4,9 +4,9 @@ import { Processor, Strength } from './ValueProcessor';
 
 const chooseFrom = function (path: string[], strength: Strength, input: Record<string, any>, branches: Record<string, Processor>, ch: string) {
   const fields = Obj.get(branches, ch);
-  return fields.fold(function () {
+  return fields.fold(() => {
     return missingBranch(path, branches, ch);
-  }, function (vp) {
+  }, (vp) => {
     return vp.extract(path.concat([ 'branch: ' + ch ]), strength, input);
   });
 };
@@ -16,9 +16,9 @@ const chooseFrom = function (path: string[], strength: Strength, input: Record<s
 const choose = function (key: string, branches: Record<string, Processor>): Processor {
   const extract = function (path: string[], strength, input: Record<string, any>) {
     const choice = Obj.get(input, key);
-    return choice.fold(function () {
+    return choice.fold(() => {
       return missingKey(path, key);
-    }, function (chosen) {
+    }, (chosen) => {
       return chooseFrom(path, strength, input, branches, chosen);
     });
   };

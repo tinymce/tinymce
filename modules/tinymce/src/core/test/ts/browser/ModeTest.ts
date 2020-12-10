@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.ModeTest', (success, failure) => {
     Assertions.assertEq('Should be the expected class state', state, Class.has(SugarElement.fromDom(editor.getBody()), cls));
   }));
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const sOverrideDefaultMode = Step.label('validate default modes cannot be overwritten', Step.async((next, die) => {
       // TODO: once `assert.throws` supports error objects simplify this
       try {

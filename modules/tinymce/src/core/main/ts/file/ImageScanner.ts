@@ -45,8 +45,8 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
         blobInfo
       });
     } else {
-      Conversions.uriToBlob(img.src).then(function (blob) {
-        Conversions.blobToDataUri(blob).then(function (dataUri) {
+      Conversions.uriToBlob(img.src).then((blob) => {
+        Conversions.blobToDataUri(blob).then((dataUri) => {
           base64 = Conversions.parseDataUri(dataUri).data;
           blobInfo = blobCache.create(uniqueId(), blob, base64);
           blobCache.add(blobInfo);
@@ -56,7 +56,7 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
             blobInfo
           });
         });
-      }, function (err) {
+      }, (err) => {
         reject(err);
       });
     }
@@ -74,7 +74,7 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
       blobInfo
     });
   } else {
-    Conversions.uriToBlob(img.src).then(function (blob) {
+    Conversions.uriToBlob(img.src).then((blob) => {
       blobInfo = blobCache.create(uniqueId(), blob, base64);
       blobCache.add(blobInfo);
 
@@ -82,7 +82,7 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
         image: img,
         blobInfo
       });
-    }, function (err) {
+    }, (err) => {
       reject(err);
     });
   }
@@ -100,7 +100,7 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
       predicate = Fun.always;
     }
 
-    const images = Arr.filter(getAllImages(elm), function (img) {
+    const images = Arr.filter(getAllImages(elm), (img) => {
       const src = img.src;
 
       if (!Env.fileApi) {
@@ -130,12 +130,12 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
       return false;
     });
 
-    const promises = Arr.map(images, function (img): Promise<BlobInfoImagePair> {
+    const promises = Arr.map(images, (img): Promise<BlobInfoImagePair> => {
       if (cachedPromises[img.src] !== undefined) {
         // Since the cached promise will return the cached image
         // We need to wrap it and resolve with the actual image
-        return new Promise(function (resolve) {
-          cachedPromises[img.src].then(function (imageInfo) {
+        return new Promise((resolve) => {
+          cachedPromises[img.src].then((imageInfo) => {
             if (typeof imageInfo === 'string') { // error apparently
               return imageInfo;
             }
@@ -147,12 +147,12 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
         });
       }
 
-      const newPromise = new Promise<BlobInfoImagePair>(function (resolve, reject) {
+      const newPromise = new Promise<BlobInfoImagePair>((resolve, reject) => {
         imageToBlobInfo(blobCache, img, resolve, reject);
-      }).then(function (result) {
+      }).then((result) => {
         delete cachedPromises[result.image.src];
         return result;
-      }).catch(function (error) {
+      }).catch((error) => {
         delete cachedPromises[img.src];
         return error;
       });

@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as TablePositions from 'ephox/snooker/api/TablePositions';
 
-UnitTest.test('RectangularTest', function () {
+UnitTest.test('RectangularTest', () => {
   const body = SelectorFind.first('body').getOrDie();
   const div = SugarElement.fromTag('div');
   Insert.append(body, div);
@@ -73,7 +73,7 @@ UnitTest.test('RectangularTest', function () {
   InsertAll.append(div, [ table, table2 ] );
 
   const check = function (tableTarget: SugarElement, from: string, to: string, expected: boolean) {
-    [].forEach.call(tableTarget.dom.querySelectorAll('td'), function (td: HTMLElement) {
+    [].forEach.call(tableTarget.dom.querySelectorAll('td'), (td: HTMLElement) => {
       td.style.background = '';
     });
     Optional.from(document.querySelector(from) as HTMLElement).getOrDie('Missing element for "from" selector').style.background = '#cadbee';

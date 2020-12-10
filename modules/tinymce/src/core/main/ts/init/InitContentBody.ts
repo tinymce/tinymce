@@ -140,7 +140,7 @@ const createParser = function (editor: Editor): DomParser {
   const parser = DomParser(mkParserSettings(editor), editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
-  parser.addAttributeFilter('src,href,style,tabindex', function (nodes, name) {
+  parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
     let i = nodes.length, node: AstNode, value: string;
     const dom = editor.dom;
     const internalName = 'data-mce-' + name;
@@ -176,7 +176,7 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   // Keep scripts from executing
-  parser.addNodeFilter('script', function (nodes: AstNode[]) {
+  parser.addNodeFilter('script', (nodes: AstNode[]) => {
     let i = nodes.length;
 
     while (i--) {
@@ -189,7 +189,7 @@ const createParser = function (editor: Editor): DomParser {
   });
 
   if (editor.settings.preserve_cdata) {
-    parser.addNodeFilter('#cdata', function (nodes: AstNode[]) {
+    parser.addNodeFilter('#cdata', (nodes: AstNode[]) => {
       let i = nodes.length;
 
       while (i--) {
@@ -201,7 +201,7 @@ const createParser = function (editor: Editor): DomParser {
     });
   }
 
-  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', function (nodes: AstNode[]) {
+  parser.addNodeFilter('p,h1,h2,h3,h4,h5,h6,div', (nodes: AstNode[]) => {
     let i = nodes.length;
     const nonEmptyElements = editor.schema.getNonEmptyElements();
 
@@ -219,7 +219,7 @@ const createParser = function (editor: Editor): DomParser {
 
 const autoFocus = function (editor: Editor) {
   if (editor.settings.auto_focus) {
-    Delay.setEditorTimeout(editor, function () {
+    Delay.setEditorTimeout(editor, () => {
       let focusEditor;
 
       if (editor.settings.auto_focus === true) {
@@ -321,16 +321,16 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
   }
 
   if (settings.protect) {
-    editor.on('BeforeSetContent', function (e) {
-      Tools.each(settings.protect, function (pattern) {
-        e.content = e.content.replace(pattern, function (str) {
+    editor.on('BeforeSetContent', (e) => {
+      Tools.each(settings.protect, (pattern) => {
+        e.content = e.content.replace(pattern, (str) => {
           return '<!--mce:protected ' + escape(str) + '-->';
         });
       });
     });
   }
 
-  editor.on('SetContent', function () {
+  editor.on('SetContent', () => {
     editor.addVisual(editor.getBody());
   });
 
@@ -341,7 +341,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
 
   editor.startContent = editor.getContent({ format: 'raw' });
 
-  editor.on('compositionstart compositionend', function (e) {
+  editor.on('compositionstart compositionend', (e) => {
     editor.composing = e.type === 'compositionstart';
   });
 
@@ -349,7 +349,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
   if (editor.contentStyles.length > 0) {
     let contentCssText = '';
 
-    Tools.each(editor.contentStyles, function (style) {
+    Tools.each(editor.contentStyles, (style) => {
       contentCssText += style + '\r\n';
     });
 

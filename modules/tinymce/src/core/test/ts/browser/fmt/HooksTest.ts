@@ -5,12 +5,12 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Hooks from 'tinymce/core/fmt/Hooks';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('pre - postProcessHook', function (editor) {
+  suite.test('pre - postProcessHook', (editor) => {
     const assertPreHook = function (setupHtml, setupSelection, expected) {
       editor.getBody().innerHTML = setupHtml;
       LegacyUnit.setSelection.apply(LegacyUnit, [ editor ].concat(setupSelection));
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', function (success, fail
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     selector: 'textarea',

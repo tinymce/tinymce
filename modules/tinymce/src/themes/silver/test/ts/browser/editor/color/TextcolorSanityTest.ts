@@ -11,7 +11,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
 
   const browser = PlatformDetection.detect().browser;
 
-  const forecolorStruct = ApproxStructure.build(function (s, str) {
+  const forecolorStruct = ApproxStructure.build((s, str) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -28,7 +28,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
     });
   });
 
-  const backcolorStruct = ApproxStructure.build(function (s, str) {
+  const backcolorStruct = ApproxStructure.build((s, str) => {
     return s.element('body', {
       children: [
         s.element('p', {
@@ -45,7 +45,7 @@ UnitTest.asynctest('TextcolorSanityTest', (success, failure) => {
     });
   });
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

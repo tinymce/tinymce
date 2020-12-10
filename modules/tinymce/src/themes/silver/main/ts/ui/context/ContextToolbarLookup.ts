@@ -11,8 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { ContextTypes } from '../../ContextToolbar';
 import { ScopedToolbars } from './ContextToolbarScopes';
 
-export type LookupResult = { toolbars: ContextTypes[]; elem: SugarElement };
-type MatchResult = { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] };
+export interface LookupResult { toolbars: ContextTypes[]; elem: SugarElement }
+interface MatchResult { contextToolbars: ContextTypes[]; contextForms: ContextTypes[] }
 
 const matchTargetWith = (elem: SugarElement, candidates: ContextTypes[]): MatchResult => {
   const ctxs = Arr.filter(candidates, (toolbarApi) => toolbarApi.predicate(elem.dom));

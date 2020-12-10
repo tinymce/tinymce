@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import JSONRequest from 'tinymce/core/api/util/JSONRequest';
 
-UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.asyncTest('Successful request - send method', function (editor, done) {
+  suite.asyncTest('Successful request - send method', (editor, done) => {
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_ok',
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     });
   });
 
-  suite.asyncTest('Successful request - sendRPC static method', function (editor, done) {
+  suite.asyncTest('Successful request - sendRPC static method', (editor, done) => {
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_ok',
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     });
   });
 
-  suite.asyncTest('Error request - send method', function (editor, done) {
+  suite.asyncTest('Error request - send method', (editor, done) => {
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_fail',
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     });
   });
 
-  suite.asyncTest('Error request - sendRPC static method', function (editor, done) {
+  suite.asyncTest('Error request - sendRPC static method', (editor, done) => {
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_fail',
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', function (succes
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

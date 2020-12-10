@@ -44,7 +44,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
 
   const oldTab = Cell(null);
 
-  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, function (tab) {
+  const allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>> = Arr.map(spec.tabs, (tab) => {
     return {
       value: tab.name,
       dom: {

@@ -31,12 +31,12 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteSettingsTest', (success, 
         paste_as_text: true,
         plugins: 'paste'
       }),
-      Chain.op(function (editor) {
+      Chain.op((editor) => {
         Assertions.assertEq('Should be text format', 'text', editor.plugins.paste.clipboard.pasteFormat.get());
       }),
       cRemoveEditor
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

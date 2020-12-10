@@ -37,7 +37,7 @@ const matchParents = function (editor: Editor, node: Node, name: string, vars: F
   }
 
   // Find first node with similar format settings
-  node = editor.dom.getParent(node, function (node) {
+  node = editor.dom.getParent(node, (node) => {
     if (matchesUnInheritedFormatSelector(editor, node, name)) {
       return true;
     }
@@ -166,7 +166,7 @@ const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
 
   // Check start of selection for formats
   const startElement = editor.selection.getStart();
-  editor.dom.getParent(startElement, function (node) {
+  editor.dom.getParent(startElement, (node) => {
     for (let i = 0; i < names.length; i++) {
       const name = names[i];
 

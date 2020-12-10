@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
   Theme();
   TablePlugin();
 
-  TinyLoader.setup(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const eDoc = SugarElement.fromDom(editor.getDoc());
 
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
     }));
 
     const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => tinyApis.sAssertContentStructure(
-      ApproxStructure.build(function (s, str, _arr) {
+      ApproxStructure.build((s, str, _arr) => {
         const attrs = state ? {
           'contenteditable': str.is('false'),
           'data-mce-contenteditable': str.is('true')
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         sSetMode('readonly'),
         tinyApis.sSetCursor([], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
         ),
         sSetMode('design'),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, arr) {
+          ApproxStructure.build((s, str, arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {

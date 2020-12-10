@@ -7,12 +7,12 @@ import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('getContent', function (editor) {
+  suite.test('getContent', (editor) => {
     let rng, eventObj;
 
     editor.focus();
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     editor.off('GetContent', handler);
   });
 
-  suite.test('getContent contextual', function (editor) {
+  suite.test('getContent contextual', (editor) => {
     editor.setContent('<p><em>text</em></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('em')[0].firstChild, 1);
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent({ contextual: true }), '<em>ex</em>', 'Get selected contents');
   });
 
-  suite.test('getContent of zwsp', function (editor) {
+  suite.test('getContent of zwsp', (editor) => {
     editor.setContent('<p>a' + Zwsp.ZWSP + 'b</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody(), 0);
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent({ format: 'text' }), 'ab', 'Get selected contents');
   });
 
-  suite.test('setContent', function (editor) {
+  suite.test('setContent', (editor) => {
     let rng, eventObj;
 
     // Set contents at selection
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     editor.off('SetContent', handler);
   });
 
-  suite.test('getStart/getEnd', function (editor) {
+  suite.test('getStart/getEnd', (editor) => {
     let rng;
 
     // Selected contents
@@ -186,7 +186,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getSelectedBlocks().length, 0, 'should return empty array');
   });
 
-  suite.test('getStart/getEnd on comment should return parent element', function (editor) {
+  suite.test('getStart/getEnd on comment should return parent element', (editor) => {
     editor.setContent('<p><!-- x --></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 0);
@@ -199,7 +199,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getEnd(true).nodeName, 'P', 'Node name should be paragraph');
   });
 
-  suite.test('getBookmark/setBookmark (persistent)', function (editor) {
+  suite.test('getBookmark/setBookmark (persistent)', (editor) => {
     let rng, bookmark;
 
     // Get persistent bookmark simple text selection
@@ -225,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
   });
 
-  suite.test('getBookmark/setBookmark (simple)', function (editor) {
+  suite.test('getBookmark/setBookmark (simple)', (editor) => {
     let rng, bookmark;
 
     // Get persistent bookmark simple text selection
@@ -251,7 +251,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - simple text selection', (editor) => {
     editor.setContent('text');
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild, 1);
@@ -263,7 +263,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), 'ex', 'Selected contents (text)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark simple element selection', (editor) => {
     // Get non intrusive bookmark simple element selection
     editor.setContent('<p>text<em>a<strong>b</strong>c</em></p>');
     const rng = editor.dom.createRng();
@@ -275,7 +275,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<strong>b</strong>', 'Selected contents (element)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get non intrusive bookmark multiple elements text selection', (editor) => {
     // Get non intrusive bookmark multiple elements text selection
     editor.setContent('<p>text</p>\n<p>text</p>');
     const rng = editor.dom.createRng();
@@ -288,7 +288,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (elements)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive)', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive)', (editor) => {
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
     editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
@@ -305,7 +305,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text (normalized)', (editor) => {
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
     editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
@@ -323,7 +323,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text with zwsp (normalized)', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - fragmentext text with zwsp (normalized)', (editor) => {
     // Get non intrusive bookmark multiple elements text selection fragmented
     editor.setContent('<p>text</p><p>text</p>');
     editor.dom.select('p')[0].appendChild(editor.dom.doc.createTextNode('a'));
@@ -341,7 +341,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<p>ext</p>\n<p>tex</p>', 'Selected contents (fragmented, elements)');
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before image', (editor) => {
     let rng;
 
     editor.setContent('<p><img src="about:blank" /></p>');
@@ -359,7 +359,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before/after image', (editor) => {
     let rng;
 
     editor.setContent('<p><img src="about:blank" /></p>');
@@ -377,7 +377,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after image', (editor) => {
     let rng;
 
     editor.setContent('<p><img src="about:blank" /></p>');
@@ -395,7 +395,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark before element', (editor) => {
     let rng;
 
     editor.setContent('abc<b>123</b>');
@@ -413,7 +413,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 2);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark after element', (editor) => {
     let rng;
 
     // Get bookmark after element
@@ -432,7 +432,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 2);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside element', (editor) => {
     let rng;
 
     editor.setContent('abc<b>123</b>abc');
@@ -450,7 +450,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 2);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside root text', (editor) => {
     let rng;
 
     editor.setContent('abc');
@@ -468,7 +468,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 2);
   });
 
-  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', function (editor) {
+  suite.test('getBookmark/setBookmark (nonintrusive) - Get bookmark inside complex html', (editor) => {
     editor.setContent('<p>abc</p>123<p>123</p><p>123<b>123</b><table><tr><td>abc</td></tr></table></p>');
     editor.execCommand('SelectAll');
     LegacyUnit.setSelection(editor, 'td', 1, 'td', 2);
@@ -482,7 +482,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 2);
   });
 
-  suite.test('getBookmark/setBookmark on cE=false', function (editor) {
+  suite.test('getBookmark/setBookmark on cE=false', (editor) => {
     editor.setContent('text<span contentEditable="false">1</span>');
     editor.selection.select(editor.$('span')[0]);
     const bookmark = editor.selection.getBookmark(2);
@@ -491,7 +491,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
   });
 
-  suite.test('getBookmark/setBookmark before cE=false', function (editor) {
+  suite.test('getBookmark/setBookmark before cE=false', (editor) => {
     editor.setContent('<p><input><span contentEditable="false">1</span></p>');
     CaretContainer.insertInline(editor.$('span')[0], true);
     const rng = editor.dom.createRng();
@@ -504,7 +504,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equalDom(editor.selection.getNode(), editor.$('span')[0]);
   });
 
-  suite.test('getBookmark/setBookmark before cE=false block', function (editor) {
+  suite.test('getBookmark/setBookmark before cE=false block', (editor) => {
     editor.setContent('<p contentEditable="false">1</p>');
     CaretContainer.insertBlock('p', editor.$('p')[0], true);
     const rng = editor.dom.createRng();
@@ -517,20 +517,20 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equalDom(editor.selection.getNode(), editor.$('p')[0]);
   });
 
-  suite.test('select empty TD', function (editor) {
+  suite.test('select empty TD', (editor) => {
     editor.getBody().innerHTML = '<table><tr><td><br></td></tr></table>';
     editor.selection.select(editor.dom.select('td')[0], true);
     LegacyUnit.equal(editor.selection.getRng().startContainer.nodeName, 'TD');
   });
 
-  suite.test('select first p', function (editor) {
+  suite.test('select first p', (editor) => {
     editor.setContent('<p>text1</p><p>text2</p>');
     editor.selection.select(editor.dom.select('p')[0]);
     LegacyUnit.equal(editor.selection.getContent(), '<p>text1</p>', 'Select simple element, content');
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P', 'Select simple element, nodeName');
   });
 
-  suite.test('select table', function (editor) {
+  suite.test('select table', (editor) => {
     editor.setContent('<table><tbody><tr><td>text1</td></tr></tbody></table>');
     editor.selection.select(editor.dom.select('table')[0]);
     LegacyUnit.equal(
@@ -541,21 +541,21 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'TABLE', 'Select complex element, nodeName');
   });
 
-  suite.test('select table text 1', function (editor) {
+  suite.test('select table text 1', (editor) => {
     editor.setContent('<table><tbody><tr><td id="a">text1</td><td id="b">text2</td></tr></tbody></table>');
     editor.selection.select(editor.dom.select('table')[0], true);
     LegacyUnit.equal(editor.selection.getStart().id, 'a', 'Expand to text content 1 (start)');
     LegacyUnit.equal(editor.selection.getEnd().id, 'b', 'Expand to text content 1 (end)');
   });
 
-  suite.test('select table text 2', function (editor) {
+  suite.test('select table text 2', (editor) => {
     editor.setContent('<table><tbody><tr><td id="a"><br /></td><td id="b"><br /></td></tr></tbody></table>');
     editor.selection.select(editor.dom.select('table')[0], true);
     LegacyUnit.equal(editor.dom.getParent(editor.selection.getStart(), 'td').id, 'a', 'Expand to text content 2 (start)');
     LegacyUnit.equal(editor.dom.getParent(editor.selection.getEnd(), 'td').id, 'b', 'Expand to text content 2 (end)');
   });
 
-  suite.test('getNode', function (editor) {
+  suite.test('getNode', (editor) => {
     let rng;
 
     editor.setContent('<p id="p1"><span id="s1">span1</span> word <span id="s2">span2</span> word <span id="s3">span3</span></p>');
@@ -600,7 +600,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     );
   });
 
-  suite.test('normalize to text node from document', function (editor) {
+  suite.test('normalize to text node from document', (editor) => {
     let rng;
 
     // if (tinymce.isOpera || tinymce.isIE) {
@@ -622,7 +622,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
   });
 
-  suite.test('normalize to br from document', function (editor) {
+  suite.test('normalize to br from document', (editor) => {
     let rng;
 
     // if (tinymce.isOpera || tinymce.isIE) {
@@ -645,7 +645,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
   });
 
-  suite.test('normalize with contentEditable:false element', function (editor) {
+  suite.test('normalize with contentEditable:false element', (editor) => {
     let rng;
 
     editor.setContent('<p>a<b contentEditable="false">b</b>c</p>');
@@ -660,7 +660,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(CaretContainer.isCaretContainer(rng.startContainer), true);
   });
 
-  suite.test('normalize with contentEditable:false parent and contentEditable:true child element', function (editor) {
+  suite.test('normalize with contentEditable:false parent and contentEditable:true child element', (editor) => {
     editor.setContent('<p contentEditable="false">a<em contentEditable="true">b</em></p>');
     LegacyUnit.setSelection(editor, 'em', 0);
     editor.selection.normalize();
@@ -676,7 +676,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     editor.selection.setRng(rng);
   });
 
-  suite.test('normalize with contentEditable:true parent and contentEditable:false child element', function (editor) {
+  suite.test('normalize with contentEditable:true parent and contentEditable:false child element', (editor) => {
     if (Env.browser.isIE()) {
       editor.setContent('<p contentEditable="true">a<em contentEditable="false">b</em></p>');
       LegacyUnit.setSelection(editor, 'em', 0);
@@ -689,7 +689,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     }
   });
 
-  suite.test('normalize to text node from body', function (editor) {
+  suite.test('normalize to text node from body', (editor) => {
     let rng;
 
     editor.setContent('<p>text</p>');
@@ -706,7 +706,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
   });
 
-  suite.test('normalize to br from body', function (editor) {
+  suite.test('normalize to br from body', (editor) => {
     let rng;
 
     editor.setContent('<p><br /></p>');
@@ -724,7 +724,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
   });
 
-  suite.test('normalize ignore img', function (editor) {
+  suite.test('normalize ignore img', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<img src="about:blank " />';
@@ -743,7 +743,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize to before/after img', function (editor) {
+  suite.test('normalize to before/after img', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><img src="about:blank " /></p>';
@@ -762,7 +762,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize to before/after pre', function (editor) {
+  suite.test('normalize to before/after pre', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<pre>a<pre>';
@@ -781,7 +781,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize to text node inside P', function (editor) {
+  suite.test('normalize to text node inside P', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p>abc</p>';
@@ -798,7 +798,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
   });
 
-  suite.test('normalize lean left if at the start of text node', function (editor) {
+  suite.test('normalize lean left if at the start of text node', (editor) => {
     editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
     LegacyUnit.setSelection(editor, 'i', 0);
     editor.selection.normalize();
@@ -812,7 +812,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize lean start to the right if at end of text node', function (editor) {
+  suite.test('normalize lean start to the right if at end of text node', (editor) => {
     editor.getBody().innerHTML = '<p><b>a</b><i>b</i></p>';
     LegacyUnit.setSelection(editor, 'b', 1, 'i', 1);
     editor.selection.normalize();
@@ -826,7 +826,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize lean left but break before br', function (editor) {
+  suite.test('normalize lean left but break before br', (editor) => {
     editor.getBody().innerHTML = '<p>a<br><b>b</b></p>';
     LegacyUnit.setSelection(editor, 'b', 0);
     editor.selection.normalize();
@@ -836,7 +836,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 0);
   });
 
-  suite.test('normalize lean left but break before img', function (editor) {
+  suite.test('normalize lean left but break before img', (editor) => {
     editor.getBody().innerHTML = '<p>a<img><b>b</b></p>';
     LegacyUnit.setSelection(editor, 'b', 0);
     editor.selection.normalize();
@@ -846,7 +846,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 0);
   });
 
-  suite.test(`normalize lean left but don't walk out the parent block`, function (editor) {
+  suite.test(`normalize lean left but don't walk out the parent block`, (editor) => {
     editor.getBody().innerHTML = '<p>a</p><p><b>b</b></p>';
     LegacyUnit.setSelection(editor, 'b', 0);
     editor.selection.normalize();
@@ -856,7 +856,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 0);
   });
 
-  suite.test('normalize lean left into empty inline elements when caret is before br', function (editor) {
+  suite.test('normalize lean left into empty inline elements when caret is before br', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><i><b></b></i><br /></p>';
@@ -871,7 +871,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 0);
   });
 
-  suite.test('normalize lean left from br into formatter caret container', function (editor) {
+  suite.test('normalize lean left from br into formatter caret container', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>';
@@ -886,7 +886,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 1);
   });
 
-  suite.test(`normalize don't lean left into empty inline elements if there is a br element after caret`, function (editor) {
+  suite.test(`normalize don't lean left into empty inline elements if there is a br element after caret`, (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><i><b></b></i><br /><br /></p>';
@@ -901,7 +901,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 2);
   });
 
-  suite.test(`normalize don't lean left into empty inline elements if there is a br element before caret`, function (editor) {
+  suite.test(`normalize don't lean left into empty inline elements if there is a br element before caret`, (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><i><b><br /></b></i><br /></p>';
@@ -916,7 +916,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.startOffset, 1);
   });
 
-  suite.test(`normalize don't move start/end if it's before/after table`, function (editor) {
+  suite.test(`normalize don't move start/end if it's before/after table`, (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
@@ -933,7 +933,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('normalize after paragraph', function (editor) {
+  suite.test('normalize after paragraph', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p>a</p>';
@@ -950,7 +950,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('normalize caret after trailing BR', function (editor) {
+  suite.test('normalize caret after trailing BR', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p>a<br /></p>';
@@ -967,7 +967,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1, 'endOffset offset');
   });
 
-  suite.test('normalize caret after bogus block BR', function (editor) {
+  suite.test('normalize caret after bogus block BR', (editor) => {
     let rng;
 
     editor.setContent('<p><br /></p>');
@@ -984,7 +984,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 0, 'endOffset offset');
   });
 
-  suite.test('normalize after table should not move', function (editor) {
+  suite.test('normalize after table should not move', (editor) => {
     let rng;
 
     // if (tinymce.isOpera || tinymce.isIE) {
@@ -1023,7 +1023,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     });
   */
 
-  suite.test('normalize caret after double BR', function (editor) {
+  suite.test('normalize caret after double BR', (editor) => {
     let rng;
 
     editor.setContent('<p>a<br /><br /></p>');
@@ -1040,7 +1040,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 3, 'endOffset offset');
   });
 
-  suite.test('custom elements', function (editor) {
+  suite.test('custom elements', (editor) => {
     editor.setContent('<custom1>test</custom1><custom2>test</custom2>');
 
     const rng = editor.dom.createRng();
@@ -1051,10 +1051,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(editor.selection.getContent(), '<custom1>test</custom1><custom2>test</custom2>');
   });
 
-  suite.test('selectorChanged', function (editor) {
+  suite.test('selectorChanged', (editor) => {
     let newState, newArgs;
 
-    editor.selection.selectorChanged('a[href]', function (state, args) {
+    editor.selection.selectorChanged('a[href]', (state, args) => {
       newState = state;
       newArgs = args;
     });
@@ -1076,10 +1076,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(newArgs.parents.length, 1);
   });
 
-  suite.test('selectorChangedWithUnbind', function (editor) {
+  suite.test('selectorChangedWithUnbind', (editor) => {
     let newState, newArgs, calls = 0;
 
-    const { unbind } = editor.selection.selectorChangedWithUnbind('a[href]', function (state, args) {
+    const { unbind } = editor.selection.selectorChangedWithUnbind('a[href]', (state, args) => {
       newState = state;
       newArgs = args;
       calls++;
@@ -1104,7 +1104,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(calls, 1, 'selectorChangedWithUnbind callback is only called once');
   });
 
-  suite.test('setRng', function (editor) {
+  suite.test('setRng', (editor) => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>x</p>');
@@ -1121,7 +1121,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('setRng invalid range', function (editor) {
+  suite.test('setRng invalid range', (editor) => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>x</p>');
@@ -1144,7 +1144,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('setRng invalid range removed parent context', function (editor) {
+  suite.test('setRng invalid range removed parent context', (editor) => {
     editor.setContent('<p><strong><em>x</em></strong></p>');
     const textNode = editor.$('em')[0].firstChild;
 
@@ -1186,7 +1186,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     editor.selection.win = win;
   });
 */
-  suite.test('image selection webkit bug', function (editor) {
+  suite.test('image selection webkit bug', (editor) => {
     const testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
       editor.setContent(inputHtml);
       editor.selection.select(editor.dom.select('img')[0]);
@@ -1229,7 +1229,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', function (success, 
     testImageSelection('<p dir="rtl">abc<img style="float: left;" src="#">def</p>', 'P', 1);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

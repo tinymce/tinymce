@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.QuickLinkTest', (success, failu
   SilverTheme();
   LinkPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const doc = TinyDom.fromDom(document);
 

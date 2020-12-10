@@ -194,7 +194,7 @@ function AddOnManager<T>(): AddOnManager<T> {
   const addComponents = (pluginName: string, scripts: string[]) => {
     const pluginUrl = this.urls[pluginName];
 
-    Arr.each(scripts, function (script) {
+    Arr.each(scripts, (script) => {
       ScriptLoader.ScriptLoader.add(pluginUrl + '/' + script);
     });
   };
@@ -202,7 +202,7 @@ function AddOnManager<T>(): AddOnManager<T> {
   const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) {
     const deps = dependencies(name);
 
-    Arr.each(deps, function (dep) {
+    Arr.each(deps, (dep) => {
       const newUrl = createUrl(addOnUrl, dep);
 
       load(newUrl.resource, newUrl, undefined, undefined);

@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
 
   const sWaitForDragHandles = (editor: any): Step<any, any> => Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
           width: '100'
         }),
         sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('div', {
             children: [
               s.element('p', {
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
           width: '100'
         }),
         sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('div', {
             children: [
               s.element('figure', {
@@ -130,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
           width: '100'
         }),
         sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('div', {
             children: [
               s.element('figure', {
@@ -178,7 +178,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
           width: '100'
         }),
         sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('div', {
             children: [
               s.element('p', {

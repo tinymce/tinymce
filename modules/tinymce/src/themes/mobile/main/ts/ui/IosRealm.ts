@@ -45,8 +45,8 @@ export default (scrollIntoView: () => void): MobileRealm => {
 
   const socket = CommonRealm.makeSocket();
 
-  const dropup = Dropup.build(function () {
-    webapp.run(function (w) {
+  const dropup = Dropup.build(() => {
+    webapp.run((w) => {
       w.refreshStructure();
     });
   }, scrollIntoView);
@@ -80,7 +80,7 @@ export default (scrollIntoView: () => void): MobileRealm => {
   };
 
   const exit = function () {
-    webapp.run(function (w) {
+    webapp.run((w) => {
       Replacing.remove(socket, switchToEdit);
       w.exit();
     });

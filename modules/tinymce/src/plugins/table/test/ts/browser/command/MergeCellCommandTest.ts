@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  suite.test('TestCase-TBA: Table: mceTableMergeCells', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableMergeCells', (editor) => {
     testCommand(editor, 'mceTableMergeCells', [
       {
         message: 'Should merge all cells into one',
@@ -293,7 +293,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
     ]);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test merge cell commands', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

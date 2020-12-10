@@ -8,11 +8,11 @@
 import * as Actions from '../core/Actions';
 
 const register = function (editor) {
-  editor.addCommand('ApplyUnorderedListStyle', function (ui, value) {
+  editor.addCommand('ApplyUnorderedListStyle', (ui, value) => {
     Actions.applyListFormat(editor, 'UL', value['list-style-type']);
   });
 
-  editor.addCommand('ApplyOrderedListStyle', function (ui, value) {
+  editor.addCommand('ApplyOrderedListStyle', (ui, value) => {
     Actions.applyListFormat(editor, 'OL', value['list-style-type']);
   });
 };

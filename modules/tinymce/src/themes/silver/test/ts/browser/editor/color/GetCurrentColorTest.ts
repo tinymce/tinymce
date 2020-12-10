@@ -19,7 +19,7 @@ UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
     })
   );
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, browser.isIE() ? [] : [

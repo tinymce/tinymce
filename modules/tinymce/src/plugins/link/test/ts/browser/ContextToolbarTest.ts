@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', (success, 
   Theme();
   LinkPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const editorEle = TinyDom.fromDom(editor.getBody());

@@ -16,7 +16,7 @@ const test = function <T> (message: string, fn: SyncTestCallback<T>) {
   return function (initValue: T): Step<T, T> {
     return Logger.t(
       message,
-      Step.sync(function () {
+      Step.sync(() => {
         fn(initValue);
       })
     );
@@ -27,7 +27,7 @@ const asyncTest = function <T> (message: string, fn: AsyncTestCallback<T>) {
   return function (initValue: T): Step<T, T> {
     return Logger.t(
       message,
-      Step.async(function (done, die) {
+      Step.async((done, die) => {
         fn(initValue, done, die);
       })
     );
@@ -47,7 +47,7 @@ const createSuite = function <T = any> (): Suite<T> {
     },
 
     toSteps(initValue: T) {
-      return tests.map(function (test) {
+      return tests.map((test) => {
         return test(initValue);
       });
     }

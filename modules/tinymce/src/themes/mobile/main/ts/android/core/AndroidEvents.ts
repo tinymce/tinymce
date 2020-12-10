@@ -36,9 +36,9 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
   };
 
   const hasRangeInUi = function () {
-    return Focus.active(outerDoc).filter(function (input) {
+    return Focus.active(outerDoc).filter((input) => {
       return SugarNode.name(input) === 'input';
-    }).exists(function (input: SugarElement<HTMLInputElement>) {
+    }).exists((input: SugarElement<HTMLInputElement>) => {
       return input.dom.selectionStart !== input.dom.selectionEnd;
     });
   };
@@ -49,26 +49,26 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
   };
 
   const listeners = [
-    DomEvent.bind(editorApi.body, 'touchstart', function (evt) {
+    DomEvent.bind(editorApi.body, 'touchstart', (evt) => {
       editorApi.onTouchContent();
       tapping.fireTouchstart(evt);
     }),
     tapping.onTouchmove(),
     tapping.onTouchend(),
 
-    DomEvent.bind(toolstrip, 'touchstart', function (_evt) {
+    DomEvent.bind(toolstrip, 'touchstart', (_evt) => {
       editorApi.onTouchToolstrip();
     }),
 
-    editorApi.onToReading(function () {
+    editorApi.onToReading(() => {
       Focus.blur(editorApi.body);
     }),
     editorApi.onToEditing(Fun.noop),
 
     // Scroll to cursor and update the iframe height
-    editorApi.onScrollToCursor(function (tinyEvent) {
+    editorApi.onScrollToCursor((tinyEvent) => {
       tinyEvent.preventDefault();
-      editorApi.getCursorBox().each(function (bounds) {
+      editorApi.getCursorBox().each((bounds) => {
         const cWin = editorApi.win;
         // The goal here is to shift as little as required.
         const isOutside = bounds.top > cWin.innerHeight || bounds.bottom > cWin.innerHeight;
@@ -80,7 +80,7 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
     })
   ].concat(
     isAndroid6 === true ? [ ] : [
-      DomEvent.bind(SugarElement.fromDom(editorApi.win), 'blur', function () {
+      DomEvent.bind(SugarElement.fromDom(editorApi.win), 'blur', () => {
         alloy.getByDom(toolstrip).each(Toggling.off);
       }),
       DomEvent.bind(outerDoc, 'select', updateMargin),
@@ -89,7 +89,7 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
   );
 
   const destroy = function () {
-    Arr.each(listeners, function (l) {
+    Arr.each(listeners, (l) => {
       l.unbind();
     });
   };

@@ -5,7 +5,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as CellBounds from 'ephox/snooker/selection/CellBounds';
 
-UnitTest.test('CellBounds.isWithin Test', function () {
+UnitTest.test('CellBounds.isWithin Test', () => {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
   const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as SugarElement, cells, section);
 
@@ -87,7 +87,7 @@ UnitTest.test('CellBounds.isWithin Test', function () {
     { expected: false, label: 'p', row: 4, column: 4 }
   ];
 
-  Arr.each(cases, function (c) {
+  Arr.each(cases, (c) => {
     checkInSelection(c.expected, inputC, boundsC, c.row, c.column);
   });
 });

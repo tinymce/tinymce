@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import * as Regexes from 'ephox/polaris/api/Regexes';
 
-UnitTest.test('RegexesTest', function () {
+UnitTest.test('RegexesTest', () => {
   const ephoxCases = [
     'www.google.com.au',
     'www.google.com.au:80',
@@ -129,13 +129,13 @@ UnitTest.test('RegexesTest', function () {
 
   const falseCases = ephoxFalseCases.concat(mathiasBynensFalse);
 
-  Arr.each(trueCases, function (cs) {
+  Arr.each(trueCases, (cs) => {
     const matched = Regexes.link().exec(cs);
     assert.eq(cs, matched !== null && matched[0], 'expected true but was false: ' + cs);
     if (matched !== null && matched.length > 1) {
       // eslint-disable-next-line no-console
       console.log('matched groups:');
-      Arr.each(matched, function (s, i) {
+      Arr.each(matched, (s, i) => {
         // eslint-disable-next-line no-console
         console.log(i, s);
       });
@@ -143,7 +143,7 @@ UnitTest.test('RegexesTest', function () {
     }
   });
 
-  Arr.each(falseCases, function (cs) {
+  Arr.each(falseCases, (cs) => {
     const match = Regexes.link().exec(cs);
     assert.eq(false, match !== null && cs === match[0], 'expected false but was true: ' + cs);
   });
@@ -221,7 +221,7 @@ UnitTest.test('RegexesTest', function () {
   };
 
   // remember don't inline the module function execution, JS regexes have state!
-  Obj.each(autolinks, function (v, k) {
+  Obj.each(autolinks, (v, k) => {
     const match = Regexes.autolink().exec(k);
     if (match !== null) {
       const url = match[1];

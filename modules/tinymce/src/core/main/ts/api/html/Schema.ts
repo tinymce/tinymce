@@ -33,12 +33,12 @@ export interface SchemaSettings {
   whitespace_elements?: string;
 }
 
-export type Attribute = {
+export interface Attribute {
   required?: boolean;
   defaultValue?: string;
   forcedValue?: string;
   validValues?: any;
-};
+}
 
 export interface DefaultAttribute {
   name: string;
@@ -53,7 +53,7 @@ export interface AttributePattern {
   validValues?: Record<string, string>;
 }
 
-export type ElementRule = {
+export interface ElementRule {
   attributes: Record<string, Attribute>;
   attributesDefault?: DefaultAttribute[];
   attributesForced?: DefaultAttribute[];
@@ -63,7 +63,7 @@ export type ElementRule = {
   paddEmpty?: boolean;
   removeEmpty?: boolean;
   removeEmptyAttrs?: boolean;
-};
+}
 
 export interface SchemaElement extends ElementRule {
   outputName?: string;
@@ -71,8 +71,8 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export type SchemaMap = { [name: string]: {} };
-export type SchemaRegExpMap = { [name: string]: RegExp };
+export interface SchemaMap { [name: string]: {} }
+export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
   children: Record<string, {}>;
@@ -230,7 +230,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
     html4PhrasingContent = 'acronym applet basefont big font strike tt';
     phrasingContent = [ phrasingContent, html4PhrasingContent ].join(' ');
 
-    each(split(html4PhrasingContent), function (name) {
+    each(split(html4PhrasingContent), (name) => {
       add(name, '', phrasingContent);
     });
 
@@ -240,7 +240,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
     // Flow content elements from the HTML5 spec (block+inline)
     flowContent = [ blockContent, phrasingContent ].join(' ');
 
-    each(split(html4BlockContent), function (name) {
+    each(split(html4BlockContent), (name) => {
       add(name, '', flowContent);
     });
   }
@@ -379,7 +379,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
 
   // Delete children of the same name from it's parent
   // For example: form can't have a child of the name form
-  each(split('a form meter progress dfn'), function (name) {
+  each(split('a form meter progress dfn'), (name) => {
     if (schema[name]) {
       delete schema[name].children[name];
     }
@@ -419,7 +419,7 @@ const compileElementMap = function (value: string | Record<string, string>, mode
     }
 
     // Convert styles into a rule list
-    each(value, function (value, key) {
+    each(value, (value, key) => {
       styles[key] = styles[key.toUpperCase()] = mode === 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
     });
   }
@@ -490,7 +490,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), function (name) {
+  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
@@ -654,7 +654,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
     addValidElements(validElements);
 
-    each(schemaItems, function (element, name) {
+    each(schemaItems, (element, name) => {
       children[name] = element.children;
     });
   };
@@ -667,7 +667,7 @@ function Schema(settings?: SchemaSettings): Schema {
       // Flush cached items since we are altering the default maps
       mapCache.text_block_elements = mapCache.block_elements = null;
 
-      each(split(customElements, ','), function (rule) {
+      each(split(customElements, ','), (rule) => {
         const matches = customElementRegExp.exec(rule),
           inline = matches[1] === '~',
           cloneName = inline ? 'span' : 'div',
@@ -694,7 +694,7 @@ function Schema(settings?: SchemaSettings): Schema {
         }
 
         // Add custom elements at span/div positions
-        each(children, function (element, elmName) {
+        each(children, (element, elmName) => {
           if (element[cloneName]) {
             children[elmName] = element = extend({}, children[elmName]);
             element[name] = element[cloneName];
@@ -713,7 +713,7 @@ function Schema(settings?: SchemaSettings): Schema {
     mapCache[settings.schema] = null;
 
     if (validChildren) {
-      each(split(validChildren, ','), function (rule) {
+      each(split(validChildren, ','), (rule) => {
         const matches = childRuleRegExp.exec(rule);
         let parent, prefix;
 
@@ -729,7 +729,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
           parent = children[matches[2]];
 
-          each(split(matches[3], '|'), function (child) {
+          each(split(matches[3], '|'), (child) => {
             if (prefix === '-') {
               delete parent[child];
             } else {
@@ -762,7 +762,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   if (!settings.valid_elements) {
     // No valid elements defined then clone the elements from the schema spec
-    each(schemaItems, function (element, name) {
+    each(schemaItems, (element, name) => {
       elements[name] = {
         attributes: element.attributes,
         attributesOrder: element.attributesOrder
@@ -773,7 +773,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
     // Switch these on HTML4
     if (settings.schema !== 'html5') {
-      each(split('strong/b em/i'), function (item) {
+      each(split('strong/b em/i'), (item) => {
         const items = split(item, '/');
         elements[items[1]].outputName = items[0];
       });
@@ -783,19 +783,19 @@ function Schema(settings?: SchemaSettings): Schema {
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
     // Remove these if they are empty by default
-    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), function (name) {
+    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), function (name) {
+    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), (name) => {
       elements[name].paddEmpty = true;
     });
 
     // Remove these if they have no attributes
-    each(split('span'), function (name) {
+    each(split('span'), (name) => {
       elements[name].removeEmptyAttrs = true;
     });
 
@@ -829,7 +829,7 @@ function Schema(settings?: SchemaSettings): Schema {
     legend: 'fieldset',
     area: 'map',
     param: 'video audio object'
-  }, function (parents, item) {
+  }, (parents, item) => {
     if (elements[item]) {
       elements[item].parentsRequired = split(parents);
     }
@@ -837,7 +837,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   // Delete invalid elements
   if (settings.invalid_elements) {
-    each(explode(settings.invalid_elements), function (item) {
+    each(explode(settings.invalid_elements), (item) => {
       if (elements[item]) {
         delete elements[item];
       }

@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, fail
   SilverTheme();
   Plugin();
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 

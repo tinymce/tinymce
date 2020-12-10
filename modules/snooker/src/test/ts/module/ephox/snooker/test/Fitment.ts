@@ -5,15 +5,15 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as Fitment from 'ephox/snooker/model/Fitment';
 
 const mapToStructGrid = function (grid: Structs.ElementNew[][]): Structs.RowCells[] {
-  return Arr.map(grid, function (row) {
+  return Arr.map(grid, (row) => {
     return Structs.rowcells(row, 'tbody');
   });
 };
 
 const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]): void {
   assert.eq(expected.length, actual.length);
-  Arr.each(expected, function (row, i) {
-    Arr.each(row.cells, function (cell, j) {
+  Arr.each(expected, (row, i) => {
+    Arr.each(row.cells, (cell, j) => {
       assert.eq(cell.element, actual[i].cells[j].element);
       assert.eq(cell.isNew, actual[i].cells[j].isNew);
     });
@@ -28,13 +28,13 @@ const measureTest = function (expected: { error: string } | { rowDelta: number; 
   // colDelta = -3 means gridA is 3 columns too short
   // rowDelta = 3 means gridA can fit gridB with 3 rows to spare
 
-  Fitment.measure(startAddress, mapToStructGrid(gridA), mapToStructGrid(gridB)).fold(function (err) {
+  Fitment.measure(startAddress, mapToStructGrid(gridA), mapToStructGrid(gridB)).fold((err) => {
     if ('error' in expected) {
       assert.eq(expected.error, err);
     } else {
       assert.fail('An error was not expected. Message was "' + err + '"');
     }
-  }, function (delta) {
+  }, (delta) => {
     if ('rowDelta' in expected) {
       assert.eq(expected.rowDelta, delta.rowDelta, 'rowDelta expected: ' + expected.rowDelta + ' actual: ' + delta.rowDelta);
       assert.eq(expected.colDelta, delta.colDelta, 'colDelta expected: ' + expected.colDelta + ' actual: ' + delta.colDelta);

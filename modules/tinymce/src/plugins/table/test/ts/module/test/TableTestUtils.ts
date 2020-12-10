@@ -54,7 +54,7 @@ const sOpenToolbarOn = function (editor, selector, path) {
   return Logger.t('Open dialog from toolbar', Chain.asStep(TinyDom.fromDom(editor.getBody()), [
     UiFinder.cFindIn(selector),
     Cursors.cFollow(path),
-    Chain.op(function (target) {
+    Chain.op((target) => {
       editor.selection.select(target.dom);
     }),
     Mouse.cClick
@@ -125,7 +125,7 @@ const sChooseTab = (tabName: string) => Logger.t('Choose tab ' + tabName, Chain.
 
 const sAssertDialogPresence = (label, expected) => Logger.t('Assert dialog is present', Chain.asStep({}, [
   cWaitForDialog,
-  Chain.op(function (dialog) {
+  Chain.op((dialog) => {
     Assertions.assertPresence(
       label,
       expected,
@@ -149,7 +149,7 @@ const sAssertListBoxValue = (label, section, expected) => Logger.t('Assert selec
 ]));
 
 const cGetBody = Chain.control(
-  Chain.mapper(function (editor: any) {
+  Chain.mapper((editor: any) => {
     return TinyDom.fromDom(editor.getBody());
   }),
   Guard.addLogging('Get body')
@@ -278,7 +278,7 @@ const cDragResizeBar = (rowOrCol: 'row' | 'column', index: number, dx: number, d
   );
 
 const cGetWidth = Chain.control(
-  Chain.mapper(function (input: any) {
+  Chain.mapper((input: any) => {
     const editor = input.editor;
     const elm = input.element.dom;
     return getWidths(editor, elm);

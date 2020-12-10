@@ -37,9 +37,9 @@ const isImageUrl = function (editor: Editor, url: string) {
 };
 
 const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
-  editor.undoManager.extra(function () {
+  editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
-  }, function () {
+  }, () => {
     editor.insertContent('<img src="' + url + '">');
   });
 
@@ -47,9 +47,9 @@ const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof p
 };
 
 const createLink = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
-  editor.undoManager.extra(function () {
+  editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
-  }, function () {
+  }, () => {
     editor.execCommand('mceInsertLink', false, url);
   });
 
@@ -69,7 +69,7 @@ const smartInsertContent = function (editor: Editor, html: string) {
     linkSelection,
     insertImage,
     pasteHtml
-  ], function (action) {
+  ], (action) => {
     return action(editor, html, pasteHtml) !== true;
   });
 };

@@ -14,10 +14,10 @@ import * as Sanitize from './Sanitize';
 declare let unescape: any;
 
 const setup = function (editor: Editor) {
-  editor.on('preInit', function () {
+  editor.on('preInit', () => {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();
-    Tools.each('video audio iframe object'.split(' '), function (name) {
+    Tools.each('video audio iframe object'.split(' '), (name) => {
       specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
     });
 
@@ -28,7 +28,7 @@ const setup = function (editor: Editor) {
 
     // Set allowFullscreen attribs as boolean
     const boolAttrs = editor.schema.getBoolAttrs();
-    Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
+    Tools.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), (name) => {
       boolAttrs[name] = {};
     });
 
@@ -37,7 +37,7 @@ const setup = function (editor: Editor) {
       Nodes.placeHolderConverter(editor));
 
     // Replaces placeholder images with real elements for video, object, iframe etc
-    editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
+    editor.serializer.addAttributeFilter('data-mce-object', (nodes, name) => {
       let i = nodes.length;
       let node;
       let realElm;
@@ -106,10 +106,10 @@ const setup = function (editor: Editor) {
     });
   });
 
-  editor.on('SetContent', function () {
+  editor.on('SetContent', () => {
     // TODO: This shouldn't be needed there should be a way to mark bogus
     // elements so they are never removed except external save
-    editor.$('span.mce-preview-object').each(function (index, elm) {
+    editor.$('span.mce-preview-object').each((index, elm) => {
       const $elm = editor.$(elm);
 
       if ($elm.find('span.mce-shim').length === 0) {

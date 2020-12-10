@@ -20,7 +20,7 @@ const getAt = function (warehouse: Warehouse, row: number, column: number): Opti
 };
 
 const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> {
-  const filtered = filterItems(warehouse, function (detail) {
+  const filtered = filterItems(warehouse, (detail) => {
     return comparator(item, detail.element);
   });
 
@@ -28,7 +28,7 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
 };
 
 const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] {
-  const all = Arr.bind(warehouse.all, function (r) { return r.cells; });
+  const all = Arr.bind(warehouse.all, (r) => { return r.cells; });
   return Arr.filter(all, predicate);
 };
 

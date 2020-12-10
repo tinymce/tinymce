@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
-          Chain.op(function (dialog) {
+          Chain.op((dialog) => {
             Assertions.assertPresence(
               'assert presence of spacing, padding, border and caption inputs',
               {
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success
         tinyApis.sExecCommand('mceTableProps'),
         Chain.asStep({}, [
           TableTestUtils.cWaitForDialog,
-          Chain.op(function (dialog) {
+          Chain.op((dialog) => {
             Assertions.assertPresence(
               'assert presence of spacing, padding, border and caption inputs',
               {

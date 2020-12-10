@@ -36,7 +36,7 @@ const brokenPath = <E> (first: E, second: Optional<E>, splits: BrokenPathSplits<
 const bisect = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Optional<Bisect<E>> {
   const children = universe.property().children(parent);
   const index = Arr.findIndex(children, Fun.curry(universe.eq, child));
-  return index.map(function (ind) {
+  return index.map((ind) => {
     return {
       before: children.slice(0, ind),
       after: children.slice(ind + 1)
@@ -49,7 +49,7 @@ const bisect = function <E, D> (universe: Universe<E, D>, parent: E, child: E): 
  * a clone of the parent (placed after parent).
  */
 const breakToRight = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Optional<LeftRight<E>> {
-  return bisect(universe, parent, child).map(function (parts) {
+  return bisect(universe, parent, child).map((parts) => {
     const second = universe.create().clone(parent);
     universe.insert().appendAll(second, parts.after);
     universe.insert().after(parent, second);
@@ -62,7 +62,7 @@ const breakToRight = function <E, D> (universe: Universe<E, D>, parent: E, child
  * the a clone of the parent (placed before parent)
  */
 const breakToLeft = function <E, D> (universe: Universe<E, D>, parent: E, child: E): Optional<LeftRight<E>> {
-  return bisect(universe, parent, child).map(function (parts) {
+  return bisect(universe, parent, child).map((parts) => {
     const prior = universe.create().clone(parent);
     universe.insert().appendAll(prior, parts.before.concat([ child ]));
     universe.insert().appendAll(parent, parts.after);
@@ -87,8 +87,8 @@ const breakPath = function <E, D> (universe: Universe<E, D>, item: E, isTop: (e:
       return brokenPath(child, group, splits);
     } else {
       // Split the child at parent, and keep going
-      return universe.property().parent(child).bind(function (parent: E) {
-        return breaker(universe, parent, child).map(function (breakage) {
+      return universe.property().parent(child).bind((parent: E) => {
+        return breaker(universe, parent, child).map((breakage) => {
           const extra = [{ first: breakage.left, second: breakage.right }];
           // Our isTop is based on the left-side parent, so keep it regardless of split.
           const nextChild = isTop(parent) ? parent : breakage.left;

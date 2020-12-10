@@ -7,7 +7,7 @@ import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as LineWalker from 'tinymce/core/caret/LineWalker';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
     return viewBlock.get();
   };
 
-  suite.test('positionsUntil', function () {
+  suite.test('positionsUntil', () => {
     let result, predicateCallCount = 0;
 
     const predicate = function () {
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
     LegacyUnit.equal(predicateCallCount, 3);
   });
 
-  suite.test('upUntil', function () {
+  suite.test('upUntil', () => {
     let predicateCallCount = 0;
 
     const predicate = function () {
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
     LegacyUnit.equal(predicateCallCount, 3);
   });
 
-  suite.test('downUntil', function () {
+  suite.test('downUntil', () => {
     let predicateCallCount = 0;
 
     const predicate = function () {
@@ -85,18 +85,18 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', function (success, fai
     LegacyUnit.equal(predicateCallCount, 3);
   });
 
-  suite.test('isAboveLine', function () {
+  suite.test('isAboveLine', () => {
     LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 10 } as LineWalker.LinePosClientRect), true);
     LegacyUnit.equal(LineWalker.isAboveLine(5)({ line: 2 } as LineWalker.LinePosClientRect), false);
   });
 
-  suite.test('isLine', function () {
+  suite.test('isLine', () => {
     LegacyUnit.equal(LineWalker.isLine(3)({ line: 3 } as LineWalker.LinePosClientRect), true);
     LegacyUnit.equal(LineWalker.isLine(3)({ line: 4 } as LineWalker.LinePosClientRect), false);
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

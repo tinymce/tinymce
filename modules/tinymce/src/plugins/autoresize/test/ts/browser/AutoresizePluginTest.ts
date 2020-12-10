@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
     Assertions.assertEq(`should be greater than: ${scroll}px >= ${position}px`, true, scroll >= position);
   }));
 
-  const sAssertScroll = (editor: Editor, state: boolean) => Logger.t(`Assert scroll ${state}`, Step.sync(function () {
+  const sAssertScroll = (editor: Editor, state: boolean) => Logger.t(`Assert scroll ${state}`, Step.sync(() => {
     const body = editor.getBody();
     Assertions.assertEq('', !state, body.style.overflowY === 'hidden');
   }));

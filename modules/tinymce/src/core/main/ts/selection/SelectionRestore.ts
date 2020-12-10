@@ -22,19 +22,19 @@ const registerPageMouseUp = function (editor: Editor, throttledStore) {
 
   DOMUtils.DOM.bind(document, 'mouseup', mouseUpPage);
 
-  editor.on('remove', function () {
+  editor.on('remove', () => {
     DOMUtils.DOM.unbind(document, 'mouseup', mouseUpPage);
   });
 };
 
 const registerFocusOut = function (editor: Editor) {
-  editor.on('focusout', function () {
+  editor.on('focusout', () => {
     SelectionBookmark.store(editor);
   });
 };
 
 const registerMouseUp = function (editor: Editor, throttledStore) {
-  editor.on('mouseup touchend', function (_e) {
+  editor.on('mouseup touchend', (_e) => {
     throttledStore.throttle();
   });
 };
@@ -48,7 +48,7 @@ const registerEditorEvents = function (editor: Editor, throttledStore) {
     registerMouseUp(editor, throttledStore);
   }
 
-  editor.on('keyup NodeChange', function (e) {
+  editor.on('keyup NodeChange', (e) => {
     if (!isManualNodeChange(e)) {
       SelectionBookmark.store(editor);
     }
@@ -56,11 +56,11 @@ const registerEditorEvents = function (editor: Editor, throttledStore) {
 };
 
 const register = function (editor: Editor) {
-  const throttledStore = Throttler.first(function () {
+  const throttledStore = Throttler.first(() => {
     SelectionBookmark.store(editor);
   }, 0);
 
-  editor.on('init', function () {
+  editor.on('init', () => {
     if (editor.inline) {
       registerPageMouseUp(editor, throttledStore);
     }
@@ -68,7 +68,7 @@ const register = function (editor: Editor) {
     registerEditorEvents(editor, throttledStore);
   });
 
-  editor.on('remove', function () {
+  editor.on('remove', () => {
     throttledStore.cancel();
   });
 };

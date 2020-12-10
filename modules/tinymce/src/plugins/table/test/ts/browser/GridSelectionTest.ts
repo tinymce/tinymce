@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
   SilverTheme();
   Plugin();
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sAssertTableSelection = function (tableHtml: string, selectCells: string[], cellContents: string[]) {
@@ -32,18 +32,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.GridSelectionTest', (success, 
         const table = editor.$('table')[0];
         const cells = getCells(table);
 
-        const startTd = Tools.grep(cells, function (elm) {
+        const startTd = Tools.grep(cells, (elm) => {
           return elm.innerHTML === selectCells[0];
         })[0];
 
-        const endTd = Tools.grep(cells, function (elm) {
+        const endTd = Tools.grep(cells, (elm) => {
           return elm.innerHTML === selectCells[1];
         })[0];
 
         selectRangeXY(table, startTd, endTd);
 
         let selection = getSelectedCells(table);
-        selection = Tools.map(selection, function (elm) {
+        selection = Tools.map(selection, (elm) => {
           return elm.innerHTML;
         });
 

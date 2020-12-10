@@ -11,7 +11,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   SilverTheme();
 
   const sResetLocalStorage = function () {
-    return Logger.t('Reset local storage', Step.sync(function () {
+    return Logger.t('Reset local storage', Step.sync(() => {
       LocalStorage.removeItem('tinymce-custom-colors');
     }));
   };
@@ -30,7 +30,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
         Math.abs(expectedRgb[2] - actualRgb[2]) <= delta
       ), 'Color value should match (within ' + delta + '). Expected: ' + expectedColor + ' Actual: ' + actualColor);
     };
-    return Logger.t(`Assert colors: ${expected}`, Step.sync(function () {
+    return Logger.t(`Assert colors: ${expected}`, Step.sync(() => {
       const colors = Settings.mapColors(input);
       Assert.eq('Colors length should match', expected.length, colors.length);
       for (let i = 0; i < expected.length; i++) {
@@ -42,14 +42,14 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   };
 
   const sAssertCols = function (editor, expected) {
-    return Logger.t(`Assert color cols: ${expected}`, Step.sync(function () {
+    return Logger.t(`Assert color cols: ${expected}`, Step.sync(() => {
       const colors = ColorSwatch.getColorCols(editor);
       Assert.eq('should be same', expected, colors);
     }));
   };
 
   const sAssertCalcCols = function (editor, colors, expected) {
-    return Logger.t(`Assert calced cols: ${expected}`, Step.sync(function () {
+    return Logger.t(`Assert calced cols: ${expected}`, Step.sync(() => {
       const sqrt = ColorSwatch.calcCols(colors);
       Assert.eq('should be same', expected, sqrt);
     }));
@@ -98,7 +98,7 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     }
   ];
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({},
       Log.steps('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
         sResetLocalStorage(),

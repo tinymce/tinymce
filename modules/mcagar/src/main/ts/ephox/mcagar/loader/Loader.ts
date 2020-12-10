@@ -77,7 +77,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
         settingsSetup(editor);
 
         editor.on('SkinLoaded', () => {
-          setTimeout(function () {
+          setTimeout(() => {
             try {
               callbacks.run(editor, onSuccess, onFailure);
             } catch (e) {

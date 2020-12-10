@@ -42,13 +42,13 @@ const applyVAlign = function (editor: Editor, elm: Element, name: string) {
 };
 
 const unApplyAlign = function (editor: Editor, elm: Element) {
-  Tools.each('left center right'.split(' '), function (name) {
+  Tools.each('left center right'.split(' '), (name) => {
     editor.formatter.remove('align' + name, {}, elm);
   });
 };
 
 const unApplyVAlign = function (editor: Editor, elm: Element) {
-  Tools.each('top middle bottom'.split(' '), function (name) {
+  Tools.each('top middle bottom'.split(' '), (name) => {
     editor.formatter.remove('valign' + name, {}, elm);
   });
 };

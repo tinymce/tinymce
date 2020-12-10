@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     ]);
 
     const standardFillOkTest = () => {
-      const htmlFilledEmptyTable = ApproxStructure.build(function (s, str/* , arr*/) {
+      const htmlFilledEmptyTable = ApproxStructure.build((s, str/* , arr*/) => {
         return s.element('table', {
           attrs: {
             border: str.is('1'),
@@ -140,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableDialogGeneralTest', (succ
     };
 
     const allOnOkTest = () => {
-      const htmlFilledAllOnTable = ApproxStructure.build(function (s, str/* , arr*/) {
+      const htmlFilledAllOnTable = ApproxStructure.build((s, str/* , arr*/) => {
         return s.element('table', {
           styles: {
             'height': str.is('500px'),

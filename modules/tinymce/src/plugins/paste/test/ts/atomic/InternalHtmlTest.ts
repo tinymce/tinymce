@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 
-UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', function () {
+UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', () => {
   const testMark = function () {
     assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
   };

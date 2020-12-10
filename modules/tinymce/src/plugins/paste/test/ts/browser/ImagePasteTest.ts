@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
   ].join('');
 
   const sTeardown = function (editor: Editor) {
-    return Logger.t('Delete editor settings', Step.sync(function () {
+    return Logger.t('Delete editor settings', Step.sync(() => {
       delete editor.settings.paste_data_images;
       delete editor.settings.images_dataimg_filter;
       editor.editorUpload.destroy();
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
   };
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
-    return Arr.bind(steps, function (step) {
+    return Arr.bind(steps, (step) => {
       return [ step, sTeardown(editor) ];
     });
   };
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
   };
 
   const waitFor = function (predicate: () => boolean) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const check = function (time, count) {
         if (predicate()) {
           resolve();
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
           if (count === 0) {
             reject(new Error('Waited for predicate to be true'));
           } else {
-            Delay.setTimeout(function () {
+            Delay.setTimeout(() => {
               check(time, count - 1);
             }, time);
           }
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     return waitFor(() => editor.dom.select(selector).length > 0);
   };
 
-  suite.asyncTest('TestCase-TBA: Paste: pasteImages should set unique id in blobcache', function (editor, done, die) {
+  suite.asyncTest('TestCase-TBA: Paste: pasteImages should set unique id in blobcache', (editor, done, die) => {
     const clipboard = Clipboard(editor, Cell('html'));
 
     const hasCachedItem = (name) => !!editor.editorUpload.blobCache.get(name);
@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 
-    waitForSelector(editor, 'img').then(function () {
+    waitForSelector(editor, 'img').then(() => {
       waitFor(() => hasCachedItem('mceclip0') && hasCachedItem('mceclip1')).then(() => {
         const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
         const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
-  suite.asyncTest('TestCase-TBA: Paste: dropImages', function (editor, done, die) {
+  suite.asyncTest('TestCase-TBA: Paste: dropImages', (editor, done, die) => {
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -138,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     ]) as DragEvent;
     clipboard.pasteImageData(event, rng);
 
-    waitForSelector(editor, 'img').then(function () {
+    waitForSelector(editor, 'img').then(() => {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
-  suite.asyncTest('TestCase-TBA: Paste: pasteImages', function (editor, done, die) {
+  suite.asyncTest('TestCase-TBA: Paste: pasteImages', (editor, done, die) => {
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -157,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 
-    waitForSelector(editor, 'img').then(function () {
+    waitForSelector(editor, 'img').then(() => {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
@@ -210,7 +210,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
-  suite.asyncTest('TestCase-TBA: Paste: dropImages - images_dataimg_filter', function (editor, done, die) {
+  suite.asyncTest('TestCase-TBA: Paste: dropImages - images_dataimg_filter', (editor, done, die) => {
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -225,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     ]) as DragEvent;
     clipboard.pasteImageData(event, rng);
 
-    waitForSelector(editor, 'img').then(function () {
+    waitForSelector(editor, 'img').then(() => {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
-  suite.asyncTest('TestCase-TBA: Paste: pasteImages - images_dataimg_filter', function (editor, done, die) {
+  suite.asyncTest('TestCase-TBA: Paste: pasteImages - images_dataimg_filter', (editor, done, die) => {
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
@@ -248,7 +248,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     ]) as ClipboardEvent;
     clipboard.pasteImageData(event, rng);
 
-    waitForSelector(editor, 'img').then(function () {
+    waitForSelector(editor, 'img').then(() => {
       LegacyUnit.equal(editor.getContent(), '<p><img src=\"data:image/gif;base64,' + base64ImgSrc + '" />a</p>');
       LegacyUnit.strictEqual(editor.dom.select('img')[0].src.indexOf('blob:'), 0);
 
@@ -256,7 +256,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }).catch(die);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, appendTeardown(editor, Log.steps('TBA', 'Paste: Test image paste', suite.toSteps(editor))), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

@@ -133,7 +133,7 @@ const sCloseDialog = function (ui: TinyUi) {
 
 const cFakeEvent = function (name: string) {
   return Chain.control(
-    Chain.op(function (elm: SugarElement) {
+    Chain.op((elm: SugarElement) => {
       const element: HTMLElement = elm.dom;
       // NOTE we can't fake a paste event here.
       let event;
@@ -230,7 +230,7 @@ const sSubmitAndReopen = function (ui: TinyUi) {
 };
 
 const sSetSetting = function (editorSetting: Record<string, any>, key: string, value: any) {
-  return Logger.t(`Set setting ${key}: ${value}`, Step.sync(function () {
+  return Logger.t(`Set setting ${key}: ${value}`, Step.sync(() => {
     editorSetting[key] = value;
   }));
 };

@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import * as Util from 'ephox/snooker/util/Util';
 
-UnitTest.test('UtilTest', function () {
+UnitTest.test('UtilTest', () => {
   const eq = (a: number, b: number) => a === b;
 
   assert.eq([], Util.unique([], eq));

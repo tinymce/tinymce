@@ -34,8 +34,8 @@ export const BarMutation = function (): BarMutation {
 
   const delegate = Mutation();
 
-  delegate.events.drag.bind(function (event) {
-    target.each(function (t) {
+  delegate.events.drag.bind((event) => {
+    target.each((t) => {
       // There is always going to be this padding / border collapse / margin problem with widths. I'll have to resolve that.
       events.trigger.drag(event.xDelta, event.yDelta, t);
     });

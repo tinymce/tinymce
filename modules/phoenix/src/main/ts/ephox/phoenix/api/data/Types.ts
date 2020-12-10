@@ -45,11 +45,11 @@ export interface Traverse<E> {
   readonly mode: Transition;
 }
 
-export type Successor = {
+export interface Successor {
   readonly current: Transition;
   readonly next: Transition;
   readonly fallback: Optional<Transition>;
-};
+}
 
 export interface Wrapter<E> {
   readonly element: E;

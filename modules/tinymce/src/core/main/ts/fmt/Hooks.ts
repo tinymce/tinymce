@@ -32,12 +32,12 @@ const addPostProcessHook = function (name, hook) {
 };
 
 const postProcess = function (name: string, editor: Editor) {
-  each(postProcessHooks[name], function (hook) {
+  each(postProcessHooks[name], (hook) => {
     hook(editor);
   });
 };
 
-addPostProcessHook('pre', function (editor: Editor) {
+addPostProcessHook('pre', (editor: Editor) => {
   const rng = editor.selection.getRng();
   let blocks;
 
@@ -55,7 +55,7 @@ addPostProcessHook('pre', function (editor: Editor) {
   if (!rng.collapsed) {
     blocks = editor.selection.getSelectedBlocks();
 
-    each(filter(filter(blocks, isPre), hasPreSibling), function (pre) {
+    each(filter(filter(blocks, isPre), hasPreSibling), (pre) => {
       joinPre(pre.previousSibling, pre);
     });
   }

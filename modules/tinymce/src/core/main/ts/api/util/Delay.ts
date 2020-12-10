@@ -8,10 +8,10 @@
 import Editor from '../Editor';
 import Promise from './Promise';
 
-type DebounceFunc<T extends (...args: any[]) => void> = {
+interface DebounceFunc<T extends (...args: any[]) => void> {
   (...args: Parameters<T>): void;
   stop: () => void;
-};
+}
 
 interface Delay {
   requestAnimationFrame (callback: () => void, element?: HTMLElement): void;
@@ -108,7 +108,7 @@ const Delay: Delay = {
       return;
     }
 
-    requestAnimationFramePromise = new Promise(function (resolve) {
+    requestAnimationFramePromise = new Promise((resolve) => {
       if (!element) {
         element = document.body;
       }
@@ -148,7 +148,7 @@ const Delay: Delay = {
    * @return {Number} Timeout id number.
    */
   setEditorTimeout(editor, callback, time?) {
-    return wrappedSetTimeout(function () {
+    return wrappedSetTimeout(() => {
       if (!editor.removed) {
         callback();
       }
@@ -165,7 +165,7 @@ const Delay: Delay = {
    * @return {Number} Timeout id number.
    */
   setEditorInterval(editor, callback, time?) {
-    const timer = wrappedSetInterval(function () {
+    const timer = wrappedSetInterval(() => {
       if (!editor.removed) {
         callback();
       } else {

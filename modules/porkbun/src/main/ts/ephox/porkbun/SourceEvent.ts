@@ -7,7 +7,7 @@ export default function (fields: string[], source: Bindable<any>): Event {
 
   const triggerer = function (evt: Record<string, any>) {
     // yay! Let's unbox this event, convert it to a constargs, so it can be re-boxed!
-    const args = Arr.map(fields, function (field) {
+    const args = Arr.map(fields, (field) => {
       return evt[field];
     });
     mine.trigger.apply(null, args);

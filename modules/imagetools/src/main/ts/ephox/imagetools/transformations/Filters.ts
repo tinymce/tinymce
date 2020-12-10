@@ -3,7 +3,7 @@ import { fromCanvas, ImageResult } from '../util/ImageResult';
 import * as ColorMatrix from './ColorMatrix';
 
 function colorFilter(ir: ImageResult, matrix: ColorMatrix.Matrix): Promise<ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return applyColorFilter(canvas, ir.getType(), matrix);
   });
 }
@@ -43,7 +43,7 @@ function applyColorFilter(canvas: HTMLCanvasElement, type: string, matrix: Color
 }
 
 function convoluteFilter(ir: ImageResult, matrix: ColorMatrix.ConvolutionMatrix): Promise<ImageResult> {
-  return ir.toCanvas().then(function (canvas) {
+  return ir.toCanvas().then((canvas) => {
     return applyConvoluteFilter(canvas, ir.getType(), matrix);
   });
 }
@@ -139,7 +139,7 @@ function functionColorFilter(colorFn: (color: number, value: number) => number):
   };
 
   return function (ir: ImageResult, value: number) {
-    return ir.toCanvas().then(function (canvas) {
+    return ir.toCanvas().then((canvas) => {
       return filterImpl(canvas, ir.getType(), value);
     });
   };
@@ -192,11 +192,11 @@ const emboss = basicConvolutionFilter([
   0, 1, 2
 ]);
 
-const gamma = functionColorFilter(function (color, value) {
+const gamma = functionColorFilter((color, value) => {
   return Math.pow(color / 255, 1 - value) * 255;
 });
 
-const exposure = functionColorFilter(function (color, value) {
+const exposure = functionColorFilter((color, value) => {
   return 255 * (1 - Math.exp(-(color / 255) * value));
 });
 

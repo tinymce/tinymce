@@ -80,7 +80,7 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
       return;
     }
 
-    Tools.each(styleSheet.imports, function (styleSheet) {
+    Tools.each(styleSheet.imports, (styleSheet) => {
       append(styleSheet, true);
     });
 
@@ -91,18 +91,18 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
       // @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);
     }
 
-    Tools.each(rules, function (cssRule) {
+    Tools.each(rules, (cssRule) => {
       if (isCssImportRule(cssRule)) {
         append(cssRule.styleSheet, true);
       } else if (isCssPageRule(cssRule)) {
-        Tools.each(cssRule.selectorText.split(','), function (selector) {
+        Tools.each(cssRule.selectorText.split(','), (selector) => {
           selectors.push(Tools.trim(selector));
         });
       }
     });
   }
 
-  Tools.each(editor.contentCSS, function (url) {
+  Tools.each(editor.contentCSS, (url) => {
     contentCSSUrls[url] = true;
   });
 
@@ -113,7 +113,7 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
   }
 
   try {
-    Tools.each(doc.styleSheets, function (styleSheet: string) {
+    Tools.each(doc.styleSheets, (styleSheet: string) => {
       append(styleSheet);
     });
   } catch (e) {
@@ -172,13 +172,13 @@ const defaultConvertSelectorToFormat = function (editor: Editor, selectorText: s
 };
 
 const getGroupsBySelector = function (groups: Group[], selector: string): Group[] {
-  return Tools.grep(groups, function (group) {
+  return Tools.grep(groups, (group) => {
     return !group.filter || group.filter(selector);
   });
 };
 
 const compileUserDefinedGroups = function (groups: UserDefinedGroup[]): Group[] {
-  return Tools.map(groups, function (group) {
+  return Tools.map(groups, (group) => {
     return Tools.extend({}, group, {
       original: group,
       selectors: {},
@@ -231,7 +231,7 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('init', function (_e) {
+  editor.on('init', (_e) => {
     const model = generate();
 
     const globallyUniqueSelectors = {};
@@ -259,13 +259,13 @@ const setup = function (editor: Editor) {
       return null;
     };
 
-    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector: string) {
+    Tools.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), (selector: string) => {
       if (selector.indexOf('.mce-') === -1) {
         if (!selectorFilter || selectorFilter(selector)) {
           const selectorGroups = getGroupsBySelector(groups, selector);
 
           if (selectorGroups.length > 0) {
-            Tools.each(selectorGroups, function (group) {
+            Tools.each(selectorGroups, (group) => {
               const menuItem = processSelector(selector, group);
               if (menuItem) {
                 model.addItemToGroup(group.title, menuItem);

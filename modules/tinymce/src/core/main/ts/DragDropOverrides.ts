@@ -215,7 +215,7 @@ const drop = (state: Singleton.Value<State>, editor: Editor) => (e: EditorEvent<
         } as DragEvent);
 
         if (!args.isDefaultPrevented()) {
-          editor.undoManager.transact(function () {
+          editor.undoManager.transact(() => {
             removeElement(state.element);
             editor.insertContent(editor.dom.getOuterHTML(targetClone));
             editor._selectionOverrides.hideFakeCaret();

@@ -12,7 +12,7 @@ import Rect, { GeomRect } from 'tinymce/core/api/geom/Rect';
 import Promise from 'tinymce/core/api/util/Promise';
 import { CropRect } from './CropRect';
 
-const loadImage = (image): Promise<SugarElement> => new Promise(function (resolve) {
+const loadImage = (image): Promise<SugarElement> => new Promise((resolve) => {
   const loaded = function () {
     image.removeEventListener('load', loaded);
     resolve(image);

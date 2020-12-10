@@ -4,10 +4,10 @@ import { Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import I18n from 'tinymce/core/api/util/I18n';
 
-UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.I18nTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('Translate strings', function () {
+  suite.test('Translate strings', () => {
     const translate = I18n.translate;
 
     I18n.add('code', {
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
     I18n.setCode('en');
   });
 
-  suite.test('Switch language', function () {
+  suite.test('Switch language', () => {
     I18n.add('code1', {
       text: 'translation1'
     });
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
     I18n.setCode('en');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

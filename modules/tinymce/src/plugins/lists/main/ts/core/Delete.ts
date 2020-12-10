@@ -215,7 +215,7 @@ const backspaceDeleteIntoListCaret = function (editor: Editor, isForward: boolea
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
     if (otherLi) {
-      editor.undoManager.transact(function () {
+      editor.undoManager.transact(() => {
         removeBlock(dom, block, root);
         ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
         editor.selection.select(otherLi, true);
@@ -239,7 +239,7 @@ const backspaceDeleteRange = function (editor: Editor): boolean {
   const startListParent = editor.dom.getParent(selectionStartElm, 'LI,DT,DD', root);
 
   if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
-    editor.undoManager.transact(function () {
+    editor.undoManager.transact(() => {
       editor.execCommand('Delete');
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     });
@@ -255,7 +255,7 @@ const backspaceDelete = function (editor: Editor, isForward: boolean): boolean {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('keydown', function (e) {
+  editor.on('keydown', (e) => {
     if (e.keyCode === VK.BACKSPACE) {
       if (backspaceDelete(editor, false)) {
         e.preventDefault();

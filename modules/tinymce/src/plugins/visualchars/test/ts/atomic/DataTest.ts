@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as Data from 'tinymce/plugins/visualchars/core/Data';
 
-UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', function () {
+UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', () => {
   Assert.eq(
     'should return correct selector',
     'span.mce-a,span.mce-b',

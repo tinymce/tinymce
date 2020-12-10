@@ -16,13 +16,13 @@ export interface Textdata<E> extends TextdataGet<E> {
  * Create a PositionArray of textnodes and returns the array along with the concatenated text.
  */
 const get = function <E, D> (universe: Universe<E, D>, elements: E[]): TextdataGet<E> {
-  const list = PositionArray.generate(elements, function (x, start) {
+  const list = PositionArray.generate(elements, (x, start) => {
     return universe.property().isText(x) ?
       Optional.some(Spot.range(x, start, start + universe.property().getText(x).length)) :
       Optional.none<SpotRange<E>>();
   });
 
-  const allText = Arr.foldr(list, function (b, a) {
+  const allText = Arr.foldr(list, (b, a) => {
     return universe.property().getText(a.element) + b;
   }, '');
 
@@ -33,9 +33,9 @@ const get = function <E, D> (universe: Universe<E, D>, elements: E[]): TextdataG
 };
 
 const cursor = function <E, D> (universe: Universe<E, D>, data: TextdataGet<E>, current: E, offset: number): Textdata<E> {
-  const position = PositionArray.find(data.list, function (item) {
+  const position = PositionArray.find(data.list, (item) => {
     return universe.eq(item.element, current);
-  }).map(function (element) {
+  }).map((element) => {
     return element.start + offset;
   });
 

@@ -46,7 +46,7 @@ const defaultTouchSettings: RawEditorSettings = {
 const normalizePlugins = function (plugins: string | string[]) {
   const pluginNames = Type.isArray(plugins) ? plugins.join(' ') : plugins;
   const trimmedPlugins = Arr.map(Type.isString(pluginNames) ? pluginNames.split(' ') : [ ], Strings.trim);
-  return Arr.filter(trimmedPlugins, function (item) {
+  return Arr.filter(trimmedPlugins, (item) => {
     return item.length > 0;
   });
 };
@@ -57,7 +57,7 @@ const filterLegacyMobilePlugins = function (plugins: string[]) {
 };
 
 const extractSections = function (keys, settings) {
-  const result = Obj.bifilter(settings, function (value, key) {
+  const result = Obj.bifilter(settings, (value, key) => {
     return Arr.contains(keys, key);
   });
 
@@ -235,7 +235,7 @@ const getParamObject = (value: string) => {
   let output = {};
 
   if (typeof value === 'string') {
-    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), function (val: string) {
+    Arr.each(value.indexOf('=') > 0 ? value.split(/[;,](?![^=;,]*(?:[;,]|$))/) : value.split(','), (val: string) => {
       const arr = val.split('=');
 
       if (arr.length > 1) {

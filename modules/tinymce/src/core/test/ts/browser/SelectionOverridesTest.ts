@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
   const isPhantomJs = /PhantomJS/.test(window.navigator.userAgent);
 
@@ -16,14 +16,14 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(a, true, label);
   };
 
-  suite.test('click on link in cE=false', function (editor: Editor) {
+  suite.test('click on link in cE=false', (editor: Editor) => {
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
     const evt = editor.fire('click', { target: editor.$('strong')[0] } as any);
 
     LegacyUnit.equal(evt.isDefaultPrevented(), true);
   });
 
-  suite.test('click next to cE=false block', function (editor) {
+  suite.test('click next to cE=false block', (editor) => {
     editor.setContent(
       '<table style="width: 100%">' +
       '<tr>' +
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(editor.selection.getNode().nodeName !== 'P', true);
   });
 
-  suite.test('offscreen copy of cE=false block remains offscreen', function (editor) {
+  suite.test('offscreen copy of cE=false block remains offscreen', (editor) => {
     if (!isPhantomJs) {
       editor.setContent(
         '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     editor.getBody().contentEditable = 'true';
   });
 
-  suite.test('set range after ce=false element but lean backwards', function (editor) {
+  suite.test('set range after ce=false element but lean backwards', (editor) => {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'after');
   });
 
-  suite.test('set range after ce=false element but lean backwards', function (editor) {
+  suite.test('set range after ce=false element but lean backwards', (editor) => {
     editor.setContent('<p><span contenteditable="false">Noneditable1</span><span contenteditable="false">Noneditable2</span></p>', { format: 'raw' });
 
     const rng = document.createRange();
@@ -128,7 +128,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(passCondition, true);
   });
 
-  suite.test('set range after ce=false element but lean forwards', function (editor) {
+  suite.test('set range after ce=false element but lean forwards', (editor) => {
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
@@ -139,22 +139,22 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'before');
   });
 
-  suite.test('showCaret at TD', function (editor) {
+  suite.test('showCaret at TD', (editor) => {
     editor.setContent('<table><tr><td contenteditable="false">x</td></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
     LegacyUnit.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
   });
 
-  suite.test('showCaret at TH', function (editor) {
+  suite.test('showCaret at TH', (editor) => {
     editor.setContent('<table><tr><th contenteditable="false">x</th></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
     LegacyUnit.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
   });
 
-  suite.test('showCaret block on specific element', function (editor) {
+  suite.test('showCaret block on specific element', (editor) => {
     let rng;
 
-    editor.on('ShowCaret', function (e) {
+    editor.on('ShowCaret', (e) => {
       if (e.target.getAttribute('data-no-cef') === 'true') {
         e.preventDefault();
       }
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     editor._selectionOverrides.hideFakeCaret();
   });
 
-  suite.test('showBlockCaretContainer before ce=false element', function (editor) {
+  suite.test('showBlockCaretContainer before ce=false element', (editor) => {
     editor.setContent('<p contenteditable="false">a</p>');
     const para = editor.dom.select('p[contenteditable=false]')[0];
 
@@ -189,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
   });
 
-  suite.test('showBlockCaretContainer after ce=false element', function (editor) {
+  suite.test('showBlockCaretContainer after ce=false element', (editor) => {
     editor.setContent('<p contenteditable="false">a</p>');
     const para = editor.dom.select('p[contenteditable=false]')[0];
 
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
   });
 
-  suite.test('set range in short ended element', function (editor) {
+  suite.test('set range in short ended element', (editor) => {
     Arr.each([ 'br', 'img', 'input' ], (elmName) => {
       editor.setContent('<p><' + elmName + '/></p>');
       const paraElem = editor.dom.select('p')[0];
@@ -226,7 +226,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', function (succ
     });
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     selector: 'textarea',

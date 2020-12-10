@@ -70,18 +70,18 @@ const setup = function (realm: MobileRealm, editor: Editor) {
     return LinkButton.sketch(realm, editor);
   };
 
-  const unlink = actionSketch('unlink', 'link', function () {
+  const unlink = actionSketch('unlink', 'link', () => {
     editor.execCommand('unlink', null, false);
   });
   const image = function () {
     return ImagePicker.sketch(editor);
   };
 
-  const bullist = actionSketch('unordered-list', 'ul', function () {
+  const bullist = actionSketch('unordered-list', 'ul', () => {
     editor.execCommand('InsertUnorderedList', null, false);
   });
 
-  const numlist = actionSketch('ordered-list', 'ol', function () {
+  const numlist = actionSketch('ordered-list', 'ol', () => {
     editor.execCommand('InsertOrderedList', null, false);
   });
 
@@ -96,13 +96,13 @@ const setup = function (realm: MobileRealm, editor: Editor) {
   const styleFormats = StyleFormats.register(editor);
 
   const styleFormatsMenu = function () {
-    return StyleFormats.ui(editor, styleFormats, function () {
+    return StyleFormats.ui(editor, styleFormats, () => {
       editor.fire('scrollIntoView');
     });
   };
 
   const styleselect = function () {
-    return Buttons.forToolbar('style-formats', function (button) {
+    return Buttons.forToolbar('style-formats', (button) => {
       editor.fire('toReading');
       realm.dropup.appear(styleFormatsMenu, Toggling.on, button);
     }, Behaviour.derive([
@@ -127,7 +127,7 @@ const setup = function (realm: MobileRealm, editor: Editor) {
       isSupported() {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
-        return prereq.forall(function (p) {
+        return prereq.forall((p) => {
           return Obj.hasNonNullableKey(buttons, p);
         });
       },

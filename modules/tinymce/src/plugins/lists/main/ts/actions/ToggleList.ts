@@ -23,14 +23,14 @@ const updateListStyle = function (dom, el, detail) {
 };
 
 const setAttribs = function (elm, attrs) {
-  Tools.each(attrs, function (value, key) {
+  Tools.each(attrs, (value, key) => {
     elm.setAttribute(key, value);
   });
 };
 
 const updateListAttrs = function (dom, el, detail) {
   setAttribs(el, detail['list-attributes']);
-  Tools.each(dom.select('li', el), function (li) {
+  Tools.each(dom.select('li', el), (li) => {
     setAttribs(li, detail['list-item-attributes']);
   });
 };
@@ -88,7 +88,7 @@ const getSelectedTextBlocks = function (editor: Editor, rng, root) {
     }
   }
 
-  Tools.each(siblings, function (node) {
+  Tools.each(siblings, (node) => {
     if (NodeType.isTextBlock(editor, node)) {
       textBlocks.push(node);
       block = null;
@@ -152,7 +152,7 @@ const applyList = function (editor: Editor, listName: string, detail = {}) {
   const bookmark = Bookmark.createBookmark(rng);
   const selectedTextBlocks = getSelectedTextBlocks(editor, rng, root);
 
-  Tools.each(selectedTextBlocks, function (block) {
+  Tools.each(selectedTextBlocks, (block) => {
     let listBlock;
 
     const sibling = block.previousSibling;

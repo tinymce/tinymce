@@ -50,7 +50,7 @@ const setup = function (info, onSuccess, onFailure) {
     socket
   };
 
-  ThemeManager.add(strName, function (editor) {
+  ThemeManager.add(strName, (editor) => {
     return {
       renderUI() {
         editor.fire('SkinLoaded');
@@ -64,7 +64,7 @@ const setup = function (info, onSuccess, onFailure) {
 
   return {
     use(f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
-      TinyLoader.setup(function (editor, onS, onF) {
+      TinyLoader.setup((editor, onS, onF) => {
         const features = Features.setup(realm, editor);
 
         FormatChangers.init(realm, editor);
@@ -72,12 +72,12 @@ const setup = function (info, onSuccess, onFailure) {
         const apis = TinyApis(editor);
 
         const buttons = { };
-        Arr.each(info.items, function (item) {
+        Arr.each(info.items, (item) => {
           // For each item in the toolbar, make a lookup
           buttons[item] = Memento.record(features[item].sketch());
         });
 
-        const toolbarItems = Arr.map(info.items, function (item) {
+        const toolbarItems = Arr.map(info.items, (item) => {
           return buttons[item].asSpec();
         });
 

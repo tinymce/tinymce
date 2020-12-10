@@ -6,22 +6,22 @@ import EventUtils from 'tinymce/core/api/dom/EventUtils';
 
 declare const document: any;
 
-UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const eventUtils = EventUtils.Event;
 
-  suite.test('unbind all', function () {
+  suite.test('unbind all', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click = true;
     });
 
-    eventUtils.bind(window, 'keydown', function () {
+    eventUtils.bind(window, 'keydown', () => {
       result.keydown1 = true;
     });
 
-    eventUtils.bind(window, 'keydown', function () {
+    eventUtils.bind(window, 'keydown', () => {
       result.keydown2 = true;
     });
 
@@ -37,18 +37,18 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, {});
   });
 
-  suite.test('unbind event', function () {
+  suite.test('unbind event', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click = true;
     });
 
-    eventUtils.bind(window, 'keydown', function () {
+    eventUtils.bind(window, 'keydown', () => {
       result.keydown1 = true;
     });
 
-    eventUtils.bind(window, 'keydown', function () {
+    eventUtils.bind(window, 'keydown', () => {
       result.keydown2 = true;
     });
 
@@ -64,19 +64,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { keydown1: true, keydown2: true });
   });
 
-  suite.test('unbind event non existing', function () {
+  suite.test('unbind event non existing', () => {
     eventUtils.unbind(window, 'noevent');
     LegacyUnit.equal(true, true, 'No exception');
   });
 
-  suite.test('unbind callback', function () {
+  suite.test('unbind callback', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click = true;
     });
 
-    eventUtils.bind(window, 'keydown', function () {
+    eventUtils.bind(window, 'keydown', () => {
       result.keydown1 = true;
     });
 
@@ -98,8 +98,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click: true, keydown1: true });
   });
 
-  suite.test('unbind multiple', function () {
-    eventUtils.bind(window, 'mouseup mousedown click', function (e) {
+  suite.test('unbind multiple', () => {
+    eventUtils.bind(window, 'mouseup mousedown click', (e) => {
       result[e.type] = true;
     });
 
@@ -112,8 +112,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click: true });
   });
 
-  suite.test('bind multiple', function () {
-    eventUtils.bind(window, 'mouseup mousedown', function (e) {
+  suite.test('bind multiple', () => {
+    eventUtils.bind(window, 'mouseup mousedown', (e) => {
       result[e.type] = true;
     });
 
@@ -124,26 +124,26 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { mouseup: true, mousedown: true });
   });
 
-  suite.test('bind/fire bubbling', function () {
+  suite.test('bind/fire bubbling', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.window = true;
     });
 
-    eventUtils.bind(document, 'click', function () {
+    eventUtils.bind(document, 'click', () => {
       result.document = true;
     });
 
-    eventUtils.bind(document.body, 'click', function () {
+    eventUtils.bind(document.body, 'click', () => {
       result.body = true;
     });
 
-    eventUtils.bind(document.getElementById('content'), 'click', function () {
+    eventUtils.bind(document.getElementById('content'), 'click', () => {
       result.content = true;
     });
 
-    eventUtils.bind(document.getElementById('inner'), 'click', function () {
+    eventUtils.bind(document.getElementById('inner'), 'click', () => {
       result.inner = true;
     });
 
@@ -168,17 +168,17 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { inner: true, content: true, body: true, document: true, window: true });
   });
 
-  suite.test('bind/fire stopImmediatePropagation', function () {
-    eventUtils.bind(window, 'click', function () {
+  suite.test('bind/fire stopImmediatePropagation', () => {
+    eventUtils.bind(window, 'click', () => {
       result.click1 = true;
     });
 
-    eventUtils.bind(window, 'click', function (e) {
+    eventUtils.bind(window, 'click', (e) => {
       result.click2 = true;
       e.stopImmediatePropagation();
     });
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click3 = true;
     });
 
@@ -187,16 +187,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click1: true, click2: true });
   });
 
-  suite.test('bind/fire stopPropagation', function () {
-    eventUtils.bind(window, 'click', function () {
+  suite.test('bind/fire stopPropagation', () => {
+    eventUtils.bind(window, 'click', () => {
       result.click1 = true;
     });
 
-    eventUtils.bind(document.body, 'click', function () {
+    eventUtils.bind(document.body, 'click', () => {
       result.click2 = true;
     });
 
-    eventUtils.bind(document.getElementById('inner'), 'click', function (e) {
+    eventUtils.bind(document.getElementById('inner'), 'click', (e) => {
       result.click3 = true;
       e.stopPropagation();
     });
@@ -206,22 +206,22 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click3: true });
   });
 
-  suite.test('clean window', function () {
+  suite.test('clean window', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click1 = true;
     });
 
-    eventUtils.bind(document.body, 'click', function () {
+    eventUtils.bind(document.body, 'click', () => {
       result.click2 = true;
     });
 
-    eventUtils.bind(document.getElementById('content'), 'click', function () {
+    eventUtils.bind(document.getElementById('content'), 'click', () => {
       result.click3 = true;
     });
 
-    eventUtils.bind(document.getElementById('inner'), 'click', function () {
+    eventUtils.bind(document.getElementById('inner'), 'click', () => {
       result.click4 = true;
     });
 
@@ -235,26 +235,26 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, {});
   });
 
-  suite.test('clean document', function () {
+  suite.test('clean document', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click1 = true;
     });
 
-    eventUtils.bind(document, 'click', function () {
+    eventUtils.bind(document, 'click', () => {
       result.click2 = true;
     });
 
-    eventUtils.bind(document.body, 'click', function () {
+    eventUtils.bind(document.body, 'click', () => {
       result.click3 = true;
     });
 
-    eventUtils.bind(document.getElementById('content'), 'click', function () {
+    eventUtils.bind(document.getElementById('content'), 'click', () => {
       result.click4 = true;
     });
 
-    eventUtils.bind(document.getElementById('inner'), 'click', function () {
+    eventUtils.bind(document.getElementById('inner'), 'click', () => {
       result.click5 = true;
     });
 
@@ -268,22 +268,22 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click1: true });
   });
 
-  suite.test('clean element', function () {
+  suite.test('clean element', () => {
     let result;
 
-    eventUtils.bind(window, 'click', function () {
+    eventUtils.bind(window, 'click', () => {
       result.click1 = true;
     });
 
-    eventUtils.bind(document.body, 'click', function () {
+    eventUtils.bind(document.body, 'click', () => {
       result.click2 = true;
     });
 
-    eventUtils.bind(document.getElementById('content'), 'click', function () {
+    eventUtils.bind(document.getElementById('content'), 'click', () => {
       result.click3 = true;
     });
 
-    eventUtils.bind(document.getElementById('inner'), 'click', function () {
+    eventUtils.bind(document.getElementById('inner'), 'click', () => {
       result.click4 = true;
     });
 
@@ -297,10 +297,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { click1: true, click2: true });
   });
 
-  suite.test('mouseenter/mouseleave bind/unbind', function () {
+  suite.test('mouseenter/mouseleave bind/unbind', () => {
     let result = {};
 
-    eventUtils.bind(document.body, 'mouseenter mouseleave', function (e) {
+    eventUtils.bind(document.body, 'mouseenter mouseleave', (e) => {
       result[e.type] = true;
     });
 
@@ -339,7 +339,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
   });
   */
 
-  suite.test('bind unbind fire clean on null', function () {
+  suite.test('bind unbind fire clean on null', () => {
     eventUtils.bind(null, 'click', Fun.noop);
     eventUtils.unbind(null, 'click', Fun.noop);
     eventUtils.fire(null, 'click', {});
@@ -347,10 +347,10 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.equal(true, true, 'No exception');
   });
 
-  suite.test('bind ready when page is loaded', function () {
+  suite.test('bind ready when page is loaded', () => {
     let ready;
 
-    eventUtils.bind(window, 'ready', function () {
+    eventUtils.bind(window, 'ready', () => {
       ready = true;
     });
 
@@ -358,13 +358,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.equal(true, ready, 'Window is ready.');
   });
 
-  suite.test('event states when event object is fired twice', function () {
+  suite.test('event states when event object is fired twice', () => {
     const result = {};
 
-    eventUtils.bind(window, 'keydown', function (e) {
+    eventUtils.bind(window, 'keydown', (e) => {
       result[e.type] = true; e.preventDefault(); e.stopPropagation();
     });
-    eventUtils.bind(window, 'keyup', function (e) {
+    eventUtils.bind(window, 'keyup', (e) => {
       result[e.type] = true; e.stopImmediatePropagation();
     });
 
@@ -379,7 +379,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.deepEqual(result, { keydown: true, keyup: true });
   });
 
-  suite.test('unbind inside callback', function () {
+  suite.test('unbind inside callback', () => {
     let data;
 
     const append = function (value) {
@@ -406,16 +406,16 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.equal(data, 'ac');
   });
 
-  suite.test('ready/DOMContentLoaded (domLoaded = true)', function () {
+  suite.test('ready/DOMContentLoaded (domLoaded = true)', () => {
     let evt;
 
-    eventUtils.bind(window, 'ready', function (e) {
+    eventUtils.bind(window, 'ready', (e) => {
       evt = e;
     });
     LegacyUnit.equal(evt.type, 'ready');
   });
 
-  suite.test('ready/DOMContentLoaded (document.readyState check)', function () {
+  suite.test('ready/DOMContentLoaded (document.readyState check)', () => {
     let evt;
 
     try {
@@ -427,20 +427,20 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
 
     eventUtils.domLoaded = false;
     document.readyState = 'loading';
-    eventUtils.bind(window, 'ready', function (e) {
+    eventUtils.bind(window, 'ready', (e) => {
       evt = e;
     });
     LegacyUnit.equal(true, typeof evt !== 'undefined');
 
     eventUtils.domLoaded = false;
     document.readyState = 'complete';
-    eventUtils.bind(window, 'ready', function (e) {
+    eventUtils.bind(window, 'ready', (e) => {
       evt = e;
     });
     LegacyUnit.equal(evt.type, 'ready');
   });
 
-  suite.test('isDefaultPrevented', function () {
+  suite.test('isDefaultPrevented', () => {
     const testObj: any = {};
     const testCallback = function () {
       return 'hello';
@@ -453,7 +453,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     LegacyUnit.equal(typeof testObj.isImmediatePropagationStopped, 'function', 'Has our isImmediatePropagationStopped');
   });
 
-  const sAddTestDiv = Step.sync(function () {
+  const sAddTestDiv = Step.sync(() => {
     const testDiv = document.createElement('div');
     testDiv.id = 'testDiv';
     testDiv.innerHTML = (
@@ -465,15 +465,15 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
     document.body.appendChild(testDiv);
   });
 
-  const sRemoveTestDiv = Step.sync(function () {
+  const sRemoveTestDiv = Step.sync(() => {
     const testDiv = document.querySelector('#testDiv');
     testDiv.parentNode.removeChild(testDiv);
   });
 
-  let steps = Arr.bind(suite.toSteps({}), function (step) {
+  let steps = Arr.bind(suite.toSteps({}), (step) => {
     return [
       step,
-      Step.sync(function () {
+      Step.sync(() => {
         eventUtils.clean(window);
       })
     ];
@@ -481,7 +481,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', function (success,
 
   steps = [ sAddTestDiv ].concat(steps).concat(sRemoveTestDiv);
 
-  Pipeline.async({}, steps, function () {
+  Pipeline.async({}, steps, () => {
     success();
   }, failure);
 });

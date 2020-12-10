@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableCellClassListTest', (succ
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

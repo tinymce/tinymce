@@ -6,7 +6,7 @@ import * as Newlines from 'tinymce/plugins/paste/core/Newlines';
 import PastePlugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.test('browser.tinymce.plugins.paste.NewlinesTest', function () {
+UnitTest.test('browser.tinymce.plugins.paste.NewlinesTest', () => {
   Theme();
   PastePlugin();
 
@@ -56,7 +56,7 @@ UnitTest.test('browser.tinymce.plugins.paste.NewlinesTest', function () {
     'h4,h5,h6,header,hgroup,hr,i,ins,label,menu,nav,noscript,object,ol,pre,' +
     'q,s,script,section,select,small,strong,style,sub,sup,svg,table,textarea,' +
     'time,u,ul,var,video,wbr').split(','),
-    function (tag) {
+    (tag) => {
       const content = '<p>a</p><' + tag + '>b</' + tag + '><p>c<br>d</p>';
       textCases.push({
         label: tag.toUpperCase() + ' tag should qualify content (' + content + ') as not a plain text',
@@ -66,7 +66,7 @@ UnitTest.test('browser.tinymce.plugins.paste.NewlinesTest', function () {
     }
   );
 
-  Arr.each(textCases, function (c) {
+  Arr.each(textCases, (c) => {
     Assertions.assertEq(c.label || 'Asserting: ' + c.content, c.isText, Newlines.isPlainText(c.content));
   });
 });

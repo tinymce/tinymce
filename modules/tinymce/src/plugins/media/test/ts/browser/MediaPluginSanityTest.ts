@@ -7,11 +7,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.MediaPluginSanityTest', (success, failure) => {
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 

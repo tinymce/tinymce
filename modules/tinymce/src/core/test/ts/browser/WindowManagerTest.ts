@@ -4,19 +4,19 @@ import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('OpenWindow/CloseWindow events', function (editor) {
+  suite.test('OpenWindow/CloseWindow events', (editor) => {
     let openWindowArgs, closeWindowArgs;
 
-    editor.on('CloseWindow', function (e) {
+    editor.on('CloseWindow', (e) => {
       closeWindowArgs = e;
     });
 
-    editor.on('OpenWindow', function (e) {
+    editor.on('OpenWindow', (e) => {
       openWindowArgs = e;
       editor.windowManager.close();
     });
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', function (success, 
     editor.off('CloseWindow OpenWindow');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

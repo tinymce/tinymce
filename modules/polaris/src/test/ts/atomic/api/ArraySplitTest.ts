@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Arrays from 'ephox/polaris/api/Arrays';
 import { Splitting } from 'ephox/polaris/api/Splitting';
 
-UnitTest.test('api.Arrays.splitby', function () {
+UnitTest.test('api.Arrays.splitby', () => {
   const check = function <T> (expected: T[][], input: T[], pred: (x: T) => boolean) {
     const actual = Arrays.splitby(input, pred);
     assert.eq(expected, actual);
@@ -12,7 +12,7 @@ UnitTest.test('api.Arrays.splitby', function () {
   check([], [], Fun.always);
   check([[ 1 ]], [ 1 ], Fun.never);
   check([[ 1, 2, 3 ]], [ 1, 2, 3 ], Fun.never);
-  check([[ 1 ], [ 2, 3 ], [ 4, 5, 6 ], [ 7 ], [ 8 ]], [ 1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8 ], function (x) {
+  check([[ 1 ], [ 2, 3 ], [ 4, 5, 6 ], [ 7 ], [ 8 ]], [ 1, '|', 2, 3, '|', 4, 5, 6, '|', 7, '|', '|', 8 ], (x) => {
     return x === '|';
   });
 

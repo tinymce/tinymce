@@ -23,7 +23,7 @@ const createColgroup = () => SugarElement.fromTag('colgroup');
 const replace = function <K extends keyof HTMLElementTagNameMap> (cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
-  Obj.each(attrs, function (v, k) {
+  Obj.each(attrs, (v, k) => {
     if (v === null) {
       Attribute.remove(replica, k);
     } else {
@@ -46,14 +46,14 @@ const newRow = function (doc: SugarElement) {
 
 const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, formats: string[]) {
   const first = CursorPosition.first(oldCell);
-  return first.map(function (firstText) {
+  return first.map((firstText) => {
     const formatSelector = formats.join(',');
     // Find the ancestors of the first text node that match the given formats.
-    const parents = SelectorFilter.ancestors(firstText, formatSelector, function (element) {
+    const parents = SelectorFilter.ancestors(firstText, formatSelector, (element) => {
       return Compare.eq(element, oldCell);
     });
     // Add the matched ancestors to the new cell, then return the new cell.
-    return Arr.foldr(parents, function (last, parent) {
+    return Arr.foldr(parents, (last, parent) => {
       const clonedFormat = Replication.shallow(parent);
       Attribute.remove(clonedFormat, 'contenteditable');
       Insert.append(last, clonedFormat);

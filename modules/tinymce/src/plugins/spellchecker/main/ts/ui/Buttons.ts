@@ -25,7 +25,7 @@ const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 const buildMenuItems = function (listName: string, languageValues: LanguageValue[]) {
   const items = [];
 
-  Tools.each(languageValues, function (languageValue) {
+  Tools.each(languageValues, (languageValue) => {
     items.push({
       selectable: true,
       text: languageValue.name,
@@ -37,7 +37,7 @@ const buildMenuItems = function (listName: string, languageValues: LanguageValue
 };
 
 const getItems = function (editor: Editor): LanguageValue[] {
-  return Tools.map(Settings.getLanguages(editor).split(','), function (langPair) {
+  return Tools.map(Settings.getLanguages(editor).split(','), (langPair) => {
     const langPairs = langPair.split('=');
 
     return {

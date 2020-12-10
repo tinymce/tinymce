@@ -18,7 +18,7 @@ UnitTest.asynctest('Browser Test: .MetadataTest', (success, failure) => {
   NoMetaFakePlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({},

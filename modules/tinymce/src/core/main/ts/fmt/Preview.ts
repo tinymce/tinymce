@@ -93,7 +93,7 @@ const parsedSelectorToHtml = function (ancestry, editor: Editor) {
         parent.appendChild(elm);
       }
 
-      Tools.each(siblings, function (sibling) {
+      Tools.each(siblings, (sibling) => {
         const siblingElm = createElement(sibling);
         parent.insertBefore(siblingElm, elm);
       });
@@ -128,7 +128,7 @@ const parseSelectorItem = function (item) {
 
   if (item !== '*') {
     // matching IDs, CLASSes, ATTRIBUTES and PSEUDOs
-    tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, function ($0, $1, $2, $3, $4) {
+    tagName = item.replace(/(?:([#\.]|::?)([\w\-]+)|(\[)([^\]]+)\]?)/g, ($0, $1, $2, $3, $4) => {
       switch ($1) {
         case '#':
           obj.attrs.id = $2;
@@ -173,7 +173,7 @@ const parseSelector = function (selector: string) {
   selector = selector.replace(/\s*(~\+|~|\+|>)\s*/g, '$1');
 
   // split either on > or on space, but not the one inside brackets
-  return Tools.map(selector.split(/(?:>|\s+(?![^\[\]]+\]))/), function (item) {
+  return Tools.map(selector.split(/(?:>|\s+(?![^\[\]]+\]))/), (item) => {
     // process each sibling selector separately
     const siblings = Tools.map(item.split(/(?:~\+|~|\+)/), parseSelectorItem);
     const obj = siblings.pop(); // the last one is our real target
@@ -238,7 +238,7 @@ const getCssText = function (editor: Editor, format: any) {
   const previewElm = dom.select(name, previewFrag)[0] || previewFrag.firstChild;
 
   // Add format styles to preview element
-  each(format.styles, function (value, name: string) {
+  each(format.styles, (value, name: string) => {
     const newValue = removeVars(value);
 
     if (newValue) {
@@ -247,7 +247,7 @@ const getCssText = function (editor: Editor, format: any) {
   });
 
   // Add attributes to preview element
-  each(format.attributes, function (value, name: string) {
+  each(format.attributes, (value, name: string) => {
     const newValue = removeVars(value);
 
     if (newValue) {
@@ -256,7 +256,7 @@ const getCssText = function (editor: Editor, format: any) {
   });
 
   // Add classes to preview element
-  each(format.classes, function (value) {
+  each(format.classes, (value) => {
     const newValue = removeVars(value);
 
     if (!dom.hasClass(previewElm, newValue)) {

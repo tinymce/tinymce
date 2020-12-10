@@ -4,17 +4,17 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as SelectionUtils from 'tinymce/core/selection/SelectionUtils';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cHasAllContentsSelected = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', function
       cHasAllContentsSelected([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
       Assertions.cAssertEq('Should be false since only some contents is selected', false)
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

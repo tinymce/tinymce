@@ -52,7 +52,7 @@ const asRaw = function <T, U = any> (label: string, prop: Processor, obj: U): Re
 
 const getOrDie = function (extraction: Result<any, any>): any {
   return extraction.fold(
-    function (errInfo) {
+    (errInfo) => {
       // A readable version of the error.
       throw new Error(
         formatError(errInfo)

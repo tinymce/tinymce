@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Remove UL at single LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at single LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at start LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at start LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at start empty LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at start empty LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li><br></li>' +
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at middle LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle empty LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at middle empty LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at end LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at end LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at end empty LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at end empty LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -171,7 +171,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -209,7 +209,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -248,7 +248,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove OL on a deep nested LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove OL on a deep nested LI', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a' +
@@ -306,7 +306,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<div>a</div>' +
       '<ul>' +
@@ -327,7 +327,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with single item', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove indented list with single item', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -355,7 +355,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -386,7 +386,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', function (editor) {
+  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
         '<li>a</li>' +
@@ -410,7 +410,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

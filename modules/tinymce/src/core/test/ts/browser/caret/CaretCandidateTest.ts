@@ -7,7 +7,7 @@ import * as CaretCandidate from 'tinymce/core/caret/CaretCandidate';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -23,8 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
     viewBlock.update(html);
   };
 
-  suite.test('isCaretCandidate', function () {
-    $.each('img input textarea hr table iframe video audio object'.split(' '), function (index, name) {
+  suite.test('isCaretCandidate', () => {
+    $.each('img input textarea hr table iframe video audio object'.split(' '), (index, name) => {
       LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createElement(name)), true);
     });
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
     LegacyUnit.equal(CaretCandidate.isCaretCandidate(document.createTextNode(Zwsp.ZWSP)), false);
   });
 
-  suite.test('isInEditable', function () {
+  suite.test('isInEditable', () => {
     setupHtml('abc<span contentEditable="true"><b><span contentEditable="false">X</span></b></span>');
     LegacyUnit.equal(CaretCandidate.isInEditable($('span span', getRoot())[0].firstChild, getRoot()), false);
     LegacyUnit.equal(CaretCandidate.isInEditable($('span span', getRoot())[0], getRoot()), true);
@@ -48,8 +48,8 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
     LegacyUnit.equal(CaretCandidate.isInEditable(getRoot().firstChild, getRoot()), true);
   });
 
-  suite.test('isAtomic', function () {
-    $.each([ 'img', 'input', 'textarea', 'hr' ], function (index, name) {
+  suite.test('isAtomic', () => {
+    $.each([ 'img', 'input', 'textarea', 'hr' ], (index, name) => {
       LegacyUnit.equal(CaretCandidate.isAtomic(document.createElement(name)), true);
     });
 
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
     );
   });
 
-  suite.test('isEditableCaretCandidate', function () {
+  suite.test('isEditableCaretCandidate', () => {
     setupHtml('abc<b>xx</b><span contentEditable="false"><span contentEditable="false">X</span></span>');
     LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate(getRoot().firstChild, getRoot()), true);
     LegacyUnit.equal(CaretCandidate.isEditableCaretCandidate($('b', getRoot())[0]), false);
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', function (success,
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

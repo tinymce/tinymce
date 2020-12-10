@@ -4,10 +4,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import $ from 'tinymce/core/api/dom/DomQuery';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('isText/isElement/isComment', function () {
+  suite.test('isText/isElement/isComment', () => {
     LegacyUnit.strictEqual(NodeType.isText(document.createTextNode('x')), true);
     LegacyUnit.strictEqual(NodeType.isText(null), false);
     LegacyUnit.strictEqual(NodeType.isText(document.createElement('div')), false);
@@ -24,14 +24,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(NodeType.isComment(document.createElement('div')), false);
   });
 
-  suite.test('isBr', function () {
+  suite.test('isBr', () => {
     LegacyUnit.strictEqual(NodeType.isBr(null), false);
     LegacyUnit.strictEqual(NodeType.isBr(document.createTextNode('x')), false);
     LegacyUnit.strictEqual(NodeType.isBr(document.createElement('br')), true);
     LegacyUnit.strictEqual(NodeType.isBr(document.createComment('x')), false);
   });
 
-  suite.test('isContentEditableTrue', function () {
+  suite.test('isContentEditableTrue', () => {
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue(null), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createComment('x')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createTextNode('x')), false);
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="inherit"></div>')[0]), false);
   });
 
-  suite.test('isContentEditableFalse', function () {
+  suite.test('isContentEditableFalse', () => {
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse(null), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createComment('x')), false);
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createTextNode('x')), false);
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="inherit"></div>')[0]), false);
   });
 
-  suite.test('matchNodeNames', function () {
+  suite.test('matchNodeNames', () => {
     const matchNodeNames = NodeType.matchNodeNames([ 'a', 'div', '#text' ]);
 
     LegacyUnit.strictEqual(matchNodeNames(null), false);
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(matchNodeNames(document.createElement('b')), false);
   });
 
-  suite.test('hasPropValue', function () {
+  suite.test('hasPropValue', () => {
     const hasTabIndex3 = NodeType.hasPropValue('tabIndex', 3);
 
     LegacyUnit.strictEqual(hasTabIndex3(null), false);
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(hasTabIndex3(document.createElement('b')), false);
   });
 
-  suite.test('isBogus', function () {
+  suite.test('isBogus', () => {
     LegacyUnit.strictEqual(NodeType.isBogus($('<div data-mce-bogus="1"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.isBogus($('<div data-mce-bogus="all"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.isBogus($('<div></div>')[0]), false);
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(NodeType.isBogus(null), false);
   });
 
-  suite.test('isBogusAll', function () {
+  suite.test('isBogusAll', () => {
     LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="1"></div>')[0]), false);
     LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="all"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.isBogusAll($('<div></div>')[0]), false);
@@ -90,19 +90,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', function (success, f
     LegacyUnit.strictEqual(NodeType.isBogusAll(null), false);
   });
 
-  suite.test('hasAttribute', function () {
+  suite.test('hasAttribute', () => {
     LegacyUnit.strictEqual(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]), true);
     LegacyUnit.strictEqual(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]), false);
   });
 
-  suite.test('isTable', function () {
+  suite.test('isTable', () => {
     LegacyUnit.strictEqual(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]), true);
     LegacyUnit.strictEqual(NodeType.isTable($('<div></div>')[0]), false);
     LegacyUnit.strictEqual(NodeType.isTable(document.createTextNode('test')), false);
     LegacyUnit.strictEqual(NodeType.isTable(null), false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

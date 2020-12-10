@@ -80,10 +80,10 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
-        AlloyEvents.run(NativeEvents.focusin(), function (component, _simulatedEvent) {
+        AlloyEvents.run(NativeEvents.focusin(), (component, _simulatedEvent) => {
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         }),
-        AlloyEvents.run(NativeEvents.change(), function (component, _simulatedEvent) {
+        AlloyEvents.run(NativeEvents.change(), (component, _simulatedEvent) => {
           AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
         })
       ])
@@ -159,7 +159,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       }),
       ReadOnly.receivingConfig(),
       AddEventsBehaviour.config('size-input-events2', [
-        AlloyEvents.run<RatioEvent>(ratioEvent, function (component, simulatedEvent) {
+        AlloyEvents.run<RatioEvent>(ratioEvent, (component, simulatedEvent) => {
           const isField1 = simulatedEvent.event.isField1;
           const optCurrent = isField1 ? AlloyFormCoupledInputs.getField1(component) : AlloyFormCoupledInputs.getField2(component);
           const optOther = isField1 ? AlloyFormCoupledInputs.getField2(component) : AlloyFormCoupledInputs.getField1(component);

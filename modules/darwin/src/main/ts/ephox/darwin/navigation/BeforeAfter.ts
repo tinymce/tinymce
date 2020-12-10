@@ -52,14 +52,14 @@ const isRow = function (elem: SugarElement): Optional<SugarElement<HTMLTableRowE
 const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number,
                          failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean): BeforeAfter {
   // Identify the cells that the before and after are in.
-  return SelectorFind.closest(after, 'td,th', isRoot).bind(function (afterCell) {
-    return SelectorFind.closest(before, 'td,th', isRoot).map(function (beforeCell) {
+  return SelectorFind.closest(after, 'td,th', isRoot).bind((afterCell) => {
+    return SelectorFind.closest(before, 'td,th', isRoot).map((beforeCell) => {
       // If they are not in the same cell
       if (!Compare.eq(afterCell, beforeCell)) {
-        return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(function () {
+        return DomParent.sharedOne(isRow, [ afterCell, beforeCell ]).fold(() => {
           // No shared row, and they overlap x-wise -> success, otherwise: failed
           return isOverlapping(bridge, beforeCell, afterCell) ? adt.success() : failure(beforeCell);
-        }, function (_sharedRow) {
+        }, (_sharedRow) => {
           // In the same row, so it failed.
           return failure(beforeCell);
         });

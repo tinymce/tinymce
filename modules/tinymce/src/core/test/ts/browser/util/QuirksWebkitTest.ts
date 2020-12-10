@@ -6,12 +6,12 @@ import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('Delete from beginning of P into H1', function (editor) {
+  suite.test('Delete from beginning of P into H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Delete between empty paragraphs', function (editor) {
+  suite.test('Delete between empty paragraphs', (editor) => {
     editor.getBody().innerHTML = '<p>a</p><p><br></p><p><br></p><p>b</p>';
     LegacyUnit.setSelection(editor, 'p:last', 0);
     editor.execCommand('Delete');
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('Delete range from middle of H1 to middle of span in P', function (editor) {
+  suite.test('Delete range from middle of H1 to middle of span in P', (editor) => {
     editor.getBody().innerHTML = '<h1>ab</h1><p>b<span style="color:red">cd</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1, 'span', 1);
     editor.execCommand('Delete');
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with style span inside into H1 with inline block', function (editor) {
+  suite.test('Delete from beginning of P with style span inside into H1 with inline block', (editor) => {
     editor.getBody().innerHTML = '<h1>a<input type="text"></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with style span inside into H1', function (editor) {
+  suite.test('Delete from beginning of P with style span inside into H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P into H1 with contentEditable:false', function (editor) {
+  suite.test('Delete from beginning of P into H1 with contentEditable:false', (editor) => {
     editor.getBody().innerHTML = '<h1 contentEditable="false">a</h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Delete from beginning of P with style span inside into H1 with trailing BR', function (editor) {
+  suite.test('Delete from beginning of P with style span inside into H1 with trailing BR', (editor) => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p>b<span style="color:red">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Delete from empty P with style span inside into H1', function (editor) {
+  suite.test('Delete from empty P with style span inside into H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0);
     editor.execCommand('Delete');
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with span style to H1', function (editor) {
+  suite.test('Delete from beginning of P with span style to H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0);
     editor.execCommand('Delete');
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete from beginning of P with BR line to H1', function (editor) {
+  suite.test('Delete from beginning of P with BR line to H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<br>c</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('Delete');
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Delete from after image to paragraph', function (editor) {
+  suite.test('Delete from after image to paragraph', (editor) => {
     editor.getBody().innerHTML = '<p>a</p><p><img src="about:blank"></p>';
     const rng = editor.dom.createRng();
     rng.setStartAfter(editor.dom.select('img')[0]);
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('ForwardDelete from end of H1 to P with style span', function (editor) {
+  suite.test('ForwardDelete from end of H1 to P with style span', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 with trailing BR to P with style span', function (editor) {
+  suite.test('ForwardDelete from end of H1 with trailing BR to P with style span', (editor) => {
     editor.getBody().innerHTML = '<h1>a<br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -121,7 +121,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 with two trailing BR:s to P with style span', function (editor) {
+  suite.test('ForwardDelete from end of H1 with two trailing BR:s to P with style span', (editor) => {
     editor.getBody().innerHTML = '<h1>a<br><br></h1><p><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 to P with style and inline block element', function (editor) {
+  suite.test('ForwardDelete from end of H1 to P with style and inline block element', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p><input type="text"><span style="color:red">b</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -137,7 +137,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 with BR line to P', function (editor) {
+  suite.test('ForwardDelete from end of H1 with BR line to P', (editor) => {
     editor.getBody().innerHTML = '<h1>a<br>b</h1><p>c</p>';
 
     const rng = editor.selection.getRng();
@@ -150,7 +150,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 into P', function (editor) {
+  suite.test('ForwardDelete from end of H1 into P', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -158,14 +158,14 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('ForwardDelete from end of H1 into P with contentEditable:false', function (editor) {
+  suite.test('ForwardDelete from end of H1 into P with contentEditable:false', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p contentEditable="false">b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
     LegacyUnit.equal(editor.getContent(), '<h1>a</h1><p contenteditable="false">b</p>');
   });
 
-  suite.test('ForwardDelete from end of H1 into P with style span inside', function (editor) {
+  suite.test('ForwardDelete from end of H1 into P with style span inside', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b<span style="color: #010203">c</span></p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('ForwardDelete');
@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'H1');
   });
 
-  suite.test('Backspace key from beginning of P into H1', function (editor) {
+  suite.test('Backspace key from beginning of P into H1', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.fire('keydown', { keyCode: 8, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'H1');
   });
 
-  suite.test('Delete key from end of H1 into P', function (editor) {
+  suite.test('Delete key from end of H1 into P', (editor) => {
     editor.getBody().innerHTML = '<h1>a</h1><p>b</p>';
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.fire('keydown', { keyCode: 46, shiftKey: false, ctrlKey: false, altKey: false, metaKey: false } as KeyboardEvent);
@@ -302,7 +302,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
         LegacyUnit.equal(editor.selection.getRng().startOffset, 1);
       });
   */
-  suite.test('ForwardDelete all contents', function (editor) {
+  suite.test('ForwardDelete all contents', (editor) => {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.fire('keydown', { keyCode: 46 } as KeyboardEvent);
@@ -310,7 +310,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 
-  suite.test('Delete all contents', function (editor) {
+  suite.test('Delete all contents', (editor) => {
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.fire('keydown', { keyCode: 8 } as KeyboardEvent);
@@ -318,7 +318,7 @@ UnitTest.asynctest('browser.tinymce.core.util.QuirksWebkitTest', function (succe
     LegacyUnit.equal(editor.selection.getStart(true).nodeName, 'P');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const steps = Env.webkit ? suite.toSteps(editor) : [];
     Pipeline.async({}, steps, onSuccess, onFailure);
   }, {

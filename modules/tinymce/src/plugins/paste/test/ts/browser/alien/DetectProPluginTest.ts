@@ -6,7 +6,7 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as DetectProPlugin from 'tinymce/plugins/paste/alien/DetectProPlugin';
 
-UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', function () {
+UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', () => {
   // Fake loading of powerpaste
   PluginManager.add('powerpaste', Fun.noop);
 

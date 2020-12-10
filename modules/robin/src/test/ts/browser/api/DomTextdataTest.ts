@@ -4,7 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import { SugarElement } from '@ephox/sugar';
 import * as DomTextdata from 'ephox/robin/api/dom/DomTextdata';
 
-UnitTest.test('DomTextdataTest', function () {
+UnitTest.test('DomTextdataTest', () => {
   const a = SugarElement.fromText('alpha');
   const b = SugarElement.fromText(' beta');
   const c = SugarElement.fromText('');

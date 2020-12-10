@@ -14,17 +14,17 @@ export interface RawZone {
 const rawOne = function (universe: TestUniverse, zone: Zone<Gene>): RawZone {
   return {
     lang: zone.lang,
-    elements: Arr.map(zone.elements, function (elem) {
+    elements: Arr.map(zone.elements, (elem) => {
       return elem.id;
     }),
-    words: Arr.map(zone.words, function (w) {
+    words: Arr.map(zone.words, (w) => {
       return w.word;
     })
   };
 };
 
 const raw = function (universe: TestUniverse, zones: Zone<Gene>[]): RawZone[] {
-  return Arr.map(zones, function (zone) {
+  return Arr.map(zones, (zone) => {
     return rawOne(universe, zone);
   });
 };
@@ -35,7 +35,7 @@ const assertZones = function (label: string, universe: TestUniverse, expected: R
 };
 
 const assertProps = function (label: string, universe: TestUniverse, zones: Zone<Gene>[]): void {
-  Arr.each(zones, function (zone) {
+  Arr.each(zones, (zone) => {
     const elements = zone.elements;
     if (elements.length === 0) {
       return;
@@ -45,9 +45,9 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
 
     Logger.sync(
       '\nProperty test for zone: ' + JSON.stringify(rawOne(universe, zone), null, 2),
-      function () {
+      () => {
         // Check languages all match the zone language
-        Arr.each(elements, function (x) {
+        Arr.each(elements, (x) => {
           Assert.eq(
             'Checking everything in ' + label + ' has same language. Item: ' + x.id,
             LanguageZones.calculate(universe, x).getOr('none'), zone.lang
@@ -61,7 +61,7 @@ const assertProps = function (label: string, universe: TestUniverse, zones: Zone
 
         // Check block tags match across zones
         const blockParent = universe.up().predicate(first, universe.property().isBoundary).getOrDie('No block parent tag found');
-        Arr.each(elements, function (x) {
+        Arr.each(elements, (x) => {
           Assert.eq(
             'All block ancestor tags should be the same as the original',
             blockParent,

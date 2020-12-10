@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { Compare, Hierarchy, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as DomClumps from 'ephox/robin/api/dom/DomClumps';
 
-UnitTest.test('DomClumpsTest', function () {
+UnitTest.test('DomClumpsTest', () => {
   const body = SugarBody.body();
 
   const container = SugarElement.fromTag('div');

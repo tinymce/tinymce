@@ -24,7 +24,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 // disconnect the stack, it looks like it is fixed. That makes some level of sense.
 const autocompleteHack = function (/* iBody */) {
   return function (f) {
-    Delay.setTimeout(function () {
+    Delay.setTimeout(() => {
       f();
     }, 0);
   };
@@ -34,13 +34,13 @@ const resume = function (cWin) {
   cWin.focus();
   const iBody = SugarElement.fromDom(cWin.document.body);
 
-  const inInput = Focus.active().exists(function (elem) {
+  const inInput = Focus.active().exists((elem) => {
     return Arr.contains([ 'input', 'textarea' ], SugarNode.name(elem));
   });
 
   const transaction = inInput ? autocompleteHack() : Fun.apply;
 
-  transaction(function () {
+  transaction(() => {
     // If we don't blur before focusing the content, a previous focus in something like a statebutton
     // which represents the chosen font colour can stop the keyboard from appearing. Therefore, we blur
     // first.

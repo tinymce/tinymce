@@ -23,13 +23,13 @@ const getValue = function (item): string {
 const convert = function (formats, memMenuThunk) {
   const mainMenu = makeMenu('Styles', [
   ].concat(
-    Arr.map(formats.items, function (k) {
+    Arr.map(formats.items, (k) => {
       return makeItem(getValue(k), k.title, k.isSelected(), k.getPreview(), Obj.hasNonNullableKey(formats.expansions, getValue(k)));
     })
   ), memMenuThunk, false);
 
-  const submenus = Obj.map(formats.menus, function (menuItems, menuName) {
-    const items = Arr.map(menuItems, function (item) {
+  const submenus = Obj.map(formats.menus, (menuItems, menuName) => {
+    const items = Arr.map(menuItems, (item) => {
       return makeItem(
         getValue(item),
         item.title,
@@ -67,7 +67,7 @@ const makeItem = function (value, text, selected, preview, isMenu) {
       selected
     },
     itemBehaviours: Behaviour.derive(isMenu ? [ ] : [
-      Receivers.format(value, function (comp, status) {
+      Receivers.format(value, (comp, status) => {
         const toggle = status ? Toggling.on : Toggling.off;
         toggle(comp);
       })
@@ -125,13 +125,13 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
 
         behaviours: Behaviour.derive([
           AddEventsBehaviour.config('adhoc-scrollable-menu', [
-            AlloyEvents.runOnAttached(function (component, _simulatedEvent) {
+            AlloyEvents.runOnAttached((component, _simulatedEvent) => {
               Css.set(component.element, 'overflow-y', 'auto');
               Css.set(component.element, '-webkit-overflow-scrolling', 'touch');
               Scrollable.register(component.element);
             }),
 
-            AlloyEvents.runOnDetached(function (component) {
+            AlloyEvents.runOnDetached((component) => {
               Css.remove(component.element, 'overflow-y');
               Css.remove(component.element, '-webkit-overflow-scrolling');
               Scrollable.deregister(component.element);
@@ -156,7 +156,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
 };
 
 const sketch = function (settings) {
-  const dataset = convert(settings.formats, function () {
+  const dataset = convert(settings.formats, () => {
     return memMenu;
   });
   // Turn settings into a tiered menu data.

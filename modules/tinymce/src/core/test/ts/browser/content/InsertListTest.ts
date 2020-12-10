@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
     return DOMUtils.DOM.createFragment(html);
   };
 
-  suite.test('isListFragment', function () {
+  suite.test('isListFragment', () => {
     LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul>')), true);
     LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ol><li>x</li></ol>')), true);
     LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<meta><ul><li>x</li></ul>')), true);
@@ -33,21 +33,21 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
     LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<div></div>')), false);
   });
 
-  suite.test('listItems', function () {
+  suite.test('listItems', () => {
     const list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild as HTMLUListElement;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.listItems(list)[0].nodeName, 'LI');
   });
 
-  suite.test('trimListItems', function () {
+  suite.test('trimListItems', () => {
     const list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild as HTMLUListElement;
 
     LegacyUnit.equal(InsertList.listItems(list).length, 3);
     LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

@@ -503,7 +503,7 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
     if (!MultiRange.hasMultipleRanges(sel) && hasAnyRanges(editor)) {
       const normRng = NormalizeRange.normalize(dom, rng);
 
-      normRng.each(function (normRng) {
+      normRng.each((normRng) => {
         setRng(normRng, isForward());
       });
 

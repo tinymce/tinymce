@@ -5,7 +5,7 @@ import { Css, Scroll, SugarElement } from '@ephox/sugar';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', (success, failure) => {
 
   Theme();
 
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
   const sSetBodyStyles = function (editor, css) {
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
-      Step.sync(function () {
+      Step.sync(() => {
         Css.setAll(SugarElement.fromDom(editor.getBody()), css);
       })
     );
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', function (succes
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sSetContentToBigDiv = Step.label(

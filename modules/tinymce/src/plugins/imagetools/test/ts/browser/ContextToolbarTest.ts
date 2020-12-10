@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (suc
   ImagePlugin();
   ImageToolsPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = SugarElement.fromDom(document);

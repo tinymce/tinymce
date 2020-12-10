@@ -4,17 +4,17 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', (success, failure) => {
 
   Theme();
 
   const sInsertBr = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       InsertBr.insert(editor);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

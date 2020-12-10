@@ -8,7 +8,7 @@ import * as ImageUtils from '../module/test/ImageUtils';
 
 // TODO: This needs to be looked at again once notifications come back
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', (success, failure) => {
   const uploadHandlerState = ImageUtils.createStateContainer();
 
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', fun
   ]));
 
   TinyLoader.setupLight(
-    function (editor, onSuccess, onFailure) {
+    (editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
 
       const sTestImageToolsError = (testId, description, proxyUrl, apiKey, errorMessage) => Log.step(

@@ -203,7 +203,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
       // It will also decode the \" \' if keepSlashes is set to false or omitted
       const decode = function (str: string, keepSlashes?: boolean) {
         if (isEncoded) {
-          str = str.replace(/\uFEFF[0-9]/g, function (str) {
+          str = str.replace(/\uFEFF[0-9]/g, (str) => {
             return encodingLookup[str];
           });
         }
@@ -260,7 +260,7 @@ const Styles = function (settings?: StylesSettings, schema?: Schema): Styles {
         css = css.replace(/[\u0000-\u001F]/g, '');
 
         // Encode \" \' % and ; and : inside strings so they don't interfere with the style parsing
-        css = css.replace(/\\[\"\';:\uFEFF]/g, encode).replace(/\"[^\"]+\"|\'[^\']+\'/g, function (str) {
+        css = css.replace(/\\[\"\';:\uFEFF]/g, encode).replace(/\"[^\"]+\"|\'[^\']+\'/g, (str) => {
           return str.replace(/[;:]/g, encode);
         });
 

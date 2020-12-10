@@ -13,13 +13,13 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
     return htmlSerializer.serialize(node);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       Logger.t('Get content as tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a</p>'),
-        Step.sync(function () {
+        Step.sync(() => {
           const html = toHtml(editor.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected html', '<p>a</p>', html);
         })
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       Logger.t('Get selection as tree', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>ab<em>c</em></p>'),
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
-        Step.sync(function () {
+        Step.sync(() => {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
         })
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (suc
       Logger.t('Get selection as tree with whitespace', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a b c</p>'),
         tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 4),
-        Step.sync(function () {
+        Step.sync(() => {
           const html = toHtml(editor.selection.getContent({ format: 'tree' }));
           Assertions.assertHtml('Should be expected selection html', ' b ', html);
         })

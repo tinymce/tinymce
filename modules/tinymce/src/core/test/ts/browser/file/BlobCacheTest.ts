@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 
-UnitTest.test('browser.tinymce.core.file.BlobCacheTest', function () {
+UnitTest.test('browser.tinymce.core.file.BlobCacheTest', () => {
   const uriToBlob = function (base64: string, type: string) {
     let i;
     const str = atob(base64);

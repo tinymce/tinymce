@@ -10,7 +10,7 @@ const byId = function (item: Gene, id: string): Optional<Gene> {
   if (item.id !== undefined && item.id === id) {
     return Optional.some(item);
   } else {
-    return Arr.foldl(item.children || [], function (b, a) {
+    return Arr.foldl(item.children || [], (b, a) => {
       return byId(a, id).or(b);
     }, Optional.none<Gene>());
   }
@@ -25,14 +25,14 @@ const byItem = function (item: Gene, target: Gene): Optional<Gene> {
   } else if (sameId && itemNu && targetNu && item.random === target.random) {
     return Optional.some(item);
   } else {
-    return Arr.foldl(item.children || [], function (b, a) {
+    return Arr.foldl(item.children || [], (b, a) => {
       return byItem(a, target).or(b);
     }, Optional.none());
   }
 };
 
 const indexIn = function (parent: Gene, item: Gene): Optional<number> {
-  return Arr.findIndex(parent.children, function (x) {
+  return Arr.findIndex(parent.children, (x) => {
     return Comparator.eq(x, item);
   });
 };

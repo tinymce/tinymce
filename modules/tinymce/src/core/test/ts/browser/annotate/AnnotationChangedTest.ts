@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
       changes.set([ ]);
     });
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sTestAnnotationEvents = <T> (label: string, start: number[], soffset: number, expected: Array<{ uid: string; name: string; state: boolean}>): Step<T, T> => StepSequence.sequenceSame<T>([

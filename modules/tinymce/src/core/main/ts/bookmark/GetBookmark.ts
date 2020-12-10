@@ -75,7 +75,7 @@ const getLocation = function (trim: TrimFn, selection: EditorSelection, normaliz
 const findIndex = function (dom: DOMUtils, name: string, element: Element) {
   let count = 0;
 
-  Tools.each(dom.select(name), function (node) {
+  Tools.each(dom.select(name), (node) => {
     if (node.getAttribute('data-mce-bogus') === 'all') {
       return;
     }

@@ -5,7 +5,7 @@ import * as Look from 'ephox/robin/api/general/Look';
 import * as Parent from 'ephox/robin/api/general/Parent';
 import * as Structure from 'ephox/robin/api/general/Structure';
 
-UnitTest.test('BlockTest', function () {
+UnitTest.test('BlockTest', () => {
   const doc = TestUniverse(Gene('root', 'root', [
     Gene('d1', 'div', [
       TextGene('d1_t1', 'List: '),
@@ -32,7 +32,7 @@ UnitTest.test('BlockTest', function () {
   ]));
 
   const check = function (expected: Optional<string>, ids: string[], look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>) {
-    const items = Arr.map(ids, function (id) {
+    const items = Arr.map(ids, (id) => {
       return doc.find(doc.get(), id).getOrDie();
     });
     const actual = Parent.sharedOne(doc, look, items);

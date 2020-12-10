@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { formatSize } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
-UnitTest.test('SizeInputFormatTest', function () {
+UnitTest.test('SizeInputFormatTest', () => {
   // pixel measurements do not get decimals
   assert.eq('12px', formatSize({ value: 12, unit: 'px' }));
   assert.eq('12px', formatSize({ value: 12.123, unit: 'px' }));

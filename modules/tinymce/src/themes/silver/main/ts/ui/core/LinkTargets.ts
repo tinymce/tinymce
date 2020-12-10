@@ -68,7 +68,7 @@ const isChildOfContentEditableTrue = function (node: Node) {
 };
 
 const select = function (selector: string, root: HTMLElement) {
-  return Arr.map(SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(root), selector), function (element) {
+  return Arr.map(SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(root), selector), (element) => {
     return element.dom;
   });
 };

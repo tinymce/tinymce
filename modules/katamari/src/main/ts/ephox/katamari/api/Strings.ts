@@ -16,7 +16,7 @@ export const supplant = function (str: string, obj: {[key: string]: string | num
   };
 
   return str.replace(/\$\{([^{}]*)\}/g,
-    function (fullMatch: string, key: string) {
+    (fullMatch: string, key: string) => {
       const value = obj[key];
       return isStringOrNumber(value) ? value.toString() : fullMatch;
     }

@@ -68,14 +68,14 @@ UnitTest.asynctest('HttpTest', (success, failure) => {
     ), [ 'cached' ], validCalls)
   ];
 
-  Arr.foldr(responses, function (res, rest) {
-    return rest.bindFuture(function () {
+  Arr.foldr(responses, (res, rest) => {
+    return rest.bindFuture(() => {
       return res;
     });
-  }, FutureResult.pure({})).get(function (v) {
-    v.fold(function (err) {
+  }, FutureResult.pure({})).get((v) => {
+    v.fold((err) => {
       failure(err);
-    }, function (_) {
+    }, (_) => {
       success();
     });
   });

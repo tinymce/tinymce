@@ -7,7 +7,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationTest', (success, failure) => {
   SilverTheme();
   SearchReplacePlugin();
 
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
     ui.sWaitForPopup('wait for dialog', 'div.tox-dialog')
   ]));
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = SugarElement.fromDom(document);

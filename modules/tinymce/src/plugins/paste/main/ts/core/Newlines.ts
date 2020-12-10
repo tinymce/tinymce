@@ -52,7 +52,7 @@ const toBlockElements = function (text: string, rootTag: string, rootAttrs: Root
   const tagOpen = openContainer(rootTag, rootAttrs);
   const tagClose = '</' + rootTag + '>';
 
-  const paragraphs = Tools.map(blocks, function (p) {
+  const paragraphs = Tools.map(blocks, (p) => {
     return p.split(/\n/).join('<br />');
   });
 

@@ -13,7 +13,7 @@ import * as Buttons from './ui/Buttons';
 import * as ContextToolbar from './ui/ContextToolbar';
 
 export default function () {
-  PluginManager.add('imagetools', function (editor) {
+  PluginManager.add('imagetools', (editor) => {
     const imageUploadTimerState = Cell(0);
     const lastSelectedImageState = Cell(null);
 

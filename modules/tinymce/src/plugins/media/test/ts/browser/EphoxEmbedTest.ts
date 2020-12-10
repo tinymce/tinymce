@@ -9,11 +9,11 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', (success, failure) => {
   Plugin();
   Theme();
 
-  const ephoxEmbedStructure = ApproxStructure.build(function (s, str/* , arr*/) {
+  const ephoxEmbedStructure = ApproxStructure.build((s, str/* , arr*/) => {
     return s.element('p', {
       children: [
         s.element('div', {
@@ -34,14 +34,14 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', function
   });
 
   const sAssertDivStructure = function (editor: Editor, expected: StructAssert) {
-    return Logger.t(`Assert div structure ${expected}`, Step.sync(function () {
+    return Logger.t(`Assert div structure ${expected}`, Step.sync(() => {
       const div = editor.dom.select('div')[0];
       const actual = div ? SugarElement.fromHtml(div.outerHTML) : SugarElement.fromHtml('');
       return Assertions.sAssertStructure('Should be the same structure', expected, actual);
     }));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
     const apis = TinyApis(editor);
 

@@ -10,7 +10,7 @@ import { sAnnotate, sAssertHtmlContent } from '../../module/test/AnnotationAsser
 UnitTest.asynctest('browser.tinymce.core.annotate.AnnotateTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight(function (editor: Editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     // TODO: Consider testing collapse sections.

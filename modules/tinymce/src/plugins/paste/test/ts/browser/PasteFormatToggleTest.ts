@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteFormatToggleTest', (succe
   Theme();
   PastePlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const steps = Env.webkit ?
       Log.steps('TBA', 'Paste: paste plain text',

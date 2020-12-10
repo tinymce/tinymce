@@ -17,7 +17,7 @@ export const validateStrArr = function (label: string, array: any): void {
   if (!Type.isArray(array)) {
     throw new Error('The ' + label + ' fields must be an array. Was: ' + array + '.');
   }
-  Arr.each(array, function (a) {
+  Arr.each(array, (a) => {
     if (!Type.isString(a)) {
       throw new Error('The value ' + a + ' in the ' + label + ' fields was not a string.');
     }
@@ -30,11 +30,11 @@ export const invalidTypeMessage = function (incorrect: string[], type: string): 
 
 export const checkDupes = function (everything: string[]): void {
   const sorted = sort(everything);
-  const dupe = Arr.find(sorted, function (s, i) {
+  const dupe = Arr.find(sorted, (s, i) => {
     return i < sorted.length - 1 && s === sorted[i + 1];
   });
 
-  dupe.each(function (d) {
+  dupe.each((d) => {
     throw new Error('The field: ' + d + ' occurs more than once in the combined fields: [' + sorted.join(', ') + '].');
   });
 };

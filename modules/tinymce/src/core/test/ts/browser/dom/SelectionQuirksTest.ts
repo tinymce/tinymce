@@ -4,11 +4,11 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', (success, failure) => {
 
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
     let count;
@@ -22,19 +22,19 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
     editor.selection.normalize = normalize;
 
     const sResetNormalizeCounter = function () {
-      return Step.sync(function () {
+      return Step.sync(() => {
         count = 0;
       });
     };
 
     const sAssertNormalizeCounter = function (expected) {
-      return Step.sync(function () {
+      return Step.sync(() => {
         Assertions.assertEq('checking normalization counter', expected, count);
       });
     };
 
     const sClickBody = function (editor) {
-      return Step.sync(function () {
+      return Step.sync(() => {
         const target = editor.getBody();
 
         editor.fire('mousedown', { target });
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', function (suc
       Logger.t('Test normalization for floated images', GeneralSteps.sequence([
         tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),
         tinyApis.sSetSelection([ 0 ], 1, [ 0 ], 2),
-        Step.sync(function () {
+        Step.sync(() => {
           const selection = editor.selection.getSel();
           Assertions.assertEq('Anchor node should be the paragraph not the text node', 'P', selection.anchorNode.nodeName);
           Assertions.assertEq('Anchor offset should be the element index', 1, selection.anchorOffset);

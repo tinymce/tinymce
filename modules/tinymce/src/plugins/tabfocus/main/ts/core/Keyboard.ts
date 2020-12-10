@@ -43,7 +43,7 @@ const setup = function (editor: Editor) {
         return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex !== -1 && canSelectRecursive(el);
       }
 
-      Tools.each(el, function (e, i) {
+      Tools.each(el, (e, i) => {
         if (e.id === editor.id) {
           x = i;
           return false;
@@ -95,7 +95,7 @@ const setup = function (editor: Editor) {
       if (el.id && focusEditor) {
         focusEditor.focus();
       } else {
-        Delay.setTimeout(function () {
+        Delay.setTimeout(() => {
           if (!Env.webkit) {
             window.focus();
           }
@@ -108,7 +108,7 @@ const setup = function (editor: Editor) {
     }
   }
 
-  editor.on('init', function () {
+  editor.on('init', () => {
     if (editor.inline) {
       // Remove default tabIndex in inline mode
       DOM.setAttrib(editor.getBody(), 'tabIndex', null);

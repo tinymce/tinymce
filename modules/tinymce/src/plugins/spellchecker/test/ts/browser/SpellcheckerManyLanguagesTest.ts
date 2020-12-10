@@ -5,12 +5,12 @@ import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import SpellcheckerPlugin from 'tinymce/plugins/spellchecker/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (success, failure) => {
 
   SpellcheckerPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Multiple languages split button', [

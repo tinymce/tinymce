@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, fa
   Theme();
   PrintPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [ Log.step('TBA', 'Print: Assert print button exists',

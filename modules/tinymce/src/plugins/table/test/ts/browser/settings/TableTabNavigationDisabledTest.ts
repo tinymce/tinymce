@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TableTablNavigationDisabledTes
 
   const tableHtml = '<table><tbody><tr><td>a</td></tr><tr><td>a</td></tr></tbody></table>';
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

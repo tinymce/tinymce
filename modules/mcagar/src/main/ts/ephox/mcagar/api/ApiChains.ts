@@ -28,18 +28,18 @@ const lazyBody = function (editor: Editor): SugarElement<HTMLElement> {
   return SugarElement.fromDom(editor.getBody());
 };
 
-const cNodeChanged = <T extends Editor> (): Chain<T, T> => Chain.op(function (editor: T) {
+const cNodeChanged = <T extends Editor> (): Chain<T, T> => Chain.op((editor: T) => {
   editor.nodeChanged();
 });
 
 const cSetContent = function <T extends Editor> (html: string): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     editor.setContent(html);
   });
 };
 
 const cSetRawContent = function <T extends Editor> (html: string): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     editor.getBody().innerHTML = html;
   });
 };
@@ -54,7 +54,7 @@ const cSetCursor = function <T extends Editor> (elementPath: number[], offset: n
 };
 
 const cSetSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     const range = TinySelections.createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
     editor.selection.setRng(range);
     editor.nodeChanged();
@@ -62,43 +62,43 @@ const cSetSelection = function <T extends Editor> (startPath: number[], soffset:
 };
 
 const cSetSetting = function <T extends Editor> (key: string, value: any): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     editor.settings[key] = value;
   });
 };
 
 const cDeleteSetting = function <T extends Editor> (key: string): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     delete editor.settings[key];
   });
 };
 
 const cSelect = function <T extends Editor> (selector: string, path: number[]): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
     const target = Cursors.calculateOne(container, path);
     editor.selection.select(target.dom);
   });
 };
 
-const cGetContent: Chain<Editor, string> = Chain.mapper(function (editor: Editor) {
+const cGetContent: Chain<Editor, string> = Chain.mapper((editor: Editor) => {
   return editor.getContent();
 });
 
 const cExecCommand = function <T extends Editor> (command: string, value?: any): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     editor.execCommand(command, false, value);
   });
 };
 
 const cAssertContent = function <T extends Editor> (expected: string): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
   });
 };
 
 const cAssertContentPresence = function <T extends Editor> (expected: Presence): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     Assertions.assertPresence(
       () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
       expected,
@@ -108,7 +108,7 @@ const cAssertContentPresence = function <T extends Editor> (expected: Presence):
 };
 
 const cAssertContentStructure = function <T extends Editor> (expected: StructAssert): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     return Assertions.assertStructure(
       'Asserting the structure of tiny content.',
       expected,
@@ -129,14 +129,14 @@ const assertPath = function (label: string, root: SugarElement, expPath: number[
 };
 
 const cAssertSelection = function <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> {
-  return Chain.op(function (editor: T) {
+  return Chain.op((editor: T) => {
     const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
     assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);
     assertPath('finish', lazyBody(editor), finishPath, foffset, actual.endContainer, actual.endOffset);
   });
 };
 
-const cFocus = Chain.op(function (editor: Editor) {
+const cFocus = Chain.op((editor: Editor) => {
   editor.focus();
 });
 

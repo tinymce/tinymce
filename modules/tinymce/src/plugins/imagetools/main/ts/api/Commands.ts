@@ -18,7 +18,7 @@ const register = function (editor: Editor, imageUploadTimerState: Cell<number>) 
     mceImageFlipVertical: Actions.flip(editor, imageUploadTimerState, 'v'),
     mceImageFlipHorizontal: Actions.flip(editor, imageUploadTimerState, 'h'),
     mceEditImage: Dialog.makeOpen(editor, imageUploadTimerState)
-  }, function (fn, cmd) {
+  }, (fn, cmd) => {
     editor.addCommand(cmd, fn);
   });
 };

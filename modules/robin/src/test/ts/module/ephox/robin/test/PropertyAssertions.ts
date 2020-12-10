@@ -19,7 +19,7 @@ const formatErr = function (label: string, err: any): string { // TODO narrow ty
 const checkWith = function <T extends any[]> (label: string, arbitraries: T, f: Function, options: Record<string, any> = {}): void { // TODO narrow types
   // NOTE: Due to a current implementation detail of Jsc's wrapper, these will not have labels in the console
   // However, use this one if you want to supply options (like seed, number of tests etc.)
-  Logger.sync(label, function () {
+  Logger.sync(label, () => {
     const property = Jsc.forall.apply(Jsc, [ ...arbitraries, f ]);
     try {
       const output = Jsc.check(property, options);

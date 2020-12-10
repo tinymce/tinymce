@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
 
   const stripAttribs = function ($el, attr) {
     if (Tools.isArray(attr)) {
-      Tools.each(attr, function (attr) {
+      Tools.each(attr, (attr) => {
         stripAttribs($el, attr);
       });
       return;
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     return html.replace(/<br data-mce-bogus="1" \/>/g, '');
   };
 
-  suite.test('TestCase-TBA: TableOfContents: mceInsertToc', function (editor) {
+  suite.test('TestCase-TBA: TableOfContents: mceInsertToc', (editor) => {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: TableOfContents: mceInsertToc - flat structure', function (editor) {
+  suite.test('TestCase-TBA: TableOfContents: mceInsertToc - flat structure', (editor) => {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  suite.test('TestCase-TBA: TableOfContents: mceUpdateToc', function (editor) {
+  suite.test('TestCase-TBA: TableOfContents: mceUpdateToc', (editor) => {
     editor.getBody().innerHTML =
       '<h1 id="h1">H1</h1>' +
       '<p>This is some text.</p><br />' +
@@ -135,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
       'ToC has been successfully updated');
   });
 
-  suite.test('TestCase-TBA: TableOfContents: Misc.', function (editor) {
+  suite.test('TestCase-TBA: TableOfContents: Misc.', (editor) => {
     editor.getBody().innerHTML =
       '<h2 id="h1">H2</h2>' +
       '<p>This is some text.</p><br />' +
@@ -173,7 +173,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'TableOfContents: Api insert, update and test table of contents', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'toc',

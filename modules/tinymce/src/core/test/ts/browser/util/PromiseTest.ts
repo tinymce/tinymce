@@ -4,46 +4,46 @@ import { Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import Promise from 'tinymce/core/api/util/Promise';
 
-UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.asyncTest('Promise resolve', function (_, done) {
-    new Promise(function (resolve) {
+  suite.asyncTest('Promise resolve', (_, done) => {
+    new Promise((resolve) => {
       resolve('123');
-    }).then(function (result) {
+    }).then((result) => {
       LegacyUnit.equal('123', result);
       done();
     });
   });
 
-  suite.asyncTest('Promise reject', function (_, done) {
-    new Promise(function (resolve, reject) {
+  suite.asyncTest('Promise reject', (_, done) => {
+    new Promise((resolve, reject) => {
       reject('123');
-    }).then(Fun.noop, function (result) {
+    }).then(Fun.noop, (result) => {
       LegacyUnit.equal('123', result);
       done();
     });
   });
 
-  suite.asyncTest('Promise reject', function (_, done) {
+  suite.asyncTest('Promise reject', (_, done) => {
     const promises = [
-      new Promise(function (resolve) {
+      new Promise((resolve) => {
         resolve('123');
       }),
 
-      new Promise(function (resolve) {
+      new Promise((resolve) => {
         resolve('456');
       })
     ];
 
-    Promise.all(promises).then(function (results) {
+    Promise.all(promises).then((results) => {
       LegacyUnit.equal('123', results[0]);
       LegacyUnit.equal('456', results[1]);
       done();
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

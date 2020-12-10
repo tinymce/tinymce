@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
   CharmapPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const eDoc = SugarElement.fromDom(editor.getDoc());
 

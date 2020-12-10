@@ -13,7 +13,7 @@ UnitTest.asynctest(
     TextpatternPlugin();
 
     const sTypeChar = function (editor: Editor, character: string) {
-      return Logger.t(`Type ${character}`, Step.sync(function () {
+      return Logger.t(`Type ${character}`, Step.sync(() => {
         const charCode = character.charCodeAt(0);
         editor.fire('keypress', { charCode } as KeyboardEvent);
       }));
@@ -28,7 +28,7 @@ UnitTest.asynctest(
           sTypeChar(editor, trigger),
           Waiter.sTryUntil(
             'did not get expected format',
-            tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+            tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
               return s.element('body', {
                 children: [
                   s.element('p', {
@@ -49,7 +49,7 @@ UnitTest.asynctest(
       };
     };
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const tnt = sTypeAndTrigger(tinyApis, editor);
 

@@ -7,7 +7,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.delete.ImageBlockDeleteTest', (success, failure) => {
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

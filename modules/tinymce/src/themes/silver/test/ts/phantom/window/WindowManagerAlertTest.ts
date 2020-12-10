@@ -202,7 +202,7 @@ UnitTest.asynctest('WindowManager:alert Test', (success, failure) => {
     sClickShouldFocusOnFirstButton,
     sShouldFocusOnOkButton,
     sCloseButtonShouldWork
-  ], function () {
+  ], () => {
     helpers.destroy();
     success();
   }, failure);

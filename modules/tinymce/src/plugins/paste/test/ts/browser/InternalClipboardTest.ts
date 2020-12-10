@@ -19,27 +19,27 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   TablePlugin();
   Theme();
 
-  const sResetProcessEvents = Logger.t('Reset process events', Step.sync(function () {
+  const sResetProcessEvents = Logger.t('Reset process events', Step.sync(() => {
     lastPreProcessEvent = null;
     lastPostProcessEvent = null;
   }));
 
   const sCutCopyDataTransferEvent = function (editor: Editor, type: string) {
-    return Logger.t('Cut copy data transfer event', Step.sync(function () {
+    return Logger.t('Cut copy data transfer event', Step.sync(() => {
       dataTransfer = MockDataTransfer.create({});
       editor.fire(type, { clipboardData: dataTransfer });
     }));
   };
 
   const sPasteDataTransferEvent = function (editor: Editor, data: Record<string, string>) {
-    return Logger.t('Paste data transfer event', Step.sync(function () {
+    return Logger.t('Paste data transfer event', Step.sync(() => {
       dataTransfer = MockDataTransfer.create(data);
       editor.fire('paste', { clipboardData: dataTransfer } as ClipboardEvent);
     }));
   };
 
   const sAssertClipboardData = function (expectedHtml: string, expectedText: string) {
-    return Logger.t(`Assert clipboard data ${expectedHtml}, ${expectedText}`, Step.sync(function () {
+    return Logger.t(`Assert clipboard data ${expectedHtml}, ${expectedText}`, Step.sync(() => {
       Assert.eq('text/html data should match', expectedHtml, dataTransfer.getData('text/html'));
       Assert.eq('text/plain data should match', expectedText, dataTransfer.getData('text/plain'));
     }));
@@ -163,20 +163,20 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   };
 
   const sAssertLastPreProcessEvent = function (expectedData) {
-    return Logger.t('Assert last preprocess event', Step.sync(function () {
+    return Logger.t('Assert last preprocess event', Step.sync(() => {
       Assert.eq('Internal property should be equal', expectedData.internal, lastPreProcessEvent.internal);
       Assert.eq('Content property should be equal', expectedData.content, lastPreProcessEvent.content);
     }));
   };
 
   const sAssertLastPostProcessEvent = function (expectedData) {
-    return Logger.t('Assert last postprocess event', Step.sync(function () {
+    return Logger.t('Assert last postprocess event', Step.sync(() => {
       Assert.eq('Internal property should be equal', expectedData.internal, lastPostProcessEvent.internal);
       Assert.eq('Content property should be equal', expectedData.content, lastPostProcessEvent.node.innerHTML);
     }));
   };
 
-  const sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(function () {
+  const sWaitForProcessEvents = Waiter.sTryUntil('Did not get any events fired', Step.sync(() => {
     Assert.eq('PastePreProcess event object', lastPreProcessEvent !== null, true);
     Assert.eq('PastePostProcess event object', lastPostProcessEvent !== null, true);
   }));
@@ -216,7 +216,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -227,11 +227,11 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
   }, {
     plugins: 'paste table',
     init_instance_callback(editor) {
-      editor.on('PastePreProcess', function (evt) {
+      editor.on('PastePreProcess', (evt) => {
         lastPreProcessEvent = evt;
       });
 
-      editor.on('PastePostProcess', function (evt) {
+      editor.on('PastePostProcess', (evt) => {
         lastPostProcessEvent = evt;
       });
     },

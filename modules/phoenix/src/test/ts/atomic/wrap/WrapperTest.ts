@@ -5,7 +5,7 @@ import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import * as Wrapper from 'ephox/phoenix/wrap/Wrapper';
 import { Wraps } from 'ephox/phoenix/wrap/Wraps';
 
-UnitTest.test('WrapperTest', function () {
+UnitTest.test('WrapperTest', () => {
   const make = function () {
     return TestUniverse(
       Gene('root', 'root', [
@@ -43,7 +43,7 @@ UnitTest.test('WrapperTest', function () {
 
     const actual = Wrapper.reuse(doc, start, startOffset, finish, finishOffset, predicate, nu);
     assert.eq(expected, TestRenders.ids(actual));
-    assert.eq(postTest, doc.shortlog(function (item) {
+    assert.eq(postTest, doc.shortlog((item) => {
       return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
     }));
   };

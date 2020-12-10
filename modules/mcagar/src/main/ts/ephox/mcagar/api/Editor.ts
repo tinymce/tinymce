@@ -6,7 +6,7 @@ import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
 const cFromElement = function <T extends EditorType = EditorType> (element: SugarElement, settings: Record<string, any>): Chain<any, T> {
-  return Chain.async<any, T>(function (_, next, die) {
+  return Chain.async<any, T>((_, next, die) => {
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
       ...settings
@@ -36,8 +36,8 @@ const cFromElement = function <T extends EditorType = EditorType> (element: Suga
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
         }
-        editor.on('SkinLoaded', function () {
-          setTimeout(function () {
+        editor.on('SkinLoaded', () => {
+          setTimeout(() => {
             next(editor);
           }, 0);
         });
@@ -59,7 +59,7 @@ const cFromSettings = function <T extends EditorType = EditorType> (settings: Re
   return cFromHtml(null, settings);
 };
 
-const cRemove = Chain.op(function (editor: EditorType) {
+const cRemove = Chain.op((editor: EditorType) => {
   const id = editor.id;
   editor.remove();
   Selectors.one('#' + id).each(Remove.remove);

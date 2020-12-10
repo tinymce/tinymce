@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Paste: isAbsoluteUrl', function () {
+  suite.test('TestCase-TBA: Paste: isAbsoluteUrl', () => {
     LegacyUnit.equal(SmartPaste.isAbsoluteUrl('http://www.site.com'), true);
     LegacyUnit.equal(SmartPaste.isAbsoluteUrl('https://www.site.com'), true);
     LegacyUnit.equal(SmartPaste.isAbsoluteUrl('http://www.site.com/dir-name/file.gif?query=%42'), true);
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(SmartPaste.isAbsoluteUrl(''), false);
   });
 
-  suite.test('TestCase-TBA: Paste: isImageUrl', function (editor) {
+  suite.test('TestCase-TBA: Paste: isImageUrl', (editor) => {
     LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com'), false);
     LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'https://www.site.com'), false);
     LegacyUnit.equal(SmartPaste.isImageUrl(editor, 'http://www.site.com/dir-name/file.jpeg'), true);
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     delete editor.settings.images_file_types;
   });
 
-  suite.test('TINY-6306: Smart paste enabled (with custom images_file_types settings)', function (editor) {
+  suite.test('TINY-6306: Smart paste enabled (with custom images_file_types settings)', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p></p>');
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     delete editor.settings.images_file_types;
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste url on selection', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste url on selection', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 3);
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste image url', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste enabled, paste as content, paste image url', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 3);
   });
 
-  suite.test('TestCase-TBA: Paste: smart paste disabled, paste as content, paste image url', function (editor) {
+  suite.test('TestCase-TBA: Paste: smart paste disabled, paste as content, paste image url', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste enabled, paste as text, paste image url', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste enabled, paste as text, paste image url', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste disabled, paste as text, paste image url', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste disabled, paste as text, paste image url', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste enabled, paste as content, paste link html', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste enabled, paste as content, paste link html', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -194,7 +194,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste disabled, paste as content, paste link html', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste disabled, paste as content, paste link html', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -207,7 +207,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste enabled, paste as text, paste link html', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste enabled, paste as text, paste link html', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -220,7 +220,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  suite.test('TINY-4523: Paste: smart paste disabled, paste as text, paste link html', function (editor) {
+  suite.test('TINY-4523: Paste: smart paste disabled, paste as text, paste link html', (editor) => {
     editor.focus();
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
@@ -233,7 +233,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
     LegacyUnit.equal(editor.undoManager.data.length, 2);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Paste: Test smart paste', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStyles
   Theme();
   ListsPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

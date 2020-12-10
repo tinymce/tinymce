@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as StringMapper from 'ephox/polaris/words/StringMapper';
 import * as UnicodeData from 'ephox/polaris/words/UnicodeData';
 
-UnitTest.test('Words.StringMapperTest', function () {
+UnitTest.test('Words.StringMapperTest', () => {
   const ci = UnicodeData.characterIndices;
 
   const ALETTER = ci.ALETTER;

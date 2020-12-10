@@ -112,7 +112,7 @@ const replaceVars = function (value: FormatAttrOrStyleValue, vars: FormatVars): 
   if (typeof value !== 'string') {
     value = value(vars);
   } else if (vars) {
-    value = value.replace(/%(\w+)/g, function (str, name) {
+    value = value.replace(/%(\w+)/g, (str, name) => {
       return vars[name] || str;
     });
   }
@@ -164,7 +164,7 @@ const getStyle = function (dom: DOMUtils, node: Node, name: string) {
 const getTextDecoration = function (dom: DOMUtils, node: Node): string {
   let decoration;
 
-  dom.getParent(node, function (n) {
+  dom.getParent(node, (n) => {
     decoration = dom.getStyle(n, 'text-decoration');
     return decoration && decoration !== 'none';
   });

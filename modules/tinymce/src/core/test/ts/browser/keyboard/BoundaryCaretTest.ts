@@ -7,7 +7,7 @@ import * as BoundaryCaret from 'tinymce/core/keyboard/BoundaryCaret';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', (success, failure) => {
   const ZWSP = Zwsp.ZWSP;
 
   const isInlineTarget = function (elm) {
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (
   };
 
   const sTestRenderCaret = function (html, elementPath, offset, expectedHtml, expectedPath, _expectedOffset) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = SugarElement.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
       const location = createLocation(elm, elementPath, offset);
       const caret = Cell(null);
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', function (
       sTestRenderCaret('<p><a href="#">a<img src="#"></a></p>', [ 0, 0 ], 2, '<p><a href="#">a<img src="#">' + ZWSP + '</a></p>', [ 0, 0, 2 ], 1),
       sTestRenderCaret('<p><a href="#">a</a><img src="#"></p>', [ 0 ], 1, '<p><a href="#">a</a>' + ZWSP + '<img src="#"></p>', [ 0, 1 ], 1)
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

@@ -25,11 +25,11 @@ const isServiceErrorCode = function (code) {
 };
 
 const getHttpErrorMsg = function (status) {
-  const message = Arr.find(friendlyHttpErrors, function (error) {
+  const message = Arr.find(friendlyHttpErrors, (error) => {
     return status === error.code;
   }).fold(
     Fun.constant('Unknown ImageProxy error'),
-    function (error) {
+    (error) => {
       return error.message;
     }
   );
@@ -44,11 +44,11 @@ const handleHttpError = function (status) {
 };
 
 const getServiceErrorMsg = function (type) {
-  return Arr.find(friendlyServiceErrors, function (error) {
+  return Arr.find(friendlyServiceErrors, (error) => {
     return error.type === type;
   }).fold(
     Fun.constant('Unknown service error'),
-    function (error) {
+    (error) => {
       return error.message;
     }
   );
@@ -63,7 +63,7 @@ const getServiceError = function (text) {
 };
 
 const handleServiceError = function (status, blob) {
-  return Utils.readBlob(blob).then(function (text) {
+  return Utils.readBlob(blob).then((text) => {
     const serviceError = getServiceError(text);
 
     return Promise.reject(serviceError);

@@ -2,7 +2,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 
-UnitTest.test('HeaderOperationsTest', function () {
+UnitTest.test('HeaderOperationsTest', () => {
   testSingleRowHeader();
   testMultipleRowHeader();
   testSingleColumnHeader();

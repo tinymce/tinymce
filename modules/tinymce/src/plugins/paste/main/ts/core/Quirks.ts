@@ -22,13 +22,13 @@ import * as WordFilter from './WordFilter';
  */
 
 function addPreProcessFilter(editor: Editor, filterFunc) {
-  editor.on('PastePreProcess', function (e) {
+  editor.on('PastePreProcess', (e) => {
     e.content = filterFunc(editor, e.content, e.internal, e.wordContent);
   });
 }
 
 function addPostProcessFilter(editor: Editor, filterFunc) {
-  editor.on('PastePostProcess', function (e) {
+  editor.on('PastePostProcess', (e) => {
     filterFunc(editor, e.node);
   });
 }
@@ -52,7 +52,7 @@ function removeExplorerBrElementsAfterBlocks(editor: Editor, html: string) {
   // Produce block regexp based on the block elements in schema
   const blockElements = [];
 
-  Tools.each(editor.schema.getBlockElements(), function (block: Element, blockName: string) {
+  Tools.each(editor.schema.getBlockElements(), (block: Element, blockName: string) => {
     blockElements.push(blockName);
   });
 
@@ -107,7 +107,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
   if (webKitStyles) {
     const dom = editor.dom, node = editor.selection.getNode();
 
-    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function (all, before, value, after) {
+    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, (all, before, value, after) => {
       const inputStyles = dom.parseStyle(dom.decode(value));
       let outputStyles = {};
 
@@ -141,7 +141,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
   }
 
   // Keep internal styles
-  content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, function (all, before, value, after) {
+  content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, (all, before, value, after) => {
     return before + ' style="' + value + '"' + after;
   });
 
@@ -149,7 +149,7 @@ function removeWebKitStyles(editor: Editor, content: string, internal: boolean, 
 }
 
 function removeUnderlineAndFontInAnchor(editor: Editor, root: Element) {
-  editor.$('a', root).find('font,u').each(function (i, node) {
+  editor.$('a', root).find('font,u').each((i, node) => {
     editor.dom.remove(node, true);
   });
 }

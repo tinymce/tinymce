@@ -6,13 +6,13 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',
-  function (success, failure) {
+  (success, failure) => {
 
     Theme();
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setup((editor, onSuccess, onFailure) => {
       Pipeline.async({}, [
-        Logger.t('Check if iframe has the right custom attributes', Step.sync(function () {
+        Logger.t('Check if iframe has the right custom attributes', Step.sync(() => {
           const ifr = SugarElement.fromDom(editor.iframeElement);
 
           Assertions.assertEq('Id should not be the defined x', true, Attribute.get(ifr, 'id') !== 'x');

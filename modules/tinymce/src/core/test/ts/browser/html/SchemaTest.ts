@@ -4,19 +4,19 @@ import { Arr, Obj } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import Schema from 'tinymce/core/api/html/Schema';
 
-UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   const ok = function (value, label?) {
     return LegacyUnit.equal(value, true, label);
   };
 
-  suite.test('Valid elements global rule', function () {
+  suite.test('Valid elements global rule', () => {
     const schema = Schema({ valid_elements: '@[id|style],img[src|-style]' });
     LegacyUnit.deepEqual(schema.getElementRule('img'), { attributes: { id: {}, src: {}}, attributesOrder: [ 'id', 'src' ] });
   });
 
-  suite.test('Whildcard element rule', function () {
+  suite.test('Whildcard element rule', () => {
     let schema = Schema({ valid_elements: '*[id|class]' });
     LegacyUnit.deepEqual(schema.getElementRule('b').attributes, { id: {}, class: {}});
     LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [ 'id', 'class' ]);
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     LegacyUnit.equal(schema.getElementRule('b'), undefined);
   });
 
-  suite.test('Whildcard attribute rule', function () {
+  suite.test('Whildcard attribute rule', () => {
     let schema = Schema({ valid_elements: 'b[id|class|*]' });
     LegacyUnit.deepEqual(schema.getElementRule('b').attributes, { id: {}, class: {}});
     LegacyUnit.deepEqual(schema.getElementRule('b').attributesOrder, [ 'id', 'class' ]);
@@ -64,14 +64,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(schema.getElementRule('b').attributePatterns[0].pattern.test('xba'));
   });
 
-  suite.test('Valid attributes and attribute order', function () {
+  suite.test('Valid attributes and attribute order', () => {
     const schema = Schema({ valid_elements: 'div,a[href|title],b[title]' });
     LegacyUnit.deepEqual(schema.getElementRule('div'), { attributes: {}, attributesOrder: [] });
     LegacyUnit.deepEqual(schema.getElementRule('a'), { attributes: { href: {}, title: {}}, attributesOrder: [ 'href', 'title' ] });
     LegacyUnit.deepEqual(schema.getElementRule('b'), { attributes: { title: {}}, attributesOrder: [ 'title' ] });
   });
 
-  suite.test('Required any attributes', function () {
+  suite.test('Required any attributes', () => {
     const schema = Schema({ valid_elements: 'a![id|style|href]' });
     LegacyUnit.deepEqual(
       schema.getElementRule('a'),
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('Required attributes', function () {
+  suite.test('Required attributes', () => {
     const schema = Schema({ valid_elements: 'a[!href|!name]' });
     LegacyUnit.deepEqual(
       schema.getElementRule('a'),
@@ -90,7 +90,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('Default attribute values', function () {
+  suite.test('Default attribute values', () => {
     const schema = Schema({ valid_elements: 'img[border=0]' });
     LegacyUnit.deepEqual(
       schema.getElementRule('img'),
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('Forced attribute values', function () {
+  suite.test('Forced attribute values', () => {
     const schema = Schema({ valid_elements: 'img[border:0]' });
     LegacyUnit.deepEqual(
       schema.getElementRule('img'),
@@ -114,7 +114,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('Required attribute values', function () {
+  suite.test('Required attribute values', () => {
     const schema = Schema({ valid_elements: 'span[dir<ltr?rtl]' });
     LegacyUnit.deepEqual(
       schema.getElementRule('span'),
@@ -125,14 +125,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('Required parents', function () {
+  suite.test('Required parents', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getElementRule('tr').parentsRequired, [ 'tbody', 'thead', 'tfoot' ]);
     LegacyUnit.deepEqual(schema.getElementRule('li').parentsRequired, [ 'ul', 'ol' ]);
     LegacyUnit.deepEqual(schema.getElementRule('div').parentsRequired, undefined);
   });
 
-  suite.test('Remove empty elements', function () {
+  suite.test('Remove empty elements', () => {
     let schema = Schema({ valid_elements: '-span' });
     LegacyUnit.deepEqual(schema.getElementRule('span'), { attributes: {}, attributesOrder: [], removeEmpty: true });
 
@@ -144,7 +144,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     LegacyUnit.equal(schema.getElementRule('tr').removeEmpty, undefined);
   });
 
-  suite.test('addValidElements', function () {
+  suite.test('addValidElements', () => {
     const schema = Schema({ valid_elements: '@[id|style],img[src|-style]' });
     schema.addValidElements('b[class]');
     LegacyUnit.deepEqual(
@@ -164,7 +164,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test(`addValidElements when there's a colon in an attribute name`, function () {
+  suite.test(`addValidElements when there's a colon in an attribute name`, () => {
     const schema = Schema({ valid_elements: '@[xml\\:space]' });
     schema.addValidElements('pre[xml\\:lang]');
     LegacyUnit.deepEqual(
@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     );
   });
 
-  suite.test('setValidElements', function () {
+  suite.test('setValidElements', () => {
     let schema = Schema({ valid_elements: '@[id|style],img[src|-style]' });
     schema.setValidElements('b[class]');
     LegacyUnit.equal(schema.getElementRule('img'), undefined);
@@ -192,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
       });
   });
 
-  suite.test('getBoolAttrs', function () {
+  suite.test('getBoolAttrs', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getBoolAttrs(), {
       CONTROLS: {}, LOOP: {}, AUTOPLAY: {}, SELECTED: {}, READONLY: {}, NOWRAP: {},
@@ -204,7 +204,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getBlockElements', function () {
+  suite.test('getBlockElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getBlockElements(), {
       SUMMARY: {}, MAIN: {}, DETAILS: {}, ASIDE: {}, HGROUP: {}, SECTION: {}, ARTICLE: {}, FOOTER: {}, HEADER: {},
@@ -222,7 +222,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getShortEndedElements', function () {
+  suite.test('getShortEndedElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getShortEndedElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
@@ -234,7 +234,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getNonEmptyElements', function () {
+  suite.test('getNonEmptyElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getNonEmptyElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
@@ -250,7 +250,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getWhiteSpaceElements', function () {
+  suite.test('getWhiteSpaceElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getWhiteSpaceElements(), {
       IFRAME: {}, NOSCRIPT: {}, OBJECT: {}, PRE: {}, CODE: {},
@@ -260,7 +260,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getTextBlockElements', function () {
+  suite.test('getTextBlockElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getTextBlockElements(), {
       ADDRESS: {}, MAIN: {}, ARTICLE: {}, ASIDE: {}, BLOCKQUOTE: {}, CENTER: {}, DIR: {}, DIV: {},
@@ -274,7 +274,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('getTextInlineElements', function () {
+  suite.test('getTextInlineElements', () => {
     const schema = Schema();
     LegacyUnit.deepEqual(schema.getTextInlineElements(), {
       B: {}, CITE: {}, CODE: {}, DFN: {}, EM: {}, FONT: {}, I: {}, MARK: {}, Q: {},
@@ -300,7 +300,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ]));
   });
 
-  suite.test('isValidChild', function () {
+  suite.test('isValidChild', () => {
     const schema = Schema();
     ok(schema.isValidChild('body', 'p'));
     ok(schema.isValidChild('ul', 'LI'));
@@ -310,14 +310,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(!schema.isValidChild('p', 'body'));
   });
 
-  suite.test('getElementRule', function () {
+  suite.test('getElementRule', () => {
     const schema = Schema();
     ok(!!schema.getElementRule('b'));
     ok(!schema.getElementRule('bx'));
     ok(!schema.getElementRule(null));
   });
 
-  suite.test('addCustomElements', function () {
+  suite.test('addCustomElements', () => {
     const schema = Schema({ valid_elements: 'inline,block' });
     schema.addCustomElements('~inline,block');
     ok(!!schema.getElementRule('inline'));
@@ -327,7 +327,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(schema.isValidChild('p', 'inline'));
   });
 
-  suite.test('addValidChildren', function () {
+  suite.test('addValidChildren', () => {
     let schema = Schema();
     ok(schema.isValidChild('body', 'p'));
     ok(!schema.isValidChild('body', 'body'));
@@ -342,7 +342,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(!schema.isValidChild('body', 'p'));
   });
 
-  suite.test('addCustomElements/getCustomElements', function () {
+  suite.test('addCustomElements/getCustomElements', () => {
     const schema = Schema();
     schema.addCustomElements('~inline,block');
     ok(!!schema.getBlockElements().block);
@@ -351,7 +351,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(!!schema.getCustomElements().block);
   });
 
-  suite.test('whitespaceElements', function () {
+  suite.test('whitespaceElements', () => {
     let schema = Schema({ whitespace_elements : 'pre,p' });
     ok(!!schema.getWhiteSpaceElements().pre);
     ok(!schema.getWhiteSpaceElements().span);
@@ -360,42 +360,42 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(!!schema.getWhiteSpaceElements().code);
   });
 
-  suite.test('selfClosingElements', function () {
+  suite.test('selfClosingElements', () => {
     const schema = Schema({ self_closing_elements : 'pre,p' });
     ok(!!schema.getSelfClosingElements().pre);
     ok(!!schema.getSelfClosingElements().p);
     ok(!schema.getSelfClosingElements().li);
   });
 
-  suite.test('shortEndedElements', function () {
+  suite.test('shortEndedElements', () => {
     const schema = Schema({ short_ended_elements : 'pre,p' });
     ok(!!schema.getShortEndedElements().pre);
     ok(!!schema.getShortEndedElements().p);
     ok(!schema.getShortEndedElements().img);
   });
 
-  suite.test('booleanAttributes', function () {
+  suite.test('booleanAttributes', () => {
     const schema = Schema({ boolean_attributes : 'href,alt' });
     ok(!!schema.getBoolAttrs().href);
     ok(!!schema.getBoolAttrs().alt);
     ok(!schema.getBoolAttrs().checked);
   });
 
-  suite.test('nonEmptyElements', function () {
+  suite.test('nonEmptyElements', () => {
     const schema = Schema({ non_empty_elements : 'pre,p' });
     ok(!!schema.getNonEmptyElements().pre);
     ok(!!schema.getNonEmptyElements().p);
     ok(!schema.getNonEmptyElements().img);
   });
 
-  suite.test('blockElements', function () {
+  suite.test('blockElements', () => {
     const schema = Schema({ block_elements : 'pre,p' });
     ok(!!schema.getBlockElements().pre);
     ok(!!schema.getBlockElements().p);
     ok(!schema.getBlockElements().h1);
   });
 
-  suite.test('isValid', function () {
+  suite.test('isValid', () => {
     const schema = Schema({ valid_elements : 'a[href],i[*]' });
 
     ok(schema.isValid('a'));
@@ -407,7 +407,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     ok(schema.isValid('i', 'id'));
   });
 
-  suite.test('validStyles', function () {
+  suite.test('validStyles', () => {
     let schema = Schema({ valid_styles: 'color,font-size' });
     LegacyUnit.deepEqual(schema.getValidStyles(), {
       '*': [
@@ -448,7 +448,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('invalidStyles', function () {
+  suite.test('invalidStyles', () => {
     let schema = Schema({ invalid_styles: 'color,font-size' });
     LegacyUnit.deepEqual(schema.getInvalidStyles(), {
       '*': {
@@ -489,7 +489,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  suite.test('validClasses', function () {
+  suite.test('validClasses', () => {
     let schema = Schema({ valid_classes: 'classA,classB' });
     LegacyUnit.deepEqual(schema.getValidClasses(), {
       '*': {
@@ -530,7 +530,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', function (success, fa
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

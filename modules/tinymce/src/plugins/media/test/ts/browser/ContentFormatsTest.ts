@@ -6,13 +6,13 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Media: Object retain as is', function (editor) {
+  suite.test('TestCase-TBA: Media: Object retain as is', (editor) => {
     editor.setContent(
       '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +
       '<param name="movie" value="someurl">' +
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: Embed retain as is', function (editor) {
+  suite.test('TestCase-TBA: Media: Embed retain as is', (editor) => {
     editor.setContent(
       '<embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed>'
     );
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: Video retain as is', function (editor) {
+  suite.test('TestCase-TBA: Media: Video retain as is', (editor) => {
     editor.setContent(
       '<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
     );
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: Iframe retain as is', function (editor) {
+  suite.test('TestCase-TBA: Media: Iframe retain as is', (editor) => {
     editor.setContent(
       '<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
     );
@@ -62,7 +62,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: Audio retain as is', function (editor) {
+  suite.test('TestCase-TBA: Media: Audio retain as is', (editor) => {
     editor.setContent(
       '<audio src="sound.mp3">' +
       '<track kind="captions" src="foo.en.vtt" srclang="en" label="English">' +
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: Resize complex object', function (editor) {
+  suite.test('TestCase-TBA: Media: Resize complex object', (editor) => {
     editor.settings.media_live_embeds = false;
     editor.setContent(
       '<video width="300" height="150" controls="controls">' +
@@ -122,7 +122,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     delete editor.settings.media_live_embeds;
   });
 
-  suite.test('TestCase-TBA: Media: Media script elements', function (editor) {
+  suite.test('TestCase-TBA: Media: Media script elements', (editor) => {
     editor.setContent(
       '<script src="http://media1.tinymce.com/123456"></sc' + 'ript>' +
       '<script src="http://media2.tinymce.com/123456"></sc' + 'ript>'
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     );
   });
 
-  suite.test('TestCase-TBA: Media: XSS content', function (editor) {
+  suite.test('TestCase-TBA: Media: XSS content', (editor) => {
     function testXss(input, expectedOutput) {
       editor.setContent(input);
       LegacyUnit.equal(editor.getContent(), expectedOutput);
@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', function 
     testXss('<p><audio><script><svg></svg></script></audio>', '<p><audio></audio></p>');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Media: Test media content formats', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'media',

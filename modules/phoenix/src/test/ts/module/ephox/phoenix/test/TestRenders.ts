@@ -3,13 +3,13 @@ import { Arr, Optional } from '@ephox/katamari';
 import { TypedItem } from 'ephox/phoenix/api/Main';
 
 const typeditem = function (a: TypedItem<Gene, undefined>): string {
-  return a.fold(function (item) {
+  return a.fold((item) => {
     return 'boundary(' + item.id + ')';
-  }, function (item) {
+  }, (item) => {
     return 'empty(' + item.id + ')';
-  }, function (item) {
+  }, (item) => {
     return 'text("' + item.text + '")';
-  }, function (item) {
+  }, (item) => {
     return 'text("' + item.text + '")';
   });
 };

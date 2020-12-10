@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.FindInlinePatternTest', 
     };
 
     return Chain.label('Get inline ' + Arr.map(patterns, asStr).join(', '),
-      Chain.mapper<Editor, InlinePatternMatch[]>(function (editor) {
+      Chain.mapper<Editor, InlinePatternMatch[]>((editor) => {
         return findPatterns(editor, patterns, space);
       })
     );

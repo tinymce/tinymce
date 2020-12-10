@@ -28,13 +28,13 @@ function scale(image: HTMLImageElement | HTMLCanvasElement, dW: number, dH: numb
 
   const scaled = _scale(image, wRatio, hRatio);
 
-  return !scaleCapped ? scaled : scaled.then(function (tCanvas) {
+  return !scaleCapped ? scaled : scaled.then((tCanvas) => {
     return scale(tCanvas, dW, dH);
   });
 }
 
 function _scale(image: HTMLImageElement | HTMLCanvasElement, wRatio: number, hRatio: number): Promise<HTMLCanvasElement> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     const sW = ImageSize.getWidth(image);
     const sH = ImageSize.getHeight(image);
     const dW = Math.floor(sW * wRatio);

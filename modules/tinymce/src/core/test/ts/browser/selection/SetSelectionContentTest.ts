@@ -5,18 +5,18 @@ import { SugarElement } from '@ephox/sugar';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', (success, failure) => {
 
   Theme();
 
   const sSetContent = function (editor, content, args) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       SetSelectionContent.setContent(editor, content, args);
     });
   };
 
   const sSetContentOverride = function (editor, content, overrideContent, args) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const handler = function (e) {
         if (e.selection === true) {
           e.preventDefault();
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', function
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const root = SugarElement.fromDom(editor.getBody());
 

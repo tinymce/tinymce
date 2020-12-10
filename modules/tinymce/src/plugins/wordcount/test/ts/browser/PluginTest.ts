@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   };
 
   const sAssertWordcount = function (num: number) {
-    return Logger.t(`Assert word count ${num}`, Step.sync(function () {
+    return Logger.t(`Assert word count ${num}`, Step.sync(() => {
       const countEl = DOMUtils.DOM.select('.tox-statusbar__wordcount')[0];
       const value = countEl ? countEl.innerText : '';
       Assertions.assertEq('wordcount', num + ' WORDS', value.toUpperCase());
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   };
 
   const sFakeTyping = function (editor: Editor, str: string) {
-    return Logger.t(`Fake typing ${str}`, Step.sync(function () {
+    return Logger.t(`Fake typing ${str}`, Step.sync(() => {
       editor.getBody().innerHTML = '<p>' + str + '</p>';
       Keyboard.keystroke(Keys.space(), {}, TinyDom.fromDom(editor.getBody()));
     }));
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
   };
 
   const sExecCommand = function (editor: Editor, command: string) {
-    return Logger.t(`Execute ${command}`, Step.sync(function () {
+    return Logger.t(`Execute ${command}`, Step.sync(() => {
       editor.execCommand(command);
     }));
   };
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.plugins.wordcount.PluginTest', (success, fai
     ]));
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

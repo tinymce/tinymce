@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as EditorView from 'tinymce/core/EditorView';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', (success, failure) => {
 
   Theme();
 
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
   };
 
   const getIframeClientRect = function (editor) {
-    return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map(function (elm) {
+    return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map((elm) => {
       return elm.dom.getBoundingClientRect();
     }).getOrDie();
   };
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
   const sSetBodyStyles = function (editor, css) {
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
-      Step.sync(function () {
+      Step.sync(() => {
         Css.setAll(SugarElement.fromDom(editor.getBody()), css);
       })
     );
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', function (succes
     Assert.eq('Editor should be attached to the DOM', true, attached);
   });
 
-  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     const sSetContentToBigDiv = Step.label(

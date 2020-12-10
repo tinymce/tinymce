@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import * as Family from 'ephox/phoenix/api/general/Family';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('RangeTest', function () {
+UnitTest.test('RangeTest', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('a', 'div', [
@@ -41,7 +41,7 @@ UnitTest.test('RangeTest', function () {
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
     const actual = Family.range(doc, start, delta1, finish, delta2);
-    assert.eq(expected, Arr.map(actual, function (x) { return x.id; }));
+    assert.eq(expected, Arr.map(actual, (x) => { return x.id; }));
   };
 
   check([ 'a' ], 'a', 'a', 0, 0); // This doesn't check that it is a text node. Is that a problem?

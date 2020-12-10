@@ -94,7 +94,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
 
   const cGetContainer = Chain.mapper((editor: any) => SugarElement.fromDom(editor.editorContainer));
 
-  const cSetContent = (content: string) => Chain.mapper(function (editor: any) {
+  const cSetContent = (content: string) => Chain.mapper((editor: any) => {
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   });
 

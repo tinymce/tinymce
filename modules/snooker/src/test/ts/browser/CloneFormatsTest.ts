@@ -4,7 +4,7 @@ import { Html, Insert, SugarElement } from '@ephox/sugar';
 import { CellSpan } from 'ephox/snooker/api/Generators';
 import * as TableFill from 'ephox/snooker/api/TableFill';
 
-UnitTest.test('CloneFormatsTest', function () {
+UnitTest.test('CloneFormatsTest', () => {
   const doc = SugarElement.fromDom(document);
   const noCloneFormats = Optional.some([] as string[]);
   const cloneTableFill = TableFill.cellOperations(Fun.noop, doc, Optional.none());

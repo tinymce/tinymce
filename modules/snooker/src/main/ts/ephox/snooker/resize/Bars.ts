@@ -39,8 +39,8 @@ const destroy = function (wire: ResizeWire): void {
 
 const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create: (origin: SugarPosition, info: T) => SugarElement<HTMLDivElement>): void {
   const origin = wire.origin();
-  Arr.each(positions, function (cpOption) {
-    cpOption.each(function (cp) {
+  Arr.each(positions, (cpOption) => {
+    cpOption.each((cp) => {
       const bar = create(origin, cp);
       Class.add(bar, resizeBar);
       Insert.append(wire.parent(), bar);
@@ -49,7 +49,7 @@ const drawBar = function <T> (wire: ResizeWire, positions: Optional<T>[], create
 };
 
 const refreshCol = function (wire: ResizeWire, colPositions: Optional<BarPositions.ColInfo>[], position: SugarPosition, tableHeight: number): void {
-  drawBar(wire, colPositions, function (origin, cp) {
+  drawBar(wire, colPositions, (origin, cp) => {
     const colBar = Bar.col(cp.col, cp.x - origin.left, position.top - origin.top, BAR_THICKNESS, tableHeight);
     Class.add(colBar, resizeColBar);
     return colBar;
@@ -57,7 +57,7 @@ const refreshCol = function (wire: ResizeWire, colPositions: Optional<BarPositio
 };
 
 const refreshRow = function (wire: ResizeWire, rowPositions: Optional<BarPositions.RowInfo>[], position: SugarPosition, tableWidth: number): void {
-  drawBar(wire, rowPositions, function (origin, cp) {
+  drawBar(wire, rowPositions, (origin, cp) => {
     const rowBar = Bar.row(cp.row, position.left - origin.left, cp.y - origin.top, tableWidth, BAR_THICKNESS);
     Class.add(rowBar, resizeRowBar);
     return rowBar;
@@ -94,13 +94,13 @@ const each = function (wire: ResizeWire, f: (bar: SugarElement<HTMLDivElement>, 
 };
 
 const hide = function (wire: ResizeWire): void {
-  each(wire, function (bar) {
+  each(wire, (bar) => {
     Css.set(bar, 'display', 'none');
   });
 };
 
 const show = function (wire: ResizeWire): void {
-  each(wire, function (bar) {
+  each(wire, (bar) => {
     Css.set(bar, 'display', 'block');
   });
 };

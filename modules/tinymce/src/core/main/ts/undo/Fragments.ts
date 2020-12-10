@@ -65,7 +65,7 @@ const removeAt = function (elm: Element, index: number) {
 
 const applyDiff = function (diff, elm: Element) {
   let index = 0;
-  Arr.each(diff, function (action) {
+  Arr.each(diff, (action) => {
     if (action[0] === Diff.KEEP) {
       index++;
     } else if (action[0] === Diff.INSERT) {
@@ -78,7 +78,7 @@ const applyDiff = function (diff, elm: Element) {
 };
 
 const read = function (elm: Element): string[] {
-  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), function (item) {
+  return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), (item) => {
     return item.length > 0;
   });
 };

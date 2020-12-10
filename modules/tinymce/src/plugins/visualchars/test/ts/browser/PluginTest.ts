@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualchars.PluginTest', (success, f
   Plugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 

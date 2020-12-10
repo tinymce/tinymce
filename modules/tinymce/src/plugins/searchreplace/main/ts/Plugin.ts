@@ -13,7 +13,7 @@ import { SearchState } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('searchreplace', function (editor) {
+  PluginManager.add('searchreplace', (editor) => {
     const currentSearchState = Cell<SearchState>({
       index: -1,
       count: 0,

@@ -156,7 +156,7 @@ const Quirks = function (editor: Editor): Quirks {
       return selection === allSelection;
     };
 
-    editor.on('keydown', function (e) {
+    editor.on('keydown', (e) => {
       const keyCode = e.keyCode;
       let isCollapsed, body;
 
@@ -221,7 +221,7 @@ const Quirks = function (editor: Editor): Quirks {
 
       // Case 2 IME doesn't initialize if you click the documentElement it also doesn't properly fire the focusin event
       // Needs to be both down/up due to weird rendering bug on Chrome Windows
-      dom.bind(editor.getDoc(), 'mousedown mouseup', function (e) {
+      dom.bind(editor.getDoc(), 'mousedown mouseup', (e) => {
         let rng;
 
         if (e.target === editor.getDoc().documentElement) {
@@ -253,7 +253,7 @@ const Quirks = function (editor: Editor): Quirks {
    * It also fixes a bug on Firefox where it's impossible to delete HR elements.
    */
   const removeHrOnBackspace = function () {
-    editor.on('keydown', function (e) {
+    editor.on('keydown', (e) => {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         // Check if there is any HR elements this is faster since getRng on IE 7 & 8 is slow
         if (!editor.getBody().getElementsByTagName('hr').length) {
@@ -287,7 +287,7 @@ const Quirks = function (editor: Editor): Quirks {
     // Fix for a focus bug in FF 3.x where the body element
     // wouldn't get proper focus if the user clicked on the HTML element
     if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
-      editor.on('mousedown', function (e) {
+      editor.on('mousedown', (e) => {
         if (!isDefaultPrevented(e) && e.target.nodeName === 'HTML') {
           const body = editor.getBody();
 
@@ -295,7 +295,7 @@ const Quirks = function (editor: Editor): Quirks {
           body.blur();
 
           // Refocus the body after a little while
-          Delay.setEditorTimeout(editor, function () {
+          Delay.setEditorTimeout(editor, () => {
             body.focus();
           });
         }
@@ -308,7 +308,7 @@ const Quirks = function (editor: Editor): Quirks {
    * by clicking on them so we need to fake that.
    */
   const selectControlElements = function () {
-    editor.on('click', function (e) {
+    editor.on('click', (e) => {
       const target = e.target;
 
       // Workaround for bug, http://bugs.webkit.org/show_bug.cgi?id=12250
@@ -349,7 +349,7 @@ const Quirks = function (editor: Editor): Quirks {
         if (target !== editor.getBody()) {
           dom.setAttrib(target, 'style', null);
 
-          each(template, function (attr: Attr) {
+          each(template, (attr: Attr) => {
             target.setAttributeNode(attr.cloneNode(true) as Attr);
           });
         }
@@ -361,7 +361,7 @@ const Quirks = function (editor: Editor): Quirks {
         dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock);
     };
 
-    editor.on('keypress', function (e) {
+    editor.on('keypress', (e) => {
       let applyAttributes;
 
       if (!isDefaultPrevented(e) && (e.keyCode === 8 || e.keyCode === 46) && isSelectionAcrossElements()) {
@@ -373,13 +373,13 @@ const Quirks = function (editor: Editor): Quirks {
       }
     });
 
-    dom.bind(editor.getDoc(), 'cut', function (e) {
+    dom.bind(editor.getDoc(), 'cut', (e) => {
       let applyAttributes;
 
       if (!isDefaultPrevented(e) && isSelectionAcrossElements()) {
         applyAttributes = getAttributeApplyFunction();
 
-        Delay.setEditorTimeout(editor, function () {
+        Delay.setEditorTimeout(editor, () => {
           applyAttributes();
         });
       }
@@ -391,7 +391,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Therefore, disable Backspace when cursor immediately follows a table.
    */
   const disableBackspaceIntoATable = function () {
-    editor.on('keydown', function (e) {
+    editor.on('keydown', (e) => {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
           const previousSibling = selection.getNode().previousSibling;
@@ -415,7 +415,7 @@ const Quirks = function (editor: Editor): Quirks {
    */
   const removeBlockQuoteOnBackSpace = function () {
     // Add block quote deletion handler
-    editor.on('keydown', function (e) {
+    editor.on('keydown', (e) => {
       let rng, parent;
 
       if (isDefaultPrevented(e) || e.keyCode !== VK.BACKSPACE) {
@@ -482,7 +482,7 @@ const Quirks = function (editor: Editor): Quirks {
    */
   const addBrAfterLastLinks = function () {
     const fixLinks = function () {
-      each(dom.select('a'), function (node) {
+      each(dom.select('a'), (node) => {
         let parentNode: Node = node.parentNode;
         const root = dom.getRoot();
 
@@ -500,7 +500,7 @@ const Quirks = function (editor: Editor): Quirks {
       });
     };
 
-    editor.on('SetContent ExecCommand', function (e) {
+    editor.on('SetContent ExecCommand', (e) => {
       if (e.type === 'setcontent' || e.command === 'mceInsertLink') {
         fixLinks();
       }
@@ -525,7 +525,7 @@ const Quirks = function (editor: Editor): Quirks {
    */
   const normalizeSelection = function () {
     // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
-    editor.on('keyup focusin mouseup', function (e) {
+    editor.on('keyup focusin mouseup', (e) => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
       // better exclude any key combinations with the modifiers to avoid double normalization
       // (also addresses TINY-1130)
@@ -557,7 +557,7 @@ const Quirks = function (editor: Editor): Quirks {
    */
   const restoreFocusOnKeyDown = function () {
     if (!editor.inline) {
-      editor.on('keydown', function () {
+      editor.on('keydown', () => {
         if (document.activeElement === document.body) {
           editor.getWin().focus();
         }
@@ -577,7 +577,7 @@ const Quirks = function (editor: Editor): Quirks {
   const bodyHeight = function () {
     if (!editor.inline) {
       editor.contentStyles.push('body {min-height: 150px}');
-      editor.on('click', function (e) {
+      editor.on('click', (e) => {
         let rng;
 
         if (e.target.nodeName === 'HTML') {
@@ -605,7 +605,7 @@ const Quirks = function (editor: Editor): Quirks {
    */
   const blockCmdArrowNavigation = function () {
     if (Env.mac) {
-      editor.on('keydown', function (e) {
+      editor.on('keydown', (e) => {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
@@ -629,7 +629,7 @@ const Quirks = function (editor: Editor): Quirks {
    * 2) If you hold down the finger it will display the link/image touch callout menu.
    */
   const tapLinksAndImages = function () {
-    editor.on('click', function (e) {
+    editor.on('click', (e) => {
       let elm = e.target;
 
       do {
@@ -705,8 +705,8 @@ const Quirks = function (editor: Editor): Quirks {
    * For example this: <form><button></form>
    */
   const blockFormSubmitInsideEditor = function () {
-    editor.on('init', function () {
-      editor.dom.bind(editor.getBody(), 'submit', function (e) {
+    editor.on('init', () => {
+      editor.dom.bind(editor.getBody(), 'submit', (e) => {
         e.preventDefault();
       });
     });
@@ -721,7 +721,7 @@ const Quirks = function (editor: Editor): Quirks {
    *  3) Paste and it will add BR element to table cell.
    */
   const removeAppleInterchangeBrs = function () {
-    parser.addNodeFilter('br', function (nodes) {
+    parser.addNodeFilter('br', (nodes) => {
       let i = nodes.length;
 
       while (i--) {
@@ -737,11 +737,11 @@ const Quirks = function (editor: Editor): Quirks {
    * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
    */
   const ieInternalDragAndDrop = function () {
-    editor.on('dragstart', function (e) {
+    editor.on('dragstart', (e) => {
       setMceInternalContent(e);
     });
 
-    editor.on('drop', function (e) {
+    editor.on('drop', (e) => {
       if (!isDefaultPrevented(e)) {
         const internalContent = getMceInternalContent(e);
 

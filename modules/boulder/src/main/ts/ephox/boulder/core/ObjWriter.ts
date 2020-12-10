@@ -6,7 +6,7 @@ const wrap = function <V> (key: string, value: V): { [key: string]: V} {
 
 const wrapAll = function <K extends string | number, T> (keyvalues: Array<{ key: K; value: T }>): Record<K, T> {
   const r = {} as Record<K, T>;
-  Arr.each(keyvalues, function (kv) {
+  Arr.each(keyvalues, (kv) => {
     r[kv.key] = kv.value;
   });
   return r;

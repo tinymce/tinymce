@@ -94,7 +94,7 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
   if (Settings.getEventRoot(editor)) {
     if (!customEventRootDelegates) {
       customEventRootDelegates = {};
-      editor.editorManager.on('removeEditor', function () {
+      editor.editorManager.on('removeEditor', () => {
         if (!editor.editorManager.activeEditor) {
           if (customEventRootDelegates) {
             Obj.each(customEventRootDelegates, (_value, name) => {
@@ -154,7 +154,7 @@ const EditorObservable: EditorObservable = {
   bindPendingEventDelegates() {
     const self = (this as Editor);
 
-    Tools.each(self._pendingNativeEvents, function (name) {
+    Tools.each(self._pendingNativeEvents, (name) => {
       bindEventDelegate(self, name);
     });
   },

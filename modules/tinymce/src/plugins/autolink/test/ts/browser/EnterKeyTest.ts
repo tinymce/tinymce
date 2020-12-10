@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
   Theme();
   AutoLinkPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, fa
         tinyApis.sSetContent('<p>abcdefghijk</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 'abcdefghijk'.length),
         tinyActions.sContentKeystroke(Keys.enter(), {}),
-        Step.sync(function () {
+        Step.sync(() => {
           try {
             editor.fire('keydown', { keyCode: 13 });
           } catch (error) {

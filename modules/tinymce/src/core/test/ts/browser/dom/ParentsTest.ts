@@ -4,16 +4,16 @@ import { Arr } from '@ephox/katamari';
 import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import * as Parents from 'tinymce/core/dom/Parents';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) => {
 
   const cCreateStructure = function (html) {
-    return Chain.injectThunked(function () {
+    return Chain.injectThunked(() => {
       return SugarElement.fromHtml(html);
     });
   };
 
   const cParentsUntil = function (startPath, rootPath, predicate) {
-    return Chain.mapper(function (structure: any) {
+    return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsUntil(startNode, rootNode, predicate);
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
   };
 
   const cParents = function (startPath, rootPath) {
-    return Chain.mapper(function (structure: any) {
+    return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parents(startNode, rootNode);
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
   };
 
   const cParentsAndSelf = function (startPath, rootPath) {
-    return Chain.mapper(function (structure: any) {
+    return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
       return Parents.parentsAndSelf(startNode, rootNode);
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
   };
 
   const cAssertElementNames = function (expectedNames) {
-    return Chain.mapper(function (parents: SugarElement[]) {
+    return Chain.mapper((parents: SugarElement[]) => {
       const names = Arr.map(parents, SugarNode.name);
       Assertions.assertEq('Should be expected names', expectedNames, names);
       return {};
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', function (success, fa
         cAssertElementNames([ '#text', 'u', 'i' ])
       ]))
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

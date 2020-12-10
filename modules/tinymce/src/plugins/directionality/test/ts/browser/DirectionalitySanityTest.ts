@@ -11,7 +11,7 @@ UnitTest.asynctest(
     DirectionalityPlugin();
     SilverTheme();
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
@@ -20,7 +20,7 @@ UnitTest.asynctest(
           tinyApis.sSetContent('a'),
           tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
           tinyUi.sClickOnToolbar('click on ltr btn', 'button[title="Right to left"]'),
-          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -32,7 +32,7 @@ UnitTest.asynctest(
             });
           })),
           tinyUi.sClickOnToolbar('click on rtl btn', 'button[title="Left to right"]'),
-          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
             return s.element('body', {
               children: [
                 s.element('p', {

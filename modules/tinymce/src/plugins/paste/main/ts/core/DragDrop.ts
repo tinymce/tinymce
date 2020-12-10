@@ -31,7 +31,7 @@ const setFocusedRange = function (editor: Editor, rng: Range) {
 const setup = function (editor: Editor, clipboard: Clipboard, draggingInternallyState) {
   // Block all drag/drop events
   if (Settings.shouldBlockDrop(editor)) {
-    editor.on('dragend dragover draggesture dragdrop drop drag', function (e) {
+    editor.on('dragend dragover draggesture dragdrop drop drag', (e) => {
       e.preventDefault();
       e.stopPropagation();
     });
@@ -39,7 +39,7 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
 
   // Prevent users from dropping data images on Gecko
   if (!Settings.shouldPasteDataImages(editor)) {
-    editor.on('drop', function (e) {
+    editor.on('drop', (e) => {
       const dataTransfer = e.dataTransfer;
 
       if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
@@ -48,7 +48,7 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
     });
   }
 
-  editor.on('drop', function (e) {
+  editor.on('drop', (e) => {
     const rng = getCaretRangeFromEvent(editor, e);
 
     if (e.isDefaultPrevented() || draggingInternallyState.get()) {
@@ -69,8 +69,8 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
         e.preventDefault();
 
         // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
-        Delay.setEditorTimeout(editor, function () {
-          editor.undoManager.transact(function () {
+        Delay.setEditorTimeout(editor, () => {
+          editor.undoManager.transact(() => {
             if (dropContent['mce-internal']) {
               editor.execCommand('Delete');
             }
@@ -90,11 +90,11 @@ const setup = function (editor: Editor, clipboard: Clipboard, draggingInternally
     }
   });
 
-  editor.on('dragstart', function (_e) {
+  editor.on('dragstart', (_e) => {
     draggingInternallyState.set(true);
   });
 
-  editor.on('dragover dragend', function (e) {
+  editor.on('dragover dragend', (e) => {
     if (Settings.shouldPasteDataImages(editor) && draggingInternallyState.get() === false) {
       e.preventDefault();
       setFocusedRange(editor, getCaretRangeFromEvent(editor, e));

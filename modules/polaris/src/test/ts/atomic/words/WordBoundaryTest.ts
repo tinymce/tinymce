@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as StringMapper from 'ephox/polaris/words/StringMapper';
 import * as WordBoundary from 'ephox/polaris/words/WordBoundary';
 
-UnitTest.test('Words.WordBoundaryTest', function () {
+UnitTest.test('Words.WordBoundaryTest', () => {
   const iwb = function (str: string, index: number) {
     return WordBoundary.isWordBoundary(StringMapper.classify(str.split('')), index);
   };

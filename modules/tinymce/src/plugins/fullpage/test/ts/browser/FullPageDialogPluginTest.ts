@@ -7,7 +7,7 @@ import { SugarBody, SugarElement, Value } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/fullpage/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', (success, failure) => {
   Plugin();
   Theme();
 
@@ -148,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     ])
   );
 
-  const sOpenDialog = (editor) => Logger.t('Open dialog', Step.sync(function () {
+  const sOpenDialog = (editor) => Logger.t('Open dialog', Step.sync(() => {
     editor.execCommand('mceFullPageProperties');
   }));
 
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
     ])
   );
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const doc = SugarElement.fromDom(document);
     Pipeline.async({},
       Log.steps('TBA', 'FullPage: Test initial data, set new input values, open dialog, verify that the dialog data matches the input values', [

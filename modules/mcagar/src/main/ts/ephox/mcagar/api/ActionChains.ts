@@ -11,11 +11,11 @@ export interface ActionChains {
   cUiKeydown: <T> (code: number, modifiers?: Record<string, any>) => Chain<T, T>;
 }
 
-const cIDoc = Chain.mapper(function (editor: Editor) {
+const cIDoc = Chain.mapper((editor: Editor) => {
   return SugarElement.fromDom(editor.getDoc());
 });
 
-const cUiDoc = Chain.injectThunked(function () {
+const cUiDoc = Chain.injectThunked(() => {
   return SugarElement.fromDom(document);
 });
 
@@ -23,7 +23,7 @@ const cTriggerKeyEvent = function <T> (cTarget: Chain<T, SugarElement>, evtType:
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cTarget, 'doc'),
     NamedChain.direct('doc', FocusTools.cGetFocused, 'activeElement'),
-    NamedChain.direct('activeElement', Chain.op(function (dispatcher) {
+    NamedChain.direct('activeElement', Chain.op((dispatcher) => {
       Keyboard[evtType](code, modifiers, dispatcher);
     }), '_'),
     NamedChain.output(NamedChain.inputName())

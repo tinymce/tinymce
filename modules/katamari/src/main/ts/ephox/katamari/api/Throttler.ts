@@ -19,7 +19,7 @@ export const adaptable = function <A extends any[]> (fn: (...a: A) => void, rate
   const throttle = function (...newArgs: A) {
     args = newArgs;
     if (timer === null) {
-      timer = setTimeout(function () {
+      timer = setTimeout(() => {
         const blargs = args === null ? [] : args;
         fn.apply(null, blargs);
         timer = null;
@@ -46,7 +46,7 @@ export const first = function <A extends any[]> (fn: (...a: A) => void, rate: nu
   };
   const throttle = function (...args) {
     if (timer === null) {
-      timer = setTimeout(function () {
+      timer = setTimeout(() => {
         fn.apply(null, args);
         timer = null;
       }, rate);
@@ -74,7 +74,7 @@ export const last = function <A extends any[]> (fn: (...a: A) => void, rate: num
     if (timer !== null) {
       clearTimeout(timer);
     }
-    timer = setTimeout(function () {
+    timer = setTimeout(() => {
       fn.apply(null, args);
       timer = null;
     }, rate);

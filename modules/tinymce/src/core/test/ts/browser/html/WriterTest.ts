@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import Writer from 'tinymce/core/api/html/Writer';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.WriterTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('Comment', function () {
+  suite.test('Comment', () => {
     let writer;
 
     writer = Writer();
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<!---->');
   });
 
-  suite.test('CDATA', function () {
+  suite.test('CDATA', () => {
     let writer;
 
     writer = Writer();
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<![CDATA[]]>');
   });
 
-  suite.test('PI', function () {
+  suite.test('PI', () => {
     let writer;
 
     writer = Writer();
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<?xml encoding="UTF-8" &lt; &gt;?>');
   });
 
-  suite.test('Doctype', function () {
+  suite.test('Doctype', () => {
     let writer;
 
     writer = Writer();
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<!DOCTYPE>');
   });
 
-  suite.test('Text', function () {
+  suite.test('Text', () => {
     let writer;
 
     writer = Writer();
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '');
   });
 
-  suite.test('Text raw', function () {
+  suite.test('Text raw', () => {
     let writer;
 
     writer = Writer();
@@ -82,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '');
   });
 
-  suite.test('Start', function () {
+  suite.test('Start', () => {
     let writer;
 
     writer = Writer();
@@ -106,13 +106,13 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<br />');
   });
 
-  suite.test('End', function () {
+  suite.test('End', () => {
     const writer = Writer();
     writer.end('b');
     LegacyUnit.equal(writer.getContent(), '</b>');
   });
 
-  suite.test('Indentation', function () {
+  suite.test('Indentation', () => {
     let writer;
 
     writer = Writer({ indent: true, indent_before: 'p', indent_after: 'p' });
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), '<p>a</p>');
   });
 
-  suite.test('Entities', function () {
+  suite.test('Entities', () => {
     let writer;
 
     writer = Writer();
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', function (success, fa
     LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

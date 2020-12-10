@@ -40,19 +40,19 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
 
   const logicalCaret = CaretWalker(getRoot());
 
-  suite.test('inside empty root', function () {
+  suite.test('inside empty root', () => {
     setupHtml('');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), null);
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
   });
 
-  suite.test('on null', function () {
+  suite.test('on null', () => {
     setupHtml('');
     CaretAsserts.assertCaretPosition(logicalCaret.next(null), null);
     CaretAsserts.assertCaretPosition(logicalCaret.prev(null), null);
   });
 
-  suite.test('within text node in root', function () {
+  suite.test('within text node in root', () => {
     setupHtml('abc');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 0)), CaretPosition(getRoot().firstChild, 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot().firstChild, 2));
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().firstChild, 0)), null);
   });
 
-  suite.test('within text node in element', function () {
+  suite.test('within text node in element', () => {
     setupHtml('<p>abc</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p', 0)), findTextPos('p', 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p', 1)), findTextPos('p', 2));
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('p', 0)), null);
   });
 
-  suite.test('from index text node over comment', function () {
+  suite.test('from index text node over comment', () => {
     setupHtml('abcd<!-- x -->efgh');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot().firstChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().lastChild, 0));
@@ -84,46 +84,46 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 3)), CaretPosition(getRoot().lastChild, 4));
   });
 
-  suite.test('from text to text across elements', function () {
+  suite.test('from text to text across elements', () => {
     setupHtml('<p>abc</p><p>def</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), findTextPos('p:last', 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(findTextPos('p:last', 0)), findTextPos('p:first', 3));
   });
 
-  suite.test('from text to text across elements with siblings', function () {
+  suite.test('from text to text across elements with siblings', () => {
     setupHtml('<p>abc<b><!-- x --></b></p><p><b><!-- x --></b></p><p><b><!-- x --></b>def</p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('p:first', 3)), CaretPosition(findElm('p:last').lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last').lastChild, 0)), findTextPos('p:first', 3));
   });
 
-  suite.test('from input to text', function () {
+  suite.test('from input to text', () => {
     setupHtml('123<input>456');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(getRoot().lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 3));
   });
 
-  suite.test('from input to input across elements', function () {
+  suite.test('from input to input across elements', () => {
     setupHtml('<p><input></p><p><input></p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 1)), CaretPosition(findElm('p:last'), 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 1));
   });
 
-  suite.test('next br to br across elements', function () {
+  suite.test('next br to br across elements', () => {
     setupHtml('<p><br></p><p><br></p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p:first'), 0)), CaretPosition(findElm('p:last'), 0));
   });
 
-  suite.test('from text node to before cef span over br', function () {
+  suite.test('from text node to before cef span over br', () => {
     setupHtml('<p>a<br><span contenteditable="false">X</span></p>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(findElm('p'), 1)), CaretPosition(findElm('p'), 2));
   });
 
-  suite.test('prev br to br across elements', function () {
+  suite.test('prev br to br across elements', () => {
     setupHtml('<p><br></p><p><br></p>');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('p:last'), 0)), CaretPosition(findElm('p:first'), 0));
   });
 
-  suite.test('from before/after br to text', function () {
+  suite.test('from before/after br to text', () => {
     setupHtml('<br>123<br>456<br>789');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getChildNode(1), 0));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 2)), CaretPosition(getChildNode(3), 0));
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 0));
   });
 
-  suite.test('over br', function () {
+  suite.test('over br', () => {
     setupHtml('<br><br><br>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -146,7 +146,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
   });
 
-  suite.test('over input', function () {
+  suite.test('over input', () => {
     setupHtml('<input><input><input>');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -158,7 +158,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
   });
 
-  suite.test('over img', function () {
+  suite.test('over img', () => {
     setupHtml('<img src="about:blank"><img src="about:blank"><img src="about:blank">');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 0)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -170,7 +170,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 0)), null);
   });
 
-  suite.test('over script/style/textarea', function () {
+  suite.test('over script/style/textarea', () => {
     setupHtml('a<script>//x</script>b<style>x{}</style>c<textarea>x</textarea>d');
     CaretAsserts.assertCaretPosition(
       logicalCaret.next(CaretPosition(getRoot().firstChild, 1)),
@@ -189,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 2)), CaretPosition(getRoot().childNodes[0], 1));
   });
 
-  suite.test('around tables', function () {
+  suite.test('around tables', () => {
     setupHtml('a<table><tr><td>A</td></tr></table><table><tr><td>B</td></tr></table>b');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 1)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), findTextPos('td:first', 0));
@@ -205,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot(), 1)), CaretPosition(getRoot().firstChild, 1));
   });
 
-  suite.test('over cE=false', function () {
+  suite.test('over cE=false', () => {
     setupHtml('123<span contentEditable="false">a</span>456');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot(), 1));
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot(), 1)), CaretPosition(getRoot(), 2));
@@ -229,17 +229,17 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     });
   */
 
-  suite.test('from after to last element', function () {
+  suite.test('from after to last element', () => {
     setupHtml('<input />');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
   });
 
-  suite.test('from after to last element with br', function () {
+  suite.test('from after to last element with br', () => {
     setupHtml('<input /><br>');
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), CaretPosition(getRoot(), 1));
   });
 
-  suite.test('from inside cE=true in cE=false to after cE=false', function () {
+  suite.test('from inside cE=true in cE=false to after cE=false', () => {
     setupHtml(
       '<p>' +
       '<span contentEditable="false">' +
@@ -255,7 +255,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.next(findTextPos('span span', 3)), CaretPosition(findElm('p'), 1));
   });
 
-  suite.test('around cE=false inside nested cE=true', function () {
+  suite.test('around cE=false inside nested cE=true', () => {
     setupHtml(
       '<span contentEditable="false">' +
       '<span contentEditable="true">' +
@@ -276,7 +276,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(findElm('span span'), 3)), CaretPosition(findElm('span span'), 2));
   });
 
-  suite.test('next from last node', function () {
+  suite.test('next from last node', () => {
     setupHtml(
       '<p><b><input></b></p>' +
       '<input>' +
@@ -287,7 +287,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.next(findElmPos('p:last', 1)), null);
   });
 
-  suite.test('left/right between cE=false inlines in different blocks', function () {
+  suite.test('left/right between cE=false inlines in different blocks', () => {
     setupHtml(
       '<p>' +
       '<span contentEditable="false">abc</span>' +
@@ -301,7 +301,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(findElmPos('p:last', 0)), findElmPos('p:first', 1));
   });
 
-  suite.test('from before/after root', function () {
+  suite.test('from before/after root', () => {
     setupHtml(
       '<p>a</p>' +
       '<p>b</p>'
@@ -311,14 +311,14 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition.after(getRoot())), findTextPos('p:last', 1));
   });
 
-  suite.test('never into caret containers', function () {
+  suite.test('never into caret containers', () => {
     setupHtml('abc<b data-mce-caret="1">def</b>ghi');
     CaretAsserts.assertCaretPosition(logicalCaret.next(CaretPosition(getRoot().firstChild, 3)), CaretPosition(getRoot().lastChild, 0));
     CaretAsserts.assertCaretPosition(logicalCaret.prev(CaretPosition(getRoot().lastChild, 0)), CaretPosition(getRoot().firstChild, 3));
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

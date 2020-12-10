@@ -3,18 +3,18 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', (success, failure) => {
 
   Theme();
 
   const sAssertMenuItemCount = function (expected, _editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actual = document.querySelectorAll('.tox-collection__item').length;
       Assert.eq('Should be correct count', expected, actual);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [

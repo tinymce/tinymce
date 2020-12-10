@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { ActionChains, ApiChains, Editor } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', (success, failure) => {
 
   Theme();
 
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', function 
       ApiChains.cAssertContent('a<br />b'),
       Editor.cRemove
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

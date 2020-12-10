@@ -10,7 +10,7 @@ import * as Api from './api/Api';
 import * as ImportCss from './core/ImportCss';
 
 export default function () {
-  PluginManager.add('importcss', function (editor) {
+  PluginManager.add('importcss', (editor) => {
     ImportCss.setup(editor);
     return Api.get(editor);
   });

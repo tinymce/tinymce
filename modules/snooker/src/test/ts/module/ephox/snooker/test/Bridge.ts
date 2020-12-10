@@ -7,7 +7,7 @@ import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 // Mock/Stub out helper functions
 
 const targetStub = function (selection: { section: number; row: number; column: number}[], bounds: { startRow: number; startCol: number; finishRow: number; finishCol: number}, table: SugarElement): TargetMergable {
-  const cells = Optionals.cat(Arr.map(selection, function (path) {
+  const cells = Optionals.cat(Arr.map(selection, (path) => {
     return Hierarchy.follow(table, [ path.section, path.row, path.column ]);
   }));
 
@@ -27,7 +27,7 @@ const generators: Generators = {
     const tag = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th');
     Insert.append(tag, SugarElement.fromText('?'));
     // We aren't halving widths here, so table widths will not be preserved.p
-    Css.getRaw(prev.element, 'width').each(function (w) {
+    Css.getRaw(prev.element, 'width').each((w) => {
       Css.set(tag, 'width', w);
     });
     return tag;
@@ -35,7 +35,7 @@ const generators: Generators = {
   replace(cell, tag, attrs) {
     const replica = Replication.copy(cell, tag);
     // TODO: Snooker passes null to indicate 'remove attribute'
-    Obj.each(attrs, function (v, k) {
+    Obj.each(attrs, (v, k) => {
       if (v === null) {
         Attribute.remove(replica, k);
       } else {

@@ -49,7 +49,7 @@ const getChildNodes = (node: Node): Node[] => {
     return [];
   }
 
-  return ArrUtils.reduce(node.childNodes, function (result, node) {
+  return ArrUtils.reduce(node.childNodes, (result, node) => {
     if (isBogus(node) && node.nodeName !== 'BR') {
       result = result.concat(getChildNodes(node));
     } else {
@@ -80,7 +80,7 @@ const normalizedNodeIndex = (node: Node): number => {
   nodes = getChildNodes(normalizedParent(node));
   index = ArrUtils.findIndex(nodes, equal(node), node);
   nodes = nodes.slice(0, index + 1);
-  const numTextFragments = ArrUtils.reduce(nodes, function (result, node, i) {
+  const numTextFragments = ArrUtils.reduce(nodes, (result, node, i) => {
     if (isText(node) && isText(nodes[i - 1])) {
       result++;
     }
@@ -144,7 +144,7 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
   path.push(createPathItem(container));
   parents = parentsUntil(root, container);
   parents = ArrUtils.filter(parents, Fun.not(NodeType.isBogus));
-  path = path.concat(ArrUtils.map(parents, function (node) {
+  path = path.concat(ArrUtils.map(parents, (node) => {
     return createPathItem(node);
   }));
 
@@ -154,7 +154,7 @@ const create = (root: Node, caretPosition: CaretPosition): string => {
 const resolvePathItem = (node: Node, name: string, index: number): Node => {
   let nodes = getChildNodes(node);
 
-  nodes = ArrUtils.filter(nodes, function (node, index) {
+  nodes = ArrUtils.filter(nodes, (node, index) => {
     return !isText(node) || !isText(nodes[index - 1]);
   });
 
@@ -202,7 +202,7 @@ const resolve = (root: Node, path: string): CaretPosition => {
   const paths = parts[0].split('/');
   offset = parts.length > 1 ? parts[1] : 'before';
 
-  const container = ArrUtils.reduce(paths, function (result, value) {
+  const container = ArrUtils.reduce(paths, (result, value) => {
     const match = /([\w\-\(\)]+)\[([0-9]+)\]/.exec(value);
     if (!match) {
       return null;

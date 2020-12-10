@@ -10,7 +10,7 @@ const words = function (allText: string): WordScope[] {
   const len = allText.length;
 
   // FIX ... I may possibly index strings elsewhere.
-  return Arr.map(matches, function (x) {
+  return Arr.map(matches, (x) => {
     const start = x.start;
     const finish = x.finish;
     const text = allText.substring(start, finish);

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
   SilverTheme();
   ImagePlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
     Pipeline.async({}, [

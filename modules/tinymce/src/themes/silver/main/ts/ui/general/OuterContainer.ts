@@ -136,17 +136,17 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
     focusToolbar(comp) {
       const optToolbar = Composite.parts.getPart(comp, detail, 'toolbar').orThunk(() => Composite.parts.getPart(comp, detail, 'multiple-toolbar'));
 
-      optToolbar.each(function (toolbar) {
+      optToolbar.each((toolbar) => {
         Keying.focusIn(toolbar);
       });
     },
     setMenubar(comp, menus) {
-      Composite.parts.getPart(comp, detail, 'menubar').each(function (menubar) {
+      Composite.parts.getPart(comp, detail, 'menubar').each((menubar) => {
         SilverMenubar.setMenus(menubar, menus);
       });
     },
     focusMenubar(comp) {
-      Composite.parts.getPart(comp, detail, 'menubar').each(function (menubar) {
+      Composite.parts.getPart(comp, detail, 'menubar').each((menubar) => {
         SilverMenubar.focus(menubar);
       });
     }
@@ -324,7 +324,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
       return apis.getToolbar(comp);
     },
     setToolbar(apis, comp, grps) {
-      const groups = Arr.map(grps, function (grp) {
+      const groups = Arr.map(grps, (grp) => {
         return renderToolbarGroup(grp);
       });
 

@@ -3,11 +3,11 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyHrTest', (success, failure) => {
 
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

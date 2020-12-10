@@ -8,13 +8,13 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest(
   'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',
-  function (success, failure) {
+  (success, failure) => {
     const os = PlatformDetection.detect().os;
 
     Theme();
 
     const sAssertCaretAtZwsp = function (editor) {
-      return Step.sync(function () {
+      return Step.sync(() => {
         const rng = editor.selection.getRng();
         const sc = rng.startContainer, so = rng.startOffset;
         const chr = sc.data.substr(so, 1);
@@ -23,7 +23,7 @@ UnitTest.asynctest(
     };
 
     const sAssertCaretAfterZwsp = function (editor) {
-      return Step.sync(function () {
+      return Step.sync(() => {
         const rng = editor.selection.getRng();
         const sc = rng.startContainer, so = rng.startOffset;
         const chr = sc.data.substr(so - 1, 1);
@@ -31,7 +31,7 @@ UnitTest.asynctest(
       });
     };
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
       const tinyActions = TinyActions(editor);
 

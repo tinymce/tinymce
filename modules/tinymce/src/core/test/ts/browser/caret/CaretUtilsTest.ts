@@ -9,7 +9,7 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 import * as CaretAsserts from '../../module/test/CaretAsserts';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const assertRange = CaretAsserts.assertRange;
   const createRange = CaretAsserts.createRange;
@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     return $(selector, getRoot())[0];
   };
 
-  suite.test('isForwards', function () {
+  suite.test('isForwards', () => {
     LegacyUnit.equal(CaretUtils.isForwards(1), true);
     LegacyUnit.equal(CaretUtils.isForwards(10), true);
     LegacyUnit.equal(CaretUtils.isForwards(0), false);
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     LegacyUnit.equal(CaretUtils.isForwards(-10), false);
   });
 
-  suite.test('isBackwards', function () {
+  suite.test('isBackwards', () => {
     LegacyUnit.equal(CaretUtils.isBackwards(1), false);
     LegacyUnit.equal(CaretUtils.isBackwards(10), false);
     LegacyUnit.equal(CaretUtils.isBackwards(0), false);
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     LegacyUnit.equal(CaretUtils.isBackwards(-10), true);
   });
 
-  suite.test('findNode', function () {
+  suite.test('findNode', () => {
     setupHtml('<b>abc</b><b><i>123</i></b>def');
 
     const isBold = function (node) {
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), -1, isText, getRoot()), getRoot().lastChild);
   });
 
-  suite.test('getEditingHost', function () {
+  suite.test('getEditingHost', () => {
     setupHtml('<span contentEditable="true"><span contentEditable="false"></span></span>');
 
     LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot(), getRoot()), getRoot());
@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot().firstChild.firstChild, getRoot()), getRoot().firstChild);
   });
 
-  suite.test('getParentBlock', function () {
+  suite.test('getParentBlock', () => {
     setupHtml('<p>abc</p><div><p><table><tr><td>X</td></tr></p></div>');
 
     LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('p:first')), findElm('p:first'));
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('table')), findElm('table'));
   });
 
-  suite.test('isInSameBlock', function () {
+  suite.test('isInSameBlock', () => {
     setupHtml('<p>abc</p><p>def<b>ghj</b></p>');
 
     LegacyUnit.strictEqual(CaretUtils.isInSameBlock(
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     ), true);
   });
 
-  suite.test('isInSameEditingHost', function () {
+  suite.test('isInSameEditingHost', () => {
     setupHtml(
       '<p>abc</p>' +
       'def' +
@@ -156,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     ), false);
   });
 
-  suite.test('normalizeRange', function () {
+  suite.test('normalizeRange', () => {
     setupHtml(
       'abc<span contentEditable="false">1</span>def'
     );
@@ -167,7 +167,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange deep', function () {
+  suite.test('normalizeRange deep', () => {
     setupHtml(
       '<i><b>abc</b></i><span contentEditable="false">1</span><i><b>def</b></i>'
     );
@@ -184,7 +184,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 0)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange break at candidate', function () {
+  suite.test('normalizeRange break at candidate', () => {
     setupHtml(
       '<p><b>abc</b><input></p><p contentEditable="false">1</p><p><input><b>abc</b></p>'
     );
@@ -199,7 +199,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     );
   });
 
-  suite.test('normalizeRange at block caret container', function () {
+  suite.test('normalizeRange at block caret container', () => {
     setupHtml(
       '<p data-mce-caret="before">\u00a0</p><p contentEditable="false">1</p><p data-mce-caret="after">\u00a0</p>'
     );
@@ -210,7 +210,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 1)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange at inline caret container', function () {
+  suite.test('normalizeRange at inline caret container', () => {
     setupHtml(
       'abc<span contentEditable="false">1</span>def'
     );
@@ -232,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[3], 1)), createRange(getRoot(), 3));
   });
 
-  suite.test('normalizeRange at inline caret container (combined)', function () {
+  suite.test('normalizeRange at inline caret container (combined)', () => {
     setupHtml(
       'abc' + ZWSP + '<span contentEditable="false">1</span>' + ZWSP + 'def'
     );
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().lastChild, 1)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange at inline caret container after block', function () {
+  suite.test('normalizeRange at inline caret container after block', () => {
     setupHtml(
       '<p><span contentEditable="false">1</span></p>' + ZWSP + 'abc'
     );
@@ -252,7 +252,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', function (success, fail
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

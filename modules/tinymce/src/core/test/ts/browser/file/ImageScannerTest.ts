@@ -8,7 +8,7 @@ import { ImageScanner } from 'tinymce/core/file/ImageScanner';
 import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -20,11 +20,11 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (succe
   let blobUriSrc;
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
 
-  Conversions.uriToBlob(base64Src).then(function (blob) {
+  Conversions.uriToBlob(base64Src).then((blob) => {
     blobUriSrc = URL.createObjectURL(blob);
   });
 
-  suite.asyncTest('findAll', function (_, done) {
+  suite.asyncTest('findAll', (_, done) => {
     const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     viewBlock.update(
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (succe
       '<img src="' + invalidBlobUriSrc + '">'
     );
 
-    imageScanner.findAll(viewBlock.get()).then(function (result) {
+    imageScanner.findAll(viewBlock.get()).then((result) => {
       done();
       const blobInfo = result[0].blobInfo;
       LegacyUnit.equal(result.length, 3);
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (succe
     });
   });
 
-  suite.asyncTest('findAll (filtered)', function (_, done) {
+  suite.asyncTest('findAll (filtered)', (_, done) => {
     const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     const predicate = function (img) {
@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (succe
       '<img src="' + base64Src + '" data-skip="1">'
     );
 
-    imageScanner.findAll(viewBlock.get(), predicate).then(function (result) {
+    imageScanner.findAll(viewBlock.get(), predicate).then((result) => {
       done();
       LegacyUnit.equal(result.length, 1);
       LegacyUnit.equal('data:image/gif;base64,' + result[0].blobInfo.base64(), base64Src);
@@ -66,11 +66,11 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', function (succe
     });
   });
 
-  Conversions.uriToBlob(base64Src).then(function (blob) {
+  Conversions.uriToBlob(base64Src).then((blob) => {
     blobUriSrc = URL.createObjectURL(blob);
 
     viewBlock.attach();
-    Pipeline.async({}, suite.toSteps({}), function () {
+    Pipeline.async({}, suite.toSteps({}), () => {
       viewBlock.detach();
       success();
     }, failure);

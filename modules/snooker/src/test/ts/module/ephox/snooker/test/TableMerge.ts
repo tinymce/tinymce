@@ -7,15 +7,15 @@ import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';
 
 const mapToStructGrid = function (grid: Structs.ElementNew[][]): Structs.RowCells[] {
-  return Arr.map(grid, function (row) {
+  return Arr.map(grid, (row) => {
     return Structs.rowcells(row, 'tbody');
   });
 };
 
 const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]): void {
   assert.eq(expected.length, actual.length);
-  Arr.each(expected, function (row, i) {
-    Arr.each(row.cells, function (cell, j) {
+  Arr.each(expected, (row, i) => {
+    Arr.each(row.cells, (cell, j) => {
       assert.eq(cell.element, actual[i].cells[j].element);
       assert.eq(cell.isNew, actual[i].cells[j].isNew);
     });
@@ -39,13 +39,13 @@ const mergeTest = function (
     generator(),
     comparator
   );
-  nuGrid.fold(function (err) {
+  nuGrid.fold((err) => {
     if ('error' in expected) {
       assert.eq(expected.error, err);
     } else {
       assert.fail('Failure was unexpected, got error "' + err + '"');
     }
-  }, function (grid) {
+  }, (grid) => {
     if (!('error' in expected)) {
       assertGrids(mapToStructGrid(expected), grid);
     } else {
@@ -53,7 +53,7 @@ const mergeTest = function (
     }
   });
 };
-type Spec = { rows: number; cols: number; grid: Structs.ElementNew[][] };
+interface Spec { rows: number; cols: number; grid: Structs.ElementNew[][] }
 type Asserter = (result: Result<Structs.RowCells[], string>, s: Structs.Address, specA: Spec, specB: Spec) => void;
 const mergeIVTest = function (
   asserter: Asserter,

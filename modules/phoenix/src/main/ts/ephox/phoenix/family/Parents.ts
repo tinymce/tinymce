@@ -8,8 +8,8 @@ const common = function <E, D> (universe: Universe<E, D>, item1: E, item2: E): O
   const item1parents = [ item1 ].concat(universe.up().all(item1));
   const item2parents = [ item2 ].concat(universe.up().all(item2));
 
-  return Arr.find(item1parents, function (x) {
-    return Arr.exists(item2parents, function (y) {
+  return Arr.find(item1parents, (x) => {
+    return Arr.exists(item2parents, (y) => {
       return universe.eq(y, x);
     });
   });

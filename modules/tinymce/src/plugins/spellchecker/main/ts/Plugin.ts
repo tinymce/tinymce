@@ -16,7 +16,7 @@ import * as Buttons from './ui/Buttons';
 import * as SuggestionsMenu from './ui/SuggestionsMenu';
 
 export default function () {
-  PluginManager.add('spellchecker', function (editor, pluginUrl) {
+  PluginManager.add('spellchecker', (editor, pluginUrl) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const startedState = Cell(false);
       const currentLanguageState = Cell<string>(Settings.getLanguage(editor));

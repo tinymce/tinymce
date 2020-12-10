@@ -2,13 +2,13 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Redistribution from 'ephox/snooker/resize/Redistribution';
 import { Size } from '../../../../main/ts/ephox/snooker/resize/Size';
 
-UnitTest.test('RedistributeTest', function () {
+UnitTest.test('RedistributeTest', () => {
   const toStr = function (f: Size) {
-    return f.fold(function (raw) {
+    return f.fold((raw) => {
       return 'invalid[' + raw + ']';
-    }, function (pixels) {
+    }, (pixels) => {
       return 'pixels[' + pixels + ']';
-    }, function (percent) {
+    }, (percent) => {
       return 'percent[' + percent + ']';
     });
   };

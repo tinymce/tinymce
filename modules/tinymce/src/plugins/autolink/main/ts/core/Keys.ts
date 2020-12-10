@@ -174,7 +174,7 @@ const parseCurrentLine = function (editor: Editor, endOffset, delimiter) {
 const setup = function (editor: Editor) {
   let autoUrlDetectState;
 
-  editor.on('keydown', function (e) {
+  editor.on('keydown', (e) => {
     if (e.keyCode === 13) {
       return handleEnter(editor);
     }
@@ -182,7 +182,7 @@ const setup = function (editor: Editor) {
 
   // Internet Explorer has built-in automatic linking for most cases
   if (Env.browser.isIE()) {
-    editor.on('focus', function () {
+    editor.on('focus', () => {
       if (!autoUrlDetectState) {
         autoUrlDetectState = true;
 
@@ -197,13 +197,13 @@ const setup = function (editor: Editor) {
     return;
   }
 
-  editor.on('keypress', function (e) {
+  editor.on('keypress', (e) => {
     if (e.keyCode === 41) {
       return handleEclipse(editor);
     }
   });
 
-  editor.on('keyup', function (e) {
+  editor.on('keyup', (e) => {
     if (e.keyCode === 32) {
       return handleSpacebar(editor);
     }

@@ -9,7 +9,7 @@
   },
   "rules": {
     "@typescript-eslint/camelcase": "off", // leave off
-    "@typescript-eslint/consistent-type-definitions": "off", // leave off
+    "@typescript-eslint/consistent-type-assertions": "error",
     "@typescript-eslint/explicit-module-boundary-types": [ "error", { "allowArgumentsExplicitlyTypedAsAny": true } ],
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
@@ -38,6 +38,7 @@
     "no-multiple-empty-lines": ["error", { "max": 1 }],
     "no-nested-ternary": "error",
     "one-var": "off",
+    "prefer-arrow-callback": "error",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
     "max-len": ["warn", 260],

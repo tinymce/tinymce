@@ -69,7 +69,7 @@ const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
   const recurse = function (newRecent: Optional<E>) {
     return Gather.walk(universe, item, mode, walking).fold(
       terminate,
-      function (prev) {
+      (prev) => {
         return repeat(universe, prev.item, prev.mode, Optional.none(), process, walking, newRecent);
       }
     );
@@ -83,7 +83,7 @@ const repeat = function <E, D> (universe: Universe<E, D>, item: E, mode: Transit
     const text = universe.property().getText(item);
     return process(universe, phase, item, text, offsetOption).fold(
       terminate,
-      function () {
+      () => {
         return recurse(Optional.some(item));
       },
       outcome.success
@@ -96,7 +96,7 @@ const descendToLeft = function <E, D> (universe: Universe<E, D>, item: E, offset
   if (universe.property().isText(item)) {
     return Optional.none<SpotPoint<E>>();
   } else {
-    return Seeker.left(universe, descended.element, universe.property().isText, isRoot).map(function (t) {
+    return Seeker.left(universe, descended.element, universe.property().isText, isRoot).map((t) => {
       return Spot.point(t, universe.property().getText(t).length);
     });
   }
@@ -107,7 +107,7 @@ const descendToRight = function <E, D> (universe: Universe<E, D>, item: E, offse
   if (universe.property().isText(item)) {
     return Optional.none<SpotPoint<E>>();
   } else {
-    return Seeker.right(universe, descended.element, universe.property().isText, isRoot).map(function (t) {
+    return Seeker.right(universe, descended.element, universe.property().isText, isRoot).map((t) => {
       return Spot.point(t, 0);
     });
   }
@@ -115,7 +115,7 @@ const descendToRight = function <E, D> (universe: Universe<E, D>, item: E, offse
 
 const findTextNeighbour = function <E, D> (universe: Universe<E, D>, item: E, offset: number): SpotPoint<E> {
   const stopAt = (item: E) => isBoundary(universe, item);
-  return descendToLeft(universe, item, offset, stopAt).orThunk(function () {
+  return descendToLeft(universe, item, offset, stopAt).orThunk(() => {
     return descendToRight(universe, item, offset, stopAt);
   }).getOr(Spot.point(item, offset));
 };

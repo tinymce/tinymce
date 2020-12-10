@@ -3,21 +3,21 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader } from '@ephox/mcagar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', (success, failure) => {
 
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
-      Logger.t('Pre/post process events', Step.sync(function () {
+      Logger.t('Pre/post process events', Step.sync(() => {
         let preProcessArgs, postProcessArgs;
 
-        editor.on('PreProcess', function (o) {
+        editor.on('PreProcess', (o) => {
           preProcessArgs = o;
           editor.dom.setAttrib(preProcessArgs.node.getElementsByTagName('span')[0], 'class', 'abc');
         });
 
-        editor.on('PostProcess', function (o) {
+        editor.on('PostProcess', (o) => {
           o.content = o.content.replace(/<em>/g, '<em class="123">');
           postProcessArgs = o;
         });

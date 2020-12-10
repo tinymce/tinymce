@@ -4,14 +4,14 @@ import { Optional, Result } from '@ephox/katamari';
 import { Attribute, Focus, SugarElement, Traverse } from '@ephox/sugar';
 import { MobileRealm } from 'tinymce/themes/mobile/ui/IosRealm';
 
-const cGetFocused = Chain.binder(function () {
-  return Focus.active().fold(function () {
+const cGetFocused = Chain.binder(() => {
+  return Focus.active().fold(() => {
     return Result.error('Could not find focused element');
   }, Result.value);
 });
 
-const cGetParent = Chain.binder(function (elem: SugarElement) {
-  return Traverse.parent(elem).fold(function () {
+const cGetParent = Chain.binder((elem: SugarElement) => {
+  return Traverse.parent(elem).fold(() => {
     return Result.error('Could not find parent of ' + AlloyLogger.element(elem));
   }, Result.value);
 });
@@ -24,13 +24,13 @@ const sSetFieldValue = function (value: string) {
 };
 
 const sSetFieldOptValue = function (optVal: Optional<string>) {
-  return optVal.fold(function () {
+  return optVal.fold(() => {
     return Step.pass;
   }, sSetFieldValue);
 };
 
 const sStartEditor = function (alloy: Gui.GuiSystem) {
-  return Step.sync(function () {
+  return Step.sync(() => {
     const button = UiFinder.findIn(alloy.element, '[role="button"]').getOrDie();
     const x = alloy.getByDom(button).getOrDie();
     AlloyTriggers.emit(x, NativeEvents.click());
@@ -39,7 +39,7 @@ const sStartEditor = function (alloy: Gui.GuiSystem) {
 
 const sClickComponent = function (realm: MobileRealm, memento: MementoRecord) {
   return Chain.asStep({ }, [
-    Chain.injectThunked(function () {
+    Chain.injectThunked(() => {
       return memento.get(realm.socket).element;
     }),
     Mouse.cClick
@@ -49,7 +49,7 @@ const sClickComponent = function (realm: MobileRealm, memento: MementoRecord) {
 const sWaitForToggledState = function (label: string, state: boolean, realm: MobileRealm, memento: MementoRecord) {
   return Waiter.sTryUntil(
     label,
-    Step.sync(function () {
+    Step.sync(() => {
       const component = memento.get(realm.socket);
       Assertions.assertEq(
         'Selected/Pressed state of component: (' + Attribute.get(component.element, 'class') + ')',
@@ -63,7 +63,7 @@ const sWaitForToggledState = function (label: string, state: boolean, realm: Mob
 };
 
 const sBroadcastState = function (realm: MobileRealm, channels: string[], command: string, state: boolean) {
-  return Step.sync(function () {
+  return Step.sync(() => {
     realm.system.broadcastOn(channels, {
       command,
       state

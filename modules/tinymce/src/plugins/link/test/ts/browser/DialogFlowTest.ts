@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, fail
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = TinyDom.fromDom(document);

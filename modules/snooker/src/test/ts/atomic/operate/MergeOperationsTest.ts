@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as MergingOperations from 'ephox/snooker/operate/MergingOperations';
 
-UnitTest.test('MergeOperationsTest', function () {
+UnitTest.test('MergeOperationsTest', () => {
   const b = Structs.bounds;
   const r = Structs.rowcells;
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
@@ -14,8 +14,8 @@ UnitTest.test('MergeOperationsTest', function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], bounds: Structs.Bounds, lead: string) {
       const actual = MergingOperations.merge(grid, bounds, Fun.tripleEquals, Fun.constant(lead as unknown as SugarElement));
       assert.eq(expected.length, actual.length);
-      Arr.each(expected, function (row, i) {
-        Arr.each(row.cells, function (cell, j) {
+      Arr.each(expected, (row, i) => {
+        Arr.each(row.cells, (cell, j) => {
           assert.eq(cell.element, actual[i].cells[j].element);
           assert.eq(cell.isNew, actual[i].cells[j].isNew);
         });
@@ -85,8 +85,8 @@ UnitTest.test('MergeOperationsTest', function () {
     const check = function (expected: Structs.RowCells[], grid: Structs.RowCells[], target: string) {
       const actual = MergingOperations.unmerge(grid, target as unknown as SugarElement, Fun.tripleEquals, Fun.constant('?') as any);
       assert.eq(expected.length, actual.length);
-      Arr.each(expected, function (row, i) {
-        Arr.each(row.cells, function (cell, j) {
+      Arr.each(expected, (row, i) => {
+        Arr.each(row.cells, (cell, j) => {
           assert.eq(cell.element, actual[i].cells[j].element);
           assert.eq(cell.isNew, actual[i].cells[j].isNew);
         });

@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
   TextpatternPlugin();
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       Step.label('Italic format on single word using space 1', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
         Step.label('Check italic format was applied around the "a" and trailing whitespace',
-          tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
             return Utils.bodyStruct([
               s.element('p', {
                 children: [
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Bold/italic format on single word using space', GeneralSteps.sequence([
         Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
-        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return Utils.bodyStruct([
             s.element('p', {
               children: [
@@ -89,7 +89,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
       ])),
       Step.label('Bold/italic format on single word using enter', GeneralSteps.sequence([
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '***a***'),
-        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return Utils.bodyStruct([
             s.element('p', {
               children: [
@@ -167,7 +167,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', 
         Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [ 0, 1 ]),
         tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
       ])),
-      Step.label('getPatterns/setPatterns', Step.sync(function () {
+      Step.label('getPatterns/setPatterns', Step.sync(() => {
         // Store the original patterns
         const origPatterns = editor.plugins.textpattern.getPatterns();
 

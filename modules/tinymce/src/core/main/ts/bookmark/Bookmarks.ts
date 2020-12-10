@@ -16,7 +16,7 @@ const getBookmark = function (selection: EditorSelection, type: number, normaliz
 };
 
 const moveToBookmark = function (selection: EditorSelection, bookmark: Bookmark) {
-  ResolveBookmark.resolve(selection, bookmark).each(function (rng) {
+  ResolveBookmark.resolve(selection, bookmark).each((rng) => {
     selection.setRng(rng);
   });
 };

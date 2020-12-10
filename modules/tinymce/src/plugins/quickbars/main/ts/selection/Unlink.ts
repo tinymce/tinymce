@@ -41,7 +41,7 @@ const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
   const selection = editor.selection;
   const bookmark = Bookmark.create(dom, selection.getRng());
 
-  Tools.each(elms, function (elm) {
+  Tools.each(elms, (elm) => {
     editor.dom.remove(elm, true);
   });
 

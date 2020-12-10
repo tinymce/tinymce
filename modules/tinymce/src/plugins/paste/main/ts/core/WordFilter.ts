@@ -51,7 +51,7 @@ function isNumericList(text) {
 
   text = text.replace(/^[\u00a0 ]+/, '');
 
-  Tools.each(patterns, function (pattern) {
+  Tools.each(patterns, (pattern) => {
     if (pattern.test(text)) {
       found = true;
       return false;
@@ -230,7 +230,7 @@ function filterStyles(editor: Editor, validStyles, node, styleValue) {
   let outputStyles = {}, matches;
   const styles = editor.dom.parseStyle(styleValue);
 
-  Tools.each(styles, function (value, name) {
+  Tools.each(styles, (value, name) => {
     // Convert various MS styles to W3C styles
     switch (name) {
       case 'mso-list':
@@ -370,7 +370,7 @@ const filterWordContent = function (editor: Editor, content: string) {
 
   // Add style/class attribute to all element rules since the user might have removed them from
   // paste_word_valid_elements config option and we need to check them for properties
-  Tools.each(schema.elements, function (rule) {
+  Tools.each(schema.elements, (rule) => {
     /* eslint dot-notation:0*/
     if (!rule.attributes.class) {
       rule.attributes.class = {};
@@ -387,7 +387,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   const domParser = DomParser({}, schema);
 
   // Filter styles to remove "mso" specific styles and convert some of them
-  domParser.addAttributeFilter('style', function (nodes) {
+  domParser.addAttributeFilter('style', (nodes) => {
     let i = nodes.length, node;
 
     while (i--) {
@@ -402,7 +402,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   });
 
   // Check the class attribute for comments or del items and remove those
-  domParser.addAttributeFilter('class', function (nodes) {
+  domParser.addAttributeFilter('class', (nodes) => {
     let i = nodes.length, node, className;
 
     while (i--) {
@@ -418,7 +418,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   });
 
   // Remove all del elements since we don't want the track changes code in the editor
-  domParser.addNodeFilter('del', function (nodes) {
+  domParser.addNodeFilter('del', (nodes) => {
     let i = nodes.length;
 
     while (i--) {
@@ -427,7 +427,7 @@ const filterWordContent = function (editor: Editor, content: string) {
   });
 
   // Keep some of the links and anchors
-  domParser.addNodeFilter('a', function (nodes) {
+  domParser.addNodeFilter('a', (nodes) => {
     let i = nodes.length, node, href, name;
 
     while (i--) {

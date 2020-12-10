@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   Theme();
 
   const sScrollReset = function (editor: Editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.getWin().scrollTo(0, 0);
     });
   };
@@ -20,25 +20,25 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   const sSetContent = function (editor: Editor, tinyApis: TinyApis, html: string) {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
-      Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(function () {
+      Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(() => {
         Assertions.assertEq('Scroll body should be more than 100', true, editor.getBody().scrollHeight > 100);
       }))
     ]);
   };
 
   const sScrollIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
     });
   };
 
   const sScrollElementIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(function () {
+  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(() => {
     const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
     const rng = editor.dom.createRng();
     rng.setStart(x.dom, offset);
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   });
 
   const sAssertScrollPosition = function (editor: Editor, x: number, y: number) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
       const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
       Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, x, actualX);
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const sAssertApproxScrollPosition = function (editor: Editor, x: number, y: number) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actualX = editor.dom.getViewPort(editor.getWin()).x;
       const actualY = editor.dom.getViewPort(editor.getWin()).y;
       Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
@@ -66,7 +66,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const mBindScrollIntoViewEvent = function (editor: Editor) {
-    return Step.stateful(function (_value, next, _die) {
+    return Step.stateful((_value, next, _die) => {
       const state = Cell({});
 
       const handler = function (e) {
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
   };
 
   const mAssertScrollIntoViewEventInfo = function (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) {
-    return Step.stateful(function (value: any, next, _die) {
+    return Step.stateful((value: any, next, _die) => {
       const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
       const actualTarget = SugarElement.fromDom(value.state.get().elm);
       Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
@@ -196,7 +196,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     return /PhantomJS/.test(window.navigator.userAgent);
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason

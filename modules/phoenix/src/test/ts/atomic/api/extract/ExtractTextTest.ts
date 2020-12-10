@@ -3,7 +3,7 @@ import { Gene, TestUniverse, TextGene, Universe } from '@ephox/boss';
 import * as Extract from 'ephox/phoenix/api/general/Extract';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('ExtractTextTest', function () {
+UnitTest.test('ExtractTextTest', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [

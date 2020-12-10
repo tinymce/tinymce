@@ -7,7 +7,7 @@ import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {
@@ -22,13 +22,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
   };
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cNormalizeRange = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
       const rng = document.createRange();
@@ -41,12 +41,12 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
   };
 
   const cAssertRange = function (startPath, startOffset, endPath, endOffset) {
-    return Chain.op(function (range) {
+    return Chain.op((range) => {
       assertRange(viewBlock.get(), range, startPath, startOffset, endPath, endOffset);
     });
   };
 
-  const cAssertRangeNone = Chain.op(function (range: Optional<any>) {
+  const cAssertRangeNone = Chain.op((range: Optional<any>) => {
     Assertions.assertEq('Should be none', true, range.isNone());
   });
 
@@ -294,7 +294,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
       ]))
     ])),
 
-    Logger.t('Normalize on document', Step.sync(function () {
+    Logger.t('Normalize on document', Step.sync(() => {
       const doc = document.implementation.createHTMLDocument('');
       const rng = document.createRange();
       const dom = DOMUtils(doc, { root_element: doc.body });
@@ -307,7 +307,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', function
       const normRng = NormalizeRange.normalize(dom, rng);
       assertRange(doc.body, normRng, [ 0, 0 ], 0, [ 0, 0 ], 0);
     }))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

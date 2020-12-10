@@ -19,16 +19,16 @@ const getPlaceholderHtml = function () {
 const setup = function (editor) {
   const separatorHtml = Settings.getSeparatorHtml(editor);
 
-  const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function (a) {
+  const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, (a) => {
     return '\\' + a;
   }), 'gi');
 
-  editor.on('BeforeSetContent', function (e) {
+  editor.on('BeforeSetContent', (e) => {
     e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml());
   });
 
-  editor.on('PreInit', function () {
-    editor.serializer.addNodeFilter('img', function (nodes) {
+  editor.on('PreInit', () => {
+    editor.serializer.addNodeFilter('img', (nodes) => {
       let i = nodes.length, node, className;
 
       while (i--) {

@@ -121,7 +121,7 @@ const dataToHtml = function (editor: Editor, dataIn: MediaData) {
     data.width = data.width || '300';
     data.height = data.height || '150';
 
-    Tools.each(data, function (value, key) {
+    Tools.each(data, (value, key) => {
       data[key] = editor.dom.encode('' + value);
     });
 

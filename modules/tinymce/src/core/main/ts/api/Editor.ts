@@ -800,7 +800,7 @@ class Editor implements EditorObservable {
 
       // Update hidden form element
       if ((form = DOM.getParent(self.id, 'form'))) {
-        each(form.elements, function (elm) {
+        each(form.elements, (elm) => {
           if ((elm as any).name === self.id) {
             (elm as any).value = html;
             return false;

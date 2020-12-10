@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   /* eslint-disable max-len */
 
   const sTeardown = function (editor: Editor) {
-    return Logger.t('Delete settings', Step.sync(function () {
+    return Logger.t('Delete settings', Step.sync(() => {
       delete editor.settings.paste_remove_styles_if_webkit;
       delete editor.settings.paste_retain_style_properties;
       delete editor.settings.paste_enable_default_filters;
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   };
 
   const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
-    return Arr.bind(steps, function (step) {
+    return Arr.bind(steps, (step) => {
       return [ step, sTeardown(editor) ];
     });
   };
@@ -39,10 +39,10 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
   };
 
-  suite.test('TestCase-TBA: Paste: Plain text toggle event', function (editor) {
+  suite.test('TestCase-TBA: Paste: Plain text toggle event', (editor) => {
     const events = [];
 
-    editor.on('PastePlainTextToggle', function (e) {
+    editor.on('PastePlainTextToggle', (e) => {
       events.push({ state: e.state });
     });
 
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     ], 'Should be enabled again');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste simple text content', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste simple text content', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>1TEST4</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste text with meta and nbsp', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste text with meta and nbsp', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1&nbsp;</p>');
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>1 TEST</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste styled text content', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste styled text content', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.settings.paste_remove_styles_if_webkit = false;
@@ -105,7 +105,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>1<strong><em><span style="color: red;">TEST</span></em></strong>4</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste paragraph in paragraph', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste paragraph in paragraph', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>1</p><p>TEST</p><p>4</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste paragraphs in complex paragraph', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste paragraphs in complex paragraph', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p><strong><em>1234</em></strong></p>');
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><strong><em>1</em></strong></p><p>TEST 1</p><p>TEST 2</p><p><strong><em>4</em></strong></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word fake list', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word fake list', (editor) => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -159,7 +159,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ol><li>Version 7.0:</li></ol>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word fake list before BR', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word fake list before BR', (editor) => {
     let rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li><li>Item 4</li><li>Item 5</li><li>Item 6</li></ul><p><br />a</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word fake lists interrupted by header', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word fake lists interrupted by header', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ul><li>List before heading A</li><li>List before heading B</li></ul><h1>heading</h1><ul><li>List after heading A</li><li>List after heading B</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste list like paragraph and list', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste list like paragraph and list', (editor) => {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, {
@@ -201,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><ol><li>Y</li></ol>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste list like paragraph and list (disabled)', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste list like paragraph and list (disabled)', (editor) => {
     editor.setContent('');
 
     editor.settings.paste_convert_word_fake_lists = false;
@@ -215,7 +215,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>ABC. X</p><p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Y</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word table', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word table', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td width="307"><p>Cell 1</p></td><td width="307"><p>Cell 2</p></td></tr><tr><td width="307"><p>Cell 3</p></td><td width="307"><p>Cell 4</p></td></tr></tbody></table><p>&nbsp;</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Office 365', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Office 365', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -239,7 +239,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Google Docs 1', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Google Docs 1', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -251,7 +251,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Google Docs 2', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Google Docs 2', (editor) => {
     const rng = editor.dom.createRng();
 
     editor.setContent('<p>1234</p>');
@@ -273,7 +273,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word without mso markings', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word without mso markings', (editor) => {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
@@ -290,7 +290,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     ));
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word links', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word links', (editor) => {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, {
       content: (
@@ -329,7 +329,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     ));
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word retain styles', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word retain styles', (editor) => {
     editor.settings.paste_retain_style_properties = 'color,background-color,font-family';
 
     // Test color
@@ -345,7 +345,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p style="background-color: #ff0000;">Test</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste Word retain bold/italic styles to elements', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste Word retain bold/italic styles to elements', (editor) => {
     editor.settings.paste_retain_style_properties = 'color';
 
     editor.setContent('');
@@ -364,7 +364,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><strong>bold</strong><em>italic</em><strong><em>bold + italic</em></strong><strong><span style="color: red;">bold + color</span></strong></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste track changes comment', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste track changes comment', (editor) => {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, {
@@ -379,7 +379,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>1</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste nested (UL) word list', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste nested (UL) word list', (editor) => {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, {
@@ -415,7 +415,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Paste: paste nested (OL) word list', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste nested (OL) word list', (editor) => {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, {
@@ -455,7 +455,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Paste: Paste list start index', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste list start index', (editor) => {
     editor.settings.paste_merge_formats = true;
 
     editor.setContent('');
@@ -471,7 +471,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ol start="10"><li>J</li></ol>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste paste_merge_formats: true', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste paste_merge_formats: true', (editor) => {
     editor.settings.paste_merge_formats = true;
 
     editor.setContent('<p><strong>a</strong></p>');
@@ -480,7 +480,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste paste_merge_formats: false', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste paste_merge_formats: false', (editor) => {
     editor.settings.paste_merge_formats = false;
 
     editor.setContent('<p><strong>a</strong></p>');
@@ -489,7 +489,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><strong>a<em><strong>b</strong></em></strong></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: Paste word DIV as P', function (editor) {
+  suite.test('TestCase-TBA: Paste: Paste word DIV as P', (editor) => {
     editor.setContent('');
     editor.execCommand('SelectAll');
     editor.execCommand('mceInsertClipboardContent', false, { content: '<p class="MsoNormal">1</p><div>2</div>' });
@@ -497,7 +497,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   });
 
   if (Env.ie) {
-    suite.test('TestCase-TBA: Paste: Paste part of list from IE', function (editor) {
+    suite.test('TestCase-TBA: Paste: Paste part of list from IE', (editor) => {
       editor.setContent('');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<li>item2</li><li>item3</li>' });
@@ -505,7 +505,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     });
   }
 
-  suite.test('TestCase-TBA: Paste: Disable default filters', function (editor) {
+  suite.test('TestCase-TBA: Paste: Disable default filters', (editor) => {
     editor.settings.paste_enable_default_filters = false;
 
     // Test color
@@ -516,7 +516,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p class="MsoNormal" style="color: #ff0000;">Test</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste invalid content with spans on page', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste invalid content with spans on page', (editor) => {
     const startingContent = '<p>123 testing <span id="x">span later in document</span></p>',
       insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
@@ -529,7 +529,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), insertedContent + startingContent);
   });
 
-  suite.test('TestCase-TBA: Paste: paste plain text with space', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste plain text with space', (editor) => {
     editor.setContent('<p>text</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -540,7 +540,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>t&nbsp;a&nbsp;xt</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste plain text with linefeeds', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste plain text with linefeeds', (editor) => {
     editor.setContent('<p>text</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -551,7 +551,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>ta<br />b<br />c&nbsp;xt</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste plain text with double linefeeds', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste plain text with double linefeeds', (editor) => {
     editor.setContent('<p>text</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -562,7 +562,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>t</p><p>a</p><p>b</p><p>c</p><p>xt</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste plain text with entities', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste plain text with entities', (editor) => {
     editor.setContent('<p>text</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -573,7 +573,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>t&lt; &amp; &gt;xt</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste plain text with paragraphs', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste plain text with paragraphs', (editor) => {
     editor.setContent('<p>text</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 1);
@@ -584,7 +584,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>t</p><p>a<br />&lt;b&gt;b&lt;/b&gt;</p><p>c</p><p>xt</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste data image with paste_data_images: false', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste data image with paste_data_images: false', (editor) => {
     editor.setContent('');
 
     editor.execCommand('mceInsertClipboardContent', false, { content: '<img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">' });
@@ -594,7 +594,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '');
   });
 
-  suite.test('TestCase-TBA: Paste: paste data image with paste_data_images: true', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste data image with paste_data_images: true', (editor) => {
     editor.settings.paste_data_images = true;
 
     editor.setContent('');
@@ -603,14 +603,14 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><img src="data:image/gif;base64,R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" /></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste data with script', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste data with script', (editor) => {
     editor.setContent('');
     editor.execCommand('mceInsertClipboardContent', false, { content: `<p><img src="non-existent.png" onerror="alert('!')" /></p>` });
 
     LegacyUnit.equal(editor.getContent(), '<p><img src="non-existent.png" /></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste pre process text (event)', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste pre process text (event)', (editor) => {
     function callback(e) {
       e.content = 'PRE:' + e.content;
     }
@@ -628,7 +628,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p>c</p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste pre process html (event)', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste pre process html (event)', (editor) => {
     function callback(e) {
       e.content = 'PRE:' + e.content;
     }
@@ -646,7 +646,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><em>c</em></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste post process (event)', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste post process (event)', (editor) => {
     function callback(e) {
       e.node.innerHTML += ':POST';
     }
@@ -664,56 +664,56 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<p><em>c</em></p>');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of conditional comments', function () {
+  suite.test('TestCase-TBA: Paste: paste innerText of conditional comments', () => {
     LegacyUnit.equal(Utils.innerText('<![if !supportLists]>X<![endif]>'), 'X');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of single P', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of single P', (editor) => {
     editor.setContent('<p>a</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of single P with whitespace wrapped content', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of single P with whitespace wrapped content', (editor) => {
     editor.setContent('<p>   a   </p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of two P', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of two P', (editor) => {
     editor.setContent('<p>a</p><p>b</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\n\nb');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of H1 and P', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of H1 and P', (editor) => {
     editor.setContent('<h1>a</h1><p>b</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of P with BR', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of P with BR', (editor) => {
     editor.setContent('<p>a<br>b</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a\nb');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of P with WBR', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of P with WBR', (editor) => {
     editor.setContent('<p>a<wbr>b</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'ab');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of P with VIDEO', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of P with VIDEO', (editor) => {
     editor.setContent('<p>a<video>b<br>c</video>d</p>');
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML), 'a d');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of PRE', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of PRE', (editor) => {
     editor.getBody().innerHTML = '<pre>a\nb\n</pre>';
     LegacyUnit.equal(Utils.innerText(editor.getBody().innerHTML).replace(/\r\n/g, '\n'), 'a\nb\n');
   });
 
-  suite.test('TestCase-TBA: Paste: paste innerText of textnode with whitespace', function (editor) {
+  suite.test('TestCase-TBA: Paste: paste innerText of textnode with whitespace', (editor) => {
     editor.getBody().innerHTML = '<pre> a </pre>';
     LegacyUnit.equal(Utils.innerText((editor.getBody().firstChild as HTMLElement).innerHTML), ' a ');
   });
 
-  suite.test('TestCase-TBA: Paste: trim html from clipboard fragments', function () {
+  suite.test('TestCase-TBA: Paste: trim html from clipboard fragments', () => {
     LegacyUnit.equal(Utils.trimHtml('<!--StartFragment-->a<!--EndFragment-->'), 'a');
     LegacyUnit.equal(Utils.trimHtml('a\n<body>\n<!--StartFragment-->\nb\n<!--EndFragment-->\n</body>\nc'), '\nb\n');
     LegacyUnit.equal(Utils.trimHtml('a<!--StartFragment-->b<!--EndFragment-->c'), 'abc');
@@ -726,7 +726,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   });
 
   if (Env.ie) {
-    suite.test('TestCase-TBA: Paste: paste font and u in anchor', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste font and u in anchor', (editor) => {
       editor.setContent('<p>a</p>');
       LegacyUnit.setSelection(editor, 'p', 1);
 
@@ -739,95 +739,95 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   }
 
   if (Env.webkit) {
-    suite.test('TestCase-TBA: Paste: paste webkit retains text styles runtime styles internal', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit retains text styles runtime styles internal', (editor) => {
       editor.settings.paste_webkit_styles = 'color';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;' });
       LegacyUnit.equal(editor.getContent(), '<p>&lt;span style="color:red"&gt;&lt;span data-mce-style="color:red"&gt;</p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles internal', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles internal', (editor) => {
       editor.settings.paste_webkit_styles = 'color';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; font-size: 42px" data-mce-style="color: red;">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color)', (editor) => {
       editor.settings.paste_webkit_styles = 'color';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="color: red;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep before attr', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep before attr', (editor) => {
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span class="c" style="color:red; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span class="c">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep after attr', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep after attr', (editor) => {
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color:red; text-indent: 10px" title="t">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span title="t">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep before/after attr', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles keep before/after attr', (editor) => {
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span class="c" style="color:red; text-indent: 10px" title="t">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span class="c" title="t">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (background-color)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (background-color)', (editor) => {
       editor.settings.paste_webkit_styles = 'background-color';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="background-color:red; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="background-color: red;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (font-size)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (font-size)', (editor) => {
       editor.settings.paste_webkit_styles = 'font-size';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-size:42px; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="font-size: 42px;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (font-family)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (font-family)', (editor) => {
       editor.settings.paste_webkit_styles = 'font-family';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="font-family:Arial; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="font-family: Arial;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles font-family allowed but not specified', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles font-family allowed but not specified', (editor) => {
       editor.settings.paste_webkit_styles = 'font-family';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<p title="x" style="text-indent: 10px">Test</p>' });
       LegacyUnit.equal(editor.getContent(), '<p title="x">Test</p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (custom styles)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (custom styles)', (editor) => {
       editor.settings.paste_webkit_styles = 'color font-style';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style="color: red; font-style: italic;">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (all)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (all)', (editor) => {
       editor.settings.paste_webkit_styles = 'all';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p><span style=\"color: red; font-style: italic; text-indent: 10px;\">Test</span></p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (none)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (none)', (editor) => {
       editor.settings.paste_webkit_styles = 'none';
       editor.setContent('');
       editor.execCommand('mceInsertClipboardContent', false, { content: '<span style="color: red; font-style: italic; text-indent: 10px">Test</span>' });
       LegacyUnit.equal(editor.getContent(), '<p>Test</p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (named)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (named)', (editor) => {
       editor.settings.paste_webkit_styles = 'color';
 
       editor.setContent('<p style="color:red">Test</span>');
@@ -843,7 +843,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
       LegacyUnit.equal(editor.getContent(), '<p style="color: red;">ab</p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (hex)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (hex)', (editor) => {
       editor.setContent('<p style="color:#ff0000">Test</span>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 
@@ -858,7 +858,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
       LegacyUnit.equal(editor.getContent(), '<p style="color: #ff0000;">abc</p>');
     });
 
-    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (rgb)', function (editor) {
+    suite.test('TestCase-TBA: Paste: paste webkit remove runtime styles (color) in the same (color) (rgb)', (editor) => {
       editor.setContent('<p style="color:rgb(255, 0, 0)">Test</span>');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
 
@@ -874,7 +874,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     });
   }
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, appendTeardown(editor, Log.steps('TBA', 'Paste: Paste sanity tests', suite.toSteps(editor))), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

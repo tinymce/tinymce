@@ -9,7 +9,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -27,13 +27,13 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   };
 
   const teardown = function (done) {
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       EditorManager.remove();
       done();
     }, 0);
   };
 
-  suite.asyncTest('target (initialised properly)', function (_, done) {
+  suite.asyncTest('target (initialised properly)', (_, done) => {
     const elm1 = viewBlock.get().querySelector<HTMLElement>('#elm-1');
 
     EditorManager.init({
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('target (initialise on element without id)', function (_, done) {
+  suite.asyncTest('target (initialise on element without id)', (_, done) => {
     const elm = document.createElement('textarea');
     viewBlock.get().appendChild(elm);
 
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('target (selector option takes precedence over target option)', function (_, done) {
+  suite.asyncTest('target (selector option takes precedence over target option)', (_, done) => {
     const elm1 = document.getElementById('elm-1');
     const elm2 = document.getElementById('elm-2');
 
@@ -79,19 +79,19 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('selector on non existing targets', function (_, done) {
+  suite.asyncTest('selector on non existing targets', (_, done) => {
     EditorManager.init({
       selector: '#non-existing-id',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default'
-    }).then(function (result) {
+    }).then((result) => {
       Assertions.assertEq('Should be an result that is zero length', 0, result.length);
       teardown(done);
     });
   });
 
   if (Env.browser.isIE()) {
-    suite.asyncTest('selector on an unsupported browser', function (_, done) {
+    suite.asyncTest('selector on an unsupported browser', (_, done) => {
       // Fake IE 8
       const oldIeValue = Env.browser.version.major;
       Env.browser.version.major = 8;
@@ -100,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
         selector: '#elm-2',
         skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
         content_css: '/project/tinymce/js/tinymce/skins/content/default'
-      }).then(function (result) {
+      }).then((result) => {
         Assertions.assertEq('Should be an result that is zero length', 0, result.length);
         Env.browser.version.major = oldIeValue;
         teardown(done);
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   }
 
-  suite.asyncTest('target (each editor should have a different target)', function (_, done) {
+  suite.asyncTest('target (each editor should have a different target)', (_, done) => {
     const maxCount = document.querySelectorAll('.elm-even').length;
     const elm1 = document.getElementById('elm-1');
     let count = 0;
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   });
 
-  suite.asyncTest('Test base_url and suffix options', function (_, done) {
+  suite.asyncTest('Test base_url and suffix options', (_, done) => {
     const oldBaseURL = EditorManager.baseURL;
     const oldSuffix = EditorManager.suffix;
 
@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
   });
 
   const getSkinCssFilenames = function () {
-    return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), function (link) {
+    return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), (link) => {
       const href = Attribute.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
       const isSkin = href.indexOf('oxide/') > -1;
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     });
   };
 
-  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful(function (_value, next, die) {
+  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful((_value, next, die) => {
     viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
 
     EditorManager.init({
@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     }).then(next, die);
   }));
 
-  const mAssertEditors = Step.label('mAssertEditors', Step.stateful(function (editors: any[], next, _die) {
+  const mAssertEditors = Step.label('mAssertEditors', Step.stateful((editors: any[], next, _die) => {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     // eslint-disable-next-line no-console
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
       getSkinCssFilenames()
     );
 
-    const targets = Arr.map(editors, function (editor) {
+    const targets = Arr.map(editors, (editor) => {
       return editor.getElement();
     });
 
@@ -236,14 +236,14 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     next(targets);
   }));
 
-  const sRemoveAllEditors = Step.label('sRemoveAllEditors', Step.sync(function () {
+  const sRemoveAllEditors = Step.label('sRemoveAllEditors', Step.sync(() => {
     EditorManager.remove();
   }));
 
-  const mAssertTargets = Step.label('mAssertTargets', Step.stateful(function (targets: any[], next, _die) {
+  const mAssertTargets = Step.label('mAssertTargets', Step.stateful((targets: any[], next, _die) => {
     Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
 
-    Arr.each(targets, function (target) {
+    Arr.each(targets, (target) => {
       Assertions.assertEq('Target parent should not be null', true, target.parentNode !== null);
     });
 
@@ -282,7 +282,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', functio
     Logger.t('Initialize on list item with initial content', GeneralSteps.sequence([
       sInitAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content')
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

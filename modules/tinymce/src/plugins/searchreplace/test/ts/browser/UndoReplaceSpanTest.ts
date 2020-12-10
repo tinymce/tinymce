@@ -11,18 +11,18 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
   SearchreplacePlugin();
 
   const sUndo = function (editor) {
-    return Logger.t('Undo', Step.sync(function () {
+    return Logger.t('Undo', Step.sync(() => {
       editor.undoManager.undo();
     }));
   };
 
   const sRedo = function (editor) {
-    return Logger.t('Redo', Step.sync(function () {
+    return Logger.t('Redo', Step.sync(() => {
       editor.undoManager.redo();
     }));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

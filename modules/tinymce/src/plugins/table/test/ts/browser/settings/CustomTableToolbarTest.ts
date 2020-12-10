@@ -14,14 +14,14 @@ import * as TableTestUtils from '../../module/test/TableTestUtils';
  *
  */
 
-UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', (success, failure) => {
 
   TablePlugin();
   Theme();
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', funct
         TableTestUtils.sOpenToolbarOn(editor, 'table td', [ 0 ]),
         Chain.asStep({}, [
           tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
-          Chain.mapper(function (x) {
+          Chain.mapper((x) => {
             return SelectorFilter.descendants(x, 'button').length;
           }),
           Assertions.cAssertEq('has correct count', 2)

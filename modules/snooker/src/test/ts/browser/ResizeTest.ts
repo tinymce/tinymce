@@ -6,7 +6,7 @@ import { TableSize } from 'ephox/snooker/api/TableSize';
 import * as Deltas from 'ephox/snooker/calc/Deltas';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
-UnitTest.test('ResizeTest', function () {
+UnitTest.test('ResizeTest', () => {
   const resizing = ResizeBehaviour.preserveTable();
 
   const boundBox = '<div style="width: 800px; height: 600px; display: block;"></div>';

@@ -10,13 +10,13 @@ UnitTest.asynctest('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', (suc
   Theme();
   PageBreakPlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'PageBreak: Click on the pagebreak toolbar button and assert pagebreak is inserted', [
       tinyUi.sClickOnToolbar('click on pagebreak button', 'button[aria-label="Page break"]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
+      tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
         return s.element('body', {
           children: [
             s.element('p', {

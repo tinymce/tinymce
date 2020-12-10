@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerChangeLangu
   SpellcheckerPlugin();
   SilverTheme();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({}, Log.steps('TBA', 'Spellchecker: Change language test', [

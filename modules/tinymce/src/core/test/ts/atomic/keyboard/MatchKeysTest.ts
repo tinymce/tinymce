@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 
-UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (success, failure) {
+UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failure) => {
   const state = Cell([]);
 
   const event = function (evt) {
@@ -25,13 +25,13 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
   };
 
   const sTestMatch = function (patterns, event, expectedData) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       state.set([]);
 
       const matches = MatchKeys.match(patterns, event);
       Assertions.assertEq('Should have some matches', true, matches.length > 0);
 
-      Arr.find(matches, function (pattern) {
+      Arr.find(matches, (pattern) => {
         return pattern.action();
       });
 
@@ -40,7 +40,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
   };
 
   const sTestMatchNone = function (patterns, event) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       Assertions.assertEq(
         'Should not produce any matches',
         0,
@@ -50,7 +50,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
   };
 
   const sTestExecute = function (patterns, event, expectedData, expectedMatch) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       state.set([]);
 
       const result = MatchKeys.execute(patterns, event);
@@ -88,14 +88,14 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', function (succe
       [ 'b' ],
       { shiftKey: false, altKey: false, ctrlKey: true, metaKey: true, keyCode: 65, action: actionB }
     ),
-    Logger.t('Action wrapper helper', Step.sync(function () {
-      const action = MatchKeys.action(function (...rest: any[]) {
+    Logger.t('Action wrapper helper', Step.sync(() => {
+      const action = MatchKeys.action((...rest: any[]) => {
         return Array.prototype.slice.call(rest, 0);
       }, 1, 2, 3);
 
       Assertions.assertEq('Should return the parameters passed in', [ 1, 2, 3 ], action());
     }))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

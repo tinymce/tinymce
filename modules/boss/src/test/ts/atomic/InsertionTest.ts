@@ -6,7 +6,7 @@ import * as Locator from 'ephox/boss/mutant/Locator';
 import * as Logger from 'ephox/boss/mutant/Logger';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('InsertionTest', function () {
+UnitTest.test('InsertionTest', () => {
   const data = function (): Gene {
     return Gene('A', '.', [
       Gene('B', '.'),
@@ -56,7 +56,7 @@ UnitTest.test('InsertionTest', function () {
   const checkAfterAll = function (expected: string, input: Gene, anchorId: string, itemIds: string[]) {
     const family = Tracks.track(input, Optional.none());
     const anchor = Locator.byId(family, anchorId).getOrDie('Did not find anchor: ' + anchorId);
-    const items = Arr.map(itemIds, function (itemId) {
+    const items = Arr.map(itemIds, (itemId) => {
       return Locator.byId(family, itemId).getOrDie('Did not find item: ' + itemId);
     });
     Insertion.afterAll(anchor, items);

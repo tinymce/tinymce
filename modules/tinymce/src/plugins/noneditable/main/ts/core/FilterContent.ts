@@ -68,14 +68,14 @@ const setup = function (editor: Editor) {
   const hasNonEditClass = hasClass(nonEditClass);
   const nonEditableRegExps = Settings.getNonEditableRegExps(editor);
 
-  editor.on('PreInit', function () {
+  editor.on('PreInit', () => {
     if (nonEditableRegExps.length > 0) {
-      editor.on('BeforeSetContent', function (e) {
+      editor.on('BeforeSetContent', (e) => {
         convertRegExpsToNonEditable(editor, nonEditableRegExps, e);
       });
     }
 
-    editor.parser.addAttributeFilter('class', function (nodes) {
+    editor.parser.addAttributeFilter('class', (nodes) => {
       let i = nodes.length, node;
 
       while (i--) {
@@ -89,7 +89,7 @@ const setup = function (editor: Editor) {
       }
     });
 
-    editor.serializer.addAttributeFilter(contentEditableAttrName, function (nodes) {
+    editor.serializer.addAttributeFilter(contentEditableAttrName, (nodes) => {
       let i = nodes.length, node;
 
       while (i--) {

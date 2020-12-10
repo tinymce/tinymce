@@ -24,7 +24,7 @@ UnitTest.test('SizeInputConvertTest', () => {
   Jsc.property(
     'All units can convert to themselves',
     Jsc.number(0, largeSensible), Jsc.oneof(Jsc.elements(units)),
-    function (value: number, unit: SizeUnit) {
+    (value: number, unit: SizeUnit) => {
       const outValue = convertUnit(nuSize(value, unit), unit).getOrNull();
       return Jsc.eq(value, outValue);
     }
@@ -34,7 +34,7 @@ UnitTest.test('SizeInputConvertTest', () => {
   Jsc.property(
     'All convertable units should convert back and forth',
     Jsc.number(0, largeSensible), Jsc.oneof(Jsc.elements(convertableUnits)), Jsc.oneof(Jsc.elements(convertableUnits)),
-    function (value: number, unit1: SizeUnit, unit2: SizeUnit) {
+    (value: number, unit1: SizeUnit, unit2: SizeUnit) => {
       const outValue = convertUnit(nuSize(value, unit1), unit2).bind(
         (unit2Value) => convertUnit(nuSize(unit2Value, unit2), unit1)
       ).getOrNull();
@@ -46,7 +46,7 @@ UnitTest.test('SizeInputConvertTest', () => {
   Jsc.property(
     'All non-convertable units can only convert to themselves',
     Jsc.number(0, largeSensible), Jsc.oneof(Jsc.elements(nonConvertable)), Jsc.oneof(Jsc.elements(units)),
-    function (value: number, unit1: SizeUnit, unit2: SizeUnit) {
+    (value: number, unit1: SizeUnit, unit2: SizeUnit) => {
       return Jsc.eq(unit1 === unit2, convertUnit(nuSize(value, unit1), unit2).isSome());
     }
   );

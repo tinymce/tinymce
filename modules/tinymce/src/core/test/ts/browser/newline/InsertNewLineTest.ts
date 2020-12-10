@@ -12,12 +12,12 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
 
   const sInsertNewline = function (editor: Editor, args) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       InsertNewLine.insert(editor, args);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const body = SugarElement.fromDom(editor.getBody());
 

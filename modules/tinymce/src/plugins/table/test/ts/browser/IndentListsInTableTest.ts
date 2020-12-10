@@ -12,13 +12,13 @@ UnitTest.asynctest('browser.tinymce.plugins.table.IndentListsInTableTest', (succ
   ListsPlugin();
 
   const sAssertTableInnerHTML = function (editor, expected) {
-    return Logger.t('Assert table InnerHTML ' + expected, Step.sync(function () {
+    return Logger.t('Assert table InnerHTML ' + expected, Step.sync(() => {
       const actual = editor.getBody().firstChild.innerHTML;
       Assert.eq('Does not have correct html', expected, actual);
     }));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

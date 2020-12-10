@@ -58,7 +58,7 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
   const normalize = function (rng: Range): boolean {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.never,
-      function (normalizedRng) {
+      (normalizedRng) => {
         rng.setStart(normalizedRng.startContainer, normalizedRng.startOffset);
         rng.setEnd(normalizedRng.endContainer, normalizedRng.endOffset);
         return true;

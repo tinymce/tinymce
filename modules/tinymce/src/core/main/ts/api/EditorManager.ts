@@ -50,7 +50,7 @@ const isValidLegacyKey = function (id) {
 
 const globalEventDelegate = function (e) {
   const type = e.type;
-  each(EditorManager.get(), function (editor) {
+  each(EditorManager.get(), (editor) => {
     switch (type) {
       case 'scroll':
         editor.fire('ScrollWindow', e);
@@ -85,7 +85,7 @@ const removeEditorFromList = function (targetEditor: Editor) {
     }
   }
 
-  editors = Arr.filter(editors, function (editor) {
+  editors = Arr.filter(editors, (editor) => {
     return targetEditor !== editor;
   });
 
@@ -418,7 +418,7 @@ const EditorManager: EditorManager = {
       }
 
       if (settings.types) {
-        each(settings.types, function (type) {
+        each(settings.types, (type) => {
           targets = targets.concat(DOM.select(type.selector));
         });
 
@@ -435,14 +435,14 @@ const EditorManager: EditorManager = {
           const l = settings.elements || '';
 
           if (l.length > 0) {
-            each(explode(l), function (id) {
+            each(explode(l), (id) => {
               const elm = DOM.get(id);
 
               if (elm) {
                 targets.push(elm);
               } else {
-                each(document.forms, function (f: HTMLFormElement) {
-                  each(f.elements, function (e: HTMLFormElement) {
+                each(document.forms, (f: HTMLFormElement) => {
+                  each(f.elements, (e: HTMLFormElement) => {
                     if (e.name === id) {
                       id = 'mce_editor_' + instanceCounter++;
                       DOM.setAttrib(e, 'id', id);
@@ -457,7 +457,7 @@ const EditorManager: EditorManager = {
 
         case 'textareas':
         case 'specific_textareas':
-          each(DOM.select('textarea'), function (elm) {
+          each(DOM.select('textarea'), (elm) => {
             if (settings.editor_deselector && hasClass(elm, settings.editor_deselector)) {
               return;
             }
@@ -485,7 +485,7 @@ const EditorManager: EditorManager = {
         const editor: Editor = new Editor(id, settings, self);
         editors.push(editor);
 
-        editor.on('init', function () {
+        editor.on('init', () => {
           if (++initCount === targets.length) {
             provideResults(editors);
           }
@@ -502,8 +502,8 @@ const EditorManager: EditorManager = {
 
       // TODO: Deprecate this one
       if (settings.types) {
-        each(settings.types, function (type) {
-          Tools.each(targets, function (elm: HTMLElement) {
+        each(settings.types, (type) => {
+          Tools.each(targets, (elm: HTMLElement) => {
             if (DOM.is(elm, type.selector)) {
               createEditor(createId(elm), extend({}, settings, type), elm);
               return false;
@@ -516,18 +516,18 @@ const EditorManager: EditorManager = {
         return;
       }
 
-      Tools.each(targets, function (elm) {
+      Tools.each(targets, (elm) => {
         purgeDestroyedEditor(self.get(elm.id));
       });
 
-      targets = Tools.grep(targets, function (elm) {
+      targets = Tools.grep(targets, (elm) => {
         return !self.get(elm.id);
       });
 
       if (targets.length === 0) {
         provideResults([]);
       } else {
-        each(targets, function (elm) {
+        each(targets, (elm) => {
           if (isInvalidInlineTarget(settings, elm)) {
             ErrorReporter.initError('Could not initialize inline editor on invalid inline target element', elm);
           } else {
@@ -540,7 +540,7 @@ const EditorManager: EditorManager = {
     self.settings = settings;
     DOM.bind(window, 'ready', initEditors);
 
-    return new Promise(function (resolve) {
+    return new Promise((resolve) => {
       if (result) {
         resolve(result);
       } else {
@@ -577,7 +577,7 @@ const EditorManager: EditorManager = {
     if (arguments.length === 0) {
       return editors.slice(0);
     } else if (Type.isString(id)) {
-      return Arr.find(editors, function (editor) {
+      return Arr.find(editors, (editor) => {
         return editor.id === id;
       }).getOr(null);
     } else if (Type.isNumber(id)) {
@@ -688,7 +688,7 @@ const EditorManager: EditorManager = {
 
     // Remove editors by selector
     if (Type.isString(selector)) {
-      each(DOM.select(selector), function (elm) {
+      each(DOM.select(selector), (elm) => {
         editor = self.get(elm.id);
 
         if (editor) {
@@ -782,7 +782,7 @@ const EditorManager: EditorManager = {
    * tinyMCE.triggerSave();
    */
   triggerSave() {
-    each(editors, function (editor) {
+    each(editors, (editor) => {
       editor.save();
     });
   },

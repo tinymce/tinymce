@@ -80,7 +80,7 @@ const skipCellsX = function (table: TableModel, x: number, y: number) {
 };
 
 const getWidth = function (rows: TableRowModel[]) {
-  return Arr.foldl(rows, function (acc, row) {
+  return Arr.foldl(rows, (acc, row) => {
     return row.cells.length > acc ? row.cells.length : acc;
   }, 0);
 };
@@ -131,8 +131,8 @@ const createDomTable = function (table: TableModel, rows: SugarElement<HTMLTable
 };
 
 const modelRowsToDomRows = function (table: TableModel) {
-  return Arr.map(table.rows, function (row) {
-    const cells = Arr.map(row.cells, function (cell) {
+  return Arr.map(table.rows, (row) => {
+    const cells = Arr.map(row.cells, (cell) => {
       const td = Replication.deep(cell);
       Attribute.remove(td, 'colspan');
       Attribute.remove(td, 'rowspan');
@@ -148,8 +148,8 @@ const modelRowsToDomRows = function (table: TableModel) {
 const fromDom = function (tableElm: SugarElement<HTMLTableElement>) {
   const table = tableModel(Replication.shallow(tableElm), 0, []);
 
-  Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(tableElm, 'tr'), function (tr, y) {
-    Arr.each(SelectorFilter.descendants<HTMLTableCellElement>(tr, 'td,th'), function (td, x) {
+  Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(tableElm, 'tr'), (tr, y) => {
+    Arr.each(SelectorFilter.descendants<HTMLTableCellElement>(tr, 'td,th'), (td, x) => {
       fillout(table, skipCellsX(table, x, y), y, tr, td);
     });
   });
@@ -162,8 +162,8 @@ const toDom = function (table: TableModel) {
 };
 
 const subsection = function (table: TableModel, startElement: SugarElement<unknown>, endElement: SugarElement<unknown>) {
-  return findElementPos(table, startElement).bind(function (startPos) {
-    return findElementPos(table, endElement).map(function (endPos) {
+  return findElementPos(table, startElement).bind((startPos) => {
+    return findElementPos(table, endElement).map((endPos) => {
       return subTable(table, startPos, endPos);
     });
   });

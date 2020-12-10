@@ -12,7 +12,7 @@ import TestFrameEditor from '../../module/test/ui/TestFrameEditor';
 import * as TestSelectors from '../../module/test/ui/TestSelectors';
 import * as TestStyles from '../../module/test/ui/TestStyles';
 
-UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, failure) {
+UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', (success, failure) => {
   const detection = PlatformDetection.detect();
 
   const realm = IosRealm(Fun.noop);
@@ -45,14 +45,14 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', function (success, fai
   Pipeline.async({}, detection.browser.isChrome() ? [
     TestStyles.sWaitForToolstrip(realm),
     tEditor.sWaitForEditorLoaded,
-    Step.sync(function () {
+    Step.sync(() => {
       tEditor.editor().focus();
     }),
     Mouse.sClickOn(realm.element, TestSelectors.fontsize()),
     tEditor.sAssertEq('on first showing, the font size slider should not have fired execCommand', [ ])
 
     // Think about how to do the slider events
-  ] : [], function () {
+  ] : [], () => {
     unload(); success();
   }, failure);
 });

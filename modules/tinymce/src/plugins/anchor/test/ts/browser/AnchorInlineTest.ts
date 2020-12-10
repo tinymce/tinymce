@@ -9,7 +9,7 @@ UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
   AnchorPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const tinyActions = TinyActions(editor);

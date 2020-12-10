@@ -3,7 +3,7 @@ import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Strings from 'ephox/polaris/api/Strings';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
-UnitTest.test('api.PositionArray.splits', function () {
+UnitTest.test('api.PositionArray.splits', () => {
   const subdivide = function (unit: Parrays.PArrayTestItem, positions: number[]) {
     const tokens = Strings.splits(unit.item, positions);
     return Parrays.make(tokens);

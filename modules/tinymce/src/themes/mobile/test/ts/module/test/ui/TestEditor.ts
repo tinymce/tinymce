@@ -12,7 +12,7 @@ export default function () {
   };
 
   const sPrepareState = function (node, content) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editorState.start.set(node);
       editorState.content.set(content);
     });
