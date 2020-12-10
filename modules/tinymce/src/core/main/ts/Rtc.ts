@@ -43,6 +43,10 @@ interface RtcRuntimeApi {
   hasUndo: () => boolean;
   hasRedo: () => boolean;
   transact: (fn: () => void) => void;
+  reset: () => void;
+  clear: () => void;
+  ignore: (fn: () => void) => void;
+  extra: (fn1: () => void, fn2: () => void) => void;
   canApplyFormat: (format: string) => boolean;
   matchFormat: (format: string, vars: Record<string, string>) => boolean;
   closestFormat: (formats: string) => string;
@@ -194,16 +198,16 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         rtcEditor.redo();
         return createDummyUndoLevel();
       },
-      clear: unsupported,
-      reset: unsupported,
+      clear: () => rtcEditor.clear(),
+      reset: () => rtcEditor.reset(),
       hasUndo: () => rtcEditor.hasUndo(),
       hasRedo: () => rtcEditor.hasRedo(),
       transact: (_undoManager, _locks, fn) => {
         rtcEditor.transact(fn);
         return createDummyUndoLevel();
       },
-      ignore: unsupported,
-      extra: unsupported
+      ignore: (_locks, callback) => rtcEditor.ignore(callback),
+      extra: (_undoManager, _index, callback1, callback2) => rtcEditor.extra(callback1, callback2)
     },
     formatter: {
       match: (name, vars?, _node?) => rtcEditor.matchFormat(name, defaultVars(vars)),
