@@ -27,12 +27,12 @@ export const map = function <T, R> (obj: T, f: (value: T[keyof T], key: string) 
 };
 
 export const tupleMap = function <R, T> (obj: T, f: (value: T[keyof T], key: string) => {k: string; v: any}): R {
-  const r: Record<string, any> = {};
+  const r = {} as R;
   each(obj, (x, i) => {
     const tuple = f(x, i);
     r[tuple.k] = tuple.v;
   });
-  return <R> r;
+  return r;
 };
 
 const objAcc = <K extends number | string | symbol, V> (r: Record<K, V>) => (x: V, i: K): void => {

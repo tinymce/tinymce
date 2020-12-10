@@ -34,7 +34,7 @@ for (let i = 0; i < forms.length; i++) {
       const selector = document.getElementById('selector') as HTMLSelectElement;
       const currOp = getValue(selector);
       const image = document.getElementById('editor') as HTMLImageElement;
-      modify(image, currOp, [].slice.call((<HTMLFormElement> this).elements)
+      modify(image, currOp, [].slice.call((this as HTMLFormElement).elements)
         .filter((el: HTMLElement) => {
           return el.tagName !== 'BUTTON';
         })

@@ -38,7 +38,7 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
       } as any);
     } else {
       // IE 11 doesn't support the UIEvent constructor, so we need to fallback to using createEvent
-      ev = (<Document> element.dom.ownerDocument).createEvent('UIEvent');
+      ev = element.dom.ownerDocument.createEvent('UIEvent');
       ev.initUIEvent(type, true, true, window, null);
     }
     // Patch in the touch properties

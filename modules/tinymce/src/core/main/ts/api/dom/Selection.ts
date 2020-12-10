@@ -277,7 +277,7 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  const getSel = (): Selection | null => win.getSelection ? win.getSelection() : (<any> win.document).selection;
+  const getSel = (): Selection | null => win.getSelection ? win.getSelection() : (win.document as any).selection;
 
   /**
    * Returns the browsers internal range object.

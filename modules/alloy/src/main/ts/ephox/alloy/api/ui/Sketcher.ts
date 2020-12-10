@@ -72,7 +72,7 @@ export interface CompositeSketcherRawDetail<S extends CompositeSketchSpec, D ext
 }
 
 export function isSketchSpec(spec: AlloySpec): spec is SketchSpec {
-  return (<SketchSpec> spec).uid !== undefined;
+  return (spec as SketchSpec).uid !== undefined;
 }
 
 const singleSchema = ValueSchema.objOfOnly([
