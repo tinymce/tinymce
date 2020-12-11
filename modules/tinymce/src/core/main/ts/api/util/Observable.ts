@@ -47,7 +47,7 @@ const Observable: Observable<any> = {
    * @param {Boolean?} bubble True/false if the event is to be bubbled.
    * @return {Object} Event args instance passed in.
    * @example
-   * editor.fire('event', {...});
+   * instance.fire('event', {...});
    */
   fire(name, args?, bubble?) {
     const self = this;
@@ -82,7 +82,7 @@ const Observable: Observable<any> = {
    * @param {Boolean} prepend Optional flag if the event should be prepended. Use this with care.
    * @return {Object} Current class instance.
    * @example
-   * editor.on('event', function(e) {
+   * instance.on('event', function(e) {
    *     // Callback logic
    * });
    */
@@ -100,13 +100,13 @@ const Observable: Observable<any> = {
    * @return {Object} Current class instance.
    * @example
    * // Unbind specific callback
-   * editor.off('event', handler);
+   * instance.off('event', handler);
    *
    * // Unbind all listeners by name
-   * editor.off('event');
+   * instance.off('event');
    *
    * // Unbind all events
-   * editor.off();
+   * instance.off();
    */
   off(name?, callback?) {
     return getEventDispatcher(this).off(name, callback);

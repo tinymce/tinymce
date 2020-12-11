@@ -12,9 +12,13 @@ import Editor from './Editor';
 import I18n from './util/I18n';
 
 /**
- * TinyMCE theme class. Allows for a custom theme to be used with TinyMCE when registered via the ThemeManager.
+ * TinyMCE theme pseudo class. Allows for a custom theme to be used with TinyMCE when registered using the ThemeManager.
  *
- * @summary <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
+ * @summary This is a pseudo class that describes how to create a custom theme for TinyMCE.
+ * <br /><br />
+ * See AddOnManager for more information about the methods available on the ThemeManager instance.
+ * <br /><br />
+ * <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
  * Creating a custom theme may require implementing this functionality.
  * To change TinyMCE's appearance, Tiny recommends changing the Skin instead.
  *
@@ -22,16 +26,18 @@ import I18n from './util/I18n';
  * @example
  * tinymce.ThemeManager.add('MyTheme', function(editor) {
  *     // Setup up custom UI elements in the dom
- *     const div = document.createElement('div');
- *     const iframe = document.createElement('iframe');
+ *     var div = document.createElement('div');
+ *     var iframe = document.createElement('iframe');
  *     document.body.appendChild(div);
  *     document.body.appendChild(iframe);
  *
  *     // Themes should fire the SkinLoaded event once the UI has been created and all StyleSheets have been loaded.
- *     editor.on('init', () => editor.fire('SkinLoaded'));
+ *     editor.on('init', function() {
+ *         editor.fire('SkinLoaded');
+ *     });
  *
  *     // Themes must return a renderUI function that returns the editorContainer. If the editor is not running in inline mode, an iframeContainer should also be returned.
- *     const renderUI = function() {
+ *     var renderUI = function() {
  *         return {
  *             editorContainer: div,
  *             iframeContainer: iframe
@@ -39,12 +45,21 @@ import I18n from './util/I18n';
  *     };
  *
  *     // Return the renderUI function
- *     return { renderUI };
+ *     return {
+ *         renderUI: renderUI
+ *     };
  * });
  */
 
 /**
- * TinyMCE plugin class. Allows for custom plugins to be added to TinyMCE when registered via the PluginManager.
+ * TinyMCE plugin psuedo class. Allows for custom plugins to be added to TinyMCE when registered using the PluginManager.
+ *
+ * @summary This is a pseudo class that describes how to create a custom plugin for TinyMCE.
+ * <br /><br />
+ * A custom plugin registered using <code>PluginManager.add</code> should either not return any value or return plugin metadata as an object that contains the plugin's name and a URL.
+ * The URL is intended to link to help documentation.
+ * <br /><br />
+ * See AddOnManager for more information about the methods available on the PluginManager instance.
  *
  * @class tinymce.Plugin
  * @example
@@ -53,7 +68,7 @@ import I18n from './util/I18n';
  *     // To show this button in the editor, include it in the toolbar setting
  *     editor.ui.registry.addButton('myCustomToolbarButton', {
  *         text: 'My Custom Button',
- *         onAction: function () {
+ *         onAction: function() {
  *             alert('Button clicked!');
  *         }
  *     });
@@ -67,14 +82,17 @@ import I18n from './util/I18n';
  *         }
  *     });
  *
- *     // Return plugin metadata
- *     return {name: 'MyPlugin', url: 'https://mydocs.com/myplugin};
+ *     // Either return plugin metadata or do not return
+ *     return {
+ *         name: 'MyPlugin',
+ *         url: 'https://mydocs.com/myplugin'
+ *     };
  * });
  */
 
 /**
- * This class handles the loading of themes, plugins and other add-ons and their language packs.
- * Superclass of ThemeManager and PluginManager.
+ * This class handles the loading of add-ons and their language packs.
+ * ThemeManager and PluginManager are instances of AddOnManager, and manage themes and plugins.
  *
  * @class tinymce.AddOnManager
  */
@@ -244,7 +262,7 @@ function AddOnManager<T>(): AddOnManager<T> {
      *
      * @method get
      * @param {String} name Add-on to look for.
-     * @return {tinymce.PluginManager} Theme or plugin add-on instance or undefined.
+     * @return {tinymce.Theme/tinymce.Plugin} Theme or plugin add-on instance or undefined.
      */
     get,
 
@@ -264,8 +282,8 @@ function AddOnManager<T>(): AddOnManager<T> {
      *
      * @method add
      * @param {String} id Short name/id for the add-on.
-     * @param {tinymce.PluginManager} addOn Theme or plugin to add.
-     * @return {tinymce.PluginManager} The same theme or plugin instance that got passed in.
+     * @param {tinymce.Theme/tinymce.Plugin} addOn Theme or plugin to add.
+     * @return {tinymce.Theme/tinymce.Plugin} The same theme or plugin instance that got passed in.
      * @example
      * // Create a simple plugin
      * tinymce.create('tinymce.plugins.TestPlugin', {

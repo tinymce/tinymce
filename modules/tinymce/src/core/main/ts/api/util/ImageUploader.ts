@@ -36,7 +36,7 @@ export const createUploader = (editor: Editor, uploadStatus: UploadStatus) =>
 /**
  * This class handles uploading images to a back-end server.
  *
- * @summary Added in TinyMCE 5.7.
+ * @summary <strong>Added in TinyMCE 5.7.</strong>
  *
  * @class tinymce.util.ImageUploader
  */
