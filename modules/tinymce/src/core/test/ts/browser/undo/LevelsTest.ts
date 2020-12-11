@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
 
   Theme();
 
-  const getBookmark = function (editor) {
+  const getBookmark = (editor) => {
     return editor.selection.getBookmark(2, true);
   };
 

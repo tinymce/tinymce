@@ -23,7 +23,7 @@ import Tools from '../util/Tools';
 import DomQuery, { DomQueryConstructor } from './DomQuery';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import Sizzle from './Sizzle';
-import { StyleSheetLoader } from './StyleSheetLoader';
+import StyleSheetLoader from './StyleSheetLoader';
 import DomTreeWalker from './TreeWalker';
 
 /**
@@ -63,10 +63,10 @@ interface AttrHooks {
   };
 }
 
-const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks {
+const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, getContext): AttrHooks => {
   const keepValues: boolean = settings.keep_values;
   const keepUrlHook = {
-    set($elm, value: string, name: string) {
+    set: ($elm, value: string, name: string) => {
       if (settings.url_converter) {
         value = settings.url_converter.call(settings.url_converter_scope || getContext(), value, name, $elm[0]);
       }
@@ -74,14 +74,14 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
       $elm.attr('data-mce-' + name, value).attr(name, value);
     },
 
-    get($elm, name: string) {
+    get: ($elm, name: string) => {
       return $elm.attr('data-mce-' + name) || $elm.attr(name);
     }
   };
 
   const attrHooks: AttrHooks = {
     style: {
-      set($elm, value: string | {}) {
+      set: ($elm, value: string | {}) => {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
@@ -101,7 +101,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
         }
       },
 
-      get($elm) {
+      get: ($elm) => {
         let value = $elm.attr('data-mce-style') || $elm.attr('style');
 
         value = styles.serialize(styles.parse(value), $elm[0].nodeName);
@@ -118,7 +118,7 @@ const setupAttrHooks = function (styles: Styles, settings: Partial<DOMUtilsSetti
   return attrHooks;
 };
 
-const updateInternalStyleAttr = function (styles: Styles, $elm) {
+const updateInternalStyleAttr = (styles: Styles, $elm) => {
   const rawValue = $elm.attr('style');
 
   let value = styles.serialize(styles.parse(rawValue), $elm[0].nodeName);
@@ -130,7 +130,7 @@ const updateInternalStyleAttr = function (styles: Styles, $elm) {
   $elm.attr('data-mce-style', value);
 };
 
-const findNodeIndex = function (node: Node, normalized?: boolean) {
+const findNodeIndex = (node: Node, normalized?: boolean) => {
   let idx = 0, lastNodeType, nodeType;
 
   if (node) {
@@ -279,7 +279,7 @@ interface DOMUtils {
  * @param {Document} doc Document reference to bind the utility class to.
  * @param {settings} settings Optional settings collection.
  */
-function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils {
+const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMUtils => {
   const addedStyles = {};
 
   const win = window;
@@ -556,11 +556,11 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       selectorVal = selector;
 
       if (selector === '*') {
-        selector = function (node) {
+        selector = (node) => {
           return node.nodeType === 1;
         };
       } else {
-        selector = function (node) {
+        selector = (node) => {
           return is(node, selectorVal);
         };
       }
@@ -597,7 +597,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     if (node) {
       // If expression make a function of it using is
       if (typeof selector === 'string') {
-        func = function (node) {
+        func = (node) => {
           return is(node, selector);
         };
       }
@@ -619,7 +619,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
 
   const select = (selector: string, scope?: Node | string) => Sizzle(selector, get(scope) || settings.root_element || doc, []);
 
-  const run = <R, T extends Node>(elm: RunArguments<T>, func: (node: T) => R, scope?): false | R => {
+  const run = function <R, T extends Node> (elm: RunArguments<T>, func: (node: T) => R, scope?): false | R {
     let result;
     const node = typeof elm === 'string' ? get(elm) : elm;
 
@@ -1886,21 +1886,19 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const attrHooks = setupAttrHooks(styles, settings, () => self);
 
   return self;
-}
+};
 
-namespace DOMUtils {
-  /**
-   * Instance of DOMUtils for the current document.
-   *
-   * @static
-   * @property DOM
-   * @type tinymce.dom.DOMUtils
-   * @example
-   * // Example of how to add a class to some element by id
-   * tinymce.DOM.addClass('someid', 'someclass');
-   */
-  export const DOM: DOMUtils = DOMUtils(document);
-  export const nodeIndex = findNodeIndex;
-}
+/**
+ * Instance of DOMUtils for the current document.
+ *
+ * @static
+ * @property DOM
+ * @type tinymce.dom.DOMUtils
+ * @example
+ * // Example of how to add a class to some element by id
+ * tinymce.DOM.addClass('someid', 'someclass');
+ */
+DOMUtils.DOM = DOMUtils(document);
+DOMUtils.nodeIndex = findNodeIndex;
 
 export default DOMUtils;

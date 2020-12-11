@@ -10,17 +10,17 @@ import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import * as NewLineUtils from './NewLineUtils';
 
-const matchesSelector = function (editor: Editor, selector: string) {
+const matchesSelector = (editor: Editor, selector: string) => {
   return NewLineUtils.getParentBlock(editor).filter((parentBlock) => {
     return selector.length > 0 && Selectors.is(SugarElement.fromDom(parentBlock), selector);
   }).isSome();
 };
 
-const shouldInsertBr = function (editor: Editor) {
+const shouldInsertBr = (editor: Editor) => {
   return matchesSelector(editor, Settings.getBrNewLineSelector(editor));
 };
 
-const shouldBlockNewLine = function (editor: Editor) {
+const shouldBlockNewLine = (editor: Editor) => {
   return matchesSelector(editor, Settings.getNoNewLineSelector(editor));
 };
 

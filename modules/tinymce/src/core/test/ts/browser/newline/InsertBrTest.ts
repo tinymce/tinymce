@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertBrTest', (success, failur
 
   Theme();
 
-  const sInsertBr = function (editor) {
+  const sInsertBr = (editor) => {
     return Step.sync(() => {
       InsertBr.insert(editor);
     });

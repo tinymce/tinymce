@@ -11,28 +11,28 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
   const ZWSP = Zwsp.ZWSP;
   const viewBlock = ViewBlock();
 
-  const isInlineTarget = function (elm) {
+  const isInlineTarget = (elm) => {
     return Selectors.is(SugarElement.fromDom(elm), 'a[href],code');
   };
 
-  const createViewElement = function (html) {
+  const createViewElement = (html) => {
     viewBlock.update(html);
     return SugarElement.fromDom(viewBlock.get());
   };
 
-  const createLocation = function (elm, elementPath, offset) {
+  const createLocation = (elm, elementPath, offset) => {
     const container = Hierarchy.follow(elm, elementPath);
     const pos = CaretPosition(container.getOrDie().dom, offset);
     const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom, pos);
     return location;
   };
 
-  const createPosition = function (elm, elementPath, offset) {
+  const createPosition = (elm, elementPath, offset) => {
     const container = Hierarchy.follow(elm, elementPath);
     return CaretPosition(container.getOrDie().dom, offset);
   };
 
-  const locationName = function (location) {
+  const locationName = (location) => {
     return location.fold(
       Fun.constant('before'),
       Fun.constant('start'),
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
     );
   };
 
-  const locationElement = function (location) {
+  const locationElement = (location) => {
     return SugarElement.fromDom(location.fold(
       Fun.identity,
       Fun.identity,
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
     ));
   };
 
-  const sTestValidLocation = function (html, elementPath, offset, expectedLocationName, expectedInline) {
+  const sTestValidLocation = (html, elementPath, offset, expectedLocationName, expectedInline) => {
     return Step.sync(() => {
       const elm = createViewElement(html);
       const location = createLocation(elm, elementPath, offset);
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
     });
   };
 
-  const sTestInvalidLocation = function (html, elementPath, offset) {
+  const sTestInvalidLocation = (html, elementPath, offset) => {
     return Step.sync(() => {
       const elm = createViewElement(html);
       const location = createLocation(elm, elementPath, offset);
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
     });
   };
 
-  const sTestFindLocation = function (forward, html, elementPath, offset, expectedLocationName, expectedInline) {
+  const sTestFindLocation = (forward, html, elementPath, offset, expectedLocationName, expectedInline) => {
     return Step.sync(() => {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (succes
     });
   };
 
-  const sTestFindLocationInvalid = function (forward, html, elementPath, offset) {
+  const sTestFindLocationInvalid = (forward, html, elementPath, offset) => {
     return Step.sync(() => {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);

@@ -14,7 +14,7 @@ import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;
 
-const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name: string) {
+const matchesUnInheritedFormatSelector = (ed: Editor, node: Node, name: string) => {
   // TODO: Is this safe? it doesn't look like it is this could be a block or inline format
   const formatList = ed.formatter.get(name) as SelectorFormat[];
 
@@ -29,7 +29,7 @@ const matchesUnInheritedFormatSelector = function (ed: Editor, node: Node, name:
   return false;
 };
 
-const matchParents = function (editor: Editor, node: Node, name: string, vars: FormatVars) {
+const matchParents = (editor: Editor, node: Node, name: string, vars: FormatVars) => {
   const root = editor.dom.getRoot();
 
   if (node === root) {
@@ -49,7 +49,7 @@ const matchParents = function (editor: Editor, node: Node, name: string, vars: F
   return matchNode(editor, node, name, vars);
 };
 
-const matchName = function (dom: DOMUtils, node: Node, format) {
+const matchName = (dom: DOMUtils, node: Node, format) => {
   // Check for inline match
   if (isEq(node, format.inline)) {
     return true;
@@ -66,7 +66,7 @@ const matchName = function (dom: DOMUtils, node: Node, format) {
   }
 };
 
-const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string, similar: boolean, vars: FormatVars) {
+const matchItems = (dom: DOMUtils, node: Node, format, itemName: string, similar: boolean, vars: FormatVars) => {
   let key, value;
   const items = format[itemName];
   let i;
@@ -110,7 +110,7 @@ const matchItems = function (dom: DOMUtils, node: Node, format, itemName: string
   return format;
 };
 
-const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean) {
+const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, similar?: boolean) => {
   const formatList = ed.formatter.get(name);
   let format, i, x, classes;
   const dom = ed.dom;
@@ -137,7 +137,7 @@ const matchNode = function (ed: Editor, node: Node, name: string, vars?: FormatV
   }
 };
 
-const match = function (editor: Editor, name: string, vars: FormatVars, node) {
+const match = (editor: Editor, name: string, vars: FormatVars, node) => {
   // Check specified node
   if (node) {
     return matchParents(editor, node, name, vars);
@@ -160,7 +160,7 @@ const match = function (editor: Editor, name: string, vars: FormatVars, node) {
   return false;
 };
 
-const matchAll = function (editor: Editor, names: string[], vars: FormatVars) {
+const matchAll = (editor: Editor, names: string[], vars: FormatVars) => {
   const matchedFormatNames: string[] = [];
   const checkedMap: Record<string, boolean> = {};
 
@@ -188,7 +188,7 @@ const closest = (editor: Editor, names: string[]): string | null => {
   ).getOrNull();
 };
 
-const canApply = function (editor: Editor, name: string) {
+const canApply = (editor: Editor, name: string) => {
   const formatList = editor.formatter.get(name);
   let startNode, parents, i, x, selector;
   const dom = editor.dom;

@@ -56,38 +56,38 @@ export interface WindowManagerImpl {
   close: (dialog: InstanceApi<any>) => void;
 }
 
-const WindowManager = function (editor: Editor): WindowManager {
+const WindowManager = (editor: Editor): WindowManager => {
   let dialogs: InstanceApi<any>[] = [];
 
-  const getImplementation = function (): WindowManagerImpl {
+  const getImplementation = (): WindowManagerImpl => {
     const theme = editor.theme;
     return theme && theme.getWindowManagerImpl ? theme.getWindowManagerImpl() : WindowManagerImpl();
   };
 
-  const funcBind = function (scope, f) {
-    return function () {
-      return f ? f.apply(scope, arguments) : undefined;
+  const funcBind = (scope, f) => {
+    return (...args: any[]) => {
+      return f ? f.apply(scope, args) : undefined;
     };
   };
 
-  const fireOpenEvent = function <T> (dialog: InstanceApi<T>) {
+  const fireOpenEvent = <T>(dialog: InstanceApi<T>) => {
     editor.fire('OpenWindow', {
       dialog
     });
   };
 
-  const fireCloseEvent = function <T> (dialog: InstanceApi<T>) {
+  const fireCloseEvent = <T>(dialog: InstanceApi<T>) => {
     editor.fire('CloseWindow', {
       dialog
     });
   };
 
-  const addDialog = function <T> (dialog: InstanceApi<T>) {
+  const addDialog = <T>(dialog: InstanceApi<T>) => {
     dialogs.push(dialog);
     fireOpenEvent(dialog);
   };
 
-  const closeDialog = function <T> (dialog: InstanceApi<T>) {
+  const closeDialog = <T>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
     dialogs = Arr.filter(dialogs, (otherDialog) => {
       return otherDialog !== dialog;
@@ -98,7 +98,7 @@ const WindowManager = function (editor: Editor): WindowManager {
     }
   };
 
-  const getTopDialog = function () {
+  const getTopDialog = () => {
     return Optional.from(dialogs[dialogs.length - 1]);
   };
 
@@ -111,23 +111,25 @@ const WindowManager = function (editor: Editor): WindowManager {
     return dialog;
   };
 
-  const open = function <T> (args, params?: WindowParams): Dialog.DialogInstanceApi<T> {
+  const open = <T>(args, params?: WindowParams): Dialog.DialogInstanceApi<T> => {
     return storeSelectionAndOpenDialog(() => getImplementation().open<T>(args, params, closeDialog));
   };
 
-  const openUrl = function (args): Dialog.UrlDialogInstanceApi {
+  const openUrl = (args): Dialog.UrlDialogInstanceApi => {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
-  const alert = function (message, callback?: () => void, scope?) {
-    getImplementation().alert(message, funcBind(scope ? scope : this, callback));
+  const alert = (message, callback?: () => void, scope?) => {
+    const windowManagerImpl = getImplementation();
+    windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, callback));
   };
 
-  const confirm = function (message, callback?: (state: boolean) => void, scope?) {
-    getImplementation().confirm(message, funcBind(scope ? scope : this, callback));
+  const confirm = (message, callback?: (state: boolean) => void, scope?) => {
+    const windowManagerImpl = getImplementation();
+    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback));
   };
 
-  const close = function () {
+  const close = () => {
     getTopDialog().each((dialog) => {
       getImplementation().close(dialog);
       closeDialog(dialog);

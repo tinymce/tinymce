@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
 
   Theme();
 
-  const trimBrs = function (string: string) {
+  const trimBrs = (string: string) => {
     return string.replace(/<br>/g, '');
   };
 

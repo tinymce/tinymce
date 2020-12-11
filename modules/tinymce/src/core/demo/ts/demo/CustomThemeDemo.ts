@@ -1,6 +1,6 @@
 declare const tinymce: any;
 
-export default function () {
+export default () => {
   const textarea = document.createElement('textarea');
   textarea.rows = 20;
   textarea.cols = 80;
@@ -10,7 +10,7 @@ export default function () {
 
   tinymce.init({
     selector: 'textarea',
-    theme(editor, target) {
+    theme: (editor, target) => {
       const dom = tinymce.DOM;
 
       const editorContainer = dom.insertAfter(dom.create('div', { style: 'border: 1px solid gray' },
@@ -52,4 +52,4 @@ export default function () {
     },
     height: 600
   });
-}
+};

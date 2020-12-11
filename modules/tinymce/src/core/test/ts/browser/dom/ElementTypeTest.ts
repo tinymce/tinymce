@@ -4,13 +4,13 @@ import { SugarElement } from '@ephox/sugar';
 import * as ElementType from 'tinymce/core/dom/ElementType';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure) => {
-  const sCheckElement = function (name, predicate, expectedValue) {
+  const sCheckElement = (name, predicate, expectedValue) => {
     return Step.sync(() => {
       Assertions.assertEq('Should be the expected value for specified element', expectedValue, predicate(SugarElement.fromTag(name)));
     });
   };
 
-  const sCheckText = function (predicate) {
+  const sCheckText = (predicate) => {
     return Step.sync(() => {
       Assertions.assertEq('Should be false for non element', false, predicate(SugarElement.fromText('text')));
     });

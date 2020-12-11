@@ -10,7 +10,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const assertRange = function (root, range, startPath, startOffset, endPath, endOffset) {
+  const assertRange = (root, range, startPath, startOffset, endPath, endOffset) => {
     const sc = Hierarchy.follow(SugarElement.fromDom(root), startPath).getOrDie();
     const ec = Hierarchy.follow(SugarElement.fromDom(root), endPath).getOrDie();
     const actualRange = range.getOrDie('Should be some');
@@ -21,13 +21,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', (success
     Assertions.assertEq('Should be expected end offset', endOffset, actualRange.endOffset);
   };
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cNormalizeRange = function (startPath, startOffset, endPath, endOffset) {
+  const cNormalizeRange = (startPath, startOffset, endPath, endOffset) => {
     return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', (success
     });
   };
 
-  const cAssertRange = function (startPath, startOffset, endPath, endOffset) {
+  const cAssertRange = (startPath, startOffset, endPath, endOffset) => {
     return Chain.op((range) => {
       assertRange(viewBlock.get(), range, startPath, startOffset, endPath, endOffset);
     });

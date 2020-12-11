@@ -12,19 +12,19 @@ UnitTest.asynctest('browser.tinymce.core.fmt.CaretFormatTest', (success, failure
 
   Theme();
 
-  const sApplyCaretFormat = function (editor, name, vars) {
+  const sApplyCaretFormat = (editor, name, vars) => {
     return Step.sync(() => {
       CaretFormat.applyCaretFormat(editor, name, vars);
     });
   };
 
-  const sRemoveCaretFormat = function (editor, name, vars, similar?) {
+  const sRemoveCaretFormat = (editor, name, vars, similar?) => {
     return Step.sync(() => {
       CaretFormat.removeCaretFormat(editor, name, vars, similar);
     });
   };
 
-  const sAssertNormalizedContentStructure = function (editor, expected) {
+  const sAssertNormalizedContentStructure = (editor, expected) => {
     return Step.sync(() => {
       const rawBody = editor.getBody().cloneNode(true);
       rawBody.normalize();

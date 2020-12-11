@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Predicate from 'tinymce/core/util/Predicate';
 
 UnitTest.test('atomic.tinymce.core.util.PredicateTest', () => {
-  const isAbove = function (target, value) {
+  const isAbove = (target, value) => {
     return value() > target();
   };
 

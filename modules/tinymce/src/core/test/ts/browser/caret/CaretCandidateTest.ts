@@ -15,11 +15,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretCandidateTest', (success, failure)
     return;
   }
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
   };
 

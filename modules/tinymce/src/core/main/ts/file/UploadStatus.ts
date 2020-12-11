@@ -27,44 +27,44 @@ export const UploadStatus = (): UploadStatus => {
   const PENDING = 1, UPLOADED = 2;
   let blobUriStatuses = {};
 
-  const createStatus = function (status: number, resultUri: string) {
+  const createStatus = (status: number, resultUri: string) => {
     return {
       status,
       resultUri
     };
   };
 
-  const hasBlobUri = function (blobUri: string) {
+  const hasBlobUri = (blobUri: string) => {
     return blobUri in blobUriStatuses;
   };
 
-  const getResultUri = function (blobUri: string) {
+  const getResultUri = (blobUri: string) => {
     const result = blobUriStatuses[blobUri];
 
     return result ? result.resultUri : null;
   };
 
-  const isPending = function (blobUri: string) {
+  const isPending = (blobUri: string) => {
     return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === PENDING : false;
   };
 
-  const isUploaded = function (blobUri: string) {
+  const isUploaded = (blobUri: string) => {
     return hasBlobUri(blobUri) ? blobUriStatuses[blobUri].status === UPLOADED : false;
   };
 
-  const markPending = function (blobUri: string) {
+  const markPending = (blobUri: string) => {
     blobUriStatuses[blobUri] = createStatus(PENDING, null);
   };
 
-  const markUploaded = function (blobUri: string, resultUri: string) {
+  const markUploaded = (blobUri: string, resultUri: string) => {
     blobUriStatuses[blobUri] = createStatus(UPLOADED, resultUri);
   };
 
-  const removeFailed = function (blobUri: string) {
+  const removeFailed = (blobUri: string) => {
     delete blobUriStatuses[blobUri];
   };
 
-  const destroy = function () {
+  const destroy = () => {
     blobUriStatuses = {};
   };
 

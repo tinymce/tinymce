@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', (success, failure)
   const serializer = HtmlSerializer({}, schema);
   let parser, root;
 
-  const countNodes = function (node, counter?) {
+  const countNodes = (node, counter?) => {
     let sibling;
 
     if (!counter) {

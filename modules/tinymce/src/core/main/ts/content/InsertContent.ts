@@ -9,7 +9,7 @@ import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
 
-const processValue = function (value) {
+const processValue = (value) => {
   let details;
 
   if (typeof value !== 'string') {
@@ -32,7 +32,7 @@ const processValue = function (value) {
   };
 };
 
-const insertAtCaret = function (editor: Editor, value) {
+const insertAtCaret = (editor: Editor, value) => {
   const result = processValue(value);
 
   Rtc.insertContent(editor, result.content, result.details);

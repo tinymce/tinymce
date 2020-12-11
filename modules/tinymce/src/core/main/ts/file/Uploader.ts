@@ -54,7 +54,7 @@ export interface Uploader {
   upload (blobInfos: BlobInfo[], openNotification?: () => NotificationApi): Promise<UploadResult[]>;
 }
 
-export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
+export const Uploader = (uploadStatus: UploadStatus, settings): Uploader => {
   const pendingPromises: Record<string, ResolveFn<UploadResult>[]> = {};
 
   const pathJoin = (path1, path2) => {
@@ -212,4 +212,4 @@ export function Uploader(uploadStatus: UploadStatus, settings): Uploader {
   return {
     upload
   };
-}
+};

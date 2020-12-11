@@ -7,7 +7,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const sSetContent = function (html) {
+  const sSetContent = (html) => {
     return Step.sync(() => {
       viewBlock.update(html);
     });
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', (succes
     next(RangeNormalizer.normalize(value));
   });
 
-  const mCreateRange = function (startPath, startOffset, endPath, endOffset) {
+  const mCreateRange = (startPath, startOffset, endPath, endOffset) => {
     return Step.stateful((_value, next, _die) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', (succes
     });
   };
 
-  const mAssertRange = function (startPath, startOffset, endPath, endOffset) {
+  const mAssertRange = (startPath, startOffset, endPath, endOffset) => {
     return Step.stateful((value: any, next, _die) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();

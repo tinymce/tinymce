@@ -1,7 +1,7 @@
 import { Assertions, Step, Waiter } from '@ephox/agar';
 import Editor from 'tinymce/core/api/Editor';
 
-export default function () {
+export default () => {
 
   const errors: string[] = [];
 
@@ -24,4 +24,4 @@ export default function () {
     sAssertErrorLogged,
     trackErrors
   };
-}
+};

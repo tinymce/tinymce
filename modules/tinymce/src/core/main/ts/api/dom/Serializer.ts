@@ -19,7 +19,7 @@ interface DomSerializer extends DomSerializerImpl { }
  * @class tinymce.dom.Serializer
  */
 
-const DomSerializer = function (settings: DomSerializerSettings, editor?: Editor): DomSerializer {
+const DomSerializer = (settings: DomSerializerSettings, editor?: Editor): DomSerializer => {
   const domSerializer = DomSerializerImpl(settings, editor);
 
   // Return public methods

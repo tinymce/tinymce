@@ -6,7 +6,7 @@ import * as ClientRect from 'tinymce/core/geom/ClientRect';
 UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const rect = function (x, y, w, h) {
+  const rect = (x, y, w, h) => {
     return {
       left: x,
       top: y,

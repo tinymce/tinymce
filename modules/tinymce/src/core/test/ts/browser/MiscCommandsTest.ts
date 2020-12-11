@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', (success, failure) =
 
   Theme();
 
-  const normalizeRng = function (rng: Range) {
+  const normalizeRng = (rng: Range) => {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.MiscCommandsTest', (success, failure) =
     return rng;
   };
 
-  const ok = function (value: boolean, label?: string) {
+  const ok = (value: boolean, label?: string) => {
     return Assert.eq(label, true, value);
   };
 

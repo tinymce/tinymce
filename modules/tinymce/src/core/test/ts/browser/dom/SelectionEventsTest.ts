@@ -9,11 +9,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', (success, fai
 
   Theme();
 
-  const mBindEventMutator = function (editor, eventName, mutator) {
+  const mBindEventMutator = (editor, eventName, mutator) => {
     return Step.stateful((_value, next, _die) => {
       const eventArgs = Cell(null);
 
-      const handler = function (e) {
+      const handler = (e) => {
         mutator(editor, e);
         eventArgs.set(e);
       };
@@ -23,18 +23,18 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', (success, fai
     });
   };
 
-  const mBindEvent = function (editor, eventName) {
+  const mBindEvent = (editor, eventName) => {
     return mBindEventMutator(editor, eventName, Fun.noop);
   };
 
-  const mUnbindEvent = function (editor, eventName) {
+  const mUnbindEvent = (editor, eventName) => {
     return Step.stateful((value: any, next, _die) => {
       editor.off(eventName, value.handler);
       next({});
     });
   };
 
-  const mAssertSetSelectionEventArgs = function (editor, expectedForward) {
+  const mAssertSetSelectionEventArgs = (editor, expectedForward) => {
     return Step.stateful((value: any, next, _die) => {
       Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
       assertSelectAllRange(editor, value.eventArgs.get().range);
@@ -42,30 +42,30 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', (success, fai
     });
   };
 
-  const getSelectAllRng = function (editor) {
+  const getSelectAllRng = (editor) => {
     const rng = document.createRange();
     rng.setStartBefore(editor.getBody().firstChild);
     rng.setEndAfter(editor.getBody().firstChild);
     return rng;
   };
 
-  const sSetRng = function (editor, forward) {
+  const sSetRng = (editor, forward) => {
     return Step.sync(() => {
       editor.selection.setRng(getSelectAllRng(editor), forward);
     });
   };
 
-  const sGetRng = function (editor, _forward?) {
+  const sGetRng = (editor, _forward?) => {
     return Step.sync(() => {
       editor.selection.getRng();
     });
   };
 
-  const selectAll = function (editor, eventArgs) {
+  const selectAll = (editor, eventArgs) => {
     eventArgs.range = getSelectAllRng(editor);
   };
 
-  const assertSelectAllRange = function (editor, actualRng) {
+  const assertSelectAllRange = (editor, actualRng) => {
     Assertions.assertDomEq(
       'Should be expected startContainer',
       SugarElement.fromDom(editor.getBody()),

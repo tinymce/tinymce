@@ -27,7 +27,7 @@ interface Quirks {
   isHidden (): boolean;
 }
 
-const Quirks = function (editor: Editor): Quirks {
+const Quirks = (editor: Editor): Quirks => {
   const each = Tools.each;
   const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
   const isGecko = Env.gecko, isIE = Env.ie, isWebKit = Env.webkit;
@@ -37,7 +37,7 @@ const Quirks = function (editor: Editor): Quirks {
   /**
    * Executes a command with a specific state this can be to enable/disable browser editing features.
    */
-  const setEditorCommandState = function (cmd, state) {
+  const setEditorCommandState = (cmd, state) => {
     try {
       editor.getDoc().execCommand(cmd, false, state);
     } catch (ex) {
@@ -52,7 +52,7 @@ const Quirks = function (editor: Editor): Quirks {
    * @param {Event} e Event object.
    * @return {Boolean} true/false if the event is prevented or not.
    */
-  const isDefaultPrevented = function (e) {
+  const isDefaultPrevented = (e) => {
     return e.isDefaultPrevented();
   };
 
@@ -64,7 +64,7 @@ const Quirks = function (editor: Editor): Quirks {
    * @private
    * @param {DragEvent} e Event object
    */
-  const setMceInternalContent = function (e) {
+  const setMceInternalContent = (e) => {
     let selectionHtml, internalContent;
 
     if (e.dataTransfer) {
@@ -91,7 +91,7 @@ const Quirks = function (editor: Editor): Quirks {
    * @param {DragEvent} e Event object
    * @returns {String} mce-internal content
    */
-  const getMceInternalContent = function (e) {
+  const getMceInternalContent = (e) => {
     let internalContent;
 
     if (e.dataTransfer) {
@@ -118,7 +118,7 @@ const Quirks = function (editor: Editor): Quirks {
    * @param {String} content Content to insert at selection.
    * @param {Boolean} internal State if the paste is to be considered internal or external.
    */
-  const insertClipboardContents = function (content, internal) {
+  const insertClipboardContents = (content, internal) => {
     if (editor.queryCommandSupported('mceInsertClipboardContent')) {
       editor.execCommand('mceInsertClipboardContent', false, { content, internal });
     } else {
@@ -138,15 +138,15 @@ const Quirks = function (editor: Editor): Quirks {
    * Or:
    * [<h1></h1>]
    */
-  const emptyEditorWhenDeleting = function () {
-    const serializeRng = function (rng) {
+  const emptyEditorWhenDeleting = () => {
+    const serializeRng = (rng) => {
       const body = dom.create('body');
       const contents = rng.cloneContents();
       body.appendChild(contents);
       return selection.serializer.serialize(body, { format: 'html' });
     };
 
-    const allContentsSelected = function (rng) {
+    const allContentsSelected = (rng) => {
       const selection = serializeRng(rng);
 
       const allRng = dom.createRng();
@@ -195,7 +195,7 @@ const Quirks = function (editor: Editor): Quirks {
    * IE selects more than the contents <body>[<p>a</p>]</body> instead of <body><p>[a]</p]</body> see bug #6438
    * This selects the whole body so that backspace/delete logic will delete everything
    */
-  const selectAll = function () {
+  const selectAll = () => {
     editor.shortcuts.add('meta+a', null, 'SelectAll');
   };
 
@@ -210,7 +210,7 @@ const Quirks = function (editor: Editor): Quirks {
    *
    * See: https://bugs.webkit.org/show_bug.cgi?id=83566
    */
-  const inputMethodFocus = function () {
+  const inputMethodFocus = () => {
     if (!editor.inline) {
       // Case 1 IME doesn't initialize if you focus the document
       // Disabled since it was interferring with the cE=false logic
@@ -252,7 +252,7 @@ const Quirks = function (editor: Editor): Quirks {
    *
    * It also fixes a bug on Firefox where it's impossible to delete HR elements.
    */
-  const removeHrOnBackspace = function () {
+  const removeHrOnBackspace = () => {
     editor.on('keydown', (e) => {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         // Check if there is any HR elements this is faster since getRng on IE 7 & 8 is slow
@@ -283,7 +283,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Firefox 3.x has an issue where the body element won't get proper focus if you click out
    * side it's rectangle.
    */
-  const focusBody = function () {
+  const focusBody = () => {
     // Fix for a focus bug in FF 3.x where the body element
     // wouldn't get proper focus if the user clicked on the HTML element
     if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
@@ -307,7 +307,7 @@ const Quirks = function (editor: Editor): Quirks {
    * WebKit has a bug where it isn't possible to select image, hr or anchor elements
    * by clicking on them so we need to fake that.
    */
-  const selectControlElements = function () {
+  const selectControlElements = () => {
     editor.on('click', (e) => {
       const target = e.target;
 
@@ -339,11 +339,11 @@ const Quirks = function (editor: Editor): Quirks {
    * Instead of:
    * <p style="color:red">bla|ed</p>
    */
-  const removeStylesWhenDeletingAcrossBlockElements = function () {
-    const getAttributeApplyFunction = function () {
+  const removeStylesWhenDeletingAcrossBlockElements = () => {
+    const getAttributeApplyFunction = () => {
       const template = dom.getAttribs(selection.getStart().cloneNode(false));
 
-      return function () {
+      return () => {
         const target = selection.getStart();
 
         if (target !== editor.getBody()) {
@@ -356,7 +356,7 @@ const Quirks = function (editor: Editor): Quirks {
       };
     };
 
-    const isSelectionAcrossElements = function () {
+    const isSelectionAcrossElements = () => {
       return !selection.isCollapsed() &&
         dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock);
     };
@@ -390,7 +390,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Backspacing into a table behaves differently depending upon browser type.
    * Therefore, disable Backspace when cursor immediately follows a table.
    */
-  const disableBackspaceIntoATable = function () {
+  const disableBackspaceIntoATable = () => {
     editor.on('keydown', (e) => {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
@@ -413,7 +413,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Becomes:
    * <p>|x</p>
    */
-  const removeBlockQuoteOnBackSpace = function () {
+  const removeBlockQuoteOnBackSpace = () => {
     // Add block quote deletion handler
     editor.on('keydown', (e) => {
       let rng, parent;
@@ -480,8 +480,8 @@ const Quirks = function (editor: Editor): Quirks {
    * Becomes this:
    * <p><b><a href="#">x</a></b><br></p>
    */
-  const addBrAfterLastLinks = function () {
-    const fixLinks = function () {
+  const addBrAfterLastLinks = () => {
+    const fixLinks = () => {
       each(dom.select('a'), (node) => {
         let parentNode: Node = node.parentNode;
         const root = dom.getRoot();
@@ -523,7 +523,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Fixes selection issues where the caret can be placed between two inline elements like <b>a</b>|<b>b</b>
    * this fix will lean the caret right into the closest inline element.
    */
-  const normalizeSelection = function () {
+  const normalizeSelection = () => {
     // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
     editor.on('keyup focusin mouseup', (e) => {
       // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
@@ -538,7 +538,7 @@ const Quirks = function (editor: Editor): Quirks {
   /**
    * Forces Gecko to render a broken image icon if it fails to load an image.
    */
-  const showBrokenImageIcon = function () {
+  const showBrokenImageIcon = () => {
     editor.contentStyles.push(
       'img:-moz-broken {' +
       '-moz-force-broken-image-icon:1;' +
@@ -555,7 +555,7 @@ const Quirks = function (editor: Editor): Quirks {
    * The touch event moves the focus to the parent document while having the caret inside the iframe
    * this fix moves the focus back into the iframe document.
    */
-  const restoreFocusOnKeyDown = function () {
+  const restoreFocusOnKeyDown = () => {
     if (!editor.inline) {
       editor.on('keydown', () => {
         if (document.activeElement === document.body) {
@@ -574,7 +574,7 @@ const Quirks = function (editor: Editor): Quirks {
    * we simply move the focus into the first paragraph. Not ideal since you loose the
    * positioning of the caret but goot enough for most cases.
    */
-  const bodyHeight = function () {
+  const bodyHeight = () => {
     if (!editor.inline) {
       editor.contentStyles.push('body {min-height: 150px}');
       editor.on('click', (e) => {
@@ -603,7 +603,7 @@ const Quirks = function (editor: Editor): Quirks {
    * Firefox on Mac OS will move the browser back to the previous page if you press CMD+Left arrow.
    * You might then loose all your work so we need to block that behavior and replace it with our own.
    */
-  const blockCmdArrowNavigation = function () {
+  const blockCmdArrowNavigation = () => {
     if (Env.mac) {
       editor.on('keydown', (e) => {
         if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
@@ -619,7 +619,7 @@ const Quirks = function (editor: Editor): Quirks {
   /**
    * Disables the autolinking in IE 9+ this is then re-enabled by the autolink plugin.
    */
-  const disableAutoUrlDetect = function () {
+  const disableAutoUrlDetect = () => {
     setEditorCommandState('AutoUrlDetect', false);
   };
 
@@ -628,7 +628,7 @@ const Quirks = function (editor: Editor): Quirks {
    * 1) It's possible to open links within a contentEditable area by clicking on them.
    * 2) If you hold down the finger it will display the link/image touch callout menu.
    */
-  const tapLinksAndImages = function () {
+  const tapLinksAndImages = () => {
     editor.on('click', (e) => {
       let elm = e.target;
 
@@ -704,7 +704,7 @@ const Quirks = function (editor: Editor): Quirks {
    * WebKit has a bug where it will allow forms to be submitted if they are inside a contentEditable element.
    * For example this: <form><button></form>
    */
-  const blockFormSubmitInsideEditor = function () {
+  const blockFormSubmitInsideEditor = () => {
     editor.on('init', () => {
       editor.dom.bind(editor.getBody(), 'submit', (e) => {
         e.preventDefault();
@@ -720,7 +720,7 @@ const Quirks = function (editor: Editor): Quirks {
    *  2) Select and copy cells A2-B2.
    *  3) Paste and it will add BR element to table cell.
    */
-  const removeAppleInterchangeBrs = function () {
+  const removeAppleInterchangeBrs = () => {
     parser.addNodeFilter('br', (nodes) => {
       let i = nodes.length;
 
@@ -736,7 +736,7 @@ const Quirks = function (editor: Editor): Quirks {
    * IE cannot set custom contentType's on drag events, and also does not properly drag/drop between
    * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
    */
-  const ieInternalDragAndDrop = function () {
+  const ieInternalDragAndDrop = () => {
     editor.on('dragstart', (e) => {
       setMceInternalContent(e);
     });
@@ -759,7 +759,7 @@ const Quirks = function (editor: Editor): Quirks {
   // No-op since Mozilla seems to have fixed the caret repaint issues
   const refreshContentEditable = Fun.noop;
 
-  const isHidden = function (): boolean {
+  const isHidden = (): boolean => {
     if (!isGecko || editor.removed) {
       return false;
     }

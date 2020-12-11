@@ -18,7 +18,7 @@ import EditorSelection from './Selection';
 
 interface BookmarkManager {
   getBookmark (type: number, normalized?: boolean): Bookmark;
-  moveToBookmark (bookmark: Bookmark): boolean;
+  moveToBookmark (bookmark: Bookmark): void;
 }
 
 /**
@@ -28,7 +28,7 @@ interface BookmarkManager {
  * @method BookmarkManager
  * @param {tinymce.dom.Selection} selection Selection instance to handle bookmarks for.
  */
-function BookmarkManager(selection: EditorSelection): BookmarkManager {
+const BookmarkManager = (selection: EditorSelection): BookmarkManager => {
   return {
     /**
      * Returns a bookmark location for the current selection. This bookmark object
@@ -47,14 +47,13 @@ function BookmarkManager(selection: EditorSelection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    getBookmark: Fun.curry(Bookmarks.getBookmark, selection) as (type: number, normalized?: boolean) => Bookmark,
+    getBookmark: Fun.curry(Bookmarks.getBookmark, selection),
 
     /**
      * Restores the selection to the specified bookmark.
      *
      * @method moveToBookmark
      * @param {Object} bookmark Bookmark to restore selection from.
-     * @return {Boolean} true/false if it was successful or not.
      * @example
      * // Stores a bookmark of the current selection
      * var bm = tinymce.activeEditor.selection.getBookmark();
@@ -64,20 +63,18 @@ function BookmarkManager(selection: EditorSelection): BookmarkManager {
      * // Restore the selection bookmark
      * tinymce.activeEditor.selection.moveToBookmark(bm);
      */
-    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection) as (bookmark: Bookmark) => boolean
+    moveToBookmark: Fun.curry(Bookmarks.moveToBookmark, selection)
   };
-}
+};
 
-namespace BookmarkManager {
-  /**
-   * Returns true/false if the specified node is a bookmark node or not.
-   *
-   * @static
-   * @method isBookmarkNode
-   * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
-   * @return {Boolean} true/false if the node is a bookmark node or not.
-   */
-  export const isBookmarkNode = Bookmarks.isBookmarkNode as (node: Node) => boolean;
-}
+/**
+ * Returns true/false if the specified node is a bookmark node or not.
+ *
+ * @static
+ * @method isBookmarkNode
+ * @param {DOMNode} node DOM Node to check if it's a bookmark node or not.
+ * @return {Boolean} true/false if the node is a bookmark node or not.
+ */
+BookmarkManager.isBookmarkNode = Bookmarks.isBookmarkNode;
 
 export default BookmarkManager;

@@ -36,7 +36,7 @@ type ApplyFormatProp = keyof InlineFormat | keyof BlockFormat | keyof SelectorFo
 const hasFormatProperty = (format: ApplyFormat, prop: ApplyFormatProp): boolean =>
   Obj.hasNonNullableKey(format as any, prop);
 
-const isElementNode = function (node: Node) {
+const isElementNode = (node: Node) => {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
@@ -64,7 +64,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) {
+const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
   const isCollapsed = !node && ed.selection.isCollapsed();
@@ -72,7 +72,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
   const selection = ed.selection;
 
   // TODO: Add actual type for fmt below
-  const setElementFormat = function (elm: Node, fmt?: ApplyFormat) {
+  const setElementFormat = (elm: Node, fmt?: ApplyFormat) => {
     fmt = fmt || format;
 
     if (elm) {
@@ -108,7 +108,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     }
   };
 
-  const applyNodeStyle = function (formatList, node: Node) {
+  const applyNodeStyle = (formatList, node: Node) => {
     let found = false;
 
     if (!FormatUtils.isSelectorFormat(format)) {
@@ -132,7 +132,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     return found;
   };
 
-  const applyRngStyle = function (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) {
+  const applyRngStyle = (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) => {
     const newWrappers: Element[] = [];
     let contentEditable = true;
 
@@ -147,7 +147,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
       /**
        * Process a list of nodes wrap them.
        */
-      const process = function (node: Node) {
+      const process = (node: Node) => {
         let hasContentEditableState = false;
         let lastContentEditable = contentEditable;
         const nodeName = node.nodeName.toLowerCase();
@@ -237,7 +237,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
       each(newWrappers, (node) => {
-        const process = function (node: Element) {
+        const process = (node: Element) => {
           if (node.nodeName === 'A') {
             setElementFormat(node, format);
           }
@@ -251,7 +251,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
     // Cleanup
     each(newWrappers, (node) => {
-      const getChildCount = function (node: Node) {
+      const getChildCount = (node: Node) => {
         let count = 0;
 
         each(node.childNodes, (node) => {
@@ -263,7 +263,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return count;
       };
 
-      const getChildElementNode = function (root: Node): Node | false {
+      const getChildElementNode = (root: Node): Node | false => {
         let child: Node | false = false;
         each(root.childNodes, (node) => {
           if (isElementNode(node)) {
@@ -274,7 +274,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         return child;
       };
 
-      const mergeStyles = function (node: Element) {
+      const mergeStyles = (node: Element) => {
         let clone;
 
         const child = getChildElementNode(node);

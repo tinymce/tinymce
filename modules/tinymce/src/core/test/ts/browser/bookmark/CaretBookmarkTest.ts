@@ -10,15 +10,15 @@ UnitTest.asynctest('browser.tinymce.core.CaretBookmarkTest', (success, failure) 
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
   };
 
-  const createTextPos = function (textNode, offset) {
+  const createTextPos = (textNode, offset) => {
     return CaretPosition(textNode, offset);
   };
 

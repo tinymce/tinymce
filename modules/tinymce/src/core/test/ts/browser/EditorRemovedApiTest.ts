@@ -8,68 +8,68 @@ UnitTest.asynctest('browser.tinymce.core.EditorApiTest', (success, failure) => {
 
   Theme();
 
-  const sRemoveEditor = function (editor) {
+  const sRemoveEditor = (editor) => {
     return Step.sync(() => {
       editor.remove();
     });
   };
 
-  const sExecCallback = function (editor, name, arg) {
+  const sExecCallback = (editor, name, arg) => {
     return Step.sync(() => {
       editor.execCallback(name, arg);
     });
   };
 
-  const sTryAccess = function (editor, name, expectedValue) {
+  const sTryAccess = (editor, name, expectedValue) => {
     return Step.sync(() => {
       const result = editor[name]();
       Assertions.assertEq('Should be expected value on a removed editor', expectedValue, result);
     });
   };
 
-  const sShow = function (editor) {
+  const sShow = (editor) => {
     return Step.sync(() => {
       editor.show();
     });
   };
 
-  const sHide = function (editor) {
+  const sHide = (editor) => {
     return Step.sync(() => {
       editor.hide();
     });
   };
 
-  const sLoad = function (editor) {
+  const sLoad = (editor) => {
     return Step.sync(() => {
       editor.load();
     });
   };
 
-  const sSave = function (editor) {
+  const sSave = (editor) => {
     return Step.sync(() => {
       editor.save();
     });
   };
 
-  const sQueryCommandState = function (editor, name) {
+  const sQueryCommandState = (editor, name) => {
     return Step.sync(() => {
       editor.queryCommandState(name);
     });
   };
 
-  const sQueryCommandValue = function (editor, name) {
+  const sQueryCommandValue = (editor, name) => {
     return Step.sync(() => {
       editor.queryCommandValue(name);
     });
   };
 
-  const sQueryCommandSupported = function (editor, name) {
+  const sQueryCommandSupported = (editor, name) => {
     return Step.sync(() => {
       editor.queryCommandSupported(name);
     });
   };
 
-  const sUploadImages = function (editor) {
+  const sUploadImages = (editor) => {
     return Step.sync(() => {
       editor.uploadImages(Fun.noop);
     });

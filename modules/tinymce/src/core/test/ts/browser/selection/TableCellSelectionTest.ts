@@ -8,7 +8,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
@@ -18,7 +18,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', (suc
     return TableCellSelection.getCellsFromElement(SugarElement.fromDom(viewBlock.get()));
   });
 
-  const cGetCellsFromRanges = function (paths) {
+  const cGetCellsFromRanges = (paths) => {
     return Chain.mapper((viewBlock: any) => {
       const ranges = Arr.map(paths, (path) => {
         const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.TableCellSelectionTest', (suc
     });
   };
 
-  const cAssertCellContents = function (expectedContents) {
+  const cAssertCellContents = (expectedContents) => {
     return Chain.op((cells: SugarElement[]) => {
       const actualContents = Arr.map(cells, Html.get);
       Assertions.assertEq('Should be expected cell contents', expectedContents, actualContents);

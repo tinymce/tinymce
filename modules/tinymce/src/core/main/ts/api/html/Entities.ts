@@ -210,7 +210,7 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
     return '&#' + chr.charCodeAt(0) + ';';
   });
 
-  const encodeCustomNamed = function (text: string, attr) {
+  const encodeCustomNamed = (text: string, attr) => {
     return encodeNamed(text, attr, entitiesMap);
   };
 

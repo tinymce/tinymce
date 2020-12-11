@@ -15,14 +15,14 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', (success, failure) => 
     return;
   }
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
   suite.test('positionsUntil', () => {
     let result, predicateCallCount = 0;
 
-    const predicate = function () {
+    const predicate = () => {
       predicateCallCount++;
       return false;
     };
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', (success, failure) => 
   suite.test('upUntil', () => {
     let predicateCallCount = 0;
 
-    const predicate = function () {
+    const predicate = () => {
       predicateCallCount++;
       return false;
     };
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.LineWalkerTest', (success, failure) => 
   suite.test('downUntil', () => {
     let predicateCallCount = 0;
 
-    const predicate = function () {
+    const predicate = () => {
       predicateCallCount++;
       return false;
     };

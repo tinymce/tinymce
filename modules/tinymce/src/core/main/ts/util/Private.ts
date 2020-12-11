@@ -16,27 +16,27 @@ import * as Uuid from './Uuid';
 
 const fieldName = Uuid.uuid('private');
 
-const set = function (publicKey, privateKey) {
-  return function (obj, value) {
+const set = (publicKey, privateKey) => {
+  return (obj, value) => {
     if (!obj[fieldName]) {
       obj[fieldName] = {};
     }
 
-    obj[fieldName][publicKey] = function (key) {
+    obj[fieldName][publicKey] = (key) => {
       return key === privateKey ? value : null;
     };
   };
 };
 
-const getOr = function (publicKey, privateKey) {
-  return function (obj, defaultValue) {
+const getOr = (publicKey, privateKey) => {
+  return (obj, defaultValue) => {
     const collection = obj[fieldName];
     const accessor = collection ? collection[publicKey] : null;
     return accessor ? accessor(privateKey) : defaultValue;
   };
 };
 
-const create = function () {
+const create = () => {
   const publicKey = Uuid.uuid('pu');
   const privateKey = Uuid.uuid('pr');
 

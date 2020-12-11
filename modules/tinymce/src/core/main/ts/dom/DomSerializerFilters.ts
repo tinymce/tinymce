@@ -106,7 +106,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
   htmlParser.addNodeFilter('script,style', (nodes, name) => {
     let i = nodes.length, node, value, type;
 
-    const trim = function (value) {
+    const trim = (value) => {
       /* jshint maxlen:255 */
       /* eslint max-len:0 */
       return value.replace(/(<!--\[CDATA\[|\]\]-->)/g, '\n')
@@ -210,8 +210,8 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
  *
  * Example of what happens: <body>text</body> becomes <body>text<br><br></body>
  */
-const trimTrailingBr = function (rootNode) {
-  const isBr = function (node) {
+const trimTrailingBr = (rootNode) => {
+  const isBr = (node) => {
     return node && node.name === 'br';
   };
 

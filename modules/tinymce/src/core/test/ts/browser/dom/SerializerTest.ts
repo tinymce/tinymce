@@ -15,11 +15,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerTest', (success, failure)
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock();
 
-  const teardown = function () {
+  const teardown = () => {
     viewBlock.update('');
   };
 
-  const addTeardown = function (steps) {
+  const addTeardown = (steps) => {
     return Arr.bind(steps, (step) => {
       return [ step, Step.sync(teardown) ];
     });

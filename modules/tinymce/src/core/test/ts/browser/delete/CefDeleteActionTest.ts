@@ -8,13 +8,13 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cReadAction = function (forward, cursorPath, cursorOffset) {
+  const cReadAction = (forward, cursorPath, cursorOffset) => {
     return Chain.mapper((viewBlock: any) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     });
   };
 
-  const cAssertRemoveElementAction = function (elementPath) {
+  const cAssertRemoveElementAction = (elementPath) => {
     return Chain.op((actionOption: Optional<any>) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     });
   };
 
-  const cAssertMoveToElementAction = function (elementPath) {
+  const cAssertMoveToElementAction = (elementPath) => {
     return Chain.op((actionOption: Optional<any>) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     });
   };
 
-  const cAssertMoveToPositionAction = function (elementPath, offset) {
+  const cAssertMoveToPositionAction = (elementPath, offset) => {
     return Chain.op((actionOption: Optional<any>) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     Assertions.assertEq('Action value should be none', true, actionOption.isNone());
   });
 
-  const actionName = function (action) {
+  const actionName = (action) => {
     return action.fold(
       Fun.constant('remove'),
       Fun.constant('moveToElement'),
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     );
   };
 
-  const actionValue = function (action) {
+  const actionValue = (action) => {
     return action.fold(
       SugarElement.fromDom,
       SugarElement.fromDom,

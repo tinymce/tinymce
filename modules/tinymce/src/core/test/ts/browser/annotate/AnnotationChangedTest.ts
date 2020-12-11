@@ -268,6 +268,7 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
         });
 
         // NOTE: Have to use old function syntax here when accessing "arguments"
+        // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
         const listener = function (state, name, obj) {
           // NOTE: These failures won't stop the tests, but they will stop it before it updates
           // the changes in changes.set

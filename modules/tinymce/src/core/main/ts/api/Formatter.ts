@@ -44,7 +44,7 @@ interface Formatter extends FormatRegistry {
   getCssText (format: string | Format): string;
 }
 
-const Formatter = function (editor: Editor): Formatter {
+const Formatter = (editor: Editor): Formatter => {
   const formats = FormatRegistry(editor);
   const formatChangeState = Cell(null);
 

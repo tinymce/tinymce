@@ -1,6 +1,6 @@
 declare let tinymce: any;
 
-export default function (init: ShadowRootInit) {
+export default (init: ShadowRootInit) => {
 
   const shadowHost = document.getElementById('shadow-host');
 
@@ -20,4 +20,4 @@ export default function (init: ShadowRootInit) {
   addSection();
   addSection();
   addSection();
-}
+};

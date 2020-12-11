@@ -19,7 +19,7 @@ import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
 import Sizzle from './dom/Sizzle';
-import { StyleSheetLoader, StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
+import StyleSheetLoader, { StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
 import Editor, { EditorConstructor } from './Editor';
@@ -82,7 +82,7 @@ interface RangeUtilsNamespace {
 interface AddOnManagerNamespace {
   new <T>(): AddOnManager<T>;
 
-  language: string;
+  language: string | undefined;
   languageLoad: boolean;
   baseURL: string;
   PluginManager: PluginManager;

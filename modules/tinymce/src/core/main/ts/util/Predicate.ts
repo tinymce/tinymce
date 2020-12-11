@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const or = function (...args: any[]) {
+const or = (...args: any[]) => {
 
-  return function (x) {
+  return (x) => {
     for (let i = 0; i < args.length; i++) {
       if (args[i](x)) {
         return true;
@@ -18,8 +18,8 @@ const or = function (...args: any[]) {
   };
 };
 
-const and = function (...args: any[]) {
-  return function (x) {
+const and = (...args: any[]) => {
+  return (x) => {
     for (let i = 0; i < args.length; i++) {
       if (!args[i](x)) {
         return false;

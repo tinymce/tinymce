@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.FocusControllerTest', (success, f
     const customNoUiElm = DOMUtils.DOM.create('div', { class: 'x' }, null);
 
     const oldPredicate = FocusManager.isEditorUIElement;
-    FocusManager.isEditorUIElement = function (elm) {
+    FocusManager.isEditorUIElement = (elm) => {
       return elm.className === 'abc';
     };
 

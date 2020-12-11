@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectTest', (success, failure) => 
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;' // Wordpress
   ];
 
-  const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
+  const sAssertSelectBoxDisplayValue = (editor, title, expectedValue) => {
     return Chain.asStep(SugarElement.fromDom(document.body), [
       UiFinder.cFindIn('*[title="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),

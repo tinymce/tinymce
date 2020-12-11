@@ -96,7 +96,7 @@ class JSONRequest {
 
     const xhrArgs = extend(this.settings, args) as XHRSettings;
 
-    xhrArgs.success = function (c: any, x) {
+    xhrArgs.success = (c: any, x) => {
       c = JSON.parse(c);
 
       if (typeof c === 'undefined') {
@@ -112,7 +112,7 @@ class JSONRequest {
       }
     };
 
-    xhrArgs.error = function (ty, x) {
+    xhrArgs.error = (ty, x) => {
       if (ecb) {
         ecb.call(xhrArgs.error_scope || xhrArgs.scope, ty, x);
       }

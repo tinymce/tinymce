@@ -58,7 +58,7 @@ const pluginInitError = (editor: Editor, name: string, err) => {
   displayError(editor, message);
 };
 
-const initError = function (message: string, ...x: any[]) {
+const initError = (message: string, ...x: any[]) => {
   const console = window.console;
   if (console) { // Skip test env
     if (console.error) {

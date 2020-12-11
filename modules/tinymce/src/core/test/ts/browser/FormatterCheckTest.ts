@@ -127,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     editor.formatter.register('complex', {
       inline: 'span',
       styles: {
-        color(vars) {
+        color: (vars) => {
           return vars.color + '00';
         }
       }
@@ -156,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
   suite.test('Custom onmatch handler', (editor) => {
     editor.formatter.register('format', {
       inline: 'span',
-      onmatch(elm) {
+      onmatch: (elm) => {
         return elm.className === 'x';
       }
     });

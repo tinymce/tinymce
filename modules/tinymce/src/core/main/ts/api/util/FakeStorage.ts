@@ -6,26 +6,26 @@
  */
 
 // Simple stub of localstorage for IE11 with strict security settings #TINY-1782
-export const create = () => (function () {
+export const create = () => (() => {
   let data = {};
   let keys = [];
   const storage = {
-    getItem(key) {
+    getItem: (key) => {
       const item = data[key];
       return item ? item : null;
     },
-    setItem(key, value) {
+    setItem: (key, value) => {
       keys.push(key);
       data[key] = String(value);
     },
-    key(index) {
+    key: (index) => {
       return keys[index];
     },
-    removeItem(key) {
+    removeItem: (key) => {
       keys = keys.filter((k) => k === key);
       delete data[key];
     },
-    clear() {
+    clear: () => {
       keys = [];
       data = {};
     },
@@ -33,7 +33,7 @@ export const create = () => (function () {
   };
 
   Object.defineProperty(storage, 'length', {
-    get() { return keys.length; },
+    get: () => keys.length,
     configurable: false,
     enumerable: false
   });

@@ -10,6 +10,7 @@ import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
 import Promise from '../api/util/Promise';
 import * as Conversions from './Conversions';
+import { UploadStatus } from './UploadStatus';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;
@@ -29,11 +30,11 @@ export interface ImageScanner {
 
 let count = 0;
 
-export const uniqueId = function (prefix?: string): string {
+export const uniqueId = (prefix?: string): string => {
   return (prefix || 'blobid') + (count++);
 };
 
-const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, resolve, reject) {
+const imageToBlobInfo = (blobCache: BlobCache, img: HTMLImageElement, resolve, reject) => {
   let base64, blobInfo;
 
   if (img.src.indexOf('blob:') === 0) {
@@ -88,14 +89,14 @@ const imageToBlobInfo = function (blobCache: BlobCache, img: HTMLImageElement, r
   }
 };
 
-const getAllImages = function (elm: HTMLElement): HTMLImageElement[] {
+const getAllImages = (elm: HTMLElement): HTMLImageElement[] => {
   return elm ? Arr.from(elm.getElementsByTagName('img')) : [];
 };
 
-export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
+export const ImageScanner = (uploadStatus: UploadStatus, blobCache: BlobCache): ImageScanner => {
   const cachedPromises: Record<string, Promise<BlobInfoImagePair>> = {};
 
-  const findAll = function (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) {
+  const findAll = (elm: HTMLElement, predicate?: (img: HTMLImageElement) => boolean) => {
     if (!predicate) {
       predicate = Fun.always;
     }
@@ -168,4 +169,4 @@ export function ImageScanner(uploadStatus, blobCache: BlobCache): ImageScanner {
   return {
     findAll
   };
-}
+};

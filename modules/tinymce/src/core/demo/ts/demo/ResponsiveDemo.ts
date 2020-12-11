@@ -40,7 +40,7 @@ export default () => {
     ],
     importcss_append: true,
     height: 400,
-    file_picker_callback(callback, _value, meta) {
+    file_picker_callback: (callback, _value, meta) => {
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
@@ -90,7 +90,7 @@ export default () => {
       ],
       toolbar: 'fullscreen bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image insertfile undo redo | styleselect'
     },
-    setup(ed) {
+    setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [

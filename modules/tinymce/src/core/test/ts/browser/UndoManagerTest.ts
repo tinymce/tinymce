@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', (success, failure) => {
 
   Theme();
 
-  const ok = function (value: boolean, label?: string) {
+  const ok = (value: boolean, label?: string) => {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -365,7 +365,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', (success, failure) => {
   suite.test('BeforeAddUndo event', (editor) => {
     let lastEvt, addUndoEvt;
 
-    const blockEvent = function (e) {
+    const blockEvent = (e) => {
       e.preventDefault();
     };
 
@@ -444,7 +444,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', (success, failure) => {
     LegacyUnit.setSelection(editor, 'p', 1);
 
     let first = true;
-    const test = function () {
+    const test = () => {
       if (first) {
         first = false;
         if (editor.isDirty()) {

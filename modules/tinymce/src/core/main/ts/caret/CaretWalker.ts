@@ -229,7 +229,7 @@ export const CaretWalker = (root: Node): CaretWalker => ({
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-  next(caretPosition: CaretPosition): CaretPosition {
+  next: (caretPosition: CaretPosition): CaretPosition => {
     return findCaretPosition(HDirection.Forwards, caretPosition, root);
   },
 
@@ -242,7 +242,7 @@ export const CaretWalker = (root: Node): CaretWalker => ({
      * @param {tinymce.caret.CaretPosition} caretPosition Caret position to start from.
      * @return {tinymce.caret.CaretPosition} CaretPosition or null if no position was found.
      */
-  prev(caretPosition: CaretPosition): CaretPosition {
+  prev: (caretPosition: CaretPosition): CaretPosition => {
     return findCaretPosition(HDirection.Backwards, caretPosition, root);
   }
 });

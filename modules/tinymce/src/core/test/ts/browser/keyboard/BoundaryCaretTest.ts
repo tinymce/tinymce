@@ -10,18 +10,18 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', (success, failure) => {
   const ZWSP = Zwsp.ZWSP;
 
-  const isInlineTarget = function (elm) {
+  const isInlineTarget = (elm) => {
     return Selectors.is(SugarElement.fromDom(elm), 'a[href],code');
   };
 
-  const createLocation = function (elm, elementPath, offset) {
+  const createLocation = (elm, elementPath, offset) => {
     const container = Hierarchy.follow(elm, elementPath);
     const pos = CaretPosition(container.getOrDie().dom, offset);
     const location = BoundaryLocation.readLocation(isInlineTarget, elm.dom, pos);
     return location;
   };
 
-  const sTestRenderCaret = function (html, elementPath, offset, expectedHtml, expectedPath, _expectedOffset) {
+  const sTestRenderCaret = (html, elementPath, offset, expectedHtml, expectedPath, _expectedOffset) => {
     return Step.sync(() => {
       const elm = SugarElement.fromHtml<HTMLDivElement>('<div>' + html + '</div>');
       const location = createLocation(elm, elementPath, offset);

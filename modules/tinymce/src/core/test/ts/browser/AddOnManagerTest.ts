@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
   const suite = LegacyUnit.createSuite();
   let languagePackUrl;
 
-  const patch = function (proto, name, patchFunc) {
+  const patch = (proto, name, patchFunc) => {
     let originalFunc = proto[name];
     let originalFuncs = proto.__originalFuncs;
 
@@ -25,14 +25,13 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
       originalFunc = originalFuncs[name];
     }
 
-    proto[name] = function () {
-      const args = Array.prototype.slice.call(arguments);
+    proto[name] = (...args: any[]) => {
       args.unshift(originalFunc);
       return patchFunc.apply(this, args);
     };
   };
 
-  const unpatch = function (proto, name?) {
+  const unpatch = (proto, name?) => {
     const originalFuncs = proto.__originalFuncs;
 
     if (!originalFuncs) {
@@ -51,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
     }
   };
 
-  const getLanguagePackUrl = function (code, languages?) {
+  const getLanguagePackUrl = (code, languages?) => {
     languagePackUrl = null;
     I18n.setCode(code);
     PluginManager.requireLangPack('plugin', languages);

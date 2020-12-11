@@ -8,7 +8,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveHighlightFormatTest', (succes
   SilverTheme();
 
   TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor as any);
+    const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
       tinyApis.sFocus(),

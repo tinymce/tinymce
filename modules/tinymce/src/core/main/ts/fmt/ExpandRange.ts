@@ -22,12 +22,12 @@ const getParents = FormatUtils.getParents;
 const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
 const isTextBlock = FormatUtils.isTextBlock;
 
-const isBogusBr = function (node: Node) {
+const isBogusBr = (node: Node) => {
   return NodeType.isBr(node) && node.getAttribute('data-mce-bogus') && !node.nextSibling;
 };
 
 // Expands the node to the closes contentEditable false element if it exists
-const findParentContentEditable = function (dom: DOMUtils, node: Node) {
+const findParentContentEditable = (dom: DOMUtils, node: Node) => {
   let parent = node;
 
   while (parent) {

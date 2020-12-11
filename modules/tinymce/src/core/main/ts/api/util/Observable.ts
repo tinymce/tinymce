@@ -21,11 +21,11 @@ interface Observable<T> {
  * @mixin tinymce.util.Observable
  */
 
-const getEventDispatcher = function (obj): EventDispatcher<any> {
+const getEventDispatcher = (obj): EventDispatcher<any> => {
   if (!obj._eventDispatcher) {
     obj._eventDispatcher = new EventDispatcher({
       scope: obj,
-      toggleEvent(name, state) {
+      toggleEvent: (name, state) => {
         if (EventDispatcher.isNative(name) && obj.toggleNativeEvent) {
           obj.toggleNativeEvent(name, state);
         }

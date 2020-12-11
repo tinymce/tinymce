@@ -1,7 +1,7 @@
 import { GeneralSteps, Keyboard, Step } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
 
-const insertCharAtRange = function (rng, chr) {
+const insertCharAtRange = (rng, chr) => {
   const outRng = rng.cloneRange();
   const sc = rng.startContainer, so = rng.startOffset;
 
@@ -25,7 +25,7 @@ const insertCharAtRange = function (rng, chr) {
   return outRng;
 };
 
-const insertCharAtSelection = function (doc, chr) {
+const insertCharAtSelection = (doc, chr) => {
   const sel = doc.defaultView.getSelection();
 
   if (sel.rangeCount >= 1) {
@@ -38,13 +38,13 @@ const insertCharAtSelection = function (doc, chr) {
   }
 };
 
-const sInsertCharAtSelection = function (doc, chr) {
+const sInsertCharAtSelection = (doc, chr) => {
   return Step.sync(() => {
     insertCharAtSelection(doc.dom, chr);
   });
 };
 
-const sTypeChar = function (doc, chr) {
+const sTypeChar = (doc, chr) => {
   return GeneralSteps.sequence([
     Keyboard.sKeydown(doc, chr, {}),
     Keyboard.sKeypress(doc, chr, {}),
@@ -53,7 +53,7 @@ const sTypeChar = function (doc, chr) {
   ]);
 };
 
-const sTypeContentAtSelection = function (doc, text) {
+const sTypeContentAtSelection = (doc, text) => {
   return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
 };
 
