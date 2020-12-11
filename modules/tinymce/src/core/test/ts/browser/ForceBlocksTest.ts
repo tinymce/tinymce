@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', (success, failure) =>
 
   Theme();
 
-  const pressArrowKey = function (editor: Editor) {
+  const pressArrowKey = (editor: Editor) => {
     const dom = editor.dom, target = editor.selection.getNode();
     const evt = { keyCode: 37 };
 

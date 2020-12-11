@@ -17,7 +17,7 @@ import * as Diff from './Diff';
  * @private
  */
 
-const getOuterHtml = function (elm: Node): string {
+const getOuterHtml = (elm: Node): string => {
   if (NodeType.isElement(elm)) {
     return elm.outerHTML;
   } else if (NodeType.isText(elm)) {
@@ -29,7 +29,7 @@ const getOuterHtml = function (elm: Node): string {
   return '';
 };
 
-const createFragment = function (html: string): DocumentFragment {
+const createFragment = (html: string): DocumentFragment => {
   let node;
 
   const container = document.createElement('div');
@@ -46,7 +46,7 @@ const createFragment = function (html: string): DocumentFragment {
   return frag;
 };
 
-const insertAt = function (elm: Element, html: string, index: number) {
+const insertAt = (elm: Element, html: string, index: number) => {
   const fragment = createFragment(html);
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
     const target = elm.childNodes[index];
@@ -56,14 +56,14 @@ const insertAt = function (elm: Element, html: string, index: number) {
   }
 };
 
-const removeAt = function (elm: Element, index: number) {
+const removeAt = (elm: Element, index: number) => {
   if (elm.hasChildNodes() && index < elm.childNodes.length) {
     const target = elm.childNodes[index];
     target.parentNode.removeChild(target);
   }
 };
 
-const applyDiff = function (diff, elm: Element) {
+const applyDiff = (diff, elm: Element) => {
   let index = 0;
   Arr.each(diff, (action) => {
     if (action[0] === Diff.KEEP) {
@@ -77,13 +77,13 @@ const applyDiff = function (diff, elm: Element) {
   });
 };
 
-const read = function (elm: Element): string[] {
+const read = (elm: Element): string[] => {
   return Arr.filter(Arr.map(Arr.from(elm.childNodes), getOuterHtml), (item) => {
     return item.length > 0;
   });
 };
 
-const write = function (fragments: string[], elm: Element): Element {
+const write = (fragments: string[], elm: Element): Element => {
   const currentFragments = Arr.map(Arr.from(elm.childNodes), getOuterHtml);
   applyDiff(Diff.diff(currentFragments, fragments), elm);
   return elm;

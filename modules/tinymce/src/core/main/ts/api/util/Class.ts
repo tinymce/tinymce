@@ -50,8 +50,7 @@ interface Class {
   extend <T extends Props<A>, A extends any[] = any[]>(props: T): ExtendedClassConstructor<T, A>;
 }
 
-const Class: Class = function () {
-};
+const Class: Class = () => {};
 
 // Provides classical inheritance, based on code made by John Resig
 Class.extend = extendClass = function <T extends Props<A>, A extends any[]> (props: T): ExtendedClassConstructor<T, A> {

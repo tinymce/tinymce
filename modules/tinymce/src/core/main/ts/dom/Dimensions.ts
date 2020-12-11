@@ -14,7 +14,7 @@ export interface NodeClientRect extends ClientRect.ClientRect {
 }
 
 const getNodeClientRects = (node: Node): NodeClientRect[] => {
-  const toArrayWithNode = function (clientRects) {
+  const toArrayWithNode = (clientRects) => {
     return Arr.map(clientRects, (clientRect) => {
       clientRect = ClientRect.clone(clientRect);
       clientRect.node = node;

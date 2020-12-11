@@ -26,7 +26,7 @@ const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isForwards = (direction: HDirection) => direction > 0;
 const isBackwards = (direction: HDirection) => direction < 0;
 
-const skipCaretContainers = function (walk, shallow?: boolean): Node {
+const skipCaretContainers = (walk, shallow?: boolean): Node => {
   let node;
 
   while ((node = walk(shallow))) {

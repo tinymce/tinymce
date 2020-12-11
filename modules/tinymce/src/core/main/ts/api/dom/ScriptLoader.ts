@@ -93,12 +93,12 @@ class ScriptLoader {
     };
 
     // Execute callback when script is loaded
-    const done = function () {
+    const done = () => {
       cleanup();
       success();
     };
 
-    const error = function () {
+    const error = () => {
       cleanup();
 
       // We can't mark it as done if there is a load error since
@@ -229,7 +229,7 @@ class ScriptLoader {
     const self = this;
     const failures = [];
 
-    const execCallbacks = function (name, url) {
+    const execCallbacks = (name, url) => {
       // Execute URL callback functions
       each(self.scriptLoadedCallbacks[url], (callback) => {
         if (Type.isFunction(callback[name])) {
@@ -246,7 +246,7 @@ class ScriptLoader {
       scope: scope || this
     });
 
-    const loadScripts = function () {
+    const loadScripts = () => {
       const loadingScripts = grep(scripts);
 
       // Current scripts has been handled

@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', (success, failure
     return;
   }
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
@@ -29,15 +29,15 @@ UnitTest.asynctest('browser.tinymce.core.caret.FakeCaretTest', (success, failure
     getParam: () => 'p'
   };
 
-  const setup = function () {
+  const setup = () => {
     fakeCaret = FakeCaret(mockEditor, getRoot(), isBlock, Fun.always);
   };
 
-  const teardown = function () {
+  const teardown = () => {
     fakeCaret.destroy();
   };
 
-  const isBlock = function (node) {
+  const isBlock = (node) => {
     return node.nodeName === 'DIV';
   };
 

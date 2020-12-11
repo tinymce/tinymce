@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.ClickContentEditableFalseTest', (succes
 
   Theme();
 
-  const sClickMiddleOf = function (editor, elementPath) {
+  const sClickMiddleOf = (editor, elementPath) => {
     return Step.sync(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie().dom as HTMLElement;
       const rect = element.getBoundingClientRect();

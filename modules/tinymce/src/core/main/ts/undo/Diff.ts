@@ -14,12 +14,12 @@
 
 const KEEP = 0, INSERT = 1, DELETE = 2;
 
-const diff = function (left, right) {
+const diff = (left, right) => {
   const size = left.length + right.length + 2;
   const vDown = new Array(size);
   const vUp = new Array(size);
 
-  const snake = function (start, end, diag) {
+  const snake = (start, end, diag) => {
     return {
       start,
       end,
@@ -27,7 +27,7 @@ const diff = function (left, right) {
     };
   };
 
-  const buildScript = function (start1, end1, start2, end2, script) {
+  const buildScript = (start1, end1, start2, end2, script) => {
     const middle = getMiddleSnake(start1, end1, start2, end2);
 
     if (middle === null || middle.start === end1 && middle.diag === end1 - end2 ||
@@ -58,7 +58,7 @@ const diff = function (left, right) {
     }
   };
 
-  const buildSnake = function (start, diag, end1, end2) {
+  const buildSnake = (start, diag, end1, end2) => {
     let end = start;
     while (end - diag < end2 && end < end1 && left[end] === right[end - diag]) {
       ++end;
@@ -66,7 +66,7 @@ const diff = function (left, right) {
     return snake(start, end, diag);
   };
 
-  const getMiddleSnake = function (start1, end1, start2, end2) {
+  const getMiddleSnake = (start1, end1, start2, end2) => {
     // Myers Algorithm
     // Initialisations
     const m = end1 - start1;

@@ -29,24 +29,24 @@ const trimZwsp = (fragment: DocumentFragment) => {
   });
 };
 
-const isEmptyAnchor = function (dom: DOMUtils, elm: Element) {
+const isEmptyAnchor = (dom: DOMUtils, elm: Element) => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
-const isTableCell = function (node) {
+const isTableCell = (node) => {
   return node && /^(TD|TH|CAPTION)$/.test(node.nodeName);
 };
 
-const emptyBlock = function (elm) {
+const emptyBlock = (elm) => {
   elm.innerHTML = '<br data-mce-bogus="1">';
 };
 
-const containerAndSiblingName = function (container, nodeName) {
+const containerAndSiblingName = (container, nodeName) => {
   return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
 };
 
 // Returns true if the block can be split into two blocks or not
-const canSplitBlock = function (dom, node) {
+const canSplitBlock = (dom, node) => {
   return node &&
     dom.isBlock(node) &&
     !/^(TD|TH|CAPTION|FORM)$/.test(node.nodeName) &&
@@ -55,7 +55,7 @@ const canSplitBlock = function (dom, node) {
 };
 
 // Remove the first empty inline element of the block so this: <p><b><em></em></b>x</p> becomes this: <p>x</p>
-const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, block) {
+const trimInlineElementsOnLeftSideOfBlock = (dom, nonEmptyElementsMap, block) => {
   let node = block;
   const firstChilds = [];
   let i;
@@ -88,7 +88,7 @@ const trimInlineElementsOnLeftSideOfBlock = function (dom, nonEmptyElementsMap, 
   }
 };
 
-const normalizeZwspOffset = function (start, container, offset) {
+const normalizeZwspOffset = (start, container, offset) => {
   if (NodeType.isText(container) === false) {
     return offset;
   } else if (start) {
@@ -98,7 +98,7 @@ const normalizeZwspOffset = function (start, container, offset) {
   }
 };
 
-const includeZwspInRange = function (rng) {
+const includeZwspInRange = (rng) => {
   const newRng = rng.cloneRange();
   newRng.setStart(rng.startContainer, normalizeZwspOffset(true, rng.startContainer, rng.startOffset));
   newRng.setEnd(rng.endContainer, normalizeZwspOffset(false, rng.endContainer, rng.endOffset));
@@ -106,7 +106,7 @@ const includeZwspInRange = function (rng) {
 };
 
 // Trims any linebreaks at the beginning of node user for example when pressing enter in a PRE element
-const trimLeadingLineBreaks = function (node) {
+const trimLeadingLineBreaks = (node) => {
   do {
     if (NodeType.isText(node)) {
       node.nodeValue = node.nodeValue.replace(/^[\r\n]+/, '');
@@ -116,7 +116,7 @@ const trimLeadingLineBreaks = function (node) {
   } while (node);
 };
 
-const getEditableRoot = function (dom, node) {
+const getEditableRoot = (dom, node) => {
   const root = dom.getRoot();
   let parent, editableRoot;
 
@@ -160,7 +160,7 @@ const applyAttributes = (editor: Editor, node: Element, forcedRootBlockAttrs: Re
   dom.setAttribs(node, remainingAttrs);
 };
 
-const setForcedBlockAttrs = function (editor: Editor, node) {
+const setForcedBlockAttrs = (editor: Editor, node) => {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
@@ -170,7 +170,7 @@ const setForcedBlockAttrs = function (editor: Editor, node) {
 };
 
 // Wraps any text nodes or inline elements in the specified forced root block name
-const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName, rng, container, offset) {
+const wrapSelfAndSiblingsInDefaultBlock = (editor: Editor, newBlockName, rng, container, offset) => {
   let newBlock, parentBlock, startNode, node, next, rootBlockName;
   const blockName = newBlockName || 'P';
   const dom = editor.dom, editableRoot = getEditableRoot(dom, container);
@@ -231,7 +231,7 @@ const wrapSelfAndSiblingsInDefaultBlock = function (editor: Editor, newBlockName
 
 // Adds a BR at the end of blocks that only contains an IMG or INPUT since
 // these might be floated and then they won't expand the block
-const addBrToBlockIfNeeded = function (dom, block) {
+const addBrToBlockIfNeeded = (dom, block) => {
   // IE will render the blocks correctly other browsers needs a BR
   block.normalize(); // Remove empty text nodes that got left behind by the extract
 
@@ -242,7 +242,7 @@ const addBrToBlockIfNeeded = function (dom, block) {
   }
 };
 
-const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
+const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>) => {
   let tmpRng, container, offset, parentBlock;
   let newBlock, fragment, containerBlock, parentBlockName, newBlockName, isAfterLastNodeInContainer;
   const dom = editor.dom;
@@ -251,7 +251,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
   // Creates a new block element by cloning the current one or creating a new one if the name is specified
   // This function will also copy any text formatting from the parent block and add it to the new one
-  const createNewBlock = function (name?) {
+  const createNewBlock = (name?) => {
     let node = container, block, clonedNode, caretNode;
     const textInlineElements = schema.getTextInlineElements();
 
@@ -297,7 +297,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
   };
 
   // Returns true/false if the caret is at the start/end of the parent block element
-  const isCaretAtStartOrEndOfBlock = function (start?) {
+  const isCaretAtStartOrEndOfBlock = (start?) => {
     let node, name;
 
     const normalizedOffset = normalizeZwspOffset(start, container, offset);
@@ -358,7 +358,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     return true;
   };
 
-  const insertNewBlockAfter = function () {
+  const insertNewBlockAfter = () => {
     // If the caret is at the end of a header we produce a P tag after it similar to Word unless we are in a hgroup
     if (/^(H[1-6]|PRE|FIGURE)$/.test(parentBlockName) && containerBlockName !== 'HGROUP') {
       newBlock = createNewBlock(newBlockName);

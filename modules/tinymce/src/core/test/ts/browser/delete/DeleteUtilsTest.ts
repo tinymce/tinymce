@@ -9,27 +9,27 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.delete.DeleteUtilsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cGetParentTextBlock = function (elementPath) {
+  const cGetParentTextBlock = (elementPath) => {
     return Chain.mapper((viewBlock: any) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       return DeleteUtils.getParentBlock(SugarElement.fromDom(viewBlock.get()), element);
     });
   };
 
-  const cAssertBlock = function (elementPath) {
+  const cAssertBlock = (elementPath) => {
     return Chain.op((actualBlock: Optional<any>) => {
       const expectedBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       Assertions.assertDomEq('Should be the expected block element', expectedBlock, actualBlock.getOrDie());
     });
   };
 
-  const cWillDeleteLastPositionInElement = function (forward, caretPath, caretOffset, elementPath) {
+  const cWillDeleteLastPositionInElement = (forward, caretPath, caretOffset, elementPath) => {
     return Chain.injectThunked(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const caretNode = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), caretPath).getOrDie();

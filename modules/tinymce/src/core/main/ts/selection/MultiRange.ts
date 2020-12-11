@@ -9,7 +9,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as RangeNodes from './RangeNodes';
 
-const getRanges = function (selection) {
+const getRanges = (selection) => {
   const ranges = [];
 
   if (selection) {
@@ -21,14 +21,14 @@ const getRanges = function (selection) {
   return ranges;
 };
 
-const getSelectedNodes = function (ranges) {
+const getSelectedNodes = (ranges) => {
   return Arr.bind(ranges, (range) => {
     const node = RangeNodes.getSelectedNode(range);
     return node ? [ SugarElement.fromDom(node) ] : [];
   });
 };
 
-const hasMultipleRanges = function (selection) {
+const hasMultipleRanges = (selection) => {
   return getRanges(selection).length > 1;
 };
 

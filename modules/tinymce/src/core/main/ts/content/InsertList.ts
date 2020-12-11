@@ -18,25 +18,25 @@ import * as NodeType from '../dom/NodeType';
  * @private
  */
 
-const hasOnlyOneChild = function (node) {
+const hasOnlyOneChild = (node) => {
   return node.firstChild && node.firstChild === node.lastChild;
 };
 
-const isPaddingNode = function (node) {
+const isPaddingNode = (node) => {
   return node.name === 'br' || node.value === Unicode.nbsp;
 };
 
-const isPaddedEmptyBlock = function (schema, node) {
+const isPaddedEmptyBlock = (schema, node) => {
   const blockElements = schema.getBlockElements();
   return blockElements[node.name] && hasOnlyOneChild(node) && isPaddingNode(node.firstChild);
 };
 
-const isEmptyFragmentElement = function (schema, node) {
+const isEmptyFragmentElement = (schema, node) => {
   const nonEmptyElements = schema.getNonEmptyElements();
   return node && (node.isEmpty(nonEmptyElements) || isPaddedEmptyBlock(schema, node));
 };
 
-const isListFragment = function (schema, fragment) {
+const isListFragment = (schema, fragment) => {
   let firstChild = fragment.firstChild;
   let lastChild = fragment.lastChild;
 
@@ -62,7 +62,7 @@ const isListFragment = function (schema, fragment) {
   return firstChild.name === 'ul' || firstChild.name === 'ol';
 };
 
-const cleanupDomFragment = function (domFragment) {
+const cleanupDomFragment = (domFragment) => {
   const firstChild = domFragment.firstChild;
   const lastChild = domFragment.lastChild;
 
@@ -78,45 +78,45 @@ const cleanupDomFragment = function (domFragment) {
   return domFragment;
 };
 
-const toDomFragment = function (dom, serializer, fragment) {
+const toDomFragment = (dom, serializer, fragment) => {
   const html = serializer.serialize(fragment);
   const domFragment = dom.createFragment(html);
 
   return cleanupDomFragment(domFragment);
 };
 
-const listItems = function (elm: Element) {
+const listItems = (elm: Element) => {
   return Tools.grep(elm.childNodes, (child) => {
     return child.nodeName === 'LI';
   });
 };
 
-const isPadding = function (node) {
+const isPadding = (node) => {
   return node.data === Unicode.nbsp || NodeType.isBr(node);
 };
 
-const isListItemPadded = function (node) {
+const isListItemPadded = (node) => {
   return node && node.firstChild && node.firstChild === node.lastChild && isPadding(node.firstChild);
 };
 
-const isEmptyOrPadded = function (elm) {
+const isEmptyOrPadded = (elm) => {
   return !elm.firstChild || isListItemPadded(elm);
 };
 
-const trimListItems = function (elms) {
+const trimListItems = (elms) => {
   return elms.length > 0 && isEmptyOrPadded(elms[elms.length - 1]) ? elms.slice(0, -1) : elms;
 };
 
-const getParentLi = function (dom, node) {
+const getParentLi = (dom, node) => {
   const parentBlock = dom.getParent(node, dom.isBlock);
   return parentBlock && parentBlock.nodeName === 'LI' ? parentBlock : null;
 };
 
-const isParentBlockLi = function (dom, node) {
+const isParentBlockLi = (dom, node) => {
   return !!getParentLi(dom, node);
 };
 
-const getSplit = function (parentNode, rng) {
+const getSplit = (parentNode, rng) => {
   const beforeRng = rng.cloneRange();
   const afterRng = rng.cloneRange();
 
@@ -129,7 +129,7 @@ const getSplit = function (parentNode, rng) {
   ];
 };
 
-const findFirstIn = function (node, rootNode) {
+const findFirstIn = (node, rootNode) => {
   const caretPos = CaretPosition.before(node);
   const caretWalker = CaretWalker(rootNode);
   const newCaretPos = caretWalker.next(caretPos);
@@ -137,7 +137,7 @@ const findFirstIn = function (node, rootNode) {
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-const findLastOf = function (node, rootNode) {
+const findLastOf = (node, rootNode) => {
   const caretPos = CaretPosition.after(node);
   const caretWalker = CaretWalker(rootNode);
   const newCaretPos = caretWalker.prev(caretPos);
@@ -145,7 +145,7 @@ const findLastOf = function (node, rootNode) {
   return newCaretPos ? newCaretPos.toRange() : null;
 };
 
-const insertMiddle = function (target, elms, rootNode, rng) {
+const insertMiddle = (target, elms, rootNode, rng) => {
   const parts = getSplit(target, rng);
   const parentElm = target.parentNode;
 
@@ -159,7 +159,7 @@ const insertMiddle = function (target, elms, rootNode, rng) {
   return findLastOf(elms[elms.length - 1], rootNode);
 };
 
-const insertBefore = function (target, elms, rootNode) {
+const insertBefore = (target, elms, rootNode) => {
   const parentElm = target.parentNode;
 
   Tools.each(elms, (elm) => {
@@ -169,19 +169,19 @@ const insertBefore = function (target, elms, rootNode) {
   return findFirstIn(target, rootNode);
 };
 
-const insertAfter = function (target, elms, rootNode, dom) {
+const insertAfter = (target, elms, rootNode, dom) => {
   dom.insertAfter(elms.reverse(), target);
   return findLastOf(elms[0], rootNode);
 };
 
-const insertAtCaret = function (serializer, dom, rng, fragment): Range {
+const insertAtCaret = (serializer, dom, rng, fragment): Range => {
   const domFragment = toDomFragment(dom, serializer, fragment);
   const liTarget = getParentLi(dom, rng.startContainer);
   const liElms = trimListItems(listItems(domFragment.firstChild));
   const BEGINNING = 1, END = 2;
   const rootNode = dom.getRoot();
 
-  const isAt = function (location) {
+  const isAt = (location) => {
     const caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(dom.getRoot());
     const newPos = location === BEGINNING ? caretWalker.prev(caretPos) : caretWalker.next(caretPos);

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failur
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_ok',
-      success(data) {
+      success: (data) => {
         LegacyUnit.equal(data, 'Hello JSON-RPC');
         done();
       }
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failur
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_ok',
-      success(data) {
+      success: (data) => {
         LegacyUnit.equal(data, 'Hello JSON-RPC');
         done();
       }
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failur
     new JSONRequest({}).send({
       type: 'GET',
       url: '/custom/json_rpc_fail',
-      error(error) {
+      error: (error) => {
         LegacyUnit.equal(error.code, 42);
         done();
       }
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failur
     JSONRequest.sendRPC({
       type: 'GET',
       url: '/custom/json_rpc_fail',
-      error(error) {
+      error: (error) => {
         LegacyUnit.equal(error.code, 42);
         done();
       }

@@ -7,7 +7,7 @@ import * as FontInfo from 'tinymce/core/fmt/FontInfo';
 UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const assertComputedFontProp = function (fontProp, html, path, expected) {
+  const assertComputedFontProp = (fontProp, html, path, expected) => {
     const div = document.createElement('div');
     const fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', (success, failure) =
     div.parentNode.removeChild(div);
   };
 
-  const assertSpecificFontProp = function (fontProp, html, path, expected) {
+  const assertSpecificFontProp = (fontProp, html, path, expected) => {
     const div = document.createElement('div');
     const fontGetProp = fontProp === 'fontSize' ? FontInfo.getFontSize : FontInfo.getFontFamily;
 

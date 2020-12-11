@@ -155,11 +155,11 @@ class Shortcuts {
     const cmd = cmdFunc;
 
     if (typeof cmd === 'string') {
-      return function () {
+      return () => {
         self.editor.execCommand(cmd, false, null);
       };
     } else if (Tools.isArray(cmd)) {
-      return function () {
+      return () => {
         self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
       };
     } else {

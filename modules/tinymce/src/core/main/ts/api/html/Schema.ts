@@ -131,15 +131,15 @@ const split = (items: string, delim?: string): string[] => {
  * @return {Object} Schema lookup table.
  */
 // TODO: Improve return type
-const compileSchema = function (type: SchemaType): Record<string, any> {
+const compileSchema = (type: SchemaType): Record<string, any> => {
   const schema: Record<string, any> = {};
   let globalAttributes, blockContent;
   let phrasingContent, flowContent, html4BlockContent, html4PhrasingContent;
 
-  const add = function (name: string, attributes?: string, children?: string | string[]) {
+  const add = (name: string, attributes?: string, children?: string | string[]) => {
     let ni, attributesOrder, element;
 
-    const arrayToMap = function (array, obj?) {
+    const arrayToMap = (array, obj?) => {
       const map = {};
       let i, l;
 
@@ -172,7 +172,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
     }
   };
 
-  const addAttrs = function (name: string, attributes?: string) {
+  const addAttrs = (name: string, attributes?: string) => {
     let ni, schemaItem, i, l;
 
     const names = split(name);
@@ -406,7 +406,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
   return schema;
 };
 
-const compileElementMap = function (value: string | Record<string, string>, mode?: string ) {
+const compileElementMap = (value: string | Record<string, string>, mode?: string ) => {
   let styles;
 
   if (value) {
@@ -427,14 +427,14 @@ const compileElementMap = function (value: string | Record<string, string>, mode
   return styles;
 };
 
-function Schema(settings?: SchemaSettings): Schema {
+const Schema = (settings?: SchemaSettings): Schema => {
   let elements: Record<string, SchemaElement> = {};
   const children: Record<string, {}> = {};
   let patternElements = [];
   const customElementsMap = {}, specialElements = {} as SchemaRegExpMap;
 
   // Creates an lookup table map object for the specified option or the default value
-  const createLookupTable = function (option: string, defaultValue?: string, extendWith?: string) {
+  const createLookupTable = (option: string, defaultValue?: string, extendWith?: string) => {
     let value = settings[option];
 
     if (!value) {
@@ -648,7 +648,7 @@ function Schema(settings?: SchemaSettings): Schema {
     }
   };
 
-  const setValidElements = function (validElements: string) {
+  const setValidElements = (validElements: string) => {
     elements = {};
     patternElements = [];
 
@@ -660,7 +660,7 @@ function Schema(settings?: SchemaSettings): Schema {
   };
 
   // Adds custom non HTML elements to the schema
-  const addCustomElements = function (customElements: string) {
+  const addCustomElements = (customElements: string) => {
     const customElementRegExp = /^(~)?(.+)$/;
 
     if (customElements) {
@@ -705,7 +705,7 @@ function Schema(settings?: SchemaSettings): Schema {
   };
 
   // Adds valid children to the schema object
-  const addValidChildren = function (validChildren) {
+  const addValidChildren = (validChildren) => {
     // see: https://html.spec.whatwg.org/#valid-custom-element-name
     const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
 
@@ -1097,6 +1097,6 @@ function Schema(settings?: SchemaSettings): Schema {
     addCustomElements,
     addValidChildren
   };
-}
+};
 
 export default Schema;

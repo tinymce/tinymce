@@ -94,7 +94,7 @@ const normalizedNodeIndex = (node: Node): number => {
   return index - numTextFragments;
 };
 
-const createPathItem = function (node) {
+const createPathItem = (node) => {
   let name;
 
   if (isText(node)) {
@@ -106,7 +106,7 @@ const createPathItem = function (node) {
   return name + '[' + normalizedNodeIndex(node) + ']';
 };
 
-const parentsUntil = function (root: Node, node: Node, predicate?): Node[] {
+const parentsUntil = (root: Node, node: Node, predicate?): Node[] => {
   const parents = [];
 
   for (node = node.parentNode; node !== root; node = node.parentNode) {

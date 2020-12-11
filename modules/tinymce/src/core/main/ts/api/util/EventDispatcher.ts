@@ -154,17 +154,17 @@ class EventDispatcher<T> {
     // Add event delegation methods if they are missing
     if (!args.preventDefault) {
       // Add preventDefault method
-      args.preventDefault = function () {
+      args.preventDefault = () => {
         args.isDefaultPrevented = Fun.always;
       };
 
       // Add stopPropagation
-      args.stopPropagation = function () {
+      args.stopPropagation = () => {
         args.isPropagationStopped = Fun.always;
       };
 
       // Add stopImmediatePropagation
-      args.stopImmediatePropagation = function () {
+      args.stopImmediatePropagation = () => {
         args.isImmediatePropagationStopped = Fun.always;
       };
 

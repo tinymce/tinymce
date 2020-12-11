@@ -8,19 +8,19 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cAssertHtml = function (expectedHtml) {
+  const cAssertHtml = (expectedHtml) => {
     return Chain.op(() => {
       Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
     });
   };
 
-  const cMergeBlocks = function (forward, block1Path, block2Path) {
+  const cMergeBlocks = (forward, block1Path, block2Path) => {
     return Chain.mapper((viewBlock: any) => {
       const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie();
       const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie();
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', (success, fail
     });
   };
 
-  const cAssertPosition = function (expectedPath, expectedOffset) {
+  const cAssertPosition = (expectedPath, expectedOffset) => {
     return Chain.op((position: Optional<any>) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), expectedPath).getOrDie();
 

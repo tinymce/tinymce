@@ -6,7 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const ok = function (value, label?) {
+  const ok = (value, label?) => {
     // console.log(value, label);
     return LegacyUnit.equal(value, true, label);
   };

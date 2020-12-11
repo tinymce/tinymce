@@ -11,13 +11,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
 
   const writer = Writer(), schema = Schema();
 
-  const createCounter = function (writer): SaxParserSettings & { counts: any } {
+  const createCounter = (writer): SaxParserSettings & { counts: any } => {
     const counts: any = {};
 
     return {
       counts,
 
-      comment(text) {
+      comment: (text) => {
         if ('comment' in counts) {
           counts.comment++;
         } else {
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.comment(text);
       },
 
-      cdata(text) {
+      cdata: (text) => {
         if ('cdata' in counts) {
           counts.cdata++;
         } else {
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.cdata(text);
       },
 
-      text(text, raw) {
+      text: (text, raw) => {
         if ('text' in counts) {
           counts.text++;
         } else {
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.text(text, raw);
       },
 
-      start(name, attrs, empty) {
+      start: (name, attrs, empty) => {
         if ('start' in counts) {
           counts.start++;
         } else {
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.start(name, attrs, empty);
       },
 
-      end(name) {
+      end: (name) => {
         if ('end' in counts) {
           counts.end++;
         } else {
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.end(name);
       },
 
-      pi(name, text) {
+      pi: (name, text) => {
         if ('pi' in counts) {
           counts.pi++;
         } else {
@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
         writer.pi(name, text);
       },
 
-      doctype(text) {
+      doctype: (text) => {
         if ('doctype:' in counts) {
           counts.doctype++;
         } else {
@@ -877,7 +877,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
   });
 
   suite.test('Parse away bogus elements', () => {
-    const testBogusSaxParse = function (inputHtml, outputHtml, counters) {
+    const testBogusSaxParse = (inputHtml, outputHtml, counters) => {
       const counter = createCounter(writer);
       counter.validate = true;
       const parser = SaxParser(counter, schema);
@@ -911,7 +911,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
   });
 
   suite.test('findEndTag', () => {
-    const testFindEndTag = function (html, startIndex, expectedIndex) {
+    const testFindEndTag = (html, startIndex, expectedIndex) => {
       LegacyUnit.equal(SaxParser.findEndTag(schema, html, startIndex), expectedIndex);
     };
 

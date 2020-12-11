@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.bookmark.BookmarksTest', (success, fail
 
   const cGetFilledPersistentBookmark = (_type: number, _normalized: boolean) => NamedChain.direct('editor', Chain.mapper((editor) => GetBookmark.getPersistentBookmark(editor.selection, true)), 'bookmark');
 
-  const assertRawRange = function (element, rng, startPath, startOffset, endPath, endOffset) {
+  const assertRawRange = (element, rng, startPath, startOffset, endPath, endOffset) => {
     const startContainer = Hierarchy.follow(element, startPath).getOrDie();
     const endContainer = Hierarchy.follow(element, endPath).getOrDie();
 

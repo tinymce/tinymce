@@ -14,8 +14,8 @@
 
 let count = 0;
 
-const seed = function () {
-  const rnd = function () {
+const seed = () => {
+  const rnd = () => {
     return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
   };
 
@@ -23,7 +23,7 @@ const seed = function () {
   return 's' + now.toString(36) + rnd() + rnd() + rnd();
 };
 
-const uuid = function (prefix) {
+const uuid = (prefix) => {
   return prefix + (count++) + seed();
 };
 

@@ -8,7 +8,7 @@
 import SaxParser from '../api/html/SaxParser';
 import * as Zwsp from '../text/Zwsp';
 
-const trimHtml = function (tempAttrs, html) {
+const trimHtml = (tempAttrs, html) => {
   const trimContentRegExp = new RegExp([
     '\\s?(' + tempAttrs.join('|') + ')="[^"]+"' // Trim temporaty data-mce prefixed attributes like data-mce-selected
   ].join('|'), 'gi');
@@ -16,7 +16,7 @@ const trimHtml = function (tempAttrs, html) {
   return html.replace(trimContentRegExp, '');
 };
 
-const trimInternal = function (serializer, html) {
+const trimInternal = (serializer, html) => {
   let content = html;
   const bogusAllRegExp = /<(\w+) [^>]*data-mce-bogus="all"[^>]*>/g;
   let endTagIndex, index, matchLength, matches;

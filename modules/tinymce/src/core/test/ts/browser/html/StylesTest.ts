@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', (success, failure) =>
 
   suite.test('Urls convert urls and force format', () => {
     const styles = Styles({
-      url_converter(url) {
+      url_converter: (url) => {
         return '|' + url + '|';
       }
     });

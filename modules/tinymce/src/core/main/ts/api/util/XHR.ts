@@ -233,7 +233,7 @@ const XHR: XHR = {
   send(settings: XHRSettings) {
     let xhr, count = 0;
 
-    const ready = function () {
+    const ready = () => {
       if (!settings.async || xhr.readyState === 4 || count++ > 10000) {
         if (settings.success && count < 10000 && xhr.status === 200) {
           settings.success.call(settings.success_scope, '' + xhr.responseText, xhr, settings);

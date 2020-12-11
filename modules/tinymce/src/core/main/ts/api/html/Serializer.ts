@@ -28,7 +28,7 @@ interface HtmlSerializer {
  * @version 3.4
  */
 
-const HtmlSerializer = function (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer {
+const HtmlSerializer = (settings?: HtmlSerializerSettings, schema = Schema()): HtmlSerializer => {
   const writer = Writer(settings);
 
   settings = settings || {};
@@ -48,32 +48,32 @@ const HtmlSerializer = function (settings?: HtmlSerializerSettings, schema = Sch
 
     const handlers = {
       // #text
-      3(node) {
+      3: (node) => {
         writer.text(node.value, node.raw);
       },
 
       // #comment
-      8(node) {
+      8: (node) => {
         writer.comment(node.value);
       },
 
       // Processing instruction
-      7(node) {
+      7: (node) => {
         writer.pi(node.name, node.value);
       },
 
       // Doctype
-      10(node) {
+      10: (node) => {
         writer.doctype(node.value);
       },
 
       // CDATA
-      4(node) {
+      4: (node) => {
         writer.cdata(node.value);
       },
 
       // Document fragment
-      11(node) {
+      11: (node) => {
         if ((node = node.firstChild)) {
           do {
             walk(node);
@@ -84,7 +84,7 @@ const HtmlSerializer = function (settings?: HtmlSerializerSettings, schema = Sch
 
     writer.reset();
 
-    const walk = function (node: AstNode) {
+    const walk = (node: AstNode) => {
       const handler = handlers[node.type];
       let name, isEmpty, attrs, attrName, attrValue, sortedAttrs, i, l, elementRule;
 

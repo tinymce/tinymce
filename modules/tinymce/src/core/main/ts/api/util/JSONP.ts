@@ -27,7 +27,7 @@ const JSONP: JSONP = {
     const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
     const id = 'tinymce_jsonp_' + count;
 
-    self.callbacks[count] = function (json) {
+    self.callbacks[count] = (json: string) => {
       dom.remove(id);
       delete self.callbacks[count];
 

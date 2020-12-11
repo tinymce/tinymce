@@ -11,13 +11,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
 
   Theme();
 
-  const sScrollReset = function (editor: Editor) {
+  const sScrollReset = (editor: Editor) => {
     return Step.sync(() => {
       editor.getWin().scrollTo(0, 0);
     });
   };
 
-  const sSetContent = function (editor: Editor, tinyApis: TinyApis, html: string) {
+  const sSetContent = (editor: Editor, tinyApis: TinyApis, html: string) => {
     return GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(() => {
@@ -26,13 +26,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     ]);
   };
 
-  const sScrollIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
+  const sScrollIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
     return Step.sync(() => {
       editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
     });
   };
 
-  const sScrollElementIntoView = function (editor: Editor, selector: string, alignToTop?: boolean) {
+  const sScrollElementIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
     return Step.sync(() => {
       ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
     });
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     ScrollIntoView.scrollRangeIntoView(editor, rng);
   });
 
-  const sAssertScrollPosition = function (editor: Editor, x: number, y: number) {
+  const sAssertScrollPosition = (editor: Editor, x: number, y: number) => {
     return Step.sync(() => {
       const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
       const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const sAssertApproxScrollPosition = function (editor: Editor, x: number, y: number) {
+  const sAssertApproxScrollPosition = (editor: Editor, x: number, y: number) => {
     return Step.sync(() => {
       const actualX = editor.dom.getViewPort(editor.getWin()).x;
       const actualY = editor.dom.getViewPort(editor.getWin()).y;
@@ -65,11 +65,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const mBindScrollIntoViewEvent = function (editor: Editor) {
+  const mBindScrollIntoViewEvent = (editor: Editor) => {
     return Step.stateful((_value, next, _die) => {
       const state = Cell({});
 
-      const handler = function (e) {
+      const handler = (e) => {
         e.preventDefault();
         state.set({
           elm: e.elm,
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const mAssertScrollIntoViewEventInfo = function (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) {
+  const mAssertScrollIntoViewEventInfo = (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) => {
     return Step.stateful((value: any, next, _die) => {
       const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
       const actualTarget = SugarElement.fromDom(value.state.get().elm);
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     });
   };
 
-  const steps = function (editor: Editor, tinyApis: TinyApis) {
+  const steps = (editor: Editor, tinyApis: TinyApis) => {
     return [
       tinyApis.sFocus(),
       Logger.t('Public Selection API', GeneralSteps.sequence([
@@ -192,7 +192,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     ];
   };
 
-  const isPhantomJs = function () {
+  const isPhantomJs = () => {
     return /PhantomJS/.test(window.navigator.userAgent);
   };
 

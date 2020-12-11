@@ -135,7 +135,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
     Log.step('TBA', 'insertAtCaret prevent default of beforeSetContent', Step.sync(() => {
       let args;
 
-      const handler = function (e) {
+      const handler = (e) => {
         if (e.selection === true) {
           e.preventDefault();
           e.content = '<h1>b</h1>';
@@ -143,7 +143,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentTest', (success, f
         }
       };
 
-      const collector = function (e) {
+      const collector = (e) => {
         args = e;
       };
 

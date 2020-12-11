@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure)
       result.keydown1 = true;
     });
 
-    const callback2 = function () {
+    const callback2 = () => {
       result.keydown2 = true;
     };
 
@@ -382,13 +382,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure)
   suite.test('unbind inside callback', () => {
     let data;
 
-    const append = function (value) {
-      return function () {
+    const append = (value) => {
+      return () => {
         data += value;
       };
     };
 
-    const callback = function () {
+    const callback = () => {
       eventUtils.unbind(window, 'click', callback);
       data += 'b';
     };
@@ -442,7 +442,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure)
 
   suite.test('isDefaultPrevented', () => {
     const testObj: any = {};
-    const testCallback = function () {
+    const testCallback = () => {
       return 'hello';
     };
     testObj.isDefaultPrevented = testCallback;

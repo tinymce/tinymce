@@ -1,7 +1,7 @@
 import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
-import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
+import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 
 UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, failure) => {
   const contentCss = '/project/tinymce/js/tinymce/skins/content/default/content.css';

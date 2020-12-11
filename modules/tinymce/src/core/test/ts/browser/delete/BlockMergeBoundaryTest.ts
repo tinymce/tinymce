@@ -10,13 +10,13 @@ type BlockBoundary = BlockMergeBoundary.BlockBoundary;
 UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cReadBlockBoundary = function (forward, cursorPath, cursorOffset) {
+  const cReadBlockBoundary = (forward, cursorPath, cursorOffset) => {
     return Chain.mapper((viewBlock: any) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', (success, f
     });
   };
 
-  const cAssertBlockBoundaryPositions = function (fromPath, fromOffset, toPath, toOffset): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
+  const cAssertBlockBoundaryPositions = (fromPath, fromOffset, toPath, toOffset): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> => {
     return Chain.op((blockBoundaryOption: Optional<BlockMergeBoundary.BlockBoundary>) => {
       const fromContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromPath).getOrDie();
       const toContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toPath).getOrDie();
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockMergeBoundary', (success, f
     });
   };
 
-  const cAssertBlockBoundaryBlocks = function (fromBlockPath: number[], toBlockPath: number[]): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> {
+  const cAssertBlockBoundaryBlocks = (fromBlockPath: number[], toBlockPath: number[]): Chain<Optional<BlockBoundary>, Optional<BlockBoundary>> => {
     return Chain.op((blockBoundaryOption: Optional<BlockBoundary>) => {
       const expectedFromBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), fromBlockPath).getOrDie();
       const expectedToBlock = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), toBlockPath).getOrDie();

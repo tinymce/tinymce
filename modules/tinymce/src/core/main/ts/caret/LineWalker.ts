@@ -44,7 +44,7 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   let line = 0;
   const result = [];
 
-  const add = function (node: Node) {
+  const add = (node: Node) => {
     let i, clientRect, clientRects;
 
     clientRects = Dimensions.getClientRects([ node ]);
@@ -96,7 +96,7 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   const result = [];
   let line = 0, clientRect;
 
-  const getClientRect = function (caretPosition) {
+  const getClientRect = (caretPosition: CaretPosition) => {
     if (direction === 1) {
       return ArrUtils.last(caretPosition.getClientRects());
     }

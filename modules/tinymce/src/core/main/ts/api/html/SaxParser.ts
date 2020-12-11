@@ -197,7 +197,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
+const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
 
   if (settings.fix_self_closing !== false) {
@@ -648,10 +648,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   return {
     parse
   };
-}
+};
 
-namespace SaxParser {
-  export const findEndTag = findEndTagIndex;
-}
+SaxParser.findEndTag = findEndTagIndex;
 
 export default SaxParser;

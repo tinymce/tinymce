@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure)
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
     return viewBlock.get();
   };

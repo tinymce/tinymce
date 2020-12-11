@@ -8,13 +8,13 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cReadFragment = function (startPath, startOffset, endPath, endOffset) {
+  const cReadFragment = (startPath, startOffset, endPath, endOffset) => {
     return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', (success
     });
   };
 
-  const cReadFragmentCells = function (paths) {
+  const cReadFragmentCells = (paths) => {
     return Chain.mapper((viewBlock: any) => {
       const ranges = Arr.map(paths, (path) => {
         const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
@@ -40,13 +40,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.FragmentReaderTest', (success
     });
   };
 
-  const getFragmentHtml = function (fragment) {
+  const getFragmentHtml = (fragment) => {
     const elm = SugarElement.fromTag('div');
     Insert.append(elm, fragment);
     return Html.get(elm);
   };
 
-  const cAssertFragmentHtml = function (expectedHtml) {
+  const cAssertFragmentHtml = (expectedHtml) => {
     return Chain.mapper((fragment) => {
       const actualHtml = getFragmentHtml(fragment);
       Assertions.assertHtml('Should be expected fragment html', expectedHtml, actualHtml);

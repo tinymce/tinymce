@@ -6,7 +6,7 @@ import AstNode from 'tinymce/core/api/html/Node';
 UnitTest.asynctest('browser.tinymce.core.html.NodeTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const ok = function (value, label?) {
+  const ok = (value, label?) => {
     return LegacyUnit.equal(value, true, label);
   };
 
@@ -383,7 +383,7 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', (success, failure) => {
     node1 = root.append(new AstNode('a', 1)).attr('name', 'x');
     ok(!root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
 
-    const isSpan = function (node) {
+    const isSpan = (node) => {
       return node.name === 'span';
     };
 

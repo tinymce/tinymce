@@ -9,12 +9,12 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', (success, failur
 
   Theme();
 
-  const sKeyUp = function (editor, key) {
+  const sKeyUp = (editor, key) => {
     const iDoc = SugarElement.fromDom(editor.getDoc());
     return Keyboard.sKeyup(iDoc, key, {});
   };
 
-  const sFakeBackspaceKeyOnRange = function (editor) {
+  const sFakeBackspaceKeyOnRange = (editor) => {
     return GeneralSteps.sequence([
       Step.sync(() => {
         editor.getDoc().execCommand('Delete', false, null);
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', (success, failur
     ]);
   };
 
-  const sTestDeletePadd = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) {
+  const sTestDeletePadd = (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions) => {
     return GeneralSteps.sequence([
       tinyApis.sFocus(),
       Logger.t('Should padd empty ce=true inside ce=false when everything is deleted', GeneralSteps.sequence([

@@ -22,7 +22,7 @@ type TrimFn = (s: string) => string;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
-const getNormalizedTextOffset = function (trim: TrimFn, container: Text, offset: number): number {
+const getNormalizedTextOffset = (trim: TrimFn, container: Text, offset: number): number => {
   let node, trimmedOffset;
 
   trimmedOffset = trim(container.data.slice(0, offset)).length;
@@ -33,7 +33,7 @@ const getNormalizedTextOffset = function (trim: TrimFn, container: Text, offset:
   return trimmedOffset;
 };
 
-const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) {
+const getPoint = (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng: Range, start: boolean) => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   let offset = rng[start ? 'startOffset' : 'endOffset'];
   const point = [];
@@ -60,7 +60,7 @@ const getPoint = function (dom: DOMUtils, trim: TrimFn, normalized: boolean, rng
   return point;
 };
 
-const getLocation = function (trim: TrimFn, selection: EditorSelection, normalized: boolean, rng: Range): PathBookmark {
+const getLocation = (trim: TrimFn, selection: EditorSelection, normalized: boolean, rng: Range): PathBookmark => {
   const dom = selection.dom, bookmark: any = {};
 
   bookmark.start = getPoint(dom, trim, normalized, rng, true);
@@ -72,7 +72,7 @@ const getLocation = function (trim: TrimFn, selection: EditorSelection, normaliz
   return bookmark;
 };
 
-const findIndex = function (dom: DOMUtils, name: string, element: Element) {
+const findIndex = (dom: DOMUtils, name: string, element: Element) => {
   let count = 0;
 
   Tools.each(dom.select(name), (node) => {
@@ -90,7 +90,7 @@ const findIndex = function (dom: DOMUtils, name: string, element: Element) {
   return count;
 };
 
-const moveEndPoint = function (rng: Range, start: boolean) {
+const moveEndPoint = (rng: Range, start: boolean) => {
   let container, offset, childNodes;
   const prefix = start ? 'start' : 'end';
 
@@ -107,14 +107,14 @@ const moveEndPoint = function (rng: Range, start: boolean) {
   }
 };
 
-const normalizeTableCellSelection = function (rng: Range) {
+const normalizeTableCellSelection = (rng: Range) => {
   moveEndPoint(rng, true);
   moveEndPoint(rng, false);
 
   return rng;
 };
 
-const findSibling = function (node: Node, offset: number): Element {
+const findSibling = (node: Node, offset: number): Element => {
   let sibling;
 
   if (NodeType.isElement(node)) {
@@ -141,11 +141,11 @@ const findSibling = function (node: Node, offset: number): Element {
   }
 };
 
-const findAdjacentContentEditableFalseElm = function (rng: Range) {
+const findAdjacentContentEditableFalseElm = (rng: Range) => {
   return findSibling(rng.startContainer, rng.startOffset) || findSibling(rng.endContainer, rng.endOffset);
 };
 
-const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection: EditorSelection): IndexBookmark | PathBookmark {
+const getOffsetBookmark = (trim: TrimFn, normalized: boolean, selection: EditorSelection): IndexBookmark | PathBookmark => {
   const element = selection.getNode();
   let name = element ? element.nodeName : null;
   const rng = selection.getRng();
@@ -163,7 +163,7 @@ const getOffsetBookmark = function (trim: TrimFn, normalized: boolean, selection
   return getLocation(trim, selection, normalized, rng);
 };
 
-const getCaretBookmark = function (selection: EditorSelection): StringPathBookmark {
+const getCaretBookmark = (selection: EditorSelection): StringPathBookmark => {
   const rng = selection.getRng();
 
   return {
@@ -172,7 +172,7 @@ const getCaretBookmark = function (selection: EditorSelection): StringPathBookma
   };
 };
 
-const getRangeBookmark = function (selection: EditorSelection): RangeBookmark {
+const getRangeBookmark = (selection: EditorSelection): RangeBookmark => {
   return { rng: selection.getRng() };
 };
 
@@ -181,7 +181,7 @@ const createBookmarkSpan = (dom: DOMUtils, id: string, filled: boolean) => {
   return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
 };
 
-const getPersistentBookmark = function (selection: EditorSelection, filled: boolean): IdBookmark | IndexBookmark {
+const getPersistentBookmark = (selection: EditorSelection, filled: boolean): IdBookmark | IndexBookmark => {
   const dom = selection.dom;
   let rng = selection.getRng();
   const id = dom.uniqueId();
@@ -213,7 +213,7 @@ const getPersistentBookmark = function (selection: EditorSelection, filled: bool
   return { id };
 };
 
-const getBookmark = function (selection: EditorSelection, type: number, normalized: boolean): Bookmark {
+const getBookmark = (selection: EditorSelection, type: number, normalized: boolean): Bookmark => {
   if (type === 2) {
     return getOffsetBookmark(Zwsp.trim, normalized, selection);
   } else if (type === 3) {

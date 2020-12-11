@@ -16,25 +16,25 @@ UnitTest.asynctest('browser.tinymce.core.CaretWalkerTest', (success, failure) =>
     return;
   }
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
   const getChildNode = (childIndex: number) => getRoot().childNodes[childIndex];
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
   };
 
-  const findElm = function (selector) {
+  const findElm = (selector) => {
     return DomQuery(selector, getRoot())[0];
   };
 
-  const findElmPos = function (selector, offset) {
+  const findElmPos = (selector, offset) => {
     return CaretPosition(DomQuery(selector, getRoot())[0], offset);
   };
 
-  const findTextPos = function (selector, offset) {
+  const findTextPos = (selector, offset) => {
     return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
   };
 

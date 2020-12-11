@@ -9,8 +9,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', (success, failure)
   const viewBlock = ViewBlock();
   let nodes;
 
-  const setup = function () {
-    const all = function (node) {
+  const setup = () => {
+    const all = (node) => {
       let list = [ node ];
 
       if (node.hasChildNodes()) {
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TreeWalkerTest', (success, failure)
     nodes = all(viewBlock.get()).slice(1);
   };
 
-  const compareNodeLists = function (expectedNodes, actutalNodes) {
+  const compareNodeLists = (expectedNodes, actutalNodes) => {
     if (expectedNodes.length !== actutalNodes.length) {
       return false;
     }

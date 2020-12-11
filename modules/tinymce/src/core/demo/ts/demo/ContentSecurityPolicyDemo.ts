@@ -50,7 +50,7 @@ const settings = {
   importcss_append: true,
   height: 400,
   image_advtab: true,
-  file_picker_callback(callback, _value, meta) {
+  file_picker_callback: (callback, _value, meta) => {
     if (meta.fieldname === 'poster') {
       callback('test.mp4', { altsource: 'blah.ogg', width: '400px', poster: 'testing.jpg', embed: '<p>test</p>' });
       return;
@@ -96,7 +96,7 @@ const settings = {
   template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
   image_caption: true,
   theme: 'silver',
-  setup(ed) {
+  setup: (ed) => {
     makeSidebar(ed, 'sidebar1', 'green', 200);
   },
   plugins: [

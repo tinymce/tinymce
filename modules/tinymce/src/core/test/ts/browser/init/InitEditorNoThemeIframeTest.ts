@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', (suc
   }, {
     theme: false,
     base_url: '/project/tinymce/js/tinymce',
-    init_instance_callback(editor) {
+    init_instance_callback: (editor) => {
       editor.fire('SkinLoaded');
     }
   }, success, failure);

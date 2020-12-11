@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', (succ
 
   Theme();
 
-  const locationName = function (location) {
+  const locationName = (location) => {
     return location.fold(
       Fun.constant('before'),
       Fun.constant('start'),
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', (succ
     );
   };
 
-  const readLocation = function (editor: Editor) {
+  const readLocation = (editor: Editor) => {
     const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
     return BoundaryLocation
       .readLocation(isInlineTarget, editor.getBody(), CaretPosition.fromRangeStart(editor.selection.getRng()))
@@ -29,8 +29,8 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', (succ
       .getOr('none');
   };
 
-  const sTestDeleteOrBackspaceKey = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) {
-    return function (setupHtml, setupPath, setupOffset, expectedHtml, expectedLocation, expectedPath, expectedOffet) {
+  const sTestDeleteOrBackspaceKey = (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) => {
+    return (setupHtml, setupPath, setupOffset, expectedHtml, expectedLocation, expectedPath, expectedOffet) => {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(setupHtml),
         tinyApis.sSetCursor(setupPath, setupOffset),
@@ -46,13 +46,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineBoundaryDeleteTest', (succ
     };
   };
 
-  const sNormalizeBody = function (editor) {
+  const sNormalizeBody = (editor) => {
     return Step.sync(() => {
       editor.getBody().normalize();
     });
   };
 
-  const paragraphWithText = function (text) {
+  const paragraphWithText = (text) => {
     return ApproxStructure.build((s, str, _arr) => {
       return s.element('body', {
         children: [ s.element('p', { children: [ s.text(str.is(text)) ] }) ]

@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export default function () {
-  const unimplemented = function () {
+export default () => {
+  const unimplemented = () => {
     throw new Error('Theme did not provide a WindowManager implementation.');
   };
 
@@ -19,4 +19,4 @@ export default function () {
     getParams: unimplemented,
     setParams: unimplemented
   };
-}
+};

@@ -5,7 +5,7 @@ import * as Empty from 'tinymce/core/dom/Empty';
 
 UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', (success, failure) => {
 
-  const sTestEmpty = function (html, expected) {
+  const sTestEmpty = (html, expected) => {
     return Step.sync(() => {
       const elm = SugarElement.fromHtml(html);
       const expectedLabel = expected ? 'empty' : 'not empty';

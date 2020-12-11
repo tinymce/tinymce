@@ -40,12 +40,12 @@ const cellPosition = (x: number, y: number): CellPosition => ({
   y
 });
 
-const getSpan = function (td: SugarElement<HTMLTableCellElement>, key: string) {
+const getSpan = (td: SugarElement<HTMLTableCellElement>, key: string) => {
   const value = parseInt(Attribute.get(td, key), 10);
   return isNaN(value) ? 1 : value;
 };
 
-const fillout = function (table: TableModel, x: number, y: number, tr: SugarElement<HTMLTableRowElement>, td: SugarElement<HTMLTableCellElement>) {
+const fillout = (table: TableModel, x: number, y: number, tr: SugarElement<HTMLTableRowElement>, td: SugarElement<HTMLTableCellElement>) => {
   const rowspan = getSpan(td, 'rowspan');
   const colspan = getSpan(td, 'colspan');
   const rows = table.rows;
@@ -65,13 +65,13 @@ const fillout = function (table: TableModel, x: number, y: number, tr: SugarElem
   }
 };
 
-const cellExists = function (table: TableModel, x: number, y: number) {
+const cellExists = (table: TableModel, x: number, y: number) => {
   const rows = table.rows;
   const cells = rows[y] ? rows[y].cells : [];
   return !!cells[x];
 };
 
-const skipCellsX = function (table: TableModel, x: number, y: number) {
+const skipCellsX = (table: TableModel, x: number, y: number) => {
   while (cellExists(table, x, y)) {
     x++;
   }
@@ -79,13 +79,13 @@ const skipCellsX = function (table: TableModel, x: number, y: number) {
   return x;
 };
 
-const getWidth = function (rows: TableRowModel[]) {
+const getWidth = (rows: TableRowModel[]) => {
   return Arr.foldl(rows, (acc, row) => {
     return row.cells.length > acc ? row.cells.length : acc;
   }, 0);
 };
 
-const findElementPos = function (table: TableModel, element: SugarElement<unknown>): Optional<CellPosition> {
+const findElementPos = (table: TableModel, element: SugarElement<unknown>): Optional<CellPosition> => {
   const rows = table.rows;
   for (let y = 0; y < rows.length; y++) {
     const cells = rows[y].cells;
@@ -99,7 +99,7 @@ const findElementPos = function (table: TableModel, element: SugarElement<unknow
   return Optional.none();
 };
 
-const extractRows = function (table: TableModel, sx: number, sy: number, ex: number, ey: number) {
+const extractRows = (table: TableModel, sx: number, sy: number, ex: number, ey: number) => {
   const newRows = [];
   const rows = table.rows;
 
@@ -112,7 +112,7 @@ const extractRows = function (table: TableModel, sx: number, sy: number, ex: num
   return newRows;
 };
 
-const subTable = function (table: TableModel, startPos: CellPosition, endPos: CellPosition) {
+const subTable = (table: TableModel, startPos: CellPosition, endPos: CellPosition) => {
   const sx = startPos.x, sy = startPos.y;
   const ex = endPos.x, ey = endPos.y;
   const newRows = sy < ey ? extractRows(table, sx, sy, ex, ey) : extractRows(table, sx, ey, ex, sy);
@@ -120,7 +120,7 @@ const subTable = function (table: TableModel, startPos: CellPosition, endPos: Ce
   return tableModel(table.element, getWidth(newRows), newRows);
 };
 
-const createDomTable = function (table: TableModel, rows: SugarElement<HTMLTableRowElement>[]) {
+const createDomTable = (table: TableModel, rows: SugarElement<HTMLTableRowElement>[]) => {
   const tableElement = Replication.shallow(table.element);
   const tableBody = SugarElement.fromTag('tbody');
 
@@ -130,7 +130,7 @@ const createDomTable = function (table: TableModel, rows: SugarElement<HTMLTable
   return tableElement;
 };
 
-const modelRowsToDomRows = function (table: TableModel) {
+const modelRowsToDomRows = (table: TableModel) => {
   return Arr.map(table.rows, (row) => {
     const cells = Arr.map(row.cells, (cell) => {
       const td = Replication.deep(cell);
@@ -145,7 +145,7 @@ const modelRowsToDomRows = function (table: TableModel) {
   });
 };
 
-const fromDom = function (tableElm: SugarElement<HTMLTableElement>) {
+const fromDom = (tableElm: SugarElement<HTMLTableElement>) => {
   const table = tableModel(Replication.shallow(tableElm), 0, []);
 
   Arr.each(SelectorFilter.descendants<HTMLTableRowElement>(tableElm, 'tr'), (tr, y) => {
@@ -157,11 +157,11 @@ const fromDom = function (tableElm: SugarElement<HTMLTableElement>) {
   return tableModel(table.element, getWidth(table.rows), table.rows);
 };
 
-const toDom = function (table: TableModel) {
+const toDom = (table: TableModel) => {
   return createDomTable(table, modelRowsToDomRows(table));
 };
 
-const subsection = function (table: TableModel, startElement: SugarElement<unknown>, endElement: SugarElement<unknown>) {
+const subsection = (table: TableModel, startElement: SugarElement<unknown>, endElement: SugarElement<unknown>) => {
   return findElementPos(table, startElement).bind((startPos) => {
     return findElementPos(table, endElement).map((endPos) => {
       return subTable(table, startPos, endPos);

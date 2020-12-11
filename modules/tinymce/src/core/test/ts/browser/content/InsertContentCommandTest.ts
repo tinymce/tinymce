@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
 
   Theme();
 
-  const normalizeRng = function (rng: Range) {
+  const normalizeRng = (rng: Range) => {
     if (rng.startContainer.nodeType === 3) {
       if (rng.startOffset === 0) {
         rng.setStartBefore(rng.startContainer);
@@ -30,11 +30,11 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     return rng;
   };
 
-  const ok = function (value: boolean, label?: string) {
+  const ok = (value: boolean, label?: string) => {
     return LegacyUnit.equal(value, true, label);
   };
 
-  const getContent = function (editor) {
+  const getContent = (editor) => {
     return editor.getContent();
   };
 

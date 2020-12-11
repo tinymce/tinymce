@@ -22,11 +22,11 @@ const lazyTempDocument = () => undoLevelDocument.get().getOrThunk(() => {
   return doc;
 });
 
-const hasIframes = function (html: string) {
+const hasIframes = (html: string) => {
   return html.indexOf('</iframe>') !== -1;
 };
 
-const createFragmentedLevel = function (fragments: string[]): UndoLevel {
+const createFragmentedLevel = (fragments: string[]): UndoLevel => {
   return {
     type: UndoLevelType.Fragmented,
     fragments,
@@ -36,7 +36,7 @@ const createFragmentedLevel = function (fragments: string[]): UndoLevel {
   };
 };
 
-const createCompleteLevel = function (content: string): UndoLevel {
+const createCompleteLevel = (content: string): UndoLevel => {
   return {
     type: UndoLevelType.Complete,
     fragments: null,
@@ -46,7 +46,7 @@ const createCompleteLevel = function (content: string): UndoLevel {
   };
 };
 
-const createFromEditor = function (editor: Editor): UndoLevel {
+const createFromEditor = (editor: Editor): UndoLevel => {
   const fragments = Fragments.read(editor.getBody());
   const trimmedFragments = Arr.bind(fragments, (html) => {
     const trimmed = TrimHtml.trimInternal(editor.serializer, html);
@@ -57,7 +57,7 @@ const createFromEditor = function (editor: Editor): UndoLevel {
   return hasIframes(content) ? createFragmentedLevel(trimmedFragments) : createCompleteLevel(content);
 };
 
-const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolean) {
+const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean) => {
   if (level.type === UndoLevelType.Fragmented) {
     Fragments.write(level.fragments, editor.getBody());
   } else {
@@ -67,7 +67,7 @@ const applyToEditor = function (editor: Editor, level: UndoLevel, before: boolea
   editor.selection.moveToBookmark(before ? level.beforeBookmark : level.bookmark);
 };
 
-const getLevelContent = function (level: UndoLevel): string {
+const getLevelContent = (level: UndoLevel): string => {
   return level.type === UndoLevelType.Fragmented ? level.fragments.join('') : level.content;
 };
 
@@ -83,7 +83,7 @@ const hasEqualContent = (level1: UndoLevel, level2: UndoLevel): boolean => getLe
 const hasEqualCleanedContent = (level1: UndoLevel, level2: UndoLevel): boolean => getCleanLevelContent(level1) === getCleanLevelContent(level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
-const isEq = function (level1: UndoLevel, level2: UndoLevel): boolean {
+const isEq = (level1: UndoLevel, level2: UndoLevel): boolean => {
   if (!level1 || !level2) {
     return false;
   } else if (hasEqualContent(level1, level2)) {

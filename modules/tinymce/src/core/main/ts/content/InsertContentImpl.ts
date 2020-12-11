@@ -37,7 +37,7 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
   }
 };
 
-const validInsertion = function (editor: Editor, value: string, parentNode: Element) {
+const validInsertion = (editor: Editor, value: string, parentNode: Element) => {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -54,7 +54,7 @@ const validInsertion = function (editor: Editor, value: string, parentNode: Elem
   }
 };
 
-const trimBrsFromTableCell = function (dom: DOMUtils, elm: Element) {
+const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
@@ -63,7 +63,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const dom = editor.dom;
 
   if (merge) {
-    const root = editor.getBody(), elementUtils = new ElementUtils(dom);
+    const root = editor.getBody(), elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
@@ -91,20 +91,20 @@ const unmarkFragmentElements = (elm: Element) => {
   });
 };
 
-const isPartOfFragment = function (node: Element) {
+const isPartOfFragment = (node: Element) => {
   return !!node.getAttribute('data-mce-fragment');
 };
 
-const canHaveChildren = function (editor: Editor, node) {
+const canHaveChildren = (editor: Editor, node) => {
   return node && !editor.schema.getShortEndedElements()[node.nodeName];
 };
 
-const moveSelectionToMarker = function (editor: Editor, marker) {
+const moveSelectionToMarker = (editor: Editor, marker) => {
   let nextRng;
   const dom = editor.dom, selection = editor.selection;
   let node2;
 
-  const getContentEditableFalseParent = function (node: Node) {
+  const getContentEditableFalseParent = (node: Node) => {
     const root = editor.getBody();
 
     for (; node && node !== root; node = node.parentNode) {
@@ -152,7 +152,7 @@ const moveSelectionToMarker = function (editor: Editor, marker) {
     rng.setEndBefore(marker);
   }
 
-  const findNextCaretRng = function (rng) {
+  const findNextCaretRng = (rng) => {
     let caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(editor.getBody());
 
@@ -199,7 +199,7 @@ const deleteSelectedContent = (editor: Editor) => {
   }
 };
 
-export const insertHtmlAtCaret = function (editor: Editor, value: string, details) {
+export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
   let parentNode, rootNode, args;
   let marker, rng, node;
   const selection: EditorSelection = editor.selection, dom = editor.dom;

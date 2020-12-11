@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', (success, failure) => {
   Theme();
 
-  const sAssertSelectBoxDisplayValue = function (editor, title, expectedValue) {
+  const sAssertSelectBoxDisplayValue = (editor, title, expectedValue) => {
     return Chain.asStep(SugarElement.fromDom(document.body), [
       UiFinder.cFindIn('*[title="' + title + '"]'),
       Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),

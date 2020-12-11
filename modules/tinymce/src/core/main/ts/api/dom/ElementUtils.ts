@@ -18,7 +18,11 @@ import DOMUtils from './DOMUtils';
 
 const each = Tools.each;
 
-const ElementUtils = function (dom: DOMUtils) {
+export interface ElementUtils {
+  readonly compare: (node1: Node, node2: Node) => boolean;
+}
+
+const ElementUtils = (dom: DOMUtils): ElementUtils => {
   /**
    * Compares two nodes and checks if it's attributes and styles matches.
    * This doesn't compare classes as items since their order is significant.
@@ -28,7 +32,7 @@ const ElementUtils = function (dom: DOMUtils) {
    * @param {Node} node2 Second node to compare with.
    * @return {boolean} True/false if the nodes are the same or not.
    */
-  this.compare = function (node1, node2) {
+  const compare = (node1, node2) => {
     // Not the same name
     if (node1.nodeName !== node2.nodeName) {
       return false;
@@ -41,7 +45,7 @@ const ElementUtils = function (dom: DOMUtils) {
      * @param {Node} node Node to get attributes from.
      * @return {Object} Name/value object with attributes and attribute values.
      */
-    const getAttribs = function (node) {
+    const getAttribs = (node) => {
       const attribs = {};
 
       each(dom.getAttribs(node), (attr: Attr) => {
@@ -64,7 +68,7 @@ const ElementUtils = function (dom: DOMUtils) {
      * @param {Object} obj2 Second object to compare.
      * @return {boolean} True/false if the objects matches or not.
      */
-    const compareObjects = function (obj1, obj2) {
+    const compareObjects = (obj1, obj2) => {
       let value, name;
 
       for (name in obj1) {
@@ -109,6 +113,10 @@ const ElementUtils = function (dom: DOMUtils) {
     }
 
     return !Bookmarks.isBookmarkNode(node1) && !Bookmarks.isBookmarkNode(node2);
+  };
+
+  return {
+    compare
   };
 };
 

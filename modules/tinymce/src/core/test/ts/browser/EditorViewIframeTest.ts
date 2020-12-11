@@ -12,17 +12,17 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', (success, failur
 
   const hiddenScrollbar = Scroll.scrollBarWidth() === 0;
 
-  const isPhantomJs = function () {
+  const isPhantomJs = () => {
     return /PhantomJS/.test(window.navigator.userAgent);
   };
 
-  const getIframeClientRect = function (editor) {
+  const getIframeClientRect = (editor) => {
     return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map((elm) => {
       return elm.dom.getBoundingClientRect();
     }).getOrDie();
   };
 
-  const sSetBodyStyles = function (editor, css) {
+  const sSetBodyStyles = (editor, css) => {
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
       Step.sync(() => {
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', (success, failur
     );
   };
 
-  const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
+  const sTestIsXYInContentArea = (editor, deltaX, deltaY) => {
     const dx1 = -25 - deltaX;
     const dy1 = -25 - deltaY;
     const dx2 = -5 - deltaX;

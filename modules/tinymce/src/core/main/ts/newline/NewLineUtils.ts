@@ -13,7 +13,7 @@ import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 
-const firstNonWhiteSpaceNodeSibling = function (node) {
+const firstNonWhiteSpaceNodeSibling = (node) => {
   while (node) {
     if (node.nodeType === 1 || (node.nodeType === 3 && node.data && /[\r\n\s]/.test(node.data))) {
       return node;
@@ -23,7 +23,7 @@ const firstNonWhiteSpaceNodeSibling = function (node) {
   }
 };
 
-const moveToCaretPosition = function (editor: Editor, root) {
+const moveToCaretPosition = (editor: Editor, root) => {
   let node, lastNode = root;
   const dom = editor.dom;
   const moveCaretBeforeOnEnterElementsMap = editor.schema.getMoveCaretBeforeOnEnterElements();
@@ -86,7 +86,7 @@ const moveToCaretPosition = function (editor: Editor, root) {
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
-const getEditableRoot = function (dom, node) {
+const getEditableRoot = (dom, node) => {
   const root = dom.getRoot();
   let parent, editableRoot;
 
@@ -103,11 +103,11 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
-const getParentBlock = function (editor: Editor) {
+const getParentBlock = (editor: Editor) => {
   return Optional.from(editor.dom.getParent(editor.selection.getStart(true), editor.dom.isBlock));
 };
 
-const getParentBlockName = function (editor: Editor) {
+const getParentBlockName = (editor: Editor) => {
   return getParentBlock(editor).fold(
     Fun.constant(''),
     (parentBlock) => {
@@ -116,7 +116,7 @@ const getParentBlockName = function (editor: Editor) {
   );
 };
 
-const isListItemParentBlock = function (editor: Editor) {
+const isListItemParentBlock = (editor: Editor) => {
   return getParentBlock(editor).filter((elm) => {
     return ElementType.isListItem(SugarElement.fromDom(elm));
   }).isSome();

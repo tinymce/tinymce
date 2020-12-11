@@ -122,7 +122,7 @@ interface AddOnManager<T> {
   waitFor (name: string, callback: () => void, state?: WaitState): void;
 }
 
-function AddOnManager<T>(): AddOnManager<T> {
+const AddOnManager = <T>(): AddOnManager<T> => {
   const items: AddOnConstructor<T>[] = [];
   const urls: Record<string, string> = {};
   const lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }> = {};
@@ -192,14 +192,14 @@ function AddOnManager<T>(): AddOnManager<T> {
   };
 
   const addComponents = (pluginName: string, scripts: string[]) => {
-    const pluginUrl = this.urls[pluginName];
+    const pluginUrl = urls[pluginName];
 
     Arr.each(scripts, (script) => {
       ScriptLoader.ScriptLoader.add(pluginUrl + '/' + script);
     });
   };
 
-  const loadDependencies = function (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) {
+  const loadDependencies = (name: string, addOnUrl: string | UrlObject, success: () => void, scope: any) => {
     const deps = dependencies(name);
 
     Arr.each(deps, (dep) => {
@@ -347,14 +347,11 @@ function AddOnManager<T>(): AddOnManager<T> {
     waitFor
 
   };
-}
+};
 
-namespace AddOnManager {
-  export let language: string;
-  export let languageLoad: boolean;
-  export let baseURL: string;
-  export const PluginManager: AddOnManager<any> = AddOnManager();
-  export const ThemeManager: AddOnManager<any> = AddOnManager();
-}
+AddOnManager.languageLoad = true;
+AddOnManager.baseURL = '';
+AddOnManager.PluginManager = AddOnManager<any>();
+AddOnManager.ThemeManager = AddOnManager<any>();
 
 export default AddOnManager;

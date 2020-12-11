@@ -42,13 +42,13 @@ let beforeUnloadDelegate: (e: BeforeUnloadEvent) => any;
 const legacyEditors = [];
 let editors = [];
 
-const isValidLegacyKey = function (id) {
+const isValidLegacyKey = (id) => {
   // In theory we could filter out any editor id:s that clash
   // with array prototype items but that could break existing integrations
   return id !== 'length';
 };
 
-const globalEventDelegate = function (e) {
+const globalEventDelegate = (e) => {
   const type = e.type;
   each(EditorManager.get(), (editor) => {
     switch (type) {
@@ -62,7 +62,7 @@ const globalEventDelegate = function (e) {
   });
 };
 
-const toggleGlobalEvents = function (state) {
+const toggleGlobalEvents = (state) => {
   if (state !== boundGlobalEvents) {
     if (state) {
       DomQuery(window).on('resize scroll', globalEventDelegate);
@@ -74,7 +74,7 @@ const toggleGlobalEvents = function (state) {
   }
 };
 
-const removeEditorFromList = function (targetEditor: Editor) {
+const removeEditorFromList = (targetEditor: Editor) => {
   const oldEditors = editors;
 
   delete legacyEditors[targetEditor.id];
@@ -102,7 +102,7 @@ const removeEditorFromList = function (targetEditor: Editor) {
   return oldEditors.length !== editors.length;
 };
 
-const purgeDestroyedEditor = function (editor) {
+const purgeDestroyedEditor = (editor) => {
   // User has manually destroyed the editor lets clean up the mess
   if (editor && editor.initialized && !(editor.getContainer() || editor.getBody()).parentNode) {
     removeEditorFromList(editor);
@@ -386,17 +386,17 @@ const EditorManager: EditorManager = {
       return id;
     };
 
-    const execCallback = function (name) {
+    const execCallback = (name: string) => {
       const callback = settings[name];
 
       if (!callback) {
         return;
       }
 
-      return callback.apply(self, Array.prototype.slice.call(arguments, 2));
+      return callback.apply(self, []);
     };
 
-    const hasClass = function (elm, className) {
+    const hasClass = (elm, className) => {
       return className.constructor === RegExp ? className.test(elm.className) : DOM.hasClass(elm, className);
     };
 
@@ -472,16 +472,16 @@ const EditorManager: EditorManager = {
       return targets;
     };
 
-    let provideResults = function (editors) {
+    let provideResults = (editors) => {
       result = editors;
     };
 
-    const initEditors = function () {
+    const initEditors = () => {
       let initCount = 0;
       const editors = [];
       let targets: HTMLElement[];
 
-      const createEditor = function (id: string, settings: RawEditorSettings, targetElm: HTMLElement) {
+      const createEditor = (id: string, settings: RawEditorSettings, targetElm: HTMLElement) => {
         const editor: Editor = new Editor(id, settings, self);
         editors.push(editor);
 
@@ -544,7 +544,7 @@ const EditorManager: EditorManager = {
       if (result) {
         resolve(result);
       } else {
-        provideResults = function (editors) {
+        provideResults = (editors) => {
           resolve(editors);
         };
       }
@@ -573,6 +573,7 @@ const EditorManager: EditorManager = {
    *    ed.windowManager.alert('Hello world!');
    * });
    */
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   get(id?: number | string) {
     if (arguments.length === 0) {
       return editors.slice(0);
@@ -625,7 +626,7 @@ const EditorManager: EditorManager = {
     self.fire('AddEditor', { editor });
 
     if (!beforeUnloadDelegate) {
-      beforeUnloadDelegate = function (e) {
+      beforeUnloadDelegate = (e) => {
         const event = self.fire('BeforeUnload');
         if (event.returnValue) {
           // browsers are all a little bit special about this: https://developer.mozilla.org/en-US/docs/Web/API/BeforeUnloadEvent
@@ -781,7 +782,7 @@ const EditorManager: EditorManager = {
    * // Saves all contents
    * tinyMCE.triggerSave();
    */
-  triggerSave() {
+  triggerSave: () => {
     each(editors, (editor) => {
       editor.save();
     });
@@ -794,7 +795,7 @@ const EditorManager: EditorManager = {
    * @param {String} code Optional language code.
    * @param {Object} items Name/value object with translations.
    */
-  addI18n(code, items) {
+  addI18n: (code, items) => {
     I18n.add(code, items);
   },
 
@@ -805,7 +806,7 @@ const EditorManager: EditorManager = {
    * @param {String/Array/Object} text String to translate
    * @return {String} Translated string.
    */
-  translate(text) {
+  translate: (text) => {
     return I18n.translate(text);
   },
 

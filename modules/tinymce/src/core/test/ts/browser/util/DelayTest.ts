@@ -7,7 +7,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 UnitTest.asynctest('browser.tinymce.core.util.DelayTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const ok = function (value, label) {
+  const ok = (value, label) => {
     return LegacyUnit.equal(value, true, label);
   };
 

@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
 
   Theme();
 
-  const getContent = function (editor) {
+  const getContent = (editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
   };
 
@@ -746,12 +746,12 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
-        color(vars) {
+        color: (vars) => {
           return vars.color + '00ff';
         }
       },
       attributes: {
-        title(vars) {
+        title: (vars) => {
           return vars.title + '2';
         }
       }
@@ -2110,7 +2110,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'span',
-      onformat(elm) {
+      onformat: (elm) => {
         elm.className = 'x';
       }
     });

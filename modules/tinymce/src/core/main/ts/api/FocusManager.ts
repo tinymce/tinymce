@@ -28,7 +28,7 @@ interface FocusManager {
  * @param  {Element} elm Element to check if it's part of the UI or not.
  * @return {Boolean} True/false state if the element is part of the UI or not.
  */
-const isEditorUIElement = function (elm: Element) {
+const isEditorUIElement = (elm: Element) => {
   // Needs to be converted to string since svg can have focus: #6776
   const className = elm.className.toString();
   return className.indexOf('tox-') !== -1 || className.indexOf('mce-') !== -1;

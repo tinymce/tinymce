@@ -11,7 +11,7 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html.trim());
     });

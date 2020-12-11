@@ -21,7 +21,7 @@ import * as NormalizeRange from '../selection/NormalizeRange';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
 
 // Walks the parent block to the right and look for BR elements
-const hasRightSideContent = function (schema: Schema, container, parentBlock) {
+const hasRightSideContent = (schema: Schema, container, parentBlock) => {
   const walker = new DomTreeWalker(container, parentBlock);
   let node;
   const nonEmptyElementsMap = schema.getNonEmptyElements();
@@ -33,7 +33,7 @@ const hasRightSideContent = function (schema: Schema, container, parentBlock) {
   }
 };
 
-const scrollToBr = function (dom: DOMUtils, selection: EditorSelection, brElm) {
+const scrollToBr = (dom: DOMUtils, selection: EditorSelection, brElm) => {
   // Insert temp marker and scroll to that
   const marker = dom.create('span', {}, '&nbsp;');
   brElm.parentNode.insertBefore(marker, brElm);
@@ -41,7 +41,7 @@ const scrollToBr = function (dom: DOMUtils, selection: EditorSelection, brElm) {
   dom.remove(marker);
 };
 
-const moveSelectionToBr = function (dom: DOMUtils, selection: EditorSelection, brElm, extraBr) {
+const moveSelectionToBr = (dom: DOMUtils, selection: EditorSelection, brElm, extraBr) => {
   const rng = dom.createRng();
 
   if (!extraBr) {
@@ -55,7 +55,7 @@ const moveSelectionToBr = function (dom: DOMUtils, selection: EditorSelection, b
   selection.setRng(rng);
 };
 
-const insertBrAtCaret = function (editor: Editor, evt?) {
+const insertBrAtCaret = (editor: Editor, evt?) => {
   // We load the current event in from EnterKey.js when appropriate to heed
   // certain event-specific variations such as ctrl-enter in a list
   const selection = editor.selection;
@@ -113,13 +113,13 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
   editor.undoManager.add();
 };
 
-const insertBrBefore = function (editor: Editor, inline) {
+const insertBrBefore = (editor: Editor, inline) => {
   const br = SugarElement.fromTag('br');
   Insert.before(SugarElement.fromDom(inline), br);
   editor.undoManager.add();
 };
 
-const insertBrAfter = function (editor: Editor, inline) {
+const insertBrAfter = (editor: Editor, inline) => {
   if (!hasBrAfter(editor.getBody(), inline)) {
     Insert.after(SugarElement.fromDom(inline), SugarElement.fromTag('br'));
   }
@@ -131,11 +131,11 @@ const insertBrAfter = function (editor: Editor, inline) {
   editor.undoManager.add();
 };
 
-const isBeforeBr = function (pos) {
+const isBeforeBr = (pos) => {
   return NodeType.isBr(pos.getNode());
 };
 
-const hasBrAfter = function (rootNode, startNode) {
+const hasBrAfter = (rootNode, startNode) => {
   if (isBeforeBr(CaretPosition.after(startNode))) {
     return true;
   } else {
@@ -145,11 +145,11 @@ const hasBrAfter = function (rootNode, startNode) {
   }
 };
 
-const isAnchorLink = function (elm) {
+const isAnchorLink = (elm) => {
   return elm && elm.nodeName === 'A' && 'href' in elm;
 };
 
-const isInsideAnchor = function (location) {
+const isInsideAnchor = (location) => {
   return location.fold(
     Fun.never,
     isAnchorLink,
@@ -158,13 +158,13 @@ const isInsideAnchor = function (location) {
   );
 };
 
-const readInlineAnchorLocation = function (editor: Editor) {
+const readInlineAnchorLocation = (editor: Editor) => {
   const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
   const position = CaretPosition.fromRangeStart(editor.selection.getRng());
   return BoundaryLocation.readLocation(isInlineTarget, editor.getBody(), position).filter(isInsideAnchor);
 };
 
-const insertBrOutsideAnchor = function (editor: Editor, location) {
+const insertBrOutsideAnchor = (editor: Editor, location) => {
   location.fold(
     Fun.noop,
     Fun.curry(insertBrBefore, editor),
@@ -173,7 +173,7 @@ const insertBrOutsideAnchor = function (editor: Editor, location) {
   );
 };
 
-const insert = function (editor: Editor, evt?) {
+const insert = (editor: Editor, evt?) => {
   const anchorLocation = readInlineAnchorLocation(editor);
 
   if (anchorLocation.isSome()) {

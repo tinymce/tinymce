@@ -7,7 +7,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const ok = function (value, label?) {
+  const ok = (value, label?) => {
     return LegacyUnit.equal(value, true, label);
   };
 

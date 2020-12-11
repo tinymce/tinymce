@@ -8,11 +8,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', (success, failure) =
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
   };
 

@@ -8,13 +8,13 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, failure) => {
   const ZWSP = Zwsp.ZWSP;
 
-  const cCreateElement = function (html) {
+  const cCreateElement = (html) => {
     return Chain.injectThunked(() => {
       return SugarElement.fromHtml(html);
     });
   };
 
-  const cNormalizePosition = function (forward, path, offset) {
+  const cNormalizePosition = (forward, path, offset) => {
     return Chain.mapper((elm: any) => {
       const container = Hierarchy.follow(elm, path).getOrDie();
       const pos = CaretPosition(container.dom, offset);
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, fa
     });
   };
 
-  const cAssertPosition = function (path, expectedOffset) {
+  const cAssertPosition = (path, expectedOffset) => {
     return Chain.mapper((elmPos: any) => {
       const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
       Assertions.assertDomEq('Should be expected container', SugarElement.fromDom(elmPos.pos.container()), expectedContainer);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, fa
     });
   };
 
-  const cSplitAt = function (path, offset) {
+  const cSplitAt = (path, offset) => {
     return Chain.mapper((elm: any) => {
       const textNode = Hierarchy.follow(elm, path).filter(SugarNode.isText).getOrDie();
       textNode.dom.splitText(offset);
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, fa
     });
   };
 
-  const createFakeEditor = function (settings) {
+  const createFakeEditor = (settings) => {
     return {
       settings,
       getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal

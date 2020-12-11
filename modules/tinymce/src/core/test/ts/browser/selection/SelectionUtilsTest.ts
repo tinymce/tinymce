@@ -7,13 +7,13 @@ import ViewBlock from '../../module/test/ViewBlock';
 UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html) {
+  const cSetHtml = (html) => {
     return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
-  const cHasAllContentsSelected = function (startPath, startOffset, endPath, endOffset) {
+  const cHasAllContentsSelected = (startPath, startOffset, endPath, endOffset) => {
     return Chain.mapper((viewBlock: any) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();

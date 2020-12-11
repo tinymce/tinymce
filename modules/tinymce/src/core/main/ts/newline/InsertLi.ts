@@ -9,23 +9,23 @@ import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as NewLineUtils from './NewLineUtils';
 
-const hasFirstChild = function (elm, name) {
+const hasFirstChild = (elm, name) => {
   return elm.firstChild && elm.firstChild.nodeName === name;
 };
 
-const hasParent = function (elm, parentName) {
+const hasParent = (elm, parentName) => {
   return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
 };
 
-const isListBlock = function (elm) {
+const isListBlock = (elm) => {
   return elm && /^(OL|UL|LI)$/.test(elm.nodeName);
 };
 
-const isNestedList = function (elm) {
+const isNestedList = (elm) => {
   return isListBlock(elm) && isListBlock(elm.parentNode);
 };
 
-const getContainerBlock = function (containerBlock) {
+const getContainerBlock = (containerBlock) => {
   const containerBlockParent = containerBlock.parentNode;
 
   if (/^(LI|DT|DD)$/.test(containerBlockParent.nodeName)) {
@@ -35,7 +35,7 @@ const getContainerBlock = function (containerBlock) {
   return containerBlock;
 };
 
-const isFirstOrLastLi = function (containerBlock, parentBlock, first) {
+const isFirstOrLastLi = (containerBlock, parentBlock, first) => {
   let node = containerBlock[first ? 'firstChild' : 'lastChild'];
 
   // Find first/last element since there might be whitespace there
@@ -51,7 +51,7 @@ const isFirstOrLastLi = function (containerBlock, parentBlock, first) {
 };
 
 // Inserts a block or br before/after or in the middle of a split list of the LI is empty
-const insert = function (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName) {
+const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, newBlockName) => {
   const dom = editor.dom;
   const rng = editor.selection.getRng();
 
