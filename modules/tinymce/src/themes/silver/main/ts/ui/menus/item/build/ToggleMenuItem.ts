@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, ItemTypes, Toggling } from '@ephox/alloy';
+import { Disabling, Focusing, ItemTypes, Toggling } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Merger, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -50,7 +50,13 @@ const renderToggleMenuItem = (
       disabled: spec.disabled,
       getApi,
       onAction: spec.onAction,
-      onSetup: spec.onSetup,
+      onSetup: (api, comp) => {
+        if (spec.active) {
+          Focusing.focus(comp);
+        }
+        return spec.onSetup(api);
+      },
+
       triggersSubmenu: false,
       itemBehaviours: [ ]
     }, structure, itemResponse, providersBackstage),

@@ -24,8 +24,13 @@ const factory: CompositeSketchFactory<SplitDropdownDetail, SplitDropdownSpec> = 
 
   const switchToMenu = (sandbox: AlloyComponent) => {
     Composing.getCurrent(sandbox).each((current) => {
-      Highlighting.highlightFirst(current);
-      Keying.focusIn(current);
+      Highlighting.getHighlighted(current).fold(
+        () => {
+          Highlighting.highlightFirst(current);
+          Keying.focusIn(current);
+        },
+        Fun.noop,
+      )
     });
   };
 

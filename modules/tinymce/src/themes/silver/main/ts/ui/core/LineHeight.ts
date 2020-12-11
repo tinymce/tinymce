@@ -44,6 +44,7 @@ const getLineHeights = (editor: Editor): Menu.ToggleMenuItemSpec[] => {
     (value, i) => ({
       type: 'togglemenuitem',
       text: value,
+      active: normaliseLineHeight(value) === normaliseLineHeight(editor.queryCommandValue('LineHeight')),
       onSetup: (api) => {
         apis.set(normaliseLineHeight(value), api);
 

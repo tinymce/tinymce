@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Disabling, Toggling } from '@ephox/alloy';
+import { Disabling, Focusing, Toggling } from '@ephox/alloy';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -55,8 +55,11 @@ const renderChoiceItem = (
       disabled: spec.disabled,
       getApi,
       onAction: (_api) => onItemValueHandler(spec.value),
-      onSetup: (api) => {
+      onSetup: (api, comp) => {
         api.setActive(isSelected);
+        if (isSelected) {
+          Focusing.focus(comp);
+        }
         return Fun.noop;
       },
       triggersSubmenu: false,

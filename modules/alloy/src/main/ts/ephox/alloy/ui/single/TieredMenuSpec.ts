@@ -183,7 +183,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
         // want to change the active menu. Sometimes, we just want to show it (e.g. hover)
         detail.onOpenSubmenu(container, item, activeMenu, Arr.reverse(path));
         if (decision === ExpandHighlightDecision.HighlightSubmenu) {
-          Highlighting.highlightFirst(activeMenu);
+          if (Highlighting.getHighlighted(activeMenu).isNone()) {
+            Highlighting.highlightFirst(activeMenu);
+          }
           return updateMenuPath(container, layeredState, path);
         } else {
           Highlighting.dehighlightAll(activeMenu);

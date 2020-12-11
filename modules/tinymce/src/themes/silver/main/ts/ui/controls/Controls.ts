@@ -15,7 +15,7 @@ export interface GetApiType<T> {
 export type OnDestroy<T> = (controlApi: T) => void;
 
 export interface OnControlAttachedType<T> extends GetApiType<T> {
-  onSetup: (controlApi: T) => OnDestroy<T>; // TODO: check: no change here?
+  onSetup: (controlApi: T, comp: AlloyComponent) => OnDestroy<T>; // TODO: check: no change here?
 }
 
 const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent) => {
@@ -28,7 +28,7 @@ const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent) => {
 const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cell<OnDestroy<T>>) => AlloyEvents.runOnAttached((comp) => {
   const run = runWithApi(info, comp);
   run((api) => {
-    const onDestroy = info.onSetup(api);
+    const onDestroy = info.onSetup(api, comp);
     if (onDestroy !== null && onDestroy !== undefined) {
       editorOffCell.set(onDestroy);
     }

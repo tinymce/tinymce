@@ -23,7 +23,7 @@ export const componentRenderPipeline = (xs: Array<Optional<AlloySpec>>) =>
 
 export interface CommonMenuItemSpec<T> {
   onAction: (itemApi: T) => void;
-  onSetup: (itemApi: T) => OnDestroy<T>;
+  onSetup: (itemApi: T, component: AlloyComponent) => OnDestroy<T>;
   triggersSubmenu: boolean;
   disabled: boolean;
   itemBehaviours: Array<Behaviour.NamedConfiguredBehaviour<Behaviour.BehaviourConfigSpec, Behaviour.BehaviourConfigDetail>>;
