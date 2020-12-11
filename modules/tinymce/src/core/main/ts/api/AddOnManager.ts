@@ -12,13 +12,13 @@ import Editor from './Editor';
 import I18n from './util/I18n';
 
 /**
- * TinyMCE theme manager class. Subclass of AddOnManager. Allows for a custom theme to be used with TinyMCE.
+ * TinyMCE theme class. Allows for a custom theme to be used with TinyMCE when registered via the ThemeManager.
  *
  * @summary <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
  * Creating a custom theme may require implementing this functionality.
  * To change TinyMCE's appearance, Tiny recommends changing the Skin instead.
  *
- * @class tinymce.ThemeManager
+ * @class tinymce.Theme
  * @example
  * tinymce.ThemeManager.add('MyTheme', function(editor) {
  *     // Setup up custom UI elements in the dom
@@ -27,10 +27,10 @@ import I18n from './util/I18n';
  *     document.body.appendChild(div);
  *     document.body.appendChild(iframe);
  *
- *     // Themes should fire the SkinLoaded event once the UI has been created
+ *     // Themes should fire the SkinLoaded event once the UI has been created and all StyleSheets have been loaded.
  *     editor.on('init', () => editor.fire('SkinLoaded'));
  *
- *     // Themes must return a renderUI function that returns the editorContainer and iframeContainer
+ *     // Themes must return a renderUI function that returns the editorContainer. If the editor is not running in inline mode, an iframeContainer should also be returned.
  *     const renderUI = function() {
  *         return {
  *             editorContainer: div,
@@ -44,9 +44,9 @@ import I18n from './util/I18n';
  */
 
 /**
- * TinyMCE plugin manager class. Subclass of AddOnManager. Allows for custom plugins to be added to TinyMCE.
+ * TinyMCE plugin class. Allows for custom plugins to be added to TinyMCE when registered via the PluginManager.
  *
- * @class tinymce.PluginManager
+ * @class tinymce.Plugin
  * @example
  * tinymce.PluginManager.add('MyPlugin', function(editor, url) {
  *     // Register a toolbar button that triggers an alert when clicked
