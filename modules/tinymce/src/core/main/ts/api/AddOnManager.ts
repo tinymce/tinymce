@@ -15,9 +15,9 @@ import I18n from './util/I18n';
  * TinyMCE theme pseudo class. Allows for a custom theme to be used with TinyMCE when registered using the ThemeManager.
  *
  * @summary This is a pseudo class that describes how to create a custom theme for TinyMCE.
- * <br /><br />
+ * <br><br>
  * See AddOnManager for more information about the methods available on the ThemeManager instance.
- * <br /><br />
+ * <br><br>
  * <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
  * Creating a custom theme may require implementing this functionality.
  * To change TinyMCE's appearance, Tiny recommends changing the Skin instead.
@@ -55,10 +55,10 @@ import I18n from './util/I18n';
  * TinyMCE plugin psuedo class. Allows for custom plugins to be added to TinyMCE when registered using the PluginManager.
  *
  * @summary This is a pseudo class that describes how to create a custom plugin for TinyMCE.
- * <br /><br />
+ * <br><br>
  * A custom plugin registered using <code>PluginManager.add</code> should either not return any value or return plugin metadata as an object that contains the plugin's name and a URL.
  * The URL is intended to link to help documentation.
- * <br /><br />
+ * <br><br>
  * See AddOnManager for more information about the methods available on the PluginManager instance.
  *
  * @class tinymce.Plugin

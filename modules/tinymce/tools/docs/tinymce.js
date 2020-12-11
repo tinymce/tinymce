@@ -4,7 +4,6 @@
  * @static
  * @class tinymce
  * @borrow-members tinymce.EditorManager
- * @borrow-members tinymce.EditorObservable
  * @borrow-members tinymce.util.Tools
  */
 
