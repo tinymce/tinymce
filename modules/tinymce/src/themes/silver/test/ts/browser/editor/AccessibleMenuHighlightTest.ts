@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, Log, Pipeline, Waiter } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, Log, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { TinyLoader } from '@ephox/mcagar';
@@ -63,8 +63,18 @@ UnitTest.asyncTest('browser.tinymce.themes.silver.editor.AccessibleMenuHighlight
       sTestToolbar('line height', 'Line height', Optional.some('1.4')),
       sTestToolbar('font size', 'Font sizes', Optional.some('12pt')),
       sTestToolbar('font select', 'Fonts', Optional.none()),
+
       sTestNestedMenu('block format', 'Format', [ 'Formats', 'Blocks' ], Optional.some('Paragraph')),
-      sTestNestedMenu('font size', 'Format', [ 'Font sizes' ], Optional.some('12pt'))
+      sTestNestedMenu('font size', 'Format', [ 'Font sizes' ], Optional.some('12pt')),
+
+      Log.stepsAsStep('TINY-6399', 'Check that changing underlying content while menu is open does not break focus', [
+        FocusTools.sSetFocus('Selecting line height toolbar button', container, 'button[title="Line height"]'),
+        Keyboard.sKeystroke(doc, Keys.down(), {}),
+        FocusTools.sTryOnSelector(`Is 1.4 selected`, doc, ':contains("1.4")'),
+        Step.sync(() => editor.execCommand('LineHeight', false, '1.5', { skip_focus: true })),
+        FocusTools.sTryOnSelector(`Is 1.4 selected`, doc, ':contains("1.4")'),
+        Keyboard.sKeystroke(doc, Keys.escape(), {})
+      ])
     ], success, failure);
   }, settings, success, failure);
 });
