@@ -8,15 +8,15 @@
 const internalMimeType = 'x-tinymce/html';
 const internalMark = '<!-- ' + internalMimeType + ' -->';
 
-const mark = function (html: string) {
+const mark = (html: string) => {
   return internalMark + html;
 };
 
-const unmark = function (html: string) {
+const unmark = (html: string) => {
   return html.replace(internalMark, '');
 };
 
-const isMarked = function (html: string) {
+const isMarked = (html: string) => {
   return html.indexOf(internalMark) !== -1;
 };
 

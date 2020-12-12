@@ -48,7 +48,7 @@ const overrideFormats = (editor: Editor) => {
       inline: 'font',
       toggle: false,
       attributes: {
-        size(vars) {
+        size: (vars) => {
           return String(Tools.inArray(fontSizes, vars.value) + 1);
         }
       }

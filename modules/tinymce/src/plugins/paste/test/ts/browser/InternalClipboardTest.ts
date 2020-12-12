@@ -24,28 +24,28 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     lastPostProcessEvent = null;
   }));
 
-  const sCutCopyDataTransferEvent = function (editor: Editor, type: string) {
+  const sCutCopyDataTransferEvent = (editor: Editor, type: string) => {
     return Logger.t('Cut copy data transfer event', Step.sync(() => {
       dataTransfer = MockDataTransfer.create({});
       editor.fire(type, { clipboardData: dataTransfer });
     }));
   };
 
-  const sPasteDataTransferEvent = function (editor: Editor, data: Record<string, string>) {
+  const sPasteDataTransferEvent = (editor: Editor, data: Record<string, string>) => {
     return Logger.t('Paste data transfer event', Step.sync(() => {
       dataTransfer = MockDataTransfer.create(data);
       editor.fire('paste', { clipboardData: dataTransfer } as ClipboardEvent);
     }));
   };
 
-  const sAssertClipboardData = function (expectedHtml: string, expectedText: string) {
+  const sAssertClipboardData = (expectedHtml: string, expectedText: string) => {
     return Logger.t(`Assert clipboard data ${expectedHtml}, ${expectedText}`, Step.sync(() => {
       Assert.eq('text/html data should match', expectedHtml, dataTransfer.getData('text/html'));
       Assert.eq('text/plain data should match', expectedText, dataTransfer.getData('text/plain'));
     }));
   };
 
-  const sCopy = function (editor: Editor, tinyApis: TinyApis, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) {
+  const sCopy = (editor: Editor, tinyApis: TinyApis, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) => {
     return Logger.t('Copy', GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]));
   };
 
-  const sCut = function (editor: Editor, tinyApis: TinyApis, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) {
+  const sCut = (editor: Editor, tinyApis: TinyApis, html: string, spath: number[], soffset: number, fpath: number[], foffset: number) => {
     return Logger.t('Cut', GeneralSteps.sequence([
       tinyApis.sSetContent(html),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]));
   };
 
-  const sPaste = function (editor: Editor, tinyApis: TinyApis, startHtml: string, pasteData: Record<string, string>, spath: number[], soffset: number, fpath: number[], foffset: number) {
+  const sPaste = (editor: Editor, tinyApis: TinyApis, startHtml: string, pasteData: Record<string, string>, spath: number[], soffset: number, fpath: number[], foffset: number) => {
     return Logger.t('Paste', GeneralSteps.sequence([
       tinyApis.sSetContent(startHtml),
       tinyApis.sSetSelection(spath, soffset, fpath, foffset),
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]));
   };
 
-  const sTestCopy = function (editor: Editor, tinyApis: TinyApis) {
+  const sTestCopy = (editor: Editor, tinyApis: TinyApis) => {
     return GeneralSteps.sequence([
       Log.stepsAsStep('TBA', 'Paste: Copy simple text', [
         sCopy(editor, tinyApis, '<p>text</p>', [ 0, 0 ], 0, [ 0, 0 ], 4),
@@ -125,8 +125,8 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]);
   };
 
-  const sTestCut = function (editor: Editor, tinyApis: TinyApis) {
-    const sWaitUntilAssertContent = function (expected: string) {
+  const sTestCut = (editor: Editor, tinyApis: TinyApis) => {
+    const sWaitUntilAssertContent = (expected: string) => {
       return Waiter.sTryUntil('Cut is async now, so need to wait for content', tinyApis.sAssertContent(expected));
     };
 
@@ -162,14 +162,14 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ]);
   };
 
-  const sAssertLastPreProcessEvent = function (expectedData) {
+  const sAssertLastPreProcessEvent = (expectedData) => {
     return Logger.t('Assert last preprocess event', Step.sync(() => {
       Assert.eq('Internal property should be equal', expectedData.internal, lastPreProcessEvent.internal);
       Assert.eq('Content property should be equal', expectedData.content, lastPreProcessEvent.content);
     }));
   };
 
-  const sAssertLastPostProcessEvent = function (expectedData) {
+  const sAssertLastPostProcessEvent = (expectedData) => {
     return Logger.t('Assert last postprocess event', Step.sync(() => {
       Assert.eq('Internal property should be equal', expectedData.internal, lastPostProcessEvent.internal);
       Assert.eq('Content property should be equal', expectedData.content, lastPostProcessEvent.node.innerHTML);
@@ -181,7 +181,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     Assert.eq('PastePostProcess event object', lastPostProcessEvent !== null, true);
   }));
 
-  const sTestPaste = function (editor: Editor, tinyApis: TinyApis) {
+  const sTestPaste = (editor: Editor, tinyApis: TinyApis) => {
     return GeneralSteps.sequence([
       Log.stepsAsStep('TBA', 'Paste: Paste external content', [
         sPaste(editor, tinyApis, '<p>abc</p>', { 'text/plain': 'X', 'text/html': '<p>X</p>' }, [ 0, 0 ], 0, [ 0, 0 ], 3),
@@ -226,7 +226,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.InternalClipboardTest', (succe
     ], onSuccess, onFailure);
   }, {
     plugins: 'paste table',
-    init_instance_callback(editor) {
+    init_instance_callback: (editor) => {
       editor.on('PastePreProcess', (evt) => {
         lastPreProcessEvent = evt;
       });

@@ -18,7 +18,7 @@ const getLink = (editor: Editor, elm: Node) => editor.dom.getParent<HTMLAnchorEl
 
 const getSelectedLink = (editor: Editor) => getLink(editor, editor.selection.getStart());
 
-const hasOnlyAltModifier = function (e) {
+const hasOnlyAltModifier = (e) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
@@ -36,15 +36,15 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | null) => {
   }
 };
 
-const openDialog = (editor: Editor) => function () {
+const openDialog = (editor: Editor) => () => {
   Dialog.open(editor);
 };
 
-const gotoSelectedLink = (editor: Editor) => function () {
+const gotoSelectedLink = (editor: Editor) => () => {
   gotoLink(editor, getSelectedLink(editor));
 };
 
-const leftClickedOnAHref = (editor: Editor) => function (elm) {
+const leftClickedOnAHref = (editor: Editor) => (elm) => {
   let sel, rng, node;
   // TODO: this used to query the context menu plugin directly. Is that a good idea?
   //  && !isContextMenuVisible(editor)

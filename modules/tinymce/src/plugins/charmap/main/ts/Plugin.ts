@@ -13,7 +13,7 @@ import * as CharMap from './core/CharMap';
 import * as Autocompletion from './ui/Autocompletion';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('charmap', (editor) => {
     const charMap = CharMap.getCharMap(editor);
     Commands.register(editor, charMap);
@@ -23,4 +23,4 @@ export default function () {
 
     return Api.get(editor);
   });
-}
+};

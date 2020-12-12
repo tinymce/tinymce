@@ -3,10 +3,10 @@ import { Fun, Result } from '@ephox/katamari';
 import { TinyDom, TinyUi } from '@ephox/mcagar';
 import { Attribute } from '@ephox/sugar';
 
-export default function (editor) {
+export default (editor) => {
   const ui = TinyUi(editor);
 
-  const cHasState = function (predicate) {
+  const cHasState = (predicate) => {
     return Chain.control(
       Chain.binder((element) => {
         return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
@@ -15,7 +15,7 @@ export default function (editor) {
     );
   };
 
-  const cWaitForState = function (predicate) {
+  const cWaitForState = (predicate) => {
     return Chain.control(
       cHasState(predicate),
       Guard.tryUntil('Predicate has failed.', 10, 3000)
@@ -32,7 +32,7 @@ export default function (editor) {
     Guard.addLogging('Drag and drop')
   );
 
-  const cExecCommandFromDialog = function (label) {
+  const cExecCommandFromDialog = (label) => {
     let cInteractWithUi;
 
     switch (label) {
@@ -74,7 +74,7 @@ export default function (editor) {
     );
   };
 
-  const cWaitForUi = function (label, selector) {
+  const cWaitForUi = (label, selector) => {
     return Chain.control(
       UiFinder.cWaitForState(label, selector, Fun.always),
       Guard.addLogging('Wait for UI')
@@ -86,7 +86,7 @@ export default function (editor) {
     Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
   );
 
-  const cClickButton = function (text) {
+  const cClickButton = (text) => {
     return Chain.control(
       Chain.fromChains([
         cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
@@ -99,7 +99,7 @@ export default function (editor) {
     );
   };
 
-  const cClickToolbarButton = function (label) {
+  const cClickToolbarButton = (label) => {
     return Chain.control(
       Chain.fromChains([
         UiFinder.cFindIn('button[aria-label="' + label + '"]'),
@@ -112,7 +112,7 @@ export default function (editor) {
     );
   };
 
-  const sWaitForUrlChange = function (imgEl, origUrl) {
+  const sWaitForUrlChange = (imgEl, origUrl) => {
     return Logger.t('Wait for url change', Chain.asStep(imgEl, [
       cWaitForState((el) => {
         return Attribute.get(el, 'src') !== origUrl;
@@ -120,7 +120,7 @@ export default function (editor) {
     ]));
   };
 
-  const sExec = function (execFromToolbar, label) {
+  const sExec = (execFromToolbar, label) => {
     return Logger.t(`Execute ${label}`, Step.async((next, die) => {
       const imgEl = TinyDom.fromDom(editor.selection.getNode());
       const origUrl = Attribute.get(imgEl, 'src');
@@ -143,4 +143,4 @@ export default function (editor) {
     sExecDialog: Fun.curry(sExec, false),
     cClickToolbarButton
   };
-}
+};

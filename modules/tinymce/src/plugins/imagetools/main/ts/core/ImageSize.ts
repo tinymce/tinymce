@@ -10,12 +10,12 @@ export interface ImageSize {
   readonly h: number;
 }
 
-function getImageSize(img: HTMLImageElement): ImageSize | null {
+const getImageSize = (img: HTMLImageElement): ImageSize | null => {
   let width, height;
 
-  function isPxValue(value) {
+  const isPxValue = (value) => {
     return /^[0-9\.]+px$/.test(value);
-  }
+  };
 
   width = img.style.width;
   height = img.style.height;
@@ -41,9 +41,9 @@ function getImageSize(img: HTMLImageElement): ImageSize | null {
   }
 
   return null;
-}
+};
 
-function setImageSize(img: HTMLImageElement, size: ImageSize) {
+const setImageSize = (img: HTMLImageElement, size: ImageSize) => {
   let width, height;
 
   if (size) {
@@ -64,14 +64,14 @@ function setImageSize(img: HTMLImageElement, size: ImageSize) {
       img.setAttribute('height', String(size.h));
     }
   }
-}
+};
 
-function getNaturalImageSize(img: HTMLImageElement) {
+const getNaturalImageSize = (img: HTMLImageElement) => {
   return {
     w: img.naturalWidth,
     h: img.naturalHeight
   };
-}
+};
 
 export {
   getImageSize,

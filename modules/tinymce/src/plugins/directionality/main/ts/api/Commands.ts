@@ -7,7 +7,7 @@
 
 import * as Direction from '../core/Direction';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mceDirectionLTR', () => {
     Direction.setDir(editor, 'ltr');
   });

@@ -16,20 +16,20 @@ import { TableActions } from '../actions/TableActions';
 import * as Util from '../core/Util';
 import * as TableTargets from './TableTargets';
 
-const forward = function (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) {
+const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
   return go(editor, isRoot, CellNavigation.next(cell), actions);
 };
 
-const backward = function (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) {
+const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
   return go(editor, isRoot, CellNavigation.prev(cell), actions);
 };
 
-const getCellFirstCursorPosition = function (editor: Editor, cell: SugarElement<Node>): Range {
+const getCellFirstCursorPosition = (editor: Editor, cell: SugarElement<Node>): Range => {
   const selection = SimSelection.exact(cell, 0, cell, 0);
   return WindowSelection.toNative(selection);
 };
 
-const getNewRowCursorPosition = function (editor: Editor, table: SugarElement<HTMLTableElement>): Optional<Range> {
+const getNewRowCursorPosition = (editor: Editor, table: SugarElement<HTMLTableElement>): Optional<Range> => {
   const rows = SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr');
   return Arr.last(rows).bind((last) => {
     return SelectorFind.descendant<HTMLTableCellElement>(last, 'td,th').map((first) => {
@@ -38,7 +38,7 @@ const getNewRowCursorPosition = function (editor: Editor, table: SugarElement<HT
   });
 };
 
-const go = function (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation, actions: TableActions): Optional<Range> {
+const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation, actions: TableActions): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(editor, cell);
@@ -56,10 +56,10 @@ const go = function (editor: Editor, isRoot: (e: SugarElement) => boolean, cell:
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = function (event: KeyboardEvent, editor: Editor, actions: TableActions) {
+const handle = (event: KeyboardEvent, editor: Editor, actions: TableActions) => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
-    const isRoot = function (element) {
+    const isRoot = (element) => {
       const name = SugarNode.name(element);
       return Compare.eq(element, body) || Arr.contains(rootElements, name);
     };

@@ -8,12 +8,12 @@
 import * as Actions from '../core/Actions';
 import * as CharMap from '../core/CharMap';
 
-const get = function (editor) {
-  const getCharMap = function () {
+const get = (editor) => {
+  const getCharMap = () => {
     return CharMap.getCharMap(editor);
   };
 
-  const insertChar = function (chr) {
+  const insertChar = (chr) => {
     Actions.insertChar(editor, chr);
   };
 

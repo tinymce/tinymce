@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const insertEmoticon = function (editor: Editor, ch: string): void {
+const insertEmoticon = (editor: Editor, ch: string): void => {
   editor.insertContent(ch);
 };
 

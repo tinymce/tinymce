@@ -17,7 +17,7 @@ const enum ListType {
   UnorderedList = 'UL'
 }
 
-const findIndex = function (list, predicate) {
+const findIndex = (list, predicate) => {
   for (let index = 0; index < list.length; index++) {
     const element = list[index];
 
@@ -29,7 +29,7 @@ const findIndex = function (list, predicate) {
 };
 
 // <ListStyles>
-const styleValueToText = function (styleValue) {
+const styleValueToText = (styleValue) => {
   return styleValue.replace(/\-/g, ' ').replace(/\b\w/g, (chr) => {
     return chr.toUpperCase();
   });
@@ -42,7 +42,7 @@ const isWithinList = (editor: Editor, e, nodeName) => {
   return lists.length > 0 && lists[0].nodeName === nodeName;
 };
 
-const addSplitButton = function (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) {
+const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) => {
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
@@ -82,7 +82,7 @@ const addSplitButton = function (editor: Editor, id: string, tooltip: string, cm
   });
 };
 
-const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, _styles) {
+const addButton = (editor: Editor, id, tooltip, cmd, nodeName, _styles) => {
   editor.ui.registry.addToggleButton(id, {
     active: false,
     tooltip,
@@ -99,7 +99,7 @@ const addButton = function (editor: Editor, id, tooltip, cmd, nodeName, _styles)
   });
 };
 
-const addControl = function (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) {
+const addControl = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]) => {
   if (styles.length > 1) {
     addSplitButton(editor, id, tooltip, cmd, nodeName, styles);
   } else {
@@ -107,7 +107,7 @@ const addControl = function (editor: Editor, id: string, tooltip: string, cmd: s
   }
 };
 
-const register = function (editor) {
+const register = (editor) => {
   addControl(editor, 'numlist', 'Numbered list', 'InsertOrderedList', ListType.OrderedList, Settings.getNumberStyles(editor));
   addControl(editor, 'bullist', 'Bullet list', 'InsertUnorderedList', ListType.UnorderedList, Settings.getBulletStyles(editor));
 };

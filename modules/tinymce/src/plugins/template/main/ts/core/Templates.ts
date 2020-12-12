@@ -11,8 +11,8 @@ import XHR from 'tinymce/core/api/util/XHR';
 import * as Settings from '../api/Settings';
 import * as DateTimeHelper from './DateTimeHelper';
 
-const createTemplateList = function (editor: Editor, callback) {
-  return function () {
+const createTemplateList = (editor: Editor, callback) => {
+  return () => {
     const templateList = Settings.getTemplates(editor);
 
     if (typeof templateList === 'function') {
@@ -23,7 +23,7 @@ const createTemplateList = function (editor: Editor, callback) {
     if (typeof templateList === 'string') {
       XHR.send({
         url: templateList,
-        success(text) {
+        success: (text) => {
           callback(JSON.parse(text));
         }
       });
@@ -33,7 +33,7 @@ const createTemplateList = function (editor: Editor, callback) {
   };
 };
 
-const replaceTemplateValues = function (html, templateValues) {
+const replaceTemplateValues = (html, templateValues) => {
   Tools.each(templateValues, (v, k) => {
     if (typeof v === 'function') {
       v = v(k);
@@ -45,7 +45,7 @@ const replaceTemplateValues = function (html, templateValues) {
   return html;
 };
 
-const replaceVals = function (editor, e) {
+const replaceVals = (editor, e) => {
   const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
 
   Tools.each(dom.select('*', e), (e) => {
@@ -59,11 +59,11 @@ const replaceVals = function (editor, e) {
   });
 };
 
-const hasClass = function (n, c) {
+const hasClass = (n, c) => {
   return new RegExp('\\b' + c + '\\b', 'g').test(n.className);
 };
 
-const insertTemplate = function (editor: Editor, _ui: boolean, html: string) {
+const insertTemplate = (editor: Editor, _ui: boolean, html: string) => {
   // Note: ui is unused here but is required since this can be called by execCommand
   let el;
   const dom = editor.dom;

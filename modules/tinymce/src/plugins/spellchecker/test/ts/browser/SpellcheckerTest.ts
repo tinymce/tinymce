@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (suc
   SilverTheme();
   SpellcheckerPlugin();
 
-  const sTestDefaultLanguage = function (editor) {
+  const sTestDefaultLanguage = (editor) => {
     return Step.sync(() => {
       Assert.eq('should be same', Settings.getLanguage(editor), 'en');
     });

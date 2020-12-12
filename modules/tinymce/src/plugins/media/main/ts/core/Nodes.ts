@@ -126,7 +126,7 @@ const createPreviewNode = (editor: Editor, node: AstNode) => {
   return previewWrapper;
 };
 
-const retainAttributesAndInnerHtml = function (editor: Editor, sourceNode: AstNode, targetNode: AstNode) {
+const retainAttributesAndInnerHtml = (editor: Editor, sourceNode: AstNode, targetNode: AstNode) => {
   // Prefix all attributes except width, height and style since we
   // will add these to the placeholder
   const attribs = sourceNode.attributes;
@@ -158,7 +158,7 @@ const isPageEmbedWrapper = (node: AstNode) => {
   return nodeClass && /\btiny-pageembed\b/.test(nodeClass);
 };
 
-const isWithinEmbedWrapper = function (node: AstNode) {
+const isWithinEmbedWrapper = (node: AstNode) => {
   while ((node = node.parent)) {
     if (node.attr('data-ephox-embed-iri') || isPageEmbedWrapper(node)) {
       return true;
@@ -168,8 +168,8 @@ const isWithinEmbedWrapper = function (node: AstNode) {
   return false;
 };
 
-const placeHolderConverter = function (editor: Editor) {
-  return function (nodes) {
+const placeHolderConverter = (editor: Editor) => {
+  return (nodes) => {
     let i = nodes.length;
     let node;
     let videoScript;

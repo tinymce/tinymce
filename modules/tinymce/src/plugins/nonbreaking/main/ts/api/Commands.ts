@@ -7,7 +7,7 @@
 
 import * as Actions from '../core/Actions';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mceNonBreaking', () => {
     Actions.insertNbsp(editor, 1);
   });

@@ -7,8 +7,8 @@
 
 import * as Dialog from '../ui/Dialog';
 
-const get = function (editor) {
-  const showDialog = function () {
+const get = (editor) => {
+  const showDialog = () => {
     Dialog.showDialog(editor);
   };
 

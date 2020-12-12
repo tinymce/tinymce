@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setContent = function (editor, html) {
+const setContent = (editor, html) => {
   // We get a lovely "Wrong document" error in IE 11 if we
   // don't move the focus to the editor before creating an undo
-  // transation since it tries to make a bookmark for the current selection
+  // transaction since it tries to make a bookmark for the current selection
   editor.focus();
 
   editor.undoManager.transact(() => {
@@ -19,7 +19,7 @@ const setContent = function (editor, html) {
   editor.nodeChanged();
 };
 
-const getContent = function (editor) {
+const getContent = (editor) => {
   return editor.getContent({ source_view: true });
 };
 

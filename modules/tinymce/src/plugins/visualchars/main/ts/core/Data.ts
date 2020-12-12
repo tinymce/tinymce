@@ -12,7 +12,7 @@ export const charMap = {
   '\u00ad': 'shy'
 };
 
-export const charMapToRegExp = function (charMap, global?) {
+export const charMapToRegExp = (charMap, global?) => {
   let regExp = '';
 
   Obj.each(charMap, (_value, key) => {
@@ -22,7 +22,7 @@ export const charMapToRegExp = function (charMap, global?) {
   return new RegExp('[' + regExp + ']', global ? 'g' : '');
 };
 
-export const charMapToSelector = function (charMap) {
+export const charMapToSelector = (charMap) => {
   let selector = '';
   Obj.each(charMap, (value) => {
     if (selector) {

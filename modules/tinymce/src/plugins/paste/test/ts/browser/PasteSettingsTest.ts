@@ -9,7 +9,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteSettingsTest', (success, 
   Theme();
   Plugin();
 
-  const cCreateInlineEditor = function (settings) {
+  const cCreateInlineEditor = (settings) => {
     return Chain.control(
       McEditor.cFromSettings({
         ...settings,

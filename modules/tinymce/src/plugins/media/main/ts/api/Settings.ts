@@ -5,39 +5,39 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getScripts = function (editor) {
+const getScripts = (editor) => {
   return editor.getParam('media_scripts');
 };
 
-const getAudioTemplateCallback = function (editor) {
+const getAudioTemplateCallback = (editor) => {
   return editor.getParam('audio_template_callback');
 };
 
-const getVideoTemplateCallback = function (editor) {
+const getVideoTemplateCallback = (editor) => {
   return editor.getParam('video_template_callback');
 };
 
-const hasLiveEmbeds = function (editor) {
+const hasLiveEmbeds = (editor) => {
   return editor.getParam('media_live_embeds', true);
 };
 
-const shouldFilterHtml = function (editor) {
+const shouldFilterHtml = (editor) => {
   return editor.getParam('media_filter_html', true);
 };
 
-const getUrlResolver = function (editor) {
+const getUrlResolver = (editor) => {
   return editor.getParam('media_url_resolver');
 };
 
-const hasAltSource = function (editor) {
+const hasAltSource = (editor) => {
   return editor.getParam('media_alt_source', true);
 };
 
-const hasPoster = function (editor) {
+const hasPoster = (editor) => {
   return editor.getParam('media_poster', true);
 };
 
-const hasDimensions = function (editor) {
+const hasDimensions = (editor) => {
   return editor.getParam('media_dimensions', true);
 };
 

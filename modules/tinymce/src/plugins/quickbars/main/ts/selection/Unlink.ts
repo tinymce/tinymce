@@ -18,7 +18,7 @@ import * as Bookmark from './Bookmark';
  *  a[b<a href="x">c]d</a>e -> a[bc]<a href="x">d</a>e
  */
 
-const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, endNode: Node) {
+const getSelectedElements = (rootElm: HTMLElement, startNode: Node, endNode: Node) => {
   let node;
   const elms = [];
 
@@ -36,7 +36,7 @@ const getSelectedElements = function (rootElm: HTMLElement, startNode: Node, end
   return elms;
 };
 
-const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
+const unwrapElements = (editor: Editor, elms: HTMLElement[]) => {
   const dom = editor.dom;
   const selection = editor.selection;
   const bookmark = Bookmark.create(dom, selection.getRng());
@@ -48,16 +48,16 @@ const unwrapElements = function (editor: Editor, elms: HTMLElement[]) {
   selection.setRng(Bookmark.resolve(dom, bookmark));
 };
 
-const isLink = function (elm: HTMLElement) {
+const isLink = (elm: HTMLElement) => {
   return elm.nodeName === 'A' && elm.hasAttribute('href');
 };
 
-const getParentAnchorOrSelf = function (dom, elm: Node) {
+const getParentAnchorOrSelf = (dom, elm: Node) => {
   const anchorElm = dom.getParent(elm, isLink);
   return anchorElm ? anchorElm : elm;
 };
 
-const getSelectedAnchors = function (editor: Editor) {
+const getSelectedAnchors = (editor: Editor) => {
   const selection = editor.selection;
   const dom = editor.dom;
   const rng = selection.getRng();
@@ -68,7 +68,7 @@ const getSelectedAnchors = function (editor: Editor) {
   return Tools.grep(getSelectedElements(rootElm, startElm, endElm), isLink);
 };
 
-const unlinkSelection = function (editor: Editor) {
+const unlinkSelection = (editor: Editor) => {
   unwrapElements(editor, getSelectedAnchors(editor));
 };
 

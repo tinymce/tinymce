@@ -19,7 +19,7 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default function () {
+export default () => {
   PluginManager.add('autosave', (editor) => {
     BeforeUnload.setup(editor);
     Buttons.register(editor);
@@ -32,4 +32,4 @@ export default function () {
 
     return Api.get(editor);
   });
-}
+};

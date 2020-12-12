@@ -8,9 +8,9 @@
 import Editor from 'tinymce/core/api/Editor';
 import * as Delete from '../core/Delete';
 
-const get = function (editor: Editor) {
+const get = (editor: Editor) => {
   return {
-    backspaceDelete(isForward: boolean) {
+    backspaceDelete: (isForward: boolean) => {
       Delete.backspaceDelete(editor, isForward);
     }
   };

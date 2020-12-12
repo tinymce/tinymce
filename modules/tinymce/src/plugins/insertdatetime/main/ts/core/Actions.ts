@@ -12,7 +12,7 @@ const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunda
 const monthsShort = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
 const monthsLong = 'January February March April May June July August September October November December'.split(' ');
 
-const addZeros = function (value, len) {
+const addZeros = (value, len) => {
   value = '' + value;
 
   if (value.length < len) {
@@ -24,7 +24,7 @@ const addZeros = function (value, len) {
   return value;
 };
 
-const getDateTime = function (editor, fmt, date?) {
+const getDateTime = (editor, fmt, date?) => {
   date = date || new Date();
 
   fmt = fmt.replace('%D', '%m/%d/%Y');
@@ -47,7 +47,7 @@ const getDateTime = function (editor, fmt, date?) {
   return fmt;
 };
 
-const updateElement = function (editor, timeElm, computerTime, userTime) {
+const updateElement = (editor, timeElm, computerTime, userTime) => {
   const newTimeElm = editor.dom.create('time', { datetime: computerTime }, userTime);
   timeElm.parentNode.insertBefore(newTimeElm, timeElm);
   editor.dom.remove(timeElm);
@@ -55,7 +55,7 @@ const updateElement = function (editor, timeElm, computerTime, userTime) {
   editor.selection.collapse(false);
 };
 
-const insertDateTime = function (editor, format) {
+const insertDateTime = (editor, format) => {
   if (Settings.shouldInsertTimeElement(editor)) {
     const userTime = getDateTime(editor, format);
     let computerTime;

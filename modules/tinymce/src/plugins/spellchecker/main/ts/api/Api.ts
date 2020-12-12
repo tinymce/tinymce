@@ -14,28 +14,20 @@ import * as Settings from './Settings';
 type LastSuggestion = Actions.LastSuggestion;
 type Data = Actions.Data;
 
-const get = function (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, _url: string) {
-  const getLanguage = function () {
-    return currentLanguageState.get();
-  };
-
-  const getWordCharPattern = function () {
+const get = (editor: Editor, startedState: Cell<boolean>, lastSuggestionsState: Cell<LastSuggestion>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, _url: string) => {
+  const getWordCharPattern = () => {
     return Settings.getSpellcheckerWordcharPattern(editor);
   };
 
-  const markErrors = function (data: Data) {
+  const markErrors = (data: Data) => {
     Actions.markErrors(editor, startedState, textMatcherState, lastSuggestionsState, data);
   };
 
-  const getTextMatcher = function () {
-    return textMatcherState.get();
-  };
-
   return {
-    getTextMatcher,
+    getTextMatcher: textMatcherState.get,
     getWordCharPattern,
     markErrors,
-    getLanguage
+    getLanguage: currentLanguageState.get
   };
 };
 

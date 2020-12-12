@@ -20,7 +20,7 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default function () {
+export default () => {
   PluginManager.add('emoticons', (editor, pluginUrl) => {
     const databaseUrl = Settings.getEmoticonDatabaseUrl(editor, pluginUrl);
     const databaseId = Settings.getEmoticonDatabaseId(editor);
@@ -31,4 +31,4 @@ export default function () {
     Autocompletion.init(editor, database);
     Filters.setup(editor);
   });
-}
+};

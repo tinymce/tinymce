@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) 
     }
   ];
 
-  const cCreateEditorFromSettings = function (settings = {}, html?) {
+  const cCreateEditorFromSettings = (settings = {}, html?) => {
     return Chain.control(
       McEditor.cFromHtml(html, {
         ...settings,
@@ -67,21 +67,21 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) 
     );
   };
 
-  const cCreateEditorFromHtml = function (html, settings) {
+  const cCreateEditorFromHtml = (html, settings) => {
     return Chain.control(
       cCreateEditorFromSettings(settings, html),
       Guard.addLogging(`Create editor using ${html}`)
     );
   };
 
-  const cRemoveEditor = function () {
+  const cRemoveEditor = () => {
     return Chain.control(
       McEditor.cRemove,
       Guard.addLogging('Remove Editor')
     );
   };
 
-  const cAssertCases = function (cases) {
+  const cAssertCases = (cases) => {
     return Chain.control(
       Chain.op((editor: any) => {
         const pasteBin = PasteBin(editor);

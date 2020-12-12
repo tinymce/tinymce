@@ -7,7 +7,7 @@
 
 import * as Settings from '../api/Settings';
 
-const setup = function (editor) {
+const setup = (editor) => {
   const $ = editor.$, tocClass = Settings.getTocClass(editor);
 
   editor.on('PreProcess', (e) => {

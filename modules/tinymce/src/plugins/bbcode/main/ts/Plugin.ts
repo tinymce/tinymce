@@ -8,7 +8,7 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Convert from './core/Convert';
 
-export default function () {
+export default () => {
   PluginManager.add('bbcode', (editor) => {
     editor.on('BeforeSetContent', (e) => {
       e.content = Convert.bbcode2html(e.content);
@@ -24,4 +24,4 @@ export default function () {
       }
     });
   });
-}
+};

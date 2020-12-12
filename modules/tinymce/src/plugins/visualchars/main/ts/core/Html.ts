@@ -7,7 +7,7 @@
 
 import * as Data from './Data';
 
-const wrapCharWithSpan = function (value) {
+const wrapCharWithSpan = (value) => {
   return '<span data-mce-bogus="1" class="mce-' + Data.charMap[value] + '">' + value + '</span>';
 };
 

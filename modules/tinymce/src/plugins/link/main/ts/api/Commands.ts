@@ -8,7 +8,7 @@
 import * as Actions from '../core/Actions';
 import * as Settings from './Settings';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mceLink', () => {
     if (Settings.useQuickLink(editor)) {
       // Taken from ContextEditorEvents in silver. Find a better way.

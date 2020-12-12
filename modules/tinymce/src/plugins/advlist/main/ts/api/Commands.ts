@@ -7,7 +7,7 @@
 
 import * as Actions from '../core/Actions';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('ApplyUnorderedListStyle', (ui, value) => {
     Actions.applyListFormat(editor, 'UL', value['list-style-type']);
   });

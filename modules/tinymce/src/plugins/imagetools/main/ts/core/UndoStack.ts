@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-export default function () {
+export default () => {
   const data = [];
   let index = -1;
 
-  function add(state) {
+  const add = (state) => {
     const removed = data.splice(++index);
     data.push(state);
 
@@ -17,27 +17,27 @@ export default function () {
       state,
       removed
     };
-  }
+  };
 
-  function undo() {
+  const undo = () => {
     if (canUndo()) {
       return data[--index];
     }
-  }
+  };
 
-  function redo() {
+  const redo = () => {
     if (canRedo()) {
       return data[++index];
     }
-  }
+  };
 
-  function canUndo() {
+  const canUndo = () => {
     return index > 0;
-  }
+  };
 
-  function canRedo() {
+  const canRedo = () => {
     return index !== -1 && index < data.length - 1;
-  }
+  };
 
   return {
     data,
@@ -47,4 +47,4 @@ export default function () {
     canUndo,
     canRedo
   };
-}
+};

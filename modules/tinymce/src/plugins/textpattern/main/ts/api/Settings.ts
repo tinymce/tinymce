@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import { createPatternSet, normalizePattern } from './Pattern';
 
-const error = function (...args: Parameters<Console['error']>) {
+const error = (...args: Parameters<Console['error']>) => {
   const console: Console = Global.console;
   if (console) { // Skip test env
     if (console.error) { // tslint:disable-line:no-console

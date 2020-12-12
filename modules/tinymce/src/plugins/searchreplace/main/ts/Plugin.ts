@@ -12,7 +12,7 @@ import * as Commands from './api/Commands';
 import { SearchState } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('searchreplace', (editor) => {
     const currentSearchState = Cell<SearchState>({
       index: -1,
@@ -28,4 +28,4 @@ export default function () {
 
     return Api.get(editor, currentSearchState);
   });
-}
+};

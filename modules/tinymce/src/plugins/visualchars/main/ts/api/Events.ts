@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireVisualChars = function (editor, state) {
+const fireVisualChars = (editor, state) => {
   return editor.fire('VisualChars', { state });
 };
 

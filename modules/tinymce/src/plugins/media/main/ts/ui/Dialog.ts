@@ -81,8 +81,8 @@ const wrap = (data: MediaData): MediaDialogData => {
   return wrapped;
 };
 
-const handleError = function (editor: Editor): (error?: { msg: string }) => void {
-  return function (error) {
+const handleError = (editor: Editor): (error?: { msg: string }) => void => {
+  return (error) => {
     const errorMessage = error && error.msg ?
       'Media embed handler error: ' + error.msg :
       'Media embed handler threw unknown error.';
@@ -94,7 +94,7 @@ const snippetToData = (editor: Editor, embedSnippet: string): MediaData => HtmlT
 
 const isMediaElement = (element: Element) => element.getAttribute('data-mce-object') || element.getAttribute('data-ephox-embed-iri');
 
-const getEditorData = function (editor: Editor): MediaData {
+const getEditorData = (editor: Editor): MediaData => {
   const element = editor.selection.getNode();
   const snippet = isMediaElement(element) ? editor.serializer.serialize(element, { selection: true }) : '';
   return {
@@ -103,8 +103,8 @@ const getEditorData = function (editor: Editor): MediaData {
   };
 };
 
-const addEmbedHtml = function (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) {
-  return function (response: { url: string; html: string }) {
+const addEmbedHtml = (api: Dialog.DialogInstanceApi<MediaDialogData>, editor: Editor) => {
+  return (response: { url: string; html: string }) => {
     // Only set values if a URL has been defined
     if (Type.isString(response.url) && response.url.trim().length > 0) {
       const html = response.html;
@@ -120,7 +120,7 @@ const addEmbedHtml = function (api: Dialog.DialogInstanceApi<MediaDialogData>, e
   };
 };
 
-const selectPlaceholder = function (editor: Editor, beforeObjects: HTMLElement[]) {
+const selectPlaceholder = (editor: Editor, beforeObjects: HTMLElement[]) => {
   const afterObjects = editor.dom.select('*[data-mce-object]');
 
   // Find new image placeholder so we can select it
@@ -135,7 +135,7 @@ const selectPlaceholder = function (editor: Editor, beforeObjects: HTMLElement[]
   editor.selection.select(afterObjects[0]);
 };
 
-const handleInsert = function (editor: Editor, html: string) {
+const handleInsert = (editor: Editor, html: string) => {
   const beforeObjects = editor.dom.select('*[data-mce-object]');
 
   editor.insertContent(html);
@@ -143,7 +143,7 @@ const handleInsert = function (editor: Editor, html: string) {
   editor.nodeChanged();
 };
 
-const submitForm = function (prevData: MediaData, newData: MediaData, editor: Editor) {
+const submitForm = (prevData: MediaData, newData: MediaData, editor: Editor) => {
   newData.embed = UpdateHtml.updateHtml(newData.embed, newData);
 
   // Only fetch the embed HTML content if the URL has changed from what it previously was
@@ -157,7 +157,7 @@ const submitForm = function (prevData: MediaData, newData: MediaData, editor: Ed
   }
 };
 
-const showDialog = function (editor: Editor) {
+const showDialog = (editor: Editor) => {
   const editorData = getEditorData(editor);
   const currentData = Cell<MediaData>(editorData);
   const initialData = wrap(editorData);
@@ -279,12 +279,12 @@ const showDialog = function (editor: Editor) {
         primary: true
       }
     ],
-    onSubmit(api) {
+    onSubmit: (api) => {
       const serviceData = unwrap(api.getData());
       submitForm(currentData.get(), serviceData, editor);
       api.close();
     },
-    onChange(api, detail) {
+    onChange: (api, detail) => {
       switch (detail.name) {
         case 'source':
           handleSource(currentData.get(), api);

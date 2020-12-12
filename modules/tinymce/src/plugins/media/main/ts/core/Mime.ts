@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const guess = function (url: string): string {
+const guess = (url: string): string => {
   const mimes = {
     mp3: 'audio/mpeg',
     m4a: 'audio/x-m4a',

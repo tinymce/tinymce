@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.SubmitTest', (success, fa
     plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver(data, resolve) {
+    media_url_resolver: (data, resolve) => {
       Delay.setTimeout(() => {
         resolve({
           html: '<span id="fake">' + data.url + '</span>'

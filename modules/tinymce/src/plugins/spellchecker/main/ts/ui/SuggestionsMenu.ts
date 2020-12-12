@@ -63,8 +63,8 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState:
   return items;
 };
 
-const setup = function (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
-                        textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) {
+const setup = (editor: Editor, pluginUrl: string, lastSuggestionsState: Cell<LastSuggestion>, startedState: Cell<boolean>,
+               textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>) => {
   const update = (element: HTMLElement) => {
     const target = element;
     if (target.className === 'mce-spellchecker-word') {

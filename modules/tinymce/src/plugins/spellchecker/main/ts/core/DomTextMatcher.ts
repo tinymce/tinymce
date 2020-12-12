@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-function isContentEditableFalse(node) {
+const isContentEditableFalse = (node) => {
   return node && node.nodeType === 1 && node.contentEditable === 'false';
-}
+};
 
 export type Match = Record<string, string>;
 
@@ -28,7 +28,7 @@ export interface DomTextMatcher {
   indexOf: (match: Match) => number;
 }
 
-export const DomTextMatcher = function (node, editor): DomTextMatcher {
+export const DomTextMatcher = (node, editor): DomTextMatcher => {
   let m, matches = [];
   const dom = editor.dom;
 
@@ -36,7 +36,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   const hiddenTextElementsMap = editor.schema.getWhiteSpaceElements(); // TEXTAREA, PRE, STYLE, SCRIPT
   const shortEndedElementsMap = editor.schema.getShortEndedElements(); // BR, IMG, INPUT
 
-  function createMatch(m, data) {
+  const createMatch = (m, data) => {
     if (!m[0]) {
       throw new Error('findAndReplaceDOMText cannot handle zero-length matches');
     }
@@ -47,9 +47,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       text: m[0],
       data
     };
-  }
+  };
 
-  function getText(node) {
+  const getText = (node) => {
     let txt;
 
     if (node.nodeType === 3) {
@@ -77,9 +77,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     }
 
     return txt;
-  }
+  };
 
-  function stepThroughMatches(node, matches, replaceFn) {
+  const stepThroughMatches = (node, matches, replaceFn) => {
     let startNode, endNode, startNodeIndex,
       endNodeIndex, innerNodes = [], atIndex = 0, curNode = node,
       matchLocation, matchIndex = 0;
@@ -163,14 +163,14 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
         }
       }
     }
-  }
+  };
 
   /**
   * Generates the actual replaceFn which splits up text nodes
   * and inserts the replacement element.
   */
-  function genReplacer(callback) {
-    function makeReplacementNode(fill, matchIndex) {
+  const genReplacer = (callback) => {
+    const makeReplacementNode = (fill, matchIndex) => {
       const match = matches[matchIndex];
 
       if (!match.stencil) {
@@ -185,9 +185,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       }
 
       return clone;
-    }
+    };
 
-    return function (range) {
+    return (range) => {
       let before;
       let after;
       let parentNode;
@@ -247,21 +247,21 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
 
       return elB;
     };
-  }
+  };
 
-  function unwrapElement(element) {
+  const unwrapElement = (element) => {
     const parentNode = element.parentNode;
     while (element.childNodes.length > 0) {
       parentNode.insertBefore(element.childNodes[0], element);
     }
     parentNode.removeChild(element);
-  }
+  };
 
-  function hasClass(elm) {
+  const hasClass = (elm) => {
     return elm.className.indexOf('mce-spellchecker-word') !== -1;
-  }
+  };
 
-  function getWrappersByIndex(index) {
+  const getWrappersByIndex = (index) => {
     const elements = node.getElementsByTagName('*'), wrappers = [];
 
     index = typeof index === 'number' ? '' + index : null;
@@ -277,7 +277,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     }
 
     return wrappers;
-  }
+  };
 
   /**
   * Returns the index of a specific match object or -1 if it isn't found.
@@ -285,7 +285,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   * @param  {Match} match Text match object.
   * @return {Number} Index of match or -1 if it isn't found.
   */
-  function indexOf(match) {
+  const indexOf = (match) => {
     let i = matches.length;
     while (i--) {
       if (matches[i] === match) {
@@ -294,7 +294,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     }
 
     return -1;
-  }
+  };
 
   /**
   * Filters the matches. If the callback returns true it stays if not it gets removed.
@@ -391,9 +391,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   * @param {DOMElement} element Element to return match object for.
   * @return {Object} Match object for the specified element.
   */
-  function matchFromElement(element) {
+  const matchFromElement = (element) => {
     return matches[element.getAttribute('data-mce-index')];
-  }
+  };
 
   /**
   * Returns a DOM element from the specified match element. This will be the first element if it's split
@@ -402,9 +402,9 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   * @param {Object} match Match element to get first element of.
   * @return {DOMElement} DOM element for the specified match object.
   */
-  function elementFromMatch(match) {
+  const elementFromMatch = (match) => {
     return getWrappersByIndex(indexOf(match))[0];
-  }
+  };
 
   /**
   * Adds match the specified range for example a grammar line.
@@ -431,7 +431,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   * @param  {Object} match Match object to get range for.
   * @return {DOMRange} DOM Range for the specified match.
   */
-  function rangeFromMatch(match) {
+  const rangeFromMatch = (match) => {
     const wrappers = getWrappersByIndex(indexOf(match));
 
     const rng = editor.dom.createRng();
@@ -439,7 +439,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     rng.setEndAfter(wrappers[wrappers.length - 1]);
 
     return rng;
-  }
+  };
 
   /**
   * Replaces the specified match with the specified text.
@@ -448,7 +448,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   * @param {String} text Text to replace the match with.
   * @return {DOMRange} DOM range produced after the replace.
   */
-  function replace(match, text) {
+  const replace = (match, text) => {
     const rng = rangeFromMatch(match);
 
     rng.deleteContents();
@@ -458,7 +458,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
     }
 
     return rng;
-  }
+  };
 
   /**
   * Resets the DomTextMatcher instance. This will remove any wrapped nodes and remove any matches.

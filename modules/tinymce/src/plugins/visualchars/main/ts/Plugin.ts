@@ -14,7 +14,7 @@ import * as Bindings from './core/Bindings';
 import * as Keyboard from './core/Keyboard';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('visualchars', (editor) => {
     const toggleState = Cell(Settings.isEnabledByDefault(editor));
 
@@ -25,4 +25,4 @@ export default function () {
 
     return Api.get(toggleState);
   });
-}
+};

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireInsertCustomChar = function (editor, chr) {
+const fireInsertCustomChar = (editor, chr) => {
   return editor.fire('insertCustomChar', { chr });
 };
 

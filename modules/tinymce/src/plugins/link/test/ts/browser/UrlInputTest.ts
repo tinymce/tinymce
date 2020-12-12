@@ -6,7 +6,7 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const cFakeEvent = function (name) {
+const cFakeEvent = (name) => {
   return Chain.label('Fake event',
     Chain.op((elm: SugarElement) => {
       const evt = document.createEvent('HTMLEvents');

@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.IndentListsInTableTest', (succ
   TablePlugin();
   ListsPlugin();
 
-  const sAssertTableInnerHTML = function (editor, expected) {
+  const sAssertTableInnerHTML = (editor, expected) => {
     return Logger.t('Assert table InnerHTML ' + expected, Step.sync(() => {
       const actual = editor.getBody().firstChild.innerHTML;
       Assert.eq('Does not have correct html', expected, actual);

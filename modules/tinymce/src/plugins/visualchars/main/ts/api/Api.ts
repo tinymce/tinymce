@@ -5,8 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const get = function (toggleState) {
-  const isEnabled = function () {
+const get = (toggleState) => {
+  const isEnabled = () => {
     return toggleState.get();
   };
 

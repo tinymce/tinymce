@@ -10,7 +10,7 @@ import { indentListSelection, outdentListSelection } from '../actions/Indendatio
 import * as Settings from '../api/Settings';
 import * as Delete from './Delete';
 
-const setupTabKey = function (editor) {
+const setupTabKey = (editor) => {
   editor.on('keydown', (e) => {
     // Check for tab but not ctrl/cmd+tab since it switches browser tabs
     if (e.keyCode !== VK.TAB || VK.metaKeyPressed(e)) {
@@ -25,7 +25,7 @@ const setupTabKey = function (editor) {
   });
 };
 
-const setup = function (editor) {
+const setup = (editor) => {
   if (Settings.shouldIndentOnTab(editor)) {
     setupTabKey(editor);
   }

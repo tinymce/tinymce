@@ -7,11 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const fireSpellcheckStart = function (editor: Editor) {
+const fireSpellcheckStart = (editor: Editor) => {
   return editor.fire('SpellcheckStart');
 };
 
-const fireSpellcheckEnd = function (editor: Editor) {
+const fireSpellcheckEnd = (editor: Editor) => {
   return editor.fire('SpellcheckEnd');
 };
 

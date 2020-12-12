@@ -25,14 +25,14 @@ export interface ResizeHandler {
 const barResizerPrefix = 'bar-';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
 
-export const getResizeHandler = function (editor: Editor): ResizeHandler {
+export const getResizeHandler = (editor: Editor): ResizeHandler => {
   let selectionRng = Optional.none<Range>();
   let resize = Optional.none<TableResize>();
   let wire = Optional.none<ResizeWire>();
   let startW: number;
   let startRawW: string;
 
-  const isTable = function (elm: Node): elm is HTMLTableElement {
+  const isTable = (elm: Node): elm is HTMLTableElement => {
     return elm.nodeName === 'TABLE';
   };
 
@@ -87,7 +87,7 @@ export const getResizeHandler = function (editor: Editor): ResizeHandler {
     }
   };
 
-  const destroy = function () {
+  const destroy = () => {
     resize.each((sz) => {
       sz.destroy();
     });

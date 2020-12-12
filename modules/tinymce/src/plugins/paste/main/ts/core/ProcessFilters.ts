@@ -27,17 +27,15 @@ const preProcess = (editor: Editor, html: string) => {
   return HtmlSerializer({ validate: Settings.getValidate(editor) }, editor.schema).serialize(fragment);
 };
 
-const processResult = function (content: string, cancelled: boolean) {
-  return { content, cancelled };
-};
+const processResult = (content: string, cancelled: boolean) => ({ content, cancelled });
 
-const postProcessFilter = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
+const postProcessFilter = (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) => {
   const tempBody = editor.dom.create('div', { style: 'display:none' }, html);
   const postProcessArgs = Events.firePastePostProcess(editor, tempBody, internal, isWordHtml);
   return processResult(postProcessArgs.node.innerHTML, postProcessArgs.isDefaultPrevented());
 };
 
-const filterContent = function (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) {
+const filterContent = (editor: Editor, content: string, internal: boolean, isWordHtml: boolean) => {
   const preProcessArgs = Events.firePastePreProcess(editor, content, internal, isWordHtml);
 
   // Filter the content to remove potentially dangerous content (eg scripts)
@@ -50,7 +48,7 @@ const filterContent = function (editor: Editor, content: string, internal: boole
   }
 };
 
-const process = function (editor: Editor, html: string, internal: boolean) {
+const process = (editor: Editor, html: string, internal: boolean) => {
   const isWordHtml = WordFilter.isWordContent(html);
   const content = isWordHtml ? WordFilter.preProcess(editor, html) : html;
 

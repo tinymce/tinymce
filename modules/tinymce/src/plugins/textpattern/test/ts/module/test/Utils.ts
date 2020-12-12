@@ -2,8 +2,8 @@ import { ApproxStructure, GeneralSteps, Keys, Logger, Step, StructAssert } from 
 import { Arr, Unicode } from '@ephox/katamari';
 import { TinyActions, TinyApis } from '@ephox/mcagar';
 
-const sSetContentAndFireKeystroke = function (key: number) {
-  return function (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) {
+const sSetContentAndFireKeystroke = (key: number) => {
+  return (tinyApis: TinyApis, tinyActions: TinyActions, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {
     return Logger.t(`Set content and press ${key}`, GeneralSteps.sequence([
       tinyApis.sSetContent(wrapInP ? '<p>' + content + '</p>' : content),
       tinyApis.sFocus(),
@@ -27,13 +27,13 @@ const sSetContentAndPressSpace = (tinyApis: TinyApis, tinyActions: TinyActions, 
   tinyActions.sContentKeystroke(32, {})
 ]));
 
-const withTeardown = function (steps: Step<any, any>[], teardownStep: Step<any, any>) {
+const withTeardown = (steps: Step<any, any>[], teardownStep: Step<any, any>) => {
   return Arr.bind(steps, (step) => {
     return [ step, teardownStep ];
   });
 };
 
-const bodyStruct = function (children: StructAssert[]) {
+const bodyStruct = (children: StructAssert[]) => {
   return ApproxStructure.build((s, _str) => {
     return s.element('body', {
       children
@@ -41,7 +41,7 @@ const bodyStruct = function (children: StructAssert[]) {
   });
 };
 
-const inlineStructHelper = function (tag: string, content: string) {
+const inlineStructHelper = (tag: string, content: string) => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
@@ -58,7 +58,7 @@ const inlineStructHelper = function (tag: string, content: string) {
   });
 };
 
-const inlineBlockStructHelper = function (tag: string, content: string) {
+const inlineBlockStructHelper = (tag: string, content: string) => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element('p', {
@@ -76,7 +76,7 @@ const inlineBlockStructHelper = function (tag: string, content: string) {
   });
 };
 
-const blockStructHelper = function (tag: string, content: string) {
+const blockStructHelper = (tag: string, content: string) => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
@@ -89,7 +89,7 @@ const blockStructHelper = function (tag: string, content: string) {
   });
 };
 
-const forcedRootBlockInlineStructHelper = function (tag: string, content: string) {
+const forcedRootBlockInlineStructHelper = (tag: string, content: string) => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {
@@ -104,7 +104,7 @@ const forcedRootBlockInlineStructHelper = function (tag: string, content: string
   });
 };
 
-const forcedRootBlockStructHelper = function (tag: string, content: string) {
+const forcedRootBlockStructHelper = (tag: string, content: string) => {
   return ApproxStructure.build((s, str) => {
     return bodyStruct([
       s.element(tag, {

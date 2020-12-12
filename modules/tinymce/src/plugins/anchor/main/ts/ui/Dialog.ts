@@ -53,7 +53,7 @@ const open = (editor: Editor) => {
     initialData: {
       id: currentId
     },
-    onSubmit(api) {
+    onSubmit: (api) => {
       if (insertAnchor(editor, api.getData().id)) { // TODO we need a better way to do validation
         api.close();
       }

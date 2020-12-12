@@ -5,15 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const enableWhenDirty = function (editor) {
+const enableWhenDirty = (editor) => {
   return editor.getParam('save_enablewhendirty', true);
 };
 
-const hasOnSaveCallback = function (editor) {
+const hasOnSaveCallback = (editor) => {
   return !!editor.getParam('save_onsavecallback');
 };
 
-const hasOnCancelCallback = function (editor) {
+const hasOnCancelCallback = (editor) => {
   return !!editor.getParam('save_oncancelcallback');
 };
 

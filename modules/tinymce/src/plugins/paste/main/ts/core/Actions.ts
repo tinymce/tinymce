@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Clipboard } from '../api/Clipboard';
 import * as Events from '../api/Events';
 
-const togglePlainTextPaste = function (editor: Editor, clipboard: Clipboard) {
+const togglePlainTextPaste = (editor: Editor, clipboard: Clipboard) => {
   if (clipboard.pasteFormat.get() === 'text') {
     clipboard.pasteFormat.set('html');
     Events.firePastePlainTextToggle(editor, false);

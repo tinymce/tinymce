@@ -19,7 +19,7 @@ export interface CharMap {
   characters: [number, string][];
 }
 
-const getDefaultCharMap = function (): CharMap[] {
+const getDefaultCharMap = (): CharMap[] => {
   return [
     // TODO: Merge categories with TBIO
     // {
@@ -365,13 +365,13 @@ const getDefaultCharMap = function (): CharMap[] {
   ];
 };
 
-const charmapFilter = function (charmap) {
+const charmapFilter = (charmap) => {
   return Tools.grep(charmap, (item) => {
     return isArray(item) && item.length === 2;
   });
 };
 
-const getCharsFromSetting = function (settingValue) {
+const getCharsFromSetting = (settingValue) => {
   if (isArray(settingValue)) {
     return [].concat(charmapFilter(settingValue));
   }
@@ -383,7 +383,7 @@ const getCharsFromSetting = function (settingValue) {
   return [];
 };
 
-const extendCharMap = function (editor: Editor, charmap: CharMap[]) {
+const extendCharMap = (editor: Editor, charmap: CharMap[]) => {
   const userCharMap = Settings.getCharMap(editor);
   if (userCharMap) {
     charmap = [{ name: UserDefined, characters: getCharsFromSetting(userCharMap) }];
@@ -402,7 +402,7 @@ const extendCharMap = function (editor: Editor, charmap: CharMap[]) {
   return charmap;
 };
 
-const getCharMap = function (editor: Editor): CharMap[] {
+const getCharMap = (editor: Editor): CharMap[] => {
   const groups = extendCharMap(editor, getDefaultCharMap());
   return groups.length > 1 ? [
     {

@@ -97,7 +97,7 @@ const getHtml = (editor: Editor): string => {
   // for example: <img style="float: right"> we need to check if any of them contains some useful html.
   // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
 
-  const copyAndRemove = function (toElm: HTMLElement, fromElm: HTMLElement) {
+  const copyAndRemove = (toElm: HTMLElement, fromElm: HTMLElement) => {
     toElm.appendChild(fromElm);
     editor.dom.remove(fromElm, true); // remove, but keep children
   };

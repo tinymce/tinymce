@@ -12,12 +12,12 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', (succe
   Plugin();
   Theme();
 
-  const teardown = function (editor) {
+  const teardown = (editor) => {
     editor.getBody().rtl = '';
   };
 
   suite.test('TestCase-TBA: FullPage: Keep header/footer intact', (editor) => {
-    const normalizeHTML = function (html) {
+    const normalizeHTML = (html) => {
       return html.replace(/\s/g, '');
     };
 
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', (succe
   });
 
   suite.test('TestCase-TBA: FullPage: add/remove stylesheets', (editor) => {
-    const hasLink = function hasink(href) {
+    const hasLink = (href) => {
       const links = editor.getDoc().getElementsByTagName('link');
 
       for (let i = 0; i < links.length; i++) {
@@ -123,7 +123,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', (succe
     LegacyUnit.equal(hasLink('c.css'), false);
   });
 
-  const sParseStyles = function (editor) {
+  const sParseStyles = (editor) => {
     return Logger.t('Parse styles', GeneralSteps.sequence([
       Step.sync(() => {
         editor.setContent('<html><head><style>p {text-transform: uppercase}</style></head><body dir="rtl"><p>Test</p></body></html>');
@@ -138,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPagePluginTest', (succe
     ]));
   };
 
-  const sProtectConditionalCommentsInHeadFoot = function (editor) {
+  const sProtectConditionalCommentsInHeadFoot = (editor) => {
     return Logger.t('Set and assert styles were added to iframe document', GeneralSteps.sequence([
       Step.sync(() => {
         editor.setContent([

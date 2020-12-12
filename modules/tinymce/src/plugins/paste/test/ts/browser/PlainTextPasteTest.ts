@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
   Theme();
   PastePlugin();
 
-  const cCreateEditorFromSettings = function (settings, _html?) {
+  const cCreateEditorFromSettings = (settings, _html?) => {
     return Chain.control(
       McEditor.cFromSettings({
         ...settings,
@@ -23,14 +23,14 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
     );
   };
 
-  const cRemoveEditor = function () {
+  const cRemoveEditor = () => {
     return Chain.control(
       McEditor.cRemove,
       Guard.addLogging('Remove editor')
     );
   };
 
-  const cClearEditor = function () {
+  const cClearEditor = () => {
     return Chain.control(
       Chain.async((editor: any, next, _die) => {
         editor.setContent('');
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
     );
   };
 
-  const cFireFakePasteEvent = function (data) {
+  const cFireFakePasteEvent = (data) => {
     return Chain.control(
       Chain.async((editor: any, next, _die) => {
         editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
     );
   };
 
-  const cAssertEditorContent = function (label, expected) {
+  const cAssertEditorContent = (label, expected) => {
     return Chain.control(
       Chain.async((editor: any, next, _die) => {
         Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
     );
   };
 
-  const cAssertClipboardPaste = function (expected, data) {
+  const cAssertClipboardPaste = (expected, data) => {
     const chains = [];
 
     Obj.each(data, (data, label) => {

@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.FindInlinePatternTest', 
 
   const inlinePatterns = Settings.getPatternSet(mockEditor as any).inlinePatterns;
 
-  const cGetInlinePattern = function (patterns: InlinePattern[], space: boolean = false) {
+  const cGetInlinePattern = (patterns: InlinePattern[], space: boolean = false) => {
     const asStr = (p: InlinePattern) => {
       if (p.type === 'inline-format') {
         return p.start + 'TEXT' + p.end + ' = ' + JSON.stringify(p.format);
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.FindInlinePatternTest', 
     endRng: PathRange;
   }
 
-  const cAssertPatterns = function (expectedMatches: ExpectedPatternMatch[]) {
+  const cAssertPatterns = (expectedMatches: ExpectedPatternMatch[]) => {
     return Chain.op<InlinePatternMatch[]>((actualMatches) => {
       Assertions.assertEq('Pattern count does not match', expectedMatches.length, actualMatches.length);
       for (let i = 0; i < expectedMatches.length; i++) {
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.FindInlinePatternTest', 
     });
   };
 
-  const cAssertSimpleMatch = function (matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) {
+  const cAssertSimpleMatch = (matchStart: string, matchEnd: string, formats: string[], startRng: PathRange, endRng: PathRange) => {
     return cAssertPatterns([{ pattern: { start: matchStart, end: matchEnd, format: formats }, startRng, endRng }]);
   };
 

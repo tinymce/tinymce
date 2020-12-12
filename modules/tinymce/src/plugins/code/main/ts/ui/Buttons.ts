@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import * as Dialog from './Dialog';
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addButton('code', {
     icon: 'sourcecode',
     tooltip: 'Source code',

@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EmojiDatabase } from '../core/EmojiDatabase';
 import * as Dialog from './Dialog';
 
-const register = function (editor: Editor, database: EmojiDatabase): void {
+const register = (editor: Editor, database: EmojiDatabase): void => {
   const onAction = () => Dialog.open(editor, database);
 
   editor.ui.registry.addButton('emoticons', {

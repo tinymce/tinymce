@@ -22,7 +22,7 @@ interface LanguageValue {
 
 const spellcheckerEvents = 'SpellcheckStart SpellcheckEnd';
 
-const buildMenuItems = function (listName: string, languageValues: LanguageValue[]) {
+const buildMenuItems = (listName: string, languageValues: LanguageValue[]) => {
   const items = [];
 
   Tools.each(languageValues, (languageValue) => {
@@ -36,7 +36,7 @@ const buildMenuItems = function (listName: string, languageValues: LanguageValue
   return items;
 };
 
-const getItems = function (editor: Editor): LanguageValue[] {
+const getItems = (editor: Editor): LanguageValue[] => {
   return Tools.map(Settings.getLanguages(editor).split(','), (langPair) => {
     const langPairs = langPair.split('=');
 
@@ -47,9 +47,9 @@ const getItems = function (editor: Editor): LanguageValue[] {
   });
 };
 
-const register = function (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>) {
+const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>, textMatcherState: Cell<DomTextMatcher>, currentLanguageState: Cell<string>, lastSuggestionsState: Cell<LastSuggestion>) => {
   const languageMenuItems = buildMenuItems('Language', getItems(editor));
-  const startSpellchecking = function () {
+  const startSpellchecking = () => {
     Actions.spellcheck(editor, pluginUrl, startedState, textMatcherState, lastSuggestionsState, currentLanguageState);
   };
 

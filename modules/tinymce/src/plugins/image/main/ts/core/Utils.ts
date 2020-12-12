@@ -109,7 +109,7 @@ const createImageList = (editor: Editor, callback: (imageList: any) => void) => 
   if (typeof imageList === 'string') {
     XHR.send({
       url: imageList,
-      success(text) {
+      success: (text) => {
         callback(JSON.parse(text));
       }
     });

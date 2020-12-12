@@ -14,7 +14,7 @@ import * as Scan from '../core/Scan';
 
 const patternName = 'pattern';
 
-const open = function (editor: Editor, charMap: CharMap[]) {
+const open = (editor: Editor, charMap: CharMap[]) => {
   const makeGroupItems = (): Dialog.BodyComponentSpec[] => [
     {
       label: 'Search',
@@ -77,7 +77,7 @@ const open = function (editor: Editor, charMap: CharMap[]) {
       }
     ],
     initialData,
-    onAction(api, details) {
+    onAction: (api, details) => {
       if (details.name === 'results') {
         Actions.insertChar(editor, details.value);
         api.close();

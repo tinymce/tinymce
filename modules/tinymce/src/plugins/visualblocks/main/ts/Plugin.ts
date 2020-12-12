@@ -11,7 +11,7 @@ import * as Commands from './api/Commands';
 import * as Bindings from './core/Bindings';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('visualblocks', (editor, pluginUrl) => {
     const enabledState = Cell(false);
 
@@ -19,4 +19,4 @@ export default function () {
     Buttons.register(editor, enabledState);
     Bindings.setup(editor, pluginUrl, enabledState);
   });
-}
+};

@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
   Plugin();
   Theme();
 
-  const stripAttribs = function ($el, attr) {
+  const stripAttribs = ($el, attr) => {
     if (Tools.isArray(attr)) {
       Tools.each(attr, (attr) => {
         stripAttribs($el, attr);
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.plugins.toc.TocPluginTest', (success, failur
     $el.find('[' + attr + ']').removeAttr(attr);
   };
 
-  const trimBr = function (html) {
+  const trimBr = (html) => {
     return html.replace(/<br data-mce-bogus="1" \/>/g, '');
   };
 

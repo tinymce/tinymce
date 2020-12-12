@@ -14,21 +14,21 @@ import { ClipboardContents } from './Clipboard';
 import * as InternalHtml from './InternalHtml';
 import * as Utils from './Utils';
 
-const getCaretRangeFromEvent = function (editor: Editor, e: MouseEvent) {
+const getCaretRangeFromEvent = (editor: Editor, e: MouseEvent) => {
   return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
 };
 
-const isPlainTextFileUrl = function (content: ClipboardContents) {
+const isPlainTextFileUrl = (content: ClipboardContents) => {
   const plainTextContent = content['text/plain'];
   return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
 };
 
-const setFocusedRange = function (editor: Editor, rng: Range) {
+const setFocusedRange = (editor: Editor, rng: Range) => {
   editor.focus();
   editor.selection.setRng(rng);
 };
 
-const setup = function (editor: Editor, clipboard: Clipboard, draggingInternallyState) {
+const setup = (editor: Editor, clipboard: Clipboard, draggingInternallyState) => {
   // Block all drag/drop events
   if (Settings.shouldBlockDrop(editor)) {
     editor.on('dragend dragover draggesture dragdrop drop drag', (e) => {

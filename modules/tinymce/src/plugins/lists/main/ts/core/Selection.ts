@@ -18,17 +18,17 @@ const getParentList = (editor: Editor, node?: Node) => {
   return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart));
 };
 
-const isParentListSelected = function (parentList, selectedBlocks) {
+const isParentListSelected = (parentList, selectedBlocks) => {
   return parentList && selectedBlocks.length === 1 && selectedBlocks[0] === parentList;
 };
 
-const findSubLists = function (parentList) {
+const findSubLists = (parentList) => {
   return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), (elm: Node) => {
     return NodeType.isListNode(elm);
   });
 };
 
-const getSelectedSubLists = function (editor) {
+const getSelectedSubLists = (editor) => {
   const parentList = getParentList(editor);
   const selectedBlocks = editor.selection.getSelectedBlocks();
 
@@ -41,7 +41,7 @@ const getSelectedSubLists = function (editor) {
   }
 };
 
-const findParentListItemsNodes = function (editor, elms) {
+const findParentListItemsNodes = (editor, elms) => {
   const listItemsElms = Tools.map(elms, (elm) => {
     const parentLi = editor.dom.getParent(elm, 'li,dd,dt', getClosestListRootElm(editor, elm));
 
@@ -51,7 +51,7 @@ const findParentListItemsNodes = function (editor, elms) {
   return DomQuery.unique(listItemsElms);
 };
 
-const getSelectedListItems = function (editor) {
+const getSelectedListItems = (editor) => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
   return Tools.grep(findParentListItemsNodes(editor, selectedBlocks), (block) => {
     return NodeType.isListItemNode(block);
@@ -60,7 +60,7 @@ const getSelectedListItems = function (editor) {
 
 const getSelectedDlItems = (editor: Editor): Node[] => Arr.filter(getSelectedListItems(editor), NodeType.isDlItemNode);
 
-const getClosestListRootElm = function (editor, elm) {
+const getClosestListRootElm = (editor, elm) => {
   const parentTableCell = editor.dom.getParents(elm, 'TD,TH');
   const root = parentTableCell.length > 0 ? parentTableCell[0] : editor.getBody();
 

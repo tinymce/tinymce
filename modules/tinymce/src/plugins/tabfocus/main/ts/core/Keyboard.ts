@@ -16,32 +16,32 @@ import * as Settings from '../api/Settings';
 
 const DOM = DOMUtils.DOM;
 
-const tabCancel = function (e) {
+const tabCancel = (e) => {
   if (e.keyCode === VK.TAB && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
   }
 };
 
-const setup = function (editor: Editor) {
-  function tabHandler(e) {
+const setup = (editor: Editor) => {
+  const tabHandler = (e) => {
     let x: number, i: number;
 
     if (e.keyCode !== VK.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
       return;
     }
 
-    function find(direction) {
+    const find = (direction) => {
       const el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
 
-      function canSelectRecursive(e) {
+      const canSelectRecursive = (e) => {
         return e.nodeName === 'BODY' || (e.type !== 'hidden' &&
           e.style.display !== 'none' &&
           e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode));
-      }
+      };
 
-      function canSelect(el) {
+      const canSelect = (el) => {
         return /INPUT|TEXTAREA|BUTTON/.test(el.tagName) && EditorManager.get(e.id) && el.tabIndex !== -1 && canSelectRecursive(el);
-      }
+      };
 
       Tools.each(el, (e, i) => {
         if (e.id === editor.id) {
@@ -64,7 +64,7 @@ const setup = function (editor: Editor) {
       }
 
       return null;
-    }
+    };
 
     const v = Tools.explode(Settings.getTabFocus(editor));
 
@@ -106,7 +106,7 @@ const setup = function (editor: Editor) {
 
       e.preventDefault();
     }
-  }
+  };
 
   editor.on('init', () => {
     if (editor.inline) {
