@@ -12,15 +12,15 @@ UnitTest.asynctest(
     Theme();
     TextpatternPlugin();
 
-    const sTypeChar = function (editor: Editor, character: string) {
+    const sTypeChar = (editor: Editor, character: string) => {
       return Logger.t(`Type ${character}`, Step.sync(() => {
         const charCode = character.charCodeAt(0);
         editor.fire('keypress', { charCode } as KeyboardEvent);
       }));
     };
 
-    const sTypeAndTrigger = function (tinyApis: TinyApis, editor: Editor) {
-      return function (label, patternText, trigger, tag, rawText) {
+    const sTypeAndTrigger = (tinyApis: TinyApis, editor: Editor) => {
+      return (label, patternText, trigger, tag, rawText) => {
         return Logger.t(label, GeneralSteps.sequence([
           tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
           tinyApis.sFocus(),

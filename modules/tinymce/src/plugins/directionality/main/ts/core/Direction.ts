@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
-const setDir = function (editor: Editor, dir: string) {
+const setDir = (editor: Editor, dir: string) => {
   const dom = editor.dom;
   let curDir;
   const blocks = editor.selection.getSelectedBlocks();

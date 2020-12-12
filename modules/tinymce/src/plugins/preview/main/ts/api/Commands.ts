@@ -7,7 +7,7 @@
 
 import { open } from '../ui/Dialog';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mcePreview', () => {
     open(editor);
   });

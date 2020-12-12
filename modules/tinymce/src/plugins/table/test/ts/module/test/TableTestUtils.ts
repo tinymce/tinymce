@@ -50,7 +50,7 @@ const sAssertTableStructure = (editor: Editor, structure: StructAssert) => Logge
   Assertions.assertStructure('Should be a table the expected structure', structure, table);
 }));
 
-const sOpenToolbarOn = function (editor, selector, path) {
+const sOpenToolbarOn = (editor, selector, path) => {
   return Logger.t('Open dialog from toolbar', Chain.asStep(TinyDom.fromDom(editor.getBody()), [
     UiFinder.cFindIn(selector),
     Cursors.cFollow(path),
@@ -230,7 +230,7 @@ const cDeleteRow = Chain.control(
   Guard.addLogging('Delete row')
 );
 
-const cDragHandle = function (id, deltaH, deltaV) {
+const cDragHandle = (id, deltaH, deltaV) => {
   return Chain.control(
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),

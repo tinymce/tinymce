@@ -14,7 +14,7 @@ import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import { TableActions } from './TableActions';
 
-const extractSelected = function (cells) {
+const extractSelected = (cells) => {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)
   return TableLookup.table(cells[0]).map(Replication.deep).map((replica) => {
     return [ CopySelected.extract(replica, Ephemera.attributeSelector) ];
@@ -25,9 +25,9 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string => 
 
 const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
+const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection) => {
   editor.on('BeforeGetContent', (e) => {
-    const multiCellContext = function (cells) {
+    const multiCellContext = (cells) => {
       e.preventDefault();
       extractSelected(cells).each((elements) => {
         e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);

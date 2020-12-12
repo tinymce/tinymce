@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const setup = function (editor) {
+const setup = (editor) => {
   editor.addShortcut('Meta+K', '', () => {
     editor.execCommand('mceLink');
   });

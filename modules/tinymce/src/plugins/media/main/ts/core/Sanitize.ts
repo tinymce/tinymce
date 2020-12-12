@@ -11,7 +11,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Writer from 'tinymce/core/api/html/Writer';
 import * as Settings from '../api/Settings';
 
-const sanitize = function (editor: Editor, html: string) {
+const sanitize = (editor: Editor, html: string) => {
   if (Settings.shouldFilterHtml(editor) === false) {
     return html;
   }
@@ -23,25 +23,25 @@ const sanitize = function (editor: Editor, html: string) {
     validate: false,
     allow_conditional_comments: false,
 
-    comment(text) {
+    comment: (text) => {
       if (!blocked) {
         writer.comment(text);
       }
     },
 
-    cdata(text) {
+    cdata: (text) => {
       if (!blocked) {
         writer.cdata(text);
       }
     },
 
-    text(text, raw) {
+    text: (text, raw) => {
       if (!blocked) {
         writer.text(text, raw);
       }
     },
 
-    start(name, attrs, empty) {
+    start: (name, attrs, empty) => {
       blocked = true;
 
       if (name === 'script' || name === 'noscript' || name === 'svg') {
@@ -65,7 +65,7 @@ const sanitize = function (editor: Editor, html: string) {
       blocked = false;
     },
 
-    end(name) {
+    end: (name) => {
       if (blocked) {
         return;
       }

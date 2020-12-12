@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     table_toolbar: ''
   };
 
-  const assertWithin = function (value, min, max) {
+  const assertWithin = (value, min, max) => {
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
   };
 

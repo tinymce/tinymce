@@ -16,10 +16,10 @@
  * @param  {DOMRange} rng DOM Range to get bookmark on.
  * @return {Object} Bookmark object.
  */
-const create = function (dom, rng) {
+const create = (dom, rng) => {
   const bookmark = {};
 
-  function setupEndPoint(start?) {
+  const setupEndPoint = (start?) => {
     let offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
@@ -46,7 +46,7 @@ const create = function (dom, rng) {
 
     bookmark[start ? 'startContainer' : 'endContainer'] = container;
     bookmark[start ? 'startOffset' : 'endOffset'] = offset;
-  }
+  };
 
   setupEndPoint(true);
 
@@ -62,11 +62,11 @@ const create = function (dom, rng) {
  *
  * @param {Object} bookmark Bookmark object to move selection to.
  */
-const resolve = function (dom, bookmark) {
-  function restoreEndPoint(start?) {
+const resolve = (dom, bookmark) => {
+  const restoreEndPoint = (start?) => {
     let container, offset, node;
 
-    function nodeIndex(container) {
+    const nodeIndex = (container) => {
       let node = container.parentNode.firstChild, idx = 0;
 
       while (node) {
@@ -83,7 +83,7 @@ const resolve = function (dom, bookmark) {
       }
 
       return -1;
-    }
+    };
 
     container = node = bookmark[start ? 'startContainer' : 'endContainer'];
     offset = bookmark[start ? 'startOffset' : 'endOffset'];
@@ -100,7 +100,7 @@ const resolve = function (dom, bookmark) {
 
     bookmark[start ? 'startContainer' : 'endContainer'] = container;
     bookmark[start ? 'startOffset' : 'endOffset'] = offset;
-  }
+  };
 
   restoreEndPoint(true);
   restoreEndPoint();

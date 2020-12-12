@@ -7,7 +7,7 @@
 
 import { Clipboard } from './Clipboard';
 
-const get = function (clipboard: Clipboard, quirks) {
+const get = (clipboard: Clipboard, quirks) => {
   return {
     clipboard,
     quirks

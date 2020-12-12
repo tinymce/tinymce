@@ -35,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
   const clearEvents = () => modifiedEvents = [];
   const defaultEvent = { type: 'tablemodified', structure: true, style: false } as TableModifiedEvent;
 
-  const testCommand = function (editor: Editor, command: string, tests: MergeCellTest[]) {
+  const testCommand = (editor: Editor, command: string, tests: MergeCellTest[]) => {
     Tools.each(tests, (test) => {
       clearEvents();
       editor.getBody().innerHTML = test.before;
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
     });
   };
 
-  const cleanTableHtml = function (html: string) {
+  const cleanTableHtml = (html: string) => {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 

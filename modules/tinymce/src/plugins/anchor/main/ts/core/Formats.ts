@@ -18,7 +18,7 @@ const registerFormats = (editor: Editor) => {
     attributes: {
       id: '%value'
     },
-    onmatch(node: Node, _fmt, _itemName: string) {
+    onmatch: (node: Node, _fmt, _itemName: string) => {
       return Utils.isNamedAnchor(node);
     }
   });

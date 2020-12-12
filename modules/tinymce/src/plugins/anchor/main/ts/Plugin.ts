@@ -11,7 +11,7 @@ import * as FilterContent from './core/FilterContent';
 import * as Formats from './core/Formats';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('anchor', (editor) => {
     FilterContent.setup(editor);
     Commands.register(editor);
@@ -21,4 +21,4 @@ export default function () {
       Formats.registerFormats(editor);
     });
   });
-}
+};

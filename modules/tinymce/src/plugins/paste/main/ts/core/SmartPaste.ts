@@ -28,15 +28,15 @@ const pasteHtml = (editor: Editor, html: string) => {
  * @private
  */
 
-const isAbsoluteUrl = function (url: string) {
+const isAbsoluteUrl = (url: string) => {
   return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
 };
 
-const isImageUrl = function (editor: Editor, url: string) {
+const isImageUrl = (editor: Editor, url: string) => {
   return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url, `.${type}`));
 };
 
-const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
+const createImage = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) => {
   editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
   }, () => {
@@ -46,7 +46,7 @@ const createImage = function (editor: Editor, url: string, pasteHtmlFn: typeof p
   return true;
 };
 
-const createLink = function (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) {
+const createLink = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) => {
   editor.undoManager.extra(() => {
     pasteHtmlFn(editor, url);
   }, () => {
@@ -56,15 +56,15 @@ const createLink = function (editor: Editor, url: string, pasteHtmlFn: typeof pa
   return true;
 };
 
-const linkSelection = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
+const linkSelection = (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) => {
   return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
 };
 
-const insertImage = function (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) {
+const insertImage = (editor: Editor, html: string, pasteHtmlFn: typeof pasteHtml) => {
   return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
 };
 
-const smartInsertContent = function (editor: Editor, html: string) {
+const smartInsertContent = (editor: Editor, html: string) => {
   Tools.each([
     linkSelection,
     insertImage,
@@ -74,7 +74,7 @@ const smartInsertContent = function (editor: Editor, html: string) {
   });
 };
 
-const insertContent = function (editor: Editor, html: string, pasteAsText: boolean) {
+const insertContent = (editor: Editor, html: string, pasteAsText: boolean) => {
   if (pasteAsText || Settings.isSmartPasteEnabled(editor) === false) {
     pasteHtml(editor, html);
   } else {

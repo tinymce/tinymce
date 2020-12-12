@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', (success, 
   Plugin();
   Theme();
 
-  const sTestEmbedContentFromUrlWithAttribute = function (editor: Editor, api: TinyApis, ui: TinyUi, url: string, content: string) {
+  const sTestEmbedContentFromUrlWithAttribute = (editor: Editor, api: TinyApis, ui: TinyUi, url: string, content: string) => {
     return Logger.t(`Assert embeded ${content} from ${url} with attribute`, GeneralSteps.sequence([
       api.sSetContent(''),
       Utils.sOpenDialog(ui),
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', (success, 
       Utils.sCloseDialog(ui)
     ]));
   };
-  const sTestEmbedContentFromUrl2 = function (editor: Editor, api: TinyApis, ui: TinyUi, url: string, url2: string, content: string, content2: string) {
+  const sTestEmbedContentFromUrl2 = (editor: Editor, api: TinyApis, ui: TinyUi, url: string, url2: string, content: string, content2: string) => {
     return Logger.t(`Assert embeded ${content} from ${url} and ${content2} from ${url2}`, GeneralSteps.sequence([
       api.sSetContent(''),
       Utils.sOpenDialog(ui),
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', (success, 
     plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver(data, resolve) {
+    media_url_resolver: (data, resolve) => {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce'

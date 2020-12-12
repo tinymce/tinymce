@@ -70,19 +70,19 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
     validate: false,
     allow_conditional_comments: true,
 
-    comment(text) {
+    comment: (text) => {
       writer.comment(text);
     },
 
-    cdata(text) {
+    cdata: (text) => {
       writer.cdata(text);
     },
 
-    text(text, raw) {
+    text: (text, raw) => {
       writer.text(text, raw);
     },
 
-    start(name, attrs, empty) {
+    start: (name, attrs, empty) => {
       if (isEphoxEmbed.get()) {
         // Don't make any changes to children of an EME embed
       } else if (Obj.has(attrs.map, 'data-ephox-embed-iri')) {
@@ -153,7 +153,7 @@ const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean)
       writer.start(name, attrs, empty);
     },
 
-    end(name) {
+    end: (name) => {
       if (!isEphoxEmbed.get()) {
         if (name === 'video' && updateAll) {
           for (let index = 0; index < 2; index++) {

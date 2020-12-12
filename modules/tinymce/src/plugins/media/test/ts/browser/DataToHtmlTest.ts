@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', (success
   Plugin();
   Theme();
 
-  const sTestDataToHtml = function (editor, data, expected) {
+  const sTestDataToHtml = (editor, data, expected) => {
     const actual = SugarElement.fromHtml(DataToHtml.dataToHtml(editor, data));
 
     return Logger.t(`Test html data ${expected}`, Waiter.sTryUntil('Wait for structure check',

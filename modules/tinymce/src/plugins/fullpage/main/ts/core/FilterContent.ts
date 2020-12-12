@@ -17,7 +17,7 @@ const each = Tools.each;
 const low = (s: string) =>
   s.replace(/<\/?[A-Z]+/g, (a: string) => a.toLowerCase());
 
-const handleSetContent = function (editor: Editor, headState, footState, evt) {
+const handleSetContent = (editor: Editor, headState, footState, evt) => {
   let startPos, endPos, content, styles = '';
   const dom = editor.dom;
 
@@ -121,7 +121,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   });
 };
 
-const getDefaultHeader = function (editor) {
+const getDefaultHeader = (editor) => {
   let header = '', value, styles = '';
 
   if (Settings.getDefaultXmlPi(editor)) {
@@ -157,13 +157,13 @@ const getDefaultHeader = function (editor) {
   return header;
 };
 
-const handleGetContent = function (editor: Editor, head, foot, evt: GetContentEvent) {
+const handleGetContent = (editor: Editor, head, foot, evt: GetContentEvent) => {
   if (evt.format === 'html' && !evt.selection && (!evt.source_view || !Settings.shouldHideInSourceView(editor))) {
     evt.content = Protect.unprotectHtml(Tools.trim(head) + '\n' + Tools.trim(evt.content) + '\n' + Tools.trim(foot));
   }
 };
 
-const setup = function (editor: Editor, headState, footState) {
+const setup = (editor: Editor, headState, footState) => {
   editor.on('BeforeSetContent', (evt) => {
     handleSetContent(editor, headState, footState, evt);
   });

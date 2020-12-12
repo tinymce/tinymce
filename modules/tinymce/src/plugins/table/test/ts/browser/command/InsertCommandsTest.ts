@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
   Plugin();
   SilverTheme();
 
-  const cleanTableHtml = function (html: string) {
+  const cleanTableHtml = (html: string) => {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 

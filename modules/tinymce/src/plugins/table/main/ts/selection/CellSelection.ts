@@ -25,7 +25,7 @@ export interface CellSelectionApi {
   clear: (container: SugarElement) => void;
 }
 
-export default function (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi {
+export default (editor: Editor, lazyResize: () => Optional<TableResize>, selectionTargets: SelectionTargets): CellSelectionApi => {
   const onSelection = (cells: SugarElement[], start: SugarElement, finish: SugarElement) => {
     selectionTargets.targets().each((targets) => {
       const tableOpt = TableLookup.table(start);
@@ -186,4 +186,4 @@ export default function (editor: Editor, lazyResize: () => Optional<TableResize>
   return {
     clear: annotations.clear
   };
-}
+};

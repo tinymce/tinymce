@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addContextToolbar('imagetools', {
     items: Settings.getToolbarItems(editor),
     predicate: (elem) => Actions.getEditableImage(editor, elem).isSome(),

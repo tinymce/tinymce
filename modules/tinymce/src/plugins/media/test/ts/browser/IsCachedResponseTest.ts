@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', (succes
   Theme();
   MediaPlugin();
 
-  const sWaitForAndAssertNotification = function (expected: string) {
+  const sWaitForAndAssertNotification = (expected: string) => {
     return Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Could not find notification', 'div.tox-notification__body'),
       Chain.mapper(Html.get),
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.IsCachedResponseTest', (succes
     toolbar: 'media',
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
-    media_url_resolver(data, resolve, reject) {
+    media_url_resolver: (data, resolve, reject) => {
       if (data.url === 'test') {
         resolve({
           html: '<div>x</div>' });

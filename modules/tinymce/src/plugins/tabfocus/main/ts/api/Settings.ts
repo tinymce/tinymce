@@ -5,11 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const getTabFocusElements = function (editor) {
+const getTabFocusElements = (editor) => {
   return editor.getParam('tabfocus_elements', ':prev,:next');
 };
 
-const getTabFocus = function (editor) {
+const getTabFocus = (editor) => {
   return editor.getParam('tab_focus', getTabFocusElements(editor));
 };
 

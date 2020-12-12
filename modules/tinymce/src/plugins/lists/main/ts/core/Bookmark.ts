@@ -21,10 +21,10 @@ const DOM = DOMUtils.DOM;
  * @param  {DOMRange} rng DOM Range to get bookmark on.
  * @return {Object} Bookmark object.
  */
-const createBookmark = function (rng) {
+const createBookmark = (rng) => {
   const bookmark = {};
 
-  const setupEndPoint = function (start?) {
+  const setupEndPoint = (start?) => {
     let offsetNode, container, offset;
 
     container = rng[start ? 'startContainer' : 'endContainer'];
@@ -62,11 +62,11 @@ const createBookmark = function (rng) {
   return bookmark;
 };
 
-const resolveBookmark = function (bookmark) {
-  function restoreEndPoint(start?) {
+const resolveBookmark = (bookmark) => {
+  const restoreEndPoint = (start?) => {
     let container, offset, node;
 
-    const nodeIndex = function (container) {
+    const nodeIndex = (container) => {
       let node = container.parentNode.firstChild, idx = 0;
 
       while (node) {
@@ -104,7 +104,7 @@ const resolveBookmark = function (bookmark) {
 
     bookmark[start ? 'startContainer' : 'endContainer'] = container;
     bookmark[start ? 'startOffset' : 'endOffset'] = offset;
-  }
+  };
 
   restoreEndPoint(true);
   restoreEndPoint();

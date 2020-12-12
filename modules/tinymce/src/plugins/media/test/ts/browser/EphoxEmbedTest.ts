@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', (success
     });
   });
 
-  const sAssertDivStructure = function (editor: Editor, expected: StructAssert) {
+  const sAssertDivStructure = (editor: Editor, expected: StructAssert) => {
     return Logger.t(`Assert div structure ${expected}`, Step.sync(() => {
       const div = editor.dom.select('div')[0];
       const actual = div ? SugarElement.fromHtml(div.outerHTML) : SugarElement.fromHtml('');
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.EphoxEmbedTest', (success
     plugins: 'media',
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver(data, resolve) {
+    media_url_resolver: (data, resolve) => {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'

@@ -7,11 +7,11 @@
 
 import Promise from 'tinymce/core/api/util/Promise';
 
-const blobToBase64 = function (blob: Blob) {
+const blobToBase64 = (blob: Blob) => {
   return new Promise<string>((resolve) => {
     const reader = new FileReader();
 
-    reader.onloadend = function () {
+    reader.onloadend = () => {
       resolve((reader.result as string).split(',')[1]);
     };
 

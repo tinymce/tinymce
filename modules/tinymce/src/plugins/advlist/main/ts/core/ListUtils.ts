@@ -7,21 +7,21 @@
 
 import { Optional } from '@ephox/katamari';
 
-const isChildOfBody = function (editor, elm) {
+const isChildOfBody = (editor, elm) => {
   return editor.$.contains(editor.getBody(), elm);
 };
 
-const isTableCellNode = function (node) {
+const isTableCellNode = (node) => {
   return node && /^(TH|TD)$/.test(node.nodeName);
 };
 
-const isListNode = function (editor) {
-  return function (node) {
+const isListNode = (editor) => {
+  return (node) => {
     return node && (/^(OL|UL|DL)$/).test(node.nodeName) && isChildOfBody(editor, node);
   };
 };
 
-const getSelectedStyleType = function (editor): Optional<string> {
+const getSelectedStyleType = (editor): Optional<string> => {
   const listElm = editor.dom.getParent(editor.selection.getNode(), 'ol,ul');
   const style = editor.dom.getStyle(listElm, 'listStyleType');
   return Optional.from(style);

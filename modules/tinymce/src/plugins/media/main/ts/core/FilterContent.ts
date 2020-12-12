@@ -13,7 +13,7 @@ import * as Sanitize from './Sanitize';
 
 declare let unescape: any;
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor) => {
   editor.on('preInit', () => {
     // Make sure that any messy HTML is retained inside these
     const specialElements = editor.schema.getSpecialElements();

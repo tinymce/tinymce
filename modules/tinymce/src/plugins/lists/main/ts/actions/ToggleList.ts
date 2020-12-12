@@ -17,25 +17,25 @@ import * as Selection from '../core/Selection';
 import { isCustomList } from '../core/Util';
 import { flattenListSelection } from './Indendation';
 
-const updateListStyle = function (dom, el, detail) {
+const updateListStyle = (dom, el, detail) => {
   const type = detail['list-style-type'] ? detail['list-style-type'] : null;
   dom.setStyle(el, 'list-style-type', type);
 };
 
-const setAttribs = function (elm, attrs) {
+const setAttribs = (elm, attrs) => {
   Tools.each(attrs, (value, key) => {
     elm.setAttribute(key, value);
   });
 };
 
-const updateListAttrs = function (dom, el, detail) {
+const updateListAttrs = (dom, el, detail) => {
   setAttribs(el, detail['list-attributes']);
   Tools.each(dom.select('li', el), (li) => {
     setAttribs(li, detail['list-item-attributes']);
   });
 };
 
-const updateListWithDetails = function (dom, el, detail) {
+const updateListWithDetails = (dom, el, detail) => {
   updateListStyle(dom, el, detail);
   updateListAttrs(dom, el, detail);
 };
@@ -44,7 +44,7 @@ const removeStyles = (dom, element: HTMLElement, styles: string[]) => {
   Tools.each(styles, (style) => dom.setStyle(element, { [style]: '' }));
 };
 
-const getEndPointNode = function (editor, rng, start, root) {
+const getEndPointNode = (editor, rng, start, root) => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   const offset = rng[start ? 'startOffset' : 'endOffset'];
 
@@ -72,7 +72,7 @@ const getEndPointNode = function (editor, rng, start, root) {
   return container;
 };
 
-const getSelectedTextBlocks = function (editor: Editor, rng, root) {
+const getSelectedTextBlocks = (editor: Editor, rng, root) => {
   const textBlocks = [], dom = editor.dom;
 
   const startNode = getEndPointNode(editor, rng, true, root);
@@ -124,7 +124,7 @@ const getSelectedTextBlocks = function (editor: Editor, rng, root) {
   return textBlocks;
 };
 
-const hasCompatibleStyle = function (dom: DOMUtils, sib, detail) {
+const hasCompatibleStyle = (dom: DOMUtils, sib, detail) => {
   const sibStyle = dom.getStyle(sib, 'list-style-type');
   let detailStyle = detail ? detail['list-style-type'] : '';
 
@@ -133,7 +133,7 @@ const hasCompatibleStyle = function (dom: DOMUtils, sib, detail) {
   return sibStyle === detailStyle;
 };
 
-const applyList = function (editor: Editor, listName: string, detail = {}) {
+const applyList = (editor: Editor, listName: string, detail = {}) => {
   const rng = editor.selection.getRng();
   let listItemName = 'LI';
   const root = Selection.getClosestListRootElm(editor, editor.selection.getStart(true));
@@ -183,25 +183,25 @@ const applyList = function (editor: Editor, listName: string, detail = {}) {
   editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
 };
 
-const isValidLists = function (list1, list2) {
+const isValidLists = (list1, list2) => {
   return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
 };
 
-const hasSameListStyle = function (dom, list1, list2) {
+const hasSameListStyle = (dom, list1, list2) => {
   const targetStyle = dom.getStyle(list1, 'list-style-type', true);
   const style = dom.getStyle(list2, 'list-style-type', true);
   return targetStyle === style;
 };
 
-const hasSameClasses = function (elm1, elm2) {
+const hasSameClasses = (elm1, elm2) => {
   return elm1.className === elm2.className;
 };
 
-const shouldMerge = function (dom, list1, list2) {
+const shouldMerge = (dom, list1, list2) => {
   return isValidLists(list1, list2) && hasSameListStyle(dom, list1, list2) && hasSameClasses(list1, list2);
 };
 
-const mergeWithAdjacentLists = function (dom, listBlock) {
+const mergeWithAdjacentLists = (dom, listBlock) => {
   let sibling, node;
 
   sibling = listBlock.nextSibling;
@@ -223,7 +223,7 @@ const mergeWithAdjacentLists = function (dom, listBlock) {
   }
 };
 
-const updateList = function (editor: Editor, list, listName, detail) {
+const updateList = (editor: Editor, list, listName, detail) => {
   if (list.nodeName !== listName) {
     const newList = editor.dom.rename(list, listName);
     updateListWithDetails(editor.dom, newList, detail);
@@ -234,7 +234,7 @@ const updateList = function (editor: Editor, list, listName, detail) {
   }
 };
 
-const toggleMultipleLists = function (editor, parentList, lists, listName, detail) {
+const toggleMultipleLists = (editor, parentList, lists, listName, detail) => {
   const parentIsList = NodeType.isListNode(parentList);
   if (parentIsList && parentList.nodeName === listName && !hasListStyleDetail(detail)) {
     flattenListSelection(editor);
@@ -251,11 +251,11 @@ const toggleMultipleLists = function (editor, parentList, lists, listName, detai
   }
 };
 
-const hasListStyleDetail = function (detail) {
+const hasListStyleDetail = (detail) => {
   return 'list-style-type' in detail;
 };
 
-const toggleSingleList = function (editor, parentList, listName, detail) {
+const toggleSingleList = (editor, parentList, listName, detail) => {
   if (parentList === editor.getBody()) {
     return;
   }
@@ -278,7 +278,7 @@ const toggleSingleList = function (editor, parentList, listName, detail) {
   }
 };
 
-const toggleList = function (editor, listName, detail) {
+const toggleList = (editor, listName, detail) => {
   const parentList = Selection.getParentList(editor);
   const selectedSubLists = Selection.getSelectedSubLists(editor);
 

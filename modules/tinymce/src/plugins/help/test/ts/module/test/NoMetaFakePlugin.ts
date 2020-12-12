@@ -3,4 +3,4 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 
 PluginManager.add('nometafake', Fun.noop);
 
-export default function () {}
+export default () => {};

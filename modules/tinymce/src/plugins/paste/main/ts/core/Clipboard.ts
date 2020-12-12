@@ -302,7 +302,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  function insertClipboardContent(editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
+  const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) => {
     let content;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
@@ -358,9 +358,9 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     } else {
       pasteHtml(editor, content, internal);
     }
-  }
+  };
 
-  const getLastRng = function () {
+  const getLastRng = () => {
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 

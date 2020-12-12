@@ -11,11 +11,11 @@ import * as FilterContent from './core/FilterContent';
 import * as ResolveName from './core/ResolveName';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('pagebreak', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     FilterContent.setup(editor);
     ResolveName.setup(editor);
   });
-}
+};

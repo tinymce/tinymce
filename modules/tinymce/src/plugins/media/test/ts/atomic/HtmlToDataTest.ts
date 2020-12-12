@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
 
 UnitTest.test('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
-  const testHtmlToData = function (html, expected) {
+  const testHtmlToData = (html, expected) => {
     const actual = HtmlToData.htmlToData([], html);
     Assert.eq('Assert equal', expected, actual);
   };

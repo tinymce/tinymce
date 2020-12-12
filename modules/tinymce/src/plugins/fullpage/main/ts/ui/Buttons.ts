@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addButton('fullpage', {
     // TODO: This should be title or text, with no icon?
     tooltip: 'Metadata and document properties',

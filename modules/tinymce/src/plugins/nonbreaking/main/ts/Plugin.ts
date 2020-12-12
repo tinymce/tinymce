@@ -17,10 +17,10 @@ import * as Buttons from './ui/Buttons';
  * @private
  */
 
-export default function () {
+export default () => {
   PluginManager.add('nonbreaking', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     Keyboard.setup(editor);
   });
-}
+};

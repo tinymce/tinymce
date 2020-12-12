@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
 
   /* eslint-disable max-len */
 
-  const sTeardown = function (editor: Editor) {
+  const sTeardown = (editor: Editor) => {
     return Logger.t('Delete settings', Step.sync(() => {
       delete editor.settings.paste_remove_styles_if_webkit;
       delete editor.settings.paste_retain_style_properties;
@@ -29,13 +29,13 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     }));
   };
 
-  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
+  const appendTeardown = (editor: Editor, steps: Step<any, any>[]) => {
     return Arr.bind(steps, (step) => {
       return [ step, sTeardown(editor) ];
     });
   };
 
-  const trimContent = function (content: string) {
+  const trimContent = (content: string) => {
     return content.replace(/^<p>&nbsp;<\/p>\n?/, '').replace(/\n?<p>&nbsp;<\/p>$/, '');
   };
 
@@ -611,9 +611,9 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   });
 
   suite.test('TestCase-TBA: Paste: paste pre process text (event)', (editor) => {
-    function callback(e) {
+    const callback = (e) => {
       e.content = 'PRE:' + e.content;
-    }
+    };
 
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
@@ -629,9 +629,9 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   });
 
   suite.test('TestCase-TBA: Paste: paste pre process html (event)', (editor) => {
-    function callback(e) {
+    const callback = (e) => {
       e.content = 'PRE:' + e.content;
-    }
+    };
 
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
@@ -647,9 +647,9 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
   });
 
   suite.test('TestCase-TBA: Paste: paste post process (event)', (editor) => {
-    function callback(e) {
+    const callback = (e) => {
       e.node.innerHTML += ':POST';
-    }
+    };
 
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);

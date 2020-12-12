@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
   ListsPlugin();
   Theme();
 
-  const listStyleTest = function (title: string, definition) {
+  const listStyleTest = (title: string, definition) => {
     suite.test(title, (editor) => {
       editor.getBody().innerHTML = definition.inputContent;
       LegacyUnit.setSelection(editor, definition.inputSelection[0], definition.inputSelection[1]);

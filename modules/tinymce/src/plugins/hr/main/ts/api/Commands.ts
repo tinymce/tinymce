@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('InsertHorizontalRule', () => {
     editor.execCommand('mceInsertContent', false, '<hr />');
   });

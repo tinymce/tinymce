@@ -7,19 +7,19 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const firePastePreProcess = function (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) {
+const firePastePreProcess = (editor: Editor, html: string, internal: boolean, isWordHtml: boolean) => {
   return editor.fire('PastePreProcess', { content: html, internal, wordContent: isWordHtml });
 };
 
-const firePastePostProcess = function (editor: Editor, node: HTMLElement, internal: boolean, isWordHtml: boolean) {
+const firePastePostProcess = (editor: Editor, node: HTMLElement, internal: boolean, isWordHtml: boolean) => {
   return editor.fire('PastePostProcess', { node, internal, wordContent: isWordHtml });
 };
 
-const firePastePlainTextToggle = function (editor: Editor, state: boolean) {
+const firePastePlainTextToggle = (editor: Editor, state: boolean) => {
   return editor.fire('PastePlainTextToggle', { state });
 };
 
-const firePaste = function (editor: Editor, ieFake: boolean) {
+const firePaste = (editor: Editor, ieFake: boolean) => {
   // Casting this as it only exists for IE compatibility
   return editor.fire('paste', { ieFake } as any as ClipboardEvent);
 };

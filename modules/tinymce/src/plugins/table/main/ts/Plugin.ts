@@ -26,7 +26,7 @@ import { getSelectionStartCellOrCaption } from './selection/TableSelection';
 import * as Buttons from './ui/Buttons';
 import * as MenuItems from './ui/MenuItems';
 
-function Plugin(editor: Editor) {
+const Plugin = (editor: Editor) => {
   const selections = Selections(() => Util.getBody(editor), () => getSelectionStartCellOrCaption(Util.getSelectionStart(editor)), ephemera.selectedSelector);
   const selectionTargets = getSelectionTargets(editor, selections);
   const resizeHandler = getResizeHandler(editor);
@@ -59,8 +59,8 @@ function Plugin(editor: Editor) {
   });
 
   return getApi(editor, clipboard, resizeHandler, selectionTargets);
-}
+};
 
-export default function () {
+export default () => {
   PluginManager.add('table', Plugin);
-}
+};

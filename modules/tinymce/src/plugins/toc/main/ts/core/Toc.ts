@@ -14,7 +14,7 @@ import * as Guid from './Guid';
 
 const tocId = Guid.create('mcetoc_');
 
-const generateSelector = function (depth: number) {
+const generateSelector = (depth: number) => {
   let i;
   const selector = [];
   for (i = 1; i <= depth; i++) {
@@ -23,11 +23,11 @@ const generateSelector = function (depth: number) {
   return selector.join(',');
 };
 
-const hasHeaders = function (editor: Editor) {
+const hasHeaders = (editor: Editor) => {
   return readHeaders(editor).length > 0;
 };
 
-const readHeaders = function (editor: Editor) {
+const readHeaders = (editor: Editor) => {
   const tocClass = Settings.getTocClass(editor);
   const headerTag = Settings.getTocHeader(editor);
   const selector = generateSelector(Settings.getTocDepth(editor));
@@ -51,7 +51,7 @@ const readHeaders = function (editor: Editor) {
   });
 };
 
-const getMinLevel = function (headers) {
+const getMinLevel = (headers) => {
   let i, minLevel = 9;
 
   for (i = 0; i < headers.length; i++) {
@@ -67,18 +67,18 @@ const getMinLevel = function (headers) {
   return minLevel;
 };
 
-const generateTitle = function (tag, title) {
+const generateTitle = (tag, title) => {
   const openTag = '<' + tag + ' contenteditable="true">';
   const closeTag = '</' + tag + '>';
   return openTag + DOMUtils.DOM.encode(title) + closeTag;
 };
 
-const generateTocHtml = function (editor) {
+const generateTocHtml = (editor) => {
   const html = generateTocContentHtml(editor);
   return '<div class="' + editor.dom.encode(Settings.getTocClass(editor)) + '" contenteditable="false">' + html + '</div>';
 };
 
-const generateTocContentHtml = function (editor) {
+const generateTocContentHtml = (editor) => {
   let html = '';
   const headers = readHeaders(editor);
   let prevLevel = getMinLevel(headers) - 1;
@@ -123,11 +123,11 @@ const generateTocContentHtml = function (editor) {
   return html;
 };
 
-const isEmptyOrOffscren = function (editor, nodes) {
+const isEmptyOrOffscren = (editor, nodes) => {
   return !nodes.length || editor.dom.getParents(nodes[0], '.mce-offscreen-selection').length > 0;
 };
 
-const insertToc = function (editor) {
+const insertToc = (editor) => {
   const tocClass = Settings.getTocClass(editor);
   const $tocElm = editor.$('.' + tocClass);
 
@@ -138,7 +138,7 @@ const insertToc = function (editor) {
   }
 };
 
-const updateToc = function (editor) {
+const updateToc = (editor) => {
   const tocClass = Settings.getTocClass(editor);
   const $tocElm = editor.$('.' + tocClass);
 

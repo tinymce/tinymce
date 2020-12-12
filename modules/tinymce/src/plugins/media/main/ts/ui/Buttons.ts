@@ -11,7 +11,7 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 const stateSelectorAdapter = (editor: Editor, selector: string[]) => (buttonApi: Toolbar.ToolbarToggleButtonInstanceApi) =>
   editor.selection.selectorChangedWithUnbind(selector.join(','), buttonApi.setActive).unbind;
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('media', {
     tooltip: 'Insert/edit media',
     icon: 'embed',

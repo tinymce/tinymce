@@ -7,7 +7,7 @@
 
 import * as Actions from '../core/Actions';
 
-const register = function (editor, toggleState) {
+const register = (editor, toggleState) => {
   editor.addCommand('mceVisualChars', () => {
     Actions.toggleVisualChars(editor, toggleState);
   });

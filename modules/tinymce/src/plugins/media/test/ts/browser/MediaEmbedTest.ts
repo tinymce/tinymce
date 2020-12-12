@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.MediaEmbedTest', (success
     plugins: [ 'media' ],
     toolbar: 'media',
     theme: 'silver',
-    media_url_resolver(data, resolve) {
+    media_url_resolver: (data, resolve) => {
       resolve({
         html: '<video width="300" height="150" ' +
           'controls="controls">\n<source src="' + data.url + '" />\n</video>'

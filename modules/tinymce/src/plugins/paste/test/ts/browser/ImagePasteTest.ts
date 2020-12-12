@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     'R0lGODlhAQABAPAAAP8REf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
   ].join('');
 
-  const sTeardown = function (editor: Editor) {
+  const sTeardown = (editor: Editor) => {
     return Logger.t('Delete editor settings', Step.sync(() => {
       delete editor.settings.paste_data_images;
       delete editor.settings.images_dataimg_filter;
@@ -37,13 +37,13 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     }));
   };
 
-  const appendTeardown = function (editor: Editor, steps: Step<any, any>[]) {
+  const appendTeardown = (editor: Editor, steps: Step<any, any>[]) => {
     return Arr.bind(steps, (step) => {
       return [ step, sTeardown(editor) ];
     });
   };
 
-  const base64ToBlob = function (base64: string, type: string, filename: string): File {
+  const base64ToBlob = (base64: string, type: string, filename: string): File => {
     const buff = atob(base64);
     const bytes = new Uint8Array(buff.length);
 
@@ -57,7 +57,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     return file;
   };
 
-  const mockEvent = function (type: string, files) {
+  const mockEvent = (type: string, files) => {
     const event = {
       type,
       preventDefault: Fun.noop
@@ -71,15 +71,15 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     return event;
   };
 
-  const setupContent = function (editor: Editor) {
+  const setupContent = (editor: Editor) => {
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     return editor.selection.getRng();
   };
 
-  const waitFor = function (predicate: () => boolean) {
+  const waitFor = (predicate: () => boolean) => {
     return new Promise((resolve, reject) => {
-      const check = function (time, count) {
+      const check = (time, count) => {
         if (predicate()) {
           resolve();
         } else {
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     });
   };
 
-  const waitForSelector = function (editor: Editor, selector: string) {
+  const waitForSelector = (editor: Editor, selector: string) => {
     return waitFor(() => editor.dom.select(selector).length > 0);
   };
 
@@ -214,7 +214,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
-    editor.settings.images_dataimg_filter = function (img) {
+    editor.settings.images_dataimg_filter = (img) => {
       LegacyUnit.strictEqual(img.src, 'data:image/gif;base64,' + base64ImgSrc);
       return false;
     };
@@ -237,7 +237,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     const clipboard = Clipboard(editor, Cell('html'));
 
     editor.settings.paste_data_images = true;
-    editor.settings.images_dataimg_filter = function (img) {
+    editor.settings.images_dataimg_filter = (img) => {
       LegacyUnit.strictEqual(img.src, 'data:image/gif;base64,' + base64ImgSrc);
       return false;
     };

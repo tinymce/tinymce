@@ -13,7 +13,7 @@ const isCodeSampleSelection = (editor: Editor) => {
   return editor.dom.is(node, 'pre[class*="language-"]');
 };
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('codesample', {
     icon: 'code-sample',
     tooltip: 'Insert/edit code sample',

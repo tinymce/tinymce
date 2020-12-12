@@ -9,14 +9,14 @@ import { flattenListSelection, indentListSelection, outdentListSelection } from 
 import * as ToggleList from '../actions/ToggleList';
 import * as Dialog from '../ui/Dialog';
 
-const queryListCommandState = function (editor, listName) {
-  return function () {
+const queryListCommandState = (editor, listName) => {
+  return () => {
     const parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
     return parentList && parentList.nodeName === listName;
   };
 };
 
-const register = function (editor) {
+const register = (editor) => {
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 

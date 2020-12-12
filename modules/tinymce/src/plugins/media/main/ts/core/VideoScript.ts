@@ -11,7 +11,7 @@ export interface VideoScript {
   height?: number;
 }
 
-const getVideoScriptMatch = function (prefixes: VideoScript[], src: string): VideoScript {
+const getVideoScriptMatch = (prefixes: VideoScript[], src: string): VideoScript => {
   // var prefixes = Settings.getScripts(editor);
   if (prefixes) {
     for (let i = 0; i < prefixes.length; i++) {

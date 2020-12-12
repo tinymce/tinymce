@@ -12,7 +12,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   const formats = Settings.getFormats(editor);
   const defaultFormat = Cell(Settings.getDefaultDateTime(editor));
 

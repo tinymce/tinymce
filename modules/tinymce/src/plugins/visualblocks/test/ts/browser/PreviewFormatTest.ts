@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (s
   Theme();
   VisualBlocksPlugin();
 
-  const sWaitForVisualBlocks = function (editor) {
+  const sWaitForVisualBlocks = (editor) => {
     return Waiter.sTryUntil('Wait for background css to be applied to first element', Step.sync(() => {
       const p = SugarElement.fromDom(editor.getBody().firstChild);
       const background = Css.get(p, 'background-image');

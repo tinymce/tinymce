@@ -1,8 +1,8 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 
-const Plugin = function (_editor, _url) {
+const Plugin = (_editor, _url) => {
   return {
-    getMetadata() {
+    getMetadata: () => {
       return {
         name: 'Fake',
         url: 'http://www.fake.com'
@@ -13,4 +13,4 @@ const Plugin = function (_editor, _url) {
 
 PluginManager.add('fake', Plugin);
 
-export default function () {}
+export default () => {};

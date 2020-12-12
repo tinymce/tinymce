@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireFullscreenStateChanged = function (editor, state) {
+const fireFullscreenStateChanged = (editor, state) => {
   editor.fire('FullscreenStateChanged', { state });
 };
 
