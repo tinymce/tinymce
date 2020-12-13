@@ -8,7 +8,7 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Merger, Obj } from '@ephox/katamari';
 
-const getFromExpandingItem = function (item) {
+const getFromExpandingItem = (item) => {
   const newItem = Merger.deepMerge(
     Objects.exclude(item, [ 'items' ]),
     {
@@ -37,7 +37,7 @@ const getFromExpandingItem = function (item) {
   };
 };
 
-const getFromItem = function (item) {
+const getFromItem = (item) => {
   return Obj.hasNonNullableKey(item, 'items') ? getFromExpandingItem(item) : {
     item,
     menus: { },
@@ -46,7 +46,7 @@ const getFromItem = function (item) {
 };
 
 // Takes items, and consolidates them into its return value
-const expand = function (items) {
+const expand = (items) => {
   return Arr.foldr(items, (acc, item) => {
     const newData = getFromItem(item);
     return {

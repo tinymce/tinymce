@@ -22,15 +22,15 @@ import Delay from 'tinymce/core/api/util/Delay';
 // Then we tried everyone's favourite setTimeout solution. This appears to work because it looks like the bug might
 // be caused by the fact that the autocomplete cache is maintained while in the same event queue. As soon as we
 // disconnect the stack, it looks like it is fixed. That makes some level of sense.
-const autocompleteHack = function (/* iBody */) {
-  return function (f) {
+const autocompleteHack = (/* iBody */) => {
+  return (f) => {
     Delay.setTimeout(() => {
       f();
     }, 0);
   };
 };
 
-const resume = function (cWin) {
+const resume = (cWin) => {
   cWin.focus();
   const iBody = SugarElement.fromDom(cWin.document.body);
 

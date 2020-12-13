@@ -24,7 +24,7 @@ UnitTest.asynctest('Browser Test: ui.FontSizeSliderTest', (success, failure) => 
 
   TestStyles.addStyles();
 
-  const unload = function () {
+  const unload = () => {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system);
   };

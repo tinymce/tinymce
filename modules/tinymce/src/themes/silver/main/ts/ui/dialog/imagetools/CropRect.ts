@@ -56,7 +56,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
   const getInnerRect = () => getRelativeRect(clampRect, currentRect);
 
-  function moveRect(handle, startRect, deltaX, deltaY) {
+  const moveRect = (handle, startRect, deltaX, deltaY) => {
     let x, y, w, h, rect;
 
     x = startRect.x;
@@ -82,24 +82,24 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
     instance.fire('updateRect', { rect });
     setInnerRect(rect);
-  }
+  };
 
-  function render() {
-    function createDragHelper(handle) {
+  const render = () => {
+    const createDragHelper = (handle) => {
       let startRect;
-      return new DragHelper(id, {
+      return DragHelper(id, {
         document: containerElm.ownerDocument,
         handle: id + '-' + handle.name,
 
-        start() {
+        start: () => {
           startRect = currentRect;
         },
 
-        drag(e) {
+        drag: (e) => {
           moveRect(handle, startRect, e.deltaX, e.deltaY);
         }
       });
-    }
+    };
 
     DomQuery(
       '<div id="' + id + '" class="' + prefix + 'croprect-container"' +
@@ -139,12 +139,12 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
         }
       });
 
-      function moveAndBlock(evt, handle, startRect, deltaX, deltaY) {
+      const moveAndBlock = (evt, handle, startRect, deltaX, deltaY) => {
         evt.stopPropagation();
         evt.preventDefault();
 
         moveRect(activeHandle, startRect, deltaX, deltaY);
-      }
+      };
 
       switch (e.keyCode) {
         case VK.LEFT:
@@ -170,9 +170,9 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
           break;
       }
     });
-  }
+  };
 
-  function toggleVisibility(state: boolean) {
+  const toggleVisibility = (state: boolean) => {
     const selectors = Tools.map(handles, (handle) => {
       return '#' + id + '-' + handle.name;
     }).concat(Tools.map(blockers, (blocker) => {
@@ -184,10 +184,10 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     } else {
       DomQuery(selectors, containerElm).hide();
     }
-  }
+  };
 
-  function repaint(rect) {
-    function updateElementRect(name, rect) {
+  const repaint = (rect) => {
+    const updateElementRect = (name, rect) => {
       if (rect.h < 0) {
         rect.h = 0;
       }
@@ -202,7 +202,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
         width: rect.w,
         height: rect.h
       });
-    }
+    };
 
     Tools.each(handles, (handle) => {
       DomQuery('#' + id + '-' + handle.name, containerElm).css({
@@ -221,34 +221,34 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
     });
     updateElementRect('left', { x: viewPortRect.x, y: rect.y, w: rect.x - viewPortRect.x, h: rect.h });
     updateElementRect('move', rect);
-  }
+  };
 
-  function setRect(rect: GeomRect): void {
+  const setRect = (rect: GeomRect): void => {
     currentRect = rect;
     repaint(currentRect);
-  }
+  };
 
-  function setViewPortRect(rect: GeomRect): void {
+  const setViewPortRect = (rect: GeomRect): void => {
     viewPortRect = rect;
     repaint(currentRect);
-  }
+  };
 
-  function setInnerRect(rect: GeomRect): void {
+  const setInnerRect = (rect: GeomRect): void => {
     setRect(getAbsoluteRect(clampRect, rect));
-  }
+  };
 
-  function setClampRect(rect: GeomRect): void {
+  const setClampRect = (rect: GeomRect): void => {
     clampRect = rect;
     repaint(currentRect);
-  }
+  };
 
-  function destroy() {
+  const destroy = () => {
     Tools.each(dragHelpers, (helper) => {
       helper.destroy();
     });
 
     dragHelpers = [];
-  }
+  };
 
   render();
 

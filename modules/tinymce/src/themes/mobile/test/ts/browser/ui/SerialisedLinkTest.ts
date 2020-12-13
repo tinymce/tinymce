@@ -28,7 +28,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   TestStyles.addStyles();
 
-  const unload = function () {
+  const unload = () => {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system);
   };
@@ -44,7 +44,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     }
   ]);
 
-  const sAssertNavigation = function (label, prevEnabled, nextEnabled) {
+  const sAssertNavigation = (label, prevEnabled, nextEnabled) => {
     return Logger.t(
       label,
       Step.sync(() => {
@@ -53,7 +53,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         const prev = Traverse.parent(active).bind(Traverse.prevSibling).getOrDie('Could not find button to left');
         const next = Traverse.parent(active).bind(Traverse.nextSibling).getOrDie('Could not find button to right');
 
-        const assertNavButton = function (buttonLabel, expected, button) {
+        const assertNavButton = (buttonLabel, expected, button) => {
           Assertions.assertStructure(
             'Checking ' + buttonLabel + ' button should be enabled = ' + expected,
             ApproxStructure.build((s, str, arr) => {
@@ -76,7 +76,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
     );
   };
 
-  const sClickNavigation = function (selector) {
+  const sClickNavigation = (selector) => {
     return Chain.asStep({ }, [
       TestUi.cGetFocused,
       TestUi.cGetParent,
@@ -139,7 +139,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
 
   const sClickLink = Mouse.sClickOn(realm.element, TestSelectors.link());
 
-  const sTestScenario = function (rawScenario) {
+  const sTestScenario = (rawScenario) => {
     const scenario = ValueSchema.asRawOrDie('Checking scenario', ValueSchema.objOf([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('content', ''),
@@ -337,7 +337,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
       node: SugarElement.fromHtml('<a href="http://prepared-url">Prepared</a>'),
       fields: { },
       expected: [ ],
-      mutations(node) {
+      mutations: (node) => {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
@@ -356,7 +356,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations(node) {
+      mutations: (node) => {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
@@ -375,7 +375,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         url: 'http://new-url'
       },
       expected: [ ],
-      mutations(node) {
+      mutations: (node) => {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {
@@ -395,7 +395,7 @@ UnitTest.asynctest('Browser Test: ui.SerialisedLinkTest', (success, failure) => 
         text: 'new-text'
       },
       expected: [ ],
-      mutations(node) {
+      mutations: (node) => {
         return Assertions.sAssertStructure('Checking mutated structure', ApproxStructure.build((s, str, _arr) => {
           return s.element('a', {
             attrs: {

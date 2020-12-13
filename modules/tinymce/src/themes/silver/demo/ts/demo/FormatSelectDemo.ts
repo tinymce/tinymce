@@ -1,7 +1,7 @@
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
@@ -66,4 +66,4 @@ export default function () {
     block_formats: 'Paragraph=p;Heading 1=h1;Heading 2=h2;Separator Name=|;Heading 3=h3',
     plugins: [ 'lists', 'autolink', 'autosave', 'insertdatetime' ]
   });
-}
+};

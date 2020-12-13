@@ -8,15 +8,15 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind, SugarElement, TextContent } from '@ephox/sugar';
 
-const isNotEmpty = function (val) {
+const isNotEmpty = (val) => {
   return val.length > 0;
 };
 
-const defaultToEmpty = function (str) {
+const defaultToEmpty = (str) => {
   return str === undefined || str === null ? '' : str;
 };
 
-const noLink = function (editor) {
+const noLink = (editor) => {
   const text = editor.selection.getContent({ format: 'text' });
   return {
     url: '',
@@ -27,7 +27,7 @@ const noLink = function (editor) {
   };
 };
 
-const fromLink = function (link) {
+const fromLink = (link) => {
   const text = TextContent.get(link);
   const url = Attribute.get(link, 'href');
   const title = Attribute.get(link, 'title');
@@ -41,7 +41,7 @@ const fromLink = function (link) {
   };
 };
 
-const getInfo = function (editor) {
+const getInfo = (editor) => {
   // TODO: Improve with more of tiny's link logic?
   return query(editor).fold(
     () => {
@@ -53,26 +53,26 @@ const getInfo = function (editor) {
   );
 };
 
-const wasSimple = function (link) {
+const wasSimple = (link) => {
   const prevHref = Attribute.get(link, 'href');
   const prevText = TextContent.get(link);
   return prevHref === prevText;
 };
 
-const getTextToApply = function (link, url, info) {
+const getTextToApply = (link, url, info) => {
   return info.text.toOptional().filter(isNotEmpty).fold(() => {
     return wasSimple(link) ? Optional.some(url) : Optional.none();
   }, Optional.some);
 };
 
-const unlinkIfRequired = function (editor, info) {
+const unlinkIfRequired = (editor, info) => {
   const activeLink = info.link.bind(Fun.identity);
   activeLink.each((_link) => {
     editor.execCommand('unlink');
   });
 };
 
-const getAttrs = function (url, info) {
+const getAttrs = (url, info) => {
   const attrs: any = { };
   attrs.href = url;
 
@@ -85,7 +85,7 @@ const getAttrs = function (url, info) {
   return attrs;
 };
 
-const applyInfo = function (editor, info) {
+const applyInfo = (editor, info) => {
   info.url.toOptional().filter(isNotEmpty).fold(() => {
     // Unlink if there is something to unlink
     unlinkIfRequired(editor, info);
@@ -107,7 +107,7 @@ const applyInfo = function (editor, info) {
   });
 };
 
-const query = function (editor) {
+const query = (editor) => {
   const start = SugarElement.fromDom(editor.selection.getStart());
   return SelectorFind.closest(start, 'a');
 };

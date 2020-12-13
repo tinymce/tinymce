@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const patchPipeConfig = (config: string[] | string) => typeof config === 'string' ? config.split(/[ ,]/) : config;
 
-const shouldNeverUseNative = function (editor: Editor): boolean {
+const shouldNeverUseNative = (editor: Editor): boolean => {
   return editor.getParam('contextmenu_never_use_native', false, 'boolean');
 };
 
@@ -26,7 +26,7 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string): strin
 
 const isContextMenuDisabled = (editor: Editor): boolean => editor.getParam('contextmenu') === false;
 
-const getContextMenu = function (editor: Editor): string[] {
+const getContextMenu = (editor: Editor): string[] => {
   return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
 };
 

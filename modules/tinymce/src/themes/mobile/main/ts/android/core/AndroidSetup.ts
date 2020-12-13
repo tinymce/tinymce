@@ -19,42 +19,42 @@ const EXTRA_SPACING = 50;
 
 const data = 'data-' + Styles.resolve('last-outer-height');
 
-const setLastHeight = function (cBody, value) {
+const setLastHeight = (cBody, value) => {
   Attribute.set(cBody, data, value);
 };
 
-const getLastHeight = function (cBody) {
+const getLastHeight = (cBody) => {
   return DataAttributes.safeParse(cBody, data);
 };
 
-const getBoundsFrom = function (rect: RawRect) {
+const getBoundsFrom = (rect: RawRect) => {
   return {
     top: rect.top,
     bottom: rect.top + rect.height
   };
 };
 
-const getBounds = function (cWin) {
+const getBounds = (cWin) => {
   const rects = Rectangles.getRectangles(cWin);
   return rects.length > 0 ? Optional.some(rects[0]).map(getBoundsFrom) : Optional.none();
 };
 
-const findDelta = function (outerWindow, cBody) {
+const findDelta = (outerWindow, cBody) => {
   const last = getLastHeight(cBody);
   const current = outerWindow.innerHeight;
   return last > current ? Optional.some(last - current) : Optional.none();
 };
 
-const calculate = function (cWin, bounds, delta) {
+const calculate = (cWin, bounds, delta) => {
   // The goal here is to shift as little as required.
   const isOutside = bounds.top > cWin.innerHeight || bounds.bottom > cWin.innerHeight;
   return isOutside ? Math.min(delta, bounds.bottom - cWin.innerHeight + EXTRA_SPACING) : 0;
 };
 
-const setup = function (outerWindow, cWin) {
+const setup = (outerWindow, cWin) => {
   const cBody = SugarElement.fromDom(cWin.document.body);
 
-  const toEditing = function () {
+  const toEditing = () => {
     // TBIO-3816 throttling the resume was causing keyboard hide/show issues with undo/redo
     // throttling was introduced to work around a different keyboard hide/show issue, where
     // async uiChanged in Processor in polish was causing keyboard hide, which no longer seems to occur
@@ -77,7 +77,7 @@ const setup = function (outerWindow, cWin) {
 
   setLastHeight(cBody, outerWindow.innerHeight);
 
-  const destroy = function () {
+  const destroy = () => {
     onResize.unbind();
   };
 

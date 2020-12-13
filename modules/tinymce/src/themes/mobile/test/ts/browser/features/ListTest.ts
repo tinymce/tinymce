@@ -21,46 +21,46 @@ UnitTest.asynctest('Browser Test: features.ListTest', (success, failure) => {
       const sSetP2 = apis.sSetSelection([ 1, 0 ], 'Norma'.length, [ 1, 0 ], 'Norma'.length);
       const sSetP3 = apis.sSetSelection([ 2, 0, 0 ], 'Bu'.length, [ 2, 0, 0 ], 'Bu'.length);
 
-      const sCheckComponent = function (label, state) {
-        return function (memento) {
+      const sCheckComponent = (label, state) => {
+        return (memento) => {
           return TestUi.sWaitForToggledState(label, state, realm, memento);
         };
       };
 
-      const sCheckLists = function (situation, stateOfNumlist, stateOfBullist) {
+      const sCheckLists = (situation, stateOfNumlist, stateOfBullist) => {
         return GeneralSteps.sequence([
           sCheckComponent('checking numlist: ' + situation, stateOfNumlist)(buttons.numlist),
           sCheckComponent('checking bullist: ' + situation, stateOfBullist)(buttons.bullist)
         ]);
       };
 
-      const sCheckInNumlist = function (situation) {
+      const sCheckInNumlist = (situation) => {
         return sCheckLists(situation, true, false);
       };
 
-      const sCheckInBullist = function (situation) {
+      const sCheckInBullist = (situation) => {
         return sCheckLists(situation, false, true);
       };
 
-      const sCheckInNoList = function (situation) {
+      const sCheckInNoList = (situation) => {
         return sCheckLists(situation, false, false);
       };
 
-      const sCheckP1 = function (situation) {
+      const sCheckP1 = (situation) => {
         return GeneralSteps.sequence([
           sSetP1,
           sCheckInNumlist(situation)
         ]);
       };
 
-      const sCheckP2 = function (situation) {
+      const sCheckP2 = (situation) => {
         return GeneralSteps.sequence([
           sSetP2,
           sCheckInNoList(situation)
         ]);
       };
 
-      const sCheckP3 = function (situation) {
+      const sCheckP3 = (situation) => {
         return GeneralSteps.sequence([
           sSetP3,
           sCheckInBullist(situation)

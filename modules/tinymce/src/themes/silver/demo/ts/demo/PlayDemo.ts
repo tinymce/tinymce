@@ -5,7 +5,7 @@ import ButtonSetupDemo from './ButtonSetupDemo';
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
   tinymce.init({
     // TODO: Investigate. Should thisget the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
@@ -98,7 +98,7 @@ export default function () {
       // }
     ],
 
-    setup(ed: Editor) {
+    setup: (ed: Editor) => {
       ButtonSetupDemo.setup(ed);
 
       ed.on('skinLoaded', () => {
@@ -147,4 +147,4 @@ export default function () {
 
     }
   });
-}
+};

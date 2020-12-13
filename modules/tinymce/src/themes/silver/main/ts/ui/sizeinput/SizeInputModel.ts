@@ -14,11 +14,11 @@ export interface Size {
   unit: SizeUnit;
 }
 
-export const nuSize = function (value: number, unit: SizeUnit): Size {
+export const nuSize = (value: number, unit: SizeUnit): Size => {
   return { value, unit };
 };
 
-export const formatSize = function (size: Size): string {
+export const formatSize = (size: Size): string => {
   const unitDec = {
     '': 0,
     'px': 0,
@@ -41,7 +41,7 @@ export const formatSize = function (size: Size): string {
   return numText + size.unit;
 };
 
-export const parseSize = function (sizeText: string): Result<Size, string> {
+export const parseSize = (sizeText: string): Result<Size, string> => {
   const numPattern = /^\s*(\d+(?:\.\d+)?)\s*(|cm|mm|in|px|pt|pc|em|ex|ch|rem|vw|vh|vmin|vmax|%)\s*$/;
   const match = numPattern.exec(sizeText);
   if (match !== null) {

@@ -14,7 +14,7 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 const beforeObject = Id.generate('alloy-fake-before-tabstop');
 const afterObject = Id.generate('alloy-fake-after-tabstop');
 
-const craftWithClasses = function (classes) {
+const craftWithClasses = (classes) => {
   return {
     dom: {
       tag: 'div',
@@ -35,7 +35,7 @@ const craftWithClasses = function (classes) {
   };
 };
 
-const craft = function (spec) {
+const craft = (spec) => {
   return {
     dom: {
       tag: 'div',
@@ -53,7 +53,7 @@ const craft = function (spec) {
 };
 
 // TODO: Create an API in alloy to do this.
-const triggerTab = function (placeholder, shiftKey) {
+const triggerTab = (placeholder, shiftKey) => {
   AlloyTriggers.emitWith(placeholder, NativeEvents.keydown(), {
     raw: {
       which: 9,
@@ -62,13 +62,13 @@ const triggerTab = function (placeholder, shiftKey) {
   });
 };
 
-const onFocus = function (container, targetComp) {
+const onFocus = (container, targetComp) => {
   const target = targetComp.element;
   // If focus has shifted naturally to a before object, the tab direction is backwards.
   if (Class.has(target, beforeObject)) { triggerTab(container, true); } else if (Class.has(target, afterObject)) { triggerTab(container, false); }
 };
 
-const isPseudoStop = function (element) {
+const isPseudoStop = (element) => {
   return SelectorExists.closest(element, [ '.' + beforeObject, '.' + afterObject ].join(','), Fun.never);
 };
 

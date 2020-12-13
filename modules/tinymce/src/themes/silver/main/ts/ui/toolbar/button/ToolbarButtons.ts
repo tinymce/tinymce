@@ -301,7 +301,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       attributes: { 'aria-pressed': false, ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers) }
     },
 
-    onExecute(button: AlloyComponent) {
+    onExecute: (button: AlloyComponent) => {
       spec.onAction(getApi(button));
     },
 

@@ -35,7 +35,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
 
   Assert.eq('Expect init be valid', true, ValueSchema.asRaw('.', schema, {
     ...base,
-    init(_el) {
+    init: (_el) => {
       return {
         setValue: Fun.noop,
         getValue: Fun.constant(''),
@@ -48,7 +48,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
     ...base,
     scriptId: 'scriptId',
     scriptUrl: 'scriptUrl',
-    init(_el) {
+    init: (_el) => {
       return {
         setValue: Fun.noop,
         getValue: Fun.constant(''),

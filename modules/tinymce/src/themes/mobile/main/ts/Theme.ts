@@ -58,7 +58,7 @@ const renderMobileTheme = (editor: Editor) => {
 
     const outerWindow = targetNode.ownerDocument.defaultView;
     const orientation = Orientation.onChange(outerWindow, {
-      onChange() {
+      onChange: () => {
         const alloy = realm.system;
         alloy.broadcastOn([ TinyChannels.orientationChanged ], { width: Orientation.getActualWidth(outerWindow) });
       },
@@ -95,7 +95,7 @@ const renderMobileTheme = (editor: Editor) => {
     const bindHandler = (label: string, handler) => {
       editor.on(label, handler);
       return {
-        unbind() {
+        unbind: () => {
           editor.off(label);
         }
       };
@@ -104,25 +104,25 @@ const renderMobileTheme = (editor: Editor) => {
     editor.on('init', () => {
       realm.init({
         editor: {
-          getFrame() {
+          getFrame: () => {
             return SugarElement.fromDom(editor.contentAreaContainer.querySelector('iframe'));
           },
 
-          onDomChanged() {
+          onDomChanged: () => {
             return {
               unbind: Fun.noop
             };
           },
 
-          onToReading(handler) {
+          onToReading: (handler) => {
             return bindHandler(READING, handler);
           },
 
-          onToEditing(handler) {
+          onToEditing: (handler) => {
             return bindHandler(EDITING, handler);
           },
 
-          onScrollToCursor(handler) {
+          onScrollToCursor: (handler) => {
             editor.on('ScrollIntoView', (tinyEvent) => {
               handler(tinyEvent);
             });
@@ -137,11 +137,11 @@ const renderMobileTheme = (editor: Editor) => {
             };
           },
 
-          onTouchToolstrip() {
+          onTouchToolstrip: () => {
             hideDropup();
           },
 
-          onTouchContent() {
+          onTouchContent: () => {
             const toolbar = SugarElement.fromDom(editor.editorContainer.querySelector('.' + Styles.resolve('toolbar')));
             // If something in the toolbar had focus, fire an execute on it (execute on tap away)
             // Perhaps it will be clearer later what is a better way of doing this.
@@ -150,7 +150,7 @@ const renderMobileTheme = (editor: Editor) => {
             hideDropup();
           },
 
-          onTapContent(evt: EventArgs<TouchEvent>) {
+          onTapContent: (evt: EventArgs<TouchEvent>) => {
             const target = evt.target;
             // If the user has tapped (touchstart, touchend without movement) on an image, select it.
             if (SugarNode.name(target) === 'img') {
@@ -176,11 +176,11 @@ const renderMobileTheme = (editor: Editor) => {
         alloy: realm.system,
         translate: Fun.noop,
 
-        setReadOnly(ro) {
+        setReadOnly: (ro) => {
           setReadOnly(dynamicGroup, readOnlyGroups, mainGroups, ro);
         },
 
-        readOnlyOnInit() {
+        readOnlyOnInit: () => {
           return Settings.readOnlyOnInit(editor);
         }
       });
@@ -261,7 +261,7 @@ const renderMobileTheme = (editor: Editor) => {
   };
 
   return {
-    getNotificationManagerImpl() {
+    getNotificationManagerImpl: () => {
       return {
         open: Fun.constant({
           progressBar: { value: Fun.noop },

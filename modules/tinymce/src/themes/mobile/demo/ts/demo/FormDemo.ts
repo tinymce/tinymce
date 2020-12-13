@@ -6,12 +6,12 @@ import * as Inputs from 'tinymce/themes/mobile/ui/Inputs';
 import * as SerialisedDialog from 'tinymce/themes/mobile/ui/SerialisedDialog';
 import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
-export default function () {
+export default () => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const form = SerialisedDialog.sketch({
     onExecute: Fun.noop,
-    getInitialValue() {
+    getInitialValue: () => {
       return Optional.some({
         alpha: 'Alpha',
         beta: '',
@@ -53,4 +53,4 @@ export default function () {
   });
 
   gui.add(container);
-}
+};

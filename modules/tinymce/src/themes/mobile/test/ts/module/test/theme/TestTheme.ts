@@ -9,7 +9,7 @@ import * as FormatChangers from 'tinymce/themes/mobile/util/FormatChangers';
 
 const strName = 'test';
 
-const setup = function (info, onSuccess, onFailure) {
+const setup = (info, onSuccess, onFailure) => {
 
   /* This test is going to create a toolbar with both list items on it */
   const alloy = Gui.create();
@@ -52,7 +52,7 @@ const setup = function (info, onSuccess, onFailure) {
 
   ThemeManager.add(strName, (editor) => {
     return {
-      renderUI() {
+      renderUI: () => {
         editor.fire('SkinLoaded');
         return {
           iframeContainer: socket.element.dom,
@@ -63,7 +63,7 @@ const setup = function (info, onSuccess, onFailure) {
   });
 
   return {
-    use(f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) {
+    use: (f: (realm: MobileRealm, apis: TinyApis, toolbar: AlloyComponent, socket: AlloyComponent, buttons, onSuccess: () => void, onFailure: (err?: any) => void) => void) => {
       TinyLoader.setup((editor, onS, onF) => {
         const features = Features.setup(realm, editor);
 

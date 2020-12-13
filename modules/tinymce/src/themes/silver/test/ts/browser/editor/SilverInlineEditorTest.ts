@@ -426,7 +426,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
         icon: 'italic',
         text: 'Text with icon',
         shortcut: 'Meta+M',
-        onAction() {
+        onAction: () => {
           console.log('Just Text click');
         }
       });

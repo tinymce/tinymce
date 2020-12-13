@@ -10,7 +10,7 @@ import { Arr, Future, Futures, Merger, Obj, Optional, Result, Results } from '@e
 
 export interface FormValidator { 'value': string | number; 'text': string }
 
-const toValidValues = function <T> (values: { [key: string]: Optional<T[keyof T]> }) {
+const toValidValues = <T> (values: { [key: string]: Optional<T[keyof T]> }) => {
   const errors: string[] = [];
   const result: { [key: string]: T[keyof T] } = {};
 
@@ -26,7 +26,7 @@ const toValidValues = function <T> (values: { [key: string]: Optional<T[keyof T]
     Result.value<{ [key: string]: T[keyof T] }, string[]>(result);
 };
 
-const toValuesOrDefaults = function (optionValues, defaults) {
+const toValuesOrDefaults = (optionValues, defaults) => {
   const r = {};
   Obj.each(optionValues, (v, k) => {
     v.each((someValue) => {

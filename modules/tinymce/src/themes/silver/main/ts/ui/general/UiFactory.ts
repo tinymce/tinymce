@@ -36,7 +36,7 @@ import { renderHtmlPanel } from './HtmlPanel';
 export type FormPartRenderer = (parts: FormTypes.FormParts, spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 export type NoFormRenderer = (spec: BridgedType, backstage: UiFactoryBackstage) => AlloySpec;
 
-const make = function (render: NoFormRenderer): FormPartRenderer {
+const make = (render: NoFormRenderer): FormPartRenderer => {
   return (parts, spec, backstage) => Obj.get(spec, 'name').fold(
     () => render(spec, backstage),
     (fieldName) => parts.field(fieldName, render(spec, backstage) as SimpleOrSketchSpec)

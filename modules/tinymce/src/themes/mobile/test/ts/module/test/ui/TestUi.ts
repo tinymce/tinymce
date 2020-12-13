@@ -16,20 +16,20 @@ const cGetParent = Chain.binder((elem: SugarElement) => {
   }, Result.value);
 });
 
-const sSetFieldValue = function (value: string) {
+const sSetFieldValue = (value: string) => {
   return Chain.asStep({ }, [
     cGetFocused,
     UiControls.cSetValue(value)
   ]);
 };
 
-const sSetFieldOptValue = function (optVal: Optional<string>) {
+const sSetFieldOptValue = (optVal: Optional<string>) => {
   return optVal.fold(() => {
     return Step.pass;
   }, sSetFieldValue);
 };
 
-const sStartEditor = function (alloy: Gui.GuiSystem) {
+const sStartEditor = (alloy: Gui.GuiSystem) => {
   return Step.sync(() => {
     const button = UiFinder.findIn(alloy.element, '[role="button"]').getOrDie();
     const x = alloy.getByDom(button).getOrDie();
@@ -37,7 +37,7 @@ const sStartEditor = function (alloy: Gui.GuiSystem) {
   });
 };
 
-const sClickComponent = function (realm: MobileRealm, memento: MementoRecord) {
+const sClickComponent = (realm: MobileRealm, memento: MementoRecord) => {
   return Chain.asStep({ }, [
     Chain.injectThunked(() => {
       return memento.get(realm.socket).element;
@@ -46,7 +46,7 @@ const sClickComponent = function (realm: MobileRealm, memento: MementoRecord) {
   ]);
 };
 
-const sWaitForToggledState = function (label: string, state: boolean, realm: MobileRealm, memento: MementoRecord) {
+const sWaitForToggledState = (label: string, state: boolean, realm: MobileRealm, memento: MementoRecord) => {
   return Waiter.sTryUntil(
     label,
     Step.sync(() => {
@@ -62,7 +62,7 @@ const sWaitForToggledState = function (label: string, state: boolean, realm: Mob
   );
 };
 
-const sBroadcastState = function (realm: MobileRealm, channels: string[], command: string, state: boolean) {
+const sBroadcastState = (realm: MobileRealm, channels: string[], command: string, state: boolean) => {
   return Step.sync(() => {
     realm.system.broadcastOn(channels, {
       command,

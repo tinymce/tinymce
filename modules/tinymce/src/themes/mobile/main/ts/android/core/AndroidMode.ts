@@ -14,14 +14,14 @@ import * as Thor from '../../util/Thor';
 import * as AndroidEvents from './AndroidEvents';
 import * as AndroidSetup from './AndroidSetup';
 
-const create = function (platform, mask) {
+const create = (platform, mask) => {
 
   const meta = MetaViewport.tag();
   const androidApi = Singleton.api();
 
   const androidEvents = Singleton.api();
 
-  const enter = function () {
+  const enter = () => {
     mask.hide();
 
     Class.add(platform.container, Styles.resolve('fullscreen-maximized'));
@@ -43,7 +43,7 @@ const create = function (platform, mask) {
     });
   };
 
-  const exit = function () {
+  const exit = () => {
     meta.restore();
     mask.show();
     Class.remove(platform.container, Styles.resolve('fullscreen-maximized'));

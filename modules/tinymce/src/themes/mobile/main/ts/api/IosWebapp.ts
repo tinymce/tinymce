@@ -21,7 +21,7 @@ export interface MobileWebApp {
   destroy(): void;
 }
 
-const produce = function (raw: {any}): MobileWebApp {
+const produce = (raw: {any}): MobileWebApp => {
   const mobile = ValueSchema.asRawOrDie(
     'Getting IosWebapp schema',
     MobileSchema,
@@ -32,7 +32,7 @@ const produce = function (raw: {any}): MobileWebApp {
   Css.set(mobile.toolstrip, 'width', '100%');
   Css.set(mobile.container, 'position', 'relative');
 
-  const onView = function () {
+  const onView = () => {
     mobile.setReadOnly(mobile.readOnlyOnInit());
     mode.enter();
   };
@@ -43,10 +43,10 @@ const produce = function (raw: {any}): MobileWebApp {
 
   mobile.alloy.add(mask);
   const maskApi = {
-    show() {
+    show: () => {
       mobile.alloy.add(mask);
     },
-    hide() {
+    hide: () => {
       mobile.alloy.remove(mask);
     }
   };

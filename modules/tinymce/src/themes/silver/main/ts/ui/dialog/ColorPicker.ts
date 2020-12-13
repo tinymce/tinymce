@@ -38,11 +38,11 @@ const english = {
   'aria.input.invalid': 'Invalid input'
 };
 
-const getEnglishText = function (key) {
+const getEnglishText = (key) => {
   return english[key];
 };
 
-const translate = function (key) {
+const translate = (key) => {
   // TODO: use this: I18n.translate()
   return getEnglishText(key);
 };

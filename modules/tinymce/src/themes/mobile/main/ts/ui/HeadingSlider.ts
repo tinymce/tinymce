@@ -25,10 +25,10 @@ const makeSlider = (spec): SketchSpec => SizeSlider.sketch({
 
 const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {
-    onChange(value) {
+    onChange: (value) => {
       editor.execCommand('FormatBlock', null, headings[value].toLowerCase());
     },
-    getInitialValue() {
+    getInitialValue: () => {
       const node = editor.selection.getStart();
       const elem = SugarElement.fromDom(node);
       const heading = PredicateFind.closest(elem, (e) => {

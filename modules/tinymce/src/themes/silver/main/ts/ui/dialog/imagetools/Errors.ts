@@ -20,11 +20,11 @@ const friendlyServiceErrors = [
   { type: 'domain_not_trusted', message: 'The api key is not valid for the request origins.' }
 ];
 
-const isServiceErrorCode = function (code) {
+const isServiceErrorCode = (code) => {
   return code === 400 || code === 403 || code === 500;
 };
 
-const getHttpErrorMsg = function (status) {
+const getHttpErrorMsg = (status) => {
   const message = Arr.find(friendlyHttpErrors, (error) => {
     return status === error.code;
   }).fold(
@@ -37,13 +37,13 @@ const getHttpErrorMsg = function (status) {
   return 'ImageProxy HTTP error: ' + message;
 };
 
-const handleHttpError = function (status) {
+const handleHttpError = (status) => {
   const message = getHttpErrorMsg(status);
 
   return Promise.reject(message);
 };
 
-const getServiceErrorMsg = function (type) {
+const getServiceErrorMsg = (type) => {
   return Arr.find(friendlyServiceErrors, (error) => {
     return error.type === type;
   }).fold(
@@ -54,7 +54,7 @@ const getServiceErrorMsg = function (type) {
   );
 };
 
-const getServiceError = function (text) {
+const getServiceError = (text) => {
   const serviceError = Utils.parseJson(text);
   const errorType = Utils.traverse(serviceError, [ 'error', 'type' ]);
   const errorMsg = errorType ? getServiceErrorMsg(errorType) : 'Invalid JSON in service error message';
@@ -62,7 +62,7 @@ const getServiceError = function (text) {
   return 'ImageProxy Service error: ' + errorMsg;
 };
 
-const handleServiceError = function (status, blob) {
+const handleServiceError = (status, blob) => {
   return Utils.readBlob(blob).then((text) => {
     const serviceError = getServiceError(text);
 
@@ -70,7 +70,7 @@ const handleServiceError = function (status, blob) {
   });
 };
 
-const handleServiceErrorResponse = function (status, blob) {
+const handleServiceErrorResponse = (status, blob) => {
   return isServiceErrorCode(status) ? handleServiceError(status, blob) : handleHttpError(status);
 };
 

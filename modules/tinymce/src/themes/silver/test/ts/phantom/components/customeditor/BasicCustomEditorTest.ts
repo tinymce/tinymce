@@ -35,8 +35,8 @@ UnitTest.asynctest('CustomEditor component Test', (success, failure) => {
         Delay.clearInterval(intervalId);
         Class.add(SugarElement.fromDom(e), 'my-custom-editor');
         resolve({
-          setValue(s: string) { customEditorValue.set(s); },
-          getValue() { return customEditorValue.get(); },
+          setValue: (s: string) => customEditorValue.set(s),
+          getValue: () => customEditorValue.get(),
           destroy: Fun.noop
         });
       }

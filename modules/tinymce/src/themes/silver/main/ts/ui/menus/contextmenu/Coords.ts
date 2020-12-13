@@ -16,7 +16,7 @@ interface Position {
   y: number;
 }
 
-const nu = function (x: number, y: number): MakeshiftAnchorSpec {
+const nu = (x: number, y: number): MakeshiftAnchorSpec => {
   return {
     anchor: 'makeshift',
     x,
@@ -24,13 +24,13 @@ const nu = function (x: number, y: number): MakeshiftAnchorSpec {
   };
 };
 
-const transpose = function (pos: Position, dx: number, dy: number) {
+const transpose = (pos: Position, dx: number, dy: number) => {
   return nu(pos.x + dx, pos.y + dy);
 };
 
 const isTouchEvent = (e: MouseEvent | TouchEvent): e is TouchEvent => e.type === 'longpress' || e.type.indexOf('touch') === 0;
 
-const fromPageXY = function (e: MouseEvent | TouchEvent) {
+const fromPageXY = (e: MouseEvent | TouchEvent) => {
   if (isTouchEvent(e)) {
     const touch = e.touches[0];
     return nu(touch.pageX, touch.pageY);
@@ -39,7 +39,7 @@ const fromPageXY = function (e: MouseEvent | TouchEvent) {
   }
 };
 
-const fromClientXY = function (e: MouseEvent | TouchEvent) {
+const fromClientXY = (e: MouseEvent | TouchEvent) => {
   if (isTouchEvent(e)) {
     const touch = e.touches[0];
     return nu(touch.clientX, touch.clientY);
@@ -48,12 +48,12 @@ const fromClientXY = function (e: MouseEvent | TouchEvent) {
   }
 };
 
-const transposeContentAreaContainer = function (element: HTMLElement, pos: Position) {
+const transposeContentAreaContainer = (element: HTMLElement, pos: Position) => {
   const containerPos = DOMUtils.DOM.getPos(element);
   return transpose(pos, containerPos.x, containerPos.y);
 };
 
-export const getPointAnchor = function (editor: Editor, e: MouseEvent | TouchEvent) {
+export const getPointAnchor = (editor: Editor, e: MouseEvent | TouchEvent) => {
   // If the contextmenu event is fired via the editor.fire() API or some other means, fall back to selection anchor
   if (e.type === 'contextmenu' || e.type === 'longpress') {
     if (editor.inline) {
@@ -66,7 +66,7 @@ export const getPointAnchor = function (editor: Editor, e: MouseEvent | TouchEve
   }
 };
 
-export const getSelectionAnchor = function (editor: Editor): SelectionAnchorSpec {
+export const getSelectionAnchor = (editor: Editor): SelectionAnchorSpec => {
   return {
     anchor: 'selection',
     root: SugarElement.fromDom(editor.selection.getNode())

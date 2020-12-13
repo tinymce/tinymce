@@ -22,7 +22,7 @@ interface NavigateEvent extends CustomEvent {
   readonly direction: number;
 }
 
-const sketch = function (rawSpec) {
+const sketch = (rawSpec) => {
   const navigateEvent = 'navigateEvent';
 
   const wrapperAdhocEvents = 'serializer-wrapper-events';
@@ -44,10 +44,10 @@ const sketch = function (rawSpec) {
 
   const spec = ValueSchema.asRawOrDie('SerialisedDialog', schema, rawSpec);
 
-  const navigationButton = function (direction, directionName, enabled) {
+  const navigationButton = (direction, directionName, enabled) => {
     return Button.sketch({
       dom: UiDomFactory.dom('<span class="${prefix}-icon-' + directionName + ' ${prefix}-icon"></span>'),
-      action(button) {
+      action: (button) => {
         AlloyTriggers.emitWith(button, navigateEvent, { direction });
       },
       buttonBehaviours: Behaviour.derive([
@@ -59,13 +59,13 @@ const sketch = function (rawSpec) {
     });
   };
 
-  const reposition = function (dialog, message) {
+  const reposition = (dialog, message) => {
     SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each((parent) => {
       Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
     });
   };
 
-  const navigate = function (dialog, direction) {
+  const navigate = (dialog, direction) => {
     const screens = SelectorFilter.descendants<HTMLElement>(dialog.element, '.' + Styles.resolve('serialised-dialog-screen'));
     SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each((parent) => {
       if ((spec.state.currentScreen.get() + direction) >= 0 && (spec.state.currentScreen.get() + direction) < screens.length) {
@@ -80,7 +80,7 @@ const sketch = function (rawSpec) {
   };
 
   // Unfortunately we need to inspect the DOM to find the input that is currently on screen
-  const focusInput = function (dialog) {
+  const focusInput = (dialog) => {
     const inputs = SelectorFilter.descendants(dialog.element, 'input');
     const optInput = Optional.from(inputs[spec.state.currentScreen.get()]);
     optInput.each((input) => {
@@ -92,7 +92,7 @@ const sketch = function (rawSpec) {
     Highlighting.highlightAt(dotitems, spec.state.currentScreen.get());
   };
 
-  const resetState = function () {
+  const resetState = () => {
     spec.state.currentScreen.set(0);
     spec.state.dialogSwipeState.clear();
   };
@@ -123,14 +123,14 @@ const sketch = function (rawSpec) {
           }),
           Keying.config({
             mode: 'special',
-            focusIn(dialog, _specialInfo) {
+            focusIn: (dialog, _specialInfo) => {
               focusInput(dialog);
             },
-            onTab(dialog, _specialInfo) {
+            onTab: (dialog, _specialInfo) => {
               navigate(dialog, +1);
               return Optional.some(true);
             },
-            onShiftTab(dialog, _specialInfo) {
+            onShiftTab: (dialog, _specialInfo) => {
               navigate(dialog, -1);
               return Optional.some(true);
             }
@@ -192,7 +192,7 @@ const sketch = function (rawSpec) {
     behaviours: Behaviour.derive([
       Keying.config({
         mode: 'special',
-        focusIn(wrapper) {
+        focusIn: (wrapper) => {
           const form = memForm.get(wrapper);
           Keying.focusIn(form);
         }

@@ -29,10 +29,10 @@ const makeItems = (spec) => [
 
 const sketch = (realm: MobileRealm, editor): SketchSpec => {
   const spec = {
-    onChange(value) {
+    onChange: (value) => {
       FontSizes.apply(editor, value);
     },
-    getInitialValue(/* slider */) {
+    getInitialValue: (/* slider */) => {
       return FontSizes.get(editor);
     }
   };

@@ -26,16 +26,16 @@ const isAndroid6 = PlatformDetection.detect().os.version.major >= 6;
   an input or textarea
 
 */
-const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
+const initEvents = (editorApi: PlatformEditor, toolstrip, alloy) => {
 
   const tapping = TappingEvent.monitor(editorApi);
   const outerDoc = Traverse.owner(toolstrip);
 
-  const isRanged = function (sel: SimRange) {
+  const isRanged = (sel: SimRange) => {
     return !Compare.eq(sel.start, sel.finish) || sel.soffset !== sel.foffset;
   };
 
-  const hasRangeInUi = function () {
+  const hasRangeInUi = () => {
     return Focus.active(outerDoc).filter((input) => {
       return SugarNode.name(input) === 'input';
     }).exists((input: SugarElement<HTMLInputElement>) => {
@@ -43,7 +43,7 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
     });
   };
 
-  const updateMargin = function () {
+  const updateMargin = () => {
     const rangeInContent = editorApi.doc.dom.hasFocus() && editorApi.getSelection().exists(isRanged);
     alloy.getByDom(toolstrip).each((rangeInContent || hasRangeInUi()) === true ? Toggling.on : Toggling.off);
   };
@@ -88,7 +88,7 @@ const initEvents = function (editorApi: PlatformEditor, toolstrip, alloy) {
     ]
   );
 
-  const destroy = function () {
+  const destroy = () => {
     Arr.each(listeners, (l) => {
       l.unbind();
     });

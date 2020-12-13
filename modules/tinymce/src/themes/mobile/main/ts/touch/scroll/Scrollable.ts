@@ -10,7 +10,7 @@ import * as Styles from '../../style/Styles';
 
 const scrollableStyle = Styles.resolve('scrollable');
 
-const register = function (element) {
+const register = (element) => {
 /*
  *  The reason this function exists is to have a
  *  central place where to set if an element can be explicitly
@@ -19,7 +19,7 @@ const register = function (element) {
   Class.add(element, scrollableStyle);
 };
 
-const deregister = function (element) {
+const deregister = (element) => {
   Class.remove(element, scrollableStyle);
 };
 

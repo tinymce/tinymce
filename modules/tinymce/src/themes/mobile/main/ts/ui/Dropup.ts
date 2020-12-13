@@ -39,13 +39,13 @@ const build = (refresh, scrollIntoView): DropUp => {
           dimension: {
             property: 'height'
           },
-          onShrunk(component) {
+          onShrunk: (component) => {
             refresh();
             scrollIntoView();
 
             Replacing.set(component, [ ]);
           },
-          onGrown(_component) {
+          onGrown: (_component) => {
             refresh();
             scrollIntoView();
           }

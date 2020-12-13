@@ -54,7 +54,7 @@ export interface Device {
   keyboard: Keyboard;
 }
 
-export const findDevice = function (deviceWidth, deviceHeight): Keyboard {
+export const findDevice = (deviceWidth, deviceHeight): Keyboard => {
   const devices: Device[] = [
     // iPhone 4 class
     { width: 320, height: 480, keyboard: { portrait: 300, landscape: 240 }},
