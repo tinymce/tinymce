@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', (success
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
 
-    const sClickAndAssertEvents = function (tooltip, expected: EventLog[]) {
+    const sClickAndAssertEvents = (tooltip, expected: EventLog[]) => {
       return GeneralSteps.sequence([
         store.sClear,
         tinyUi.sClickOnToolbar('Toggle sidebar', 'button[aria-label="' + tooltip + '"]'),
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', (success
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
-    setup(editor) {
+    setup: (editor) => {
       const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
         const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
         const entry: EventLog = { name, index };

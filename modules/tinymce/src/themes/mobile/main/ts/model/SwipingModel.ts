@@ -13,14 +13,14 @@ const SWIPING_NONE = 0;
  * these points to identify whether or not the swipe was *consistent enough*
  */
 
-const init = function (xValue) {
+const init = (xValue) => {
   return {
     xValue,
     points: [ ]
   };
 };
 
-const move = function (model, xValue) {
+const move = (model, xValue) => {
   if (xValue === model.xValue) {
     return model; // do nothing.
   }
@@ -32,7 +32,7 @@ const move = function (model, xValue) {
 
   const newPoint = { direction: currentDirection, xValue };
 
-  const priorPoints = (function () {
+  const priorPoints = (() => {
     if (model.points.length === 0) {
       return [ ];
     } else {
@@ -47,7 +47,7 @@ const move = function (model, xValue) {
   };
 };
 
-const complete = function (model/* , snaps*/) {
+const complete = (model/* , snaps*/) => {
   if (model.points.length === 0) {
     return SWIPING_NONE;
   } else {

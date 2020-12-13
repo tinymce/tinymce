@@ -11,10 +11,10 @@ import { Attribute, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
  * The purpose of this fix is to toggle the presence of a meta tag which disables scrolling
  * for the user
  */
-const tag = function () {
+const tag = () => {
   const head = SelectorFind.first('head').getOrDie();
 
-  const nu = function () {
+  const nu = () => {
     const meta = SugarElement.fromTag('meta');
     Attribute.set(meta, 'name', 'viewport');
     Insert.append(head, meta);
@@ -24,11 +24,11 @@ const tag = function () {
   const element = SelectorFind.first('meta[name="viewport"]').getOrThunk(nu);
   const backup = Attribute.get(element, 'content');
 
-  const maximize = function () {
+  const maximize = () => {
     Attribute.set(element, 'content', 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0');
   };
 
-  const restore = function () {
+  const restore = () => {
     if (backup !== undefined && backup !== null && backup.length > 0) {
       Attribute.set(element, 'content', backup);
     } else {

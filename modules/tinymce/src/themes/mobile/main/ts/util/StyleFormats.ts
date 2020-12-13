@@ -85,7 +85,7 @@ const ui = (editor, formats, onDone) => {
 
   return StylesMenu.sketch({
     formats: pruned,
-    handle(item, value) {
+    handle: (item, value) => {
       editor.undoManager.transact(() => {
         if (Toggling.isOn(item)) {
           editor.formatter.remove(value);

@@ -5,7 +5,7 @@ import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import TestProviders from './TestProviders';
 
-export default function (sink?: AlloyComponent): UiFactoryBackstage {
+export default (sink?: AlloyComponent): UiFactoryBackstage => {
   // NOTE: Non-sensical anchor
   const hotspotAnchorFn = (): HotspotAnchorSpec => ({
     anchor: 'hotspot',
@@ -48,4 +48,4 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       isDraggableModal: Fun.never
     }
   };
-}
+};

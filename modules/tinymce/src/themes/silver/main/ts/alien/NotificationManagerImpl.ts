@@ -14,7 +14,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstage } from '../backstage/Backstage';
 import { Notification } from '../ui/general/Notification';
 
-export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl {
+export default (editor: Editor, extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
   const backstage: UiFactoryBackstage = extras.backstage;
 
   const getLayoutDirection = (rel: 'tc-tc' | 'bc-bc' | 'bc-tc' | 'tc-bc') => {
@@ -134,11 +134,11 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     };
   };
 
-  const close = function (notification: NotificationApi) {
+  const close = (notification: NotificationApi) => {
     notification.close();
   };
 
-  const getArgs = function (notification: NotificationApi) {
+  const getArgs = (notification: NotificationApi) => {
     return notification.settings;
   };
 
@@ -148,4 +148,4 @@ export default function (editor: Editor, extras, uiMothership: Gui.GuiSystem): N
     reposition,
     getArgs
   };
-}
+};

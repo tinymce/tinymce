@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { identifyButtons } from 'tinymce/themes/silver/ui/toolbar/Integration';
 import { setupDemo } from '../components/DemoHelpers';
 
-export default function () {
+export default () => {
 
   const buttons = {
     'alpha': {
@@ -145,4 +145,4 @@ export default function () {
   });
 
   helpers.uiMothership.add(toolbar);
-}
+};

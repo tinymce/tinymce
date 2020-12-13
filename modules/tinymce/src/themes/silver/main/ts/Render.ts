@@ -168,7 +168,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-menubar' ]
     },
     backstage,
-    onEscape() {
+    onEscape: () => {
       editor.focus();
     }
   });
@@ -182,7 +182,7 @@ const setup = (editor: Editor): RenderInfo => {
     },
     getSink: lazySink,
     providers: backstage.shared.providers,
-    onEscape() {
+    onEscape: () => {
       editor.focus();
     },
     type: toolbarMode,
@@ -392,7 +392,7 @@ const setup = (editor: Editor): RenderInfo => {
     return parsedHeight;
   };
 
-  const renderUI = function (): ModeRenderInfo {
+  const renderUI = (): ModeRenderInfo => {
     header.setup(editor, backstage.shared, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);

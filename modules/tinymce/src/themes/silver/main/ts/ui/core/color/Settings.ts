@@ -43,7 +43,7 @@ const defaultColors = [
 
 const colorCache = ColorCache(10);
 
-const mapColors = function (colorMap: string[]): Menu.ChoiceMenuItemSpec[] {
+const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors = [];
 
   const canvas = document.createElement('canvas');

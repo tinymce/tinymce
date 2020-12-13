@@ -52,7 +52,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
         classes: [ 'tox-dialog__body-nav-item' ],
         innerHtml: backstage.shared.providers.translate(tab.title)
       },
-      view() {
+      view: () => {
         return [
           // Dupe with SilverDialog
           AlloyForm.sketch((parts) => ({

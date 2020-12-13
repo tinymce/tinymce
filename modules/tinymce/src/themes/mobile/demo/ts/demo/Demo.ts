@@ -1,6 +1,6 @@
 declare let tinymce: any;
 
-export default function () {
+export default () => {
   tinymce.init({
     selector: '.tiny-text',
     theme: 'mobile',
@@ -12,7 +12,7 @@ export default function () {
     ],
     skin_url: '../../../../../js/tinymce/skins/ui/oxide',
 
-    setup(ed) {
+    setup: (ed) => {
       ed.on('skinLoaded', () => {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -74,4 +74,4 @@ export default function () {
       }
     ]
   });
-}
+};

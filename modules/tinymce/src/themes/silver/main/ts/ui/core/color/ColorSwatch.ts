@@ -16,7 +16,7 @@ export interface ColorSwatchDialogData {
   colorpicker: string;
 }
 
-const getCurrentColor = function (editor: Editor, format) {
+const getCurrentColor = (editor: Editor, format) => {
   let color;
 
   editor.dom.getParents(editor.selection.getStart(), (elm) => {
@@ -30,7 +30,7 @@ const getCurrentColor = function (editor: Editor, format) {
   return color;
 };
 
-const applyFormat = function (editor: Editor, format, value) {
+const applyFormat = (editor: Editor, format, value) => {
   editor.undoManager.transact(() => {
     editor.focus();
     editor.formatter.apply(format, { value });
@@ -38,7 +38,7 @@ const applyFormat = function (editor: Editor, format, value) {
   });
 };
 
-const removeFormat = function (editor: Editor, format) {
+const removeFormat = (editor: Editor, format) => {
   editor.undoManager.transact(() => {
     editor.focus();
     editor.formatter.remove(format, { value: null }, null, true);
@@ -58,7 +58,7 @@ const registerCommands = (editor: Editor) => {
 
 const calcCols = (colors) => Math.max(5, Math.ceil(Math.sqrt(colors)));
 
-const getColorCols = function (editor: Editor) {
+const getColorCols = (editor: Editor) => {
   const colors = Settings.getColors(editor);
   const defaultCols = calcCols(colors.length);
   return Settings.getColorCols(editor, defaultCols);
@@ -84,7 +84,7 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   ] : [ remove ];
 };
 
-const applyColor = function (editor: Editor, format, value, onChoice: (v: string) => void) {
+const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void) => {
   if (value === 'custom') {
     const dialog = colorPickerDialog(editor);
     dialog((colorOpt) => {

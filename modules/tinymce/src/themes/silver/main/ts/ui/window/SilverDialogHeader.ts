@@ -90,7 +90,7 @@ const renderInlineHeader = (
     Dragging.config({
       mode: 'mouse',
       blockerClass: 'blocker',
-      getTarget(handle) {
+      getTarget: (handle) => {
         return SelectorFind.closest(handle, '[role="dialog"]').getOrDie();
       },
       snaps: {

@@ -13,7 +13,7 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
 
   const state = Cell(null);
 
-  const sAssertState = function (expected) {
+  const sAssertState = (expected) => {
     return Logger.t(`Assert state ${expected}`, Step.sync(() => {
       Assert.eq('should be same', expected, state.get());
     }));

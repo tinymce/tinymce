@@ -40,21 +40,21 @@ const identify = (editor: Editor): string[] => {
   return Type.isArray(toolbar) ? identifyFromArray(toolbar) : extract(toolbar);
 };
 
-const setup = function (realm: MobileRealm, editor: Editor) {
-  const commandSketch = function (name) {
-    return function () {
+const setup = (realm: MobileRealm, editor: Editor) => {
+  const commandSketch = (name) => {
+    return () => {
       return Buttons.forToolbarCommand(editor, name);
     };
   };
 
-  const stateCommandSketch = function (name) {
-    return function () {
+  const stateCommandSketch = (name) => {
+    return () => {
       return Buttons.forToolbarStateCommand(editor, name);
     };
   };
 
-  const actionSketch = function (name, query, action) {
-    return function () {
+  const actionSketch = (name, query, action) => {
+    return () => {
       return Buttons.forToolbarStateAction(editor, name, query, action);
     };
   };
@@ -66,14 +66,14 @@ const setup = function (realm: MobileRealm, editor: Editor) {
   const underline = stateCommandSketch('underline');
   const removeformat = commandSketch('removeformat');
 
-  const link = function () {
+  const link = () => {
     return LinkButton.sketch(realm, editor);
   };
 
   const unlink = actionSketch('unlink', 'link', () => {
     editor.execCommand('unlink', null, false);
   });
-  const image = function () {
+  const image = () => {
     return ImagePicker.sketch(editor);
   };
 
@@ -85,23 +85,23 @@ const setup = function (realm: MobileRealm, editor: Editor) {
     editor.execCommand('InsertOrderedList', null, false);
   });
 
-  const fontsizeselect = function () {
+  const fontsizeselect = () => {
     return FontSizeSlider.sketch(realm, editor);
   };
 
-  const forecolor = function () {
+  const forecolor = () => {
     return ColorSlider.sketch(realm, editor);
   };
 
   const styleFormats = StyleFormats.register(editor);
 
-  const styleFormatsMenu = function () {
+  const styleFormatsMenu = () => {
     return StyleFormats.ui(editor, styleFormats, () => {
       editor.fire('scrollIntoView');
     });
   };
 
-  const styleselect = function () {
+  const styleselect = () => {
     return Buttons.forToolbar('style-formats', (button) => {
       editor.fire('toReading');
       realm.dropup.appear(styleFormatsMenu, Toggling.on, button);
@@ -122,9 +122,9 @@ const setup = function (realm: MobileRealm, editor: Editor) {
     ]), editor);
   };
 
-  const feature = function (prereq, sketch) {
+  const feature = (prereq, sketch) => {
     return {
-      isSupported() {
+      isSupported: () => {
         // NOTE: forall is true for none
         const buttons = editor.ui.registry.getAll().buttons;
         return prereq.forall((p) => {

@@ -5,7 +5,7 @@ import { Attribute, Focus, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import TestEditor from './TestEditor';
 
-export default function () {
+export default () => {
   const frame = SugarElement.fromTag('iframe');
   Attribute.set(frame, 'src', '/project/tinymce/src/themes/mobile/test/html/editor.html');
 
@@ -19,10 +19,10 @@ export default function () {
   );
 
   const config = {
-    getFrame() {
+    getFrame: () => {
       return frame;
     },
-    onDomChanged() {
+    onDomChanged: () => {
       return { unbind: Fun.noop };
     }
   };
@@ -32,18 +32,18 @@ export default function () {
 
   const editor = {
     selection: {
-      getStart() {
+      getStart: () => {
         return WindowSelection.getExact(frame.dom.contentWindow).map((sel) => {
           return sel.start.dom;
         }).getOr(null);
       },
-      getContent() {
+      getContent: () => {
         return frame.dom.contentWindow.document.body.innerHTML;
       },
       select: Fun.noop
     },
 
-    getBody() {
+    getBody: () => {
       return frame.dom.contentWindow.document.body;
     },
 
@@ -51,7 +51,7 @@ export default function () {
     execCommand: dEditor.execCommand,
     dom: dEditor.dom,
     // Maybe this should be implemented
-    focus() {
+    focus: () => {
       Focus.focus(frame);
       const win = frame.dom.contentWindow;
       WindowSelection.getExact(win).orThunk(() => {
@@ -87,4 +87,4 @@ export default function () {
     sClear: delegate.sClear,
     sPrepareState: delegate.sPrepareState
   };
-}
+};

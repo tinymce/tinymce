@@ -17,7 +17,7 @@ export interface ToolbarGroupSetting {
   items: string[];
 }
 
-const getSkinUrl = function (editor: Editor): string {
+const getSkinUrl = (editor: Editor): string => {
   const skin = editor.getParam('skin');
   let skinUrl = editor.getParam('skin_url');
 

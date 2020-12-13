@@ -16,7 +16,7 @@ import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
 
-export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec {
+export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const items = ColorSwatch.getColors(backstage.colorinput.getColors(), backstage.colorinput.hasCustomColors());
   const columns = backstage.colorinput.getColorCols();
   const presets = 'color';
@@ -52,4 +52,4 @@ export function renderColorSwatchItem(spec: Menu.FancyMenuItem, backstage: UiFac
       ItemWidget.parts.widget(AlloyMenu.sketch(widgetSpec))
     ]
   };
-}
+};

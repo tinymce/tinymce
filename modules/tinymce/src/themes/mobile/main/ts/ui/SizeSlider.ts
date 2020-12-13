@@ -19,14 +19,14 @@ const schema = ValueSchema.objOfOnly([
   FieldSchema.strict('sizes')
 ]);
 
-const sketch = function (rawSpec): SketchSpec {
+const sketch = (rawSpec): SketchSpec => {
   const spec = ValueSchema.asRawOrDie('SizeSlider', schema, rawSpec);
 
-  const isValidValue = function (valueIndex) {
+  const isValidValue = (valueIndex) => {
     return valueIndex >= 0 && valueIndex < spec.sizes.length;
   };
 
-  const onChange = function (slider, thumb, valueIndex) {
+  const onChange = (slider, thumb, valueIndex) => {
     const index = valueIndex.x();
     if (isValidValue(index)) {
       spec.onChange(index);
@@ -42,10 +42,10 @@ const sketch = function (rawSpec): SketchSpec {
         Styles.resolve('slider-size-container') ]
     },
     onChange,
-    onDragStart(slider, thumb) {
+    onDragStart: (slider, thumb) => {
       Toggling.on(thumb);
     },
-    onDragEnd(slider, thumb) {
+    onDragEnd: (slider, thumb) => {
       Toggling.off(thumb);
     },
     model: {

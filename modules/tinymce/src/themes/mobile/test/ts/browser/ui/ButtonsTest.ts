@@ -33,7 +33,7 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', (success, failure) => {
 
   TestStyles.addStyles();
 
-  const unload = function () {
+  const unload = () => {
     TestStyles.removeStyles();
     Attachment.detachSystem(realm.system);
   };
@@ -59,8 +59,8 @@ UnitTest.asynctest('Browser Test: ui.ButtonsTest', (success, failure) => {
   const sClickBeta = TestUi.sClickComponent(realm, memBeta);
   const sClickGamma = TestUi.sClickComponent(realm, memGamma);
 
-  const sCheckComponent = function (label, state) {
-    return function (memento) {
+  const sCheckComponent = (label, state) => {
+    return (memento) => {
       return TestUi.sWaitForToggledState(label, state, realm, memento);
     };
   };

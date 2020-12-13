@@ -50,11 +50,11 @@ export type IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Windo
  * needs to exclude the keyboard. This isn't a problem with timid, because the keyboard is dismissed.
  */
 const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Window, page: SugarElement<Node>, frame: SugarElement<HTMLElement>): IosKeyboard => {
-  const toEditing = function () {
+  const toEditing = () => {
     ResumeEditing.resume(cWin, frame);
   };
 
-  const toReading = function () {
+  const toReading = () => {
     CaptureBin.input(outerBody, Focus.blur);
   };
 
@@ -72,7 +72,7 @@ const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: W
   // Do nothing
   const onToolbarTouch = Fun.noop;
 
-  const destroy = function () {
+  const destroy = () => {
     captureInput.unbind();
   };
 
@@ -103,19 +103,19 @@ const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: W
  * dropdowns dismiss the keyboard, so they have all the height they require.
  */
 const timid: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: Window, page: SugarElement<Node>, frame: SugarElement<HTMLElement>): IosKeyboard => {
-  const dismissKeyboard = function () {
+  const dismissKeyboard = () => {
     Focus.blur(frame);
   };
 
-  const onToolbarTouch = function () {
+  const onToolbarTouch = () => {
     dismissKeyboard();
   };
 
-  const toReading = function () {
+  const toReading = () => {
     dismissKeyboard();
   };
 
-  const toEditing = function () {
+  const toEditing = () => {
     ResumeEditing.resume(cWin, frame);
   };
 

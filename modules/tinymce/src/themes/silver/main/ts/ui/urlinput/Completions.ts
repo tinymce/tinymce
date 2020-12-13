@@ -55,14 +55,14 @@ const anchorTargetBottom = (linkInfo: LinkInformation) => Optional.from(linkInfo
 
 const historyTargets = (history: string[]) => Arr.map(history, (url) => staticMenuItem(url, url));
 
-const joinMenuLists = function (items: BridgeMenu.MenuItemSpec[][]) {
+const joinMenuLists = (items: BridgeMenu.MenuItemSpec[][]) => {
   return Arr.foldl(items, (a, b) => {
     const bothEmpty = a.length === 0 || b.length === 0;
     return bothEmpty ? a.concat(b) : a.concat(separator, b);
   }, [] as SingleMenuItemSpec[]);
 };
 
-const filterByQuery = function (term: string, menuItems: BridgeMenu.MenuItemSpec[]) {
+const filterByQuery = (term: string, menuItems: BridgeMenu.MenuItemSpec[]) => {
   const lowerCaseTerm = term.toLowerCase();
   return Arr.filter(menuItems, (item) => {
     const text = item.meta !== undefined && item.meta.text !== undefined ? item.meta.text : item.text;

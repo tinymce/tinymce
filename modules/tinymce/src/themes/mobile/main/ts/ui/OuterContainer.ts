@@ -12,7 +12,7 @@ import * as Styles from '../style/Styles';
 const READ_ONLY_MODE_CLASS = Styles.resolve('readonly-mode');
 const EDIT_MODE_CLASS = Styles.resolve('edit-mode');
 
-export default function (spec) {
+export default (spec) => {
   const root = GuiFactory.build(
     Container.sketch({
       dom: {
@@ -29,4 +29,4 @@ export default function (spec) {
   );
 
   return Gui.takeover(root);
-}
+};

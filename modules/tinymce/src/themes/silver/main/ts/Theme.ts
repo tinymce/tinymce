@@ -14,7 +14,7 @@ import * as WindowManager from './ui/dialog/WindowManager';
 
 type RenderInfo = Render.RenderInfo;
 
-export default function () {
+export default () => {
   ThemeManager.add('silver', (editor): Theme => {
     const { uiMothership, backstage, renderUI, getUi }: RenderInfo = Render.setup(editor);
 
@@ -30,4 +30,4 @@ export default function () {
       ui: getUi()
     };
   });
-}
+};

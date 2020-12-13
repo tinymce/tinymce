@@ -27,8 +27,8 @@ export interface ScrollingToolbar {
   readonly focus: () => void;
 }
 
-export const ScrollingToolbar = function (): ScrollingToolbar {
-  const makeGroup = function (gSpec) {
+export const ScrollingToolbar = (): ScrollingToolbar => {
+  const makeGroup = (gSpec) => {
     const scrollClass = gSpec.scrollable === true ? '${prefix}-toolbar-scrollable-group' : '';
     return {
       dom: UiDomFactory.dom('<div aria-label="' + gSpec.label + '" class="${prefix}-toolbar-group ' + scrollClass + '"></div>'),
@@ -104,39 +104,39 @@ export const ScrollingToolbar = function (): ScrollingToolbar {
     })
   );
 
-  const resetGroups = function () {
+  const resetGroups = () => {
     Toolbar.setGroups(toolbar, initGroups.get());
     Toggling.off(toolbar);
   };
 
   const initGroups = Cell([ ]);
 
-  const setGroups = function (gs) {
+  const setGroups = (gs) => {
     initGroups.set(gs);
     resetGroups();
   };
 
-  const createGroups = function (gs) {
+  const createGroups = (gs) => {
     return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, makeGroup));
   };
 
-  const refresh = function () {
+  const refresh = () => {
     // Toolbar.refresh is undefined
     // Toolbar.refresh(toolbar);
   };
 
-  const setContextToolbar = function (gs) {
+  const setContextToolbar = (gs) => {
     Toggling.on(toolbar);
     Toolbar.setGroups(toolbar, gs);
   };
 
-  const restoreToolbar = function () {
+  const restoreToolbar = () => {
     if (Toggling.isOn(toolbar)) {
       resetGroups();
     }
   };
 
-  const focus = function () {
+  const focus = () => {
     Keying.focusIn(toolbar);
   };
 

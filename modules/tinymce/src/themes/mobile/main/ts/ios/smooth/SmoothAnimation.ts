@@ -8,7 +8,7 @@
 import { Optional } from '@ephox/katamari';
 import Delay from 'tinymce/core/api/util/Delay';
 
-const adjust = function (value, destination, amount) {
+const adjust = (value, destination, amount) => {
   if (Math.abs(value - destination) <= amount) {
     return Optional.none();
   } else if (value < destination) {
@@ -18,20 +18,20 @@ const adjust = function (value, destination, amount) {
   }
 };
 
-const create = function () {
+const create = () => {
   let interval = null;
 
-  const animate = function (getCurrent, destination, amount, increment, doFinish, rate) {
+  const animate = (getCurrent, destination, amount, increment, doFinish, rate) => {
     let finished = false;
 
-    const finish = function (v) {
+    const finish = (v) => {
       finished = true;
       doFinish(v);
     };
 
     Delay.clearInterval(interval);
 
-    const abort = function (v) {
+    const abort = (v) => {
       Delay.clearInterval(interval);
       finish(v);
     };
