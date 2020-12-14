@@ -19,7 +19,7 @@ import I18n from './util/I18n';
  * See AddOnManager for more information about the methods available on the ThemeManager instance.
  * <br><br>
  * <strong>Warning</strong>: Much of TinyMCE's functionality is provided by the default Silver theme.
- * Creating a custom theme may require implementing this functionality.
+ * Creating a custom theme may require the re-implementation of this functionality.
  * To change TinyMCE's appearance, Tiny recommends changing the Skin instead.
  *
  * @class tinymce.Theme
