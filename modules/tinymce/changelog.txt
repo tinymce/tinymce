@@ -1,4 +1,5 @@
 Version 5.7.0 (TBD)
+    Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
     Added new data to the `TableModified` event to describe whether the table's `structure`, `style`, or both were modified #TINY-6643
     Added `video` and `audio` live embed support for the `media` plugin #TINY-6229
     Added the ability to resize `video` and `iframe` media elements #TINY-6229
