@@ -12,12 +12,12 @@ UnitTest.asynctest('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', 
   Theme();
 
   const selectors = {
-    titleInput : 'label.tox-label:contains(Title) + input.tox-textfield',
-    keywordsInput : 'label.tox-label:contains(Keywords) + input.tox-textfield',
-    descriptionInput : 'label.tox-label:contains(Description) + input.tox-textfield',
-    robotsInput : 'label.tox-label:contains(Robots) + input.tox-textfield',
-    authorInput : 'label.tox-label:contains(Author) + input.tox-textfield',
-    encodingInput : 'label.tox-label:contains(Encoding) + input.tox-textfield'
+    titleInput: 'label.tox-label:contains(Title) + input.tox-textfield',
+    keywordsInput: 'label.tox-label:contains(Keywords) + input.tox-textfield',
+    descriptionInput: 'label.tox-label:contains(Description) + input.tox-textfield',
+    robotsInput: 'label.tox-label:contains(Robots) + input.tox-textfield',
+    authorInput: 'label.tox-label:contains(Author) + input.tox-textfield',
+    encodingInput: 'label.tox-label:contains(Encoding) + input.tox-textfield'
   };
 
   const sInitialState = (editor) => Logger.t(

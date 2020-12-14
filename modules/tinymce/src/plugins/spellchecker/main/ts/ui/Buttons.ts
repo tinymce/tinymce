@@ -70,9 +70,9 @@ const register = (editor: Editor, pluginUrl: string, startedState: Cell<boolean>
 
   const splitButtonArgs: Toolbar.ToolbarSplitButtonSpec = {
     ...buttonArgs,
-    type : 'splitbutton',
-    select : (value) => value === currentLanguageState.get(),
-    fetch : (callback) => {
+    type: 'splitbutton',
+    select: (value) => value === currentLanguageState.get(),
+    fetch: (callback) => {
       const items = Tools.map(languageMenuItems, (languageItem): Menu.ChoiceMenuItemSpec => ({
         type: 'choiceitem',
         value: languageItem.data,

@@ -53,7 +53,7 @@ const create = (name: string): Outlaw => {
 
   const events: OutlawEvents = Events.create({
     shoot: Event([ 'target' ]),
-    die:   Event([])
+    die: Event([])
   });
 
   const establishment = Singleton.value<Saloon>();

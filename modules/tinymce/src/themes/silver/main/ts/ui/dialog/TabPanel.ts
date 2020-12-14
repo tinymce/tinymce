@@ -75,7 +75,7 @@ export const renderTabPanel = (spec: TabPanelSpec, backstage: UiFactoryBackstage
                 channels: Objects.wrapAll([
                   {
                     key: SendDataToSectionChannel,
-                    value:  {
+                    value: {
                       onReceive: updateDataWithForm
                     }
                   },

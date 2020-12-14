@@ -32,6 +32,7 @@
     "import/order": ["error", {
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
     }],
+    "key-spacing": [ "error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     "no-empty": "off",
     "no-shadow": "off",
     "no-underscore-dangle": "off",

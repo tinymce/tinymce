@@ -9,8 +9,8 @@ tinymce.init({
     username: '<em>username here</em>'
   },
   template_replace_values: {
-    username : 'Jack',
-    staffid : '991234'
+    username: 'Jack',
+    staffid: '991234'
   },
   templates: [
     { title: 'Some title 1', description: 'Some desc 1', content: 'My content {$username}' },

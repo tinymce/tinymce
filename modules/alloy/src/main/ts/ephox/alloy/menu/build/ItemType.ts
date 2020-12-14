@@ -22,7 +22,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
     // INVESTIGATE: If more efficient, destructure attributes out
     ...detail.domModification,
     attributes: {
-      'role':  detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
+      'role': detail.toggling.isSome() ? 'menuitemcheckbox' : 'menuitem',
       ...detail.domModification.attributes,
       'aria-haspopup': detail.hasSubmenu,
       ...(detail.hasSubmenu ? { 'aria-expanded': false } : {})

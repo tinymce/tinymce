@@ -16,21 +16,21 @@ const checkContains = (target: string) => {
 
 const browsers: PlatformInfo[] = [
   {
-    name : 'Edge',
+    name: 'Edge',
     versionRegexes: [ /.*?edge\/ ?([0-9]+)\.([0-9]+)$/ ],
     search: (uastring) => {
       return Strings.contains(uastring, 'edge/') && Strings.contains(uastring, 'chrome') && Strings.contains(uastring, 'safari') && Strings.contains(uastring, 'applewebkit');
     }
   },
   {
-    name : 'Chrome',
+    name: 'Chrome',
     versionRegexes: [ /.*?chrome\/([0-9]+)\.([0-9]+).*/, normalVersionRegex ],
     search: (uastring) => {
       return Strings.contains(uastring, 'chrome') && !Strings.contains(uastring, 'chromeframe');
     }
   },
   {
-    name : 'IE',
+    name: 'IE',
     versionRegexes: [ /.*?msie\ ?([0-9]+)\.([0-9]+).*/, /.*?rv:([0-9]+)\.([0-9]+).*/ ],
     search: (uastring) => {
       return Strings.contains(uastring, 'msie') || Strings.contains(uastring, 'trident');
@@ -38,17 +38,17 @@ const browsers: PlatformInfo[] = [
   },
   // INVESTIGATE: Is this still the Opera user agent?
   {
-    name : 'Opera',
+    name: 'Opera',
     versionRegexes: [ normalVersionRegex, /.*?opera\/([0-9]+)\.([0-9]+).*/ ],
-    search : checkContains('opera')
+    search: checkContains('opera')
   },
   {
-    name : 'Firefox',
+    name: 'Firefox',
     versionRegexes: [ /.*?firefox\/\ ?([0-9]+)\.([0-9]+).*/ ],
-    search : checkContains('firefox')
+    search: checkContains('firefox')
   },
   {
-    name : 'Safari',
+    name: 'Safari',
     versionRegexes: [ normalVersionRegex, /.*?cpu os ([0-9]+)_([0-9]+).*/ ],
     search: (uastring) => {
       return (Strings.contains(uastring, 'safari') || Strings.contains(uastring, 'mobile/')) && Strings.contains(uastring, 'applewebkit');
@@ -58,44 +58,44 @@ const browsers: PlatformInfo[] = [
 
 const oses: PlatformInfo[] = [
   {
-    name : 'Windows',
-    search : checkContains('win'),
+    name: 'Windows',
+    search: checkContains('win'),
     versionRegexes: [ /.*?windows\ nt\ ?([0-9]+)\.([0-9]+).*/ ]
   },
   {
-    name : 'iOS',
+    name: 'iOS',
     search: (uastring) => {
       return Strings.contains(uastring, 'iphone') || Strings.contains(uastring, 'ipad');
     },
     versionRegexes: [ /.*?version\/\ ?([0-9]+)\.([0-9]+).*/, /.*cpu os ([0-9]+)_([0-9]+).*/, /.*cpu iphone os ([0-9]+)_([0-9]+).*/ ]
   },
   {
-    name : 'Android',
-    search : checkContains('android'),
+    name: 'Android',
+    search: checkContains('android'),
     versionRegexes: [ /.*?android\ ?([0-9]+)\.([0-9]+).*/ ]
   },
   {
-    name : 'OSX',
-    search : checkContains('mac os x'),
+    name: 'OSX',
+    search: checkContains('mac os x'),
     versionRegexes: [ /.*?mac\ os\ x\ ?([0-9]+)_([0-9]+).*/ ]
   },
   {
-    name : 'Linux',
-    search : checkContains('linux'),
+    name: 'Linux',
+    search: checkContains('linux'),
     versionRegexes: [ ]
   },
-  { name : 'Solaris',
-    search : checkContains('sunos'),
-    versionRegexes: [ ]
-  },
-  {
-    name : 'FreeBSD',
-    search : checkContains('freebsd'),
+  { name: 'Solaris',
+    search: checkContains('sunos'),
     versionRegexes: [ ]
   },
   {
-    name : 'ChromeOS',
-    search : checkContains('cros'),
+    name: 'FreeBSD',
+    search: checkContains('freebsd'),
+    versionRegexes: [ ]
+  },
+  {
+    name: 'ChromeOS',
+    search: checkContains('cros'),
     versionRegexes: [ /.*?chrome\/([0-9]+)\.([0-9]+).*/ ]
   }
 ];

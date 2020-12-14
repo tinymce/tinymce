@@ -154,8 +154,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.DetectHeaderRowTest', (success
     ], onSuccess, onFailure);
   }, {
     plugins: 'table',
-    indent : false,
-    theme : 'silver',
+    indent: false,
+    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure );
 });

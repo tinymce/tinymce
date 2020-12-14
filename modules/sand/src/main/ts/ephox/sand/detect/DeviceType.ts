@@ -26,7 +26,7 @@ export const DeviceType = (os: OperatingSystem, browser: Browser, userAgent: str
   const isDesktop = !isPhone && !isTablet && !iOSwebview;
 
   return {
-    isiPad : Fun.constant(isiPad),
+    isiPad: Fun.constant(isiPad),
     isiPhone: Fun.constant(isiPhone),
     isTablet: Fun.constant(isTablet),
     isPhone: Fun.constant(isPhone),
