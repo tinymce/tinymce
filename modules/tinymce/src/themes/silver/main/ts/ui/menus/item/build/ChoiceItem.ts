@@ -35,7 +35,7 @@ const renderChoiceItem = (
 
   const structure = renderItemStructure({
     presets,
-    textContent:  useText ? spec.text : Optional.none(),
+    textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.icon,

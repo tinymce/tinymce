@@ -72,7 +72,7 @@ UnitTest.test('Custom Editor Schema Test', () => {
       g: new Boolean(false),
       h: new Date(),
       i: /^(?:fizz|buzz)/,
-      j: new Blob([ '<a id="a"><b id="b">hey!</b></a>' ], { type : 'text/html' }),
+      j: new Blob([ '<a id="a"><b id="b">hey!</b></a>' ], { type: 'text/html' }),
       k: [ 'text', Infinity, true, false ],
       l: { prop: 'value' },
       m: new Map([[ 'key1', 'value1' ], [ 'key2', 'value2' ]]),

@@ -227,10 +227,10 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) =>
     LegacyUnit.deepEqual(schema.getShortEndedElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
       INPUT: {}, IMG: {}, HR: {}, FRAME: {}, COL: {}, BR: {},
-      BASEFONT: {}, BASE: {}, AREA: {}, SOURCE : {}, WBR : {}, TRACK : {},
+      BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {}, WBR: {}, TRACK: {},
       embed: {}, param: {}, meta: {}, link: {}, isindex: {},
       input: {}, img: {}, hr: {}, frame: {}, col: {}, br: {},
-      basefont: {}, base: {}, area: {}, source : {}, wbr : {}, track : {}
+      basefont: {}, base: {}, area: {}, source: {}, wbr: {}, track: {}
     });
   });
 
@@ -239,14 +239,14 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) =>
     LegacyUnit.deepEqual(schema.getNonEmptyElements(), {
       EMBED: {}, PARAM: {}, META: {}, LINK: {}, ISINDEX: {},
       INPUT: {}, IMG: {}, HR: {}, FRAME: {}, COL: {}, BR: {},
-      BASEFONT: {}, BASE: {}, AREA: {}, SOURCE : {},
+      BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {},
       TD: {}, TH: {}, IFRAME: {}, VIDEO: {}, AUDIO: {}, OBJECT: {},
-      WBR: {}, TRACK : {}, SCRIPT : {}, PRE: {}, CODE: {},
+      WBR: {}, TRACK: {}, SCRIPT: {}, PRE: {}, CODE: {},
       embed: {}, param: {}, meta: {}, link: {}, isindex: {},
       input: {}, img: {}, hr: {}, frame: {}, col: {}, br: {},
-      basefont: {}, base: {}, area: {}, source : {},
+      basefont: {}, base: {}, area: {}, source: {},
       td: {}, th: {}, iframe: {}, video: {}, audio: {}, object: {},
-      wbr : {}, track : {}, script : {}, pre: {}, code: {}
+      wbr: {}, track: {}, script: {}, pre: {}, code: {}
     });
   });
 
@@ -352,51 +352,51 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) =>
   });
 
   suite.test('whitespaceElements', () => {
-    let schema = Schema({ whitespace_elements : 'pre,p' });
+    let schema = Schema({ whitespace_elements: 'pre,p' });
     ok(!!schema.getWhiteSpaceElements().pre);
     ok(!schema.getWhiteSpaceElements().span);
 
-    schema = Schema({ whitespace_elements : 'code' });
+    schema = Schema({ whitespace_elements: 'code' });
     ok(!!schema.getWhiteSpaceElements().code);
   });
 
   suite.test('selfClosingElements', () => {
-    const schema = Schema({ self_closing_elements : 'pre,p' });
+    const schema = Schema({ self_closing_elements: 'pre,p' });
     ok(!!schema.getSelfClosingElements().pre);
     ok(!!schema.getSelfClosingElements().p);
     ok(!schema.getSelfClosingElements().li);
   });
 
   suite.test('shortEndedElements', () => {
-    const schema = Schema({ short_ended_elements : 'pre,p' });
+    const schema = Schema({ short_ended_elements: 'pre,p' });
     ok(!!schema.getShortEndedElements().pre);
     ok(!!schema.getShortEndedElements().p);
     ok(!schema.getShortEndedElements().img);
   });
 
   suite.test('booleanAttributes', () => {
-    const schema = Schema({ boolean_attributes : 'href,alt' });
+    const schema = Schema({ boolean_attributes: 'href,alt' });
     ok(!!schema.getBoolAttrs().href);
     ok(!!schema.getBoolAttrs().alt);
     ok(!schema.getBoolAttrs().checked);
   });
 
   suite.test('nonEmptyElements', () => {
-    const schema = Schema({ non_empty_elements : 'pre,p' });
+    const schema = Schema({ non_empty_elements: 'pre,p' });
     ok(!!schema.getNonEmptyElements().pre);
     ok(!!schema.getNonEmptyElements().p);
     ok(!schema.getNonEmptyElements().img);
   });
 
   suite.test('blockElements', () => {
-    const schema = Schema({ block_elements : 'pre,p' });
+    const schema = Schema({ block_elements: 'pre,p' });
     ok(!!schema.getBlockElements().pre);
     ok(!!schema.getBlockElements().p);
     ok(!schema.getBlockElements().h1);
   });
 
   suite.test('isValid', () => {
-    const schema = Schema({ valid_elements : 'a[href],i[*]' });
+    const schema = Schema({ valid_elements: 'a[href],i[*]' });
 
     ok(schema.isValid('a'));
     ok(schema.isValid('a', 'href'));

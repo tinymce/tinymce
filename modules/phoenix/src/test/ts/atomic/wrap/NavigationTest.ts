@@ -93,7 +93,7 @@ UnitTest.test('NavigationTest', () => {
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, 'root');
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1');
   checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1');
-  checkFreeFallRtl({ element: '1.1.1', offset:  0 }, doc, '1.1.1');
+  checkFreeFallRtl({ element: '1.1.1', offset: 0 }, doc, '1.1.1');
   checkFreeFallRtl({ element: '1.1.2', offset: 15 }, doc, '1.1.2');
   checkFreeFallRtl({ element: '1.2.5', offset: 18 }, doc, '1.2');
   checkFreeFallRtl({ element: '1.2.1', offset: 12 }, doc, '1.2.1');
@@ -136,7 +136,7 @@ UnitTest.test('NavigationTest', () => {
 
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-root');
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1');
-  checkFreeFallRtl({ element: '3-c0', offset:  0 }, doc, '3-c0');
+  checkFreeFallRtl({ element: '3-c0', offset: 0 }, doc, '3-c0');
   checkFreeFallRtl({ element: '3-1.1', offset: 9 }, doc, '3-1.1');
 
   doc = TestUniverse(
@@ -155,12 +155,12 @@ UnitTest.test('NavigationTest', () => {
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1');
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-c1');
   checkFreeFallLtr({ element: '4-1.1', offset: 0 }, doc, '4-1.1');
-  checkFreeFallLtr({ element: '4-c2', offset:  0 }, doc, '4-c2');
+  checkFreeFallLtr({ element: '4-c2', offset: 0 }, doc, '4-c2');
 
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-root');
-  checkFreeFallRtl({ element: '4-c0', offset:  0 }, doc, '4-c0');
+  checkFreeFallRtl({ element: '4-c0', offset: 0 }, doc, '4-c0');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1');
-  checkFreeFallRtl({ element: '4-c1', offset:  0 }, doc, '4-c1');
+  checkFreeFallRtl({ element: '4-c1', offset: 0 }, doc, '4-c1');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-1.1');
   checkFreeFallRtl({ element: '4-1.1', offset: 9 }, doc, '4-c2');
 });
