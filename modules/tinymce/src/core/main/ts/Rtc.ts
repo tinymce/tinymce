@@ -6,18 +6,19 @@
  */
 
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import * as MatchFormat from './fmt/MatchFormat';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
+import { ParserArgs } from './api/html/DomParser';
 import AstNode from './api/html/Node';
 import HtmlSerializer from './api/html/Serializer';
+import Promise from './api/util/Promise';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
-import { addVisualInternal } from './view/VisualAidsImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
 import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
 import * as FilterNode from './html/FilterNode';
@@ -25,8 +26,7 @@ import { getSelectedContentInternal, GetSelectionContentArgs } from './selection
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
-import { ParserArgs } from './api/html/DomParser';
-import Promise from './api/util/Promise';
+import { addVisualInternal } from './view/VisualAidsImpl';
 
 const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 

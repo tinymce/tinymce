@@ -4,9 +4,9 @@ import { Optional, OptionalInstances } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import * as Readonly from 'tinymce/core/mode/Readonly';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as Readonly from 'tinymce/core/mode/Readonly';
 
 const tOptional = OptionalInstances.tOptional;
 

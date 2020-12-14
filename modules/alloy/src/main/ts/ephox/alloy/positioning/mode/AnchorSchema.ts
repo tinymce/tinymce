@@ -2,8 +2,8 @@ import { ValueSchema } from '@ephox/boulder';
 
 import HotspotAnchor from './HotspotAnchor';
 import MakeshiftAnchor from './MakeshiftAnchor';
-import SelectionAnchor from './SelectionAnchor';
 import NodeAnchor from './NodeAnchor';
+import SelectionAnchor from './SelectionAnchor';
 import SubmenuAnchor from './SubmenuAnchor';
 
 export default ValueSchema.choose(

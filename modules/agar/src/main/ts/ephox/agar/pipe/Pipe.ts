@@ -4,7 +4,7 @@ export type NextFn<T> = (value: T, logs: TestLogs) => void;
 export type DieFn = (err: any, logs: TestLogs) => void;
 export type RunFn<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs) => void;
 
-const callAsync = (f) => {
+const callAsync = (f: () => void) => {
   // eslint-disable-next-line @tinymce/no-unimported-promise
   typeof Promise !== 'undefined' ? Promise.resolve().then(f) : setTimeout(f, 0);
 };

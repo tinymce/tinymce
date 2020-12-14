@@ -9,8 +9,8 @@ import AddOnManager from './AddOnManager';
 import { DomQueryConstructor } from './dom/DomQuery';
 import Editor from './Editor';
 import { NotificationManagerImpl } from './NotificationManager';
-import { WindowManagerImpl } from './WindowManager';
 import { EditorUiApi } from './ui/Ui';
+import { WindowManagerImpl } from './WindowManager';
 
 export interface Theme {
   ui?: any;

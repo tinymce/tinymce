@@ -1,9 +1,9 @@
 import { Log, Pipeline, UiFinder } from '@ephox/agar';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
-import Theme from 'tinymce/themes/silver/Theme';
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asyncTest('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', (success, failure) => {
   Theme();

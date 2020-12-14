@@ -3,8 +3,8 @@ import { Arr } from '@ephox/katamari';
 import { Css, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as ResizeBehaviour from 'ephox/snooker/api/ResizeBehaviour';
 import { TableSize } from 'ephox/snooker/api/TableSize';
-import * as Deltas from 'ephox/snooker/calc/Deltas';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
+import * as Deltas from 'ephox/snooker/calc/Deltas';
 
 UnitTest.test('ResizeTest', () => {
   const resizing = ResizeBehaviour.preserveTable();

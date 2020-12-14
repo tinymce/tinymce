@@ -8,8 +8,8 @@
 import { Fun } from '@ephox/katamari';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
-import * as LineHeightCommands from '../commands/LineHeight';
 import * as IndentOutdent from '../commands/IndentOutdent';
+import * as LineHeightCommands from '../commands/LineHeight';
 import * as InsertContent from '../content/InsertContent';
 import * as NodeType from '../dom/NodeType';
 import * as InsertBr from '../newline/InsertBr';

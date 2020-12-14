@@ -33,15 +33,15 @@ interface Delay {
 
 let requestAnimationFramePromise;
 
-const requestAnimationFrame = (callback, element?) => {
-  let i, requestAnimationFrameFunc: any = window.requestAnimationFrame;
+const requestAnimationFrame = (callback: () => void, element?: HTMLElement) => {
+  let requestAnimationFrameFunc: any = window.requestAnimationFrame;
   const vendors = [ 'ms', 'moz', 'webkit' ];
 
-  const featurefill = (callback) => {
-    window.setTimeout(callback, 0);
+  const featurefill = (cb: () => void) => {
+    window.setTimeout(cb, 0);
   };
 
-  for (i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {
+  for (let i = 0; i < vendors.length && !requestAnimationFrameFunc; i++) {
     requestAnimationFrameFunc = window[vendors[i] + 'RequestAnimationFrame'];
   }
 
@@ -52,7 +52,7 @@ const requestAnimationFrame = (callback, element?) => {
   requestAnimationFrameFunc(callback, element);
 };
 
-const wrappedSetTimeout = (callback, time?) => {
+const wrappedSetTimeout = (callback: () => void, time?: number) => {
   if (typeof time !== 'number') {
     time = 0;
   }

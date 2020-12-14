@@ -120,6 +120,7 @@ export const ScrollingToolbar = (): ScrollingToolbar => {
     return Arr.map(gs, Fun.compose(ToolbarGroup.sketch, makeGroup));
   };
 
+  // eslint-disable-next-line @tinymce/prefer-fun
   const refresh = () => {
     // Toolbar.refresh is undefined
     // Toolbar.refresh(toolbar);

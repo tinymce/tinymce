@@ -11,10 +11,10 @@ import * as AlignmentButtons from './AlignmentButtons';
 import * as ColorSwatch from './color/ColorSwatch';
 import * as ComplexControls from './ComplexControls';
 import * as IndentOutdent from './IndentOutdent';
+import * as LineHeight from './LineHeight';
 import * as SimpleControls from './SimpleControls';
 import * as UndoRedo from './UndoRedo';
 import * as VisualAid from './VisualAid';
-import * as LineHeight from './LineHeight';
 
 const setup = (editor: Editor, backstage: UiFactoryBackstage) => {
   AlignmentButtons.register(editor);

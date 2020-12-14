@@ -1,7 +1,7 @@
 import { Result } from '@ephox/katamari';
 import { SugarBody, Traverse } from '@ephox/sugar';
-import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
+import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';

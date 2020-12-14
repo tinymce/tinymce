@@ -42,12 +42,12 @@ import { EditorSettings, RawEditorSettings } from './SettingsTypes';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
 import { registry } from './ui/Registry';
+import { EditorUi } from './ui/Ui';
 import EventDispatcher, { NativeEventMap } from './util/EventDispatcher';
 import I18n, { TranslatedString, Untranslated } from './util/I18n';
 import Tools from './util/Tools';
 import URI from './util/URI';
 import WindowManager from './WindowManager';
-import { EditorUi } from './ui/Ui';
 
 /**
  * This class contains the core logic for a TinyMCE editor.
@@ -838,8 +838,8 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', {format: 'html'});
    */
-  public setContent (content: string, args?: EditorContent.SetContentArgs): string;
-  public setContent (content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
+  public setContent(content: string, args?: EditorContent.SetContentArgs): string;
+  public setContent(content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
   public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
@@ -861,8 +861,8 @@ class Editor implements EditorObservable {
    * // Get content of a specific editor:
    * tinymce.get('content id').getContent()
    */
-  public getContent (args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
-  public getContent (args?: EditorContent.GetContentArgs): string;
+  public getContent(args: { format: 'tree' } & EditorContent.GetContentArgs): AstNode;
+  public getContent(args?: EditorContent.GetContentArgs): string;
   public getContent(args?: EditorContent.GetContentArgs): EditorContent.Content {
     return EditorContent.getContent(this, args);
   }

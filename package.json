@@ -38,7 +38,7 @@
     "@ephox/swag": "^4.3.0",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-prismjs": "^1.19.0",
-    "@tinymce/eslint-plugin": "^1.4.0",
+    "@tinymce/eslint-plugin": "^1.6.1",
     "awesome-typescript-loader": "^5.2.0",
     "chalk": "^4.1.0",
     "emojilib": "^2.4.0",

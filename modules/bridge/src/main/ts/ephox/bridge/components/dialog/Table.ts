@@ -1,5 +1,5 @@
-import { Result } from '@ephox/katamari';
 import { ValueSchema, FieldSchema } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
 
 export interface TableSpec {
   type: 'table';

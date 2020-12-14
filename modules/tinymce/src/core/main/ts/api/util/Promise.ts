@@ -38,7 +38,7 @@ const promise = function () {
 
   // Use polyfill for setImmediate for performance gains
   const asap = Promise.immediateFn || (typeof setImmediate === 'function' && setImmediate) ||
-    ((fn) => setTimeout(fn, 1));
+    ((fn: (...args: any[]) => void) => setTimeout(fn, 1));
 
   function handle(deferred) {
     const me = this;

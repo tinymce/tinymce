@@ -3,13 +3,13 @@ import { SugarElement } from '@ephox/sugar';
 import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowData } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
-import * as Deltas from '../calc/Deltas';
 import { Warehouse } from '../api/Warehouse';
+import * as Deltas from '../calc/Deltas';
 import * as CellUtils from '../util/CellUtils';
+import { BarPositions, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
 import * as Sizes from './Sizes';
-import { BarPositions, RowInfo } from './BarPositions';
 
 const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 

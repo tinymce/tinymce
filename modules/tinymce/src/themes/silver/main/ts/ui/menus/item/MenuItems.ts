@@ -6,13 +6,13 @@
  */
 
 import { renderAutocompleteItem } from './build/AutocompleteMenuItem';
+import { renderCardMenuItem } from './build/CardMenuItem';
 import { renderChoiceItem } from './build/ChoiceItem';
 import { renderFancyMenuItem } from './build/FancyMenuItem';
 import { renderNestedItem } from './build/NestedMenuItem';
 import { renderNormalItem } from './build/NormalMenuItem';
 import { renderSeparatorItem } from './build/SeparatorItem';
 import { renderToggleMenuItem } from './build/ToggleMenuItem';
-import { renderCardMenuItem } from './build/CardMenuItem';
 
 const choice = renderChoiceItem;
 const autocomplete = renderAutocompleteItem;

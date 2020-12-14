@@ -1,5 +1,5 @@
-import { BehaviourCellState } from '../common/BehaviourCellState';
 import * as Behaviour from '../../api/behaviour/Behaviour';
+import { BehaviourCellState } from '../common/BehaviourCellState';
 
 export interface AllowBubblingBehavior extends Behaviour.AlloyBehaviour<AllowBubblingConfigSpec, AllowBubblingConfig> {
   config: (config: AllowBubblingConfigSpec) => Behaviour.NamedConfiguredBehaviour<AllowBubblingConfigSpec, AllowBubblingConfig>;
