@@ -16,9 +16,9 @@ const description = `<h1>Editor UI keyboard navigation</h1>
 
 <p>The sections of the outer UI of the editor - the menubar, toolbar, sidebar and footer - are all keyboard navigable. As such, there are multiple ways to activate keyboard navigation:</p>
 <ul>
-  <li>Focus the menubar: Alt + F9 (Windows) or &#x2325;F9 (MacOS)</li>
-  <li>Focus the toolbar: Alt + F10 (Windows) or &#x2325;F10 (MacOS)</li>
-  <li>Focus the footer: Alt + F11 (Windows) or &#x2325;F11 (MacOS)</li>
+  <li>Focus the menubar: Alt + F9 (Windows/ChromeOS) or &#x2325;F9 (MacOS)</li>
+  <li>Focus the toolbar: Alt + F10 (Windows/ChromeOS) or &#x2325;F10 (MacOS)</li>
+  <li>Focus the footer: Alt + F11 (Windows/ChromeOS) or &#x2325;F11 (MacOS)</li>
 </ul>
 
 <p>Focusing the menubar or toolbar will start keyboard navigation at the first item in the menubar or toolbar, which will be highlighted with a gray background. Focusing the footer will start keyboard navigation at the first item in the element path, which will be highlighted with an underline. </p>
