@@ -16,7 +16,6 @@ const point = (type: string, element: SugarElement<any>, x: number, y: number): 
 
   // Adapted from https://stackoverflow.com/a/42447620/11275515
   if (typeof TouchEvent === 'function' && typeof Touch === 'function') {
-    // @ts-ignore
     const touchAction = new Touch(touch);
     const ev: TouchEvent = new TouchEvent(type, {
       cancelable: true,

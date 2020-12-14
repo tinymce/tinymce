@@ -16,6 +16,7 @@ export const isShadowRoot = (dos: RootNode): dos is SugarElement<ShadowRoot> =>
   SugarNode.isDocumentFragment(dos);
 
 const supported: boolean =
+  // eslint-disable-next-line @tinymce/no-implicit-dom-globals
   Type.isFunction(Element.prototype.attachShadow) &&
   Type.isFunction(Node.prototype.getRootNode);
 

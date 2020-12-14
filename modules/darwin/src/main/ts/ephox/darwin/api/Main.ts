@@ -1,7 +1,7 @@
+import * as CellOpSelection from '../queries/CellOpSelection';
 import { Response } from '../selection/Response';
 import { Selections } from '../selection/Selections';
 import * as SelectionTypes from '../selection/SelectionTypes';
-import * as CellOpSelection from '../queries/CellOpSelection';
 import { Ephemera } from './Ephemera';
 import * as InputHandlers from './InputHandlers';
 import { SelectionAnnotation } from './SelectionAnnotation';

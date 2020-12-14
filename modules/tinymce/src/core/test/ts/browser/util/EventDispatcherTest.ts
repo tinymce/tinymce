@@ -305,7 +305,9 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
       }
     });
 
+    // eslint-disable-next-line @tinymce/prefer-fun
     const listenerA = () => {};
+    // eslint-disable-next-line @tinymce/prefer-fun
     const listenerB = () => {};
 
     dispatcher.on('click', listenerA);

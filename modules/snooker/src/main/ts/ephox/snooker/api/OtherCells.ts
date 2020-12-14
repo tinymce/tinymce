@@ -2,9 +2,9 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
-import { Warehouse } from './Warehouse';
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
+import { Warehouse } from './Warehouse';
 
 export interface OtherCells {
   readonly upOrLeftCells: SugarElement<HTMLTableCellElement>[];

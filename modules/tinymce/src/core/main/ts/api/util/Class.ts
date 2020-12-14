@@ -50,6 +50,7 @@ interface Class {
   extend <T extends Props<A>, A extends any[] = any[]>(props: T): ExtendedClassConstructor<T, A>;
 }
 
+// eslint-disable-next-line @tinymce/prefer-fun
 const Class: Class = () => {};
 
 // Provides classical inheritance, based on code made by John Resig

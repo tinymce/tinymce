@@ -1,8 +1,8 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
-import * as Blocks from 'ephox/snooker/lookup/Blocks';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
+import * as Blocks from 'ephox/snooker/lookup/Blocks';
 
 UnitTest.test('BlocksTest', () => {
   const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);

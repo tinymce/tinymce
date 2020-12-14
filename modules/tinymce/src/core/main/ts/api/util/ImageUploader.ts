@@ -8,9 +8,9 @@
 import * as Uploader from '../../file/Uploader';
 import { UploadStatus } from '../../file/UploadStatus';
 import Editor from '../Editor';
+import { BlobInfo } from '../file/BlobCache';
 import { NotificationApi } from '../NotificationManager';
 import * as Settings from '../Settings';
-import { BlobInfo } from '../file/BlobCache';
 
 export type UploadResult = Uploader.UploadResult;
 

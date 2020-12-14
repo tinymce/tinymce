@@ -6,9 +6,9 @@ import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
 import { TableOperationResult } from '../api/TableOperations';
 import { TableSize } from '../api/TableSize';
+import { Warehouse } from '../api/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import * as Bars from '../resize/Bars';
-import { Warehouse } from '../api/Warehouse';
 import * as Transitions from './Transitions';
 
 type DetailExt = Structs.DetailExt;

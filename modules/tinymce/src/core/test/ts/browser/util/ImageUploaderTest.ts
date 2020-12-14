@@ -1,10 +1,9 @@
 import { Log, Pipeline, Chain } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, TinyLoader } from '@ephox/mcagar';
 import { Arr } from '@ephox/katamari';
-import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
-
+import { ApiChains, TinyLoader } from '@ephox/mcagar';
 import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
 
 import Theme from 'tinymce/themes/silver/Theme';
 

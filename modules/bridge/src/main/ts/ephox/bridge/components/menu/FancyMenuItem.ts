@@ -1,5 +1,5 @@
-import { Result, Fun } from '@ephox/katamari';
 import { FieldSchema, ValueSchema } from '@ephox/boulder';
+import { Result, Fun } from '@ephox/katamari';
 
 export interface FancyMenuItemSpec {
   type: 'fancymenuitem';

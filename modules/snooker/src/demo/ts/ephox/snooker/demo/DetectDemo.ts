@@ -136,6 +136,7 @@ Ready.execute(() => {
   rtlManager.on();
 
   // For firefox.
+  // eslint-disable-next-line @tinymce/prefer-fun
   Ready.execute(() => {
     // document.execCommand("enableInlineTableEditing", null, false);
     // document.execCommand("enableObjectResizing", false, "false");
