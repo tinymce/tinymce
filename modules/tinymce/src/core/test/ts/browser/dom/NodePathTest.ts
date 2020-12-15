@@ -4,7 +4,7 @@ import { LegacyUnit } from '@ephox/mcagar';
 import * as NodePath from 'tinymce/core/dom/NodePath';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
   const viewBlock = ViewBlock();
 
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, f
     viewBlock.update(html);
   };
 
-  suite.test('create', function () {
+  suite.test('create', () => {
     setupHtml('<p>a<b>12<input></b></p>');
 
     LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild), [ 0 ]);
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, f
     LegacyUnit.deepEqual(NodePath.create(getRoot(), getRoot().firstChild.lastChild.lastChild), [ 1, 1, 0 ]);
   });
 
-  suite.test('resolve', function () {
+  suite.test('resolve', () => {
     setupHtml('<p>a<b>12<input></b></p>');
 
     LegacyUnit.equalDom(NodePath.resolve(getRoot(), NodePath.create(getRoot(), getRoot().firstChild)), getRoot().firstChild);
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodePathTest', function (success, f
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

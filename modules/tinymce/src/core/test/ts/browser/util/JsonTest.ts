@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import JSON from 'tinymce/core/api/util/JSON';
 
-UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.JsonTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('serialize', function () {
+  suite.test('serialize', () => {
     LegacyUnit.equal(
       JSON.serialize({
         'arr1': [ 1, 2, 3, [ 1, 2, 3 ]],
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function (success, fail
     );
   });
 
-  suite.test('parse', function () {
+  suite.test('parse', () => {
     const parsedValue = JSON.parse('{"arr1":[1,2,3,[1,2,3]],"bool1":true,"float1":3.14,"int1":123,"null1":null,' +
       '"obj1":{"key1":"val1","key2":"val2"},"\\"obj2":{},"str1":"abc\\u00c5123","date1":"1970-01-01T00:00:00.000Z"}');
     LegacyUnit.equal(parsedValue.arr1, [ 1, 2, 3, [ 1, 2, 3 ]]);
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', function (success, fail
     LegacyUnit.equal(parsedValue.date1, '1970-01-01T00:00:00.000Z');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

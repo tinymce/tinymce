@@ -4,7 +4,7 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
 import { WordWalking } from 'ephox/robin/words/WordWalking';
 
-UnitTest.test('WordDecisionTest', function () {
+UnitTest.test('WordDecisionTest', () => {
   const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('p1', 'p', [
@@ -26,7 +26,7 @@ UnitTest.test('WordDecisionTest', function () {
   const check = function (items: string[], abort: boolean, id: string, slicer: (text: string) => Optional<[number, number]>, _currLanguage: Optional<string>) {
     const isCustomBoundary = Fun.never;
     const actual = WordDecision.decide(universe, universe.find(universe.get(), id).getOrDie(), slicer, isCustomBoundary);
-    assert.eq(items, Arr.map(actual.items, function (item) { return item.item.id; }));
+    assert.eq(items, Arr.map(actual.items, (item) => { return item.item.id; }));
     assert.eq(abort, actual.abort);
   };
 

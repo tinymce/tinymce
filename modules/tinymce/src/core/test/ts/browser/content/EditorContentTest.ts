@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
   });
   const sClearEvents = Step.sync(() => events = []);
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -122,7 +122,7 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentTest', (success, f
       Log.stepsAsStep('TBA', 'setContent html', [
         sClearEvents,
         tinyApis.sSetContent('<p>html</p>'),
-        Step.sync(function () {
+        Step.sync(() => {
           editor.setContent('<p>new html</p>');
         }),
         tinyApis.sAssertContent('<p>new html</p>'),

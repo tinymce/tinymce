@@ -20,14 +20,14 @@ const oneAll = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, el
 
 const unsafeOne = function <E, D> (universe: Universe<E, D>, look: Looker<E, D>, head: E, tail: E[]): Optional<E> {
   const start = look(universe, head);
-  return Arr.foldr(tail, function (b, a) {
+  return Arr.foldr(tail, (b, a) => {
     const current = look(universe, a);
     return commonElement(universe, b, current);
   }, start);
 };
 
 const commonElement = function <E, D> (universe: Universe<E, D>, start: Optional<E>, end: Optional<E>): Optional<E> {
-  return start.bind(function (s) {
+  return start.bind((s) => {
     return end.filter(Fun.curry(universe.eq, s));
   });
 };

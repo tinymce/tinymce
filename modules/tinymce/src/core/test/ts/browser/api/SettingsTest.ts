@@ -4,7 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import * as Settings from 'tinymce/core/api/Settings';
 
-UnitTest.test('browser.tinymce.core.api.SettingsTest', function () {
+UnitTest.test('browser.tinymce.core.api.SettingsTest', () => {
   Assertions.assertEq('Should be default id', 'tinymce', Settings.getBodyId(new Editor('id', {}, EditorManager)));
   Assertions.assertEq('Should be specified id', 'x', Settings.getBodyId(new Editor('id', { body_id: 'x' }, EditorManager)));
   Assertions.assertEq('Should be specified id for ida', 'a', Settings.getBodyId(new Editor('ida', { body_id: 'ida=a,idb=b' }, EditorManager)));

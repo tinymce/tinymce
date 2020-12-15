@@ -35,7 +35,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const getSelection = function () {
-    return WindowSelection.get(win).map(function (exactAdt) {
+    return WindowSelection.get(win).map((exactAdt) => {
       return Util.convertToRange(win, exactAdt);
     });
   };
@@ -46,7 +46,7 @@ export const WindowBridge = function (win: Window): WindowBridge {
   };
 
   const situsFromPoint = function (x: number, y: number) {
-    return WindowSelection.getAtPoint(win, x, y).map(function (exact) {
+    return WindowSelection.getAtPoint(win, x, y).map((exact) => {
       return Situs.create(exact.start, exact.soffset, exact.finish, exact.foffset);
     });
   };

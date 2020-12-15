@@ -3,15 +3,15 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import Color from 'tinymce/core/api/util/Color';
 
-UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.ColorTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('Constructor', function () {
+  suite.test('Constructor', () => {
     LegacyUnit.equal(Color().toHex(), '#000000');
     LegacyUnit.equal(Color('#faebcd').toHex(), '#faebcd');
   });
 
-  suite.test('parse method', function () {
+  suite.test('parse method', () => {
     const color = Color();
 
     LegacyUnit.equal(color.parse('#faebcd').toHex(), '#faebcd');
@@ -25,19 +25,19 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', function (success, fai
     LegacyUnit.equal(color.parse({ r: -1, g: -10, b: -20 }).toHex(), '#000000');
   });
 
-  suite.test('toRgb method', function () {
+  suite.test('toRgb method', () => {
     LegacyUnit.deepEqual(Color('#faebcd').toRgb(), { r: 250, g: 235, b: 205 });
   });
 
-  suite.test('toHsv method', function () {
+  suite.test('toHsv method', () => {
     LegacyUnit.deepEqual(Color('#804041').toHsv(), { h: 359, s: 50, v: 50 });
   });
 
-  suite.test('toHex method', function () {
+  suite.test('toHex method', () => {
     LegacyUnit.equal(Color({ r: 255, g: 254, b: 253 }).toHex(), '#fffefd');
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

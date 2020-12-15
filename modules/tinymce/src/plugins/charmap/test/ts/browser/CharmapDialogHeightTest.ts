@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
   // Move into shared library
   const cFakeEvent = function (name) {
     return Chain.control(
-      Chain.op(function (elm: SugarElement) {
+      Chain.op((elm: SugarElement) => {
         const evt = document.createEvent('HTMLEvents');
         evt.initEvent(name, true, true);
         elm.dom.dispatchEvent(evt);
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
 
   const cTabPanelHeight = Chain.binder<SugarElement, string, string>((tabpanel) => Css.getRaw(tabpanel, 'height').fold(() => Result.error('tabpanel has no height'), Result.value));
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
     const doc = SugarElement.fromDom(document);

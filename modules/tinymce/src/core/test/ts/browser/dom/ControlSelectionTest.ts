@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', (success, failure) => {
   Theme();
   const eventCounter = Cell<Record<string, number>>({ });
 

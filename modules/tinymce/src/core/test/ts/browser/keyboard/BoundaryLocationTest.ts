@@ -7,7 +7,7 @@ import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', (success, failure) => {
   const ZWSP = Zwsp.ZWSP;
   const viewBlock = ViewBlock();
 
@@ -51,7 +51,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const sTestValidLocation = function (html, elementPath, offset, expectedLocationName, expectedInline) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = createViewElement(html);
       const location = createLocation(elm, elementPath, offset);
       Assertions.assertEq('Should be a valid location: ' + html, true, location.isSome());
@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const sTestInvalidLocation = function (html, elementPath, offset) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = createViewElement(html);
       const location = createLocation(elm, elementPath, offset);
       Assertions.assertEq('Should not be a valid location: ' + html, true, location.isNone());
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const sTestFindLocation = function (forward, html, elementPath, offset, expectedLocationName, expectedInline) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
       const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
@@ -81,7 +81,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
   };
 
   const sTestFindLocationInvalid = function (forward, html, elementPath, offset) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = createViewElement(html);
       const position = createPosition(elm, elementPath, offset);
       const location = BoundaryLocation.findLocation(forward, isInlineTarget, elm.dom, position);
@@ -228,7 +228,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryLocationTest', functio
     sTestNextLocationsBetweenInlines,
     sTestNextLocationsBetweenBlocks,
     sTestNextZwspLocations
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

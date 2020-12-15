@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     return editor.getContent();
   };
 
-  suite.test('mceInsertContent - p inside text of p', function (editor) {
+  suite.test('mceInsertContent - p inside text of p', (editor) => {
     editor.setContent('<p>1234</p>');
     editor.focus();
     let rng = editor.dom.createRng();
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent before HR', function (editor) {
+  suite.test('mceInsertContent before HR', (editor) => {
     editor.setContent('<hr>');
     editor.focus();
     const rng = editor.dom.createRng();
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<p>x</p><hr />');
   });
 
-  suite.test('mceInsertContent HR at end of H1', function (editor) {
+  suite.test('mceInsertContent HR at end of H1', (editor) => {
     editor.setContent('<h1>abc</h1>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
@@ -76,7 +76,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<h1>abc</h1><hr /><h1>\u00a0</h1>');
   });
 
-  suite.test('mceInsertContent HR at end of H1 with P sibling', function (editor) {
+  suite.test('mceInsertContent HR at end of H1 with P sibling', (editor) => {
     editor.setContent('<h1>abc</h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
@@ -85,7 +85,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<h1>abc</h1><hr /><p>def</p>');
   });
 
-  suite.test('mceInsertContent HR at end of H1 with inline elements with P sibling', function (editor) {
+  suite.test('mceInsertContent HR at end of H1 with inline elements with P sibling', (editor) => {
     editor.setContent('<h1><strong>abc</strong></h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'strong', 3);
     editor.execCommand('mceInsertContent', false, '<hr>');
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<h1><strong>abc</strong></h1><hr /><p>def</p>');
   });
 
-  suite.test('mceInsertContent empty block', function (editor) {
+  suite.test('mceInsertContent empty block', (editor) => {
     editor.setContent('<h1>abc</h1>');
     LegacyUnit.setSelection(editor, 'h1', 1);
     editor.execCommand('mceInsertContent', false, '<p></p>');
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<h1>a</h1><p>\u00a0</p><h1>bc</h1>');
   });
 
-  suite.test('mceInsertContent table at end of H1 with P sibling', function (editor) {
+  suite.test('mceInsertContent table at end of H1 with P sibling', (editor) => {
     editor.setContent('<h1>abc</h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<table><tr><td></td></tr></table>');
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(getContent(editor), '<h1>abc</h1><table><tbody><tr><td>\u00a0</td></tr></tbody></table><p>def</p>');
   });
 
-  suite.test('mceInsertContent - p inside whole p', function (editor) {
+  suite.test('mceInsertContent - p inside whole p', (editor) => {
     let rng;
 
     editor.setContent('<p>1234</p>');
@@ -130,7 +130,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - pre in text of pre', function (editor) {
+  suite.test('mceInsertContent - pre in text of pre', (editor) => {
     let rng;
 
     editor.setContent('<pre>1234</pre>');
@@ -149,7 +149,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - h1 in text of h1', function (editor) {
+  suite.test('mceInsertContent - h1 in text of h1', (editor) => {
     let rng;
 
     editor.setContent('<h1>1234</h1>');
@@ -168,7 +168,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - li inside li', function (editor) {
+  suite.test('mceInsertContent - li inside li', (editor) => {
     let rng;
 
     editor.setContent('<ul><li>1234</li></ul>');
@@ -187,7 +187,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - p inside empty editor', function (editor) {
+  suite.test('mceInsertContent - p inside empty editor', (editor) => {
     editor.setContent('');
     editor.execCommand('mceInsertContent', false, '<p>abc</p>');
     LegacyUnit.equal(getContent(editor), '<p>abc</p>');
@@ -200,7 +200,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - text inside empty p', function (editor) {
+  suite.test('mceInsertContent - text inside empty p', (editor) => {
     editor.getBody().innerHTML = '<p></p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('mceInsertContent', false, 'abc');
@@ -217,7 +217,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal((rng.startContainer as HTMLElement).innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - text inside empty p with br caret node', function (editor) {
+  suite.test('mceInsertContent - text inside empty p with br caret node', (editor) => {
     let rng;
 
     editor.getBody().innerHTML = '<p><br></p>';
@@ -236,7 +236,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.startContainer.innerHTML, 'abc');
   });
 
-  suite.test('mceInsertContent - image inside p', function (editor) {
+  suite.test('mceInsertContent - image inside p', (editor) => {
     let rng;
 
     editor.setContent('<p>1</p>');
@@ -254,7 +254,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.endOffset, 1);
   });
 
-  suite.test('mceInsertContent - legacy content', function (editor) {
+  suite.test('mceInsertContent - legacy content', (editor) => {
     // Convert legacy content
     editor.setContent('<p>1</p>');
     const rng = editor.dom.createRng();
@@ -268,7 +268,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     );
   });
 
-  suite.test('mceInsertContent - hr', function (editor) {
+  suite.test('mceInsertContent - hr', (editor) => {
     let rng;
 
     editor.setContent('<p>123</p>');
@@ -287,7 +287,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(rng.endOffset, 0);
   });
 
-  suite.test('mceInsertContent - forced root block', function (editor) {
+  suite.test('mceInsertContent - forced root block', (editor) => {
     // Forced root block
     editor.getBody().innerHTML = '';
     editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
@@ -295,7 +295,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<strong>123</strong></p><!-- a -->');
   });
 
-  suite.test('mceInsertContent - mixed inline content inside td', function (editor) {
+  suite.test('mceInsertContent - mixed inline content inside td', (editor) => {
     // Forced root block
     editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
     LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
@@ -303,7 +303,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
   });
 
-  suite.test('mceInsertContent - invalid insertion with spans on page', function (editor) {
+  suite.test('mceInsertContent - invalid insertion with spans on page', (editor) => {
     const startingContent = '<p>123 testing <em>span later in document</em></p>',
       insertedContent = '<ul><li>u</li><li>l</li></ul>';
     editor.setContent(startingContent);
@@ -316,104 +316,104 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentCommandTest', (suc
     LegacyUnit.equal(editor.getContent(), insertedContent + startingContent);
   });
 
-  suite.test('mceInsertContent - text with space before at start of block', function (editor) {
+  suite.test('mceInsertContent - text with space before at start of block', (editor) => {
     editor.getBody().innerHTML = '<p>a</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('mceInsertContent', false, ' b');
     LegacyUnit.equal(editor.getContent(), '<p>\u00a0ba</p>');
   });
 
-  suite.test('mceInsertContent - text with space after at end of block', function (editor) {
+  suite.test('mceInsertContent - text with space after at end of block', (editor) => {
     editor.getBody().innerHTML = '<p>a</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('mceInsertContent', false, 'b ');
     LegacyUnit.equal(editor.getContent(), '<p>ab\u00a0</p>');
   });
 
-  suite.test('mceInsertContent - text with space before/after at middle of block', function (editor) {
+  suite.test('mceInsertContent - text with space before/after at middle of block', (editor) => {
     editor.getBody().innerHTML = '<p>ac</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('mceInsertContent', false, ' b ');
     LegacyUnit.equal(editor.getContent(), '<p>a b c</p>');
   });
 
-  suite.test('mceInsertContent - inline element with space before/after at middle of block', function (editor) {
+  suite.test('mceInsertContent - inline element with space before/after at middle of block', (editor) => {
     editor.getBody().innerHTML = '<p>ac</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('mceInsertContent', false, ' <em>b</em> ');
     LegacyUnit.equal(editor.getContent(), '<p>a <em>b</em> c</p>');
   });
 
-  suite.test('mceInsertContent - block element with space before/after at middle of block', function (editor) {
+  suite.test('mceInsertContent - block element with space before/after at middle of block', (editor) => {
     editor.getBody().innerHTML = '<p>ac</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('mceInsertContent', false, ' <p>b</p> ');
     LegacyUnit.equal(editor.getContent(), '<p>a</p><p>b</p><p>c</p>');
   });
 
-  suite.test('mceInsertContent - strong in strong', function (editor) {
+  suite.test('mceInsertContent - strong in strong', (editor) => {
     editor.getBody().innerHTML = '<strong>ac</strong>';
     LegacyUnit.setSelection(editor, 'strong', 1);
     editor.execCommand('mceInsertContent', false, { content: '<strong>b</strong>', merge: true });
     LegacyUnit.equal(editor.getContent(), '<p><strong>abc</strong></p>');
   });
 
-  suite.test('mceInsertContent - span in span same style color', function (editor) {
+  suite.test('mceInsertContent - span in span same style color', (editor) => {
     editor.getBody().innerHTML = '<span style="color:#ff0000">ac</strong>';
     LegacyUnit.setSelection(editor, 'span', 1);
     editor.execCommand('mceInsertContent', false, { content: '<span style="color:#ff0000">b</span>', merge: true });
     LegacyUnit.equal(editor.getContent(), '<p><span style="color: #ff0000;">abc</span></p>');
   });
 
-  suite.test('mceInsertContent - span in span different style color', function (editor) {
+  suite.test('mceInsertContent - span in span different style color', (editor) => {
     editor.getBody().innerHTML = '<span style="color:#ff0000">ac</strong>';
     LegacyUnit.setSelection(editor, 'span', 1);
     editor.execCommand('mceInsertContent', false, { content: '<span style="color:#00ff00">b</span>', merge: true });
     LegacyUnit.equal(editor.getContent(), '<p><span style="color: #ff0000;">a<span style="color: #00ff00;">b</span>c</span></p>');
   });
 
-  suite.test('mceInsertContent - select with option element', function (editor) {
+  suite.test('mceInsertContent - select with option element', (editor) => {
     editor.getBody().innerHTML = '<p>1</p>';
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('mceInsertContent', false, '2<select><option selected="selected">3</option></select>');
     LegacyUnit.equal(editor.getContent(), '<p>12<select><option selected="selected">3</option></select></p>');
   });
 
-  suite.test('mceInsertContent - insert P in span style element #7090', function (editor) {
+  suite.test('mceInsertContent - insert P in span style element #7090', (editor) => {
     editor.setContent('<p><span style="color: red">1</span></p><p>3</p>');
     LegacyUnit.setSelection(editor, 'span', 1);
     editor.execCommand('mceInsertContent', false, '<p>2</p>');
     LegacyUnit.equal(editor.getContent(), '<p><span style="color: red;">1</span></p><p>2</p><p>3</p>');
   });
 
-  suite.test('mceInsertContent - insert char at char surrounded by spaces', function (editor) {
+  suite.test('mceInsertContent - insert char at char surrounded by spaces', (editor) => {
     editor.setContent('<p>a b c</p>');
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertContent', false, 'X');
     LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a X c</p>"');
   });
 
-  suite.test('mceInsertRawHTML - insert p at start', function (editor) {
+  suite.test('mceInsertRawHTML - insert p at start', (editor) => {
     editor.setContent('<p>abc</p>');
     editor.execCommand('mceInsertRawHTML', false, '<p>Hello world!</p>');
     LegacyUnit.equal(editor.getContent(), '<p>Hello world!</p><p>abc</p>');
   });
 
-  suite.test('mceInsertRawHTML - insert link inside p', function (editor) {
+  suite.test('mceInsertRawHTML - insert link inside p', (editor) => {
     editor.setContent('<p>abc</p>');
     LegacyUnit.setSelection(editor, 'p', 3);
     editor.execCommand('mceInsertRawHTML', false, ' <a href="#">Hello world!</a>');
     LegacyUnit.equal(editor.getContent(), '<p>abc <a href="#">Hello world!</a></p>');
   });
 
-  suite.test('mceInsertRawHTML - insert char at char surrounded by spaces', function (editor) {
+  suite.test('mceInsertRawHTML - insert char at char surrounded by spaces', (editor) => {
     editor.setContent('<p>a b c</p>');
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertRawHTML', false, '<strong>X</strong>');
     LegacyUnit.equal(JSON.serialize(editor.getContent()), '"<p>a <strong>X</strong> c</p>"');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

@@ -48,7 +48,7 @@ const createCompleteLevel = function (content: string): UndoLevel {
 
 const createFromEditor = function (editor: Editor): UndoLevel {
   const fragments = Fragments.read(editor.getBody());
-  const trimmedFragments = Arr.bind(fragments, function (html) {
+  const trimmedFragments = Arr.bind(fragments, (html) => {
     const trimmed = TrimHtml.trimInternal(editor.serializer, html);
     return trimmed.length > 0 ? [ trimmed ] : [];
   });

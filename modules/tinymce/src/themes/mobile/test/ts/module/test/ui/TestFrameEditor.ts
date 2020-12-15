@@ -33,7 +33,7 @@ export default function () {
   const editor = {
     selection: {
       getStart() {
-        return WindowSelection.getExact(frame.dom.contentWindow).map(function (sel) {
+        return WindowSelection.getExact(frame.dom.contentWindow).map((sel) => {
           return sel.start.dom;
         }).getOr(null);
       },
@@ -54,7 +54,7 @@ export default function () {
     focus() {
       Focus.focus(frame);
       const win = frame.dom.contentWindow;
-      WindowSelection.getExact(win).orThunk(function () {
+      WindowSelection.getExact(win).orThunk(() => {
         const fbody = SugarElement.fromDom(frame.dom.contentWindow.document.body);
         const elem = Cursors.calculateOne(fbody, [ 0 ]);
         WindowSelection.setExact(win, elem, 0, elem, 0);

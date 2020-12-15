@@ -319,7 +319,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
     NamedChain.read('editor', cMergeResizeSplitAssertWidth('resized after merge and then split', mergeResizeSplit)),
 
     NamedChain.read('editor', Editor.cRemove)
-  ]), function () {
+  ]), () => {
     success();
   }, failure, TestLogs.init());
 });

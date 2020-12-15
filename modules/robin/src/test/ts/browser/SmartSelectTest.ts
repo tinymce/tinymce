@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Compare, Hierarchy, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import * as DomSmartSelect from 'ephox/robin/api/dom/DomSmartSelect';
 
-UnitTest.test('SmartSelectTest', function () {
+UnitTest.test('SmartSelectTest', () => {
   const editor = SugarElement.fromTag('div');
 
   /*
@@ -63,9 +63,9 @@ UnitTest.test('SmartSelectTest', function () {
   const check = function (expected: Expected, path: number[], offset: number) {
     const start = Hierarchy.follow(editor, path).getOrDie('Looking for start of smart select');
     const actual = DomSmartSelect.word(start, offset);
-    actual.fold(function () {
+    actual.fold(() => {
       throw new Error('Expected to select word: ' + expected.word);
-    }, function (act) {
+    }, (act) => {
       const expStart = Hierarchy.follow(editor, expected.start.element).getOrDie('Could not find expected start');
       const expFinish = Hierarchy.follow(editor, expected.finish.element).getOrDie('Could not find expected finish');
       assert.eq(true, Compare.eq(expStart, act.startContainer));

@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success,
     editor.setMode(state ? 'readonly' : 'design');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

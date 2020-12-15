@@ -4,10 +4,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('relativePosition', function () {
+  suite.test('relativePosition', () => {
     const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
         [ 'br-bl', 50, 40, 20, 30 ]
       ];
 
-    Tools.each(tests, function (item: any[]) {
+    Tools.each(tests, (item: any[]) => {
       LegacyUnit.deepEqual(
         Rect.relativePosition(sourceRect, targetRect, item[0]),
         Rect.create(item[1], item[2], item[3], item[4]),
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
     });
   });
 
-  suite.test('findBestRelativePosition', function () {
+  suite.test('findBestRelativePosition', () => {
     const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
@@ -44,7 +44,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
         [[ 'tl-bl', 'tr-tl', 'bl-tl' ], 10, 20, 40, 100, 'bl-tl' ]
       ];
 
-    Tools.each(tests, function (item: any[]) {
+    Tools.each(tests, (item: any[]) => {
       LegacyUnit.equal(
         Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
         item[5],
@@ -53,11 +53,11 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
     });
   });
 
-  suite.test('inflate', function () {
+  suite.test('inflate', () => {
     LegacyUnit.deepEqual(Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10), Rect.create(5, 10, 40, 60));
   });
 
-  suite.test('intersect', function () {
+  suite.test('intersect', () => {
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { x: 10, y: 20, w: 30, h: 40 });
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { x: 15, y: 25, w: 25, h: 35 });
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { x: 15, y: 25, w: 5, h: 5 });
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
     LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { x: 10, y: 60, w: 30, h: 0 });
   });
 
-  suite.test('clamp', function () {
+  suite.test('clamp', () => {
     LegacyUnit.deepEqual(
       Rect.clamp(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)),
       Rect.create(10, 20, 30, 40)
@@ -85,15 +85,15 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', function (success, fail
     );
   });
 
-  suite.test('create', function () {
+  suite.test('create', () => {
     LegacyUnit.deepEqual(Rect.create(10, 20, 30, 40), { x: 10, y: 20, w: 30, h: 40 });
   });
 
-  suite.test('fromClientRect', function () {
+  suite.test('fromClientRect', () => {
     LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

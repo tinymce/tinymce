@@ -3,7 +3,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Styling from 'ephox/boss/mutant/Styling';
 
-UnitTest.test('StylingTest', function () {
+UnitTest.test('StylingTest', () => {
   const item = Gene('item', 'item', [], { border: '10' });
 
   Assert.eq('eq', { border: '10' }, item.css);

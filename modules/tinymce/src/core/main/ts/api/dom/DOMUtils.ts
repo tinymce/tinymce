@@ -301,7 +301,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const events = settings.ownEvents ? new EventUtils() : EventUtils.Event;
   const blockElementsMap = schema.getBlockElements();
 
-  const $ = DomQuery.overrideDefaults(function () {
+  const $ = DomQuery.overrideDefaults(() => {
     return {
       context: doc,
       element: self.getRoot()
@@ -407,7 +407,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       const clone = doc.createElement(node.nodeName);
 
       // Copy attribs
-      each(getAttribs(node), function (attr: Attr) {
+      each(getAttribs(node), (attr: Attr) => {
         setAttrib(clone, attr.nodeName, getAttrib(node, attr.nodeName));
       });
 
@@ -455,7 +455,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
 
     // Camelcase it, if needed
-    name = name.replace(/-(\D)/g, function (a, b) {
+    name = name.replace(/-(\D)/g, (a, b) => {
       return b.toUpperCase();
     });
 
@@ -630,7 +630,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     if (Tools.isArray(node) && (node.length || node.length === 0)) {
       result = [];
 
-      each(node, function (elm, i) {
+      each(node, (elm, i) => {
         if (elm) {
           result.push(func.call(scope, typeof elm === 'string' ? get(elm) : elm, i));
         }
@@ -645,8 +645,8 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const setAttribs = (elm: string | Node | Node[], attrs: Record<string, string | boolean | number>) => {
-    $$(elm).each(function (i, node) {
-      each(attrs, function (value, name) {
+    $$(elm).each((i, node) => {
+      each(attrs, (value, name) => {
         setAttrib(node, name, value);
       });
     });
@@ -656,7 +656,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     const $elm = $$(elm);
 
     if (isIE) {
-      $elm.each(function (i, target: Element) {
+      $elm.each((i, target: Element) => {
         if ((target as any).canHaveHTML === false) {
           return;
         }
@@ -684,7 +684,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const add = (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement =>
-    run(parentElm, function (parentElm) {
+    run(parentElm, (parentElm) => {
       const newElm = typeof name === 'string' ? doc.createElement(name) : name;
       setAttribs(newElm, attrs);
 
@@ -769,7 +769,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     return $node.length > 1 ? $node.toArray() : $node[0];
   };
 
-  const removeAllAttribs = (e: RunArguments<Element>) => run(e, function (e) {
+  const removeAllAttribs = (e: RunArguments<Element>) => run(e, (e) => {
     let i;
     const attrs = e.attributes;
     for (i = attrs.length - 1; i >= 0; i--) {
@@ -883,7 +883,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const insertAfter = <T extends Node>(node: RunArguments<T>, reference: string | Node): false | T => {
     const referenceNode = get(reference);
 
-    return run(node, function (node) {
+    return run(node, (node) => {
       const parent = referenceNode.parentNode;
       const nextSibling = referenceNode.nextSibling;
 
@@ -897,13 +897,13 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     });
   };
 
-  const replace = <T extends Node>(newElm: Node, oldElm: RunArguments<T>, keepChildren?: boolean) => run<T, T>(oldElm, function (oldElm) {
+  const replace = <T extends Node>(newElm: Node, oldElm: RunArguments<T>, keepChildren?: boolean) => run<T, T>(oldElm, (oldElm) => {
     if (Tools.is(oldElm, 'array')) {
       newElm = newElm.cloneNode(true);
     }
 
     if (keepChildren) {
-      each(grep(oldElm.childNodes), function (node) {
+      each(grep(oldElm.childNodes), (node) => {
         newElm.appendChild(node);
       });
     }
@@ -919,7 +919,7 @@ function DOMUtils(doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       newElm = create(name);
 
       // Copy attribs to new block
-      each(getAttribs(elm), function (attrNode: Attr) {
+      each(getAttribs(elm), (attrNode: Attr) => {
         setAttrib(newElm, attrNode.nodeName, getAttrib(elm, attrNode.nodeName));
       });
 

@@ -6,7 +6,7 @@ import { Arr } from '@ephox/katamari';
 const splits = function (value: string, indices: number[]): string[] {
   if (indices.length === 0) { return [ value ]; }
 
-  const divisions = Arr.foldl(indices, function (acc, x) {
+  const divisions = Arr.foldl(indices, (acc, x) => {
     if (x === 0) { return acc; }
 
     const part = value.substring(acc.prev, x);

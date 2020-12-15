@@ -66,7 +66,7 @@ const canInsertIntoEditableRoot = function (editor: Editor) {
 
 const match = function (predicates, action) {
   return function (editor: Editor, shiftKey) {
-    const isMatch = Arr.foldl(predicates, function (res, p) {
+    const isMatch = Arr.foldl(predicates, (res, p) => {
       return res && p(editor, shiftKey);
     }, true);
 

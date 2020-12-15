@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, fai
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     editor.setContent(
       '<p><a name="Difference"></a>Differences anchor us</p>'

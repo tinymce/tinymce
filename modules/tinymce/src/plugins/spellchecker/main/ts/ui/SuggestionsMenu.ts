@@ -20,7 +20,7 @@ const getSuggestions = (editor: Editor, pluginUrl: string, lastSuggestionsState:
   const items = [];
   const suggestions = lastSuggestionsState.get().suggestions[word];
 
-  Tools.each(suggestions, function (suggestion) {
+  Tools.each(suggestions, (suggestion) => {
     items.push({
       text: suggestion,
       onAction: () => {

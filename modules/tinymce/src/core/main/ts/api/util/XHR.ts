@@ -34,7 +34,7 @@ interface XHR extends Observable<XHREventMap> {
 }
 
 /**
- * This API allows you to send XMLHTTPRequests cross browser.
+ * This API allows you to send XMLHTTPRequests cross browser. Extends the Observable class.
  * @class tinymce.util.XHR
  * @mixes tinymce.util.Observable
  * @static
@@ -273,7 +273,7 @@ const XHR: XHR = {
     }
 
     if (settings.requestheaders) {
-      Tools.each(settings.requestheaders, function (header) {
+      Tools.each(settings.requestheaders, (header) => {
         xhr.setRequestHeader(header.key, header.value);
       });
     }

@@ -33,12 +33,12 @@ export interface SchemaSettings {
   whitespace_elements?: string;
 }
 
-export type Attribute = {
+export interface Attribute {
   required?: boolean;
   defaultValue?: string;
   forcedValue?: string;
   validValues?: any;
-};
+}
 
 export interface DefaultAttribute {
   name: string;
@@ -53,7 +53,7 @@ export interface AttributePattern {
   validValues?: Record<string, string>;
 }
 
-export type ElementRule = {
+export interface ElementRule {
   attributes: Record<string, Attribute>;
   attributesDefault?: DefaultAttribute[];
   attributesForced?: DefaultAttribute[];
@@ -63,7 +63,7 @@ export type ElementRule = {
   paddEmpty?: boolean;
   removeEmpty?: boolean;
   removeEmptyAttrs?: boolean;
-};
+}
 
 export interface SchemaElement extends ElementRule {
   outputName?: string;
@@ -71,8 +71,8 @@ export interface SchemaElement extends ElementRule {
   pattern?: RegExp;
 }
 
-export type SchemaMap = { [name: string]: {} };
-export type SchemaRegExpMap = { [name: string]: RegExp };
+export interface SchemaMap { [name: string]: {} }
+export interface SchemaRegExpMap { [name: string]: RegExp }
 
 interface Schema {
   children: Record<string, {}>;
@@ -230,7 +230,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
     html4PhrasingContent = 'acronym applet basefont big font strike tt';
     phrasingContent = [ phrasingContent, html4PhrasingContent ].join(' ');
 
-    each(split(html4PhrasingContent), function (name) {
+    each(split(html4PhrasingContent), (name) => {
       add(name, '', phrasingContent);
     });
 
@@ -240,7 +240,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
     // Flow content elements from the HTML5 spec (block+inline)
     flowContent = [ blockContent, phrasingContent ].join(' ');
 
-    each(split(html4BlockContent), function (name) {
+    each(split(html4BlockContent), (name) => {
       add(name, '', flowContent);
     });
   }
@@ -379,7 +379,7 @@ const compileSchema = function (type: SchemaType): Record<string, any> {
 
   // Delete children of the same name from it's parent
   // For example: form can't have a child of the name form
-  each(split('a form meter progress dfn'), function (name) {
+  each(split('a form meter progress dfn'), (name) => {
     if (schema[name]) {
       delete schema[name].children[name];
     }
@@ -419,7 +419,7 @@ const compileElementMap = function (value: string | Record<string, string>, mode
     }
 
     // Convert styles into a rule list
-    each(value, function (value, key) {
+    each(value, (value, key) => {
       styles[key] = styles[key.toUpperCase()] = mode === 'map' ? makeMap(value, /[, ]/) : explode(value, /[, ]/);
     });
   }
@@ -490,7 +490,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font strike u var cite ' +
     'dfn code mark q sup sub samp');
 
-  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), function (name) {
+  each((settings.special || 'script noscript iframe noframes noembed title style textarea xmp').split(' '), (name) => {
     specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
   });
 
@@ -654,7 +654,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
     addValidElements(validElements);
 
-    each(schemaItems, function (element, name) {
+    each(schemaItems, (element, name) => {
       children[name] = element.children;
     });
   };
@@ -667,7 +667,7 @@ function Schema(settings?: SchemaSettings): Schema {
       // Flush cached items since we are altering the default maps
       mapCache.text_block_elements = mapCache.block_elements = null;
 
-      each(split(customElements, ','), function (rule) {
+      each(split(customElements, ','), (rule) => {
         const matches = customElementRegExp.exec(rule),
           inline = matches[1] === '~',
           cloneName = inline ? 'span' : 'div',
@@ -694,7 +694,7 @@ function Schema(settings?: SchemaSettings): Schema {
         }
 
         // Add custom elements at span/div positions
-        each(children, function (element, elmName) {
+        each(children, (element, elmName) => {
           if (element[cloneName]) {
             children[elmName] = element = extend({}, children[elmName]);
             element[name] = element[cloneName];
@@ -713,7 +713,7 @@ function Schema(settings?: SchemaSettings): Schema {
     mapCache[settings.schema] = null;
 
     if (validChildren) {
-      each(split(validChildren, ','), function (rule) {
+      each(split(validChildren, ','), (rule) => {
         const matches = childRuleRegExp.exec(rule);
         let parent, prefix;
 
@@ -729,7 +729,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
           parent = children[matches[2]];
 
-          each(split(matches[3], '|'), function (child) {
+          each(split(matches[3], '|'), (child) => {
             if (prefix === '-') {
               delete parent[child];
             } else {
@@ -762,7 +762,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   if (!settings.valid_elements) {
     // No valid elements defined then clone the elements from the schema spec
-    each(schemaItems, function (element, name) {
+    each(schemaItems, (element, name) => {
       elements[name] = {
         attributes: element.attributes,
         attributesOrder: element.attributesOrder
@@ -773,7 +773,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
     // Switch these on HTML4
     if (settings.schema !== 'html5') {
-      each(split('strong/b em/i'), function (item) {
+      each(split('strong/b em/i'), (item) => {
         const items = split(item, '/');
         elements[items[1]].outputName = items[0];
       });
@@ -783,19 +783,19 @@ function Schema(settings?: SchemaSettings): Schema {
     // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
     // Remove these if they are empty by default
-    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), function (name) {
+    each(split('ol ul sub sup blockquote span font a table tbody strong em b i'), (name) => {
       if (elements[name]) {
         elements[name].removeEmpty = true;
       }
     });
 
     // Padd these by default
-    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), function (name) {
+    each(split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li'), (name) => {
       elements[name].paddEmpty = true;
     });
 
     // Remove these if they have no attributes
-    each(split('span'), function (name) {
+    each(split('span'), (name) => {
       elements[name].removeEmptyAttrs = true;
     });
 
@@ -829,7 +829,7 @@ function Schema(settings?: SchemaSettings): Schema {
     legend: 'fieldset',
     area: 'map',
     param: 'video audio object'
-  }, function (parents, item) {
+  }, (parents, item) => {
     if (elements[item]) {
       elements[item].parentsRequired = split(parents);
     }
@@ -837,7 +837,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   // Delete invalid elements
   if (settings.invalid_elements) {
-    each(explode(settings.invalid_elements), function (item) {
+    each(explode(settings.invalid_elements), (item) => {
       if (elements[item]) {
         delete elements[item];
       }
@@ -901,7 +901,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getBlockElements = (): SchemaMap => blockElementsMap;
 
   /**
-   * Returns a map with text block elements. Such as: p,h1-h6,div,address
+   * Returns a map with text block elements. For example: <code>&#60;p&#62;</code>, <code>&#60;h1&#62;</code> to <code>&#60;h6&#62;</code>, <code>&#60;div&#62;</code> or <code>&#60;address&#62;</code>.
    *
    * @method getTextBlockElements
    * @return {Object} Name/value lookup map for block elements.
@@ -909,7 +909,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getTextBlockElements = (): SchemaMap => textBlockElementsMap;
 
   /**
-   * Returns a map of inline text format nodes for example strong/span or ins.
+   * Returns a map of inline text format nodes. For example: <code>&#60;strong&#62;</code>, <code>&#60;span&#62;</code> or <code>&#60;ins&#62;</code>.
    *
    * @method getTextInlineElements
    * @return {Object} Name/value lookup map for text format elements.
@@ -917,7 +917,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getTextInlineElements = (): SchemaMap => textInlineElementsMap;
 
   /**
-   * Returns a map with short ended elements such as BR or IMG.
+   * Returns a map with short ended elements. For example: <code>&#60;br&#62;</code> or <code>&#60;img&#62;</code>.
    *
    * @method getShortEndedElements
    * @return {Object} Name/value lookup map for short ended elements.
@@ -925,7 +925,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getShortEndedElements = (): SchemaMap => shortEndedElementsMap;
 
   /**
-   * Returns a map with self closing tags such as <li>.
+   * Returns a map with self closing tags. For example: <code>&#60;li&#62;</code>.
    *
    * @method getSelfClosingElements
    * @return {Object} Name/value lookup map for self closing tags elements.
@@ -934,7 +934,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   /**
    * Returns a map with elements that should be treated as contents regardless if it has text
-   * content in them or not such as TD, VIDEO or IMG.
+   * content in them or not. For example: <code>&#60;td&#62;</code>, <code>&#60;video&#62;</code> or <code>&#60;img&#62;</code>.
    *
    * @method getNonEmptyElements
    * @return {Object} Name/value lookup map for non empty elements.
@@ -943,7 +943,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   /**
    * Returns a map with elements that the caret should be moved in front of after enter is
-   * pressed
+   * pressed.
    *
    * @method getMoveCaretBeforeOnEnterElements
    * @return {Object} Name/value lookup map for elements to place the caret in front of.
@@ -951,7 +951,7 @@ function Schema(settings?: SchemaSettings): Schema {
   const getMoveCaretBeforeOnEnterElements = (): SchemaMap => moveCaretBeforeOnEnterElementsMap;
 
   /**
-   * Returns a map with elements where white space is to be preserved like PRE or SCRIPT.
+   * Returns a map with elements where white space is to be preserved. For example: <code>&#60;pre&#62;</code> or <code>&#60;script&#62;</code>.
    *
    * @method getWhiteSpaceElements
    * @return {Object} Name/value lookup map for white space elements.
@@ -1041,7 +1041,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   /**
    * Parses a valid elements string and adds it to the schema. The valid elements
-   * format is for example "element[attr=default|otherattr]".
+   * format is for example <code>element[attr=default|otherattr]</code>.
    * Existing rules will be replaced with the ones specified, so this extends the schema.
    *
    * @method addValidElements
@@ -1050,7 +1050,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   /**
    * Parses a valid elements string and sets it to the schema. The valid elements
-   * format is for example "element[attr=default|otherattr]".
+   * format is for example <code>element[attr=default|otherattr]</code>.
    * Existing rules will be replaced with the ones specified, so this extends the schema.
    *
    * @method setValidElements
@@ -1058,7 +1058,7 @@ function Schema(settings?: SchemaSettings): Schema {
    */
 
   /**
-   * Adds custom non HTML elements to the schema.
+   * Adds custom non-HTML elements to the schema.
    *
    * @method addCustomElements
    * @param {String} custom_elements Comma separated list of custom elements to add.
@@ -1066,7 +1066,7 @@ function Schema(settings?: SchemaSettings): Schema {
 
   /**
    * Parses a valid children string and adds them to the schema structure. The valid children
-   * format is for example: "element[child1|child2]".
+   * format is for example <code>element[child1|child2]</code>.
    *
    * @method addValidChildren
    * @param {String} valid_children Valid children elements string to parse

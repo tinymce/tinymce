@@ -58,7 +58,7 @@ const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBo
 
 const restoreStyles = function (dom: DOMUtils) {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
-  Arr.each(clobberedEls, function (element) {
+  Arr.each(clobberedEls, (element) => {
     const restore = Attribute.get(element, attr);
     if (restore !== 'no-styles') {
       Css.setAll(element, dom.parseStyle(restore));

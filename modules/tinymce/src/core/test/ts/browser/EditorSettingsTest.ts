@@ -9,7 +9,7 @@ import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import * as EditorSettings from 'tinymce/core/EditorSettings';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', (success, failure) => {
   const detection = PlatformDetection.detect();
   const isTouch = detection.deviceType.isTouch();
   const isPhone = detection.deviceType.isPhone();
@@ -38,7 +38,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
     menubar: false
   };
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     Pipeline.async({}, [
       Logger.t('default desktop settings', Step.sync(() => {
         const defaultSettings = EditorSettings.getDefaultSettings({}, 'id', 'documentBaseUrl', false, editor);
@@ -101,7 +101,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       })),
 
       Logger.t('getEditorSettings tests', GeneralSteps.sequence([
-        Logger.t('Override defaults plugins', Step.sync(function () {
+        Logger.t('Override defaults plugins', Step.sync(() => {
           const settings = EditorSettings.getEditorSettings(
             editor,
             'id',
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should have the default setting', 'a', settings.defaultSetting);
         })),
 
-        Logger.t('Override defaults with forced_plugins using arrays', Step.sync(function () {
+        Logger.t('Override defaults with forced_plugins using arrays', Step.sync(() => {
           const defaultSettings = {
             forced_plugins: [ 'a', 'b' ]
           };
@@ -139,7 +139,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
         })),
 
-        Logger.t('Override defaults with forced_plugins using strings', Step.sync(function () {
+        Logger.t('Override defaults with forced_plugins using strings', Step.sync(() => {
           const defaultSettings = {
             forced_plugins: 'a b'
           };
@@ -153,7 +153,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
         })),
 
-        Logger.t('Override defaults with forced_plugins using mixed types and spaces', Step.sync(function () {
+        Logger.t('Override defaults with forced_plugins using mixed types and spaces', Step.sync(() => {
           const defaultSettings = {
             forced_plugins: '  a   b'
           };
@@ -167,7 +167,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be both forced and user plugins', isPhone ? 'a b' : 'a b c d e', settings.plugins);
         })),
 
-        Logger.t('Override defaults with just default forced_plugins', Step.sync(function () {
+        Logger.t('Override defaults with just default forced_plugins', Step.sync(() => {
           const defaultSettings = {
             forced_plugins: [ 'a', 'b' ]
           };
@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be just default plugins', 'a b', settings.plugins);
         })),
 
-        Logger.t('Override defaults with just user plugins', Step.sync(function () {
+        Logger.t('Override defaults with just user plugins', Step.sync(() => {
           const defaultSettings = {
           };
 
@@ -193,7 +193,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be just user plugins', isPhone ? '' : 'a b', settings.plugins);
         })),
 
-        Logger.t('Override defaults with forced_plugins should not be possible to override', Step.sync(function () {
+        Logger.t('Override defaults with forced_plugins should not be possible to override', Step.sync(() => {
           const defaultSettings = {
             forced_plugins: [ 'a', 'b' ]
           };
@@ -208,7 +208,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be just forced and user plugins', isPhone ? 'a b' : 'a b c d', settings.plugins);
         })),
 
-        Logger.t('Getters for various setting types', Step.sync(function () {
+        Logger.t('Getters for various setting types', Step.sync(() => {
           const settings = EditorSettings.getEditorSettings(
             {} as Editor,
             'id',
@@ -243,7 +243,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           Assertions.assertEq('Should be undefined for existing bool setting', undefined, EditorSettings.getParam(fakeEditor, 'boolTrue', undefined, 'string'));
         })),
 
-        Logger.t('Mobile override', Step.sync(function () {
+        Logger.t('Mobile override', Step.sync(() => {
           const settings = EditorSettings.getEditorSettings(
             {} as Editor,
             'id',
@@ -270,7 +270,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
       ])),
 
       Logger.t('combineSettings tests', GeneralSteps.sequence([
-        Logger.t('Merged settings (desktop)', Step.sync(function () {
+        Logger.t('Merged settings (desktop)', Step.sync(() => {
           Assertions.assertEq(
             'Should have validate, forced and empty plugins in the merged settings',
             { a: 1, b: 2, c: 3, validate: true, external_plugins: {}, plugins: '' },
@@ -278,7 +278,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override settings (desktop)', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override settings (desktop)', Step.sync(() => {
           Assertions.assertEq(
             'Should have plugins merged with forced plugins',
             { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
@@ -286,7 +286,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override settings (mobile)', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override settings (mobile)', Step.sync(() => {
           Assertions.assertEq(
             'Should be have plugins merged with forced plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
@@ -294,7 +294,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (desktop)', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (desktop)', Step.sync(() => {
           Assertions.assertEq(
             'Should not have plugins merged with mobile plugins',
             { validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a b' },
@@ -302,7 +302,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(() => {
           Assertions.assertEq(
             'Should have forced_plugins merged with mobile plugins but only whitelisted user plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists', theme: 'mobile', toolbar_sticky: true },
@@ -310,7 +310,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override settings with user mobile settings (mobile)', Step.sync(() => {
           Assertions.assertEq(
             'Should not merge forced_plugins with mobile plugins when theme is not mobile',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, forced_plugins: [ 'a' ], plugins: 'a lists custom' },
@@ -318,7 +318,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings forced_plugins in default override forced_plugins in user settings', Step.sync(function () {
+        Logger.t('Merged settings forced_plugins in default override forced_plugins in user settings', Step.sync(() => {
           Assertions.assertEq(
             'Should not have user forced plugins',
             { validate: true, external_plugins: {}, forced_plugins: [ 'b' ], plugins: 'a' },
@@ -326,7 +326,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings when theme is mobile, on a mobile device', Step.sync(function () {
+        Logger.t('Merged settings when theme is mobile, on a mobile device', Step.sync(() => {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins ',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
@@ -334,7 +334,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device', Step.sync(function () {
+        Logger.t('Merged settings when mobile.plugins is undefined, on a mobile device', Step.sync(() => {
           Assertions.assertEq(
             'Should use settings.plugins when mobile theme is not set',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists b autolink', theme: 'silver' },
@@ -342,7 +342,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings when mobile.plugins is undefined, legacy mobile theme and on a mobile device', Step.sync(function () {
+        Logger.t('Merged settings when mobile.plugins is undefined, legacy mobile theme and on a mobile device', Step.sync(() => {
           Assertions.assertEq(
             'Should fallback to filtered white listed. settings.plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
@@ -350,7 +350,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings with empty mobile.plugins="" on mobile', Step.sync(function () {
+        Logger.t('Merged settings with empty mobile.plugins="" on mobile', Step.sync(() => {
           Assertions.assertEq(
             'Should not have any plugins when mobile.plugins is explicitly empty',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: '' },
@@ -358,7 +358,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings with defined mobile.plugins', Step.sync(function () {
+        Logger.t('Merged settings with defined mobile.plugins', Step.sync(() => {
           Assertions.assertEq(
             'Should allow all plugins',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink foo bar' },
@@ -366,7 +366,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings with defined mobile.plugins and legacy mobile theme', Step.sync(function () {
+        Logger.t('Merged settings with defined mobile.plugins and legacy mobile theme', Step.sync(() => {
           Assertions.assertEq(
             'Should fallback to filtered white listed',
             { ...expectedPhoneDefaultSettings, validate: true, external_plugins: {}, plugins: 'lists autolink', theme: 'mobile' },
@@ -374,7 +374,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings with mobile.theme silver and mobile.plugins', Step.sync(function () {
+        Logger.t('Merged settings with mobile.theme silver and mobile.plugins', Step.sync(() => {
           Assertions.assertEq(
             'Should allow all mobile plugin',
             { ...expectedPhoneDefaultSettings, validate: true, theme: 'silver', external_plugins: {}, plugins: 'lists autolink foo bar' },
@@ -382,7 +382,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
           );
         })),
 
-        Logger.t('Merged settings with mobile.theme silver and mobile.plugins on Desktop', Step.sync(function () {
+        Logger.t('Merged settings with mobile.theme silver and mobile.plugins on Desktop', Step.sync(() => {
           Assertions.assertEq(
             'Should respect the desktop settings',
             { validate: true, theme: 'silver', external_plugins: {}, plugins: 'aa bb cc' },
@@ -395,7 +395,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         }))
       ])),
 
-      Logger.t('getParam hash (legacy)', Step.sync(function () {
+      Logger.t('getParam hash (legacy)', Step.sync(() => {
         const editor = new Editor('id', {
           hash1: 'a,b,c',
           hash2: 'a',
@@ -411,7 +411,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorSettingsTest', function (success,
         Assertions.assertEq('Should be expected object', { a: 'b', c: 'd' }, EditorSettings.getParam(editor, 'hash5', {}, 'hash'));
         Assertions.assertEq('Should be expected default object', { b: 2 }, EditorSettings.getParam(editor, 'hash_undefined', { b: 2 }, 'hash'));
       })),
-      Logger.t('getParam primary types', Step.sync(function () {
+      Logger.t('getParam primary types', Step.sync(() => {
         const editor = new Editor('id', {
           bool: true,
           str: 'a',

@@ -30,6 +30,8 @@ interface ControlSelection {
 
 type ResizeHandle = [ number, number, number, number ] & { elm?: Element };
 
+// Note: Need to use a type here, as types are iterable whereas interfaces are not
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type ResizeHandles = {
   ne: ResizeHandle;
   nw: ResizeHandle;
@@ -436,7 +438,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
 
     // Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
-    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (img) {
+    each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), (img) => {
       img.removeAttribute(elementSelectionAttr);
     });
 
@@ -478,14 +480,14 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  editor.on('init', function () {
+  editor.on('init', () => {
     disableGeckoResize();
 
     // Sniff sniff, hard to feature detect this stuff
     if (Env.browser.isIE() || Env.browser.isEdge()) {
       // Needs to be mousedown for drag/drop to work on IE 11
       // Needs to be click on Edge to properly select images
-      editor.on('mousedown click', function (e) {
+      editor.on('mousedown click', (e) => {
         const target = e.target, nodeName = target.nodeName;
 
         if (!resizeStarted && /^(TABLE|IMG|HR)$/.test(nodeName) && !isWithinContentEditableFalse(target)) {
@@ -526,7 +528,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       editor.on('remove', () => dom.unbind(rootElement, 'mscontrolselect', handleMSControlSelect));
     }
 
-    const throttledUpdateResizeRect = Delay.throttle(function (e) {
+    const throttledUpdateResizeRect = Delay.throttle((e) => {
       if (!editor.composing) {
         updateResizeRect(e);
       }
@@ -535,7 +537,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     editor.on('nodechange ResizeEditor ResizeWindow ResizeContent drop FullscreenStateChanged', throttledUpdateResizeRect);
 
     // Update resize rect while typing in a table
-    editor.on('keyup compositionend', function (e) {
+    editor.on('keyup compositionend', (e) => {
       // Don't update the resize rect while composing since it blows away the IME see: #2710
       if (selectedElm && selectedElm.nodeName === 'TABLE') {
         throttledUpdateResizeRect(e);

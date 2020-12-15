@@ -11,12 +11,12 @@ UnitTest.asynctest(
     Theme();
     VisualBlocksPlugin();
 
-    TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
       const tinyUi = TinyUi(editor);
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, Log.steps('TBA', 'VisualBlocks: Assert visual blocks are not present, click on the visual blocks button and assert they are present, click on the button again and assert they are not present', [
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
             classes: [
               arr.not('mce-visualblocks')
@@ -24,7 +24,7 @@ UnitTest.asynctest(
           });
         })),
         tinyUi.sClickOnToolbar('click visualblocks button', 'button'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
             classes: [
               arr.has('mce-visualblocks')
@@ -32,7 +32,7 @@ UnitTest.asynctest(
           });
         })),
         tinyUi.sClickOnToolbar('click visualblocks button', 'button'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str, arr) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
             classes: [
               arr.not('mce-visualblocks')

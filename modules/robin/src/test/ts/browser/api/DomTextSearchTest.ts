@@ -7,7 +7,7 @@ import { Compare, Html, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 import * as DomTextSearch from 'ephox/robin/api/dom/DomTextSearch';
 import { TextSeekerOutcome, TextSeekerPhaseConstructor } from 'ephox/robin/textdata/TextSeeker';
 
-UnitTest.test('DomTextSearchTest', function () {
+UnitTest.test('DomTextSearchTest', () => {
   const wordbreaker = function () {
     return new RegExp(Pattern.wordbreak(), 'i');
   };
@@ -20,11 +20,11 @@ UnitTest.test('DomTextSearchTest', function () {
   };
 
   const checkInfo = function (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement, expectedOffset: number) {
-    result.fold(function () {
+    result.fold(() => {
       Assert.fail('Unexpected abort');
-    }, function () {
+    }, () => {
       Assert.fail('Unexpected edge');
-    }, function (info) {
+    }, (info) => {
       const isSame = Compare.eq(info.element, expectedElement);
       Assert.eq('eq', true, isSame);
       Assert.eq('eq', info.offset, expectedOffset);
@@ -32,19 +32,19 @@ UnitTest.test('DomTextSearchTest', function () {
   };
 
   const checkEdge = function (result: TextSeekerOutcome<SugarElement>, expectedElement: SugarElement) {
-    result.fold(function () {
+    result.fold(() => {
       Assert.fail('Unexpected abort');
-    }, function (edge) {
+    }, (edge) => {
       const isSame = Compare.eq(edge, expectedElement);
       Assert.eq('eq', true, isSame);
-    }, function () {
+    }, () => {
       Assert.fail('Unexpected info');
     });
   };
   const checkAbort = function (result: TextSeekerOutcome<SugarElement>) {
-    result.fold(Fun.noop, function () {
+    result.fold(Fun.noop, () => {
       Assert.fail('Unexpected edge');
-    }, function () {
+    }, () => {
       Assert.fail('Unexpected info found');
     });
   };

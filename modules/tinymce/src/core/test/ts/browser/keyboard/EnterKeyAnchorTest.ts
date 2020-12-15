@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
         sSetup(tinyApis, '<p><a href="#">' + Zwsp.ZWSP + 'a</a></p>', [ 0, 0, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -75,7 +75,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
         sSetup(tinyApis, '<p><a href="#">a' + Zwsp.ZWSP + '</a></p>', [ 0, 0, 0 ], 2),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -116,7 +116,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
         sSetup(tinyApis, '<p>a<a href="#">' + Zwsp.ZWSP + 'b</a>c</p>', [ 0, 1, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -160,7 +160,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
         sSetup(tinyApis, '<p>a<a href="#">b' + Zwsp.ZWSP + '</a>c</p>', [ 0, 1, 0 ], 1),
         sEnterKey(tinyActions),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -191,7 +191,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyAnchorTest', (success,
     );
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

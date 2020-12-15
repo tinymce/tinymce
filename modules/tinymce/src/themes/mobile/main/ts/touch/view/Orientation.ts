@@ -43,7 +43,7 @@ const onChange = function (outerWindow, listeners) {
     const orientation = get(outerWindow);
     listeners.onChange(orientation);
 
-    onAdjustment(function () {
+    onAdjustment(() => {
       // We don't care about whether there was a resize or not.
       listeners.onReady(orientation);
     });
@@ -57,7 +57,7 @@ const onChange = function (outerWindow, listeners) {
 
     const flag = outerWindow.innerHeight;
     let insurance = 0;
-    poller = Delay.setInterval(function () {
+    poller = Delay.setInterval(() => {
       if (flag !== outerWindow.innerHeight) {
         Delay.clearInterval(poller);
         f(Optional.some(outerWindow.innerHeight));

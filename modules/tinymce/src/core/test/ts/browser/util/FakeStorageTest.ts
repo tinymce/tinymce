@@ -8,17 +8,17 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
   const suite = LegacyUnit.createSuite();
   const LocalStorage = FakeStorage.create();
 
-  const teardown = Step.sync(function () {
+  const teardown = Step.sync(() => {
     LocalStorage.clear();
   });
 
   const appendTeardown = function (steps) {
-    return Arr.bind(steps, function (step) {
+    return Arr.bind(steps, (step) => {
       return [ step, teardown ];
     });
   };
 
-  suite.test('setItem', function () {
+  suite.test('setItem', () => {
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.getItem('a'), '1');
     LocalStorage.setItem('a', '2');
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
     LegacyUnit.equal(LocalStorage.getItem('a'), new Date(0).toString());
   });
 
-  suite.test('getItem', function () {
+  suite.test('getItem', () => {
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.getItem('a'), '1');
     LocalStorage.setItem('a', '0');
@@ -41,39 +41,39 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
     LegacyUnit.equal(LocalStorage.getItem('b'), null);
   });
 
-  suite.test('removeItem', function () {
+  suite.test('removeItem', () => {
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.getItem('a'), '1');
     LocalStorage.removeItem('a');
     LegacyUnit.equal(LocalStorage.getItem('a'), null);
   });
 
-  suite.test('key', function () {
+  suite.test('key', () => {
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.key(0), 'a');
     LegacyUnit.equal(LocalStorage.length, 1);
   });
 
-  suite.test('length', function () {
+  suite.test('length', () => {
     LegacyUnit.equal(LocalStorage.length, 0);
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.length, 1);
   });
 
-  suite.test('clear', function () {
+  suite.test('clear', () => {
     LegacyUnit.equal(LocalStorage.length, 0);
     LocalStorage.setItem('a', '1');
     LegacyUnit.equal(LocalStorage.length, 1);
   });
 
-  suite.test('setItem key and value with commas', function () {
+  suite.test('setItem key and value with commas', () => {
     LocalStorage.setItem('a,1', '1,2');
     LocalStorage.setItem('b,2', '2,3');
     LegacyUnit.equal(LocalStorage.getItem('a,1'), '1,2');
     LegacyUnit.equal(LocalStorage.getItem('b,2'), '2,3');
   });
 
-  suite.test('setItem with two large values', function () {
+  suite.test('setItem with two large values', () => {
     let data = '';
 
     for (let i = 0; i < 1024; i++) {
@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
     LegacyUnit.equal(LocalStorage.getItem('b').length, 1024);
   });
 
-  suite.test('setItem with two large keys', function () {
+  suite.test('setItem with two large keys', () => {
     let key = '';
 
     for (let i = 0; i < 1024; i++) {
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.core.util.LocalStorageTest', (success, failu
 
   LocalStorage.clear();
   const steps = appendTeardown(suite.toSteps({}));
-  Pipeline.async({}, steps, function () {
+  Pipeline.async({}, steps, () => {
     success();
   }, failure);
 });

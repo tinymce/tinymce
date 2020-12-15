@@ -20,7 +20,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     }
   });
 
-  const shouldFail = (label: string, conf, asserter: (err: Error) => void) => Step.async(function (next, die) {
+  const shouldFail = (label: string, conf, asserter: (err: Error) => void) => Step.async((next, die) => {
     try {
       windowManager.open(conf, {}, Fun.noop);
     } catch (err) {
@@ -207,7 +207,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
   const sWindowDataTest = Logger.t(
     'Initial Data test',
     GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         const conf: Dialog.DialogSpec<any> = {
           title: 'test',
           body: {
@@ -296,7 +296,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     sTestMinRequiredConfigWithoutDragging,
     sWindowDataTest
 
-  ], function () {
+  ], () => {
     helpers.destroy();
     success();
   }, failure);

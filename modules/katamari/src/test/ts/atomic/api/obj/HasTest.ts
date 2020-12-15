@@ -9,5 +9,5 @@ UnitTest.test('HasTest', () => {
   Assert.eq('eq', false, Obj.has(withoutObjProto, 'b'));
 
   Assert.eq('eq', true, Obj.has({ a: 1 }, 'a'));
-  Assert.eq('eq', false, Obj.has(<any> { a: 1 }, 'b'));
+  Assert.eq('eq', false, Obj.has({ a: 1 } as Record<string, number>, 'b'));
 });

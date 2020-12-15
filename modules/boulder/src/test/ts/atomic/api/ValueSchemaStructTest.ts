@@ -3,7 +3,7 @@ import * as FieldPresence from 'ephox/boulder/api/FieldPresence';
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
-UnitTest.test('ValueSchemaStuct Test', function () {
+UnitTest.test('ValueSchemaStuct Test', () => {
   const actualVal = ValueSchema.asStructOrDie('test.struct.val', ValueSchema.anyValue(), 10);
   assert.eq(10, actualVal);
 

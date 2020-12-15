@@ -14,7 +14,7 @@ export default function (doAction) {
   );
 
   const start = function (value) {
-    const future = LazyValue.nu(function (callback) {
+    const future = LazyValue.nu((callback) => {
       return doAction(value).get(callback);
     });
 
@@ -24,7 +24,7 @@ export default function (doAction) {
 
   // Idle will fire g once the current action is complete.
   const idle = function (g) {
-    action.get().get(function () {
+    action.get().get(() => {
       g();
     });
   };

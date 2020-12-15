@@ -32,7 +32,7 @@ const choose = <T extends WeightedItem>(candidates: T[]) => {
       total: newTotal,
       list: rest.list.concat([ merged ])
     };
-  }, { list: <(T & AccWeightItem)[]> [], total: 0 });
+  }, { list: [] as Array<T & AccWeightItem>, total: 0 });
 
   return weighted(result.list, result.total);
 };

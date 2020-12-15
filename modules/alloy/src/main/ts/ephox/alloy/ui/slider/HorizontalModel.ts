@@ -75,9 +75,7 @@ const handleMovement = (direction: number) => (spectrum: AlloyComponent, detail:
 // get x offset from event
 const getValueFromEvent = (simulatedEvent: NativeSimulatedEvent): Optional<number> => {
   const pos = ModelCommon.getEventSource(simulatedEvent);
-  return pos.map(function (p) {
-    return p.left;
-  });
+  return pos.map((p) => p.left);
 };
 
 // find the x offset of a given value from the model

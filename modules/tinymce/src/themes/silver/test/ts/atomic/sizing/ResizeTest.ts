@@ -22,7 +22,7 @@ const mockEditor = (containerHeight, contentAreaHeight) => {
   } as Editor;
 };
 
-UnitTest.asynctest('Editor resizing tests', function (success, failure) {
+UnitTest.asynctest('Editor resizing tests', (success, failure) => {
   const makeCappedSizeTest = (label, originalSize, delta, minSize, maxSize, expected) => Logger.t(label, Step.sync(() => {
     const actual = Utils.calcCappedSize(originalSize + delta, Optional.some(minSize), Optional.some(maxSize));
     Assertions.assertEq('Editor size should match expected', expected, actual);
@@ -63,7 +63,7 @@ UnitTest.asynctest('Editor resizing tests', function (success, failure) {
   Pipeline.async({}, [
     cappedSizeTests,
     getDimensionsTests
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

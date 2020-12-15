@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
   TabfocusPlugin();
 
   const sAddInputs = function (editor) {
-    return Logger.t('Add inputs', Step.sync(function () {
+    return Logger.t('Add inputs', Step.sync(() => {
       const container = editor.getContainer();
       const input1 = document.createElement('input');
       input1.id = 'tempinput1';
@@ -20,13 +20,13 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
     }));
   };
 
-  const sRemoveInputs = Logger.t('Remove inputs', Step.sync(function () {
+  const sRemoveInputs = Logger.t('Remove inputs', Step.sync(() => {
     const input1 = document.getElementById('tempinput1');
 
     input1.parentNode.removeChild(input1);
   }));
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyActions = TinyActions(editor);
     const tinyApis = TinyApis(editor);
 
@@ -34,12 +34,12 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
       Log.steps('TBA', 'TabFocus: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', [
         sAddInputs(editor),
         tinyApis.sFocus(),
-        Step.sync(function () {
+        Step.sync(() => {
           Assert.eq('should be same', 'IFRAME', document.activeElement.nodeName);
         }),
         tinyActions.sContentKeystroke(Keys.tab(), {}),
         Waiter.sTryUntil('wait for focus',
-          Step.sync(function () {
+          Step.sync(() => {
             const input = document.getElementById('tempinput1');
             Assert.eq('should be same', input.outerHTML, document.activeElement.outerHTML);
           })),

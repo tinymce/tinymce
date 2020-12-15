@@ -23,7 +23,7 @@ const isParentListSelected = function (parentList, selectedBlocks) {
 };
 
 const findSubLists = function (parentList) {
-  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), function (elm: Node) {
+  return Tools.grep(parentList.querySelectorAll('ol,ul,dl'), (elm: Node) => {
     return NodeType.isListNode(elm);
   });
 };
@@ -35,14 +35,14 @@ const getSelectedSubLists = function (editor) {
   if (isParentListSelected(parentList, selectedBlocks)) {
     return findSubLists(parentList);
   } else {
-    return Tools.grep(selectedBlocks, function (elm: Node) {
+    return Tools.grep(selectedBlocks, (elm: Node) => {
       return NodeType.isListNode(elm) && parentList !== elm;
     });
   }
 };
 
 const findParentListItemsNodes = function (editor, elms) {
-  const listItemsElms = Tools.map(elms, function (elm) {
+  const listItemsElms = Tools.map(elms, (elm) => {
     const parentLi = editor.dom.getParent(elm, 'li,dd,dt', getClosestListRootElm(editor, elm));
 
     return parentLi ? parentLi : elm;
@@ -53,7 +53,7 @@ const findParentListItemsNodes = function (editor, elms) {
 
 const getSelectedListItems = function (editor) {
   const selectedBlocks = editor.selection.getSelectedBlocks();
-  return Tools.grep(findParentListItemsNodes(editor, selectedBlocks), function (block) {
+  return Tools.grep(findParentListItemsNodes(editor, selectedBlocks), (block) => {
     return NodeType.isListItemNode(block);
   });
 };

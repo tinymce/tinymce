@@ -1,9 +1,9 @@
 import { Num, Optional } from '@ephox/katamari';
 
-export type WrapArrNavigationOutcome = {
+export interface WrapArrNavigationOutcome {
   readonly row: number;
   readonly column: number;
-};
+}
 export type ArrNavigationFunc<A> = (values: A[], index: number, numRows: number, numCols: number) => Optional<A>;
 
 const withGrid = <A>(values: A[], index: number, numCols: number, f: (oldRow: number, oldColumn: number) => Optional<WrapArrNavigationOutcome>): Optional<A> => {

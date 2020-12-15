@@ -10,7 +10,7 @@ import * as Dialog from '../ui/Dialog';
 import * as Utils from '../util/Utils';
 
 const register = function (editor: Editor) {
-  editor.addCommand('codesample', function () {
+  editor.addCommand('codesample', () => {
     const node = editor.selection.getNode();
     if (editor.selection.isCollapsed() || Utils.isCodeSample(node)) {
       Dialog.open(editor);

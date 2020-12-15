@@ -16,7 +16,7 @@ interface TestEvents {
   };
 }
 
-UnitTest.test('Events', function () {
+UnitTest.test('Events', () => {
   (function () {
     const events: TestEvents = Events.create({
       myEvent: Event([ 'name' ])
@@ -56,7 +56,7 @@ UnitTest.test('Events', function () {
     });
 
     assert.throwsError(
-      function () { events.registry.emptyEvent.bind(undefined as any); },
+      () => { events.registry.emptyEvent.bind(undefined as any); },
       'Event bind error: undefined handler'
     );
   })();
@@ -71,7 +71,7 @@ UnitTest.test('Events', function () {
     });
 
     assert.throws(
-      function () {
+      () => {
         try {
           eb.trigger.quack('hay', 'bee', 'quee');
         } catch (ex) {
@@ -81,7 +81,7 @@ UnitTest.test('Events', function () {
       'Cannot trigger a source event.'
     );
 
-    eb.registry.quack.bind(function (evt) {
+    eb.registry.quack.bind((evt) => {
       assert.eq('ay', evt.a);
       assert.eq('bee', evt.b);
       assert.eq('sea', evt.c);
@@ -99,7 +99,7 @@ UnitTest.test('Events', function () {
       quack: SourceEvent([ 'a', 'b', 'c' ], ea.registry.chook)
     });
 
-    eb.registry.quack.bind(function (evt) {
+    eb.registry.quack.bind((evt) => {
       assert.eq('ay', evt.a);
       assert.eq('bee', evt.b);
       assert.eq('sea', evt.c);

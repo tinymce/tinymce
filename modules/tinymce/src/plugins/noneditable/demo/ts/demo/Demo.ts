@@ -1,12 +1,12 @@
 declare let tinymce: any;
 
 const button = document.querySelector('button.clicky');
-button.addEventListener('click', function () {
+button.addEventListener('click', () => {
   tinymce.activeEditor.insertContent(content);
 });
 const content = '<span class="mceNonEditable">[NONEDITABLE]</span>';
 const button2 = document.querySelector('button.boldy');
-button2.addEventListener('click', function () {
+button2.addEventListener('click', () => {
   tinymce.activeEditor.execCommand('bold');
 });
 

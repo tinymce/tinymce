@@ -13,7 +13,7 @@ const isValue = function (obj) {
 };
 
 const traverse = function (json, path) {
-  const value = path.reduce(function (result, key) {
+  const value = path.reduce((result, key) => {
     return isValue(result) ? result[key] : undefined;
   }, json);
 
@@ -21,7 +21,7 @@ const traverse = function (json, path) {
 };
 
 const requestUrlAsBlob = function (url: string, headers: Record<string, string>, withCredentials: boolean) {
-  return new Promise<{status: number; blob: Blob}>(function (resolve) {
+  return new Promise<{status: number; blob: Blob}>((resolve) => {
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
@@ -37,7 +37,7 @@ const requestUrlAsBlob = function (url: string, headers: Record<string, string>,
 
     xhr.withCredentials = withCredentials;
 
-    Tools.each(headers, function (value, key) {
+    Tools.each(headers, (value, key) => {
       xhr.setRequestHeader(key, value);
     });
 
@@ -47,7 +47,7 @@ const requestUrlAsBlob = function (url: string, headers: Record<string, string>,
 };
 
 const readBlob = function (blob) {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     const fr = new FileReader();
 
     fr.onload = function (e) {

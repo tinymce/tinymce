@@ -9,13 +9,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cReadAction = function (forward, cursorPath, cursorOffset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
       const rng = document.createRange();
       rng.setStart(container.dom, cursorOffset);
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertRemoveElementAction = function (elementPath) {
-    return Chain.op(function (actionOption: Optional<any>) {
+    return Chain.op((actionOption: Optional<any>) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertMoveToElementAction = function (elementPath) {
-    return Chain.op(function (actionOption: Optional<any>) {
+    return Chain.op((actionOption: Optional<any>) => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
   };
 
   const cAssertMoveToPositionAction = function (elementPath, offset) {
-    return Chain.op(function (actionOption: Optional<any>) {
+    return Chain.op((actionOption: Optional<any>) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
       const action = actionOption.getOrDie();
       Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     });
   };
 
-  const cAssertActionNone = Chain.op(function (actionOption: Optional<any>) {
+  const cAssertActionNone = Chain.op((actionOption: Optional<any>) => {
     Assertions.assertEq('Action value should be none', true, actionOption.isNone());
   });
 
@@ -300,7 +300,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
         cAssertActionNone
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

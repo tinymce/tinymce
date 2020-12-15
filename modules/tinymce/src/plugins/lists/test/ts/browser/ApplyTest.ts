@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>'
     );
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single empty P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single empty P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p><br></p>'
     );
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to multiple Ps', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to multiple Ps', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL list to single P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL list to single P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>'
     );
@@ -73,7 +73,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL list to single empty P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL list to single empty P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p><br></p>'
     );
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL list to multiple Ps', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL list to multiple Ps', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL to UL list', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL to UL list', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL list with collapsed selection',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ul>' +
         '<li>a</li>' +
@@ -156,7 +156,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     }
   );
 
-  suite.test('TestCase-TBA: Lists: Apply UL to OL list', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL to OL list', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -179,7 +179,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL to OL list collapsed selection', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL to OL list collapsed selection', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -202,7 +202,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL to P and merge with adjacent lists', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL to P and merge with adjacent lists', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -227,7 +227,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL to OL and merge with adjacent lists', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL to OL and merge with adjacent lists', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -252,7 +252,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL to P and merge with adjacent lists', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL to P and merge with adjacent lists', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>a</li>' +
@@ -277,7 +277,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL to UL and merge with adjacent lists', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL to UL and merge with adjacent lists', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ol>' +
       '<li>1a</li>' +
@@ -309,7 +309,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL and DO not merge with adjacent lists because styles are different (exec has style)',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol>' +
         '<li>a</li>' +
@@ -339,7 +339,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to P and DO not merge with adjacent lists because styles are different (exec has style)',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol>' +
         '<li>a</li>' +
@@ -369,7 +369,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL and DO not merge with adjacent lists because styles are different (original has style)',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol style="list-style-type: upper-roman;">' +
         '<li>a</li>' +
@@ -399,7 +399,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL should merge with adjacent lists because styles are the same (both have roman)',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol style="list-style-type: upper-roman;">' +
         '<li>a</li>' +
@@ -427,7 +427,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL should merge with above list because styles are the same (both have lower-roman), but not below list',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol style="list-style-type: lower-roman;">' +
         '<li>a</li>' +
@@ -457,7 +457,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL should merge with below lists because styles are the same (both have roman), but not above list',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol style="list-style-type: upper-roman;">' +
         '<li>a</li>' +
@@ -487,7 +487,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply OL to UL and DO not merge with adjacent lists because classes are different',
-    function (editor) {
+    (editor) => {
       editor.getBody().innerHTML = LegacyUnit.trimBrs(
         '<ol class="a">' +
         '<li>a</li>' +
@@ -515,7 +515,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     }
   );
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single text line', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single text line', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -532,7 +532,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single text line with BR', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single text line with BR', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -549,7 +549,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to multiple lines separated by BR', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to multiple lines separated by BR', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -576,7 +576,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
 
   suite.test(
     'Apply UL list to multiple lines separated by BR and with trailing BR',
-    function (editor) {
+    (editor) => {
       editor.settings.forced_root_block = false;
 
       editor.getBody().innerHTML = (
@@ -600,7 +600,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     }
   );
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to multiple formatted lines separated by BR', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to multiple formatted lines separated by BR', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -626,7 +626,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getEnd().nodeName, Env.ie && Env.ie < 9 ? 'LI' : 'EM');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to br line and text block line', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -651,7 +651,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to text block line and br line', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to text block line and br line', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -677,7 +677,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getEnd().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to all BR lines (SelectAll)', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to all BR lines (SelectAll)', (editor) => {
     editor.settings.forced_root_block = false;
 
     editor.getBody().innerHTML = (
@@ -701,7 +701,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to all P lines (SelectAll)', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to all P lines (SelectAll)', (editor) => {
     editor.getBody().innerHTML = (
       '<p>a</p>' +
       '<p>b</p>' +
@@ -721,7 +721,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>'
     );
@@ -734,7 +734,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to more than two paragraphs', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to more than two paragraphs', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -748,7 +748,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ul><li>a</li><li>b</li><li>c</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL with custom attributes', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL with custom attributes', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs('<p>a</p>');
 
     editor.focus();
@@ -763,7 +763,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ul class="a" data-custom="c1"><li>a</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL and LI with custom attributes', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL and LI with custom attributes', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs('<p>a</p>');
 
     editor.focus();
@@ -784,7 +784,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ul class="a" data-custom="c1"><li class="b" data-custom1="c2" data-custom2="">a</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Lists: Handle one empty unordered list items without error', function (editor) {
+  suite.test('TestCase-TBA: Lists: Handle one empty unordered list items without error', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -804,7 +804,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Handle several empty unordered list items without error', function (editor) {
+  suite.test('TestCase-TBA: Lists: Handle several empty unordered list items without error', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -834,7 +834,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Handle one empty ordered list items without error', function (editor) {
+  suite.test('TestCase-TBA: Lists: Handle one empty ordered list items without error', (editor) => {
     editor.getBody().innerHTML = (
       '<ol>' +
       '<li>a</li>' +
@@ -854,7 +854,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Handle several empty ordered list items without error', function (editor) {
+  suite.test('TestCase-TBA: Lists: Handle several empty ordered list items without error', (editor) => {
     editor.getBody().innerHTML = (
       '<ol>' +
       '<li>a</li>' +
@@ -884,7 +884,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     );
   });
 
-  suite.test('TestCase-TBA: Lists: Apply list on paragraphs with list between', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply list on paragraphs with list between', (editor) => {
     editor.getBody().innerHTML = (
       '<p>a</p>' +
       '<ol>' +
@@ -898,7 +898,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a</li></ul><ul><li>b</li></ul><ul><li>c</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply unordered list on children on a fully selected ordered list', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply unordered list on children on a fully selected ordered list', (editor) => {
     editor.getBody().innerHTML = (
       '<ol>' +
         '<li>a' +
@@ -915,7 +915,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getBody().innerHTML, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply unordered list on empty table cell', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply unordered list on empty table cell', (editor) => {
     editor.getBody().innerHTML = (
       '<table>' +
         '<tbody>' +
@@ -937,7 +937,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getBody().innerHTML, '<table><tbody><tr><td><ul><li><br></li></ul></td></tr></tbody></table>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply unordered list on table cell with two lines br', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply unordered list on table cell with two lines br', (editor) => {
     editor.getBody().innerHTML = (
       '<table>' +
         '<tbody>' +
@@ -959,7 +959,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getBody().innerHTML, '<table><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply UL list to single P with forced_root_block_attrs', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply UL list to single P with forced_root_block_attrs', (editor) => {
     editor.settings.forced_root_block = 'p';
     editor.settings.forced_root_block_attrs = {
       'data-editor': '1'
@@ -1082,7 +1082,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyTest', (success, failure)
     LegacyUnit.equal(editor.getBody().innerHTML, expected);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply list tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

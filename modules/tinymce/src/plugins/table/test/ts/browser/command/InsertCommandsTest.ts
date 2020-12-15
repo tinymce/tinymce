@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     clearEvents();
   };
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command', (editor) => {
     editor.focus();
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command with two selected columns', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command with two selected columns', (editor) => {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td>' +
       '<td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
@@ -59,7 +59,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command', (editor) => {
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertColBefore');
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command with two selected columns', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command with two selected columns', (editor) => {
     editor.getBody().innerHTML = (
       '<table><tr><td>1</td><td data-mce-selected="1">2</td><td data-mce-selected="1">3</td>' +
       '</tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
@@ -83,7 +83,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command', (editor) => {
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowAfter');
@@ -93,7 +93,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command with two selected rows', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command with two selected rows', (editor) => {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
@@ -106,7 +106,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command on merged cells', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command on merged cells', (editor) => {
     editor.setContent(
       '<table>' +
       '<tr><td>1</td><td>2</td><td>3</td></tr>' +
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command', (editor) => {
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowBefore');
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command with two selected rows', function (editor) {
+  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command with two selected rows', (editor) => {
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
@@ -155,7 +155,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test insert commands', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

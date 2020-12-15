@@ -8,7 +8,7 @@ import * as TableLookup from './TableLookup';
  * a list of the cells within its table.
  */
 const detect = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): Optional<{ all: SugarElement[]; index: number }> {
-  return TableLookup.table(current, isRoot).bind(function (table) {
+  return TableLookup.table(current, isRoot).bind((table) => {
     const all = TableLookup.cells(table);
     const index = Arr.findIndex(all, (x) => Compare.eq(current, x));
 
@@ -21,9 +21,9 @@ const detect = function (current: SugarElement, isRoot?: (e: SugarElement) => bo
  */
 const next = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation {
   const detection = detect(current, isRoot);
-  return detection.fold(function () {
+  return detection.fold(() => {
     return CellLocation.none(current);
-  }, function (info) {
+  }, (info) => {
     return info.index + 1 < info.all.length ? CellLocation.middle(current, info.all[info.index + 1]) : CellLocation.last(current);
   });
 };
@@ -33,9 +33,9 @@ const next = function (current: SugarElement, isRoot?: (e: SugarElement) => bool
  */
 const prev = function (current: SugarElement, isRoot?: (e: SugarElement) => boolean): CellLocation {
   const detection = detect(current, isRoot);
-  return detection.fold(function () {
+  return detection.fold(() => {
     return CellLocation.none();
-  }, function (info) {
+  }, (info) => {
     return info.index - 1 >= 0 ? CellLocation.middle(current, info.all[info.index - 1]) : CellLocation.first(current);
   });
 };

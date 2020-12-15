@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     return string.replace(/<br>/g, '');
   };
 
-  suite.test('insertAtCaret - selected image with bogus div', function (editor) {
+  suite.test('insertAtCaret - selected image with bogus div', (editor) => {
     editor.getBody().innerHTML = '<img src="about:blank" /><div data-mce-bogus="all">x</div>';
     editor.focus();
     // editor.selection.setCursorLocation(editor.getBody(), 0);
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     LegacyUnit.equal(trimBrs(editor.getBody().innerHTML), 'a<div data-mce-bogus="all">x</div>');
   });
 
-  suite.test('insertAtCaret - selected text with bogus div', function (editor) {
+  suite.test('insertAtCaret - selected text with bogus div', (editor) => {
     editor.getBody().innerHTML = 'a<div data-mce-bogus="all">x</div>';
     editor.focus();
     const rng = editor.dom.createRng();
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertContentForcedRootBlockFal
     LegacyUnit.equal(trimBrs(editor.getBody().innerHTML), 'b<div data-mce-bogus="all">x</div>');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     selector: 'textarea',

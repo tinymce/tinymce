@@ -8,11 +8,11 @@ import { renderAlertBanner } from 'tinymce/themes/silver/ui/general/AlertBanner'
 
 UnitTest.asynctest('AlertBanner component Test', (success, failure) => {
   const providers = {
-    icons: () => <Record<string, string>> {
+    icons: (): Record<string, string> => ({
       helpa: 'provided-for-help',
       close: 'provided-for-close'
-    },
-    menuItems: () => <Record<string, any>> {},
+    }),
+    menuItems: (): Record<string, any> => ({}),
     translate: I18n.translate,
     isDisabled: Fun.never,
     getSetting: (_settingName: string, defaultVal: any) => defaultVal

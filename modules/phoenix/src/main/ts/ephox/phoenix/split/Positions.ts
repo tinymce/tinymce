@@ -5,16 +5,16 @@ import { TextSplit } from '../api/data/TextSplit';
  * Categorise a split of a text node as: none, start, middle, or end
  */
 const determine = function <E> (target: TextSplit<E>): SplitPosition<E> {
-  return target.before.fold(function () {
-    return target.after.fold(function () {
+  return target.before.fold(() => {
+    return target.after.fold(() => {
       return SplitPosition.none<E>();
-    }, function (a) {
+    }, (a) => {
       return SplitPosition.start(a);
     });
-  }, function (b) {
-    return target.after.fold(function () {
+  }, (b) => {
+    return target.after.fold(() => {
       return SplitPosition.end(b);
-    }, function (a) {
+    }, (a) => {
       return SplitPosition.middle(b, a);
     });
   });

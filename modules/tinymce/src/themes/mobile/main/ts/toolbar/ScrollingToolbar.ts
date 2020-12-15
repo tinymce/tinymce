@@ -35,7 +35,7 @@ export const ScrollingToolbar = function (): ScrollingToolbar {
 
       tgroupBehaviours: Behaviour.derive([
         AddEventsBehaviour.config('adhoc-scrollable-toolbar', gSpec.scrollable === true ? [
-          AlloyEvents.runOnInit(function (component, _simulatedEvent) {
+          AlloyEvents.runOnInit((component, _simulatedEvent) => {
             Css.set(component.element, 'overflow-x', 'auto');
             Scrollables.markAsHorizontal(component.element);
             Scrollable.register(component.element);

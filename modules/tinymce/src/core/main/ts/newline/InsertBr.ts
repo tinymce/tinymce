@@ -64,7 +64,7 @@ const insertBrAtCaret = function (editor: Editor, evt?) {
   let brElm: HTMLElement;
   let extraBr: boolean;
 
-  NormalizeRange.normalize(dom, rng).each(function (normRng) {
+  NormalizeRange.normalize(dom, rng).each((normRng) => {
     rng.setStart(normRng.startContainer, normRng.startOffset);
     rng.setEnd(normRng.endContainer, normRng.endOffset);
   });
@@ -139,7 +139,7 @@ const hasBrAfter = function (rootNode, startNode) {
   if (isBeforeBr(CaretPosition.after(startNode))) {
     return true;
   } else {
-    return CaretFinder.nextPosition(rootNode, CaretPosition.after(startNode)).map(function (pos) {
+    return CaretFinder.nextPosition(rootNode, CaretPosition.after(startNode)).map((pos) => {
       return NodeType.isBr(pos.getNode());
     }).getOr(false);
   }

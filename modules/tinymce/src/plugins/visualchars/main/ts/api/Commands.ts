@@ -8,7 +8,7 @@
 import * as Actions from '../core/Actions';
 
 const register = function (editor, toggleState) {
-  editor.addCommand('mceVisualChars', function () {
+  editor.addCommand('mceVisualChars', () => {
     Actions.toggleVisualChars(editor, toggleState);
   });
 };

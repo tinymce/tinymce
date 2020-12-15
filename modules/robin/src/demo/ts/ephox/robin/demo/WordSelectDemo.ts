@@ -40,11 +40,11 @@ const getSelection = function () {
   }).getOrNull();
 };
 
-DomEvent.bind(editor, 'click', function (_event) {
+DomEvent.bind(editor, 'click', (_event) => {
   const current = getSelection();
   if (current !== null && current.collapsed) {
     const wordRange = DomSmartSelect.word(current.startContainer, current.startOffset, Fun.never);
-    wordRange.each(function (wr) {
+    wordRange.each((wr) => {
       select(wr.startContainer, wr.startOffset, wr.endContainer, wr.endOffset);
     });
   }

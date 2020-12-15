@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as Transitions from 'ephox/snooker/model/Transitions';
 
-UnitTest.test('TableCounterTest', function () {
+UnitTest.test('TableCounterTest', () => {
   const dn = (fakeElement: any, rowspan: number, colspan: number, isNew: boolean) => Structs.detailnew(fakeElement as SugarElement, rowspan, colspan, isNew);
   const r = Structs.rowcells;
   const rd = Structs.rowdetails;
@@ -13,9 +13,7 @@ UnitTest.test('TableCounterTest', function () {
   const check = function (expected: Structs.RowDetails[], input: Structs.RowCells[]) {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);
     const cleaner = function (obj: Structs.RowDetails[]) {
-      return Arr.map(obj, function (row) {
-        return row.details;
-      });
+      return Arr.map(obj, (row) => row.details);
     };
     assert.eq(cleaner(expected), cleaner(actual));
   };

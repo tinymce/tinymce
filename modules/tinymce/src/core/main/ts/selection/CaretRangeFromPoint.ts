@@ -40,7 +40,7 @@ const findClosestIeRange = function (clientX, clientY, doc) {
   rng.moveToElementText(element);
   rects = Tools.toArray(rng.getClientRects());
 
-  rects = rects.sort(function (a, b) {
+  rects = rects.sort((a, b) => {
     a = Math.abs(Math.max(a.top - clientY, a.bottom - clientY));
     b = Math.abs(Math.max(b.top - clientY, b.bottom - clientY));
 

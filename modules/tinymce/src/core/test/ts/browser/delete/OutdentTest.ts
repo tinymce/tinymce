@@ -4,7 +4,7 @@ import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', (success, failure) => {
   Theme();
 
   const sTestDeleteOrBackspaceKey = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) {
@@ -23,12 +23,12 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', function (success
   };
 
   const sNormalizeBody = function (editor: Editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.getBody().normalize();
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
     const sTestBackspace = sTestDeleteOrBackspaceKey(editor, tinyApis, tinyActions, Keys.backspace());

@@ -4,16 +4,16 @@ import { Fun, Result } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', (success, failure) => {
 
   const cFromDom = function (html: string) {
-    return Chain.injectThunked(function () {
+    return Chain.injectThunked(() => {
       return SimpleTableModel.fromDom(SugarElement.fromHtml(html));
     });
   };
 
   const cFromDomSubSection = function (html: string, startPath: number[], endPath: number[]) {
-    return Chain.binder(function (_) {
+    return Chain.binder((_) => {
       const tableElm = SugarElement.fromHtml<HTMLTableElement>(html);
       const startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
       const endElm = Hierarchy.follow(tableElm, endPath).getOrDie();
@@ -25,19 +25,19 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (
   };
 
   const cAssertWidth = function (expectedWidth: number) {
-    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
+    return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width);
     });
   };
 
   const cAssertHeight = function (expectedWidth: number) {
-    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
+    return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows.length);
     });
   };
 
   const cAssertModelAsHtml = function (expectedHtml: string) {
-    return Chain.op(function (tableModel: SimpleTableModel.TableModel) {
+    return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       const actualHtml = Html.getOuter(SimpleTableModel.toDom(tableModel));
       Assertions.assertHtml('Should be expected table html', expectedHtml, actualHtml);
     });
@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', function (
         cAssertModelAsHtml('<table><tbody><tr><td>E</td><td>F</td></tr><tr><td>H</td><td>I</td></tr></tbody></table>')
       ]))
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

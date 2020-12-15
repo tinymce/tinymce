@@ -5,7 +5,7 @@ import * as Sizes from 'ephox/snooker/api/Sizes';
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { addStyles, readHeight, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
-UnitTest.test('Table Sizes Test (fusebox)', function () {
+UnitTest.test('Table Sizes Test (fusebox)', () => {
   const percentTable =
   '<table style="width: 100%;">' +
   '<tbody>' +
@@ -55,9 +55,9 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     const table = SugarElement.fromTag('table');
     Css.set(table, 'width', totalWidth);
     const tbody = SugarElement.fromTag('tbody');
-    const trows = Arr.map(info, function (row, r) {
+    const trows = Arr.map(info, (row, r) => {
       const tr = SugarElement.fromTag('tr');
-      const cells = Arr.map(row, function (width, c) {
+      const cells = Arr.map(row, (width, c) => {
         const td = SugarElement.fromTag('td');
         Css.set(td, 'width', width);
         Insert.append(td, SugarElement.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
@@ -75,9 +75,9 @@ UnitTest.test('Table Sizes Test (fusebox)', function () {
     const table = SugarElement.fromTag('table');
     Css.set(table, 'height', totalHeight);
     const tbody = SugarElement.fromTag('tbody');
-    const trows = Arr.map(info, function (row, r) {
+    const trows = Arr.map(info, (row, r) => {
       const tr = SugarElement.fromTag('tr');
-      const cells = Arr.map(row, function (height, c) {
+      const cells = Arr.map(row, (height, c) => {
         const td = SugarElement.fromTag('td');
         Css.set(td, 'height', height);
         Insert.append(td, SugarElement.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));

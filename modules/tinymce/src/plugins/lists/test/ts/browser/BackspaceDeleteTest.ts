@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', (editor) => {
     const content = '<ul><li><span>a</span></li></ul>';
     editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', (editor) => {
     const content = '<ul><li><span>a</span><strong>b</strong></li></ul>';
     editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
 
@@ -70,7 +70,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'STRONG');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -92,7 +92,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of start LI in UL inside UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of start LI in UL inside UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -145,7 +145,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -176,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -194,7 +194,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -216,7 +216,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -239,7 +239,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -270,7 +270,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI above in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI above in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -293,7 +293,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with BR padded empty LI above in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with BR padded empty LI above in UL', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -316,7 +316,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at empty LI (IE)', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at empty LI (IE)', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -339,7 +339,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI with STRING and BR above in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI with STRING and BR above in UL', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -362,7 +362,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at nested LI with adjacent BR', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at nested LI with adjacent BR', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>1' +
@@ -387,7 +387,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at LI selected with triple-click in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at LI selected with triple-click in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -418,7 +418,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at partially selected list', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at partially selected list', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>abc</p>' +
       '<ul>' +
@@ -453,7 +453,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
 
   // Delete
 
-  suite.test('TestCase-TBA: Lists: Delete at end of single LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of single LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -473,7 +473,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of first LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of first LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -494,7 +494,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a</li>' +
@@ -517,7 +517,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of start LI in UL inside UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of start LI in UL inside UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -546,7 +546,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL inside UL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL inside UL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
       '<li>a' +
@@ -577,7 +577,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -600,7 +600,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before BR padded empty LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of LI before BR padded empty LI', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -623,7 +623,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI with STRONG', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI with STRONG', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>a</li>' +
@@ -646,7 +646,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at nested LI with adjacent BR', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at nested LI with adjacent BR', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>1' +
@@ -671,7 +671,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at BR before text in LI', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at BR before text in LI', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
       '<li>1</li>' +
@@ -688,7 +688,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace merge li elements', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace merge li elements', (editor) => {
     // IE allows you to place the caret inside a LI without children
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<ul>' +
@@ -712,7 +712,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getRng().startContainer.nodeType, 3, 'Should be a text node');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li without block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li without block element', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li>1</li>' +
@@ -735,7 +735,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with block element', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -758,7 +758,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with multiple block elements', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with multiple block elements', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li><p>1</p><p>2</p></li>' +
@@ -781,7 +781,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li without block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li without block element', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -804,7 +804,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with block element', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with block element', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -827,7 +827,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with multiple block elements', function (editor) {
+  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with multiple block elements', (editor) => {
     editor.getBody().innerHTML = (
       '<ul>' +
         '<li>1</li>' +
@@ -850,7 +850,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Backspace from indented list', function (editor) {
+  suite.test('Backspace from indented list', (editor) => {
     editor.getBody().innerHTML = (
       '<ol>' +
         '<li>a' +
@@ -882,7 +882,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Delete into indented list', function (editor) {
+  suite.test('Delete into indented list', (editor) => {
     editor.getBody().innerHTML = (
       '<ol>' +
         '<li>a' +
@@ -910,7 +910,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI in UL inside UL and then undo', function (editor) {
+  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI in UL inside UL and then undo', (editor) => {
     editor.resetContent((
       '<ul>' +
         '<li>item 1</li>' +
@@ -968,7 +968,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

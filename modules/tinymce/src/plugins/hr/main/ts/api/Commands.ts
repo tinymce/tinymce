@@ -6,7 +6,7 @@
  */
 
 const register = function (editor) {
-  editor.addCommand('InsertHorizontalRule', function () {
+  editor.addCommand('InsertHorizontalRule', () => {
     editor.execCommand('mceInsertContent', false, '<hr />');
   });
 };

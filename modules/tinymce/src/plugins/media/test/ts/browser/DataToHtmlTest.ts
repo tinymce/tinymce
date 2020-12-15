@@ -7,7 +7,7 @@ import * as DataToHtml from 'tinymce/plugins/media/core/DataToHtml';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', (success, failure) => {
   Plugin();
   Theme();
 
@@ -20,9 +20,9 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', function
     );
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
-    const videoStruct = ApproxStructure.build(function (s, str/* , arr*/) {
+    const videoStruct = ApproxStructure.build((s, str/* , arr*/) => {
       return s.element('video', {
         children: [
           s.text(str.is('\n')),
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.core.DataToHtmlTest', function
       });
     });
 
-    const iframeStruct = ApproxStructure.build(function (s, str/* , arr*/) {
+    const iframeStruct = ApproxStructure.build((s, str/* , arr*/) => {
       return s.element('iframe', {
         attrs: {
           height: str.is('150'),

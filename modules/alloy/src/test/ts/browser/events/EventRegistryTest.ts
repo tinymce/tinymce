@@ -7,7 +7,7 @@ import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import { ElementAndHandler, EventRegistry } from 'ephox/alloy/events/EventRegistry';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
 
-type ExpectedType = { id?: string; handler: string; target?: string; purpose?: string };
+interface ExpectedType { id?: string; handler: string; target?: string; purpose?: string }
 
 UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const body = SugarElement.fromDom(document.body);

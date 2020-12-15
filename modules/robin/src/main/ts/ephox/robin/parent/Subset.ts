@@ -36,8 +36,8 @@ const unsafeSubset = function <E, D> (universe: Universe<E, D>, common: E, ps1: 
   const endIndex = finder(ps2);
 
   // Return all common children between first and last
-  return startIndex.bind(function (sIndex) {
-    return endIndex.map(function (eIndex) {
+  return startIndex.bind((sIndex) => {
+    return endIndex.map((eIndex) => {
       // This is required because the range could be backwards.
       const first = Math.min(sIndex, eIndex);
       const last = Math.max(sIndex, eIndex);
@@ -57,9 +57,9 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
 
   const prune = function (path: E[]) {
     const index = Arr.findIndex(path, isRoot);
-    return index.fold(function () {
+    return index.fold(() => {
       return path;
-    }, function (ind) {
+    }, (ind) => {
       return path.slice(0, ind + 1);
     });
   };
@@ -67,7 +67,7 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
   const pruned1 = prune(ps1);
   const pruned2 = prune(ps2);
 
-  const shared = Arr.find(pruned1, function (x) {
+  const shared = Arr.find(pruned1, (x) => {
     return Arr.exists(pruned2, eq(universe, x));
   });
 
@@ -85,7 +85,7 @@ const ancestors = function <E, D> (universe: Universe<E, D>, start: E, end: E, i
  */
 const subset = function <E, D> (universe: Universe<E, D>, start: E, end: E): Optional<E[]> {
   const ancs = ancestors(universe, start, end);
-  return ancs.shared.bind(function (shared) {
+  return ancs.shared.bind((shared) => {
     return unsafeSubset(universe, shared, ancs.firstpath, ancs.secondpath);
   });
 };

@@ -19,11 +19,11 @@ export interface UiChains {
   cTriggerContextMenu: <T extends Editor> (label: string, target: string, menu: string) => Chain<T, T>;
 }
 
-const cToolstripRoot = Chain.mapper(function (editor: Editor) {
+const cToolstripRoot = Chain.mapper((editor: Editor) => {
   return SugarElement.fromDom(editor.getContainer());
 });
 
-const cEditorRoot = Chain.mapper(function (editor: Editor) {
+const cEditorRoot = Chain.mapper((editor: Editor) => {
   return SugarElement.fromDom(editor.getBody());
 });
 

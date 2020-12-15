@@ -6,22 +6,22 @@ import * as DomParent from 'ephox/robin/api/dom/DomParent';
 import * as DomStructure from 'ephox/robin/api/dom/DomStructure';
 import * as BrowserCheck from 'ephox/robin/test/BrowserCheck';
 
-UnitTest.test('BlockTest', function () {
+UnitTest.test('BlockTest', () => {
   const check = function (expected: string, input: string, look: (e: SugarElement) => Optional<SugarElement>) {
-    BrowserCheck.run(input, function (node) {
+    BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
-      actual.fold(function () {
+      actual.fold(() => {
         assert.fail('Expected a common ' + expected + ' tag');
-      }, function (act) {
+      }, (act) => {
         assert.eq(expected, SugarNode.name(act));
       });
     });
   };
 
   const checkNone = function (input: string, look: (e: SugarElement) => Optional<SugarElement>) {
-    BrowserCheck.run(input, function (node) {
+    BrowserCheck.run(input, (node) => {
       const actual = DomParent.sharedOne(look, [ node ]);
-      actual.each(function (a) {
+      actual.each((a) => {
         assert.fail('Expected no common tag matching the look. Received: ' + SugarNode.name(a));
       });
     });
@@ -30,17 +30,17 @@ UnitTest.test('BlockTest', function () {
   check('p', '<p>this<span class="me"> is it </span></p>', DomLook.selector('p'));
   checkNone('<p>this<span class="me"> is it</span></p>', DomLook.selector('blockquote'));
 
-  check('p', '<p>this<span class="me"> is it </span></p>', DomLook.predicate(function (element) {
+  check('p', '<p>this<span class="me"> is it </span></p>', DomLook.predicate((element) => {
     return SugarNode.name(element) === 'p';
   }));
 
   check('p', '<p>this<span class="me"> is it </span></p>', DomLook.predicate(DomStructure.isBlock));
 
-  BrowserCheck.run('<p>this<span class="child"> is it </span></p>', function (node) {
+  BrowserCheck.run('<p>this<span class="child"> is it </span></p>', (node) => {
     const actual = DomParent.sharedOne(DomLook.exact(Traverse.parent(node).getOrDie()), [ node ]);
-    actual.fold(function () {
+    actual.fold(() => {
       assert.fail('Expected a common tag');
-    }, function (act) {
+    }, (act) => {
       assert.eq('span', SugarNode.name(act));
     });
   });

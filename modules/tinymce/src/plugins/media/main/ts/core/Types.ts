@@ -5,6 +5,8 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+// Note: Need to use a type here, as types are iterable whereas interfaces are not
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type MediaData = {
   allowFullscreen?: boolean;
   source: string;

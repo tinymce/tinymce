@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.UndoManager', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -17,13 +17,13 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     return LegacyUnit.equal(value, true, label);
   };
 
-  suite.test('Initial states', function (editor) {
+  suite.test('Initial states', (editor) => {
     ok(!editor.undoManager.hasUndo());
     ok(!editor.undoManager.hasRedo());
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('One undo level', function (editor) {
+  suite.test('One undo level', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('Two undo levels', function (editor) {
+  suite.test('Two undo levels', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -50,7 +50,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('No undo levels and one redo', function (editor) {
+  suite.test('No undo levels and one redo', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('One undo levels and one redo', function (editor) {
+  suite.test('One undo levels and one redo', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -78,7 +78,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('Typing state', function (editor) {
+  suite.test('Typing state', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -102,7 +102,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('Undo and add new level', function (editor) {
+  suite.test('Undo and add new level', (editor) => {
     editor.undoManager.clear();
     editor.setContent('test');
 
@@ -117,21 +117,21 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!editor.undoManager.typing);
   });
 
-  suite.test('Events', function (editor) {
+  suite.test('Events', (editor) => {
     let add, undo, redo;
 
     editor.undoManager.clear();
     editor.setContent('test');
 
-    editor.on('AddUndo', function (e) {
+    editor.on('AddUndo', (e) => {
       add = e.level;
     });
 
-    editor.on('Undo', function (e) {
+    editor.on('Undo', (e) => {
       undo = e.level;
     });
 
-    editor.on('Redo', function (e) {
+    editor.on('Redo', (e) => {
       redo = e.level;
     });
 
@@ -149,18 +149,18 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(!!redo.bookmark);
   });
 
-  suite.test('No undo/redo cmds on Undo/Redo shortcut', function (editor) {
+  suite.test('No undo/redo cmds on Undo/Redo shortcut', (editor) => {
     const commands = [];
     let added = false;
 
     editor.undoManager.clear();
     editor.setContent('test');
 
-    editor.on('BeforeExecCommand', function (e) {
+    editor.on('BeforeExecCommand', (e) => {
       commands.push(e.command);
     });
 
-    editor.on('BeforeAddUndo', function () {
+    editor.on('BeforeAddUndo', () => {
       added = true;
     });
 
@@ -180,16 +180,16 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.deepEqual(commands, [ 'Undo' ]);
   });
 
-  suite.test('Transact', function (editor) {
+  suite.test('Transact', (editor) => {
     let count = 0;
 
     editor.undoManager.clear();
 
-    editor.on('BeforeAddUndo', function () {
+    editor.on('BeforeAddUndo', () => {
       count++;
     });
 
-    const level = editor.undoManager.transact(function () {
+    const level = editor.undoManager.transact(() => {
       editor.undoManager.add();
       editor.undoManager.add();
     });
@@ -198,7 +198,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(level !== null, true);
   });
 
-  suite.test('Transact no change', function (editor) {
+  suite.test('Transact no change', (editor) => {
     editor.undoManager.add();
 
     const level = editor.undoManager.transact(Fun.noop);
@@ -206,29 +206,29 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(level, null);
   });
 
-  suite.test('Transact with change', function (editor) {
+  suite.test('Transact with change', (editor) => {
     editor.undoManager.add();
 
-    const level = editor.undoManager.transact(function () {
+    const level = editor.undoManager.transact(() => {
       editor.setContent('x');
     });
 
     LegacyUnit.equal(level !== null, true);
   });
 
-  suite.test('Transact nested', function (editor) {
+  suite.test('Transact nested', (editor) => {
     let count = 0;
 
     editor.undoManager.clear();
 
-    editor.on('BeforeAddUndo', function () {
+    editor.on('BeforeAddUndo', () => {
       count++;
     });
 
-    editor.undoManager.transact(function () {
+    editor.undoManager.transact(() => {
       editor.undoManager.add();
 
-      editor.undoManager.transact(function () {
+      editor.undoManager.transact(() => {
         editor.undoManager.add();
       });
     });
@@ -236,17 +236,17 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(count, 1);
   });
 
-  suite.test('Transact exception', function (editor) {
+  suite.test('Transact exception', (editor) => {
     let count = 0;
 
     editor.undoManager.clear();
 
-    editor.on('BeforeAddUndo', function () {
+    editor.on('BeforeAddUndo', () => {
       count++;
     });
 
     try {
-      editor.undoManager.transact(function () {
+      editor.undoManager.transact(() => {
         throw new Error('Test');
       });
 
@@ -260,16 +260,16 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(count, 1);
   });
 
-  suite.test('Extra with changes', function (editor) {
+  suite.test('Extra with changes', (editor) => {
     editor.undoManager.clear();
     editor.setContent('<p>abc</p>');
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.undoManager.add();
 
-    editor.undoManager.extra(function () {
+    editor.undoManager.extra(() => {
       LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
       editor.insertContent('1');
-    }, function () {
+    }, () => {
       LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
       editor.insertContent('2');
     });
@@ -287,17 +287,17 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.deepEqual(data[1].beforeBookmark, data[2].bookmark);
   });
 
-  suite.test('Exclude internal elements', function (editor) {
+  suite.test('Exclude internal elements', (editor) => {
     let count = 0, lastLevel;
 
     editor.undoManager.clear();
     LegacyUnit.equal(count, 0);
 
-    editor.on('AddUndo', function () {
+    editor.on('AddUndo', () => {
       count++;
     });
 
-    editor.on('BeforeAddUndo', function (e) {
+    editor.on('BeforeAddUndo', (e) => {
       lastLevel = e.level;
     });
 
@@ -341,10 +341,10 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     );
   });
 
-  suite.test('Undo added when typing and losing focus', function (editor) {
+  suite.test('Undo added when typing and losing focus', (editor) => {
     let lastLevel;
 
-    editor.on('BeforeAddUndo', function (e) {
+    editor.on('BeforeAddUndo', (e) => {
       lastLevel = e.level;
     });
 
@@ -362,14 +362,14 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.getContent(), '<p>some</p>');
   });
 
-  suite.test('BeforeAddUndo event', function (editor) {
+  suite.test('BeforeAddUndo event', (editor) => {
     let lastEvt, addUndoEvt;
 
     const blockEvent = function (e) {
       e.preventDefault();
     };
 
-    editor.on('BeforeAddUndo', function (e) {
+    editor.on('BeforeAddUndo', (e) => {
       lastEvt = e;
     });
 
@@ -388,7 +388,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
 
     editor.on('BeforeAddUndo', blockEvent);
 
-    editor.on('AddUndo', function (e) {
+    editor.on('AddUndo', (e) => {
       addUndoEvt = e;
     });
 
@@ -403,7 +403,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     editor.off('BeforeAddUndo', blockEvent);
   });
 
-  suite.test('Dirty state type letter', function (editor) {
+  suite.test('Dirty state type letter', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -415,7 +415,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
-  suite.test('Dirty state type shift+letter', function (editor) {
+  suite.test('Dirty state type shift+letter', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -427,7 +427,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     ok(editor.isDirty(), 'Dirty state should be true');
   });
 
-  suite.test('Dirty state type AltGr+letter', function (editor) {
+  suite.test('Dirty state type AltGr+letter', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -467,7 +467,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     done();
   });
 
-  suite.test('ExecCommand while typing should produce undo level', function (editor) {
+  suite.test('ExecCommand while typing should produce undo level', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -485,7 +485,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
   });
 
-  suite.test('transact while typing should produce undo level', function (editor) {
+  suite.test('transact while typing should produce undo level', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
@@ -495,7 +495,7 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     KeyUtils.type(editor, { keyCode: 66, charCode: 66 });
     LegacyUnit.equal(editor.undoManager.typing, true);
     LegacyUnit.equal(editor.getContent(), '<p>aB</p>');
-    editor.undoManager.transact(function () {
+    editor.undoManager.transact(() => {
       (editor.getBody().firstChild.firstChild as Text).data = 'aBC';
     });
     LegacyUnit.equal(editor.undoManager.typing, false);
@@ -505,14 +505,14 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.undoManager.data[2].content, '<p>aBC</p>');
   });
 
-  suite.test('ignore does a transaction but no levels', function (editor) {
+  suite.test('ignore does a transaction but no levels', (editor) => {
     editor.undoManager.clear();
     editor.setDirty(false);
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.undoManager.typing = true;
 
-    editor.undoManager.ignore(function () {
+    editor.undoManager.ignore(() => {
       editor.execCommand('bold');
       editor.execCommand('italic');
     });
@@ -522,13 +522,13 @@ UnitTest.asynctest('browser.tinymce.core.UndoManager', function (success, failur
     LegacyUnit.equal(editor.getContent(), '<p><em><strong>a</strong></em></p>');
   });
 
-  suite.test('undo filter for mceRepaint is case insensitive', function (editor) {
+  suite.test('undo filter for mceRepaint is case insensitive', (editor) => {
     editor.undoManager.clear();
     editor.execCommand('mceRepaint');
     LegacyUnit.equal(editor.undoManager.hasUndo(), false);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

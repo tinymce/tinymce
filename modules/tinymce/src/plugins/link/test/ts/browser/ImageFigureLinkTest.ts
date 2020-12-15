@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const ui = TinyUi(editor);
 
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ImageFigureLinkTest', (success,
     };
 
     const sUnlinkSelection = function () {
-      return Logger.t('Unlink the selection', Step.sync(function () {
+      return Logger.t('Unlink the selection', Step.sync(() => {
         LinkPluginUtils.unlink(editor);
       }));
     };

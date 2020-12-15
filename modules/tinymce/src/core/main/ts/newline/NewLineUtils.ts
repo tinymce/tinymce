@@ -110,14 +110,14 @@ const getParentBlock = function (editor: Editor) {
 const getParentBlockName = function (editor: Editor) {
   return getParentBlock(editor).fold(
     Fun.constant(''),
-    function (parentBlock) {
+    (parentBlock) => {
       return parentBlock.nodeName.toUpperCase();
     }
   );
 };
 
 const isListItemParentBlock = function (editor: Editor) {
-  return getParentBlock(editor).filter(function (elm) {
+  return getParentBlock(editor).filter((elm) => {
     return ElementType.isListItem(SugarElement.fromDom(elm));
   }).isSome();
 };

@@ -27,7 +27,7 @@ const sWaitForToolstrip = function (realm) {
     'Waiting until CSS has loaded',
     Chain.asStep(realm.element, [
       UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
-      Chain.op(function (toolstrip) {
+      Chain.op((toolstrip) => {
         if (navigator.userAgent.indexOf('PhantomJS') === -1) {
           Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
         }

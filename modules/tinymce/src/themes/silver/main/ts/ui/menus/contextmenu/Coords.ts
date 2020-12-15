@@ -11,10 +11,10 @@ import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 
-type Position = {
+interface Position {
   x: number;
   y: number;
-};
+}
 
 const nu = function (x: number, y: number): MakeshiftAnchorSpec {
   return {

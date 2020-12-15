@@ -227,8 +227,8 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       imageScanner = ImageScanner(uploadStatus, blobCache);
     }
 
-    return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard(function (result) {
-      result = Arr.filter(result, function (resultItem) {
+    return imageScanner.findAll(editor.getBody(), isValidDataUriImage).then(aliveGuard((result) => {
+      result = Arr.filter(result, (resultItem) => {
         // ImageScanner internally converts images that it finds, but it may fail to do so if image source is inaccessible.
         // In such case resultItem will contain appropriate text error message, instead of image data.
         if (typeof resultItem === 'string') {
@@ -238,7 +238,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
         return true;
       });
 
-      Arr.each(result, function (resultItem) {
+      Arr.each(result, (resultItem) => {
         replaceUrlInUndoStack(resultItem.image.src, resultItem.blobInfo.blobUri());
         resultItem.image.src = resultItem.blobInfo.blobUri();
         resultItem.image.removeAttribute('data-mce-src');
@@ -255,7 +255,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   };
 
   const replaceBlobUris = function (content: string) {
-    return content.replace(/src="(blob:[^"]+)"/g, function (match, blobUri) {
+    return content.replace(/src="(blob:[^"]+)"/g, (match, blobUri) => {
       const resultUri = uploadStatus.getResultUri(blobUri);
 
       if (resultUri) {
@@ -265,7 +265,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
       let blobInfo = blobCache.getByUri(blobUri);
 
       if (!blobInfo) {
-        blobInfo = Arr.foldl(editor.editorManager.get(), function (result, editor) {
+        blobInfo = Arr.foldl(editor.editorManager.get(), (result, editor) => {
           return result || editor.editorUpload && editor.editorUpload.blobCache.getByUri(blobUri);
         }, null);
       }
@@ -279,7 +279,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     });
   };
 
-  editor.on('SetContent', function () {
+  editor.on('SetContent', () => {
     if (Settings.isAutomaticUploadsEnabled(editor)) {
       uploadImagesAuto();
     } else {
@@ -287,11 +287,11 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }
   });
 
-  editor.on('RawSaveContent', function (e) {
+  editor.on('RawSaveContent', (e) => {
     e.content = replaceBlobUris(e.content);
   });
 
-  editor.on('GetContent', function (e) {
+  editor.on('GetContent', (e) => {
     // if the content is not a string, we can't process it
     if (e.source_view || e.format === 'raw' || e.format === 'tree') {
       return;
@@ -300,9 +300,9 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     e.content = replaceBlobUris(e.content);
   });
 
-  editor.on('PostRender', function () {
-    editor.parser.addNodeFilter('img', function (images) {
-      Arr.each(images, function (img) {
+  editor.on('PostRender', () => {
+    editor.parser.addNodeFilter('img', (images) => {
+      Arr.each(images, (img) => {
         const src = img.attr('src');
 
         if (blobCache.getByUri(src)) {

@@ -83,9 +83,9 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) 
 
   const cAssertCases = function (cases) {
     return Chain.control(
-      Chain.op(function (editor: any) {
+      Chain.op((editor: any) => {
         const pasteBin = PasteBin(editor);
-        Obj.each(cases, function (c, i) {
+        Obj.each(cases, (c, i) => {
           getPasteBinParent(editor).appendChild(editor.dom.createFragment(c.content));
           Assertions.assertEq(c.label || 'Asserting paste bin case ' + i, c.result, pasteBin.getHtml());
           pasteBin.remove();
@@ -108,7 +108,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) 
       cAssertCases(cases),
       cRemoveEditor()
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

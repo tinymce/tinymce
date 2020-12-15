@@ -3,7 +3,7 @@ import { CommentGene, Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as Navigation from 'ephox/phoenix/wrap/Navigation';
 
-UnitTest.test('NavigationTest', function () {
+UnitTest.test('NavigationTest', () => {
   let doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'div', [

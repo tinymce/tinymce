@@ -34,7 +34,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
     const keys: string[] = Obj.keys(obj);
 
     // Ensure all required keys are present.
-    const allReqd = Arr.forall(required, function (req) {
+    const allReqd = Arr.forall(required, (req) => {
       return Arr.contains(keys, req);
     });
 
@@ -44,7 +44,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
 
     handleUnsupported(required, keys);
 
-    const invalidKeys = Arr.filter(required, function (key) {
+    const invalidKeys = Arr.filter(required, (key) => {
       return !pred.validate(obj[key], key);
     });
 
@@ -57,7 +57,7 @@ const baseWith = function (handleUnsupported: HandleFn, required: string[], pred
 };
 
 const handleExact = function (required: string[], keys: string[]) {
-  const unsupported = Arr.filter(keys, function (key) {
+  const unsupported = Arr.filter(keys, (key) => {
     return !Arr.contains(required, key);
   });
 

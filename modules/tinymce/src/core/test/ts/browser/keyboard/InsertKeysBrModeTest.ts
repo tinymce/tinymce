@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysBrModeTest', (succes
     editor.fire('input', { isComposing: false } as InputEvent);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

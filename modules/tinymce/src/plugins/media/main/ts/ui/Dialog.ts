@@ -151,7 +151,7 @@ const submitForm = function (prevData: MediaData, newData: MediaData, editor: Ed
     handleInsert(editor, newData.embed);
   } else {
     Service.getEmbedHtml(editor, newData)
-      .then(function (response) {
+      .then((response) => {
         handleInsert(editor, response.html);
       }).catch(handleError(editor));
   }

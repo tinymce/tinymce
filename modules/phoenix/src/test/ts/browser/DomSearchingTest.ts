@@ -4,7 +4,7 @@ import { Pattern } from '@ephox/polaris';
 import { SugarElement } from '@ephox/sugar';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 
-UnitTest.test('DomSearchingTest', function () {
+UnitTest.test('DomSearchingTest', () => {
   const root = SugarElement.fromTag('div');
   root.dom.innerHTML = 'This is some<ol><li>text</li></ol>';
 

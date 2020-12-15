@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
   CharmapPlugin();
   SilverTheme();
 
-  suite.test('TestCase-TBA: Charmap: Replace characters by array', function (editor) {
+  suite.test('TestCase-TBA: Charmap: Replace characters by array', (editor) => {
     editor.settings.charmap = [
       [ 65, 'Latin A' ],
       [ 66, 'Latin B' ]
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     ]);
   });
 
-  suite.test('TestCase-TBA: Charmap: Replace characters by function', function (editor) {
+  suite.test('TestCase-TBA: Charmap: Replace characters by function', (editor) => {
     editor.settings.charmap = function () {
       return [
         [ 65, 'Latin A fun' ],
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     ]);
   });
 
-  suite.test('TestCase-TBA: Charmap: Append characters by array', function (editor) {
+  suite.test('TestCase-TBA: Charmap: Append characters by array', (editor) => {
     editor.settings.charmap = [
       [ 67, 'Latin C' ]
     ];
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     ]);
   });
 
-  suite.test('TestCase-TBA: Charmap: Append characters by function', function (editor) {
+  suite.test('TestCase-TBA: Charmap: Append characters by function', (editor) => {
     editor.settings.charmap = [
       [ 67, 'Latin C' ]
     ];
@@ -92,10 +92,10 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     ]);
   });
 
-  suite.test('TestCase-TBA: Charmap: Insert character', function (editor) {
+  suite.test('TestCase-TBA: Charmap: Insert character', (editor) => {
     let lastEvt;
 
-    editor.on('InsertCustomChar', function (e) {
+    editor.on('InsertCustomChar', (e) => {
       lastEvt = e;
     });
 
@@ -103,7 +103,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
     LegacyUnit.equal(lastEvt.chr, 'A');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Charmap: Test replacing, appending and inserting characters', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     theme: 'silver',

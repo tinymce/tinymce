@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
 
   const cClearEditor = function () {
     return Chain.control(
-      Chain.async(function (editor: any, next, _die) {
+      Chain.async((editor: any, next, _die) => {
         editor.setContent('');
         next(editor);
       }),
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
 
   const cFireFakePasteEvent = function (data) {
     return Chain.control(
-      Chain.async(function (editor: any, next, _die) {
+      Chain.async((editor: any, next, _die) => {
         editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
         next(editor);
       }),
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
 
   const cAssertEditorContent = function (label, expected) {
     return Chain.control(
-      Chain.async(function (editor: any, next, _die) {
+      Chain.async((editor: any, next, _die) => {
         Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
         next(editor);
       }),
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
   const cAssertClipboardPaste = function (expected, data) {
     const chains = [];
 
-    Obj.each(data, function (data, label) {
+    Obj.each(data, (data, label) => {
       chains.push(
         cFireFakePasteEvent(data),
         Chain.control(
@@ -133,7 +133,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
       cAssertClipboardPaste(expectedWithoutRootBlock, pasteData),
       cRemoveEditor()
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

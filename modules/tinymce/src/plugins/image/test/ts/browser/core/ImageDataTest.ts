@@ -7,7 +7,7 @@ import { create, defaultData, getStyleValue, ImageData, isFigure, isImage, read,
 
 UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success, failure) => {
   const cSetHtml = (html: string) => Chain.control(
-    Chain.op(function (elm: SugarElement) {
+    Chain.op((elm: SugarElement) => {
       Html.set(elm, html);
     }),
     Guard.addLogging('Set html')
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
     Guard.addLogging(`Create ${data}`)
   );
   const cReadFromImage = Chain.control(
-    Chain.mapper(function (elm: SugarElement) {
+    Chain.mapper((elm: SugarElement) => {
       const img = SugarNode.name(elm) === 'img' ? elm : SelectorFind.descendant(elm, 'img').getOrDie('failed to find image');
       return { model: read(normalizeCss, img.dom), image: img, parent: elm };
     }),
@@ -37,41 +37,41 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
   );
 
   const cWriteToImage = Chain.control(
-    Chain.op(function (data: any) {
+    Chain.op((data: any) => {
       write(normalizeCss, data.model, data.image.dom);
     }),
     Guard.addLogging('Write to image')
   );
 
   const cUpdateModel = (props) => Chain.control(
-    Chain.mapper(function (data: any) {
+    Chain.mapper((data: any) => {
       return { model: { ...data.model, ...props }, image: data.image, parent: data.parent };
     }),
     Guard.addLogging('Update data model')
   );
 
   const cAssertModel = (model) => Chain.control(
-    Chain.op(function (data: any) {
+    Chain.op((data: any) => {
       Assert.eq('', model, data.model);
     }),
     Guard.addLogging('Assert model')
   );
 
   const cAssertStructure = (structure) => Chain.control(
-    Chain.op(function (data: any) {
+    Chain.op((data: any) => {
       Assertions.assertStructure('', structure, data.parent);
     }),
     Guard.addLogging('Assert structure')
   );
 
   const cAssertImage = Chain.control(
-    Chain.op(function (data: any) {
+    Chain.op((data: any) => {
       Assert.eq('Should be an image', true, isImage(data.image.dom));
     }),
     Guard.addLogging('Assert image')
   );
 
-  const cAssertFigure = Chain.op(function (data: any) {
+  const cAssertFigure = Chain.op((data: any) => {
     Assert.eq('Parent should be a figure', true, isFigure(data.image.dom.parentNode));
   });
 
@@ -115,7 +115,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         borderStyle: 'dotted',
         isDecorative: false
       }),
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('img', {
           attrs: {
             src: str.is('some.gif'),
@@ -170,7 +170,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         borderStyle: '',
         isDecorative: false
       }),
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('img', {
           attrs: {
             src: str.is('some.gif'),
@@ -225,7 +225,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         borderStyle: 'dotted',
         isDecorative: false
       }),
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('figure', {
           attrs: {
             contenteditable: str.is('false'),
@@ -296,7 +296,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         borderStyle: 'dotted',
         isDecorative: true
       }),
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('img', {
           attrs: {
             src: str.is('some.gif'),
@@ -339,7 +339,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -384,7 +384,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -429,7 +429,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -474,7 +474,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -519,7 +519,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -539,7 +539,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         caption: true
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('figure', {
@@ -574,7 +574,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         caption: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -593,7 +593,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         src: 'some2.gif'
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('figure', {
@@ -640,7 +640,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         isDecorative: false
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -690,7 +690,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         height: '250'
       }),
       cWriteToImage,
-      cAssertStructure(ApproxStructure.build(function (s, str) {
+      cAssertStructure(ApproxStructure.build((s, str) => {
         return s.element('div', {
           children: [
             s.element('img', {
@@ -717,7 +717,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

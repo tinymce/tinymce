@@ -19,7 +19,7 @@ export interface ColorSwatchDialogData {
 const getCurrentColor = function (editor: Editor, format) {
   let color;
 
-  editor.dom.getParents(editor.selection.getStart(), function (elm) {
+  editor.dom.getParents(editor.selection.getStart(), (elm) => {
     let value;
 
     if ((value = elm.style[format === 'forecolor' ? 'color' : 'background-color'])) {
@@ -31,7 +31,7 @@ const getCurrentColor = function (editor: Editor, format) {
 };
 
 const applyFormat = function (editor: Editor, format, value) {
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     editor.focus();
     editor.formatter.apply(format, { value });
     editor.nodeChanged();
@@ -39,7 +39,7 @@ const applyFormat = function (editor: Editor, format, value) {
 };
 
 const removeFormat = function (editor: Editor, format) {
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     editor.focus();
     editor.formatter.remove(format, { value: null }, null, true);
     editor.nodeChanged();
@@ -47,11 +47,11 @@ const removeFormat = function (editor: Editor, format) {
 };
 
 const registerCommands = (editor: Editor) => {
-  editor.addCommand('mceApplyTextcolor', function (format, value) {
+  editor.addCommand('mceApplyTextcolor', (format, value) => {
     applyFormat(editor, format, value);
   });
 
-  editor.addCommand('mceRemoveTextcolor', function (format) {
+  editor.addCommand('mceRemoveTextcolor', (format) => {
     removeFormat(editor, format);
   });
 };

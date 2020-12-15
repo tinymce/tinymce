@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.themes.mobile.ThemeTest', (success, failure)
   ContextMenuPlugin();
   TextPatternPlugin();
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({}, [

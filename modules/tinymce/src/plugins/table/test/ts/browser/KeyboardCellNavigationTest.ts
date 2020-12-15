@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
   TablePlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 
@@ -26,14 +26,14 @@ UnitTest.asynctest('browser.tinymce.plugins.table.quirks.KeyboardCellNavigationT
         tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1, 0 ], 0),
         tinyActions.sContentKeydown(Keys.down(), {}),
         tinyApis.sSetCursor([ 0, 0, 1, 0, 0, 0, 0 ], 0),
-        Step.sync(function () {
-          editor.on('SelectionChange', function () {
+        Step.sync(() => {
+          editor.on('SelectionChange', () => {
             selectionChangeState.set(true);
           });
         }),
         Waiter.sTryUntil(
           'editor did not have correct selection',
-          Step.sync(function () {
+          Step.sync(() => {
             Assert.eq('state is true', true, selectionChangeState.get());
           })
         ),

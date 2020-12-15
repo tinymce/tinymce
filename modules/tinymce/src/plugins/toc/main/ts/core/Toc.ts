@@ -35,12 +35,12 @@ const readHeaders = function (editor: Editor) {
 
   // if headerTag is one of h1-9, we need to filter it out from the set
   if (headers.length && /^h[1-9]$/i.test(headerTag)) {
-    headers = headers.filter(function (i, el) {
+    headers = headers.filter((i, el) => {
       return !editor.dom.hasClass(el.parentNode, tocClass);
     });
   }
 
-  return Tools.map(headers, function (h) {
+  return Tools.map(headers, (h) => {
     const id = (h as Element).id;
     return {
       id: id ? id : tocId(),
@@ -143,7 +143,7 @@ const updateToc = function (editor) {
   const $tocElm = editor.$('.' + tocClass);
 
   if ($tocElm.length) {
-    editor.undoManager.transact(function () {
+    editor.undoManager.transact(() => {
       $tocElm.html(generateTocContentHtml(editor));
     });
   }

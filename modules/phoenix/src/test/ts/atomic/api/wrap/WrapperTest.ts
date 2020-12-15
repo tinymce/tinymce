@@ -3,7 +3,7 @@ import { Gene, Logger, TestUniverse, TextGene } from '@ephox/boss';
 import * as Wrapping from 'ephox/phoenix/api/general/Wrapping';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('WrapperTest', function () {
+UnitTest.test('WrapperTest', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('a', '', [
@@ -44,7 +44,7 @@ UnitTest.test('WrapperTest', function () {
   };
 
   const dump = function () {
-    return Logger.custom(doc.get(), function (item) {
+    return Logger.custom(doc.get(), (item) => {
       return doc.property().isText(item) ? item.id + '("' + item.text + '")' : item.id;
     });
   };

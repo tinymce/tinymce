@@ -5,23 +5,23 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as MergeBlocks from 'tinymce/core/delete/MergeBlocks';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cAssertHtml = function (expectedHtml) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
     });
   };
 
   const cMergeBlocks = function (forward, block1Path, block2Path) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie();
       const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie();
       return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2);
@@ -29,7 +29,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (succ
   };
 
   const cAssertPosition = function (expectedPath, expectedOffset) {
-    return Chain.op(function (position: Optional<any>) {
+    return Chain.op((position: Optional<any>) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), expectedPath).getOrDie();
 
       Assertions.assertDomEq('Should be expected container', container, SugarElement.fromDom(position.getOrDie().container()));
@@ -245,7 +245,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.MergeBlocksTest', function (succ
         cAssertHtml('<div>ab</div><div><h1>c</h1></div>')
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

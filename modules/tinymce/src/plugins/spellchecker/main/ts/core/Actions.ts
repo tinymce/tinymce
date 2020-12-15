@@ -35,7 +35,7 @@ const defaultSpellcheckCallback = function (editor: Editor, pluginUrl: string, c
 
     data[method === 'addToDictionary' ? 'word' : 'text'] = text;
 
-    Tools.each(data, function (value, key) {
+    Tools.each(data, (value, key) => {
       if (postData) {
         postData += '&';
       }
@@ -118,7 +118,7 @@ const ignoreWord = function (editor: Editor, startedState: Cell<boolean>, textMa
   editor.selection.collapse();
 
   if (all) {
-    Tools.each(editor.dom.select('span.mce-spellchecker-word'), function (span) {
+    Tools.each(editor.dom.select('span.mce-spellchecker-word'), (span) => {
       if (span.getAttribute('data-mce-word') === word) {
         editor.dom.remove(span, true);
       }
@@ -200,9 +200,9 @@ const markErrors = function (editor: Editor, startedState: Cell<boolean>, textMa
 
   const bookmark = editor.selection.getBookmark();
 
-  getTextMatcher(editor, textMatcherState).find(Settings.getSpellcheckerWordcharPattern(editor)).filter(function (match) {
+  getTextMatcher(editor, textMatcherState).find(Settings.getSpellcheckerWordcharPattern(editor)).filter((match) => {
     return !!suggestions[match.text];
-  }).wrap(function (match) {
+  }).wrap((match) => {
     return editor.dom.create('span', {
       'class': 'mce-spellchecker-word',
       'aria-invalid': 'spelling',

@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
   ListsPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.TableInListTest', (success, fa
       Log.stepsAsStep('TBA', 'Lists: delete list in table test', [
         tinyApis.sSetContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>'),
         tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 1),
-        Step.sync(function () {
+        Step.sync(() => {
           editor.plugins.lists.backspaceDelete();
           editor.plugins.lists.backspaceDelete();
         }),

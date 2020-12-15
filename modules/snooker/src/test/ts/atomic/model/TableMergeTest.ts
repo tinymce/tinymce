@@ -5,7 +5,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/test/TableMerge';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
-UnitTest.test('TableMergeTest', function () {
+UnitTest.test('TableMergeTest', () => {
   const generator = TestGenerator;
   const start = Structs.address;
   const suite = TableMerge.suite;

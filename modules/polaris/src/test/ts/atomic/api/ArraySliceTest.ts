@@ -7,7 +7,7 @@ const { tArray, tNumber } = Testable;
 
 const is = <T> (a: T) => (b: T) => a === b;
 
-UnitTest.test('sliceby: unit tests', function () {
+UnitTest.test('sliceby: unit tests', () => {
 
   const check = function (expected: number[], input: number[], pred: (x: number, i: number) => boolean) {
     const actual = Arrays.sliceby(input, pred);
@@ -20,7 +20,7 @@ UnitTest.test('sliceby: unit tests', function () {
   check([ 1, 2, 3 ], [ 1, 2, 3, 4 ], is(4));
 });
 
-UnitTest.test('sliceby: property tests', function () {
+UnitTest.test('sliceby: property tests', () => {
 
   fc.assert(fc.property(
     fc.array(fc.nat()),

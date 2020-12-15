@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (
   SilverTheme();
   Plugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const api = TinyApis(editor);
     const doc = SugarElement.fromDom(document);
 

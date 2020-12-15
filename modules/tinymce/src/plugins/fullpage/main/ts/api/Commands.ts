@@ -8,7 +8,7 @@
 import * as Dialog from '../ui/Dialog';
 
 const register = function (editor, headState) {
-  editor.addCommand('mceFullPageProperties', function () {
+  editor.addCommand('mceFullPageProperties', () => {
     Dialog.open(editor, headState);
   });
 };

@@ -3,7 +3,7 @@ import { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as Simplify from 'ephox/robin/pathway/Simplify';
 
-UnitTest.test('SimplifyTest', function () {
+UnitTest.test('SimplifyTest', () => {
   const doc = TestUniverse(Gene('root', 'root', [
     Gene('a', '.', [
       Gene('aa', '.', [
@@ -36,12 +36,12 @@ UnitTest.test('SimplifyTest', function () {
   ]));
 
   const check = function (expected: string[], raw: string[]) {
-    const path = Arr.map(raw, function (r) {
+    const path = Arr.map(raw, (r) => {
       return doc.find(doc.get(), r).getOrDie('Could not find: ' + r);
     });
 
     const actual = Simplify.simplify(doc, path);
-    assert.eq(expected, Arr.map(actual, function (s) { return s.id; }));
+    assert.eq(expected, Arr.map(actual, (s) => { return s.id; }));
   };
 
   check([], []);

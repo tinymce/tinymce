@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Id } from '@ephox/katamari';
+import { Arr, Fun, Id, Type } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -26,15 +26,17 @@ export interface LinkTarget {
   attach: any; // To allow popups we have to replace the function with a placeholder
 }
 
+const isElement = (node: Node): node is HTMLElement => Type.isNonNullable(node) && node.nodeType === 1;
+
 const trim = Tools.trim;
 const hasContentEditableState = function (value: string) {
   return function (node: Node) {
-    if (node && node.nodeType === 1) {
-      if ((<HTMLElement> node).contentEditable === value) {
+    if (isElement(node)) {
+      if (node.contentEditable === value) {
         return true;
       }
 
-      if ((<HTMLElement> node).getAttribute('data-mce-contenteditable') === value) {
+      if (node.getAttribute('data-mce-contenteditable') === value) {
         return true;
       }
     }
@@ -58,7 +60,7 @@ const create = function (type: LinkTargetType, title: string, url: string, level
 
 const isChildOfContentEditableTrue = function (node: Node) {
   while ((node = node.parentNode)) {
-    const value = (<HTMLElement> node).contentEditable;
+    const value = (node as HTMLElement).contentEditable;
     if (value && value !== 'inherit') {
       return isContentEditableTrue(node);
     }
@@ -68,7 +70,7 @@ const isChildOfContentEditableTrue = function (node: Node) {
 };
 
 const select = function (selector: string, root: HTMLElement) {
-  return Arr.map(SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(root), selector), function (element) {
+  return Arr.map(SelectorFilter.descendants<HTMLElement>(SugarElement.fromDom(root), selector), (element) => {
     return element.dom;
   });
 };
@@ -82,7 +84,7 @@ const getOrGenerateId = function (elm: HTMLElement) {
 };
 
 const isAnchor = function (elm: HTMLElement) {
-  return elm && elm.nodeName === 'A' && (elm.id || (<HTMLAnchorElement> elm).name) !== undefined;
+  return elm && elm.nodeName === 'A' && (elm.id || (elm as HTMLAnchorElement).name) !== undefined;
 };
 
 const isValidAnchor = function (elm: HTMLElement) {

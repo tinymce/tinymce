@@ -5,8 +5,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-type Selection = { startPath: number[]; sOffset: number; finishPath: number[]; fOffset: number };
-type Text = { before: string; selected: string; after: string };
+interface Selection { startPath: number[]; sOffset: number; finishPath: number[]; fOffset: number }
+interface Text { before: string; selected: string; after: string }
 
 UnitTest.asynctest('browser.tinymce.core.fmt.TextDecorationColorTest', (success, failure) => {
   Theme();

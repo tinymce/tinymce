@@ -4,7 +4,7 @@ import { Optional } from '@ephox/katamari';
 import * as Split from 'ephox/phoenix/api/general/Split';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('api.Split.(split,splitByPair)', function () {
+UnitTest.test('api.Split.(split,splitByPair)', () => {
   const generate = function (text: string) {
     const universe = TestUniverse(
       Gene('root', 'root', [
@@ -17,10 +17,10 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
   };
 
   const isEq = function (opt1: Optional<string>, opt2: Optional<Gene>) {
-    return opt1.fold(function () {
+    return opt1.fold(() => {
       return opt2.isNone();
-    }, function (a) {
-      return opt2.exists(function (x) {
+    }, (a) => {
+      return opt2.exists((x) => {
         return a === x.text;
       });
     });
@@ -37,7 +37,7 @@ UnitTest.test('api.Split.(split,splitByPair)', function () {
     const input = generate(text);
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);
-    assert.eq(expected, input.universe.shortlog(function (item) {
+    assert.eq(expected, input.universe.shortlog((item) => {
       return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
     }));
   };

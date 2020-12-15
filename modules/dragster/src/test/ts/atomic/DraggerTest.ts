@@ -4,7 +4,7 @@ import { SugarElement, SugarPosition } from '@ephox/sugar';
 import { DragApi, DragMode, DragSink } from 'ephox/dragster/api/DragApis';
 import * as Dragging from 'ephox/dragster/core/Dragging';
 
-UnitTest.test('DraggerTest', function () {
+UnitTest.test('DraggerTest', () => {
   let optApi: Optional<DragApi> = Optional.none();
 
   const argumentToStart: any = 'start';

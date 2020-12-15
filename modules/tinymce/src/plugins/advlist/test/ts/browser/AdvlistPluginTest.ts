@@ -6,7 +6,7 @@ import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   AdvListPlugin();
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function
   Theme();
 
   const listStyleTest = function (title: string, definition) {
-    suite.test(title, function (editor) {
+    suite.test(title, (editor) => {
       editor.getBody().innerHTML = definition.inputContent;
       LegacyUnit.setSelection(editor, definition.inputSelection[0], definition.inputSelection[1]);
       editor.execCommand(definition.command, false, { 'list-style-type': definition.listType });
@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', function
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     plugins: 'advlist lists',

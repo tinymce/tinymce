@@ -16,7 +16,7 @@ UnitTest.asynctest('Editor (Silver) directionality test', (success, failure) => 
 
   const cGetEditorContainer = Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getContainer()));
 
-  const cSetContent = (content: string) => Chain.mapper(function (editor: any) {
+  const cSetContent = (content: string) => Chain.mapper((editor: any) => {
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   });
 

@@ -22,7 +22,7 @@ interface Header {
 }
 
 const extractFrom = function (blob: Blob): Promise<JPEGMeta> {
-  return Conversions.blobToArrayBuffer(blob).then<JPEGMeta>(function (ar) {
+  return Conversions.blobToArrayBuffer(blob).then<JPEGMeta>((ar) => {
     try {
       const br = new BinaryReader(ar);
       if (readShort(br, 0).is(0xFFD8)) { // is JPEG

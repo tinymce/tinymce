@@ -8,7 +8,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import * as LinkBridge from 'tinymce/themes/mobile/bridge/LinkBridge';
 
-UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
+UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
   const store = TestHelpers.TestStore();
 
   const editorState = {
@@ -47,7 +47,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
 
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
-    Logger.sync('getInfo ... ' + scenario.label, function () {
+    Logger.sync('getInfo ... ' + scenario.label, () => {
       editorState.start.set(SugarElement.fromText(scenario.nodeText).dom);
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
@@ -71,7 +71,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
 
     const scenario = ValueSchema.asRawOrDie(rawScenario.label, schema, rawScenario);
 
-    Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, function () {
+    Logger.sync('getInfo ... ' + scenario.label + ', link: ' + scenario.linkHtml, () => {
       editorState.start.set(SugarElement.fromHtml(scenario.linkHtml).dom);
       editorState.content.set(scenario.selection);
       const info = LinkBridge.getInfo(editor);
@@ -95,7 +95,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       expected: Optional.from(rawScenario.expected).getOr([])
     };
 
-    Logger.sync('setInfo ... ' + scenario.label, function () {
+    Logger.sync('setInfo ... ' + scenario.label, () => {
       store.clear();
       LinkBridge.applyInfo(editor, scenario.info);
       store.assertEq('Checking store', scenario.expected);
@@ -279,7 +279,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {
             href: str.is('hi')
@@ -302,7 +302,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {
             href: str.is('hi')
@@ -325,7 +325,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', function () {
       )
     },
     mutations(elem) {
-      Assertions.assertStructure('Checking structure', ApproxStructure.build(function (s, str, _arr) {
+      Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {
             href: str.is('hi'),

@@ -9,12 +9,12 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Convert from './core/Convert';
 
 export default function () {
-  PluginManager.add('bbcode', function (editor) {
-    editor.on('BeforeSetContent', function (e) {
+  PluginManager.add('bbcode', (editor) => {
+    editor.on('BeforeSetContent', (e) => {
       e.content = Convert.bbcode2html(e.content);
     });
 
-    editor.on('PostProcess', function (e) {
+    editor.on('PostProcess', (e) => {
       if (e.set) {
         e.content = Convert.bbcode2html(e.content);
       }

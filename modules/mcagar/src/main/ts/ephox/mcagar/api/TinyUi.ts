@@ -109,14 +109,14 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const getDialogByElement = function (element: SugarElement) {
-    return Arr.find(editor.windowManager.getWindows(), function (win) {
+    return Arr.find(editor.windowManager.getWindows(), (win) => {
       return element.dom.id === win._id;
     });
   };
 
   const cAssertDialogContents = function (data: Record<string, any>) {
-    return Chain.async<SugarElement, SugarElement>(function (element, next, die) {
-      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
+    return Chain.async<SugarElement, SugarElement>((element, next, die) => {
+      getDialogByElement(element).fold(() => die('Can not find dialog'), (win) => {
         Assertions.assertEq('asserting dialog contents', data, win.toJSON());
         next(element);
       });
@@ -124,8 +124,8 @@ export const TinyUi = function (editor: Editor): TinyUi {
   };
 
   const cFillDialogWith = function (data: Record<string, any>) {
-    return Chain.async<SugarElement, SugarElement>(function (element, next, die) {
-      getDialogByElement(element).fold(() => die('Can not find dialog'), function (win) {
+    return Chain.async<SugarElement, SugarElement>((element, next, die) => {
+      getDialogByElement(element).fold(() => die('Can not find dialog'), (win) => {
         win.fromJSON({ ...win.toJSON(), ...data });
         next(element);
       });

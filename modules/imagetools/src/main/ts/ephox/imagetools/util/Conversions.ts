@@ -14,7 +14,7 @@ function imageToBlob(image: HTMLImageElement): Promise<Blob> {
 }
 
 function blobToImage(blob: Blob): Promise<HTMLImageElement> {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const blobUrl = URL.createObjectURL(blob);
 
     const image = new Image();
@@ -45,7 +45,7 @@ function blobToImage(blob: Blob): Promise<HTMLImageElement> {
 }
 
 function anyUriToBlob(url: string): Promise<Blob> {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
     xhr.open('GET', url, true);
@@ -111,8 +111,8 @@ function dataUriToBlobSync(uri: string): Optional<Blob> {
 }
 
 function dataUriToBlob(uri: string): Promise<Blob> {
-  return new Promise(function (resolve, reject) {
-    dataUriToBlobSync(uri).fold(function () {
+  return new Promise((resolve, reject) => {
+    dataUriToBlobSync(uri).fold(() => {
       // uri isn't valid
       reject('uri is not base64: ' + uri);
     }, resolve);
@@ -135,8 +135,8 @@ function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number
   type = type || 'image/png';
 
   if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
-    return new Promise<Blob>(function (resolve, reject) {
-      canvas.toBlob(function (blob) {
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
         if (blob) {
           resolve(blob);
         } else {
@@ -155,7 +155,7 @@ function canvasToDataURL(canvas: HTMLCanvasElement, type?: string, quality?: num
 }
 
 function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
-  return blobToImage(blob).then(function (image) {
+  return blobToImage(blob).then((image) => {
     // we aren't retaining the image, so revoke the URL immediately
     revokeImageUrl(image);
 
@@ -168,7 +168,7 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
 }
 
 function blobToDataUri(blob: Blob): Promise<string> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
 
     reader.onloadend = function () {
@@ -180,7 +180,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
 }
 
 function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
 
     reader.onloadend = function () {
@@ -192,7 +192,7 @@ function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
 }
 
 function blobToBase64(blob: Blob): Promise<string> {
-  return blobToDataUri(blob).then(function (dataUri) {
+  return blobToDataUri(blob).then((dataUri) => {
     return dataUri.split(',')[1];
   });
 }

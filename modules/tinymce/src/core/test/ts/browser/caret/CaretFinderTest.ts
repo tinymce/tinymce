@@ -6,24 +6,24 @@ import * as CaretFinder from 'tinymce/core/caret/CaretFinder';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   const cSetHtml = function (html) {
-    return Chain.op(function () {
+    return Chain.op(() => {
       viewBlock.update(html);
     });
   };
 
   const cCreateFromPosition = function (path, offset) {
-    return Chain.mapper(function (viewBlock: any) {
+    return Chain.mapper((viewBlock: any) => {
       const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
       return CaretPosition(container.dom, offset);
     });
   };
 
   const cAssertCaretPosition = function (path, expectedOffset) {
-    return Chain.op(function (posOption: Optional<any>) {
+    return Chain.op((posOption: Optional<any>) => {
       const pos = posOption.getOrDie();
       const expectedContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
       Assertions.assertDomEq('Should be the expected container', expectedContainer, SugarElement.fromDom(pos.container()));
@@ -31,24 +31,24 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
     });
   };
 
-  const cAssertNone = Chain.op(function (pos: Optional<any>) {
+  const cAssertNone = Chain.op((pos: Optional<any>) => {
     Assertions.assertEq('Should be the none but got some', true, pos.isNone());
   });
 
   const cFromPosition = function (forward) {
-    return Chain.mapper(function (from: CaretPosition) {
+    return Chain.mapper((from: CaretPosition) => {
       return CaretFinder.fromPosition(forward, viewBlock.get(), from);
     });
   };
 
   const cNavigate = function (forward) {
-    return Chain.mapper(function (from: CaretPosition) {
+    return Chain.mapper((from: CaretPosition) => {
       return CaretFinder.navigate(forward, viewBlock.get(), from);
     });
   };
 
   const cPositionIn = function (forward, path) {
-    return Chain.injectThunked(function () {
+    return Chain.injectThunked(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie() as SugarElement<HTMLElement>;
       return CaretFinder.positionIn(forward, element.dom);
     });
@@ -372,7 +372,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretFinderTest', function (success, fa
         cAssertCaretPosition([ 0, 1 ], 0)
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

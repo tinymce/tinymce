@@ -10,7 +10,7 @@ import { Pipeline } from 'ephox/agar/api/Pipeline';
 import { Step } from 'ephox/agar/api/Step';
 import * as UiFinder from 'ephox/agar/api/UiFinder';
 
-UnitTest.asynctest('MouseTest', function (success, failure) {
+UnitTest.asynctest('MouseTest', (success, failure) => {
 
   const input = SugarElement.fromTag('input');
   const container = SugarElement.fromTag('container');

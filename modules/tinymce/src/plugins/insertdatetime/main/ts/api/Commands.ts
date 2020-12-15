@@ -9,11 +9,11 @@ import * as Actions from '../core/Actions';
 import * as Settings from './Settings';
 
 const register = function (editor) {
-  editor.addCommand('mceInsertDate', function () {
+  editor.addCommand('mceInsertDate', () => {
     Actions.insertDateTime(editor, Settings.getDateFormat(editor));
   });
 
-  editor.addCommand('mceInsertTime', function () {
+  editor.addCommand('mceInsertTime', () => {
     Actions.insertDateTime(editor, Settings.getTimeFormat(editor));
   });
 };

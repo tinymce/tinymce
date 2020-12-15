@@ -6,19 +6,19 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as TransformOperations from 'ephox/snooker/operate/TransformOperations';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
-UnitTest.test('TransformOperationsTest', function () {
+UnitTest.test('TransformOperationsTest', () => {
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
-    return Arr.map(grid, function (row) {
+    return Arr.map(grid, (row) => {
       return Structs.rowcells(row, 'tbody');
     });
   };
 
   const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
-    Arr.each(expected, function (row, i) {
-      Arr.each(row.cells, function (cell, j) {
+    Arr.each(expected, (row, i) => {
+      Arr.each(row.cells, (cell, j) => {
         assert.eq(cell.element, actual[i].cells[j].element);
         assert.eq(cell.isNew, actual[i].cells[j].isNew);
       });

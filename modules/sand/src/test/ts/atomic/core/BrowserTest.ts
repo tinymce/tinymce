@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import * as PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
-UnitTest.test('BrowserTest', function () {
+UnitTest.test('BrowserTest', () => {
   function check(expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) {
     const platform = PlatformDetection.detect(userAgent, Fun.never);
     assert.eq(expectedBrowser, platform.browser.current);

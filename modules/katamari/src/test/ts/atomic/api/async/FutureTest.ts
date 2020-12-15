@@ -53,18 +53,18 @@ promiseTest('Future: anonBind', () =>
     });
   }))));
 
-promiseTest('Future: parallel', () => new Promise(function (resolve, reject) {
-  const f = Future.nu(function (callback) {
+promiseTest('Future: parallel', () => new Promise((resolve, reject) => {
+  const f = Future.nu((callback) => {
     setTimeout(Fun.curry(callback, 'apple'), 10);
   });
-  const g = Future.nu(function (callback) {
+  const g = Future.nu((callback) => {
     setTimeout(Fun.curry(callback, 'banana'), 5);
   });
-  const h = Future.nu(function (callback) {
+  const h = Future.nu((callback) => {
     callback('carrot');
   });
 
-  Futures.par([ f, g, h ]).get(function (r) {
+  Futures.par([ f, g, h ]).get((r) => {
     eqAsync('r[0]', r[0], 'apple', reject);
     eqAsync('r[1]', r[1], 'banana', reject);
     eqAsync('r[2]', r[2], 'carrot', reject);
@@ -85,15 +85,15 @@ promiseTest('Future: parallel spec', () =>
   })))
 );
 
-promiseTest('Future: mapM', function () {
-  return new Promise(function (resolve, reject) {
+promiseTest('Future: mapM', () => {
+  return new Promise((resolve, reject) => {
     const fn = function (a) {
-      return Future.nu(function (cb) {
+      return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' bizarro'), 10);
       });
     };
 
-    Futures.traverse([ 'q', 'r', 's' ], fn).get(function (r) {
+    Futures.traverse([ 'q', 'r', 's' ], fn).get((r) => {
       eqAsync('eq', [ 'q bizarro', 'r bizarro', 's bizarro' ], r, reject);
       resolve();
     });
@@ -113,41 +113,41 @@ promiseTest('Future: mapM spec', () =>
   })))
 );
 
-promiseTest('Future: compose', function () {
-  return new Promise(function (resolve, reject) {
+promiseTest('Future: compose', () => {
+  return new Promise((resolve, reject) => {
     const f = function (a) {
-      return Future.nu(function (cb) {
+      return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' f'), 10);
       });
     };
 
     const g = function (a) {
-      return Future.nu(function (cb) {
+      return Future.nu((cb) => {
         setTimeout(Fun.curry(cb, a + ' g'), 10);
       });
     };
 
-    Futures.compose(f, g)('a').get(function (r) {
+    Futures.compose(f, g)('a').get((r) => {
       eqAsync('compose', 'a g f', r, reject);
       resolve(true);
     });
   });
 });
 
-promiseTest('Future: cache', function () {
-  return new Promise(function (resolve, reject) {
+promiseTest('Future: cache', () => {
+  return new Promise((resolve, reject) => {
     let callCount = 0;
-    const future = Future.nu(function (cb) {
+    const future = Future.nu((cb) => {
       callCount++;
       setTimeout(Fun.curry(cb, callCount), 10);
     });
     const cachedFuture = future.toCached();
 
     eqAsync('eq', 0, callCount, reject);
-    cachedFuture.get(function (r) {
+    cachedFuture.get((r) => {
       eqAsync('eq', 1, r, reject);
       eqAsync('eq', 1, callCount, reject);
-      cachedFuture.get(function (r2) {
+      cachedFuture.get((r2) => {
         eqAsync('eq', 1, r2, reject);
         eqAsync('eq', 1, callCount, reject);
         resolve();

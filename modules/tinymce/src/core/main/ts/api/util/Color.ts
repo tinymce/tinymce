@@ -9,6 +9,7 @@
  * This class lets you parse/serialize colors and convert rgb/hsb.
  *
  * @class tinymce.util.Color
+ * @private
  * @example
  * var white = new tinymce.util.Color({r: 255, g: 255, b: 255});
  * var red = new tinymce.util.Color('#FF0000');

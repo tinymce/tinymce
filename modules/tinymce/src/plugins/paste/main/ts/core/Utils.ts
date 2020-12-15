@@ -17,7 +17,7 @@ import Tools from 'tinymce/core/api/util/Tools';
  */
 
 function filter(content, items) {
-  Tools.each(items, function (v) {
+  Tools.each(items, (v) => {
     if (v.constructor === RegExp) {
       content = content.replace(v, '');
     } else {

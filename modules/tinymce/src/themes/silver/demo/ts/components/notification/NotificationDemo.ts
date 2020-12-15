@@ -12,7 +12,7 @@ export default function () {
       text: 'This is an example ' + (type ? type : 'blank') + ' message.'
     });
 
-    Delay.setTimeout(function () {
+    Delay.setTimeout(() => {
       notification.text('Message changed.');
     }, 5000);
     console.log(notification);
@@ -51,7 +51,7 @@ export default function () {
     });
     notification.progressBar.value(percent);
 
-    Delay.setTimeout(function () {
+    Delay.setTimeout(() => {
       notification.progressBar.value(90);
     }, 5000);
     console.log(notification);
@@ -84,7 +84,7 @@ export default function () {
     { title: 'notifyProgress', action: notifyProgress, value: 50 },
     { title: 'notifyTimeout', action: notifyTimeout, value: 3000 },
     { title: 'notifyIcon', action: notifyIcon }
-  ], function (notification) {
+  ], (notification) => {
     const btn = document.createElement('button');
     btn.innerHTML = notification.title;
     btn.onclick = function () {

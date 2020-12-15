@@ -3,14 +3,14 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
 import XHR, { XHRSettings } from 'tinymce/core/api/util/XHR';
 
-UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.util.XhrTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
   type XHRTest = XMLHttpRequest & { test?: number };
   type XHRSettingsTest = XHRSettings & { test?: number };
 
-  suite.asyncTest('Successful request', function (_, done) {
-    XHR.on('beforeSend', function (e: { xhr: XHRTest; settings: XHRSettingsTest }) {
+  suite.asyncTest('Successful request', (_, done) => {
+    XHR.on('beforeSend', (e: { xhr: XHRTest; settings: XHRSettingsTest }) => {
       e.xhr.test = 123;
       e.settings.test = 456;
     });
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failu
     });
   });
 
-  suite.asyncTest('Unsuccessful request', function (_, done) {
+  suite.asyncTest('Unsuccessful request', (_, done) => {
     XHR.send({
       url: '/custom/404',
       error(type, xhr, input) {
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', function (success, failu
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

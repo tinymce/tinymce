@@ -46,14 +46,14 @@ UnitTest.test('SizeInputParsingTest', () => {
   });
 
   const arbPad = Jsc.array(Jsc.elements(' \t'.split(''))).smap(
-    function (arr) { return arr.join(''); },
-    function (s) { return s.split(''); }
+    (arr) => { return arr.join(''); },
+    (s) => { return s.split(''); }
   );
 
   Jsc.property(
     'Valid size strings should be parseable',
     arbPad, Jsc.number(0, largeSensible), arbPad, Jsc.oneof(Jsc.elements(units)), arbPad,
-    function (pad1: string, nonNegNumber: number, pad2: string, unit: SizeUnit, pad3: string) {
+    (pad1: string, nonNegNumber: number, pad2: string, unit: SizeUnit, pad3: string) => {
       const str = pad1 + nonNegNumber + pad2 + unit + pad3;
       const parsed = parseSize(str);
       const size = parsed.toOptional().getOrNull();

@@ -60,7 +60,7 @@ const getFrame = function (editor) {
 
 const getOrDerive = function (name, f) {
   return function (editor) {
-    const g = editor[name].getOrThunk(function () {
+    const g = editor[name].getOrThunk(() => {
       const frame = getFrame(editor);
       return function () {
         return f(frame);
@@ -72,7 +72,7 @@ const getOrDerive = function (name, f) {
 };
 
 const getOrListen = function (editor, doc, name, type: string) {
-  return editor[name].getOrThunk(function () {
+  return editor[name].getOrThunk(() => {
     return function (handler) {
       return DomEvent.bind(doc, type, handler);
     };
@@ -97,29 +97,29 @@ const getActiveApi = function (editor): Optional<PlatformEditor> {
     return WindowSelection.getExact(win).filter(isCollapsed).bind(toStartRect);
   };
 
-  return getBodyFromFrame(frame).bind(function (body) {
-    return getDocFromFrame(frame).bind(function (doc) {
-      return getWinFromFrame(frame).map(function (win) {
+  return getBodyFromFrame(frame).bind((body) => {
+    return getDocFromFrame(frame).bind((doc) => {
+      return getWinFromFrame(frame).map((win) => {
 
         const html = SugarElement.fromDom(doc.dom.documentElement);
 
-        const getCursorBox: () => Optional<RawRect> = editor.getCursorBox.getOrThunk(function () {
+        const getCursorBox: () => Optional<RawRect> = editor.getCursorBox.getOrThunk(() => {
           return function () {
-            return WindowSelection.get(win).bind(function (sel) {
-              return WindowSelection.getFirstRect(win, sel).orThunk(function () {
+            return WindowSelection.get(win).bind((sel) => {
+              return WindowSelection.getFirstRect(win, sel).orThunk(() => {
                 return tryFallbackBox(win);
               });
             });
           };
         });
 
-        const setSelection = editor.setSelection.getOrThunk(function () {
+        const setSelection = editor.setSelection.getOrThunk(() => {
           return function (start, soffset, finish, foffset) {
             WindowSelection.setExact(win, start, soffset, finish, foffset);
           };
         });
 
-        const clearSelection = editor.clearSelection.getOrThunk(function () {
+        const clearSelection = editor.clearSelection.getOrThunk(() => {
           return function () {
             WindowSelection.clear(win);
           };

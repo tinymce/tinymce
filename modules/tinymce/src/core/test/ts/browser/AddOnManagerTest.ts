@@ -58,7 +58,7 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
     return languagePackUrl;
   };
 
-  suite.test('requireLangPack', function () {
+  suite.test('requireLangPack', () => {
     // requiring a language pack waits for the plugin to be loaded
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'sv'), null);
 
@@ -78,14 +78,14 @@ UnitTest.asynctest('browser.tinymce.core.AddOnManagerTest', (success, failure) =
     LegacyUnit.strictEqual(getLanguagePackUrl('sv', 'sv'), null);
   });
 
-  patch(ScriptLoader.ScriptLoader, 'add', function (origFunc, url, scriptSuccess) {
+  patch(ScriptLoader.ScriptLoader, 'add', (origFunc, url, scriptSuccess) => {
     languagePackUrl = url;
     if (scriptSuccess) {
       scriptSuccess();
     }
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     unpatch(ScriptLoader.ScriptLoader);
     success();
   }, failure);

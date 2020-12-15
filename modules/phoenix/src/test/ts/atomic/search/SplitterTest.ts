@@ -5,7 +5,7 @@ import * as Splitter from 'ephox/phoenix/search/Splitter';
 import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 
-UnitTest.test('SplitterTest', function () {
+UnitTest.test('SplitterTest', () => {
 
   interface CheckItem {
     id: string;
@@ -19,7 +19,7 @@ UnitTest.test('SplitterTest', function () {
     const item = Finder.get(universe, id);
     const actual = Splitter.subdivide(universe, item, positions);
     assert.eq(expected.length, actual.length, 'Incorrect size for subdivide test');
-    Arr.each(expected, function (exp, i) {
+    Arr.each(expected, (exp, i) => {
       const act = actual[i];
       // TODO: Consider removing an expected id from the test case as it isn't really representing anything meaningful
       assert.eq(exp.id, act.element.id);

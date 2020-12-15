@@ -4,10 +4,10 @@ import { LegacyUnit } from '@ephox/mcagar';
 import Schema from 'tinymce/core/api/html/Schema';
 import Styles from 'tinymce/core/api/html/Styles';
 
-UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.html.StylesTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  suite.test('Basic parsing/serializing', function () {
+  suite.test('Basic parsing/serializing', () => {
     const styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('FONT-SIZE:10px')), 'font-size: 10px;');
@@ -27,7 +27,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     );
   });
 
-  suite.test('Colors force hex and lowercase', function () {
+  suite.test('Colors force hex and lowercase', () => {
     const styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('color: rgb(1,2,3)')), 'color: #010203;');
@@ -41,7 +41,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     LegacyUnit.equal(styles.serialize(styles.parse('   FONT-SIZE  :  10px  ;   COLOR  :  RED   ')), 'font-size: 10px; color: red;');
   });
 
-  suite.test('Urls convert urls and force format', function () {
+  suite.test('Urls convert urls and force format', () => {
     const styles = Styles({
       url_converter(url) {
         return '|' + url + '|';
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     );
   });
 
-  suite.test('Compress styles', function () {
+  suite.test('Compress styles', () => {
     const styles = Styles();
 
     LegacyUnit.equal(
@@ -146,13 +146,13 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     );
   });
 
-  suite.test('Font weight', function () {
+  suite.test('Font weight', () => {
     const styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('font-weight: 700')), 'font-weight: bold;');
   });
 
-  suite.test('Valid styles', function () {
+  suite.test('Valid styles', () => {
     const styles = Styles({}, Schema({ valid_styles: { '*': 'color,font-size', 'a': 'margin-left' }}));
 
     LegacyUnit.equal(
@@ -165,7 +165,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     );
   });
 
-  suite.test('Invalid styles', function () {
+  suite.test('Invalid styles', () => {
     const styles = Styles({}, Schema({ invalid_styles: { '*': 'color,font-size', 'a': 'margin-left' }}));
 
     LegacyUnit.equal(styles.serialize(styles.parse('color: #ff0000; font-size: 10px; margin-left: 10px'), 'b'), 'margin-left: 10px;');
@@ -175,7 +175,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     );
   });
 
-  suite.test('Suspicious (XSS) property names', function () {
+  suite.test('Suspicious (XSS) property names', () => {
     const styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse(`font-fa"on-load\\3dxss\\28\\29\\20mily:'arial'`)), '');
@@ -183,7 +183,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     LegacyUnit.equal(styles.serialize(styles.parse(`font-fa\\22on-load\\3dxss\\28\\29\\20mily:'arial'`)), '');
   });
 
-  suite.test('Script urls denied', function () {
+  suite.test('Script urls denied', () => {
     const styles = Styles();
 
     LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), '');
@@ -211,7 +211,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     LegacyUnit.equal(styles.serialize(styles.parse('background:url("data: image /svg+xml,%3Csvg/%3E")')), '');
   });
 
-  suite.test('Script urls allowed', function () {
+  suite.test('Script urls allowed', () => {
     const styles = Styles({ allow_script_urls: true });
 
     LegacyUnit.equal(styles.serialize(styles.parse('behavior:url(test.htc)')), `behavior: url('test.htc');`);
@@ -220,7 +220,7 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', function (success, fa
     LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), `background: url('vbscript:alert(1');`);
   });
 
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     success();
   }, failure);
 });

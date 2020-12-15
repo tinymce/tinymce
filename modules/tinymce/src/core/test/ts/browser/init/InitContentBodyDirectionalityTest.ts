@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.init.InitContentBodyDirectionalityTest'
 
   const cGetBodyDir = Chain.mapper((editor: any) => editor.getBody().dir);
 
-  const cSetContent = (content: string) => Chain.mapper(function (editor: Editor) {
+  const cSetContent = (content: string) => Chain.mapper((editor: Editor) => {
     return editor.editorCommands.execCommand('mceSetContent', false, content);
   });
 

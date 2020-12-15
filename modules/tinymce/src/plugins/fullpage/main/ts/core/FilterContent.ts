@@ -63,7 +63,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
 
   // Parse header and update iframe
   const headerFragment = Parser.parseHeader(headState.get());
-  each(headerFragment.getAll('style'), function (node) {
+  each(headerFragment.getAll('style'), (node) => {
     if (node.firstChild) {
       styles += node.firstChild.value;
     }
@@ -90,14 +90,14 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   }
 
   const currentStyleSheetsMap: Record<string, HTMLLinkElement> = {};
-  Tools.each(headElm.getElementsByTagName('link'), function (stylesheet: HTMLLinkElement) {
+  Tools.each(headElm.getElementsByTagName('link'), (stylesheet: HTMLLinkElement) => {
     if (stylesheet.rel === 'stylesheet' && stylesheet.getAttribute('data-mce-fullpage')) {
       currentStyleSheetsMap[stylesheet.href] = stylesheet;
     }
   });
 
   // Add new
-  Tools.each(headerFragment.getAll('link'), function (stylesheet) {
+  Tools.each(headerFragment.getAll('link'), (stylesheet) => {
     const href = stylesheet.attr('href');
     if (!href) {
       return true;
@@ -116,7 +116,7 @@ const handleSetContent = function (editor: Editor, headState, footState, evt) {
   });
 
   // Delete old
-  Tools.each(currentStyleSheetsMap, function (stylesheet) {
+  Tools.each(currentStyleSheetsMap, (stylesheet) => {
     stylesheet.parentNode.removeChild(stylesheet);
   });
 };
@@ -164,10 +164,10 @@ const handleGetContent = function (editor: Editor, head, foot, evt: GetContentEv
 };
 
 const setup = function (editor: Editor, headState, footState) {
-  editor.on('BeforeSetContent', function (evt) {
+  editor.on('BeforeSetContent', (evt) => {
     handleSetContent(editor, headState, footState, evt);
   });
-  editor.on('GetContent', function (evt) {
+  editor.on('GetContent', (evt) => {
     handleGetContent(editor, headState.get(), footState.get(), evt);
   });
 };

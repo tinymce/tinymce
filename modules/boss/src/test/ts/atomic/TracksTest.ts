@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { Gene } from 'ephox/boss/api/Gene';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('TracksTest', function () {
+UnitTest.test('TracksTest', () => {
   const family = Gene('A', '.', [
     Gene('B', '.'),
     Gene('C', '.', [

@@ -29,7 +29,7 @@ const normalizeBlockSelectionRange = (rng: Range): Range => {
   const rootNode = rng.commonAncestorContainer;
 
   return CaretFinder.fromPosition(false, rootNode, endPos)
-    .map(function (newEndPos) {
+    .map((newEndPos) => {
       if (!CaretUtils.isInSameBlock(startPos, endPos, rootNode) && CaretUtils.isInSameBlock(startPos, newEndPos, rootNode)) {
         return createRange(startPos.container(), startPos.offset(), newEndPos.container(), newEndPos.offset());
       } else {

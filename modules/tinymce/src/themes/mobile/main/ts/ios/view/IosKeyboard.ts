@@ -58,7 +58,7 @@ const stubborn: IosKeyboardConstructor = (outerBody: SugarElement<Node>, cWin: W
     CaptureBin.input(outerBody, Focus.blur);
   };
 
-  const captureInput = DomEvent.bind(page, 'keydown', function (evt) {
+  const captureInput = DomEvent.bind(page, 'keydown', (evt) => {
     // Think about killing the event.
     if (!Arr.contains([ 'input', 'textarea' ], SugarNode.name(evt.target))) {
 

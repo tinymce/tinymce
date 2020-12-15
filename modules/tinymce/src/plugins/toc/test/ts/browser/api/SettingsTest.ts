@@ -4,7 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import * as Settings from 'tinymce/plugins/toc/api/Settings';
 
-UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', function () {
+UnitTest.test('browser.tinymce.plugins.toc.api.SettingsTest', () => {
   Assertions.assertEq('TestCase-TBA: TableOfContents: Should be default toc class', 'mce-toc', Settings.getTocClass(new Editor('x', {}, EditorManager)));
   Assertions.assertEq('TestCase-TBA: TableOfContents: Should be specified toc class', 'c', Settings.getTocClass(new Editor('x', { toc_class: 'c' }, EditorManager)));
 

@@ -31,10 +31,10 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string => 
 const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom.innerText).join('');
 
 const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
-  editor.on('BeforeGetContent', function (e) {
+  editor.on('BeforeGetContent', (e) => {
     const multiCellContext = function (cells) {
       e.preventDefault();
-      extractSelected(cells).each(function (elements) {
+      extractSelected(cells).each((elements) => {
         e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);
       });
     };
@@ -44,14 +44,14 @@ const registerEvents = function (editor: Editor, selections: Selections, actions
     }
   });
 
-  editor.on('BeforeSetContent', function (e) {
+  editor.on('BeforeSetContent', (e) => {
     if (e.selection === true && e.paste === true) {
       const cellOpt = Optional.from(editor.dom.getParent(editor.selection.getStart(), 'th,td'));
-      cellOpt.each(function (domCell) {
+      cellOpt.each((domCell) => {
         const cell = SugarElement.fromDom(domCell);
         TableLookup.table(cell).each((table) => {
 
-          const elements = Arr.filter(SugarElements.fromHtml(e.content), function (content) {
+          const elements = Arr.filter(SugarElements.fromHtml(e.content), (content) => {
             return SugarNode.name(content) !== 'meta';
           });
 

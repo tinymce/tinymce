@@ -36,7 +36,7 @@ const isEditorContentAreaElement = function (elm: Element) {
 
 const isUIElement = function (editor: Editor, elm: Node) {
   const customSelector = Settings.getCustomUiSelector(editor);
-  const parent = DOM.getParent(elm, function (elm) {
+  const parent = DOM.getParent(elm, (elm) => {
     return (
       isEditorUIElement(elm) ||
       (customSelector ? editor.dom.is(elm, customSelector) : false)
@@ -82,7 +82,7 @@ const registerEvents = function (editorManager: EditorManager, e: { editor: Edit
 
   editor.on('focusout', function () {
     const self: Editor = this;
-    Delay.setEditorTimeout(self, function () {
+    Delay.setEditorTimeout(self, () => {
       const focusedEditor = editorManager.focusedEditor;
 
       // Still the same editor the blur was outside any editor UI

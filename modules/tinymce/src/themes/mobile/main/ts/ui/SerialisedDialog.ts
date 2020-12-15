@@ -34,7 +34,7 @@ const sketch = function (rawSpec) {
     FieldSchema.defaulted('maxFieldIndex', rawSpec.fields.length - 1),
     FieldSchema.strict('onExecute'),
     FieldSchema.strict('getInitialValue'),
-    FieldSchema.state('state', function () {
+    FieldSchema.state('state', () => {
       return {
         dialogSwipeState: Singleton.value(),
         currentScreen: Cell(0)
@@ -60,16 +60,16 @@ const sketch = function (rawSpec) {
   };
 
   const reposition = function (dialog, message) {
-    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each((parent) => {
       Css.set(parent, 'left', (-spec.state.currentScreen.get() * message.width) + 'px');
     });
   };
 
   const navigate = function (dialog, direction) {
     const screens = SelectorFilter.descendants<HTMLElement>(dialog.element, '.' + Styles.resolve('serialised-dialog-screen'));
-    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each(function (parent) {
+    SelectorFind.descendant(dialog.element, '.' + Styles.resolve('serialised-dialog-chain')).each((parent) => {
       if ((spec.state.currentScreen.get() + direction) >= 0 && (spec.state.currentScreen.get() + direction) < screens.length) {
-        Css.getRaw(parent, 'left').each(function (left) {
+        Css.getRaw(parent, 'left').each((left) => {
           const currentLeft = parseInt(left, 10);
           const w = Width.get(screens[0]);
           Css.set(parent, 'left', (currentLeft - (direction * w)) + 'px');
@@ -83,8 +83,8 @@ const sketch = function (rawSpec) {
   const focusInput = function (dialog) {
     const inputs = SelectorFilter.descendants(dialog.element, 'input');
     const optInput = Optional.from(inputs[spec.state.currentScreen.get()]);
-    optInput.each(function (input) {
-      dialog.getSystem().getByDom(input).each(function (inputComp) {
+    optInput.each((input) => {
+      dialog.getSystem().getByDom(input).each((inputComp) => {
         AlloyTriggers.dispatchFocus(dialog, inputComp.element);
       });
     });
@@ -98,13 +98,13 @@ const sketch = function (rawSpec) {
   };
 
   const memForm = Memento.record(
-    Form.sketch(function (parts) {
+    Form.sketch((parts) => {
       return {
         dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog"></div>'),
         components: [
           Container.sketch({
             dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-chain" style="left: 0px; position: absolute;"></div>'),
-            components: Arr.map(spec.fields, function (field, i) {
+            components: Arr.map(spec.fields, (field, i) => {
               return i <= spec.maxFieldIndex ? Container.sketch({
                 dom: UiDomFactory.dom('<div class="${prefix}-serialised-dialog-screen"></div>'),
                 components: [
@@ -118,7 +118,7 @@ const sketch = function (rawSpec) {
         ],
 
         formBehaviours: Behaviour.derive([
-          Receivers.orientation(function (dialog, message) {
+          Receivers.orientation((dialog, message) => {
             reposition(dialog, message);
           }),
           Keying.config({
@@ -137,26 +137,26 @@ const sketch = function (rawSpec) {
           }),
 
           AddEventsBehaviour.config(formAdhocEvents, [
-            AlloyEvents.runOnAttached(function (dialog, _simulatedEvent) {
+            AlloyEvents.runOnAttached((dialog, _simulatedEvent) => {
               // Reset state to first screen.
               resetState();
               const dotitems = memDots.get(dialog);
               Highlighting.highlightFirst(dotitems);
-              spec.getInitialValue(dialog).each(function (v) {
+              spec.getInitialValue(dialog).each((v) => {
                 Representing.setValue(dialog, v);
               });
             }),
 
             AlloyEvents.runOnExecute(spec.onExecute),
 
-            AlloyEvents.run<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), function (dialog, simulatedEvent) {
+            AlloyEvents.run<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (dialog, simulatedEvent) => {
               const event = simulatedEvent.event;
               if (event.raw.propertyName === 'left') {
                 focusInput(dialog);
               }
             }),
 
-            AlloyEvents.run<NavigateEvent>(navigateEvent, function (dialog, simulatedEvent) {
+            AlloyEvents.run<NavigateEvent>(navigateEvent, (dialog, simulatedEvent) => {
               const event = simulatedEvent.event;
               const direction = event.direction;
               navigate(dialog, direction);
@@ -175,7 +175,7 @@ const sketch = function (rawSpec) {
         itemClass: Styles.resolve('dot-item')
       })
     ]),
-    components: Arr.bind(spec.fields, function (_f, i) {
+    components: Arr.bind(spec.fields, (_f, i) => {
       return i <= spec.maxFieldIndex ? [
         UiDomFactory.spec('<div class="${prefix}-dot-item ${prefix}-icon-full-dot ${prefix}-icon"></div>')
       ] : [];
@@ -199,23 +199,23 @@ const sketch = function (rawSpec) {
       }),
 
       AddEventsBehaviour.config(wrapperAdhocEvents, [
-        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchstart(), function (_wrapper, simulatedEvent) {
+        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchstart(), (_wrapper, simulatedEvent) => {
           const event = simulatedEvent.event;
           spec.state.dialogSwipeState.set(
             SwipingModel.init(event.raw.touches[0].clientX)
           );
         }),
-        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), function (_wrapper, simulatedEvent) {
+        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchmove(), (_wrapper, simulatedEvent) => {
           const event = simulatedEvent.event;
-          spec.state.dialogSwipeState.on(function (state) {
+          spec.state.dialogSwipeState.on((state) => {
             simulatedEvent.event.prevent();
             spec.state.dialogSwipeState.set(
               SwipingModel.move(state, event.raw.touches[0].clientX)
             );
           });
         }),
-        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchend(), function (wrapper, _simulatedEvent) {
-          spec.state.dialogSwipeState.on(function (state) {
+        AlloyEvents.run<EventArgs<TouchEvent>>(NativeEvents.touchend(), (wrapper, _simulatedEvent) => {
+          spec.state.dialogSwipeState.on((state) => {
             const dialog = memForm.get(wrapper);
             // Confusing
             const direction = -1 * SwipingModel.complete(state);

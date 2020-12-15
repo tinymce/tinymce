@@ -10,19 +10,19 @@ Css.setAll(editor, {
 });
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
-DomEvent.bind(SugarElement.fromDom(document), 'keydown', function (event) {
+DomEvent.bind(SugarElement.fromDom(document), 'keydown', (event) => {
   if (event.raw.keyCode === 13) {
     Optional.from(window.getSelection()).each((selection) => {
       if (selection.rangeCount > 0) {
         const anchorNode = SugarElement.fromDom(selection.anchorNode as Node);
         const focusNode = SugarElement.fromDom(selection.focusNode as Node);
-        const spans = DomWrapping.reuse(anchorNode, selection.anchorOffset, focusNode, selection.focusOffset, function (elem) {
+        const spans = DomWrapping.reuse(anchorNode, selection.anchorOffset, focusNode, selection.focusOffset, (elem) => {
           return SugarNode.name(elem) === 'span';
-        }, function () {
+        }, () => {
           return DomWrapping.nu(SugarElement.fromTag('span'));
         });
 
-        Arr.each(spans, function (span) {
+        Arr.each(spans, (span) => {
           Css.set(span, 'border-bottom', '1px solid red');
         });
       }

@@ -35,7 +35,7 @@ const temporary = function <E, D> (universe: Universe<E, D>, start: E, soffset: 
   universe.insert().append(span, cursor);
 
   const injectAt = universe.property().isEmptyTag(start) ? universe.property().parent(start) : Optional.some(start);
-  injectAt.each(function (z) {
+  injectAt.each((z) => {
     Injection.atStartOf(universe, z, soffset, span);
   });
 
@@ -50,7 +50,7 @@ const temporary = function <E, D> (universe: Universe<E, D>, start: E, soffset: 
  * The point approach needs to reuse a temporary span (if we already have one) or create one if we don't.
  */
 const scan = function <E, D> (universe: Universe<E, D>, start: E, soffset: number, exclusions: (e: E) => boolean): SpanWrapPoint<E> {
-  return universe.property().parent(start).bind(function (parent): Optional<SpanWrapPoint<E>> {
+  return universe.property().parent(start).bind((parent): Optional<SpanWrapPoint<E>> => {
     const cursor = Spot.point(start, soffset);
     const canReuse = isSpan(universe, exclusions)(parent) && universe.property().children(parent).length === 1 && isUnicode(universe, start);
     return canReuse ? Optional.some<SpanWrapPoint<E>>({
@@ -58,7 +58,7 @@ const scan = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
       temporary: false,
       wrappers: [ parent ]
     }) : Optional.none();
-  }).getOrThunk(function () {
+  }).getOrThunk(() => {
     return temporary(universe, start, soffset);
   });
 };
@@ -77,7 +77,7 @@ const wrap = function <E, D> (universe: Universe<E, D>, start: E, soffset: numbe
   };
 
   const wrappers = Wrapper.reuse(universe, start, soffset, finish, foffset, isSpan(universe, exclusions), nuSpan);
-  return Optional.from(wrappers[wrappers.length - 1]).map(function (lastSpan): SpanWrapRange<E> {
+  return Optional.from(wrappers[wrappers.length - 1]).map((lastSpan): SpanWrapRange<E> => {
     const lastOffset = universe.property().children(lastSpan).length;
     const range = Spot.points(
       Spot.point(wrappers[0], 0),

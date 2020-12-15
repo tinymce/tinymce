@@ -4,7 +4,7 @@ import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import * as TableDeleteAction from 'tinymce/core/delete/TableDeleteAction';
 
-UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', (success, failure) => {
 
   const cFromHtml = (html, startPath, startOffset, endPath, endOffset) =>
     Chain.injectThunked(() => {
@@ -21,18 +21,18 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
 
   const fail = (message: string) => Fun.constant(Result.error(message));
 
-  const cAssertNone = Chain.op(function (x: Optional<any>) {
+  const cAssertNone = Chain.op((x: Optional<any>) => {
     Assertions.assertEq('Is none', true, x.isNone());
   });
 
-  const cExtractActionCells = Chain.binder(function (actionOpt: Optional<any>) {
+  const cExtractActionCells = Chain.binder((actionOpt: Optional<any>) => {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
-        function (action) {
+        (action) => {
           return action.fold(
             fail('unexpected action'),
-            function (xs) {
+            (xs) => {
               const cellString = Arr.map(xs, Html.getOuter).join('');
 
               return Result.value(cellString);
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       );
   });
 
-  const cExtractDeleteSelectionCell = Chain.binder(function (actionOpt: Optional<any>) {
+  const cExtractDeleteSelectionCell = Chain.binder((actionOpt: Optional<any>) => {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
@@ -55,13 +55,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.TableDeleteActionTest', function
       );
   });
 
-  const cExtractTableFromDeleteAction = Chain.binder(function (actionOpt: Optional<any>) {
+  const cExtractTableFromDeleteAction = Chain.binder((actionOpt: Optional<any>) => {
     return actionOpt
       .fold(
         fail('unexpected nothing'),
-        function (action) {
+        (action) => {
           return action.fold(
-            function (table) {
+            (table) => {
               return Result.value(Html.getOuter(table));
             },
             fail('unexpected action'),

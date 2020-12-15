@@ -21,7 +21,7 @@ import * as Buttons from './ui/Buttons';
  */
 
 export default function () {
-  PluginManager.add('emoticons', function (editor, pluginUrl) {
+  PluginManager.add('emoticons', (editor, pluginUrl) => {
     const databaseUrl = Settings.getEmoticonDatabaseUrl(editor, pluginUrl);
     const databaseId = Settings.getEmoticonDatabaseId(editor);
 

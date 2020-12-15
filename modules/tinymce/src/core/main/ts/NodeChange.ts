@@ -31,7 +31,7 @@ class NodeChange {
 
     // Gecko doesn't support the "selectionchange" event
     if (!('onselectionchange' in editor.getDoc())) {
-      editor.on('NodeChange click mouseup keyup focus', function (e) {
+      editor.on('NodeChange click mouseup keyup focus', (e) => {
         // Since DOM Ranges mutate on modification
         // of the DOM we need to clone it's contents
         const nativeRng = editor.selection.getRng();
@@ -54,12 +54,12 @@ class NodeChange {
 
     // IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
     // When the contextmenu event fires the selection is located at the right location
-    editor.on('contextmenu', function () {
+    editor.on('contextmenu', () => {
       editor.fire('SelectionChange');
     });
 
     // Selection change is delayed ~200ms on IE when you click inside the current range
-    editor.on('SelectionChange', function () {
+    editor.on('SelectionChange', () => {
       const startElm = editor.selection.getStart(true);
 
       // When focusout from after cef element to other input element the startelm can be undefined.
@@ -75,12 +75,12 @@ class NodeChange {
     });
 
     // Fire an extra nodeChange on mouseup for compatibility reasons
-    editor.on('mouseup', function (e) {
+    editor.on('mouseup', (e) => {
       if (!e.isDefaultPrevented() && hasAnyRanges(editor)) {
         // Delay nodeChanged call for WebKit edge case issue where the range
         // isn't updated until after you click outside a selected image
         if (editor.selection.getNode().nodeName === 'IMG') {
-          Delay.setEditorTimeout(editor, function () {
+          Delay.setEditorTimeout(editor, () => {
             editor.nodeChanged();
           });
         } else {
@@ -114,7 +114,7 @@ class NodeChange {
 
       // Get parents and add them to object
       parents = [];
-      this.editor.dom.getParent(node, function (node) {
+      this.editor.dom.getParent(node, (node) => {
         if (node === root) {
           return true;
         }

@@ -49,17 +49,14 @@ const caseSensitive = function (val: string): string {
 
 /** matches :: (StringMatch, String) -> Boolean */
 const matches = function (subject: StringMatch, str: string): boolean {
-  return subject.fold(function (value, f) {
-    return f(str).indexOf(f(value)) === 0;
-  }, function (regex, f) {
-    return regex.test(f(str));
-  }, function (value, f) {
-    return f(str).indexOf(f(value)) >= 0;
-  }, function (value, f) {
-    return f(str) === f(value);
-  }, Fun.always, function (other) {
-    return !matches(other, str);
-  });
+  return subject.fold(
+    (value, f) => f(str).indexOf(f(value)) === 0,
+    (regex, f) => regex.test(f(str)),
+    (value, f) => f(str).indexOf(f(value)) >= 0,
+    (value, f) => f(str) === f(value),
+    Fun.always,
+    (other) => !matches(other, str)
+  );
 };
 
 const cata = function <T> (

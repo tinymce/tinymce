@@ -17,13 +17,13 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   Theme();
 
   const teardown = function (done) {
-    Delay.setTimeout(function () {
+    Delay.setTimeout(() => {
       EditorManager.remove();
       done();
     }, 0);
   };
 
-  suite.asyncTest('get', function (_, done) {
+  suite.asyncTest('get', (_, done) => {
     viewBlock.update('<textarea class="tinymce"></textarea>');
     EditorManager.init({
       selector: 'textarea.tinymce',
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
         // Trigger save
         let saveCount = 0;
 
-        editor1.on('SaveContent', function () {
+        editor1.on('SaveContent', () => {
           saveCount++;
         });
 
@@ -63,7 +63,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
     });
   });
 
-  suite.test('addI18n/translate', function () {
+  suite.test('addI18n/translate', () => {
     EditorManager.addI18n('en', {
       from: 'to'
     });
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
     LegacyUnit.equal(EditorManager.translate('from'), 'to');
   });
 
-  suite.asyncTest('Do not reload language pack if it was already loaded or registered manually.', function (_, done) {
+  suite.asyncTest('Do not reload language pack if it was already loaded or registered manually.', (_, done) => {
     const langCode = 'mce_lang';
     const langUrl = 'http://example.com/language/' + langCode + '.js';
 
@@ -88,7 +88,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
       language: langCode,
       language_url: langUrl,
       init_instance_callback(_ed) {
-        const scripts = Tools.grep(document.getElementsByTagName('script'), function (script) {
+        const scripts = Tools.grep(document.getElementsByTagName('script'), (script) => {
           return script.src === langUrl;
         });
 
@@ -99,7 +99,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
     });
   });
 
-  suite.asyncTest('Externally destroyed editor', function (_, done) {
+  suite.asyncTest('Externally destroyed editor', (_, done) => {
     EditorManager.remove();
 
     EditorManager.init({
@@ -107,7 +107,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback(editor1) {
-        Delay.setTimeout(function () {
+        Delay.setTimeout(() => {
           // Destroy the editor by setting innerHTML common ajax pattern
           viewBlock.update('<textarea id="' + editor1.id + '"></textarea>');
 
@@ -129,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
     });
   });
 
-  suite.test('overrideDefaults', function () {
+  suite.test('overrideDefaults', () => {
     const oldBaseURI = EditorManager.baseURI;
     const oldBaseUrl = EditorManager.baseURL;
     const oldSuffix = EditorManager.suffix;
@@ -182,7 +182,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
     EditorManager.overrideDefaults({});
   });
 
-  suite.test('Init inline editor on invalid targets', function () {
+  suite.test('Init inline editor on invalid targets', () => {
     const invalidNames = (
       'area base basefont br col frame hr img input isindex link meta param embed source wbr track ' +
       'colgroup option tbody tfoot thead tr script noscript style textarea video audio iframe object menu'
@@ -190,7 +190,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
 
     EditorManager.remove();
 
-    Tools.each(invalidNames.split(' '), function (invalidName) {
+    Tools.each(invalidNames.split(' '), (invalidName) => {
       const elm = DOMUtils.DOM.add(document.body, invalidName, { class: 'targetEditor' }, null);
 
       EditorManager.init({
@@ -206,7 +206,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerTest', (success, failure) 
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     EditorManager.remove();
     viewBlock.detach();
     success();

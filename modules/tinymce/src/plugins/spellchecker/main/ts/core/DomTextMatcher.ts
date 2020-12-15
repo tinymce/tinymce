@@ -85,7 +85,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
       matchLocation, matchIndex = 0;
 
     matches = matches.slice(0);
-    matches.sort(function (a, b) {
+    matches.sort((a, b) => {
       return a.start - b.start;
     });
 
@@ -305,7 +305,7 @@ export const DomTextMatcher = function (node, editor): DomTextMatcher {
   function filter(callback) {
     const filteredMatches = [];
 
-    each(function (match, i) {
+    each((match, i) => {
       if (callback(match, i)) {
         filteredMatches.push(match);
       }

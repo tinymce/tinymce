@@ -34,7 +34,7 @@ const createTemplateList = function (editor: Editor, callback) {
 };
 
 const replaceTemplateValues = function (html, templateValues) {
-  Tools.each(templateValues, function (v, k) {
+  Tools.each(templateValues, (v, k) => {
     if (typeof v === 'function') {
       v = v(k);
     }
@@ -48,8 +48,8 @@ const replaceTemplateValues = function (html, templateValues) {
 const replaceVals = function (editor, e) {
   const dom = editor.dom, vl = Settings.getTemplateReplaceValues(editor);
 
-  Tools.each(dom.select('*', e), function (e) {
-    Tools.each(vl, function (v, k) {
+  Tools.each(dom.select('*', e), (e) => {
+    Tools.each(vl, (v, k) => {
       if (dom.hasClass(e, k)) {
         if (typeof vl[k] === 'function') {
           vl[k](e);
@@ -79,7 +79,7 @@ const insertTemplate = function (editor: Editor, _ui: boolean, html: string) {
     el.appendChild(n[0].cloneNode(true));
   }
 
-  Tools.each(dom.select('*', el), function (n) {
+  Tools.each(dom.select('*', el), (n) => {
     // Replace cdate
     if (hasClass(n, Settings.getCreationDateClasses(editor).replace(/\s+/g, '|'))) {
       n.innerHTML = DateTimeHelper.getDateTime(editor, Settings.getCdateFormat(editor));

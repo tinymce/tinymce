@@ -12,7 +12,7 @@ import { Warehouse } from './Warehouse';
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
 const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string): void {
-  Arr.each(cells, function (cell) {
+  Arr.each(cells, (cell) => {
     const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
     Css.set(cell.element, 'width', w + unit);
@@ -27,13 +27,13 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
 };
 
 const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void {
-  Arr.each(cells, function (cell) {
+  Arr.each(cells, (cell) => {
     const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
     Css.set(cell.element, 'height', h + unit);
   });
 
-  Arr.each(rows, function (row, i) {
+  Arr.each(rows, (row, i) => {
     Css.set(row.element, 'height', newHeights[i]);
   });
 };

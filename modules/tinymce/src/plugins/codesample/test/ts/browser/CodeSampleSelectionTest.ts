@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
   CodePlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
 
     const dialogSelector = 'div.tox-dialog';
     const docBody = SugarElement.fromDom(document.body);
@@ -30,7 +30,7 @@ UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', 
             TestUtils.sSetTextareaContent(markupContent),
             TestUtils.sSubmitDialog(docBody),
             TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
-            Step.sync(function () {
+            Step.sync(() => {
               const pre = editor.getBody().querySelector('pre');
               editor.fire('dblclick', { target: pre });
             }),

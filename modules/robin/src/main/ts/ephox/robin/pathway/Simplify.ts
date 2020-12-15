@@ -11,7 +11,7 @@ const isDuplicate = function <E, D> (universe: Universe<E, D>, rest: E[], item: 
 
 const isChild = function <E, D> (universe: Universe<E, D>, rest: E[], item: E): boolean {
   const parents = universe.up().all(item);
-  return Arr.exists(parents, function (p) {
+  return Arr.exists(parents, (p) => {
     return isDuplicate(universe, rest, p);
   });
 };
@@ -23,7 +23,7 @@ const isChild = function <E, D> (universe: Universe<E, D>, rest: E[], item: E): 
  */
 const simplify = function <E, D> (universe: Universe<E, D>, items: E[]): E[] {
 // FIX: Horribly inefficient.
-  return Arr.filter(items, function (x, i) {
+  return Arr.filter(items, (x, i) => {
     const left = items.slice(0, i);
     const right = items.slice(i + 1);
     const rest = left.concat(right);

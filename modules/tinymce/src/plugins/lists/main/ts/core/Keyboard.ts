@@ -11,7 +11,7 @@ import * as Settings from '../api/Settings';
 import * as Delete from './Delete';
 
 const setupTabKey = function (editor) {
-  editor.on('keydown', function (e) {
+  editor.on('keydown', (e) => {
     // Check for tab but not ctrl/cmd+tab since it switches browser tabs
     if (e.keyCode !== VK.TAB || VK.metaKeyPressed(e)) {
       return;

@@ -83,9 +83,9 @@ class Shortcuts {
     this.editor = editor;
     const self = this;
 
-    editor.on('keyup keypress keydown', function (e) {
+    editor.on('keyup keypress keydown', (e) => {
       if ((self.hasModifier(e) || self.isFunctionKey(e)) && !e.isDefaultPrevented()) {
-        each(self.shortcuts, function (shortcut) {
+        each(self.shortcuts, (shortcut) => {
           if (self.matchShortcut(e, shortcut)) {
             self.pendingPatterns = shortcut.subpatterns.slice(0);
 
@@ -124,7 +124,7 @@ class Shortcuts {
     const self = this;
     const func = self.normalizeCommandFunc(cmdFunc);
 
-    each(explode(Tools.trim(pattern)), function (pattern) {
+    each(explode(Tools.trim(pattern)), (pattern) => {
       const shortcut = self.createShortcut(pattern, desc, func, scope);
       self.shortcuts[shortcut.id] = shortcut;
     });
@@ -172,7 +172,7 @@ class Shortcuts {
     const shortcut: any = {};
 
     // Parse modifiers and keys ctrl+alt+b for example
-    each(explode(pattern.toLowerCase(), '+'), function (value) {
+    each(explode(pattern.toLowerCase(), '+'), (value) => {
       if (value in modifierNames) {
         shortcut[value] = true;
       } else {

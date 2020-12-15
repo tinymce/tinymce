@@ -75,7 +75,7 @@ function multiply(matrix1: Matrix, matrix2: Matrix): Matrix {
 function adjust(matrix: Matrix, adjustValue: number): Matrix {
   adjustValue = clamp(adjustValue, 0, 1);
 
-  return matrix.map(function (value, index): number {
+  return matrix.map((value, index): number => {
     if (index % 6 === 0) {
       value = 1.0 - ((1 - value) * adjustValue);
     } else {

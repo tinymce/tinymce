@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Html, SugarElement } from '@ephox/sugar';
 import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 
-UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', (success, failure) => {
 
   const sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.removeTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, 
   };
 
   const sTestTrimBlockTrailingBr = function (label, inputHtml, expectedHtml) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.trimBlockTrailingBr(elm);
       Assertions.assertHtml(label, expectedHtml, Html.getOuter(elm));
@@ -34,13 +34,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, 
       sTestRemoveTrailingBr('Should be untouched since there is more than one br', '<p><b>a<br></b><br></p>', '<p><b>a<br></b><br></p>')
     ])),
     Logger.t('fillWithPaddingBr', GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         const elm = SugarElement.fromHtml('<p>a</p>');
         PaddingBr.fillWithPaddingBr(elm);
         Assertions.assertHtml('Should be padded with bogus br', '<p><br data-mce-bogus="1"></p>', Html.getOuter(elm));
       })
     ])),
-    Logger.t('isPaddedElement', Step.sync(function () {
+    Logger.t('isPaddedElement', Step.sync(() => {
       Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p>a</p>')));
       Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p>\u00a0\u00a0</p>')));
       Assertions.assertEq('Should not be padded', false, PaddingBr.isPaddedElement(SugarElement.fromHtml('<p><br><br></p>')));
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', function (success, 
       sTestTrimBlockTrailingBr('Should be untouched since it is br after a inline', '<div><b>a</b><br></div>', '<div><b>a</b><br></div>'),
       sTestTrimBlockTrailingBr('Should be untouched since it is br after inlide inline', '<span><b>a</b><br></span>', '<span><b>a</b><br></span>')
     ]))
-  ], function () {
+  ], () => {
     success();
   }, failure);
 });

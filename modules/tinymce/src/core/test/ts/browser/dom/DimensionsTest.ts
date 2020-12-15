@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure)
     return viewBlock.get();
   };
 
-  suite.test('getClientRects', function () {
+  suite.test('getClientRects', () => {
     const viewElm = setupHtml('abc<span>123</span>');
 
     LegacyUnit.strictEqual(Dimensions.getClientRects([ viewElm.firstChild ]).length, 1);
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure)
     LegacyUnit.strictEqual(Dimensions.getClientRects([ viewElm.lastChild ])[0].left > 3, true);
   });
 
-  suite.test('getClientRects from array', function () {
+  suite.test('getClientRects from array', () => {
     const viewElm = setupHtml('<b>a</b><b>b</b>');
     const clientRects = Dimensions.getClientRects(Arr.from(viewElm.childNodes));
 
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.DimensionsTest', (success, failure)
   });
 
   viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), function () {
+  Pipeline.async({}, suite.toSteps({}), () => {
     viewBlock.detach();
     success();
   }, failure);

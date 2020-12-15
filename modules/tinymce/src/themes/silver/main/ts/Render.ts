@@ -338,10 +338,10 @@ const setup = (editor: Editor): RenderInfo => {
 
   lazyOuterContainer = Optional.some(outerContainer);
 
-  editor.shortcuts.add('alt+F9', 'focus menubar', function () {
+  editor.shortcuts.add('alt+F9', 'focus menubar', () => {
     OuterContainer.focusMenubar(outerContainer);
   });
-  editor.shortcuts.add('alt+F10', 'focus toolbar', function () {
+  editor.shortcuts.add('alt+F10', 'focus toolbar', () => {
     OuterContainer.focusToolbar(outerContainer);
   });
 

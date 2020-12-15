@@ -14,10 +14,10 @@ const isArray = Tools.isArray;
 
 export const UserDefined = 'User Defined';
 
-export type CharMap = {
+export interface CharMap {
   name: string;
   characters: [number, string][];
-};
+}
 
 const getDefaultCharMap = function (): CharMap[] {
   return [
@@ -366,7 +366,7 @@ const getDefaultCharMap = function (): CharMap[] {
 };
 
 const charmapFilter = function (charmap) {
-  return Tools.grep(charmap, function (item) {
+  return Tools.grep(charmap, (item) => {
     return isArray(item) && item.length === 2;
   });
 };

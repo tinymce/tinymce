@@ -15,100 +15,100 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
   Theme();
   SearchreplacePlugin();
 
-  suite.test('TestCase-TBA: SearchReplace: Find no match', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find no match', (editor) => {
     editor.focus();
     editor.setContent('a');
     LegacyUnit.equal(0, editor.plugins.searchreplace.find('x'));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find single match', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find single match', (editor) => {
     editor.setContent('a');
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('a'));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find single match in multiple elements', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find single match in multiple elements', (editor) => {
     editor.setContent('t<b>e</b><i>xt</i>');
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('text'));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find single match, match case: true', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find single match, match case: true', (editor) => {
     editor.setContent('a A');
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('A', true));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find single match, whole words: true', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find single match, whole words: true', (editor) => {
     editor.setContent('a Ax');
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('a', false, true));
   });
 
-  suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match', function (editor) {
+  suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match', (editor) => {
     editor.setContent('^^ ^^ ^^^^');
     LegacyUnit.equal(4, editor.plugins.searchreplace.find('^^'));
     editor.setContent('50$ 50$50$');
     LegacyUnit.equal(3, editor.plugins.searchreplace.find('50$'));
   });
 
-  suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match, whole words: true', function (editor) {
+  suite.test('TestCase-TINY-4522: SearchReplace: Find special characters match, whole words: true', (editor) => {
     editor.setContent('^^ ^^ ^^^^');
     LegacyUnit.equal(2, editor.plugins.searchreplace.find('^^', false, true));
     editor.setContent('50$ 50$50$');
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('50$', false, true));
   });
 
-  suite.test('TestCase-TINY-4522: SearchReplace: Find word with punctuation, whole words: true', function (editor) {
+  suite.test('TestCase-TINY-4522: SearchReplace: Find word with punctuation, whole words: true', (editor) => {
     editor.setContent(`'test' "test" \u2018test\u2019 test: test; test! test. test? test,`);
     LegacyUnit.equal(9, editor.plugins.searchreplace.find('test', false, true));
     LegacyUnit.equal(1, editor.plugins.searchreplace.find('test!', false, true));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find multiple matches', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find multiple matches', (editor) => {
     editor.setContent('a b A');
     LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace single match', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace single match', (editor) => {
     editor.setContent('a');
     editor.plugins.searchreplace.find('a');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
     LegacyUnit.equal('<p>x</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace first in multiple matches', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace first in multiple matches', (editor) => {
     editor.setContent('a b a');
     editor.plugins.searchreplace.find('a');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), true);
     LegacyUnit.equal('<p>x b a</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace two consecutive spaces', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace two consecutive spaces', (editor) => {
     editor.setContent('a&nbsp; b');
     editor.plugins.searchreplace.find('a  ');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
     LegacyUnit.equal('<p>xb</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace consecutive spaces', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace consecutive spaces', (editor) => {
     editor.setContent('a&nbsp; &nbsp;b');
     editor.plugins.searchreplace.find('a   ');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x'), false);
     LegacyUnit.equal('<p>xb</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace all in multiple matches', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace all in multiple matches', (editor) => {
     editor.setContent('a b a');
     editor.plugins.searchreplace.find('a');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
     LegacyUnit.equal('<p>x b x</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace all spaces with new lines', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace all spaces with new lines', (editor) => {
     editor.setContent('a&nbsp; &nbsp;b<br/><br/>ab&nbsp;c');
     editor.plugins.searchreplace.find(' ');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('x', true, true), false);
     LegacyUnit.equal('<p>axxxb<br /><br />abxc</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find multiple matches, move to next and replace', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find multiple matches, move to next and replace', (editor) => {
     editor.setContent('a a');
     LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
     editor.plugins.searchreplace.next();
@@ -116,21 +116,21 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     LegacyUnit.equal('<p>a x</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace fragmented match', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace fragmented match', (editor) => {
     editor.setContent('<b>te<i>s</i>t</b><b>te<i>s</i>t</b>');
     editor.plugins.searchreplace.find('test');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('abc'), true);
     LegacyUnit.equal(editor.getContent(), '<p><b>abc</b><b>te<i>s</i>t</b></p>');
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find and replace all fragmented matches', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find and replace all fragmented matches', (editor) => {
     editor.setContent('<b>te<i>s</i>t</b><b>te<i>s</i>t</b>');
     editor.plugins.searchreplace.find('test');
     LegacyUnit.equal(editor.plugins.searchreplace.replace('abc', true, true), false);
     LegacyUnit.equal(editor.getContent(), '<p><b>abc</b><b>abc</b></p>');
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find multiple matches, move to next and replace backwards', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find multiple matches, move to next and replace backwards', (editor) => {
     editor.setContent('a a');
     LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
     editor.plugins.searchreplace.next();
@@ -139,7 +139,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     LegacyUnit.equal('<p>y x</p>', editor.getContent());
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find multiple matches and unmark them', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find multiple matches and unmark them', (editor) => {
     editor.setContent('a b a');
     LegacyUnit.equal(2, editor.plugins.searchreplace.find('a'));
     editor.plugins.searchreplace.done();
@@ -147,7 +147,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     LegacyUnit.equal(0, editor.getBody().getElementsByTagName('span').length);
   });
 
-  suite.test('TestCase-TBA: SearchReplace: Find multiple matches with pre blocks', function (editor) {
+  suite.test('TestCase-TBA: SearchReplace: Find multiple matches with pre blocks', (editor) => {
     editor.getBody().innerHTML = 'abc<pre>  abc  </pre>abc';
     LegacyUnit.equal(3, editor.plugins.searchreplace.find('b'));
     LegacyUnit.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), (
@@ -189,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePluginTes
     LegacyUnit.equal(editor.getBody().innerHTML, content);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'SearchReplace: Find and replace matches', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'searchreplace',

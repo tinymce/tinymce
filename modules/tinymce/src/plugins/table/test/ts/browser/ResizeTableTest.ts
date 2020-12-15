@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     Assertions.assertEq('asserting if value falls within a certain range', true, value >= min && value <= max);
   };
 
-  const cAssertWidths = Chain.op(function (input: any) {
+  const cAssertWidths = Chain.op((input: any) => {
     const expectedPx = input.widthBefore.px - 100;
     const expectedPercent = input.widthAfter.px / input.widthBefore.px * 100;
 
@@ -47,7 +47,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     assertWithin(input.widthAfter.raw, expectedPercent - 1, expectedPercent + 1);
   });
 
-  const cBindResizeEvents = Chain.mapper(function (input: any) {
+  const cBindResizeEvents = Chain.mapper((input: any) => {
     const objectResizeStart = (e) => {
       lastObjectResizeStartEvent.set(e);
     };
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ResizeTableTest', (success, fa
     };
   });
 
-  const cUnbindResizeEvents = Chain.mapper(function (input: any) {
+  const cUnbindResizeEvents = Chain.mapper((input: any) => {
     input.editor.off('ObjectResizeStart', input.events.objectResizeStart);
     input.editor.off('ObjectResized', input.events.objectResized);
     input.editor.off('TableModified', input.events.tableModified);

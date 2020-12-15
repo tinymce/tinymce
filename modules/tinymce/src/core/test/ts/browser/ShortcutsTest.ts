@@ -6,16 +6,16 @@ import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
 
-  suite.test('Shortcuts formats', function (editor) {
+  suite.test('Shortcuts formats', (editor) => {
     const assertShortcut = function (shortcut: string, args, assertState: boolean) {
       let called = false;
 
-      editor.shortcuts.add(shortcut, '', function () {
+      editor.shortcuts.add(shortcut, '', () => {
         called = true;
       });
 
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
     assertShortcut('f12', { keyCode: 123 }, true);
   });
 
-  suite.test('Remove', function (editor) {
+  suite.test('Remove', (editor) => {
     const testPattern = (pattern: string, keyCode: number, ctrlKey = false) => {
       let called = false;
 
@@ -80,7 +80,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
         metaKey: false
       });
 
-      editor.shortcuts.add(pattern, '', function () {
+      editor.shortcuts.add(pattern, '', () => {
         called = true;
       });
 
@@ -97,7 +97,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', function (success, fail
     testPattern('ctrl+F2', 113, true);
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

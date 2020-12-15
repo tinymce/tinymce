@@ -12,7 +12,7 @@ import * as InsertToolbars from './insert/Toolbars';
 import * as SelectionToolbars from './selection/Toolbars';
 
 export default function () {
-  PluginManager.add('quickbars', function (editor) {
+  PluginManager.add('quickbars', (editor) => {
     InsertButtons.setupButtons(editor);
     InsertToolbars.addToEditor(editor);
 

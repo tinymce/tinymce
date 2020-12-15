@@ -35,7 +35,7 @@ const create = function (platform, mask) {
       AndroidSetup.setup(platform.win, PlatformEditor.getWin(platform.editor).getOrDie('no'))
     );
 
-    PlatformEditor.getActiveApi(platform.editor).each(function (editorApi) {
+    PlatformEditor.getActiveApi(platform.editor).each((editorApi) => {
       Thor.clobberStyles(platform.container, editorApi.body);
       androidEvents.set(
         AndroidEvents.initEvents(editorApi, platform.toolstrip, platform.alloy)

@@ -4,39 +4,39 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import * as BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', (success, failure) => {
 
   Theme();
 
   const sDelete = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sDeleteNoop = function (editor) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
   const sBackspace = function (editor, _forward?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
   const sBackspaceNoop = function (editor, _forward?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [
@@ -117,7 +117,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', function 
         sDelete(editor),
         tinyApis.sAssertContent(''),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s, str) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
           return s.element('body', {
             children: [
               s.element('p', { children: [ s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}) ] })

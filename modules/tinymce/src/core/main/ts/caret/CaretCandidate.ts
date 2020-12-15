@@ -62,7 +62,7 @@ const isAtomicContentEditableFalse = (node: Node): boolean => {
     return false;
   }
 
-  return Arr.foldl(Arr.from(node.getElementsByTagName('*')), function (result, elm) {
+  return Arr.foldl(Arr.from(node.getElementsByTagName('*')), (result, elm) => {
     return result || isContentEditableTrue(elm);
   }, false) !== true;
 };

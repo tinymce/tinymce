@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     return html.replace(/<br[^>]*>/gi, '');
   };
 
-  suite.test('Enter inside empty li in beginning of ol', function (editor) {
+  suite.test('Enter inside empty li in beginning of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     LegacyUnit.setSelection(editor, 'li', 0);
     pressEnter(editor);
@@ -32,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter inside empty li at the end of ol', function (editor) {
+  suite.test('Enter inside empty li at the end of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     LegacyUnit.setSelection(editor, 'li:last', 0);
     pressEnter(editor);
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter inside empty li in the middle of ol', function (editor) {
+  suite.test('Shift+Enter inside empty li in the middle of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
     pressEnter(editor, { shiftKey: true });
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter inside empty li in beginning of ol', function (editor) {
+  suite.test('Shift+Enter inside empty li in beginning of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
     pressEnter(editor, { shiftKey: true });
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter inside empty li at the end of ol', function (editor) {
+  suite.test('Shift+Enter inside empty li at the end of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
     pressEnter(editor, { shiftKey: true });
@@ -64,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty li in the middle of ol with forced_root_block: false', function (editor) {
+  suite.test('Enter inside empty li in the middle of ol with forced_root_block: false', (editor) => {
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
@@ -74,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li in beginning of ol with forced_root_block: false', function (editor) {
+  suite.test('Enter inside empty li in beginning of ol with forced_root_block: false', (editor) => {
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
@@ -84,7 +84,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li at the end of ol with forced_root_block: false', function (editor) {
+  suite.test('Enter inside empty li at the end of ol with forced_root_block: false', (editor) => {
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li in the middle of ol', function (editor) {
+  suite.test('Enter inside empty li in the middle of ol', (editor) => {
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     pressEnter(editor);
@@ -104,7 +104,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
 
   // Nested lists in LI elements
 
-  suite.test('Enter inside empty LI in beginning of OL in LI', function (editor) {
+  suite.test('Enter inside empty LI in beginning of OL in LI', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in middle of OL in LI', function (editor) {
+  suite.test('Enter inside empty LI in middle of OL in LI', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -169,7 +169,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in end of OL in LI', function (editor) {
+  suite.test('Enter inside empty LI in end of OL in LI', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -201,7 +201,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
 
   // Nested lists in OL elements
 
-  suite.test('Enter before nested list', function (editor) {
+  suite.test('Enter before nested list', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -232,7 +232,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in beginning of OL in OL', function (editor) {
+  suite.test('Enter inside empty LI in beginning of OL in OL', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -260,7 +260,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in middle of OL in OL', function (editor) {
+  suite.test('Enter inside empty LI in middle of OL in OL', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -292,7 +292,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in end of OL in OL', function (editor) {
+  suite.test('Enter inside empty LI in end of OL in OL', (editor) => {
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -320,7 +320,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter at beginning of first DT inside DL', function (editor) {
+  suite.test('Enter at beginning of first DT inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt', 0);
     pressEnter(editor);
@@ -328,7 +328,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at beginning of first DD inside DL', function (editor) {
+  suite.test('Enter at beginning of first DD inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd', 0);
     pressEnter(editor);
@@ -336,7 +336,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at beginning of middle DT inside DL', function (editor) {
+  suite.test('Enter at beginning of middle DT inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dt>a</dt><dt>b</dt><dt>c</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt:nth-child(2)', 0);
     pressEnter(editor);
@@ -344,7 +344,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at beginning of middle DD inside DL', function (editor) {
+  suite.test('Enter at beginning of middle DD inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dd>a</dd><dd>b</dd><dd>c</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd:nth-child(2)', 0);
     pressEnter(editor);
@@ -352,7 +352,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at end of last DT inside DL', function (editor) {
+  suite.test('Enter at end of last DT inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt', 1);
     pressEnter(editor);
@@ -360,7 +360,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at end of last DD inside DL', function (editor) {
+  suite.test('Enter at end of last DD inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd', 1);
     pressEnter(editor);
@@ -368,7 +368,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at end of last empty DT inside DL', function (editor) {
+  suite.test('Enter at end of last empty DT inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dt>a</dt><dt></dt></dl>';
     LegacyUnit.setSelection(editor, 'dt:nth-child(2)', 0);
     pressEnter(editor);
@@ -376,7 +376,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at end of last empty DD inside DL', function (editor) {
+  suite.test('Enter at end of last empty DD inside DL', (editor) => {
     editor.getBody().innerHTML = '<dl><dd>a</dd><dd></dd></dl>';
     LegacyUnit.setSelection(editor, 'dd:nth-child(2)', 0);
     pressEnter(editor);
@@ -384,7 +384,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at beginning of P inside LI', function (editor) {
+  suite.test('Enter at beginning of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
@@ -392,7 +392,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter inside middle of P inside LI', function (editor) {
+  suite.test('Enter inside middle of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor);
@@ -400,7 +400,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at end of P inside LI', function (editor) {
+  suite.test('Enter at end of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor);
@@ -408,7 +408,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter at beginning of P inside LI', function (editor) {
+  suite.test('Shift+Enter at beginning of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
@@ -416,7 +416,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter inside middle of P inside LI', function (editor) {
+  suite.test('Shift+Enter inside middle of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
@@ -424,7 +424,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter at end of P inside LI', function (editor) {
+  suite.test('Shift+Enter at end of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { shiftKey: true });
@@ -435,7 +435,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter at beginning of P inside LI', function (editor) {
+  suite.test('Ctrl+Enter at beginning of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { ctrlKey: true });
@@ -443,7 +443,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter inside middle of P inside LI', function (editor) {
+  suite.test('Ctrl+Enter inside middle of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { ctrlKey: true });
@@ -451,7 +451,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter at end of P inside LI', function (editor) {
+  suite.test('Ctrl+Enter at end of P inside LI', (editor) => {
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { ctrlKey: true });
@@ -459,7 +459,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+enter in LI when forced_root_block: false', function (editor) {
+  suite.test('Shift+enter in LI when forced_root_block: false', (editor) => {
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ul><li>text</li></ul>';
     LegacyUnit.setSelection(editor, 'li', 2);
@@ -468,7 +468,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', function (
     editor.settings.forced_root_block = 'p';
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

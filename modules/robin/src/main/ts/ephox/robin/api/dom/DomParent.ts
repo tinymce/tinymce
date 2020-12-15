@@ -7,7 +7,7 @@ import * as Parent from '../general/Parent';
 const universe = DomUniverse();
 
 const sharedOne = function (look: (e: SugarElement) => Optional<SugarElement>, elements: SugarElement[]): Optional<SugarElement> {
-  return Parent.sharedOne(universe, function (_universe, element) {
+  return Parent.sharedOne(universe, (_universe, element) => {
     return look(element);
   }, elements);
 };
@@ -29,7 +29,7 @@ const breakToRight = function (parent: SugarElement, child: SugarElement): Optio
 };
 
 const breakPath = function (child: SugarElement, isTop: (e: SugarElement) => boolean, breaker: (parent: SugarElement, child: SugarElement) => Optional<LeftRight<SugarElement>>): BrokenPath<SugarElement> {
-  return Parent.breakPath(universe, child, isTop, function (u, p, c) {
+  return Parent.breakPath(universe, child, isTop, (u, p, c) => {
     return breaker(p, c);
   });
 };

@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.help.IgnoreForcedPluginsTest', (succ
   LinkPlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({},

@@ -4,7 +4,7 @@ import { Unicode } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as Selection from 'ephox/robin/smartselect/Selection';
 
-UnitTest.test('SelectionTest', function () {
+UnitTest.test('SelectionTest', () => {
   const doc1 = TestUniverse(Gene('root', 'root', [
     Gene('p1', 'p', [
       TextGene('a', 'There i'),

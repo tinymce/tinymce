@@ -17,7 +17,7 @@ const queryListCommandState = function (editor, listName) {
 };
 
 const register = function (editor) {
-  editor.on('BeforeExecCommand', function (e) {
+  editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 
     if (cmd === 'indent') {
@@ -27,15 +27,15 @@ const register = function (editor) {
     }
   });
 
-  editor.addCommand('InsertUnorderedList', function (ui, detail) {
+  editor.addCommand('InsertUnorderedList', (ui, detail) => {
     ToggleList.toggleList(editor, 'UL', detail);
   });
 
-  editor.addCommand('InsertOrderedList', function (ui, detail) {
+  editor.addCommand('InsertOrderedList', (ui, detail) => {
     ToggleList.toggleList(editor, 'OL', detail);
   });
 
-  editor.addCommand('InsertDefinitionList', function (ui, detail) {
+  editor.addCommand('InsertDefinitionList', (ui, detail) => {
     ToggleList.toggleList(editor, 'DL', detail);
   });
 

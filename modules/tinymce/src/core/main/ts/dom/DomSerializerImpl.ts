@@ -47,7 +47,7 @@ interface DomSerializerImpl {
 
 const addTempAttr = function (htmlParser: DomParser, tempAttrs: string[], name: string) {
   if (Tools.inArray(tempAttrs, name) === -1) {
-    htmlParser.addAttributeFilter(name, function (nodes, name) {
+    htmlParser.addAttributeFilter(name, (nodes, name) => {
       let i = nodes.length;
 
       while (i--) {

@@ -37,13 +37,13 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   const sSetContent = function <T> (html: string) {
-    return Step.sync<T>(function () {
+    return Step.sync<T>(() => {
       setContent(html);
     });
   };
 
   const sSetRawContent = function <T> (html: string) {
-    return Step.sync<T>(function () {
+    return Step.sync<T>(() => {
       editor.getBody().innerHTML = html;
     });
   };
@@ -53,15 +53,15 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   // Has to be thunked, so it can remain polymorphic
-  const cNodeChanged = <T> () => Chain.op<T>(function () {
+  const cNodeChanged = <T> () => Chain.op<T>(() => {
     editor.nodeChanged();
   });
 
-  const cSetDomSelection = Chain.op<Range>(function (range: Range) {
+  const cSetDomSelection = Chain.op<Range>((range: Range) => {
     editor.selection.setRng(range);
   });
 
-  const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op(function (target: SugarElement) {
+  const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op((target: SugarElement) => {
     editor.selection.select(target.dom);
   });
 
@@ -83,13 +83,13 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   const sSetSetting = function <T> (key: string, value: any): Step<T, T> {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.settings[key] = value;
     });
   };
 
   const sDeleteSetting = function <T> (key: string): Step<T, T> {
-    return Step.sync<T>(function () {
+    return Step.sync<T>(() => {
       delete editor.settings[key];
     });
   };
@@ -105,7 +105,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
   const cGetContent = <T> () => Chain.injectThunked<T, string>(() => editor.getContent());
 
   const sExecCommand = function <T> (command: string, value?: any) {
-    return Step.sync<T>(function () {
+    return Step.sync<T>(() => {
       editor.execCommand(command, false, value);
     });
   };
@@ -149,14 +149,14 @@ export const TinyApis = function (editor: Editor): TinyApis {
   };
 
   const sAssertSelection = function <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
-    return Step.sync<T>(function () {
+    return Step.sync<T>(() => {
       const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
       assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
     });
   };
 
-  const sFocus = <T> () => Step.sync<T>(function () {
+  const sFocus = <T> () => Step.sync<T>(() => {
     editor.focus();
   });
 
@@ -164,7 +164,7 @@ export const TinyApis = function (editor: Editor): TinyApis {
     Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
   });
 
-  const sNodeChanged = <T> () => Step.sync<T>(function () {
+  const sNodeChanged = <T> () => Step.sync<T>(() => {
     editor.nodeChanged();
   });
 

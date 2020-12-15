@@ -8,7 +8,7 @@
 import * as Dialog from '../ui/Dialog';
 
 const register = function (editor) {
-  editor.addCommand('mceCodeEditor', function () {
+  editor.addCommand('mceCodeEditor', () => {
     Dialog.open(editor);
   });
 };

@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     offset: number;
   }
 
-  const cSetHtml = (html: string) => Chain.op(function () {
+  const cSetHtml = (html: string) => Chain.op(() => {
     viewBlock.update(html);
   });
 
@@ -31,37 +31,37 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   };
 
-  const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+  const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper((scope: any) => {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return getPositionsUntilPreviousLine(scope.get(), pos);
   });
 
-  const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+  const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper((scope: any) => {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return getPositionsUntilNextLine(scope.get(), pos);
   });
 
-  const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+  const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper((scope: any) => {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return getPositionsAbove(scope.get(), pos);
   });
 
-  const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper(function (scope: any) {
+  const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper((scope: any) => {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return getPositionsBelow(scope.get(), pos);
   });
 
-  const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper(function (positions: CaretPosition[]) {
+  const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper((positions: CaretPosition[]) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return findClosestHorizontalPosition(positions, pos);
   });
 
-  const cAssertCaretPositions = (expectedPositions: Path[]) => Chain.op(function (actualPositions: CaretPosition[]) {
+  const cAssertCaretPositions = (expectedPositions: Path[]) => Chain.op((actualPositions: CaretPosition[]) => {
     if (expectedPositions.length !== actualPositions.length) {
       logPositions('cAssertCaretPositions', actualPositions);
     }
@@ -74,11 +74,11 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   });
 
-  const cAssertNone = Chain.op(function (a: Optional<any>) {
+  const cAssertNone = Chain.op((a: Optional<any>) => {
     Assertions.assertEq('Optional return value should be none', true, a.isNone());
   });
 
-  const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => Chain.op(function (lineInfo: LineInfo) {
+  const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => Chain.op((lineInfo: LineInfo) => {
     const actualPositions = lineInfo.positions;
 
     if (expectedPositions.length !== actualPositions.length) {
@@ -95,11 +95,11 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     });
   });
 
-  const cAssertBreakPositionNone = Chain.op(function (linebreak: LineInfo) {
+  const cAssertBreakPositionNone = Chain.op((linebreak: LineInfo) => {
     Assertions.assertEq('Should not be a line break position', true, linebreak.breakAt.isNone());
   });
 
-  const cAssertBreakPosition = (path: number[], offset: number) => Chain.op(function (linebreak: LineInfo) {
+  const cAssertBreakPosition = (path: number[], offset: number) => Chain.op((linebreak: LineInfo) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const breakPos = linebreak.breakAt.getOrDie();
 
@@ -107,12 +107,12 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     Assertions.assertEq('Should be the expected offset', offset, breakPos.offset());
   });
 
-  const cAssertBreakType = (expectedBreakType: BreakType) => Chain.op(function (linebreak: LineInfo) {
+  const cAssertBreakType = (expectedBreakType: BreakType) => Chain.op((linebreak: LineInfo) => {
     const actualBreakType = linebreak.breakType;
     Assertions.assertEq('Should be the expected break type', expectedBreakType, actualBreakType);
   });
 
-  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op(function (posOption: Optional<any>) {
+  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op((posOption: Optional<any>) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = posOption.getOrDie('Needs to return a caret');
 
@@ -120,7 +120,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     Assertions.assertEq('Should be the expected offset', offset, pos.offset());
   });
 
-  const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper(function (scope: any) {
+  const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper((scope: any) => {
     const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
     return predicate(scope.get(), pos);
@@ -506,7 +506,7 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
         cAssertCaretPosition([ 1, 2 ], 0)
       ]))
     ]))
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

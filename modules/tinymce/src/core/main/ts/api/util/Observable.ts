@@ -16,7 +16,7 @@ interface Observable<T> {
 }
 
 /**
- * This mixin will add event binding logic to classes.
+ * This mixin adds event binding logic to classes. Adapts the EventDispatcher class.
  *
  * @mixin tinymce.util.Observable
  */

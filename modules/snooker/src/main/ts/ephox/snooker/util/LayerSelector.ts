@@ -6,7 +6,7 @@ const firstLayer = function <T extends Element> (scope: SugarElement<Node>, sele
 };
 
 const filterFirstLayer = function <T extends Element> (scope: SugarElement<Node>, selector: string, predicate: (e: SugarElement<ChildNode>) => boolean): SugarElement<T>[] {
-  return Arr.bind(Traverse.children(scope), function (x) {
+  return Arr.bind(Traverse.children(scope), (x) => {
     if (Selectors.is<T>(x, selector)) {
       return predicate(x) ? [ x ] : [];
     } else {

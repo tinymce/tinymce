@@ -3,7 +3,7 @@ import { Gene } from 'ephox/boss/api/Gene';
 import { TestUniverse } from 'ephox/boss/api/TestUniverse';
 import * as Query from 'ephox/boss/mutant/Query';
 
-UnitTest.test('QueryTest', function () {
+UnitTest.test('QueryTest', () => {
   const universe = TestUniverse(Gene('1', 'root', [
     Gene('1.1', 'duck', [
       Gene('1.1.1', 'goose', []),

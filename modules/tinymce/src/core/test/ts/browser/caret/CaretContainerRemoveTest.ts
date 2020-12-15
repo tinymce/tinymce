@@ -7,7 +7,7 @@ import * as CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', (success, failure) => {
   const viewBlock = ViewBlock();
 
   if (!Env.ceFalse) {
@@ -24,7 +24,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
   const sTestRemove = Logger.t(
     'Remove',
-    Step.sync(function () {
+    Step.sync(() => {
       setupHtml('<span contentEditable="false">1</span>');
 
       CaretContainer.insertInline(getRoot().firstChild, true);
@@ -37,7 +37,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
   const sTestRemoveAndRepositionBlockAtOffset = Logger.t(
     'removeAndReposition block in same parent at offset',
-    Step.sync(function () {
+    Step.sync(() => {
       setupHtml('<span contentEditable="false">1</span>');
 
       CaretContainer.insertBlock('p', getRoot().firstChild, true);
@@ -52,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
   const sTestRemoveAndRepositionBeforeOffset = Logger.t(
     'removeAndReposition block in same parent before offset',
-    Step.sync(function () {
+    Step.sync(() => {
       setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
 
       CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
@@ -67,7 +67,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
 
   const sTestRemoveAndRepositionAfterOffset = Logger.t(
     'removeAndReposition block in same parent after offset',
-    Step.sync(function () {
+    Step.sync(() => {
       setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
 
       CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', function (su
     sTestRemoveAndRepositionBlockAtOffset,
     sTestRemoveAndRepositionBeforeOffset,
     sTestRemoveAndRepositionAfterOffset
-  ], function () {
+  ], () => {
     viewBlock.detach();
     success();
   }, failure);

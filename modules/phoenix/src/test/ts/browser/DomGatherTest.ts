@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as DomGather from 'ephox/phoenix/api/dom/DomGather';
 import { Page } from '../module/ephox/phoenix/test/Page';
 
-UnitTest.test('DomGatherTest', function () {
+UnitTest.test('DomGatherTest', () => {
   const page = Page();
 
   const is = function (x: SugarElement) {

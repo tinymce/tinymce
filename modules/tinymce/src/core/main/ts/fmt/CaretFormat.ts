@@ -163,7 +163,7 @@ const appendNode = function (parentNode: Node, node: Node) {
 };
 
 const insertFormatNodesIntoCaretContainer = function (formatNodes: Node[], caretContainer: Node) {
-  const innerMostFormatNode = Arr.foldr(formatNodes, function (parentNode, formatNode) {
+  const innerMostFormatNode = Arr.foldr(formatNodes, (parentNode, formatNode) => {
     return appendNode(parentNode, formatNode.cloneNode(false));
   }, caretContainer);
 
@@ -333,7 +333,7 @@ const disableCaretContainer = function (editor: Editor, keyCode: number) {
 };
 
 const setup = function (editor: Editor) {
-  editor.on('mouseup keydown', function (e) {
+  editor.on('mouseup keydown', (e) => {
     disableCaretContainer(editor, e.keyCode);
   });
 };

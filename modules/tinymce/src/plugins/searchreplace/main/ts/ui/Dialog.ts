@@ -53,7 +53,7 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
   };
 
   function notFoundAlert(api: Dialog.DialogInstanceApi<DialogData>) {
-    editor.windowManager.alert('Could not find the specified string.', function () {
+    editor.windowManager.alert('Could not find the specified string.', () => {
       api.focus('findtext');
     });
   }

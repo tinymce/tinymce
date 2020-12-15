@@ -5,7 +5,7 @@ import { Splitting } from '../api/Splitting';
  * Split an array into chunks matched by the predicate
  */
 const splitby = function <T> (xs: T[], pred: (x: T) => boolean): T[][] {
-  return splitbyAdv(xs, function (x) {
+  return splitbyAdv(xs, (x) => {
     return pred(x) ? Splitting.excludeWithout(x) : Splitting.include(x);
   });
 };
@@ -16,17 +16,17 @@ const splitby = function <T> (xs: T[], pred: (x: T) => boolean): T[][] {
 const splitbyAdv = function <T> (xs: T[], pred: (x: T) => Splitting<T>): T[][] {
   const r: T[][] = [];
   let part: T[] = [];
-  Arr.each(xs, function (x) {
+  Arr.each(xs, (x) => {
     const choice = pred(x);
-    Splitting.cata(choice, function () {
+    Splitting.cata(choice, () => {
       // Include in the current sublist.
       part.push(x);
-    }, function () {
+    }, () => {
       // Stop the current sublist, create a new sublist containing just x, and then start the next sublist.
       if (part.length > 0) { r.push(part); }
       r.push([ x ]);
       part = [];
-    }, function () {
+    }, () => {
       // Stop the current sublist, and start the next sublist.
       if (part.length > 0) { r.push(part); }
       part = [];

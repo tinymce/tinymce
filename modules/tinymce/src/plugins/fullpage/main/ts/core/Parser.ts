@@ -77,7 +77,7 @@ const htmlToData = function (editor: Editor, head: string) {
   }
 
   // Parse meta elements
-  Tools.each<AstNode>(headerFragment.getAll('meta'), function (meta) {
+  Tools.each<AstNode>(headerFragment.getAll('meta'), (meta) => {
     const name = meta.attr('name');
     const httpEquiv = meta.attr('http-equiv');
     let matches;
@@ -101,7 +101,7 @@ const htmlToData = function (editor: Editor, head: string) {
 
   // Parse stylesheets
   data.stylesheets = [];
-  Tools.each(headerFragment.getAll('link'), function (link) {
+  Tools.each(headerFragment.getAll('link'), (link) => {
     if (link.attr('rel') === 'stylesheet') {
       data.stylesheets.push(link.attr('href'));
     }
@@ -188,7 +188,7 @@ const dataToHtml = function (editor: Editor, data: Data, head) {
 
   // Add meta encoding
   elm = null;
-  Tools.each(headerFragment.getAll('meta'), function (meta) {
+  Tools.each(headerFragment.getAll('meta'), (meta) => {
     if (meta.attr('http-equiv') === 'Content-Type') {
       elm = meta;
     }
@@ -223,7 +223,7 @@ const dataToHtml = function (editor: Editor, data: Data, head) {
   }
 
   // Add/update/remove meta
-  Tools.each('keywords,description,author,copyright,robots'.split(','), function (name) {
+  Tools.each('keywords,description,author,copyright,robots'.split(','), (name) => {
     const nodes = headerFragment.getAll('meta');
     let i, meta;
     const value = data[name];
@@ -253,14 +253,14 @@ const dataToHtml = function (editor: Editor, data: Data, head) {
   });
 
   const currentStyleSheetsMap: Record<string, AstNode> = {};
-  Tools.each(headerFragment.getAll('link'), function (stylesheet) {
+  Tools.each(headerFragment.getAll('link'), (stylesheet) => {
     if (stylesheet.attr('rel') === 'stylesheet') {
       currentStyleSheetsMap[stylesheet.attr('href')] = stylesheet;
     }
   });
 
   // Add new
-  Tools.each(data.stylesheets, function (stylesheet) {
+  Tools.each(data.stylesheets, (stylesheet) => {
     if (!currentStyleSheetsMap[stylesheet]) {
       elm = new AstNode('link', 1);
       elm.attr({
@@ -276,7 +276,7 @@ const dataToHtml = function (editor: Editor, data: Data, head) {
   });
 
   // Delete old
-  Tools.each(currentStyleSheetsMap, function (stylesheet) {
+  Tools.each(currentStyleSheetsMap, (stylesheet) => {
     stylesheet.remove();
   });
 

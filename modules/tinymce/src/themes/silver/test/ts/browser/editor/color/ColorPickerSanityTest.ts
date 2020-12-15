@@ -9,7 +9,7 @@ import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
   SilverTheme();
 
-  TinyLoader.setupInBodyAndShadowRoot(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
     // mutation is yummy
     let currentColor = '';
 
@@ -24,7 +24,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     const docBody = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
 
     const sAssertColor = function (expected) {
-      return Logger.t('Asserting color', Step.sync(function () {
+      return Logger.t('Asserting color', Step.sync(() => {
         Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
       }));
     };
@@ -36,7 +36,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
     }));
 
     const sOpenDialog = (editor, docBody) => GeneralSteps.sequence(Logger.ts('Open dialog and wait for it to be visible', [
-      Step.sync(function () {
+      Step.sync(() => {
         const dialog = ColorSwatch.colorPickerDialog(editor);
         dialog(setColor, '#ffffff');
       }),

@@ -6,7 +6,7 @@ import * as Walker from 'ephox/phoenix/gather/Walker';
 import { Walkers } from 'ephox/phoenix/gather/Walkers';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('WalkerPathTest', function () {
+UnitTest.test('WalkerPathTest', () => {
   const universe = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'node', [

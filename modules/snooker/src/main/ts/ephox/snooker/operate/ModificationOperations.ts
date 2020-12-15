@@ -14,7 +14,7 @@ const insertRowAt = function (grid: Structs.RowCells[], index: number, example: 
   const before = rows.slice(0, index);
   const after = rows.slice(index);
 
-  const between = GridRow.mapCells(rows[example], function (ex, c) {
+  const between = GridRow.mapCells(rows[example], (ex, c) => {
     const withinSpan = index > 0 && index < rows.length && comparator(GridRow.getCellElement(rows[index - 1], c), GridRow.getCellElement(rows[index], c));
     const ret = withinSpan ? GridRow.getCell(rows[index], c) : Structs.elementnew(substitution(ex.element, comparator), true);
     return ret;
@@ -49,7 +49,7 @@ const insertColumnAt = (grid: Structs.RowCells[], index: number, example: number
 // - the other cells in that column set to span the split cell.
 const splitCellIntoColumns = function (grid: Structs.RowCells[], exampleRow: number, exampleCol: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
   const index = exampleCol + 1; // insert after
-  return Arr.map(grid, function (row, i) {
+  return Arr.map(grid, (row, i) => {
     const isTargetCell = (i === exampleRow);
     const sub = isTargetCell ? Structs.elementnew(substitution(GridRow.getCellElement(row, exampleCol), comparator), true) : GridRow.getCell(row, exampleCol);
     return GridRow.addCell(row, index, sub);
@@ -67,7 +67,7 @@ const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number
   const before = rows.slice(0, index);
   const after = rows.slice(index);
 
-  const between = GridRow.mapCells(rows[exampleRow], function (ex, i) {
+  const between = GridRow.mapCells(rows[exampleRow], (ex, i) => {
     const isTargetCell = (i === exampleCol);
     return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true) : ex;
   });
@@ -76,12 +76,12 @@ const splitCellIntoRows = function (grid: Structs.RowCells[], exampleRow: number
 };
 
 const deleteColumnsAt = function (grid: Structs.RowCells[], start: number, finish: number): Structs.RowCells[] {
-  const rows = Arr.map(grid, function (row) {
+  const rows = Arr.map(grid, (row) => {
     const cells = row.cells.slice(0, start).concat(row.cells.slice(finish + 1));
     return Structs.rowcells(cells, row.section);
   });
   // We should filter out rows that have no columns for easy deletion
-  return Arr.filter(rows, function (row) {
+  return Arr.filter(rows, (row) => {
     return row.cells.length > 0;
   });
 };

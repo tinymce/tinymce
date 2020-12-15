@@ -67,7 +67,7 @@ const field = function (name, placeholder) {
         AddEventsBehaviour.config(clearInputBehaviour, [
           // INVESTIGATE: Because this only happens on input,
           // it won't reset unless it has an initial value
-          AlloyEvents.run(NativeEvents.input(), function (iContainer) {
+          AlloyEvents.run(NativeEvents.input(), (iContainer) => {
             const input = inputSpec.get(iContainer);
             const val = Representing.getValue(input);
             const f = val.length > 0 ? Toggling.off : Toggling.on;

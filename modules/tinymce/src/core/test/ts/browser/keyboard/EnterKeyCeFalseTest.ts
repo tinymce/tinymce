@@ -6,7 +6,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
 
   Theme();
@@ -21,7 +21,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     dom.fire(target, 'keyup', evt);
   };
 
-  suite.test('Enter in text within contentEditable:true h1 inside contentEditable:false div', function (editor) {
+  suite.test('Enter in text within contentEditable:true h1 inside contentEditable:false div', (editor) => {
     editor.getBody().innerHTML = '<div contenteditable="false"><h1 contenteditable="true">ab</h1></div>';
     LegacyUnit.setSelection(editor, 'div h1', 1);
     pressEnter(editor);
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     );
   });
 
-  suite.test('Enter before cE=false div', function (editor) {
+  suite.test('Enter before cE=false div', (editor) => {
     editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
     editor.selection.select(editor.dom.select('div')[0]);
     editor.selection.collapse(true);
@@ -43,7 +43,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter after cE=false div', function (editor) {
+  suite.test('Enter after cE=false div', (editor) => {
     editor.getBody().innerHTML = '<div contenteditable="false">x</div>';
     editor.selection.select(editor.dom.select('div')[0]);
     editor.selection.collapse(false);
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', function
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,

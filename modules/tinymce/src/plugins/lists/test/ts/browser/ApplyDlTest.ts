@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
   Plugin();
   Theme();
 
-  suite.test('TestCase-TBA: Lists: Apply DL list to multiple Ps', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply DL list to multiple Ps', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'DT');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply OL list to single P', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply OL list to single P', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<p>a</p>'
     );
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('TestCase-TBA: Lists: Apply DL to P and merge with adjacent lists', function (editor) {
+  suite.test('TestCase-TBA: Lists: Apply DL to P and merge with adjacent lists', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<dl>' +
       '<dt>a</dt>' +
@@ -71,7 +71,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
     LegacyUnit.equal(editor.selection.getStart().nodeName, 'DT');
   });
 
-  suite.test('TestCase-TBA: Lists: Indent single DT in DL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Indent single DT in DL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<dl>' +
       '<dt>a</dt>' +
@@ -91,7 +91,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('TestCase-TBA: Lists: Outdent single DD in DL', function (editor) {
+  suite.test('TestCase-TBA: Lists: Outdent single DD in DL', (editor) => {
     editor.getBody().innerHTML = LegacyUnit.trimBrs(
       '<dl>' +
       '<dd>a</dd>' +
@@ -111,7 +111,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyDlTest', (success, failur
     LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Lists: Apply DL tests', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'lists',

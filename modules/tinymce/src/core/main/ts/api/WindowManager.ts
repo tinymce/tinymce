@@ -89,7 +89,7 @@ const WindowManager = function (editor: Editor): WindowManager {
 
   const closeDialog = function <T> (dialog: InstanceApi<T>) {
     fireCloseEvent(dialog);
-    dialogs = Arr.filter(dialogs, function (otherDialog) {
+    dialogs = Arr.filter(dialogs, (otherDialog) => {
       return otherDialog !== dialog;
     });
     // Move focus back to editor when the last window is closed
@@ -128,14 +128,14 @@ const WindowManager = function (editor: Editor): WindowManager {
   };
 
   const close = function () {
-    getTopDialog().each(function (dialog) {
+    getTopDialog().each((dialog) => {
       getImplementation().close(dialog);
       closeDialog(dialog);
     });
   };
 
-  editor.on('remove', function () {
-    Arr.each(dialogs, function (dialog) {
+  editor.on('remove', () => {
+    Arr.each(dialogs, (dialog) => {
       getImplementation().close(dialog);
     });
   });

@@ -44,7 +44,7 @@ const ElementUtils = function (dom: DOMUtils) {
     const getAttribs = function (node) {
       const attribs = {};
 
-      each(dom.getAttribs(node), function (attr: Attr) {
+      each(dom.getAttribs(node), (attr: Attr) => {
         const name = attr.nodeName.toLowerCase();
 
         // Don't compare internal attributes or style

@@ -14,18 +14,18 @@ UnitTest.asynctest('TextcolorCommandsTest', (success, failure) => {
   const state = Cell(null);
 
   const sAssertState = function (expected) {
-    return Logger.t(`Assert state ${expected}`, Step.sync(function () {
+    return Logger.t(`Assert state ${expected}`, Step.sync(() => {
       Assert.eq('should be same', expected, state.get());
     }));
   };
 
-  const sResetState = Logger.t('Reset state', Step.sync(function () {
+  const sResetState = Logger.t('Reset state', Step.sync(() => {
     state.set(null);
   }));
 
-  TinyLoader.setup(function (editor, onSuccess, onFailure) {
+  TinyLoader.setup((editor, onSuccess, onFailure) => {
 
-    editor.on('ExecCommand', function (e) {
+    editor.on('ExecCommand', (e) => {
       state.set(e.command);
     });
 

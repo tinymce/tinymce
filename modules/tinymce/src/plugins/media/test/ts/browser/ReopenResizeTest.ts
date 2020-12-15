@@ -8,12 +8,12 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', (success, failure) => {
   Plugin();
   Theme();
 
   const sWaitForResizeHandles = function (editor: Editor) {
-    return Waiter.sTryUntil('Wait for new width value', Step.sync(function () {
+    return Waiter.sTryUntil('Wait for new width value', Step.sync(() => {
       Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
     }));
   };
@@ -23,13 +23,13 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', function (s
     // the correct place that works cross browser
     // assertContentStructure did not work because some
     // browsers insert BRs and some do not
-    return Logger.t('Assert image is present', Step.sync(function () {
+    return Logger.t('Assert image is present', Step.sync(() => {
       const actualCount = editor.dom.select('img.mce-object').length;
       Assert.eq('assert raw content', 1, actualCount);
     }));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const ui = TinyUi(editor);
 
     Pipeline.async({},

@@ -16,7 +16,7 @@ const refreshInput = function (input) {
   const start = input.dom.selectionStart;
   const end = input.dom.selectionEnd;
   const dir = input.dom.selectionDirection;
-  Delay.setTimeout(function () {
+  Delay.setTimeout(() => {
     input.dom.setSelectionRange(start, end, dir);
     Focus.focus(input);
   }, 50);

@@ -7,7 +7,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest'
 
   Theme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

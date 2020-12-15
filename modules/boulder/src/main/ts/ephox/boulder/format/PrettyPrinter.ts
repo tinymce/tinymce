@@ -15,7 +15,7 @@ const formatErrors = function (errors: Array<{ path: string[]; getErrorInfo: () 
   ]) : errors;
 
   // TODO: Work out a better split between PrettyPrinter and SchemaError
-  return Arr.map(es, function (e) {
+  return Arr.map(es, (e) => {
     return 'Failed path: (' + e.path.join(' > ') + ')\n' + e.getErrorInfo();
   });
 };

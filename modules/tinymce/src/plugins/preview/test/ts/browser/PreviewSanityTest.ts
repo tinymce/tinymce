@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewSanityTest', (success
   const docBody = SugarElement.fromDom(document.body);
   const doc = TinyDom.fromDom(document);
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

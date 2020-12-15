@@ -19,6 +19,8 @@ export interface CoordAdt<T = number> {
   log: (label: string) => void;
 }
 
+// Note: Need to use a type here, as types are iterable whereas interfaces are not
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type StylesCoord = {
   left: Optional<string>;
   right: Optional<string>;

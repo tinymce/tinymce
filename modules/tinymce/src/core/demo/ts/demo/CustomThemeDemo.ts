@@ -24,8 +24,8 @@ export default function () {
 
       dom.setStyle(editorContainer, 'width', target.offsetWidth);
 
-      tinymce.each(dom.select('button', editorContainer), function (button) {
-        dom.bind(button, 'click', function (e) {
+      tinymce.each(dom.select('button', editorContainer), (button) => {
+        dom.bind(button, 'click', (e) => {
           e.preventDefault();
 
           editor.execCommand(
@@ -36,9 +36,9 @@ export default function () {
         });
       });
 
-      editor.on(function () {
-        tinymce.each(dom.select('button', editorContainer), function (button) {
-          editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), function (state) {
+      editor.on(() => {
+        tinymce.each(dom.select('button', editorContainer), (button) => {
+          editor.formatter.formatChanged(dom.getAttrib(button, 'data-mce-command'), (state) => {
             button.style.color = state ? 'red' : '';
           });
         });

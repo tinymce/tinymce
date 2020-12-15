@@ -32,7 +32,7 @@ export const TestUniverse = function (raw: Gene): TestUniverse {
   // NOTE: The top point might change when we are wrapping.
   const wrap = function (anchor: Gene, wrapper: Gene) {
     Insertion.wrap(anchor, wrapper);
-    content.parent.fold(Fun.noop, function (p) {
+    content.parent.fold(Fun.noop, (p) => {
       content = p;
     });
   };

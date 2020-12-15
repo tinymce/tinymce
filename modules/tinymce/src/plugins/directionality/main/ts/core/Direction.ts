@@ -16,7 +16,7 @@ const setDir = function (editor: Editor, dir: string) {
   if (blocks.length) {
     curDir = dom.getAttrib(blocks[0], 'dir');
 
-    Tools.each(blocks, function (block) {
+    Tools.each(blocks, (block) => {
       // Add dir to block if the parent block doesn't already have that dir
       if (!dom.getParent(block.parentNode, '*[dir="' + dir + '"]', dom.getRoot())) {
         dom.setAttrib(block, 'dir', curDir !== dir ? dir : null);

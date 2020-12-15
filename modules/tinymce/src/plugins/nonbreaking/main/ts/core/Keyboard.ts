@@ -13,7 +13,7 @@ const setup = function (editor) {
   const spaces = Settings.getKeyboardSpaces(editor);
 
   if (spaces > 0) {
-    editor.on('keydown', function (e) {
+    editor.on('keydown', (e) => {
       if (e.keyCode === VK.TAB && !e.isDefaultPrevented()) {
         if (e.shiftKey) {
           return;

@@ -5,7 +5,7 @@ import * as Finder from 'ephox/phoenix/test/Finder';
 import * as TestRenders from 'ephox/phoenix/test/TestRenders';
 import * as Contiguous from 'ephox/phoenix/util/Contiguous';
 
-UnitTest.test('Contiguous Text Nodes Test', function () {
+UnitTest.test('Contiguous Text Nodes Test', () => {
   const doc = TestUniverse(
     Gene('root', 'root', [
       Gene('1', 'span', [
@@ -32,7 +32,7 @@ UnitTest.test('Contiguous Text Nodes Test', function () {
   const check = function (expected: CheckItem[], ids: string[]) {
     const actual = Contiguous.textnodes(doc, Finder.getAll(doc, ids));
     assert.eq(expected.length, actual.length);
-    Arr.each(expected, function (exp, i) {
+    Arr.each(expected, (exp, i) => {
       const act = actual[i];
       assert.eq(exp.parent, act.parent.id);
       assert.eq(exp.children, TestRenders.ids(act.children));

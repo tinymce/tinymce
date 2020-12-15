@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextT
   Theme();
   SearchreplacePlugin();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
 

@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', (success, failure) => {
 
   Theme();
 
@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
 
   const sFakeBackspaceKeyOnRange = function (editor) {
     return GeneralSteps.sequence([
-      Step.sync(function () {
+      Step.sync(() => {
         editor.getDoc().execCommand('Delete', false, null);
       }),
       sKeyUp(editor, Keys.backspace())
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -60,7 +60,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyApis.sSetSelection([ 1, 1, 0 ], 0, [ 1, 1, 0 ], 1),
         sFakeBackspaceKeyOnRange(editor),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('div', {
@@ -86,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -110,7 +110,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -134,7 +134,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
         tinyActions.sContentKeystroke(Keys.backspace(), {}),
         tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
         tinyApis.sAssertContentStructure(
-          ApproxStructure.build(function (s, str, _arr) {
+          ApproxStructure.build((s, str, _arr) => {
             return s.element('body', {
               children: [
                 s.element('p', {
@@ -150,7 +150,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteTest', function (succes
     ]);
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

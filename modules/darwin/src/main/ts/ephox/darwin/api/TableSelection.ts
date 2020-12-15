@@ -9,15 +9,15 @@ const retrieve = function <T extends Element> (container: SugarElement, selector
 };
 
 const retrieveBox = function (container: SugarElement, firstSelectedSelector: string, lastSelectedSelector: string): Optional<Structs.Bounds> {
-  return CellSelection.getEdges(container, firstSelectedSelector, lastSelectedSelector).bind(function (edges) {
+  return CellSelection.getEdges(container, firstSelectedSelector, lastSelectedSelector).bind((edges) => {
     const isRoot = function (ancestor: SugarElement) {
       return Compare.eq(container, ancestor);
     };
     const sectionSelector = 'thead,tfoot,tbody,table';
     const firstAncestor = SelectorFind.ancestor(edges.first, sectionSelector, isRoot);
     const lastAncestor = SelectorFind.ancestor(edges.last, sectionSelector, isRoot);
-    return firstAncestor.bind(function (fA) {
-      return lastAncestor.bind(function (lA) {
+    return firstAncestor.bind((fA) => {
+      return lastAncestor.bind((lA) => {
         return Compare.eq(fA, lA) ? TablePositions.getBox(edges.table, edges.first, edges.last) : Optional.none<Structs.Bounds>();
       });
     });

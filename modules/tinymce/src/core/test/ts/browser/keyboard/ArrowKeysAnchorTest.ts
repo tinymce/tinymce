@@ -8,7 +8,7 @@ import Env from 'tinymce/core/api/Env';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success, failure) => {
   const BEFORE = true, AFTER = false;
   const START = true, END = false;
 
@@ -23,7 +23,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
   };
 
   const anchorSurroundedWithText = function (expectedText: string) {
-    return ApproxStructure.build(function (s, str/* , arr*/) {
+    return ApproxStructure.build((s, str/* , arr*/) => {
       return s.element('p', {
         children: [
           s.text(str.is('a')),
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
   };
 
   const anchorSurroundedWithZwspOutside = function (before: boolean) {
-    return ApproxStructure.build(function (s, str/* , arr*/) {
+    return ApproxStructure.build((s, str/* , arr*/) => {
       return s.element('p', {
         children: [
           s.text(str.is('a' + (before ? Zwsp.ZWSP : ''))),
@@ -69,8 +69,8 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
   };
 
   const anchorsZwspOutside = function (texts: string[], before: boolean, index: number) {
-    return ApproxStructure.build(function (s, str/* , arr*/) {
-      const children = Arr.map(texts, function (text, i) {
+    return ApproxStructure.build((s, str/* , arr*/) => {
+      const children = Arr.map(texts, (text, i) => {
         return Arr.flatten([
           index === i && before ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ],
           [
@@ -99,8 +99,8 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
   };
 
   const anchorsZwspInside = function (texts: string[], start: boolean, index: number) {
-    return ApproxStructure.build(function (s, str/* , arr*/) {
-      const children = Arr.map(texts, function (text, i) {
+    return ApproxStructure.build((s, str/* , arr*/) => {
+      const children = Arr.map(texts, (text, i) => {
         const zwspText = start ? Zwsp.ZWSP + text : text + Zwsp.ZWSP;
 
         return s.element(
@@ -125,7 +125,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
   };
 
   const sAssertContentStructure = function (editor: Editor, expected: StructAssert) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const actual = SugarElement.fromHtml(editor.getBody().innerHTML);
       return Assertions.assertStructure('Should be the same structure', expected, actual);
     });
@@ -244,7 +244,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', function
     ]));
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyActions = TinyActions(editor);
 

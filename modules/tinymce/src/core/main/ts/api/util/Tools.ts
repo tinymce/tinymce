@@ -220,12 +220,12 @@ const create = function (s, p, root?) {
     ns[cn].prototype[cn] = ns[cn];
 
     // Add super methods
-    self.each(sp, function (f, n) {
+    self.each(sp, (f, n) => {
       ns[cn].prototype[n] = sp[n];
     });
 
     // Add overridden methods
-    self.each(p, function (f, n) {
+    self.each(p, (f, n) => {
       // Extend methods if needed
       if (sp[n]) {
         ns[cn].prototype[n] = function () {
@@ -243,7 +243,7 @@ const create = function (s, p, root?) {
   // Add static methods
   /* jshint sub:true*/
   /* eslint dot-notation:0*/
-  self.each(p.static, function (f, n) {
+  self.each(p.static, (f, n) => {
     ns[cn][n] = f;
   });
 };
@@ -280,7 +280,7 @@ const walk = function (o, f, n?, s?) {
       o = o[n];
     }
 
-    ArrUtils.each(o, function (o, i) {
+    ArrUtils.each(o, (o, i) => {
       if (f.call(s, o, i, n) === false) {
         return false;
       }

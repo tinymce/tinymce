@@ -5,24 +5,24 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import * as DeleteElement from 'tinymce/core/delete/DeleteElement';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', (success, failure) => {
 
   Theme();
 
   const sDeleteElementPath = function (editor, forward, path) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie();
       DeleteElement.deleteElement(editor, forward, element);
     });
   };
 
   const sAssertCaretDirection = function (editor, expectedCaretData) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       Assertions.assertEq('Should have the right caret data', expectedCaretData, editor.selection.getNode().getAttribute('data-mce-caret'));
     });
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     Pipeline.async({}, [

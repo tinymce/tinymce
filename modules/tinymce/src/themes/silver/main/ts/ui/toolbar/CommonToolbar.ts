@@ -76,7 +76,7 @@ const renderToolbarGroup = (toolbarGroup: ToolbarGroup) =>
   AlloyToolbarGroup.sketch(renderToolbarGroupCommon(toolbarGroup));
 
 const getToolbarbehaviours = (toolbarSpec: ToolbarSpec, modeName) => {
-  const onAttached = AlloyEvents.runOnAttached(function (component) {
+  const onAttached = AlloyEvents.runOnAttached((component) => {
     const groups = Arr.map(toolbarSpec.initGroups, renderToolbarGroup);
     AlloyToolbar.setGroups(component, groups);
   });

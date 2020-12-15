@@ -31,22 +31,22 @@ const getCellFirstCursorPosition = function (editor: Editor, cell: SugarElement<
 
 const getNewRowCursorPosition = function (editor: Editor, table: SugarElement<HTMLTableElement>): Optional<Range> {
   const rows = SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr');
-  return Arr.last(rows).bind(function (last) {
-    return SelectorFind.descendant<HTMLTableCellElement>(last, 'td,th').map(function (first) {
+  return Arr.last(rows).bind((last) => {
+    return SelectorFind.descendant<HTMLTableCellElement>(last, 'td,th').map((first) => {
       return getCellFirstCursorPosition(editor, first);
     });
   });
 };
 
 const go = function (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation, actions: TableActions): Optional<Range> {
-  return cell.fold<Optional<Range>>(Optional.none, Optional.none, function (current, next) {
-    return CursorPosition.first(next).map(function (cell) {
+  return cell.fold<Optional<Range>>(Optional.none, Optional.none, (current, next) => {
+    return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(editor, cell);
     });
-  }, function (current) {
-    return TableLookup.table(current, isRoot).bind(function (table) {
+  }, (current) => {
+    return TableLookup.table(current, isRoot).bind((table) => {
       const targets = TableTargets.noMenu(current);
-      editor.undoManager.transact(function () {
+      editor.undoManager.transact(() => {
         actions.insertRowsAfter(table, targets);
       });
       return getNewRowCursorPosition(editor, table);
@@ -67,11 +67,11 @@ const handle = function (event: KeyboardEvent, editor: Editor, actions: TableAct
     const rng = editor.selection.getRng();
     if (rng.collapsed) {
       const start = SugarElement.fromDom(rng.startContainer);
-      TableLookup.cell(start, isRoot).each(function (cell) {
+      TableLookup.cell(start, isRoot).each((cell) => {
         event.preventDefault();
         const navigation = event.shiftKey ? backward : forward;
         const rng = navigation(editor, isRoot, cell, actions);
-        rng.each(function (range) {
+        rng.each((range) => {
           editor.selection.setRng(range);
         });
       });

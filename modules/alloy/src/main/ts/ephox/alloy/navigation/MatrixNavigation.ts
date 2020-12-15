@@ -1,10 +1,10 @@
 import { Num, Optional } from '@ephox/katamari';
 
-export type MatrixNavigationOutcome<A> = {
+export interface MatrixNavigationOutcome<A> {
   readonly rowIndex: number;
   readonly columnIndex: number;
   readonly cell: A;
-};
+}
 
 export type MatrixNavigationFunc<A> = (matrix: A[][], startRow: number, startCol: number) => Optional<MatrixNavigationOutcome<A>>;
 

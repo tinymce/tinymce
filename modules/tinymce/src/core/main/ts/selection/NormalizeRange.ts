@@ -28,7 +28,7 @@ const findParent = (node: Node, rootNode: Node, predicate: (node: Node) => boole
 
 const hasParent = (node: Node, rootNode: Node, predicate: (node: Node) => boolean) => findParent(node, rootNode, predicate) !== null;
 
-const hasParentWithName = (node: Node, rootNode: Node, name: string) => hasParent(node, rootNode, function (node) {
+const hasParentWithName = (node: Node, rootNode: Node, name: string) => hasParent(node, rootNode, (node) => {
   return node.nodeName === name;
 });
 
@@ -212,7 +212,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
     // Becomes: <b>x|</b><i>x</i>
     // Seems that only gecko has issues with this
     if (NodeType.isText(container) && offset === 0) {
-      findTextNodeRelative(dom, isAfterNode, collapsed, true, container).each(function (pos) {
+      findTextNodeRelative(dom, isAfterNode, collapsed, true, container).each((pos) => {
         container = pos.container();
         offset = pos.offset();
         normalized = true;
@@ -235,7 +235,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
 
       if (node && NodeType.isBr(node) && !isPrevNode(node, 'A') &&
         !hasBrBeforeAfter(dom, node, false) && !hasBrBeforeAfter(dom, node, true)) {
-        findTextNodeRelative(dom, isAfterNode, collapsed, true, node).each(function (pos) {
+        findTextNodeRelative(dom, isAfterNode, collapsed, true, node).each((pos) => {
           container = pos.container();
           offset = pos.offset();
           normalized = true;
@@ -248,7 +248,7 @@ const normalizeEndPoint = (dom: DOMUtils, collapsed: boolean, start: boolean, rn
   // So this: x[<b>x]</b>
   // Becomes: x<b>[x]</b>
   if (directionLeft && !collapsed && NodeType.isText(container) && offset === container.nodeValue.length) {
-    findTextNodeRelative(dom, isAfterNode, collapsed, false, container).each(function (pos) {
+    findTextNodeRelative(dom, isAfterNode, collapsed, false, container).each((pos) => {
       container = pos.container();
       offset = pos.offset();
       normalized = true;
@@ -262,7 +262,7 @@ const normalize = (dom: DOMUtils, rng: Range): Optional<Range> => {
   const collapsed = rng.collapsed, normRng = rng.cloneRange();
   const startPos = CaretPosition.fromRangeStart(rng);
 
-  normalizeEndPoint(dom, collapsed, true, normRng).each(function (pos) {
+  normalizeEndPoint(dom, collapsed, true, normRng).each((pos) => {
     // #TINY-1595: Do not move the caret to previous line
     if (!collapsed || !CaretPosition.isAbove(startPos, pos)) {
       normRng.setStart(pos.container(), pos.offset());
@@ -270,7 +270,7 @@ const normalize = (dom: DOMUtils, rng: Range): Optional<Range> => {
   });
 
   if (!collapsed) {
-    normalizeEndPoint(dom, collapsed, false, normRng).each(function (pos) {
+    normalizeEndPoint(dom, collapsed, false, normRng).each((pos) => {
       normRng.setEnd(pos.container(), pos.offset());
     });
   }

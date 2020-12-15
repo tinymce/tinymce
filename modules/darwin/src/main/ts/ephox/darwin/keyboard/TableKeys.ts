@@ -16,10 +16,10 @@ type Carets = Carets.Carets;
 const MAX_RETRIES = 20;
 
 const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SpotPoint<SugarElement<Node>>> {
-  return bridge.getSelection().bind(function (sel) {
-    return BrTags.tryBr(isRoot, sel.finish, sel.foffset, direction).fold(function () {
+  return bridge.getSelection().bind((sel) => {
+    return BrTags.tryBr(isRoot, sel.finish, sel.foffset, direction).fold(() => {
       return Optional.some(Spot.point(sel.finish, sel.foffset));
-    }, function (brNeighbour) {
+    }, (brNeighbour) => {
       const range = bridge.fromSitus(brNeighbour);
       const analysis = BeforeAfter.verify(bridge, sel.finish, sel.foffset, range.finish, range.foffset, direction.failure, isRoot);
       return BrTags.process(analysis);
@@ -30,22 +30,22 @@ const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
 const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Optional<Situs> {
   if (numRetries === 0) { return Optional.none(); }
   // Firstly, move the (x, y) and see what element we end up on.
-  return tryCursor(bridge, isRoot, element, offset, direction).bind(function (situs) {
+  return tryCursor(bridge, isRoot, element, offset, direction).bind((situs) => {
     const range = bridge.fromSitus(situs);
     // Now, check to see if the element is a new cell.
     const analysis = BeforeAfter.verify(bridge, element, offset, range.finish, range.foffset, direction.failure, isRoot);
-    return BeforeAfter.cata(analysis, function () {
+    return BeforeAfter.cata(analysis, () => {
       return Optional.none<Situs>();
-    }, function () {
+    }, () => {
       // We have a new cell, so we stop looking.
       return Optional.some(situs);
-    }, function (cell) {
+    }, (cell) => {
       if (Compare.eq(element, cell) && offset === 0) {
         return tryAgain(bridge, element, offset, Carets.moveUp, direction);
       } else { // We need to look again from the start of our current cell
         return scan(bridge, isRoot, cell, 0, direction, numRetries - 1);
       }
-    }, function (cell) {
+    }, (cell) => {
       // If we were here last time, move and try again.
       if (Compare.eq(element, cell) && offset === Awareness.getEnd(cell)) {
         return tryAgain(bridge, element, offset, Carets.moveDown, direction);
@@ -57,7 +57,7 @@ const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolea
 };
 
 const tryAgain = function (bridge: WindowBridge, element: SugarElement, offset: number, move: (carets: Carets, jump: number) => Carets, direction: KeyDirection): Optional<Situs> {
-  return Rectangles.getBoxAt(bridge, element, offset).bind(function (box) {
+  return Rectangles.getBoxAt(bridge, element, offset).bind((box) => {
     return tryAt(bridge, direction, move(box, Retries.getJumpSize()));
   });
 };
@@ -75,13 +75,13 @@ const tryAt = function (bridge: WindowBridge, direction: KeyDirection, box: Care
 };
 
 const tryCursor = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection): Optional<Situs> {
-  return Rectangles.getBoxAt(bridge, element, offset).bind(function (box) {
+  return Rectangles.getBoxAt(bridge, element, offset).bind((box) => {
     return tryAt(bridge, direction, box);
   });
 };
 
 const handle = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SimRange> {
-  return findSpot(bridge, isRoot, direction).bind(function (spot) {
+  return findSpot(bridge, isRoot, direction).bind((spot) => {
     // There is a point to start doing box-hitting from
     return scan(bridge, isRoot, spot.element, spot.offset, direction, MAX_RETRIES).map(bridge.fromSitus);
   });

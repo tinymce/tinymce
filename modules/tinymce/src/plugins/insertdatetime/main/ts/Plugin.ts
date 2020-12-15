@@ -10,7 +10,7 @@ import * as Commands from './api/Commands';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('insertdatetime', function (editor) {
+  PluginManager.add('insertdatetime', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
   });

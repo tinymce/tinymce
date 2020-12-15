@@ -28,7 +28,7 @@ const initPlugin = function (editor: Editor, initializedPlugins: string[], plugi
   const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
-    Tools.each(PluginManager.dependencies(plugin), function (dep) {
+    Tools.each(PluginManager.dependencies(plugin), (dep) => {
       initPlugin(editor, initializedPlugins, dep);
     });
 
@@ -59,7 +59,7 @@ const trimLegacyPrefix = function (name: string) {
 const initPlugins = function (editor: Editor) {
   const initializedPlugins = [];
 
-  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), function (name) {
+  Tools.each(Settings.getPlugins(editor).split(/[ ,]/), (name) => {
     initPlugin(editor, initializedPlugins, trimLegacyPrefix(name));
   });
 };

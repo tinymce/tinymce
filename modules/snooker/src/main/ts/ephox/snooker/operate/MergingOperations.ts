@@ -44,8 +44,8 @@ const unmerge = function (grid: Structs.RowCells[], target: SugarElement, compar
 };
 
 const uniqueCells = function (row: Structs.ElementNew[], comparator: CompElm): Structs.ElementNew[] {
-  return Arr.foldl(row, function (rest, cell) {
-    return Arr.exists(rest, function (currentCell) {
+  return Arr.foldl(row, (rest, cell) => {
+    return Arr.exists(rest, (currentCell) => {
       return comparator(currentCell.element, cell.element);
     }) ? rest : rest.concat([ cell ]);
   }, [] as Structs.ElementNew[]);
@@ -74,7 +74,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
   if (index > 0 && index < rows.length) {
     const rowPrevCells = rows[index - 1].cells;
     const cells = uniqueCells(rowPrevCells, comparator);
-    Arr.each(cells, function (cell) {
+    Arr.each(cells, (cell) => {
       // only make a sub when we have to
       let replacement = Optional.none<SugarElement>();
       for (let i = index; i < rows.length; i++) {
@@ -86,7 +86,7 @@ const splitRows = function (grid: Structs.RowCells[], index: number, comparator:
             if (replacement.isNone()) {
               replacement = Optional.some(substitution());
             }
-            replacement.each(function (sub) {
+            replacement.each((sub) => {
               GridRow.mutateCell(rows[i], j, Structs.elementnew(sub, true));
             });
           }

@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import * as Protect from 'tinymce/plugins/fullpage/core/Protect';
 
-UnitTest.test('atomic.tinymce.plugins.fullpage.ProtectTest', function () {
+UnitTest.test('atomic.tinymce.plugins.fullpage.ProtectTest', () => {
   const testProtect = function () {
     Assertions.assertEq('', 'a<!--mce:protected b-->c', Protect.protectHtml([ /b/g ], 'abc'));
     Assertions.assertEq('', 'a<!--mce:protected b-->cde<!--mce:protected f-->', Protect.protectHtml([ /b/g, /f/g ], 'abcdef'));

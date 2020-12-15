@@ -48,8 +48,8 @@ export default (): void => {
         })
       ]),
 
-      components: Arr.map([ 'alpha', 'beta', 'gamma' ], function (n) {
-        return <AlloySpec> {
+      components: Arr.map([ 'alpha', 'beta', 'gamma' ], (n): AlloySpec => {
+        return {
           dom: {
             tag: 'button',
             innerHtml: n
@@ -76,7 +76,7 @@ export default (): void => {
           ])
         };
       }).concat([
-        <AlloySpec> GuiFactory.premade(sink)
+        GuiFactory.premade(sink)
       ])
     })
   );

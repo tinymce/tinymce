@@ -10,7 +10,7 @@ import * as TypedList from '../extract/TypedList';
 import * as MatchSplitter from './MatchSplitter';
 
 const gen = function <E, D> (universe: Universe<E, D>, input: E[]): SpotRange<E>[] {
-  return PositionArray.generate(input, function (unit, offset) {
+  return PositionArray.generate(input, (unit, offset) => {
     const finish = offset + universe.property().getText(unit).length;
     return Optional.from(Spot.range(unit, offset, finish));
   });
@@ -25,7 +25,7 @@ const gen = function <E, D> (universe: Universe<E, D>, input: E[]): SpotRange<E>
  */
 const run = function <E, D> (universe: Universe<E, D>, elements: E[], patterns: NamedPattern[], optimise?: (e: E) => boolean): SearchResult<E>[] {
   const sections = Family.group(universe, elements, optimise);
-  const result = Arr.bind(sections, function (x: TypedItem<E, D>[]) {
+  const result = Arr.bind(sections, (x: TypedItem<E, D>[]) => {
     const input = TypedList.justText(x);
     const text = Arr.map(input, universe.property().getText).join('');
 
@@ -42,7 +42,7 @@ const run = function <E, D> (universe: Universe<E, D>, elements: E[], patterns: 
  * Runs a search for one or more words
  */
 const safeWords = function <E, D> (universe: Universe<E, D>, elements: E[], words: string[], optimise?: (e: E) => boolean): SearchResult<E>[] {
-  const patterns = Arr.map(words, function (word) {
+  const patterns = Arr.map(words, (word) => {
     const pattern = Pattern.safeword(word);
     return NamedPattern(word, pattern);
   });

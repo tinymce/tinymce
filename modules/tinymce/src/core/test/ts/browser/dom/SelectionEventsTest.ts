@@ -5,12 +5,12 @@ import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (success, failure) {
+UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', (success, failure) => {
 
   Theme();
 
   const mBindEventMutator = function (editor, eventName, mutator) {
-    return Step.stateful(function (_value, next, _die) {
+    return Step.stateful((_value, next, _die) => {
       const eventArgs = Cell(null);
 
       const handler = function (e) {
@@ -28,14 +28,14 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
   };
 
   const mUnbindEvent = function (editor, eventName) {
-    return Step.stateful(function (value: any, next, _die) {
+    return Step.stateful((value: any, next, _die) => {
       editor.off(eventName, value.handler);
       next({});
     });
   };
 
   const mAssertSetSelectionEventArgs = function (editor, expectedForward) {
-    return Step.stateful(function (value: any, next, _die) {
+    return Step.stateful((value: any, next, _die) => {
       Assertions.assertEq('Should be expected forward flag', expectedForward, value.eventArgs.get().forward);
       assertSelectAllRange(editor, value.eventArgs.get().range);
       next(value);
@@ -50,13 +50,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
   };
 
   const sSetRng = function (editor, forward) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.selection.setRng(getSelectAllRng(editor), forward);
     });
   };
 
   const sGetRng = function (editor, _forward?) {
-    return Step.sync(function () {
+    return Step.sync(() => {
       editor.selection.getRng();
     });
   };
@@ -79,7 +79,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
     );
   };
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     Pipeline.async({}, [
       tinyApis.sFocus(),
@@ -98,7 +98,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
         mBindEvent(editor, 'AfterSetSelectionRange'),
         tinyApis.sSetContent('<p>a</p>'),
         sSetRng(editor, undefined),
-        Step.stateful(function (value, next, _die) {
+        Step.stateful((value, next, _die) => {
           Assertions.assertEq('', 'undefined', typeof value.eventArgs.get().forward);
           next(value);
         }),
@@ -113,7 +113,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionEventsTest', function (suc
         tinyApis.sSetContent('<p>a</p>'),
         tinyApis.sSetCursor([ 0, 0 ], 0),
         sGetRng(editor),
-        Step.stateful(function (value, next, _die) {
+        Step.stateful((value, next, _die) => {
           assertSelectAllRange(editor, editor.selection.getRng());
           assertSelectAllRange(editor, value.eventArgs.get().range);
           next(value);

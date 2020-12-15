@@ -88,7 +88,7 @@ export default function () {
     cmd('mceEditImage')
   ];
 
-  Arr.each(commands, function (cmd) {
+  Arr.each(commands, (cmd) => {
     const btn = document.createElement('button');
     btn.innerHTML = cmd.command;
     btn.onclick = function () {

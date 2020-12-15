@@ -16,10 +16,10 @@ const comparePosition = function (item: Gene, other: Gene): number {
   const top = Up.top(item);
   const all = extract(top);
 
-  const itemIndex = Arr.findIndex(all, function (x) { return item.id === x; });
-  const otherIndex = Arr.findIndex(all, function (x) { return other.id === x; });
-  return itemIndex.bind(function (iIndex) {
-    return otherIndex.map(function (oIndex): number {
+  const itemIndex = Arr.findIndex(all, (x) => { return item.id === x; });
+  const otherIndex = Arr.findIndex(all, (x) => { return other.id === x; });
+  return itemIndex.bind((iIndex) => {
+    return otherIndex.map((oIndex): number => {
       if (iIndex < oIndex) {
         return 4;
       } else {
@@ -32,8 +32,8 @@ const comparePosition = function (item: Gene, other: Gene): number {
 const prevSibling = function (item: Gene): Optional<Gene> {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
-  const itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
-  return itemIndex.bind(function (iIndex) {
+  const itemIndex = Arr.findIndex(kin, (x) => { return item.id === x.id; });
+  return itemIndex.bind((iIndex) => {
     return iIndex > 0 ? Optional.some(kin[iIndex - 1]) : Optional.none();
   });
 };
@@ -41,8 +41,8 @@ const prevSibling = function (item: Gene): Optional<Gene> {
 const nextSibling = function (item: Gene): Optional<Gene> {
   const parent = Properties.parent(item);
   const kin = parent.map(Properties.children).getOr([]);
-  const itemIndex = Arr.findIndex(kin, function (x) { return item.id === x.id; });
-  return itemIndex.bind(function (iIndex) {
+  const itemIndex = Arr.findIndex(kin, (x) => { return item.id === x.id; });
+  return itemIndex.bind((iIndex) => {
     return iIndex < kin.length - 1 ? Optional.some(kin[iIndex + 1]) : Optional.none();
   });
 };

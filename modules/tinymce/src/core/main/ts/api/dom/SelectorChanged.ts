@@ -34,16 +34,16 @@ export default (dom: DOMUtils, editor: Editor) => {
         selectorChangedData = {};
         currentSelectors = {};
 
-        editor.on('NodeChange', function (e) {
+        editor.on('NodeChange', (e) => {
           const node = e.element, parents = dom.getParents(node, null, dom.getRoot()), matchedSelectors = {};
 
           // Check for new matching selectors
-          Tools.each(selectorChangedData, function (callbacks, selector) {
-            Tools.each(parents, function (node) {
+          Tools.each(selectorChangedData, (callbacks, selector) => {
+            Tools.each(parents, (node) => {
               if (dom.is(node, selector)) {
                 if (!currentSelectors[selector]) {
                   // Execute callbacks
-                  Tools.each(callbacks, function (callback) {
+                  Tools.each(callbacks, (callback) => {
                     callback(true, { node, selector, parents });
                   });
 
@@ -57,11 +57,11 @@ export default (dom: DOMUtils, editor: Editor) => {
           });
 
           // Check if current selectors still match
-          Tools.each(currentSelectors, function (callbacks, selector) {
+          Tools.each(currentSelectors, (callbacks, selector) => {
             if (!matchedSelectors[selector]) {
               delete currentSelectors[selector];
 
-              Tools.each(callbacks, function (callback) {
+              Tools.each(callbacks, (callback) => {
                 callback(false, { node, selector, parents });
               });
             }

@@ -28,7 +28,7 @@ export default function (win, frame) {
 
   Insert.append(SugarElement.fromDom(doc.documentElement), container);
 
-  const onTouch = DomEvent.bind(container, 'touchstart', function (event) {
+  const onTouch = DomEvent.bind(container, 'touchstart', (event) => {
     // We preventDefault the event incase the touch is between 2 letters creating a new collapsed selection,
     // in this very specific case we just want to turn the fake cursor into a real cursor.  Remember that
     // touchstart may be used to dimiss popups too, so don't kill it completely, just prevent its

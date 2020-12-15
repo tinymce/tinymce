@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityT
   InsertDatetimePlugin();
   SilverTheme();
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyUi = TinyUi(editor);
     const tinyApis = TinyApis(editor);
 
@@ -19,7 +19,7 @@ UnitTest.asynctest('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityT
         tinyUi.sClickOnToolbar('click on insertdatetime button', '[aria-haspopup="true"]'),
         tinyUi.sWaitForUi('wait for menu', '[role="menu"]'),
         tinyUi.sClickOnUi('click on first in menu', '[role="menu"] [role="menuitemcheckbox"]:first'),
-        tinyApis.sAssertContentStructure(ApproxStructure.build(function (s) {
+        tinyApis.sAssertContentStructure(ApproxStructure.build((s) => {
           return s.element('body', {
             children: [
               s.element('p', {

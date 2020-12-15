@@ -12,7 +12,7 @@ const dropLast = <T>(xs: T[]): T[] => xs.slice(0, -1);
 
 const parentsUntil = (start: SugarElement, root: SugarElement, predicate: (elm: SugarElement) => boolean): SugarElement[] => {
   if (Compare.contains(root, start)) {
-    return dropLast(Traverse.parents(start, function (elm) {
+    return dropLast(Traverse.parents(start, (elm) => {
       return predicate(elm) || Compare.eq(elm, root);
     }));
   } else {

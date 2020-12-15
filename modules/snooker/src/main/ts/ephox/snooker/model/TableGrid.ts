@@ -4,7 +4,7 @@ import { ElementNew, RowCells } from '../api/Structs';
 import * as GridRow from './GridRow';
 
 const getColumn = function (grid: RowCells[], index: number): ElementNew[] {
-  return Arr.map(grid, function (row) {
+  return Arr.map(grid, (row) => {
     return GridRow.getCell(row, index);
   });
 };
@@ -18,12 +18,12 @@ const findDiff = function (xs: ElementNew[], comp: (a: SugarElement, b: SugarEle
     return 0;
   }
   const first = xs[0];
-  const index = Arr.findIndex(xs, function (x) {
+  const index = Arr.findIndex(xs, (x) => {
     return !comp(first.element, x.element);
   });
-  return index.fold(function () {
+  return index.fold(() => {
     return xs.length;
-  }, function (ind) {
+  }, (ind) => {
     return ind;
   });
 };

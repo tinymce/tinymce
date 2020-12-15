@@ -34,7 +34,7 @@ interface CellHeightSpan extends CellHeight {
 const recalculateWidthForCells = (warehouse: Warehouse, widths: number[]): CellWidthSpan[] => {
   const all = Warehouse.justCells(warehouse);
 
-  return Arr.map(all, function (cell) {
+  return Arr.map(all, (cell) => {
     // width of a spanning cell is sum of widths of representative columns it spans
     const width = total(cell.column, cell.column + cell.colspan, widths);
     return {
@@ -68,7 +68,7 @@ const recalculateHeightForCells = (warehouse: Warehouse, heights: number[]): Cel
 };
 
 const matchRowHeight = function (warehouse: Warehouse, heights: number[]): CellHeight[] {
-  return Arr.map(warehouse.all, function (row, i) {
+  return Arr.map(warehouse.all, (row, i) => {
     return {
       element: row.element,
       height: heights[i]

@@ -5,9 +5,9 @@ import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 UnitTest.asynctest(
   'browser.tinymce.core.init.InitEditorThemeFunctionInlineTest',
-  function (success, failure) {
+  (success, failure) => {
 
-    TinyLoader.setup(function (editor, onSuccess, onFailure) {
+    TinyLoader.setup((editor, onSuccess, onFailure) => {
       const tinyApis = TinyApis(editor);
 
       Pipeline.async({}, [
@@ -15,7 +15,7 @@ UnitTest.asynctest(
           tinyApis.sSetContent('<p>a</p>'),
           tinyApis.sAssertContent('<p>a</p>')
         ])),
-        Logger.t('Editor element properties', Step.sync(function () {
+        Logger.t('Editor element properties', Step.sync(() => {
           const body = SugarElement.fromDom(document.body);
           const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
           const editorElement = SelectorFind.descendant(body, '#' + editor.id + '_parent').getOrDie('No elm');

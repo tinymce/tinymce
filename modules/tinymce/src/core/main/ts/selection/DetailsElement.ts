@@ -18,15 +18,15 @@ const preventSummaryToggle = (editor: Editor) => {
 
 // Forces the details element to always be open within the editor
 const filterDetails = (editor: Editor) => {
-  editor.parser.addNodeFilter('details', function (elms) {
-    Arr.each(elms, function (details) {
+  editor.parser.addNodeFilter('details', (elms) => {
+    Arr.each(elms, (details) => {
       details.attr('data-mce-open', details.attr('open'));
       details.attr('open', 'open');
     });
   });
 
-  editor.serializer.addNodeFilter('details', function (elms) {
-    Arr.each(elms, function (details) {
+  editor.serializer.addNodeFilter('details', (elms) => {
+    Arr.each(elms, (details) => {
       const open = details.attr('data-mce-open');
       details.attr('open', Type.isString(open) ? open : null);
       details.attr('data-mce-open', null);

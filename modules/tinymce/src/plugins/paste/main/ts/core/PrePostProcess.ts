@@ -13,14 +13,14 @@ const setup = function (editor: Editor) {
 
   const preProcess = Settings.getPreProcess(editor);
   if (preProcess) {
-    editor.on('PastePreProcess', function (e) {
+    editor.on('PastePreProcess', (e) => {
       preProcess.call(plugin, plugin, e);
     });
   }
 
   const postProcess = Settings.getPostProcess(editor);
   if (postProcess) {
-    editor.on('PastePostProcess', function (e) {
+    editor.on('PastePostProcess', (e) => {
       postProcess.call(plugin, plugin, e);
     });
   }

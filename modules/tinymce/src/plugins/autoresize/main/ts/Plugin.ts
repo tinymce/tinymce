@@ -18,7 +18,7 @@ import * as Resize from './core/Resize';
  */
 
 export default function () {
-  PluginManager.add('autoresize', function (editor) {
+  PluginManager.add('autoresize', (editor) => {
     // If autoresize is enabled, disable resize if the user hasn't explicitly enabled it
     if (!editor.settings.hasOwnProperty('resize')) {
       editor.settings.resize = false;

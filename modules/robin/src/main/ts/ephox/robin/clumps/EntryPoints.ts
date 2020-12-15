@@ -62,13 +62,13 @@ const analyse = function <E, D> (universe: Universe<E, D>, element: E, offset: n
 
 // When breaking to the left, we will want to include the 'right' section of the split.
 const toLeft = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number): E {
-  return analyse(universe, element, offset, adt.leftEdge).fold(function (e) {
+  return analyse(universe, element, offset, adt.leftEdge).fold((e) => {
     // We are at the left edge of the element, so take the whole element
     return e;
-  }, function (b, a) {
+  }, (b, a) => {
     // We are splitting an element, so take the right side
     return a;
-  }, function (e) {
+  }, (e) => {
     // We are at the right edge of the starting element, so gather the next element to the
     // right.
     return Gather.after(universe, e, isRoot).getOr(e);
@@ -77,13 +77,13 @@ const toLeft = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => bool
 
 // When breaking to the right, we will want to include the 'left' section of the split.
 const toRight = function <E, D> (universe: Universe<E, D>, isRoot: (e: E) => boolean, element: E, offset: number): E {
-  return analyse(universe, element, offset, adt.rightEdge).fold(function (e) {
+  return analyse(universe, element, offset, adt.rightEdge).fold((e) => {
     // We are at the left edge of the finishing element, so gather the previous element.
     return Gather.before(universe, e, isRoot).getOr(e);
-  }, function (b, _a) {
+  }, (b, _a) => {
     // We are splitting an element, so take the left side.
     return b;
-  }, function (e) {
+  }, (e) => {
     // We are the right edge of the element, so take the whole element
     return e;
   });

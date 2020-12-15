@@ -11,7 +11,7 @@ const setContent = function (editor, html) {
   // transation since it tries to make a bookmark for the current selection
   editor.focus();
 
-  editor.undoManager.transact(function () {
+  editor.undoManager.transact(() => {
     editor.setContent(html);
   });
 

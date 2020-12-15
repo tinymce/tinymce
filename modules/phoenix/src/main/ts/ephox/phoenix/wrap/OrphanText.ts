@@ -11,7 +11,7 @@ const textBlacklist = [ 'table', 'tbody', 'thead', 'tfoot', 'tr', 'ul', 'ol' ];
 export const OrphanText = function <E, D> (universe: Universe<E, D>): OrphanText<E> {
   const domUtils = universe.property();
   const validateParent = function (node: E, blacklist: string[]) {
-    return domUtils.parent(node).map(domUtils.name).map(function (name) {
+    return domUtils.parent(node).map(domUtils.name).map((name) => {
       return !Arr.contains(blacklist, name);
     }).getOr(false);
   };

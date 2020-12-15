@@ -22,7 +22,7 @@ import * as IosViewport from '../view/IosViewport';
 const VIEW_MARGIN = 5;
 
 const register = function (toolstrip, socket, container, outerWindow, structure, cWin) {
-  const scroller = BackgroundActivity(function (y) {
+  const scroller = BackgroundActivity((y) => {
     return IosScrolling.moveWindowScroll(toolstrip, socket, y);
   });
 
@@ -31,7 +31,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // back to show the current selection rectangle.
   const scrollBounds = function () {
     const rects = Rectangles.getRectangles(cWin);
-    return Optional.from(rects[0]).bind(function (rect) {
+    return Optional.from(rects[0]).bind((rect) => {
       const viewTop = rect.top - socket.dom.scrollTop;
       const outside = viewTop > outerWindow.innerHeight + VIEW_MARGIN || viewTop < -VIEW_MARGIN;
       return outside ? Optional.some({
@@ -41,14 +41,14 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     });
   };
 
-  const scrollThrottle = Throttler.last(function () {
+  const scrollThrottle = Throttler.last(() => {
     /*
      * As soon as the window is back to 0 (idle), scroll the toolbar and socket back into place on scroll.
      */
-    scroller.idle(function () {
-      IosUpdates.updatePositions(container, outerWindow.pageYOffset).get(function (/* _ */) {
+    scroller.idle(() => {
+      IosUpdates.updatePositions(container, outerWindow.pageYOffset).get((/* _ */) => {
         const extraScroll = scrollBounds();
-        extraScroll.each(function (extra) {
+        extraScroll.each((extra) => {
           // TODO: Smoothly animate this in a way that doesn't conflict with anything else.
           socket.dom.scrollTop = socket.dom.scrollTop + extra.top;
         });
@@ -58,7 +58,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
     });
   }, 1000);
 
-  const onScroll = DomEvent.bind(SugarElement.fromDom(outerWindow), 'scroll', function () {
+  const onScroll = DomEvent.bind(SugarElement.fromDom(outerWindow), 'scroll', () => {
     if (outerWindow.pageYOffset < 0) {
       return;
     }
@@ -158,11 +158,11 @@ const setup = function (bag: IosSetupOptions) {
   // NOTE: When the window is resizing (probably due to meta tags and viewport definitions), we are not receiving a window resize event.
   // However, it happens shortly after we start Ios mode, so here we just wait for the first window size event that we get. This code
   // is also the same code that is used for the Orientation ready event.
-  onOrientation.onAdjustment(function () {
+  onOrientation.onAdjustment(() => {
     structure.refresh();
   });
 
-  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', function () {
+  const onResize = DomEvent.bind(SugarElement.fromDom(outerWindow), 'resize', () => {
     if (structure.isExpanding()) {
       structure.refresh();
     }

@@ -35,7 +35,7 @@ const create = function (): Sherif {
 
   const shooting = function (event: ShootingEvent) {
     chaseButton.attr('disabled', false);
-    chaseButton.bind('click', function () {
+    chaseButton.bind('click', () => {
       chaseButton.detach();
       event.shooter.chase();
     });

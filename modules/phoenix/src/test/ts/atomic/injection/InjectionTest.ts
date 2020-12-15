@@ -3,7 +3,7 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import * as Injection from 'ephox/phoenix/injection/Injection';
 import * as Finder from 'ephox/phoenix/test/Finder';
 
-UnitTest.test('InsertAtTest', function () {
+UnitTest.test('InsertAtTest', () => {
   const makeUniverse = function () {
     return TestUniverse(
       Gene('root', 'root', [
@@ -26,7 +26,7 @@ UnitTest.test('InsertAtTest', function () {
     const universe = makeUniverse();
     const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);
-    assert.eq(expected, universe.shortlog(function (item) {
+    assert.eq(expected, universe.shortlog((item) => {
       return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
     }));
   };

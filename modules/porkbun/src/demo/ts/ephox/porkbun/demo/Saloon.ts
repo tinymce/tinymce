@@ -51,11 +51,11 @@ const create = function (): Saloon {
   const enter = function (patron: Outlaw) {
     seat(patron);
 
-    binder.bind(patron.events.shoot, function (event) {
+    binder.bind(patron.events.shoot, (event) => {
       events.trigger.shooting(patron, event.target);
     });
 
-    binder.bind(patron.events.die, function (_event) {
+    binder.bind(patron.events.die, (_event) => {
       stopListening(patron);
     });
   };

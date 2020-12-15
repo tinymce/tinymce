@@ -11,7 +11,7 @@ import * as Settings from '../api/Settings';
 import * as NewLineUtils from './NewLineUtils';
 
 const matchesSelector = function (editor: Editor, selector: string) {
-  return NewLineUtils.getParentBlock(editor).filter(function (parentBlock) {
+  return NewLineUtils.getParentBlock(editor).filter((parentBlock) => {
     return selector.length > 0 && Selectors.is(SugarElement.fromDom(parentBlock), selector);
   }).isSome();
 };

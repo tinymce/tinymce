@@ -11,7 +11,7 @@ import { SearchState } from '../core/Actions';
 import * as Dialog from '../ui/Dialog';
 
 const register = function (editor: Editor, currentSearchState: Cell<SearchState>) {
-  editor.addCommand('SearchReplace', function () {
+  editor.addCommand('SearchReplace', () => {
     Dialog.open(editor, currentSearchState);
   });
 };

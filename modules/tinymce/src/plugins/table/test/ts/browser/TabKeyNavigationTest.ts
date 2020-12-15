@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
   Plugin();
   SilverTheme();
 
-  suite.test('TestCase-TBA: Table: Tab key navigation', function (editor) {
+  suite.test('TestCase-TBA: Table: Tab key navigation', (editor) => {
     editor.focus();
 
     editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
@@ -39,7 +39,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.TabKeyNavigationTest', (succes
     );
   });
 
-  TinyLoader.setupLight(function (editor, onSuccess, onFailure) {
+  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Navigate the table using tab key', suite.toSteps(editor)), onSuccess, onFailure);
   }, {
     plugins: 'table',

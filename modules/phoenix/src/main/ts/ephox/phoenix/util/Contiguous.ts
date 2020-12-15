@@ -37,7 +37,7 @@ const inspect = function <E, D> (universe: Universe<E, D>, rest: Data<E>, item: 
   // 2. The item is the right sibling of the last thing on the current list ... accumulate into current list. (accumulate)
   // 3. Otherwise ... close off current, and start a new current with item (nextlist)
   const nextSibling = Optional.from(rest.current[rest.current.length - 1]).bind(universe.query().nextSibling);
-  return nextSibling.bind<AccOrSkip>(function (next) {
+  return nextSibling.bind<AccOrSkip>((next) => {
     const same = universe.eq(next, item);
     return same ? Optional.some(accumulate) : Optional.none();
   }).getOr(nextlist);
@@ -46,11 +46,11 @@ const inspect = function <E, D> (universe: Universe<E, D>, rest: Data<E>, item: 
 const textnodes = function <E, D> (universe: Universe<E, D>, items: E[]): Group<E>[] {
   const init: Data<E> = { groups: [], current: [], parent: null };
 
-  const result = Arr.foldl(items, function (rest, item) {
-    return universe.property().parent(item).fold(function () {
+  const result = Arr.foldl(items, (rest, item) => {
+    return universe.property().parent(item).fold(() => {
       // Items without parents don't affect the result.
       return rest;
-    }, function (parent) {
+    }, (parent) => {
       const builder = inspect(universe, rest, item);
       return builder(rest, parent, item);
     });

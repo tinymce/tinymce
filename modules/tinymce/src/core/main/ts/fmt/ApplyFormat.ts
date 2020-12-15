@@ -80,7 +80,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         fmt.onformat(elm, fmt as any, vars, node);
       }
 
-      each(fmt.styles, function (value, name) {
+      each(fmt.styles, (value, name) => {
         dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
       });
 
@@ -94,11 +94,11 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
         }
       }
 
-      each(fmt.attributes, function (value, name) {
+      each(fmt.attributes, (value, name) => {
         dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
       });
 
-      each(fmt.classes, function (value) {
+      each(fmt.classes, (value) => {
         value = FormatUtils.replaceVars(value, vars);
 
         if (!dom.hasClass(elm, value)) {
@@ -116,7 +116,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     }
 
     // Look for matching formats
-    each(formatList, function (format: any) {
+    each(formatList, (format: any) => {
       // Check collapsed state if it exists
       if ('collapsed' in format && format.collapsed !== isCollapsed) {
         return;
@@ -141,7 +141,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     const wrapElm = dom.create(wrapName);
     setElementFormat(wrapElm);
 
-    RangeWalk.walk(dom, rng, function (nodes) {
+    RangeWalk.walk(dom, rng, (nodes) => {
       let currentWrapElm: Element | null;
 
       /**
@@ -236,7 +236,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
-      each(newWrappers, function (node) {
+      each(newWrappers, (node) => {
         const process = function (node: Element) {
           if (node.nodeName === 'A') {
             setElementFormat(node, format);
@@ -250,11 +250,11 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
     }
 
     // Cleanup
-    each(newWrappers, function (node) {
+    each(newWrappers, (node) => {
       const getChildCount = function (node: Node) {
         let count = 0;
 
-        each(node.childNodes, function (node) {
+        each(node.childNodes, (node) => {
           if (!FormatUtils.isEmptyTextNode(node) && !Bookmarks.isBookmarkNode(node)) {
             count++;
           }
@@ -265,7 +265,7 @@ const applyFormat = function (ed: Editor, name: string, vars?: FormatVars, node?
 
       const getChildElementNode = function (root: Node): Node | false {
         let child: Node | false = false;
-        each(root.childNodes, function (node) {
+        each(root.childNodes, (node) => {
           if (isElementNode(node)) {
             child = node;
             return false; // break loop

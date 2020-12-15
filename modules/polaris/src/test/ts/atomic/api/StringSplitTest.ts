@@ -1,7 +1,7 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import * as Strings from 'ephox/polaris/api/Strings';
 
-UnitTest.test('api.Strings.splits', function () {
+UnitTest.test('api.Strings.splits', () => {
   const check = function (expected: string[], input: string, points: number[]) {
     const actual = Strings.splits(input, points);
     assert.eq(expected, actual);

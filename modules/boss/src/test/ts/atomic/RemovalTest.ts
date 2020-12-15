@@ -6,7 +6,7 @@ import * as Logger from 'ephox/boss/mutant/Logger';
 import * as Removal from 'ephox/boss/mutant/Removal';
 import * as Tracks from 'ephox/boss/mutant/Tracks';
 
-UnitTest.test('RemovalTest', function () {
+UnitTest.test('RemovalTest', () => {
   const data = function (): Gene {
     return Gene('A', '.', [
       Gene('B', '.'),

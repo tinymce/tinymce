@@ -6,7 +6,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import * as ModificationOperations from 'ephox/snooker/operate/ModificationOperations';
 import BrowserTestGenerator from 'ephox/snooker/test/BrowserTestGenerator';
 
-UnitTest.test('ModificationOperationsTest', function () {
+UnitTest.test('ModificationOperationsTest', () => {
   const r = Structs.rowcells;
   const en = (content: string, isNew: boolean) => {
     const elem = SugarElement.fromTag('td');
@@ -14,15 +14,15 @@ UnitTest.test('ModificationOperationsTest', function () {
     return Structs.elementnew(elem, isNew);
   };
   const mapToStructGrid = function (grid: Structs.ElementNew[][]) {
-    return Arr.map(grid, function (row) {
+    return Arr.map(grid, (row) => {
       return Structs.rowcells(row, 'tbody');
     });
   };
 
   const assertGrids = function (expected: Structs.RowCells[], actual: Structs.RowCells[]) {
     assert.eq(expected.length, actual.length);
-    Arr.each(expected, function (row, i) {
-      Arr.each(row.cells, function (cell, j) {
+    Arr.each(expected, (row, i) => {
+      Arr.each(row.cells, (cell, j) => {
         assert.eq(cell.element, actual[i].cells[j].element);
         assert.eq(cell.isNew, actual[i].cells[j].isNew);
       });

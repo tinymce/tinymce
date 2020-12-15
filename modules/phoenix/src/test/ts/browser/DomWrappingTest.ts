@@ -2,7 +2,7 @@ import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Class, Html, Insert, InsertAll, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 
-UnitTest.test('DomWrappingTest', function () {
+UnitTest.test('DomWrappingTest', () => {
   const root = SugarElement.fromTag('div');
   const body = SelectorFind.first('body').getOrDie();
 
@@ -24,11 +24,11 @@ UnitTest.test('DomWrappingTest', function () {
   };
 
   const checker = function (expected: string, p1: number[], offset1: number, p2: number[], offset2: number, input: SugarElement[], initial: string) {
-    check(input, function (container: SugarElement) {
+    check(input, (container: SugarElement) => {
       assert.eq(initial, Html.get(container));
       const first = c(container, p1);
       const second = c(container, p2);
-      DomWrapping.wrapWith(first, offset1, second, offset2, function () {
+      DomWrapping.wrapWith(first, offset1, second, offset2, () => {
         const basic = SugarElement.fromTag('span');
         Class.add(basic, 'me');
         return DomWrapping.nu(basic);

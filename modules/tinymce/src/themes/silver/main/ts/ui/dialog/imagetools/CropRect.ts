@@ -106,13 +106,13 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       ' role="grid" aria-dropeffect="execute">'
     ).appendTo(containerElm);
 
-    Tools.each(blockers, function (blocker) {
+    Tools.each(blockers, (blocker) => {
       DomQuery('#' + id, containerElm).append(
         '<div id="' + id + '-' + blocker + '"class="' + prefix + 'croprect-block" style="display: none" data-mce-bogus="all">'
       );
     });
 
-    Tools.each(handles, function (handle) {
+    Tools.each(handles, (handle) => {
       DomQuery('#' + id, containerElm).append(
         '<div id="' + id + '-' + handle.name + '" class="' + prefix +
         'croprect-handle ' + prefix + 'croprect-handle-' + handle.name + '"' +
@@ -125,14 +125,14 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
 
     repaint(currentRect);
 
-    DomQuery(containerElm).on('focusin focusout', function (e) {
+    DomQuery(containerElm).on('focusin focusout', (e) => {
       DomQuery(e.target).attr('aria-grabbed', e.type === 'focus' ? 'true' : 'false');
     });
 
-    DomQuery(containerElm).on('keydown', function (e) {
+    DomQuery(containerElm).on('keydown', (e) => {
       let activeHandle;
 
-      Tools.each(handles, function (handle) {
+      Tools.each(handles, (handle) => {
         if (e.target.id === id + '-' + handle.name) {
           activeHandle = handle;
           return false;
@@ -173,9 +173,9 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   }
 
   function toggleVisibility(state: boolean) {
-    const selectors = Tools.map(handles, function (handle) {
+    const selectors = Tools.map(handles, (handle) => {
       return '#' + id + '-' + handle.name;
-    }).concat(Tools.map(blockers, function (blocker) {
+    }).concat(Tools.map(blockers, (blocker) => {
       return '#' + id + '-' + blocker;
     })).join(',');
 
@@ -204,7 +204,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
       });
     }
 
-    Tools.each(handles, function (handle) {
+    Tools.each(handles, (handle) => {
       DomQuery('#' + id + '-' + handle.name, containerElm).css({
         left: rect.w * handle.xMul + rect.x,
         top: rect.h * handle.yMul + rect.y
@@ -243,7 +243,7 @@ const create = (currentRect, viewPortRect, clampRect, containerElm, action): Cro
   }
 
   function destroy() {
-    Tools.each(dragHelpers, function (helper) {
+    Tools.each(dragHelpers, (helper) => {
       helper.destroy();
     });
 

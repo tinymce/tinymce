@@ -31,7 +31,7 @@ const getScrollTop = function (element) {
 };
 
 const moveScrollAndTop = function (element, destination, finalTop) {
-  return Future.nu(function (callback) {
+  return Future.nu((callback) => {
     const getCurrent = Fun.curry(getScrollTop, element);
 
     const update = function (newScroll) {
@@ -50,7 +50,7 @@ const moveScrollAndTop = function (element, destination, finalTop) {
 };
 
 const moveOnlyScroll = function (element, destination) {
-  return Future.nu(function (callback) {
+  return Future.nu((callback) => {
     const getCurrent = Fun.curry(getScrollTop, element);
     Attribute.set(element, lastScroll, getCurrent());
 
@@ -80,7 +80,7 @@ const moveOnlyScroll = function (element, destination) {
 };
 
 const moveOnlyTop = function (element, destination) {
-  return Future.nu(function (callback) {
+  return Future.nu((callback) => {
     const getCurrent = Fun.curry(getTop, element);
 
     const update = function (newTop) {
@@ -109,7 +109,7 @@ const updateTop = function (element, amount) {
 // destination in one go.
 const moveWindowScroll = function (toolbar, viewport, destY) {
   const outerWindow = Traverse.owner(toolbar).dom.defaultView;
-  return Future.nu(function (callback) {
+  return Future.nu((callback) => {
     updateTop(toolbar, destY);
     updateTop(viewport, destY);
     outerWindow.scrollTo(0, destY);

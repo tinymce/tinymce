@@ -8,12 +8,12 @@ import { Processor } from 'ephox/boulder/api/Main';
 import * as Objects from 'ephox/boulder/api/Objects';
 import * as ValueSchema from 'ephox/boulder/api/ValueSchema';
 
-UnitTest.test('ValueSchemaRawTest', function () {
+UnitTest.test('ValueSchemaRawTest', () => {
   const checkErr = function (label: string, expectedPart: string, input: any, processor: Processor) {
-    ValueSchema.asRaw(label, processor, input).fold(function (err) {
+    ValueSchema.asRaw(label, processor, input).fold((err) => {
       const message = ValueSchema.formatError(err);
       Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
-    }, function (val) {
+    }, (val) => {
       assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(val, null, 2) + ')');
     });
   };
@@ -133,7 +133,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
     {
       fieldA: { val: 'a' },
       cieldB: { val: 'b' }
-    }, ValueSchema.setOf(function (key) {
+    }, ValueSchema.setOf((key) => {
       return key.indexOf('f') > -1 ? Result.value(key) : Result.error('start-with-f error');
     }, ValueSchema.objOf([
       FieldSchema.strict('val')
@@ -177,7 +177,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
     {
       surname: 'Jekyll'
     }, ValueSchema.objOf([
-      FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+      FieldSchema.field('name', 'name', FieldPresence.defaultedThunk((s) => {
         return 'Dr ' + s.surname;
       }), ValueSchema.anyValue())
     ])
@@ -190,52 +190,52 @@ UnitTest.test('ValueSchemaRawTest', function () {
     {
       name: 'Hyde'
     }, ValueSchema.objOf([
-      FieldSchema.field('name', 'name', FieldPresence.defaultedThunk(function (s) {
+      FieldSchema.field('name', 'name', FieldPresence.defaultedThunk((s) => {
         return 'Dr ' + s.surname;
       }), ValueSchema.anyValue())
     ])
   );
 
-  Logger.sync('option, value not supplied', function () {
+  Logger.sync('option, value not supplied', () => {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), {});
     KAssert.eqNone('alpha should be none', v.alpha);
   });
 
-  Logger.sync('option, value supplied', function () {
+  Logger.sync('option, value supplied', () => {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.option('alpha')
     ]), { alpha: 'beta' });
     KAssert.eqSome('alpha should be some(beta)', 'beta', v.alpha);
   });
 
-  Logger.sync('defaulted option(fallback), value supplied', function () {
+  Logger.sync('defaulted option(fallback), value supplied', () => {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: 'beta' });
     KAssert.eqSome('fallback.opt: alpha:beta should be some(beta)', 'beta', v.alpha);
   });
 
-  Logger.sync('defaulted option(fallback), value supplied as true', function () {
+  Logger.sync('defaulted option(fallback), value supplied as true', () => {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { alpha: true });
     KAssert.eqSome('fallback.opt: alpha:true should be some(fallback)', 'fallback', v.alpha);
   });
 
-  Logger.sync('defaulted option(fallback), value not supplied', function () {
+  Logger.sync('defaulted option(fallback), value not supplied', () => {
     const v = ValueSchema.asRawOrDie('test.option', ValueSchema.objOf([
       FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOption('fallback'), ValueSchema.anyValue())
     ]), { });
     KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
-  Logger.sync('asDefaultedOptionThunk not supplied', function () {
+  Logger.sync('asDefaultedOptionThunk not supplied', () => {
     const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
-        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
         }), ValueSchema.anyValue())
       ]),
@@ -244,11 +244,11 @@ UnitTest.test('ValueSchemaRawTest', function () {
     KAssert.eqNone('fallback.opt: no alpha should be none', v.alpha);
   });
 
-  Logger.sync('asDefaultedOptionThunk supplied as true', function () {
+  Logger.sync('asDefaultedOptionThunk supplied as true', () => {
     const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
-        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
         }), ValueSchema.anyValue())
       ]),
@@ -257,11 +257,11 @@ UnitTest.test('ValueSchemaRawTest', function () {
     KAssert.eqSome('Checking output', 'defaulted thunk.fallback', v.alpha);
   });
 
-  Logger.sync('asDefaultedOptionThunk supplied', function () {
+  Logger.sync('asDefaultedOptionThunk supplied', () => {
     const v = ValueSchema.asRawOrDie(
       'test.option',
       ValueSchema.objOf([
-        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk(function (s) {
+        FieldSchema.field('alpha', 'alpha', FieldPresence.asDefaultedOptionThunk((s) => {
           return s.label + '.' + 'fallback';
         }), ValueSchema.anyValue())
       ]),
@@ -270,11 +270,11 @@ UnitTest.test('ValueSchemaRawTest', function () {
     KAssert.eqSome('Checking output', 'alpha.value', v.alpha);
   });
 
-  Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', function () {
+  Logger.sync('mergeWithThunk({ extra: s.label }), value supplied', () => {
     const v = ValueSchema.asRawOrDie(
       'test.mergeWith',
       ValueSchema.objOf([
-        FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+        FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk((s) => {
           return Objects.wrap('extra', s.label);
         }), ValueSchema.anyValue())
       ]),
@@ -288,11 +288,11 @@ UnitTest.test('ValueSchemaRawTest', function () {
     Assert.eq('Checking output', { original: 'value', extra: 'dog' }, v.alpha);
   });
 
-  Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', function () {
+  Logger.sync('mergeWithThunk({ extra: s.label }), no value supplied', () => {
     const v = ValueSchema.asRawOrDie(
       'test.mergeWith',
       ValueSchema.objOf([
-        FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk(function (s) {
+        FieldSchema.field('alpha', 'alpha', FieldPresence.mergeWithThunk((s) => {
           return Objects.wrap('extra', s.label);
         }), ValueSchema.anyValue())
       ]),
@@ -305,7 +305,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
 
   Logger.sync(
     'Checking choose',
-    function () {
+    () => {
 
       const processor = ValueSchema.choose(
         'type',
@@ -392,7 +392,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
     }
   );
 
-  Logger.sync('Checking basic types', function () {
+  Logger.sync('Checking basic types', () => {
     checkIs('Checking valid number', 42, 42, ValueSchema.number);
     checkErr('Checking invalid number', 'Expected type: number but got: string', 'a', ValueSchema.number);
 
@@ -406,7 +406,7 @@ UnitTest.test('ValueSchemaRawTest', function () {
     checkErr('Checking invalid function', 'Expected type: function but got: string', 'a', ValueSchema.func);
   });
 
-  Logger.sync('asRaw with type', function () {
+  Logger.sync('asRaw with type', () => {
     interface SomeType {
       num: number;
       str: string;

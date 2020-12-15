@@ -10,7 +10,7 @@ import * as Commands from './api/Commands';
 import * as Buttons from './ui/Buttons';
 
 export default function () {
-  PluginManager.add('print', function (editor) {
+  PluginManager.add('print', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     editor.addShortcut('Meta+P', '', 'mcePrint');

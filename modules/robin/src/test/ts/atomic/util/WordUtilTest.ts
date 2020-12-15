@@ -3,7 +3,7 @@ import { Optional, Unicode } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as WordUtil from 'ephox/robin/util/WordUtil';
 
-UnitTest.test('Word Util', function () {
+UnitTest.test('Word Util', () => {
   const checkNone = function (text: string, word: (w: string) => Optional<string>) {
     const actual = word(text);
     KAssert.eqNone('eq', actual);
