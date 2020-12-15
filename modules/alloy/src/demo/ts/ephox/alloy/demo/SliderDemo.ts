@@ -247,6 +247,8 @@ export default (): void => {
   const isTouch = platform.deviceType.isTouch();
 
   DomEvent.bind(body, 'click', () => {
-    if (!isTouch) { Keying.focusIn(slider1); }
+    if (!isTouch) {
+      Keying.focusIn(slider1);
+    }
   });
 };

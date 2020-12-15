@@ -160,7 +160,9 @@ const engage = (spec: ForeignGuiSpec): ForeignGuiConnection => {
      * c) execute the event handler
      * d) remove it from the internal system and clear any DOM markers (alloy-ids etc)
      */
-    if (gui.element.dom.contains(event.target.dom)) { return; }
+    if (gui.element.dom.contains(event.target.dom)) {
+      return;
+    }
 
     // Find if the target has an assigned dispatcher
     findDispatcher(detail.dispatchers, event.target).each((mission) => {
@@ -170,7 +172,9 @@ const engage = (spec: ForeignGuiSpec): ForeignGuiConnection => {
       const events = data.evts;
 
       // if this dispatcher defines this event, proxy it and fire the handler
-      if (Obj.hasNonNullableKey(events, type)) { proxyFor(event, mission.target, events[type]); }
+      if (Obj.hasNonNullableKey(events, type)) {
+        proxyFor(event, mission.target, events[type]);
+      }
     });
   };
 

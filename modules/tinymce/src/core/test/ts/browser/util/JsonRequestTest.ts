@@ -50,7 +50,5 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonRequestTest', (success, failur
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

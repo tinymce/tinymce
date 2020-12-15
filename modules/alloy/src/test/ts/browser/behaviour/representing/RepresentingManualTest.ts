@@ -36,5 +36,5 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
     RepresentPipes.sSetValue(component, 'new-value'),
     store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue', 'setValue(new-value)' ]),
     RepresentPipes.sAssertValue('Checking 2nd value', 'new-value', component)
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

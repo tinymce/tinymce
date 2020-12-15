@@ -166,9 +166,7 @@ UnitTest.asynctest('Toolbar with toolbar drawer readonly mode test', (success, f
       readonly: true,
       resize: 'both'
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

@@ -19,7 +19,9 @@ UnitTest.test('LeftBlockTest', () => {
 
   const check = (expected: string[], id: string, method: (u: TestUniverse, i: Gene) => Gene[]) => {
     const actual = method(universe, universe.find(universe.get(), id).getOrDie());
-    assert.eq(expected, Arr.map(actual, (x) => { return x.id; }));
+    assert.eq(expected, Arr.map(actual, (x) => {
+      return x.id;
+    }));
   };
 
   check([ 's1-text', 's2-text', 't3' ], 't3', LeftBlock.all);

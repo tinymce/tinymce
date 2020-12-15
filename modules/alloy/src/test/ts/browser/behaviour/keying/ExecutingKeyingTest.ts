@@ -93,5 +93,5 @@ UnitTest.asynctest('ExecutingKeyingTest', (success, failure) => {
   Pipeline.async({ }, [
     sTestDefault,
     sTestConfiguration
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

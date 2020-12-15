@@ -481,7 +481,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure)
 
   steps = [ sAddTestDiv ].concat(steps).concat(sRemoveTestDiv);
 
-  Pipeline.async({}, steps, () => {
-    success();
-  }, failure);
+  Pipeline.async({}, steps, success, failure);
 });

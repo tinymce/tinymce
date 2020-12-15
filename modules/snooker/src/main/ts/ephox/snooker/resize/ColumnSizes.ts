@@ -67,7 +67,9 @@ const getWidthFrom = <T>(warehouse: Warehouse, table: SugarElement<HTMLTableElem
 };
 
 const getDeduced = (deduced: Optional<number>): string => {
-  return deduced.map((d) => { return d + 'px'; }).getOr('');
+  return deduced.map((d) => {
+    return d + 'px';
+  }).getOr('');
 };
 
 const getRawWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): string[] => {

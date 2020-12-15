@@ -42,7 +42,9 @@ const typed = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boo
 const items = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean): E[] => {
   const typedItemList = typed(universe, item, optimise);
 
-  const raw = (item: E, _universe: Universe<E, D>) => { return item; };
+  const raw = (item: E, _universe: Universe<E, D>) => {
+    return item;
+  };
 
   return Arr.map(typedItemList, (typedItem: TypedItem<E, D>) => {
     return typedItem.fold(raw, raw, raw, raw);

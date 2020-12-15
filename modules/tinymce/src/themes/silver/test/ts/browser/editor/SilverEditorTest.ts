@@ -433,9 +433,7 @@ UnitTest.asynctest('Editor (Silver) test', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

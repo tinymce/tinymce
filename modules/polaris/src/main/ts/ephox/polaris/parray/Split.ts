@@ -15,7 +15,9 @@ const divide = <T extends PRange>(unit: T, positions: number[], subdivide: (unit
  * Adds extra split points into a PositionArray, using subdivide to split if necessary
  */
 const splits = <T extends PRange>(parray: T[], positions: number[], subdivide: (unit: T, positions: number[]) => T[]): T[] => {
-  if (positions.length === 0) { return parray; }
+  if (positions.length === 0) {
+    return parray;
+  }
 
   return Arr.bind(parray, (unit) => {
     const relevant = Arr.bind(positions, (pos) => {

@@ -78,7 +78,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
   const getItemByValue = (_container: AlloyComponent, menus: AlloyComponent[], itemValue: string): Optional<AlloyComponent> =>
     // Can *greatly* improve the performance of this by calculating things up front.
     Arr.findMap(menus, (menu) => {
-      if (!menu.getSystem().isConnected()) { return Optional.none(); }
+      if (!menu.getSystem().isConnected()) {
+        return Optional.none();
+      }
       const candidates = Highlighting.getCandidates(menu);
       return Arr.find(candidates, (c) => getItemValue(c) === itemValue);
     });
@@ -102,7 +104,9 @@ const make: SingleSketchFactory<TieredMenuDetail, TieredMenuSpec> = (detail, _ra
 
       // May not need to do the active menu thing.
       Classes.remove(o.element, [ detail.markers.backgroundMenu ]);
-      if (!detail.stayInDom) { Replacing.remove(container, o); }
+      if (!detail.stayInDom) {
+        Replacing.remove(container, o);
+      }
     });
   };
 

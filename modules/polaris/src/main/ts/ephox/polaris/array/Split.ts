@@ -23,17 +23,23 @@ const splitbyAdv = <T>(xs: T[], pred: (x: T) => Splitting<T>): T[][] => {
       part.push(x);
     }, () => {
       // Stop the current sublist, create a new sublist containing just x, and then start the next sublist.
-      if (part.length > 0) { r.push(part); }
+      if (part.length > 0) {
+        r.push(part);
+      }
       r.push([ x ]);
       part = [];
     }, () => {
       // Stop the current sublist, and start the next sublist.
-      if (part.length > 0) { r.push(part); }
+      if (part.length > 0) {
+        r.push(part);
+      }
       part = [];
     });
   });
 
-  if (part.length > 0) { r.push(part); }
+  if (part.length > 0) {
+    r.push(part);
+  }
   return r;
 };
 

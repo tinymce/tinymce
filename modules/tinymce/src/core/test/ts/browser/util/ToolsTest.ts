@@ -11,7 +11,5 @@ UnitTest.asynctest('browser.tinymce.core.util.ToolsTest', (success, failure) => 
     LegacyUnit.deepEqual({ a: 1, c: 3 }, Tools.extend({ a: 1 }, null, { c: 3 }));
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

@@ -18,7 +18,9 @@ UnitTest.test('Arr.contains: unit test', () => {
 });
 
 UnitTest.test('Arr.contains: empty', () => {
-  Assert.eq('empty', false, Arr.contains([], () => { throw new Error('⊥'); }));
+  Assert.eq('empty', false, Arr.contains([], () => {
+    throw new Error('⊥');
+  }));
 });
 
 UnitTest.test('Arr.contains: array contains element', () => {

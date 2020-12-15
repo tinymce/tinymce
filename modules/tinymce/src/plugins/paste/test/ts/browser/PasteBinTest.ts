@@ -108,7 +108,5 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteBin', (success, failure) 
       cAssertCases(cases),
       cRemoveEditor()
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

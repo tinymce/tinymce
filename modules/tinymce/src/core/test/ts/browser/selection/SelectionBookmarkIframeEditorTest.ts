@@ -116,8 +116,6 @@ UnitTest.asynctest(
       plugins: '',
       toolbar: '',
       base_url: '/project/tinymce/js/tinymce'
-    }, () => {
-      success();
-    }, failure);
+    }, success, failure);
   }
 );

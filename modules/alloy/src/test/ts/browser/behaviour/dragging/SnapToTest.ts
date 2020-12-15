@@ -103,5 +103,5 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

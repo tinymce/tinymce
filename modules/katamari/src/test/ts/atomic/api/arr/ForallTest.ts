@@ -20,7 +20,9 @@ UnitTest.test('Arr.forall: unit tests', () => {
 });
 
 UnitTest.test('forall of an empty array is true', () => {
-  Assert.eq('forall empty array', true, Arr.forall([], () => { throw new Error('⊥'); }));
+  Assert.eq('forall empty array', true, Arr.forall([], () => {
+    throw new Error('⊥');
+  }));
 });
 
 UnitTest.test('forall of a non-empty array with a predicate that always returns false is false', () => {

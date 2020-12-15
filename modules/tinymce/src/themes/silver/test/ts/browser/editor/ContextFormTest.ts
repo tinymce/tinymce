@@ -235,9 +235,7 @@ UnitTest.asynctest('Editor ContextForm test', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

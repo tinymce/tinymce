@@ -276,5 +276,5 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

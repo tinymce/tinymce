@@ -68,8 +68,12 @@ export default {
           initialData: {
             preview: 'some html url'
           },
-          onSubmit: (_api) => { console.log('Preview Demo Submit'); },
-          onClose: () => { console.log('Preview Demo Close'); }
+          onSubmit: (_api) => {
+            console.log('Preview Demo Submit');
+          },
+          onClose: () => {
+            console.log('Preview Demo Close');
+          }
         });
       }
     });

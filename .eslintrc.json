@@ -16,6 +16,7 @@
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "@typescript-eslint/unbound-method": "off",
+    "brace-style": "error",
     "no-empty": "off",
     "no-underscore-dangle": "off",
     "one-var": "off",

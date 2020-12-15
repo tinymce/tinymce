@@ -28,7 +28,9 @@ const findItem = <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: Sugar
 };
 
 const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] => {
-  const all = Arr.bind(warehouse.all, (r) => { return r.cells; });
+  const all = Arr.bind(warehouse.all, (r) => {
+    return r.cells;
+  });
   return Arr.filter(all, predicate);
 };
 

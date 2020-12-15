@@ -56,7 +56,5 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', (success, failure)
       }),
       sRemoveEditors
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

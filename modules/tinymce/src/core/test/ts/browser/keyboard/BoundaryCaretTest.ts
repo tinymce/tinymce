@@ -48,7 +48,5 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.BoundaryCaretTest', (success, 
       sTestRenderCaret('<p><a href="#">a<img src="#"></a></p>', [ 0, 0 ], 2, '<p><a href="#">a<img src="#">' + ZWSP + '</a></p>', [ 0, 0, 2 ], 1),
       sTestRenderCaret('<p><a href="#">a</a><img src="#"></p>', [ 0 ], 1, '<p><a href="#">a</a>' + ZWSP + '<img src="#"></p>', [ 0, 1 ], 1)
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

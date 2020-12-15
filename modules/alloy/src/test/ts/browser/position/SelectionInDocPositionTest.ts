@@ -137,5 +137,5 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

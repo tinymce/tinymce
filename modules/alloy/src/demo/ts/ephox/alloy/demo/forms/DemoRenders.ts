@@ -238,7 +238,9 @@ const menu = (menuSpec: DemoMenu): PartialMenuSpec => {
 
 const orb = (spec: DemoItem): ItemSpec => {
   const html = (() => {
-    if (spec.data && spec.data.meta && spec.data.meta.text) { return spec.data.meta.text; }
+    if (spec.data && spec.data.meta && spec.data.meta.text) {
+      return spec.data.meta.text;
+    }
     return 'No.Text.For.Orb';
   })();
 

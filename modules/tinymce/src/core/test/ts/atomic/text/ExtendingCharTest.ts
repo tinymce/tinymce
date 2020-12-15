@@ -11,7 +11,5 @@ UnitTest.asynctest('atomic.tinymce.core.text.ExtendingCharTest', (success, failu
     LegacyUnit.strictEqual(ExtendingChar.isExtendingChar('\u0301'), true);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

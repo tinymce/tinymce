@@ -93,7 +93,5 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
     LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

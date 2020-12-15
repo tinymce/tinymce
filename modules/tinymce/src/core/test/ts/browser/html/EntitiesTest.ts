@@ -127,7 +127,5 @@ UnitTest.asynctest('browser.tinymce.core.html.EntitiesTest', (success, failure) 
     LegacyUnit.equal(Entities.encodeNumeric(Entities.decode('&#194564;')), '&#194564;', 'High byte non western character.');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

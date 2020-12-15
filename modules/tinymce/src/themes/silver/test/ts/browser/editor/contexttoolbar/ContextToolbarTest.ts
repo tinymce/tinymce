@@ -48,9 +48,7 @@ UnitTest.asynctest('Editor ContextToolbar test', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

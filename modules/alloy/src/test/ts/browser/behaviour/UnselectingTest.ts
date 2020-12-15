@@ -34,5 +34,5 @@ UnitTest.asynctest('UnselectingTest', (success, failure) => {
       })),
       component.element
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

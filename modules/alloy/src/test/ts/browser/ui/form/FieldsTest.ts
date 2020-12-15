@@ -256,5 +256,5 @@ UnitTest.asynctest('FieldsTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

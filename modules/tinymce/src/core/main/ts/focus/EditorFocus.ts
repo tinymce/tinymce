@@ -36,7 +36,9 @@ const normalizeSelection = (editor: Editor, rng: Range): void => {
   getFocusInElement(SugarElement.fromDom(editor.getBody()), rng).bind((elm) => {
     return CaretFinder.firstPositionIn(elm.dom);
   }).fold(
-    () => { editor.selection.normalize(); return; },
+    () => {
+      editor.selection.normalize(); return;
+    },
     (caretPos: CaretPosition) => editor.selection.setRng(caretPos.toRange())
   );
 };

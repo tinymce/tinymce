@@ -158,5 +158,5 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
         disabledButton.element
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

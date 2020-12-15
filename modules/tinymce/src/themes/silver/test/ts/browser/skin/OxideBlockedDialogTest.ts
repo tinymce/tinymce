@@ -121,9 +121,7 @@ UnitTest.asynctest('OxideBlockedDialogTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

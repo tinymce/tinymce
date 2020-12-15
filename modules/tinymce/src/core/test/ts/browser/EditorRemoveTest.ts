@@ -44,7 +44,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle(''),
-      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
+      Chain.op((_editor) => {
+        EditorManager.init({ selector: '#tinymce' });
+      }),
       cAssertTextareaDisplayStyle(''),
       McEditor.cRemove
     ])),
@@ -54,7 +56,9 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle('none'),
-      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
+      Chain.op((_editor) => {
+        EditorManager.init({ selector: '#tinymce' });
+      }),
       cAssertTextareaDisplayStyle('none'),
       McEditor.cRemove
     ])),
@@ -64,11 +68,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
       cAssertTextareaDisplayStyle('none'),
       cRemoveEditor,
       cAssertTextareaDisplayStyle('block'),
-      Chain.op((_editor) => { EditorManager.init({ selector: '#tinymce' }); }),
+      Chain.op((_editor) => {
+        EditorManager.init({ selector: '#tinymce' });
+      }),
       cAssertTextareaDisplayStyle('block'),
       McEditor.cRemove
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -58,7 +58,9 @@ const redistributeValues = (newWidthType: Size, widths: string[], totalWidth: nu
 
 const redistribute = (widths: string[], totalWidth: number, newWidth: string): string[] => {
   const newType = Size.from(newWidth);
-  const floats = Arr.forall(widths, (s) => { return s === '0px'; }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
+  const floats = Arr.forall(widths, (s) => {
+    return s === '0px';
+  }) ? redistributeEmpty(newType, widths.length) : redistributeValues(newType, widths, totalWidth);
   return normalize(floats);
 };
 

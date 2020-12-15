@@ -63,7 +63,5 @@ UnitTest.asynctest('Editor resizing tests', (success, failure) => {
   Pipeline.async({}, [
     cappedSizeTests,
     getDimensionsTests
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

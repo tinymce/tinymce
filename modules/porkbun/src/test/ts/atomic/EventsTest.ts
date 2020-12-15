@@ -56,7 +56,9 @@ UnitTest.test('Events', () => {
     });
 
     assert.throwsError(
-      () => { events.registry.emptyEvent.bind(undefined as any); },
+      () => {
+        events.registry.emptyEvent.bind(undefined as any);
+      },
       'Event bind error: undefined handler'
     );
   })();

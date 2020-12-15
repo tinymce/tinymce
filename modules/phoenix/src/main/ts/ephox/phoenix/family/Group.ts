@@ -23,7 +23,9 @@ const group = <E, D>(universe: Universe<E, D>, items: E[], optimise?: (e: E) => 
     });
   });
 
-  return Arr.filter(segments, (x) => { return x.length > 0; });
+  return Arr.filter(segments, (x) => {
+    return x.length > 0;
+  });
 };
 
 export {

@@ -23,7 +23,9 @@ const separate = <E, D, M extends PRange & { word: string }>(universe: Universe<
   const collate = (match: M): SearchResult<E> => {
     const sub = PositionArray.sublist(structure, match.start, match.finish);
 
-    const elements = Arr.map(sub, (unit) => { return unit.element; });
+    const elements = Arr.map(sub, (unit) => {
+      return unit.element;
+    });
 
     const exact = Arr.map(elements, universe.property().getText).join('');
     return {

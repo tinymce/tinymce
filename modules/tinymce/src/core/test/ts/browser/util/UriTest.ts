@@ -139,7 +139,5 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'http:', host: '[::1]:8080', pathname: '/dir/path1/path2' }), 'http://[::1]:8080/dir/path1/');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

@@ -47,7 +47,5 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
     LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

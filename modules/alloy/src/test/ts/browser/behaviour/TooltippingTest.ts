@@ -180,5 +180,5 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
         ]
       )
     ]);
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

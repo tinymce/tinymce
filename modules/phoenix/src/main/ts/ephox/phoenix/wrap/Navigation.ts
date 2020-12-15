@@ -53,20 +53,26 @@ const scan = <E, D>(universe: Universe<E, D>, element: E, direction: (e: E) => O
 
 const freefallLtr = <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> => {
   const candidate = scan(universe, element, universe.query().nextSibling).getOr(element);
-  if (universe.property().isText(candidate)) { return Spot.point(candidate, 0); }
+  if (universe.property().isText(candidate)) {
+    return Spot.point(candidate, 0);
+  }
   const children = universe.property().children(candidate);
   return children.length > 0 ? freefallLtr(universe, children[0]) : Spot.point(candidate, 0);
 };
 
 const toEnd = <E, D>(universe: Universe<E, D>, element: E): number => {
-  if (universe.property().isText(element)) { return universe.property().getText(element).length; }
+  if (universe.property().isText(element)) {
+    return universe.property().getText(element).length;
+  }
   const children = universe.property().children(element);
   return children.length;
 };
 
 const freefallRtl = <E, D>(universe: Universe<E, D>, element: E): SpotPoint<E> => {
   const candidate = scan(universe, element, universe.query().prevSibling).getOr(element);
-  if (universe.property().isText(candidate)) { return Spot.point(candidate, toEnd(universe, candidate)); }
+  if (universe.property().isText(candidate)) {
+    return Spot.point(candidate, toEnd(universe, candidate));
+  }
   const children = universe.property().children(candidate);
   return children.length > 0 ? freefallRtl(universe, children[children.length - 1]) : Spot.point(candidate, toEnd(universe, candidate));
 };

@@ -98,5 +98,5 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

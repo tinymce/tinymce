@@ -246,5 +246,5 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       GuiSetup.mRemoveStyles
 
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

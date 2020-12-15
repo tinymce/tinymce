@@ -21,7 +21,9 @@ export interface ArbRangeIds {
 }
 
 const getIds = (item: Gene, predicate: (g: Gene) => boolean): string[] => {
-  const rest = Arr.bind(item.children || [], (id) => { return getIds(id, predicate); });
+  const rest = Arr.bind(item.children || [], (id) => {
+    return getIds(id, predicate);
+  });
   const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
   return self.concat(rest);
 };

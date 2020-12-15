@@ -447,5 +447,5 @@ UnitTest.asynctest('DropdownMenuTest', (success, failure) => {
         ]
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

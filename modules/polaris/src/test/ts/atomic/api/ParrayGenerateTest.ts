@@ -6,7 +6,9 @@ import { PArrayTestItem } from '../../module/ephox/polaris/test/Parrays';
 UnitTest.test('api.PositionArray.generate', () => {
   const generator = (item: string, start: number): Optional<PArrayTestItem> => {
     const firstletter = item[0];
-    if (firstletter === 'a') { return Optional.none(); }
+    if (firstletter === 'a') {
+      return Optional.none();
+    }
     return Optional.some({
       start,
       finish: start + item.length,

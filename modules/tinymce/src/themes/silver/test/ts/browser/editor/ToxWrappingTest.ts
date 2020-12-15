@@ -28,9 +28,7 @@ UnitTest.asynctest('Editor (Silver) tox wrapping test', (success, failure) => {
       menubar: true,
       base_url: '/project/tinymce/js/tinymce'
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

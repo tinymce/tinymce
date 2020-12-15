@@ -107,7 +107,9 @@ const promise = <T>(): PromisePolyfillConstructor => {
       this._state = true;
       this._value = newValue;
       finale.call(this);
-    } catch (e) { reject.call(this, e); }
+    } catch (e) {
+      reject.call(this, e);
+    }
   }
 
   function reject(this: PromisePolyfill<T>, newValue: any) {
@@ -200,7 +202,9 @@ const promise = <T>(): PromisePolyfillConstructor => {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, (val: any) => { res(i, val); }, reject);
+              then.call(val, (val: any) => {
+                res(i, val);
+              }, reject);
               return;
             }
           }

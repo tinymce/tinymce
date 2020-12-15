@@ -21,7 +21,5 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', (success,
       ApiChains.cAssertContent('a<br />b'),
       Editor.cRemove
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

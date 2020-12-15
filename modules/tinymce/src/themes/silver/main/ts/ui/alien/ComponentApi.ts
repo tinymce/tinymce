@@ -17,9 +17,15 @@ const deriveToggling = (spec, component: AlloyComponent) => {
     return spec.toggle().bind((toggle) => {
       if (toggle === true) {
         return {
-          toggleOn: () => { Toggling.on(component); },
-          toggleOff: () => { Toggling.off(component); },
-          toggleIsOn: () => { Toggling.isOn(component); }
+          toggleOn: () => {
+            Toggling.on(component);
+          },
+          toggleOff: () => {
+            Toggling.off(component);
+          },
+          toggleIsOn: () => {
+            Toggling.isOn(component);
+          }
         };
       }
     });

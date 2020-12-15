@@ -87,14 +87,20 @@ const makeEventLogger = (eventName: string, initialTarget: SugarElement): Debugg
     },
     write: () => {
       const finishTime = new Date().getTime();
-      if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) { return; }
+      if (Arr.contains([ 'mousemove', 'mouseover', 'mouseout', SystemEvents.systemInit() ], eventName)) {
+        return;
+      }
       // eslint-disable-next-line no-console
       console.log(eventName, {
         event: eventName,
         time: finishTime - startTime,
         target: initialTarget.dom,
         sequence: Arr.map(sequence, (s) => {
-          if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) { return s.outcome; } else { return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')'; }
+          if (!Arr.contains([ 'cut', 'stopped', 'response' ], s.outcome)) {
+            return s.outcome;
+          } else {
+            return '{' + s.purpose + '} ' + s.outcome + ' at (' + AlloyLogger.element(s.target) + ')';
+          }
         })
       });
     }
@@ -131,7 +137,9 @@ const path = [
 ];
 
 const getTrace = (): string => {
-  if (debugging === false) { return unknown; }
+  if (debugging === false) {
+    return unknown;
+  }
   const err = new Error();
   if (err.stack !== undefined) {
     const lines = err.stack.split('\n');

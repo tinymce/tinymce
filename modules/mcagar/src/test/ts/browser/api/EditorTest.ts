@@ -15,7 +15,5 @@ UnitTest.asynctest('EditorTest', (success, failure) => {
       cAssertEditorExists,
       Editor.cRemove
     ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

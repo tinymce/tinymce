@@ -41,7 +41,5 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', (success, failure)
     LegacyUnit.deepEqual(html(Fragments.write([ '<b>c</b>', '<b>d</b>', '<!--e-->' ], div('a<b>b</b>'))), '<b>c</b><b>d</b><!--e-->');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

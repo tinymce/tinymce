@@ -114,7 +114,5 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
         McEditor.cRemove
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

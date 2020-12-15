@@ -14,5 +14,7 @@ UnitTest.test('BlocksTest', () => {
     f('r3', [ s('h', 1, 1), s('i', 1, 2) ], 'tfoot')
   ]);
 
-  assert.eq([ 'a', 'd', 'e' ], Blocks.columns(warehouse).map((c) => { return c.getOrDie(); }));
+  assert.eq([ 'a', 'd', 'e' ], Blocks.columns(warehouse).map((c) => {
+    return c.getOrDie();
+  }));
 });

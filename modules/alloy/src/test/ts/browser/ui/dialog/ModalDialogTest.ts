@@ -388,5 +388,5 @@ UnitTest.asynctest('ModalDialogTest', (success, failure) => {
         }))
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

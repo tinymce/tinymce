@@ -4,7 +4,9 @@ const narrow = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T,
   const r = { } as Pick<T, F[number]>;
   Arr.each(fields, (field) => {
     // TODO: Investigate if the undefined check is relied upon by something
-    if (obj[field] !== undefined && Obj.has(obj, field)) { r[field] = obj[field]; }
+    if (obj[field] !== undefined && Obj.has(obj, field)) {
+      r[field] = obj[field];
+    }
   });
 
   return r;

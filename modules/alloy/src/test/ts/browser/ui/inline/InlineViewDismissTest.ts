@@ -147,5 +147,5 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       store.sAssertEq('Broadcasting on outer element SHOULD fire dismiss event', [ 'test-dismiss-fired' ])
 
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

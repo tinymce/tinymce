@@ -171,7 +171,5 @@ UnitTest.asynctest('Flat Grid Keying Test', (success, failure) => {
       ),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => {
-    success();
-  }, failure);
+  }, success, failure);
 });

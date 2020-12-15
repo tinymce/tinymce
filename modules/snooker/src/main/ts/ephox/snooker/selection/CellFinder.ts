@@ -9,7 +9,9 @@ const moveBy = (warehouse: Warehouse, cell: SugarElement, row: number, column: n
     const startRow = row > 0 ? detail.row + detail.rowspan - 1 : detail.row;
     const startCol = column > 0 ? detail.column + detail.colspan - 1 : detail.column;
     const dest = Warehouse.getAt(warehouse, startRow + row, startCol + column);
-    return dest.map((d) => { return d.element; });
+    return dest.map((d) => {
+      return d.element;
+    });
   });
 };
 

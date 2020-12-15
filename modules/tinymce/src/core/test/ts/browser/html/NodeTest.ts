@@ -396,7 +396,5 @@ UnitTest.asynctest('browser.tinymce.core.html.NodeTest', (success, failure) => {
     LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

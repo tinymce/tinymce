@@ -50,7 +50,11 @@ const builder = (detail: WidgetItemDetail) => {
       AlloyEvents.run(NativeEvents.mouseover(), ItemEvents.onHover),
 
       AlloyEvents.run(SystemEvents.focusItem(), (component, _simulatedEvent) => {
-        if (detail.autofocus) { focusWidget(component); } else { Focusing.focus(component); }
+        if (detail.autofocus) {
+          focusWidget(component);
+        } else {
+          Focusing.focus(component);
+        }
       })
     ]),
     behaviours: SketchBehaviours.augment(

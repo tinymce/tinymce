@@ -38,8 +38,12 @@ export const partition = <T, E>(results: Result<T, E>[]): { values: T[]; errors:
 
   Arr.each(results, (result: Result<T, E>) => {
     result.fold(
-      (err) => { errors.push(err); },
-      (value) => { values.push(value); }
+      (err) => {
+        errors.push(err);
+      },
+      (value) => {
+        values.push(value);
+      }
     );
   });
 

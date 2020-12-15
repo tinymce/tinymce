@@ -116,7 +116,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
         cAssertElementNames([ '#text', 'u', 'i' ])
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

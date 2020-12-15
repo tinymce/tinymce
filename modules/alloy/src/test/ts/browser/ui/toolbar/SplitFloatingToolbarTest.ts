@@ -15,7 +15,9 @@ import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialTo
 UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
   // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
 
   const sinkComp = Sinks.relativeSink();
 
@@ -223,5 +225,5 @@ UnitTest.asynctest('SplitFloatingToolbarTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

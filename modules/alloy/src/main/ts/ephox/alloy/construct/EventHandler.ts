@@ -5,9 +5,10 @@ import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
 import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
 
 const nu = <T extends EventFormat>(parts: Partial<AlloyEventHandler<T>>): AlloyEventHandler<T> => {
-  if (!Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) { throw new Error(
-    'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
-  );
+  if (!Obj.hasNonNullableKey(parts, 'can') && !Obj.hasNonNullableKey(parts, 'abort') && !Obj.hasNonNullableKey(parts, 'run')) {
+    throw new Error(
+      'EventHandler defined by: ' + JSON.stringify(parts, null, 2) + ' does not have can, abort, or run!'
+    );
   }
   return ValueSchema.asRawOrDie('Extracting event.handler', ValueSchema.objOfOnly([
     FieldSchema.defaulted('can', Fun.always),

@@ -50,5 +50,5 @@ UnitTest.asynctest('SpecialKeyingTest', (success, failure) => {
       press('escape', Keys.escape(), { }),
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

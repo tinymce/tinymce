@@ -19,7 +19,9 @@ UnitTest.test('words :: Identify', () => {
 
   const checkWords = (expected: string[], input: string) => {
     const actual = Identify.words(input);
-    assert.eq(expected, Arr.map(actual, (a) => { return a.word; }));
+    assert.eq(expected, Arr.map(actual, (a) => {
+      return a.word;
+    }));
   };
 
   check([], '');

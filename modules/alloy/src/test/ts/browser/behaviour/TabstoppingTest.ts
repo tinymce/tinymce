@@ -25,5 +25,5 @@ UnitTest.asynctest('TabstoppingTest', (success, failure) => {
       })),
       component.element
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

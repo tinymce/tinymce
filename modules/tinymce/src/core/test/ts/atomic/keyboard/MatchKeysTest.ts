@@ -95,7 +95,5 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failu
 
       Assertions.assertEq('Should return the parameters passed in', [ 1, 2, 3 ], action());
     }))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

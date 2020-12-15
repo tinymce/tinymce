@@ -29,7 +29,9 @@ UnitTest.test('Arr.find: Unit tests', () => {
   };
 
   checkNone([], (x) => x > 0);
-  checkNone([], (_x) => { throw new Error('should not be called'); });
+  checkNone([], (_x) => {
+    throw new Error('should not be called');
+  });
   checkNone([ -1 ], (x) => x > 0);
   checkArr(1, [ 1 ], (x) => x > 0);
   checkArr(41, [ 4, 2, 10, 41, 3 ], (x) => x === 41);

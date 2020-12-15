@@ -84,7 +84,9 @@ const dataUriToBlobSync = (uri: string): Optional<Blob> => {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) { return Optional.none(); }
+  if (!matches) {
+    return Optional.none();
+  }
 
   const mimetype = matches[1];
   const base64 = data[1];

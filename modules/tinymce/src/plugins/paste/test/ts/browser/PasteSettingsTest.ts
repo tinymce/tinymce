@@ -36,7 +36,5 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteSettingsTest', (success, 
       }),
       cRemoveEditor
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

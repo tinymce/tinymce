@@ -56,7 +56,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', (success, failure) 
       sTestTrimBlockTrailingBr('Should be untouched since it is br after a inline', '<div><b>a</b><br></div>', '<div><b>a</b><br></div>'),
       sTestTrimBlockTrailingBr('Should be untouched since it is br after inlide inline', '<span><b>a</b><br></span>', '<span><b>a</b><br></span>')
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

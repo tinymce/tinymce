@@ -113,7 +113,5 @@ UnitTest.asynctest('Cyclic Keying Test', (success, failure) => {
       'button:contains("Button1")'
     ),
     GuiSetup.mTeardownKeyLogger(body, [ ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

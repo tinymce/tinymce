@@ -12,7 +12,9 @@ const attach = (parent: AlloyComponent, child: AlloyComponent): void => {
 const attachWith = (parent: AlloyComponent, child: AlloyComponent, insertion: (parent: SugarElement, child: SugarElement) => void): void => {
   parent.getSystem().addToWorld(child);
   insertion(parent.element, child.element);
-  if (SugarBody.inBody(parent.element)) { InternalAttachment.fireAttaching(child); }
+  if (SugarBody.inBody(parent.element)) {
+    InternalAttachment.fireAttaching(child);
+  }
   parent.syncComponents();
 };
 

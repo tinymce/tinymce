@@ -132,7 +132,5 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', (success, 
         cAssertModelAsHtml('<table><tbody><tr><td>E</td><td>F</td></tr><tr><td>H</td><td>I</td></tr></tbody></table>')
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -63,9 +63,7 @@ UnitTest.asynctest('Menu group heading test', (success, failure) => {
         { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
       ]
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

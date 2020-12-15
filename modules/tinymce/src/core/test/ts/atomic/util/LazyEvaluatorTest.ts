@@ -26,7 +26,5 @@ UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', (success, failu
 
   Pipeline.async({}, [
     sTestEvaluateUntil
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

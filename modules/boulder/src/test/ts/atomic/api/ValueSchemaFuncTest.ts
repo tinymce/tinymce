@@ -29,7 +29,9 @@ UnitTest.test('Atomic Test: api.ValueSchemaFuncTest', () => {
         Assert.eq(label + '. Was looking to see if contained: ' + expectedPart + '.\nWas: ' + message, true, message.indexOf(expectedPart) > -1);
       }
 
-      if (passed !== null) { assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')'); }
+      if (passed !== null) {
+        assert.fail(label + '\nExpected error: ' + expectedPart + '\nWas success(' + JSON.stringify(passed, null, 2) + ')');
+      }
     });
   };
 
