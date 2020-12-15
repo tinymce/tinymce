@@ -20,6 +20,7 @@ import * as Util from '../core/Util';
  * @private
  */
 
+// Note: Need to use a types here, as types are iterable whereas interfaces are not
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type TableData = {
   height: string;
