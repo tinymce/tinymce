@@ -38,14 +38,14 @@ export default function (sink?: AlloyComponent): UiFactoryBackstage {
       getSink: () => Result.value(sink)
     },
     urlinput: {
-      getHistory: () => [],
-      addToHistory: () => {},
-      getLinkInformation: () => Optional.none(),
-      getValidationHandler: () => Optional.none(),
+      getHistory: Fun.constant([]),
+      addToHistory: Fun.noop,
+      getLinkInformation: Optional.none,
+      getValidationHandler: Optional.none,
       getUrlPicker: (_filetype) => Optional.some((entry: ApiUrlData) => Future.pure(entry))
     },
     dialog: {
-      isDraggableModal: () => false
+      isDraggableModal: Fun.never
     }
   };
 }

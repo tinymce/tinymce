@@ -114,7 +114,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     nodeChangeHandler,
     dataset,
     shouldHide: false,
-    isInvalid: () => false
+    isInvalid: Fun.never
   };
 };
 

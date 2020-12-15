@@ -9,7 +9,7 @@ import {
   AlloyComponent, AlloySpec, Behaviour, Dropdown as AlloyDropdown, Layouts, RawDomSchema, SketchSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Future, Id, Merger, Optional } from '@ephox/katamari';
+import { Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -59,7 +59,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
         spec.presets,
         ItemResponse.CLOSE_ON_EXECUTE,
         // No colour is ever selected on opening
-        () => false,
+        Fun.never,
         sharedBackstage.providers
       ),
       {

@@ -1,4 +1,5 @@
 import fc from 'fast-check';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Future } from 'ephox/katamari/api/Future';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { Result } from 'ephox/katamari/api/Result';
@@ -32,7 +33,7 @@ export const arbFutureSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   }));
 
 export const arbFutureNever = <A> (): Arbitrary<Future<A>> =>
-  fc.constant(Future.nu(() => {}));
+  fc.constant(Future.nu(Fun.noop));
 
 export const arbFutureNowOrSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   fc.oneof(arbFutureNow(arbA), arbFutureSoon(arbA));

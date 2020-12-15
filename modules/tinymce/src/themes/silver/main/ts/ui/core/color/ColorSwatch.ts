@@ -137,7 +137,7 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
     onAction: (_splitButtonApi) => {
       // do something with last color
       if (lastColor.get() !== null) {
-        applyColor(editor, format, lastColor.get(), () => { });
+        applyColor(editor, format, lastColor.get(), Fun.noop);
       }
     },
     onItemAction: (_splitButtonApi, value) => {
@@ -235,7 +235,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     initialData,
     onAction,
     onSubmit: submit,
-    onClose: () => { },
+    onClose: Fun.noop,
     onCancel: () => {
       callback(Optional.none());
     }

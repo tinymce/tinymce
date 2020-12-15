@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 /*
@@ -44,7 +45,7 @@ export const registerAdvListItems = (): void => {
         // FIX: This is missing.
         buttonApi.setActive(state);
       });
-      return () => { };
+      return Fun.noop;
     },
     onAction: (_buttonApi) => {
       // apply basic list command

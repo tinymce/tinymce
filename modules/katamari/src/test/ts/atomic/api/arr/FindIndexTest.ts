@@ -2,6 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
@@ -56,7 +57,7 @@ UnitTest.test('Arr.findIndex: Element found passes predicate', () => {
 
 UnitTest.test('Arr.findIndex: If predicate is always false, then index is always none', () => {
   fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-    Assert.eq('should be none', Optional.none(), Arr.findIndex(arr, () => false), tOptional(tNumber));
+    Assert.eq('should be none', Optional.none(), Arr.findIndex(arr, Fun.never), tOptional(tNumber));
   }));
 });
 

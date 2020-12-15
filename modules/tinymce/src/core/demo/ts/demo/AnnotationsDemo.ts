@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 declare let tinymce: any;
@@ -34,7 +35,7 @@ export default function () {
           editor.annotator.annotationChanged('alpha', (state, _name, _obj) => {
             btnApi.setDisabled(state);
           });
-          return () => {};
+          return Fun.noop;
         }
       });
 

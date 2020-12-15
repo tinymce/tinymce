@@ -51,13 +51,15 @@ UnitTest.test('TextZoneTest', function () {
 
   const checkZone = function (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) {
     expected.fold(function () {
-      actual.fold(function () {
+      actual.fold(
         // Good
-      }, function (act) {
-        assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
-          JSON.stringify(rawOne(doc1, act))
-        ));
-      });
+        Fun.noop,
+        function (act) {
+          assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
+            JSON.stringify(rawOne(doc1, act))
+          ));
+        }
+      );
     }, function (exp) {
       actual.fold(function () {
         assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));

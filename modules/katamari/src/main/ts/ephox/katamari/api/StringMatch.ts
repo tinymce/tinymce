@@ -1,4 +1,5 @@
 import { Adt } from './Adt';
+import * as Fun from './Fun';
 
 type StringMapper = (str: string) => string;
 
@@ -56,9 +57,7 @@ const matches = function (subject: StringMatch, str: string): boolean {
     return f(str).indexOf(f(value)) >= 0;
   }, function (value, f) {
     return f(str) === f(value);
-  }, function () {
-    return true;
-  }, function (other) {
+  }, Fun.always, function (other) {
     return !matches(other, str);
   });
 };

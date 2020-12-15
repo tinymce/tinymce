@@ -1,6 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 UnitTest.test('fold: unit tests', () => {
   const checkl = (expected, input: any[], f, acc) => {
@@ -13,15 +14,13 @@ UnitTest.test('fold: unit tests', () => {
     Assert.eq('foldr', expected, Arr.foldr(Object.freeze(input.slice()), f, acc));
   };
 
-  checkl(0, [], () => {
-  }, 0);
+  checkl(0, [], Fun.noop, 0);
   checkl(6, [ 1, 2, 3 ], (acc, x) => acc + x, 0);
   checkl(13, [ 1, 2, 3 ], (acc, x) => acc + x, 7);
   // foldl with cons and [] should reverse the list
   checkl([ 3, 2, 1 ], [ 1, 2, 3 ], (acc, x) => [ x ].concat(acc), []);
 
-  checkr(0, [], () => {
-  }, 0);
+  checkr(0, [], Fun.noop, 0);
   checkr(6, [ 1, 2, 3 ], (acc, x) => acc + x, 0);
   checkr(13, [ 1, 2, 3 ], (acc, x) => acc + x, 7);
   // foldr with cons and [] should be identity

@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { Sidebar } from 'tinymce/core/api/ui/Ui';
@@ -86,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', function
       const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
         api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom);
         logEvent(eventName)(api);
-        return () => {};
+        return Fun.noop;
       };
       editor.ui.registry.addSidebar('mysidebar1', {
         tooltip: 'My sidebar 1',

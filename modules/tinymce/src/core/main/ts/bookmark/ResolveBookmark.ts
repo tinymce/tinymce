@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Optionals } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import Env from '../api/Env';
@@ -53,7 +53,7 @@ const isEmpty = (node: Node) => node.hasChildNodes() === false;
 
 const tryFindRangePosition = (node: Element, rng: Range): boolean =>
   CaretFinder.lastPositionIn(node).fold(
-    () => false,
+    Fun.never,
     (pos) => {
       rng.setStart(pos.container(), pos.offset());
       rng.setEnd(pos.container(), pos.offset());

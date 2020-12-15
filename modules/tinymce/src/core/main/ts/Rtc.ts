@@ -26,6 +26,7 @@ import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
 import { ParserArgs } from './api/html/DomParser';
+import Promise from './api/util/Promise';
 
 const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
 
@@ -272,6 +273,50 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
   };
 };
 
+const makeNoopAdaptor = (): RtcAdaptor => {
+  const nul = Fun.constant(null);
+  const empty = Fun.constant('');
+
+  return {
+    undoManager: {
+      beforeChange: Fun.noop,
+      addUndoLevel: nul,
+      undo: nul,
+      redo: nul,
+      clear: Fun.noop,
+      reset: Fun.noop,
+      hasUndo: Fun.never,
+      hasRedo: Fun.never,
+      transact: nul,
+      ignore: Fun.noop,
+      extra: Fun.noop
+    },
+    formatter: {
+      match: Fun.never,
+      matchAll: Fun.constant([]),
+      matchNode: Fun.never,
+      canApply: Fun.never,
+      closest: empty,
+      apply: Fun.noop,
+      remove: Fun.noop,
+      toggle: Fun.noop,
+      formatChanged: Fun.constant({ unbind: Fun.noop })
+    },
+    editor: {
+      getContent: empty,
+      setContent: empty,
+      insertContent: Fun.noop,
+      addVisual: Fun.noop
+    },
+    selection: {
+      getContent: empty
+    },
+    raw: {
+      getModel: Fun.constant(Optional.none())
+    }
+  };
+};
+
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
 export const setup = (editor: Editor): Optional<Promise<boolean>> => {
@@ -285,6 +330,10 @@ export const setup = (editor: Editor): Optional<Promise<boolean>> => {
       rtc.setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
         return rtcEditor.isRemote;
+      }, (err) => {
+        // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
+        editorCast.rtcInstance = makeNoopAdaptor();
+        return Promise.reject<boolean>(err);
       })
     )
   );

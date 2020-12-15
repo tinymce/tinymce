@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { getDemoRegistry } from './DemoRegistry';
 
 /* eslint-disable no-console */
@@ -47,7 +48,7 @@ export const registerDemoButtons = (): void => {
     tooltip: 'Bold',
     onSetup: (api) => {
       api.setActive(false);
-      return () => { };
+      return Fun.noop;
     },
     onAction: (_api) => {
       console.log('bold clicked');

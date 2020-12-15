@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import { PredicateFind, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
@@ -20,7 +21,7 @@ const addToEditor = (editor: Editor) => {
         return SelectorFind.closest(sugarNode, 'table', isRoot).fold(
           () => PredicateFind.closest(sugarNode, (elem) =>
             SugarNode.name(elem) in textBlockElementsMap && editor.dom.isEmpty(elem.dom), isRoot).isSome(),
-          () => false
+          Fun.never
         );
       },
       items: insertToolbarItems,

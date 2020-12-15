@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import * as FontCommands from '../commands/FontCommands';
 import * as LineHeightCommands from '../commands/LineHeight';
@@ -281,7 +282,7 @@ class EditorCommands {
     // Add execCommand overrides
     this.addCommands({
       // Ignore these, added for compatibility
-      'mceResetDesignMode,mceBeginUndoLevel'() { },
+      'mceResetDesignMode,mceBeginUndoLevel': Fun.noop,
 
       // Add undo manager logic
       'mceEndUndoLevel,mceAddUndoLevel'() {
@@ -469,8 +470,7 @@ class EditorCommands {
         IndentOutdent.handle(editor, command);
       },
 
-      'mceRepaint'() {
-      },
+      'mceRepaint': Fun.noop,
 
       'InsertHorizontalRule'() {
         editor.execCommand('mceInsertContent', false, '<hr />');

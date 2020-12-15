@@ -249,10 +249,7 @@ const handleDialogBlob = function (editor: Editor, imageUploadTimerState: Cell<n
       return blob;
     })
     .then(ResultConversions.blobToImageResult)
-    .then((imageResult) => updateSelectedImage(editor, blob, imageResult, true, imageUploadTimerState, img))
-    .catch(() => {
-      // Close dialog
-    });
+    .then((imageResult) => updateSelectedImage(editor, blob, imageResult, true, imageUploadTimerState, img));
 };
 
 export {

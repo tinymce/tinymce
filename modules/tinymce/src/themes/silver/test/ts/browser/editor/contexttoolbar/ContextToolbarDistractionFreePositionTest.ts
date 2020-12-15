@@ -1,5 +1,6 @@
 import { Assertions, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -116,7 +117,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('alpha', {
           text: 'Alpha',
-          onAction: () => {}
+          onAction: Fun.noop
         });
         ed.ui.registry.addContextToolbar('test-toolbar', {
           predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'a',

@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -34,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', function (success, fail
       `Do not strip tokens that weren't replaced.`);
 
     LegacyUnit.equal(translate([{ }]), '[object Object]');
-    LegacyUnit.equal(translate(function () { }), '[object Function]');
+    LegacyUnit.equal(translate(Fun.noop), '[object Function]');
 
     LegacyUnit.equal(translate(null), '');
     LegacyUnit.equal(translate(undefined), '');

@@ -15,7 +15,7 @@ UnitTest.asynctest('WindowManager:configurations Test', (success, failure) => {
     backstage: {
       ...helpers.extras.backstage,
       dialog: {
-        isDraggableModal: () => true
+        isDraggableModal: Fun.always
       }
     }
   });

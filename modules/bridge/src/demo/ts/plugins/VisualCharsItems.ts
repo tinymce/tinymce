@@ -1,8 +1,9 @@
+import { Fun } from '@ephox/katamari';
 import { getDemoRegistry } from '../buttons/DemoRegistry';
 
 const editor = {
   on: (_s, _f) => { },
-  isDirty: () => true
+  isDirty: Fun.always
 };
 
 export const registerVisualCharsItems = (): void => {
@@ -13,7 +14,7 @@ export const registerVisualCharsItems = (): void => {
       editor.on('VisualChars', (e) => {
         buttonApi.setActive(e);
       });
-      return () => { };
+      return Fun.noop;
     },
     onAction: (_buttonApi) => {
       // toggles visual chars

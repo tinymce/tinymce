@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Actions from '../core/Actions';
@@ -60,7 +60,7 @@ const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => () => 
       });
       api.close();
     },
-    onCancel: () => { }, // TODO: reimplement me
+    onCancel: Fun.noop, // TODO: reimplement me
     onAction: (api, details) => {
       switch (details.name) {
         case ImageToolsEvents.saveState:

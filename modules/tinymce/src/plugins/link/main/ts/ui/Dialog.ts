@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
@@ -42,7 +42,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
 
   const attachState = {
     href: data.url.value,
-    attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : () => {}
+    attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : Fun.noop
   };
 
   DialogConfirms.preprocess(editor, changedData).then((pData) => {

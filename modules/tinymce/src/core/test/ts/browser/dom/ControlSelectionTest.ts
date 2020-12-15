@@ -147,26 +147,36 @@ UnitTest.asynctest('browser.tinymce.core.dom.ControlSelectionTest', function (su
         sResizeAndAssertDimensions(editorBody, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202)
       ]),
       Log.stepsAsStep('TINY-6229', 'data-mce-selected attribute value retained when selecting the same element', [
-        tinyApis.sSetContent('<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span><strong>Test</strong></p>'),
+        tinyApis.sSetContent(
+          '<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span></p>' +
+          '<p><span contenteditable="false" class="mce-preview-object mce-object-audio"><audio controls></audio></span></p>'
+        ),
         // Select to set the initial selected element in ControlSelection, change and then come back
-        tinyApis.sSelect('span', [ ]),
+        tinyApis.sSelect('span.mce-object-video', [ ]),
         sWaitForDragHandles(editorBody, '#mceResizeHandlenw'),
         tinyApis.sAssertContentPresence({
-          'span[data-mce-selected=1] video': 1
-        }),
-        tinyApis.sSetCursor([ 0, 1, 0 ], 2),
-        Waiter.sTryUntil('Wait for resize handles to disappear', UiFinder.sNotExists(editorBody, '#mceResizeHandlenw')),
-        tinyApis.sAssertContentPresence({
-          'span[data-mce-selected] video': 0
+          'span[data-mce-selected=1] video': 1,
+          'span[data-mce-selected] audio': 0
         }),
         Step.sync(() => {
-          const previewSpan = editor.dom.select('span')[0];
-          editor.dom.setAttrib(previewSpan, 'data-mce-selected', '2');
+          const audioPreviewSpan = editor.dom.select('span')[1];
+          editor.dom.setAttrib(audioPreviewSpan, 'data-mce-selected', '3');
         }),
-        tinyApis.sSelect('span', [ ]),
+        tinyApis.sSelect('span.mce-object-audio', [ ]),
+        Waiter.sTryUntil('Wait for resize handles to disappear', UiFinder.sNotExists(editorBody, '#mceResizeHandlenw')),
+        tinyApis.sAssertContentPresence({
+          'span[data-mce-selected] video': 0,
+          'span[data-mce-selected=3] audio': 1
+        }),
+        Step.sync(() => {
+          const videoPreviewSpan = editor.dom.select('span')[0];
+          editor.dom.setAttrib(videoPreviewSpan, 'data-mce-selected', '2');
+        }),
+        tinyApis.sSelect('span.mce-object-video', [ ]),
         sWaitForDragHandles(editorBody, '#mceResizeHandlenw'),
         tinyApis.sAssertContentPresence({
-          'span[data-mce-selected=2] video': 1
+          'span[data-mce-selected=2] video': 1,
+          'span[data-mce-selected] audio': 0
         })
       ]),
     ], onSuccess, onFailure);

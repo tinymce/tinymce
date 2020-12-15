@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
@@ -100,5 +101,5 @@ export const open = () => {
   const helpers = setupDemo();
   const winMgr = WindowManager.setup(helpers.extras);
   // The end user will use this as config
-  winMgr.open(SearchReplaceDialogSpec, {}, () => {});
+  winMgr.open(SearchReplaceDialogSpec, {}, Fun.noop);
 };

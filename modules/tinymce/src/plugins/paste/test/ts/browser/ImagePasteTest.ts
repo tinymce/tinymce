@@ -1,6 +1,6 @@
 import { Log, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -57,13 +57,10 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     return file;
   };
 
-  const noop = function () {
-  };
-
   const mockEvent = function (type: string, files) {
     const event = {
       type,
-      preventDefault: noop
+      preventDefault: Fun.noop
     };
 
     const transferName = type === 'drop' ? 'dataTransfer' : 'clipboardData';

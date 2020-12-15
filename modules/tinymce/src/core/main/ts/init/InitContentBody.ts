@@ -454,6 +454,9 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     loadingRtc.then((rtcMode) => {
       editor.setProgressState(false);
       preInit(editor, rtcMode);
+    }, (err) => {
+      editor.notificationManager.open({ type: 'error', text: String(err) });
+      preInit(editor, true);
     });
   });
 };

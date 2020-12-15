@@ -6,7 +6,7 @@
  */
 
 import { Menu as BridgeMenu } from '@ephox/bridge';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 
 import { LinkInformation } from '../../backstage/UrlInputBackstage';
 import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
@@ -23,7 +23,7 @@ const toMenuItem = (target: LinkTarget): BridgeMenu.MenuItemSpec => ({
   meta: {
     attach: target.attach
   },
-  onAction: () => { }
+  onAction: Fun.noop
 });
 
 const staticMenuItem = (title: string, url: string): BridgeMenu.MenuItemSpec => ({
@@ -33,7 +33,7 @@ const staticMenuItem = (title: string, url: string): BridgeMenu.MenuItemSpec => 
   meta: {
     attach: undefined
   },
-  onAction: () => { }
+  onAction: Fun.noop
 });
 
 const toMenuItems = (targets: LinkTarget[]): BridgeMenu.MenuItemSpec[] =>

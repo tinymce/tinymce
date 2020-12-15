@@ -200,7 +200,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorUploadTest', (success, failure) =
       uploadedBlobInfo = null;
       assertEventsLength(0);
 
-      return editor.uploadImages(() => {}).then((result) => {
+      return editor.uploadImages(Fun.noop).then((result) => {
         Assert.eq('uploadImages retain blob urls after upload', 0, result.length);
         Assert.eq('uploadImages retain blob urls after upload', null, uploadedBlobInfo);
       });

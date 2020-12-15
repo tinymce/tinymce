@@ -1,6 +1,6 @@
 import { GeneralSteps, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Cell, Obj } from '@ephox/katamari';
+import { Cell, Fun, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -128,15 +128,15 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
         // Register buttons to use in the toolbars
         ed.ui.registry.addButton('node', {
           text: 'Node',
-          onAction: () => {}
+          onAction: Fun.noop
         });
         ed.ui.registry.addButton('parentnode', {
           text: 'Parent',
-          onAction: () => {}
+          onAction: Fun.noop
         });
         ed.ui.registry.addButton('editor', {
           text: 'Editor',
-          onAction: () => {}
+          onAction: Fun.noop
         });
 
         // Register toolbars to test with

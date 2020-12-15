@@ -1,7 +1,7 @@
 import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import TestExtras from '../../module/TestExtras';
@@ -154,7 +154,7 @@ UnitTest.asynctest('WindowManager:custom-dialog Test', (success, failure) => {
             testLog.get().concat([ 'onSubmit' ])
           );
         }
-      }, {}, () => {});
+      }, {}, Fun.noop);
     }),
 
     FocusTools.sTryOnSelector(

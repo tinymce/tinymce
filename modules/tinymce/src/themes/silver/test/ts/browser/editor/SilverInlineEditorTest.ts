@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Log, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Cell } from '@ephox/katamari';
+import { Arr, Cell, Fun } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -373,7 +373,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
       ed.ui.registry.addSplitButton('splitbutton1-with-text', {
         text: 'Delta',
-        onItemAction: () => { },
+        onItemAction: Fun.noop,
         fetch: (callback) => {
           callback([
             {
@@ -402,7 +402,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
 
       ed.ui.registry.addSplitButton('splitbutton2-with-icon', {
         icon: 'underline',
-        onItemAction: () => { },
+        onItemAction: Fun.noop,
         fetch: (callback) => {
           callback([
             {

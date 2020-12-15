@@ -1,5 +1,6 @@
 import { Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
 import Promise from 'tinymce/core/api/util/Promise';
 
@@ -18,8 +19,7 @@ UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', function (success, f
   suite.asyncTest('Promise reject', function (_, done) {
     new Promise(function (resolve, reject) {
       reject('123');
-    }).then(function () {
-    }, function (result) {
+    }).then(Fun.noop, function (result) {
       LegacyUnit.equal('123', result);
       done();
     });

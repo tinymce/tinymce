@@ -69,7 +69,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
         setup: (editor) => {
           editor.ui.registry.addSplitButton('splitbutton', {
             text: 'Test SplitButton',
-            onItemAction: () => { },
+            onItemAction: Fun.noop,
             fetch: (callback) => {
               callback([
                 {
@@ -78,7 +78,7 @@ UnitTest.asynctest('ToolbarBottomTest - assert direction that menus open in when
                 }
               ]);
             },
-            onAction: () => {}
+            onAction: Fun.noop
           });
         }
       },

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
@@ -198,21 +198,19 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
 function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
-  const noop = function () { };
-
   settings = settings || {};
 
   if (settings.fix_self_closing !== false) {
     settings.fix_self_closing = true;
   }
 
-  const comment = settings.comment ? settings.comment : noop;
-  const cdata = settings.cdata ? settings.cdata : noop;
-  const text = settings.text ? settings.text : noop;
-  const start = settings.start ? settings.start : noop;
-  const end = settings.end ? settings.end : noop;
-  const pi = settings.pi ? settings.pi : noop;
-  const doctype = settings.doctype ? settings.doctype : noop;
+  const comment = settings.comment ? settings.comment : Fun.noop;
+  const cdata = settings.cdata ? settings.cdata : Fun.noop;
+  const text = settings.text ? settings.text : Fun.noop;
+  const start = settings.start ? settings.start : Fun.noop;
+  const end = settings.end ? settings.end : Fun.noop;
+  const pi = settings.pi ? settings.pi : Fun.noop;
+  const doctype = settings.doctype ? settings.doctype : Fun.noop;
 
   const parseInternal = (base64Extract: Base64Extract, format: ParserFormat = 'html') => {
     const html = base64Extract.html;

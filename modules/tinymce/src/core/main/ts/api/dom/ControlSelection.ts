@@ -58,6 +58,7 @@ interface SelectedResizeHandle extends ResizeHandle {
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSelection => {
+  const elementSelectionAttr = 'data-mce-selected';
   const dom = editor.dom, each = Tools.each;
   let selectedElm, selectedElmGhost: HTMLElement, resizeHelper, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
   let startX, startY, selectedElmX, selectedElmY, startW, startH, ratio, resizeStarted;
@@ -272,7 +273,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     editor.nodeChanged();
   };
 
-  const showResizeRect = (targetElm: Element) => {
+  const showResizeRect = (targetElm: HTMLElement) => {
     unbindResizeHandleEvents();
 
     // Get position and size of target
@@ -292,6 +293,9 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     // Makes it possible to disable resizing
     const e = editor.fire('ObjectSelected', { target: targetElm });
+
+    // Store the original data-mce-selected value or fallback to '1' if not set
+    const selectedValue = dom.getAttrib(selectedElm, elementSelectionAttr, '1');
 
     if (isResizable(targetElm) && !e.isDefaultPrevented()) {
       each(resizeHandles, (handle, name) => {
@@ -336,7 +340,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           // Set initial ghost size
           setGhostElmSize(selectedElmGhost, targetWidth, targetHeight);
 
-          selectedElmGhost.removeAttribute('data-mce-selected');
+          selectedElmGhost.removeAttribute(elementSelectionAttr);
           rootElement.appendChild(selectedElmGhost);
 
           dom.bind(editableDoc, 'mousemove', resizeGhostElement);
@@ -392,8 +396,8 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       hideResizeRect();
     }
 
-    if (!dom.getAttrib(selectedElm, 'data-mce-selected')) {
-      selectedElm.setAttribute('data-mce-selected', '1');
+    if (!dom.getAttrib(selectedElm, elementSelectionAttr)) {
+      selectedElm.setAttribute(elementSelectionAttr, selectedValue);
     }
   };
 
@@ -401,7 +405,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     unbindResizeHandleEvents();
 
     if (selectedElm) {
-      selectedElm.removeAttribute('data-mce-selected');
+      selectedElm.removeAttribute(elementSelectionAttr);
     }
 
     Obj.each(resizeHandles, (value, name) => {
@@ -433,7 +437,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     // Remove data-mce-selected from all elements since they might have been copied using Ctrl+c/v
     each(dom.select('img[data-mce-selected],hr[data-mce-selected]'), function (img) {
-      img.removeAttribute('data-mce-selected');
+      img.removeAttribute(elementSelectionAttr);
     });
 
     controlElm = e.type === 'mousedown' ? e.target : selection.getNode();
