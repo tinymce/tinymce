@@ -21,7 +21,7 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]) => {
     (table) => {
       const replica = CopySelected.extract(table, Ephemera.attributeSelector);
       Util.removeDataStyle(replica);
-      return ([ replica ]);
+      return [ replica ];
     }
   );
 };

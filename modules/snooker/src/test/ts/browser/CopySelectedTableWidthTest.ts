@@ -9,9 +9,9 @@ const SEL_CLASS = 'copy-selected';
 const isIE = PlatformDetection.detect().browser.isIE();
 
 interface TestCase {
-  label: string;
-  expectedWidth: string;
-  table: string;
+  readonly label: string;
+  readonly expectedWidth: string;
+  readonly table: string;
 }
 
 const matchWithReducedPrecision = (label: string, expected: string, tableWidth: string) => {

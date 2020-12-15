@@ -1,9 +1,9 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Replication, Selectors, SugarElement, Width } from '@ephox/sugar';
+import * as ColUtils from '../util/ColUtils';
 import * as DetailsList from '../model/DetailsList';
 import * as LayerSelector from '../util/LayerSelector';
 import { DetailExt, RowData } from './Structs';
-import { getUniqueColumns } from './TableOperations';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -125,8 +125,8 @@ const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number =>
     }, 0);
   };
 
-  const uniqueCols = getUniqueColumns(stats.allCells);
-  const uniqueSelectedCols = getUniqueColumns(stats.selectedCells);
+  const uniqueCols = ColUtils.uniqueColumns(stats.allCells);
+  const uniqueSelectedCols = ColUtils.uniqueColumns(stats.selectedCells);
 
   // short circuit entire table selected
   if (uniqueSelectedCols.length === uniqueCols.length) {
