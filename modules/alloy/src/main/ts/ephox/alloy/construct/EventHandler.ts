@@ -25,8 +25,8 @@ const any = <T extends EventFormat>(handlers: Array<AlloyEventHandler<T>>, f: (h
 
 const read = <T extends EventFormat>(handler: (() => SimulatedEvent<T>) | AlloyEventHandler<T>): AlloyEventHandler<T> =>
   Type.isFunction(handler) ? {
-    can: Fun.constant(true),
-    abort: Fun.constant(false),
+    can: Fun.always,
+    abort: Fun.never,
     run: handler
   } : handler;
 
