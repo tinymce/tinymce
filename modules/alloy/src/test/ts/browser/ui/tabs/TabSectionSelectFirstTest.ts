@@ -123,5 +123,5 @@ UnitTest.asynctest('TabSectionSelectFirst Test', (success, failure) => {
     })), component.element),
 
     GuiSetup.mRemoveStyles
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

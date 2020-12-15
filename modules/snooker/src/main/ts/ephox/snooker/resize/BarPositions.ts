@@ -57,7 +57,9 @@ const getBottomEdge = (index: number, cell: SugarElement): RowInfo => {
 };
 
 const findPositions = <T> (getInnerEdge: (idx: number, ele: SugarElement) => T, getOuterEdge: (idx: number, ele: SugarElement) => T, array: Optional<SugarElement>[]): Optional<T>[] => {
-  if (array.length === 0 ) { return []; }
+  if (array.length === 0 ) {
+    return [];
+  }
   const lines = Arr.map(array.slice(1), (cellOption, index) => {
     return cellOption.map((cell) => {
       return getInnerEdge(index, cell);

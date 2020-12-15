@@ -14,7 +14,5 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', (s
     }),
     ApiChains.cFocus
   ],
-  () => {
-    success();
-  }, failure);
+  success, failure);
 });

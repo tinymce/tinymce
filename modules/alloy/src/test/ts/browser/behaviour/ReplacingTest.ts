@@ -245,5 +245,5 @@ UnitTest.asynctest('ReplacingTest', (success, failure) => {
         'replaceAt-2'
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

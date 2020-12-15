@@ -169,5 +169,5 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         store.sClear
       ])
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

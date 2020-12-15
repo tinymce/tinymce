@@ -220,5 +220,5 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

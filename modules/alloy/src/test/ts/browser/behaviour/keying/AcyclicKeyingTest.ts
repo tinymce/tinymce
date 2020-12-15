@@ -142,7 +142,5 @@ UnitTest.asynctest('Browser Test: behaviour.keying.AcyclicKeyingTest', (success,
     store.sAssertEq('Enter on outer container', [ 'cycle.enter' ]),
     store.sClear,
     GuiSetup.mTeardownKeyLogger(body, [ ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

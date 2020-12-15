@@ -41,7 +41,9 @@ UnitTest.test('SimplifyTest', () => {
     });
 
     const actual = Simplify.simplify(doc, path);
-    assert.eq(expected, Arr.map(actual, (s) => { return s.id; }));
+    assert.eq(expected, Arr.map(actual, (s) => {
+      return s.id;
+    }));
   };
 
   check([], []);

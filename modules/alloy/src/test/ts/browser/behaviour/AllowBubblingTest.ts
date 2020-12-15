@@ -38,5 +38,5 @@ UnitTest.asynctest('AllowBubblingTest', (success, failure) => {
       sDispatchScrollEvent(component),
       store.sAssertEq('Should have fired simulated scroll event', [ 'bubbled.scroll' ])
     ])),
-  () => { success(); }, failure);
+  success, failure);
 });

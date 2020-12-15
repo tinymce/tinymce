@@ -92,9 +92,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

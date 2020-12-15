@@ -785,7 +785,5 @@ UnitTest.asynctest('browser.tinymce.core.html.DomParserTest', (success, failure)
     );
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

@@ -136,7 +136,5 @@ UnitTest.asynctest('Flow Keying Allow Vertical Test', (success, failure) => {
         'keydown.to.body: 40'
       ])
     ];
-  }, () => {
-    success();
-  }, failure);
+  }, success, failure);
 });

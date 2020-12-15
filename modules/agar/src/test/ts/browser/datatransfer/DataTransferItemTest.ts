@@ -34,7 +34,5 @@ UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
         }
       });
     }))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -66,5 +66,5 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
       'After clicking, store should have message',
       [ 'clicked on coupled button of: primary' ]
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

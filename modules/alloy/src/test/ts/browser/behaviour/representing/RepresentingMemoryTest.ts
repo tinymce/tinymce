@@ -23,5 +23,5 @@ UnitTest.asynctest('RepresentingTest (mode: memory)', (success, failure) => {
     RepresentPipes.sAssertValue('Checking initial value', '1', component),
     RepresentPipes.sSetValue(component, '2'),
     RepresentPipes.sAssertValue('Checking 2nd value', '2', component)
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

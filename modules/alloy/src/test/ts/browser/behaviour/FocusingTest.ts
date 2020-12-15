@@ -49,5 +49,5 @@ UnitTest.asynctest('FocusingTest', (success, failure) => {
     }),
     FocusTools.sTryOnSelector('Focusing after focus call', doc, '.focusable')
 
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

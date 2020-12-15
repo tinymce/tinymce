@@ -104,7 +104,9 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
   });
 
   const listCategory = (category: string): EmojiEntry[] => {
-    if (category === ALL_CATEGORY) { return listAll(); }
+    if (category === ALL_CATEGORY) {
+      return listAll();
+    }
     return categories.get().bind((cats) => Optional.from(cats[category])).getOr([]);
   };
 

@@ -33,7 +33,9 @@ const fromText = (text: string, scope?: Document | null): SugarElement<Text> => 
 
 const fromDom = <T extends Node | Window> (node: T): SugarElement<T> => {
   // TODO: Consider removing this check, but left atm for safety
-  if (node === null || node === undefined) { throw new Error('Node cannot be null or undefined'); }
+  if (node === null || node === undefined) {
+    throw new Error('Node cannot be null or undefined');
+  }
   return {
     dom: node
   };

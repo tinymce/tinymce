@@ -133,5 +133,5 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
       sCheckClosedState('After sending system close event', { store: [ 'onClose' ] })
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -40,7 +40,5 @@ UnitTest.asynctest('browser.tinymce.core.util.JsonTest', (success, failure) => {
     LegacyUnit.equal(parsedValue.date1, '1970-01-01T00:00:00.000Z');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

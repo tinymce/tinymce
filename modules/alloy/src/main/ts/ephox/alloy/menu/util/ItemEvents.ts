@@ -15,7 +15,9 @@ const onHover = (item: AlloyComponent): void => {
   // want to lose focus on the widget. Note, that because this isn't API based
   // (i.e. we are manually searching for focus), it may not be that flexible.
   if (Focus.search(item.element).isNone() || Focusing.isFocused(item)) {
-    if (!Focusing.isFocused(item)) { Focusing.focus(item); }
+    if (!Focusing.isFocused(item)) {
+      Focusing.focus(item);
+    }
     AlloyTriggers.emitWith(item, hoverEvent, { item });
   }
 };

@@ -135,9 +135,7 @@ UnitTest.asynctest('Inline editor ContextToolbar Position test', (success, failu
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

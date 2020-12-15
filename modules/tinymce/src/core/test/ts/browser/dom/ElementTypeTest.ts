@@ -101,7 +101,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure
       sCheckElement('textarea', ElementType.isWsPreserveElement, true),
       sCheckText(ElementType.isWsPreserveElement)
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

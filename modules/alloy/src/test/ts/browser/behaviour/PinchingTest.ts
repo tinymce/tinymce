@@ -89,5 +89,5 @@ UnitTest.asynctest('Browser Test: behaviour.PinchingTest', (success, failure) =>
         { method: 'pinch', dx: (16 - 8) - (20 - 5), dy: (160 - 80) - (200 - 50) }
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

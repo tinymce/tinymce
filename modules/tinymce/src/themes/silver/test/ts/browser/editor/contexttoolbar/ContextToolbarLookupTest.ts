@@ -167,9 +167,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

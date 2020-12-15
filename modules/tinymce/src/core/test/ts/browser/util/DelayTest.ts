@@ -133,7 +133,5 @@ UnitTest.asynctest('browser.tinymce.core.util.DelayTest', (success, failure) => 
     ok(true, 'clearInterval works.');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

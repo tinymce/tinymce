@@ -94,5 +94,5 @@ UnitTest.asynctest('ToolbarGroupTest', (success, failure) => {
       Keyboard.sKeydown(doc, Keys.right(), { }),
       FocusTools.sTryOnSelector('Focus should move to B', doc, 'button:contains("B")')
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

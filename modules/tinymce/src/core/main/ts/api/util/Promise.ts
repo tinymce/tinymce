@@ -27,8 +27,12 @@ const promise = function () {
   const isArray = Array.isArray || ((value) => Object.prototype.toString.call(value) === '[object Array]');
 
   const Promise: any = function (fn) {
-    if (typeof this !== 'object') { throw new TypeError('Promises must be constructed via new'); }
-    if (typeof fn !== 'function') { throw new TypeError('not a function'); }
+    if (typeof this !== 'object') {
+      throw new TypeError('Promises must be constructed via new');
+    }
+    if (typeof fn !== 'function') {
+      throw new TypeError('not a function');
+    }
     this._state = null;
     this._value = null;
     this._deferreds = [];
@@ -65,7 +69,9 @@ const promise = function () {
 
   function resolve(newValue) {
     try { // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === this) { throw new TypeError('A promise cannot be resolved with itself.'); }
+      if (newValue === this) {
+        throw new TypeError('A promise cannot be resolved with itself.');
+      }
       if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         const then = newValue.then;
         if (typeof then === 'function') {
@@ -76,7 +82,9 @@ const promise = function () {
       this._state = true;
       this._value = newValue;
       finale.call(this);
-    } catch (e) { reject.call(this, e); }
+    } catch (e) {
+      reject.call(this, e);
+    }
   }
 
   function reject(newValue) {
@@ -109,16 +117,22 @@ const promise = function () {
     let done = false;
     try {
       fn((value) => {
-        if (done) { return; }
+        if (done) {
+          return;
+        }
         done = true;
         onFulfilled(value);
       }, (reason) => {
-        if (done) { return; }
+        if (done) {
+          return;
+        }
         done = true;
         onRejected(reason);
       });
     } catch (ex) {
-      if (done) { return; }
+      if (done) {
+        return;
+      }
       done = true;
       onRejected(ex);
     }
@@ -139,14 +153,18 @@ const promise = function () {
     const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise((resolve, reject) => {
-      if (args.length === 0) { return resolve([]); }
+      if (args.length === 0) {
+        return resolve([]);
+      }
       let remaining = args.length;
       const res = (i, val) => {
         try {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, (val) => { res(i, val); }, reject);
+              then.call(val, (val) => {
+                res(i, val);
+              }, reject);
               return;
             }
           }

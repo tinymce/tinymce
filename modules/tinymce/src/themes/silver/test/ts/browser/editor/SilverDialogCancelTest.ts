@@ -40,9 +40,7 @@ UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failur
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

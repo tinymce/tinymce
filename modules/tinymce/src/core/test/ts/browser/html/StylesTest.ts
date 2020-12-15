@@ -220,7 +220,5 @@ UnitTest.asynctest('browser.tinymce.core.html.StylesTest', (success, failure) =>
     LegacyUnit.equal(styles.serialize(styles.parse('background:url(vbscript:alert(1)')), `background: url('vbscript:alert(1');`);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

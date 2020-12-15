@@ -90,7 +90,5 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
       ]),
       McEditor.cRemove
     ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -123,7 +123,9 @@ const make: CompositeSketchFactory<TypeaheadDetail, TypeaheadSpec> = (detail, co
             const onOpenSync = (_sandbox: AlloyComponent) => {
               Composing.getCurrent(sandbox).each((menu) => {
                 previousValue.fold(() => {
-                  if (detail.model.selectsOver) { Highlighting.highlightFirst(menu); }
+                  if (detail.model.selectsOver) {
+                    Highlighting.highlightFirst(menu);
+                  }
                 }, (pv) => {
                   Highlighting.highlightBy(menu, (item) => {
                     const itemData = Representing.getValue(item) as TypeaheadData;

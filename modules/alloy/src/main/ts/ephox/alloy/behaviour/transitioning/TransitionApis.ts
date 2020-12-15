@@ -62,7 +62,9 @@ const jumpTo = (comp: AlloyComponent, transConfig: TransitioningConfig, transSta
   // Remove the previous transition
   disableTransition(comp, transConfig, transState);
   // Only call finish if there was an original state
-  if (Attribute.has(comp.element, transConfig.stateAttr) && Attribute.get(comp.element, transConfig.stateAttr) !== destination) { transConfig.onFinish(comp, destination); }
+  if (Attribute.has(comp.element, transConfig.stateAttr) && Attribute.get(comp.element, transConfig.stateAttr) !== destination) {
+    transConfig.onFinish(comp, destination);
+  }
   Attribute.set(comp.element, transConfig.stateAttr, destination);
 };
 

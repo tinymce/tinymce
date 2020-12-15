@@ -124,5 +124,5 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
       connection.disengage();
       Remove.remove(root);
     })
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

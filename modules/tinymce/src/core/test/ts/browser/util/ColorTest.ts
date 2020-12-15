@@ -37,7 +37,5 @@ UnitTest.asynctest('browser.tinymce.core.util.ColorTest', (success, failure) => 
     LegacyUnit.equal(Color({ r: 255, g: 254, b: 253 }).toHex(), '#fffefd');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

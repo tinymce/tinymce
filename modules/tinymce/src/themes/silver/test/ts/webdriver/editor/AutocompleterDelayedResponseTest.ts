@@ -127,9 +127,7 @@ UnitTest.asynctest('Editor Autocompleter delay response test', (success, failure
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

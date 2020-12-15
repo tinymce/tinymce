@@ -432,9 +432,7 @@ UnitTest.asynctest('Inline Editor (Silver) test', (success, failure) => {
       });
     }
   },
-  () => {
-    success();
-  },
+  success,
   failure
   );
 });

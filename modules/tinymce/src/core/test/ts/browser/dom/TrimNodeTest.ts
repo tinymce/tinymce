@@ -50,7 +50,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) =
     sTestTrim('<pre><strong>x</strong>\n<em>y</em></pre>', '<pre><strong>x</strong>\n<em>y</em></pre>'),
     sTestTrimFragmentedTextNode,
     sTestTrimDocumentNode
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

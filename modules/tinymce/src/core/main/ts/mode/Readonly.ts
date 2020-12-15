@@ -114,7 +114,9 @@ const registerReadOnlyContentFilters = (editor: Editor) => {
   if (editor.serializer) {
     registerFilters(editor);
   } else {
-    editor.on('PreInit', () => { registerFilters(editor); });
+    editor.on('PreInit', () => {
+      registerFilters(editor);
+    });
   }
 };
 

@@ -39,7 +39,9 @@ const unsupportedFields = <T>(path: string[], unsupported: string[]): SimpleResu
 };
 
 const custom = <T>(path: string[], err: string): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => { return err; });
+  return nu(path, () => {
+    return err;
+  });
 };
 
 const toString = (error: SchemaError): string => {

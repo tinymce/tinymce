@@ -112,15 +112,21 @@ const refresh = (component: AlloyComponent, slideConfig: SlidingConfig, slideSta
 };
 
 const grow = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
-  if (!slideState.isExpanded()) { doStartGrow(component, slideConfig, slideState); }
+  if (!slideState.isExpanded()) {
+    doStartGrow(component, slideConfig, slideState);
+  }
 };
 
 const shrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
-  if (slideState.isExpanded()) { doStartSmartShrink(component, slideConfig, slideState); }
+  if (slideState.isExpanded()) {
+    doStartSmartShrink(component, slideConfig, slideState);
+  }
 };
 
 const immediateShrink = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): void => {
-  if (slideState.isExpanded()) { doImmediateShrink(component, slideConfig, slideState, Optional.none()); }
+  if (slideState.isExpanded()) {
+    doImmediateShrink(component, slideConfig, slideState, Optional.none());
+  }
 };
 
 const hasGrown = (component: AlloyComponent, slideConfig: SlidingConfig, slideState: SlidingState): boolean =>

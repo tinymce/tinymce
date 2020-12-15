@@ -327,5 +327,5 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

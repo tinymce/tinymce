@@ -196,7 +196,5 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
 
     NamedChain.read('editor', Editor.cRemove)
   ]),
-  () => {
-    success();
-  }, failure, TestLogs.init());
+  success, failure, TestLogs.init());
 });

@@ -117,9 +117,7 @@ UnitTest.asynctest('Editor Dialog Popups Test', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

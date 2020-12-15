@@ -179,7 +179,5 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, fa
         cAssertPosition([], 2)
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

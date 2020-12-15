@@ -530,7 +530,5 @@ UnitTest.asynctest('browser.tinymce.core.html.SchemaTest', (success, failure) =>
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

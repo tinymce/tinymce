@@ -200,8 +200,12 @@ Ready.execute(() => {
   const newCell: Generators['cell'] = (prev) => {
     const td = SugarElement.fromTag('td');
     Insert.append(td, SugarElement.fromText('?'));
-    if (prev.colspan === 1) { Css.set(td, 'width', Css.get(prev.element, 'width')); }
-    if (prev.rowspan === 1) { Css.set(td, 'height', Css.get(prev.element, 'height')); }
+    if (prev.colspan === 1) {
+      Css.set(td, 'width', Css.get(prev.element, 'width'));
+    }
+    if (prev.rowspan === 1) {
+      Css.set(td, 'height', Css.get(prev.element, 'height'));
+    }
     return td;
   };
 
@@ -218,7 +222,9 @@ Ready.execute(() => {
   const replace: Generators['replace'] = (cell, tag, attrs) => {
     const replica = Replication.copy(cell, tag);
     Obj.each(attrs, (v, k) => {
-      if (v !== null) { Attribute.set(replica, k, v); }
+      if (v !== null) {
+        Attribute.set(replica, k, v);
+      }
     });
     return replica;
   };

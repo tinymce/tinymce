@@ -46,7 +46,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', (success, failure) => {
       sTestEmpty('<span contenteditable="false"></span>', false),
       sTestEmpty('<a id="anchor"></a>', false)
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

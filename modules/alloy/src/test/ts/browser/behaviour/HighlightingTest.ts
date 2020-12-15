@@ -198,5 +198,5 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

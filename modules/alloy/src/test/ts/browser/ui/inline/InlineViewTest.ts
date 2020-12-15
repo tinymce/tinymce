@@ -311,5 +311,5 @@ UnitTest.asynctest('InlineViewTest', (success, failure) => {
       sCheckClosed('Broadcasting dismiss on a external element should close inline toolbar')
 
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

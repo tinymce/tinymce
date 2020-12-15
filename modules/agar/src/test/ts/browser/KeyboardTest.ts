@@ -87,7 +87,5 @@ UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
     listenOnKeystroke(Keys.space(), {}),
     DomContainers.mTeardown
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -135,5 +135,5 @@ UnitTest.asynctest('MatrixMenuTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

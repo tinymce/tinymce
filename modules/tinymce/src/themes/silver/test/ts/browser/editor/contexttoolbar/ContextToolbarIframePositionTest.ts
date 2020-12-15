@@ -228,9 +228,7 @@ UnitTest.asynctest('IFrame editor ContextToolbar Position test', (success, failu
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

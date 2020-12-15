@@ -17,5 +17,5 @@ UnitTest.asynctest('PropertyStepsTest', (success, failure) => {
       }),
       {}
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

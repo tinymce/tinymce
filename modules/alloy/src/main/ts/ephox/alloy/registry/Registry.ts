@@ -30,16 +30,21 @@ export const Registry = (): Registry => {
 
   const failOnDuplicate = (component: AlloyComponent, tagId: string): void => {
     const conflict = components[tagId];
-    if (conflict === component) { unregister(component); } else { throw new Error(
-      'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element) + '\nCannot use it for: ' + AlloyLogger.element(component.element) + '\n' +
+    if (conflict === component) {
+      unregister(component);
+    } else {
+      throw new Error(
+        'The tagId "' + tagId + '" is already used by: ' + AlloyLogger.element(conflict.element) + '\nCannot use it for: ' + AlloyLogger.element(component.element) + '\n' +
         'The conflicting element is' + (SugarBody.inBody(conflict.element) ? ' ' : ' not ') + 'already in the DOM'
-    );
+      );
     }
   };
 
   const register = (component: AlloyComponent): void => {
     const tagId = readOrTag(component);
-    if (Obj.hasNonNullableKey(components, tagId)) { failOnDuplicate(component, tagId); }
+    if (Obj.hasNonNullableKey(components, tagId)) {
+      failOnDuplicate(component, tagId);
+    }
     // Component is passed through an an extra argument to all events
     const extraArgs = [ component ];
     events.registerId(extraArgs, tagId, component.events);

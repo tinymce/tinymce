@@ -12,7 +12,5 @@ UnitTest.asynctest('atomic.tinymce.core.text.BidiTest', (success, failure) => {
 
   Pipeline.async({}, [
     sTestHasStrongRtl
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

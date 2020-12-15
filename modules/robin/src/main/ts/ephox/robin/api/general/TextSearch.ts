@@ -82,7 +82,9 @@ const expandRight = <E, D>(universe: Universe<E, D>, item: E, offset: number, ra
 // have been fragmented.
 const scanRight = <E, D>(universe: Universe<E, D>, item: E, originalOffset: number): Optional<SpotPoint<E>> => {
   const isRoot = Fun.never;
-  if (!universe.property().isText(item)) { return Optional.none(); }
+  if (!universe.property().isText(item)) {
+    return Optional.none();
+  }
   const text = universe.property().getText(item);
   if (originalOffset <= text.length) {
     return Optional.some(Spot.point(item, originalOffset));

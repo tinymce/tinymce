@@ -46,8 +46,12 @@ UnitTest.test('SizeInputParsingTest', () => {
   });
 
   const arbPad = Jsc.array(Jsc.elements(' \t'.split(''))).smap(
-    (arr) => { return arr.join(''); },
-    (s) => { return s.split(''); }
+    (arr) => {
+      return arr.join('');
+    },
+    (s) => {
+      return s.split('');
+    }
   );
 
   Jsc.property(

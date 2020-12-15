@@ -12,7 +12,9 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
 
   const slidingStyles = [
     '.test-sliding-width-growing { transition: width 5.0s ease; }',
@@ -113,5 +115,5 @@ UnitTest.asynctest('SlidingInterruptedTest', (success, failure) => {
         sIsNotShrinking
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

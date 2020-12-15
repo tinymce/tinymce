@@ -81,7 +81,5 @@ UnitTest.asynctest('WaiterChainTest', (success, failure) => {
       makeDelayChain('not enough time', 50, 500)
     )
 
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

@@ -32,5 +32,5 @@ UnitTest.asynctest('UiControlsTest', (success, failure) => {
       Assertions.cAssertEq('Checking that cSetValue sets the value and cGetValue reads it', 'chain.value.1')
     ])
 
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

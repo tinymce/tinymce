@@ -20,7 +20,5 @@ UnitTest.asynctest('browser.tinymce.core.undo.DiffTest', (success, failure) => {
     LegacyUnit.deepEqual(Diff.diff([ 1 ], [ 2, 3 ]), [[ INSERT, 2 ], [ INSERT, 3 ], [ DELETE, 1 ]]);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

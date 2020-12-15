@@ -175,7 +175,5 @@ UnitTest.asynctest('Matrix Keying Test', (success, failure) => {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => {
-    success();
-  }, failure);
+  }, success, failure);
 });

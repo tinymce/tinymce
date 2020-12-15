@@ -110,7 +110,11 @@ export default (): void => {
           },
           action: () => {
             const slider = gui.getByUid('width-slider').getOrDie();
-            if (Sliding.hasGrown(slider)) { Sliding.shrink(slider); } else { Sliding.grow(slider); }
+            if (Sliding.hasGrown(slider)) {
+              Sliding.shrink(slider);
+            } else {
+              Sliding.grow(slider);
+            }
           }
         })
       ]

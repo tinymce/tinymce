@@ -33,7 +33,9 @@ const empty = Fun.constant([]);
 
 const justText = <E, D>(parray: TypedItem<E, D>[]): E[] => {
   return Arr.bind(parray, (x): E[] => {
-    return x.fold(empty, empty, (i) => { return [ i ]; }, empty);
+    return x.fold(empty, empty, (i) => {
+      return [ i ];
+    }, empty);
   });
 };
 

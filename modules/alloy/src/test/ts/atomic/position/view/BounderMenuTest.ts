@@ -19,7 +19,9 @@ UnitTest.test('BounderMenuTest', () => {
     assert.eq(expected.label, actual.label);
     assert.eq(expected.x, actual.x);
     assert.eq(expected.y, actual.y);
-    if (expected.candidateYforTest !== undefined) { assert.eq(expected.candidateYforTest, actual.candidateYforTest); }
+    if (expected.candidateYforTest !== undefined) {
+      assert.eq(expected.candidateYforTest, actual.candidateYforTest);
+    }
   };
 
   // LinkedLayout is for submenus (vertically aligned to opposite side of menu)

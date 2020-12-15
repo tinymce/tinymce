@@ -26,7 +26,9 @@ const subdivide = <E, D>(universe: Universe<E, D>, item: E, positions: number[])
     return Optional.some(result);
   }, pieces[0].length);
 
-  const otherElements = Arr.map(others, (a) => { return a.element; });
+  const otherElements = Arr.map(others, (a) => {
+    return a.element;
+  });
   universe.insert().afterAll(item, otherElements);
 
   return [ Spot.range(item, 0, pieces[0].length) ].concat(others);

@@ -48,5 +48,5 @@ UnitTest.asynctest('ButtonSpaceTest (webdriver)', (success, failure) => {
     ]),
     Step.wait(400),
     store.sAssertEq('Clicked should only have fired once', [ 'clicked.fake' ])
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

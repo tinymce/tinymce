@@ -151,7 +151,5 @@ UnitTest.asynctest('Widget Keying Test', (success, failure) => {
 
     GuiSetup.mRemoveStyles,
     GuiSetup.mTeardownKeyLogger(body, [ ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

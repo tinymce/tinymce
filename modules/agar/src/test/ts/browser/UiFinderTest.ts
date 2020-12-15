@@ -99,5 +99,8 @@ UnitTest.asynctest('UiFinderTest', (success, failure) => {
       Chain.inject(container),
       UiFinder.cWaitFor('Waiting for the strong tag to gain class: changing-state-waitfor', 'strong.changing-state-waitfor')
     ])
-  ], () => { teardown(); success(); }, failure);
+  ], () => {
+    teardown();
+    success();
+  }, failure);
 });

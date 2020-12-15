@@ -1054,7 +1054,5 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

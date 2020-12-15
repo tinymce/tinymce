@@ -277,7 +277,9 @@ UnitTest.asynctest('browser.tinymce.core.annotate.AnnotationChangedTest', (succe
           } else {
             const { uid, nodes } = obj;
             // In this test, gamma markers span multiple nodes
-            if (name === 'gamma') { Assertions.assertEq('Gamma annotations must have 2 nodes', 2, nodes.length); }
+            if (name === 'gamma') {
+              Assertions.assertEq('Gamma annotations must have 2 nodes', 2, nodes.length);
+            }
             assertMarker(ed, { uid, name }, nodes);
           }
 

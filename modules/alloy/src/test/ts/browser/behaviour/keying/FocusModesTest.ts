@@ -120,7 +120,5 @@ UnitTest.asynctest('Focus Modes Test', (success, failure) => {
         FocusTools.sTryOnSelector('Focus should move within container', doc, '.onFocus-button')
       ]))
     ];
-  }, () => {
-    success();
-  }, failure);
+  }, success, failure);
 });

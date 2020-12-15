@@ -237,5 +237,5 @@ UnitTest.asynctest('SplitDropdown List', (success, failure) => {
       FocusTools.sTryOnSelector('Focus should be on alpha', doc, 'li:contains("Alpha")'),
       store.sClear
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

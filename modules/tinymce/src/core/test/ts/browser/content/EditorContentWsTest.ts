@@ -17,7 +17,5 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentWsTest', (success,
       ApiChains.cAssertContent('  b  '),
       Editor.cRemove
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

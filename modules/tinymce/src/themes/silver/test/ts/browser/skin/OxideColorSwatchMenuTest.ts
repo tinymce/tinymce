@@ -139,9 +139,7 @@ UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

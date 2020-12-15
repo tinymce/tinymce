@@ -102,5 +102,5 @@ UnitTest.asynctest('MenuKeyingTest', (success, failure) => {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

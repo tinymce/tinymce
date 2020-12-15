@@ -129,5 +129,5 @@ UnitTest.asynctest('MultipleToolbarTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -33,7 +33,5 @@ UnitTest.asynctest('browser.tinymce.core.file.ConversionsTest', (success, failur
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

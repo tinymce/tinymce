@@ -75,5 +75,5 @@ UnitTest.asynctest('MakeshiftPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

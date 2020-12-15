@@ -102,7 +102,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', (success, failure) =
     LegacyUnit.strictEqual(NodeType.isTable(null), false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

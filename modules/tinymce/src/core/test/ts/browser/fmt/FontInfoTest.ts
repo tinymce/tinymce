@@ -154,7 +154,5 @@ UnitTest.asynctest('browser.tinymce.core.fmt.FontInfoTest', (success, failure) =
     LegacyUnit.equal('string', typeof actual, 'should return always string');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

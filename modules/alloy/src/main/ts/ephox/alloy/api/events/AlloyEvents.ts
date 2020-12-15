@@ -95,7 +95,9 @@ const runOnSourceName = <T extends EventFormat> (name: string): RunOnSourceName<
     key: name,
     value: EventHandler.nu({
       run: (component: AlloyComponent, simulatedEvent: SimulatedEvent<T>) => {
-        if (EventRoot.isSource(component, simulatedEvent)) { handler(component, simulatedEvent); }
+        if (EventRoot.isSource(component, simulatedEvent)) {
+          handler(component, simulatedEvent);
+        }
       }
     })
   });

@@ -184,5 +184,5 @@ UnitTest.asynctest('BasicToolbarTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -77,5 +77,5 @@ UnitTest.asynctest('HtmlSelectTest', (success, failure) => {
   Pipeline.async({}, [
     Logger.t('Scenario: no initial value', sNoInitialValue),
     Logger.t('Scenario: has initial value gamma', sHasInitialValue)
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

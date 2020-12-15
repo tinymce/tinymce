@@ -28,7 +28,9 @@ const findSpot = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, di
 };
 
 const scan = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Optional<Situs> => {
-  if (numRetries === 0) { return Optional.none(); }
+  if (numRetries === 0) {
+    return Optional.none();
+  }
   // Firstly, move the (x, y) and see what element we end up on.
   return tryCursor(bridge, isRoot, element, offset, direction).bind((situs) => {
     const range = bridge.fromSitus(situs);

@@ -58,7 +58,9 @@ const splitByPair = <E, D>(universe: Universe<E, D>, item: E, start: number, end
   universe.property().setText(item, parts[0]);
 
   // Create new text nodes for the split text sections
-  const newText = Arr.map(parts.slice(1), (text) => { return universe.create().text(text); });
+  const newText = Arr.map(parts.slice(1), (text) => {
+    return universe.create().text(text);
+  });
   const middle = newText[0];
 
   // Append new items

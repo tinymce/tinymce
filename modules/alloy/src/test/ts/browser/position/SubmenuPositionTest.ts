@@ -78,5 +78,5 @@ UnitTest.asynctest('SubmenuPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

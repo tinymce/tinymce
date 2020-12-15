@@ -257,5 +257,5 @@ UnitTest.asynctest('TabSection Test', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

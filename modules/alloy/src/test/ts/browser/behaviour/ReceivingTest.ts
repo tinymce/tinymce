@@ -51,5 +51,5 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
       gui.broadcast({ dummy: '2' });
     }),
     store.sAssertEq('After broadcast to all', [ 'received: 2' ])
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

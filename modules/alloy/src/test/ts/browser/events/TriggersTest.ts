@@ -11,7 +11,9 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
   const make = (stop: boolean, message: string) => (labEvent: EventArgs) => {
     log.push(message);
-    if (stop) { labEvent.stop(); }
+    if (stop) {
+      labEvent.stop();
+    }
   };
 
   // OK for this test, we need to start with a list of events which may or may not stop
@@ -124,5 +126,5 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
     c.type
   ));
 
-  Pipeline.async({}, steps, () => { success(); }, failure);
+  Pipeline.async({}, steps, success, failure);
 });

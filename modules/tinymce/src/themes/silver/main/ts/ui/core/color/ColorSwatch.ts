@@ -163,7 +163,9 @@ const registerTextColorButton = (editor: Editor, name: string, format: string, t
 
       editor.on('TextColorChange', handler);
 
-      return () => { editor.off('TextColorChange', handler); };
+      return () => {
+        editor.off('TextColorChange', handler);
+      };
     }
   });
 };

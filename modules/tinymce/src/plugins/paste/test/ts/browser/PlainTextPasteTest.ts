@@ -133,7 +133,5 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
       cAssertClipboardPaste(expectedWithoutRootBlock, pasteData),
       cRemoveEditor()
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

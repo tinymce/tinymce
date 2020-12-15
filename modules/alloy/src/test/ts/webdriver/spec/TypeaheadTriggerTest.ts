@@ -114,5 +114,5 @@ UnitTest.asynctest('TypeaheadTriggerTest (webdriver)', (success, failure) => {
       // Focus should still be in the typeahead.
       steps.sAssertFocusOnTypeahead('Focus after <down>')
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

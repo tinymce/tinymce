@@ -80,5 +80,5 @@ UnitTest.asynctest('SpecialKeyingFocusInTest', (success, failure) => {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

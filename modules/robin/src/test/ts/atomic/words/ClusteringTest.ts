@@ -186,7 +186,9 @@ UnitTest.test('ClusteringTest', () => {
 
   const checkProps = (universe: TestUniverse, textIds: string[], start: Gene, actual: ClusteringLangs) => {
     const checkGroup = (label: string, group: WordDecisionItem<Gene>[]) => {
-      const items = Arr.map(group, (g) => { return g.item; });
+      const items = Arr.map(group, (g) => {
+        return g.item;
+      });
       Arr.each(items, (x) => {
         Assert.eq('Checking everything in ' + label + ' has same language', LanguageZones.calculate(universe, x).getOr('none'), actual.lang.getOr('none'));
         Assert.eq(
