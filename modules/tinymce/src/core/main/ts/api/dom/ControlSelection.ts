@@ -30,6 +30,7 @@ interface ControlSelection {
 
 type ResizeHandle = [ number, number, number, number ] & { elm?: Element };
 
+// Note: Need to use a type here, as types are iterable whereas interfaces are not
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type ResizeHandles = {
   ne: ResizeHandle;
