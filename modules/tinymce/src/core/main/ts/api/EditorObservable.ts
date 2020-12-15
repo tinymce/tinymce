@@ -19,6 +19,7 @@ import Tools from './util/Tools';
  *
  * @mixin tinymce.EditorObservable
  * @extends tinymce.util.Observable
+ * @private
  */
 
 const DOM = DOMUtils.DOM;

@@ -11,6 +11,7 @@ import * as FakeStorage from './FakeStorage';
  * @class tinymce.util.LocalStorage
  * @static
  * @version 4.0
+ * @private
  * @example
  * tinymce.util.LocalStorage.setItem('key', 'value');
  * var value = tinymce.util.LocalStorage.getItem('key');

@@ -10,8 +10,8 @@
 /**
  * @property {tinymce.dom.DOMUtils} DOM Global DOM instance.
  * @property {tinymce.dom.ScriptLoader} ScriptLoader Global ScriptLoader instance.
- * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance.
- * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance.
+ * @property {tinymce.AddOnManager} PluginManager Global PluginManager instance. Instance of AddOnManager.
+ * @property {tinymce.AddOnManager} ThemeManager Global ThemeManager instance. Instance of AddOnManager.
  */
 
 /**
