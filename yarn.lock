@@ -1260,10 +1260,10 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tinymce/eslint-plugin@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-1.6.1.tgz#fc37f96f3804196e968615f10e48548f7ebb8e28"
-  integrity sha512-DFGi/Tyq+e3xR5+HSxe9/buzPRJsONVBRfh7u5cNbxyLfANOehtf+XULYioxy51mAKsMLXYDH17hgRc11BQXpA==
+"@tinymce/eslint-plugin@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-1.7.1.tgz#5e3685a6ab4e613636fd79f8126058f33ca0fe71"
+  integrity sha512-Y45sApqyWZ799CNyI+TgtrhtDT4MQ9bGd7qrZvA62YkpTqcZMNkeSKTpYwaYg0owiegAc6v3fWL7M6G6Bs7uVg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.0.0"
     "@typescript-eslint/parser" "^4.0.0"
