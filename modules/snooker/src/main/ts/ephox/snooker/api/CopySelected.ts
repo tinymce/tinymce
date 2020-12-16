@@ -1,7 +1,7 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Replication, Selectors, SugarElement, Width } from '@ephox/sugar';
-import * as ColUtils from '../util/ColUtils';
 import * as DetailsList from '../model/DetailsList';
+import * as ColUtils from '../util/ColUtils';
 import * as LayerSelector from '../util/LayerSelector';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
