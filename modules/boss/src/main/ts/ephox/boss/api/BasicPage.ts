@@ -1,13 +1,13 @@
 import { Attribute, Insert, InsertAll, SugarElement } from '@ephox/sugar';
 
-const nu = function (tag: string, id: string) {
+const nu = (tag: string, id: string) => {
   const r = SugarElement.fromTag(tag);
   Attribute.set(r, 'id', id);
   return r;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function () {
+export default () => {
 
   const container = nu('div', 'root');
 
@@ -54,7 +54,7 @@ export default function () {
   InsertAll.append(p400, [ t800, s400 ]);
   InsertAll.append(s400, [ t900, t1000 ]);
 
-  const connect = function (element: SugarElement) {
+  const connect = (element: SugarElement) => {
     Insert.append(element, container);
   };
 
@@ -86,4 +86,4 @@ export default function () {
     t900,
     t1000
   };
-}
+};

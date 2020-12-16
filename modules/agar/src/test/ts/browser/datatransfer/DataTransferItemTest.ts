@@ -12,6 +12,7 @@ UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
       const fileItem = createDataTransferItemFromFile(createDataTransfer(), createFile('a.txt', 1234, new Blob([ '123' ], { type: 'text/plain' })));
 
       Assert.eq('Should be the expected kind', 'file', fileItem.kind);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       Assert.eq('Should be a noop', Fun.noop, fileItem.getAsString);
       Assert.eq('Should be expected file', 'a.txt', fileItem.getAsFile().name);
       Assert.eq('Should be expected file', 'text/plain', fileItem.getAsFile().type);
@@ -34,7 +35,5 @@ UnitTest.asynctest('DataTransferItemTest', (success, failure) => {
         }
       });
     }))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

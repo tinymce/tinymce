@@ -10,24 +10,24 @@ import DOMUtils from '../dom/DOMUtils';
 export interface JSONPSettings {
   count?: number;
   url: string;
-  callback (json: string): void;
+  callback: (json: string) => void;
 }
 
 interface JSONP {
   callbacks: {};
   count: number;
-  send (settings: JSONPSettings): void;
+  send (this: JSONP, settings: JSONPSettings): void;
 }
 
 const JSONP: JSONP = {
   callbacks: {},
   count: 0,
 
-  send(settings: JSONPSettings) {
+  send(this: JSONP, settings: JSONPSettings) {
     const self = this, dom = DOMUtils.DOM, count = settings.count !== undefined ? settings.count : self.count;
     const id = 'tinymce_jsonp_' + count;
 
-    self.callbacks[count] = function (json) {
+    self.callbacks[count] = (json: string) => {
       dom.remove(id);
       delete self.callbacks[count];
 

@@ -10,15 +10,15 @@ import { Arr, Fun, Merger, Obj, Optional, Result } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import I18n from 'tinymce/core/api/util/I18n';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
-import * as ReadOnly from './ReadOnly';
+import I18n from 'tinymce/core/api/util/I18n';
 import * as Settings from './api/Settings';
 import * as Backstage from './backstage/Backstage';
 import * as ContextToolbar from './ContextToolbar';
 import * as Events from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
+import * as ReadOnly from './ReadOnly';
 import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer, { OuterContainerSketchSpec } from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
@@ -168,7 +168,7 @@ const setup = (editor: Editor): RenderInfo => {
       classes: [ 'tox-menubar' ]
     },
     backstage,
-    onEscape() {
+    onEscape: () => {
       editor.focus();
     }
   });
@@ -182,7 +182,7 @@ const setup = (editor: Editor): RenderInfo => {
     },
     getSink: lazySink,
     providers: backstage.shared.providers,
-    onEscape() {
+    onEscape: () => {
       editor.focus();
     },
     type: toolbarMode,
@@ -392,7 +392,7 @@ const setup = (editor: Editor): RenderInfo => {
     return parsedHeight;
   };
 
-  const renderUI = function (): ModeRenderInfo {
+  const renderUI = (): ModeRenderInfo => {
     header.setup(editor, backstage.shared, lazyHeader);
     FormatControls.setup(editor, backstage);
     SilverContextMenu.setup(editor, lazySink, backstage);

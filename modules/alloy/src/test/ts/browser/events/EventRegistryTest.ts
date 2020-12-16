@@ -63,7 +63,13 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
       purpose: f.descHandler.purpose,
       id: f.id
     })).sort((f, g) => {
-      if (f.id < g.id) { return -1; } else if (f.id > g.id) { return +1; } else { return 0; }
+      if (f.id < g.id) {
+        return -1;
+      } else if (f.id > g.id) {
+        return +1;
+      } else {
+        return 0;
+      }
     });
 
     Assertions.assertEq(() => 'filter(' + type + ') = ' + JSON.stringify(expected), expected, raw);
@@ -149,5 +155,5 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
       { handler: 'event.only(extra-args)', target: 'comp-1' },
       'event.only', 'comp-5'
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

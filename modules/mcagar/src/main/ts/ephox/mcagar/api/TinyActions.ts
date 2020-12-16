@@ -10,23 +10,23 @@ export interface TinyActions {
   sUiKeydown: <T> (code: number, modifiers?: Record<string, any>) => Step<T, T>;
 }
 
-export const TinyActions = function (editor: Editor): TinyActions {
+export const TinyActions = (editor: Editor): TinyActions => {
   const iDoc = SugarElement.fromDom(editor.getDoc());
   const uiDoc = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
 
-  const sContentKeydown = function <T> (code: number, modifiers = {}) {
+  const sContentKeydown = <T>(code: number, modifiers = {}) => {
     return Keyboard.sKeydown<T>(iDoc, code, modifiers);
   };
 
-  const sContentKeystroke = function <T> (code: number, modifiers = {}) {
+  const sContentKeystroke = <T>(code: number, modifiers = {}) => {
     return Keyboard.sKeystroke<T>(iDoc, code, modifiers);
   };
 
-  const sContentKeypress = function <T> (code: number, modifiers = {}) {
+  const sContentKeypress = <T>(code: number, modifiers = {}) => {
     return Keyboard.sKeypress<T>(iDoc, code, modifiers);
   };
 
-  const sUiKeydown = function <T> (code: number, modifiers = {}) {
+  const sUiKeydown = <T>(code: number, modifiers = {}) => {
     return Keyboard.sKeydown<T>(uiDoc, code, modifiers);
   };
 

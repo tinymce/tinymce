@@ -11,7 +11,7 @@ import Annotator from '../api/Annotator';
 import DOMUtils from '../api/dom/DOMUtils';
 import EditorSelection from '../api/dom/Selection';
 import DomSerializer, { DomSerializerSettings } from '../api/dom/Serializer';
-import { StyleSheetLoader } from '../api/dom/StyleSheetLoader';
+import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import EditorUpload from '../api/EditorUpload';
 import Env from '../api/Env';
@@ -23,6 +23,7 @@ import Schema from '../api/html/Schema';
 import * as Settings from '../api/Settings';
 import UndoManager from '../api/UndoManager';
 import Delay from '../api/util/Delay';
+import Promise from '../api/util/Promise';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
@@ -40,7 +41,6 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import Quirks from '../util/Quirks';
-import Promise from '../api/util/Promise';
 
 declare const escape: any;
 
@@ -136,7 +136,7 @@ const mkSerializerSettings = (editor: Editor): DomSerializerSettings => {
   };
 };
 
-const createParser = function (editor: Editor): DomParser {
+const createParser = (editor: Editor): DomParser => {
   const parser = DomParser(mkParserSettings(editor), editor.schema);
 
   // Convert src and href into data-mce-src, data-mce-href and data-mce-style
@@ -217,7 +217,7 @@ const createParser = function (editor: Editor): DomParser {
   return parser;
 };
 
-const autoFocus = function (editor: Editor) {
+const autoFocus = (editor: Editor) => {
   if (editor.settings.auto_focus) {
     Delay.setEditorTimeout(editor, () => {
       let focusEditor;
@@ -256,7 +256,7 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
   }
 };
 
-const initEditor = function (editor: Editor) {
+const initEditor = (editor: Editor) => {
   editor.bindPendingEventDelegates();
   editor.initialized = true;
   Events.fireInit(editor);
@@ -364,7 +364,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
   }
 };
 
-const initContentBody = function (editor: Editor, skipWrite?: boolean) {
+const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   const settings = editor.settings;
   const targetElm = editor.getElement();
   let doc = editor.getDoc();
@@ -410,6 +410,8 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
   editor.schema = Schema(settings);
   editor.dom = DOMUtils(doc, {
     keep_values: true,
+    // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     url_converter: editor.convertURL,
     url_converter_scope: editor,
     hex_colors: settings.force_hex_style_colors,
@@ -419,7 +421,7 @@ const initContentBody = function (editor: Editor, skipWrite?: boolean) {
     schema: editor.schema,
     contentCssCors: Settings.shouldUseContentCssCors(editor),
     referrerPolicy: Settings.getReferrerPolicy(editor),
-    onSetAttrib(e) {
+    onSetAttrib: (e) => {
       editor.fire('SetAttrib', e);
     }
   });

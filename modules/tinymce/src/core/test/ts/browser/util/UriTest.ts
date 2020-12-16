@@ -6,7 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const ok = function (value, label?) {
+  const ok = (value, label?) => {
     // console.log(value, label);
     return LegacyUnit.equal(value, true, label);
   };
@@ -124,6 +124,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
   });
 
   suite.test('getDocumentBaseUrl', () => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const getDocumentBaseUrl = URI.getDocumentBaseUrl;
 
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'file:', host: '', pathname: '/dir/path1/path2' }), 'file:///dir/path1/');
@@ -139,7 +140,5 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'http:', host: '[::1]:8080', pathname: '/dir/path1/path2' }), 'http://[::1]:8080/dir/path1/');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

@@ -14,7 +14,9 @@ const setup = (streamInfo: StreamingConfig, streamState: StreamingStateType) => 
 
   return (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventFormat>) => {
     throttler.throttle(component, simulatedEvent);
-    if (sInfo.stopEvent) { simulatedEvent.stop(); }
+    if (sInfo.stopEvent) {
+      simulatedEvent.stop();
+    }
   };
 };
 

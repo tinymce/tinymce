@@ -41,7 +41,9 @@ UnitTest.test('AttributeTransfer', () => {
 
     Obj.each(expectedPresent, (v, k) => {
       if (!Attribute.has(destination, k)) {
-        assert.fail('Result should have attribute: ' + k); } else { assert.eq(v, Attribute.get(destination, k));
+        assert.fail('Result should have attribute: ' + k);
+      } else {
+        assert.eq(v, Attribute.get(destination, k));
       }
     });
   };

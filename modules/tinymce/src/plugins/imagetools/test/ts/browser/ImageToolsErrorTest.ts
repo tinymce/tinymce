@@ -16,7 +16,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', (su
   ImagetoolsPlugin();
   SilverTheme();
 
-  const sAssertErrorMessage = function (html) {
+  const sAssertErrorMessage = (html) => {
     return Step.label('Check notification message', Chain.asStep(TinyDom.fromDom(document.body), [
       UiFinder.cWaitFor('Find notification', '.tox-notification__body > p'),
       Chain.label('Get notification HTML', Chain.mapper(Html.get)),

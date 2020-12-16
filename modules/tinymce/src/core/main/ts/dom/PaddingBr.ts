@@ -9,7 +9,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import { Insert, Remove, SelectorFilter, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import * as ElementType from './ElementType';
 
-const getLastChildren = function (elm) {
+const getLastChildren = (elm) => {
   const children = [];
   let rawNode = elm.dom;
 
@@ -21,7 +21,7 @@ const getLastChildren = function (elm) {
   return children;
 };
 
-const removeTrailingBr = function (elm) {
+const removeTrailingBr = (elm) => {
   const allBrs = SelectorFilter.descendants(elm, 'br');
   const brs = Arr.filter(getLastChildren(elm).slice(-1), ElementType.isBr);
   if (allBrs.length === brs.length) {
@@ -29,20 +29,20 @@ const removeTrailingBr = function (elm) {
   }
 };
 
-const fillWithPaddingBr = function (elm) {
+const fillWithPaddingBr = (elm) => {
   Remove.empty(elm);
   Insert.append(elm, SugarElement.fromHtml('<br data-mce-bogus="1">'));
 };
 
-const isPaddingContents = function (elm) {
+const isPaddingContents = (elm) => {
   return SugarNode.isText(elm) ? SugarText.get(elm) === Unicode.nbsp : ElementType.isBr(elm);
 };
 
-const isPaddedElement = function (elm) {
+const isPaddedElement = (elm) => {
   return Arr.filter(Traverse.children(elm), isPaddingContents).length === 1;
 };
 
-const trimBlockTrailingBr = function (elm) {
+const trimBlockTrailingBr = (elm) => {
   Traverse.lastChild(elm).each((lastChild) => {
     Traverse.prevSibling(lastChild).each((lastChildPrevSibling) => {
       if (ElementType.isBlock(elm) && ElementType.isBr(lastChild) && ElementType.isBlock(lastChildPrevSibling)) {

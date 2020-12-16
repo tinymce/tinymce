@@ -21,18 +21,18 @@ export interface DialogData {
   inselection: boolean;
 }
 
-const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchState>) {
+const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => {
   const dialogApi = Singleton.value<Dialog.DialogInstanceApi<DialogData>>();
   editor.undoManager.add();
 
   const selectedText = Tools.trim(editor.selection.getContent({ format: 'text' }));
 
-  function updateButtonStates(api: Dialog.DialogInstanceApi<DialogData>) {
+  const updateButtonStates = (api: Dialog.DialogInstanceApi<DialogData>) => {
     const updateNext = Actions.hasNext(editor, currentSearchState) ? api.enable : api.disable;
     updateNext('next');
     const updatePrev = Actions.hasPrev(editor, currentSearchState) ? api.enable : api.disable;
     updatePrev('prev');
-  }
+  };
 
   const updateSearchState = (api: Dialog.DialogInstanceApi<DialogData>) => {
     const data = api.getData();
@@ -46,17 +46,17 @@ const open = function (editor: Editor, currentSearchState: Cell<Actions.SearchSt
     });
   };
 
-  const disableAll = function (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean) {
+  const disableAll = (api: Dialog.DialogInstanceApi<DialogData>, disable: boolean) => {
     const buttons = [ 'replace', 'replaceall', 'prev', 'next' ];
     const toggle = disable ? api.disable : api.enable;
     Arr.each(buttons, toggle);
   };
 
-  function notFoundAlert(api: Dialog.DialogInstanceApi<DialogData>) {
+  const notFoundAlert = (api: Dialog.DialogInstanceApi<DialogData>) => {
     editor.windowManager.alert('Could not find the specified string.', () => {
       api.focus('findtext');
     });
-  }
+  };
 
   // Temporarily workaround for iOS/iPadOS dialog placement to hide the keyboard
   // TODO: Remove in 5.2 once iOS fixed positioning is fixed. See TINY-4441

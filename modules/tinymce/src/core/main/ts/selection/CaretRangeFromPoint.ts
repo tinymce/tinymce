@@ -8,11 +8,11 @@
 import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
 
-const hasCeProperty = function (node) {
+const hasCeProperty = (node) => {
   return NodeType.isContentEditableTrue(node) || NodeType.isContentEditableFalse(node);
 };
 
-const findParent = function (node, rootNode, predicate) {
+const findParent = (node, rootNode, predicate) => {
   while (node && node !== rootNode) {
     if (predicate(node)) {
       return node;
@@ -27,7 +27,7 @@ const findParent = function (node, rootNode, predicate) {
 /**
  * Finds the closest selection rect tries to get the range from that.
  */
-const findClosestIeRange = function (clientX, clientY, doc) {
+const findClosestIeRange = (clientX, clientY, doc) => {
   let rects;
 
   let element = doc.elementFromPoint(clientX, clientY);
@@ -63,12 +63,12 @@ const findClosestIeRange = function (clientX, clientY, doc) {
   return null;
 };
 
-const moveOutOfContentEditableFalse = function (rng, rootNode) {
+const moveOutOfContentEditableFalse = (rng, rootNode) => {
   const parentElement = rng && rng.parentElement ? rng.parentElement() : null;
   return NodeType.isContentEditableFalse(findParent(parentElement, rootNode, hasCeProperty)) ? null : rng;
 };
 
-const fromPoint = function (clientX: number, clientY: number, doc: Document): Range {
+const fromPoint = (clientX: number, clientY: number, doc: Document): Range => {
   let rng, point;
   const pointDoc = doc as any;
 

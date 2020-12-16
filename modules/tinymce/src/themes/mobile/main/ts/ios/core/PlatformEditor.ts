@@ -37,32 +37,32 @@ export interface PlatformEditor {
   readonly getCursorBox: () => Optional<RawRect>;
 }
 
-const getBodyFromFrame = function (frame) {
+const getBodyFromFrame = (frame) => {
   return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document.body));
 };
 
-const getDocFromFrame = function (frame) {
+const getDocFromFrame = (frame) => {
   return Optional.some(SugarElement.fromDom(frame.dom.contentWindow.document));
 };
 
-const getWinFromFrame = function (frame) {
+const getWinFromFrame = (frame) => {
   return Optional.from(frame.dom.contentWindow);
 };
 
-const getSelectionFromFrame = function (frame) {
+const getSelectionFromFrame = (frame) => {
   const optWin = getWinFromFrame(frame);
   return optWin.bind(WindowSelection.getExact);
 };
 
-const getFrame = function (editor) {
+const getFrame = (editor) => {
   return editor.getFrame();
 };
 
-const getOrDerive = function (name, f) {
-  return function (editor) {
+const getOrDerive = (name, f) => {
+  return (editor) => {
     const g = editor[name].getOrThunk(() => {
       const frame = getFrame(editor);
-      return function () {
+      return () => {
         return f(frame);
       };
     });
@@ -71,25 +71,25 @@ const getOrDerive = function (name, f) {
   };
 };
 
-const getOrListen = function (editor, doc, name, type: string) {
+const getOrListen = (editor, doc, name, type: string) => {
   return editor[name].getOrThunk(() => {
-    return function (handler) {
+    return (handler) => {
       return DomEvent.bind(doc, type, handler);
     };
   });
 };
 
-const getActiveApi = function (editor): Optional<PlatformEditor> {
+const getActiveApi = (editor): Optional<PlatformEditor> => {
   const frame = getFrame(editor);
 
   // Empty paragraphs can have no rectangle size, so let's just use the start container
   // if it is collapsed;
-  const tryFallbackBox = function (win: Window) {
-    const isCollapsed = function (sel: SimRange) {
+  const tryFallbackBox = (win: Window) => {
+    const isCollapsed = (sel: SimRange) => {
       return Compare.eq(sel.start, sel.finish) && sel.soffset === sel.foffset;
     };
 
-    const toStartRect = function (sel): Optional<RawRect> {
+    const toStartRect = (sel): Optional<RawRect> => {
       const rect = sel.start.dom.getBoundingClientRect();
       return rect.width > 0 || rect.height > 0 ? Optional.some(rect) : Optional.none();
     };
@@ -104,7 +104,7 @@ const getActiveApi = function (editor): Optional<PlatformEditor> {
         const html = SugarElement.fromDom(doc.dom.documentElement);
 
         const getCursorBox: () => Optional<RawRect> = editor.getCursorBox.getOrThunk(() => {
-          return function () {
+          return () => {
             return WindowSelection.get(win).bind((sel) => {
               return WindowSelection.getFirstRect(win, sel).orThunk(() => {
                 return tryFallbackBox(win);
@@ -114,13 +114,13 @@ const getActiveApi = function (editor): Optional<PlatformEditor> {
         });
 
         const setSelection = editor.setSelection.getOrThunk(() => {
-          return function (start, soffset, finish, foffset) {
+          return (start, soffset, finish, foffset) => {
             WindowSelection.setExact(win, start, soffset, finish, foffset);
           };
         });
 
         const clearSelection = editor.clearSelection.getOrThunk(() => {
-          return function () {
+          return () => {
             WindowSelection.clear(win);
           };
         });

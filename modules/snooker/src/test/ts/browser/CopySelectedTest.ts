@@ -15,13 +15,13 @@ UnitTest.test('CopySelectedTest', () => {
   const SEL_CLASS = 'copy-selected';
 
   // traverse really needs this built in
-  const traverseChildElements = function (e: SugarElement) {
+  const traverseChildElements = (e: SugarElement) => {
     return Arr.map(e.dom.children, SugarElement.fromDom);
   };
 
   // data objects for input/expected
-  const data = function (selected: boolean) {
-    return function (text: string, rowspan?: number, colspan?: number): TestData {
+  const data = (selected: boolean) => {
+    return (text: string, rowspan?: number, colspan?: number): TestData => {
       return {
         selected,
         html: text,
@@ -32,7 +32,7 @@ UnitTest.test('CopySelectedTest', () => {
   };
   const s = data(true);
   const ns = data(false);
-  const gen = function (): TestData {
+  const gen = (): TestData => {
     return {
       selected: false,
       html: '<br>'
@@ -40,7 +40,7 @@ UnitTest.test('CopySelectedTest', () => {
   };
 
   // generate a table structure from a nested array
-  const generateInput = function (input: TestData[][]) {
+  const generateInput = (input: TestData[][]) => {
     const table = SugarElement.fromTag('table');
     const rows = Arr.map(input, (row) => {
       const cells = Arr.map(row, (cell) => {
@@ -68,13 +68,13 @@ UnitTest.test('CopySelectedTest', () => {
     return table;
   };
 
-  const check = function (label: string, expected: TestData[][], input: TestData[][]) {
+  const check = (label: string, expected: TestData[][], input: TestData[][]) => {
     const table = generateInput(input);
 
     const replica = CopySelected.extract(table, '.' + SEL_CLASS);
 
-    // Now verify that the replica table matches the nested array structure of expected
-    const assertWithInfo = function <T> (exp: T, actual: T, info: string) {
+    // Now verify that the table matches the nested array structure of expected
+    const assertWithInfo = <T> (exp: T, actual: T, info: string) => {
       assert.eq(exp, actual, () => 'expected ' + info + ' "' + exp + '", was "' + actual + '"' + ', test "' + label + '". Output HTML:\n' + Html.getOuter(replica));
     };
 

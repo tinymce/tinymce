@@ -1,6 +1,6 @@
 declare let tinymce: any;
 
-export default function () {
+export default () => {
   const textarea = document.createElement('textarea');
   textarea.innerHTML = '<p>Bolt</p>';
 
@@ -16,10 +16,10 @@ export default function () {
     // images_upload_base_path: 'base/path',
     // images_upload_credentials: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
-    setup(ed) {
+    setup: (ed) => {
       ed.ui.registry.addButton('demoButton', {
         text: 'Demo',
-        onAction() {
+        onAction: () => {
           ed.insertContent('Hello world!');
         }
       });
@@ -29,4 +29,4 @@ export default function () {
     toolbar1: 'demoButton bold italic',
     menubar: false
   });
-}
+};

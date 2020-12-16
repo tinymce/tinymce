@@ -10,10 +10,10 @@ import * as Commands from './api/Commands';
 import * as FilterContent from './core/FilterContent';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('toc', (editor) => {
     Commands.register(editor);
     Buttons.register(editor);
     FilterContent.setup(editor);
   });
-}
+};

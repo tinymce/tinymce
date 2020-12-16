@@ -25,7 +25,7 @@ const buildFromSpec = (userSpec: SimpleOrSketchSpec): Result<AlloyComponent, str
 
   const completeSpec = {
     ...spec,
-    events:  { ...DefaultEvents, ...specEvents },
+    events: { ...DefaultEvents, ...specEvents },
     components
   };
 

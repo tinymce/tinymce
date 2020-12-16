@@ -8,7 +8,7 @@
 import { Id } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
-const createTableHtml = function (cols: number, rows: number) {
+const createTableHtml = (cols: number, rows: number) => {
   let x, y, html;
 
   html = '<table data-mce-id="mce" style="width: 100%">';
@@ -30,7 +30,7 @@ const createTableHtml = function (cols: number, rows: number) {
   return html;
 };
 
-const getInsertedElement = function (editor: Editor) {
+const getInsertedElement = (editor: Editor) => {
   const elms = editor.dom.select('*[data-mce-id]');
   return elms[0];
 };
@@ -46,11 +46,11 @@ const insertTableHtml = (editor: Editor, cols: number, rows: number) => {
   });
 };
 
-const insertTable = function (editor: Editor, cols: number, rows: number) {
+const insertTable = (editor: Editor, cols: number, rows: number) => {
   editor.plugins.table ? editor.plugins.table.insertTable(cols, rows) : insertTableHtml(editor, cols, rows);
 };
 
-const insertBlob = function (editor: Editor, base64: string, blob: Blob) {
+const insertBlob = (editor: Editor, base64: string, blob: Blob) => {
   const blobCache = editor.editorUpload.blobCache;
   const blobInfo = blobCache.create(Id.generate('mceu'), blob, base64);
   blobCache.add(blobInfo);

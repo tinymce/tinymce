@@ -12,9 +12,9 @@ UnitTest.test('DomExtractTest', () => {
 
   const optimise = Fun.never;
 
-  (function () {
+  (() => {
     // Test extractTo
-    const check = function (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number, predicate: (e: SugarElement) => boolean) {
+    const check = (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number, predicate: (e: SugarElement) => boolean) => {
       const actual = DomExtract.extractTo(cNode, cOffset, predicate, optimise);
       Assert.eq('eq', true, Compare.eq(eNode, actual.element));
       Assert.eq('eq', eOffset, actual.offset);
@@ -25,15 +25,15 @@ UnitTest.test('DomExtractTest', () => {
     });
   })();
 
-  (function () {
+  (() => {
     // Test find.
-    const check = function (eNode: SugarElement, eOffset: number, pNode: SugarElement, pOffset: number) {
+    const check = (eNode: SugarElement, eOffset: number, pNode: SugarElement, pOffset: number) => {
       const actual = DomExtract.find(pNode, pOffset, optimise).getOrDie();
       Assert.eq('eq', true, Compare.eq(eNode, actual.element));
       Assert.eq('eq', eOffset, actual.offset);
     };
 
-    const checkNone = function (pNode: SugarElement, pOffset: number) {
+    const checkNone = (pNode: SugarElement, pOffset: number) => {
       KAssert.eqNone('eq', DomExtract.find(pNode, pOffset, optimise));
     };
 
@@ -45,9 +45,9 @@ UnitTest.test('DomExtractTest', () => {
     checkNone(page.p1, 16);
   })();
 
-  (function () {
+  (() => {
     // Test extract
-    const check = function (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number) {
+    const check = (eNode: SugarElement, eOffset: number, cNode: SugarElement, cOffset: number) => {
       const actual = DomExtract.extract(cNode, cOffset, optimise);
       Assert.eq('eq', true, Compare.eq(eNode, actual.element));
       Assert.eq('eq', eOffset, actual.offset);
@@ -59,9 +59,9 @@ UnitTest.test('DomExtractTest', () => {
     check(page.s3, 0, page.t5, 0);
   })();
 
-  (function () {
+  (() => {
     // Test from
-    const check = function (expected: string, input: SugarElement) {
+    const check = (expected: string, input: SugarElement) => {
       const rawActual = DomExtract.from(input, optimise);
       const actual = Arr.map(rawActual, (x) => {
         return x.fold(() => {

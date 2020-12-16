@@ -45,7 +45,7 @@ const getEditableImage = (editor: Editor, node: Node): Optional<HTMLImageElement
   }
 };
 
-const displayError = function (editor: Editor, error: string) {
+const displayError = (editor: Editor, error: string) => {
   editor.notificationManager.open({
     text: error,
     type: 'error'
@@ -64,26 +64,26 @@ const getSelectedImage = (editor: Editor): Optional<SugarElement<HTMLImageElemen
   }
 };
 
-const extractFilename = function (editor: Editor, url: string, group: FileExtractType) {
+const extractFilename = (editor: Editor, url: string, group: FileExtractType) => {
   const m = url.match(/(?:\/|^)(([^\/\?]+)\.(?:[a-z0-9.]+))(?:\?|$)/i);
   return Type.isNonNullable(m) ? editor.dom.encode(m[group]) : null;
 };
 
-const createId = function () {
+const createId = () => {
   return 'imagetools' + count++;
 };
 
-const isLocalImage = function (editor: Editor, img: HTMLImageElement) {
+const isLocalImage = (editor: Editor, img: HTMLImageElement) => {
   const url = img.src;
 
   return url.indexOf('data:') === 0 || url.indexOf('blob:') === 0 || new URI(url).host === editor.documentBaseURI.host;
 };
 
-const isCorsImage = function (editor: Editor, img: HTMLImageElement) {
+const isCorsImage = (editor: Editor, img: HTMLImageElement) => {
   return Tools.inArray(Settings.getCorsHosts(editor), new URI(img.src).host) !== -1;
 };
 
-const isCorsWithCredentialsImage = function (editor: Editor, img: HTMLImageElement) {
+const isCorsWithCredentialsImage = (editor: Editor, img: HTMLImageElement) => {
   return Tools.inArray(Settings.getCredentialsHosts(editor), new URI(img.src).host) !== -1;
 };
 
@@ -107,7 +107,7 @@ const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Se
   (customFetchImage) => customFetchImage(img)
 );
 
-const findBlob = function (editor: Editor, img: HTMLImageElement): Promise<Blob> {
+const findBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => {
   const blobInfo = editor.editorUpload.blobCache.getByUri(img.src);
   if (blobInfo) {
     return Promise.resolve(blobInfo.blob());
@@ -116,7 +116,7 @@ const findBlob = function (editor: Editor, img: HTMLImageElement): Promise<Blob>
   return imageToBlob(editor, img);
 };
 
-const startTimedUpload = function (editor: Editor, imageUploadTimerState: Cell<number>) {
+const startTimedUpload = (editor: Editor, imageUploadTimerState: Cell<number>) => {
   const imageUploadTimer = Delay.setEditorTimeout(editor, () => {
     editor.editorUpload.uploadImagesAuto();
   }, Settings.getUploadTimeout(editor));
@@ -124,12 +124,12 @@ const startTimedUpload = function (editor: Editor, imageUploadTimerState: Cell<n
   imageUploadTimerState.set(imageUploadTimer);
 };
 
-const cancelTimedUpload = function (imageUploadTimerState: Cell<number>) {
+const cancelTimedUpload = (imageUploadTimerState: Cell<number>) => {
   Delay.clearTimeout(imageUploadTimerState.get());
 };
 
-const updateSelectedImage = function (editor: Editor, origBlob: Blob, ir: ImageResult, uploadImmediately: boolean, imageUploadTimerState: Cell<number>,
-                                      selectedImage: HTMLImageElement, size?: ImageSize.ImageSize) {
+const updateSelectedImage = (editor: Editor, origBlob: Blob, ir: ImageResult, uploadImmediately: boolean, imageUploadTimerState: Cell<number>,
+                             selectedImage: HTMLImageElement, size?: ImageSize.ImageSize) => {
   return ir.toBlob().then((blob) => {
     let uri: string, name: string, filename: string, blobInfo: BlobInfo;
 
@@ -164,7 +164,7 @@ const updateSelectedImage = function (editor: Editor, origBlob: Blob, ir: ImageR
     blobCache.add(blobInfo);
 
     editor.undoManager.transact(() => {
-      function imageLoadedHandler() {
+      const imageLoadedHandler = () => {
         editor.$(selectedImage).off('load', imageLoadedHandler);
         editor.nodeChanged();
 
@@ -174,7 +174,7 @@ const updateSelectedImage = function (editor: Editor, origBlob: Blob, ir: ImageR
           cancelTimedUpload(imageUploadTimerState);
           startTimedUpload(editor, imageUploadTimerState);
         }
-      }
+      };
 
       editor.$(selectedImage).on('load', imageLoadedHandler);
       if (size) {
@@ -193,8 +193,8 @@ const updateSelectedImage = function (editor: Editor, origBlob: Blob, ir: ImageR
   });
 };
 
-const selectedImageOperation = function (editor: Editor, imageUploadTimerState: Cell<number>, fn: (ir: ImageResult) => Promise<ImageResult>, size?: ImageSize.ImageSize) {
-  return function () {
+const selectedImageOperation = (editor: Editor, imageUploadTimerState: Cell<number>, fn: (ir: ImageResult) => Promise<ImageResult>, size?: ImageSize.ImageSize) => {
+  return () => {
     const imgOpt = getSelectedImage(editor);
     return imgOpt.fold(() => {
       displayError(editor, 'Could not find selected image');
@@ -212,8 +212,8 @@ const selectedImageOperation = function (editor: Editor, imageUploadTimerState: 
   };
 };
 
-const rotate = function (editor: Editor, imageUploadTimerState: Cell<number>, angle: number) {
-  return function () {
+const rotate = (editor: Editor, imageUploadTimerState: Cell<number>, angle: number) => {
+  return () => {
     const imgOpt = getSelectedImage(editor);
     const flippedSize = imgOpt.fold(() => null, (img) => {
       const size = ImageSize.getImageSize(img.dom);
@@ -226,15 +226,15 @@ const rotate = function (editor: Editor, imageUploadTimerState: Cell<number>, an
   };
 };
 
-const flip = function (editor: Editor, imageUploadTimerState: Cell<number>, axis: 'v' | 'h') {
-  return function () {
+const flip = (editor: Editor, imageUploadTimerState: Cell<number>, axis: 'v' | 'h') => {
+  return () => {
     return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.flip(imageResult, axis);
     })();
   };
 };
 
-const handleDialogBlob = function (editor: Editor, imageUploadTimerState: Cell<number>, img: HTMLImageElement, originalSize: ImageSize.ImageSize, blob: Blob) {
+const handleDialogBlob = (editor: Editor, imageUploadTimerState: Cell<number>, img: HTMLImageElement, originalSize: ImageSize.ImageSize, blob: Blob) => {
   return BlobConversions.blobToImage(blob)
     .then((newImage) => {
       const newSize = ImageSize.getNaturalImageSize(newImage);

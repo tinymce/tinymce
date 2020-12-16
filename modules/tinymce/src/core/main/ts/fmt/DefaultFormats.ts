@@ -10,7 +10,7 @@ import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
 import { Formats, FormatVars } from './FormatTypes';
 
-const get = function (dom: DOMUtils) {
+const get = (dom: DOMUtils) => {
   const formats: Formats = {
     valigntop: [
       { selector: 'td,th', styles: { verticalAlign: 'top' }}
@@ -164,11 +164,11 @@ const get = function (dom: DOMUtils) {
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
-      onmatch(node, _fmt, _itemName) {
+      onmatch: (node, _fmt, _itemName) => {
         return NodeType.isElement(node) && node.hasAttribute('href');
       },
 
-      onformat(elm, _fmt, vars?: FormatVars) {
+      onformat: (elm, _fmt, vars?: FormatVars) => {
         Tools.each(vars, (value, key) => {
           dom.setAttrib(elm, key, value);
         });

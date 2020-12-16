@@ -7,8 +7,8 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', (success, failure) => {
   Theme();
 
-  const sTestDeleteOrBackspaceKey = function (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) {
-    return function (setupHtml: string, setupPath: number[], setupOffset: number, expectedHtml: string, expectedPath: number[], expectedOffset: number) {
+  const sTestDeleteOrBackspaceKey = (editor: Editor, tinyApis: TinyApis, tinyActions: TinyActions, key: number) => {
+    return (setupHtml: string, setupPath: number[], setupOffset: number, expectedHtml: string, expectedPath: number[], expectedOffset: number) => {
       return GeneralSteps.sequence([
         tinyApis.sSetContent(setupHtml),
         tinyApis.sSetCursor(setupPath, setupOffset),
@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeindentTest', (success, failure
     };
   };
 
-  const sNormalizeBody = function (editor: Editor) {
+  const sNormalizeBody = (editor: Editor) => {
     return Step.sync(() => {
       editor.getBody().normalize();
     });

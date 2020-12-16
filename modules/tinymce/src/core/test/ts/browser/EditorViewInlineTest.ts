@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', (success, failur
 
   const hiddenScrollbar = Scroll.scrollBarWidth() === 0;
 
-  const sSetBodyStyles = function (editor, css) {
+  const sSetBodyStyles = (editor, css) => {
     return Step.label(
       'sSetBodyStyles ' + JSON.stringify(css),
       Step.sync(() => {
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewInlineTest', (success, failur
     );
   };
 
-  const sTestIsXYInContentArea = function (editor, deltaX, deltaY) {
+  const sTestIsXYInContentArea = (editor, deltaX, deltaY) => {
     const dx1 = -25 - deltaX;
     const dy1 = -25 - deltaY;
     const dx2 = -5 - deltaX;

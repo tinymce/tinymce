@@ -12,7 +12,7 @@ export interface Adt {
  * Generates a church encoded ADT (https://en.wikipedia.org/wiki/Church_encoding)
  * For syntax and use, look at the test code.
  */
-const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: { [key: string]: string[] }[]): T {
+const generate = <T = Record<string, (...data: any[]) => Adt>> (cases: { [key: string]: string[] }[]): T => {
   // validation
   if (!Type.isArray(cases)) {
     throw new Error('cases must be an array');
@@ -50,21 +50,15 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
     //
     // constructor for key
     //
-    adt[key] = function (): Adt {
-      const argLength = arguments.length;
+    adt[key] = (...args: any[]): Adt => {
+      const argLength = args.length;
 
       // validation
       if (argLength !== value.length) {
         throw new Error('Wrong number of arguments to case ' + key + '. Expected ' + value.length + ' (' + value + '), got ' + argLength);
       }
 
-      // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-      const args = new Array(argLength);
-      for (let i = 0; i < args.length; i++) {
-        args[i] = arguments[i];
-      }
-
-      const match = function (branches: { [branch: string]: Function }) {
+      const match = (branches: { [branch: string]: Function }) => {
         const branchKeys: string[] = Obj.keys(branches);
         if (constructors.length !== branchKeys.length) {
           throw new Error('Wrong number of arguments to match. Expected: ' + constructors.join(',') + '\nActual: ' + branchKeys.join(','));
@@ -85,18 +79,18 @@ const generate = function <T = Record<string, (...data: any[]) => Adt>> (cases: 
       // the fold function for key
       //
       return {
-        fold(/* arguments */) {
+        fold: (...foldArgs: any[]) => {
           // runtime validation
-          if (arguments.length !== cases.length) {
-            throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + arguments.length);
+          if (foldArgs.length !== cases.length) {
+            throw new Error('Wrong number of arguments to fold. Expected ' + cases.length + ', got ' + foldArgs.length);
           }
-          const target = arguments[count];
+          const target = foldArgs[count];
           return target.apply(null, args);
         },
         match,
 
         // NOTE: Only for debugging.
-        log(label) {
+        log: (label) => {
           // eslint-disable-next-line no-console
           console.log(label, {
             constructors,

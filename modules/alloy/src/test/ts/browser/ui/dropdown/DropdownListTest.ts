@@ -55,7 +55,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           ])
         ]),
 
-        lazySink(c) {
+        lazySink: (c) => {
           TestDropdownMenu.assertLazySinkArgs('button', 'test-dropdown', c);
           return Result.value(memSink.get(c));
         },
@@ -78,7 +78,7 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
           menu: TestDropdownMenu.part(store)
         },
 
-        fetch() {
+        fetch: () => {
           const future = Future.pure([
             { type: 'item', data: { value: 'alpha', meta: { text: 'Alpha' }}},
             { type: 'item', data: { value: 'beta', meta: { text: 'Beta' }}},
@@ -327,5 +327,5 @@ UnitTest.asynctest('Dropdown List', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', (success, fai
   let beforeOpenEvents = [];
   let openEvents = [];
 
-  const teardown = function (editor: Editor) {
+  const teardown = (editor: Editor) => {
     const notifications = [].concat(editor.notificationManager.getNotifications());
 
     Tools.each(notifications, (notification) => {
@@ -94,7 +94,7 @@ UnitTest.asynctest('browser.tinymce.core.NotificationManagerTest', (success, fai
 
   suite.asyncTest('TestCase-TBA: Should add duplicate timeout messages', (editor, done) => {
 
-    const checkClosed = function () {
+    const checkClosed = () => {
       if (notifications.length === 0) {
         done();
         teardown(editor);

@@ -47,7 +47,7 @@ export interface MenubarItemSpec {
   getItems: () => Menu.NestedMenuItemContents[];
 }
 
-const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = function (detail, spec) {
+const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = (detail, spec) => {
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
       const buttonSpec: Toolbar.ToolbarMenuButtonSpec = {
@@ -148,10 +148,10 @@ export default Sketcher.single<SilverMenubarSpec, SilverMenubarDetail, SilverMen
     FieldSchema.defaulted('onSetup', Fun.noop)
   ],
   apis: {
-    focus(apis, comp) {
+    focus: (apis, comp) => {
       apis.focus(comp);
     },
-    setMenus(apis, comp, menus) {
+    setMenus: (apis, comp, menus) => {
       apis.setMenus(comp, menus);
     }
   }

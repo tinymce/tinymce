@@ -7,7 +7,7 @@ UnitTest.test('words :: Identify', () => {
   const none = Optional.none<string>();
   const some = Optional.some;
 
-  const check = function (expected: WordScope[], input: string) {
+  const check = (expected: WordScope[], input: string) => {
     const actual = Identify.words(input);
     assert.eq(expected.length, actual.length);
     Arr.map(expected, (x, i) => {
@@ -17,9 +17,11 @@ UnitTest.test('words :: Identify', () => {
     });
   };
 
-  const checkWords = function (expected: string[], input: string) {
+  const checkWords = (expected: string[], input: string) => {
     const actual = Identify.words(input);
-    assert.eq(expected, Arr.map(actual, (a) => { return a.word; }));
+    assert.eq(expected, Arr.map(actual, (a) => {
+      return a.word;
+    }));
   };
 
   check([], '');

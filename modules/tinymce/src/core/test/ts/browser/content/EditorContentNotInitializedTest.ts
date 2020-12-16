@@ -84,7 +84,5 @@ UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest
       cGetAndAssertContent(new AstNode('body', 11), true),
       McEditor.cRemove
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

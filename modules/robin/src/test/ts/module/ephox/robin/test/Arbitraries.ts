@@ -20,17 +20,19 @@ export interface ArbRangeIds {
   readonly ids: string[];
 }
 
-const getIds = function (item: Gene, predicate: (g: Gene) => boolean): string[] {
-  const rest = Arr.bind(item.children || [], (id) => { return getIds(id, predicate); });
+const getIds = (item: Gene, predicate: (g: Gene) => boolean): string[] => {
+  const rest = Arr.bind(item.children || [], (id) => {
+    return getIds(id, predicate);
+  });
   const self = predicate(item) && item.id !== 'root' ? [ item.id ] : [];
   return self.concat(rest);
 };
 
-const textIds = function (universe: TestUniverse) {
+const textIds = (universe: TestUniverse) => {
   return getIds(universe.get(), universe.property().isText);
 };
 
-const arbTextIds = function (universe: TestUniverse) {
+const arbTextIds = (universe: TestUniverse) => {
   const ids = textIds(universe);
   return Jsc.elements(textIds(universe)).smap((id: string): ArbTextIds => {
     return {
@@ -42,7 +44,7 @@ const arbTextIds = function (universe: TestUniverse) {
   });
 };
 
-const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
+const arbIds = (universe: TestUniverse, predicate: (g: Gene) => boolean) => {
   const ids = getIds(universe.get(), predicate);
 
   return Jsc.elements(ids).smap((id: string): ArbIds => {
@@ -57,7 +59,7 @@ const arbIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean
   });
 };
 
-const arbRangeIds = function (universe: TestUniverse, predicate: (g: Gene) => boolean) {
+const arbRangeIds = (universe: TestUniverse, predicate: (g: Gene) => boolean) => {
   const ids = getIds(universe.get(), predicate);
 
   const generator = Jsc.integer(0, ids.length - 1).generator.flatMap((startIndex: number) => {

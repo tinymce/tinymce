@@ -172,7 +172,9 @@ const pasteImage = (editor: Editor, imageItem: FileResult) => {
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
-const isDataTransferItem = (item: DataTransferItem | File): item is DataTransferItem => Type.isNonNullable((item as DataTransferItem).getAsFile);
+const isDataTransferItem = (item: DataTransferItem | File): item is DataTransferItem =>
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  Type.isNonNullable((item as DataTransferItem).getAsFile);
 
 const readFilesAsDataUris = (items: Array<File | DataTransferItem>) => Promise.all(Arr.map(items, (item) => new Promise<FileResult>((resolve) => {
   const blob = isDataTransferItem(item) ? item.getAsFile() : item;
@@ -302,7 +304,7 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     }
   });
 
-  function insertClipboardContent(editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) {
+  const insertClipboardContent = (editor: Editor, clipboardContent: ClipboardContents, isKeyBoardPaste: boolean, plainTextMode: boolean, internal: boolean) => {
     let content;
 
     // Grab HTML from Clipboard API or paste bin as a fallback
@@ -358,9 +360,9 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
     } else {
       pasteHtml(editor, content, internal);
     }
-  }
+  };
 
-  const getLastRng = function () {
+  const getLastRng = () => {
     return pasteBin.getLastRng() || editor.selection.getRng();
   };
 

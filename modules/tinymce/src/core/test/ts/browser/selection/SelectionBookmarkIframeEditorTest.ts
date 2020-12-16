@@ -25,12 +25,12 @@ UnitTest.asynctest(
       document.body.appendChild(div);
     });
 
-    const focusDiv = function () {
+    const focusDiv = () => {
       const input: any = document.querySelector('#' + testDivId);
       input.focus();
     };
 
-    const setSelection = function (editor, start, soffset, finish, foffset) {
+    const setSelection = (editor, start, soffset, finish, foffset) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
 
@@ -41,9 +41,9 @@ UnitTest.asynctest(
       editor.selection.setRng(rng);
     };
 
-    const assertPath = function (label, root, expPath, expOffset, actElement, actOffset) {
+    const assertPath = (label, root, expPath, expOffset, actElement, actOffset) => {
       const expected = Cursors.calculateOne(root, expPath);
-      const message = function () {
+      const message = () => {
         const actual = SugarElement.fromDom(actElement);
         const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
@@ -52,7 +52,7 @@ UnitTest.asynctest(
       Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
     };
 
-    const assertSelection = function (editor, startPath, soffset, finishPath, foffset) {
+    const assertSelection = (editor, startPath, soffset, finishPath, foffset) => {
       const actual = editor.selection.getRng();
       const root = SugarElement.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
@@ -116,8 +116,6 @@ UnitTest.asynctest(
       plugins: '',
       toolbar: '',
       base_url: '/project/tinymce/js/tinymce'
-    }, () => {
-      success();
-    }, failure);
+    }, success, failure);
   }
 );

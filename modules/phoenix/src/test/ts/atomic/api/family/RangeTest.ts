@@ -37,11 +37,13 @@ UnitTest.test('RangeTest', () => {
     ])
   );
 
-  const check = function (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) {
+  const check = (expected: string[], startId: string, finishId: string, delta1: number, delta2: number) => {
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
     const actual = Family.range(doc, start, delta1, finish, delta2);
-    assert.eq(expected, Arr.map(actual, (x) => { return x.id; }));
+    assert.eq(expected, Arr.map(actual, (x) => {
+      return x.id;
+    }));
   };
 
   check([ 'a' ], 'a', 'a', 0, 0); // This doesn't check that it is a text node. Is that a problem?

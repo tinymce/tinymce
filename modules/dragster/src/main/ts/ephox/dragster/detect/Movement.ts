@@ -17,21 +17,21 @@ export const Movement = (): Movement => {
   const inDragState = InDrag();
   let dragState: DragState = noDragState;
 
-  const on = function () {
+  const on = () => {
     dragState.reset();
     dragState = inDragState;
   };
 
-  const off = function () {
+  const off = () => {
     dragState.reset();
     dragState = noDragState;
   };
 
-  const onEvent = function (event: EventArgs, mode: DragMode) {
+  const onEvent = (event: EventArgs, mode: DragMode) => {
     dragState.onEvent(event, mode);
   };
 
-  const isOn = function () {
+  const isOn = () => {
     return dragState === inDragState;
   };
 

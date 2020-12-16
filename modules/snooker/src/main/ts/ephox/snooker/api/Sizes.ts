@@ -11,7 +11,7 @@ import { Warehouse } from './Warehouse';
 
 type BarPositions<A> = BarPositions.BarPositions<A>;
 
-const redistributeToW = function (newWidths: string[], cells: DetailExt[], unit: string): void {
+const redistributeToW = (newWidths: string[], cells: DetailExt[], unit: string): void => {
   Arr.each(cells, (cell) => {
     const widths = newWidths.slice(cell.column, cell.colspan + cell.column);
     const w = Redistribution.sum(widths, CellUtils.minWidth());
@@ -26,7 +26,7 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
   });
 };
 
-const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void {
+const redistributeToH = <T> (newHeights: string[], rows: RowData<T>[], cells: DetailExt[], unit: string): void => {
   Arr.each(cells, (cell) => {
     const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
     const h = Redistribution.sum(heights, CellUtils.minHeight());
@@ -38,7 +38,7 @@ const redistributeToH = function <T> (newHeights: string[], rows: RowData<T>[], 
   });
 };
 
-const getUnit = function (newSize: string): 'px' | '%' {
+const getUnit = (newSize: string): 'px' | '%' => {
   return Redistribution.validate(newSize).fold(Fun.constant('px'), Fun.constant('px'), Fun.constant('%'));
 };
 

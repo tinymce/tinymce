@@ -12,7 +12,9 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 UnitTest.asynctest('SlidingTest', (success, failure) => {
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
 
   const slidingStyles = [
     '.test-sliding-closed { visibility: hidden; opacity: 0; }',
@@ -242,5 +244,5 @@ UnitTest.asynctest('SlidingTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

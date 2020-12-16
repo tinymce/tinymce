@@ -7,13 +7,13 @@ UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', (success, failu
 
   const sTestEvaluateUntil = Step.sync(() => {
     const operations = [
-      function (a, b) {
+      (a, b) => {
         return a === 1 && b === 'a' ? Optional.some(1) : Optional.none();
       },
-      function (a, b) {
+      (a, b) => {
         return a === 2 && b === 'b' ? Optional.some(2) : Optional.none();
       },
-      function (a, b) {
+      (a, b) => {
         return a === 3 && b === 'c' ? Optional.some(3) : Optional.none();
       }
     ];
@@ -26,7 +26,5 @@ UnitTest.asynctest('atomic.tinymce.core.util.LazyEvaluatorTest', (success, failu
 
   Pipeline.async({}, [
     sTestEvaluateUntil
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

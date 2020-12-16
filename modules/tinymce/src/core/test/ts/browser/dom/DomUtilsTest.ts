@@ -12,7 +12,7 @@ UnitTest.test('browser.tinymce.core.dom.DOMUtils.parseStyle', () => {
   DOM.add(document.body, 'div', { id: 'test' });
 
   const dom = DOMUtils(document, {
-    hex_colors: true, keep_values: true, url_converter(u) {
+    hex_colors: true, keep_values: true, url_converter: (u) => {
       return 'X' + u + 'Y';
     }
   });
@@ -244,7 +244,7 @@ UnitTest.test('browser.tinymce.core.dom.DOMUtils.setGetAttrib', () => {
   Assert.eq('', 'abc', DOM.getAttrib('test', 'title'));
 
   const dom = DOMUtils(document, {
-    keep_values: true, url_converter(u, n) {
+    keep_values: true, url_converter: (u, n) => {
       return '&<>"' + u + '&<>"' + n;
     }
   });

@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
   '</tbody>' +
   '</table>';
 
-  const cOnSelector = function (selector: string) {
+  const cOnSelector = (selector: string) => {
     return Chain.control(
       Chain.async((_, next) => {
         EditorManager.init({
@@ -34,7 +34,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
           plugins: 'table',
           skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
           content_css: '/project/tinymce/js/tinymce/skins/content/default',
-          setup(editor) {
+          setup: (editor) => {
             editor.on('SkinLoaded', () => {
               Delay.setTimeout(() => {
                 next(editor);

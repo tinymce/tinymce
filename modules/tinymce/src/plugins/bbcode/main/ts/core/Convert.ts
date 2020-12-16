@@ -7,10 +7,10 @@
 
 import Tools from 'tinymce/core/api/util/Tools';
 
-const html2bbcode = function (s) {
+const html2bbcode = (s) => {
   s = Tools.trim(s);
 
-  const rep = function (re, str) {
+  const rep = (re, str) => {
     s = s.replace(re, str);
   };
 
@@ -56,10 +56,10 @@ const html2bbcode = function (s) {
   return s;
 };
 
-const bbcode2html = function (s) {
+const bbcode2html = (s) => {
   s = Tools.trim(s);
 
-  const rep = function (re, str) {
+  const rep = (re, str) => {
     s = s.replace(re, str);
   };
 

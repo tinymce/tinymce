@@ -4,7 +4,7 @@ import { Attribute, Class, Css, Insert, Remove, SelectorFind, SugarElement } fro
 
 const styleClass = Id.generate('ui-test-styles');
 
-const addStyles = function () {
+const addStyles = () => {
   const link = SugarElement.fromTag('link');
   Attribute.setAll(link, {
     rel: 'Stylesheet',
@@ -17,12 +17,12 @@ const addStyles = function () {
   Insert.append(head, link);
 };
 
-const removeStyles = function () {
+const removeStyles = () => {
   const head = SugarElement.fromDom(document.head);
   SelectorFind.descendant(head, '.' + styleClass).each(Remove.remove);
 };
 
-const sWaitForToolstrip = function (realm) {
+const sWaitForToolstrip = (realm) => {
   return Waiter.sTryUntil(
     'Waiting until CSS has loaded',
     Chain.asStep(realm.element, [

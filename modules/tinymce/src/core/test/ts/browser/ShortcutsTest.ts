@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.ShortcutsTest', (success, failure) => {
   Theme();
 
   suite.test('Shortcuts formats', (editor) => {
-    const assertShortcut = function (shortcut: string, args, assertState: boolean) {
+    const assertShortcut = (shortcut: string, args, assertState: boolean) => {
       let called = false;
 
       editor.shortcuts.add(shortcut, '', () => {

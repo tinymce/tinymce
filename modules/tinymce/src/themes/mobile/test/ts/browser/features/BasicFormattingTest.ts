@@ -22,21 +22,21 @@ UnitTest.asynctest('Browser Test: features.BasicFormattingTest', (success, failu
       const sSetS1 = apis.sSetSelection([ 0, 0 ], 'n'.length, [ 0, 0 ], 'n'.length);
       const sSetS2 = apis.sSetSelection([ 0, 1, 0 ], 'for'.length, [ 0, 1, 0 ], 'for'.length);
 
-      const sCheckComponent = function (label, state) {
-        return function (memento) {
+      const sCheckComponent = (label, state) => {
+        return (memento) => {
           return TestUi.sWaitForToggledState(label, state, realm, memento);
         };
       };
 
-      const sTestFormatter = function (openTag, closeTag, name) {
-        const sCheckS1 = function (situation) {
+      const sTestFormatter = (openTag, closeTag, name) => {
+        const sCheckS1 = (situation) => {
           return GeneralSteps.sequence([
             sSetS1,
             sCheckComponent(situation, false)(buttons[name])
           ]);
         };
 
-        const sCheckS2 = function (situation) {
+        const sCheckS2 = (situation) => {
           return GeneralSteps.sequence([
             sSetS2,
             sCheckComponent(situation, true)(buttons[name])

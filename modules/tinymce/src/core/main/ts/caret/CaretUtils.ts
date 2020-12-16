@@ -26,7 +26,7 @@ const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isForwards = (direction: HDirection) => direction > 0;
 const isBackwards = (direction: HDirection) => direction < 0;
 
-const skipCaretContainers = function (walk, shallow?: boolean): Node {
+const skipCaretContainers = (walk, shallow?: boolean): Node => {
   let node;
 
   while ((node = walk(shallow))) {
@@ -44,13 +44,13 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
 
   if (isBackwards(direction)) {
     if (isCefOrCaretContainer) {
-      node = skipCaretContainers(walker.prev, true);
+      node = skipCaretContainers(walker.prev.bind(walker), true);
       if (predicateFn(node)) {
         return node;
       }
     }
 
-    while ((node = skipCaretContainers(walker.prev, shallow))) {
+    while ((node = skipCaretContainers(walker.prev.bind(walker), shallow))) {
       if (predicateFn(node)) {
         return node;
       }
@@ -59,13 +59,13 @@ const findNode = (node: Node, direction: number, predicateFn: (node: Node) => bo
 
   if (isForwards(direction)) {
     if (isCefOrCaretContainer) {
-      node = skipCaretContainers(walker.next, true);
+      node = skipCaretContainers(walker.next.bind(walker), true);
       if (predicateFn(node)) {
         return node;
       }
     }
 
-    while ((node = skipCaretContainers(walker.next, shallow))) {
+    while ((node = skipCaretContainers(walker.next.bind(walker), shallow))) {
       if (predicateFn(node)) {
         return node;
       }

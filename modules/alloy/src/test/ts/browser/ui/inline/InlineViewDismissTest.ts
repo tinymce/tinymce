@@ -23,11 +23,11 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
           classes: [ 'test-inline' ]
         },
 
-        lazySink() {
+        lazySink: () => {
           return Result.value(component);
         },
 
-        getRelated() {
+        getRelated: () => {
           return Optional.some(related);
         },
 
@@ -147,5 +147,5 @@ UnitTest.asynctest('InlineViewDismissTest', (success, failure) => {
       store.sAssertEq('Broadcasting on outer element SHOULD fire dismiss event', [ 'test-dismiss-fired' ])
 
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -20,27 +20,27 @@ UnitTest.asynctest('Browser Test: features.UnlinkTest', (success, failure) => {
       const sSetS1 = apis.sSetSelection([ 0, 0 ], 'n'.length, [ 0, 0 ], 'n'.length);
       const sSetS2 = apis.sSetSelection([ 0, 1, 0 ], 'tin'.length, [ 0, 1, 0 ], 'tin'.length);
 
-      const sCheckComponent = function (label, state) {
-        return function (memento) {
+      const sCheckComponent = (label, state) => {
+        return (memento) => {
           return TestUi.sWaitForToggledState(label, state, realm, memento);
         };
       };
 
-      const sCheckS1 = function (situation) {
+      const sCheckS1 = (situation) => {
         return GeneralSteps.sequence([
           sSetS1,
           sCheckLink(situation, false)
         ]);
       };
 
-      const sCheckS2 = function (situation) {
+      const sCheckS2 = (situation) => {
         return GeneralSteps.sequence([
           sSetS2,
           sCheckLink(situation, true)
         ]);
       };
 
-      const sCheckLink = function (situation, expected) {
+      const sCheckLink = (situation, expected) => {
         return GeneralSteps.sequence([
           sCheckComponent(situation + ' (unlink state)', expected)(buttons.unlink),
           sCheckComponent(situation + ' (link state)', expected)(buttons.link)

@@ -28,7 +28,7 @@ UnitTest.test('GroupTest', () => {
     ])
   );
 
-  const check = function (expected: string[][], ids: string[]) {
+  const check = (expected: string[][], ids: string[]) => {
     const items = Arr.map(ids, (id) => {
       return Finder.get(doc, id);
     });

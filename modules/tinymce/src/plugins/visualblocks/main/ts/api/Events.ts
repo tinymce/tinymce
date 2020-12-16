@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const fireVisualBlocks = function (editor: Editor, state: boolean) {
+const fireVisualBlocks = (editor: Editor, state: boolean) => {
   editor.fire('VisualBlocks', { state });
 };
 

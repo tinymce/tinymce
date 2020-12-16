@@ -9,15 +9,15 @@ UnitTest.asynctest('browser.tinymce.selection.SetSelectionContentTest', (success
 
   Theme();
 
-  const sSetContent = function (editor, content, args) {
+  const sSetContent = (editor, content, args) => {
     return Step.sync(() => {
       SetSelectionContent.setContent(editor, content, args);
     });
   };
 
-  const sSetContentOverride = function (editor, content, overrideContent, args) {
+  const sSetContentOverride = (editor, content, overrideContent, args) => {
     return Step.sync(() => {
-      const handler = function (e) {
+      const handler = (e) => {
         if (e.selection === true) {
           e.preventDefault();
           editor.getBody().innerHTML = overrideContent;

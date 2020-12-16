@@ -61,7 +61,5 @@ UnitTest.asynctest('ActionTest', (success, failure) => {
   Pipeline.async({}, [
     sResetCount,
     sTestStep
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

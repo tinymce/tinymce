@@ -50,7 +50,11 @@ UnitTest.test('Browser Test: SelectionTest', () => {
   assertSelection('(p1text, 1) -> (p2text, 2)', p1text, 1, p2text, 1);
 
   setSelection(p2text, 2, p1text, 3);
-  if (!PlatformDetection.detect().browser.isIE()) { assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3); } else { assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2); }
+  if (!PlatformDetection.detect().browser.isIE()) {
+    assertSelection('(p2text, 2) -> (p1text, 3)', p2text, 2, p1text, 3);
+  } else {
+    assertSelection('reversed (p1text, 3) -> (p2text, 2)', p1text, 3, p2text, 2);
+  }
 
   const assertFragmentHtml = (expected: string, fragment: SugarElement<Node>) => {
     const div = SugarElement.fromTag('div');

@@ -27,14 +27,14 @@ const chromeos = 'ChromeOS';
 // Though there is a bit of dupe with this and Browser, trying to
 // reuse code makes it much harder to follow and change.
 
-const unknown = function (): OperatingSystem {
+const unknown = (): OperatingSystem => {
   return nu({
     current: undefined,
     version: Version.unknown()
   });
 };
 
-const nu = function (info: UaString): OperatingSystem {
+const nu = (info: UaString): OperatingSystem => {
   const current = info.current;
   const version = info.version;
 

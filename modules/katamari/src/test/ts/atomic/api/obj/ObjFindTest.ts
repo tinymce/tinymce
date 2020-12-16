@@ -5,24 +5,36 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 UnitTest.test('ObjFindTest', () => {
-  const checkNone = function (input, pred) {
+  const checkNone = (input, pred) => {
     const actual = Obj.find(input, pred);
     return actual.isNone();
   };
 
-  const checkObj = function (expected, input, pred) {
+  const checkObj = (expected, input, pred) => {
     const actual = Obj.find(input, pred).getOrDie('should have value');
     Assert.eq('eq', expected, actual);
   };
 
-  checkNone({}, (v, _k) => { return v > 0; });
-  checkObj(3, { test: 3 }, (_v, k) => { return k === 'test'; });
-  checkNone({ test: 0 }, (v, _k) => { return v > 0; });
-  checkObj(4, { blah: 4, test: 3 }, (v, _k) => { return v > 0; });
-  checkNone({ blah: 4, test: 3 }, (v, _k) => { return v === 12; });
+  checkNone({}, (v, _k) => {
+    return v > 0;
+  });
+  checkObj(3, { test: 3 }, (_v, k) => {
+    return k === 'test';
+  });
+  checkNone({ test: 0 }, (v, _k) => {
+    return v > 0;
+  });
+  checkObj(4, { blah: 4, test: 3 }, (v, _k) => {
+    return v > 0;
+  });
+  checkNone({ blah: 4, test: 3 }, (v, _k) => {
+    return v === 12;
+  });
 
   const obj = { blah: 4, test: 3 };
-  checkObj(4, obj, (v, k, o) => { return o === obj; });
+  checkObj(4, obj, (v, k, o) => {
+    return o === obj;
+  });
 });
 
 UnitTest.test('the value found by find always passes predicate', () => {

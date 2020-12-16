@@ -49,7 +49,9 @@ UnitTest.asyncTest('browser.tinymce.themes.silver.window.SilverDialogBlockTest',
     const ui = TinyUi(editor);
 
     const cOpen = (params: WindowParams) => DialogUtils.cOpen(editor, dialogSpec, params);
-    const cClose = Chain.mapper<Dialog.DialogInstanceApi<{ fred: string }>, void>((api) => { api.close(); });
+    const cClose = Chain.mapper<Dialog.DialogInstanceApi<{ fred: string }>, void>((api) => {
+      api.close();
+    });
     const cClick = Chain.fromIsolatedChains([
       ui.cWaitForUi('Fred button', 'button:contains("Clickable?")'),
       Chain.mapper<SugarElement<HTMLButtonElement>, SugarElement<Element>>((button) => {

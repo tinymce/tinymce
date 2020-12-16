@@ -4,7 +4,7 @@ import { Textdata } from '../general/Textdata';
 
 const universe = DomUniverse();
 
-const from = function (elements: SugarElement[], current: SugarElement, offset: number): Textdata<SugarElement> {
+const from = (elements: SugarElement[], current: SugarElement, offset: number): Textdata<SugarElement> => {
   return Textdata.from(universe, elements, current, offset);
 };
 

@@ -10,13 +10,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
 
   const viewBlock = ViewBlock();
 
-  const cSetHtml = function (html: string) {
+  const cSetHtml = (html: string) => {
     return Chain.op((vb: any) => {
       vb.update(html);
     });
   };
 
-  const cSetSelection = function (startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+  const cSetSelection = (startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
     return Chain.op(() => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
@@ -28,14 +28,14 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
     });
   };
 
-  const cGetBookmark = function (rootPath: number[]) {
+  const cGetBookmark = (rootPath: number[]) => {
     return Chain.injectThunked(() => {
       const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
       return SelectionBookmark.getBookmark(root);
     });
   };
 
-  const cValidateBookmark = function (rootPath: number[]) {
+  const cValidateBookmark = (rootPath: number[]) => {
     return Chain.async((input: Optional<SimRange>, next) => {
       const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
 
@@ -53,7 +53,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
     Assert.eq('should be some', true, x.isSome());
   });
 
-  const cAssertSelection = function (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) {
+  const cAssertSelection = (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
     return Chain.op(() => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
@@ -69,7 +69,7 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
     });
   };
 
-  const cManipulateBookmarkOffsets = function (startPad: number, finishPad: number) {
+  const cManipulateBookmarkOffsets = (startPad: number, finishPad: number) => {
     return Chain.mapper((bookmark: Optional<SimRange>) => {
       return bookmark
         .map((bm) => {
@@ -78,13 +78,13 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
     });
   };
 
-  const cDeleteElement = function (path: number[]) {
+  const cDeleteElement = (path: number[]) => {
     return Chain.op(() => {
       Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).each(Remove.remove);
     });
   };
 
-  const cAssertBookmark = function (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) {
+  const cAssertBookmark = (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
     return Chain.op((input: Optional<SimRange>) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();

@@ -7,7 +7,7 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failure) => {
   SilverTheme();
 
-  const sRemoveFormat = function (editor, format) {
+  const sRemoveFormat = (editor, format) => {
     return Step.sync(() => {
       editor.formatter.register('format', format);
       RemoveFormat.remove(editor, 'format');

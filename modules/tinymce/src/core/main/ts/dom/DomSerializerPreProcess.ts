@@ -9,7 +9,7 @@ import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import Tools from '../api/util/Tools';
 
-const preProcess = function (editor: Editor, node: Element, args) {
+const preProcess = (editor: Editor, node: Element, args) => {
   let doc, oldDoc;
   const dom = editor.dom;
 
@@ -48,11 +48,11 @@ const preProcess = function (editor: Editor, node: Element, args) {
   return node;
 };
 
-const shouldFireEvent = function (editor: Editor, args) {
+const shouldFireEvent = (editor: Editor, args) => {
   return editor && editor.hasEventListeners('PreProcess') && !args.no_events;
 };
 
-const process = function (editor: Editor, node: Element, args) {
+const process = (editor: Editor, node: Element, args) => {
   return shouldFireEvent(editor, args) ? preProcess(editor, node, args) : node;
 };
 

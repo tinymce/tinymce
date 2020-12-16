@@ -224,9 +224,7 @@ UnitTest.asynctest('OxideFontFormatMenuTest', (success, failure) => {
 
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

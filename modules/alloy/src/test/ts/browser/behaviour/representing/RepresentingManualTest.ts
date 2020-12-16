@@ -17,11 +17,11 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
       Representing.config({
         store: {
           mode: 'manual',
-          getValue(comp) {
+          getValue: (comp) => {
             store.adder('getValue')();
             return Html.get(comp.element);
           },
-          setValue(comp, v) {
+          setValue: (comp, v) => {
             Html.set(comp.element, v);
             store.adder('setValue(' + v + ')')();
           },
@@ -36,5 +36,5 @@ UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
     RepresentPipes.sSetValue(component, 'new-value'),
     store.sAssertEq('Should have called setValue on init', [ 'setValue(init-value)', 'getValue', 'setValue(new-value)' ]),
     RepresentPipes.sAssertValue('Checking 2nd value', 'new-value', component)
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

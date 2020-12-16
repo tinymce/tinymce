@@ -10,7 +10,7 @@ const transferableAttributes: Record<string, string[]> = {
 };
 
 // NOTE: This may create a td instead of a th, but it is for irregular table handling.
-const createCell = function () {
+const createCell = () => {
   const td = SugarElement.fromTag('td');
   Insert.append(td, SugarElement.fromTag('br'));
   return td;
@@ -20,7 +20,7 @@ const createCol = () => SugarElement.fromTag('col');
 
 const createColgroup = () => SugarElement.fromTag('colgroup');
 
-const replace = function <K extends keyof HTMLElementTagNameMap> (cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) {
+const replace = <K extends keyof HTMLElementTagNameMap>(cell: SugarElement, tag: K, attrs: Record<string, string | number | boolean | null>) => {
   const replica = Replication.copy(cell, tag);
   // TODO: Snooker passes null to indicate 'remove attribute'
   Obj.each(attrs, (v, k) => {
@@ -33,18 +33,18 @@ const replace = function <K extends keyof HTMLElementTagNameMap> (cell: SugarEle
   return replica;
 };
 
-const pasteReplace = function (cell: SugarElement) {
+const pasteReplace = (cell: SugarElement) => {
   // TODO: check for empty content and don't return anything
   return cell;
 };
 
-const newRow = function (doc: SugarElement) {
-  return function () {
+const newRow = (doc: SugarElement) => {
+  return () => {
     return SugarElement.fromTag('tr', doc.dom);
   };
 };
 
-const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, formats: string[]) {
+const cloneFormats = (oldCell: SugarElement, newCell: SugarElement, formats: string[]) => {
   const first = CursorPosition.first(oldCell);
   return first.map((firstText) => {
     const formatSelector = formats.join(',');
@@ -62,7 +62,7 @@ const cloneFormats = function (oldCell: SugarElement, newCell: SugarElement, for
   }).getOr(newCell);
 };
 
-const cloneAppropriateAttributes = <T extends HTMLElement> (original: SugarElement<T>, clone: SugarElement<T>): void => {
+const cloneAppropriateAttributes = <T extends HTMLElement>(original: SugarElement<T>, clone: SugarElement<T>): void => {
   Obj.each(transferableAttributes, (validAttributes, attributeName) =>
     Attribute.getOpt(original, attributeName)
       .filter((attribute) => Arr.contains(validAttributes, attribute))
@@ -70,7 +70,7 @@ const cloneAppropriateAttributes = <T extends HTMLElement> (original: SugarEleme
   );
 };
 
-const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators {
+const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, doc: SugarElement, formatsToClone: Optional<string[]>): Generators => {
   const cloneCss = <T extends HTMLElement> (prev: CellSpan, clone: SugarElement<T>) => {
     // inherit the style and width, dont inherit the row height
     Css.copy(prev.element, clone);
@@ -81,7 +81,7 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
     }
   };
 
-  const newCell = function (prev: CellSpan) {
+  const newCell = (prev: CellSpan) => {
     const docu = Traverse.owner(prev.element);
     const td = SugarElement.fromTag(SugarNode.name(prev.element) as 'td' | 'th', docu.dom);
 
@@ -115,7 +115,7 @@ const cellOperations = function (mutate: (e1: SugarElement, e2: SugarElement) =>
   };
 };
 
-const paste = function (doc: SugarElement): SimpleGenerators {
+const paste = (doc: SugarElement): SimpleGenerators => {
   return {
     col: createCol,
     colgroup: createColgroup,

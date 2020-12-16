@@ -15,7 +15,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
 
   Theme();
 
-  const setup = function () {
+  const setup = () => {
     let i, htmlReset = '', odd;
     for (i = 1; i < 9; i++) {
       odd = i % 2 !== 0;
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
     viewBlock.update(htmlReset);
   };
 
-  const teardown = function (done) {
+  const teardown = (done) => {
     window.setTimeout(() => {
       EditorManager.remove();
       done();
@@ -40,7 +40,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
         LegacyUnit.equalDom(ed.targetElm, elm1);
         teardown(done);
       }
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       target: elm,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
         LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
         LegacyUnit.equalDom(ed.targetElm, elm);
         teardown(done);
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
         LegacyUnit.equalDom(ed.targetElm, elm2);
         teardown(done);
       }
@@ -119,7 +119,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       target: elm1,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
         LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
         LegacyUnit.equal(Tools.inArray(targets, ed.targetElm), -1);
 
@@ -142,7 +142,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       selector: '#elm-1',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
 
         Assertions.assertEq('Should have set suffix on EditorManager', '.min', EditorManager.suffix);
         Assertions.assertEq('Should have set suffix on editor', '.min', ed.suffix);
@@ -159,7 +159,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
     });
   });
 
-  const getSkinCssFilenames = function () {
+  const getSkinCssFilenames = () => {
     return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), (link) => {
       const href = Attribute.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
@@ -257,7 +257,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       selector,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
-      init_instance_callback(ed) {
+      init_instance_callback: (ed) => {
         Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
         teardown(done);
       }

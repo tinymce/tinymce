@@ -19,7 +19,7 @@ export interface Sizers {
 }
 
 export const Sizers = (): Sizers => {
-  const box = function (): Box {
+  const box = (): Box => {
     const r = SugarElement.fromTag('div');
     Width.set(r, 8);
     Height.set(r, 8);
@@ -27,12 +27,12 @@ export const Sizers = (): Sizers => {
     Css.set(r, 'border', '1px solid gray');
     Css.set(r, 'z-index', '1000');
 
-    const set = function (x: number, y: number) {
+    const set = (x: number, y: number) => {
       Css.set(r, 'left', (x - 4) + 'px');
       Css.set(r, 'top', (y - 4) + 'px');
     };
 
-    const destroy = function () {
+    const destroy = () => {
       Remove.remove(r);
     };
 
@@ -53,7 +53,7 @@ export const Sizers = (): Sizers => {
   const southeast = box();
   Css.set(southeast.element(), 'cursor', 'se-resize');
 
-  const update = function (target: SugarElement) {
+  const update = (target: SugarElement) => {
     const loc = SugarLocation.viewport(target);
     const w = Width.get(target);
     const h = Height.get(target);
@@ -75,19 +75,19 @@ export const Sizers = (): Sizers => {
     });
   };
 
-  const hide = function () {
+  const hide = () => {
     Arr.each([ northwest, north, northeast, southeast ], (x) => {
       x.hide();
     });
   };
 
-  const show = function () {
+  const show = () => {
     Arr.each([ northwest, north, northeast, southeast ], (x) => {
       x.show();
     });
   };
 
-  const destroy = function () {
+  const destroy = () => {
     northwest.destroy();
     north.destroy();
     northeast.destroy();

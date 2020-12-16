@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -31,7 +31,7 @@ export default function () {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     selector: 'textarea',
-    setup(ed) {
+    setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
@@ -44,4 +44,4 @@ export default function () {
 
   tinymce.init(settings);
   tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
-}
+};

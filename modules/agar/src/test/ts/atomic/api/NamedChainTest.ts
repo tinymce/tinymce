@@ -131,7 +131,5 @@ UnitTest.asynctest('NamedChainTest', (success, failure) => {
         ])
       ])
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

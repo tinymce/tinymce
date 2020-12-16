@@ -18,17 +18,21 @@ declare const setImmediate: (f: Function, timeout?: number) => number;
 
 const promise = function () {
   // Polyfill for Function.prototype.bind
-  function bind(fn, thisArg) {
-    return function () {
-      fn.apply(thisArg, arguments);
+  const bind = (fn, thisArg) => {
+    return (...args: any[]) => {
+      fn.apply(thisArg, args);
     };
-  }
+  };
 
-  const isArray = Array.isArray || function (value) { return Object.prototype.toString.call(value) === '[object Array]'; };
+  const isArray = Array.isArray || ((value) => Object.prototype.toString.call(value) === '[object Array]');
 
   const Promise: any = function (fn) {
-    if (typeof this !== 'object') { throw new TypeError('Promises must be constructed via new'); }
-    if (typeof fn !== 'function') { throw new TypeError('not a function'); }
+    if (typeof this !== 'object') {
+      throw new TypeError('Promises must be constructed via new');
+    }
+    if (typeof fn !== 'function') {
+      throw new TypeError('not a function');
+    }
     this._state = null;
     this._value = null;
     this._deferreds = [];
@@ -38,7 +42,7 @@ const promise = function () {
 
   // Use polyfill for setImmediate for performance gains
   const asap = Promise.immediateFn || (typeof setImmediate === 'function' && setImmediate) ||
-  function (fn) { setTimeout(fn, 1); };
+    ((fn: (...args: any[]) => void) => setTimeout(fn, 1));
 
   function handle(deferred) {
     const me = this;
@@ -65,7 +69,9 @@ const promise = function () {
 
   function resolve(newValue) {
     try { // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-      if (newValue === this) { throw new TypeError('A promise cannot be resolved with itself.'); }
+      if (newValue === this) {
+        throw new TypeError('A promise cannot be resolved with itself.');
+      }
       if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
         const then = newValue.then;
         if (typeof then === 'function') {
@@ -76,7 +82,9 @@ const promise = function () {
       this._state = true;
       this._value = newValue;
       finale.call(this);
-    } catch (e) { reject.call(this, e); }
+    } catch (e) {
+      reject.call(this, e);
+    }
   }
 
   function reject(newValue) {
@@ -105,24 +113,30 @@ const promise = function () {
    *
    * Makes no guarantees about asynchrony.
    */
-  function doResolve(fn, onFulfilled, onRejected) {
+  const doResolve = (fn, onFulfilled, onRejected) => {
     let done = false;
     try {
       fn((value) => {
-        if (done) { return; }
+        if (done) {
+          return;
+        }
         done = true;
         onFulfilled(value);
       }, (reason) => {
-        if (done) { return; }
+        if (done) {
+          return;
+        }
         done = true;
         onRejected(reason);
       });
     } catch (ex) {
-      if (done) { return; }
+      if (done) {
+        return;
+      }
       done = true;
       onRejected(ex);
     }
-  }
+  };
 
   Promise.prototype.catch = function (onRejected) {
     return this.then(null, onRejected);
@@ -135,18 +149,22 @@ const promise = function () {
     });
   };
 
-  Promise.all = function () {
-    const args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
+  Promise.all = (...values: any[]) => {
+    const args = Array.prototype.slice.call(values.length === 1 && isArray(values[0]) ? values[0] : values);
 
     return new Promise((resolve, reject) => {
-      if (args.length === 0) { return resolve([]); }
+      if (args.length === 0) {
+        return resolve([]);
+      }
       let remaining = args.length;
-      function res(i, val) {
+      const res = (i, val) => {
         try {
           if (val && (typeof val === 'object' || typeof val === 'function')) {
             const then = val.then;
             if (typeof then === 'function') {
-              then.call(val, (val) => { res(i, val); }, reject);
+              then.call(val, (val) => {
+                res(i, val);
+              }, reject);
               return;
             }
           }
@@ -157,14 +175,14 @@ const promise = function () {
         } catch (ex) {
           reject(ex);
         }
-      }
+      };
       for (let i = 0; i < args.length; i++) {
         res(i, args[i]);
       }
     });
   };
 
-  Promise.resolve = function (value) {
+  Promise.resolve = (value) => {
     if (value && typeof value === 'object' && value.constructor === Promise) {
       return value;
     }
@@ -174,13 +192,13 @@ const promise = function () {
     });
   };
 
-  Promise.reject = function (value) {
+  Promise.reject = (value) => {
     return new Promise((resolve, reject) => {
       reject(value);
     });
   };
 
-  Promise.race = function (values) {
+  Promise.race = (values) => {
     return new Promise((resolve, reject) => {
       for (let i = 0, len = values.length; i < len; i++) {
         values[i].then(resolve, reject);

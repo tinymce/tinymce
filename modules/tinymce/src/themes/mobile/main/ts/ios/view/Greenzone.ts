@@ -10,7 +10,7 @@ import * as CursorRefresh from '../../touch/focus/CursorRefresh';
 import * as IosScrolling from '../scroll/IosScrolling';
 import * as DeviceZones from './DeviceZones';
 
-const scrollIntoView = function (cWin, socket, dropup, top, bottom) {
+const scrollIntoView = (cWin, socket, dropup, top, bottom) => {
   const greenzone = DeviceZones.getGreenzone(socket, dropup);
   const refreshCursor = Fun.curry(CursorRefresh.refresh, cWin);
 

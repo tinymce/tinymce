@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const getKeyboardSpaces = function (editor: Editor) {
+const getKeyboardSpaces = (editor: Editor) => {
   const spaces = editor.getParam('nonbreaking_force_tab', 0);
 
   if (typeof spaces === 'boolean') {
@@ -17,7 +17,7 @@ const getKeyboardSpaces = function (editor: Editor) {
   }
 };
 
-const wrapNbsps = function (editor: Editor) {
+const wrapNbsps = (editor: Editor) => {
   return editor.getParam('nonbreaking_wrap', true, 'boolean');
 };
 

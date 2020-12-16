@@ -37,11 +37,9 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
           mode: 'mouse',
           blockerClass: 'test-blocker',
           snaps: {
-            getSnapPoints() {
-              return [
-                snap
-              ];
-            },
+            getSnapPoints: () => [
+              snap
+            ],
             leftAttr: 'data-snap-left',
             topAttr: 'data-snap-top'
           },
@@ -105,5 +103,5 @@ UnitTest.asynctest('SnapToTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

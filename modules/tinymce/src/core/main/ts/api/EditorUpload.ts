@@ -11,8 +11,8 @@ import { BlobInfoImagePair, ImageScanner } from '../file/ImageScanner';
 import { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
-import { UndoLevel } from '../undo/UndoManagerTypes';
 import * as Levels from '../undo/Levels';
+import { UndoLevel } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
@@ -37,11 +37,11 @@ export type UploadCallback = (results: UploadResult[]) => void;
 
 interface EditorUpload {
   blobCache: BlobCache;
-  addFilter (filter: (img: HTMLImageElement) => boolean): void;
-  uploadImages (callback?: UploadCallback): Promise<UploadResult[]>;
-  uploadImagesAuto (callback?: UploadCallback): void | Promise<UploadResult[]>;
-  scanForImages (): Promise<BlobInfoImagePair[]>;
-  destroy (): void;
+  addFilter: (filter: (img: HTMLImageElement) => boolean) => void;
+  uploadImages: (callback?: UploadCallback) => Promise<UploadResult[]>;
+  uploadImagesAuto: (callback?: UploadCallback) => void | Promise<UploadResult[]>;
+  scanForImages: () => Promise<BlobInfoImagePair[]>;
+  destroy: () => void;
 }
 
 const UploadChangeHandler = (editor: Editor) => {
@@ -69,15 +69,15 @@ const UploadChangeHandler = (editor: Editor) => {
   };
 };
 
-const EditorUpload = function (editor: Editor): EditorUpload {
+const EditorUpload = (editor: Editor): EditorUpload => {
   const blobCache = BlobCache();
   let uploader: Uploader, imageScanner: ImageScanner;
   const uploadStatus = UploadStatus();
   const urlFilters: Array<(img: HTMLImageElement) => boolean> = [];
   const changeHandler = UploadChangeHandler(editor);
 
-  const aliveGuard = function <T, R> (callback?: (result: T) => R) {
-    return function (result: T) {
+  const aliveGuard = <T, R> (callback?: (result: T) => R) => {
+    return (result: T) => {
       if (editor.selection) {
         return callback(result);
       }
@@ -89,7 +89,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
   const cacheInvalidator = (url: string): string => url + (url.indexOf('?') === -1 ? '?' : '&') + (new Date()).getTime();
 
   // Replaces strings without regexps to avoid FF regexp to big issue
-  const replaceString = function (content: string, search: string, replace: string): string {
+  const replaceString = (content: string, search: string, replace: string): string => {
     let index = 0;
 
     do {
@@ -205,7 +205,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }
   };
 
-  const isValidDataUriImage = function (imgElm: HTMLImageElement) {
+  const isValidDataUriImage = (imgElm: HTMLImageElement) => {
     if (Arr.forall(urlFilters, (filter) => filter(imgElm)) === false) {
       return false;
     }
@@ -222,7 +222,7 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     urlFilters.push(filter);
   };
 
-  const scanForImages = function (): Promise<BlobInfoImagePair[]> {
+  const scanForImages = (): Promise<BlobInfoImagePair[]> => {
     if (!imageScanner) {
       imageScanner = ImageScanner(uploadStatus, blobCache);
     }
@@ -248,13 +248,13 @@ const EditorUpload = function (editor: Editor): EditorUpload {
     }));
   };
 
-  const destroy = function () {
+  const destroy = () => {
     blobCache.destroy();
     uploadStatus.destroy();
     imageScanner = uploader = null;
   };
 
-  const replaceBlobUris = function (content: string) {
+  const replaceBlobUris = (content: string) => {
     return content.replace(/src="(blob:[^"]+)"/g, (match, blobUri) => {
       const resultUri = uploadStatus.getResultUri(blobUri);
 

@@ -24,7 +24,7 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
         uid: 'no-duplicates',
         containerBehaviours: Behaviour.derive([
           Sandboxing.config({
-            getAttachPoint(c) {
+            getAttachPoint: (c) => {
               Assertions.assertEq('Checking getAttachPoint gets given sandbox', sandbox.element, c.element);
               return sink;
             },
@@ -133,5 +133,5 @@ UnitTest.asynctest('SandboxingTest', (success, failure) => {
 
       sCheckClosedState('After sending system close event', { store: [ 'onClose' ] })
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

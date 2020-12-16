@@ -9,11 +9,11 @@ const DragnDrop: DragnDropBehaviour = Behaviour.createModes({
   // TODO: Try to see if there's a way we can actually get the correct
   // drag config type here based on the branch
   active: {
-    exhibit(base, dragInfo) {
+    exhibit: (base, dragInfo) => {
       return dragInfo.instance.exhibit(base, dragInfo as any);
     },
 
-    events(dragInfo) {
+    events: (dragInfo) => {
       return dragInfo.instance.handlers(dragInfo as any);
     }
   }

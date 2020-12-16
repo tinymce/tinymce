@@ -9,14 +9,14 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 
-const displayErrorMessage = function (editor, message) {
+const displayErrorMessage = (editor, message) => {
   editor.notificationManager.open({
     text: message,
     type: 'error'
   });
 };
 
-const save = function (editor) {
+const save = (editor) => {
   const formObj = DOMUtils.DOM.getParent(editor.id, 'form') as HTMLFormElement;
 
   if (Settings.enableWhenDirty(editor) && !editor.isDirty()) {
@@ -51,7 +51,7 @@ const save = function (editor) {
   }
 };
 
-const cancel = function (editor) {
+const cancel = (editor) => {
   const h = Tools.trim(editor.startContent);
 
   // Use callback instead

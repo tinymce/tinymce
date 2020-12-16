@@ -18,7 +18,7 @@ export interface ResizeWire {
   isResizable: ResizeCallback;
 }
 
-const only = function (element: SugarElement, isResizable: ResizeCallback): ResizeWire {
+const only = (element: SugarElement, isResizable: ResizeCallback): ResizeWire => {
   // If element is a 'document', use the document element ('HTML' tag) for appending.
   const parent = Optional.from(element.dom.documentElement).map(SugarElement.fromDom).getOr(element);
   return {
@@ -29,7 +29,7 @@ const only = function (element: SugarElement, isResizable: ResizeCallback): Resi
   };
 };
 
-const detached = function (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire {
+const detached = (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire => {
   const origin = () => SugarLocation.absolute(chrome);
   return {
     parent: Fun.constant(chrome),
@@ -39,7 +39,7 @@ const detached = function (editable: SugarElement, chrome: SugarElement, isResiz
   };
 };
 
-const body = function (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire {
+const body = (editable: SugarElement, chrome: SugarElement, isResizable: ResizeCallback): ResizeWire => {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),

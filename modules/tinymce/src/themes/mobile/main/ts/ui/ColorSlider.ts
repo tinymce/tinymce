@@ -68,10 +68,10 @@ const makeSlider = (spec): SketchSpec => {
     ],
 
     onChange,
-    onDragStart(slider, thumb) {
+    onDragStart: (slider, thumb) => {
       Toggling.on(thumb);
     },
-    onDragEnd(slider, thumb) {
+    onDragEnd: (slider, thumb) => {
       Toggling.off(thumb);
     },
     onInit,
@@ -97,13 +97,13 @@ const makeItems = (spec): SketchSpec[] => [
 
 const sketch = (realm: MobileRealm, editor: Editor) => {
   const spec = {
-    onChange(slider, thumb, color) {
+    onChange: (slider, thumb, color) => {
       editor.undoManager.transact(() => {
         editor.formatter.apply('forecolor', { value: color });
         editor.nodeChanged();
       });
     },
-    getInitialValue(/* slider */) {
+    getInitialValue: (/* slider */) => {
       // Return black
       return BLACK;
     }

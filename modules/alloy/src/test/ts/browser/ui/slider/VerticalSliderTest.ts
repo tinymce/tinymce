@@ -14,7 +14,9 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
 
   // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(
     Slider.sketch({
       dom: {
@@ -250,5 +252,5 @@ UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failu
       Keyboard.sKeydown(doc, Keys.down(), {}),
       sAssertValue('Checking that the thumb is now one step further bottom', 70)
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -35,7 +35,7 @@ let customEventRootDelegates;
  * @param {String} eventName Name of the event for example "click".
  * @return {Element/Document} HTML Element or document target to bind on.
  */
-const getEventTarget = function (editor: Editor, eventName: string): Node {
+const getEventTarget = (editor: Editor, eventName: string): Node => {
   if (eventName === 'selectionchange') {
     return editor.getDoc();
   }
@@ -78,7 +78,7 @@ const fireEvent = (editor: Editor, eventName: string, e: Event) => {
  * @param {tinymce.Editor} editor Editor instance to get event target from.
  * @param {String} eventName Name of the event for example "click".
  */
-const bindEventDelegate = function (editor: Editor, eventName: string) {
+const bindEventDelegate = (editor: Editor, eventName: string) => {
   let delegate;
 
   if (!editor.delegates) {
@@ -111,7 +111,7 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
       return;
     }
 
-    delegate = function (e) {
+    delegate = (e) => {
       const target = e.target;
       const editors = editor.editorManager.get();
       let i = editors.length;
@@ -128,7 +128,7 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
     customEventRootDelegates[eventName] = delegate;
     DOM.bind(eventRootElm, eventName, delegate);
   } else {
-    delegate = function (e) {
+    delegate = (e) => {
       fireEvent(editor, eventName, e);
     };
 
@@ -138,9 +138,9 @@ const bindEventDelegate = function (editor: Editor, eventName: string) {
 };
 
 interface EditorObservable extends Observable<EditorEventMap> {
-  bindPendingEventDelegates (): void;
-  toggleNativeEvent (name: string, state: boolean);
-  unbindAllNativeEvents (): void;
+  bindPendingEventDelegates (this: Editor): void;
+  toggleNativeEvent (this: Editor, name: string, state: boolean);
+  unbindAllNativeEvents (this: Editor): void;
 }
 
 const EditorObservable: EditorObservable = {
@@ -152,7 +152,7 @@ const EditorObservable: EditorObservable = {
    * @private
    */
   bindPendingEventDelegates() {
-    const self = (this as Editor);
+    const self = this;
 
     Tools.each(self._pendingNativeEvents, (name) => {
       bindEventDelegate(self, name);

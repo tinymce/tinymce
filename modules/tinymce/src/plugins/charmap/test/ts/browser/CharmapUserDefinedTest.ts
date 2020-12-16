@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
-const cFakeEvent = function (name) {
+const cFakeEvent = (name) => {
   return Chain.control(
     Chain.op((elm: SugarElement) => {
       const evt = document.createEvent('HTMLEvents');

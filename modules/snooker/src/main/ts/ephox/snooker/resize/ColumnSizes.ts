@@ -10,7 +10,7 @@ import * as Sizes from './Sizes';
 
 const isCol = SugarNode.isTag('col');
 
-const getRaw = function (cell: SugarElement, property: string, getter: (e: SugarElement) => number): string {
+const getRaw = (cell: SugarElement, property: string, getter: (e: SugarElement) => number): string => {
   return Css.getRaw(cell, property).fold(() => {
     return getter(cell) + 'px';
   }, (raw) => {
@@ -18,13 +18,13 @@ const getRaw = function (cell: SugarElement, property: string, getter: (e: Sugar
   });
 };
 
-const getRawW = function (cell: SugarElement, tableSize: TableSize): string {
+const getRawW = (cell: SugarElement, tableSize: TableSize): string => {
   // For col elements use the computed width as col elements aren't affected by borders, padding, etc...
   const fallback = (e: SugarElement) => isCol(e) ? Width.get(e) : Sizes.getPixelWidth(e, tableSize);
   return getRaw(cell, 'width', fallback);
 };
 
-const getRawH = function (cell: SugarElement): string {
+const getRawH = (cell: SugarElement): string => {
   return getRaw(cell, 'height', Sizes.getHeight);
 };
 
@@ -42,8 +42,7 @@ const getDimension = <T>(cellOpt: Optional<SugarElement>, index: number, backups
     (cell) => getter(cell)
   );
 
-const getWidthFrom = function <T> (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, getWidth: (cell: SugarElement, tableSize: TableSize) => T,
-                                   fallback: (deduced: Optional<number>) => T, tableSize: TableSize): T[] {
+const getWidthFrom = <T>(warehouse: Warehouse, table: SugarElement<HTMLTableElement>, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Optional<number>) => T, tableSize: TableSize): T[] => {
   const columnCells = Blocks.columns(warehouse);
   const columns: Optional<SugarElement>[] = Warehouse.hasColumns(warehouse) ? justCols(warehouse) : columnCells;
 
@@ -67,15 +66,17 @@ const getWidthFrom = function <T> (warehouse: Warehouse, table: SugarElement<HTM
   });
 };
 
-const getDeduced = function (deduced: Optional<number>): string {
-  return deduced.map((d) => { return d + 'px'; }).getOr('');
+const getDeduced = (deduced: Optional<number>): string => {
+  return deduced.map((d) => {
+    return d + 'px';
+  }).getOr('');
 };
 
-const getRawWidths = function (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): string[] {
+const getRawWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): string[] => {
   return getWidthFrom(warehouse, table, getRawW, getDeduced, tableSize);
 };
 
-const getPercentageWidths = function (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): number[] {
+const getPercentageWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): number[] => {
   return getWidthFrom(warehouse, table, Sizes.getPercentageWidth, (deduced) => {
     return deduced.fold(() => {
       return tableSize.minCellWidth();
@@ -85,14 +86,14 @@ const getPercentageWidths = function (warehouse: Warehouse, table: SugarElement<
   }, tableSize);
 };
 
-const getPixelWidths = function (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): number[] {
+const getPixelWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, tableSize: TableSize): number[] => {
   return getWidthFrom(warehouse, table, Sizes.getPixelWidth, (deduced) => {
     // Minimum cell width when all else fails.
     return deduced.getOrThunk(tableSize.minCellWidth);
   }, tableSize);
 };
 
-const getHeightFrom = function <T> (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T): T[] {
+const getHeightFrom = <T> (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>, getHeight: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T): T[] => {
   const rows = Blocks.rows(warehouse);
 
   const backups = [ Optional.some(direction.edge(table)) ].concat(Arr.map(direction.positions(rows, table), (pos) =>
@@ -104,13 +105,13 @@ const getHeightFrom = function <T> (warehouse: Warehouse, table: SugarElement<HT
   });
 };
 
-const getPixelHeights = function (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): number[] {
+const getPixelHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): number[] => {
   return getHeightFrom(warehouse, table, direction, Sizes.getHeight, (deduced: Optional<number>) => {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };
 
-const getRawHeights = function (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): string[] {
+const getRawHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): string[] => {
   return getHeightFrom(warehouse, table, direction, getRawH, getDeduced);
 };
 

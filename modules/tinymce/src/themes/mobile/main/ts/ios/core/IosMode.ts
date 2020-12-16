@@ -20,7 +20,7 @@ import * as PlatformEditor from './PlatformEditor';
 
 type IosApi = IosSetup.IosApi;
 
-const create = function (platform, mask) {
+const create = (platform, mask) => {
   const meta = MetaViewport.tag();
 
   const priorState = Singleton.value();
@@ -29,7 +29,7 @@ const create = function (platform, mask) {
   const iosApi = Singleton.api<IosApi>();
   const iosEvents = Singleton.api();
 
-  const enter = function () {
+  const enter = () => {
     mask.hide();
     const doc = SugarElement.fromDom(document);
     PlatformEditor.getActiveApi(platform.editor).each((editorApi) => {
@@ -83,7 +83,7 @@ const create = function (platform, mask) {
     });
   };
 
-  const exit = function () {
+  const exit = () => {
     meta.restore();
     iosEvents.clear();
     iosApi.clear();
@@ -123,7 +123,7 @@ const create = function (platform, mask) {
   };
 
   // dropup
-  const refreshStructure = function () {
+  const refreshStructure = () => {
     iosApi.run((api) => {
       api.refreshStructure();
     });

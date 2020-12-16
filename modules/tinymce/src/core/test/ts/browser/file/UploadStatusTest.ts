@@ -33,7 +33,5 @@ UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', (success, failu
     LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

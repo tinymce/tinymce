@@ -15,7 +15,7 @@ const makeSetupHandler = (editor: Editor, clipboard: Clipboard) => (api) => {
   return () => editor.off('PastePlainTextToggle', pastePlainTextToggleHandler);
 };
 
-const register = function (editor: Editor, clipboard: Clipboard) {
+const register = (editor: Editor, clipboard: Clipboard) => {
   editor.ui.registry.addToggleButton('pastetext', {
     active: false,
     icon: 'paste-text',

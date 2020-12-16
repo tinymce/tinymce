@@ -49,7 +49,7 @@ UnitTest.test('TextZoneTest', () => {
     ], {}, { lang: 'fr' })
   ]));
 
-  const checkZone = function (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) {
+  const checkZone = (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) => {
     expected.fold(() => {
       actual.fold(
         // Good
@@ -69,13 +69,13 @@ UnitTest.test('TextZoneTest', () => {
     });
   };
 
-  const checkSingle = function (label: string, expected: Optional<RawZone>, startId: string, onlyLang: string) {
+  const checkSingle = (label: string, expected: Optional<RawZone>, startId: string, onlyLang: string) => {
     const item = doc1.find(doc1.get(), startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', onlyLang);
     checkZone(label + ' ' + startId, expected, actual);
   };
 
-  const checkRange = function (label: string, expected: Optional<RawZone>, startId: string, finishId: string, onlyLang: string) {
+  const checkRange = (label: string, expected: Optional<RawZone>, startId: string, finishId: string, onlyLang: string) => {
     const item1 = doc1.find(doc1.get(), startId).getOrDie();
     const item2 = doc1.find(doc1.get(), finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', onlyLang);
@@ -140,7 +140,7 @@ UnitTest.test('TextZoneTest', () => {
     'en'
   );
 
-  const checkSingleProp = function (info: ArbIds) {
+  const checkSingleProp = (info: ArbIds) => {
     const item = doc1.find(doc1.get(), info.startId).getOrDie();
     const actual = TextZone.single(doc1, item, 'en', 'en');
     return actual.forall((zone) => {
@@ -149,7 +149,7 @@ UnitTest.test('TextZoneTest', () => {
     });
   };
 
-  const checkRangeProp = function (info: ArbRangeIds) {
+  const checkRangeProp = (info: ArbRangeIds) => {
     const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
     const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
     const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');

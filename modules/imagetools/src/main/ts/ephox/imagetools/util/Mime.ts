@@ -1,10 +1,10 @@
-function getUriPathName(uri: string): string {
+const getUriPathName = (uri: string): string => {
   const a = document.createElement('a');
   a.href = uri;
   return a.pathname;
-}
+};
 
-function guessMimeType(uri: string): string {
+const guessMimeType = (uri: string): string => {
   if (uri.indexOf('data:') === 0) {
     const parts = uri.split(',');
     const matches = /data:([^;]+)/.exec(parts[0]);
@@ -24,7 +24,7 @@ function guessMimeType(uri: string): string {
     }
     return mimes[ext];
   }
-}
+};
 
 export {
   guessMimeType

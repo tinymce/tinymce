@@ -49,7 +49,7 @@ UnitTest.asynctest('browser.tinymce.core.file.ImageScannerTest', (success, failu
   suite.asyncTest('findAll (filtered)', (_, done) => {
     const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
-    const predicate = function (img) {
+    const predicate = (img) => {
       return !img.hasAttribute('data-skip');
     };
 

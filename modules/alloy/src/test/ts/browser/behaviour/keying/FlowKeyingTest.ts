@@ -136,7 +136,5 @@ UnitTest.asynctest('Flow Keying Skip Element Test', (success, failure) => {
 
       GuiSetup.mTeardownKeyLogger(body, [ ])
     ];
-  }, () => {
-    success();
-  }, failure);
+  }, success, failure);
 });

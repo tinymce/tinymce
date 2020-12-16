@@ -717,7 +717,5 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageDataTest', (success,
         });
       }))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

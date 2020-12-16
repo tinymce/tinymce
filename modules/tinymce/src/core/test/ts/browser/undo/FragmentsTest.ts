@@ -6,13 +6,13 @@ import * as Fragments from 'tinymce/core/undo/Fragments';
 UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const div = function (html) {
+  const div = (html) => {
     const div = document.createElement('div');
     div.innerHTML = html;
     return div;
   };
 
-  const html = function (elm) {
+  const html = (elm) => {
     return elm.innerHTML;
   };
 
@@ -41,7 +41,5 @@ UnitTest.asynctest('browser.tinymce.core.undo.FragmentsTest', (success, failure)
     LegacyUnit.deepEqual(html(Fragments.write([ '<b>c</b>', '<b>d</b>', '<!--e-->' ], div('a<b>b</b>'))), '<b>c</b><b>d</b><!--e-->');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

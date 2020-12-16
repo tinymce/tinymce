@@ -21,7 +21,7 @@ const typeLookup = {
 };
 
 // Walks the tree left/right
-const walk = function (node: AstNode, root: AstNode | null, prev?: boolean): AstNode {
+const walk = (node: AstNode, root: AstNode | null, prev?: boolean): AstNode => {
   const startName = prev ? 'lastChild' : 'firstChild';
   const siblingName = prev ? 'prev' : 'next';
 

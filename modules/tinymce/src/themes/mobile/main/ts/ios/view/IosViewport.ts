@@ -16,7 +16,7 @@ import * as DeviceZones from './DeviceZones';
 const fixture = Adt.generate([
   { fixed: [ 'element', 'property', 'offsetY' ] },
   // Not supporting property yet
-  { scroller : [ 'element', 'offsetY' ] }
+  { scroller: [ 'element', 'offsetY' ] }
 ]);
 
 const yFixedData = 'data-' + Styles.resolve('position-y-fixed');

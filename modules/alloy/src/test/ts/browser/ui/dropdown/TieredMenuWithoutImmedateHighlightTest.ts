@@ -151,5 +151,5 @@ UnitTest.asynctest('TieredMenuWithoutImmediateHighlightTest', (success, failure)
       })),
       component.element
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

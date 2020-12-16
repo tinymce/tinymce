@@ -9,8 +9,8 @@ UnitTest.test('Fun: unit tests', () => {
 
   const add2squared = Fun.compose(squared, add2);
 
-  const f0 = function () {
-    return Assert.eq('eq', 0, arguments.length);
+  const f0 = (...args: any[]) => {
+    return Assert.eq('eq', 0, args.length);
   };
   Fun.noarg(f0)(1, 2, 3);
 

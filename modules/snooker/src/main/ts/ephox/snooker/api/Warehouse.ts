@@ -10,16 +10,16 @@ export interface Warehouse {
   readonly columns: Record<string, Structs.ColumnExt>;
 }
 
-const key = function (row: number, column: number): string {
+const key = (row: number, column: number): string => {
   return row + ',' + column;
 };
 
-const getAt = function (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> {
+const getAt = (warehouse: Warehouse, row: number, column: number): Optional<Structs.DetailExt> => {
   const raw = warehouse.access[key(row, column)];
   return raw !== undefined ? Optional.some(raw) : Optional.none<Structs.DetailExt>();
 };
 
-const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> {
+const findItem = <T> (warehouse: Warehouse, item: T, comparator: (a: T, b: SugarElement) => boolean): Optional<Structs.DetailExt> => {
   const filtered = filterItems(warehouse, (detail) => {
     return comparator(item, detail.element);
   });
@@ -27,8 +27,10 @@ const findItem = function <T> (warehouse: Warehouse, item: T, comparator: (a: T,
   return filtered.length > 0 ? Optional.some(filtered[0]) : Optional.none<Structs.DetailExt>();
 };
 
-const filterItems = function (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] {
-  const all = Arr.bind(warehouse.all, (r) => { return r.cells; });
+const filterItems = (warehouse: Warehouse, predicate: (x: Structs.DetailExt, i: number) => boolean): Structs.DetailExt[] => {
+  const all = Arr.bind(warehouse.all, (r) => {
+    return r.cells;
+  });
   return Arr.filter(all, predicate);
 };
 

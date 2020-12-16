@@ -6,7 +6,7 @@ tinymce.init({
   toolbar: 'undo redo | media',
   // media_dimensions: false,
   // media_live_embeds: false,
-  file_picker_callback(callback, value, meta) {
+  file_picker_callback: (callback, value, meta) => {
     // Provide alternative source and posted for the media dialog
     if (meta.filetype === 'media') {
       callback('https://youtu.be/a4tNU2jgTZU');

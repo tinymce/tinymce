@@ -17,7 +17,7 @@ import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
 import * as TableCellSelection from './TableCellSelection';
 
-const getStartNode = function (rng) {
+const getStartNode = (rng) => {
   const sc = rng.startContainer, so = rng.startOffset;
   if (NodeType.isText(sc)) {
     return so === 0 ? Optional.some(SugarElement.fromDom(sc)) : Optional.none();
@@ -26,7 +26,7 @@ const getStartNode = function (rng) {
   }
 };
 
-const getEndNode = function (rng) {
+const getEndNode = (rng) => {
   const ec = rng.endContainer, eo = rng.endOffset;
   if (NodeType.isText(ec)) {
     return eo === ec.data.length ? Optional.some(SugarElement.fromDom(ec)) : Optional.none();
@@ -35,7 +35,7 @@ const getEndNode = function (rng) {
   }
 };
 
-const getFirstChildren = function (node) {
+const getFirstChildren = (node) => {
   return Traverse.firstChild(node).fold(
     Fun.constant([ node ]),
     (child) => {
@@ -44,7 +44,7 @@ const getFirstChildren = function (node) {
   );
 };
 
-const getLastChildren = function (node) {
+const getLastChildren = (node) => {
   return Traverse.lastChild(node).fold(
     Fun.constant([ node ]),
     (child) => {
@@ -59,7 +59,7 @@ const getLastChildren = function (node) {
   );
 };
 
-const hasAllContentsSelected = function (elm, rng) {
+const hasAllContentsSelected = (elm, rng) => {
   return Optionals.lift2(getStartNode(rng), getEndNode(rng), (startNode, endNode) => {
     const start = Arr.find(getFirstChildren(elm), Fun.curry(Compare.eq, startNode));
     const end = Arr.find(getLastChildren(elm), Fun.curry(Compare.eq, endNode));

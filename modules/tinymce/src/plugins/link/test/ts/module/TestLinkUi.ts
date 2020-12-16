@@ -94,7 +94,7 @@ const sWaitForUi = (label: string, selector: string) => Logger.t('Wait for UI', 
   1000
 ));
 
-const sInsertLink = function (ui: TinyUi, url: string) {
+const sInsertLink = (ui: TinyUi, url: string) => {
   return Logger.t('Insert link', GeneralSteps.sequence([
     sOpenLinkDialog(ui),
     FocusTools.sSetActiveValue(doc, url),

@@ -2,12 +2,13 @@ import * as Canvas from '../util/Canvas';
 import * as ImageResult from '../util/ImageResult';
 import * as ImageResizerCanvas from './ImageResizerCanvas';
 
-function rotate(ir: ImageResult.ImageResult, angle: number): Promise<ImageResult.ImageResult> {
+const rotate = (ir: ImageResult.ImageResult, angle: number): Promise<ImageResult.ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return applyRotate(canvas, ir.getType(), angle);
   });
-}
-function applyRotate(image: HTMLImageElement | HTMLCanvasElement, type: string, angle: number): Promise<ImageResult.ImageResult> {
+};
+
+const applyRotate = (image: HTMLImageElement | HTMLCanvasElement, type: string, angle: number): Promise<ImageResult.ImageResult> => {
   const canvas = Canvas.create(image.width, image.height);
   const context = Canvas.get2dContext(canvas);
   let translateX = 0;
@@ -32,14 +33,15 @@ function applyRotate(image: HTMLImageElement | HTMLCanvasElement, type: string, 
   context.drawImage(image, 0, 0);
 
   return ImageResult.fromCanvas(canvas, type);
-}
+};
 
-function flip(ir: ImageResult.ImageResult, axis: 'v' | 'h'): Promise<ImageResult.ImageResult> {
+const flip = (ir: ImageResult.ImageResult, axis: 'v' | 'h'): Promise<ImageResult.ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return applyFlip(canvas, ir.getType(), axis);
   });
-}
-function applyFlip(image: HTMLImageElement | HTMLCanvasElement, type: string, axis: 'v' | 'h'): Promise<ImageResult.ImageResult> {
+};
+
+const applyFlip = (image: HTMLImageElement | HTMLCanvasElement, type: string, axis: 'v' | 'h'): Promise<ImageResult.ImageResult> => {
   const canvas = Canvas.create(image.width, image.height);
   const context = Canvas.get2dContext(canvas);
 
@@ -52,30 +54,31 @@ function applyFlip(image: HTMLImageElement | HTMLCanvasElement, type: string, ax
   }
 
   return ImageResult.fromCanvas(canvas, type);
-}
+};
 
-function crop(ir: ImageResult.ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult.ImageResult> {
+const crop = (ir: ImageResult.ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult.ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return applyCrop(canvas, ir.getType(), x, y, w, h);
   });
-}
-function applyCrop(image: HTMLImageElement | HTMLCanvasElement, type: string, x: number, y: number, w: number, h: number): Promise<ImageResult.ImageResult> {
+};
+
+const applyCrop = (image: HTMLImageElement | HTMLCanvasElement, type: string, x: number, y: number, w: number, h: number): Promise<ImageResult.ImageResult> => {
   const canvas = Canvas.create(w, h);
   const context = Canvas.get2dContext(canvas);
 
   context.drawImage(image, -x, -y);
 
   return ImageResult.fromCanvas(canvas, type);
-}
+};
 
-function resize(ir: ImageResult.ImageResult, w: number, h: number): Promise<ImageResult.ImageResult> {
+const resize = (ir: ImageResult.ImageResult, w: number, h: number): Promise<ImageResult.ImageResult> => {
   return ir.toCanvas().then((canvas) => {
     return ImageResizerCanvas.scale(canvas, w, h)
       .then((newCanvas) => {
         return ImageResult.fromCanvas(newCanvas, ir.getType());
       });
   });
-}
+};
 
 export {
   rotate,

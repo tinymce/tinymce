@@ -32,7 +32,7 @@ const preprocessExact = (start: SugarElement<Node>, soffset: number, finish: Sug
 };
 
 const preprocess = (selection: SimSelection): SimSelection => selection.match({
-  domRange(rng) {
+  domRange: (rng) => {
     const start = SugarElement.fromDom(rng.startContainer);
     const finish = SugarElement.fromDom(rng.endContainer);
     return preprocessExact(start, rng.startOffset, finish, rng.endOffset);

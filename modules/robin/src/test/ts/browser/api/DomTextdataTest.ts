@@ -12,7 +12,7 @@ UnitTest.test('DomTextdataTest', () => {
   const e = SugarElement.fromText('epsilon');
   const f = SugarElement.fromText('foo');
 
-  const check = function (expected: { text: string; cursor: Optional<number> }, elements: SugarElement[], current: SugarElement, offset: number) {
+  const check = (expected: { text: string; cursor: Optional<number> }, elements: SugarElement[], current: SugarElement, offset: number) => {
     const actual = DomTextdata.from(elements, current, offset);
     Assert.eq('eq', expected.text, actual.text);
 

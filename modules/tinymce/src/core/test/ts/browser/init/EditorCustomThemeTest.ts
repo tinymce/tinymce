@@ -22,7 +22,7 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', (success, 
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    theme(editor, targetnode) {
+    theme: (editor, targetnode) => {
       const editorContainer = document.createElement('div');
       editorContainer.id = 'editorContainer';
 

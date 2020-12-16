@@ -28,7 +28,7 @@ const dispatchWith = (component: AlloyComponent, target: SugarElement, event: st
   component.getSystem().triggerEvent(event, target, data);
 };
 
-const dispatchEvent = function <T extends EventFormat> (component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void {
+const dispatchEvent = <T extends EventFormat>(component: AlloyComponent, target: SugarElement, event: string, simulatedEvent: SimulatedEvent<T>): void => {
   component.getSystem().triggerEvent(event, target, simulatedEvent.event);
 };
 

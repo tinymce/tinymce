@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', (success, failure) => {
   Theme();
 
-  const sCreateInlineEditor = function (html) {
+  const sCreateInlineEditor = (html) => {
     return Chain.asStep({}, [
       McEditor.cFromHtml(html, {
         inline: true,
@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', (success, failure)
     ]);
   };
 
-  const sAssertSelection = function (editorIndex, startPath, startOffset, endPath, endOffset) {
+  const sAssertSelection = (editorIndex, startPath, startOffset, endPath, endOffset) => {
     return Step.sync(() => {
       const editor = EditorManager.get(editorIndex);
       const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
@@ -56,7 +56,5 @@ UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', (success, failure)
       }),
       sRemoveEditors
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

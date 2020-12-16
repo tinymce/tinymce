@@ -19,12 +19,12 @@ export interface Mutation {
   events: DragDistanceEvents['registry'];
 }
 
-export const Mutation = function (): Mutation {
+export const Mutation = (): Mutation => {
   const events: DragDistanceEvents = Events.create({
     drag: Event([ 'xDelta', 'yDelta' ])
   });
 
-  const mutate = function (x: number, y: number) {
+  const mutate = (x: number, y: number) => {
     events.trigger.drag(x, y);
   };
 

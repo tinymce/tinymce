@@ -4,8 +4,8 @@ import { Arr } from '@ephox/katamari';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';

@@ -28,18 +28,18 @@ UnitTest.asynctest(
       document.body.appendChild(div);
     });
 
-    const sWaitForBookmark = function (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) {
+    const sWaitForBookmark = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
       return Waiter.sTryUntil('wait for selection', Step.sync(() => {
         assertBookmark(editor, startPath, startOffset, endPath, endOffset);
       }));
     };
 
-    const focusDiv = function () {
+    const focusDiv = () => {
       const input: any = document.querySelector('#' + testDivId);
       input.focus();
     };
 
-    const setSelection = function (editor: Editor, start: number[], soffset: number, finish: number[], foffset: number) {
+    const setSelection = (editor: Editor, start: number[], soffset: number, finish: number[], foffset: number) => {
       const sc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
       const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
 
@@ -50,9 +50,9 @@ UnitTest.asynctest(
       editor.selection.setRng(rng);
     };
 
-    const assertPath = function (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) {
+    const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
       const expected = Cursors.calculateOne(root, expPath);
-      const message = function () {
+      const message = () => {
         const actual = SugarElement.fromDom(actElement);
         const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
         return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
@@ -61,14 +61,14 @@ UnitTest.asynctest(
       Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
     };
 
-    const assertSelection = function (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+    const assertSelection = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
       const actual = editor.selection.getRng();
       const root = SugarElement.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
       assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
     };
 
-    const assertBookmark = function (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) {
+    const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
       const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
       const root = SugarElement.fromDom(editor.getBody());
       assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
@@ -199,8 +199,6 @@ UnitTest.asynctest(
       plugins: '',
       toolbar: '',
       base_url: '/project/tinymce/js/tinymce'
-    }, () => {
-      success();
-    }, failure);
+    }, success, failure);
   }
 );

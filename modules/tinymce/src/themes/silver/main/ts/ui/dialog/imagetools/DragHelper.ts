@@ -33,7 +33,7 @@ interface DragHelperSettings {
   stop?: (e: MouseEvent | TouchEvent) => void;
 }
 
-function getDocumentSize(doc: Document) {
+const getDocumentSize = (doc: Document) => {
   const max = Math.max;
 
   const documentElement = doc.documentElement;
@@ -51,9 +51,9 @@ function getDocumentSize(doc: Document) {
     width: scrollWidth < offsetWidth ? clientWidth : scrollWidth,
     height: scrollHeight < offsetHeight ? clientHeight : scrollHeight
   };
-}
+};
 
-function updateWithTouchData(e) {
+const updateWithTouchData = (e) => {
   let keys, i;
 
   if (e.changedTouches) {
@@ -62,9 +62,9 @@ function updateWithTouchData(e) {
       e[keys[i]] = e.changedTouches[0][keys[i]];
     }
   }
-}
+};
 
-export default function (id: string, settings: DragHelperSettings) {
+export default (id: string, settings: DragHelperSettings) => {
   let $eventOverlay;
   const doc = settings.document || document;
   let downButton;
@@ -72,7 +72,7 @@ export default function (id: string, settings: DragHelperSettings) {
 
   const handleElement = doc.getElementById(settings.handle || id);
 
-  const start = function (e) {
+  const start = (e) => {
     const docSize = getDocumentSize(doc);
     let cursor;
 
@@ -107,7 +107,7 @@ export default function (id: string, settings: DragHelperSettings) {
     settings.start(e);
   };
 
-  const drag = function (e) {
+  const drag = (e) => {
     updateWithTouchData(e);
 
     if (e.button !== downButton) {
@@ -121,7 +121,7 @@ export default function (id: string, settings: DragHelperSettings) {
     settings.drag(e);
   };
 
-  const stop = function (e) {
+  const stop = (e) => {
     updateWithTouchData(e);
 
     DomQuery(doc).off('mousemove touchmove', drag).off('mouseup touchend', stop);
@@ -138,9 +138,13 @@ export default function (id: string, settings: DragHelperSettings) {
    *
    * @method destroy
    */
-  this.destroy = function () {
+  const destroy = () => {
     DomQuery(handleElement).off();
   };
 
   DomQuery(handleElement).on('mousedown touchstart', start);
-}
+
+  return {
+    destroy
+  };
+};

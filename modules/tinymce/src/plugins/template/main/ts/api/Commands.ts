@@ -8,7 +8,7 @@
 import { Fun } from '@ephox/katamari';
 import * as Templates from '../core/Templates';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mceInsertTemplate', Fun.curry(Templates.insertTemplate, editor));
 };
 

@@ -10,13 +10,13 @@ import * as Settings from 'tinymce/themes/silver/ui/core/color/Settings';
 UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
   SilverTheme();
 
-  const sResetLocalStorage = function () {
+  const sResetLocalStorage = () => {
     return Logger.t('Reset local storage', Step.sync(() => {
       LocalStorage.removeItem('tinymce-custom-colors');
     }));
   };
 
-  const sAssertColors = function (input, expected) {
+  const sAssertColors = (input, expected) => {
     const extractColor = (color: string) => {
       const m = /^#([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})$/.exec(color);
       return [ parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16) ];
@@ -41,14 +41,14 @@ UnitTest.asynctest('ColorSettingsTest', (success, failure) => {
     }));
   };
 
-  const sAssertCols = function (editor, expected) {
+  const sAssertCols = (editor, expected) => {
     return Logger.t(`Assert color cols: ${expected}`, Step.sync(() => {
       const colors = ColorSwatch.getColorCols(editor);
       Assert.eq('should be same', expected, colors);
     }));
   };
 
-  const sAssertCalcCols = function (editor, colors, expected) {
+  const sAssertCalcCols = (editor, colors, expected) => {
     return Logger.t(`Assert calced cols: ${expected}`, Step.sync(() => {
       const sqrt = ColorSwatch.calcCols(colors);
       Assert.eq('should be same', expected, sqrt);

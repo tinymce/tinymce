@@ -42,7 +42,7 @@ const receivingChannel = (rawSpec: RepositionReceivingSpec): Record<string, Rece
   const detail: RepositionReceivingDetail = ValueSchema.asRawOrDie('Reposition', schema, rawSpec);
   return {
     [ Channels.repositionPopups() ]: {
-      onReceive(sandbox: AlloyComponent) {
+      onReceive: (sandbox: AlloyComponent) => {
         if (Sandboxing.isOpen(sandbox)) {
           detail.fireEventInstead.fold(
             () => detail.doReposition(sandbox),

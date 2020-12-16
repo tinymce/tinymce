@@ -17,7 +17,7 @@ const selectors = {
   poster: 'label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'
 };
 
-const sOpenDialog = function (ui: TinyUi) {
+const sOpenDialog = (ui: TinyUi) => {
   return Logger.t('Open dialog', GeneralSteps.sequence([
     ui.sClickOnToolbar('Click on media button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
     ui.sWaitForPopup('wait for popup', 'div.tox-dialog-wrap')
@@ -69,21 +69,21 @@ const sSetValueAndTrigger = (selector: string, value: string, events: string[]) 
   ])
 ]));
 
-const sPasteSourceValue = function (ui: TinyUi, value: string) {
+const sPasteSourceValue = (ui: TinyUi, value: string) => {
   return sSetValueAndTrigger(selectors.source, value, [ 'paste' ])(ui);
 };
 
 const sPastePosterValue = (ui: TinyUi, value: string) => sSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(ui);
 
-const sChangeWidthValue = function (ui: TinyUi, value: string) {
+const sChangeWidthValue = (ui: TinyUi, value: string) => {
   return sSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(ui);
 };
 
-const sChangeHeightValue = function (ui: TinyUi, value: string) {
+const sChangeHeightValue = (ui: TinyUi, value: string) => {
   return sSetValueAndTrigger(selectors.height, value, [ 'input', 'change' ])(ui);
 };
 
-const sAssertSizeRecalcConstrained = function (ui: TinyUi) {
+const sAssertSizeRecalcConstrained = (ui: TinyUi) => {
   return Logger.t('Asset constrained size recalculation', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
@@ -96,7 +96,7 @@ const sAssertSizeRecalcConstrained = function (ui: TinyUi) {
   ]));
 };
 
-const sAssertSizeRecalcConstrainedReopen = function (ui: TinyUi) {
+const sAssertSizeRecalcConstrainedReopen = (ui: TinyUi) => {
   return Logger.t('Assert constrained size recalculation on dialog reopen', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
@@ -113,7 +113,7 @@ const sAssertSizeRecalcConstrainedReopen = function (ui: TinyUi) {
   ]));
 };
 
-const sAssertSizeRecalcUnconstrained = function (ui: TinyUi) {
+const sAssertSizeRecalcUnconstrained = (ui: TinyUi) => {
   return Logger.t('Assert unconstrained size recalculation', GeneralSteps.sequence([
     sOpenDialog(ui),
     sPasteSourceValue(ui, 'http://test.se'),
@@ -127,11 +127,11 @@ const sAssertSizeRecalcUnconstrained = function (ui: TinyUi) {
   ]));
 };
 
-const sCloseDialog = function (ui: TinyUi) {
+const sCloseDialog = (ui: TinyUi) => {
   return Logger.t('Close dialog', ui.sClickOnUi('Click cancel button', selectors.xClose));
 };
 
-const cFakeEvent = function (name: string) {
+const cFakeEvent = (name: string) => {
   return Chain.control(
     Chain.op((elm: SugarElement) => {
       const element: HTMLElement = elm.dom;
@@ -156,7 +156,7 @@ const cFindFilepickerInput = cFindInDialog(selectors.source);
 
 const cFindTextarea = cFindInDialog(selectors.embed);
 
-const cSetSourceInput = function (ui: TinyUi, value: string) {
+const cSetSourceInput = (ui: TinyUi, value: string) => {
   return Chain.control(
     Chain.fromChains([
       cFindFilepickerInput(ui),
@@ -166,7 +166,7 @@ const cSetSourceInput = function (ui: TinyUi, value: string) {
   );
 };
 
-const sPasteTextareaValue = function (ui: TinyUi, value: string) {
+const sPasteTextareaValue = (ui: TinyUi, value: string) => {
   return Logger.t(`Paste text area ${value}`, Chain.asStep({}, [
     Chain.fromChains([
       cFindInDialog(selectors.embedButton)(ui),
@@ -180,7 +180,7 @@ const sPasteTextareaValue = function (ui: TinyUi, value: string) {
   ]));
 };
 
-const sAssertEmbedData = function (ui: TinyUi, content: string) {
+const sAssertEmbedData = (ui: TinyUi, content: string) => {
   return GeneralSteps.sequence([
     ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
     Waiter.sTryUntil('Textarea should have a proper value',
@@ -193,7 +193,7 @@ const sAssertEmbedData = function (ui: TinyUi, content: string) {
   ]);
 };
 
-const sTestEmbedContentFromUrl = function (apis: TinyApis, ui: TinyUi, url: string, content: string) {
+const sTestEmbedContentFromUrl = (apis: TinyApis, ui: TinyUi, url: string, content: string) => {
   return Logger.t(`Assert embed ${content} from ${url}`, GeneralSteps.sequence([
     apis.sSetContent(''),
     sOpenDialog(ui),
@@ -203,13 +203,13 @@ const sTestEmbedContentFromUrl = function (apis: TinyApis, ui: TinyUi, url: stri
   ]));
 };
 
-const sSetFormItemNoEvent = function (ui: TinyUi, value: string) {
+const sSetFormItemNoEvent = (ui: TinyUi, value: string) => {
   return Logger.t(`Set form item ${value}`, Chain.asStep({}, [
     cSetSourceInput(ui, value)
   ]));
 };
 
-const sAssertEditorContent = function (apis: TinyApis, editor: Editor, expected: string) {
+const sAssertEditorContent = (apis: TinyApis, editor: Editor, expected: string) => {
   return Waiter.sTryUntil('Wait for editor value',
     Chain.asStep({}, [
       apis.cGetContent(),
@@ -218,18 +218,18 @@ const sAssertEditorContent = function (apis: TinyApis, editor: Editor, expected:
   );
 };
 
-const sSubmitDialog = function (ui: TinyUi) {
+const sSubmitDialog = (ui: TinyUi) => {
   return Logger.t('Submit dialog', ui.sClickOnUi('Click submit button', selectors.saveButton));
 };
 
-const sSubmitAndReopen = function (ui: TinyUi) {
+const sSubmitAndReopen = (ui: TinyUi) => {
   return Logger.t('Submit and reopen dialog', GeneralSteps.sequence([
     sSubmitDialog(ui),
     sOpenDialog(ui)
   ]));
 };
 
-const sSetSetting = function (editorSetting: Record<string, any>, key: string, value: any) {
+const sSetSetting = (editorSetting: Record<string, any>, key: string, value: any) => {
   return Logger.t(`Set setting ${key}: ${value}`, Step.sync(() => {
     editorSetting[key] = value;
   }));

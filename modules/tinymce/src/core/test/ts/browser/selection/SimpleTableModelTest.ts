@@ -6,13 +6,13 @@ import * as SimpleTableModel from 'tinymce/core/selection/SimpleTableModel';
 
 UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', (success, failure) => {
 
-  const cFromDom = function (html: string) {
+  const cFromDom = (html: string) => {
     return Chain.injectThunked(() => {
       return SimpleTableModel.fromDom(SugarElement.fromHtml(html));
     });
   };
 
-  const cFromDomSubSection = function (html: string, startPath: number[], endPath: number[]) {
+  const cFromDomSubSection = (html: string, startPath: number[], endPath: number[]) => {
     return Chain.binder((_) => {
       const tableElm = SugarElement.fromHtml<HTMLTableElement>(html);
       const startElm = Hierarchy.follow(tableElm, startPath).getOrDie();
@@ -24,19 +24,19 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', (success, 
     });
   };
 
-  const cAssertWidth = function (expectedWidth: number) {
+  const cAssertWidth = (expectedWidth: number) => {
     return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       Assertions.assertEq('Should be expected width', expectedWidth, tableModel.width);
     });
   };
 
-  const cAssertHeight = function (expectedWidth: number) {
+  const cAssertHeight = (expectedWidth: number) => {
     return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       Assertions.assertEq('Should be expected height', expectedWidth, tableModel.rows.length);
     });
   };
 
-  const cAssertModelAsHtml = function (expectedHtml: string) {
+  const cAssertModelAsHtml = (expectedHtml: string) => {
     return Chain.op((tableModel: SimpleTableModel.TableModel) => {
       const actualHtml = Html.getOuter(SimpleTableModel.toDom(tableModel));
       Assertions.assertHtml('Should be expected table html', expectedHtml, actualHtml);
@@ -132,7 +132,5 @@ UnitTest.asynctest('browser.tinymce.core.selection.SimpleTableModel', (success, 
         cAssertModelAsHtml('<table><tbody><tr><td>E</td><td>F</td></tr><tr><td>H</td><td>I</td></tr></tbody></table>')
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

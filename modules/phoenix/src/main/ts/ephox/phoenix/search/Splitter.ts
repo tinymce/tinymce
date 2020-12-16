@@ -9,7 +9,7 @@ import { SpotRange } from '../api/data/Types';
  *
  * Returns a PositionArray of the result.
  */
-const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] {
+const subdivide = <E, D>(universe: Universe<E, D>, item: E, positions: number[]): SpotRange<E>[] => {
   const text = universe.property().getText(item);
   const pieces = Arr.filter(Strings.splits(text, positions), (section) => {
     return section.length > 0;
@@ -26,7 +26,9 @@ const subdivide = function <E, D> (universe: Universe<E, D>, item: E, positions:
     return Optional.some(result);
   }, pieces[0].length);
 
-  const otherElements = Arr.map(others, (a) => { return a.element; });
+  const otherElements = Arr.map(others, (a) => {
+    return a.element;
+  });
   universe.insert().afterAll(item, otherElements);
 
   return [ Spot.range(item, 0, pieces[0].length) ].concat(others);

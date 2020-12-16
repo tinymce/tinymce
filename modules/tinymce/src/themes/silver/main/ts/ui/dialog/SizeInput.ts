@@ -136,7 +136,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     markers: {
       lockClass: 'tox-locked'
     },
-    onLockedChange(current: AlloyComponent, other: AlloyComponent, _lock: AlloyComponent) {
+    onLockedChange: (current: AlloyComponent, other: AlloyComponent, _lock: AlloyComponent) => {
       parseSize(Representing.getValue(current)).each((size) => {
         converter(size).each((newSize) => {
           Representing.setValue(other, formatSize(newSize));

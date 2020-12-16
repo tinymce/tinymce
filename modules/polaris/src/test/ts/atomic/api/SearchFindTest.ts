@@ -6,7 +6,7 @@ import * as Safe from 'ephox/polaris/pattern/Safe';
 import { PRegExp } from 'ephox/polaris/pattern/Types';
 
 UnitTest.test('api.Search.findall (using api.Pattern)', () => {
-  const checkAll = function (expected: [number, number][], input: string, pattern: PRegExp) {
+  const checkAll = (expected: [number, number][], input: string, pattern: PRegExp) => {
     const actual = Search.findall(input, pattern);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, (exp, i) => {
@@ -19,7 +19,7 @@ UnitTest.test('api.Search.findall (using api.Pattern)', () => {
     name
   });
 
-  const checkMany = function (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) {
+  const checkMany = (expected: [number, number, string][], text: string, targets: ReturnType<typeof testData>[]) => {
     const actual = Search.findmany(text, targets);
     assert.eq(expected.length, actual.length);
     Arr.each(expected, (exp, i) => {

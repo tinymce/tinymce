@@ -9,28 +9,28 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', (success, f
 
   Theme();
 
-  const sDelete = function (editor) {
+  const sDelete = (editor) => {
     return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sDeleteNoop = function (editor) {
+  const sDeleteNoop = (editor) => {
     return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
     });
   };
 
-  const sBackspace = function (editor, _forward?) {
+  const sBackspace = (editor, _forward?) => {
     return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
     });
   };
 
-  const sBackspaceNoop = function (editor, _forward?) {
+  const sBackspaceNoop = (editor, _forward?) => {
     return Step.sync(() => {
       const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
       Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);

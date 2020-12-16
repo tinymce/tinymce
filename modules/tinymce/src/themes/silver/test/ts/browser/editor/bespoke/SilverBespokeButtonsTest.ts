@@ -329,9 +329,7 @@ UnitTest.asynctest('Editor (Silver) bespoke toolbar buttons test', (success, fai
       base_url: '/project/tinymce/js/tinymce',
       content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

@@ -35,7 +35,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     factory: Toolbar,
     schema: ToolbarSchema.schema(),
     name: 'overflow',
-    overrides(detail) {
+    overrides: (detail) => {
       return {
         toolbarBehaviours: Behaviour.derive([
           Sliding.config({

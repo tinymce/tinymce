@@ -8,14 +8,14 @@ UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', (success, fail
   const DOM = DOMUtils.DOM;
   const viewBlock = ViewBlock();
 
-  const createRange = function (sc, so, ec, eo) {
+  const createRange = (sc, so, ec, eo) => {
     const rng = DOM.createRng();
     rng.setStart(sc, so);
     rng.setEnd(ec, eo);
     return rng;
   };
 
-  const assertRange = function (expected, actual) {
+  const assertRange = (expected, actual) => {
     Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
     Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
     Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);

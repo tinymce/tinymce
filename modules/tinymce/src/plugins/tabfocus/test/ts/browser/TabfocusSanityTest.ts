@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', (succe
   Theme();
   TabfocusPlugin();
 
-  const sAddInputs = function (editor) {
+  const sAddInputs = (editor) => {
     return Logger.t('Add inputs', Step.sync(() => {
       const container = editor.getContainer();
       const input1 = document.createElement('input');

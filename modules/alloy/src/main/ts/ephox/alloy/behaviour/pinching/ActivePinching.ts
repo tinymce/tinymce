@@ -7,10 +7,12 @@ import { DragModeDeltas } from '../../dragging/common/DraggingTypes';
 import { PinchDragData, PinchingConfig, PinchingState } from './PinchingTypes';
 
 const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
-  getData(e: EventArgs<TouchEvent>) {
+  getData: (e: EventArgs<TouchEvent>) => {
     const raw = e.raw;
     const touches = raw.touches;
-    if (touches.length < 2) { return Optional.none(); }
+    if (touches.length < 2) {
+      return Optional.none();
+    }
 
     const deltaX = Math.abs(touches[0].clientX - touches[1].clientX);
     const deltaY = Math.abs(touches[0].clientY - touches[1].clientY);
@@ -24,7 +26,7 @@ const mode: DragModeDeltas<TouchEvent, PinchDragData> = {
     });
   },
 
-  getDelta(old, nu) {
+  getDelta: (old, nu) => {
     const changeX = nu.deltaX - old.deltaX;
     const changeY = nu.deltaY - old.deltaY;
     const changeDistance = nu.deltaDistance - old.deltaDistance;

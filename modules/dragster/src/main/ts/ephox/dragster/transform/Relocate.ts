@@ -20,8 +20,8 @@ interface Relocate {
   readonly events: RelocateEvents['registry'];
 }
 
-const both = function (element: SugarElement): Relocate {
-  const mutate = function (x: number, y: number) {
+const both = (element: SugarElement): Relocate => {
+  const mutate = (x: number, y: number) => {
     const location = SugarLocation.absolute(element);
     Css.setAll(element, {
       left: (location.left + x) + 'px',

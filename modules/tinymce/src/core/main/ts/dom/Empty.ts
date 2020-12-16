@@ -12,21 +12,21 @@ import * as CaretCandidate from '../caret/CaretCandidate';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as NodeType from './NodeType';
 
-const hasWhitespacePreserveParent = function (node: Node, rootNode: Node) {
+const hasWhitespacePreserveParent = (node: Node, rootNode: Node) => {
   const rootElement = SugarElement.fromDom(rootNode);
   const startNode = SugarElement.fromDom(node);
   return SelectorExists.ancestor(startNode, 'pre,code', Fun.curry(Compare.eq, rootElement));
 };
 
-const isWhitespace = function (node: Node, rootNode: Node) {
+const isWhitespace = (node: Node, rootNode: Node) => {
   return NodeType.isText(node) && isWhitespaceText(node.data) && hasWhitespacePreserveParent(node, rootNode) === false;
 };
 
-const isNamedAnchor = function (node: Node) {
+const isNamedAnchor = (node: Node) => {
   return NodeType.isElement(node) && node.nodeName === 'A' && !node.hasAttribute('href') && (node.hasAttribute('name') || node.hasAttribute('id'));
 };
 
-const isContent = function (node: Node, rootNode: Node) {
+const isContent = (node: Node, rootNode: Node) => {
   return (CaretCandidate.isCaretCandidate(node) && isWhitespace(node, rootNode) === false) || isNamedAnchor(node) || isBookmark(node);
 };
 
@@ -34,7 +34,7 @@ const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
-const isEmptyNode = function (targetNode: Node, skipBogus: boolean) {
+const isEmptyNode = (targetNode: Node, skipBogus: boolean) => {
   let node, brCount = 0;
 
   if (isContent(targetNode, targetNode)) {

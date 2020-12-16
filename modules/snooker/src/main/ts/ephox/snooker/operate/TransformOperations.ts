@@ -7,8 +7,8 @@ type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 type Subst = (element: SugarElement, comparator: CompElm) => SugarElement;
 
 // substitution :: (item, comparator) -> item
-const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst): Structs.RowCells[] {
-  const isTarget = function (cell: Structs.ElementNew) {
+const replaceIn = (grid: Structs.RowCells[], targets: Structs.ElementNew[], comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
+  const isTarget = (cell: Structs.ElementNew) => {
     return Arr.exists(targets, (target) => {
       return comparator(cell.element, target.element);
     });
@@ -21,16 +21,16 @@ const replaceIn = function (grid: Structs.RowCells[], targets: Structs.ElementNe
   });
 };
 
-const notStartRow = function (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean {
+const notStartRow = (grid: Structs.RowCells[], rowIndex: number, colIndex: number, comparator: CompElm): boolean => {
   return GridRow.getCellElement(grid[rowIndex], colIndex) !== undefined && (rowIndex > 0 && comparator(GridRow.getCellElement(grid[rowIndex - 1], colIndex), GridRow.getCellElement(grid[rowIndex], colIndex)));
 };
 
-const notStartColumn = function (row: Structs.RowCells, index: number, comparator: CompElm): boolean {
+const notStartColumn = (row: Structs.RowCells, index: number, comparator: CompElm): boolean => {
   return index > 0 && comparator(GridRow.getCellElement(row, index - 1), GridRow.getCellElement(row, index));
 };
 
 // substitution :: (item, comparator) -> item
-const replaceColumn = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
+const replaceColumn = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
   // Make this efficient later.
   const targets = Arr.bind(grid, (row, i) => {
     // check if already added.
@@ -42,7 +42,7 @@ const replaceColumn = function (grid: Structs.RowCells[], index: number, compara
 };
 
 // substitution :: (item, comparator) -> item
-const replaceRow = function (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] {
+const replaceRow = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
   const rows = GridRow.extractGridDetails(grid).rows;
   const targetRow = rows[index];
   const targets = Arr.bind(targetRow.cells, (item, i) => {

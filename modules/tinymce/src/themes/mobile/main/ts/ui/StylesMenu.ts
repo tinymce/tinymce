@@ -16,11 +16,11 @@ import * as Receivers from '../channels/Receivers';
 import * as Styles from '../style/Styles';
 import * as Scrollable from '../touch/scroll/Scrollable';
 
-const getValue = function (item): string {
+const getValue = (item): string => {
   return Obj.get(item, 'format').getOr(item.title);
 };
 
-const convert = function (formats, memMenuThunk) {
+const convert = (formats, memMenuThunk) => {
   const mainMenu = makeMenu('Styles', [
   ].concat(
     Arr.map(formats.items, (k) => {
@@ -50,7 +50,7 @@ const convert = function (formats, memMenuThunk) {
   };
 };
 
-const makeItem = function (value, text, selected, preview, isMenu) {
+const makeItem = (value, text, selected, preview, isMenu) => {
   return {
     data: {
       value,
@@ -86,7 +86,7 @@ const makeItem = function (value, text, selected, preview, isMenu) {
   };
 };
 
-const makeMenu = function (value, items, memMenuThunk, collapsable) {
+const makeMenu = (value, items, memMenuThunk, collapsable) => {
   return {
     value,
     dom: {
@@ -107,7 +107,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
           },
           GuiFactory.text(value)
         ] : [ GuiFactory.text(value) ],
-        action(item) {
+        action: (item) => {
           if (collapsable) {
             const comp = memMenuThunk().get(item);
             TieredMenu.collapseMenu(comp);
@@ -155,7 +155,7 @@ const makeMenu = function (value, items, memMenuThunk, collapsable) {
   };
 };
 
-const sketch = function (settings) {
+const sketch = (settings) => {
   const dataset = convert(settings.formats, () => {
     return memMenu;
   });
@@ -173,20 +173,20 @@ const sketch = function (settings) {
     // For animations, need things to stay around in the DOM (at least until animation is done)
     stayInDom: true,
 
-    onExecute(_tmenu, item) {
+    onExecute: (_tmenu, item) => {
       const v = Representing.getValue(item);
       settings.handle(item, v.value);
       return Optional.none();
     },
-    onEscape() {
+    onEscape: () => {
       return Optional.none();
     },
-    onOpenMenu(container, menu) {
+    onOpenMenu: (container, menu) => {
       const w = Width.get(container.element);
       Width.set(menu.element, w);
       Transitioning.jumpTo(menu, 'current');
     },
-    onOpenSubmenu(container, item, submenu) {
+    onOpenSubmenu: (container, item, submenu) => {
       const w = Width.get(container.element);
       const menu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const menuComp = container.getSystem().getByDom(menu).getOrDie();
@@ -198,7 +198,7 @@ const sketch = function (settings) {
       Transitioning.progressTo(submenu, 'current');
     },
 
-    onCollapseMenu(container, item, menu) {
+    onCollapseMenu: (container, item, menu) => {
       const submenu = SelectorFind.ancestor(item.element, '[role="menu"]').getOrDie('hacky');
       const submenuComp = container.getSystem().getByDom(submenu).getOrDie();
       Transitioning.progressTo(submenuComp, 'after');

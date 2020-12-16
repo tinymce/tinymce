@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.imagetools.SequenceTest', (success, 
     const tinyApis = TinyApis(editor);
     const imgOps = ImageOps(editor);
 
-    const sManipulateImage = function (message, url) {
+    const sManipulateImage = (message, url) => {
       return Log.stepsAsStep('TBA', `ImageTools: ${message}`, [
         ImageUtils.sLoadImage(editor, url),
         tinyApis.sSelect('img', []),

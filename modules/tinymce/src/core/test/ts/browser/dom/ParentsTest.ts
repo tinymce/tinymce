@@ -6,13 +6,13 @@ import * as Parents from 'tinymce/core/dom/Parents';
 
 UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) => {
 
-  const cCreateStructure = function (html) {
+  const cCreateStructure = (html) => {
     return Chain.injectThunked(() => {
       return SugarElement.fromHtml(html);
     });
   };
 
-  const cParentsUntil = function (startPath, rootPath, predicate) {
+  const cParentsUntil = (startPath, rootPath, predicate) => {
     return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
     });
   };
 
-  const cParents = function (startPath, rootPath) {
+  const cParents = (startPath, rootPath) => {
     return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
     });
   };
 
-  const cParentsAndSelf = function (startPath, rootPath) {
+  const cParentsAndSelf = (startPath, rootPath) => {
     return Chain.mapper((structure: any) => {
       const startNode = Hierarchy.follow(structure, startPath).getOrDie();
       const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
     });
   };
 
-  const cAssertElementNames = function (expectedNames) {
+  const cAssertElementNames = (expectedNames) => {
     return Chain.mapper((parents: SugarElement[]) => {
       const names = Arr.map(parents, SugarNode.name);
       Assertions.assertEq('Should be expected names', expectedNames, names);
@@ -44,8 +44,8 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
     });
   };
 
-  const hasName = function (name) {
-    return function (elm) {
+  const hasName = (name) => {
+    return (elm) => {
       return SugarNode.name(elm) === name;
     };
   };
@@ -116,7 +116,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) =>
         cAssertElementNames([ '#text', 'u', 'i' ])
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

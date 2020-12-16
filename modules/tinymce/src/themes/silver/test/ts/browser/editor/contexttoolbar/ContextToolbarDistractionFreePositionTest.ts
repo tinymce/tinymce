@@ -125,9 +125,7 @@ UnitTest.asynctest('Distraction free editor ContextToolbar Position test', (succ
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

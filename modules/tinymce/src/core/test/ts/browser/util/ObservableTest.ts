@@ -11,12 +11,12 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', (success, failure
     let lastName, lastState, data = '';
 
     const Class: any = function (parentObj) {
-      this.toggleNativeEvent = function (name, state) {
+      this.toggleNativeEvent = (name, state) => {
         lastName = name;
         lastState = state;
       };
 
-      this.parent = function () {
+      this.parent = () => {
         return parentObj;
       };
     };
@@ -62,7 +62,5 @@ UnitTest.asynctest('browser.tinymce.core.util.ObservableTest', (success, failure
     LegacyUnit.strictEqual(data, 'cabcr');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

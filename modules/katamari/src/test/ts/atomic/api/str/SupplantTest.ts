@@ -3,10 +3,10 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('supplant', () => {
-  function check(expected, str, obj) {
+  const check = (expected: string, str: string, obj: Record<string, any>) => {
     const actual = Strings.supplant(str, obj);
     Assert.eq('eq', expected, actual);
-  }
+  };
 
   check('', '', {});
   check('', '', { cat: 'dog' });

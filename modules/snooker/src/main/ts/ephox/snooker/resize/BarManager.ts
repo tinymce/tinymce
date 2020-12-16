@@ -46,13 +46,13 @@ export interface BarManager {
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
 
-export const BarManager = function (wire: ResizeWire): BarManager {
+export const BarManager = (wire: ResizeWire): BarManager => {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
 
   let hoverTable = Optional.none<SugarElement<HTMLTableElement>>();
 
-  const getResizer = function (element: SugarElement, type: string) {
+  const getResizer = (element: SugarElement, type: string) => {
     return Optional.from(Attribute.get(element, type));
   };
 
@@ -69,7 +69,7 @@ export const BarManager = function (wire: ResizeWire): BarManager {
     });
   });
 
-  const getDelta = function (target: SugarElement, dir: string) {
+  const getDelta = (target: SugarElement, dir: string) => {
     const newX = CellUtils.getCssValue(target, dir);
     const oldX = CellUtils.getAttrValue(target, 'data-initial-' + dir, 0);
     return newX - oldX;
@@ -97,7 +97,7 @@ export const BarManager = function (wire: ResizeWire): BarManager {
 
   });
 
-  const handler = function (target: SugarElement, dir: string) {
+  const handler = (target: SugarElement, dir: string) => {
     events.trigger.startAdjust();
     mutation.assign(target);
     Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
@@ -117,7 +117,7 @@ export const BarManager = function (wire: ResizeWire): BarManager {
     }
   });
 
-  const isRoot = function (e: SugarElement) {
+  const isRoot = (e: SugarElement) => {
     return Compare.eq(e, wire.view());
   };
 
@@ -143,14 +143,14 @@ export const BarManager = function (wire: ResizeWire): BarManager {
     );
   });
 
-  const destroy = function () {
+  const destroy = () => {
     mousedown.unbind();
     mouseover.unbind();
     resizing.destroy();
     Bars.destroy(wire);
   };
 
-  const refresh = function (tbl: SugarElement<HTMLTableElement>) {
+  const refresh = (tbl: SugarElement<HTMLTableElement>) => {
     Bars.refresh(wire, tbl);
   };
 

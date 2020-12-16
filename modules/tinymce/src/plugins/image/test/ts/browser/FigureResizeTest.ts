@@ -28,7 +28,7 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
     Guard.addLogging('Get element size')
   );
 
-  const cDragHandleRight = function (px) {
+  const cDragHandleRight = (px: number) => {
     return Chain.control(
       Chain.op((input: any) => {
         const dom = input.editor.dom;
@@ -90,7 +90,5 @@ UnitTest.asynctest('browser.tinymce.plugins.image.FigureResizeTest', (success, f
       ]),
       McEditor.cRemove
     ])
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

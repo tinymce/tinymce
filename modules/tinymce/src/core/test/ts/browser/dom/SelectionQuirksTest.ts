@@ -15,25 +15,25 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', (success, fai
 
     // hijack editor.selection.normalize() to count how many times it will be invoked
     const backupNormalize = editor.selection.normalize;
-    const normalize = function () {
+    const normalize = (...args: any[]) => {
       count = count === undefined ? 1 : count + 1;
-      backupNormalize.apply(this, arguments);
+      backupNormalize.apply(this, args);
     };
     editor.selection.normalize = normalize;
 
-    const sResetNormalizeCounter = function () {
+    const sResetNormalizeCounter = () => {
       return Step.sync(() => {
         count = 0;
       });
     };
 
-    const sAssertNormalizeCounter = function (expected) {
+    const sAssertNormalizeCounter = (expected) => {
       return Step.sync(() => {
         Assertions.assertEq('checking normalization counter', expected, count);
       });
     };
 
-    const sClickBody = function (editor) {
+    const sClickBody = (editor) => {
       return Step.sync(() => {
         const target = editor.getBody();
 

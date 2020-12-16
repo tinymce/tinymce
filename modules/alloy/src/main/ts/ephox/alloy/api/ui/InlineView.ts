@@ -56,22 +56,22 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
     markers: menuSpec.menu.markers,
     highlightImmediately: menuSpec.menu.highlightImmediately,
 
-    onEscape() {
+    onEscape: () => {
       // Note for the future: this should possibly also call detail.onHide
       Sandboxing.close(menuSandbox);
       detail.onEscape.map((handler) => handler(menuSandbox));
       return Optional.some<boolean>(true);
     },
 
-    onExecute() {
+    onExecute: () => {
       return Optional.some<boolean>(true);
     },
 
-    onOpenMenu(tmenu, menu) {
+    onOpenMenu: (tmenu, menu) => {
       Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds());
     },
 
-    onOpenSubmenu(tmenu, item, submenu, triggeringPaths) {
+    onOpenSubmenu: (tmenu, item, submenu, triggeringPaths) => {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
@@ -80,7 +80,7 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       }, submenu);
     },
 
-    onRepositionMenu(tmenu, primaryMenu, submenuTriggers) {
+    onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
       const sink = lazySink().getOrDie();
       Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
       Arr.each(submenuTriggers, (st) => {
@@ -173,16 +173,16 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
       detail.inlineBehaviours,
       [
         Sandboxing.config({
-          isPartOf(sandbox, data, queryElem) {
+          isPartOf: (sandbox, data, queryElem) => {
             return ComponentStructure.isPartOf(data, queryElem) || isPartOfRelated(sandbox, queryElem);
           },
-          getAttachPoint(sandbox) {
+          getAttachPoint: (sandbox) => {
             return detail.lazySink(sandbox).getOrDie();
           },
-          onOpen(sandbox) {
+          onOpen: (sandbox) => {
             detail.onShow(sandbox);
           },
-          onClose(sandbox) {
+          onClose: (sandbox) => {
             detail.onHide(sandbox);
           }
         }),

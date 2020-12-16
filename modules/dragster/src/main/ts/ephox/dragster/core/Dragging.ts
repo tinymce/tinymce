@@ -25,7 +25,7 @@ export interface Dragging {
   readonly events: DragActionEvents['registry'];
 }
 
-const setup = function (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>): Dragging {
+const setup = (mutation: DragMutation, mode: DragMode, settings: Partial<BlockerOptions>): Dragging => {
   let active = false;
 
   const events: DragActionEvents = Events.create({
@@ -35,7 +35,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
 
   const movement = Movement();
 
-  const drop = function () {
+  const drop = () => {
     sink.stop();
     if (movement.isOn()) {
       movement.off();
@@ -45,13 +45,13 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
 
   const throttledDrop = Throttler.last(drop, 200);
 
-  const go = function (parent: SugarElement<Node>) {
+  const go = (parent: SugarElement<Node>) => {
     sink.start(parent);
     movement.on();
     events.trigger.start();
   };
 
-  const mousemove = function (event: EventArgs) {
+  const mousemove = (event: EventArgs) => {
     throttledDrop.cancel();
     movement.onEvent(event, mode);
   };
@@ -60,17 +60,17 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
     mode.mutate(mutation, event.info);
   });
 
-  const on = function () {
+  const on = () => {
     active = true;
   };
 
-  const off = function () {
+  const off = () => {
     active = false;
     // acivate some events here?
   };
 
-  const runIfActive = function <F extends (...args: any[]) => any> (f: F) {
-    return function (...args: Parameters<F>) {
+  const runIfActive = <F extends (...args: any[]) => any> (f: F) => {
+    return (...args: Parameters<F>) => {
       if (active) {
         f.apply(null, args);
       }
@@ -86,7 +86,7 @@ const setup = function (mutation: DragMutation, mode: DragMode, settings: Partia
     delayDrop: runIfActive(throttledDrop.throttle)
   }), settings);
 
-  const destroy = function () {
+  const destroy = () => {
     sink.destroy();
   };
 

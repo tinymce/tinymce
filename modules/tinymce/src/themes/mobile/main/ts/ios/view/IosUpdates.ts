@@ -11,13 +11,13 @@ import { Css } from '@ephox/sugar';
 import * as IosScrolling from '../scroll/IosScrolling';
 import * as IosViewport from './IosViewport';
 
-const updateFixed = function (element, property, winY, offsetY) {
+const updateFixed = (element, property, winY, offsetY) => {
   const destination = winY + offsetY;
   Css.set(element, property, destination + 'px');
   return Future.pure(offsetY);
 };
 
-const updateScrollingFixed = function (element, winY, offsetY) {
+const updateScrollingFixed = (element, winY, offsetY) => {
   const destTop = winY + offsetY;
   const oldProp = Css.getRaw(element, 'top').getOr(offsetY);
   // While we are changing top, aim to scroll by the same amount to keep the cursor in the same location.
@@ -26,7 +26,7 @@ const updateScrollingFixed = function (element, winY, offsetY) {
   return IosScrolling.moveScrollAndTop(element, destScroll, destTop);
 };
 
-const updateFixture = function (fixture, winY) {
+const updateFixture = (fixture, winY) => {
   return fixture.fold((element, property, offsetY) => {
     return updateFixed(element, property, winY, offsetY);
   }, (element, offsetY) => {
@@ -34,7 +34,7 @@ const updateFixture = function (fixture, winY) {
   });
 };
 
-const updatePositions = function (container, winY) {
+const updatePositions = (container, winY) => {
   const fixtures = IosViewport.findFixtures(container);
   const updates = Arr.map(fixtures, (fixture) => {
     return updateFixture(fixture, winY);

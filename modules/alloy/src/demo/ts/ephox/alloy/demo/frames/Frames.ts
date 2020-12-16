@@ -26,7 +26,9 @@ const readDoc = (element: SugarElement): SugarElement<Document> => {
 };
 
 const write = (element: SugarElement, content: string): void => {
-  if (!SugarBody.inBody(element)) { throw new Error('Internal error: attempted to write to an iframe that is not n the DOM'); }
+  if (!SugarBody.inBody(element)) {
+    throw new Error('Internal error: attempted to write to an iframe that is not n the DOM');
+  }
 
   const doc = readDoc(element);
   const dom = doc.dom;

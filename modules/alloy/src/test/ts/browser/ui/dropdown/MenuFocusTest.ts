@@ -138,5 +138,5 @@ UnitTest.asynctest('MenuFocusTest', (success, failure) => {
       sAssertFocusShift('Focusing on alpha-widget-2 (fakeFocus)', 'input', '.alpha-widget-2'),
       sAssertFocusShift('Focusing on beta-item-2 (fakeFocus)', 'input', '.beta-item-2')
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

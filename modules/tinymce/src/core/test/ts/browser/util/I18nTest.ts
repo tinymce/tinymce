@@ -91,7 +91,5 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', (success, failure) => {
     I18n.setCode('en');
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

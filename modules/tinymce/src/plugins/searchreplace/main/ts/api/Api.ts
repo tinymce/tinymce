@@ -9,24 +9,24 @@ import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Actions from '../core/Actions';
 
-const get = function (editor: Editor, currentState: Cell<Actions.SearchState>) {
-  const done = function (keepEditorSelection?: boolean) {
+const get = (editor: Editor, currentState: Cell<Actions.SearchState>) => {
+  const done = (keepEditorSelection?: boolean) => {
     return Actions.done(editor, currentState, keepEditorSelection);
   };
 
-  const find = function (text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean = false) {
+  const find = (text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean = false) => {
     return Actions.find(editor, currentState, text, matchCase, wholeWord, inSelection);
   };
 
-  const next = function () {
+  const next = () => {
     return Actions.next(editor, currentState);
   };
 
-  const prev = function () {
+  const prev = () => {
     return Actions.prev(editor, currentState);
   };
 
-  const replace = function (text: string, forward?: boolean, all?: boolean) {
+  const replace = (text: string, forward?: boolean, all?: boolean) => {
     return Actions.replace(editor, currentState, text, forward, all);
   };
 

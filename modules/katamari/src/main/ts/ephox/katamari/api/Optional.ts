@@ -77,7 +77,7 @@ export interface Optional<T> {
 const none = <T>(): Optional<T> => NONE;
 
 const NONE: Optional<any> = (() => {
-  const eq = function (o) {
+  const eq = (o) => {
     return o.isNone();
   };
 
@@ -91,7 +91,7 @@ const NONE: Optional<any> = (() => {
     isNone: Fun.always,
     getOr: id,
     getOrThunk: call,
-    getOrDie(msg) {
+    getOrDie: (msg) => {
       throw new Error(msg || 'error: getOrDie called on none.');
     },
     getOrNull: Fun.constant(null),
@@ -106,7 +106,7 @@ const NONE: Optional<any> = (() => {
     filter: none,
     equals: eq,
     equals_: eq,
-    toArray() { return []; },
+    toArray: () => [],
     toString: Fun.constant('none()')
   };
   return me;
@@ -119,7 +119,7 @@ const some = <T>(a: T): Optional<T> => {
     // can't Fun.constant this one
     me;
 
-  const bind = function <T2> (f: (value: T) => T2) {
+  const bind = <T2> (f: (value: T) => T2) => {
     return f(a);
   };
 
@@ -146,13 +146,13 @@ const some = <T>(a: T): Optional<T> => {
       f(a) ? me as Optional<Q> : NONE,
     toArray: () => [ a ],
     toString: () => 'some(' + a + ')',
-    equals(o: Optional<T>) {
+    equals: (o: Optional<T>) => {
       return o.is(a);
     },
-    equals_<T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) {
+    equals_: <T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) => {
       return o.fold(
         Fun.never,
-        (b) => { return elementEq(a, b); }
+        (b) => elementEq(a, b)
       );
     }
   };

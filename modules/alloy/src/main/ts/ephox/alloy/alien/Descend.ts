@@ -13,7 +13,11 @@ const point = <T extends Node> (element: SugarElement<T>, offset: number): Eleme
 // NOTE: This only descends once.
 const descendOnce = (element: SugarElement<Node>, offset: number): ElementAndOffset<Node> => {
   const children: SugarElement[] = Traverse.children(element);
-  if (children.length === 0) { return point(element, offset); } else if (offset < children.length) { return point(children[offset], 0); } else {
+  if (children.length === 0) {
+    return point(element, offset);
+  } else if (offset < children.length) {
+    return point(children[offset], 0);
+  } else {
     const last = children[children.length - 1];
     const len = SugarNode.isText(last) ? SugarText.get(last).length : Traverse.children(last).length;
     return point(last, len);

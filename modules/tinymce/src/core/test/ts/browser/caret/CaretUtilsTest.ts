@@ -21,11 +21,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
 
   const ZWSP = Zwsp.ZWSP;
 
-  const getRoot = function () {
+  const getRoot = () => {
     return viewBlock.get();
   };
 
-  const setupHtml = function (html) {
+  const setupHtml = (html) => {
     viewBlock.update(html);
 
     // IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
@@ -33,7 +33,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     replaceWithZwsp(viewBlock.get());
   };
 
-  const replaceWithZwsp = function (node) {
+  const replaceWithZwsp = (node) => {
     for (let i = 0; i < node.childNodes.length; i++) {
       const childNode = node.childNodes[i];
 
@@ -45,7 +45,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     }
   };
 
-  const findElm = function (selector) {
+  const findElm = (selector) => {
     return $(selector, getRoot())[0];
   };
 
@@ -68,11 +68,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
   suite.test('findNode', () => {
     setupHtml('<b>abc</b><b><i>123</i></b>def');
 
-    const isBold = function (node) {
+    const isBold = (node) => {
       return node.nodeName === 'B';
     };
 
-    const isText = function (node) {
+    const isText = (node) => {
       return node.nodeType === 3;
     };
 

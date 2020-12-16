@@ -23,18 +23,18 @@ UnitTest.test('DownTest', () => {
       ])
     ]), Optional.none());
 
-  const check = function (expected: string[], actual: Gene[]) {
+  const check = (expected: string[], actual: Gene[]) => {
     assert.eq(expected, Arr.map(actual, (item) => {
       return item.id;
     }));
   };
 
-  const checkSelector = function (expected: string[], query: string) {
+  const checkSelector = (expected: string[], query: string) => {
     const actual = Down.selector(family, query);
     check(expected, actual);
   };
 
-  const checkPredicate = function (expected: string[], id: string, predicate: (e: Gene) => boolean) {
+  const checkPredicate = (expected: string[], id: string, predicate: (e: Gene) => boolean) => {
     const start = Locator.byId(family, id).getOrDie('Did not find start: ' + id);
     const actual = Down.predicate(start, predicate);
     check(expected, actual);

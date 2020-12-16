@@ -9,23 +9,23 @@ import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as Settings from '../api/Settings';
 
-const rangeEqualsDelimiterOrSpace = function (rangeString, delimiter) {
+const rangeEqualsDelimiterOrSpace = (rangeString, delimiter) => {
   return rangeString === delimiter || rangeString === ' ' || rangeString.charCodeAt(0) === 160;
 };
 
-const handleEclipse = function (editor) {
+const handleEclipse = (editor) => {
   parseCurrentLine(editor, -1, '(');
 };
 
-const handleSpacebar = function (editor) {
+const handleSpacebar = (editor) => {
   parseCurrentLine(editor, 0, '');
 };
 
-const handleEnter = function (editor) {
+const handleEnter = (editor) => {
   parseCurrentLine(editor, -1, '');
 };
 
-const scopeIndex = function (container, index) {
+const scopeIndex = (container, index) => {
   if (index < 0) {
     index = 0;
   }
@@ -41,7 +41,7 @@ const scopeIndex = function (container, index) {
   return index;
 };
 
-const setStart = function (rng, container, offset) {
+const setStart = (rng, container, offset) => {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setStart(container, scopeIndex(container, offset));
   } else {
@@ -49,7 +49,7 @@ const setStart = function (rng, container, offset) {
   }
 };
 
-const setEnd = function (rng, container, offset) {
+const setEnd = (rng, container, offset) => {
   if (container.nodeType !== 1 || container.hasChildNodes()) {
     rng.setEnd(container, scopeIndex(container, offset));
   } else {
@@ -57,7 +57,7 @@ const setEnd = function (rng, container, offset) {
   }
 };
 
-const parseCurrentLine = function (editor: Editor, endOffset, delimiter) {
+const parseCurrentLine = (editor: Editor, endOffset, delimiter) => {
   let end, endContainer, bookmark, text, prev, len, rngText;
   const autoLinkPattern = Settings.getAutoLinkPattern(editor);
   const defaultLinkTarget = Settings.getDefaultLinkTarget(editor);
@@ -171,7 +171,7 @@ const parseCurrentLine = function (editor: Editor, endOffset, delimiter) {
   }
 };
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor) => {
   let autoUrlDetectState;
 
   editor.on('keydown', (e) => {

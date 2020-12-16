@@ -7,7 +7,7 @@
 
 import * as Events from '../api/Events';
 
-const insertChar = function (editor, chr) {
+const insertChar = (editor, chr) => {
   const evtChr = Events.fireInsertCustomChar(editor, chr).chr;
   editor.execCommand('mceInsertContent', false, evtChr);
 };

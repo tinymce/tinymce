@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor) => {
   editor.on('ResolveName', (e) => {
     let name;
 

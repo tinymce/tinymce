@@ -33,7 +33,7 @@ const adt: {
   fit: (reposition: RepositionDecision) => BounderAttemptAdt;
   nofit: (reposition: RepositionDecision, deltaW: number, deltaH: number) => BounderAttemptAdt;
 } = Adt.generate([
-  { fit:   [ 'reposition' ] },
+  { fit: [ 'reposition' ] },
   { nofit: [ 'reposition', 'deltaW', 'deltaH' ] }
 ]);
 

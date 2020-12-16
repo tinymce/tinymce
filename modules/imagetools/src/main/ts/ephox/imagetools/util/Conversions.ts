@@ -3,7 +3,7 @@ import * as Canvas from './Canvas';
 import * as ImageSize from './ImageSize';
 import { Promise } from './Promise';
 
-function imageToBlob(image: HTMLImageElement): Promise<Blob> {
+const imageToBlob = (image: HTMLImageElement): Promise<Blob> => {
   const src = image.src;
 
   if (src.indexOf('data:') === 0) {
@@ -11,28 +11,28 @@ function imageToBlob(image: HTMLImageElement): Promise<Blob> {
   }
 
   return anyUriToBlob(src);
-}
+};
 
-function blobToImage(blob: Blob): Promise<HTMLImageElement> {
+const blobToImage = (blob: Blob): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const blobUrl = URL.createObjectURL(blob);
 
     const image = new Image();
 
-    const removeListeners = function () {
+    const removeListeners = () => {
       image.removeEventListener('load', loaded);
       image.removeEventListener('error', error);
     };
 
-    function loaded() {
+    const loaded = () => {
       removeListeners();
       resolve(image);
-    }
+    };
 
-    function error() {
+    const error = () => {
       removeListeners();
       reject('Unable to load data of type ' + blob.type + ': ' + blobUrl);
-    }
+    };
 
     image.addEventListener('load', loaded);
     image.addEventListener('error', error);
@@ -42,9 +42,9 @@ function blobToImage(blob: Blob): Promise<HTMLImageElement> {
       loaded();
     }
   });
-}
+};
 
-function anyUriToBlob(url: string): Promise<Blob> {
+const anyUriToBlob = (url: string): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
 
@@ -78,13 +78,15 @@ function anyUriToBlob(url: string): Promise<Blob> {
 
     xhr.send();
   });
-}
+};
 
-function dataUriToBlobSync(uri: string): Optional<Blob> {
+const dataUriToBlobSync = (uri: string): Optional<Blob> => {
   const data = uri.split(',');
 
   const matches = /data:([^;]+)/.exec(data[0]);
-  if (!matches) { return Optional.none(); }
+  if (!matches) {
+    return Optional.none();
+  }
 
   const mimetype = matches[1];
   const base64 = data[1];
@@ -108,18 +110,18 @@ function dataUriToBlobSync(uri: string): Optional<Blob> {
     byteArrays[sliceIndex] = new Uint8Array(bytes);
   }
   return Optional.some(new Blob(byteArrays, { type: mimetype }));
-}
+};
 
-function dataUriToBlob(uri: string): Promise<Blob> {
+const dataUriToBlob = (uri: string): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     dataUriToBlobSync(uri).fold(() => {
       // uri isn't valid
       reject('uri is not base64: ' + uri);
     }, resolve);
   });
-}
+};
 
-function uriToBlob(url: string): Promise<Blob> | null {
+const uriToBlob = (url: string): Promise<Blob> | null => {
   if (url.indexOf('blob:') === 0) {
     return anyUriToBlob(url);
   }
@@ -129,11 +131,12 @@ function uriToBlob(url: string): Promise<Blob> | null {
   }
 
   return null;
-}
+};
 
-function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> {
+const canvasToBlob = (canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> => {
   type = type || 'image/png';
 
+  // eslint-disable-next-line @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method
   if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
     return new Promise<Blob>((resolve, reject) => {
       canvas.toBlob((blob) => {
@@ -147,14 +150,14 @@ function canvasToBlob(canvas: HTMLCanvasElement, type?: string, quality?: number
   } else {
     return dataUriToBlob(canvas.toDataURL(type, quality));
   }
-}
+};
 
-function canvasToDataURL(canvas: HTMLCanvasElement, type?: string, quality?: number): string {
+const canvasToDataURL = (canvas: HTMLCanvasElement, type?: string, quality?: number): string => {
   type = type || 'image/png';
   return canvas.toDataURL(type, quality);
-}
+};
 
-function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
+const blobToCanvas = (blob: Blob): Promise<HTMLCanvasElement> => {
   return blobToImage(blob).then((image) => {
     // we aren't retaining the image, so revoke the URL immediately
     revokeImageUrl(image);
@@ -165,41 +168,41 @@ function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
 
     return canvas;
   });
-}
+};
 
-function blobToDataUri(blob: Blob): Promise<string> {
+const blobToDataUri = (blob: Blob): Promise<string> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
 
-    reader.onloadend = function () {
+    reader.onloadend = () => {
       resolve(reader.result as string);
     };
 
     reader.readAsDataURL(blob);
   });
-}
+};
 
-function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+const blobToArrayBuffer = (blob: Blob): Promise<ArrayBuffer> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
 
-    reader.onloadend = function () {
+    reader.onloadend = () => {
       resolve(reader.result as ArrayBuffer);
     };
 
     reader.readAsArrayBuffer(blob);
   });
-}
+};
 
-function blobToBase64(blob: Blob): Promise<string> {
+const blobToBase64 = (blob: Blob): Promise<string> => {
   return blobToDataUri(blob).then((dataUri) => {
     return dataUri.split(',')[1];
   });
-}
+};
 
-function revokeImageUrl(image: HTMLImageElement): void {
+const revokeImageUrl = (image: HTMLImageElement): void => {
   URL.revokeObjectURL(image.src);
-}
+};
 
 export {
   // used outside

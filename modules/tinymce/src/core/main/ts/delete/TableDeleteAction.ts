@@ -50,7 +50,7 @@ const tableSelection = (rng: TableCellRng, table: SugarElement<HTMLTableElement>
 const deleteAction = Adt.generate([
   { removeTable: [ 'element' ] },
   { emptyCells: [ 'cells' ] },
-  { deleteCellSelection : [ 'rng', 'cell' ] }
+  { deleteCellSelection: [ 'rng', 'cell' ] }
 ]);
 
 const isRootFromElement = (root: SugarElement<any>): IsRootFn =>

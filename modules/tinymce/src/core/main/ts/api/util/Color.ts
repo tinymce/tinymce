@@ -32,10 +32,10 @@ interface HSV {
 }
 
 interface Color {
-  toRgb (): RGB;
-  toHsv (): HSV;
-  toHex (): string;
-  parse (value: string | RGB | HSV): Color;
+  toRgb: () => RGB;
+  toHsv: () => HSV;
+  toHex: () => string;
+  parse: (value: string | RGB | HSV) => Color;
 }
 
 export type ColorConstructor = new (value?: string | RGB | HSV) => Color;
@@ -47,11 +47,11 @@ export type ColorConstructor = new (value?: string | RGB | HSV) => Color;
  * @method Color
  * @param {String} value Optional initial value to parse.
  */
-const Color = function (value?: string | RGB | HSV): Color {
+const Color = (value?: string | RGB | HSV): Color => {
   const self: any = {};
   let r = 0, g = 0, b = 0;
 
-  const rgb2hsv = function (r, g, b) {
+  const rgb2hsv = (r, g, b) => {
     let h, s, v;
 
     h = 0;
@@ -88,7 +88,7 @@ const Color = function (value?: string | RGB | HSV): Color {
     };
   };
 
-  const hsvToRgb = function (hue, saturation, brightness) {
+  const hsvToRgb = (hue, saturation, brightness) => {
     hue = (parseInt(hue, 10) || 0) % 360;
     saturation = parseInt(saturation, 10) / 100;
     brightness = parseInt(brightness, 10) / 100;
@@ -157,8 +157,8 @@ const Color = function (value?: string | RGB | HSV): Color {
    * @method toHex
    * @return {String} Hex string of current color.
    */
-  const toHex = function () {
-    const hex = function (val) {
+  const toHex = () => {
+    const hex = (val) => {
       val = parseInt(val, 10).toString(16);
 
       return val.length > 1 ? val : '0' + val;
@@ -173,7 +173,7 @@ const Color = function (value?: string | RGB | HSV): Color {
    * @method toRgb
    * @return {Object} Object with r, g, b fields.
    */
-  const toRgb = function () {
+  const toRgb = () => {
     return {
       r,
       g,
@@ -187,7 +187,7 @@ const Color = function (value?: string | RGB | HSV): Color {
    * @method toHsv
    * @return {Object} Object with h, s, v fields.
    */
-  const toHsv = function () {
+  const toHsv = () => {
     return rgb2hsv(r, g, b);
   };
 
@@ -205,7 +205,7 @@ const Color = function (value?: string | RGB | HSV): Color {
    * @param {Object/String} value Color value to parse.
    * @return {tinymce.util.Color} Current color instance.
    */
-  const parse = function (value) {
+  const parse = (value) => {
     let matches;
 
     if (typeof value === 'object') {

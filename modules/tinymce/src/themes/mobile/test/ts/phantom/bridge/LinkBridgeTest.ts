@@ -22,14 +22,14 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
       getContent: editorState.content.get,
       select: Fun.noop
     },
-    insertContent(data) {
+    insertContent: (data) => {
       store.adder({ method: 'insertContent', data })();
     },
-    execCommand(name) {
+    execCommand: (name) => {
       store.adder({ method: 'execCommand', data: name })();
     },
     dom: {
-      createHTML(tag, attributes, innerText) {
+      createHTML: (tag, attributes, innerText) => {
         return { tag, attributes, innerText };
       },
       encode: Fun.identity
@@ -37,7 +37,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
     focus: Fun.noop
   };
 
-  const checkGetNoLink = function (rawScenario) {
+  const checkGetNoLink = (rawScenario) => {
     const schema = ValueSchema.objOfOnly([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('nodeText', ''),
@@ -61,7 +61,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
     });
   };
 
-  const checkGetALink = function (rawScenario) {
+  const checkGetALink = (rawScenario) => {
     const schema = ValueSchema.objOfOnly([
       FieldSchema.strict('label'),
       FieldSchema.defaulted('linkHtml', ''),
@@ -80,7 +80,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
     });
   };
 
-  const checkApply = function (rawScenario) {
+  const checkApply = (rawScenario) => {
     const toResult = (info, param) => Optional.from(info[param]).fold(() => Result.error('Missing ' + param), Result.value);
     const scenario = {
       label: Optional.from(rawScenario.label).getOrDie('Missing label'),
@@ -175,7 +175,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
     info: {
       url: 'hi'
     },
-    mutations(_elem) {
+    mutations: (_elem) => {
 
     },
     expected: [
@@ -198,7 +198,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
       url: 'hi',
       text: 'hello'
     },
-    mutations(_elem) {
+    mutations: (_elem) => {
 
     },
     expected: [
@@ -222,7 +222,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
       text: 'hello',
       title: 'Title'
     },
-    mutations(_elem) {
+    mutations: (_elem) => {
 
     },
     expected: [
@@ -248,7 +248,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
       title: 'Title',
       target: 'new'
     },
-    mutations(_elem) {
+    mutations: (_elem) => {
 
     },
     expected: [
@@ -278,7 +278,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
         SugarElement.fromHtml('<a href="http://foo">http://foo</a>')
       )
     },
-    mutations(elem) {
+    mutations: (elem) => {
       Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {
@@ -301,7 +301,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
         SugarElement.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations(elem) {
+    mutations: (elem) => {
       Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {
@@ -324,7 +324,7 @@ UnitTest.test('Test: phantom.bridge.LinkBridgeTest', () => {
         SugarElement.fromHtml('<a href="http://foo">Foo</a>')
       )
     },
-    mutations(elem) {
+    mutations: (elem) => {
       Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, _arr) => {
         return s.element('a', {
           attrs: {

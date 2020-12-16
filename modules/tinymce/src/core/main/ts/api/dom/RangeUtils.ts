@@ -16,9 +16,9 @@ import * as SplitRange from '../../selection/SplitRange';
 import DOMUtils from './DOMUtils';
 
 interface RangeUtils {
-  walk (rng: Range, callback: (nodes: Node[]) => void): void;
-  split (rng: Range): RangeLikeObject;
-  normalize (rng: Range): boolean;
+  walk: (rng: Range, callback: (nodes: Node[]) => void) => void;
+  split: (rng: Range) => RangeLikeObject;
+  normalize: (rng: Range) => boolean;
 }
 
 /**
@@ -26,7 +26,7 @@ interface RangeUtils {
  *
  * @class tinymce.dom.RangeUtils
  */
-function RangeUtils(dom: DOMUtils): RangeUtils {
+const RangeUtils = (dom: DOMUtils): RangeUtils => {
   /**
    * Walks the specified range like object and executes the callback for each sibling collection it finds.
    *
@@ -35,7 +35,7 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    * @param {RangeObject} rng Range like object.
    * @param {Function} callback Callback function to execute for each sibling collection.
    */
-  const walk = function (rng: RangeLikeObject, callback: (nodes: Node[]) => void) {
+  const walk = (rng: RangeLikeObject, callback: (nodes: Node[]) => void) => {
     return RangeWalk.walk(dom, rng, callback);
   };
 
@@ -55,7 +55,7 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
    * @param {Range} rng Range to normalize.
    * @return {Boolean} True or false if the specified range was normalized or not.
    */
-  const normalize = function (rng: Range): boolean {
+  const normalize = (rng: Range): boolean => {
     return NormalizeRange.normalize(dom, rng).fold(
       Fun.never,
       (normalizedRng) => {
@@ -71,34 +71,32 @@ function RangeUtils(dom: DOMUtils): RangeUtils {
     split,
     normalize
   };
-}
+};
 
-namespace RangeUtils {
-  /**
-   * Compares two ranges and checks if they are equal.
-   *
-   * @static
-   * @method compareRanges
-   * @param {RangeObject} rng1 First range to compare.
-   * @param {RangeObject} rng2 First range to compare.
-   * @return {Boolean} True or false if the ranges are equal.
-   */
-  export const compareRanges = RangeCompare.isEq;
+/**
+ * Compares two ranges and checks if they are equal.
+ *
+ * @static
+ * @method compareRanges
+ * @param {RangeObject} rng1 First range to compare.
+ * @param {RangeObject} rng2 First range to compare.
+ * @return {Boolean} True or false if the ranges are equal.
+ */
+RangeUtils.compareRanges = RangeCompare.isEq;
 
-  /**
-   * Gets the caret range for the given x/y location.
-   *
-   * @static
-   * @method getCaretRangeFromPoint
-   * @param {Number} clientX X coordinate for range
-   * @param {Number} clientY Y coordinate for range
-   * @param {Document} doc Document that the x and y coordinates are relative to
-   * @returns {Range} Caret range
-   */
-  export const getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint as (clientX: number, clientY: number, doc: Document) => Range;
+/**
+ * Gets the caret range for the given x/y location.
+ *
+ * @static
+ * @method getCaretRangeFromPoint
+ * @param {Number} clientX X coordinate for range
+ * @param {Number} clientY Y coordinate for range
+ * @param {Document} doc Document that the x and y coordinates are relative to
+ * @returns {Range} Caret range
+ */
+RangeUtils.getCaretRangeFromPoint = CaretRangeFromPoint.fromPoint;
 
-  export const getSelectedNode = RangeNodes.getSelectedNode as (range: Range) => Node;
-  export const getNode = RangeNodes.getNode;
-}
+RangeUtils.getSelectedNode = RangeNodes.getSelectedNode;
+RangeUtils.getNode = RangeNodes.getNode;
 
 export default RangeUtils;

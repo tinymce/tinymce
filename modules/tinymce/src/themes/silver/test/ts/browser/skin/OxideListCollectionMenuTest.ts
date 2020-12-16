@@ -165,9 +165,7 @@ UnitTest.asynctest('OxideListCollectionMenuTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

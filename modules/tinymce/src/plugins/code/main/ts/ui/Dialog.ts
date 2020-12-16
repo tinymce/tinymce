@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import * as Content from '../core/Content';
 
-const open = function (editor: Editor) {
+const open = (editor: Editor) => {
   const editorContent: string = Content.getContent(editor);
 
   editor.windowManager.open({

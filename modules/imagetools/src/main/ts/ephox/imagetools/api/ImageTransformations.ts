@@ -3,67 +3,67 @@ import * as Filters from '../transformations/Filters';
 import * as ImageTools from '../transformations/ImageTools';
 import { ImageResult } from '../util/ImageResult';
 
-const invert = function (ir: ImageResult): Promise<ImageResult> {
+const invert = (ir: ImageResult): Promise<ImageResult> => {
   return Filters.invert(ir);
 };
 
-const sharpen = function (ir: ImageResult): Promise<ImageResult> {
+const sharpen = (ir: ImageResult): Promise<ImageResult> => {
   return Filters.sharpen(ir);
 };
 
-const emboss = function (ir: ImageResult): Promise<ImageResult> {
+const emboss = (ir: ImageResult): Promise<ImageResult> => {
   return Filters.emboss(ir);
 };
 
-const gamma = function (ir: ImageResult, value: number): Promise<ImageResult> {
+const gamma = (ir: ImageResult, value: number): Promise<ImageResult> => {
   return Filters.gamma(ir, value);
 };
 
-const exposure = function (ir: ImageResult, value: number): Promise<ImageResult> {
+const exposure = (ir: ImageResult, value: number): Promise<ImageResult> => {
   return Filters.exposure(ir, value);
 };
 
-const colorize = function (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> {
+const colorize = (ir: ImageResult, adjustR: number, adjustG: number, adjustB: number): Promise<ImageResult> => {
   return Filters.colorize(ir, adjustR, adjustG, adjustB);
 };
 
-const brightness = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const brightness = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.brightness(ir, adjust);
 };
 
-const hue = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const hue = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.hue(ir, adjust);
 };
 
-const saturate = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const saturate = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.saturate(ir, adjust);
 };
 
-const contrast = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const contrast = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.contrast(ir, adjust);
 };
 
-const grayscale = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const grayscale = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.grayscale(ir, adjust);
 };
 
-const sepia = function (ir: ImageResult, adjust: number): Promise<ImageResult> {
+const sepia = (ir: ImageResult, adjust: number): Promise<ImageResult> => {
   return Filters.sepia(ir, adjust);
 };
 
-const flip = function (ir: ImageResult, axis: 'h' | 'v'): Promise<ImageResult> {
+const flip = (ir: ImageResult, axis: 'h' | 'v'): Promise<ImageResult> => {
   return ImageTools.flip(ir, axis);
 };
 
-const crop = function (ir: ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult> {
+const crop = (ir: ImageResult, x: number, y: number, w: number, h: number): Promise<ImageResult> => {
   return ImageTools.crop(ir, x, y, w, h);
 };
 
-const resize = function (ir: ImageResult, w: number, h: number): Promise<ImageResult> {
+const resize = (ir: ImageResult, w: number, h: number): Promise<ImageResult> => {
   return ImageTools.resize(ir, w, h);
 };
 
-const rotate = function (ir: ImageResult, angle: number): Promise<ImageResult> {
+const rotate = (ir: ImageResult, angle: number): Promise<ImageResult> => {
   return ImageTools.rotate(ir, angle);
 };
 

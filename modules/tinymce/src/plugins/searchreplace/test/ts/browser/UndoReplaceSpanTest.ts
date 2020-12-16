@@ -1,6 +1,7 @@
 import { Chain, Log, Logger, Mouse, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 
 import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -10,13 +11,13 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', 
   Theme();
   SearchreplacePlugin();
 
-  const sUndo = function (editor) {
+  const sUndo = (editor: Editor) => {
     return Logger.t('Undo', Step.sync(() => {
       editor.undoManager.undo();
     }));
   };
 
-  const sRedo = function (editor) {
+  const sRedo = (editor: Editor) => {
     return Logger.t('Redo', Step.sync(() => {
       editor.undoManager.redo();
     }));

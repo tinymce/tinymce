@@ -27,8 +27,8 @@ interface VK {
   END: number;
   HOME: number;
 
-  modifierPressed (e: KeyboardLikeEvent): boolean;
-  metaKeyPressed (e: KeyboardLikeEvent): boolean;
+  modifierPressed: (e: KeyboardLikeEvent) => boolean;
+  metaKeyPressed: (e: KeyboardLikeEvent) => boolean;
 }
 
 /**
@@ -48,11 +48,11 @@ const VK: VK = {
   END: 35,
   HOME: 36,
 
-  modifierPressed(e: KeyboardLikeEvent): boolean {
-    return e.shiftKey || e.ctrlKey || e.altKey || this.metaKeyPressed(e);
+  modifierPressed: (e: KeyboardLikeEvent): boolean => {
+    return e.shiftKey || e.ctrlKey || e.altKey || VK.metaKeyPressed(e);
   },
 
-  metaKeyPressed(e: KeyboardLikeEvent): boolean {
+  metaKeyPressed: (e: KeyboardLikeEvent): boolean => {
     // Check if ctrl or meta key is pressed. Edge case for AltGr on Windows where it produces ctrlKey+altKey states
     return (Env.mac ? e.metaKey : e.ctrlKey && !e.altKey);
   }

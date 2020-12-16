@@ -63,5 +63,5 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

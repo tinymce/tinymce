@@ -76,7 +76,5 @@ UnitTest.asynctest('WaiterTest', (success, failure) => {
       makeDelayStep('not enough time', 50, 500)
     )
 
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

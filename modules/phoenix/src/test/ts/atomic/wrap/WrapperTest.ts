@@ -6,7 +6,7 @@ import * as Wrapper from 'ephox/phoenix/wrap/Wrapper';
 import { Wraps } from 'ephox/phoenix/wrap/Wraps';
 
 UnitTest.test('WrapperTest', () => {
-  const make = function () {
+  const make = () => {
     return TestUniverse(
       Gene('root', 'root', [
         Gene('1', 'span', [
@@ -27,16 +27,16 @@ UnitTest.test('WrapperTest', () => {
     );
   };
 
-  const check = function (postTest: string, expected: string[], startId: string, startOffset: number, finishId: string, finishOffset: number) {
+  const check = (postTest: string, expected: string[], startId: string, startOffset: number, finishId: string, finishOffset: number) => {
     const doc = make();
     const start = Finder.get(doc, startId);
     const finish = Finder.get(doc, finishId);
-    const predicate = function (item: Gene) {
+    const predicate = (item: Gene) => {
       return item.name === 'span';
     };
 
     let counter = 0;
-    const nu = function () {
+    const nu = () => {
       counter++;
       return Wraps(doc, Gene('new-span-' + counter, 'span', []));
     };

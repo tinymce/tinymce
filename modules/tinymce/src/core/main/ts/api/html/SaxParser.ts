@@ -65,19 +65,19 @@ export interface SaxParserSettings {
   self_closing_elements?: Record<string, {}>;
   validate?: boolean;
 
-  cdata? (text: string): void;
-  comment? (text: string): void;
-  doctype? (text: string): void;
-  end? (name: string): void;
-  pi? (name: string, text: string): void;
-  start? (name: string, attrs: AttrList, empty: boolean): void;
-  text? (text: string, raw?: boolean): void;
+  cdata?: (text: string) => void;
+  comment?: (text: string) => void;
+  doctype?: (text: string) => void;
+  end?: (name: string) => void;
+  pi?: (name: string, text: string) => void;
+  start?: (name: string, attrs: AttrList, empty: boolean) => void;
+  text?: (text: string, raw?: boolean) => void;
 }
 
 export type ParserFormat = 'html' | 'xhtml' | 'xml';
 
 interface SaxParser {
-  parse (html: string, format?: ParserFormat): void;
+  parse: (html: string, format?: ParserFormat) => void;
 }
 
 const enum ParsingMode {
@@ -197,7 +197,7 @@ const checkBogusAttribute = (regExp: RegExp, attrString: string): string | null 
  * @param {Object} settings Name/value collection of settings. comment, cdata, text, start and end are callbacks.
  * @param {tinymce.html.Schema} schema HTML Schema class to use when parsing.
  */
-function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
+const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser => {
   settings = settings || {};
 
   if (settings.fix_self_closing !== false) {
@@ -648,10 +648,8 @@ function SaxParser(settings?: SaxParserSettings, schema = Schema()): SaxParser {
   return {
     parse
   };
-}
+};
 
-namespace SaxParser {
-  export const findEndTag = findEndTagIndex;
-}
+SaxParser.findEndTag = findEndTagIndex;
 
 export default SaxParser;

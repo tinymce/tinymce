@@ -92,14 +92,14 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
       [
         Keying.config({
           mode: 'special',
-          focusIn(slider) {
+          focusIn: (slider) => {
             return AlloyParts.getPart(slider, detail, 'spectrum').map(Keying.focusIn).map(Fun.always);
           }
         }),
         Representing.config({
           store: {
             mode: 'manual',
-            getValue(_) {
+            getValue: (_) => {
               return modelDetail.value.get();
             }
           }

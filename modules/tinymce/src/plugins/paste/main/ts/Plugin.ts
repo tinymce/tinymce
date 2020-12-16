@@ -18,7 +18,7 @@ import * as PrePostProcess from './core/PrePostProcess';
 import * as Quirks from './core/Quirks';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('paste', (editor) => {
     if (DetectProPlugin.hasProPlugin(editor) === false) {
       const draggingInternallyState = Cell(false);
@@ -35,4 +35,4 @@ export default function () {
       return Api.get(clipboard, quirks);
     }
   });
-}
+};

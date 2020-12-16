@@ -35,7 +35,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
    * @param {Array} nodes Nodes to exclude items from.
    * @return {Array} Array with nodes excluding the start/end container if needed.
    */
-  const exclude = function (nodes: Node[]) {
+  const exclude = (nodes: Node[]) => {
     let node;
 
     // First node is excluded
@@ -53,7 +53,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
     return nodes;
   };
 
-  const collectSiblings = function (node: Node, name: string, endNode?: Node) {
+  const collectSiblings = (node: Node, name: string, endNode?: Node) => {
     const siblings = [];
 
     for (; node && node !== endNode; node = node[name]) {
@@ -63,7 +63,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
     return siblings;
   };
 
-  const findEndPoint = function (node: Node, root: Node) {
+  const findEndPoint = (node: Node, root: Node) => {
     do {
       if (node.parentNode === root) {
         return node;
@@ -73,7 +73,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
     } while (node);
   };
 
-  const walkBoundary = function (startNode: Node, endNode: Node, next?: boolean) {
+  const walkBoundary = (startNode: Node, endNode: Node, next?: boolean) => {
     const siblingName = next ? 'nextSibling' : 'previousSibling';
 
     for (let node = startNode, parent = node.parentNode; node && node !== endNode; node = parent) {

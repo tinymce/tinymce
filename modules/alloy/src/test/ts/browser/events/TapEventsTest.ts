@@ -13,7 +13,7 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
   const store = TestStore();
 
   const monitor = TapEvent.monitor({
-    triggerEvent(name) {
+    triggerEvent: (name) => {
       store.adder(name)();
       return true;
     }
@@ -169,5 +169,5 @@ UnitTest.asynctest('browser events.TapEventsTest', (success, failure) => {
         store.sClear
       ])
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

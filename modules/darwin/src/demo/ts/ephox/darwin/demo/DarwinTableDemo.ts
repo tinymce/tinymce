@@ -95,7 +95,7 @@ DomEvent.bind(ephoxUi, 'mousedown', mouseHandlers.mousedown);
 DomEvent.bind(ephoxUi, 'mouseover', mouseHandlers.mouseover);
 DomEvent.bind(ephoxUi, 'mouseup', mouseHandlers.mouseup);
 
-const handleResponse = function (event: EventArgs, response: Response) {
+const handleResponse = (event: EventArgs, response: Response) => {
   if (response.kill) {
     event.kill();
   }

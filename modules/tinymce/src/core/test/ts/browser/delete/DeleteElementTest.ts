@@ -9,14 +9,14 @@ UnitTest.asynctest('browser.tinymce.core.delete.DeleteElementTest', (success, fa
 
   Theme();
 
-  const sDeleteElementPath = function (editor, forward, path) {
+  const sDeleteElementPath = (editor, forward, path) => {
     return Step.sync(() => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), path).getOrDie();
       DeleteElement.deleteElement(editor, forward, element);
     });
   };
 
-  const sAssertCaretDirection = function (editor, expectedCaretData) {
+  const sAssertCaretDirection = (editor, expectedCaretData) => {
     return Step.sync(() => {
       Assertions.assertEq('Should have the right caret data', expectedCaretData, editor.selection.getNode().getAttribute('data-mce-caret'));
     });

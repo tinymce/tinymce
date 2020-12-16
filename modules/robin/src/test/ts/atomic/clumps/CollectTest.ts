@@ -14,7 +14,7 @@ UnitTest.test('ClumpsTest', () => {
     ])
   ]));
 
-  const isRoot = function (item: Gene) {
+  const isRoot = (item: Gene) => {
     return item.name === 'root';
   };
 
@@ -26,7 +26,7 @@ UnitTest.test('ClumpsTest', () => {
   }
 
   // const collect = function <E, D> (universe: Universe<E, D>, isRoot, start, soffset, finish, foffset)
-  const check = function (expected: RawRange[], startId: string, soffset: number, finishId: string, foffset: number) {
+  const check = (expected: RawRange[], startId: string, soffset: number, finishId: string, foffset: number) => {
     const start = doc.find(doc.get(), startId).getOrDie();
     const finish = doc.find(doc.get(), finishId).getOrDie();
     const rawActual = Clumps.collect(doc, isRoot, start, soffset, finish, foffset);

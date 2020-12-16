@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import { SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { StyleSheetLoader } from 'tinymce/core/api/dom/StyleSheetLoader';
+import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';
 
 UnitTest.test('browser.tinymce.core.dom.StyleSheetLoaderRegistry - same element gets same instance (document)', () => {

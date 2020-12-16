@@ -5,7 +5,7 @@ import * as PositionArray from 'ephox/polaris/api/PositionArray';
 import * as Parrays from 'ephox/polaris/test/Parrays';
 
 UnitTest.test('api.PositionArray.get', () => {
-  const check = function (expected: Optional<string>, input: string[], offset: number) {
+  const check = (expected: Optional<string>, input: string[], offset: number) => {
     const parray = Parrays.make(input);
     const actual = PositionArray.get(parray, offset);
     KAssert.eqOptional('eq', expected, actual.map((x) => x.item));

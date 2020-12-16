@@ -7,7 +7,7 @@ const assertOption = <A> (a: Optional<A>, b: Optional<A>) => {
   Assert.eq('option eq', a, b, tOptional());
 };
 
-const boom = function (): string {
+const boom = (): never => {
   throw new Error('barf');
 };
 

@@ -13,26 +13,32 @@ type ArrayCallback<T, R> = ArrUtils.ArrayCallback<T, R>;
 type ObjCallback<T, R> = ArrUtils.ObjCallback<T, R>;
 
 interface Tools {
-  is (obj: any, type: string): boolean;
-  isArray <T>(arr: any): arr is Array<T>;
-  inArray <T>(arr: ArrayLike<T>, value: T): number;
-  grep <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
-  grep <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
-  trim (str: string): string;
-  toArray <T>(obj: ArrayLike<T>): T[];
-  hasOwn (obj: any, name: string): boolean;
-  makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
-  each <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
-  each <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
-  map <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
-  map <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
-  extend (obj: Object, ext: Object, ...objs: Object[]): any;
-  create (name: string, p: Object, root?: Object);
-  walk <T = any>(obj: T, f: Function, n?: keyof T, scope?: any): void;
-  createNS (name: string, o?: Object): any;
-  resolve (path: string, o?: Object): any;
-  explode (s: string, d?: string | RegExp): string[];
-  _addCacheSuffix (url: string): string;
+  is: (obj: any, type: string) => boolean;
+  isArray: <T>(arr: any) => arr is Array<T>;
+  inArray: <T>(arr: ArrayLike<T>, value: T) => number;
+  grep: {
+    <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
+    <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
+  };
+  trim: (str: string) => string;
+  toArray: <T>(obj: ArrayLike<T>) => T[];
+  hasOwn: (obj: any, name: string) => boolean;
+  makeMap: <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>) => Record<string, T | string>;
+  each: {
+    <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
+    <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
+  };
+  map: {
+    <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
+    <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
+  };
+  extend: (obj: Object, ext: Object, ...objs: Object[]) => any;
+  create: (name: string, p: Object, root?: Object) => void;
+  walk: <T = any>(obj: T, f: Function, n?: keyof T, scope?: any) => void;
+  createNS: (name: string, o?: Object) => any;
+  resolve: (path: string, o?: Object) => any;
+  explode: (s: string, d?: string | RegExp) => string[];
+  _addCacheSuffix: (url: string) => string;
 }
 
 /**
@@ -51,7 +57,7 @@ interface Tools {
  */
 const whiteSpaceRegExp = /^\s*|\s*$/g;
 
-const trim = function (str) {
+const trim = (str) => {
   return (str === null || str === undefined) ? '' : ('' + str).replace(whiteSpaceRegExp, '');
 };
 
@@ -63,7 +69,7 @@ const trim = function (str) {
  * @param {string} type Optional type to check for.
  * @return {Boolean} true/false if the object is of the specified type.
  */
-const is = function (obj: any, type: string) {
+const is = (obj: any, type: string) => {
   if (!type) {
     return obj !== undefined;
   }
@@ -84,7 +90,7 @@ const is = function (obj: any, type: string) {
  * @param {Object} map Optional map to add items to.
  * @return {Object} Name/value map of items.
  */
-const makeMap = function (items, delim?, map?) {
+const makeMap = (items, delim?, map?) => {
   let i;
 
   items = items || [];
@@ -112,7 +118,7 @@ const makeMap = function (items, delim?, map?) {
  * @param {String} prop
  * @returns {Boolean}
  */
-const hasOwnProperty = function (obj, prop) {
+const hasOwnProperty = (obj, prop) => {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 };
 
@@ -248,7 +254,7 @@ const create = function (s, p, root?) {
   });
 };
 
-const extend = function (obj, ...exts: any[]) {
+const extend = (obj, ...exts: any[]) => {
   for (let i = 0; i < exts.length; i++) {
     const ext = exts[i];
     for (const name in ext) {
@@ -308,7 +314,7 @@ const walk = function (o, f, n?, s?) {
  *     }
  * };
  */
-const createNS = function (n, o?) {
+const createNS = (n, o?) => {
   let i, v;
 
   o = o || window;
@@ -338,7 +344,7 @@ const createNS = function (n, o?) {
  * // Resolve a path into an object reference
  * var obj = tinymce.resolve('a.b.c.d');
  */
-const resolve = function (n, o?) {
+const resolve = (n, o?) => {
   let i, l;
 
   o = o || window;
@@ -365,7 +371,7 @@ const resolve = function (n, o?) {
  * // Split a string into an array with a,b,c
  * var arr = tinymce.explode('a, b,   c');
  */
-const explode = function (s, d?) {
+const explode = (s, d?) => {
   if (!s || is(s, 'array')) {
     return s;
   }
@@ -373,7 +379,7 @@ const explode = function (s, d?) {
   return ArrUtils.map(s.split(d || ','), trim);
 };
 
-const _addCacheSuffix = function (url) {
+const _addCacheSuffix = (url) => {
   const cacheSuffix = Env.cacheSuffix;
 
   if (cacheSuffix) {

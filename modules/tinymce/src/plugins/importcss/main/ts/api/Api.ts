@@ -7,8 +7,8 @@
 
 import * as ImportCss from '../core/ImportCss';
 
-const get = function (editor) {
-  const convertSelectorToFormat = function (selectorText) {
+const get = (editor) => {
+  const convertSelectorToFormat = (selectorText) => {
     return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
   };
 

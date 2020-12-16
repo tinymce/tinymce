@@ -6,15 +6,15 @@ import * as Search from '../general/Search';
 
 const universe = DomUniverse();
 
-const run = function (elements: SugarElement[], patterns: NamedPattern[], optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] {
+const run = (elements: SugarElement[], patterns: NamedPattern[], optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] => {
   return Search.run(universe, elements, patterns, optimise);
 };
 
-const safeWords = function (elements: SugarElement[], words: string[], optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] {
+const safeWords = (elements: SugarElement[], words: string[], optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] => {
   return Search.safeWords(universe, elements, words, optimise);
 };
 
-const safeToken = function (elements: SugarElement[], token: string, optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] {
+const safeToken = (elements: SugarElement[], token: string, optimise?: (e: SugarElement) => boolean): SearchResult<SugarElement>[] => {
   return Search.safeToken(universe, elements, token, optimise);
 };
 

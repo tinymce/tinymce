@@ -4,11 +4,11 @@ import * as Words from '../general/Words';
 
 const universe = DomUniverse();
 
-const identify = function (allText: string): WordScope[] {
+const identify = (allText: string): WordScope[] => {
   return Words.identify(allText);
 };
 
-const isWord = function (text: string): boolean {
+const isWord = (text: string): boolean => {
   return Words.isWord(universe, text);
 };
 

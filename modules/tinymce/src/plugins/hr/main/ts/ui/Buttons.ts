@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addButton('hr', {
     icon: 'horizontal-rule',
     tooltip: 'Horizontal line',

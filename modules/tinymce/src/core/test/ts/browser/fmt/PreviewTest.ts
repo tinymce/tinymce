@@ -109,11 +109,11 @@ UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.parseSelector', () 
 });
 
 UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.selectorToHtml', () => {
-  const trimSpaces = function (str) {
+  const trimSpaces = (str) => {
     return str.replace(/>\s+</g, '><').replace(/^\s*|\s*$/g, '');
   };
 
-  const selectorToHtml = function (selector) {
+  const selectorToHtml = (selector) => {
     return HtmlUtils.normalizeHtml(Preview.selectorToHtml(selector).outerHTML);
   };
 
@@ -163,11 +163,11 @@ UnitTest.test('browser.tinymce.core.fmt.PreviewTest: Preview.selectorToHtml', ()
 UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', (success, failure) => {
   Theme();
 
-  const ok = function (value: boolean, label: string) {
+  const ok = (value: boolean, label: string) => {
     return Assert.eq(label, true, value);
   };
 
-  const previewStyles = function () {
+  const previewStyles = () => {
     return (
       'table .preview {' +
       'color: rgb(0, 255, 0);' + // green
@@ -185,7 +185,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.PreviewTest: Preview.getCssText', (
 
   const runTest = (editor) =>
     Logger.t('Get preview css text for formats', Step.sync(() => {
-      const getCssText = function (format) {
+      const getCssText = (format) => {
         return Preview.getCssText(editor, format);
       };
 

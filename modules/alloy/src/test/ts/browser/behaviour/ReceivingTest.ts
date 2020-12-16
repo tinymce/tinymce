@@ -6,8 +6,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Receiving } from 'ephox/alloy/api/behaviour/Receiving';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import { Container } from 'ephox/alloy/api/ui/Container';
 
 UnitTest.asynctest('ReceivingTest', (success, failure) => {
 
@@ -27,7 +27,7 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
               schema: ValueSchema.objOfOnly([
                 FieldSchema.strict('dummy')
               ]),
-              onReceive(_component, data) {
+              onReceive: (_component, data) => {
                 store.adder('received: ' + data.dummy)();
               }
             }
@@ -51,5 +51,5 @@ UnitTest.asynctest('ReceivingTest', (success, failure) => {
       gui.broadcast({ dummy: '2' });
     }),
     store.sAssertEq('After broadcast to all', [ 'received: 2' ])
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

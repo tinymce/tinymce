@@ -25,7 +25,9 @@ const LONGPRESS_DELAY = 400;
 
 const getTouch = (event: EventArgs<TouchEvent>): Optional<Touch> => {
   const raw = event.raw;
-  if (raw.touches === undefined || raw.touches.length !== 1) { return Optional.none(); }
+  if (raw.touches === undefined || raw.touches.length !== 1) {
+    return Optional.none();
+  }
   return Optional.some(raw.touches[0]);
 };
 
@@ -71,7 +73,9 @@ const monitor = (settings: GuiEventSettings): Monitor => {
     longpress.cancel();
     getTouch(event).each((touch) => {
       startData.get().each((data) => {
-        if (isFarEnough(touch, data)) { startData.set(Optional.none()); }
+        if (isFarEnough(touch, data)) {
+          startData.set(Optional.none());
+        }
       });
     });
     return Optional.none();

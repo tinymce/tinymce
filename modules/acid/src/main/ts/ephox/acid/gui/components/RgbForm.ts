@@ -303,7 +303,7 @@ const rgbFormFactory = (
       })),
       {
         apis: {
-          updateHex(form: AlloyComponent, hex: Hex) {
+          updateHex: (form: AlloyComponent, hex: Hex) => {
             Representing.setValue(form, {
               hex: hex.value
             });
@@ -324,7 +324,7 @@ const rgbFormFactory = (
     name: 'RgbForm',
     configFields: [],
     apis: {
-      updateHex(apis: Apis, form: AlloyComponent, hex: Hex) {
+      updateHex: (apis: Apis, form: AlloyComponent, hex: Hex) => {
         apis.updateHex(form, hex);
       }
     },

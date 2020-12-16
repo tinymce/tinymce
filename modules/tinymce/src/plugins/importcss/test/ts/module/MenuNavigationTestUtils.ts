@@ -10,7 +10,9 @@ const sAssertFocusOnItem = (doc, text) => FocusTools.sTryOnSelector(
 const sDelay = Step.wait(0);
 
 const generateNavigation = (doc, navigation) => {
-  if (navigation.length === 0) { return [ ]; }
+  if (navigation.length === 0) {
+    return [ ];
+  }
 
   return Arr.bind(navigation.concat(navigation.slice(0, 1)), (nav, i) => {
     const exploration = (nav.subitems.length > 0) ? [

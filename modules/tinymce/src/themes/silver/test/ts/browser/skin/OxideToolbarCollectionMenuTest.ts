@@ -167,9 +167,7 @@ UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

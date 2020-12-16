@@ -28,7 +28,7 @@ export default (): void => {
     ])
   });
 
-  const lazySink = function () {
+  const lazySink = () => {
     return Result.value(sink);
   };
   gui.add(sink);

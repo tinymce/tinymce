@@ -159,13 +159,13 @@ const isRtl = () => getLanguageData()
 const hasCode = (code: string) => Obj.has(data, code);
 
 interface I18n {
-  getData (): Record<string, Record<string, string>>;
-  setCode (newCode: string): void;
-  getCode (): string;
-  add (code: string, items: Record<string, string>): void;
-  translate (text: Untranslated): TranslatedString;
-  isRtl (): boolean;
-  hasCode (code: string): boolean;
+  getData: () => Record<string, Record<string, string>>;
+  setCode: (newCode: string) => void;
+  getCode: () => string;
+  add: (code: string, items: Record<string, string>) => void;
+  translate: (text: Untranslated) => TranslatedString;
+  isRtl: () => boolean;
+  hasCode: (code: string) => boolean;
 }
 
 const I18n: I18n = {

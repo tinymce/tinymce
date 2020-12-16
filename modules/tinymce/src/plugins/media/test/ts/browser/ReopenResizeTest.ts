@@ -12,13 +12,13 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', (success, f
   Plugin();
   Theme();
 
-  const sWaitForResizeHandles = function (editor: Editor) {
+  const sWaitForResizeHandles = (editor: Editor) => {
     return Waiter.sTryUntil('Wait for new width value', Step.sync(() => {
       Assert.eq('Resize handle should exist', editor.dom.select('#mceResizeHandlenw').length, 1);
     }));
   };
 
-  const sRawAssertImagePresence = function (editor: Editor) {
+  const sRawAssertImagePresence = (editor: Editor) => {
     // Hacky way to assert that the placeholder image is in
     // the correct place that works cross browser
     // assertContentStructure did not work because some
@@ -56,7 +56,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ReopenResizeTest', (success, f
     theme: 'silver',
     indent: false,
     forced_root_block: false,
-    media_live_embeds:  false,
+    media_live_embeds: false,
     base_url: '/project/tinymce/js/tinymce'
   }, success, failure);
 });

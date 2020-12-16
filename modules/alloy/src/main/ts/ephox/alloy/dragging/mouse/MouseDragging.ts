@@ -19,7 +19,9 @@ import { MouseDraggingConfig } from './MouseDraggingTypes';
 const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs<MouseEvent>>> => [
   AlloyEvents.run<EventArgs<MouseEvent>>(NativeEvents.mousedown(), (component, simulatedEvent) => {
     const raw = simulatedEvent.event.raw;
-    if (raw.button !== 0) { return; }
+    if (raw.button !== 0) {
+      return;
+    }
     simulatedEvent.stop();
 
     const stop = () => DragUtils.stop(component, Optional.some(blocker), dragConfig, dragState);
@@ -32,7 +34,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
       drop: stop,
       delayDrop: delayDrop.schedule,
       forceDrop: stop,
-      move(event) {
+      move: (event) => {
         // Stop any pending drops caused by mouseout
         delayDrop.cancel();
         DragUtils.move(component, dragConfig, dragState, MouseData, event);

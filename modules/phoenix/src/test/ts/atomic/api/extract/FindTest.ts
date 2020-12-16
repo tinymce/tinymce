@@ -27,7 +27,7 @@ UnitTest.test('api.Extract.find', () => {
     ])
   );
 
-  const check = function (expected: Optional<{ id: string; offset: number }>, topId: string, offset: number) {
+  const check = (expected: Optional<{ id: string; offset: number }>, topId: string, offset: number) => {
     const top = Finder.get(doc, topId);
     const actual = Extract.find(doc, top, offset);
     expected.fold(() => {

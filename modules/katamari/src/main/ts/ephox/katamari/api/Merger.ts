@@ -25,25 +25,20 @@ interface ShallowMergeFunc {
   (...objs: Array<Record<string, any>>): Record<string, any>;
 }
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-const shallow = function (old: Record<string, any>, nu: Record<string, any>) {
+const shallow = (old: Record<string, any>, nu: Record<string, any>) => {
   return nu;
 };
 
-const deep = function (old: Record<string, any>, nu: Record<string, any>) {
+const deep = (old: Record<string, any>, nu: Record<string, any>) => {
   const bothObjects = Type.isObject(old) && Type.isObject(nu);
   return bothObjects ? deepMerge(old, nu) : nu;
 };
 
-const baseMerge = function (merger: MergeStrategy): (...objs: Array<Record<string, any>>) => any {
-  return function () {
-    // Don't use array slice(arguments), makes the whole function unoptimisable on Chrome
-    const objects = new Array(arguments.length);
-    for (let i = 0; i < objects.length; i++) {
-      objects[i] = arguments[i];
-    }
-
+const baseMerge = (merger: MergeStrategy): (...objs: Array<Record<string, any>>) => any => {
+  return (...objects: any[]) => {
     if (objects.length === 0) {
       throw new Error(`Can't merge zero objects`);
     }

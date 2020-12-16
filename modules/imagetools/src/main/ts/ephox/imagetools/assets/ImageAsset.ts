@@ -15,7 +15,7 @@ const adt: ImageAssetConstructor = Adt.generate([
       'objurl'          // an object URL - THIS MUST BE RELEASED WHEN DONE
     ]
   },
-  { url:  [ 'id', 'url', 'raw' ] } // Remote image. JS image object/element loaded via url
+  { url: [ 'id', 'url', 'raw' ] } // Remote image. JS image object/element loaded via url
 
 ]);
 

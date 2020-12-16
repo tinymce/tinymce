@@ -24,9 +24,7 @@ type Testable<A> = Testable.Testable<A>;
  */
 export const promiseTest = <A>(name: string, f: () => Promise<A>): void => {
   UnitTest.asynctest(name, (success, failure) => {
-    f().then(() => {
-      success();
-    }, failure);
+    f().then(success, failure);
   });
 };
 

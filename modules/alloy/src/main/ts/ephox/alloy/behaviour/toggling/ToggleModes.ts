@@ -6,7 +6,9 @@ import { AriaTogglingConfig } from './TogglingTypes';
 
 const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attribute.set(component.element, 'aria-pressed', status);
-  if (ariaInfo.syncWithExpanded) { updateExpanded(component, ariaInfo, status); }
+  if (ariaInfo.syncWithExpanded) {
+    updateExpanded(component, ariaInfo, status);
+  }
 };
 
 const updateSelected = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {

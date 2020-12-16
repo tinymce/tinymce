@@ -23,7 +23,7 @@ UnitTest.asynctest('ColorPickerSanityTest', (success, failure) => {
 
     const docBody = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
 
-    const sAssertColor = function (expected) {
+    const sAssertColor = (expected) => {
       return Logger.t('Asserting color', Step.sync(() => {
         Assertions.assertEq('Asserting current colour is ' + expected, expected, currentColor);
       }));

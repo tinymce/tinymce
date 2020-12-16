@@ -3,7 +3,7 @@ import * as Assertion from 'ephox/imagetools/test/Assertion';
 import * as Mime from 'ephox/imagetools/util/Mime';
 
 UnitTest.test('MimeTest', () => {
-  const check = function (expected: string | undefined, input: string) {
+  const check = (expected: string | undefined, input: string) => {
     const label = input;
     Assertion.assertEq(expected, Mime.guessMimeType(input), label);
   };

@@ -1,7 +1,7 @@
 import * as Arr from './Arr';
 import * as Obj from './Obj';
 
-export const stringArray = function (a: string[]): string[] {
+export const stringArray = (a: string[]): string[] => {
   const all = {};
   Arr.each(a, (key) => {
     all[key] = {};

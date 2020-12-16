@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const addZeros = function (value, len) {
+const addZeros = (value, len) => {
   value = '' + value;
 
   if (value.length < len) {
@@ -17,7 +17,7 @@ const addZeros = function (value, len) {
   return value;
 };
 
-const getDateTime = function (editor, fmt, date?) {
+const getDateTime = (editor, fmt, date?) => {
   const daysShort = 'Sun Mon Tue Wed Thu Fri Sat Sun'.split(' ');
   const daysLong = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday Sunday'.split(' ');
   const monthsShort = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');

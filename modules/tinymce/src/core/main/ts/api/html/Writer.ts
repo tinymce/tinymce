@@ -35,18 +35,18 @@ export interface WriterSettings {
 }
 
 interface Writer {
-  cdata (text: string): void;
-  comment (text: string): void;
-  doctype (text: string): void;
-  end (name: string): void;
-  getContent (): string;
-  pi (name: string, text: string): void;
-  reset (): void;
-  start (name: string, attrs?: Attributes, empty?: boolean): void;
-  text (text: string, raw?: boolean): void;
+  cdata: (text: string) => void;
+  comment: (text: string) => void;
+  doctype: (text: string) => void;
+  end: (name: string) => void;
+  getContent: () => string;
+  pi: (name: string, text: string) => void;
+  reset: () => void;
+  start: (name: string, attrs?: Attributes, empty?: boolean) => void;
+  text: (text: string, raw?: boolean) => void;
 }
 
-const Writer = function (settings?: WriterSettings): Writer {
+const Writer = (settings?: WriterSettings): Writer => {
   const html = [];
 
   settings = settings || {};
@@ -65,7 +65,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @param {Array} attrs Optional attribute array or undefined if it hasn't any.
      * @param {Boolean} empty Optional empty state if the tag should end like <br />.
      */
-    start(name: string, attrs?: Attributes, empty?: boolean) {
+    start: (name: string, attrs?: Attributes, empty?: boolean) => {
       let i, l, attr, value;
 
       if (indent && indentBefore[name] && html.length > 0) {
@@ -106,7 +106,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @method end
      * @param {String} name Name of the element.
      */
-    end(name: string) {
+    end: (name: string) => {
       let value;
 
       /* if (indent && indentBefore[name] && html.length > 0) {
@@ -134,7 +134,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @param {String} text String to write out.
      * @param {Boolean} raw Optional raw state if true the contents wont get encoded.
      */
-    text(text: string, raw?: boolean) {
+    text: (text: string, raw?: boolean) => {
       if (text.length > 0) {
         html[html.length] = raw ? text : encode(text);
       }
@@ -146,7 +146,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @method cdata
      * @param {String} text String to write out inside the cdata.
      */
-    cdata(text: string) {
+    cdata: (text: string) => {
       html.push('<![CDATA[', text, ']]>');
     },
 
@@ -156,7 +156,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @method cdata
      * @param {String} text String to write out inside the comment.
      */
-    comment(text: string) {
+    comment: (text: string) => {
       html.push('<!--', text, '-->');
     },
 
@@ -167,7 +167,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @param {String} name Name of the pi.
      * @param {String} text String to write out inside the pi.
      */
-    pi(name: string, text: string) {
+    pi: (name: string, text: string) => {
       if (text) {
         html.push('<?', name, ' ', encode(text), '?>');
       } else {
@@ -185,7 +185,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @method doctype
      * @param {String} text String to write out inside the doctype.
      */
-    doctype(text: string) {
+    doctype: (text: string) => {
       html.push('<!DOCTYPE', text, '>', indent ? '\n' : '');
     },
 
@@ -194,7 +194,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      *
      * @method reset
      */
-    reset() {
+    reset: () => {
       html.length = 0;
     },
 
@@ -204,7 +204,7 @@ const Writer = function (settings?: WriterSettings): Writer {
      * @method getContent
      * @return {String} HTML contents that got written down.
      */
-    getContent(): string {
+    getContent: (): string => {
       return html.join('').replace(/\n$/, '');
     }
   };

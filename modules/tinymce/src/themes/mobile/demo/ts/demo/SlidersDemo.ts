@@ -6,7 +6,7 @@ import * as ColorSlider from 'tinymce/themes/mobile/ui/ColorSlider';
 import * as FontSizeSlider from 'tinymce/themes/mobile/ui/FontSizeSlider';
 import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
-export default function () {
+export default () => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const fontSlider = Container.sketch({
@@ -53,4 +53,4 @@ export default function () {
   });
 
   gui.add(container);
-}
+};

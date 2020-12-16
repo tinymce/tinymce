@@ -17,12 +17,12 @@ import * as VideoScript from './VideoScript';
 
 export type DataToHtmlCallback = (data: MediaData) => string;
 
-const getIframeHtml = function (data: MediaData) {
+const getIframeHtml = (data: MediaData) => {
   const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
   return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
-const getFlashHtml = function (data: MediaData) {
+const getFlashHtml = (data: MediaData) => {
   let html = '<object data="' + data.source + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
 
   if (data.poster) {
@@ -34,7 +34,7 @@ const getFlashHtml = function (data: MediaData) {
   return html;
 };
 
-const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtmlCallback) {
+const getAudioHtml = (data: MediaData, audioTemplateCallback: DataToHtmlCallback) => {
   if (audioTemplateCallback) {
     return audioTemplateCallback(data);
   } else {
@@ -50,7 +50,7 @@ const getAudioHtml = function (data: MediaData, audioTemplateCallback: DataToHtm
   }
 };
 
-const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtmlCallback) {
+const getVideoHtml = (data: MediaData, videoTemplateCallback: DataToHtmlCallback) => {
   if (videoTemplateCallback) {
     return videoTemplateCallback(data);
   } else {
@@ -67,11 +67,11 @@ const getVideoHtml = function (data: MediaData, videoTemplateCallback: DataToHtm
   }
 };
 
-const getScriptHtml = function (data: MediaData) {
+const getScriptHtml = (data: MediaData) => {
   return '<script src="' + data.source + '"></script>';
 };
 
-const dataToHtml = function (editor: Editor, dataIn: MediaData) {
+const dataToHtml = (editor: Editor, dataIn: MediaData) => {
   const data: MediaData = Tools.extend({}, dataIn);
 
   if (!data.source) {

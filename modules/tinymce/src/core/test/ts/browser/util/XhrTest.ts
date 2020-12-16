@@ -17,7 +17,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', (success, failure) => {
 
     XHR.send({
       url: '/custom/json_rpc_ok',
-      success(data, xhr: XHRTest, input: XHRSettingsTest) {
+      success: (data, xhr: XHRTest, input: XHRSettingsTest) => {
         LegacyUnit.equal(JSON.parse(data), { result: 'Hello JSON-RPC', error: null, id: 1 });
         LegacyUnit.equal(xhr.status, 200);
         LegacyUnit.equal(input.url, '/custom/json_rpc_ok');
@@ -31,7 +31,7 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', (success, failure) => {
   suite.asyncTest('Unsuccessful request', (_, done) => {
     XHR.send({
       url: '/custom/404',
-      error(type, xhr, input) {
+      error: (type, xhr, input) => {
         LegacyUnit.equal(type, 'GENERAL');
         LegacyUnit.equal(xhr.status, 404);
         LegacyUnit.equal(input.url, '/custom/404');
@@ -40,7 +40,5 @@ UnitTest.asynctest('browser.tinymce.core.util.XhrTest', (success, failure) => {
     });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

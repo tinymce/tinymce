@@ -19,7 +19,7 @@ import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
 import Sizzle from './dom/Sizzle';
-import { StyleSheetLoader, StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
+import StyleSheetLoader, { StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
 import Editor, { EditorConstructor } from './Editor';
@@ -27,7 +27,6 @@ import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
-import ImageUploader from './util/ImageUploader';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import Rect from './geom/Rect';
@@ -51,6 +50,7 @@ import Color, { ColorConstructor } from './util/Color';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
+import ImageUploader from './util/ImageUploader';
 import JSON from './util/JSON';
 import JSONP from './util/JSONP';
 import JSONRequest, { JSONRequestConstructor } from './util/JSONRequest';
@@ -82,7 +82,7 @@ interface RangeUtilsNamespace {
 interface AddOnManagerNamespace {
   new <T>(): AddOnManager<T>;
 
-  language: string;
+  language: string | undefined;
   languageLoad: boolean;
   baseURL: string;
   PluginManager: PluginManager;

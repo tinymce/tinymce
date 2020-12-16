@@ -28,7 +28,7 @@ interface UserDefinedGroup extends Partial<Group> {
   title: string;
 }
 
-const removeCacheSuffix = function (url: string) {
+const removeCacheSuffix = (url: string) => {
   const cacheSuffix = Env.cacheSuffix;
 
   if (typeof url === 'string') {
@@ -51,13 +51,13 @@ const isSkinContentCss = (editor: Editor, href: string) => {
   return false;
 };
 
-const compileFilter = function (filter: string | RegExp | ((value: string) => boolean)) {
+const compileFilter = (filter: string | RegExp | ((value: string) => boolean)) => {
   if (typeof filter === 'string') {
-    return function (value) {
+    return (value) => {
       return value.indexOf(filter) !== -1;
     };
   } else if (filter instanceof RegExp) {
-    return function (value) {
+    return (value) => {
       return filter.test(value);
     };
   }
@@ -68,10 +68,10 @@ const compileFilter = function (filter: string | RegExp | ((value: string) => bo
 const isCssImportRule = (rule: CSSRule): rule is CSSImportRule => (rule as any).styleSheet;
 const isCssPageRule = (rule: CSSRule): rule is CSSPageRule => (rule as any).selectorText;
 
-const getSelectors = function (editor: Editor, doc, fileFilter) {
+const getSelectors = (editor: Editor, doc, fileFilter) => {
   const selectors = [], contentCSSUrls = {};
 
-  function append(styleSheet, imported?) {
+  const append = (styleSheet, imported?) => {
     let href = styleSheet.href, rules: CSSRule[];
 
     href = removeCacheSuffix(href);
@@ -100,14 +100,14 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
         });
       }
     });
-  }
+  };
 
   Tools.each(editor.contentCSS, (url) => {
     contentCSSUrls[url] = true;
   });
 
   if (!fileFilter) {
-    fileFilter = function (href: string, imported: string) {
+    fileFilter = (href: string, imported: string) => {
       return imported || contentCSSUrls[href];
     };
   }
@@ -123,7 +123,7 @@ const getSelectors = function (editor: Editor, doc, fileFilter) {
   return selectors;
 };
 
-const defaultConvertSelectorToFormat = function (editor: Editor, selectorText: string) {
+const defaultConvertSelectorToFormat = (editor: Editor, selectorText: string) => {
   let format;
 
   // Parse simple element.class1, .class1
@@ -171,13 +171,13 @@ const defaultConvertSelectorToFormat = function (editor: Editor, selectorText: s
   return format;
 };
 
-const getGroupsBySelector = function (groups: Group[], selector: string): Group[] {
+const getGroupsBySelector = (groups: Group[], selector: string): Group[] => {
   return Tools.grep(groups, (group) => {
     return !group.filter || group.filter(selector);
   });
 };
 
-const compileUserDefinedGroups = function (groups: UserDefinedGroup[]): Group[] {
+const compileUserDefinedGroups = (groups: UserDefinedGroup[]): Group[] => {
   return Tools.map(groups, (group) => {
     return Tools.extend({}, group, {
       original: group,
@@ -197,16 +197,16 @@ interface StyleGroup {
   filter: string | RegExp | Function;
 }
 
-const isExclusiveMode = function (editor: Editor, group: StyleGroup) {
+const isExclusiveMode = (editor: Editor, group: StyleGroup) => {
   // Exclusive mode can only be disabled when there are groups allowing the same style to be present in multiple groups
   return group === null || Settings.shouldImportExclusive(editor) !== false;
 };
 
-const isUniqueSelector = function (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) {
+const isUniqueSelector = (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) => {
   return !(isExclusiveMode(editor, group) ? selector in globallyUniqueSelectors : selector in group.selectors);
 };
 
-const markUniqueSelector = function (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) {
+const markUniqueSelector = (editor: Editor, selector: string, group: StyleGroup, globallyUniqueSelectors: Record<string, any>) => {
   if (isExclusiveMode(editor, group)) {
     globallyUniqueSelectors[selector] = true;
   } else {
@@ -214,7 +214,7 @@ const markUniqueSelector = function (editor: Editor, selector: string, group: St
   }
 };
 
-const convertSelectorToFormat = function (editor, plugin, selector, group) {
+const convertSelectorToFormat = (editor, plugin, selector, group) => {
   let selectorConverter;
 
   if (group && group.selector_converter) {
@@ -222,7 +222,7 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
   } else if (Settings.getSelectorConverter(editor)) {
     selectorConverter = Settings.getSelectorConverter(editor);
   } else {
-    selectorConverter = function () {
+    selectorConverter = () => {
       return defaultConvertSelectorToFormat(editor, selector);
     };
   }
@@ -230,7 +230,7 @@ const convertSelectorToFormat = function (editor, plugin, selector, group) {
   return selectorConverter.call(plugin, selector, group);
 };
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor) => {
   editor.on('init', (_e) => {
     const model = generate();
 
@@ -238,7 +238,7 @@ const setup = function (editor: Editor) {
     const selectorFilter = compileFilter(Settings.getSelectorFilter(editor));
     const groups = compileUserDefinedGroups(Settings.getCssGroups(editor));
 
-    const processSelector = function (selector: string, group: StyleGroup) {
+    const processSelector = (selector: string, group: StyleGroup) => {
       if (isUniqueSelector(editor, selector, group, globallyUniqueSelectors)) {
         markUniqueSelector(editor, selector, group, globallyUniqueSelectors);
 

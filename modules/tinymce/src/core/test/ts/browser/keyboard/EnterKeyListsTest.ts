@@ -10,7 +10,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
 
   Theme();
 
-  const pressEnter = function (editor: Editor, evt?: any) {
+  const pressEnter = (editor: Editor, evt?: any) => {
     const dom = editor.dom, target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
@@ -20,7 +20,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     dom.fire(target, 'keyup', evt);
   };
 
-  const trimBrsOnIE = function (html) {
+  const trimBrsOnIE = (html) => {
     return html.replace(/<br[^>]*>/gi, '');
   };
 

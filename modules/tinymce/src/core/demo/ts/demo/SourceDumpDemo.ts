@@ -1,6 +1,6 @@
 declare let tinymce: any;
 
-export default function () {
+export default () => {
   tinymce.init({
     selector: 'textarea#editor',
     skin_url: '../../../../js/tinymce/skins/lightgray',
@@ -20,7 +20,7 @@ export default function () {
     autosave_ask_before_unload: false,
     toolbar: 'fontsizeselect fontselect insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
-    init_instance_callback(editor) {
+    init_instance_callback: (editor) => {
       editor.on('init keyup change', () => dumpSource(editor));
     }
   });
@@ -30,4 +30,4 @@ export default function () {
     const raw = document.getElementById('raw') as HTMLInputElement;
     textArea.value = raw.checked ? editor.getBody().innerHTML : editor.getContent();
   };
-}
+};

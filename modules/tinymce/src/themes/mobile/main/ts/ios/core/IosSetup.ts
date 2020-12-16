@@ -21,7 +21,7 @@ import * as IosViewport from '../view/IosViewport';
 
 const VIEW_MARGIN = 5;
 
-const register = function (toolstrip, socket, container, outerWindow, structure, cWin) {
+const register = (toolstrip, socket, container, outerWindow, structure, cWin) => {
   const scroller = BackgroundActivity((y) => {
     return IosScrolling.moveWindowScroll(toolstrip, socket, y);
   });
@@ -29,7 +29,7 @@ const register = function (toolstrip, socket, container, outerWindow, structure,
   // NOTE: This is a WebView specific way of scrolling when out of bounds. When we need to make
   // the webapp work again, we'll have to adjust this function. Essentially, it just jumps the scroll
   // back to show the current selection rectangle.
-  const scrollBounds = function () {
+  const scrollBounds = () => {
     const rects = Rectangles.getRectangles(cWin);
     return Optional.from(rects[0]).bind((rect) => {
       const viewTop = rect.top - socket.dom.scrollTop;
@@ -122,7 +122,7 @@ interface IosSetupOptions {
   readonly outerBody: SugarElement<Node>;
 }
 
-const setup = function (bag: IosSetupOptions) {
+const setup = (bag: IosSetupOptions) => {
   const cWin = bag.cWin;
   const ceBody = bag.ceBody;
   const socket = bag.socket;
@@ -136,17 +136,17 @@ const setup = function (bag: IosSetupOptions) {
   const structure = IosViewport.takeover(socket, ceBody, toolstrip, dropup);
   const keyboardModel = keyboardType(outerBody, cWin, SugarBody.body(), contentElement);
 
-  const toEditing = function () {
+  const toEditing = () => {
     // Consider inlining, though it will make it harder to follow the API
     keyboardModel.toEditing();
     clearSelection();
   };
 
-  const toReading = function () {
+  const toReading = () => {
     keyboardModel.toReading();
   };
 
-  const onToolbarTouch = function (_event) {
+  const onToolbarTouch = (_event) => {
     keyboardModel.onToolbarTouch();
   };
 
@@ -172,34 +172,34 @@ const setup = function (bag: IosSetupOptions) {
 
   const unfocusedSelection = FakeSelection(cWin, contentElement);
 
-  const refreshSelection = function () {
+  const refreshSelection = () => {
     if (unfocusedSelection.isActive()) {
       unfocusedSelection.update();
     }
   };
 
-  const highlightSelection = function () {
+  const highlightSelection = () => {
     unfocusedSelection.update();
   };
 
-  const clearSelection = function () {
+  const clearSelection = () => {
     unfocusedSelection.clear();
   };
 
-  const scrollIntoView = function (top, bottom) {
+  const scrollIntoView = (top, bottom) => {
     Greenzone.scrollIntoView(cWin, socket, dropup, top, bottom);
   };
 
-  const syncHeight = function () {
+  const syncHeight = () => {
     Css.set(contentElement, 'height', contentElement.dom.contentWindow.document.body.scrollHeight + 'px');
   };
 
-  const setViewportOffset = function (newYOffset) {
+  const setViewportOffset = (newYOffset) => {
     structure.setViewportOffset(newYOffset);
     IosScrolling.moveOnlyTop(socket, newYOffset).get(Fun.identity);
   };
 
-  const destroy = function () {
+  const destroy = () => {
     structure.restore();
     onOrientation.destroy();
     onScroll.unbind();

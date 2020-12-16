@@ -669,9 +669,7 @@ UnitTest.asynctest('Editor Autocompleter test', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

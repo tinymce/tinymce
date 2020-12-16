@@ -144,10 +144,10 @@ UnitTest.asynctest('browser.tinymce.plugins.media.ContentFormatsTest', (success,
   });
 
   suite.test('TestCase-TBA: Media: XSS content', (editor) => {
-    function testXss(input, expectedOutput) {
+    const testXss = (input, expectedOutput) => {
       editor.setContent(input);
       LegacyUnit.equal(editor.getContent(), expectedOutput);
-    }
+    };
 
     testXss('<video><a href="javascript:alert(1);">a</a></video>', '<p><video width="300" height="150"><a>a</a></video></p>');
     testXss('<video><img src="x" onload="alert(1)"></video>', '<p><video width="300" height=\"150\"><img src="x" /></video></p>');

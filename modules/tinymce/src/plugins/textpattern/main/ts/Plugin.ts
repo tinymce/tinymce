@@ -11,7 +11,7 @@ import * as Api from './api/Api';
 import * as Settings from './api/Settings';
 import * as Keyboard from './keyboard/Keyboard';
 
-export default function () {
+export default () => {
   PluginManager.add('textpattern', (editor) => {
     const patternsState = Cell(Settings.getPatternSet(editor));
 
@@ -19,4 +19,4 @@ export default function () {
 
     return Api.get(patternsState);
   });
-}
+};

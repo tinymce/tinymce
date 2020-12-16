@@ -1,34 +1,32 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 
-const notImplemented = function () {
+const notImplemented = () => {
   throw new Error('Mockup function is not implemented.');
 };
 
-const createDataTransferItem = function (mime, content) {
+const createDataTransferItem = (mime, content) => {
   return {
     kind: 'string',
     type: mime,
     getAsFile: notImplemented,
-    getAsString() {
-      return content;
-    }
+    getAsString: Fun.constant(content)
   };
 };
 
-const create = function (inputData) {
+const create = (inputData) => {
   let data = {};
 
-  const clearData = function () {
+  const clearData = () => {
     data = {};
     result.items = [];
     result.types = [];
   };
 
-  const getData = function (mime) {
+  const getData = (mime) => {
     return mime in data ? data[mime] : '';
   };
 
-  const setData = function (mime, content) {
+  const setData = (mime, content) => {
     data[mime] = content;
     result.types = Obj.keys(data);
     result.items = Arr.map(result.types, (type) => {

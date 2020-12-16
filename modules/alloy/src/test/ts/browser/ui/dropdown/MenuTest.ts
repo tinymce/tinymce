@@ -100,5 +100,5 @@ UnitTest.asynctest('MenuTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

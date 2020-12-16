@@ -3,17 +3,15 @@ import { Fun, Future } from '@ephox/katamari';
 
 import * as SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 
-UnitTest.asynctest('SmoothAnimationTest', function () {
-  const success = arguments[arguments.length - 2];
-
+UnitTest.asynctest('SmoothAnimationTest', (success) => {
   const animator = SmoothAnimation.create();
 
-  const check = function (label, initial, destination, amount) {
+  const check = (label, initial, destination, amount) => {
     return Future.nu((callback) => {
       let current = initial;
       let values = [ current ];
 
-      const add = function (val, abort) {
+      const add = (val, abort) => {
         if (val > 100) {
           abort('abort');
         } else {
@@ -37,7 +35,7 @@ UnitTest.asynctest('SmoothAnimationTest', function () {
     });
   };
 
-  const assertInfo = function (label, expected, info) {
+  const assertInfo = (label, expected, info) => {
     assert.eq(
       expected.current,
       info.current,

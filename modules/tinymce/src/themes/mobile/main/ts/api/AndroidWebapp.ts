@@ -16,7 +16,7 @@ import * as TapToEditMask from '../touch/view/TapToEditMask';
 import MobileSchema from './MobileSchema';
 
 // TODO: Remove dupe with IosWebapp
-const produce = function (raw: {any}): MobileWebApp {
+const produce = (raw: {any}): MobileWebApp => {
   const mobile = ValueSchema.asRawOrDie(
     'Getting AndroidWebapp schema',
     MobileSchema,
@@ -27,7 +27,7 @@ const produce = function (raw: {any}): MobileWebApp {
   Css.set(mobile.toolstrip, 'width', '100%');
 
   // We do not make the Android container relative, because we aren't positioning the toolbar absolutely.
-  const onTap = function () {
+  const onTap = () => {
     mobile.setReadOnly(mobile.readOnlyOnInit());
     mode.enter();
   };
@@ -38,10 +38,10 @@ const produce = function (raw: {any}): MobileWebApp {
 
   mobile.alloy.add(mask);
   const maskApi = {
-    show() {
+    show: () => {
       mobile.alloy.add(mask);
     },
-    hide() {
+    hide: () => {
       mobile.alloy.remove(mask);
     }
   };

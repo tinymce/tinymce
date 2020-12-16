@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
   Theme();
 
-  const toHtml = function (node: AstNode) {
+  const toHtml = (node: AstNode) => {
     const htmlSerializer = HtmlSerializer({});
     return htmlSerializer.serialize(node);
   };

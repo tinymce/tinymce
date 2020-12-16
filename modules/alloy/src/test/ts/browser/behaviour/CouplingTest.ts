@@ -19,7 +19,7 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
       containerBehaviours: Behaviour.derive([
         Coupling.config({
           others: {
-            'secondary-1'(primary) {
+            'secondary-1': (primary) => {
               return Button.sketch({
                 dom: {
                   tag: 'button'
@@ -66,5 +66,5 @@ UnitTest.asynctest('CouplingTest', (success, failure) => {
       'After clicking, store should have message',
       [ 'clicked on coupled button of: primary' ]
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

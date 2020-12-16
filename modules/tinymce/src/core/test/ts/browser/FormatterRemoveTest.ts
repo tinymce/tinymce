@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', (success, failure
 
   Theme();
 
-  const getContent = function (editor: Editor) {
+  const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
   };
 
@@ -124,7 +124,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterRemoveTest', (success, failure
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
-        color(vars) {
+        color: (vars) => {
           return vars.color + '00';
         }
       },

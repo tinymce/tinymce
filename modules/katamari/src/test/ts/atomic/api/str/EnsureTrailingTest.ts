@@ -3,10 +3,10 @@ import fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('ensureTrailing: unit tests', () => {
-  function check(expected, str, suffix) {
+  const check = (expected: string, str: string, suffix: string) => {
     const actual = Strings.ensureTrailing(str, suffix);
     Assert.eq('ensureTrailing', expected, actual);
-  }
+  };
 
   check('', '', '');
   check('a', 'a', 'a');

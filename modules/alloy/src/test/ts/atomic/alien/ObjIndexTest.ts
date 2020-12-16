@@ -8,7 +8,13 @@ UnitTest.test('ObjIndexTest', () => {
   const tuple = <T>(k: string, v: T) => ({ country: k, value: v });
 
   const sortObjValue = (obj: Record<string, any[]>) => Obj.map(obj, (array, _k) => array.slice(0).sort((a, b) => {
-    if (a.country < b.country) { return -1; } else if (a.country > b.country) { return +1; } else { return 0; }
+    if (a.country < b.country) {
+      return -1;
+    } else if (a.country > b.country) {
+      return +1;
+    } else {
+      return 0;
+    }
   }));
 
   const assertSortedEq = (label: string, expected: Record<string, any[]>, actual: Record<string, any[]>) => {

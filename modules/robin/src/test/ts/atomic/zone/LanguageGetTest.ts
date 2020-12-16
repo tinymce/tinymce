@@ -4,7 +4,7 @@ import { Optional } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('LanguageGetTest', () => {
-  const check = function (doc: TestUniverse, id: string, lang: Optional<string>) {
+  const check = (doc: TestUniverse, id: string, lang: Optional<string>) => {
     const item = doc.find(doc.get(), id).getOrDie();
     const itemLang = LanguageZones.calculate(doc, item);
     Assert.eq(

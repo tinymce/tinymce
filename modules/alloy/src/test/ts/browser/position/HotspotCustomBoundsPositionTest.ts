@@ -88,5 +88,5 @@ UnitTest.asynctest('HotspotPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

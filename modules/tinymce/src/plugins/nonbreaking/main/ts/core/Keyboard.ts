@@ -9,7 +9,7 @@ import VK from 'tinymce/core/api/util/VK';
 import * as Settings from '../api/Settings';
 import * as Actions from './Actions';
 
-const setup = function (editor) {
+const setup = (editor) => {
   const spaces = Settings.getKeyboardSpaces(editor);
 
   if (spaces > 0) {

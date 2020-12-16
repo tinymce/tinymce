@@ -22,7 +22,7 @@ export interface SearchState {
   inSelection: boolean;
 }
 
-const getElmIndex = function (elm: Element) {
+const getElmIndex = (elm: Element) => {
   const value = elm.getAttribute('data-mce-index');
 
   if (typeof value === 'number') {
@@ -32,7 +32,7 @@ const getElmIndex = function (elm: Element) {
   return value;
 };
 
-const markAllMatches = function (editor: Editor, currentSearchState: Cell<SearchState>, pattern: Pattern, inSelection: boolean) {
+const markAllMatches = (editor: Editor, currentSearchState: Cell<SearchState>, pattern: Pattern, inSelection: boolean) => {
   const marker = editor.dom.create('span', {
     'data-mce-bogus': 1
   });
@@ -49,7 +49,7 @@ const markAllMatches = function (editor: Editor, currentSearchState: Cell<Search
   }
 };
 
-const unwrap = function (node: Node) {
+const unwrap = (node: Node) => {
   const parentNode = node.parentNode;
 
   if (node.firstChild) {
@@ -59,7 +59,7 @@ const unwrap = function (node: Node) {
   node.parentNode.removeChild(node);
 };
 
-const findSpansByIndex = function (editor: Editor, index: number) {
+const findSpansByIndex = (editor: Editor, index: number) => {
   const spans = [];
 
   const nodes = Tools.toArray(editor.getBody().getElementsByTagName('span'));
@@ -80,7 +80,7 @@ const findSpansByIndex = function (editor: Editor, index: number) {
   return spans;
 };
 
-const moveSelection = function (editor: Editor, currentSearchState: Cell<SearchState>, forward: boolean) {
+const moveSelection = (editor: Editor, currentSearchState: Cell<SearchState>, forward: boolean) => {
   const searchState = currentSearchState.get();
   let testIndex = searchState.index;
   const dom = editor.dom;
@@ -113,7 +113,7 @@ const moveSelection = function (editor: Editor, currentSearchState: Cell<SearchS
   return -1;
 };
 
-const removeNode = function (dom: DOMUtils, node: Node) {
+const removeNode = (dom: DOMUtils, node: Node) => {
   const parent = node.parentNode;
 
   dom.remove(node);
@@ -129,7 +129,7 @@ const escapeSearchText = (text: string, wholeWord: boolean) => {
   return wholeWord ? `(?:^|\\s|${PolarisPattern.punctuation()})` + wordRegex + `(?=$|\\s|${PolarisPattern.punctuation()})` : wordRegex;
 };
 
-const find = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean) {
+const find = (editor: Editor, currentSearchState: Cell<SearchState>, text: string, matchCase: boolean, wholeWord: boolean, inSelection: boolean) => {
   const escapedText = escapeSearchText(text, wholeWord);
 
   const pattern = {
@@ -153,23 +153,23 @@ const find = function (editor: Editor, currentSearchState: Cell<SearchState>, te
   return count;
 };
 
-const next = function (editor: Editor, currentSearchState: Cell<SearchState>) {
+const next = (editor: Editor, currentSearchState: Cell<SearchState>) => {
   const index = moveSelection(editor, currentSearchState, true);
   currentSearchState.set({ ...currentSearchState.get(), index });
 };
 
-const prev = function (editor: Editor, currentSearchState: Cell<SearchState>) {
+const prev = (editor: Editor, currentSearchState: Cell<SearchState>) => {
   const index = moveSelection(editor, currentSearchState, false);
   currentSearchState.set({ ...currentSearchState.get(), index });
 };
 
-const isMatchSpan = function (node: Element) {
+const isMatchSpan = (node: Element) => {
   const matchIndex = getElmIndex(node);
 
   return matchIndex !== null && matchIndex.length > 0;
 };
 
-const replace = function (editor: Editor, currentSearchState: Cell<SearchState>, text: string, forward?: boolean, all?: boolean) {
+const replace = (editor: Editor, currentSearchState: Cell<SearchState>, text: string, forward?: boolean, all?: boolean) => {
   const searchState = currentSearchState.get();
   const currentIndex = searchState.index;
   let currentMatchIndex, nextIndex = currentIndex;
@@ -224,7 +224,7 @@ const replace = function (editor: Editor, currentSearchState: Cell<SearchState>,
   return !all && currentSearchState.get().count > 0;
 };
 
-const done = function (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean) {
+const done = (editor: Editor, currentSearchState: Cell<SearchState>, keepEditorSelection?: boolean) => {
   let i, startContainer, endContainer;
   const searchState = currentSearchState.get();
 

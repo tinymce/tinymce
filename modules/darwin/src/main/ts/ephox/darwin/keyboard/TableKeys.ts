@@ -15,7 +15,7 @@ type Carets = Carets.Carets;
 
 const MAX_RETRIES = 20;
 
-const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SpotPoint<SugarElement<Node>>> {
+const findSpot = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SpotPoint<SugarElement<Node>>> => {
   return bridge.getSelection().bind((sel) => {
     return BrTags.tryBr(isRoot, sel.finish, sel.foffset, direction).fold(() => {
       return Optional.some(Spot.point(sel.finish, sel.foffset));
@@ -27,8 +27,10 @@ const findSpot = function (bridge: WindowBridge, isRoot: (e: SugarElement) => bo
   });
 };
 
-const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Optional<Situs> {
-  if (numRetries === 0) { return Optional.none(); }
+const scan = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection, numRetries: number): Optional<Situs> => {
+  if (numRetries === 0) {
+    return Optional.none();
+  }
   // Firstly, move the (x, y) and see what element we end up on.
   return tryCursor(bridge, isRoot, element, offset, direction).bind((situs) => {
     const range = bridge.fromSitus(situs);
@@ -56,13 +58,13 @@ const scan = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolea
   });
 };
 
-const tryAgain = function (bridge: WindowBridge, element: SugarElement, offset: number, move: (carets: Carets, jump: number) => Carets, direction: KeyDirection): Optional<Situs> {
+const tryAgain = (bridge: WindowBridge, element: SugarElement, offset: number, move: (carets: Carets, jump: number) => Carets, direction: KeyDirection): Optional<Situs> => {
   return Rectangles.getBoxAt(bridge, element, offset).bind((box) => {
     return tryAt(bridge, direction, move(box, Retries.getJumpSize()));
   });
 };
 
-const tryAt = function (bridge: WindowBridge, direction: KeyDirection, box: Carets): Optional<Situs> {
+const tryAt = (bridge: WindowBridge, direction: KeyDirection, box: Carets): Optional<Situs> => {
   const browser = PlatformDetection.detect().browser;
   // NOTE: As we attempt to take over selection everywhere, we'll probably need to separate these again.
   if (browser.isChrome() || browser.isSafari() || browser.isFirefox() || browser.isEdge()) {
@@ -74,13 +76,13 @@ const tryAt = function (bridge: WindowBridge, direction: KeyDirection, box: Care
   }
 };
 
-const tryCursor = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection): Optional<Situs> {
+const tryCursor = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, element: SugarElement, offset: number, direction: KeyDirection): Optional<Situs> => {
   return Rectangles.getBoxAt(bridge, element, offset).bind((box) => {
     return tryAt(bridge, direction, box);
   });
 };
 
-const handle = function (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SimRange> {
+const handle = (bridge: WindowBridge, isRoot: (e: SugarElement) => boolean, direction: KeyDirection): Optional<SimRange> => {
   return findSpot(bridge, isRoot, direction).bind((spot) => {
     // There is a point to start doing box-hitting from
     return scan(bridge, isRoot, spot.element, spot.offset, direction, MAX_RETRIES).map(bridge.fromSitus);

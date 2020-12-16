@@ -15,7 +15,7 @@ UnitTest.test('StructureTest', () => {
     Gene('strong1', 'strong', [])
   ]));
 
-  const check = function (expected: boolean, id: string) {
+  const check = (expected: boolean, id: string) => {
     const item = doc.find(doc.get(), id).getOrDie();
     const actual = Structure.isInline(doc, item);
     assert.eq(expected, actual);

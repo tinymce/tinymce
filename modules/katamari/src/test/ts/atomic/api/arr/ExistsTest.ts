@@ -6,7 +6,9 @@ import * as Fun from 'ephox/katamari/api/Fun';
 const eqc = (x) => (a) => x === a;
 const never = Fun.never;
 const always = Fun.always;
-const bottom = () => { throw new Error('error'); };
+const bottom = () => {
+  throw new Error('error');
+};
 
 UnitTest.test('Arr.exists: unit test', () => {
   const check = (expected, input: any[], f) => {

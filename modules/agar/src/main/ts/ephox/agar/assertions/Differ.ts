@@ -13,6 +13,7 @@
  * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
  */
 const htmlDiff: (v1: string, v2: string) => string = (() => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   const hasOwn = Object.prototype.hasOwnProperty;
 
   /* jshint eqeqeq:false, eqnull:true */

@@ -30,13 +30,13 @@ const getGroups = Thunk.cached((realm, editor) => {
 
           // Do not include link
           maxFieldIndex: [ 'url', 'text', 'title', 'target' ].length - 1,
-          getInitialValue(/* dialog */) {
+          getInitialValue: (/* dialog */) => {
             return Optional.some(
               LinkBridge.getInfo(editor)
             );
           },
 
-          onExecute(dialog, _simulatedEvent) {
+          onExecute: (dialog, _simulatedEvent) => {
             const info = Representing.getValue(dialog);
             LinkBridge.applyInfo(editor, info);
             realm.restoreToolbar();
@@ -48,7 +48,7 @@ const getGroups = Thunk.cached((realm, editor) => {
   ];
 });
 
-const sketch = function (realm, editor): SketchSpec {
+const sketch = (realm, editor): SketchSpec => {
   return Buttons.forToolbarStateAction(editor, 'link', 'link', () => {
     const groups = getGroups(realm, editor);
 

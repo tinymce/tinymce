@@ -13,14 +13,16 @@ import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from './FormatTypes';
 
 export interface FormatRegistry {
-  get (name: string): Format[];
-  get (): Record<string, Format[]>;
-  has (name: string): boolean;
-  register (name: string | Formats, format?: Format[] | Format): void;
-  unregister (name: string): Formats;
+  get: {
+    (name: string): Format[];
+    (): Record<string, Format[]>;
+  };
+  has: (name: string) => boolean;
+  register: (name: string | Formats, format?: Format[] | Format) => void;
+  unregister: (name: string) => Formats;
 }
 
-export function FormatRegistry(editor: Editor): FormatRegistry {
+export const FormatRegistry = (editor: Editor): FormatRegistry => {
   const formats: Record<string, Format[]> = {};
 
   const get = (name?: string): Format[] | Record<string, Format[]> =>
@@ -28,7 +30,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
 
   const has = (name: string): boolean => Obj.has(formats, name);
 
-  const register = function (name: string | Formats, format?: Format | Format[]) {
+  const register = (name: string | Formats, format?: Format | Format[]) => {
     if (name) {
       if (typeof name !== 'string') {
         Tools.each(name, (format, name) => {
@@ -74,7 +76,7 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
     }
   };
 
-  const unregister = function (name: string) {
+  const unregister = (name: string) => {
     if (name && formats[name]) {
       delete formats[name];
     }
@@ -91,4 +93,4 @@ export function FormatRegistry(editor: Editor): FormatRegistry {
     register,
     unregister
   };
-}
+};

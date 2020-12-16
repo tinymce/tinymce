@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.newline.InsertNewLine', (success, failu
 
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
 
-  const sInsertNewline = function (editor: Editor, args) {
+  const sInsertNewline = (editor: Editor, args) => {
     return Step.sync(() => {
       InsertNewLine.insert(editor, args);
     });

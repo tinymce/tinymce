@@ -29,7 +29,7 @@ interface Data {
   active_color?: string;
 }
 
-const parseHeader = function (head: string) {
+const parseHeader = (head: string) => {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
@@ -38,16 +38,16 @@ const parseHeader = function (head: string) {
   }).parse(head, { format: 'xhtml' });
 };
 
-const htmlToData = function (editor: Editor, head: string) {
+const htmlToData = (editor: Editor, head: string) => {
   const headerFragment = parseHeader(head);
   const data: Data = {};
   let elm, matches;
 
-  function getAttr(elm, name) {
+  const getAttr = (elm, name) => {
     const value = elm.attr(name);
 
     return value || '';
-  }
+  };
 
   // Default some values
   // TODO: Not sure these are used anymore
@@ -120,21 +120,21 @@ const htmlToData = function (editor: Editor, head: string) {
   return data;
 };
 
-const dataToHtml = function (editor: Editor, data: Data, head) {
+const dataToHtml = (editor: Editor, data: Data, head) => {
   let headElement, elm, value;
   const dom = editor.dom;
 
-  function setAttr(elm, name, value) {
+  const setAttr = (elm, name, value) => {
     elm.attr(name, value ? value : undefined);
-  }
+  };
 
-  function addHeadNode(node) {
+  const addHeadNode = (node) => {
     if (headElement.firstChild) {
       headElement.insert(node, headElement.firstChild);
     } else {
       headElement.append(node);
     }
-  }
+  };
 
   const headerFragment = parseHeader(head);
   headElement = headerFragment.getAll('head')[0];

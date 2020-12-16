@@ -112,5 +112,5 @@ UnitTest.asynctest('Browser Test: events.AttachingEventTest', (success, failure)
     }),
 
     store.sAssertEq('After detaching from the DOM, should have fired detached', [ 'detached-from:main-container' ])
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

@@ -7,8 +7,8 @@
 
 import { Arr } from '@ephox/katamari';
 
-const isNodeType = function (type) {
-  return function (node: Node) {
+const isNodeType = (type: number) => {
+  return (node: Node) => {
     return !!node && node.nodeType === type;
   };
 };
@@ -32,10 +32,10 @@ const matchNodeNames = <T extends Node>(names: string[]) => {
   };
 };
 
-const matchStyleValues = function (name: string, values: string) {
+const matchStyleValues = (name: string, values: string) => {
   const items = values.toLowerCase().split(' ');
 
-  return function (node) {
+  return (node) => {
     let i, cssValue;
 
     if (isElement(node)) {
@@ -52,20 +52,20 @@ const matchStyleValues = function (name: string, values: string) {
   };
 };
 
-const hasPropValue = function (propName: string, propValue: any) {
-  return function (node: Node) {
+const hasPropValue = (propName: string, propValue: any) => {
+  return (node: Node) => {
     return isElement(node) && node[propName] === propValue;
   };
 };
 
-const hasAttribute = function (attrName: string) {
-  return function (node: Node) {
+const hasAttribute = (attrName: string) => {
+  return (node: Node) => {
     return isElement(node) && node.hasAttribute(attrName);
   };
 };
 
-const hasAttributeValue = function (attrName: string, attrValue: string) {
-  return function (node: Node) {
+const hasAttributeValue = (attrName: string, attrValue: string) => {
+  return (node: Node) => {
     return isElement(node) && node.getAttribute(attrName) === attrValue;
   };
 };
@@ -74,8 +74,8 @@ const isBogus = (node: Node): node is Element => isElement(node) && node.hasAttr
 const isBogusAll = (node: Node): node is Element => isElement(node) && node.getAttribute('data-mce-bogus') === 'all';
 const isTable = (node: Node): node is Element => isElement(node) && node.tagName === 'TABLE';
 
-const hasContentEditableState = function (value: string) {
-  return function (node: Node) {
+const hasContentEditableState = (value: string) => {
+  return (node: Node) => {
     if (isElement(node)) {
       if (node.contentEditable === value) {
         return true;

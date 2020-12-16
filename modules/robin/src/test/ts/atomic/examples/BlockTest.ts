@@ -31,7 +31,7 @@ UnitTest.test('BlockTest', () => {
     ])
   ]));
 
-  const check = function (expected: Optional<string>, ids: string[], look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>) {
+  const check = (expected: Optional<string>, ids: string[], look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>) => {
     const items = Arr.map(ids, (id) => {
       return doc.find(doc.get(), id).getOrDie();
     });

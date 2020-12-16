@@ -51,13 +51,14 @@ UnitTest.test('ADT Test', () => {
     { actual: [ 'target', 'block' ] }
   ]);
 
-  const none = function () {
-    Assert.eq('eq', 0, arguments.length);
+  const none = (...args: any[]) => {
+    Assert.eq('eq', 0, args.length);
   };
 
   const targetStr = 'target';
   const blockStr = 'block';
 
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   const tag = function (target, block) {
     Assert.eq('eq', 2, arguments.length);
     Assert.eq('eq', targetStr, target);
@@ -143,8 +144,8 @@ UnitTest.test('Error is thrown if not all arguments are supplied', () => {
   }));
 });
 
-const record = function () {
-  return Array.prototype.slice.call(arguments, 0);
+const record = (...args: any[]) => {
+  return args;
 };
 
 UnitTest.test('adt.nothing.match should pass [ ]', () => {

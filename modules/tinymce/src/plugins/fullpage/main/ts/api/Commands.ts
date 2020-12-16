@@ -7,7 +7,7 @@
 
 import * as Dialog from '../ui/Dialog';
 
-const register = function (editor, headState) {
+const register = (editor, headState) => {
   editor.addCommand('mceFullPageProperties', () => {
     Dialog.open(editor, headState);
   });

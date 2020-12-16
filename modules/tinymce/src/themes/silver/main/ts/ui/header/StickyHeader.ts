@@ -204,7 +204,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
     Focusing.config({ }),
     Docking.config({
       contextual: {
-        lazyContext(comp) {
+        lazyContext: (comp) => {
           const headerHeight = Height.getOuter(comp.element);
           const container = editor.inline ? editor.getContentAreaContainer() : editor.getContainer();
           const box = Boxes.box(SugarElement.fromDom(container));

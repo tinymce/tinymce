@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (suc
   SilverTheme();
   SpellcheckerPlugin();
 
-  const sTestDefaultLanguage = function (editor) {
+  const sTestDefaultLanguage = (editor) => {
     return Step.sync(() => {
       Assert.eq('should be same', Settings.getLanguage(editor), 'en');
     });
@@ -65,7 +65,7 @@ UnitTest.asynctest('browser.tinymce.plugins.spellchecker.SpellcheckerTest', (suc
     toolbar: 'spellchecker',
     base_url: '/project/tinymce/js/tinymce',
     statusbar: false,
-    spellchecker_callback(method, _text, success, _failure) {
+    spellchecker_callback: (method, _text, success, _failure) => {
       if (method === 'spellcheck') {
         success({ words: {
           helo: [ 'hello' ],

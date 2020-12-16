@@ -35,7 +35,7 @@ interface Annotator {
   getAll: (name: string) => Record<string, Element[]>;
 }
 
-const Annotator = function (editor: Editor): Annotator {
+const Annotator = (editor: Editor): Annotator => {
   const registry = create();
   AnnotationFilter.setup(editor, registry);
   const changes = AnnotationChanges.setup(editor, registry);

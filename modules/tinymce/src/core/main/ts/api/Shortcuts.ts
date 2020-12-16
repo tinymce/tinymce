@@ -74,6 +74,60 @@ export interface ShortcutsConstructor {
 
 type CommandFunc = string | [string, boolean, any] | (() => void);
 
+const parseShortcut = (pattern: string): Shortcut => {
+  let key;
+  const shortcut: any = {};
+
+  // Parse modifiers and keys ctrl+alt+b for example
+  each(explode(pattern.toLowerCase(), '+'), (value) => {
+    if (value in modifierNames) {
+      shortcut[value] = true;
+    } else {
+      // Allow numeric keycodes like ctrl+219 for ctrl+[
+      if (/^[0-9]{2,}$/.test(value)) {
+        shortcut.keyCode = parseInt(value, 10);
+      } else {
+        shortcut.charCode = value.charCodeAt(0);
+        shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
+      }
+    }
+  });
+
+  // Generate unique id for modifier combination and set default state for unused modifiers
+  const id = [ shortcut.keyCode ];
+  for (key in modifierNames) {
+    if (shortcut[key]) {
+      id.push(key);
+    } else {
+      shortcut[key] = false;
+    }
+  }
+  shortcut.id = id.join(',');
+
+  // Handle special access modifier differently depending on Mac/Win
+  if (shortcut.access) {
+    shortcut.alt = true;
+
+    if (Env.mac) {
+      shortcut.ctrl = true;
+    } else {
+      shortcut.shift = true;
+    }
+  }
+
+  // Handle special meta modifier differently depending on Mac/Win
+  if (shortcut.meta) {
+    if (Env.mac) {
+      shortcut.meta = true;
+    } else {
+      shortcut.ctrl = true;
+      shortcut.meta = false;
+    }
+  }
+
+  return shortcut;
+};
+
 class Shortcuts {
   private readonly editor: Editor;
   private readonly shortcuts: Record<string, Shortcut> = {};
@@ -155,11 +209,11 @@ class Shortcuts {
     const cmd = cmdFunc;
 
     if (typeof cmd === 'string') {
-      return function () {
+      return () => {
         self.editor.execCommand(cmd, false, null);
       };
     } else if (Tools.isArray(cmd)) {
-      return function () {
+      return () => {
         self.editor.execCommand(cmd[0], cmd[1], cmd[2]);
       };
     } else {
@@ -167,62 +221,8 @@ class Shortcuts {
     }
   }
 
-  private parseShortcut(pattern: string): Shortcut {
-    let key;
-    const shortcut: any = {};
-
-    // Parse modifiers and keys ctrl+alt+b for example
-    each(explode(pattern.toLowerCase(), '+'), (value) => {
-      if (value in modifierNames) {
-        shortcut[value] = true;
-      } else {
-        // Allow numeric keycodes like ctrl+219 for ctrl+[
-        if (/^[0-9]{2,}$/.test(value)) {
-          shortcut.keyCode = parseInt(value, 10);
-        } else {
-          shortcut.charCode = value.charCodeAt(0);
-          shortcut.keyCode = keyCodeLookup[value] || value.toUpperCase().charCodeAt(0);
-        }
-      }
-    });
-
-    // Generate unique id for modifier combination and set default state for unused modifiers
-    const id = [ shortcut.keyCode ];
-    for (key in modifierNames) {
-      if (shortcut[key]) {
-        id.push(key);
-      } else {
-        shortcut[key] = false;
-      }
-    }
-    shortcut.id = id.join(',');
-
-    // Handle special access modifier differently depending on Mac/Win
-    if (shortcut.access) {
-      shortcut.alt = true;
-
-      if (Env.mac) {
-        shortcut.ctrl = true;
-      } else {
-        shortcut.shift = true;
-      }
-    }
-
-    // Handle special meta modifier differently depending on Mac/Win
-    if (shortcut.meta) {
-      if (Env.mac) {
-        shortcut.meta = true;
-      } else {
-        shortcut.ctrl = true;
-        shortcut.meta = false;
-      }
-    }
-
-    return shortcut;
-  }
-
   private createShortcut(pattern: string, desc?: string, cmdFunc?: () => void, scope?): Shortcut {
-    const shortcuts = Tools.map(explode(pattern, '>'), this.parseShortcut);
+    const shortcuts = Tools.map(explode(pattern, '>'), parseShortcut);
     shortcuts[shortcuts.length - 1] = Tools.extend(shortcuts[shortcuts.length - 1], {
       func: cmdFunc,
       scope: scope || this.editor

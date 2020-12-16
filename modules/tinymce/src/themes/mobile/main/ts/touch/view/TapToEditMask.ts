@@ -11,7 +11,7 @@ import { Throttler } from '@ephox/katamari';
 import * as Styles from '../../style/Styles';
 import * as UiDomFactory from '../../util/UiDomFactory';
 
-const sketch = function (onView, _translate): SketchSpec {
+const sketch = (onView, _translate): SketchSpec => {
 
   const memIcon = Memento.record(
     Container.sketch({
@@ -38,7 +38,7 @@ const sketch = function (onView, _translate): SketchSpec {
             components: [
               memIcon.asSpec()
             ],
-            action(_button) {
+            action: (_button) => {
               onViewThrottle.throttle();
             },
 

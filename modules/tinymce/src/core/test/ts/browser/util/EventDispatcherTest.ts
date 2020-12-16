@@ -132,7 +132,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    const handler = function () {
+    const handler = () => {
       data += 'b';
     };
 
@@ -173,13 +173,13 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    const listenerA = function () {
+    const listenerA = () => {
       data += 'a';
     };
-    const listenerB = function () {
+    const listenerB = () => {
       data += 'b';
     };
-    const listenerC = function () {
+    const listenerC = () => {
       data += 'c';
     };
 
@@ -199,13 +199,13 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    const listenerA = function () {
+    const listenerA = () => {
       data += 'a';
     };
-    const listenerB = function () {
+    const listenerB = () => {
       data += 'b';
     };
-    const listenerC = function () {
+    const listenerC = () => {
       data += 'c';
     };
 
@@ -225,10 +225,10 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     const dispatcher = new EventDispatcher();
     let data = '';
 
-    const listenerA = function () {
+    const listenerA = () => {
       data += 'a';
     };
-    const listenerB = function () {
+    const listenerB = () => {
       data += 'b';
     };
 
@@ -266,7 +266,7 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     let lastArgs;
 
     const dispatcher = new EventDispatcher({
-      beforeFire(args) {
+      beforeFire: (args) => {
         lastArgs = args;
       }
     });
@@ -279,13 +279,13 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     let lastArgs, data = '';
 
     const dispatcher = new EventDispatcher({
-      beforeFire(args) {
+      beforeFire: (args) => {
         lastArgs = args;
         args.stopImmediatePropagation();
       }
     });
 
-    const listenerA = function () {
+    const listenerA = () => {
       data += 'a';
     };
 
@@ -299,16 +299,16 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     let lastName, lastState;
 
     const dispatcher = new EventDispatcher({
-      toggleEvent(name, state) {
+      toggleEvent: (name, state) => {
         lastName = name;
         lastState = state;
       }
     });
 
-    const listenerA = function () {
-    };
-    const listenerB = function () {
-    };
+    // eslint-disable-next-line @tinymce/prefer-fun
+    const listenerA = () => {};
+    // eslint-disable-next-line @tinymce/prefer-fun
+    const listenerB = () => {};
 
     dispatcher.on('click', listenerA);
     LegacyUnit.equal(lastName, 'click');
@@ -328,7 +328,5 @@ UnitTest.asynctest('browser.tinymce.core.util.EventDispatcherTest', (success, fa
     LegacyUnit.equal(lastState, false);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

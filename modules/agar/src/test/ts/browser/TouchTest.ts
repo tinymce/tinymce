@@ -115,11 +115,15 @@ UnitTest.asynctest('TouchTest', (success, failure) => {
     )
 
   ], () => {
-    Arr.each(handlers, (h) => { h.unbind(); });
+    Arr.each(handlers, (h) => {
+      h.unbind();
+    });
     Remove.remove(container);
     success();
   }, (err) => {
-    Arr.each(handlers, (h) => { h.unbind(); });
+    Arr.each(handlers, (h) => {
+      h.unbind();
+    });
     failure(err);
   });
 });

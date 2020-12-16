@@ -188,5 +188,5 @@ UnitTest.asynctest('TieredMenuTest', (success, failure) => {
       )
       // TODO: Beef up tests
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

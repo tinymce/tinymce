@@ -5,7 +5,7 @@ import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('WarehouseTest', () => {
-  const check = function (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) {
+  const check = (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) => {
     const actual = Warehouse.generate(input);
     assert.eq(expected, Obj.map(actual.access, (x) => x.element));
   };

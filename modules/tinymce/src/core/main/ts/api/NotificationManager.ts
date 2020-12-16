@@ -14,10 +14,10 @@ import * as Settings from './Settings';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
-  open (spec: NotificationSpec, closeCallback?: () => void): NotificationApi;
-  close <T extends NotificationApi>(notification: T): void;
-  reposition <T extends NotificationApi>(notifications: T[]): void;
-  getArgs <T extends NotificationApi>(notification: T): NotificationSpec;
+  open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
+  close: <T extends NotificationApi>(notification: T) => void;
+  reposition: <T extends NotificationApi>(notifications: T[]) => void;
+  getArgs: <T extends NotificationApi>(notification: T) => NotificationSpec;
 }
 
 export interface NotificationSpec {
@@ -59,33 +59,33 @@ interface NotificationManager {
  * });
  */
 
-function NotificationManager(editor: Editor): NotificationManager {
+const NotificationManager = (editor: Editor): NotificationManager => {
   const notifications: NotificationApi[] = [];
 
-  const getImplementation = function (): NotificationManagerImpl {
+  const getImplementation = (): NotificationManagerImpl => {
     const theme = editor.theme;
     return theme && theme.getNotificationManagerImpl ? theme.getNotificationManagerImpl() : NotificationManagerImpl();
   };
 
-  const getTopNotification = function (): Optional<NotificationApi> {
+  const getTopNotification = (): Optional<NotificationApi> => {
     return Optional.from(notifications[0]);
   };
 
-  const isEqual = function (a: NotificationSpec, b: NotificationSpec) {
+  const isEqual = (a: NotificationSpec, b: NotificationSpec) => {
     return a.type === b.type && a.text === b.text && !a.progressBar && !a.timeout && !b.progressBar && !b.timeout;
   };
 
-  const reposition = function () {
+  const reposition = () => {
     if (notifications.length > 0) {
       getImplementation().reposition(notifications);
     }
   };
 
-  const addNotification = function (notification: NotificationApi) {
+  const addNotification = (notification: NotificationApi) => {
     notifications.push(notification);
   };
 
-  const closeNotification = function (notification: NotificationApi) {
+  const closeNotification = (notification: NotificationApi) => {
     Arr.findIndex(notifications, (otherNotification) => {
       return otherNotification === notification;
     }).each((index) => {
@@ -95,7 +95,7 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const open = function (spec: NotificationSpec, fireEvent: boolean = true) {
+  const open = (spec: NotificationSpec, fireEvent: boolean = true) => {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
       return;
@@ -131,7 +131,7 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const close = function () {
+  const close = () => {
     getTopNotification().each((notification) => {
       getImplementation().close(notification);
       closeNotification(notification);
@@ -139,11 +139,11 @@ function NotificationManager(editor: Editor): NotificationManager {
     });
   };
 
-  const getNotifications = function (): NotificationApi[] {
+  const getNotifications = (): NotificationApi[] => {
     return notifications;
   };
 
-  const registerEvents = function (editor: Editor) {
+  const registerEvents = (editor: Editor) => {
     editor.on('SkinLoaded', () => {
       const serviceMessage = Settings.getServiceMessage(editor);
 
@@ -198,6 +198,6 @@ function NotificationManager(editor: Editor): NotificationManager {
      */
     getNotifications
   };
-}
+};
 
 export default NotificationManager;

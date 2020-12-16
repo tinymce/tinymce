@@ -18,7 +18,7 @@ import RangeUtils from './dom/RangeUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
-import { StyleSheetLoader } from './dom/StyleSheetLoader';
+import StyleSheetLoader from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker from './dom/TreeWalker';
 import Editor from './Editor';

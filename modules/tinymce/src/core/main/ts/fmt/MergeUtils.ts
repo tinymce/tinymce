@@ -37,7 +37,7 @@ const findElementSibling = (node: Node, siblingName: 'nextSibling' | 'previousSi
 
 const mergeSiblingsNodes = (dom: DOMUtils, prev: Node, next: Node) => {
   let sibling, tmpSibling;
-  const elementUtils = new ElementUtils(dom);
+  const elementUtils = ElementUtils(dom);
 
   // Check if next/prev exists and that they are elements
   if (prev && next) {

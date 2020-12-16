@@ -1,7 +1,7 @@
 import { Insert, InsertAll, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const Page = function () {
+export const Page = () => {
 
   const container = SugarElement.fromTag('div');
   const div1 = SugarElement.fromTag('div');
@@ -42,13 +42,13 @@ export const Page = function () {
   InsertAll.append(p4, [ t8, s4 ]);
   InsertAll.append(s4, [ t9, t10 ]);
 
-  const connect = function () {
+  const connect = () => {
     // IMPORTANT: Otherwise CSS display does not work.
     const body = SelectorFind.first('body').getOrDie('No body tag found!');
     Insert.append(body, container);
   };
 
-  const disconnect = function () {
+  const disconnect = () => {
     Remove.remove(container);
   };
 

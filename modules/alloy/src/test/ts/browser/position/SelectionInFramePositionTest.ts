@@ -182,5 +182,5 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

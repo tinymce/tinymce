@@ -11,7 +11,7 @@ import * as Actions from './core/Actions';
 import * as Keyboard from './core/Keyboard';
 import * as Controls from './ui/Controls';
 
-export default function () {
+export default () => {
   PluginManager.add('link', (editor) => {
     Controls.setupButtons(editor);
     Controls.setupMenuItems(editor);
@@ -21,4 +21,4 @@ export default function () {
     Commands.register(editor);
     Keyboard.setup(editor);
   });
-}
+};

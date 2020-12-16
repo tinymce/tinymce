@@ -35,13 +35,15 @@ UnitTest.test('SimplifyTest', () => {
     ])
   ]));
 
-  const check = function (expected: string[], raw: string[]) {
+  const check = (expected: string[], raw: string[]) => {
     const path = Arr.map(raw, (r) => {
       return doc.find(doc.get(), r).getOrDie('Could not find: ' + r);
     });
 
     const actual = Simplify.simplify(doc, path);
-    assert.eq(expected, Arr.map(actual, (s) => { return s.id; }));
+    assert.eq(expected, Arr.map(actual, (s) => {
+      return s.id;
+    }));
   };
 
   check([], []);

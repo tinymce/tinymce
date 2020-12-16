@@ -37,13 +37,13 @@ UnitTest.test('WrapperTest', () => {
   );
 
   let counter = 0;
-  const factory = function () {
+  const factory = () => {
     const item = Gene('wrap_' + counter, '.');
     counter++;
     return Wrapping.nu(doc, item);
   };
 
-  const dump = function () {
+  const dump = () => {
     return Logger.custom(doc.get(), (item) => {
       return doc.property().isText(item) ? item.id + '("' + item.text + '")' : item.id;
     });
@@ -56,7 +56,7 @@ UnitTest.test('WrapperTest', () => {
     endOffset: number;
   }
 
-  const check = function (overall: string, expResult: ExpResult, startId: string, startOffset: number, endId: string, endOffset: number) {
+  const check = (overall: string, expResult: ExpResult, startId: string, startOffset: number, endId: string, endOffset: number) => {
     counter = 0;
     const actual = Wrapping.leaves(doc, Finder.get(doc, startId), startOffset, Finder.get(doc, endId), endOffset, factory).getOrDie();
     assert.eq(overall, dump());

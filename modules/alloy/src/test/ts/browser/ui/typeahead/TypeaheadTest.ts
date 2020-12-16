@@ -48,7 +48,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               }
             },
 
-            fetch(input) {
+            fetch: (input) => {
               const text = Value.get(input.element).toLowerCase();
               const future = Future.pure([
                 { type: 'item', data: { value: text + '1', meta: { text: Strings.capitalize(text) + '1' }}},
@@ -69,7 +69,7 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
               });
             },
 
-            lazySink(c) {
+            lazySink: (c) => {
               TestDropdownMenu.assertLazySinkArgs('input', 'test-typeahead', c);
               return Result.value(sink);
             },
@@ -246,5 +246,5 @@ UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadTest', (success, failur
       GuiSetup.mRemoveStyles
 
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

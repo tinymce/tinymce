@@ -36,7 +36,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', (success, failure) 
     // Get selected contents, onGetContent event
     eventObj = {};
 
-    const handler = function (event) {
+    const handler = (event) => {
       eventObj = event;
     };
 
@@ -140,7 +140,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', (success, failure) 
     // Set selected contents, onSetContent event
     eventObj = {};
 
-    const handler = function (event) {
+    const handler = (event) => {
       eventObj = event;
     };
 
@@ -1163,7 +1163,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', (success, failure) 
   });
   /*
   // TODO: Re-implement this test as a separate test if needed by destroying an editor etc
-  suite.test('getRng should return null if win.document is not defined or null', function (editor) {
+  suite.test('getRng should return null if win.document is not defined or null', (editor) => {
     const win = editor.selection.win;
     let rng = editor.dom.createRng();
 
@@ -1187,7 +1187,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SelectionTest', (success, failure) 
   });
 */
   suite.test('image selection webkit bug', (editor) => {
-    const testImageSelection = function (inputHtml, expectedContainerName, expectedOffset) {
+    const testImageSelection = (inputHtml, expectedContainerName, expectedOffset) => {
       editor.setContent(inputHtml);
       editor.selection.select(editor.dom.select('img')[0]);
 

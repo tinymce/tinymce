@@ -56,5 +56,5 @@ UnitTest.asynctest('StreamingTest', (success, failure) => {
       AlloyTriggers.emit(component, 'cancel.stream');
     }),
     Waiter.sTryUntil('', store.sAssertEq('Event should have been cancelled, so nothing should be in store', [ ]))
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

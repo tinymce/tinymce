@@ -2,8 +2,8 @@ import { Arr } from '@ephox/katamari';
 
 declare let tinymce: any;
 
-export default function () {
-  const cmd = function (command, value?) {
+export default () => {
+  const cmd = (command, value?) => {
     return { command, value };
   };
 
@@ -91,7 +91,7 @@ export default function () {
   Arr.each(commands, (cmd) => {
     const btn = document.createElement('button');
     btn.innerHTML = cmd.command;
-    btn.onclick = function () {
+    btn.onclick = () => {
       tinymce.activeEditor.execCommand(cmd.command, false, cmd.value);
     };
     document.querySelector('#ephox-ui').appendChild(btn);
@@ -108,4 +108,4 @@ export default function () {
     toolbar1: 'bold italic',
     menubar: false
   });
-}
+};

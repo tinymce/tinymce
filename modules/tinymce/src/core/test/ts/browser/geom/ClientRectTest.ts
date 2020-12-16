@@ -6,7 +6,7 @@ import * as ClientRect from 'tinymce/core/geom/ClientRect';
 UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', (success, failure) => {
   const suite = LegacyUnit.createSuite();
 
-  const rect = function (x, y, w, h) {
+  const rect = (x, y, w, h) => {
     return {
       left: x,
       top: y,
@@ -92,7 +92,5 @@ UnitTest.asynctest('browser.tinymce.core.geom.ClientRectTest', (success, failure
     LegacyUnit.equal(ClientRect.getOverflow(rect(10, 10, 10, 10), rect(10, 15, 10, 10)), { x: 0, y: 5 });
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

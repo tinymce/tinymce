@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.DialogHeightTest', (success,
   SilverTheme();
 
   // Move into shared library
-  const cFakeEvent = function (name) {
+  const cFakeEvent = (name) => {
     return Chain.control(
       Chain.op((elm: SugarElement) => {
         const evt = document.createEvent('HTMLEvents');

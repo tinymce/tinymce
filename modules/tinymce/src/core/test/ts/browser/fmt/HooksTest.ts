@@ -11,7 +11,7 @@ UnitTest.asynctest('browser.tinymce.core.fmt.HooksTest', (success, failure) => {
   Theme();
 
   suite.test('pre - postProcessHook', (editor) => {
-    const assertPreHook = function (setupHtml, setupSelection, expected) {
+    const assertPreHook = (setupHtml, setupSelection, expected) => {
       editor.getBody().innerHTML = setupHtml;
       LegacyUnit.setSelection.apply(LegacyUnit, [ editor ].concat(setupSelection));
       Hooks.postProcess('pre', editor);

@@ -36,13 +36,13 @@ const Keying: KeyingBehaviour<any> = Behaviour.createModes({
   branches: KeyboardBranches,
   name: 'keying',
   active: {
-    events(keyingConfig: GeneralKeyingConfig, keyingState: KeyingState) {
+    events: (keyingConfig: GeneralKeyingConfig, keyingState: KeyingState) => {
       const handler = keyingConfig.handler;
       return handler.toEvents(keyingConfig, keyingState);
     }
   },
   apis: {
-    focusIn(component: AlloyComponent, keyConfig: GeneralKeyingConfig, keyState: KeyingState) {
+    focusIn: (component: AlloyComponent, keyConfig: GeneralKeyingConfig, keyState: KeyingState) => {
       // If we have a custom sendFocusIn function, use that.
       // Otherwise, we just trigger focus on the outer element.
       keyConfig.sendFocusIn(keyConfig).fold(
@@ -57,7 +57,7 @@ const Keying: KeyingBehaviour<any> = Behaviour.createModes({
 
     // These APIs are going to be interesting because they are not
     // available for all keying modes
-    setGridSize(component: AlloyComponent, keyConfig: GeneralKeyingConfig, keyState: KeyingState, numRows: number, numColumns: number) {
+    setGridSize: (component: AlloyComponent, keyConfig: GeneralKeyingConfig, keyState: KeyingState, numRows: number, numColumns: number) => {
       if (!isFlatgridState(keyState)) {
         // eslint-disable-next-line no-console
         console.error('Layout does not support setGridSize');

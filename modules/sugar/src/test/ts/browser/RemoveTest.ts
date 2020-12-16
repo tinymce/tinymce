@@ -29,7 +29,9 @@ UnitTest.test('RemoveTest', () => {
     Insert.append(container, p2);
     Insert.append(p, span);
 
-    if (connected) { Insert.append(SugarBody.body(), container); }
+    if (connected) {
+      Insert.append(SugarBody.body(), container);
+    }
 
     assert.eq('<p><span></span></p><p></p>', Html.get(container));
     Remove.remove(p2);

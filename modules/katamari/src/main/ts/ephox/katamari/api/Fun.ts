@@ -5,8 +5,8 @@ const noarg: <T>(f: () => T) => (...args: any[]) => void
 = (f) => () => f();
 
 /** Compose a unary function with an n-ary function */
-const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V {
-  return function (...args: T) {
+const compose = <T extends any[], U, V>(fa: (v: U) => V, fb: (...x: T) => U): (...x: T) => V => {
+  return (...args: T) => {
     return fa(fb.apply(null, args));
   };
 };
@@ -15,17 +15,17 @@ const compose = function <T extends any[], U, V> (fa: (v: U) => V, fb: (...x: T)
 const compose1 = <A, B, C> (fbc: (b: B) => C, fab: (a: A) => B) => (a: A): C =>
   fbc(fab(a));
 
-const constant = function <T> (value: T): () => T {
-  return function () {
+const constant = <T>(value: T): () => T => {
+  return () => {
     return value;
   };
 };
 
-const identity = function <T = any> (x: T): T {
+const identity = <T = any>(x: T): T => {
   return x;
 };
 
-const tripleEquals = function <T> (a: T, b: T): boolean {
+const tripleEquals = <T>(a: T, b: T): boolean => {
   return a === b;
 };
 
@@ -40,27 +40,28 @@ function curry <A, B, C, D, E, F, G, REST extends any[], OUT>(fn: (a: A, b: B, c
 function curry <A, B, C, D, E, F, G, H, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H): (...restArgs: REST) => OUT;
 function curry <A, B, C, D, E, F, G, H, I, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I): (...restArgs: REST) => OUT;
 function curry <A, B, C, D, E, F, G, H, I, J, REST extends any[], OUT>(fn: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J, ...restArgs: REST) => OUT, a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H, i: I, j: J): (...restArgs: REST) => OUT;
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 function curry <OUT>(fn: (...allArgs: any[]) => OUT, ...initialArgs: any[]): (...restArgs: any[]) => OUT {
-  return function (...restArgs: any[]) {
+  return (...restArgs: any[]) => {
     const all = initialArgs.concat(restArgs);
     return fn.apply(null, all);
   };
 }
 
-const not = <T> (f: (t: T) => boolean) => (t: T): boolean =>
+const not = <T>(f: (t: T) => boolean) => (t: T): boolean =>
   !f(t);
 
-const die = function (msg: string) {
-  return function (): never {
+const die = (msg: string) => {
+  return (): never => {
     throw new Error(msg);
   };
 };
 
-const apply = function <T> (f: () => T): T {
+const apply = <T>(f: () => T): T => {
   return f();
 };
 
-const call = function (f: () => any): void {
+const call = (f: () => any): void => {
   f();
 };
 

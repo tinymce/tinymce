@@ -2,7 +2,7 @@ import { SugarElement } from '@ephox/sugar';
 
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   const makeSidebar = (ed, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -44,7 +44,7 @@ export default function () {
     ],
     importcss_append: true,
     height: 400,
-    file_picker_callback(callback, _value, meta) {
+    file_picker_callback: (callback, _value, meta) => {
       // Provide file and text for the link dialog
       if (meta.filetype === 'file') {
         callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
@@ -90,7 +90,7 @@ export default function () {
         'autosave lists'
       ]
     },
-    setup(ed) {
+    setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
@@ -110,4 +110,4 @@ export default function () {
 
   tinymce.init(stickySettings);
   tinymce.init({ ...stickySettings, inline: true, selector: '.tinymce' });
-}
+};

@@ -11,12 +11,12 @@ import Tools from '../util/Tools';
 export interface EntitiesMap { [name: string]: string }
 
 interface Entities {
-  encodeRaw (text: string, attr?: boolean): string;
-  encodeAllRaw (text: string): string;
-  encodeNumeric (text: string, attr?: boolean): string;
-  encodeNamed (text: string, attr?: boolean, entities?: EntitiesMap): string;
-  getEncodeFunc (name: string, entities?: EntitiesMap | string): (text: string, attr?: boolean) => string;
-  decode (text: string): string;
+  encodeRaw: (text: string, attr?: boolean) => string;
+  encodeAllRaw: (text: string) => string;
+  encodeNumeric: (text: string, attr?: boolean) => string;
+  encodeNamed: (text: string, attr?: boolean, entities?: EntitiesMap) => string;
+  getEncodeFunc: (name: string, entities?: EntitiesMap | string) => (text: string, attr?: boolean) => string;
+  decode: (text: string) => string;
 }
 
 /**
@@ -210,7 +210,7 @@ const getEncodeFunc = (name: string, entities?: EntitiesMap | string) => {
     return '&#' + chr.charCodeAt(0) + ';';
   });
 
-  const encodeCustomNamed = function (text: string, attr) {
+  const encodeCustomNamed = (text: string, attr) => {
     return encodeNamed(text, attr, entitiesMap);
   };
 

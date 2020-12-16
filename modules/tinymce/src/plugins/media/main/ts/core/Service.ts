@@ -12,9 +12,9 @@ import * as DataToHtml from './DataToHtml';
 import { MediaData } from './Types';
 
 const cache = {};
-const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) {
+const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) => {
   return new Promise<{url: string; html: string}>((res, rej) => {
-    const wrappedResolve = function (response) {
+    const wrappedResolve = (response) => {
       if (response.html) {
         cache[data.source] = response;
       }
@@ -31,25 +31,25 @@ const embedPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtm
   });
 };
 
-const defaultPromise = function (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) {
+const defaultPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback) => {
   return new Promise<{url: string; html: string}>((res) => {
     res({ html: dataToHtml(data), url: data.source });
   });
 };
 
-const loadedData = function (editor: Editor) {
-  return function (data: MediaData) {
+const loadedData = (editor: Editor) => {
+  return (data: MediaData) => {
     return DataToHtml.dataToHtml(editor, data);
   };
 };
 
-const getEmbedHtml = function (editor: Editor, data: MediaData) {
+const getEmbedHtml = (editor: Editor, data: MediaData) => {
   const embedHandler = Settings.getUrlResolver(editor);
 
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 };
 
-const isCached = function (url: string) {
+const isCached = (url: string) => {
   return cache.hasOwnProperty(url);
 };
 

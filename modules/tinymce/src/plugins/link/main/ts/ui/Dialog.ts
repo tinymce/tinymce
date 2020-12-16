@@ -155,7 +155,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit, editor: Editor): Dialog.
   };
 };
 
-const open = function (editor: Editor) {
+const open = (editor: Editor) => {
   const data = collectData(editor);
   data.then((info) => {
     const onSubmit = handleSubmit(editor, info);

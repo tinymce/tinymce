@@ -69,7 +69,9 @@ const transferOne = (source: SugarElement<Element>, destination: SugarElement<El
 
 // Transfer attributes(attrs) from source to destination, unless they are already present
 const transfer = (source: SugarElement<Element>, destination: SugarElement<Element>, attrs: string[]): void => {
-  if (!SugarNode.isElement(source) || !SugarNode.isElement(destination)) { return; }
+  if (!SugarNode.isElement(source) || !SugarNode.isElement(destination)) {
+    return;
+  }
   Arr.each(attrs, (attr) => {
     transferOne(source, destination, attr);
   });

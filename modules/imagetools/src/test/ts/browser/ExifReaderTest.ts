@@ -79,7 +79,7 @@ const problematiJPEGs: Record<string, any>[] = [
   }
 ];
 
-const urlToBlob = function (url: string): Promise<Blob> {
+const urlToBlob = (url: string): Promise<Blob> => {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'blob';
@@ -91,7 +91,7 @@ const urlToBlob = function (url: string): Promise<Blob> {
         reject(`${url} cannot be loaded.`);
       }
     };
-    xhr.onerror = function () {
+    xhr.onerror = () => {
       reject(`${url} cannot be loaded.`);
     };
     xhr.send();

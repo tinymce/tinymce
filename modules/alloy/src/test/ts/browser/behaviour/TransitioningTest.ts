@@ -10,7 +10,9 @@ import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('TransitioningTest', (success, failure) => {
 
-  if (PhantomSkipper.skip()) { return success(); }
+  if (PhantomSkipper.skip()) {
+    return success();
+  }
 
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build({
     dom: {
@@ -27,10 +29,10 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
             transitionClass: 'transitioning'
           }
         }),
-        onTransition(_comp, route) {
+        onTransition: (_comp, route) => {
           store.adder(route.start + '->' + route.destination)();
         },
-        onFinish(_comp, finishState) {
+        onFinish: (_comp, finishState) => {
           store.adder('finish: ' + finishState)();
         }
       })
@@ -106,5 +108,5 @@ UnitTest.asynctest('TransitioningTest', (success, failure) => {
         'beta->alpha'
       ])
     )
-  ], () => { success(); }, failure);
+  ], success, failure);
 });

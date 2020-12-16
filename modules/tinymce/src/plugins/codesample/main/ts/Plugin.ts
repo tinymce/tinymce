@@ -12,7 +12,7 @@ import * as Buttons from './ui/Buttons';
 import * as Dialog from './ui/Dialog';
 import * as Utils from './util/Utils';
 
-export default function () {
+export default () => {
   PluginManager.add('codesample', (editor) => {
     FilterContent.setup(editor);
     Buttons.register(editor);
@@ -24,4 +24,4 @@ export default function () {
       }
     });
   });
-}
+};

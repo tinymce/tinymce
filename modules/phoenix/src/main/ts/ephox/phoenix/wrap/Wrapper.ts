@@ -11,7 +11,7 @@ type Group<E> = Contiguous.Group<E>;
 /**
  * Wrap all text nodes between two DOM positions, using the nu() wrapper
  */
-const wrapWith = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>): E[] {
+const wrapWith = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>): E[] => {
   const nodes = Split.range(universe, base, baseOffset, end, endOffset);
   return wrapper(universe, nodes, nu);
 };
@@ -19,7 +19,7 @@ const wrapWith = function <E, D> (universe: Universe<E, D>, base: E, baseOffset:
 /**
  * Wrap non-empty text nodes using the nu() wrapper
  */
-const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>): E[] {
+const wrapper = <E, D>(universe: Universe<E, D>, wrapped: E[], nu: () => Wrapter<E>): E[] => {
   if (wrapped.length === 0) {
     return wrapped;
   }
@@ -39,7 +39,7 @@ const wrapper = function <E, D> (universe: Universe<E, D>, wrapped: E[], nu: () 
 /**
  * Return the cursor positions at the start and end of a collection of wrapper elements
  */
-const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]): Optional<SpotPoints<E>> {
+const endPoints = <E, D>(universe: Universe<E, D>, wrapped: E[]): Optional<SpotPoints<E>> => {
   return Optional.from(wrapped[0]).map((first) => {
     // INVESTIGATE: Should this one navigate to the next child when first isn't navigating down a level?
     const last = Navigation.toLower(universe, wrapped[wrapped.length - 1]);
@@ -53,7 +53,7 @@ const endPoints = function <E, D> (universe: Universe<E, D>, wrapped: E[]): Opti
 /**
  * Calls wrapWith() on text nodes in the range, and returns the end points
  */
-const leaves = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>): Optional<SpotPoints<E>> {
+const leaves = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, nu: () => Wrapter<E>): Optional<SpotPoints<E>> => {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
   const wrapped = wrapWith(universe, start.element, start.offset, finish.element, finish.offset, nu);
@@ -63,24 +63,24 @@ const leaves = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: n
 /*
  * Returns a list of spans (reusing where possible) that wrap the text nodes within the range
  */
-const reuse = function <E, D> (universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>): E[] {
+const reuse = <E, D>(universe: Universe<E, D>, base: E, baseOffset: number, end: E, endOffset: number, predicate: (e: E) => boolean, nu: () => Wrapter<E>): E[] => {
   const start = Navigation.toLeaf(universe, base, baseOffset);
   const finish = Navigation.toLeaf(universe, end, endOffset);
   const nodes = Split.range(universe, start.element, start.offset, finish.element, finish.offset);
 
   const groups: Group<E>[] = Contiguous.textnodes(universe, nodes);
 
-  const canReuse = function (group: Group<E>) {
+  const canReuse = (group: Group<E>) => {
     // TODO: Work out a sensible way to consider empty text nodes here.
     const children = universe.property().children(group.parent);
     return children.length === group.children.length && predicate(group.parent);
   };
 
-  const recycle = function (group: Group<E>) {
+  const recycle = (group: Group<E>) => {
     return group.parent;
   };
 
-  const create = function (group: Group<E>): E {
+  const create = (group: Group<E>): E => {
     const container = nu();
     universe.insert().before(group.children[0], container.element);
     Arr.each(group.children, container.wrap);

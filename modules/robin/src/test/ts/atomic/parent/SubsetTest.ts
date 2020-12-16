@@ -26,7 +26,7 @@ UnitTest.test('SubsetTest', () => {
     ])
   ]));
 
-  const check = function (expected: Optional<string[]>, startId: string, finishId: string) {
+  const check = (expected: Optional<string[]>, startId: string, finishId: string) => {
     const start = universe.find(universe.get(), startId).getOrDie();
     const finish = universe.find(universe.get(), finishId).getOrDie();
 

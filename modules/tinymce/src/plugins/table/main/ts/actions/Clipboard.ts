@@ -30,9 +30,9 @@ const serializeElements = (editor: Editor, elements: SugarElement[]): string => 
 
 const getTextContent = (elements: SugarElement[]): string => Arr.map(elements, (element) => element.dom.innerText).join('');
 
-const registerEvents = function (editor: Editor, selections: Selections, actions: TableActions, cellSelection) {
+const registerEvents = (editor: Editor, selections: Selections, actions: TableActions, cellSelection) => {
   editor.on('BeforeGetContent', (e) => {
-    const multiCellContext = function (cells) {
+    const multiCellContext = (cells) => {
       e.preventDefault();
       extractSelected(cells).each((elements) => {
         e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);

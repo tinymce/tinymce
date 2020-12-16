@@ -123,7 +123,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
   const clientRects = [];
   let beforeNode, node;
 
-  const addUniqueAndValidRect = function (clientRect) {
+  const addUniqueAndValidRect = (clientRect) => {
     if (clientRect.height === 0) {
       return;
     }
@@ -137,7 +137,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
     clientRects.push(clientRect);
   };
 
-  const addCharacterOffset = function (container, offset) {
+  const addCharacterOffset = (container, offset) => {
     const range = createRange(container.ownerDocument);
 
     if (offset < container.data.length) {
@@ -239,7 +239,7 @@ export interface CaretPosition {
  * @param {Number} offset Offset within that container node.
  * @param {Array} clientRects Optional client rects array for the position.
  */
-export function CaretPosition(container: Node, offset: number, clientRects?): CaretPosition {
+export const CaretPosition = (container: Node, offset: number, clientRects?): CaretPosition => {
   const isAtStart = () => {
     if (isText(container)) {
       return offset === 0;
@@ -355,53 +355,53 @@ export function CaretPosition(container: Node, offset: number, clientRects?): Ca
      */
     getNode
   };
-}
+};
 
-export namespace CaretPosition {
-  /**
-   * Creates a caret position from the start of a range.
-   *
-   * @method fromRangeStart
-   * @param {DOMRange} range DOM Range to create caret position from.
-   * @return {tinymce.caret.CaretPosition} Caret position from the start of DOM range.
-   */
-  export const fromRangeStart = (range: Range) => CaretPosition(range.startContainer, range.startOffset);
+/**
+ * Creates a caret position from the start of a range.
+ *
+ * @method fromRangeStart
+ * @param {DOMRange} range DOM Range to create caret position from.
+ * @return {tinymce.caret.CaretPosition} Caret position from the start of DOM range.
+ */
+CaretPosition.fromRangeStart = (range: Range) => CaretPosition(range.startContainer, range.startOffset);
 
-  /**
-   * Creates a caret position from the end of a range.
-   *
-   * @method fromRangeEnd
-   * @param {DOMRange} range DOM Range to create caret position from.
-   * @return {tinymce.caret.CaretPosition} Caret position from the end of DOM range.
-   */
-  export const fromRangeEnd = (range: Range) => CaretPosition(range.endContainer, range.endOffset);
+/**
+ * Creates a caret position from the end of a range.
+ *
+ * @method fromRangeEnd
+ * @param {DOMRange} range DOM Range to create caret position from.
+ * @return {tinymce.caret.CaretPosition} Caret position from the end of DOM range.
+ */
+CaretPosition.fromRangeEnd = (range: Range) => CaretPosition(range.endContainer, range.endOffset);
 
-  /**
-   * Creates a caret position from a node and places the offset after it.
-   *
-   * @method after
-   * @param {Node} node Node to get caret position from.
-   * @return {tinymce.caret.CaretPosition} Caret position from the node.
-   */
-  export const after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
+/**
+ * Creates a caret position from a node and places the offset after it.
+ *
+ * @method after
+ * @param {Node} node Node to get caret position from.
+ * @return {tinymce.caret.CaretPosition} Caret position from the node.
+ */
+CaretPosition.after = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node) + 1);
 
-  /**
-   * Creates a caret position from a node and places the offset before it.
-   *
-   * @method before
-   * @param {Node} node Node to get caret position from.
-   * @return {tinymce.caret.CaretPosition} Caret position from the node.
-   */
-  export const before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
+/**
+ * Creates a caret position from a node and places the offset before it.
+ *
+ * @method before
+ * @param {Node} node Node to get caret position from.
+ * @return {tinymce.caret.CaretPosition} Caret position from the node.
+ */
+CaretPosition.before = (node: Node) => CaretPosition(node.parentNode, nodeIndex(node));
 
-  export const isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean => Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
+CaretPosition.isAbove = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
+  Optionals.lift2(Arr.head(pos2.getClientRects()), Arr.last(pos1.getClientRects()), GeomClientRect.isAbove).getOr(false);
 
-  export const isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean => Optionals.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
+CaretPosition.isBelow = (pos1: CaretPosition, pos2: CaretPosition): boolean =>
+  Optionals.lift2(Arr.last(pos2.getClientRects()), Arr.head(pos1.getClientRects()), GeomClientRect.isBelow).getOr(false);
 
-  export const isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
-  export const isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
-  export const isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
-  export const isElementPosition = (pos: CaretPosition) => isTextPosition(pos) === false;
-}
+CaretPosition.isAtStart = (pos: CaretPosition) => pos ? pos.isAtStart() : false;
+CaretPosition.isAtEnd = (pos: CaretPosition) => pos ? pos.isAtEnd() : false;
+CaretPosition.isTextPosition = (pos: CaretPosition) => pos ? NodeType.isText(pos.container()) : false;
+CaretPosition.isElementPosition = (pos: CaretPosition) => CaretPosition.isTextPosition(pos) === false;
 
 export default CaretPosition;

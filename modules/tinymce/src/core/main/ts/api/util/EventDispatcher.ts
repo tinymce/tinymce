@@ -56,12 +56,12 @@ export interface NativeEventMap {
 export type EditorEvent<T> = T & {
   target: any;
   type: string;
-  preventDefault (): void;
-  isDefaultPrevented (): boolean;
-  stopPropagation (): void;
-  isPropagationStopped (): boolean;
-  stopImmediatePropagation (): void;
-  isImmediatePropagationStopped (): boolean;
+  preventDefault: () => void;
+  isDefaultPrevented: () => boolean;
+  stopPropagation: () => void;
+  isPropagationStopped: () => boolean;
+  stopImmediatePropagation: () => void;
+  isImmediatePropagationStopped: () => boolean;
 };
 
 export interface EventDispatcherSettings {
@@ -75,7 +75,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 
   new (settings?: EventDispatcherSettings): EventDispatcher<T>;
 
-  isNative (name: string): boolean;
+  isNative: (name: string) => boolean;
 }
 
 /**
@@ -154,17 +154,17 @@ class EventDispatcher<T> {
     // Add event delegation methods if they are missing
     if (!args.preventDefault) {
       // Add preventDefault method
-      args.preventDefault = function () {
+      args.preventDefault = () => {
         args.isDefaultPrevented = Fun.always;
       };
 
       // Add stopPropagation
-      args.stopPropagation = function () {
+      args.stopPropagation = () => {
         args.isPropagationStopped = Fun.always;
       };
 
       // Add stopImmediatePropagation
-      args.stopImmediatePropagation = function () {
+      args.stopImmediatePropagation = () => {
         args.isImmediatePropagationStopped = Fun.always;
       };
 

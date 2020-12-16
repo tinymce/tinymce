@@ -1,6 +1,6 @@
 declare let tinymce: any;
 
-export default function () {
+export default () => {
 
   const settings = {
     selector: '.tinymce',
@@ -32,4 +32,4 @@ export default function () {
   };
 
   tinymce.init(settings);
-}
+};

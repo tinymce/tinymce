@@ -12,7 +12,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
 
   Theme();
 
-  const ok = function (a: boolean, label: string) {
+  const ok = (a: boolean, label: string) => {
     LegacyUnit.equal(a, true, label);
   };
 

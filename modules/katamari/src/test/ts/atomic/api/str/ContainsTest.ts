@@ -3,10 +3,10 @@ import fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('contains: unit test', () => {
-  function check(expected, str, substr) {
+  const check = (expected: boolean, str: string, substr: string) => {
     const actual = Strings.contains(str, substr);
     Assert.eq('contains', expected, actual);
-  }
+  };
 
   check(false, 'a', 'b');
   check(false, 'cat', 'dog');

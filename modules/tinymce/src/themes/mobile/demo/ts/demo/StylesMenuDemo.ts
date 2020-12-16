@@ -5,7 +5,7 @@ import { SelectorFind } from '@ephox/sugar';
 import * as StylesMenu from 'tinymce/themes/mobile/ui/StylesMenu';
 import * as UiDomFactory from 'tinymce/themes/mobile/util/UiDomFactory';
 
-export default function () {
+export default () => {
   const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();
 
   const menu = StylesMenu.sketch({
@@ -26,7 +26,7 @@ export default function () {
         { title: 'Gamma', isSelected: Fun.never, getPreview: Fun.constant('') }
       ]
     },
-    handle(format) {
+    handle: (format) => {
       // eslint-disable-next-line no-console
       console.log('firing', format);
     }
@@ -48,4 +48,4 @@ export default function () {
   });
 
   gui.add(container);
-}
+};

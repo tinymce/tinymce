@@ -12,7 +12,7 @@ import * as Commands from './api/Commands';
 import { ScrollInfo } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
-export default function () {
+export default () => {
   PluginManager.add('fullscreen', (editor) => {
     const fullscreenState = Cell<ScrollInfo | null>(null);
 
@@ -27,4 +27,4 @@ export default function () {
 
     return Api.get(fullscreenState);
   });
-}
+};

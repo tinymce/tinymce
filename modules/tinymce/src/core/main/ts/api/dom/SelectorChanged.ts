@@ -29,7 +29,7 @@ export default (dom: DOMUtils, editor: Editor) => {
   let currentSelectors: Record<string, SelectorChangedCallback[]>;
 
   return {
-    selectorChangedWithUnbind(selector: string, callback: SelectorChangedCallback): { unbind: () => void } {
+    selectorChangedWithUnbind: (selector: string, callback: SelectorChangedCallback): { unbind: () => void } => {
       if (!selectorChangedData) {
         selectorChangedData = {};
         currentSelectors = {};
@@ -77,7 +77,7 @@ export default (dom: DOMUtils, editor: Editor) => {
       selectorChangedData[selector].push(callback);
 
       return {
-        unbind() {
+        unbind: () => {
           deleteFromCallbackMap(selectorChangedData, selector, callback);
           deleteFromCallbackMap(currentSelectors, selector, callback);
         }

@@ -18,7 +18,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
 
-const renderTextField = function (spec: TextField, providersBackstage: UiFactoryBackstageProviders) {
+const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstageProviders) => {
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
   const baseInputBehaviours = [
@@ -47,12 +47,12 @@ const renderTextField = function (spec: TextField, providersBackstage: UiFactory
   ];
 
   const validatingBehaviours = spec.validation.map((vl) => Invalidating.config({
-    getRoot(input) {
+    getRoot: (input) => {
       return Traverse.parent(input.element);
     },
     invalidClass: 'tox-invalid',
     validator: {
-      validate(input) {
+      validate: (input) => {
         const v = Representing.getValue(input);
         const result = vl.validator(v);
         return Future.pure(result === true ? Result.value(v) : Result.error(result));

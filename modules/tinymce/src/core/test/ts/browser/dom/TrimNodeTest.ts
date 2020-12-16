@@ -7,7 +7,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) =
 
   const dom = DOMUtils(document, {});
 
-  const sTestTrim = function (inputHtml: string, expectedTrimmedHtml: string) {
+  const sTestTrim = (inputHtml: string, expectedTrimmedHtml: string) => {
     return Step.sync(() => {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
@@ -50,7 +50,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) =
     sTestTrim('<pre><strong>x</strong>\n<em>y</em></pre>', '<pre><strong>x</strong>\n<em>y</em></pre>'),
     sTestTrimFragmentedTextNode,
     sTestTrimDocumentNode
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

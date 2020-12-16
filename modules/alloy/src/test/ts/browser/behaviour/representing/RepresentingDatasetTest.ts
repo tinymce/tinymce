@@ -26,10 +26,10 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
                 text: 'Hund'
               }
             },
-            getDataKey(component) {
+            getDataKey: (component) => {
               return Value.get(component.element);
             },
-            getFallbackEntry(key) {
+            getFallbackEntry: (key) => {
               return { value: 'fallback.' + key.toLowerCase(), meta: { text: key }};
             },
             setValue: (comp, data) => {
@@ -98,5 +98,5 @@ UnitTest.asynctest('RepresentingTest (mode: dataset)', (success, failure) => {
         component.element
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

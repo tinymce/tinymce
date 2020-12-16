@@ -25,7 +25,7 @@ export interface BarMutation {
   };
 }
 
-export const BarMutation = function (): BarMutation {
+export const BarMutation = (): BarMutation => {
   const events: DragDistanceEvents = Events.create({
     drag: Event([ 'xDelta', 'yDelta', 'target' ])
   });
@@ -41,11 +41,11 @@ export const BarMutation = function (): BarMutation {
     });
   });
 
-  const assign = function (t: SugarElement) {
+  const assign = (t: SugarElement) => {
     target = Optional.some(t);
   };
 
-  const get = function () {
+  const get = () => {
     return target;
   };
 

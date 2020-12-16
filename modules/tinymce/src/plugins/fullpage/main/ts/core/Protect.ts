@@ -10,7 +10,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 declare const escape: any;
 declare const unescape: any;
 
-const protectHtml = function (protect, html) {
+const protectHtml = (protect, html) => {
   Tools.each(protect, (pattern) => {
     html = html.replace(pattern, (str) => {
       return '<!--mce:protected ' + escape(str) + '-->';
@@ -20,7 +20,7 @@ const protectHtml = function (protect, html) {
   return html;
 };
 
-const unprotectHtml = function (html) {
+const unprotectHtml = (html) => {
   return html.replace(/<!--mce:protected ([\s\S]*?)-->/g, (a, m) => {
     return unescape(m);
   });

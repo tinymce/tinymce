@@ -23,7 +23,7 @@ UnitTest.test('PartSubstitutesTest', () => {
         'debug.sketcher': { },
         'partUids': ({
           'required.A': 'a-uid',
-          'optional.B' : 'b-uid',
+          'optional.B': 'b-uid',
           'external.C': 'c-uid',
           'group.D': 'd-uid'
         }),

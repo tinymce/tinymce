@@ -16,7 +16,7 @@ import Tools from '../util/Tools';
  * @class tinymce.dom.StyleSheetLoader
  */
 
-export interface StyleSheetLoader {
+interface StyleSheetLoader {
   load: (url: string, success: () => void, failure?: () => void) => void;
   loadAll: (urls: string[], success: (urls: string[]) => void, failure: (urls: string[]) => void) => void;
   unload: (url: string) => void;
@@ -38,7 +38,7 @@ interface StyleState {
   count: number;
 }
 
-export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader {
+const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader => {
   let idCount = 0;
   const loadedStates: Record<string, StyleState> = {};
 
@@ -258,4 +258,6 @@ export function StyleSheetLoader(documentOrShadowRoot: Document | ShadowRoot, se
     unloadAll,
     _setReferrerPolicy
   };
-}
+};
+
+export default StyleSheetLoader;

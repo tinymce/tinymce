@@ -10,14 +10,14 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
   const suite = LegacyUnit.createSuite();
   const schema = Schema({});
 
-  const createFragment = function (html) {
+  const createFragment = (html) => {
     const parser = DomParser({ validate: false });
     const fragment = parser.parse(html);
 
     return fragment;
   };
 
-  const createDomFragment = function (html): DocumentFragment {
+  const createDomFragment = (html): DocumentFragment => {
     return DOMUtils.DOM.createFragment(html);
   };
 
@@ -47,7 +47,5 @@ UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, fail
     LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
   });
 
-  Pipeline.async({}, suite.toSteps({}), () => {
-    success();
-  }, failure);
+  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

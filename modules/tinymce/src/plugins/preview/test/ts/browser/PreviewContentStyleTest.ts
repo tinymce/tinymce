@@ -18,11 +18,11 @@ UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (s
     Assert.eq('Should be same html', expected, regexp.test(actual));
   });
 
-  const sAssertIframeHtmlContains = function (editor, text) {
+  const sAssertIframeHtmlContains = (editor, text) => {
     return Logger.t('Assert Iframe Html contains ' + text, sAssertIframeContains(editor, text, true));
   };
 
-  const sAssertIframeHtmlNotContains = function (editor, text) {
+  const sAssertIframeHtmlNotContains = (editor, text) => {
     return Logger.t('Assert Iframe Html does not contain ' + text, sAssertIframeContains(editor, text, false));
   };
 

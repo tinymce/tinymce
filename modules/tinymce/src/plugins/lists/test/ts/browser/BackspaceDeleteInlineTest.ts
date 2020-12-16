@@ -29,12 +29,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', (s
     LegacyUnit.equal(DomQuery('#lists li').length, 3);
   });
 
-  const teardown = function (editor, div) {
+  const teardown = (editor, div) => {
     editor.remove();
     div.parentNode.removeChild(div);
   };
 
-  const setup = function (success, failure) {
+  const setup = (success, failure) => {
     const div = document.createElement('div');
 
     div.innerHTML = (
@@ -54,7 +54,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', (s
       skin: false,
       plugins: 'lists',
       disable_nodechange: true,
-      init_instance_callback(editor) {
+      init_instance_callback: (editor) => {
         Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete inline tests', suite.toSteps(editor)), () => {
           teardown(editor, div);
           success();

@@ -29,12 +29,10 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
   });
 
   suite.test('TestCase-TBA: Charmap: Replace characters by function', (editor) => {
-    editor.settings.charmap = function () {
-      return [
-        [ 65, 'Latin A fun' ],
-        [ 66, 'Latin B fun' ]
-      ];
-    };
+    editor.settings.charmap = () => [
+      [ 65, 'Latin A fun' ],
+      [ 66, 'Latin B fun' ]
+    ];
 
     LegacyUnit.deepEqual(editor.plugins.charmap.getCharMap(), [
       {
@@ -74,12 +72,10 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.CharMapPluginTest', (success
       [ 67, 'Latin C' ]
     ];
 
-    editor.settings.charmap_append = function () {
-      return [
-        [ 65, 'Latin A fun' ],
-        [ 66, 'Latin B fun' ]
-      ];
-    };
+    editor.settings.charmap_append = () => [
+      [ 65, 'Latin A fun' ],
+      [ 66, 'Latin B fun' ]
+    ];
 
     LegacyUnit.deepEqual(editor.plugins.charmap.getCharMap(), [
       {

@@ -33,26 +33,26 @@ UnitTest.test('SharedTest', () => {
     ])
   ]));
 
-  const checker = function (target: string, ids: string[], f: (look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>, items: Gene[]) => void) {
+  const checker = (target: string, ids: string[], f: (look: (universe: Universe<Gene, undefined>, item: Gene) => Optional<Gene>, items: Gene[]) => void) => {
     const items = Arr.map(ids, (id) => {
       return data.find(data.get(), id).getOrDie();
     });
 
-    const look = function (universe: Universe<Gene, undefined>, item: Gene) {
+    const look = (universe: Universe<Gene, undefined>, item: Gene) => {
       return item.name === target ? Optional.some(item) : data.up().selector(item, target);
     };
 
     f(look, items);
   };
 
-  const checkNone = function (target: string, ids: string[]) {
+  const checkNone = (target: string, ids: string[]) => {
     checker(target, ids, (look, items) => {
       const actual = oneAll(data, look, items);
       KAssert.eqNone('eq', actual);
     });
   };
 
-  const check = function (expected: string, target: string, ids: string[]) {
+  const check = (expected: string, target: string, ids: string[]) => {
     checker(target, ids, (look, items) => {
       const actual = oneAll(data, look, items).map((x) => x.id);
       KAssert.eqSome('eq', expected, actual);

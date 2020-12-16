@@ -13,7 +13,7 @@ import VK from 'tinymce/core/api/util/VK';
 import { PatternSet } from '../core/PatternTypes';
 import * as KeyHandler from './KeyHandler';
 
-const setup = function (editor: Editor, patternsState: Cell<PatternSet>) {
+const setup = (editor: Editor, patternsState: Cell<PatternSet>) => {
   const charCodes = [ ',', '.', ';', ':', '!', '?' ];
   const keyCodes = [ 32 ];
 

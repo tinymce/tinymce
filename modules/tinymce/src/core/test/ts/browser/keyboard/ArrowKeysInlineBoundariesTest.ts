@@ -13,7 +13,7 @@ UnitTest.asynctest(
 
     Theme();
 
-    const sAssertCaretAtZwsp = function (editor) {
+    const sAssertCaretAtZwsp = (editor) => {
       return Step.sync(() => {
         const rng = editor.selection.getRng();
         const sc = rng.startContainer, so = rng.startOffset;
@@ -22,7 +22,7 @@ UnitTest.asynctest(
       });
     };
 
-    const sAssertCaretAfterZwsp = function (editor) {
+    const sAssertCaretAfterZwsp = (editor) => {
       return Step.sync(() => {
         const rng = editor.selection.getRng();
         const sc = rng.startContainer, so = rng.startOffset;

@@ -7,7 +7,7 @@
 
 import Editor from 'tinymce/core/api/Editor';
 
-const hasProPlugin = function (editor: Editor) {
+const hasProPlugin = (editor: Editor) => {
   // draw back if power version is requested and registered
   if (editor.hasPlugin('powerpaste', true)) {
     if (typeof window.console !== 'undefined' && window.console.log) {

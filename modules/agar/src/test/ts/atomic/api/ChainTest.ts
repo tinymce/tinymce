@@ -272,9 +272,7 @@ UnitTest.asynctest('ChainTest', (success, failure) => {
       '[Basic API: Chain.injectThunked\n',
       testChainInjectThunked
     )
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });
 
 UnitTest.asynctest('Chain.predicate true', (success, failure) => {

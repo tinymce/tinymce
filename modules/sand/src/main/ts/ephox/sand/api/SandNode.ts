@@ -5,7 +5,7 @@
  * Might be nice to ADT this at some point instead of having individual methods.
  */
 
-const compareDocumentPosition = function (a: Node, b: Node, match: number) {
+const compareDocumentPosition = (a: Node, b: Node, match: number) => {
   // Returns: 0 if e1 and e2 are the same node, or a bitmask comparing the positions
   // of nodes e1 and e2 in their documents. See the URL below for bitmask interpretation
   // https://developer.mozilla.org/en-US/docs/Web/API/Node/compareDocumentPosition
@@ -13,11 +13,11 @@ const compareDocumentPosition = function (a: Node, b: Node, match: number) {
   return (a.compareDocumentPosition(b) & match) !== 0;
 };
 
-const documentPositionPreceding = function (a: Node, b: Node): boolean {
+const documentPositionPreceding = (a: Node, b: Node): boolean => {
   return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_PRECEDING);
 };
 
-const documentPositionContainedBy = function (a: Node, b: Node): boolean {
+const documentPositionContainedBy = (a: Node, b: Node): boolean => {
   return compareDocumentPosition(a, b, Node.DOCUMENT_POSITION_CONTAINED_BY);
 };
 

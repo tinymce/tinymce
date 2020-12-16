@@ -121,5 +121,5 @@ UnitTest.asynctest('GridMenuTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

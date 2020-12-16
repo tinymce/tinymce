@@ -13,7 +13,7 @@ import Promise from 'tinymce/core/api/util/Promise';
 import { CropRect } from './CropRect';
 
 const loadImage = (image): Promise<SugarElement> => new Promise((resolve) => {
-  const loaded = function () {
+  const loaded = () => {
     image.removeEventListener('load', loaded);
     resolve(image);
   };

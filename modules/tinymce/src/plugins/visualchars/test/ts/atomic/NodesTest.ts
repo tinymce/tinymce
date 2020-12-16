@@ -5,7 +5,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as Nodes from 'tinymce/plugins/visualchars/core/Nodes';
 
 UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', () => {
-  const testReplaceWithSpans = function () {
+  const testReplaceWithSpans = () => {
     Assertions.assertHtml(
       'should return span around shy and nbsp',
       'a<span data-mce-bogus="1" class="mce-nbsp">\u00a0</span>b<span data-mce-bogus="1" class="mce-shy">\u00AD</span>',
@@ -13,7 +13,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', () => {
     );
   };
 
-  const testFilterDescendants = function () {
+  const testFilterDescendants = () => {
     const div = document.createElement('div');
     div.innerHTML = '<p>a</p>' +
                     '<p>b' + Unicode.nbsp + '</p>' +
@@ -27,7 +27,7 @@ UnitTest.test('atomic.tinymce.plugins.visualchars.NodesTest', () => {
     );
   };
 
-  const testFilterDescendants2 = function () {
+  const testFilterDescendants2 = () => {
     const div = document.createElement('div');
     div.innerHTML = '<p>a' + Unicode.nbsp + '</p>' +
                     '<p>b' + Unicode.nbsp + '</p>' +

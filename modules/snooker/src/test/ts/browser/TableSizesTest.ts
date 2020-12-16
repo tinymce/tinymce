@@ -51,7 +51,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
   '</tbody> ' +
   '</table';
 
-  const generateW = function (info: string[][], totalWidth: string) {
+  const generateW = (info: string[][], totalWidth: string) => {
     const table = SugarElement.fromTag('table');
     Css.set(table, 'width', totalWidth);
     const tbody = SugarElement.fromTag('tbody');
@@ -71,7 +71,7 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
     return table;
   };
 
-  const generateH = function (info: string[][], totalHeight: string) {
+  const generateH = (info: string[][], totalHeight: string) => {
     const table = SugarElement.fromTag('table');
     Css.set(table, 'height', totalHeight);
     const tbody = SugarElement.fromTag('tbody');
@@ -104,26 +104,26 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
 
   assert.eq([[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
 
-  const checkWidth = function (expected: string[][], table: SugarElement, newWidth: string) {
+  const checkWidth = (expected: string[][], table: SugarElement, newWidth: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.some(newWidth), Optional.none(), TableSize.getTableSize(table));
     assert.eq(expected, readWidth(table));
     Remove.remove(table);
   };
 
-  const checkBasicWidth = function (expected: string[][], input: string[][], initialWidth: string, newWidth: string) {
+  const checkBasicWidth = (expected: string[][], input: string[][], initialWidth: string, newWidth: string) => {
     const table = generateW(input, initialWidth);
     checkWidth(expected, table, newWidth);
   };
 
-  const checkHeight = function (expected: string[][], table: SugarElement, newHeight: string) {
+  const checkHeight = (expected: string[][], table: SugarElement, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.none(), Optional.some(newHeight), TableSize.getTableSize(table));
     assert.eq(expected, readHeight(table));
     Remove.remove(table);
   };
 
-  const checkBasicHeight = function (expected: string[][], input: string[][], initialHeight: string, newHeight: string) {
+  const checkBasicHeight = (expected: string[][], input: string[][], initialHeight: string, newHeight: string) => {
     const table = generateH(input, initialHeight);
     checkHeight(expected, table, newHeight);
   };

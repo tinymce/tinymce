@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.SerializerEventsTest', (success, fa
         Assertions.assertHtml(
           'Should be expected altered html',
           '<p><span id="test2" class="abc"><em class="123">abc</em></span>123<a href="file.html">link</a></p>',
-          editor.serializer.serialize(editor.getBody(), { test : 'abc', getInner: true })
+          editor.serializer.serialize(editor.getBody(), { test: 'abc', getInner: true })
         );
 
         Assertions.assertEq('Should be expected preprocess custom arg', 'abc', preProcessArgs.test);

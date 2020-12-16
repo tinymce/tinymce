@@ -227,9 +227,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
         });
       }
     },
-    () => {
-      success();
-    },
+    success,
     failure
   );
 });

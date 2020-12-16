@@ -19,7 +19,9 @@ const setup = (editor: Editor, registry: AnnotationsRegistry): void => {
     editor.serializer.addNodeFilter('span', (spans) => {
       Arr.each(spans, (span) => {
         identifyParserNode(span).each((settings) => {
-          if (settings.persistent === false) { span.unwrap(); }
+          if (settings.persistent === false) {
+            span.unwrap();
+          }
         });
       });
     });

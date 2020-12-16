@@ -18,7 +18,7 @@ const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api) => {
   return () => editor.off('NodeChange', nodeChangeHandler);
 };
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   editor.ui.registry.addToggleButton('ltr', {
     tooltip: 'Left to right',
     icon: 'ltr',

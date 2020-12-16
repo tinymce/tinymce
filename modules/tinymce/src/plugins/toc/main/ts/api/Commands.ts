@@ -7,7 +7,7 @@
 
 import * as Toc from '../core/Toc';
 
-const register = function (editor) {
+const register = (editor) => {
   editor.addCommand('mceInsertToc', () => {
     Toc.insertToc(editor);
   });

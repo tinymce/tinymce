@@ -18,7 +18,7 @@ const bgFallback = 'background-color:rgb(255,255,255)!important;';
 
 const isAndroid = Env.os.isAndroid();
 
-const matchColor = function (editorBody: SugarElement) {
+const matchColor = (editorBody: SugarElement) => {
   // in iOS you can overscroll, sometimes when you overscroll you can reveal the bgcolor of an element beneath,
   // by matching the bg color and clobbering ensures any reveals are 'camouflaged' the same color
   const color = Css.get(editorBody, 'background-color');
@@ -26,13 +26,13 @@ const matchColor = function (editorBody: SugarElement) {
 };
 
 // We clobber all tags, direct ancestors to the editorBody get ancestorStyles, everything else gets siblingStyles
-const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBody: SugarElement) {
-  const gatherSiblings = function (element) {
+const clobberStyles = (dom: DOMUtils, container: SugarElement, editorBody: SugarElement) => {
+  const gatherSiblings = (element) => {
     return SelectorFilter.siblings(element, '*:not(.tox-silver-sink)');
   };
 
-  const clobber = function (clobberStyle: string) {
-    return function (element) {
+  const clobber = (clobberStyle: string) => {
+    return (element) => {
       const styles = Attribute.get(element, 'style');
       const backup = styles === undefined ? 'no-styles' : styles.trim();
       if (backup === clobberStyle) {
@@ -56,7 +56,7 @@ const clobberStyles = function (dom: DOMUtils, container: SugarElement, editorBo
   clobber(containerStyles + ancestorStyles + bgColor)(container);
 };
 
-const restoreStyles = function (dom: DOMUtils) {
+const restoreStyles = (dom: DOMUtils) => {
   const clobberedEls = SelectorFilter.all('[' + attr + ']');
   Arr.each(clobberedEls, (element) => {
     const restore = Attribute.get(element, attr);

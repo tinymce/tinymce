@@ -38,7 +38,7 @@ const htmlToData = (prefixes: VideoScript[], html: string): MediaData => {
   SaxParser({
     validate: false,
     allow_conditional_comments: true,
-    start(name, attrs) {
+    start: (name, attrs) => {
       if (isEphoxEmbed.get()) {
         // Ignore any child elements if handling an EME embed
       } else if (Obj.has(attrs.map, 'data-ephox-embed-iri')) {

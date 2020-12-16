@@ -3,12 +3,12 @@ import { KAssert } from '@ephox/katamari-assertions';
 import * as SmoothAnimation from 'tinymce/themes/mobile/ios/smooth/SmoothAnimation';
 
 UnitTest.test('Smooth Animation AdjustTest', () => {
-  const checkNone = function (label, value, destination, amount) {
+  const checkNone = (label, value, destination, amount) => {
     const actual = SmoothAnimation.adjust(value, destination, amount);
     KAssert.eqNone(label, actual);
   };
 
-  const check = function (label, expected, value, destination, amount) {
+  const check = (label, expected, value, destination, amount) => {
     const actual = SmoothAnimation.adjust(value, destination, amount);
     KAssert.eqSome(label, expected, actual);
   };

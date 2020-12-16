@@ -8,8 +8,8 @@
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Keyboard from './core/Keyboard';
 
-export default function () {
+export default () => {
   PluginManager.add('tabfocus', (editor) => {
     Keyboard.setup(editor);
   });
-}
+};

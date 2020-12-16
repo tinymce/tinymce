@@ -4,7 +4,7 @@ import * as Arrays from 'ephox/polaris/api/Arrays';
 import { Splitting } from 'ephox/polaris/api/Splitting';
 
 UnitTest.test('api.Arrays.splitby', () => {
-  const check = function <T> (expected: T[][], input: T[], pred: (x: T) => boolean) {
+  const check = <T>(expected: T[][], input: T[], pred: (x: T) => boolean) => {
     const actual = Arrays.splitby(input, pred);
     assert.eq(expected, actual);
   };
@@ -16,7 +16,7 @@ UnitTest.test('api.Arrays.splitby', () => {
     return x === '|';
   });
 
-  const predicate = function (value: string) {
+  const predicate = (value: string) => {
     if (value === 'x') {
       return Splitting.excludeWithout(value);
     } else if (value === '.') {
@@ -26,7 +26,7 @@ UnitTest.test('api.Arrays.splitby', () => {
     }
   };
 
-  const checkAdv = function (expected: string[][], input: string[]) {
+  const checkAdv = (expected: string[][], input: string[]) => {
     const actual = Arrays.splitbyAdv(input, predicate);
     assert.eq(expected, actual);
   };

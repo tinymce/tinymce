@@ -12,7 +12,7 @@ import { PlatformEditor } from '../ios/core/PlatformEditor';
 // TODO: TapEvent needs to be exposed in alloy's API somehow
 const monitor = (editorApi: PlatformEditor) => {
   const tapEvent = TapEvent.monitor({
-    triggerEvent(type, evt) {
+    triggerEvent: (type, evt) => {
       editorApi.onTapContent(evt);
     }
   } as any);

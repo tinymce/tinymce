@@ -14,7 +14,7 @@ import { emojisFrom } from '../core/Lookup';
 
 const patternName = 'pattern';
 
-const open = function (editor: Editor, database: EmojiDatabase) {
+const open = (editor: Editor, database: EmojiDatabase) => {
 
   const initialState = {
     pattern: '',

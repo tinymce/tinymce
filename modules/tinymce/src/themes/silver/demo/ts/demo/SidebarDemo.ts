@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 // import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: any;
 
-export default function () {
+export default () => {
   const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
       icon: 'comment',
@@ -40,10 +40,10 @@ export default function () {
     // statusbar: false,
     resize: 'both',
 
-    setup(ed: Editor) {
+    setup: (ed: Editor) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'red', 300);
       makeSidebar(ed, 'sidebar3', 'blue', 150);
     }
   });
-}
+};

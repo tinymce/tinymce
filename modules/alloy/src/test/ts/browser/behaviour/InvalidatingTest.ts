@@ -24,7 +24,7 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
         getRoot: root.get,
         notify: {},
         validator: {
-          validate(input) {
+          validate: (input) => {
             const value = Value.get(input.element);
             const res = value === 'good-value' ? Result.value('good-value') : Result.error('bad value: ' + value);
             return Future.pure(res);
@@ -276,5 +276,5 @@ UnitTest.asynctest('InvalidatingTest', (success, failure) => {
 
       GuiSetup.mRemoveStyles
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

@@ -11,12 +11,12 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as SelectionBookmark from './SelectionBookmark';
 
-const isManualNodeChange = function (e) {
+const isManualNodeChange = (e) => {
   return e.type === 'nodechange' && e.selectionChange;
 };
 
-const registerPageMouseUp = function (editor: Editor, throttledStore) {
-  const mouseUpPage = function () {
+const registerPageMouseUp = (editor: Editor, throttledStore) => {
+  const mouseUpPage = () => {
     throttledStore.throttle();
   };
 
@@ -27,19 +27,19 @@ const registerPageMouseUp = function (editor: Editor, throttledStore) {
   });
 };
 
-const registerFocusOut = function (editor: Editor) {
+const registerFocusOut = (editor: Editor) => {
   editor.on('focusout', () => {
     SelectionBookmark.store(editor);
   });
 };
 
-const registerMouseUp = function (editor: Editor, throttledStore) {
+const registerMouseUp = (editor: Editor, throttledStore) => {
   editor.on('mouseup touchend', (_e) => {
     throttledStore.throttle();
   });
 };
 
-const registerEditorEvents = function (editor: Editor, throttledStore) {
+const registerEditorEvents = (editor: Editor, throttledStore) => {
   const browser = PlatformDetection.detect().browser;
 
   if (browser.isIE()) {
@@ -55,7 +55,7 @@ const registerEditorEvents = function (editor: Editor, throttledStore) {
   });
 };
 
-const register = function (editor: Editor) {
+const register = (editor: Editor) => {
   const throttledStore = Throttler.first(() => {
     SelectionBookmark.store(editor);
   }, 0);

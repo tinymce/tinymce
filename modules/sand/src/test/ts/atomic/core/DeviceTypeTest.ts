@@ -3,31 +3,31 @@ import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 
 UnitTest.test('DeviceTypeTest', () => {
-  const getPlatform = function (userAgent: string) {
+  const getPlatform = (userAgent: string) => {
     return PlatformDetection.detect(userAgent, Fun.never);
   };
 
-  const checkTablet = function (expected: boolean, userAgent: string) {
+  const checkTablet = (expected: boolean, userAgent: string) => {
     const platform = getPlatform(userAgent);
     assert.eq(expected, platform.deviceType.isTablet(), 'Tablet incorrect: ' + userAgent);
   };
 
-  const checkiPad = function (expected: boolean, userAgent: string) {
+  const checkiPad = (expected: boolean, userAgent: string) => {
     const platform = getPlatform(userAgent);
     assert.eq(expected, platform.deviceType.isiPad(), 'iPad incorrect: ' + userAgent);
   };
 
-  const checkiPhone = function (expected: boolean, userAgent: string) {
+  const checkiPhone = (expected: boolean, userAgent: string) => {
     const platform = getPlatform(userAgent);
     assert.eq(expected, platform.deviceType.isiPhone(), 'iPhone incorrect: ' + userAgent);
   };
 
-  const checkIsWebView = function (expected: boolean, userAgent: string) {
+  const checkIsWebView = (expected: boolean, userAgent: string) => {
     const platform = getPlatform(userAgent);
     assert.eq(expected, platform.deviceType.isWebView(), 'WebView incorrect: ' + userAgent);
   };
 
-  const checkDesktop = function (expected: boolean, userAgent: string) {
+  const checkDesktop = (expected: boolean, userAgent: string) => {
     const platform = getPlatform(userAgent);
     assert.eq(expected, platform.deviceType.isDesktop(), 'desktop incorrect: ' + userAgent);
   };

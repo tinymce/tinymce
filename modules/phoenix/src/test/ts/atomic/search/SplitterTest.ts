@@ -14,7 +14,7 @@ UnitTest.test('SplitterTest', () => {
     text: string;
   }
 
-  const checkSubdivide = function (toplevel: string[], expected: CheckItem[], id: string, positions: number[], data: Gene) {
+  const checkSubdivide = (toplevel: string[], expected: CheckItem[], id: string, positions: number[], data: Gene) => {
     const universe = TestUniverse(data);
     const item = Finder.get(universe, id);
     const actual = Splitter.subdivide(universe, item, positions);

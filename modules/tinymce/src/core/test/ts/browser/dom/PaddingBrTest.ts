@@ -5,7 +5,7 @@ import * as PaddingBr from 'tinymce/core/dom/PaddingBr';
 
 UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', (success, failure) => {
 
-  const sTestRemoveTrailingBr = function (label, inputHtml, expectedHtml) {
+  const sTestRemoveTrailingBr = (label, inputHtml, expectedHtml) => {
     return Step.sync(() => {
       const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.removeTrailingBr(elm);
@@ -13,7 +13,7 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', (success, failure) 
     });
   };
 
-  const sTestTrimBlockTrailingBr = function (label, inputHtml, expectedHtml) {
+  const sTestTrimBlockTrailingBr = (label, inputHtml, expectedHtml) => {
     return Step.sync(() => {
       const elm = SugarElement.fromHtml(inputHtml);
       PaddingBr.trimBlockTrailingBr(elm);
@@ -56,7 +56,5 @@ UnitTest.asynctest('browser.tinymce.core.dom.PaddingBrTest', (success, failure) 
       sTestTrimBlockTrailingBr('Should be untouched since it is br after a inline', '<div><b>a</b><br></div>', '<div><b>a</b><br></div>'),
       sTestTrimBlockTrailingBr('Should be untouched since it is br after inlide inline', '<span><b>a</b><br></span>', '<span><b>a</b><br></span>')
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

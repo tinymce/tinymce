@@ -41,11 +41,11 @@ import DomSerializer from './Serializer';
 
 const isNativeIeSelection = (rng: any): boolean => !!(rng).select;
 
-const isAttachedToDom = function (node: Node): boolean {
+const isAttachedToDom = (node: Node): boolean => {
   return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
 };
 
-const isValidRange = function (rng: Range) {
+const isValidRange = (rng: Range) => {
   if (!rng) {
     return false;
   } else if (isNativeIeSelection(rng)) { // Native IE range still produced by placeCaretAt
@@ -64,11 +64,13 @@ interface EditorSelection {
   editor: Editor;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
-  getContent (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
-  getContent (args?: GetSelectionContent.GetSelectionContentArgs): string;
+  getContent: {
+    (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
+    (args?: GetSelectionContent.GetSelectionContentArgs): string;
+  };
   setContent: (content: string, args?: SetSelectionContent.SelectionSetContentArgs) => void;
   getBookmark: (type?: number, normalized?: boolean) => Bookmark;
-  moveToBookmark: (bookmark: Bookmark) => boolean;
+  moveToBookmark: (bookmark: Bookmark) => void;
   select: (node: Node, content?: boolean) => Node;
   isCollapsed: () => boolean;
   isForward: () => boolean;
@@ -108,7 +110,7 @@ interface EditorSelection {
  * @param {tinymce.dom.Serializer} serializer DOM serialization class to use for getContent.
  * @param {tinymce.Editor} editor Editor instance of the selection.
  */
-const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor): EditorSelection {
+const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, editor: Editor): EditorSelection => {
   let selectedRange: Range | null;
   let explicitRange: Range | null;
 
@@ -209,7 +211,6 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
    *
    * @method moveToBookmark
    * @param {Object} bookmark Bookmark to restore selection from.
-   * @return {Boolean} true/false if it was successful or not.
    * @example
    * // Stores a bookmark of the current selection
    * var bm = tinymce.activeEditor.selection.getBookmark();
@@ -219,7 +220,7 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
    * // Restore the selection bookmark
    * tinymce.activeEditor.selection.moveToBookmark(bm);
    */
-  const moveToBookmark = (bookmark: Bookmark): boolean => bookmarkManager.moveToBookmark(bookmark);
+  const moveToBookmark = (bookmark: Bookmark): void => bookmarkManager.moveToBookmark(bookmark);
 
   /**
    * Selects the specified element. This will place the start and end of the selection range around the element.
@@ -290,7 +291,7 @@ const EditorSelection = function (dom: DOMUtils, win: Window, serializer: DomSer
   const getRng = (): Range | null => {
     let selection, rng, elm;
 
-    const tryCompareBoundaryPoints = function (how, sourceRange, destinationRange) {
+    const tryCompareBoundaryPoints = (how, sourceRange, destinationRange) => {
       try {
         return sourceRange.compareBoundaryPoints(how, destinationRange);
       } catch (ex) {

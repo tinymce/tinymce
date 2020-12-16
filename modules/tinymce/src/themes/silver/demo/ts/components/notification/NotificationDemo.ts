@@ -5,8 +5,8 @@ import Delay from 'tinymce/core/api/util/Delay';
 
 declare let tinymce: any;
 
-export default function () {
-  const notifyShort = function (type) {
+export default () => {
+  const notifyShort = (type) => {
     const notification = tinymce.activeEditor.notificationManager.open({
       type,
       text: 'This is an example ' + (type ? type : 'blank') + ' message.'
@@ -18,7 +18,7 @@ export default function () {
     console.log(notification);
   };
 
-  const notifyLong = function (len) {
+  const notifyLong = (len) => {
     const longTextMessage = [];
 
     for (let i = 0; i < len; i++) {
@@ -31,7 +31,7 @@ export default function () {
     console.log(notification);
   };
 
-  const notifyExtraLong = function (len) {
+  const notifyExtraLong = (len) => {
     const longTextMessage = [ 'this is text ' ];
 
     for (let i = 0; i < len; i++) {
@@ -44,7 +44,7 @@ export default function () {
     console.log(notification);
   };
 
-  const notifyProgress = function (percent) {
+  const notifyProgress = (percent) => {
     const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Progress text',
       progressBar: true
@@ -57,7 +57,7 @@ export default function () {
     console.log(notification);
   };
 
-  const notifyTimeout = function (time) {
+  const notifyTimeout = (time) => {
     const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Timeout: ' + time,
       timeout: time
@@ -65,7 +65,7 @@ export default function () {
     console.log(notification);
   };
 
-  const notifyIcon = function () {
+  const notifyIcon = () => {
     const notification = tinymce.activeEditor.notificationManager.open({
       text: 'Text',
       icon: 'bold'
@@ -87,7 +87,7 @@ export default function () {
   ], (notification) => {
     const btn = document.createElement('button');
     btn.innerHTML = notification.title;
-    btn.onclick = function () {
+    btn.onclick = () => {
       notification.action(notification.value);
     };
     document.querySelector('#ephox-ui').appendChild(btn);
@@ -105,4 +105,4 @@ export default function () {
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     theme: 'silver'
   });
-}
+};

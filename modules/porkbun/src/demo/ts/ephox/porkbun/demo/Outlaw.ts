@@ -16,7 +16,7 @@ interface OutlawEvents {
 
 declare const $: any;
 
-const create = function (name: string): Outlaw {
+const create = (name: string): Outlaw => {
   const container = $('<div />');
   container.css({ width: '1px dashed gray' });
 
@@ -37,11 +37,11 @@ const create = function (name: string): Outlaw {
   character.append(img, caption);
   container.append(character);
 
-  const getElement = function () {
+  const getElement = () => {
     return container;
   };
 
-  const addAction = function (text: string, action: () => void) {
+  const addAction = (text: string, action: () => void) => {
     const button = $('<button />');
     button.text(text);
     button.bind('click', () => {
@@ -53,32 +53,32 @@ const create = function (name: string): Outlaw {
 
   const events: OutlawEvents = Events.create({
     shoot: Event([ 'target' ]),
-    die:   Event([])
+    die: Event([])
   });
 
   const establishment = Singleton.value<Saloon>();
-  const enter = function (saloon: Saloon) {
+  const enter = (saloon: Saloon) => {
     saloon.enter(api);
     establishment.set(saloon);
   };
 
-  const leave = function () {
+  const leave = () => {
     establishment.on((e) => e.leave(api));
     establishment.clear();
   };
 
-  const shoot = function (target: Outlaw) {
+  const shoot = (target: Outlaw) => {
     target.die();
     events.trigger.shoot(target);
   };
 
-  const die = function () {
+  const die = () => {
     img.attr('src', 'images/gravestone.jpg');
     actions.remove();
     events.trigger.die();
   };
 
-  const chase = function () {
+  const chase = () => {
     leave();
   };
 

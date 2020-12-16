@@ -37,10 +37,10 @@ const setLegacyRtlRange = (win: Window, selection: Selection, start: SugarElemen
 
 const setRangeFromRelative = (win: Window, relative: SimSelection): void =>
   SelectionDirection.diagnose(win, relative).match({
-    ltr(start, soffset, finish, foffset) {
+    ltr: (start, soffset, finish, foffset) => {
       doSetRange(win, start, soffset, finish, foffset);
     },
-    rtl(start, soffset, finish, foffset) {
+    rtl: (start, soffset, finish, foffset) => {
       getNativeSelection(win).each((selection) => {
         // If this selection is backwards, then we need to use extend.
         if (selection.setBaseAndExtent) {

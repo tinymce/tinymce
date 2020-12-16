@@ -39,18 +39,18 @@ const adt: {
 ]);
 
 // Let's get some bounding rects, and see if they overlap (x-wise)
-const isOverlapping = function (bridge: WindowBridge, before: SugarElement, after: SugarElement): boolean {
+const isOverlapping = (bridge: WindowBridge, before: SugarElement, after: SugarElement): boolean => {
   const beforeBounds = bridge.getRect(before);
   const afterBounds = bridge.getRect(after);
   return afterBounds.right > beforeBounds.left && afterBounds.left < beforeBounds.right;
 };
 
-const isRow = function (elem: SugarElement): Optional<SugarElement<HTMLTableRowElement>> {
+const isRow = (elem: SugarElement): Optional<SugarElement<HTMLTableRowElement>> => {
   return SelectorFind.closest(elem, 'tr');
 };
 
-const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number,
-                         failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean): BeforeAfter {
+const verify = (bridge: WindowBridge, before: SugarElement, beforeOffset: number, after: SugarElement, afterOffset: number,
+                failure: BeforeAfterFailureConstructor, isRoot: (e: SugarElement) => boolean): BeforeAfter => {
   // Identify the cells that the before and after are in.
   return SelectorFind.closest(after, 'td,th', isRoot).bind((afterCell) => {
     return SelectorFind.closest(before, 'td,th', isRoot).map((beforeCell) => {
@@ -70,8 +70,7 @@ const verify = function (bridge: WindowBridge, before: SugarElement, beforeOffse
   }).getOr(adt.none('default'));
 };
 
-const cata = function <T> (subject: BeforeAfter, onNone: NoneHandler<T>, onSuccess: SuccessHandler<T>,
-                           onFailedUp: FailedUpHandler<T>, onFailedDown: FailedDownHandler<T>): T {
+const cata = <T>(subject: BeforeAfter, onNone: NoneHandler<T>, onSuccess: SuccessHandler<T>, onFailedUp: FailedUpHandler<T>, onFailedDown: FailedDownHandler<T>): T => {
   return subject.fold(onNone, onSuccess, onFailedUp, onFailedDown);
 };
 

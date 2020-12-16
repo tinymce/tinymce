@@ -15,7 +15,7 @@ UnitTest.test('FitmentTest', () => {
 
   const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
 
-  const check = function <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) {
+  const check = <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) => {
     test.apply(null, args);
   };
 

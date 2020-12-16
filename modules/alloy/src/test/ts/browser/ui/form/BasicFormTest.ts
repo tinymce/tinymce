@@ -155,5 +155,5 @@ UnitTest.asynctest('Basic Form', (success, failure) => {
         ])
       )
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

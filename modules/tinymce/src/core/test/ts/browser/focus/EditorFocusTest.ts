@@ -9,14 +9,14 @@ import Theme from 'tinymce/themes/silver/Theme';
 UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failure) => {
   Theme();
 
-  const cCreateInlineEditor = function (html) {
+  const cCreateInlineEditor = (html) => {
     return McEditor.cFromHtml(html, {
       inline: true,
       base_url: '/project/tinymce/js/tinymce'
     });
   };
 
-  const cCreateEditor = function (html) {
+  const cCreateEditor = (html) => {
     return McEditor.cFromHtml(html, {
       base_url: '/project/tinymce/js/tinymce'
     });
@@ -26,7 +26,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
     EditorFocus.focus(editor, false);
   });
 
-  const cFocusElement = function (elementPath) {
+  const cFocusElement = (elementPath) => {
     return Chain.op((editor: Editor) => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).filter(SugarNode.isHTMLElement).getOrDie();
       Focus.focus(element);
@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
     Focus.focus(SugarBody.body());
   });
 
-  const cSetSelection = function (startPath, startOffset, endPath, endOffset) {
+  const cSetSelection = (startPath, startOffset, endPath, endOffset) => {
     return Chain.op((editor: Editor) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
@@ -55,7 +55,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
     });
   };
 
-  const cAssertSelection = function (startPath, startOffset, endPath, endOffset) {
+  const cAssertSelection = (startPath, startOffset, endPath, endOffset) => {
     return Chain.op((editor: Editor) => {
       const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
       const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
@@ -68,7 +68,7 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
     });
   };
 
-  const cAssertHasFocus = function (elementPath) {
+  const cAssertHasFocus = (elementPath) => {
     return Chain.op((editor: Editor) => {
       const element = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), elementPath).getOrDie();
       Assertions.assertEq('Should have focus on the editor', true, EditorFocus.hasFocus(editor));
@@ -114,7 +114,5 @@ UnitTest.asynctest('browser.tinymce.core.focus.EditorFocusTest', (success, failu
         McEditor.cRemove
       ]))
     ]))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

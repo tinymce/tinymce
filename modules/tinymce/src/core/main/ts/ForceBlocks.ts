@@ -21,11 +21,11 @@ import * as EditorFocus from './focus/EditorFocus';
  * @class tinymce.ForceBlocks
  */
 
-const isBlockElement = function (blockElements, node) {
+const isBlockElement = (blockElements, node) => {
   return blockElements.hasOwnProperty(node.nodeName);
 };
 
-const isValidTarget = function (blockElements, node) {
+const isValidTarget = (blockElements, node) => {
   if (NodeType.isText(node)) {
     return true;
   } else if (NodeType.isElement(node)) {
@@ -35,7 +35,7 @@ const isValidTarget = function (blockElements, node) {
   }
 };
 
-const hasBlockParent = function (blockElements, root, node) {
+const hasBlockParent = (blockElements, root, node) => {
   return Arr.exists(Parents.parents(SugarElement.fromDom(node), SugarElement.fromDom(root)), (elm) => {
     return isBlockElement(blockElements, elm.dom);
   });
@@ -55,7 +55,7 @@ const shouldRemoveTextNode = (blockElements, node) => {
   return false;
 };
 
-const addRootBlocks = function (editor: Editor) {
+const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema, blockElements = schema.getBlockElements();
   let node: Node = selection.getStart();
@@ -115,7 +115,7 @@ const addRootBlocks = function (editor: Editor) {
   }
 };
 
-const setup = function (editor: Editor) {
+const setup = (editor: Editor) => {
   if (Settings.getForcedRootBlock(editor)) {
     editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
   }

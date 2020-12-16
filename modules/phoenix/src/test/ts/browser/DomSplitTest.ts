@@ -11,7 +11,7 @@ UnitTest.test('DomSplitTest', () => {
   <div2>{t7:Next }<p4>{t8:Section }<s4>{t9:no}{t10:w}
   */
 
-  const check = function (expected: string[], element: SugarElement<Text>) {
+  const check = (expected: string[], element: SugarElement<Text>) => {
     const parent = Traverse.parent(element);
     parent.fold(() => {
       throw new Error('Element must have parent for test to work');
@@ -22,12 +22,12 @@ UnitTest.test('DomSplitTest', () => {
     });
   };
 
-  const checkSplitByPair = function (expected: string[], element: SugarElement<Text>, start: number, end: number) {
+  const checkSplitByPair = (expected: string[], element: SugarElement<Text>, start: number, end: number) => {
     DomSplit.splitByPair(element, start, end);
     check(expected, element);
   };
 
-  const checkSplit = function (expected: string[], element: SugarElement<Text>, offset: number) {
+  const checkSplit = (expected: string[], element: SugarElement<Text>, offset: number) => {
     DomSplit.split(element, offset);
     check(expected, element);
   };

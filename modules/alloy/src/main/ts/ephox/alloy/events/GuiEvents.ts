@@ -84,21 +84,29 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
     ]),
     (type) => DomEvent.bind(container, type, (event) => {
       tapEvent.fireIfReady(event, type).each((tapStopped) => {
-        if (tapStopped) { event.kill(); }
+        if (tapStopped) {
+          event.kill();
+        }
       });
 
       const stopped = settings.triggerEvent(type, event);
-      if (stopped) { event.kill(); }
+      if (stopped) {
+        event.kill();
+      }
     })
   );
   const pasteTimeout = Cell(Optional.none<number>());
   const onPaste = DomEvent.bind(container, 'paste', (event) => {
     tapEvent.fireIfReady(event, 'paste').each((tapStopped) => {
-      if (tapStopped) { event.kill(); }
+      if (tapStopped) {
+        event.kill();
+      }
     });
 
     const stopped = settings.triggerEvent('paste', event);
-    if (stopped) { event.kill(); }
+    if (stopped) {
+      event.kill();
+    }
     pasteTimeout.set(Optional.some(setTimeout(() => {
       settings.triggerEvent(SystemEvents.postPaste(), event);
     }, 0)));
@@ -116,13 +124,17 @@ const setup = (container: SugarElement, rawSettings: { }): { unbind: () => void 
 
   const onFocusIn = bindFocus(container, (event) => {
     const stopped = settings.triggerEvent('focusin', event);
-    if (stopped) { event.kill(); }
+    if (stopped) {
+      event.kill();
+    }
   });
 
   const focusoutTimeout = Cell(Optional.none<number>());
   const onFocusOut = bindBlur(container, (event) => {
     const stopped = settings.triggerEvent('focusout', event);
-    if (stopped) { event.kill(); }
+    if (stopped) {
+      event.kill();
+    }
 
     // INVESTIGATE: Come up with a better way of doing this. Related target can be used, but not on FF.
     // It allows the active element to change before firing the blur that we will listen to

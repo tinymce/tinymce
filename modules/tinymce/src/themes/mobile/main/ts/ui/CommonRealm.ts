@@ -12,7 +12,7 @@ import * as UiDomFactory from '../util/UiDomFactory';
 const makeEditSwitch = (webapp): AlloyComponent => GuiFactory.build(
   Button.sketch({
     dom: UiDomFactory.dom('<div class="${prefix}-mask-edit-icon ${prefix}-icon"></div>'),
-    action() {
+    action: () => {
       webapp.run((w) => {
         w.setReadOnly(false);
       });

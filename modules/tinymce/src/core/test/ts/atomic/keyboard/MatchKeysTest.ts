@@ -6,7 +6,7 @@ import * as MatchKeys from 'tinymce/core/keyboard/MatchKeys';
 UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failure) => {
   const state = Cell([]);
 
-  const event = function (evt) {
+  const event = (evt) => {
     return {
       shiftKey: false,
       altKey: false,
@@ -17,14 +17,14 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failu
     };
   };
 
-  const handleAction = function (value) {
-    return function () {
+  const handleAction = (value) => {
+    return () => {
       state.set(state.get().concat([ value ]));
       return true;
     };
   };
 
-  const sTestMatch = function (patterns, event, expectedData) {
+  const sTestMatch = (patterns, event, expectedData) => {
     return Step.sync(() => {
       state.set([]);
 
@@ -39,7 +39,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failu
     });
   };
 
-  const sTestMatchNone = function (patterns, event) {
+  const sTestMatchNone = (patterns, event) => {
     return Step.sync(() => {
       Assertions.assertEq(
         'Should not produce any matches',
@@ -49,7 +49,7 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failu
     });
   };
 
-  const sTestExecute = function (patterns, event, expectedData, expectedMatch) {
+  const sTestExecute = (patterns, event, expectedData, expectedMatch) => {
     return Step.sync(() => {
       state.set([]);
 
@@ -95,7 +95,5 @@ UnitTest.asynctest('atomic.tinymce.core.keyboard.MatchKeysTest', (success, failu
 
       Assertions.assertEq('Should return the parameters passed in', [ 1, 2, 3 ], action());
     }))
-  ], () => {
-    success();
-  }, failure);
+  ], success, failure);
 });

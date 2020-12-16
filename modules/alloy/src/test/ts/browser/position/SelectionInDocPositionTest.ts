@@ -50,7 +50,7 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
     const cSetupAnchor = Chain.mapper((data: any) => ({
       anchor: 'selection',
       root: data.inline.element,
-      getSelection() {
+      getSelection: () => {
         return Optional.some(
           Cursors.calculate(data.inline.element, data.path)
         );
@@ -137,5 +137,5 @@ UnitTest.asynctest('SelectionInDocPositionTest', (success, failure) => {
         ])
       ])
     ];
-  }, () => { success(); }, failure);
+  }, success, failure);
 });

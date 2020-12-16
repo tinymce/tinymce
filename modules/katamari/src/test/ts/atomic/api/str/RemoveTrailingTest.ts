@@ -3,10 +3,10 @@ import fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
 UnitTest.test('removeTrailing: unit tests', () => {
-  function check(expected, str, trail) {
+  const check = (expected: string, str: string, trail: string) => {
     const actual = Strings.removeTrailing(str, trail);
     Assert.eq('removeTrailing', expected, actual);
-  }
+  };
 
   check('', '', '');
   check('cat', 'cat', '');
