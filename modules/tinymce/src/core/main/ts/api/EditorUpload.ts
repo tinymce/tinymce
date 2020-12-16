@@ -37,11 +37,11 @@ export type UploadCallback = (results: UploadResult[]) => void;
 
 interface EditorUpload {
   blobCache: BlobCache;
-  addFilter (filter: (img: HTMLImageElement) => boolean): void;
-  uploadImages (callback?: UploadCallback): Promise<UploadResult[]>;
-  uploadImagesAuto (callback?: UploadCallback): void | Promise<UploadResult[]>;
-  scanForImages (): Promise<BlobInfoImagePair[]>;
-  destroy (): void;
+  addFilter: (filter: (img: HTMLImageElement) => boolean) => void;
+  uploadImages: (callback?: UploadCallback) => Promise<UploadResult[]>;
+  uploadImagesAuto: (callback?: UploadCallback) => void | Promise<UploadResult[]>;
+  scanForImages: () => Promise<BlobInfoImagePair[]>;
+  destroy: () => void;
 }
 
 const UploadChangeHandler = (editor: Editor) => {

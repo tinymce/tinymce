@@ -19,13 +19,13 @@ export interface GeomRect {
 }
 
 interface Rect {
-  inflate (rect: GeomRect, w: number, h: number): GeomRect;
-  relativePosition (rect: GeomRect, targetRect: GeomRect, rel: string): GeomRect;
-  findBestRelativePosition (rect: GeomRect, targetRect: GeomRect, constrainRect: GeomRect, rels: string[]): string | null;
-  intersect (rect: GeomRect, cropRect: GeomRect): GeomRect | null;
-  clamp (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean): GeomRect;
-  create (x: number, y: number, w: number, h: number): GeomRect;
-  fromClientRect (clientRect: ClientRect): GeomRect;
+  inflate: (rect: GeomRect, w: number, h: number) => GeomRect;
+  relativePosition: (rect: GeomRect, targetRect: GeomRect, rel: string) => GeomRect;
+  findBestRelativePosition: (rect: GeomRect, targetRect: GeomRect, constrainRect: GeomRect, rels: string[]) => string | null;
+  intersect: (rect: GeomRect, cropRect: GeomRect) => GeomRect | null;
+  clamp: (rect: GeomRect, clampRect: GeomRect, fixedSize?: boolean) => GeomRect;
+  create: (x: number, y: number, w: number, h: number) => GeomRect;
+  fromClientRect: (clientRect: ClientRect) => GeomRect;
 }
 
 const min = Math.min, max = Math.max, round = Math.round;

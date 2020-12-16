@@ -35,8 +35,8 @@ const serialize = (obj: any) => {
 };
 
 interface JSONUtils {
-  serialize (obj: any): string;
-  parse (text: string): any;
+  serialize: (obj: any) => string;
+  parse: (text: string) => any;
 }
 
 const JSONUtils: JSONUtils = {

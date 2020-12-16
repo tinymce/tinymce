@@ -8,6 +8,7 @@ import { Optional } from './Optional';
 // Use the native keys if it is available (IE9+), otherwise fall back to manually filtering
 export const keys = Object.keys;
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 export const hasOwnProperty = Object.hasOwnProperty;
 
 export const each = <T>(obj: T, f: (value: T[keyof T], key: string) => void): void => {

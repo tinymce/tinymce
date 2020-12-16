@@ -64,8 +64,10 @@ interface EditorSelection {
   editor: Editor;
   collapse: (toStart?: boolean) => void;
   setCursorLocation: (node?: Node, offset?: number) => void;
-  getContent (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
-  getContent (args?: GetSelectionContent.GetSelectionContentArgs): string;
+  getContent: {
+    (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
+    (args?: GetSelectionContent.GetSelectionContentArgs): string;
+  };
   setContent: (content: string, args?: SetSelectionContent.SelectionSetContentArgs) => void;
   getBookmark: (type?: number, normalized?: boolean) => Bookmark;
   moveToBookmark: (bookmark: Bookmark) => void;

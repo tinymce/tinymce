@@ -186,89 +186,111 @@ interface DOMUtils {
   root: Node;
   $: DomQueryConstructor;
 
-  $$ <T extends Node>(elm: T | T[] | DomQuery<T>): DomQuery<T>;
-  $$ (elm: string): DomQuery<Node>;
-  isBlock (node: string | Node): boolean;
-  clone (node: Node, deep: boolean): Node;
-  getRoot (): HTMLElement;
-  getViewPort (argWin?: Window): GeomRect;
-  getRect (elm: string | HTMLElement): GeomRect;
-  getSize (elm: string | HTMLElement): {
+  $$: {
+    <T extends Node>(elm: T | T[] | DomQuery<T>): DomQuery<T>;
+    (elm: string): DomQuery<Node>;
+  };
+  isBlock: (node: string | Node) => boolean;
+  clone: (node: Node, deep: boolean) => Node;
+  getRoot: () => HTMLElement;
+  getViewPort: (argWin?: Window) => GeomRect;
+  getRect: (elm: string | HTMLElement) => GeomRect;
+  getSize: (elm: string | HTMLElement) => {
     w: number;
     h: number;
   };
-  getParent <K extends keyof HTMLElementTagNameMap>(node: string | Node, selector: K, root?: Node): HTMLElementTagNameMap[K] | null;
-  getParent <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node): T | null;
-  getParent <T extends Element = Element>(node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): T | null;
-  getParents <K extends keyof HTMLElementTagNameMap>(elm: string | Node, selector: K, root?: Node, collect?: boolean): Array<HTMLElementTagNameMap[K]>;
-  getParents <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node): T[];
-  getParents <T extends Element = Element>(elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): T[];
-  get (elm: string | Node): HTMLElement | null;
-  getNext (node: Node, selector: string | ((node: Node) => boolean)): Node | null;
-  getPrev (node: Node, selector: string | ((node: Node) => boolean)): Node | null;
-  select <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
-  select <T extends HTMLElement = HTMLElement>(selector: string, scope?: string | Node): T[];
-  is (elm: Node | Node[], selector: string): boolean;
-  add (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean): HTMLElement;
-  create (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement;
-  createHTML (name: string, attrs?: Record<string, string>, html?: string): string;
-  createFragment (html?: string): DocumentFragment;
-  remove <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean): T | T[];
-  setStyle (elm: string | Node | Node[], name: string, value: string | number | null): void;
-  setStyle (elm: string | Node | Node[], styles: StyleMap): void;
-  getStyle (elm: string | Node, name: string, computed?: boolean): string;
-  setStyles (elm: string | Node | Node[], stylesArg: StyleMap): void;
-  removeAllAttribs (e: RunArguments<Element>): void;
-  setAttrib (elm: string | Node | Node[], name: string, value: string | boolean | number | null): void;
-  setAttribs (elm: string | Node | Node[], attrs: Record<string, string | boolean | number | null>): void;
-  getAttrib (elm: string | Node, name: string, defaultVal?: string): string;
-  getPos (elm: string | Node, rootElm?: Node): {
+  getParent: {
+    <K extends keyof HTMLElementTagNameMap>(node: string | Node, selector: K, root?: Node): HTMLElementTagNameMap[K] | null;
+    <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node): T | null;
+    <T extends Element = Element>(node: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node): T | null;
+  };
+  getParents: {
+    <K extends keyof HTMLElementTagNameMap>(elm: string | Node, selector: K, root?: Node, collect?: boolean): Array<HTMLElementTagNameMap[K]>;
+    <T extends HTMLElement>(node: string | Node, selector: (node: HTMLElement) => node is T, root?: Node): T[];
+    <T extends Element = Element>(elm: string | Node, selector?: string | ((node: HTMLElement) => boolean | void), root?: Node, collect?: boolean): T[];
+  };
+  get: (elm: string | Node) => HTMLElement | null;
+  getNext: (node: Node, selector: string | ((node: Node) => boolean)) => Node | null;
+  getPrev: (node: Node, selector: string | ((node: Node) => boolean)) => Node | null;
+  select: {
+    <K extends keyof HTMLElementTagNameMap>(selector: K, scope?: string | Node): Array<HTMLElementTagNameMap[K]>;
+    <T extends HTMLElement = HTMLElement>(selector: string, scope?: string | Node): T[];
+  };
+  is: (elm: Node | Node[], selector: string) => boolean;
+  add: (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean) => HTMLElement;
+  create: (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node) => HTMLElement;
+  createHTML: (name: string, attrs?: Record<string, string>, html?: string) => string;
+  createFragment: (html?: string) => DocumentFragment;
+  remove: <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean) => T | T[];
+  setStyle: {
+    (elm: string | Node | Node[], name: string, value: string | number | null): void;
+    (elm: string | Node | Node[], styles: StyleMap): void;
+  };
+  getStyle: (elm: string | Node, name: string, computed?: boolean) => string;
+  setStyles: (elm: string | Node | Node[], stylesArg: StyleMap) => void;
+  removeAllAttribs: (e: RunArguments<Element>) => void;
+  setAttrib: (elm: string | Node | Node[], name: string, value: string | boolean | number | null) => void;
+  setAttribs: (elm: string | Node | Node[], attrs: Record<string, string | boolean | number | null>) => void;
+  getAttrib: (elm: string | Node, name: string, defaultVal?: string) => string;
+  getPos: (elm: string | Node, rootElm?: Node) => {
     x: number;
     y: number;
   };
-  parseStyle (cssText: string): Record<string, string>;
-  serializeStyle (stylesArg: StyleMap, name?: string): string;
-  addStyle (cssText: string): void;
-  loadCSS (url: string): void;
-  addClass (elm: string | Node | Node[], cls: string): void;
-  removeClass (elm: string | Node | Node[], cls: string): void;
-  hasClass (elm: string | Node, cls: string): boolean;
-  toggleClass (elm: string | Node | Node[], cls: string, state?: boolean): void;
-  show (elm: string | Node | Node[]): void;
-  hide (elm: string | Node | Node[]): void;
-  isHidden (elm: string | Node): boolean;
-  uniqueId (prefix?: string): string;
-  setHTML (elm: string | Node | Node[], html: string): void;
-  getOuterHTML (elm: string | Node): string;
-  setOuterHTML (elm: string | Node | Node[], html: string): void;
-  decode (text: string): string;
-  encode (text: string): string;
-  insertAfter <T extends Node>(node: T | T[], reference: string | Node): T;
-  insertAfter <T extends Node>(node: RunArguments<T>, reference: string | Node): false | T;
-  replace <T extends Node>(newElm: Node, oldElm: T | T[], keepChildren?: boolean): T;
-  replace <T extends Node>(newElm: Node, oldElm: RunArguments<T>, keepChildren?: boolean): false | T;
-  rename <K extends keyof HTMLElementTagNameMap>(elm: Element, name: K): HTMLElementTagNameMap[K];
-  rename (elm: Element, name: string): Element;
-  findCommonAncestor (a: Node, b: Node): Node;
-  toHex (rgbVal: string): string;
-  run <R, T extends Node>(elm: T | T[], func: (node: T) => R, scope?: any): R;
-  run <R, T extends Node>(elm: RunArguments<T>, func: (node: T) => R, scope?: any): false | R;
-  getAttribs (elm: string | Node): NamedNodeMap | Attr[];
-  isEmpty (node: Node, elements?: Record<string, any>): boolean;
-  createRng (): Range;
-  nodeIndex (node: Node, normalized?: boolean): number;
-  split <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
-  split <T extends Node>(parentElm: Node, splitElm: T): T;
-  bind <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): Callback<K>;
-  bind <K extends string>(target: Target[], name: K, func: Callback<K>, scope?: any): Callback<K>[];
-  unbind <K extends string>(target: Target, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils;
-  unbind <K extends string>(target: Target[], name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils[];
-  fire (target: Node | Window, name: string, evt?: {}): EventUtils;
-  getContentEditable (node: Node): string | null;
-  getContentEditableParent (node: Node): string | null;
-  destroy (): void;
-  isChildOf (node: Node, parent: Node): boolean;
-  dumpRng (r: Range): string;
+  parseStyle: (cssText: string) => Record<string, string>;
+  serializeStyle: (stylesArg: StyleMap, name?: string) => string;
+  addStyle: (cssText: string) => void;
+  loadCSS: (url: string) => void;
+  addClass: (elm: string | Node | Node[], cls: string) => void;
+  removeClass: (elm: string | Node | Node[], cls: string) => void;
+  hasClass: (elm: string | Node, cls: string) => boolean;
+  toggleClass: (elm: string | Node | Node[], cls: string, state?: boolean) => void;
+  show: (elm: string | Node | Node[]) => void;
+  hide: (elm: string | Node | Node[]) => void;
+  isHidden: (elm: string | Node) => boolean;
+  uniqueId: (prefix?: string) => string;
+  setHTML: (elm: string | Node | Node[], html: string) => void;
+  getOuterHTML: (elm: string | Node) => string;
+  setOuterHTML: (elm: string | Node | Node[], html: string) => void;
+  decode: (text: string) => string;
+  encode: (text: string) => string;
+  insertAfter: {
+    <T extends Node>(node: T | T[], reference: string | Node): T;
+    <T extends Node>(node: RunArguments<T>, reference: string | Node): false | T;
+  };
+  replace: {
+    <T extends Node>(newElm: Node, oldElm: T | T[], keepChildren?: boolean): T;
+    <T extends Node>(newElm: Node, oldElm: RunArguments<T>, keepChildren?: boolean): false | T;
+  };
+  rename: {
+    <K extends keyof HTMLElementTagNameMap>(elm: Element, name: K): HTMLElementTagNameMap[K];
+    (elm: Element, name: string): Element;
+  };
+  findCommonAncestor: (a: Node, b: Node) => Node;
+  toHex: (rgbVal: string) => string;
+  run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): R;
+  run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): false | R;
+  getAttribs: (elm: string | Node) => NamedNodeMap | Attr[];
+  isEmpty: (node: Node, elements?: Record<string, any>) => boolean;
+  createRng: () => Range;
+  nodeIndex: (node: Node, normalized?: boolean) => number;
+  split: {
+    <T extends Node>(parentElm: Node, splitElm: Node, replacementElm: T): T;
+    <T extends Node>(parentElm: Node, splitElm: T): T;
+  };
+  bind: {
+    <K extends string>(target: Target, name: K, func: Callback<K>, scope?: any): Callback<K>;
+    <K extends string>(target: Target[], name: K, func: Callback<K>, scope?: any): Callback<K>[];
+  };
+  unbind: {
+    <K extends string>(target: Target, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils;
+    <K extends string>(target: Target[], name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils[];
+  };
+  fire: (target: Node | Window, name: string, evt?: {}) => EventUtils;
+  getContentEditable: (node: Node) => string | null;
+  getContentEditableParent: (node: Node) => string | null;
+  destroy: () => void;
+  isChildOf: (node: Node, parent: Node) => boolean;
+  dumpRng: (r: Range) => string;
 }
 
 /**

@@ -32,10 +32,10 @@ interface HSV {
 }
 
 interface Color {
-  toRgb (): RGB;
-  toHsv (): HSV;
-  toHex (): string;
-  parse (value: string | RGB | HSV): Color;
+  toRgb: () => RGB;
+  toHsv: () => HSV;
+  toHex: () => string;
+  parse: (value: string | RGB | HSV) => Color;
 }
 
 export type ColorConstructor = new (value?: string | RGB | HSV) => Color;

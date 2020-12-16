@@ -45,7 +45,9 @@ const getData = (transfer: DataTransfer, type: string): string => {
   return Type.isNull(data) ? '' : data;
 };
 
-const hasDragImageSupport = (transfer: DataTransfer): boolean => !Type.isUndefined(transfer.setDragImage);
+const hasDragImageSupport = (transfer: DataTransfer): boolean =>
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  !Type.isUndefined(transfer.setDragImage);
 
 const setDragImage = (transfer: DataTransfer, image: Element, x: number, y: number): void => {
   // IE 11 and Edge doesn't have support for setting drag image we can't really

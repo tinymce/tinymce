@@ -138,9 +138,9 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
 };
 
 interface EditorObservable extends Observable<EditorEventMap> {
-  bindPendingEventDelegates (): void;
-  toggleNativeEvent (name: string, state: boolean);
-  unbindAllNativeEvents (): void;
+  bindPendingEventDelegates (this: Editor): void;
+  toggleNativeEvent (this: Editor, name: string, state: boolean);
+  unbindAllNativeEvents (this: Editor): void;
 }
 
 const EditorObservable: EditorObservable = {
@@ -152,7 +152,7 @@ const EditorObservable: EditorObservable = {
    * @private
    */
   bindPendingEventDelegates() {
-    const self = (this as Editor);
+    const self = this;
 
     Tools.each(self._pendingNativeEvents, (name) => {
       bindEventDelegate(self, name);

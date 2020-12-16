@@ -33,16 +33,18 @@ interface DomSerializerSettings extends DomParserSettings, WriterSettings, Schem
 
 interface DomSerializerImpl {
   schema: Schema;
-  addNodeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
-  addAttributeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
-  getNodeFilters (): ParserFilter[];
-  getAttributeFilters (): ParserFilter[];
-  serialize (node: Element, parserArgs: { format: 'tree' } & DomSerializerArgs): AstNode;
-  serialize (node: Element, parserArgs?: DomSerializerArgs): string;
-  addRules (rules: string): void;
-  setRules (rules: string): void;
-  addTempAttr (name: string): void;
-  getTempAttrs (): string[];
+  addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  addAttributeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  getNodeFilters: () => ParserFilter[];
+  getAttributeFilters: () => ParserFilter[];
+  serialize: {
+    (node: Element, parserArgs: { format: 'tree' } & DomSerializerArgs): AstNode;
+    (node: Element, parserArgs?: DomSerializerArgs): string;
+  };
+  addRules: (rules: string) => void;
+  setRules: (rules: string) => void;
+  addTempAttr: (name: string) => void;
+  getTempAttrs: () => string[];
 }
 
 const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string) => {

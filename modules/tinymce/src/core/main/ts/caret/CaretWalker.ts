@@ -13,8 +13,8 @@ import CaretPosition from './CaretPosition';
 import { findNode, isBackwards, isForwards } from './CaretUtils';
 
 export interface CaretWalker {
-  next(caretPosition: CaretPosition): CaretPosition;
-  prev(caretPosition: CaretPosition): CaretPosition;
+  next: (caretPosition: CaretPosition) => CaretPosition;
+  prev: (caretPosition: CaretPosition) => CaretPosition;
 }
 
 /**

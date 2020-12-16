@@ -34,7 +34,7 @@ interface PromisePolyfillConstructor extends PromiseConstructor {
 
   new <T>(executor: Executor<T>): PromisePolyfill<T>;
 
-  immediateFn? (handler: (...args: any[]) => void): void;
+  immediateFn?: (handler: (...args: any[]) => void) => void;
 }
 
 const promise = <T>(): PromisePolyfillConstructor => {

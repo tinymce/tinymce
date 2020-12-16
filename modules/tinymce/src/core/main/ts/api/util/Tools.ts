@@ -13,26 +13,32 @@ type ArrayCallback<T, R> = ArrUtils.ArrayCallback<T, R>;
 type ObjCallback<T, R> = ArrUtils.ObjCallback<T, R>;
 
 interface Tools {
-  is (obj: any, type: string): boolean;
-  isArray <T>(arr: any): arr is Array<T>;
-  inArray <T>(arr: ArrayLike<T>, value: T): number;
-  grep <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
-  grep <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
-  trim (str: string): string;
-  toArray <T>(obj: ArrayLike<T>): T[];
-  hasOwn (obj: any, name: string): boolean;
-  makeMap <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>): Record<string, T | string>;
-  each <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
-  each <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
-  map <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
-  map <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
-  extend (obj: Object, ext: Object, ...objs: Object[]): any;
-  create (name: string, p: Object, root?: Object);
-  walk <T = any>(obj: T, f: Function, n?: keyof T, scope?: any): void;
-  createNS (name: string, o?: Object): any;
-  resolve (path: string, o?: Object): any;
-  explode (s: string, d?: string | RegExp): string[];
-  _addCacheSuffix (url: string): string;
+  is: (obj: any, type: string) => boolean;
+  isArray: <T>(arr: any) => arr is Array<T>;
+  inArray: <T>(arr: ArrayLike<T>, value: T) => number;
+  grep: {
+    <T>(arr: ArrayLike<T> | null | undefined, pred?: ArrayCallback<T, boolean>): T[];
+    <T>(arr: Record<string, T> | null | undefined, pred?: ObjCallback<T, boolean>): T[];
+  };
+  trim: (str: string) => string;
+  toArray: <T>(obj: ArrayLike<T>) => T[];
+  hasOwn: (obj: any, name: string) => boolean;
+  makeMap: <T>(items: ArrayLike<T> | string, delim?: string | RegExp, map?: Record<string, T | string>) => Record<string, T | string>;
+  each: {
+    <T>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, void | boolean>, scope?: any): boolean;
+    <T>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, void | boolean>, scope?: any): boolean;
+  };
+  map: {
+    <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
+    <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
+  };
+  extend: (obj: Object, ext: Object, ...objs: Object[]) => any;
+  create: (name: string, p: Object, root?: Object) => void;
+  walk: <T = any>(obj: T, f: Function, n?: keyof T, scope?: any) => void;
+  createNS: (name: string, o?: Object) => any;
+  resolve: (path: string, o?: Object) => any;
+  explode: (s: string, d?: string | RegExp) => string[];
+  _addCacheSuffix: (url: string) => string;
 }
 
 /**

@@ -77,27 +77,27 @@ export interface SchemaRegExpMap { [name: string]: RegExp }
 interface Schema {
   children: Record<string, {}>;
   elements: Record<string, SchemaElement>;
-  getValidStyles (): SchemaMap;
-  getValidClasses (): SchemaMap;
-  getBlockElements (): SchemaMap;
-  getInvalidStyles (): SchemaMap;
-  getShortEndedElements (): SchemaMap;
-  getTextBlockElements (): SchemaMap;
-  getTextInlineElements (): SchemaMap;
-  getBoolAttrs (): SchemaMap;
-  getElementRule (name: string): SchemaElement;
-  getSelfClosingElements (): SchemaMap;
-  getNonEmptyElements (): SchemaMap;
-  getMoveCaretBeforeOnEnterElements (): SchemaMap;
-  getWhiteSpaceElements (): SchemaMap;
-  getSpecialElements (): SchemaRegExpMap;
-  isValidChild (name: string, child: string): boolean;
-  isValid (name: string, attr?: string): boolean;
-  getCustomElements (): SchemaMap;
-  addValidElements (validElements: string): void;
-  setValidElements (validElements: string): void;
-  addCustomElements (customElements: string): void;
-  addValidChildren (validChildren: any): void;
+  getValidStyles: () => SchemaMap;
+  getValidClasses: () => SchemaMap;
+  getBlockElements: () => SchemaMap;
+  getInvalidStyles: () => SchemaMap;
+  getShortEndedElements: () => SchemaMap;
+  getTextBlockElements: () => SchemaMap;
+  getTextInlineElements: () => SchemaMap;
+  getBoolAttrs: () => SchemaMap;
+  getElementRule: (name: string) => SchemaElement;
+  getSelfClosingElements: () => SchemaMap;
+  getNonEmptyElements: () => SchemaMap;
+  getMoveCaretBeforeOnEnterElements: () => SchemaMap;
+  getWhiteSpaceElements: () => SchemaMap;
+  getSpecialElements: () => SchemaRegExpMap;
+  isValidChild: (name: string, child: string) => boolean;
+  isValid: (name: string, attr?: string) => boolean;
+  getCustomElements: () => SchemaMap;
+  addValidElements: (validElements: string) => void;
+  setValidElements: (validElements: string) => void;
+  addCustomElements: (customElements: string) => void;
+  addValidChildren: (validChildren: any) => void;
 }
 
 /**

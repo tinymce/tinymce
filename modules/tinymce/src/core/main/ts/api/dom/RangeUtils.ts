@@ -16,9 +16,9 @@ import * as SplitRange from '../../selection/SplitRange';
 import DOMUtils from './DOMUtils';
 
 interface RangeUtils {
-  walk (rng: Range, callback: (nodes: Node[]) => void): void;
-  split (rng: Range): RangeLikeObject;
-  normalize (rng: Range): boolean;
+  walk: (rng: Range, callback: (nodes: Node[]) => void) => void;
+  split: (rng: Range) => RangeLikeObject;
+  normalize: (rng: Range) => boolean;
 }
 
 /**

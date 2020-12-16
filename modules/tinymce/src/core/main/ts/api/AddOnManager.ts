@@ -111,15 +111,15 @@ interface AddOnManager<T> {
   urls: Record<string, string>;
   lookup: Record<string, { instance: AddOnConstructor<T>; dependencies?: string[] }>;
   _listeners: { name: string; state: WaitState; callback: () => void }[];
-  get (name: string): AddOnConstructor<T>;
-  dependencies (name: string): string[]; // TODO: deprecated in 5.7
-  requireLangPack (name: string, languages: string): void;
-  add (id: string, addOn: AddOnCallback<T>, dependencies?: string[]): AddOnConstructor<T>;
-  remove (name: string): void;
-  createUrl (baseUrl: UrlObject, dep: string | UrlObject): UrlObject;
-  addComponents (pluginName: string, scripts: string[]): void;
-  load (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void): void;
-  waitFor (name: string, callback: () => void, state?: WaitState): void;
+  get: (name: string) => AddOnConstructor<T>;
+  dependencies: (name: string) => string[]; // TODO: deprecated in 5.7
+  requireLangPack: (name: string, languages: string) => void;
+  add: (id: string, addOn: AddOnCallback<T>, dependencies?: string[]) => AddOnConstructor<T>;
+  remove: (name: string) => void;
+  createUrl: (baseUrl: UrlObject, dep: string | UrlObject) => UrlObject;
+  addComponents: (pluginName: string, scripts: string[]) => void;
+  load: (name: string, addOnUrl: string | UrlObject, success?: () => void, scope?: any, failure?: () => void) => void;
+  waitFor: (name: string, callback: () => void, state?: WaitState) => void;
 }
 
 const AddOnManager = <T>(): AddOnManager<T> => {

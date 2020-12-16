@@ -118,6 +118,8 @@ const getDefaultSettings = (settings: RawEditorSettings, id: string, documentBas
     indent_after: 'p,h1,h2,h3,h4,h5,h6,blockquote,div,title,style,pre,script,td,th,ul,ol,li,dl,dt,dd,area,table,thead,' +
     'tfoot,tbody,tr,section,summary,article,hgroup,aside,figure,figcaption,option,optgroup,datalist',
     entity_encoding: 'named',
+    // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     url_converter: editor.convertURL,
     url_converter_scope: editor
   };

@@ -46,8 +46,8 @@ export interface JSONRequestSettings {
   url?: string;
   error_scope?: any;
   success_scope?: any;
-  success? (data: any): void;
-  error? (error: any, xhr: XMLHttpRequest): void;
+  success?: (data: any) => void;
+  error?: (error: any, xhr: XMLHttpRequest) => void;
 }
 
 export interface JSONRequestArgs extends JSONRequestSettings {
@@ -61,7 +61,7 @@ export interface JSONRequestConstructor {
 
   new (settings?: JSONRequestSettings): JSONRequest;
 
-  sendRPC (o: JSONRequestArgs): void;
+  sendRPC: (o: JSONRequestArgs) => void;
 }
 
 class JSONRequest {

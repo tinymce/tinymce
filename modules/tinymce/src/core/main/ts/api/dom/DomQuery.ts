@@ -153,7 +153,11 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   wrapInner (content: string): this;
 }
 
-const doc = document, push = Array.prototype.push, slice = Array.prototype.slice;
+const doc = document;
+/* eslint-disable @typescript-eslint/unbound-method */
+const push = Array.prototype.push;
+const slice = Array.prototype.slice;
+/* eslint-enable */
 const rquickExpr = /^(?:[^#<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
 const Event = EventUtils.Event;
 const skipUniques = Tools.makeMap('children,contents,next,prev');
@@ -1229,8 +1233,10 @@ DomQueryConstructor.fn = (DomQueryConstructor as any).prototype = {
   },
 
   push,
+  /* eslint-disable @typescript-eslint/unbound-method */
   sort: Array.prototype.sort,
   splice: Array.prototype.splice
+  /* eslint-enable */
 };
 
 // Static members

@@ -15,10 +15,11 @@ export type RootNode = SugarElement<Document | ShadowRoot>;
 export const isShadowRoot = (dos: RootNode): dos is SugarElement<ShadowRoot> =>
   SugarNode.isDocumentFragment(dos);
 
+/* eslint-disable @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method */
 const supported: boolean =
-  // eslint-disable-next-line @tinymce/no-implicit-dom-globals
   Type.isFunction(Element.prototype.attachShadow) &&
   Type.isFunction(Node.prototype.getRootNode);
+/* eslint-enable */
 
 /**
  * Does the browser support shadow DOM?

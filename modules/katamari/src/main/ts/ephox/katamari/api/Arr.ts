@@ -7,9 +7,11 @@ type ArrayMorphism<T, U> = (x: T, i: number) => U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Comparator<T> = (a: T, b: T) => number;
 
+/* eslint-disable @typescript-eslint/unbound-method */
 const nativeSlice = Array.prototype.slice;
 const nativeIndexOf = Array.prototype.indexOf;
 const nativePush = Array.prototype.push;
+/* eslint-enable */
 
 const rawIndexOf = <T> (ts: ArrayLike<T>, t: T): number =>
   nativeIndexOf.call(ts, t);

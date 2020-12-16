@@ -410,6 +410,8 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   editor.schema = Schema(settings);
   editor.dom = DOMUtils(doc, {
     keep_values: true,
+    // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     url_converter: editor.convertURL,
     url_converter_scope: editor,
     hex_colors: settings.force_hex_style_colors,
