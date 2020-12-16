@@ -172,7 +172,9 @@ const pasteImage = (editor: Editor, imageItem: FileResult) => {
 
 const isClipboardEvent = (event: Event): event is ClipboardEvent => event.type === 'paste';
 
-const isDataTransferItem = (item: DataTransferItem | File): item is DataTransferItem => Type.isNonNullable((item as DataTransferItem).getAsFile);
+const isDataTransferItem = (item: DataTransferItem | File): item is DataTransferItem =>
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  Type.isNonNullable((item as DataTransferItem).getAsFile);
 
 const readFilesAsDataUris = (items: Array<File | DataTransferItem>) => Promise.all(Arr.map(items, (item) => new Promise<FileResult>((resolve) => {
   const blob = isDataTransferItem(item) ? item.getAsFile() : item;

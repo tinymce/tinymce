@@ -75,7 +75,7 @@ const collectTextToBoundary = (dom: DOMUtils, section: TextSection, node: Node, 
 
   const rootBlock = dom.getParent(rootNode, dom.isBlock);
   const walker = new DomTreeWalker(node, rootBlock);
-  const walkerFn = forwards ? walker.next : walker.prev;
+  const walkerFn = forwards ? walker.next.bind(walker) : walker.prev.bind(walker);
 
   // Walk over and add text nodes to the section and increase the offsets
   // so we know to ignore the additional text when matching
@@ -111,7 +111,7 @@ const collect = (dom: DOMUtils, rootNode: Node, startNode: Node, endNode?: Node,
 
   // Collect all the text nodes in the specified range and create sections from the
   // boundaries within the range
-  walk(dom, walker.next, startNode, {
+  walk(dom, walker.next.bind(walker), startNode, {
     boundary: finishSection,
     cef: (node) => {
       finishSection();

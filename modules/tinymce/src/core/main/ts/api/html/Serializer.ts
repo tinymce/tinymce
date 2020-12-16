@@ -15,7 +15,7 @@ export interface HtmlSerializerSettings extends WriterSettings {
 }
 
 interface HtmlSerializer {
-  serialize (node: AstNode): string;
+  serialize: (node: AstNode) => string;
 }
 
 /**

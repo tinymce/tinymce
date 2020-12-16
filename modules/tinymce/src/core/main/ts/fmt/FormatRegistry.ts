@@ -13,11 +13,13 @@ import * as DefaultFormats from './DefaultFormats';
 import { Format, Formats } from './FormatTypes';
 
 export interface FormatRegistry {
-  get (name: string): Format[];
-  get (): Record<string, Format[]>;
-  has (name: string): boolean;
-  register (name: string | Formats, format?: Format[] | Format): void;
-  unregister (name: string): Formats;
+  get: {
+    (name: string): Format[];
+    (): Record<string, Format[]>;
+  };
+  has: (name: string) => boolean;
+  register: (name: string | Formats, format?: Format[] | Format) => void;
+  unregister: (name: string) => Formats;
 }
 
 export const FormatRegistry = (editor: Editor): FormatRegistry => {

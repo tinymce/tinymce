@@ -38,9 +38,9 @@ export interface StylesSettings {
 }
 
 interface Styles {
-  toHex(color: string): string;
-  parse(css: string): Record<string, string>;
-  serialize(styles: StyleMap, elementName?: string): string;
+  toHex: (color: string) => string;
+  parse: (css: string) => Record<string, string>;
+  serialize: (styles: StyleMap, elementName?: string) => string;
 }
 
 const toHex = (match: string, r: string, g: string, b: string) => {

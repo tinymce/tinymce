@@ -14,10 +14,10 @@ import * as Settings from './Settings';
 import Delay from './util/Delay';
 
 export interface NotificationManagerImpl {
-  open (spec: NotificationSpec, closeCallback?: () => void): NotificationApi;
-  close <T extends NotificationApi>(notification: T): void;
-  reposition <T extends NotificationApi>(notifications: T[]): void;
-  getArgs <T extends NotificationApi>(notification: T): NotificationSpec;
+  open: (spec: NotificationSpec, closeCallback?: () => void) => NotificationApi;
+  close: <T extends NotificationApi>(notification: T) => void;
+  reposition: <T extends NotificationApi>(notifications: T[]) => void;
+  getArgs: <T extends NotificationApi>(notification: T) => NotificationSpec;
 }
 
 export interface NotificationSpec {

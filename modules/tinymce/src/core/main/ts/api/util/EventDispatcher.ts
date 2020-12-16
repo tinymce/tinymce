@@ -56,12 +56,12 @@ export interface NativeEventMap {
 export type EditorEvent<T> = T & {
   target: any;
   type: string;
-  preventDefault (): void;
-  isDefaultPrevented (): boolean;
-  stopPropagation (): void;
-  isPropagationStopped (): boolean;
-  stopImmediatePropagation (): void;
-  isImmediatePropagationStopped (): boolean;
+  preventDefault: () => void;
+  isDefaultPrevented: () => boolean;
+  stopPropagation: () => void;
+  isPropagationStopped: () => boolean;
+  stopImmediatePropagation: () => void;
+  isImmediatePropagationStopped: () => boolean;
 };
 
 export interface EventDispatcherSettings {
@@ -75,7 +75,7 @@ export interface EventDispatcherConstructor<T extends NativeEventMap> {
 
   new (settings?: EventDispatcherSettings): EventDispatcher<T>;
 
-  isNative (name: string): boolean;
+  isNative: (name: string) => boolean;
 }
 
 /**

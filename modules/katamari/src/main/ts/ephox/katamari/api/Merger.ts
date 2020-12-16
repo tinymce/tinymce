@@ -25,6 +25,7 @@ interface ShallowMergeFunc {
   (...objs: Array<Record<string, any>>): Record<string, any>;
 }
 
+// eslint-disable-next-line @typescript-eslint/unbound-method
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 const shallow = (old: Record<string, any>, nu: Record<string, any>) => {

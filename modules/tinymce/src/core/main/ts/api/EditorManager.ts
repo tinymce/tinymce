@@ -131,21 +131,21 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   i18n: I18n;
   suffix: string;
 
-  add (editor: Editor): Editor;
-  addI18n (code: string, item: Record<string, string>): void;
-  createEditor (id: string, settings: RawEditorSettings): Editor;
-  execCommand (cmd: string, ui: boolean, value: any): boolean;
-  get (): Editor[];
-  get (id: number | string): Editor;
-  init (settings: RawEditorSettings): Promise<Editor[]>;
-  overrideDefaults (defaultSettings: Partial<RawEditorSettings>): void;
-  remove (): void;
-  remove (selector: string | Editor): Editor | void;
-  setActive (editor: Editor): void;
-  setup (): void;
-  translate (text: Untranslated): TranslatedString;
-  triggerSave (): void;
-  _setBaseUrl (baseUrl: string): void;
+  add (this: EditorManager, editor: Editor): Editor;
+  addI18n: (code: string, item: Record<string, string>) => void;
+  createEditor (this: EditorManager, id: string, settings: RawEditorSettings): Editor;
+  execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
+  get (this: EditorManager): Editor[];
+  get (this: EditorManager, id: number | string): Editor;
+  init (this: EditorManager, settings: RawEditorSettings): Promise<Editor[]>;
+  overrideDefaults (this: EditorManager, defaultSettings: Partial<RawEditorSettings>): void;
+  remove (this: EditorManager): void;
+  remove (this: EditorManager, selector: string | Editor): Editor | void;
+  setActive (this: EditorManager, editor: Editor): void;
+  setup (this: EditorManager): void;
+  translate: (text: Untranslated) => TranslatedString;
+  triggerSave: () => void;
+  _setBaseUrl (this: EditorManager, baseUrl: string): void;
 }
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
@@ -753,7 +753,7 @@ const EditorManager: EditorManager = {
 
       case 'mceToggleEditor':
         if (!editor) {
-          self.execCommand('mceAddEditor', 0, value);
+          self.execCommand('mceAddEditor', false, value);
           return true;
         }
 

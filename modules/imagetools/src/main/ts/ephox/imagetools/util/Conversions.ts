@@ -136,7 +136,7 @@ const uriToBlob = (url: string): Promise<Blob> | null => {
 const canvasToBlob = (canvas: HTMLCanvasElement, type?: string, quality?: number): Promise<Blob> => {
   type = type || 'image/png';
 
-  // eslint-disable-next-line @tinymce/no-implicit-dom-globals
+  // eslint-disable-next-line @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method
   if (Type.isFunction(HTMLCanvasElement.prototype.toBlob)) {
     return new Promise<Blob>((resolve, reject) => {
       canvas.toBlob((blob) => {

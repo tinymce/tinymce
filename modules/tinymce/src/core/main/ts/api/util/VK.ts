@@ -27,8 +27,8 @@ interface VK {
   END: number;
   HOME: number;
 
-  modifierPressed (e: KeyboardLikeEvent): boolean;
-  metaKeyPressed (e: KeyboardLikeEvent): boolean;
+  modifierPressed: (e: KeyboardLikeEvent) => boolean;
+  metaKeyPressed: (e: KeyboardLikeEvent) => boolean;
 }
 
 /**

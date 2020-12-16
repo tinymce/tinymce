@@ -71,12 +71,12 @@ export interface DomParserSettings {
 
 interface DomParser {
   schema: Schema;
-  addAttributeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
-  getAttributeFilters (): ParserFilter[];
-  addNodeFilter (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void): void;
-  getNodeFilters (): ParserFilter[];
-  filterNode (node: AstNode): AstNode;
-  parse (html: string, args?: ParserArgs): AstNode;
+  addAttributeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  getAttributeFilters: () => ParserFilter[];
+  addNodeFilter: (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => void;
+  getNodeFilters: () => ParserFilter[];
+  filterNode: (node: AstNode) => AstNode;
+  parse: (html: string, args?: ParserArgs) => AstNode;
 }
 
 const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser => {

@@ -65,19 +65,19 @@ export interface SaxParserSettings {
   self_closing_elements?: Record<string, {}>;
   validate?: boolean;
 
-  cdata? (text: string): void;
-  comment? (text: string): void;
-  doctype? (text: string): void;
-  end? (name: string): void;
-  pi? (name: string, text: string): void;
-  start? (name: string, attrs: AttrList, empty: boolean): void;
-  text? (text: string, raw?: boolean): void;
+  cdata?: (text: string) => void;
+  comment?: (text: string) => void;
+  doctype?: (text: string) => void;
+  end?: (name: string) => void;
+  pi?: (name: string, text: string) => void;
+  start?: (name: string, attrs: AttrList, empty: boolean) => void;
+  text?: (text: string, raw?: boolean) => void;
 }
 
 export type ParserFormat = 'html' | 'xhtml' | 'xml';
 
 interface SaxParser {
-  parse (html: string, format?: ParserFormat): void;
+  parse: (html: string, format?: ParserFormat) => void;
 }
 
 const enum ParsingMode {

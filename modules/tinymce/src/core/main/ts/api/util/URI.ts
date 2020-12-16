@@ -31,8 +31,8 @@ export interface URIConstructor {
 
   new (url: string, settings?: URISettings): URI;
 
-  getDocumentBaseUrl (loc: { protocol: string; host?: string; href?: string; pathname?: string }): string;
-  parseDataUri (uri: string): { type: string; data: string };
+  getDocumentBaseUrl: (loc: { protocol: string; host?: string; href?: string; pathname?: string }) => string;
+  parseDataUri: (uri: string) => { type: string; data: string };
 }
 
 class URI {

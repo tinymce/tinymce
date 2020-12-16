@@ -15,7 +15,7 @@ import * as Settings from '../Settings';
 export type UploadResult = Uploader.UploadResult;
 
 interface ImageUploader {
-  upload (blobInfos: BlobInfo[], showNotification?: boolean): Promise<UploadResult[]>;
+  upload: (blobInfos: BlobInfo[], showNotification?: boolean) => Promise<UploadResult[]>;
 }
 
 export const openNotification = (editor: Editor) => (): NotificationApi => editor.notificationManager.open({

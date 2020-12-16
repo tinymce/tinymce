@@ -14,15 +14,15 @@ interface DebounceFunc<T extends (...args: any[]) => void> {
 }
 
 interface Delay {
-  requestAnimationFrame (callback: () => void, element?: HTMLElement): void;
-  setEditorInterval (editor: Editor, callback: () => void, time?: number): number;
-  setEditorTimeout (editor: Editor, callback: () => void, time?: number): number;
-  setInterval (callback: () => void, time?: number): number;
-  setTimeout (callback: () => void, time?: number): number;
-  clearInterval (id?: number): void;
-  clearTimeout (id?: number): void;
-  debounce <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
-  throttle <T extends (...args: any[]) => any>(callback: T, time?: number): DebounceFunc<T>;
+  requestAnimationFrame: (callback: () => void, element?: HTMLElement) => void;
+  setEditorInterval: (editor: Editor, callback: () => void, time?: number) => number;
+  setEditorTimeout: (editor: Editor, callback: () => void, time?: number) => number;
+  setInterval: (callback: () => void, time?: number) => number;
+  setTimeout: (callback: () => void, time?: number) => number;
+  clearInterval: (id?: number) => void;
+  clearTimeout: (id?: number) => void;
+  debounce: <T extends (...args: any[]) => any>(callback: T, time?: number) => DebounceFunc<T>;
+  throttle: <T extends (...args: any[]) => any>(callback: T, time?: number) => DebounceFunc<T>;
 }
 
 /**

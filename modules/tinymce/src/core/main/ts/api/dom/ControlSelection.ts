@@ -21,11 +21,11 @@ import VK from '../util/VK';
 import EditorSelection from './Selection';
 
 interface ControlSelection {
-  isResizable (elm: Element): boolean;
-  showResizeRect (elm: Element): void;
-  hideResizeRect (): void;
-  updateResizeRect (evt: EditorEvent<any>): void;
-  destroy (): void;
+  isResizable: (elm: Element) => boolean;
+  showResizeRect: (elm: Element) => void;
+  hideResizeRect: () => void;
+  updateResizeRect: (evt: EditorEvent<any>) => void;
+  destroy: () => void;
 }
 
 type ResizeHandle = [ number, number, number, number ] & { elm?: Element };

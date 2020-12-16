@@ -124,6 +124,7 @@ UnitTest.asynctest('browser.tinymce.core.util.UriTest', (success, failure) => {
   });
 
   suite.test('getDocumentBaseUrl', () => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const getDocumentBaseUrl = URI.getDocumentBaseUrl;
 
     LegacyUnit.equal(getDocumentBaseUrl({ protocol: 'file:', host: '', pathname: '/dir/path1/path2' }), 'file:///dir/path1/');
