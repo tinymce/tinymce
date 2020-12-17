@@ -11,6 +11,7 @@ import * as MergingOperations from '../operate/MergingOperations';
 import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
+import * as ColUtils from '../util/ColUtils';
 import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
@@ -67,18 +68,6 @@ const uniqueRows = (details: Structs.DetailExt[]) => {
   );
 };
 
-const uniqueColumns = (details: Structs.DetailExt[]) => {
-  const uniqueCheck = (rest: Structs.DetailExt[], detail: Structs.DetailExt) => {
-    const columnExists = Arr.exists(rest, (currentDetail) => currentDetail.column === detail.column);
-
-    return columnExists ? rest : rest.concat([ detail ]);
-  };
-
-  return Arr.foldl(details, uniqueCheck, []).sort((detailA, detailB) =>
-    detailA.column - detailB.column
-  );
-};
-
 const opInsertRowBefore = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsModification) => {
   const example = detail.row;
   const targetIndex = detail.row;
@@ -117,7 +106,7 @@ const opInsertColumnBefore = (grid: Structs.RowCells[], detail: Structs.DetailEx
 };
 
 const opInsertColumnsBefore = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
-  const columns = uniqueColumns(details);
+  const columns = ColUtils.uniqueColumns(details);
   const example = columns[0].column;
   const targetIndex = columns[0].column;
   const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
@@ -134,7 +123,7 @@ const opInsertColumnAfter = (grid: Structs.RowCells[], detail: Structs.DetailExt
 const opInsertColumnsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
   const example = details[details.length - 1].column;
   const targetIndex = details[details.length - 1].column + details[details.length - 1].colspan;
-  const columns = uniqueColumns(details);
+  const columns = ColUtils.uniqueColumns(details);
   const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
   return bundle(newGrid, details[0].row, targetIndex);
 };
@@ -161,7 +150,7 @@ const opMakeColumnHeader = (initialGrid: Structs.RowCells[], detail: Structs.Det
 };
 
 const opMakeColumnsHeader = (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const columns = uniqueColumns(details);
+  const columns = ColUtils.uniqueColumns(details);
 
   const replacer = (currentGrid: Structs.RowCells[], column: Structs.DetailExt) => TransformOperations.replaceColumn(currentGrid, column.column, comparator, genWrappers.replaceOrInit);
 
@@ -192,7 +181,7 @@ const opUnmakeColumnHeader = (initialGrid: Structs.RowCells[], detail: Structs.D
 };
 
 const opUnmakeColumnsHeader = (initialGrid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsTransform) => {
-  const columns = uniqueColumns(details);
+  const columns = ColUtils.uniqueColumns(details);
 
   const replacer = (currentGrid: Structs.RowCells[], column: Structs.DetailExt) => TransformOperations.replaceColumn(currentGrid, column.column, comparator, genWrappers.replaceOrInit);
 
@@ -212,7 +201,7 @@ const opSplitCellIntoRows = (grid: Structs.RowCells[], detail: Structs.DetailExt
 };
 
 const opEraseColumns = (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) => {
-  const columns = uniqueColumns(details);
+  const columns = ColUtils.uniqueColumns(details);
 
   const newGrid = ModificationOperations.deleteColumnsAt(grid, columns[0].column, columns[columns.length - 1].column);
   const cursor = elementFromGrid(newGrid, details[0].row, details[0].column);
