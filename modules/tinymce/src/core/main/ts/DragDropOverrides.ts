@@ -7,6 +7,7 @@
 
 import { Arr, Singleton } from '@ephox/katamari';
 import DOMUtils from './api/dom/DOMUtils';
+import { EventUtilsEvent } from './api/dom/EventUtils';
 import EditorSelection from './api/dom/Selection';
 import Editor from './api/Editor';
 import * as Settings from './api/Settings';
@@ -283,7 +284,7 @@ const blockIeDrop = (editor: Editor) => {
 // to run after the editor event handlers have run. We also bind to the document
 // so that it'll try to ensure it's the last thing that runs, as it bubbles up the dom.
 const blockUnsupportedFileDrop = (editor: Editor) => {
-  const preventFileDrop = (e: EditorEvent<DragEvent>) => {
+  const preventFileDrop = (e: EventUtilsEvent<DragEvent>) => {
     if (!e.isDefaultPrevented()) {
       // Prevent file drop events within the editor, as they'll cause the browser to navigate away
       const dataTransfer = e.dataTransfer;
@@ -296,7 +297,7 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
     }
   };
 
-  const preventFileDropIfUIElement = (e: EditorEvent<DragEvent>) => {
+  const preventFileDropIfUIElement = (e: EventUtilsEvent<DragEvent>) => {
     if (isUIElement(editor, e.target as Element)) {
       preventFileDrop(e);
     }
