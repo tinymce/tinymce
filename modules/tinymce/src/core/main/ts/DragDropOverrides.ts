@@ -283,8 +283,8 @@ const blockIeDrop = (editor: Editor) => {
 // to run after the editor event handlers have run. We also bind to the document
 // so that it'll try to ensure it's the last thing that runs, as it bubbles up the dom.
 const blockUnsupportedFileDrop = (editor: Editor) => {
-  const preventFileDrop = (e: DragEvent) => {
-    if (!e.defaultPrevented) {
+  const preventFileDrop = (e: EditorEvent<DragEvent>) => {
+    if (!e.isDefaultPrevented()) {
       // Prevent file drop events within the editor, as they'll cause the browser to navigate away
       const dataTransfer = e.dataTransfer;
       if (dataTransfer && (Arr.contains(dataTransfer.types, 'Files') || dataTransfer.files.length > 0)) {
@@ -296,7 +296,7 @@ const blockUnsupportedFileDrop = (editor: Editor) => {
     }
   };
 
-  const preventFileDropIfUIElement = (e: DragEvent) => {
+  const preventFileDropIfUIElement = (e: EditorEvent<DragEvent>) => {
     if (isUIElement(editor, e.target as Element)) {
       preventFileDrop(e);
     }

@@ -168,6 +168,29 @@ UnitTest.asynctest('browser.tinymce.core.dom.EventUtilsTest', (success, failure)
     LegacyUnit.deepEqual(result, { inner: true, content: true, body: true, document: true, window: true });
   });
 
+  suite.test('bubbling with prevented default', () => {
+    let result;
+
+    eventUtils.bind(window, 'click', (e) => {
+      result.window = true;
+      result.windowPrevented = e.defaultPrevented;
+      result.windowIsPrevented = e.isDefaultPrevented();
+    });
+
+    eventUtils.bind(document.getElementById('inner'), 'click', (e) => {
+      result.inner = true;
+      e.preventDefault();
+    });
+
+    result = {};
+    eventUtils.fire(window, 'click', { defaultPrevented: false, cancelBubble: false });
+    LegacyUnit.deepEqual(result, { window: true, windowPrevented: false, windowIsPrevented: false });
+
+    result = {};
+    eventUtils.fire(document.getElementById('inner'), 'click', { defaultPrevented: false, cancelBubble: false });
+    LegacyUnit.deepEqual(result, { inner: true, window: true, windowPrevented: true, windowIsPrevented: true });
+  });
+
   suite.test('bind/fire stopImmediatePropagation', () => {
     eventUtils.bind(window, 'click', () => {
       result.click1 = true;
