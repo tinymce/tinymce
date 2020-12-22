@@ -19,6 +19,7 @@ interface PartialEvent {
   isImmediatePropagationStopped?: () => boolean;
   stopImmediatePropagation?: () => void;
   returnValue?: boolean;
+  defaultPrevented?: boolean;
   cancelBubble?: boolean;
   composedPath?: () => EventTarget[];
 }
@@ -121,6 +122,7 @@ const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<
 
   // Add preventDefault method
   event.preventDefault = () => {
+    event.defaultPrevented = true;
     event.isDefaultPrevented = returnTrue;
 
     // Execute preventDefault on the original event object
@@ -135,6 +137,7 @@ const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<
 
   // Add stopPropagation
   event.stopPropagation = () => {
+    event.cancelBubble = true;
     event.isPropagationStopped = returnTrue;
 
     // Execute stopPropagation on the original event object
@@ -155,8 +158,8 @@ const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<
 
   // Add event delegation states
   if (hasIsDefaultPrevented(event) === false) {
-    event.isDefaultPrevented = returnFalse;
-    event.isPropagationStopped = returnFalse;
+    event.isDefaultPrevented = event.defaultPrevented === true ? returnTrue : returnFalse;
+    event.isPropagationStopped = event.cancelBubble === true ? returnTrue : returnFalse;
     event.isImmediatePropagationStopped = returnFalse;
   }
 

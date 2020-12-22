@@ -14,6 +14,8 @@ Version 5.7.0 (TBD)
     Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
     Fixed an issue where `scope` attributes on table cells would not change as expected when merging or unmerging cells #TINY-6486
     Fixed the plugin documentation links in the `help` plugin #DOC-703
+    Fixed events bound using `DOMUtils` not returning the correct result for `isDefaultPrevented` in some cases #TINY-6834
+    Fixed the "Dropped file type is not supported" notification incorrectly showing when using an inline editor #TINY-6834
     Fixed an issue with external styles bleeding into TinyMCE #TINY-6735
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
 Version 5.6.2 (2020-12-08)
