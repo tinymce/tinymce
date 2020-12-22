@@ -281,7 +281,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     writer.reset();
     parser.parse('<p title="gre>gererg"/>');
     LegacyUnit.equal(writer.getContent(), '<p title="gre&gt;gererg"></p>', 'Parse elements with quoted > characters.');
-    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse elements with quoted > characters (counts).')
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse elements with quoted > characters (counts).');
   });
 
   suite.test('Parse style elements', () => {
