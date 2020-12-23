@@ -9,7 +9,7 @@ Version 5.7.0 (TBD)
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
-    Improved the performance of SaxParser regexps #TINY-6823
+    Changed some `SaxParser` regular expressions to improve performance #TINY-6823
     Fixed table width style was removed when copying #TINY-6664
     Fixed the order of CSS precedence of `content_style` and `content_css` in the `preview` and `template` plugins. `content_style` now has precedence #TINY-6529
     Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
