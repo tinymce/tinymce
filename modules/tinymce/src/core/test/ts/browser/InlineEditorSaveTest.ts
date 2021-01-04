@@ -1,38 +1,28 @@
-import { Chain, Logger, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
+import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorSaveTest', (success, failure) => {
-  Theme();
-
-  const settings = {
+describe('browser.tinymce.core.InlineEditorSaveTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
+
+  const assertBogusNotExist = () => {
+    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(() => {
+      throw new Error('Should be data-mce-bogus tags present');
+    }, Fun.noop);
   };
 
-  const cAssertBogusExist = Chain.async((val, next, die) => {
-    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(
-      () => {
-        die('Should be data-mce-bogus tags present');
-      },
-      () => {
-        next(val);
-      }
-    );
+  it('Saving inline editor should not remove data-mce-bogus tags', () => {
+    const editor = hook.editor();
+    editor.setContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>', { format: 'raw' });
+    editor.save();
+    assertBogusNotExist();
   });
-
-  const cSaveEditor = Chain.op((editor: Editor) => editor.save());
-
-  Pipeline.async({}, [
-    Logger.t('Saving inline editor should not remove data-mce-bogus tags', Chain.asStep({}, [
-      McEditor.cFromHtml('<div></div>', settings),
-      ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
-      cSaveEditor,
-      cAssertBogusExist,
-      McEditor.cRemove
-    ]))
-  ], success, failure);
 });

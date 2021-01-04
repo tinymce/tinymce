@@ -1,17 +1,19 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
-import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import {
-  BreakType, findClosestHorizontalPosition, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine,
-  isAtFirstLine, isAtLastLine, LineInfo
-} from 'tinymce/core/caret/LineReader';
-import ViewBlock from '../../module/test/ViewBlock';
+import { assert } from 'chai';
 
-UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) => {
-  const viewBlock = ViewBlock();
+import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
+import * as LineReader from 'tinymce/core/caret/LineReader';
+import * as ViewBlock from '../../module/test/ViewBlock';
+
+const BreakType = LineReader.BreakType;
+type LineInfo = LineReader.LineInfo;
+
+describe('browser.tinymce.core.caret.LineReader', () => {
+  const viewBlock = ViewBlock.bddSetup();
   const browser = PlatformDetection.detect().browser;
   const isSafari13OrLower = browser.isSafari() && (browser.version.major < 13 || browser.version.major === 13 && browser.version.minor < 1);
 
@@ -20,494 +22,517 @@ UnitTest.asynctest('browser.tinymce.core.caret.LineReader', (success, failure) =
     offset: number;
   }
 
-  const cSetHtml = (html: string) => Chain.op(() => {
-    viewBlock.update(html);
-  });
+  const setHtml = viewBlock.update;
 
-  const logPositions = (msg, positions) => {
+  const logPositions = (msg: string, positions: CaretPosition[]) => {
     Arr.each(positions, (pos) => {
       // eslint-disable-next-line no-console
       console.log(msg, pos.container(), pos.offset(), pos.getClientRects());
     });
   };
 
-  const cGetPositionsUntilPreviousLine = (path: number[], offset: number) => Chain.mapper((scope: any) => {
-    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom, offset);
-    return getPositionsUntilPreviousLine(scope.get(), pos);
-  });
-
-  const cGetPositionsUntilNextLine = (path: number[], offset: number) => Chain.mapper((scope: any) => {
-    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom, offset);
-    return getPositionsUntilNextLine(scope.get(), pos);
-  });
-
-  const cGetAbovePositions = (path: number[], offset: number) => Chain.mapper((scope: any) => {
-    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom, offset);
-    return getPositionsAbove(scope.get(), pos);
-  });
-
-  const cGetBelowPositions = (path: number[], offset: number) => Chain.mapper((scope: any) => {
-    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
-    const pos = CaretPosition(container.dom, offset);
-    return getPositionsBelow(scope.get(), pos);
-  });
-
-  const cFindClosestHorizontalPosition = (path: number[], offset: number) => Chain.mapper((positions: CaretPosition[]) => {
+  const getPositionsUntilPreviousLine = (path: number[], offset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
-    return findClosestHorizontalPosition(positions, pos);
-  });
+    return LineReader.getPositionsUntilPreviousLine(viewBlock.get(), pos);
+  };
 
-  const cAssertCaretPositions = (expectedPositions: Path[]) => Chain.op((actualPositions: CaretPosition[]) => {
+  const getPositionsUntilNextLine = (path: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom, offset);
+    return LineReader.getPositionsUntilNextLine(viewBlock.get(), pos);
+  };
+
+  const getAbovePositions = (path: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom, offset);
+    return LineReader.getPositionsAbove(viewBlock.get(), pos);
+  };
+
+  const getBelowPositions = (path: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom, offset);
+    return LineReader.getPositionsBelow(viewBlock.get(), pos);
+  };
+
+  const findClosestHorizontalPosition = (positions: CaretPosition[], path: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
+    const pos = CaretPosition(container.dom, offset);
+    return LineReader.findClosestHorizontalPosition(positions, pos);
+  };
+
+  const assertPositions = (actualPositions: CaretPosition[], expectedPositions: Path[]) => {
+    assert.lengthOf(actualPositions, expectedPositions.length, 'Should be the expected amount of positions');
+    Arr.each(expectedPositions, (p: Path, i) => {
+      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), p.path).getOrDie();
+      Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(actualPositions[i].container()));
+      assert.equal(actualPositions[i].offset(), p.offset, 'Should be the expected offset');
+    });
+  };
+
+  const assertCaretPositions = (actualPositions: CaretPosition[], expectedPositions: Path[]) => {
     if (expectedPositions.length !== actualPositions.length) {
       logPositions('cAssertCaretPositions', actualPositions);
     }
+    assertPositions(actualPositions, expectedPositions);
+  };
 
-    Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
-    Arr.each(expectedPositions, (p: Path, i) => {
-      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), p.path).getOrDie();
-      Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(actualPositions[i].container()));
-      Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
-    });
-  });
+  const assertNone = (a: Optional<unknown>) => {
+    assert.isTrue(a.isNone(), 'Optional return value should be none');
+  };
 
-  const cAssertNone = Chain.op((a: Optional<any>) => {
-    Assertions.assertEq('Optional return value should be none', true, a.isNone());
-  });
-
-  const cAssertLineInfoCaretPositions = (expectedPositions: Path[]) => Chain.op((lineInfo: LineInfo) => {
+  const assertLineInfoCaretPositions = (lineInfo: LineInfo, expectedPositions: Path[]) => {
     const actualPositions = lineInfo.positions;
-
     if (expectedPositions.length !== actualPositions.length) {
-      if (expectedPositions.length !== actualPositions.length) {
-        logPositions('cAssertLineInfoCaretPositions', actualPositions);
-      }
+      logPositions('cAssertLineInfoCaretPositions', actualPositions);
     }
+    assertPositions(actualPositions, expectedPositions);
+  };
 
-    Assertions.assertEq('Should be the expected amount of positions', expectedPositions.length, actualPositions.length);
-    Arr.each(expectedPositions, (p: Path, i) => {
-      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), p.path).getOrDie();
-      Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(actualPositions[i].container()));
-      Assertions.assertEq('Should be the expected offset', p.offset, actualPositions[i].offset());
-    });
-  });
+  const assertBreakPositionNone = (linebreak: LineInfo) => {
+    assert.isTrue(linebreak.breakAt.isNone(), 'Should not be a line break position');
+  };
 
-  const cAssertBreakPositionNone = Chain.op((linebreak: LineInfo) => {
-    Assertions.assertEq('Should not be a line break position', true, linebreak.breakAt.isNone());
-  });
-
-  const cAssertBreakPosition = (path: number[], offset: number) => Chain.op((linebreak: LineInfo) => {
+  const assertBreakPosition = (linebreak: LineInfo, path: number[], offset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const breakPos = linebreak.breakAt.getOrDie();
 
     Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(breakPos.container()));
-    Assertions.assertEq('Should be the expected offset', offset, breakPos.offset());
-  });
+    assert.equal(breakPos.offset(), offset, 'Should be the expected offset');
+  };
 
-  const cAssertBreakType = (expectedBreakType: BreakType) => Chain.op((linebreak: LineInfo) => {
+  const assertBreakType = (linebreak: LineInfo, expectedBreakType: LineReader.BreakType) => {
     const actualBreakType = linebreak.breakType;
-    Assertions.assertEq('Should be the expected break type', expectedBreakType, actualBreakType);
-  });
+    assert.equal(actualBreakType, expectedBreakType, 'Should be the expected break type');
+  };
 
-  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op((posOption: Optional<any>) => {
+  const assertCaretPosition = (posOpt: Optional<CaretPosition>, path: number[], offset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-    const pos = posOption.getOrDie('Needs to return a caret');
+    const pos = posOpt.getOrDie('Needs to return a caret');
 
     Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(pos.container()));
-    Assertions.assertEq('Should be the expected offset', offset, pos.offset());
-  });
+    assert.equal(pos.offset(), offset, 'Should be the expected offset');
+  };
 
-  const cVisualCaretCheck = (predicate, path: number[], offset: number) => Chain.mapper((scope: any) => {
-    const container = Hierarchy.follow(SugarElement.fromDom(scope.get()), path).getOrDie();
+  const visualCaretCheck = (predicate, path: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
-    return predicate(scope.get(), pos);
+    return predicate(viewBlock.get(), pos);
+  };
+
+  const isAtFirstLine = Fun.curry(visualCaretCheck, LineReader.isAtFirstLine);
+  const isAtLastLine = Fun.curry(visualCaretCheck, LineReader.isAtLastLine);
+
+  context('getPositionsUntilPreviousLine', () => {
+    it('Should be an empty array of positions and no linebreak', () => {
+      setHtml('<p>a</p>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 0 ], 0);
+      assertLineInfoCaretPositions(lineInfo, []);
+      assertBreakType(lineInfo, BreakType.Eol);
+      assertBreakPositionNone(lineInfo);
+    });
+
+    it('Should be an array with the first position and second position and no linebreak', () => {
+      setHtml('<p>ab</p>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 0 ], 2);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 0 ], offset: 0 },
+        { path: [ 0, 0 ], offset: 1 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Eol);
+      assertBreakPositionNone(lineInfo);
+    });
+
+    it('Should be an array with one position from the second line and a break on the first line 1 <br>', () => {
+      setHtml('<p>a<br>b</p>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 2 ], 1);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 2 ], offset: 0 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Br);
+      assertBreakPosition(lineInfo, [ 0 ], 1);
+    });
+
+    it('Should be an array with one position from the second line and a break on the first line 2 <br>', () => {
+      setHtml('<p>a<br>bc</p>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 2 ], 1);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 2 ], offset: 0 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Br);
+      assertBreakPosition(lineInfo, [ 0 ], 1);
+    });
+
+    it('Should be an array with one position from the second line and a break on the first line <p>', () => {
+      setHtml('<p>a</p><p>b</p>');
+      const lineInfo = getPositionsUntilPreviousLine([ 1, 0 ], 1);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 1, 0 ], offset: 0 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Block);
+      assertBreakPosition(lineInfo, [ 0, 0 ], 1);
+    });
+
+    it('Should be an array with one position from the second line and a break on the first line (wrap)', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 0 ], 6);
+      if (isSafari13OrLower) {
+        assertLineInfoCaretPositions(lineInfo, [
+          { path: [ 0, 0 ], offset: 4 },
+          { path: [ 0, 0 ], offset: 5 }
+        ]);
+        assertBreakType(lineInfo, BreakType.Wrap);
+        assertBreakPosition(lineInfo, [ 0, 0 ], 3);
+      } else {
+        assertLineInfoCaretPositions(lineInfo, [
+          { path: [ 0, 0 ], offset: 5 }
+        ]);
+        assertBreakType(lineInfo, BreakType.Wrap);
+        assertBreakPosition(lineInfo, [ 0, 0 ], 4);
+      }
+    });
+
+    it('Should be an array with zero positions from the second line and a break on the first line', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const lineInfo = getPositionsUntilPreviousLine([ 0, 0 ], 5);
+      if (isSafari13OrLower) {
+        assertLineInfoCaretPositions(lineInfo, [
+          { path: [ 0, 0 ], offset: 4 }
+        ]);
+        assertBreakType(lineInfo, BreakType.Wrap);
+        assertBreakPosition(lineInfo, [ 0, 0 ], 3);
+      } else {
+        assertLineInfoCaretPositions(lineInfo, []);
+        assertBreakType(lineInfo, BreakType.Wrap);
+        assertBreakPosition(lineInfo, [ 0, 0 ], 4);
+      }
+    });
   });
 
-  const cIsAtFirstLine = Fun.curry(cVisualCaretCheck, isAtFirstLine);
-  const cIsAtLastLine = Fun.curry(cVisualCaretCheck, isAtLastLine);
+  context('getPositionsUntilNextLine', () => {
+    it('Should be an empty array of positions and no linebreak', () => {
+      setHtml('<p>a</p>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 1);
+      assertLineInfoCaretPositions(lineInfo, []);
+      assertBreakType(lineInfo, BreakType.Eol);
+      assertBreakPositionNone(lineInfo);
+    });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('getPositionsUntilPreviousLine', GeneralSteps.sequence([
-      Logger.t('Should be an empty array of positions and no linebreak', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cGetPositionsUntilPreviousLine([ 0, 0 ], 0),
-        cAssertLineInfoCaretPositions([]),
-        cAssertBreakType(BreakType.Eol),
-        cAssertBreakPositionNone
-      ])),
-      Logger.t('Should be an array with the first position and second position and no linebreak', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p>'),
-        cGetPositionsUntilPreviousLine([ 0, 0 ], 2),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 0 ], offset: 0 },
-          { path: [ 0, 0 ], offset: 1 }
-        ]),
-        cAssertBreakType(BreakType.Eol),
-        cAssertBreakPositionNone
-      ])),
-      Logger.t('Should be an array with one position from the second line and a break on the first line 1 <br>', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cGetPositionsUntilPreviousLine([ 0, 2 ], 1),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 2 ], offset: 0 }
-        ]),
-        cAssertBreakType(BreakType.Br),
-        cAssertBreakPosition([ 0 ], 1)
-      ])),
-      Logger.t('Should be an array with one position from the second line and a break on the first line 2 <br>', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>bc</p>'),
-        cGetPositionsUntilPreviousLine([ 0, 2 ], 1),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 2 ], offset: 0 }
-        ]),
-        cAssertBreakType(BreakType.Br),
-        cAssertBreakPosition([ 0 ], 1)
-      ])),
-      Logger.t('Should be an array with one position from the second line and a break on the first line <p>', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p>'),
-        cGetPositionsUntilPreviousLine([ 1, 0 ], 1),
-        cAssertLineInfoCaretPositions([
-          { path: [ 1, 0 ], offset: 0 }
-        ]),
-        cAssertBreakType(BreakType.Block),
-        cAssertBreakPosition([ 0, 0 ], 1)
-      ])),
-      Logger.t('Should be an array with one position from the second line and a break on the first line (wrap)', Chain.asStep(viewBlock, Arr.flatten([
-        [
-          cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-          cGetPositionsUntilPreviousLine([ 0, 0 ], 6)
-        ],
-        isSafari13OrLower ? [
-          cAssertLineInfoCaretPositions([
-            { path: [ 0, 0 ], offset: 4 },
-            { path: [ 0, 0 ], offset: 5 }
-          ]),
-          cAssertBreakType(BreakType.Wrap),
-          cAssertBreakPosition([ 0, 0 ], 3)
-        ] : [
-          cAssertLineInfoCaretPositions([
-            { path: [ 0, 0 ], offset: 5 }
-          ]),
-          cAssertBreakType(BreakType.Wrap),
-          cAssertBreakPosition([ 0, 0 ], 4)
-        ]
-      ]))),
-      Logger.t('Should be an array with zero positions from the second line and a break on the first line', Chain.asStep(viewBlock, Arr.flatten([
-        [
-          cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-          cGetPositionsUntilPreviousLine([ 0, 0 ], 5)
-        ],
-        isSafari13OrLower ? [
-          cAssertLineInfoCaretPositions([
-            { path: [ 0, 0 ], offset: 4 }
-          ]),
-          cAssertBreakType(BreakType.Wrap),
-          cAssertBreakPosition([ 0, 0 ], 3)
-        ] : [
-          cAssertLineInfoCaretPositions([]),
-          cAssertBreakType(BreakType.Wrap),
-          cAssertBreakPosition([ 0, 0 ], 4)
-        ]
-      ])))
-    ])),
+    it('Should be an array with the first position and second position and no linebreak', () => {
+      setHtml('<p>ab</p>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 0);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 0 ], offset: 1 },
+        { path: [ 0, 0 ], offset: 2 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Eol);
+      assertBreakPositionNone(lineInfo);
+    });
 
-    Logger.t('getPositionsUntilNextLine', GeneralSteps.sequence([
-      Logger.t('Should be an empty array of positions and no linebreak', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 1),
-        cAssertLineInfoCaretPositions([]),
-        cAssertBreakType(BreakType.Eol),
-        cAssertBreakPositionNone
-      ])),
-      Logger.t('Should be an array with the first position and second position and no linebreak', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 0),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 0 ], offset: 1 },
-          { path: [ 0, 0 ], offset: 2 }
-        ]),
-        cAssertBreakType(BreakType.Eol),
-        cAssertBreakPositionNone
-      ])),
-      Logger.t('Should be an array with one position from the first line and a break on the first line <br>', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 0),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 0 ], offset: 1 },
-          { path: [ 0 ], offset: 1 }
-        ]),
-        cAssertBreakType(BreakType.Br),
-        cAssertBreakPosition([ 0 ], 1)
-      ])),
-      Logger.t('Should be an array with one position from the first line and a break on the first line <br>', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input><br>b</p>'),
-        cGetPositionsUntilNextLine([ 0 ], 0),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0 ], offset: 1 }
-        ]),
-        cAssertBreakType(BreakType.Br),
-        cAssertBreakPosition([ 0 ], 1)
-      ])),
-      Logger.t('Should be an array with one position from the first line and a break on the first line <p>', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 0),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 0 ], offset: 1 }
-        ]),
-        cAssertBreakType(BreakType.Block),
-        cAssertBreakPosition([ 1, 0 ], 0)
-      ])),
-      Logger.t('Should be an array with one position from the second line and a break on the last line', Chain.asStep(viewBlock, [
-        cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 6),
-        cAssertLineInfoCaretPositions([
-          { path: [ 0, 0 ], offset: 7 }
-        ]),
-        cAssertBreakType(BreakType.Wrap),
-        cAssertBreakPosition([ 0, 0 ], 8)
-      ])),
-      Logger.t('Should be an array with zero positions from the second line and a break on the last line', Chain.asStep(viewBlock, [
-        cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-        cGetPositionsUntilNextLine([ 0, 0 ], 7),
-        cAssertLineInfoCaretPositions([]),
-        cAssertBreakType(BreakType.Wrap),
-        cAssertBreakPosition([ 0, 0 ], 8)
-      ]))
-    ])),
+    it('Should be an array with one position from the first line and a break on the first line <br>', () => {
+      setHtml('<p>a<br>b</p>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 0);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 0 ], offset: 1 },
+        { path: [ 0 ], offset: 1 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Br);
+      assertBreakPosition(lineInfo, [ 0 ], 1);
+    });
 
-    Logger.t('isAtFirstLine', GeneralSteps.sequence([
-      Logger.t('Should return true at first visual position in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cIsAtFirstLine([ 0, 0 ], 0),
-        Assertions.cAssertEq('Should be true on first position in paragraph', true)
-      ])),
-      Logger.t('Should return true at second visual position in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cIsAtFirstLine([ 0, 0 ], 1),
-        Assertions.cAssertEq('Should be true on second position in paragraph', true)
-      ])),
-      Logger.t('Should return false at second br line in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cIsAtFirstLine([ 0, 2 ], 0),
-        Assertions.cAssertEq('Should be false on second line in paragraph', false)
-      ])),
-      Logger.t('Should return false at second pos after br line in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cIsAtFirstLine([ 0, 2 ], 1),
-        Assertions.cAssertEq('Should be false on second line in paragraph', false)
-      ])),
-      Logger.t('Should return false at second paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p>'),
-        cIsAtFirstLine([ 1, 0 ], 0),
-        Assertions.cAssertEq('Should be false on second line in paragraph', false)
-      ])),
-      Logger.t('Should return false at second line in a wrapped element', Chain.asStep(viewBlock, [
-        cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-        cIsAtFirstLine([ 0, 0 ], 4),
-        Assertions.cAssertEq('Should be false on second line in paragraph', false)
-      ])),
-      Logger.t('Should return true at paragraph in td', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td><p>a</p></td></tr></tbody></table>'),
-        cIsAtFirstLine([ 0, 0, 0, 0, 0, 0 ], 0),
-        Assertions.cAssertEq('Should be true since it is the first line in td', true)
-      ])),
-      Logger.t('Should return false at second paragraph in td', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
-        cIsAtFirstLine([ 0, 0, 0, 0, 1, 0 ], 0),
-        Assertions.cAssertEq('Should be false since it is the second line in td', false)
-      ]))
-    ])),
+    it('Should be an array with one position from the first line with input and a break on the first line <br>', () => {
+      setHtml('<p><input><br>b</p>');
+      const lineInfo = getPositionsUntilNextLine([ 0 ], 0);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0 ], offset: 1 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Br);
+      assertBreakPosition(lineInfo, [ 0 ], 1);
+    });
 
-    Logger.t('isAtLastLine', GeneralSteps.sequence([
-      Logger.t('Should return true at first visual position in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cIsAtLastLine([ 0, 0 ], 0),
-        Assertions.cAssertEq('Should be true on first position in paragraph', true)
-      ])),
-      Logger.t('Should return true at second visual position in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cIsAtLastLine([ 0, 0 ], 1),
-        Assertions.cAssertEq('Should be true on second position in paragraph', true)
-      ])),
-      Logger.t('Should return false at before first br line in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cIsAtLastLine([ 0, 0 ], 0),
-        Assertions.cAssertEq('Should be false on first line in paragraph', false)
-      ])),
-      Logger.t('Should return false at first line at second pos before br line in paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br>b</p>'),
-        cIsAtLastLine([ 0, 0 ], 1),
-        Assertions.cAssertEq('Should be false on first line in paragraph', false)
-      ])),
-      Logger.t('Should return false at first paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p>'),
-        cIsAtLastLine([ 0, 0 ], 0),
-        Assertions.cAssertEq('Should be false on first paragraph line', false)
-      ])),
-      Logger.t('Should return false at second line in a wrapped element', Chain.asStep(viewBlock, [
-        cSetHtml('<div style="width: 10px">abc def ghi</div>'),
-        cIsAtLastLine([ 0, 0 ], 6),
-        Assertions.cAssertEq('Should be false on second line in paragraph', false)
-      ])),
-      Logger.t('Should return false at first paragraph in td', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
-        cIsAtLastLine([ 0, 0, 0, 0, 0, 0 ], 0),
-        Assertions.cAssertEq('Should be false since it is the first line in td', false)
-      ])),
-      Logger.t('Should return true at second paragraph in td', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
-        cIsAtLastLine([ 0, 0, 0, 0, 1, 0 ], 0),
-        Assertions.cAssertEq('Should be true since it is the second line in td', true)
-      ]))
-    ])),
+    it('Should be an array with one position from the first line and a break on the first line <p>', () => {
+      setHtml('<p>a</p><p>b</p>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 0);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 0 ], offset: 1 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Block);
+      assertBreakPosition(lineInfo, [ 1, 0 ], 0);
+    });
 
-    Logger.t('getAbovePositions', GeneralSteps.sequence([
-      Logger.t('Should return zero positions since there is no line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cGetAbovePositions([ 0, 0 ], 1),
-        cAssertCaretPositions([])
-      ])),
-      Logger.t('Should return three positions for the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p><p>a</p>'),
-        cGetAbovePositions([ 1, 0 ], 0),
-        cAssertCaretPositions([
-          { path: [ 0, 0 ], offset: 0 },
-          { path: [ 0, 0 ], offset: 1 },
-          { path: [ 0, 0 ], offset: 2 }
-        ])
-      ])),
-      Logger.t('Should return four positions for the line above2', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<input>b</p><p>a</p>'),
-        cGetAbovePositions([ 1, 0 ], 0),
-        cAssertCaretPositions([
-          { path: [ 0, 0 ], offset: 0 },
-          { path: [ 0, 0 ], offset: 1 },
-          { path: [ 0 ], offset: 1 },
-          { path: [ 0 ], offset: 2 },
-          { path: [ 0, 2 ], offset: 0 },
-          { path: [ 0, 2 ], offset: 1 }
-        ])
-      ]))
-    ])),
+    it('Should be an array with one position from the second line and a break on the last line', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 6);
+      assertLineInfoCaretPositions(lineInfo, [
+        { path: [ 0, 0 ], offset: 7 }
+      ]);
+      assertBreakType(lineInfo, BreakType.Wrap);
+      assertBreakPosition(lineInfo, [ 0, 0 ], 8);
+    });
 
-    Logger.t('getBelowPositions', GeneralSteps.sequence([
-      Logger.t('Should return zero positions since there is no line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cAssertCaretPositions([])
-      ])),
-      Logger.t('Should return three positions for the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>ab</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cAssertCaretPositions([
-          { path: [ 1, 0 ], offset: 0 },
-          { path: [ 1, 0 ], offset: 1 },
-          { path: [ 1, 0 ], offset: 2 }
-        ])
-      ])),
-      Logger.t('Should return five positions for the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>a<input>b</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cAssertCaretPositions([
-          { path: [ 1, 0 ], offset: 0 },
-          { path: [ 1, 0 ], offset: 1 },
-          { path: [ 1 ], offset: 1 },
-          { path: [ 1 ], offset: 2 },
-          { path: [ 1, 2 ], offset: 0 },
-          { path: [ 1, 2 ], offset: 1 }
-        ])
-      ]))
-    ])),
+    it('Should be an array with zero positions from the second line and a break on the last line', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const lineInfo = getPositionsUntilNextLine([ 0, 0 ], 7);
+      assertLineInfoCaretPositions(lineInfo, []);
+      assertBreakType(lineInfo, BreakType.Wrap);
+      assertBreakPosition(lineInfo, [ 0, 0 ], 8);
+    });
+  });
 
-    Logger.t('findClosestHoriontalPosition (above)', GeneralSteps.sequence([
-      Logger.t('Should not return a position since there is no above positions', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p>'),
-        cGetAbovePositions([ 0, 0 ], 0),
-        cFindClosestHorizontalPosition([ 0, 0 ], 0),
-        cAssertNone
-      ])),
-      Logger.t('Should return first caret position on the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p><p>cd</p>'),
-        cGetAbovePositions([ 1, 0 ], 0),
-        cFindClosestHorizontalPosition([ 1, 0 ], 0),
-        cAssertCaretPosition([ 0, 0 ], 0)
-      ])),
-      Logger.t('Should return last caret position on the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p><p>cd</p>'),
-        cGetAbovePositions([ 1, 0 ], 0),
-        cFindClosestHorizontalPosition([ 1, 0 ], 2),
-        cAssertCaretPosition([ 0, 0 ], 2)
-      ])),
-      Logger.t('Should return first indexed caret position on the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p><p><input></p>'),
-        cGetAbovePositions([ 1 ], 0),
-        cFindClosestHorizontalPosition([ 1 ], 0),
-        cAssertCaretPosition([ 0 ], 0)
-      ])),
-      Logger.t('Should return first indexed caret position on the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p><p><input></p>'),
-        cGetAbovePositions([ 1 ], 0),
-        cFindClosestHorizontalPosition([ 1 ], 1),
-        cAssertCaretPosition([ 0 ], 1)
-      ])),
-      Logger.t('Should return last text node position at the line above', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<input>b</p><p>a<input>b</p>'),
-        cGetAbovePositions([ 1, 2 ], 0),
-        cFindClosestHorizontalPosition([ 1, 2 ], 0),
-        cAssertCaretPosition([ 0, 2 ], 0)
-      ]))
-    ])),
+  context('isAtFirstLine', () => {
+    it('Should return true at first visual position in paragraph', () => {
+      setHtml('<p>a</p>');
+      const firstLine = isAtFirstLine([ 0, 0 ], 0);
+      assert.isTrue(firstLine, 'Should be true on first position in paragraph');
+    });
 
-    Logger.t('findClosestHoriontalPosition (below)', GeneralSteps.sequence([
-      Logger.t('Should not return a position since there is no below positions', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cFindClosestHorizontalPosition([ 0, 0 ], 0),
-        cAssertNone
-      ])),
-      Logger.t('Should return first caret position on the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p><p>cd</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cFindClosestHorizontalPosition([ 0, 0 ], 0),
-        cAssertCaretPosition([ 1, 0 ], 0)
-      ])),
-      Logger.t('Should return last caret position on the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>ab</p><p>cd</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cFindClosestHorizontalPosition([ 0, 0 ], 2),
-        cAssertCaretPosition([ 1, 0 ], 2)
-      ])),
-      Logger.t('Should return first indexed caret position on the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p><p><input></p>'),
-        cGetBelowPositions([ 0 ], 0),
-        cFindClosestHorizontalPosition([ 0 ], 0),
-        cAssertCaretPosition([ 1 ], 0)
-      ])),
-      Logger.t('Should return first indexed caret position on the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p><p><input></p>'),
-        cGetBelowPositions([ 0 ], 0),
-        cFindClosestHorizontalPosition([ 0 ], 1),
-        cAssertCaretPosition([ 1 ], 1)
-      ])),
-      Logger.t('Should return first text node position at the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<input>b</p><p>a<input>b</p>'),
-        cGetBelowPositions([ 0, 0 ], 0),
-        cFindClosestHorizontalPosition([ 0, 0 ], 0),
-        cAssertCaretPosition([ 1, 0 ], 0)
-      ])),
-      Logger.t('Should return last text node position at the line below', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<input>b</p><p>a<input>b</p>'),
-        cGetBelowPositions([ 0, 2 ], 0),
-        cFindClosestHorizontalPosition([ 0, 2 ], 0),
-        cAssertCaretPosition([ 1, 2 ], 0)
-      ]))
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+    it('Should return true at second visual position in paragraph', () => {
+      setHtml('<p>a</p>');
+      const firstLine = isAtFirstLine([ 0, 0 ], 1);
+      assert.isTrue(firstLine, 'Should be true on second position in paragraph');
+    });
+
+    it('Should return false at second br line in paragraph', () => {
+      setHtml('<p>a<br>b</p>');
+      const firstLine = isAtFirstLine([ 0, 2 ], 0);
+      assert.isFalse(firstLine, 'Should be false on second line in paragraph');
+    });
+
+    it('Should return false at second pos after br line in paragraph', () => {
+      setHtml('<p>a<br>b</p>');
+      const firstLine = isAtFirstLine([ 0, 2 ], 1);
+      assert.isFalse(firstLine, 'Should be false on second line in paragraph');
+    });
+
+    it('Should return false at second paragraph', () => {
+      setHtml('<p>a</p><p>b</p>');
+      const firstLine = isAtFirstLine([ 1, 0 ], 0);
+      assert.isFalse(firstLine, 'Should be false on second line in paragraph');
+    });
+
+    it('Should return false at second line in a wrapped element', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const firstLine = isAtFirstLine([ 0, 0 ], 4);
+      assert.isFalse(firstLine, 'Should be false on second line in paragraph');
+    });
+
+    it('Should return true at paragraph in td', () => {
+      setHtml('<table><tbody><tr><td><p>a</p></td></tr></tbody></table>');
+      const firstLine = isAtFirstLine([ 0, 0, 0, 0, 0, 0 ], 0);
+      assert.isTrue(firstLine, 'Should be true since it is the first line in td');
+    });
+
+    it('Should return false at second paragraph in td', () => {
+      setHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>');
+      const firstLine = isAtFirstLine([ 0, 0, 0, 0, 1, 0 ], 0);
+      assert.isFalse(firstLine, 'Should be false since it is the second line in td');
+    });
+  });
+
+  context('isAtLastLine', () => {
+    it('Should return true at first visual position in paragraph', () => {
+      setHtml('<p>a</p>');
+      const lastLine = isAtLastLine([ 0, 0 ], 0);
+      assert.isTrue(lastLine, 'Should be true on first position in paragraph');
+    });
+
+    it('Should return true at second visual position in paragraph', () => {
+      setHtml('<p>a</p>');
+      const lastLine = isAtLastLine([ 0, 0 ], 1);
+      assert.isTrue(lastLine, 'Should be true on second position in paragraph');
+    });
+
+    it('Should return false at before first br line in paragraph', () => {
+      setHtml('<p>a<br>b</p>');
+      const lastLine = isAtLastLine([ 0, 0 ], 0);
+      assert.isFalse(lastLine, 'Should be false on first line in paragraph');
+    });
+
+    it('Should return false at first line at second pos before br line in paragraph', () => {
+      setHtml('<p>a<br>b</p>');
+      const lastLine = isAtLastLine([ 0, 0 ], 1);
+      assert.isFalse(lastLine, 'Should be false on first line in paragraph');
+    });
+
+    it('Should return false at first paragraph', () => {
+      setHtml('<p>a</p><p>b</p>');
+      const lastLine = isAtLastLine([ 0, 0 ], 0);
+      assert.isFalse(lastLine, 'Should be false on first paragraph line');
+    });
+
+    it('Should return false at second line in a wrapped element', () => {
+      setHtml('<div style="width: 10px">abc def ghi</div>');
+      const lastLine = isAtLastLine([ 0, 0 ], 6);
+      assert.isFalse(lastLine, 'Should be false on second line in paragraph');
+    });
+
+    it('Should return false at first paragraph in td', () => {
+      setHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>');
+      const lastLine = isAtLastLine([ 0, 0, 0, 0, 0, 0 ], 0);
+      assert.isFalse(lastLine, 'Should be false since it is the first line in td');
+    });
+
+    it('Should return true at second paragraph in td', () => {
+      setHtml('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>');
+      const lastLine = isAtLastLine([ 0, 0, 0, 0, 1, 0 ], 0);
+      assert.isTrue(lastLine, 'Should be true since it is the second line in td');
+    });
+  });
+
+  context('getAbovePositions', () => {
+    it('Should return zero positions since there is no line above', () => {
+      setHtml('<p>a</p>');
+      const positions = getAbovePositions([ 0, 0 ], 1);
+      assertCaretPositions(positions, []);
+    });
+
+    it('Should return three positions for the line above', () => {
+      setHtml('<p>ab</p><p>a</p>');
+      const positions = getAbovePositions([ 1, 0 ], 0);
+      assertCaretPositions(positions, [
+        { path: [ 0, 0 ], offset: 0 },
+        { path: [ 0, 0 ], offset: 1 },
+        { path: [ 0, 0 ], offset: 2 }
+      ]);
+    });
+
+    it('Should return four positions for the line above2', () => {
+      setHtml('<p>a<input>b</p><p>a</p>');
+      const positions = getAbovePositions([ 1, 0 ], 0);
+      assertCaretPositions(positions, [
+        { path: [ 0, 0 ], offset: 0 },
+        { path: [ 0, 0 ], offset: 1 },
+        { path: [ 0 ], offset: 1 },
+        { path: [ 0 ], offset: 2 },
+        { path: [ 0, 2 ], offset: 0 },
+        { path: [ 0, 2 ], offset: 1 }
+      ]);
+    });
+  });
+
+  context('getBelowPositions', () => {
+    it('Should return zero positions since there is no line below', () => {
+      setHtml('<p>a</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      assertCaretPositions(positions, []);
+    });
+
+    it('Should return three positions for the line below', () => {
+      setHtml('<p>a</p><p>ab</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      assertCaretPositions(positions, [
+        { path: [ 1, 0 ], offset: 0 },
+        { path: [ 1, 0 ], offset: 1 },
+        { path: [ 1, 0 ], offset: 2 }
+      ]);
+    });
+
+    it('Should return five positions for the line below', () => {
+      setHtml('<p>a</p><p>a<input>b</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      assertCaretPositions(positions, [
+        { path: [ 1, 0 ], offset: 0 },
+        { path: [ 1, 0 ], offset: 1 },
+        { path: [ 1 ], offset: 1 },
+        { path: [ 1 ], offset: 2 },
+        { path: [ 1, 2 ], offset: 0 },
+        { path: [ 1, 2 ], offset: 1 }
+      ]);
+    });
+  });
+
+  context('findClosestHoriontalPosition (above)', () => {
+    it('Should not return a position since there is no above positions', () => {
+      setHtml('<p>ab</p>');
+      const positions = getAbovePositions([ 0, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 0 ], 0);
+      assertNone(closestPosOpt);
+    });
+
+    it('Should return first caret position on the line above', () => {
+      setHtml('<p>ab</p><p>cd</p>');
+      const positions = getAbovePositions([ 1, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 1, 0 ], 0);
+      assertCaretPosition(closestPosOpt, [ 0, 0 ], 0);
+    });
+
+    it('Should return last caret position on the line above', () => {
+      setHtml('<p>ab</p><p>cd</p>');
+      const positions = getAbovePositions([ 1, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 1, 0 ], 2);
+      assertCaretPosition(closestPosOpt, [ 0, 0 ], 2);
+    });
+
+    it('Should return first indexed caret position on the line above', () => {
+      setHtml('<p><input></p><p><input></p>');
+      const positions = getAbovePositions([ 1 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 1 ], 0);
+      assertCaretPosition(closestPosOpt, [ 0 ], 0);
+    });
+
+    it('Should return last indexed caret position on the line above', () => {
+      setHtml('<p><input></p><p><input></p>');
+      const positions = getAbovePositions([ 1 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 1 ], 1);
+      assertCaretPosition(closestPosOpt, [ 0 ], 1);
+    });
+
+    it('Should return last text node position at the line above', () => {
+      setHtml('<p>a<input>b</p><p>a<input>b</p>');
+      const positions = getAbovePositions([ 1, 2 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 1, 2 ], 0);
+      assertCaretPosition(closestPosOpt, [ 0, 2 ], 0);
+    });
+  });
+
+  context('findClosestHorizontalPosition (below)', () => {
+    it('Should not return a position since there is no below positions', () => {
+      setHtml('<p>ab</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 0 ], 0);
+      assertNone(closestPosOpt);
+    });
+
+    it('Should return first caret position on the line below', () => {
+      setHtml('<p>ab</p><p>cd</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 0 ], 0);
+      assertCaretPosition(closestPosOpt, [ 1, 0 ], 0);
+    });
+
+    it('Should return last caret position on the line below', () => {
+      setHtml('<p>ab</p><p>cd</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 0 ], 2);
+      assertCaretPosition(closestPosOpt, [ 1, 0 ], 2);
+    });
+
+    it('Should return first indexed caret position on the line below', () => {
+      setHtml('<p><input></p><p><input></p>');
+      const positions = getBelowPositions([ 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0 ], 0);
+      assertCaretPosition(closestPosOpt, [ 1 ], 0);
+    });
+
+    it('Should return last indexed caret position on the line below', () => {
+      setHtml('<p><input></p><p><input></p>');
+      const positions = getBelowPositions([ 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0 ], 1);
+      assertCaretPosition(closestPosOpt, [ 1 ], 1);
+    });
+
+    it('Should return first text node position at the line below', () => {
+      setHtml('<p>a<input>b</p><p>a<input>b</p>');
+      const positions = getBelowPositions([ 0, 0 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 0 ], 0);
+      assertCaretPosition(closestPosOpt, [ 1, 0 ], 0);
+    });
+
+    it('Should return last text node position at the line below', () => {
+      setHtml('<p>a<input>b</p><p>a<input>b</p>');
+      const positions = getBelowPositions([ 0, 2 ], 0);
+      const closestPosOpt = findClosestHorizontalPosition(positions, [ 0, 2 ], 0);
+      assertCaretPosition(closestPosOpt, [ 1, 2 ], 0);
+    });
+  });
 });

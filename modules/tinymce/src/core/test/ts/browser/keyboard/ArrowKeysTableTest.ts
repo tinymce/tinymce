@@ -1,14 +1,17 @@
-import { ApproxStructure, Chain, GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Keyboard, Keys, StructAssert } from '@ephox/agar';
+import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { ActionChains, ApiChains, TinyLoader } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success, failure) => {
+describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
   const browser = PlatformDetection.detect().browser;
-
-  Theme();
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
   const table = (html: string) => ApproxStructure.fromHtml('<table><tbody><tr><td>' + html + '</td></tr></tbody></table>');
   const block = ApproxStructure.fromHtml('<p><br></p>');
@@ -22,210 +25,227 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysTableTest', (success,
   const caretAfter = Fun.curry(caret, 'after');
   const visualCaretBefore = Fun.curry(visualCaret, true);
   const visualCaretAfter = Fun.curry(visualCaret, false);
-  const buildBody = (children) => ApproxStructure.build((s, _str, _arr) => s.element('body', { children }));
+  const buildBody = (children: StructAssert[]) => ApproxStructure.build((s, _str, _arr) => s.element('body', { children }));
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, [
-      Logger.t('FakeCaret before/after table', GeneralSteps.sequence(browser.isEdge() || browser.isFirefox() ? [
-        Logger.t('Move fake caret left before table', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 0),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.left()),
-          ApiChains.cAssertContentStructure(buildBody([ caretBefore(), table('1'), visualCaretBefore() ])),
-          ApiChains.cAssertSelection([ 0 ], 0, [ 0 ], 0)
-        ])),
-        Logger.t('Move fake caret right after table', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 1),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.right()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), caretAfter(), visualCaretAfter() ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0)
-        ])),
-        Logger.t('Move fake caret right after table then right again before other table', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 1),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), table('2') ])),
-          ActionChains.cContentKeystroke(Keys.right()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0),
-          ActionChains.cContentKeystroke(Keys.right()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0)
-        ])),
-        Logger.t('Move fake caret left before table then left again after other table', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 1, 0, 0, 0, 0 ], 0),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), table('2') ])),
-          ActionChains.cContentKeystroke(Keys.left()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0),
-          ActionChains.cContentKeystroke(Keys.left()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0)
-        ])),
-        Logger.t('Move fake up for when table is first element', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 0),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertContentStructure(buildBody([ block, table('1') ])),
-          ApiChains.cAssertSelection([ 0 ], 0, [ 0 ], 0)
-        ])),
-        Logger.t('Move fake down for when table is last element', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 1),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), block ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0)
-        ])),
-        Logger.t('Move fake up for when table is first element but not when caret is not as start', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 1),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertContentStructure(buildBody([ block, table('1') ])),
-          ApiChains.cAssertSelection([ 0 ], 0, [ 0 ], 0)
-        ])),
-        Logger.t('Move fake down for when table is last element but not when caret is not as end', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent('<table><tbody><tr><td>1</td></tr></tbody></table>'),
-          ApiChains.cSetCursor([ 0, 0, 0, 0, 0 ], 0),
-          ApiChains.cAssertContentStructure(buildBody([ table('1') ])),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertContentStructure(buildBody([ table('1'), block ])),
-          ApiChains.cAssertSelection([ 1 ], 0, [ 1 ], 0)
-        ])) ] : []
-      )),
+  beforeEach(() => {
+    hook.editor().focus();
+  });
 
-      Logger.t('Table cell navigation', GeneralSteps.sequence([
-        Logger.t('Should move to the cell above the current cell on key up', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>2</td><td>3</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 1, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertSelection([ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0)
-        ])),
-        Logger.t('Should move to the cell below the current cell on key down', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>2</td><td>3</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 0, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertSelection([ 0, 0, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 0 ], 0)
-        ])),
-        Logger.t('Should move to the content above when the caret is a first table row', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <p>a<p>
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>2</td><td>3</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 1, 0, 0, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('Should move to the content below if the caret is a last table row', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>2</td><td>3</td></tr>
-                </tbody>
-              </table>
-              <p>a<p>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 1, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertSelection([ 1, 0 ], 1, [ 1, 0 ], 1)
-        ])),
-        Logger.t('Should not move down if the caret is on first line in table cell <br>', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2<br>3</td></tr>
-                  <tr><td>4</td><td>5</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 0, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertSelection([ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0)
-        ])),
-        Logger.t('Should not move up if the caret is on last line in table cell <br>', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>3</td><td>4<br>5</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 1, 1, 2 ], 0),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertSelection([ 0, 0, 1, 1, 2 ], 0, [ 0, 0, 1, 1, 2 ], 0)
-        ])),
-        Logger.t('Should not move down if the caret is on first line in table cell <p>', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td><p>2</p><p>3</p></td></tr>
-                  <tr><td>4</td><td>5</td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 0, 1, 0, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.down()),
-          ApiChains.cAssertSelection([ 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 1, 0, 0 ], 0)
-        ])),
-        Logger.t('Should not move up if the caret is on last line in table cell <p>', Chain.asStep(editor, [
-          ApiChains.cFocus,
-          ApiChains.cSetContent(`
-              <table>
-                <tbody>
-                  <tr><td>1</td><td>2</td></tr>
-                  <tr><td>3</td><td><p>4</p><p>5</p></td></tr>
-                </tbody>
-              </table>
-            `),
-          ApiChains.cSetCursor([ 0, 0, 1, 1, 1, 0 ], 0),
-          ActionChains.cContentKeystroke(Keys.up()),
-          ApiChains.cAssertSelection([ 0, 0, 1, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 1, 0 ], 0)
-        ]))
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
-}
-);
+  context('FakeCaret before/after table', () => {
+    before(function () {
+      if (!browser.isEdge() && !browser.isFirefox()) {
+        this.skip();
+      }
+    });
+
+    it('Move fake caret left before table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ caretBefore(), table('1'), visualCaretBefore() ]));
+      TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    });
+
+    it('Move fake caret right after table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), visualCaretAfter() ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+
+    it('Move fake caret right after table then right again before other table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), table('2') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+
+    it('Move fake caret left before table then left again after other table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), table('2') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+
+    it('Move fake up for when table is first element', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ block, table('1') ]));
+      TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    });
+
+    it('Move fake down for when table is last element', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), block ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+
+    it('Move fake up for when table is first element but not when caret is not as start', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ block, table('1') ]));
+      TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    });
+
+    it('Move fake down for when table is last element but not when caret is not as end', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), block ]));
+      TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
+    });
+  });
+
+  context('Table cell navigation', () => {
+    it('Should move to the cell above the current cell on key up', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+          <table>
+            <tbody>
+              <tr><td>1</td><td>2</td></tr>
+              <tr><td>2</td><td>3</td></tr>
+            </tbody>
+          </table>
+        `);
+      TinySelections.setCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
+    });
+
+    it('Should move to the cell below the current cell on key down', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>3</td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 0 ], 0);
+    });
+
+    it('Should move to the content above when the caret is a first table row', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <p>a<p>
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>3</td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 1, 0, 0, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Should move to the content below if the caret is a last table row', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>3</td></tr>
+          </tbody>
+        </table>
+        <p>a<p>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    });
+
+    it('Should not move down if the caret is on first line in table cell <br>', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2<br>3</td></tr>
+            <tr><td>4</td><td>5</td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
+    });
+
+    it('Should not move up if the caret is on last line in table cell <br>', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>3</td><td>4<br>5</td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 1, 1, 2 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 2 ], 0, [ 0, 0, 1, 1, 2 ], 0);
+    });
+
+    it('Should not move down if the caret is on first line in table cell <p>', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td><p>2</p><p>3</p></td></tr>
+            <tr><td>4</td><td>5</td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 1, 0, 0 ], 0);
+    });
+
+    it('Should not move up if the caret is on last line in table cell <p>', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table>
+          <tbody>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>3</td><td><p>4</p><p>5</p></td></tr>
+          </tbody>
+        </table>
+      `);
+      TinySelections.setCursor(editor, [ 0, 0, 1, 1, 1, 0 ], 0);
+      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 1, 0 ], 0);
+    });
+  });
+});

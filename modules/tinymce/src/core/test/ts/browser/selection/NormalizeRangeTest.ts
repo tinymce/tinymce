@@ -1,314 +1,340 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as NormalizeRange from 'tinymce/core/selection/NormalizeRange';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.NormalizeRangeTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  const assertRange = (root, range, startPath, startOffset, endPath, endOffset) => {
+  const assertRange = (root: Node, range: Optional<Range>, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     const sc = Hierarchy.follow(SugarElement.fromDom(root), startPath).getOrDie();
     const ec = Hierarchy.follow(SugarElement.fromDom(root), endPath).getOrDie();
     const actualRange = range.getOrDie('Should be some');
 
     Assertions.assertDomEq('Should be expected start container', sc, SugarElement.fromDom(actualRange.startContainer));
-    Assertions.assertEq('Should be expected start offset', startOffset, actualRange.startOffset);
+    assert.equal(actualRange.startOffset, startOffset, 'Should be expected start offset');
     Assertions.assertDomEq('Should be expected end container', ec, SugarElement.fromDom(actualRange.endContainer));
-    Assertions.assertEq('Should be expected end offset', endOffset, actualRange.endOffset);
+    assert.equal(actualRange.endOffset, endOffset, 'Should be expected end offset');
   };
 
-  const cSetHtml = (html) => {
-    return Chain.op(() => {
-      viewBlock.update(html);
+  const setHtml = viewBlock.update;
+
+  const normalizeRange = (startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
+    const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
+    const rng = document.createRange();
+
+    rng.setStart(sc.dom, startOffset);
+    rng.setEnd(ec.dom, endOffset);
+
+    return NormalizeRange.normalize(DOMUtils(document, { root_element: viewBlock.get() }), rng);
+  };
+
+  const assertRangeNone = (range: Optional<Range>) => {
+    assert.isTrue(range.isNone(), 'Should be none');
+  };
+
+  context('Non normalize non collapsed selections', () => {
+    it('Should not normalize on indexed selected at root level', () => {
+      setHtml('<input>');
+      const range = normalizeRange( [], 0, [], 1);
+      assertRangeNone(range);
     });
-  };
 
-  const cNormalizeRange = (startPath, startOffset, endPath, endOffset) => {
-    return Chain.mapper((viewBlock: any) => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
-      const rng = document.createRange();
-
-      rng.setStart(sc.dom, startOffset);
-      rng.setEnd(ec.dom, endOffset);
-
-      return NormalizeRange.normalize(DOMUtils(document, { root_element: viewBlock.get() }), rng);
+    it('Should not normalize if selection is around a caret container', () => {
+      setHtml('<p data-mce-caret="before">b</p>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRangeNone(range);
     });
-  };
 
-  const cAssertRange = (startPath, startOffset, endPath, endOffset) => {
-    return Chain.op((range) => {
-      assertRange(viewBlock.get(), range, startPath, startOffset, endPath, endOffset);
+    it('Should not normalize if selection ends after table', () => {
+      setHtml('<p>a</p><table><tr><td>b</td></tr></table>');
+      const range = normalizeRange([ 0, 0 ], 0, [], 2);
+      assertRangeNone(range);
     });
-  };
 
-  const cAssertRangeNone = Chain.op((range: Optional<any>) => {
-    Assertions.assertEq('Should be none', true, range.isNone());
+    it('Should not normalize into pre', () => {
+      setHtml('<pre>a</pre>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into code', () => {
+      setHtml('<code>a</code>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize to before/after table', () => {
+      setHtml('<table><tr><td>a</td></tr></table>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRangeNone(range);
+    });
   });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('Non normalize non collapsed selections', GeneralSteps.sequence([
-      Logger.t('Should not normalize on indexed selected at root level', Chain.asStep(viewBlock, [
-        cSetHtml('<input>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize if selection is around a caret container', Chain.asStep(viewBlock, [
-        cSetHtml('<p data-mce-caret="before">b</p>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize if selection ends after table', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><table><tr><td>b</td></tr></table>'),
-        cNormalizeRange([ 0, 0 ], 0, [], 2),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into pre', Chain.asStep(viewBlock, [
-        cSetHtml('<pre>a</pre>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into code', Chain.asStep(viewBlock, [
-        cSetHtml('<code>a</code>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize to before/after table', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tr><td>a</td></tr></table>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRangeNone
-      ]))
-    ])),
+  context('Non normalize caret positions', () => {
+    it('Should not normalize on a caret at start of text node', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([ 0, 0 ], 0, [ 0, 0 ], 0);
+      assertRangeNone(range);
+    });
 
-    Logger.t('Non normalize caret positions', GeneralSteps.sequence([
-      Logger.t('Should not normalize on a caret at start of text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([ 0, 0 ], 0, [ 0, 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret at middle of text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([ 0, 0 ], 1, [ 0, 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret at end of text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([ 0, 0 ], 1, [ 0, 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret before input', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p>'),
-        cNormalizeRange([ 0 ], 0, [ 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret between inputs', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input><input></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret after input', Chain.asStep(viewBlock, [
-        cSetHtml('<p><input></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret after image', Chain.asStep(viewBlock, [
-        cSetHtml('<p><img src="about: blank"></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize on a caret before image', Chain.asStep(viewBlock, [
-        cSetHtml('<p><img src="about: blank"></p>'),
-        cNormalizeRange([ 0 ], 0, [ 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize before br', Chain.asStep(viewBlock, [
-        cSetHtml('<p><br></p>'),
-        cNormalizeRange([ 0 ], 0, [ 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into previous block with format', Chain.asStep(viewBlock, [
-        cSetHtml('<div><p><b>a</b></p>b</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into previous format inline with input', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b><input></b>b</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into previous cef inline', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b>b</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into cef block', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p>'),
-        cNormalizeRange([], 0, [], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into previous anchor inline', Chain.asStep(viewBlock, [
-        cSetHtml('<p><a href="#">a</a>b</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize out of a caret container', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b><span data-mce-caret="before">b</span></p>'),
-        cNormalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize out of a caret container', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b>' + Zwsp.ZWSP + '</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize when caret is at start of text node', Chain.asStep(viewBlock, [
-        cSetHtml('a'),
-        cNormalizeRange([ 0 ], 0, [ 0 ], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize when caret is at end of text node', Chain.asStep(viewBlock, [
-        cSetHtml('a'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize when caret is at middle of text node', Chain.asStep(viewBlock, [
-        cSetHtml('ab'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize when caret is before text node', Chain.asStep(viewBlock, [
-        cSetHtml('a'),
-        cNormalizeRange([], 0, [], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize when caret is after text node', Chain.asStep(viewBlock, [
-        cSetHtml('a'),
-        cNormalizeRange([], 1, [], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into inline elements if target inline pos is a br', Chain.asStep(viewBlock, [
-        cSetHtml('<p><i><b><br /></b></i><br /></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize from after double br', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br /><br /></p>'),
-        cNormalizeRange([ 0 ], 3, [ 0 ], 3),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into first text node', Chain.asStep(viewBlock, [
-        cSetHtml('a<b>b</b>c'),
-        cNormalizeRange([], 0, [], 0),
-        cAssertRangeNone
-      ])),
-      Logger.t('Should not normalize into last text node', Chain.asStep(viewBlock, [
-        cSetHtml('a<b>b</b>c'),
-        cNormalizeRange([], 3, [], 3),
-        cAssertRangeNone
-      ]))
-    ])),
+    it('Should not normalize on a caret at middle of text node', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([ 0, 0 ], 1, [ 0, 0 ], 1);
+      assertRangeNone(range);
+    });
 
-    Logger.t('Normalize caret positions', GeneralSteps.sequence([
-      Logger.t('Should normalize caret and lean left from text node into previous inline element text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b>b</p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRange([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize caret and lean left from text node into previous text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<b>b</b></p>'),
-        cNormalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0),
-        cAssertRange([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize caret and lean left from inline element text node into previous inline element text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b><i>b</i></p>'),
-        cNormalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0),
-        cAssertRange([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize caret and lean left from before br in inline element into previous inline element text node', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b><i><br></i></p>'),
-        cNormalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0),
-        cAssertRange([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize on a caret between blocks', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p>'),
-        cNormalizeRange([], 1, [], 1),
-        cAssertRange([ 1, 0 ], 0, [ 1, 0 ], 0)
-      ])),
-      Logger.t('Should normalize from after br to before br', Chain.asStep(viewBlock, [
-        cSetHtml('<p><br /></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRange([ 0 ], 0, [ 0 ], 0)
-      ])),
-      Logger.t('Should normalize from after br to before br', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<br /></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRange([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize before paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([], 0, [], 0),
-        cAssertRange([ 0, 0 ], 0, [ 0, 0 ], 0)
-      ])),
-      Logger.t('Should normalize after paragraph', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([], 1, [], 1),
-        cAssertRange([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize into caret container', Chain.asStep(viewBlock, [
-        cSetHtml('<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRange([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize into empty inline element before', Chain.asStep(viewBlock, [
-        cSetHtml('<p><i><b></b></i><br /></p>'),
-        cNormalizeRange([ 0 ], 1, [ 0 ], 1),
-        cAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0)
-      ]))
-    ])),
+    it('Should not normalize on a caret at end of text node', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([ 0, 0 ], 1, [ 0, 0 ], 1);
+      assertRangeNone(range);
+    });
 
-    Logger.t('Normalize expanded selections', GeneralSteps.sequence([
-      Logger.t('Should normalize to before/after image', Chain.asStep(viewBlock, [
-        cSetHtml('<p><img src="about:blank "></p>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRange([ 0 ], 0, [ 0 ], 1)
-      ])),
-      Logger.t('Should normalize to text node in p', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cNormalizeRange([], 0, [], 1),
-        cAssertRange([ 0, 0 ], 0, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Should normalize to text node in middle p', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p>b</p><p>c</p>'),
-        cNormalizeRange([], 1, [], 2),
-        cAssertRange([ 1, 0 ], 0, [ 1, 0 ], 1)
-      ])),
-      Logger.t('Should normalize start from end of inline to start of next inline element', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b>a</b><i>b</i></p>'),
-        cNormalizeRange([ 0, 0, 0 ], 1, [ 0, 1, 0 ], 1),
-        cAssertRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 1)
-      ]))
-    ])),
+    it('Should not normalize on a caret before input', () => {
+      setHtml('<p><input></p>');
+      const range = normalizeRange([ 0 ], 0, [ 0 ], 0);
+      assertRangeNone(range);
+    });
 
-    Logger.t('Normalize on document', Step.sync(() => {
-      const doc = document.implementation.createHTMLDocument('');
-      const rng = document.createRange();
-      const dom = DOMUtils(doc, { root_element: doc.body });
+    it('Should not normalize on a caret between inputs', () => {
+      setHtml('<p><input><input></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
 
-      doc.body.innerHTML = '<p>a</p>';
+    it('Should not normalize on a caret after input', () => {
+      setHtml('<p><input></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
 
-      rng.setStart(document, 0);
-      rng.setEnd(document, 0);
+    it('Should not normalize on a caret after image', () => {
+      setHtml('<p><img src="about: blank"></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
 
-      const normRng = NormalizeRange.normalize(dom, rng);
-      assertRange(doc.body, normRng, [ 0, 0 ], 0, [ 0, 0 ], 0);
-    }))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+    it('Should not normalize on a caret before image', () => {
+      setHtml('<p><img src="about: blank"></p>');
+      const range = normalizeRange([ 0 ], 0, [ 0 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize before br', () => {
+      setHtml('<p><br></p>');
+      const range = normalizeRange([ 0 ], 0, [ 0 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into previous block with format', () => {
+      setHtml('<div><p><b>a</b></p>b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into previous format inline with input', () => {
+      setHtml('<p><b><input></b>b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into previous cef inline', () => {
+      setHtml('<p><b contenteditable="false">a</b>b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into cef block', () => {
+      setHtml('<p contenteditable="false">a</p>');
+      const range = normalizeRange([], 0, [], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into previous anchor inline', () => {
+      setHtml('<p><a href="#">a</a>b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize out of a span caret container', () => {
+      setHtml('<p><b>a</b><span data-mce-caret="before">b</span></p>');
+      const range = normalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize out of a zwsp caret container', () => {
+      setHtml('<p><b>a</b>' + Zwsp.ZWSP + '</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize when caret is at start of text node', () => {
+      setHtml('a');
+      const range = normalizeRange([ 0 ], 0, [ 0 ], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize when caret is at end of text node', () => {
+      setHtml('a');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize when caret is at middle of text node', () => {
+      setHtml('ab');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize when caret is before text node', () => {
+      setHtml('a');
+      const range = normalizeRange([], 0, [], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize when caret is after text node', () => {
+      setHtml('a');
+      const range = normalizeRange([], 1, [], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into inline elements if target inline pos is a br', () => {
+      setHtml('<p><i><b><br /></b></i><br /></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize from after double br', () => {
+      setHtml('<p>a<br /><br /></p>');
+      const range = normalizeRange([ 0 ], 3, [ 0 ], 3);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into first text node', () => {
+      setHtml('a<b>b</b>c');
+      const range = normalizeRange([], 0, [], 0);
+      assertRangeNone(range);
+    });
+
+    it('Should not normalize into last text node', () => {
+      setHtml('a<b>b</b>c');
+      const range = normalizeRange([], 3, [], 3);
+      assertRangeNone(range);
+    });
+  });
+
+  context('Normalize caret positions', () => {
+    it('Should normalize caret and lean left from text node into previous inline element text node', () => {
+      setHtml('<p><b>a</b>b</p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('Should normalize caret and lean left from text node into previous text node', () => {
+      setHtml('<p>a<b>b</b></p>');
+      const range = normalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+      assertRange(viewBlock.get(), range, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Should normalize caret and lean left from inline element text node into previous inline element text node', () => {
+      setHtml('<p><b>a</b><i>b</i></p>');
+      const range = normalizeRange([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+      assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('Should normalize caret and lean left from before br in inline element into previous inline element text node', () => {
+      setHtml('<p><b>a</b><i><br></i></p>');
+      const range = normalizeRange([ 0, 1 ], 0, [ 0, 1 ], 0);
+      assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('Should normalize on a caret between blocks', () => {
+      setHtml('<p>a</p><p>b</p>');
+      const range = normalizeRange([], 1, [], 1);
+      assertRange(viewBlock.get(), range, [ 1, 0 ], 0, [ 1, 0 ], 0);
+    });
+
+    it('Should normalize from after br to before br when only child', () => {
+      setHtml('<p><br /></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRange(viewBlock.get(), range, [ 0 ], 0, [ 0 ], 0);
+    });
+
+    it('Should normalize from after br to before br', () => {
+      setHtml('<p>a<br /></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRange(viewBlock.get(), range, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Should normalize before paragraph', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([], 0, [], 0);
+      assertRange(viewBlock.get(), range, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    });
+
+    it('Should normalize after paragraph', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([], 1, [], 1);
+      assertRange(viewBlock.get(), range, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Should normalize into caret container', () => {
+      setHtml('<p><span id="_mce_caret">' + Zwsp.ZWSP + '</span><br /></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('Should normalize into empty inline element before', () => {
+      setHtml('<p><i><b></b></i><br /></p>');
+      const range = normalizeRange([ 0 ], 1, [ 0 ], 1);
+      assertRange(viewBlock.get(), range, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
+    });
+  });
+
+  context('Normalize expanded selections', () => {
+    it('Should normalize to before/after image', () => {
+      setHtml('<p><img src="about:blank "></p>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRange(viewBlock.get(), range, [ 0 ], 0, [ 0 ], 1);
+    });
+
+    it('Should normalize to text node in p', () => {
+      setHtml('<p>a</p>');
+      const range = normalizeRange([], 0, [], 1);
+      assertRange(viewBlock.get(), range, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    });
+
+    it('Should normalize to text node in middle p', () => {
+      setHtml('<p>a</p><p>b</p><p>c</p>');
+      const range = normalizeRange([], 1, [], 2);
+      assertRange(viewBlock.get(), range, [ 1, 0 ], 0, [ 1, 0 ], 1);
+    });
+
+    it('Should normalize start from end of inline to start of next inline element', () => {
+      setHtml('<p><b>a</b><i>b</i></p>');
+      const range = normalizeRange([ 0, 0, 0 ], 1, [ 0, 1, 0 ], 1);
+      assertRange(viewBlock.get(), range, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 1);
+    });
+  });
+
+  it('Normalize on document', () => {
+    const doc = document.implementation.createHTMLDocument('');
+    const rng = document.createRange();
+    const dom = DOMUtils(doc, { root_element: doc.body });
+
+    doc.body.innerHTML = '<p>a</p>';
+
+    rng.setStart(document, 0);
+    rng.setEnd(document, 0);
+
+    const normRng = NormalizeRange.normalize(dom, rng);
+    assertRange(doc.body, normRng, [ 0, 0 ], 0, [ 0, 0 ], 0);
+  });
 });

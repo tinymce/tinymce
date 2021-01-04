@@ -1,14 +1,17 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  Theme();
+describe('browser.tinymce.core.ForceBlocksTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
   const pressArrowKey = (editor: Editor) => {
     const dom = editor.dom, target = editor.selection.getNode();
@@ -19,66 +22,74 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', (success, failure) =>
     dom.fire(target, 'keyup', evt);
   };
 
-  suite.test('Wrap single root text node in P', (editor) => {
+  it('Wrap single root text node in P', () => {
+    const editor = hook.editor();
     editor.focus();
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abcd</p>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abcd</p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Wrap single root text node in P with attrs', (editor) => {
+  it('Wrap single root text node in P with attrs', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block_attrs = { class: 'class1' };
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
-    LegacyUnit.equal(editor.getContent(), '<p class="class1">abcd</p>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<p class="class1">abcd</p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
     delete editor.settings.forced_root_block_attrs;
   });
 
-  suite.test('Wrap single root text node in P but not table sibling', (editor) => {
+  it('Wrap single root text node in P but not table sibling', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = 'abcd<table><tr><td>x</td></tr></table>';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abcd</p><table><tbody><tr><td>x</td></tr></tbody></table>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p>abcd</p><table><tbody><tr><td>x</td></tr></tbody></table>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Textnodes with only whitespace should not be wrapped new paragraph', (editor) => {
+  it('Textnodes with only whitespace should not be wrapped new paragraph', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a</p>      <p>b</p>\n<p>c</p>&nbsp;<p>d</p>      x<p>e</p>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getContent()), '<p>a</p><p>b</p><p>c</p><p>d</p><p>x</p><p>e</p>');
+    assert.equal(HtmlUtils.cleanHtml(editor.getContent()), '<p>a</p><p>b</p><p>c</p><p>d</p><p>x</p><p>e</p>');
   });
 
-  suite.test('Do not wrap whitespace textnodes between inline elements', (editor) => {
+  it('Do not wrap whitespace textnodes between inline elements', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = 'a <strong>b</strong> <strong>c</strong>';
     LegacyUnit.setSelection(editor, 'strong', 0);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getContent()), '<p>a <strong>b</strong> <strong>c</strong></p>');
+    assert.equal(HtmlUtils.cleanHtml(editor.getContent()), '<p>a <strong>b</strong> <strong>c</strong></p>');
   });
 
-  suite.test('Wrap root em in P but not table sibling', (editor) => {
+  it('Wrap root em in P but not table sibling', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<em>abcd</em><table><tr><td>x</td></tr></table>';
     LegacyUnit.setSelection(editor, 'em', 2);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><em>abcd</em></p><table><tbody><tr><td>x</td></tr></tbody></table>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'EM');
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<p><em>abcd</em></p><table><tbody><tr><td>x</td></tr></tbody></table>');
+    assert.equal(editor.selection.getNode().nodeName, 'EM');
   });
 
-  suite.test('Wrap single root text node in DIV', (editor) => {
+  it('Wrap single root text node in DIV', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block = 'div';
     editor.getBody().innerHTML = 'abcd';
     LegacyUnit.setSelection(editor, 'body', 2);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<div>abcd</div>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DIV');
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<div>abcd</div>');
+    assert.equal(editor.selection.getNode().nodeName, 'DIV');
     delete editor.settings.forced_root_block;
   });
 
-  suite.test('Remove empty root text nodes', (editor) => {
+  it('Remove empty root text nodes', () => {
+    const editor = hook.editor();
     const body = editor.getBody();
 
     editor.settings.forced_root_block = 'div';
@@ -92,23 +103,16 @@ UnitTest.asynctest('browser.tinymce.core.ForceBlocksTest', (success, failure) =>
     editor.selection.setRng(rng);
 
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(body.innerHTML), '<div>abcd</div><div>abcd</div>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DIV');
-    LegacyUnit.equal(body.childNodes.length, 2);
+    assert.equal(HtmlUtils.cleanHtml(body.innerHTML), '<div>abcd</div><div>abcd</div>');
+    assert.equal(editor.selection.getNode().nodeName, 'DIV');
+    assert.lengthOf(body.childNodes, 2);
   });
 
-  suite.test('Wrap single root text node in P but not table sibling', (editor) => {
+  it('Do not wrap bookmark spans', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<span data-mce-type="bookmark">a</span>';
     LegacyUnit.setSelection(editor, 'body', 0);
     pressArrowKey(editor);
-    LegacyUnit.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
+    assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

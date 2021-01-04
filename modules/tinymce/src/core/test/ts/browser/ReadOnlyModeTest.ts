@@ -1,37 +1,127 @@
-import { ApproxStructure, Chain, Log, NamedChain, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Mouse, UiFinder } from '@ephox/agar';
+import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import * as Readonly from 'tinymce/core/mode/Readonly';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import { TinyAssertions, TinySelections } from '../../../../../../mcagar/src/main/ts/ephox/mcagar/api/Main';
 
 const tOptional = OptionalInstances.tOptional;
 
-UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) => {
-  Theme();
-  TablePlugin();
+describe('browser.tinymce.core.ReadOnlyModeTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar: 'bold',
+    plugins: 'table',
+    statusbar: false
+  }, [ Theme, TablePlugin ]);
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const eDoc = SugarElement.fromDom(editor.getDoc());
+  const setMode = (editor: Editor, mode: string) => {
+    editor.mode.set(mode);
+  };
 
-    const sSetMode = (mode: string) => Step.label('sSetMode: setting the editor mode to ' + mode, Step.sync(() => {
-      editor.mode.set(mode);
-    }));
+  const assertNestedContentEditableTrueDisabled = (editor: Editor, state: boolean, offscreen: boolean) => TinyAssertions.assertContentStructure(editor,
+    ApproxStructure.build((s, str, _arr) => {
+      const attrs = state ? {
+        'contenteditable': str.is('false'),
+        'data-mce-contenteditable': str.is('true')
+      } : {
+        'contenteditable': str.is('true'),
+        'data-mce-contenteditable': str.none()
+      };
 
-    const sAssertNestedContentEditableTrueDisabled = (state: boolean, offscreen: boolean) => tinyApis.sAssertContentStructure(
+      return s.element('body', {
+        children: [
+          s.element('div', {
+            attrs: {
+              contenteditable: str.is('false')
+            },
+            children: [
+              s.text(str.is('a')),
+              s.element('span', {
+                attrs
+              }),
+              s.text(str.is('c'))
+            ]
+          }),
+          ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
+        ]
+      });
+    })
+  );
+
+  const assertFakeSelection = (editor: Editor, expectedState: boolean) => {
+    assert.equal(editor.selection.getNode().hasAttribute('data-mce-selected'), expectedState, 'Selected element should have expected state');
+  };
+
+  const assertResizeBars = (editor: Editor, expectedState: boolean) => {
+    SelectorFind.descendant(Traverse.documentElement(TinyDom.document(editor)), '.ephox-snooker-resizer-bar').fold(
+      () => {
+        assert.isFalse(expectedState, 'Was expecting to find resize bars');
+      },
+      (bar) => {
+        const actualDisplay = Css.get(bar, 'display');
+        const expectedDisplay = expectedState ? 'block' : 'none';
+        assert.equal(actualDisplay, expectedDisplay, 'Should be expected display state on resize bar');
+      }
+    );
+  };
+
+  const mouseOverTable = (editor: Editor) => {
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table').getOrDie();
+    Mouse.mouseOver(table);
+  };
+
+  const assertToolbarDisabled = (expectedState: boolean) => {
+    const elm = UiFinder.findIn(SugarBody.body(), 'button[title="Bold"]').getOrDie();
+    assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Button should have expected disabled state');
+  };
+
+  const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
+    const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
+    const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
+    Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
+  };
+
+  it('TBA: Switching to readonly mode while having cef selection should remove fake selection', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.setContent('<div contenteditable="false">CEF</div>');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertFakeSelection(editor, true);
+    setMode(editor, 'readonly');
+    assertFakeSelection(editor, false);
+    setMode(editor, 'design');
+    assertFakeSelection(editor, true);
+  });
+
+  it('TBA: Selecting cef element while in readonly mode should not add fake selection', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.setContent('<div contenteditable="false">CEF</div>');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertFakeSelection(editor, true);
+    setMode(editor, 'readonly');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertFakeSelection(editor, false);
+    setMode(editor, 'design');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertFakeSelection(editor, true);
+  });
+
+  it('TBA: Setting caret before cef in editor while in readonly mode should not render fake caret', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.setContent('<div contenteditable="false">CEF</div>');
+    setMode(editor, 'readonly');
+    TinySelections.setCursor(editor, [], 0);
+    TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
-        const attrs = state ? {
-          'contenteditable': str.is('false'),
-          'data-mce-contenteditable': str.is('true')
-        } : {
-          'contenteditable': str.is('true'),
-          'data-mce-contenteditable': str.none()
-        };
-
         return s.element('body', {
           children: [
             s.element('div', {
@@ -39,257 +129,167 @@ UnitTest.asynctest('browser.tinymce.core.ReadOnlyModeTest', (success, failure) =
                 contenteditable: str.is('false')
               },
               children: [
-                s.text(str.is('a')),
-                s.element('span', {
-                  attrs
-                }),
-                s.text(str.is('c'))
+                s.text(str.is('CEF'))
               ]
-            }),
-            ...offscreen ? [ s.element('div', {}) ] : [] // Offscreen cef clone
+            })
           ]
         });
       })
     );
-
-    const sAssertFakeSelection = (expectedState: boolean) => Step.sync(() => {
-      Assert.eq('Selected element should have expected state', expectedState, editor.selection.getNode().hasAttribute('data-mce-selected'));
-    });
-
-    const sAssertResizeBars = (expectedState: boolean) => Step.sync(() => {
-      SelectorFind.descendant(SugarElement.fromDom(editor.getDoc().documentElement), '.ephox-snooker-resizer-bar').fold(
-        () => {
-          Assert.eq('Was expecting to find resize bars', expectedState, false);
-        },
-        (bar) => {
-          const actualDisplay = Css.get(bar, 'display');
-          const expectedDisplay = expectedState ? 'block' : 'none';
-          Assert.eq('Should be expected display state on resize bar', expectedDisplay, actualDisplay);
-        }
-      );
-    });
-
-    const sMouseOverTable = Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-      UiFinder.cFindIn('table'),
-      Mouse.cMouseOver
-    ]);
-
-    const sAssertToolbarDisabled = (expectedState: boolean) => Chain.asStep(SugarBody.body(), [
-      UiFinder.cFindIn('button[title="Bold"]'),
-      Chain.op((elm) => {
-        Assert.eq('Button should have expected disabled state', expectedState, Class.has(elm, 'tox-tbtn--disabled'));
+    setMode(editor, 'design');
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str, arr) => {
+        return s.element('body', {
+          children: [
+            s.element('p', {
+              attrs: {
+                'data-mce-caret': str.is('before'),
+                'data-mce-bogus': str.is('all')
+              },
+              children: [
+                s.element('br', {})
+              ]
+            }),
+            s.element('div', {
+              attrs: {
+                contenteditable: str.is('false')
+              },
+              children: [
+                s.text(str.is('CEF'))
+              ]
+            }),
+            s.element('div', {
+              attrs: {
+                'data-mce-bogus': str.is('all')
+              },
+              classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
+            })
+          ]
+        });
       })
-    ]);
+    );
+  });
 
-    const sAssertHrefOpt = (selector: string, expectedHref: Optional<string>) => Step.sync(() => {
-      const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-      const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
-      Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
-    });
+  it('TBA: Switching to readonly mode on content with nested contenteditable=true should toggle them to contenteditable=false', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertFakeSelection(editor, true);
+    setMode(editor, 'readonly');
+    assertNestedContentEditableTrueDisabled(editor, true, true);
+    TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    assertFakeSelection(editor, false);
+    setMode(editor, 'design');
+    TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    assertNestedContentEditableTrueDisabled(editor, false, true);
+  });
 
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Swiching to readonly mode while having cef selection should remove fake selection', [
-        sSetMode('design'),
-        tinyApis.sSetContent('<div contenteditable="false">CEF</div>'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertFakeSelection(true),
-        sSetMode('readonly'),
-        sAssertFakeSelection(false),
-        sSetMode('design'),
-        sAssertFakeSelection(true)
-      ]),
-      Log.stepsAsStep('TBA', 'Selecting cef element while in readonly mode should not add fake selection', [
-        sSetMode('design'),
-        tinyApis.sSetContent('<div contenteditable="false">CEF</div>'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertFakeSelection(true),
-        sSetMode('readonly'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertFakeSelection(false),
-        sSetMode('design'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertFakeSelection(true)
-      ]),
-      Log.stepsAsStep('TBA', 'Setting caret before cef in editor while in readonly mode should not render fake caret', [
-        sSetMode('design'),
-        tinyApis.sSetContent('<div contenteditable="false">CEF</div>'),
-        sSetMode('readonly'),
-        tinyApis.sSetCursor([], 0),
-        tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => {
-            return s.element('body', {
-              children: [
-                s.element('div', {
-                  attrs: {
-                    contenteditable: str.is('false')
-                  },
-                  children: [
-                    s.text(str.is('CEF'))
-                  ]
-                })
-              ]
-            });
-          })
-        ),
-        sSetMode('design'),
-        tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, arr) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  attrs: {
-                    'data-mce-caret': str.is('before'),
-                    'data-mce-bogus': str.is('all')
-                  },
-                  children: [
-                    s.element('br', {})
-                  ]
-                }),
-                s.element('div', {
-                  attrs: {
-                    contenteditable: str.is('false')
-                  },
-                  children: [
-                    s.text(str.is('CEF'))
-                  ]
-                }),
-                s.element('div', {
-                  attrs: {
-                    'data-mce-bogus': str.is('all')
-                  },
-                  classes: [ arr.has('mce-visual-caret'), arr.has('mce-visual-caret-before') ]
-                })
-              ]
-            });
-          })
-        )
-      ]),
-      Log.stepsAsStep('TBA', 'Swiching to readonly mode on content with nested contenteditable=true should toggle them to contenteditable=false', [
-        sSetMode('design'),
-        tinyApis.sSetContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertFakeSelection(true),
-        sSetMode('readonly'),
-        sAssertNestedContentEditableTrueDisabled(true, true),
-        tinyApis.sAssertContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        sAssertFakeSelection(false),
-        sSetMode('design'),
-        tinyApis.sAssertContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        sAssertNestedContentEditableTrueDisabled(false, true)
-      ]),
-      Log.stepsAsStep('TBA', 'Setting contents with contenteditable=true should switch them to contenteditable=false while in readonly mode', [
-        sSetMode('readonly'),
-        tinyApis.sSetContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        sAssertNestedContentEditableTrueDisabled(true, false),
-        tinyApis.sAssertContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        sSetMode('design'),
-        tinyApis.sAssertContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertNestedContentEditableTrueDisabled(false, true),
-        tinyApis.sSetContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'),
-        tinyApis.sSelect('div[contenteditable="false"]', []),
-        sAssertNestedContentEditableTrueDisabled(false, true)
-      ]),
-      Log.stepsAsStep('TBA', 'Resize bars for tables should be hidden while in readonly mode', [
-        sSetMode('design'),
-        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
-        sMouseOverTable,
-        sAssertResizeBars(true),
-        sSetMode('readonly'),
-        sAssertResizeBars(false),
-        sMouseOverTable,
-        sAssertResizeBars(false),
-        sSetMode('design'),
-        sMouseOverTable,
-        sAssertResizeBars(true)
-      ]),
-      Log.stepsAsStep('TBA', 'Context toolbar should hide in readonly mode', [
-        tinyApis.sFocus(),
-        sSetMode('design'),
-        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
-        UiFinder.sWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop'),
-        sSetMode('readonly'),
-        UiFinder.sNotExists(SugarBody.body(), '.tox-pop'),
-        sSetMode('design'),
-        tinyApis.sSetContent('<table><tbody><tr><td>a</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 0),
-        UiFinder.sWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop')
-      ]),
-      Log.stepsAsStep('TBA', 'Main toolbar should disable when switching to readonly mode', [
-        sSetMode('design'),
-        sAssertToolbarDisabled(false),
-        sSetMode('readonly'),
-        sAssertToolbarDisabled(true),
-        sSetMode('design'),
-        sAssertToolbarDisabled(false)
-      ]),
-      Log.stepsAsStep('TBA', 'Menus should close when switching to readonly mode', [
-        sSetMode('design'),
-        Chain.asStep(SugarBody.body(), [
-          UiFinder.cFindIn('.tox-mbtn:contains("File")'),
-          Mouse.cClick
-        ]),
-        UiFinder.sWaitFor('Waited for menu', SugarBody.body(), '.tox-menu'),
-        sSetMode('readonly'),
-        UiFinder.sNotExists(SugarBody.body(), '.tox-menu')
-      ]),
-      Log.stepsAsStep('TINY-6248', 'getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', [
-        tinyApis.sSetContent('<p><a href="https://tiny.cloud">external link</a></p>'),
-        sAssertHrefOpt('a', Optional.some('https://tiny.cloud')),
-        tinyApis.sSetContent('<p><a>external link with no href</a></p>'),
-        sAssertHrefOpt('a', Optional.none()),
-        tinyApis.sSetContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>'),
-        sAssertHrefOpt('img', Optional.some('https://tiny.cloud'))
-      ]),
-      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with id', [
-        sSetMode('design'),
-        Step.sync(() => editor.resetContent()),
-        sSetMode('readonly'),
-        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>'),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          NamedChain.asChain([
-            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.write(
-              'yPos',
-              Chain.mapper(() => Scroll.get(eDoc).top)
-            ),
-            NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
-            NamedChain.read('anchor', Mouse.cClick),
-            NamedChain.read('yPos', Chain.op((yPos) => {
-              const newPos = Scroll.get(eDoc).top;
-              Assert.eq('assert yPos has changed i.e. has scrolled', true, yPos !== newPos);
-            }))
-          ])
-        ])
-      ]),
-      Log.stepsAsStep('TINY-6248', 'processReadonlyEvents should scroll to bookmark with name', [
-        sSetMode('design'),
-        Step.sync(() => editor.resetContent()),
-        sSetMode('readonly'),
-        tinyApis.sSetContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>'),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          NamedChain.asChain([
-            NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-            NamedChain.write(
-              'yPos',
-              Chain.mapper(() => Scroll.get(eDoc).top)
-            ),
-            NamedChain.direct('body', UiFinder.cFindIn('a[href="#someBookmark"]'), 'anchor'),
-            NamedChain.read('anchor', Mouse.cClick),
-            NamedChain.read('yPos', Chain.op((yPos) => {
-              const newPos = Scroll.get(eDoc).top;
-              Assert.eq('assert yPos has changed i.e. has scrolled', true, yPos !== newPos);
-            }))
-          ])
-        ])
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold',
-    plugins: 'table',
-    statusbar: false
-  }, success, failure);
+  it('TBA: Setting contents with contenteditable=true should switch them to contenteditable=false while in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+    editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    assertNestedContentEditableTrueDisabled(editor, true, false);
+    TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    setMode(editor, 'design');
+    TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertNestedContentEditableTrueDisabled(editor, false, true);
+    editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
+    TinySelections.select(editor, 'div[contenteditable="false"]', []);
+    assertNestedContentEditableTrueDisabled(editor, false, true);
+  });
+
+  it('TBA: Resize bars for tables should be hidden while in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    mouseOverTable(editor);
+    assertResizeBars(editor, true);
+    setMode(editor, 'readonly');
+    assertResizeBars(editor, false);
+    mouseOverTable(editor);
+    assertResizeBars(editor, false);
+    setMode(editor, 'design');
+    mouseOverTable(editor);
+    assertResizeBars(editor, true);
+  });
+
+  it('TBA: Context toolbar should hide in readonly mode', async () => {
+    const editor = hook.editor();
+    editor.focus();
+    setMode(editor, 'design');
+    editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    await UiFinder.pWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
+    setMode(editor, 'readonly');
+    UiFinder.notExists(SugarBody.body(), '.tox-pop');
+    setMode(editor, 'design');
+    editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    UiFinder.sWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
+  });
+
+  it('TBA: Main toolbar should disable when switching to readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    assertToolbarDisabled(false);
+    setMode(editor, 'readonly');
+    assertToolbarDisabled(true);
+    setMode(editor, 'design');
+    assertToolbarDisabled(false);
+  });
+
+  it('TBA: Menus should close when switching to readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    const fileMenu = UiFinder.findIn(SugarBody.body(), '.tox-mbtn:contains("File")').getOrDie();
+    Mouse.click(fileMenu);
+    UiFinder.sWaitFor('Waited for menu', SugarBody.body(), '.tox-menu');
+    setMode(editor, 'readonly');
+    UiFinder.sNotExists(SugarBody.body(), '.tox-menu');
+  });
+
+  it('TINY-6248: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
+    assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
+    editor.setContent('<p><a>external link with no href</a></p>');
+    assertHrefOpt(editor, 'a', Optional.none());
+    editor.setContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>');
+    assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
+  });
+
+  it('TINY-6248: processReadonlyEvents should scroll to bookmark with id', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.resetContent();
+    setMode(editor, 'readonly');
+    editor.setContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>');
+
+    const body = TinyDom.body(editor);
+    const doc = TinyDom.document(editor);
+    const yPos = Scroll.get(doc).top;
+    const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
+    Mouse.click(anchor);
+    const newPos = Scroll.get(doc).top;
+    assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+  });
+
+  it('TINY-6248: processReadonlyEvents should scroll to bookmark with name', () => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+    editor.resetContent();
+    setMode(editor, 'readonly');
+    editor.setContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>');
+
+    const body = TinyDom.body(editor);
+    const doc = TinyDom.document(editor);
+    const yPos = Scroll.get(doc).top;
+    const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
+    Mouse.click(anchor);
+    const newPos = Scroll.get(doc).top;
+    assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+  });
 });

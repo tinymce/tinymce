@@ -1,105 +1,97 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as RangeNormalizer from 'tinymce/core/selection/RangeNormalizer';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.RangeNormalizerTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.selection.RangeNormalizerTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  const sSetContent = (html) => {
-    return Step.sync(() => {
-      viewBlock.update(html);
-    });
+  const setHtml = viewBlock.update;
+
+  const normalizeRange = (rng: Range) => RangeNormalizer.normalize(rng);
+
+  const createRange = (startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
+    const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
+    const rng = document.createRange();
+    rng.setStart(startContainer.dom, startOffset);
+    rng.setEnd(endContainer.dom, endOffset);
+    return rng;
   };
 
-  const mNormalizeRange = Step.stateful((value: any, next, _die) => {
-    next(RangeNormalizer.normalize(value));
+  const assertRange = (rng: Range, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
+    const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
+
+    Assertions.assertDomEq('Should be expected startContainer', startContainer, SugarElement.fromDom(rng.startContainer));
+    assert.equal(rng.startOffset, startOffset, 'Should be expected startOffset');
+    Assertions.assertDomEq('Should be expected endContainer', endContainer, SugarElement.fromDom(rng.endContainer));
+    assert.equal(rng.endOffset, endOffset, 'Should be expected endOffset');
+  };
+
+  it('Normalize range no change', () => {
+    setHtml('<p><br></p>');
+    const rng = createRange([ 0 ], 0, [ 0 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0 ], 0, [ 0 ], 0);
   });
 
-  const mCreateRange = (startPath, startOffset, endPath, endOffset) => {
-    return Step.stateful((_value, next, _die) => {
-      const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
-      const rng = document.createRange();
-      rng.setStart(startContainer.dom, startOffset);
-      rng.setEnd(endContainer.dom, endOffset);
-      next(rng);
-    });
-  };
+  it('Normalize webkit triple click selection paragraph', () => {
+    setHtml('<blockquote><p>a</p></blockquote><p>b</p>');
+    const rng = createRange([ 0, 0, 0 ], 0, [ 1 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
 
-  const mAssertRange = (startPath, startOffset, endPath, endOffset) => {
-    return Step.stateful((value: any, next, _die) => {
-      const startContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
+  it('Normalize webkit triple click selection heading', () => {
+    setHtml('<blockquote><p>a</p></blockquote><h1>b</h1>');
+    const rng = createRange([ 0, 0, 0 ], 0, [ 1 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
 
-      Assertions.assertDomEq('Should be expected startContainer', startContainer, SugarElement.fromDom(value.startContainer));
-      Assertions.assertEq('Should be expected startOffset', startOffset, value.startOffset);
-      Assertions.assertDomEq('Should be expected endContainer', endContainer, SugarElement.fromDom(value.endContainer));
-      Assertions.assertEq('Should be expected endOffset', endOffset, value.endOffset);
+  it('Normalize webkit triple click selection headings', () => {
+    setHtml('<blockquote><h1>a</h1></blockquote><h1>b</h1>');
+    const rng = createRange([ 0, 0, 0 ], 0, [ 1 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
 
-      next(value);
-    });
-  };
+  it('Normalize webkit triple click selection divs', () => {
+    setHtml('<blockquote><div>a</div></blockquote><div>b</div>');
+    const rng = createRange([ 0, 0, 0 ], 0, [ 1 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('Normalize range no change', GeneralSteps.sequence([
-      sSetContent('<p><br></p>'),
-      mCreateRange([ 0 ], 0, [ 0 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0 ], 0, [ 0 ], 0)
-    ])),
-    Logger.t('Normalize webkit triple click selection paragraph', GeneralSteps.sequence([
-      sSetContent('<blockquote><p>a</p></blockquote><p>b</p>'),
-      mCreateRange([ 0, 0, 0 ], 0, [ 1 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1)
-    ])),
-    Logger.t('Normalize webkit triple click selection heading', GeneralSteps.sequence([
-      sSetContent('<blockquote><p>a</p></blockquote><h1>b</h1>'),
-      mCreateRange([ 0, 0, 0 ], 0, [ 1 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1)
-    ])),
-    Logger.t('Normalize webkit triple click selection headings', GeneralSteps.sequence([
-      sSetContent('<blockquote><h1>a</h1></blockquote><h1>b</h1>'),
-      mCreateRange([ 0, 0, 0 ], 0, [ 1 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1)
-    ])),
-    Logger.t('Normalize webkit triple click selection divs', GeneralSteps.sequence([
-      sSetContent('<blockquote><div>a</div></blockquote><div>b</div>'),
-      mCreateRange([ 0, 0, 0 ], 0, [ 1 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1)
-    ])),
-    Logger.t('Normalize webkit triple click selection between LI:s', GeneralSteps.sequence([
-      sSetContent('<ul><li>a</li></ul><ul><li>b</li></ul>'),
-      mCreateRange([ 0, 0, 0 ], 0, [ 1, 0 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1)
-    ])),
-    Logger.t('Normalize from block start to previous block end', GeneralSteps.sequence([
-      sSetContent('<p>a</p><p>b<p>'),
-      mCreateRange([ 0, 0 ], 0, [ 1, 0 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0 ], 0, [ 0, 0 ], 1)
-    ])),
-    Logger.t('Do not normalize when end position has a valid previous position in the block', GeneralSteps.sequence([
-      sSetContent('<p>a</p><p>b<p>'),
-      mCreateRange([ 0, 0 ], 0, [ 1, 0 ], 1),
-      mNormalizeRange,
-      mAssertRange([ 0, 0 ], 0, [ 1, 0 ], 1)
-    ])),
-    Logger.t('Do not normalize when selection is on inline elements', GeneralSteps.sequence([
-      sSetContent('<b>a</b><b>b<b>'),
-      mCreateRange([ 0, 0 ], 0, [ 1, 0 ], 0),
-      mNormalizeRange,
-      mAssertRange([ 0, 0 ], 0, [ 1, 0 ], 0)
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  it('Normalize webkit triple click selection between LI:s', () => {
+    setHtml('<ul><li>a</li></ul><ul><li>b</li></ul>');
+    const rng = createRange([ 0, 0, 0 ], 0, [ 1, 0 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+  });
+
+  it('Normalize from block start to previous block end', () => {
+    setHtml('<p>a</p><p>b<p>');
+    const rng = createRange([ 0, 0 ], 0, [ 1, 0 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0 ], 0, [ 0, 0 ], 1);
+  });
+
+  it('Do not normalize when end position has a valid previous position in the block', () => {
+    setHtml('<p>a</p><p>b<p>');
+    const rng = createRange([ 0, 0 ], 0, [ 1, 0 ], 1);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0 ], 0, [ 1, 0 ], 1);
+  });
+
+  it('Do not normalize when selection is on inline elements', () => {
+    setHtml('<b>a</b><b>b<b>');
+    const rng = createRange([ 0, 0 ], 0, [ 1, 0 ], 0);
+    const normRng = normalizeRange(rng);
+    assertRange(normRng, [ 0, 0 ], 0, [ 1, 0 ], 0);
+  });
 });

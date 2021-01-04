@@ -1,37 +1,30 @@
-import { Chain, Logger, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Editor as McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.InlineEditorRemoveTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.InlineEditorRemoveTest', () => {
+  before(() => Theme());
 
   const settings = {
     inline: true,
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  const cAssertBogusNotExist = Chain.async((val, next, die) => {
-    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').fold(
-      () => {
-        next(val);
-      },
-      () => {
-        die('Should not be any data-mce-bogus tags present');
-      }
-    );
+  const assertBogusNotExist = () => {
+    UiFinder.findIn(SugarBody.body(), '[data-mce-bogus]').each(() => {
+      throw new Error('Should not be any data-mce-bogus tags present');
+    });
+  };
+
+  it('Removing inline editor should remove all data-mce-bogus tags', async () => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    editor.setContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>', { format: 'raw' });
+    editor.remove();
+    assertBogusNotExist();
+    McEditor.remove(editor);
   });
-
-  const cRemoveEditor = Chain.op((editor: any) => editor.remove());
-
-  Pipeline.async({}, [
-    Logger.t('Removing inline editor should remove all data-mce-bogus tags', Chain.asStep({}, [
-      McEditor.cFromHtml('<div></div>', settings),
-      ApiChains.cSetRawContent('<p data-mce-bogus="all">b</p><p data-mce-bogus="1">b</p>'),
-      cRemoveEditor,
-      cAssertBogusNotExist,
-      McEditor.cRemove
-    ]))
-  ], success, failure);
 });

@@ -1,25 +1,26 @@
-import { Logger } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
+import { assert } from 'chai';
+
 import { Base64Extract, extractBase64DataUris, parseDataUri, restoreDataUris, UriMap } from 'tinymce/core/html/Base64Uris';
 
-UnitTest.test('atomic.tinymce.core.html.Base64UrisTest', () => {
+describe('atomic.tinymce.core.html.Base64UrisTest', () => {
   const replacePrefix = (value: string, prefix: string) => value.replace(/\$prefix/g, prefix);
   const replaceUrisPrefix = (uris: UriMap, prefix: string): UriMap => Obj.tupleMap(uris, (value, key) => ({ k: replacePrefix(key, prefix), v: value }));
 
   const testExtract = (label: string, html: string, expectedExtract: Partial<Base64Extract>) => {
-    Logger.sync(label, () => {
+    it(label, () => {
       const actualExtract = extractBase64DataUris(html);
       const expectedHtml = replacePrefix(expectedExtract.html, actualExtract.prefix);
       const expectedUris = replaceUrisPrefix(expectedExtract.uris, actualExtract.prefix);
 
-      Assert.eq('Should be expected html', expectedHtml, actualExtract.html);
-      Assert.eq('Should have expected uris', expectedUris, actualExtract.uris);
+      assert.equal(actualExtract.html, expectedHtml, 'Should be expected html');
+      assert.deepEqual(actualExtract.uris, expectedUris, 'Should have expected uris');
     });
   };
 
-  Logger.sync('extractBase64DataUris', () => {
+  context('extractBase64DataUris', () => {
     testExtract(
       'Should not touch images that is not base64 data uris',
       '<img src="my.gif"><img src="blob:https://localhost">',
@@ -89,14 +90,14 @@ UnitTest.test('atomic.tinymce.core.html.Base64UrisTest', () => {
   });
 
   const testRestoreDataUris = (label: string, inputResult: Base64Extract, inputHtml: string, expectedHtml: string) => {
-    Logger.sync(label, () => {
+    it(label, () => {
       const actualHtml = restoreDataUris(inputHtml, inputResult);
 
-      Assert.eq('Should be the extected html', expectedHtml, actualHtml);
+      assert.equal(actualHtml, expectedHtml, 'Should be the expected html');
     });
   };
 
-  Logger.sync('restoreDataUris', () => {
+  context('restoreDataUris', () => {
     testRestoreDataUris(
       'Should restore image uris to base64 uris',
       {
@@ -114,7 +115,7 @@ UnitTest.test('atomic.tinymce.core.html.Base64UrisTest', () => {
     );
   });
 
-  Logger.sync('parseDataUri', () => {
+  it('parseDataUri', () => {
     KAssert.eqOptional('Plain text mime', Optional.some({ type: 'image/png', data: 'R0/yw==' }), parseDataUri('data:image/png;base64,R0/yw=='));
     KAssert.eqOptional('Mime with dash', Optional.some({ type: 'image/x-icon', data: 'R1/yw==' }), parseDataUri('data:image/x-icon;base64,R1/yw=='));
     KAssert.eqOptional('Mime with plus', Optional.some({ type: 'image/svg+xml', data: 'R2/yw==' }), parseDataUri('data:image/svg+xml;base64,R2/yw=='));

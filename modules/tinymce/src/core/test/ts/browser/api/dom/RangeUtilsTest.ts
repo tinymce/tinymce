@@ -1,49 +1,39 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import ViewBlock from '../../../module/test/ViewBlock';
+import * as ViewBlock from '../../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.api.dom.RangeUtilsTest', (success, failure) => {
+describe('browser.tinymce.core.api.dom.RangeUtilsTest', () => {
   const DOM = DOMUtils.DOM;
-  const viewBlock = ViewBlock();
+  const viewBlock = ViewBlock.bddSetup();
 
-  const createRange = (sc, so, ec, eo) => {
+  const createRange = (sc: Node, so: number, ec: Node, eo: number) => {
     const rng = DOM.createRng();
     rng.setStart(sc, so);
     rng.setEnd(ec, eo);
     return rng;
   };
 
-  const assertRange = (expected, actual) => {
-    Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
-    Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
-    Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);
-    Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
+  const assertRange = (expected: Range, actual: Range) => {
+    assert.strictEqual(actual.startContainer, expected.startContainer, 'startContainers should be equal');
+    assert.strictEqual(actual.startOffset, expected.startOffset, 'startOffset should be equal');
+    assert.strictEqual(actual.endContainer, expected.endContainer, 'endContainer should be equal');
+    assert.strictEqual(actual.endOffset, expected.endOffset, 'endOffset should be equal');
   };
 
-  const sTestDontNormalizeAtAnchors = Logger.t(`Don't normalize at anchors`, Step.sync(() => {
+  it(`don't normalize at anchors`, () => {
     viewBlock.update('a<a href="#">b</a>c');
 
     const rng1 = createRange(viewBlock.get().firstChild, 1, viewBlock.get().firstChild, 1);
     const rng1Clone = rng1.cloneRange();
-    Assertions.assertEq('label', false, RangeUtils(DOM).normalize(rng1));
+    assert.isFalse(RangeUtils(DOM).normalize(rng1));
     assertRange(rng1Clone, rng1);
 
     const rng2 = createRange(viewBlock.get().lastChild, 0, viewBlock.get().lastChild, 0);
     const rng2Clone = rng2.cloneRange();
-    Assertions.assertEq('label', false, RangeUtils(DOM).normalize(rng2));
+    assert.isFalse(RangeUtils(DOM).normalize(rng2));
     assertRange(rng2Clone, rng2);
-  }));
-
-  const sTestNormalize = GeneralSteps.sequence([
-    sTestDontNormalizeAtAnchors
-  ]);
-
-  Pipeline.async({}, [
-    sTestNormalize
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  });
 });

@@ -1,28 +1,33 @@
-import { PhantomSkipper, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { PhantomSkipper } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.SelectionOverridesTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    selector: 'textarea',
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  Theme();
-
-  const ok = (a: boolean, label: string) => {
-    LegacyUnit.equal(a, true, label);
-  };
-
-  suite.test('click on link in cE=false', (editor: Editor) => {
+  it('click on link in cE=false', () => {
+    const editor = hook.editor();
     editor.setContent('<p contentEditable="false"><a href="#"><strong>link</strong></a></p>');
     const evt = editor.fire('click', { target: editor.$('strong')[0] } as any);
 
-    LegacyUnit.equal(evt.isDefaultPrevented(), true);
+    assert.equal(evt.isDefaultPrevented(), true);
   });
 
-  suite.test('click next to cE=false block', (editor) => {
+  it('click next to cE=false block', () => {
+    const editor = hook.editor();
     editor.setContent(
       '<table style="width: 100%">' +
       '<tr>' +
@@ -42,36 +47,38 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     } as MouseEvent);
 
     // Since we can't do a real click we need to check if it gets sucked in towards the cE=false block
-    LegacyUnit.equal(editor.selection.getNode().nodeName !== 'P', true);
+    assert.equal(editor.selection.getNode().nodeName !== 'P', true);
   });
 
-  suite.test('offscreen copy of cE=false block remains offscreen', (editor) => {
-    if (!PhantomSkipper.detect()) {
-      editor.setContent(
-        '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
-        '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
-        '</table>'
-      );
-
-      editor.selection.select(editor.dom.select('table')[0]);
-      const offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
-
-      ok(offscreenSelection.offsetLeft !== undefined, `The offscreen selection's left border is undefined`);
-      ok(offscreenSelection.offsetLeft < 0, `The offscreen selection's left border is onscreen`);
-      ok(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft < 0,
-        'The cE=false offscreen selection is visible on-screen. Right edge: ' +
-        offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
-        (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
-      );
-    } else {
-      // Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
-      // put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
-      // so everything is off-screen anyway :-)
-      ok(true, 'Not a tested browser - PhantomJS does not put the selection off screen');
+  it('offscreen copy of cE=false block remains offscreen', function () {
+    // Chrome and Safari behave correctly, and PhantomJS also declares itself as WebKit but does not
+    // put the off-screen selection off-screen, so fails the above tests. However, it has no visible UI,
+    // so everything is off-screen anyway :-)
+    if (PhantomSkipper.detect()) {
+      this.skip();
     }
+
+    const editor = hook.editor();
+    editor.setContent(
+      '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
+      '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +
+      '</table>'
+    );
+
+    editor.selection.select(editor.dom.select('table')[0]);
+    const offscreenSelection = editor.dom.select('.mce-offscreen-selection')[0];
+
+    assert.ok(offscreenSelection.offsetLeft !== undefined, `The offscreen selection's left border is undefined`);
+    assert.isBelow(offscreenSelection.offsetLeft, 0, `The offscreen selection's left border is onscreen`);
+    assert.isBelow(offscreenSelection.offsetWidth + offscreenSelection.offsetLeft, 0,
+      'The cE=false offscreen selection is visible on-screen. Right edge: ' +
+      offscreenSelection.offsetLeft + '+' + offscreenSelection.offsetWidth + '=' +
+      (offscreenSelection.offsetLeft + offscreenSelection.offsetWidth) + 'px'
+    );
   });
 
-  suite.test('TINY-6555: click on ce=false body should not show offscreen selection', (editor) => {
+  it('TINY-6555: click on ce=false body should not show offscreen selection', () => {
+    const editor = hook.editor();
     const body = editor.getBody();
     editor.setContent(
       '<table contenteditable="true" style="width: 100%; table-layout: fixed">' +
@@ -88,12 +95,13 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     } as MouseEvent);
 
     const offscreenElements = editor.dom.select('.mce-offscreen-selection');
-    ok(offscreenElements.length === 0, 'No offscreen element shown');
+    assert.lengthOf(offscreenElements, 0, 'No offscreen element shown');
 
     editor.getBody().contentEditable = 'true';
   });
 
-  suite.test('set range after ce=false element but lean backwards', (editor) => {
+  it('set range after ce=false element but lean backwards', () => {
+    const editor = hook.editor();
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
@@ -101,10 +109,11 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     rng.setEndBefore(editor.dom.select('p[contenteditable=false]')[1]);
 
     editor.selection.setRng(rng, false);
-    LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'after');
+    assert.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'after');
   });
 
-  suite.test('set range after ce=false element but lean backwards', (editor) => {
+  it('set range after ce=false element but lean backwards 2', () => {
+    const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">Noneditable1</span><span contenteditable="false">Noneditable2</span></p>', { format: 'raw' });
 
     const rng = document.createRange();
@@ -124,10 +133,11 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
 
     // We want to ensure the selection hasn't jumped to any one of the cef spans, with offset to the left and right of it
     const passCondition = !(newRng.startContainer === newRng.endContainer && (newRng.startOffset + 1) === newRng.endOffset);
-    LegacyUnit.equal(passCondition, true);
+    assert.equal(passCondition, true);
   });
 
-  suite.test('set range after ce=false element but lean forwards', (editor) => {
+  it('set range after ce=false element but lean forwards', () => {
+    const editor = hook.editor();
     editor.setContent('<p contenteditable="false">1</p><p contenteditable="false">2</p>');
 
     const rng = document.createRange();
@@ -135,22 +145,25 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     rng.setEndBefore(editor.dom.select('p[contenteditable=false]')[1]);
 
     editor.selection.setRng(rng, true);
-    LegacyUnit.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'before');
+    assert.equal(editor.selection.getNode().getAttribute('data-mce-caret'), 'before');
   });
 
-  suite.test('showCaret at TD', (editor) => {
+  it('showCaret at TD', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td contenteditable="false">x</td></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
-    LegacyUnit.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
+    assert.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
   });
 
-  suite.test('showCaret at TH', (editor) => {
+  it('showCaret at TH', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><th contenteditable="false">x</th></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
-    LegacyUnit.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
+    assert.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
   });
 
-  suite.test('showCaret block on specific element', (editor) => {
+  it('showCaret block on specific element', () => {
+    const editor = hook.editor();
     let rng;
 
     editor.on('ShowCaret', (e) => {
@@ -162,15 +175,16 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     editor.setContent('<p contenteditable="false">a</p><p contenteditable="false" data-no-cef="true">b</p>');
 
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[0], true);
-    LegacyUnit.equal(true, rng !== null, 'Should return a range');
+    assert.equal(true, rng !== null, 'Should return a range');
     editor._selectionOverrides.hideFakeCaret();
 
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[1], false);
-    LegacyUnit.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
+    assert.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
     editor._selectionOverrides.hideFakeCaret();
   });
 
-  suite.test('showBlockCaretContainer before ce=false element', (editor) => {
+  it('showBlockCaretContainer before ce=false element', () => {
+    const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p>');
     const para = editor.dom.select('p[contenteditable=false]')[0];
 
@@ -183,12 +197,13 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     const caretContainer = editor.dom.select('p[data-mce-caret=before]')[0];
     editor._selectionOverrides.showBlockCaretContainer(caretContainer);
 
-    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
-    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
-    LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
+    assert.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
+    assert.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
   });
 
-  suite.test('showBlockCaretContainer after ce=false element', (editor) => {
+  it('showBlockCaretContainer after ce=false element', () => {
+    const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p>');
     const para = editor.dom.select('p[contenteditable=false]')[0];
 
@@ -201,12 +216,13 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
     const caretContainer = editor.dom.select('p[data-mce-caret=after]')[0];
     editor._selectionOverrides.showBlockCaretContainer(caretContainer);
 
-    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
-    LegacyUnit.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
-    LegacyUnit.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
+    assert.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
+    assert.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    assert.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
   });
 
-  suite.test('set range in short ended element', (editor) => {
+  it('set range in short ended element', () => {
+    const editor = hook.editor();
     Arr.each([ 'br', 'img', 'input' ], (elmName) => {
       editor.setContent('<p><' + elmName + '/></p>');
       const paraElem = editor.dom.select('p')[0];
@@ -218,21 +234,10 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
       editor.selection.setRng(rng);
 
       const newRng = editor.selection.getRng();
-      LegacyUnit.equal(newRng.startContainer, paraElem, `Start container should be before ${elmName}`);
-      LegacyUnit.equal(newRng.startOffset, 0, `Start offset should be before ${elmName}`);
-      LegacyUnit.equal(newRng.endContainer, paraElem, `End container should be before ${elmName}`);
-      LegacyUnit.equal(newRng.endOffset, 0, `End offset should be before ${elmName}`);
+      assert.equal(newRng.startContainer, paraElem, `Start container should be before ${elmName}`);
+      assert.equal(newRng.startOffset, 0, `Start offset should be before ${elmName}`);
+      assert.equal(newRng.endContainer, paraElem, `End container should be before ${elmName}`);
+      assert.equal(newRng.endOffset, 0, `End offset should be before ${elmName}`);
     });
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

@@ -1,50 +1,47 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as Empty from 'tinymce/core/dom/Empty';
 
-UnitTest.asynctest('browser.tinymce.core.dom.EmptyTest', (success, failure) => {
-
-  const sTestEmpty = (html, expected) => {
-    return Step.sync(() => {
-      const elm = SugarElement.fromHtml(html);
-      const expectedLabel = expected ? 'empty' : 'not empty';
-      Assertions.assertEq(html + ' should be treated as ' + expectedLabel, expected, Empty.isEmpty(elm));
-    });
+describe('browser.tinymce.core.dom.EmptyTest', () => {
+  const testEmpty = (html: string, expected: boolean) => {
+    const elm = SugarElement.fromHtml(html);
+    const expectedLabel = expected ? 'empty' : 'not empty';
+    assert.equal(Empty.isEmpty(elm), expected, html + ' should be treated as ' + expectedLabel);
   };
 
-  Pipeline.async({}, [
-    Logger.t('Empty elements', GeneralSteps.sequence([
-      sTestEmpty(' ', true),
-      sTestEmpty('\t', true),
-      sTestEmpty('\r', true),
-      sTestEmpty('\n', true),
-      sTestEmpty(' \t\r\n ', true),
-      sTestEmpty('<!-- x -->', true),
-      sTestEmpty('<p></p>', true),
-      sTestEmpty('<b></b>', true),
-      sTestEmpty('<p><b></b></p>', true),
-      sTestEmpty('<p><br></p>', true),
-      sTestEmpty('<p><i><b></b></i><b><i></i></b></p>', true),
-      sTestEmpty('<span></span>', true),
-      sTestEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true),
-      sTestEmpty('<p><br data-mce-bogus="1"><br></p>', true),
-      sTestEmpty('<a id="link" href="http://some.url/"></a>', true)
-    ])),
-    Logger.t('Non empty elements', GeneralSteps.sequence([
-      sTestEmpty('<br>', false),
-      sTestEmpty('<img src="#">', false),
-      sTestEmpty('<input>', false),
-      sTestEmpty('<textarea></textarea>', false),
-      sTestEmpty('<hr>', false),
-      sTestEmpty('a', false),
-      sTestEmpty('abc', false),
-      sTestEmpty('<p>abc</p>', false),
-      sTestEmpty('<p><br><br></p>', false),
-      sTestEmpty('<p><i><b></b></i><b><i><img src="#"></i></b></p>', false),
-      sTestEmpty('<span data-mce-bookmark="x"></span>', false),
-      sTestEmpty('<span contenteditable="false"></span>', false),
-      sTestEmpty('<a id="anchor"></a>', false)
-    ]))
-  ], success, failure);
+  it('Empty elements', () => {
+    testEmpty(' ', true);
+    testEmpty('\t', true);
+    testEmpty('\r', true);
+    testEmpty('\n', true);
+    testEmpty(' \t\r\n ', true);
+    testEmpty('<!-- x -->', true);
+    testEmpty('<p></p>', true);
+    testEmpty('<b></b>', true);
+    testEmpty('<p><b></b></p>', true);
+    testEmpty('<p><br></p>', true);
+    testEmpty('<p><i><b></b></i><b><i></i></b></p>', true);
+    testEmpty('<span></span>', true);
+    testEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true);
+    testEmpty('<p><br data-mce-bogus="1"><br></p>', true);
+    testEmpty('<a id="link" href="http://some.url/"></a>', true);
+  });
+
+  it('Non empty elements', () => {
+    testEmpty('<br>', false);
+    testEmpty('<img src="#">', false);
+    testEmpty('<input>', false);
+    testEmpty('<textarea></textarea>', false);
+    testEmpty('<hr>', false);
+    testEmpty('a', false);
+    testEmpty('abc', false);
+    testEmpty('<p>abc</p>', false);
+    testEmpty('<p><br><br></p>', false);
+    testEmpty('<p><i><b></b></i><b><i><img src="#"></i></b></p>', false);
+    testEmpty('<span data-mce-bookmark="x"></span>', false);
+    testEmpty('<span contenteditable="false"></span>', false);
+    testEmpty('<a id="anchor"></a>', false);
+  });
 });
