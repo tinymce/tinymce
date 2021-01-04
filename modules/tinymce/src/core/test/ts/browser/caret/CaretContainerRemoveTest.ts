@@ -1,93 +1,62 @@
-import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
-import Env from 'tinymce/core/api/Env';
+import { assert } from 'chai';
+
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as CaretContainerRemove from 'tinymce/core/caret/CaretContainerRemove';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretContainerRemoveTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.CaretContainerRemoveTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  if (!Env.ceFalse) {
-    return;
-  }
+  const getRoot = viewBlock.get;
+  const setupHtml = viewBlock.update;
 
-  const getRoot = () => {
-    return viewBlock.get();
-  };
+  it('remove', () => {
+    setupHtml('<span contentEditable="false">1</span>');
 
-  const setupHtml = (html) => {
-    viewBlock.update(html);
-  };
+    CaretContainer.insertInline(getRoot().firstChild, true);
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().firstChild), 'Should be inline container');
 
-  const sTestRemove = Logger.t(
-    'Remove',
-    Step.sync(() => {
-      setupHtml('<span contentEditable="false">1</span>');
+    CaretContainerRemove.remove(getRoot().firstChild);
+    assert.isFalse(CaretContainer.isCaretContainerInline(getRoot().firstChild), 'Should not be inline container');
+  });
 
-      CaretContainer.insertInline(getRoot().firstChild, true);
-      Assertions.assertEq('Should be inline container', true, CaretContainer.isCaretContainerInline(getRoot().firstChild));
+  it('removeAndReposition block in same parent at offset', () => {
+    setupHtml('<span contentEditable="false">1</span>');
 
-      CaretContainerRemove.remove(getRoot().firstChild);
-      Assertions.assertEq('Should not be inline container', false, CaretContainer.isCaretContainerInline(getRoot().firstChild));
-    })
-  );
+    CaretContainer.insertBlock('p', getRoot().firstChild, true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().firstChild), 'Should be block container');
 
-  const sTestRemoveAndRepositionBlockAtOffset = Logger.t(
-    'removeAndReposition block in same parent at offset',
-    Step.sync(() => {
-      setupHtml('<span contentEditable="false">1</span>');
+    const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, CaretPosition(getRoot(), 0));
+    assert.equal(pos.offset(), 0, 'Should be unchanged offset');
+    Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(getRoot().firstChild), 'Should not be block container');
+  });
 
-      CaretContainer.insertBlock('p', getRoot().firstChild, true);
-      Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
+  it('removeAndReposition block in same parent before offset', () => {
+    setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
 
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().firstChild, CaretPosition(getRoot(), 0));
-      Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
-      Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().firstChild));
-    })
-  );
+    CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), 'Should be block container');
 
-  const sTestRemoveAndRepositionBeforeOffset = Logger.t(
-    'removeAndReposition block in same parent before offset',
-    Step.sync(() => {
-      setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
+    const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 0));
+    assert.equal(pos.offset(), 0, 'Should be unchanged offset');
+    Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), 'Should not be block container');
+  });
 
-      CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
-      Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
+  it('removeAndReposition block in same parent after offset', () => {
+    setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
 
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 0));
-      Assertions.assertEq('Should be unchanged offset', 0, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
-      Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
-    })
-  );
+    CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), 'Should be block container');
 
-  const sTestRemoveAndRepositionAfterOffset = Logger.t(
-    'removeAndReposition block in same parent after offset',
-    Step.sync(() => {
-      setupHtml('<span contentEditable="false">1</span><span contentEditable="false">2</span>');
-
-      CaretContainer.insertBlock('p', getRoot().childNodes[1], true);
-      Assertions.assertEq('Should be block container', true, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
-
-      const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 3));
-      Assertions.assertEq('Should be changed offset', 2, pos.offset());
-      Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
-      Assertions.assertEq('Should not be block container', false, CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
-    })
-  );
-
-  viewBlock.attach();
-  Pipeline.async({}, [
-    sTestRemove,
-    sTestRemoveAndRepositionBlockAtOffset,
-    sTestRemoveAndRepositionBeforeOffset,
-    sTestRemoveAndRepositionAfterOffset
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+    const pos = CaretContainerRemove.removeAndReposition(getRoot().childNodes[1], CaretPosition(getRoot(), 3));
+    assert.equal(pos.offset(), 2, 'Should be changed offset');
+    Assertions.assertDomEq('Should be unchanged container', SugarElement.fromDom(getRoot()), SugarElement.fromDom(pos.container()));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), 'Should not be block container');
+  });
 });

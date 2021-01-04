@@ -1,142 +1,152 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.commands.OutdentCommandTest', (success, failure) => {
-  Theme();
-
-  const sAssertOutdentCommandState = (editor: Editor, expectedState: boolean) => Step.sync(() => {
-    Assertions.assertEq('', expectedState, editor.queryCommandState('outdent'));
-  });
-
-  const sSetReadOnly = (editor: Editor, state: boolean) => Step.sync(() => {
-    editor.setMode(state ? 'readonly' : 'design');
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('Outdent on single paragraph without margin/padding', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>a</p>'),
-        sAssertOutdentCommandState(editor, false),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p>a</p>')
-      ])),
-      Logger.t('Outdent on mutiple paragraphs without margin/padding', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p>a</p><p>b</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with margin', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-left: 40px;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p>a</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with padding', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', false),
-        tinyApis.sSetContent('<p style="padding-left: 40px;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p>a</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with margin x 2', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', false),
-        tinyApis.sSetContent('<p style="padding-left: 80px;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="padding-left: 40px;">a</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with padding x 2', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-left: 80px;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="margin-left: 40px;">a</p>')
-      ])),
-      Logger.t('Outdent on mutiple paragraphs with margin', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-left: 80px;">a</p><p style="margin-left: 40px;">b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="margin-left: 40px;">a</p><p>b</p>')
-      ])),
-      Logger.t('Outdent on mutiple paragraphs with padding', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', false),
-        tinyApis.sSetContent('<p style="padding-left: 80px;">a</p><p style="padding-left: 40px;">b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="padding-left: 40px;">a</p><p>b</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with padding and rtl', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', false),
-        tinyApis.sSetContent('<p style="padding-right: 80px; direction: rtl;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="padding-right: 40px; direction: rtl;">a</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with margin and rtl', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-right: 80px; direction: rtl;">a</p>'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="margin-right: 40px; direction: rtl;">a</p>')
-      ])),
-      Logger.t('Outdent on single paragraph with margin in readonly mode', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        sSetReadOnly(editor, true),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-left: 40px;">a</p>'),
-        sAssertOutdentCommandState(editor, false),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="margin-left: 40px;">a</p>'),
-        sSetReadOnly(editor, false)
-      ])),
-      Logger.t('Outdent on selected table using margin', GeneralSteps.sequence([
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>'),
-        tinyApis.sExecCommand('SelectAll'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<table style="margin-left: 40px;"><tbody><tr><td>a</td></tr></tbody></table>')
-      ])),
-      Logger.t('Outdent on selected table always using margin', GeneralSteps.sequence([
-        tinyApis.sSetSetting('indent_use_margin', false),
-        tinyApis.sSetContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>'),
-        tinyApis.sExecCommand('SelectAll'),
-        sAssertOutdentCommandState(editor, true),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<table style="margin-left: 40px;"><tbody><tr><td>a</td></tr></tbody></table>')
-      ])),
-      Logger.t('Outdent on contentEditable=false', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('indent_use_margin', true),
-        tinyApis.sSetContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>'),
-        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
-        tinyApis.sExecCommand('outdent'),
-        tinyApis.sAssertContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>')
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.commands.OutdentCommandTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, success, failure);
+  }, [ Theme ], true);
+
+  const assertOutdentCommandState = (editor: Editor, expectedState: boolean) => {
+    assert.equal(editor.queryCommandState('outdent'), expectedState);
+  };
+
+  const setReadOnly = (editor: Editor, state: boolean) => {
+    editor.mode.set(state ? 'readonly' : 'design');
+  };
+
+  it('Outdent on single paragraph without margin/padding', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    assertOutdentCommandState(editor, false);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+  });
+
+  it('Outdent on multiple paragraphs without margin/padding', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p>a</p><p>b</p>');
+  });
+
+  it('Outdent on single paragraph with margin', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-left: 40px;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+  });
+
+  it('Outdent on single paragraph with padding', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = false;
+    editor.setContent('<p style="padding-left: 40px;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+  });
+
+  it('Outdent on single paragraph with margin x 2', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = false;
+    editor.setContent('<p style="padding-left: 80px;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="padding-left: 40px;">a</p>');
+  });
+
+  it('Outdent on single paragraph with padding x 2', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-left: 80px;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="margin-left: 40px;">a</p>');
+  });
+
+  it('Outdent on mutiple paragraphs with margin', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-left: 80px;">a</p><p style="margin-left: 40px;">b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="margin-left: 40px;">a</p><p>b</p>');
+  });
+
+  it('Outdent on multiple paragraphs with padding', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = false;
+    editor.setContent('<p style="padding-left: 80px;">a</p><p style="padding-left: 40px;">b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="padding-left: 40px;">a</p><p>b</p>');
+  });
+
+  it('Outdent on single paragraph with padding and rtl', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = false;
+    editor.setContent('<p style="padding-right: 80px; direction: rtl;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="padding-right: 40px; direction: rtl;">a</p>');
+  });
+
+  it('Outdent on single paragraph with margin and rtl', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-right: 80px; direction: rtl;">a</p>');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="margin-right: 40px; direction: rtl;">a</p>');
+  });
+
+  it('Outdent on single paragraph with margin in readonly mode', () => {
+    const editor = hook.editor();
+    setReadOnly(editor, true);
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-left: 40px;">a</p>');
+    assertOutdentCommandState(editor, false);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="margin-left: 40px;">a</p>');
+    setReadOnly(editor, false);
+  });
+
+  it('Outdent on selected table using margin', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>');
+    editor.execCommand('SelectAll');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<table style="margin-left: 40px;"><tbody><tr><td>a</td></tr></tbody></table>');
+  });
+
+  it('Outdent on selected table always using margin', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = false;
+    editor.setContent('<table style="margin-left: 80px;"><tr><td>a</td></tr></table>');
+    editor.execCommand('SelectAll');
+    assertOutdentCommandState(editor, true);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<table style="margin-left: 40px;"><tbody><tr><td>a</td></tr></tbody></table>');
+  });
+
+  it('Outdent on contentEditable=false', () => {
+    const editor = hook.editor();
+    editor.settings.indent_use_margin = true;
+    editor.setContent('<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>');
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
+    editor.execCommand('outdent');
+    TinyAssertions.assertContent(editor, '<p style="margin-left: 80px;" contenteditable="false"><span contenteditable="true">a</span></p>');
+  });
 });

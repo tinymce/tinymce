@@ -1,68 +1,75 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asyncTest('browser.tinymce.core.commands.LineHeightTest', (success, failure) => {
+describe('browser.tinymce.core.commands.LineHeightTest', () => {
   const platform = PlatformDetection.detect();
-  TinyLoader.setupLight((editor: Editor, success, failure) => {
-    const api = TinyApis(editor);
-
-    const sAssertHeight = (value: string) => Step.sync(() => {
-      const current = editor.queryCommandValue('LineHeight');
-      Assert.eq('LineHeight query command returned wrong value', value, current);
-    });
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TINY-4843', 'Specified line-height can be read from element', [
-        api.sSetContent('<p style="line-height: 1.5;">Test</p>'),
-        api.sSetCursor([ 0, 0 ], 0),
-        sAssertHeight('1.5')
-      ]),
-
-      // https://bugs.webkit.org/show_bug.cgi?id=216601
-      ...(!platform.browser.isSafari() ? [
-        Log.stepsAsStep('TINY-4843', 'Unspecified line-height can be read from element', [
-          api.sSetContent('<p>Hello</p>'),
-          api.sSetCursor([ 0, 0 ], 0),
-          sAssertHeight('1.4') // default content-css line height
-        ]) ] : []),
-
-      Log.stepsAsStep('TINY-4843', 'Specified line-height can be read from element in px', [
-        api.sSetContent('<p style="line-height: 20px;">Test</p>'),
-        api.sSetCursor([ 0, 0 ], 0),
-        sAssertHeight('20px')
-      ]),
-
-      Log.stepsAsStep('TINY-4843', 'Specified line-height can be read from ancestor element', [
-        api.sSetContent('<p style="line-height: 1.8;">Hello, <strong>world</strong></p>'),
-        api.sSetCursor([ 0, 1, 0 ], 0),
-        sAssertHeight('1.8')
-      ]),
-
-      Log.stepsAsStep('TINY-4843', 'Editor command can set line-height', [
-        api.sSetContent('<p>Hello</p>'),
-        api.sSetCursor([ 0, 0 ], 0),
-        api.sExecCommand('LineHeight', '2'),
-        api.sAssertContent('<p style="line-height: 2;">Hello</p>')
-      ]),
-
-      Log.stepsAsStep('TINY-4843', 'Editor command can alter line-height', [
-        api.sSetContent('<p style="line-height: 1.8;">Hello</p>'),
-        api.sSetCursor([ 0, 0 ], 0),
-        api.sExecCommand('LineHeight', '2'),
-        api.sAssertContent('<p style="line-height: 2;">Hello</p>')
-      ]),
-
-      Log.stepsAsStep('TINY-4843', 'Editor command can toggle line-height', [
-        api.sSetContent('<p style="line-height: 1.4;">Hello</p>'),
-        api.sSetCursor([ 0, 0 ], 0),
-        api.sExecCommand('LineHeight', '1.4'),
-        api.sAssertContent('<p>Hello</p>')
-      ])
-    ], success, failure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const assertHeight = (editor: Editor, value: string) => {
+    const current = editor.queryCommandValue('LineHeight');
+    assert.equal(current, value, 'LineHeight query command returned wrong value');
+  };
+
+  it('TINY-4843: Specified line-height can be read from element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1.5;">Test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertHeight(editor, '1.5');
+  });
+
+  it('TINY-4843: Unspecified line-height can be read from element', function () {
+    // https://bugs.webkit.org/show_bug.cgi?id=216601
+    if (platform.browser.isSafari()) {
+      this.skip();
+    }
+    const editor = hook.editor();
+    editor.setContent('<p>Hello</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertHeight(editor, '1.4'); // default content-css line height
+  });
+
+  it('TINY-4843: Specified line-height can be read from element in px', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 20px;">Test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertHeight(editor, '20px');
+  });
+
+  it('TINY-4843: Specified line-height can be read from ancestor element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1.8;">Hello, <strong>world</strong></p>');
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+    assertHeight(editor, '1.8');
+  });
+
+  it('TINY-4843: Editor command can set line-height', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Hello</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.execCommand('LineHeight', false, '2');
+    TinyAssertions.assertContent(editor, '<p style="line-height: 2;">Hello</p>');
+  });
+
+  it('TINY-4843: Editor command can alter line-height', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1.8;">Hello</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.execCommand('LineHeight', false, '2');
+    TinyAssertions.assertContent(editor, '<p style="line-height: 2;">Hello</p>');
+  });
+
+  it('TINY-4843: Editor command can toggle line-height', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1.4;">Hello</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.execCommand('LineHeight', false, '1.4');
+    TinyAssertions.assertContent(editor, '<p>Hello</p>');
+  });
 });

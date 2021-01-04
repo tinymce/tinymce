@@ -1,39 +1,37 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
 import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
+
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.init.EditorInitializationTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  Theme();
+  before(() => {
+    Theme();
 
-  const setup = () => {
-    let i, htmlReset = '', odd;
-    for (i = 1; i < 9; i++) {
-      odd = i % 2 !== 0;
+    let htmlReset = '';
+    for (let i = 1; i < 9; i++) {
+      const odd = i % 2 !== 0;
       htmlReset += '<textarea id="elm-' + i + '" class="' + (odd ? 'elm-odd' : 'elm-even') + '"></textarea>';
     }
-
-    viewBlock.attach();
     viewBlock.update(htmlReset);
-  };
+  });
 
-  const teardown = (done) => {
-    window.setTimeout(() => {
+  afterEach((done) => {
+    setTimeout(() => {
       EditorManager.remove();
       done();
     }, 0);
-  };
+  });
 
-  suite.asyncTest('target (initialised properly)', (_, done) => {
+  it('target (initialised properly)', (done) => {
     const elm1 = viewBlock.get().querySelector<HTMLElement>('#elm-1');
 
     EditorManager.init({
@@ -41,13 +39,13 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
-        LegacyUnit.equalDom(ed.targetElm, elm1);
-        teardown(done);
+        assert.strictEqual(ed.targetElm, elm1);
+        done();
       }
     });
   });
 
-  suite.asyncTest('target (initialise on element without id)', (_, done) => {
+  it('target (initialise on element without id)', (done) => {
     const elm = document.createElement('textarea');
     viewBlock.get().appendChild(elm);
 
@@ -56,14 +54,14 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
-        LegacyUnit.equal(ed.id.length > 0, true, 'editors id set to: ' + ed.id);
-        LegacyUnit.equalDom(ed.targetElm, elm);
-        teardown(done);
+        assert.isAbove(ed.id.length, 0, 'editors id set to: ' + ed.id);
+        assert.strictEqual(ed.targetElm, elm);
+        done();
       }
     });
   });
 
-  suite.asyncTest('target (selector option takes precedence over target option)', (_, done) => {
+  it('target (selector option takes precedence over target option)', (done) => {
     const elm1 = document.getElementById('elm-1');
     const elm2 = document.getElementById('elm-2');
 
@@ -73,42 +71,41 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
-        LegacyUnit.equalDom(ed.targetElm, elm2);
-        teardown(done);
+        assert.strictEqual(ed.targetElm, elm2);
+        done();
       }
     });
   });
 
-  suite.asyncTest('selector on non existing targets', (_, done) => {
-    EditorManager.init({
+  it('selector on non existing targets', () => {
+    return EditorManager.init({
       selector: '#non-existing-id',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default'
     }).then((result) => {
-      Assertions.assertEq('Should be an result that is zero length', 0, result.length);
-      teardown(done);
+      assert.lengthOf(result, 0, 'Should be a result that is zero length');
     });
   });
 
-  if (Env.browser.isIE()) {
-    suite.asyncTest('selector on an unsupported browser', (_, done) => {
-      // Fake IE 8
-      const oldIeValue = Env.browser.version.major;
-      Env.browser.version.major = 8;
+  it('selector on an unsupported browser', function () {
+    if (!Env.browser.isIE()) {
+      this.skip();
+    }
+    // Fake IE 8
+    const oldIeValue = Env.browser.version.major;
+    Env.browser.version.major = 8;
 
-      EditorManager.init({
-        selector: '#elm-2',
-        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-        content_css: '/project/tinymce/js/tinymce/skins/content/default'
-      }).then((result) => {
-        Assertions.assertEq('Should be an result that is zero length', 0, result.length);
-        Env.browser.version.major = oldIeValue;
-        teardown(done);
-      });
+    return EditorManager.init({
+      selector: '#elm-2',
+      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
+      content_css: '/project/tinymce/js/tinymce/skins/content/default'
+    }).then((result) => {
+      assert.lengthOf(result, 0, 'Should be a result that is zero length');
+      Env.browser.version.major = oldIeValue;
     });
-  }
+  });
 
-  suite.asyncTest('target (each editor should have a different target)', (_, done) => {
+  it('target (each editor should have a different target)', (done) => {
     const maxCount = document.querySelectorAll('.elm-even').length;
     const elm1 = document.getElementById('elm-1');
     let count = 0;
@@ -120,46 +117,45 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
-        LegacyUnit.equal(ed.targetElm !== elm1, true, 'target option ignored');
-        LegacyUnit.equal(Tools.inArray(targets, ed.targetElm), -1);
+        assert.notStrictEqual(ed.targetElm, elm1, 'target option ignored');
+        assert.notInclude(targets, ed.targetElm);
 
         targets.push(ed.targetElm);
 
         if (++count >= maxCount) {
-          teardown(done);
+          done();
         }
       }
     });
   });
 
-  suite.asyncTest('Test base_url and suffix options', (_, done) => {
+  it('Test base_url and suffix options', (done) => {
     const oldBaseURL = EditorManager.baseURL;
     const oldSuffix = EditorManager.suffix;
 
     EditorManager.init({
-      base_url: '/fake/url',
+      base_url: '/compiled/fake/url',
       suffix: '.min',
       selector: '#elm-1',
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
+        assert.equal(EditorManager.suffix, '.min', 'Should have set suffix on EditorManager');
+        assert.equal(ed.suffix, '.min', 'Should have set suffix on editor');
 
-        Assertions.assertEq('Should have set suffix on EditorManager', '.min', EditorManager.suffix);
-        Assertions.assertEq('Should have set suffix on editor', '.min', ed.suffix);
+        assert.equal(EditorManager.baseURL, EditorManager.documentBaseURL + 'compiled/fake/url', 'Should have set baseURL on EditorManager');
 
-        Assertions.assertEq('Should have set baseURL on EditorManager', EditorManager.documentBaseURL + 'fake/url', EditorManager.baseURL);
-
-        Assertions.assertEq('Should have set baseURI on EditorManager', EditorManager.documentBaseURL + 'fake/url', EditorManager.baseURI.source);
-        Assertions.assertEq('Should have set baseURI on editor', EditorManager.documentBaseURL + 'fake/url', ed.baseURI.source);
+        assert.equal(EditorManager.baseURI.source, EditorManager.documentBaseURL + 'compiled/fake/url', 'Should have set baseURI on EditorManager');
+        assert.equal(ed.baseURI.source, EditorManager.documentBaseURL + 'compiled/fake/url', 'Should have set baseURI on editor');
 
         EditorManager._setBaseUrl(oldBaseURL);
         EditorManager.suffix = oldSuffix;
-        teardown(done);
+        done();
       }
     });
   });
 
-  const getSkinCssFilenames = () => {
+  const getSkinCssFilenames = (): string[] => {
     return Arr.bind(SelectorFilter.descendants(SugarElement.fromDom(document), 'link'), (link) => {
       const href = Attribute.get(link, 'href');
       const fileName = href.split('/').slice(-1).join('');
@@ -168,19 +164,19 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
     });
   };
 
-  const mCreateInlineModeMultipleInstances = Step.label('mCreateInlineModeMultipleInstances', Step.stateful((_value, next, die) => {
+  const pCreateInlineModeMultipleInstances = (): Promise<Editor[]> => {
     viewBlock.update('<div class="tinymce-editor"><p>a</p></div><div class="tinymce-editor"><p>b</p></div>');
 
-    EditorManager.init({
+    return EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       toolbar_mode: 'wrap'
-    }).then(next, die);
-  }));
+    });
+  };
 
-  const mAssertEditors = Step.label('mAssertEditors', Step.stateful((editors: any[], next, _die) => {
+  const assertEditors = (editors: Editor[]) => {
     Assertions.assertHtml('Editor contents should be the first div content', '<p>a</p>', editors[0].getContent());
     Assertions.assertHtml('Editor contents should be the second div content', '<p>b</p>', editors[1].getContent());
     // eslint-disable-next-line no-console
@@ -221,36 +217,29 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[0].editorContainer));
     Assertions.assertStructure('Editor container should match expected structure', containerApproxStructure, SugarElement.fromDom(editors[1].editorContainer));
 
-    Assertions.assertEq(
-      'Should only be two skin files the skin and the content for inline mode',
+    assert.deepEqual(
+      getSkinCssFilenames(),
       [ 'skin.min.css', 'content.inline.min.css' ],
-      getSkinCssFilenames()
+      'Should only be two skin files the skin and the content for inline mode'
     );
 
-    const targets = Arr.map(editors, (editor) => {
-      return editor.getElement();
-    });
+    const targets = Arr.map(editors, (editor) => editor.getElement());
+    assert.lengthOf(targets, 2, 'Targets should be two since there are two editors');
 
-    Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
+    return targets;
+  };
 
-    next(targets);
-  }));
+  const removeAllEditors = () => EditorManager.remove();
 
-  const sRemoveAllEditors = Step.label('sRemoveAllEditors', Step.sync(() => {
-    EditorManager.remove();
-  }));
-
-  const mAssertTargets = Step.label('mAssertTargets', Step.stateful((targets: any[], next, _die) => {
-    Assertions.assertEq('Targets should be two since there are two editors', 2, targets.length);
+  const assertTargets = (targets: Node[]) => {
+    assert.lengthOf(targets, 2, 'Targets should be two since there are two editors');
 
     Arr.each(targets, (target) => {
-      Assertions.assertEq('Target parent should not be null', true, target.parentNode !== null);
+      assert.isNotNull(target.parentNode, 'Target parent should not be null');
     });
+  };
 
-    next({});
-  }));
-
-  const sInitAndAssertContent = (html: string, selector: string, expectedEditorContent: string) => Step.async((done) => {
+  const initAndAssertContent = (html: string, selector: string, expectedEditorContent: string, done: () => void) => {
     viewBlock.update(html);
 
     EditorManager.init({
@@ -258,32 +247,28 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorInitializationTest', (succes
       skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
       content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
-        Assertions.assertEq('Expect editor to have content', expectedEditorContent, ed.getContent({ format: 'text' }));
-        teardown(done);
+        assert.equal(ed.getContent({ format: 'text' }), expectedEditorContent, 'Expect editor to have content');
+        done();
       }
     });
+  };
+
+  it('Initialize multiple inline editors and remove them', async () => {
+    const editors = await pCreateInlineModeMultipleInstances();
+    const targets = assertEditors(editors);
+    removeAllEditors();
+    assertTargets(targets);
   });
 
-  setup();
-  Pipeline.async({}, [
-    ...suite.toSteps({}),
-    Logger.t('Initialize multiple inline editors and remove them', GeneralSteps.sequence([
-      mCreateInlineModeMultipleInstances,
-      mAssertEditors,
-      sRemoveAllEditors,
-      mAssertTargets
-    ])),
-    Logger.t('Initialize on textarea with initial content', GeneralSteps.sequence([
-      sInitAndAssertContent('<textarea>Initial Content</textarea>', 'textarea', 'Initial Content')
-    ])),
-    Logger.t('Initialize on input with initial content', GeneralSteps.sequence([
-      sInitAndAssertContent('<input value="Initial Content">', 'input', 'Initial Content')
-    ])),
-    Logger.t('Initialize on list item with initial content', GeneralSteps.sequence([
-      sInitAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content')
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  it('Initialize on textarea with initial content', (done) => {
+    initAndAssertContent('<textarea>Initial Content</textarea>', 'textarea', 'Initial Content', done);
+  });
+
+  it('Initialize on input with initial content', (done) => {
+    initAndAssertContent('<input value="Initial Content">', 'input', 'Initial Content', done);
+  });
+
+  it('Initialize on list item with initial content', (done) => {
+    initAndAssertContent('<ul><li>Initial Content</li></ul>', 'li', 'Initial Content', done);
+  });
 });

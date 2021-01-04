@@ -1,48 +1,43 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.content.EditorGetContentTreeTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.content.EditorGetContentTreeTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    inline: true
+  }, [ Theme ]);
 
-  const toHtml = (node: AstNode) => {
+  const toHtml = (node: AstNode): string => {
     const htmlSerializer = HtmlSerializer({});
     return htmlSerializer.serialize(node);
   };
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  it('Get content as tree', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    const html = toHtml(editor.getContent({ format: 'tree' }));
+    Assertions.assertHtml('Should be expected html', '<p>a</p>', html);
+  });
 
-    Pipeline.async({}, [
-      Logger.t('Get content as tree', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p>'),
-        Step.sync(() => {
-          const html = toHtml(editor.getContent({ format: 'tree' }));
-          Assertions.assertHtml('Should be expected html', '<p>a</p>', html);
-        })
-      ])),
-      Logger.t('Get selection as tree', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>ab<em>c</em></p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
-        Step.sync(() => {
-          const html = toHtml(editor.selection.getContent({ format: 'tree' }));
-          Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
-        })
-      ])),
-      Logger.t('Get selection as tree with whitespace', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a b c</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 4),
-        Step.sync(() => {
-          const html = toHtml(editor.selection.getContent({ format: 'tree' }));
-          Assertions.assertHtml('Should be expected selection html', ' b ', html);
-        })
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    base_url: '/project/tinymce/js/tinymce',
-    inline: true
-  }, success, failure);
+  it('Get selection as tree', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>ab<em>c</em></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 1, 0 ], 1);
+    const html = toHtml(editor.selection.getContent({ format: 'tree' }));
+    Assertions.assertHtml('Should be expected selection html', 'b<em>c</em>', html);
+  });
+
+  it('Get selection as tree with whitespace', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a b c</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 4);
+    const html = toHtml(editor.selection.getContent({ format: 'tree' }));
+    Assertions.assertHtml('Should be expected selection html', ' b ', html);
+  });
 });

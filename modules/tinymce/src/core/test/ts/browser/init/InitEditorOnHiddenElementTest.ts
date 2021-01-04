@@ -1,18 +1,18 @@
-import { Chain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Editor as McEditor } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorOnHiddenElementTest', (success, failure) => {
-
-  Theme();
+describe('browser.tinymce.core.init.InitEditorOnHiddenElementTest', () => {
+  before(() => Theme());
 
   // Firefox specific test, errors were thrown when the editor was initialised on hidden element.
-  Chain.pipeline([
-    Editor.cFromHtml('<textarea style="display:none;"></textarea>', {
+  it('editor initializes successfully', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<textarea style="display:none;"></textarea>', {
       base_url: '/project/tinymce/js/tinymce'
-    }),
-    ApiChains.cFocus
-  ],
-  success, failure);
+    });
+    editor.focus();
+    McEditor.remove(editor);
+  });
 });

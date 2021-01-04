@@ -1,12 +1,26 @@
-import { Assertions, Chain, DragnDrop, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, DragnDrop, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { ApiChains, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Hierarchy, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.DragDropOverridesTest', () => {
+  const fired = Cell(false);
+  const hook = TinyHooks.bddSetup<Editor>({
+    indent: false,
+    menubar: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
+
+  before(() => {
+    hook.editor().on('dragend', () => {
+      fired.set(true);
+    });
+  });
 
   const createFile = (name: string, lastModified: number, blob: Blob): File => {
     const newBlob: any = new Blob([ blob ], { type: blob.type });
@@ -17,61 +31,47 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
     return Object.freeze(newBlob);
   };
 
-  const cAssertNotification = (message: string) => Chain.fromIsolatedChainsWith(SugarBody.body(), [
-    UiFinder.cWaitForVisible('Wait for notification to appear', '.tox-notification'),
-    Assertions.cAssertPresence('Verify message content', {
+  const assertNotification = (message: string, editor: Editor) => async () => {
+    const body = TinyDom.body(editor);
+    const notification = await UiFinder.pWaitForVisible('Wait for notification to appear', body, '.tox-notification');
+    Assertions.assertPresence('Verify message content', {
       ['.tox-notification__body:contains(' + message + ')']: 1
-    }),
-    Mouse.cClickOn('.tox-notification__dismiss')
-  ]);
+    }, notification);
+    Mouse.clickOn(notification, '.tox-notification__dismiss');
+  };
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const fired = Cell(false);
+  it('drop draggable element outside of editor', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">a</p>');
+    const target = Hierarchy.follow(TinyDom.body(editor), [ 0 ]).filter(SugarNode.isElement).getOrDie().dom;
+    const rect = target.getBoundingClientRect();
+    const button = 0;
+    const screenX = rect.left + rect.width / 2;
+    const screenY = rect.top + rect.height / 2;
 
-    editor.on('dragend', () => {
-      fired.set(true);
-    });
+    editor.fire('mousedown', { button, screenX, screenY, target } as unknown as MouseEvent);
+    editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target } as unknown as MouseEvent);
+    editor.dom.fire(document.body, 'mouseup');
 
-    Pipeline.async({}, [
-      Logger.t('drop draggable element outside of editor', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p contenteditable="false">a</p>'),
-        Step.sync(() => {
-          const target = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), [ 0 ]).filter(SugarNode.isElement).getOrDie().dom;
-          const rect = target.getBoundingClientRect();
-          const button = 0, screenX = (rect.left + rect.width / 2), screenY = (rect.top + rect.height / 2);
+    assert.isTrue(fired.get(), 'Should fire dragend event');
+  });
 
-          editor.fire('mousedown', { button, screenX, screenY, target });
-          editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target });
-          editor.dom.fire(document.body, 'mouseup');
+  it('TINY-6027: Drag unsupported file into the editor/UI is prevented', async () => {
+    const editor = hook.editor();
+    await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+    editor.setContent('<p>Content</p>');
+    await DragnDrop.pDropFiles(TinyDom.body(editor), [
+      createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
+    ]);
+    assertNotification('Dropped file type is not supported', editor);
+    await DragnDrop.pDropItems(TinyDom.body(editor), [
+      { data: 'Some content', type: 'text/plain' }
+    ], false);
 
-          Assertions.assertEq('Should fire dragend event', true, fired.get());
-        })
-      ])),
-      Log.chainsAsStep('TINY-6027', 'Drag unsupported file into the editor/UI is prevented', [
-        Chain.inject(editor),
-        Chain.wait(100), // Wait a small amount of time to ensure the events have been bound
-        ApiChains.cSetContent('<p>Content</p>'),
-        Chain.fromIsolatedChainsWith(SugarElement.fromDom(editor.getBody()), [
-          DragnDrop.cDropFiles([
-            createFile('test.txt', 123, new Blob([ 'content' ], { type: 'text/plain' }))
-          ]),
-          cAssertNotification('Dropped file type is not supported'),
-          DragnDrop.cDropItems([
-            { data: 'Some content', type: 'text/plain' }
-          ], false)
-        ]),
-        Chain.fromIsolatedChainsWith(SugarBody.body(), [
-          UiFinder.cFindIn('.tox-toolbar__primary'),
-          DragnDrop.cDropFiles([
-            createFile('test.js', 123, new Blob([ 'var a = "content";' ], { type: 'application/javascript' }))
-          ])
-        ])
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    indent: false,
-    menubar: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    const toolbar = UiFinder.findIn(SugarBody.body(), '.tox-toolbar__primary').getOrDie();
+    await DragnDrop.pDropFiles(toolbar, [
+      createFile('test.js', 123, new Blob([ 'var a = "content";' ], { type: 'application/javascript' }))
+    ]);
+    assertNotification('Dropped file type is not supported', editor);
+  });
 });

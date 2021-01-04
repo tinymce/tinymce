@@ -1,30 +1,32 @@
-import { Assertions } from '@ephox/agar';
-import { LegacyUnit } from '@ephox/mcagar';
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import { Assert } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 
-const assertCaretPosition = (actual, expected, message?) => {
+import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
+
+const assertCaretPosition = (actual: CaretPosition | null, expected: CaretPosition | null, message?: string) => {
   if (expected === null) {
-    LegacyUnit.strictEqual(actual, expected, message || 'Expected null.');
+    assert.strictEqual(actual, expected, message || 'Expected null.');
     return;
   }
 
   if (actual === null) {
-    LegacyUnit.strictEqual(actual, expected, message || `Didn't expect null.`);
+    assert.strictEqual(actual, expected, message || `Didn't expect null.`);
     return;
   }
 
   const defaultMessage = () => `["${expected.getNode().textContent}", ${expected.offset()}] doesn't match actual position ["${actual.getNode().textContent}", ${actual.offset()}]`;
-  Assertions.assertEq(() => message || defaultMessage(), true, expected.isEqual(actual));
+  Assert.eq(() => message || defaultMessage(), true, expected.isEqual(actual));
 };
 
-const assertRange = (expected, actual) => {
-  Assertions.assertEq('startContainers should be equal', true, expected.startContainer === actual.startContainer);
-  Assertions.assertEq('startOffset should be equal', true, expected.startOffset === actual.startOffset);
-  Assertions.assertEq('endContainer should be equal', true, expected.endContainer === actual.endContainer);
-  Assertions.assertEq('endOffset should be equal', true, expected.endOffset === actual.endOffset);
+const assertRange = (expected: Range, actual: Range) => {
+  assert.strictEqual(actual.startContainer, expected.startContainer, 'startContainers should be equal');
+  assert.strictEqual(actual.startOffset, expected.startOffset, 'startOffset should be equal');
+  assert.strictEqual(actual.endContainer, expected.endContainer, 'endContainer should be equal');
+  assert.strictEqual(actual.endOffset, expected.endOffset, 'endOffset should be equal');
 };
 
-const createRange = (startContainer, startOffset, endContainer?, endOffset?): Range => {
+const createRange = (startContainer: Node, startOffset: number, endContainer?: Node, endOffset?: number): Range => {
   const rng = DOMUtils.DOM.createRng();
 
   rng.setStart(startContainer, startOffset);

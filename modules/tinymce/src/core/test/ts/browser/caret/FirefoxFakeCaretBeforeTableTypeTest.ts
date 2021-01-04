@@ -1,42 +1,45 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import Plugin from 'tinymce/plugins/table/Plugin';
+import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as KeyUtils from '../../module/test/KeyUtils';
 
-const sAssertUndoManagerDataLength = (editor: Editor, expected: number) =>
-  Step.sync(() => Assert.eq('should have correct length', expected, editor.undoManager.data.length));
+const assertUndoManagerDataLength = (editor: Editor, expected: number) =>
+  assert.lengthOf(editor.undoManager.data, expected, 'should have correct length');
 
-UnitTest.asynctest('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', (success, failure) => {
-  Theme();
-  Plugin();
+describe('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', () => {
+  before(function () {
+    // This test is only relevant on Firefox
+    if (!Env.browser.isFirefox()) {
+      this.skip();
+    }
+  });
 
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, Env.gecko ? [ // This test is only relevant on Firefox
-      Logger.t('cursor before table type', GeneralSteps.sequence([
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse; width: 100%;" border="1">' +
-          '<tbody><tr>' +
-          '<td style="width: 50%;">&nbsp;</td>' +
-          '<td style="width: 50%;">&nbsp;</td>' +
-          '</tr><tr>' +
-          '<td style="width: 50%;">&nbsp;</td>' +
-          '<td style="width: 50%;">&nbsp;</td>' +
-          '</tr></tbody>' +
-          '</table>'),
-        tinyApis.sSetCursor([], 0),
-        sAssertUndoManagerDataLength(editor, 1),
-        Step.sync(() => KeyUtils.type(editor, 'a')),
-        sAssertUndoManagerDataLength(editor, 3)
-      ]))
-    ] : [], onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table'
-  }, success, failure);
+  }, [ Theme, TablePlugin ]);
+
+  it('cursor before table type', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse; width: 100%;" border="1">' +
+      '<tbody><tr>' +
+      '<td style="width: 50%;">&nbsp;</td>' +
+      '<td style="width: 50%;">&nbsp;</td>' +
+      '</tr><tr>' +
+      '<td style="width: 50%;">&nbsp;</td>' +
+      '<td style="width: 50%;">&nbsp;</td>' +
+      '</tr></tbody>' +
+      '</table>'
+    );
+    TinySelections.setCursor(editor, [], 0);
+    assertUndoManagerDataLength(editor, 1);
+    KeyUtils.type(editor, 'a');
+    assertUndoManagerDataLength(editor, 3);
+  });
 });

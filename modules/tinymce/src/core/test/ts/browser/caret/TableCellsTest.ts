@@ -1,258 +1,248 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, SelectorFind, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import { CaretPosition } from 'tinymce/core/caret/CaretPosition';
-import {
-  findClosestPositionInAboveCell, findClosestPositionInBelowCell, getClosestCellAbove, getClosestCellBelow
-} from 'tinymce/core/caret/TableCells';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as TableCells from 'tinymce/core/caret/TableCells';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.caret.TableCellsTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.caret.TableCellsTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  const cSetHtml = (html) => {
-    return Chain.op(() => {
-      viewBlock.update(html.trim());
-    });
-  };
+  const setHtml = (html: string) => viewBlock.update(html.trim());
 
-  const cAssertCell = (path) => Chain.op((cellOption: Optional<any>) => {
-    const cell = cellOption.getOrDie('x');
+  const assertCell = (cellOpt: Optional<HTMLTableCellElement | HTMLTableCaptionElement>, path: number[]) => {
+    const cell = cellOpt.getOrDie('x');
     const expectedContainer = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     Assertions.assertDomEq('Should be the expected element', expectedContainer, SugarElement.fromDom(cell));
-  });
+  };
 
-  const cAssertNone = Chain.op((pos: Optional<any>) => {
-    Assertions.assertEq('Should be the none but got some', true, pos.isNone());
-  });
+  const assertNone = (opt: Optional<unknown>) => {
+    assert.isTrue(opt.isNone(), 'Should be the none but got some');
+  };
 
-  const cGetClosestCellAbove = (x: number, y: number) => Chain.mapper((viewBlock: any) => {
+  const getClosestCellAbove = (x: number, y: number) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
-    return getClosestCellAbove(table, rect.left + x, rect.top + y);
-  });
+    return TableCells.getClosestCellAbove(table, rect.left + x, rect.top + y);
+  };
 
-  const cGetClosestCellBelow = (x: number, y: number) => Chain.mapper((viewBlock: any) => {
+  const getClosestCellBelow = (x: number, y: number) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const rect = table.getBoundingClientRect();
-    return getClosestCellBelow(table, rect.left + x, rect.top + y);
-  });
+    return TableCells.getClosestCellBelow(table, rect.left + x, rect.top + y);
+  };
 
-  const cFindClosestPositionInAboveCell = (path: number[], offset: number) => Chain.mapper((viewBlock: any) => {
+  const findClosestPositionInAboveCell = (path: number[], offset: number) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
-    return findClosestPositionInAboveCell(table, pos);
-  });
+    return TableCells.findClosestPositionInAboveCell(table, pos);
+  };
 
-  const cFindClosestPositionInBelowCell = (path: number[], offset: number) => Chain.mapper((viewBlock: any) => {
+  const findClosestPositionInBelowCell = (path: number[], offset: number) => {
     const table = SelectorFind.descendant<HTMLTableElement>(SugarElement.fromDom(viewBlock.get()), 'table').getOrDie('Could not find table').dom;
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
     const pos = CaretPosition(container.dom, offset);
-    return findClosestPositionInBelowCell(table, pos);
-  });
+    return TableCells.findClosestPositionInBelowCell(table, pos);
+  };
 
-  const cAssertCaretPosition = (path: number[], offset: number) => Chain.op((posOption: Optional<any>) => {
+  const assertCaretPosition = (posOpt: Optional<CaretPosition>, path: number[], offset: number) => {
     const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).getOrDie();
-    const pos = posOption.getOrDie('Needs to return a caret');
+    const pos = posOpt.getOrDie('Needs to return a caret');
 
     Assertions.assertDomEq('Should be the expected container', container, SugarElement.fromDom(pos.container()));
-    Assertions.assertEq('Should be the expected offset', offset, pos.offset());
+    assert.equal(pos.offset(), offset, 'Should be the expected offset');
+  };
+
+  context('getClosestCellAbove', () => {
+    it('Should return the top/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellAbove(30, 30);
+      assertCell(cell, [ 0, 0, 0, 1 ]);
+    });
+    it('Should return the top/left cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellAbove(15, 30);
+      assertCell(cell, [ 0, 0, 0, 0 ]);
+    });
+    it('Should not return a cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellAbove(15, 15);
+      assertNone(cell);
+    });
   });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('getClosestCellAbove', GeneralSteps.sequence([
-      Logger.t('Should return the top/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellAbove(30, 30),
-        cAssertCell([ 0, 0, 0, 1 ])
-      ])),
-      Logger.t('Should return the top/left cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellAbove(15, 30),
-        cAssertCell([ 0, 0, 0, 0 ])
-      ])),
-      Logger.t('Should not return a cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellAbove(15, 15),
-        cAssertNone
-      ]))
-    ])),
+  context('getClosestCellBelow', () => {
+    it('Should return the bottom/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellBelow(30, 15);
+      assertCell(cell, [ 0, 0, 1, 1 ]);
+    });
+    it('Should return the bottom/left cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellBelow(15, 15);
+      assertCell(cell, [ 0, 0, 1, 0 ]);
+    });
+    it('Should not return a cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const cell = getClosestCellBelow(30, 30);
+      assertNone(cell);
+    });
+  });
 
-    Logger.t('getClosestCellBelow', GeneralSteps.sequence([
-      Logger.t('Should return the bottom/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellBelow(30, 15),
-        cAssertCell([ 0, 0, 1, 1 ])
-      ])),
-      Logger.t('Should return the bottom/left cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellBelow(15, 15),
-        cAssertCell([ 0, 0, 1, 0 ])
-      ])),
-      Logger.t('Should not return a cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cGetClosestCellBelow(30, 30),
-        cAssertNone
-      ]))
-    ])),
-
-    Logger.t('findClosestPositionInAboveCell', GeneralSteps.sequence([
-      Logger.t('Should return first positon in the top/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cFindClosestPositionInAboveCell([ 0, 0, 1, 1 ], 0),
-        cAssertCaretPosition([ 0, 0, 0, 1, 0 ], 0)
-      ])),
-      Logger.t('Should return last positon in the top/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cFindClosestPositionInAboveCell([ 0, 0, 1, 1 ], 1),
-        cAssertCaretPosition([ 0, 0, 0, 1, 0 ], 1)
-      ])),
-      Logger.t('Should return first positon in the bottom/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cFindClosestPositionInBelowCell([ 0, 0, 0, 1 ], 0),
-        cAssertCaretPosition([ 0, 0, 1, 1, 0 ], 0)
-      ])),
-      Logger.t('Should return last positon in the bottom/right cell', Chain.asStep(viewBlock, [
-        cSetHtml([
-          '<table style="border-collapse: collapse" border="1">',
-          '<tbody>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">a</td>',
-          '<td style="width: 20px; height: 20px;">b</td>',
-          '</tr>',
-          '<tr>',
-          '<td style="width: 20px; height: 20px;">c</td>',
-          '<td style="width: 20px; height: 20px;">d</td>',
-          '</tr>',
-          '</tbody>',
-          '</table>'
-        ].join('')),
-        cFindClosestPositionInBelowCell([ 0, 0, 0, 1 ], 1),
-        cAssertCaretPosition([ 0, 0, 1, 1, 0 ], 1)
-      ]))
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  context('findClosestPositionInAboveCell', () => {
+    it('Should return first positon in the top/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const pos = findClosestPositionInAboveCell([ 0, 0, 1, 1 ], 0);
+      assertCaretPosition(pos, [ 0, 0, 0, 1, 0 ], 0);
+    });
+    it('Should return last positon in the top/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const pos = findClosestPositionInAboveCell([ 0, 0, 1, 1 ], 1);
+      assertCaretPosition(pos, [ 0, 0, 0, 1, 0 ], 1);
+    });
+    it('Should return first positon in the bottom/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const pos = findClosestPositionInBelowCell([ 0, 0, 0, 1 ], 0);
+      assertCaretPosition(pos, [ 0, 0, 1, 1, 0 ], 0);
+    });
+    it('Should return last positon in the bottom/right cell', () => {
+      setHtml([
+        '<table style="border-collapse: collapse" border="1">',
+        '<tbody>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">a</td>',
+        '<td style="width: 20px; height: 20px;">b</td>',
+        '</tr>',
+        '<tr>',
+        '<td style="width: 20px; height: 20px;">c</td>',
+        '<td style="width: 20px; height: 20px;">d</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>'
+      ].join(''));
+      const pos = findClosestPositionInBelowCell([ 0, 0, 0, 1 ], 1);
+      assertCaretPosition(pos, [ 0, 0, 1, 1, 0 ], 1);
+    });
+  });
 });

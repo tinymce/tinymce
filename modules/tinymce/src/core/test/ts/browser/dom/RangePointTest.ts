@@ -1,42 +1,43 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as RangePoint from 'tinymce/core/dom/RangePoint';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.RangePointsTest', (success, failure) => {
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const sAssertXYWithinRange = (x: number, y: number) => Waiter.sTryUntil('Assert XY position is within selection range', Step.sync(() => {
-      const actual = RangePoint.isXYWithinRange(x, y, editor.selection.getRng());
-      Assertions.assertEq('Assert XY position is within selection range', true, actual);
-    }));
-
-    Pipeline.async({}, [
-      Logger.t('point in image selection', GeneralSteps.sequence([
-        // Insert 20x20px image
-        tinyApis.sSetContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAHUlEQVR42mNk+A+EVASMowaOGjhq4KiBowaOVAMBOBYn7dVkgssAAAAASUVORK5CYII="></p>'),
-        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
-        sAssertXYWithinRange(10, 10)
-      ])),
-      Logger.t('point in text content selection', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>Some text content</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 9),
-        sAssertXYWithinRange(15, 5)
-      ])),
-      Logger.t('point in table selection', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><table><tbody><tr><th>Header 1</th><th>Header 2</th></tr><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 1, 0 ], 8),
-        sAssertXYWithinRange(25, 20),
-        sAssertXYWithinRange(150, 20)
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.core.dom.RangePointsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body, p { margin: 0 }'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const pAssertXYWithinRange = (editor: Editor, x: number, y: number) => Waiter.pTryUntil('Assert XY position is within selection range', () => {
+    const actual = RangePoint.isXYWithinRange(x, y, editor.selection.getRng());
+    assert.isTrue(actual, 'Assert XY position is within selection range');
+  });
+
+  it('point in image selection', async () => {
+    const editor = hook.editor();
+    // Insert 20x20px image
+    editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAHUlEQVR42mNk+A+EVASMowaOGjhq4KiBowaOVAMBOBYn7dVkgssAAAAASUVORK5CYII="></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    await pAssertXYWithinRange(editor, 10, 10);
+  });
+
+  it('point in text content selection', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Some text content</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 9);
+    await pAssertXYWithinRange(editor, 15, 5);
+  });
+
+  it('point in table selection', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><table><tbody><tr><th>Header 1</th><th>Header 2</th></tr><tr><td>Cell 1</td><td>Cell 2</td></tr></tbody></table></p>');
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 1, 0 ], 8);
+    await pAssertXYWithinRange(editor, 25, 20);
+    await pAssertXYWithinRange(editor, 150, 20);
+  });
 });

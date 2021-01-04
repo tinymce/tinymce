@@ -1,120 +1,99 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as Parents from 'tinymce/core/dom/Parents';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ParentsTest', (success, failure) => {
+describe('browser.tinymce.core.dom.ParentsTest', () => {
+  const createStructure = (html: string) => SugarElement.fromHtml(html);
 
-  const cCreateStructure = (html) => {
-    return Chain.injectThunked(() => {
-      return SugarElement.fromHtml(html);
+  const parentsUntil = (structure: SugarElement, startPath: number[], rootPath: number[], predicate: (elm: SugarElement) => boolean) => {
+    const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+    const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+    return Parents.parentsUntil(startNode, rootNode, predicate);
+  };
+
+  const parents = (structure: SugarElement, startPath: number[], rootPath: number[]) => {
+    const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+    const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+    return Parents.parents(startNode, rootNode);
+  };
+
+  const parentsAndSelf = (structure: SugarElement, startPath: number[], rootPath: number[]) => {
+    const startNode = Hierarchy.follow(structure, startPath).getOrDie();
+    const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
+    return Parents.parentsAndSelf(startNode, rootNode);
+  };
+
+  const assertElementNames = (parents: SugarElement[], expectedNames: string[]) => {
+    const names = Arr.map(parents, SugarNode.name);
+    assert.deepEqual(names, expectedNames, 'Should be expected names');
+  };
+
+  context('parentsUntil', () => {
+    it('parentsUntil root', () => {
+      const structure = createStructure('<p><b>a</b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0 ], [], SugarNode.isTag('p'));
+      assertElementNames(parentElms, [ 'b' ]);
     });
-  };
 
-  const cParentsUntil = (startPath, rootPath, predicate) => {
-    return Chain.mapper((structure: any) => {
-      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
-      return Parents.parentsUntil(startNode, rootNode, predicate);
+    it('parentsUntil root on elm', () => {
+      const structure = createStructure('<p><b><i></i></b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0 ], [], SugarNode.isTag('p'));
+      assertElementNames(parentElms, [ 'b' ]);
     });
-  };
 
-  const cParents = (startPath, rootPath) => {
-    return Chain.mapper((structure: any) => {
-      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
-      return Parents.parents(startNode, rootNode);
+    it('parentsUntil root deeper', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0, 0, 0 ], [], SugarNode.isTag('p'));
+      assertElementNames(parentElms, [ 'u', 'i', 'b' ]);
     });
-  };
 
-  const cParentsAndSelf = (startPath, rootPath) => {
-    return Chain.mapper((structure: any) => {
-      const startNode = Hierarchy.follow(structure, startPath).getOrDie();
-      const rootNode = Hierarchy.follow(structure, rootPath).getOrDie();
-      return Parents.parentsAndSelf(startNode, rootNode);
+    it('parentsUntil end at b with nested inline elements', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0, 0, 0 ], [], SugarNode.isTag('b'));
+      assertElementNames(parentElms, [ 'u', 'i' ]);
     });
-  };
 
-  const cAssertElementNames = (expectedNames) => {
-    return Chain.mapper((parents: SugarElement[]) => {
-      const names = Arr.map(parents, SugarNode.name);
-      Assertions.assertEq('Should be expected names', expectedNames, names);
-      return {};
+    it('parentsUntil end at b', () => {
+      const structure = createStructure('<p><b>a</b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0 ], [], SugarNode.isTag('b'));
+      assertElementNames(parentElms, []);
     });
-  };
 
-  const hasName = (name) => {
-    return (elm) => {
-      return SugarNode.name(elm) === name;
-    };
-  };
+    it('parentsUntil root scope', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parentsUntil(structure, [ 0, 0, 0, 0 ], [ 0 ], SugarNode.isTag('p'));
+      assertElementNames(parentElms, [ 'u', 'i' ]);
+    });
+  });
 
-  Pipeline.async({}, [
-    Logger.t('parentsUntil', GeneralSteps.sequence([
-      Logger.t('parentsUntil root', Chain.asStep({}, [
-        cCreateStructure('<p><b>a</b></p>'),
-        cParentsUntil([ 0, 0 ], [], hasName('p')),
-        cAssertElementNames([ 'b' ])
-      ])),
+  context('parents', () => {
+    it('parents', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parents(structure, [ 0, 0, 0, 0 ], []);
+      assertElementNames(parentElms, [ 'u', 'i', 'b' ]);
+    });
 
-      Logger.t('parentsUntil root on elm', Chain.asStep({}, [
-        cCreateStructure('<p><b><i></i></b></p>'),
-        cParentsUntil([ 0, 0 ], [], hasName('p')),
-        cAssertElementNames([ 'b' ])
-      ])),
+    it('parents scoped', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parents(structure, [ 0, 0, 0, 0 ], [ 0 ]);
+      assertElementNames(parentElms, [ 'u', 'i' ]);
+    });
+  });
 
-      Logger.t('parentsUntil root deeper', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParentsUntil([ 0, 0, 0, 0 ], [], hasName('p')),
-        cAssertElementNames([ 'u', 'i', 'b' ])
-      ])),
+  context('parentsAndSelf', () => {
+    it('parentsAndSelf', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parentsAndSelf(structure, [ 0, 0, 0, 0 ], []);
+      assertElementNames(parentElms, [ '#text', 'u', 'i', 'b' ]);
+    });
 
-      Logger.t('parentsUntil end at b', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParentsUntil([ 0, 0, 0, 0 ], [], hasName('b')),
-        cAssertElementNames([ 'u', 'i' ])
-      ])),
-
-      Logger.t('parentsUntil end at b', Chain.asStep({}, [
-        cCreateStructure('<p><b>a</b></p>'),
-        cParentsUntil([ 0, 0 ], [], hasName('b')),
-        cAssertElementNames([])
-      ])),
-
-      Logger.t('parentsUntil root scope', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParentsUntil([ 0, 0, 0, 0 ], [ 0 ], hasName('p')),
-        cAssertElementNames([ 'u', 'i' ])
-      ]))
-    ])),
-
-    Logger.t('parents', GeneralSteps.sequence([
-      Logger.t('parents', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParents([ 0, 0, 0, 0 ], []),
-        cAssertElementNames([ 'u', 'i', 'b' ])
-      ])),
-
-      Logger.t('parents scoped', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParents([ 0, 0, 0, 0 ], [ 0 ]),
-        cAssertElementNames([ 'u', 'i' ])
-      ]))
-    ])),
-
-    Logger.t('parentsAndSelf', GeneralSteps.sequence([
-      Logger.t('parentsAndSelf', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParentsAndSelf([ 0, 0, 0, 0 ], []),
-        cAssertElementNames([ '#text', 'u', 'i', 'b' ])
-      ])),
-
-      Logger.t('parentsAndSelf scoped', Chain.asStep({}, [
-        cCreateStructure('<p><b><i><u>a</u></i></b></p>'),
-        cParentsAndSelf([ 0, 0, 0, 0 ], [ 0 ]),
-        cAssertElementNames([ '#text', 'u', 'i' ])
-      ]))
-    ]))
-  ], success, failure);
+    it('parentsAndSelf scoped', () => {
+      const structure = createStructure('<p><b><i><u>a</u></i></b></p>');
+      const parentElms = parentsAndSelf(structure, [ 0, 0, 0, 0 ], [ 0 ]);
+      assertElementNames(parentElms, [ '#text', 'u', 'i' ]);
+    });
+  });
 });

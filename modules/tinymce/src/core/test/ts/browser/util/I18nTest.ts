@@ -1,13 +1,11 @@
-import { Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import I18n from 'tinymce/core/api/util/I18n';
 
-UnitTest.asynctest('browser.tinymce.core.util.I18nTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-
-  suite.test('Translate strings', () => {
+describe('browser.tinymce.core.util.I18nTest', () => {
+  it('Translate strings', () => {
     const translate = I18n.translate;
 
     I18n.add('code', {
@@ -21,62 +19,62 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', (success, failure) => {
 
     I18n.setCode('code');
 
-    LegacyUnit.equal(translate('text'), 'text translation');
-    LegacyUnit.equal(translate('untranslated text'), 'untranslated text');
-    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}', 'a', 'b' ]), 'untranslated value:ab');
-    LegacyUnit.equal(translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
-    LegacyUnit.equal(translate('untranslated text{context:context}'), 'untranslated text');
-    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}{context:something}', 'a', 'b' ]), 'untranslated value:ab');
-    LegacyUnit.equal(translate([ 'value:{0}{1}{context:something}', 'a', 'b' ]), 'value translation:ab with context');
+    assert.equal(translate('text'), 'text translation');
+    assert.equal(translate('untranslated text'), 'untranslated text');
+    assert.equal(translate([ 'untranslated value:{0}{1}', 'a', 'b' ]), 'untranslated value:ab');
+    assert.equal(translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab');
+    assert.equal(translate('untranslated text{context:context}'), 'untranslated text');
+    assert.equal(translate([ 'untranslated value:{0}{1}{context:something}', 'a', 'b' ]), 'untranslated value:ab');
+    assert.equal(translate([ 'value:{0}{1}{context:something}', 'a', 'b' ]), 'value translation:ab with context');
 
     // check if translate survives some awkward cases
-    LegacyUnit.deepEqual(translate('empty string'), '');
-    LegacyUnit.equal(translate([ 'untranslated value:{0}{1}', 'a' ]), 'untranslated value:a{1}',
+    assert.deepEqual(translate('empty string'), '');
+    assert.equal(translate([ 'untranslated value:{0}{1}', 'a' ]), 'untranslated value:a{1}',
       `Do not strip tokens that weren't replaced.`);
 
-    LegacyUnit.equal(translate([{ }]), '[object Object]');
-    LegacyUnit.equal(translate(Fun.noop), '[object Function]');
+    assert.equal(translate([{ }]), '[object Object]');
+    assert.equal(translate(Fun.noop), '[object Function]');
 
-    LegacyUnit.equal(translate(null), '');
-    LegacyUnit.equal(translate(undefined), '');
-    LegacyUnit.equal(translate(0), '0', '0');
-    LegacyUnit.equal(translate(true), 'true', 'true');
-    LegacyUnit.equal(translate(false), 'false', 'false');
+    assert.equal(translate(null), '');
+    assert.equal(translate(undefined), '');
+    assert.equal(translate(0), '0', '0');
+    assert.equal(translate(true), 'true', 'true');
+    assert.equal(translate(false), 'false', 'false');
 
-    LegacyUnit.equal(translate({}), '[object Object]', '[object Object]');
-    LegacyUnit.equal(translate({ raw: '' }), '', 'empty string');
-    LegacyUnit.equal(translate({ raw: false }), 'false', 'false');
-    LegacyUnit.equal(translate({ raw: undefined }), '');
-    LegacyUnit.equal(translate({ raw: null }), '');
+    assert.equal(translate({}), '[object Object]', '[object Object]');
+    assert.equal(translate({ raw: '' }), '', 'empty string');
+    assert.equal(translate({ raw: false }), 'false', 'false');
+    assert.equal(translate({ raw: undefined }), '');
+    assert.equal(translate({ raw: null }), '');
 
     // https://github.com/tinymce/tinymce/issues/3029
-    LegacyUnit.equal(translate('hasOwnProperty'), 'hasOwnProperty');
+    assert.equal(translate('hasOwnProperty'), 'hasOwnProperty');
     I18n.add('code', {
       hasOwnProperty: 'good'
     });
-    LegacyUnit.equal(translate('hasOwnProperty'), 'good');
+    assert.equal(translate('hasOwnProperty'), 'good');
 
     // Translate is case insensitive
-    LegacyUnit.equal(translate('TeXt'), 'text translation');
-    LegacyUnit.equal(translate('Value:{0}{1}{context:someThinG}'), 'value translation:{0}{1} with context');
+    assert.equal(translate('TeXt'), 'text translation');
+    assert.equal(translate('Value:{0}{1}{context:someThinG}'), 'value translation:{0}{1} with context');
 
     // can be called multiple times
-    LegacyUnit.equal(translate(translate(translate(translate('value:{0}{1}')))), 'value translation:{0}{1}');
+    assert.equal(translate(translate(translate(translate('value:{0}{1}')))), 'value translation:{0}{1}');
 
     // When any translation string is the same as a key, a wrong translation will be made in nested translation calls.
-    LegacyUnit.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
+    assert.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
 
     I18n.setCode('en');
   });
 
-  suite.test('Switch language', () => {
+  it('Switch language', () => {
     I18n.add('code1', {
       text: 'translation1'
     });
 
-    Assert.eq('Should not have switched language code', 'en', I18n.getCode());
-    Assert.eq('Should not be in in rtl mode', false, I18n.isRtl());
-    Assert.eq('Should not get code1 translation', 'text', I18n.translate('text'));
+    assert.equal(I18n.getCode(), 'en', 'Should not have switched language code');
+    assert.isFalse(I18n.isRtl(), 'Should not be in in rtl mode');
+    assert.equal(I18n.translate('text'), 'text', 'Should not get code1 translation');
 
     I18n.add('code2', {
       _dir: 'rtl',
@@ -84,12 +82,10 @@ UnitTest.asynctest('browser.tinymce.core.util.I18nTest', (success, failure) => {
     });
 
     I18n.setCode('code2');
-    Assert.eq('Should have switched language code', 'code2', I18n.getCode());
-    Assert.eq('Should be in in rtl mode', true, I18n.isRtl());
-    Assert.eq('Should be get code2 translation', 'translation2', I18n.translate('text'));
+    assert.equal(I18n.getCode(), 'code2', 'Should have switched language code');
+    assert.isTrue(I18n.isRtl(), 'Should be in in rtl mode');
+    assert.equal(I18n.translate('text'), 'translation2', 'Should be get code2 translation');
 
     I18n.setCode('en');
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

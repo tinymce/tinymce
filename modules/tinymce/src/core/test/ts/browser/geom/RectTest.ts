@@ -1,13 +1,11 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import Rect from 'tinymce/core/api/geom/Rect';
 import Tools from 'tinymce/core/api/util/Tools';
 
-UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-
-  suite.test('relativePosition', () => {
+describe('browser.tinymce.core.geom.RectTest', () => {
+  it('relativePosition', () => {
     const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
@@ -25,8 +23,8 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
         [ 'br-bl', 50, 40, 20, 30 ]
       ];
 
-    Tools.each(tests, (item: any[]) => {
-      LegacyUnit.deepEqual(
+    Tools.each(tests, (item: [ string, number, number, number, number ]) => {
+      assert.deepEqual(
         Rect.relativePosition(sourceRect, targetRect, item[0]),
         Rect.create(item[1], item[2], item[3], item[4]),
         item[0] as string
@@ -34,7 +32,7 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
     });
   });
 
-  suite.test('findBestRelativePosition', () => {
+  it('findBestRelativePosition', () => {
     const sourceRect = Rect.create(0, 0, 20, 30),
       targetRect = Rect.create(10, 20, 40, 50),
       tests = [
@@ -44,8 +42,8 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
         [[ 'tl-bl', 'tr-tl', 'bl-tl' ], 10, 20, 40, 100, 'bl-tl' ]
       ];
 
-    Tools.each(tests, (item: any[]) => {
-      LegacyUnit.equal(
+    Tools.each(tests, (item: [ string[], number, number, number, number, string ]) => {
+      assert.equal(
         Rect.findBestRelativePosition(sourceRect, targetRect, Rect.create(item[1], item[2], item[3], item[4]), item[0]),
         item[5],
         item[5]
@@ -53,45 +51,43 @@ UnitTest.asynctest('browser.tinymce.core.geom.RectTest', (success, failure) => {
     });
   });
 
-  suite.test('inflate', () => {
-    LegacyUnit.deepEqual(Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10), Rect.create(5, 10, 40, 60));
+  it('inflate', () => {
+    assert.deepEqual(Rect.inflate(Rect.create(10, 20, 30, 40), 5, 10), Rect.create(5, 10, 40, 60));
   });
 
-  suite.test('intersect', () => {
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { x: 10, y: 20, w: 30, h: 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { x: 15, y: 25, w: 25, h: 35 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { x: 15, y: 25, w: 5, h: 5 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)), null);
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), { x: 40, y: 20, w: 0, h: 40 });
-    LegacyUnit.equal(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { x: 10, y: 60, w: 30, h: 0 });
+  it('intersect', () => {
+    assert.deepEqual(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)), { x: 10, y: 20, w: 30, h: 40 });
+    assert.deepEqual(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 30, 40)), { x: 15, y: 25, w: 25, h: 35 });
+    assert.deepEqual(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(15, 25, 5, 5)), { x: 15, y: 25, w: 5, h: 5 });
+    assert.isNull(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(0, 10, 5, 5)));
+    assert.isNull(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(45, 20, 5, 5)));
+    assert.isNull(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 65, 5, 5)));
+    assert.deepEqual(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(40, 20, 30, 40)), { x: 40, y: 20, w: 0, h: 40 });
+    assert.deepEqual(Rect.intersect(Rect.create(10, 20, 30, 40), Rect.create(10, 60, 30, 40)), { x: 10, y: 60, w: 30, h: 0 });
   });
 
-  suite.test('clamp', () => {
-    LegacyUnit.deepEqual(
+  it('clamp', () => {
+    assert.deepEqual(
       Rect.clamp(Rect.create(10, 20, 30, 40), Rect.create(10, 20, 30, 40)),
       Rect.create(10, 20, 30, 40)
     );
 
-    LegacyUnit.deepEqual(
+    assert.deepEqual(
       Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40)),
       Rect.create(10, 20, 25, 40)
     );
 
-    LegacyUnit.deepEqual(
+    assert.deepEqual(
       Rect.clamp(Rect.create(5, 20, 30, 40), Rect.create(10, 20, 30, 40), true),
       Rect.create(10, 20, 30, 40)
     );
   });
 
-  suite.test('create', () => {
-    LegacyUnit.deepEqual(Rect.create(10, 20, 30, 40), { x: 10, y: 20, w: 30, h: 40 });
+  it('create', () => {
+    assert.deepEqual(Rect.create(10, 20, 30, 40), { x: 10, y: 20, w: 30, h: 40 });
   });
 
-  suite.test('fromClientRect', () => {
-    LegacyUnit.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
+  it('fromClientRect', () => {
+    assert.deepEqual(Rect.fromClientRect({ left: 10, top: 20, width: 30, height: 40, bottom: 60, right: 40 }), { x: 10, y: 20, w: 30, h: 40 });
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });
