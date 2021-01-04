@@ -36,9 +36,9 @@ const listItems = [ 'li', 'dd', 'dt' ];
 const lists = [ 'ul', 'ol', 'dl' ];
 const wsElements = [ 'pre', 'script', 'textarea', 'style' ];
 
-const lazyLookup = <T = HTMLElement>(items) => {
+const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   let lookup;
-  return (node: SugarElement): node is SugarElement<T> => {
+  return (node: SugarElement<Node>): node is SugarElement<T> => {
     lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
     return lookup.hasOwnProperty(SugarNode.name(node));
   };
@@ -46,9 +46,9 @@ const lazyLookup = <T = HTMLElement>(items) => {
 
 const isHeading = lazyLookup<HTMLHeadingElement>(headings);
 const isBlock = lazyLookup(blocks);
-const isTable = (node: SugarElement): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
-const isInline = (node: SugarElement): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
-const isBr = (node: SugarElement): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
+const isTable = (node: SugarElement<Node>): node is SugarElement<HTMLTableElement> => SugarNode.name(node) === 'table';
+const isInline = (node: SugarElement<Node>): node is SugarElement<HTMLElement> => SugarNode.isElement(node) && !isBlock(node);
+const isBr = (node: SugarElement<Node>): node is SugarElement<HTMLBRElement> => SugarNode.isElement(node) && SugarNode.name(node) === 'br';
 const isTextBlock = lazyLookup(textBlocks);
 const isList = lazyLookup(lists);
 const isListItem = lazyLookup(listItems);

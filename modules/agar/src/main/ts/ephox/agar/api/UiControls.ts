@@ -4,21 +4,23 @@ import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
-const cSetValue = (newValue: string): Chain<SugarElement<any>, SugarElement<any>> =>
-  Chain.op((element: SugarElement<any>) => {
+type TogglableElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLOptionElement | HTMLButtonElement;
+
+const cSetValue = <T extends TogglableElement>(newValue: string): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.op((element) => {
     Value.set(element, newValue);
   });
 
-const cGetValue: Chain<SugarElement<any>, string> =
+const cGetValue: Chain<SugarElement<TogglableElement>, string> =
   Chain.mapper(Value.get);
 
-const sSetValue = <T>(element: SugarElement<any>, newValue: string): Step<T, T> =>
-  Chain.asStep<T, SugarElement>(element, [
+const sSetValue = <T>(element: SugarElement<TogglableElement>, newValue: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement<TogglableElement>>(element, [
     cSetValue(newValue)
   ]);
 
-const sSetValueOn = <T>(container: SugarElement<any>, selector: string, newValue: string): Step<T, T> =>
-  Chain.asStep<T, SugarElement>(container, [
+const sSetValueOn = <T>(container: SugarElement<Node>, selector: string, newValue: string): Step<T, T> =>
+  Chain.asStep<T, SugarElement<Node>>(container, [
     UiFinder.cFindIn(selector),
     cSetValue(newValue)
   ]);

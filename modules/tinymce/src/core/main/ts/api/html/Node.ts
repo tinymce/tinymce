@@ -177,7 +177,7 @@ class AstNode {
    * @param {String} value Optional value to set.
    * @return {String/tinymce.html.Node} String or undefined on a get operation or the current node on a set operation.
    */
-  public attr(name: string, value: string | null): string | AstNode;
+  public attr(name: string, value: string | null): AstNode;
   public attr(name: Record<string, string | null>): AstNode;
   public attr(name: string): string;
   public attr(name: string | Record<string, string | null>, value?: string | null): string | AstNode {

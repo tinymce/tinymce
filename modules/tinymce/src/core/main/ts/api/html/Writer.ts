@@ -8,7 +8,6 @@
 import { EntityEncoding } from '../SettingsTypes';
 import Tools from '../util/Tools';
 import Entities from './Entities';
-import { Attributes } from './Node';
 
 /**
  * This class is used to write HTML tags out it can be used with the Serializer or the SaxParser.
@@ -34,13 +33,15 @@ export interface WriterSettings {
   indent_before?: string;
 }
 
+type Attributes = Array<{ name: string; value: string }>;
+
 interface Writer {
   cdata: (text: string) => void;
   comment: (text: string) => void;
   doctype: (text: string) => void;
   end: (name: string) => void;
   getContent: () => string;
-  pi: (name: string, text: string) => void;
+  pi: (name: string, text?: string) => void;
   reset: () => void;
   start: (name: string, attrs?: Attributes, empty?: boolean) => void;
   text: (text: string, raw?: boolean) => void;
@@ -167,7 +168,7 @@ const Writer = (settings?: WriterSettings): Writer => {
      * @param {String} name Name of the pi.
      * @param {String} text String to write out inside the pi.
      */
-    pi: (name: string, text: string) => {
+    pi: (name: string, text?: string) => {
       if (text) {
         html.push('<?', name, ' ', encode(text), '?>');
       } else {

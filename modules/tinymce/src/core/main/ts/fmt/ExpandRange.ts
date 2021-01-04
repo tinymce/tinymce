@@ -12,6 +12,7 @@ import Editor from '../api/Editor';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
+import { RangeLikeObject } from '../selection/RangeTypes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
 import * as FormatUtils from './FormatUtils';
 
@@ -226,7 +227,7 @@ const findParentContainer = (
 
 const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
 
-const expandRng = (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false) => {
+const expandRng = (editor: Editor, rng: Range, format, includeTrailingSpace: boolean = false): RangeLikeObject => {
   let startContainer = rng.startContainer,
     startOffset = rng.startOffset,
     endContainer = rng.endContainer,

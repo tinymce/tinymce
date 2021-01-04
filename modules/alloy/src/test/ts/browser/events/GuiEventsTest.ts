@@ -9,7 +9,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
 
   const cleanup = Cleaner();
 
-  const page = SugarElement.fromHtml(
+  const page = SugarElement.fromHtml<HTMLDivElement>(
     `<div class="gui-events-test-container">
       <input class="test-input" />
       <div class="test-contenteditable"  contenteditable="true"></div>
