@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, PhantomSkipper, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Class, Css, Traverse } from '@ephox/sugar';
 
@@ -7,12 +7,11 @@ import { Sliding } from 'ephox/alloy/api/behaviour/Sliding';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
-import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('SlidingTest', (success, failure) => {
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) {
+  if (PhantomSkipper.detect()) {
     return success();
   }
 

@@ -23,11 +23,13 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^9.3.2",
+    "@ephox/bedrock-client": "^10.0.0",
+    "@ephox/bedrock-common": "^10.0.0",
     "@ephox/jax": "^5.0.3",
     "@ephox/sand": "^4.0.3",
     "@ephox/sugar": "^7.0.3",
     "@ephox/wrap-jsverify": "^2.0.1",
+    "@ephox/wrap-promise-polyfill": "^2.2.0",
     "@ephox/wrap-sizzle": "^4.0.0",
     "tslib": "^2.0.0"
   },

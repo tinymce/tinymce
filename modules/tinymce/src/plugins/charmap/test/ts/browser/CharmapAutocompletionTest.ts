@@ -1,4 +1,4 @@
-import { Keyboard, Keys, Log, Pipeline, Step, UiFinder } from '@ephox/agar';
+import { Keyboard, Keys, Log, PhantomSkipper, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
@@ -25,7 +25,7 @@ UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (succes
 
         // This assertion does not pass on Phantom. The editor content
         // is empty. Not sure if it's an encoding issue for entities.
-        navigator.userAgent.indexOf('PhantomJS') > -1 ? Step.pass : tinyApis.sAssertContent('<p>₡</p>')
+        PhantomSkipper.detect() ? Step.pass : tinyApis.sAssertContent('<p>₡</p>')
       ])
       , onSuccess, onFailure);
   }, {

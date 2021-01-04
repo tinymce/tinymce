@@ -6,6 +6,15 @@ import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
+const click = Clicks.click({});
+const mouseOver = Clicks.mouseOver({});
+const mouseDown = Clicks.mouseDown({});
+const mouseUp = Clicks.mouseUp({});
+const mouseMove = Clicks.mouseMove({});
+const mouseOut = Clicks.mouseOut({});
+const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number): void =>
+  Clicks.mouseMove({ dx, dy })(element);
+
 // Custom event creation
 const cClickWith = Fun.compose(Chain.op, Clicks.click);
 const cContextMenuWith = Fun.compose(Chain.op, Clicks.contextMenu);
@@ -46,17 +55,24 @@ const cMouseMove = cMouseMoveWith({ });
  * @deprecated use cMouseOutWith({ }) instead */
 const cMouseOut = cMouseOutWith({ });
 
+const triggerOn = <T extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<T>) => void): SugarElement<T> => {
+  const ele = UiFinder.findIn(container, selector).getOrDie();
+  action(ele);
+  return ele;
+};
+
 // Work with selectors
 const sTriggerOn = <T, U extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<U>) => void) =>
-  Chain.asStep<T, SugarElement<Node>>(container, [ Chain.async((container, next, die) => {
-    UiFinder.findIn(container, selector).fold(
-      () => die('Could not find element: ' + selector),
-      (ele) => {
-        action(ele);
-        next(container);
-      }
-    );
-  }) ]);
+  Step.sync<T>(() => triggerOn(container, selector, action));
+
+const clickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
+  triggerOn<T>(container, selector, Clicks.trigger);
+
+const hoverOn = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
+  triggerOn<T>(container, selector, Clicks.mouseOver({ }));
+
+const contextMenuOn = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
+  triggerOn<T>(container, selector, Clicks.contextMenu({ }));
 
 const sClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
   sTriggerOn<T, Element>(container, selector, Clicks.trigger);
@@ -79,6 +95,9 @@ const trueClick = (elem: SugarElement<HTMLElement>): void => {
   Clicks.mouseDown({ })(elem);
   Clicks.mouseUp({ })(elem);
   Clicks.trigger(elem);
+};
+const trueClickOn = (container: SugarElement<Node>, selector: string): void => {
+  triggerOn(container, selector, trueClick);
 };
 const cTrueClick = Chain.op(trueClick);
 const sTrueClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
@@ -121,6 +140,8 @@ export {
   sContextMenuOn,
   cClickOn,
 
+  trueClick,
+  trueClickOn,
   cTrueClick,
   sTrueClickOn,
 
@@ -130,6 +151,18 @@ export {
   leftClickButtons,
   rightClickButtons,
   middleClickButtons,
+
+  click,
+  mouseOver,
+  mouseDown,
+  mouseUp,
+  mouseMove,
+  mouseMoveTo,
+  mouseOut,
+
+  clickOn,
+  contextMenuOn,
+  hoverOn,
 
   point,
   event
