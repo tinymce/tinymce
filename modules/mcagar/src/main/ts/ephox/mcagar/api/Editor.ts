@@ -36,13 +36,13 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
         }
-        editor.on('SkinLoaded', () => {
+        editor.once('SkinLoaded', () => {
           setTimeout(() => {
             next(editor);
           }, 0);
         });
 
-        editor.on('SkinLoadError', (e) => {
+        editor.once('SkinLoadError', (e) => {
           die(e.message);
         });
       }

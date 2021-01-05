@@ -16,7 +16,8 @@ import * as NodeType from '../dom/NodeType';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as Zwsp from '../text/Zwsp';
 import {
-  Bookmark, IdBookmark, IndexBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark, PathBookmark
+  Bookmark, IdBookmark, IndexBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark, PathBookmark,
+  StringPathBookmark
 } from './BookmarkTypes';
 import * as CaretBookmark from './CaretBookmark';
 
@@ -29,7 +30,7 @@ const addBogus = (dom: DOMUtils, node: Node): Node => {
   return node;
 };
 
-const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark) => {
+const resolveCaretPositionBookmark = (dom: DOMUtils, bookmark: StringPathBookmark) => {
   let pos;
 
   const rng = dom.createRng();

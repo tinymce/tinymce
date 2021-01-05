@@ -76,7 +76,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
         // Execute the setup called by the test.
         settingsSetup(editor);
 
-        editor.on('SkinLoaded', () => {
+        editor.once('SkinLoaded', () => {
           setTimeout(() => {
             try {
               callbacks.run(editor, onSuccess, onFailure);
@@ -86,7 +86,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
           }, 0);
         });
 
-        editor.on('SkinLoadError', (e) => {
+        editor.once('SkinLoadError', (e) => {
           callbacks.failure(e.message);
         });
       }

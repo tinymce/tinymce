@@ -178,11 +178,14 @@ const calculateImageSize = (helpers: Helpers, info: ImageDialogInfo, state: Imag
 
   if (!meta.width && !meta.height && info.hasDimensions) {
     if (Strings.isNotEmpty(url)) {
-      helpers.imageSize(url).then((size) => {
-        if (state.open) {
-          api.setData({ dimensions: size });
-        }
-      });
+      helpers.imageSize(url)
+        .then((size) => {
+          if (state.open) {
+            api.setData({ dimensions: size });
+          }
+        })
+        // eslint-disable-next-line no-console
+        .catch((e) => console.error(e));
     } else {
       api.setData({ dimensions: { width: '', height: '' }});
     }

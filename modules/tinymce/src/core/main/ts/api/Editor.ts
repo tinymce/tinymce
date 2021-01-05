@@ -840,6 +840,7 @@ class Editor implements EditorObservable {
    */
   public setContent(content: string, args?: EditorContent.SetContentArgs): string;
   public setContent(content: AstNode, args?: EditorContent.SetContentArgs): AstNode;
+  public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content;
   public setContent(content: EditorContent.Content, args?: EditorContent.SetContentArgs): EditorContent.Content {
     return EditorContent.setContent(this, content, args);
   }
