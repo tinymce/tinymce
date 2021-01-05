@@ -5,6 +5,8 @@ import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import { setTinymceBaseUrl } from '../loader/Urls';
 
+const errorMessageEditorRemoved = 'Editor Removed';
+
 const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, settings: Record<string, any>): Chain<any, T> => {
   return Chain.async<any, T>((_, next, die) => {
     const nuSettings: Record<string, any> = {
@@ -29,6 +31,14 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
 
     const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 
+    const onRemove = (e: any) => {
+      if (e.editor.id === randomId) {
+        tinymce.off('RemoveEditor', onRemove);
+        Selectors.one('#' + randomId).each(Remove.remove);
+        die(errorMessageEditorRemoved);
+      }
+    };
+    tinymce.on('RemoveEditor', onRemove);
     tinymce.init({
       ...nuSettings,
       ...targetSettings,
@@ -37,12 +47,14 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
           nuSettings.setup(editor);
         }
         editor.once('SkinLoaded', () => {
+          tinymce.off('RemoveEditor', onRemove);
           setTimeout(() => {
             next(editor);
           }, 0);
         });
 
         editor.once('SkinLoadError', (e) => {
+          tinymce.off('RemoveEditor', onRemove);
           die(e.message);
         });
       }
@@ -69,6 +81,7 @@ const cCreate = cFromSettings({});
 const cCreateInline = cFromSettings({ inline: true });
 
 export {
+  errorMessageEditorRemoved,
   cFromHtml,
   cFromElement,
   cFromSettings,
