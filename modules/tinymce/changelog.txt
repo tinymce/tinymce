@@ -18,6 +18,7 @@ Version 5.7.0 (TBD)
     Fixed the "Dropped file type is not supported" notification incorrectly showing when using an inline editor #TINY-6834
     Fixed an issue with external styles bleeding into TinyMCE #TINY-6735
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
+    Fixed attempting to continue initialization after the editor was destroyed while loading stylesheets #INT-2282
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)
