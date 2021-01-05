@@ -288,15 +288,21 @@ const loadContentCss = (editor: Editor, css: string[]) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
   const fontCss = Settings.getFontCss(editor);
 
-  const loaded = () => {
-    editor.on('remove', () => {
-      styleSheetLoader.unloadAll(css);
+  const removeCss = () => {
+    styleSheetLoader.unloadAll(css);
 
-      if (!editor.inline) {
-        editor.ui.styleSheetLoader.unloadAll(fontCss);
-      }
-    });
-    initEditor(editor);
+    if (!editor.inline) {
+      editor.ui.styleSheetLoader.unloadAll(fontCss);
+    }
+  };
+
+  const loaded = () => {
+    if (editor.destroyed) {
+      removeCss();
+    } else {
+      editor.on('remove', removeCss);
+      initEditor(editor);
+    }
   };
 
   // Load all stylesheets
