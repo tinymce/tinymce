@@ -191,7 +191,7 @@ const findTextPosition = (container: Node, offset: number): CaretPosition => {
   return CaretPosition(container, offset);
 };
 
-const resolve = (root: Node, path: string): CaretPosition => {
+const resolve = (root: Node, path: string): CaretPosition | null => {
   let offset;
 
   if (!path) {

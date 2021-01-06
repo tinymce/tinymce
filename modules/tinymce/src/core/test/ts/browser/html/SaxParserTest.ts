@@ -275,6 +275,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     parser.parse('<p ></p>');
     LegacyUnit.equal(writer.getContent(), '<p></p>', 'Parse start elements with whitespace only attribs part.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse start elements with whitespace only attribs part (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<p title="gre>gererg"/>');
+    LegacyUnit.equal(writer.getContent(), '<p title="gre&gt;gererg"></p>', 'Parse elements with quoted > characters.');
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse elements with quoted > characters (counts).');
   });
 
   suite.test('Parse style elements', () => {
@@ -919,6 +926,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     testFindEndTag('<img>', 3, 3);
     testFindEndTag('<b></b>', 3, 7);
     testFindEndTag('<b><img></b>', 3, 12);
+    testFindEndTag('<tag                                               ', 0, 0);
     testFindEndTag('<b><!-- </b> --></b>', 3, 20);
     testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
   });

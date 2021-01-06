@@ -34,9 +34,9 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (s
         Assertions.assertEq('Notification should be an error', 'error', notification.settings.type);
         notification.close();
       })),
-      Log.step('TBA', 'Plugin load error should be reported', Step.sync(() => {
-        errorHelper.sAssertErrorLogged('Error is reported', 'Failed to initialize plugin: errorplugin');
-      }))
+      Log.step('TBA', 'Plugin load error should be reported',
+        errorHelper.sAssertErrorLogged('Error is reported', 'Failed to initialize plugin: errorplugin')
+      )
     ], onSuccess, onFailure);
   }, {
     base_url: '/project/tinymce/js/tinymce',

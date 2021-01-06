@@ -47,8 +47,8 @@ const cMouseMove = cMouseMoveWith({ });
 const cMouseOut = cMouseOutWith({ });
 
 // Work with selectors
-const sTriggerOn = <T>(container: SugarElement, selector: string, action: (ele: SugarElement) => void) =>
-  Chain.asStep<T, SugarElement>(container, [ Chain.async<SugarElement, SugarElement>((container, next, die) => {
+const sTriggerOn = <T, U extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<U>) => void) =>
+  Chain.asStep<T, SugarElement<Node>>(container, [ Chain.async((container, next, die) => {
     UiFinder.findIn(container, selector).fold(
       () => die('Could not find element: ' + selector),
       (ele) => {
@@ -58,22 +58,22 @@ const sTriggerOn = <T>(container: SugarElement, selector: string, action: (ele: 
     );
   }) ]);
 
-const sClickOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
-  sTriggerOn<T>(container, selector, Clicks.trigger);
+const sClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerOn<T, Element>(container, selector, Clicks.trigger);
 
-const sHoverOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
-  sTriggerOn<T>(container, selector, Clicks.mouseOver({ }));
+const sHoverOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerOn<T, Element>(container, selector, Clicks.mouseOver({ }));
 
-const sContextMenuOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
-  sTriggerOn<T>(container, selector, Clicks.contextMenu({ }));
+const sContextMenuOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerOn<T, Element>(container, selector, Clicks.contextMenu({ }));
 
-const cClickOn = (selector: string): Chain<SugarElement, SugarElement> => Chain.fromIsolatedChains([
+const cClickOn = <T>(selector: string): Chain<SugarElement<T>, SugarElement<T>> => Chain.fromIsolatedChains([
   UiFinder.cFindIn(selector),
   cClick
 ]);
 
 // True click utilities: mouse down / mouse up / click events all in one
-const trueClick = (elem: SugarElement) => {
+const trueClick = (elem: SugarElement<HTMLElement>): void => {
   // The closest event queue to a true Click
   Focus.focus(elem);
   Clicks.mouseDown({ })(elem);
@@ -81,8 +81,8 @@ const trueClick = (elem: SugarElement) => {
   Clicks.trigger(elem);
 };
 const cTrueClick = Chain.op(trueClick);
-const sTrueClickOn = <T>(container: SugarElement, selector: string): Step<T, T> =>
-  sTriggerOn<T>(container, selector, trueClick);
+const sTrueClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerOn<T, HTMLElement>(container, selector, trueClick);
 
 // Low level exports
 const leftClickButton = Clicks.leftClickButton ;

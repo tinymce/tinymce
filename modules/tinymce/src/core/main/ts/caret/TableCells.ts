@@ -14,11 +14,12 @@ import { findClosestHorizontalPosition, getFirstLinePositions, getLastLinePositi
 
 type GetAxisValue = (rect: ClientRect) => number;
 type IsTargetCorner = (corner: Corner, y: number) => boolean;
+type CellOrCaption = HTMLTableCellElement | HTMLTableCaptionElement;
 
 interface Corner {
-  x: number;
-  y: number;
-  cell: HTMLElement;
+  readonly x: number;
+  readonly y: number;
+  readonly cell: CellOrCaption;
 }
 
 const deflate = (rect: ClientRect, delta: number): ClientRect => ({
@@ -30,7 +31,7 @@ const deflate = (rect: ClientRect, delta: number): ClientRect => ({
   height: rect.height + delta
 });
 
-const getCorners = (getYAxisValue, tds: HTMLElement[]): Corner[] => Arr.bind(tds, (td) => {
+const getCorners = (getYAxisValue: GetAxisValue, tds: CellOrCaption[]): Corner[] => Arr.bind(tds, (td) => {
   const rect = deflate(roundRect(td.getBoundingClientRect()), -1);
   return [
     { x: rect.left, y: getYAxisValue(rect), cell: td },
@@ -54,9 +55,8 @@ const getClosestCell = (
   table: HTMLElement,
   x: number,
   y: number
-): Optional<HTMLElement> => {
-  type TableThing = HTMLTableDataCellElement | HTMLTableHeaderCellElement | HTMLTableCaptionElement;
-  const cells = SelectorFilter.descendants<TableThing>(
+): Optional<CellOrCaption> => {
+  const cells = SelectorFilter.descendants<CellOrCaption>(
     SugarElement.fromDom(table),
     'td,th,caption'
   ).map((e) => e.dom);
