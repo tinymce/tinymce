@@ -61,7 +61,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
             // As we have deliberately removed the editor during the loading process
             // we have to intercept the error that is thrown by McEditor.cFromHtml.
             if (err === McEditor.errorMessageEditorRemoved) {
-              next({}, logs2);
+              next(value, logs2);
             } else {
               die(err, logs2);
             }
