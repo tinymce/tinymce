@@ -68,23 +68,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
           }, logs);
         }
       ),
-      Chain.async((input, next, die) => {
-        const checker = setInterval(() => {
-          if (uncaughtErrors.length > 0) {
-            clearInterval(checker);
-            clearTimeout(timer);
-            die(uncaughtErrors[0].reason);
-          }
-        }, 5);
-        const timer = setTimeout(() => {
-          clearInterval(checker);
-          next(input);
-        }, 50);
-      }),
+      Chain.wait(50), // to allow the stylesheet loading to finish
       Chain.op(() => {
         // teardown monitoring for uncaught errors
         window.removeEventListener('unhandledrejection', recordError);
-        uncaughtErrors = [];
+        // check for uncaught promise errors
+        if (uncaughtErrors.length > 0) {
+          throw uncaughtErrors[0].reason;
+        }
       })
     ])),
 
