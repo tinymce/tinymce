@@ -132,7 +132,7 @@ const findEndTagIndex = (schema: Schema, html: string, startIndex: number): numb
   let count = 1, index, matches;
 
   const shortEndedElements = schema.getShortEndedElements();
-  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)(\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
   tokenRegExp.lastIndex = index = startIndex;
 
   while ((matches = tokenRegExp.exec(html))) {
@@ -368,7 +368,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
       '(?:!(--)?)|' + // Start malformed comment
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
       '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
-      `(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"'>]+(?:(?:"[^"]*")|(?:'[^']*')|[^>]*))*|\\/|\\s+)>)` + // Start element
+      `(?:([A-Za-z][A-Za-z0-9\\-_:.]*)(\\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\\s*|\\/)>)` + // Start element
       ')', 'g');
 
     const attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;
