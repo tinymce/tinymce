@@ -11,7 +11,9 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
-  const os = PlatformDetection.detect().os;
+  const detect = PlatformDetection.detect();
+  const browser = detect.browser;
+  const os = detect.os;
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce'
@@ -35,9 +37,13 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
     assert.equal(chr, Zwsp.ZWSP, 'Should be after a zwsp at caret');
   };
 
-  // TODO: This function was needed to make tests pass on Firefox, but it is likely hiding bugs in the arrow navigation
+  // TODO: This function was needed to make tests pass on Firefox and IE, but it is likely hiding bugs in the arrow navigation
   const legacySetRawContent = (editor: Editor, content: string) => {
-    editor.getBody().innerHTML = content;
+    if (browser.isIE() || browser.isFirefox()) {
+      editor.getBody().innerHTML = content;
+    } else {
+      editor.setContent(content, { format: 'raw' });
+    }
   };
 
   context('Arrow keys anchor with text', () => {
@@ -63,7 +69,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to after anchor with text', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#">x</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -73,7 +79,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to start inside anchor over text', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#">x</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
@@ -105,7 +111,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to after on anchor with img', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -115,7 +121,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to start inside anchor over img', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), {});
@@ -127,7 +133,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
   context('Arrow keys between blocks', () => {
     it('From end of anchor text to after anchor to start of anchor in next paragraph', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#">a</a></p><p><a href="#">b</a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#">a</a></p><p><a href="#">b</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -153,7 +159,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end of anchor text to after anchor to but not to next paragraph', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#">a</a></p><p>b<a href="#">c</a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#">a</a></p><p>b<a href="#">c</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -181,7 +187,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
   context('Arrow keys between lists', () => {
     it('From end of anchor text to after anchor to start of anchor in next list item', () => {
       const editor = hook.editor();
-      editor.setContent('<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>', { format: 'raw' });
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -207,7 +213,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end of anchor text to after anchor to but not to next list item', () => {
       const editor = hook.editor();
-      editor.setContent('<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>', { format: 'raw' });
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -246,7 +252,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end of anchor to after anchor but not to next list item anchor', () => {
       const editor = hook.editor();
-      editor.setContent('<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>', { format: 'raw' });
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -281,7 +287,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to after anchor + code with text', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
@@ -291,7 +297,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
 
     it('From end to start inside anchor + code over text', () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
+      legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
       Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });

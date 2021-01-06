@@ -3,8 +3,9 @@ import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
-import Editor from 'tinymce/core/api/Editor';
+import 'tinymce';
 
+import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -15,6 +16,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
   before(() => {
     Theme();
+    EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
 
     let htmlReset = '';
     for (let i = 1; i < 9; i++) {
@@ -36,8 +38,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
     EditorManager.init({
       target: elm1,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.strictEqual(ed.targetElm, elm1);
         done();
@@ -51,8 +51,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
     EditorManager.init({
       target: elm,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.isAbove(ed.id.length, 0, 'editors id set to: ' + ed.id);
         assert.strictEqual(ed.targetElm, elm);
@@ -68,8 +66,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     EditorManager.init({
       selector: '#elm-2',
       target: elm1,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.strictEqual(ed.targetElm, elm2);
         done();
@@ -80,8 +76,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   it('selector on non existing targets', () => {
     return EditorManager.init({
       selector: '#non-existing-id',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default'
     }).then((result) => {
       assert.lengthOf(result, 0, 'Should be a result that is zero length');
     });
@@ -97,8 +91,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
     return EditorManager.init({
       selector: '#elm-2',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default'
     }).then((result) => {
       assert.lengthOf(result, 0, 'Should be a result that is zero length');
       Env.browser.version.major = oldIeValue;
@@ -114,8 +106,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     EditorManager.init({
       selector: '.elm-even',
       target: elm1,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.notStrictEqual(ed.targetElm, elm1, 'target option ignored');
         assert.notInclude(targets, ed.targetElm);
@@ -137,8 +127,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
       base_url: '/compiled/fake/url',
       suffix: '.min',
       selector: '#elm-1',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.equal(EditorManager.suffix, '.min', 'Should have set suffix on EditorManager');
         assert.equal(ed.suffix, '.min', 'Should have set suffix on editor');
@@ -170,8 +158,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     return EditorManager.init({
       selector: '.tinymce-editor',
       inline: true,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       toolbar_mode: 'wrap'
     });
   };
@@ -244,8 +230,6 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
     EditorManager.init({
       selector,
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (ed) => {
         assert.equal(ed.getContent({ format: 'text' }), expectedEditorContent, 'Expect editor to have content');
         done();
