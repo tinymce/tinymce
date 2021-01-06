@@ -31,7 +31,7 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
 
     const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 
-    const onRemove = (e: any) => {
+    const onRemove = (e: { editor: EditorType }) => {
       if (e.editor.id === randomId) {
         tinymce.off('RemoveEditor', onRemove);
         Selectors.one('#' + randomId).each(Remove.remove);
