@@ -168,10 +168,8 @@ const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number 
       const endIndex = lcHtml.indexOf('>', startIndex);
       return endIndex !== -1 ? endIndex : lcHtml.length;
     } else {
-      const endCommentRegexp = /--!?>/;
-      endCommentRegexp.lastIndex = startIndex;
-      const match = endCommentRegexp.exec(html);
-      return match ? match.index + match[0].length : lcHtml.length;
+      const match = /--!?>/.exec(html.substr(startIndex));
+      return match ? startIndex + match.index + match[0].length : lcHtml.length;
     }
   }
 };

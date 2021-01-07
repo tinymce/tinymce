@@ -17,6 +17,7 @@ Version 5.7.0 (TBD)
     Fixed events bound using `DOMUtils` not returning the correct result for `isDefaultPrevented` in some cases #TINY-6834
     Fixed the "Dropped file type is not supported" notification incorrectly showing when using an inline editor #TINY-6834
     Fixed an issue with external styles bleeding into TinyMCE #TINY-6735
+    Fixed an issue where parsing malformed comments could cause an infinite loop #TINY-6864
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
