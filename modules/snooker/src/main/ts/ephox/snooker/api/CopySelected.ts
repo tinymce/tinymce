@@ -3,7 +3,6 @@ import { Attribute, Insert, Remove, Replication, Selectors, SugarElement } from 
 import * as DetailsList from '../model/DetailsList';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';
-import * as Sizes from './Sizes';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
@@ -116,8 +115,7 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, hous
   const tableSize = TableSize.getTableSize(replica);
   tableSize.adjustTableWidth(widthDelta);
 
-  // If using relative widths, ensure cell and column widths are redistributed
-  Sizes.redistributeRelativeWidths(tableSize, replica);
+  // TODO: If using relative widths, ensure cell and column widths are redistributed
 };
 
 const getTableWidthDelta = (table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, stats: StatsStruct): number => {
