@@ -297,7 +297,7 @@ const loadContentCss = (editor: Editor, css: string[]) => {
   };
 
   const loaded = () => {
-    if (editor.destroyed) {
+    if (editor.removed) {
       removeCss();
     } else {
       editor.on('remove', removeCss);
