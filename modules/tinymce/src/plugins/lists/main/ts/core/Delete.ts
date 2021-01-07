@@ -130,7 +130,7 @@ const mergeLiElements = (dom: DOMUtils, fromElm: Element, toElm: Element) => {
 const mergeIntoEmptyLi = (editor: Editor, fromLi: HTMLLIElement, toLi: HTMLLIElement) => {
   editor.dom.$(toLi).empty();
   mergeLiElements(editor.dom, fromLi, toLi);
-  editor.selection.setCursorLocation(toLi);
+  editor.selection.setCursorLocation(toLi, 0);
 };
 
 const mergeForward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement) => {
