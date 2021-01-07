@@ -5,7 +5,7 @@ import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
-import { DetailExt, RowData, Column } from './Structs';
+import { DetailExt, RowData, Column, ColumnExt } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
@@ -75,6 +75,23 @@ const redistribute = (table: SugarElement, optWidth: Optional<string>, optHeight
   });
 };
 
+const redistributeRelativeWidths = (tableSize: TableSize, table: SugarElement<HTMLTableElement>): void => {
+  if (tableSize.isRelative) {
+    const warehouse = Warehouse.fromTable(table);
+    const columns = tableSize.getWidths(warehouse, tableSize);
+    const totalWidth = Arr.foldl(columns, (acc, width) => acc + width, 0);
+
+    const resizeElm = (elm: ColumnExt | DetailExt) => {
+      Sizes.getGenericWidth(elm.element).each((dimension) => {
+        Sizes.setGenericWidth(elm.element, (dimension.value / totalWidth) * 100, '%');
+      });
+    };
+
+    Arr.each(Warehouse.justColumns(warehouse), (column) => resizeElm(column));
+    Arr.each(Warehouse.justCells(warehouse), (cell) => resizeElm(cell));
+  }
+};
+
 const isPercentSizing = Sizes.isPercentSizing;
 const isPixelSizing = Sizes.isPixelSizing;
 const isNoneSizing = Sizes.isNoneSizing;
@@ -88,5 +105,6 @@ export {
   isPercentSizing,
   isPixelSizing,
   isNoneSizing,
-  redistribute
+  redistribute,
+  redistributeRelativeWidths,
 };

@@ -1,8 +1,9 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Attribute, Insert, Remove, Replication, Selectors, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Insert, Remove, Replication, Selectors, SugarElement } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
-import * as ColUtils from '../util/ColUtils';
+import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';
+import * as Sizes from './Sizes';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
@@ -89,7 +90,14 @@ const fillInGaps = <T>(list: RowData<T>[], house: Warehouse, stats: StatsStruct,
   }
 };
 
-const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widthDelta: number): void => {
+const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, house: Warehouse, widthDelta: number): void => {
+  // remove columns that are not in the new table
+  Obj.each(house.columns, (col) => {
+    if (col.column < stats.minCol || col.column > stats.maxCol) {
+      Remove.remove(col.element);
+    }
+  });
+
   // can't use :empty selector as that will not include TRs made up of whitespace
   const emptyRows = Arr.filter(LayerSelector.firstLayer(replica, 'tr'), (row) =>
     // there is no sugar method for this, and Traverse.children() does too much processing
@@ -105,39 +113,25 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, widt
     });
   }
 
-  const replicaTableSize = TableSize.getTableSize(replica);
-  replicaTableSize.adjustTableWidth(widthDelta);
+  const tableSize = TableSize.getTableSize(replica);
+  tableSize.adjustTableWidth(widthDelta);
+
+  // If using relative widths, ensure cell and column widths are redistributed
+  Sizes.redistributeRelativeWidths(tableSize, replica);
 };
 
-const getTableWidthDelta = (tableSize: TableSize, stats: StatsStruct): number => {
-  /*
-    Calculate new width by comparing width of selected columns to
-    width of all columns, which is the ratio to apply to the full table width.
-
-    We have to do this due to padding/margin etc.
-    (e.g. a 1000px wide table might have 3 x 320px wide columns)
-
-    Note: We will be off by a few pixels due to borders
-  */
-  const getColsWidth = (cols: DetailExt[]) => {
-    return cols.reduce((acc, col) => {
-      return acc + Width.getOuter(col.element);
-    }, 0);
-  };
-
-  const uniqueCols = ColUtils.uniqueColumns(stats.allCells);
-  const uniqueSelectedCols = ColUtils.uniqueColumns(stats.selectedCells);
-
+const getTableWidthDelta = (table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, stats: StatsStruct): number => {
   // short circuit entire table selected
-  if (uniqueSelectedCols.length === uniqueCols.length) {
+  if (stats.minCol === 0 && warehouse.grid.columns === stats.maxCol + 1) {
     return 0;
   }
 
-  const allColsWidth = getColsWidth(uniqueCols);
-  const selectedColsWidth = getColsWidth(uniqueSelectedCols);
-
+  const colWidths = ColumnSizes.getPixelWidths(warehouse, table, tableSize);
+  const allColsWidth = Arr.foldl(colWidths, (acc, width) => acc + width, 0);
+  const selectedColsWidth = Arr.foldl(colWidths.slice(stats.minCol, stats.maxCol + 1), (acc, width) => acc + width, 0);
   const newWidth = (selectedColsWidth / allColsWidth) * tableSize.pixelWidth();
   const delta = newWidth - tableSize.pixelWidth();
+
   return tableSize.getCellDelta(delta);
 };
 
@@ -146,19 +140,20 @@ const extract = (table: SugarElement, selectedSelector: string): SugarElement =>
 
   const replica = Replication.deep(table);
   const list = DetailsList.fromTable(replica);
-  const house = Warehouse.generate(list);
   const tableSize = TableSize.getTableSize(table);
-  const stats = findSelectedStats(house, isSelected);
 
   // remove unselected cells
   const selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
   const unselectedCells = LayerSelector.filterFirstLayer(replica, 'th,td', (cell) => Selectors.is(cell, selector));
   Arr.each(unselectedCells, Remove.remove);
 
-  fillInGaps(list, house, stats, isSelected);
+  const replicaHouse = Warehouse.generate(list);
+  const replicaStats = findSelectedStats(replicaHouse, isSelected);
+  fillInGaps(list, replicaHouse, replicaStats, isSelected);
 
-  const widthDelta = getTableWidthDelta(tableSize, stats);
-  clean(replica, stats, widthDelta);
+  const house = Warehouse.fromTable(table);
+  const widthDelta = getTableWidthDelta(table, house, tableSize, replicaStats);
+  clean(replica, replicaStats, replicaHouse, widthDelta);
 
   return replica;
 };
