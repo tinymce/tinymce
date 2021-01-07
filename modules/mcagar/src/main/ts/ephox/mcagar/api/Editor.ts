@@ -41,7 +41,7 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
         const onRemove = () => {
           Selectors.one('#' + randomId).each(Remove.remove);
           die(errorMessageEditorRemoved);
-        }
+        };
         editor.once('remove', onRemove);
 
         editor.once('SkinLoaded', () => {
