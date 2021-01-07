@@ -46,11 +46,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
           setup: (editor: Editor) => {
             editor.on('LoadContent', () => {
               // Hook the function called when stylesheets are loaded
-              // so we can destroy the editor right after starting to load them.
+              // so we can remove the editor right after starting to load them.
               const realLoadAll = editor.ui.styleSheetLoader.loadAll;
               editor.ui.styleSheetLoader.loadAll = (...args) => {
                 realLoadAll.apply(editor.ui.styleSheetLoader, args);
-                editor.destroy();
+                editor.remove();
               };
             });
           }
