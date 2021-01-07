@@ -31,14 +31,6 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
 
     const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 
-    const onRemove = (e: { editor: EditorType }) => {
-      if (e.editor.id === randomId) {
-        tinymce.off('RemoveEditor', onRemove);
-        Selectors.one('#' + randomId).each(Remove.remove);
-        die(errorMessageEditorRemoved);
-      }
-    };
-    tinymce.on('RemoveEditor', onRemove);
     tinymce.init({
       ...nuSettings,
       ...targetSettings,
@@ -46,15 +38,21 @@ const cFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
         if (Type.isFunction(nuSettings.setup)) {
           nuSettings.setup(editor);
         }
+        const onRemove = () => {
+          Selectors.one('#' + randomId).each(Remove.remove);
+          die(errorMessageEditorRemoved);
+        }
+        editor.once('remove', onRemove);
+
         editor.once('SkinLoaded', () => {
-          tinymce.off('RemoveEditor', onRemove);
+          editor.off('remove', onRemove);
           setTimeout(() => {
             next(editor);
           }, 0);
         });
 
         editor.once('SkinLoadError', (e) => {
-          tinymce.off('RemoveEditor', onRemove);
+          editor.off('remove', onRemove);
           die(e.message);
         });
       }
