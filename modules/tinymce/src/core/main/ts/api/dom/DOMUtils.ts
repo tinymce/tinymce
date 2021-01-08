@@ -296,6 +296,7 @@ interface DOMUtils {
 /**
  * Constructs a new DOMUtils instance. Consult the TinyMCE Documentation for more details on settings etc for this class.
  *
+ * @private
  * @constructor
  * @method DOMUtils
  * @param {Document} doc Document reference to bind the utility class to.
