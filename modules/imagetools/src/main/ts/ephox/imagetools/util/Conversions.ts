@@ -39,7 +39,8 @@ const blobToImage = (blob: Blob): Promise<HTMLImageElement> => {
     image.src = blobUrl;
 
     if (image.complete) {
-      loaded();
+      // Need a timeout due to IE 11 not setting the complete state correctly
+      setTimeout(loaded, 0);
     }
   });
 };
