@@ -82,7 +82,7 @@ const bddSetupLight = <T extends EditorType = EditorType>(settings: Record<strin
 };
 
 const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record<string, any>, element: SugarElement, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
-  return setupHooks(settings, setupModules, focusOnInit, () => Optional.some(element));
+  return setupHooks(settings, setupModules, focusOnInit, Fun.constant(Optional.some(element)));
 };
 
 const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): ShadowRootHook<T> => {

@@ -11,7 +11,7 @@ import { Slider } from 'ephox/alloy/api/ui/Slider';
 
 UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failure) => {
 
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
+  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
   if (PhantomSkipper.detect()) {
     return success();

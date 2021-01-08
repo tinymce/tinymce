@@ -6,12 +6,12 @@ import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
-const click = Clicks.click({});
-const mouseOver = Clicks.mouseOver({});
-const mouseDown = Clicks.mouseDown({});
-const mouseUp = Clicks.mouseUp({});
-const mouseMove = Clicks.mouseMove({});
-const mouseOut = Clicks.mouseOut({});
+const click = Clicks.click({ });
+const mouseOver = Clicks.mouseOver({ });
+const mouseDown = Clicks.mouseDown({ });
+const mouseUp = Clicks.mouseUp({ });
+const mouseMove = Clicks.mouseMove({ });
+const mouseOut = Clicks.mouseOut({ });
 const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number): void =>
   Clicks.mouseMove({ dx, dy })(element);
 
@@ -69,7 +69,7 @@ const clickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector:
   triggerOn<T>(container, selector, Clicks.trigger);
 
 const hoverOn = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
-  triggerOn<T>(container, selector, Clicks.mouseOver({ }));
+  triggerOn<T>(container, selector, mouseOver);
 
 const contextMenuOn = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, Clicks.contextMenu({ }));
@@ -93,7 +93,7 @@ const trueClick = (elem: SugarElement<HTMLElement>): void => {
   // The closest event queue to a true Click
   Focus.focus(elem);
   Clicks.mouseDown({ })(elem);
-  Clicks.mouseUp({ })(elem);
+  mouseUp(elem);
   Clicks.trigger(elem);
 };
 const trueClickOn = (container: SugarElement<Node>, selector: string): void => {
