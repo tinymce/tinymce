@@ -139,14 +139,14 @@ const extract = (table: SugarElement, selectedSelector: string): SugarElement =>
   const replica = Replication.deep(table);
   const list = DetailsList.fromTable(replica);
   const tableSize = TableSize.getTableSize(table);
+  const replicaHouse = Warehouse.generate(list);
+  const replicaStats = findSelectedStats(replicaHouse, isSelected);
 
   // remove unselected cells
   const selector = 'th:not(' + selectedSelector + ')' + ',td:not(' + selectedSelector + ')';
   const unselectedCells = LayerSelector.filterFirstLayer(replica, 'th,td', (cell) => Selectors.is(cell, selector));
   Arr.each(unselectedCells, Remove.remove);
 
-  const replicaHouse = Warehouse.generate(list);
-  const replicaStats = findSelectedStats(replicaHouse, isSelected);
   fillInGaps(list, replicaHouse, replicaStats, isSelected);
 
   const house = Warehouse.fromTable(table);
