@@ -92,7 +92,7 @@ const cClickOn = <T>(selector: string): Chain<SugarElement<T>, SugarElement<T>> 
 const trueClick = (elem: SugarElement<HTMLElement>): void => {
   // The closest event queue to a true Click
   Focus.focus(elem);
-  Clicks.mouseDown({ })(elem);
+  mouseDown(elem);
   mouseUp(elem);
   Clicks.trigger(elem);
 };
