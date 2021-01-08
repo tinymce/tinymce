@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
@@ -333,12 +333,6 @@ const resize = Adjustments.adjustWidthTo;
 
 // Custom selection extractors
 
-const onUnlockedCell = (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<Structs.DetailExt> =>
-  RunOperation.onCell(warehouse, target).filter((detail) => !detail.isLocked);
-
-const onUnlockedCells = (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
-  RunOperation.onCells(warehouse, target).map((details) => Arr.filter(details, (detail) => !detail.isLocked)).filter((details) => details.length > 0);
-
 /**
  * before: true - If a locked column is the first column in the selection, then inserting/pasting columns before should be a noop.
  * before: false - If a locked column is the last column in the selection, then inserting/pasting columns after should be a noop.
@@ -364,36 +358,28 @@ const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target
     return unlockedColumns(before, details.cells).map((unlockedCells) => ({ ...details, cells: unlockedCells }));
   });
 
-// If any locked columns are present in the selection, then don't want to be able to merge
-const mergeCellsExtractor = (warehouse: Warehouse, target: RunOperation.TargetMergable): Optional<ExtractMergable> =>
-  RunOperation.onMergable(warehouse, target).filter((mergeable) => Arr.forall(mergeable.cells, (cell) => Warehouse.findItem(warehouse, cell, Compare.eq).exists((detail) => !detail.isLocked)));
-
-// If any locked columns are present in the selection, then don't want to be able to unmerge
-const unmergeCellsExtractor = (warehouse: Warehouse, target: RunOperation.TargetUnmergable): Optional<SugarElement[]> =>
-  RunOperation.onUnmergable(warehouse, target).filter((cells) => Arr.forall(cells, (cell) => Warehouse.findItem(warehouse, cell, Compare.eq).exists((detail) => !detail.isLocked)));
-
 export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), resize, Fun.noop, Generators.modification);
-export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), resize, Fun.noop, Generators.modification);
-export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, onUnlockedCell, resize, Fun.noop, Generators.modification);
-export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
-export const eraseColumns = RunOperation.run(opEraseColumns, onUnlockedCells, resize, prune, Generators.modification);
+export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
+export const eraseColumns = RunOperation.run(opEraseColumns, RunOperation.onUnlockedCells, resize, prune, Generators.modification);
 export const eraseRows = RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification);
-export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
-export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
-export const unmakeColumnHeader = RunOperation.run(opUnmakeColumnHeader, onUnlockedCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const unmakeColumnsHeader = RunOperation.run(opUnmakeColumnsHeader, onUnlockedCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
+export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
+export const unmakeColumnHeader = RunOperation.run(opUnmakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
+export const unmakeColumnsHeader = RunOperation.run(opUnmakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
 export const makeRowHeader = RunOperation.run(opMakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
 export const makeRowsHeader = RunOperation.run(opMakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform('col', 'th'));
 export const unmakeRowHeader = RunOperation.run(opUnmakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
 export const unmakeRowsHeader = RunOperation.run(opUnmakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, Generators.transform(null, 'td'));
-export const mergeCells = RunOperation.run(opMergeCells, mergeCellsExtractor, Fun.noop, Fun.noop, Generators.merging);
-export const unmergeCells = RunOperation.run(opUnmergeCells, unmergeCellsExtractor, resize, Fun.noop, Generators.merging);
+export const mergeCells = RunOperation.run(opMergeCells, RunOperation.onUnlockedMergable, Fun.noop, Fun.noop, Generators.merging);
+export const unmergeCells = RunOperation.run(opUnmergeCells, RunOperation.onUnlockedUnmergable, resize, Fun.noop, Generators.merging);
 export const pasteCells = RunOperation.run(opPasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification);
 export const pasteColsBefore = RunOperation.run(opPasteColsBefore, pasteColumnsExtractor(true), Fun.noop, Fun.noop, Generators.modification);
 export const pasteColsAfter = RunOperation.run(opPasteColsAfter, pasteColumnsExtractor(false), Fun.noop, Fun.noop, Generators.modification);

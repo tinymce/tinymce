@@ -179,6 +179,25 @@ const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<Detail
   return cells.length > 0 ? Optional.some(cells) : Optional.none();
 };
 
+// Custom unlocked extractors
+
+const onUnlockedCell = (warehouse: Warehouse, target: TargetElement): Optional<Structs.DetailExt> =>
+  onCell(warehouse, target).filter((detail) => !detail.isLocked);
+
+const onUnlockedCells = (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+  onCells(warehouse, target).map((details) => Arr.filter(details, (detail) => !detail.isLocked)).filter((details) => details.length > 0);
+
+const isUnlockedTableCell = (warehouse: Warehouse, cell: SugarElement) => findInWarehouse(warehouse, cell).exists((detail) => !detail.isLocked);
+const allUnlocked = (warehouse: Warehouse, cells: SugarElement[]) => Arr.forall(cells, (cell) => isUnlockedTableCell(warehouse, cell));
+
+// If any locked columns are present in the selection, then don't want to be able to merge
+const onUnlockedMergable = (warehouse: Warehouse, target: TargetMergable): Optional<ExtractMergable> =>
+  onMergable(warehouse, target).filter((mergeable) => allUnlocked(warehouse, mergeable.cells));
+
+// If any locked columns are present in the selection, then don't want to be able to unmerge
+const onUnlockedUnmergable = (warehouse: Warehouse, target: TargetUnmergable): Optional<SugarElement[]> =>
+  onUnmergable(warehouse, target).filter((cells) => allUnlocked(warehouse, cells));
+
 export {
   run,
   toDetailList,
@@ -187,6 +206,10 @@ export {
   onPaste,
   onPasteByEditor,
   onMergable,
-  onUnmergable
+  onUnmergable,
+  onUnlockedCell,
+  onUnlockedCells,
+  onUnlockedMergable,
+  onUnlockedUnmergable
 };
 

@@ -97,18 +97,12 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.CommandsOnLockedColumn
       { cmd: 'mceTableCopyCol', table, tableStructure },
       { cmd: 'mceTablePasteColBefore', table, tableStructure },
       { cmd: 'mceTablePasteColAfter', table, tableStructure },
-      // TODO: Should it prevent this also?
-      // {
-      //   cmd: 'mceTableCellType',
-      //   value: { type: 'th' }
-      // },
       {
         cmd: 'mceTableColType',
         value: { type: 'th' },
         table,
         tableStructure
-      },
-      // { cmd: 'mceTableCellProps' }
+      }
     ], sTestCommand);
 
     Pipeline.async({}, [

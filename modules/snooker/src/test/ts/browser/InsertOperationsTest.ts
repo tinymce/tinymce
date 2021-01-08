@@ -634,7 +634,6 @@ UnitTest.test('InsertOperationsTest', () => {
     ]
   );
 
-  // TODO: Should locked columns count towards the number of columns to be inserted before?
   Assertions.checkOldMultiple(
     'TINY-6765: Check that column can be inserted before if start of selection is a not a locked column but a locked column is in the selection (locked column should not count towards the number of columns inserted before)',
     Optional.some({ section: 1, row: 0, column: 0 }),
@@ -665,7 +664,6 @@ UnitTest.test('InsertOperationsTest', () => {
     ]
   );
 
-  // TODO: Should locked columns count towards the number of columns to be inserted after?
   Assertions.checkOldMultiple(
     'TINY-6765: Check that column can be inserted after if end of selection is a not a locked column but a locked column is in the selection (locked column should not count towards the number of columns inserted after)',
     Optional.some({ section: 1, row: 0, column: 3 }),
