@@ -106,7 +106,8 @@ UnitTest.test('atomic.tinymce.core.html.Base64UrisTest', () => {
           img_123_0: 'data:image/gif;base64,R0/yw==',
           img_123_1: 'data:image/png;base64,R1/yw==',
           img_123_2: 'data:image/jpeg;base64,R2/yw=='
-        }
+        },
+        re: /img_123_[0-9]+/g
       },
       '<img src="img_123_0"><img src="img_123_1"><img src="img_123_2">',
       '<img src="data:image/gif;base64,R0/yw=="><img src="data:image/png;base64,R1/yw=="><img src="data:image/jpeg;base64,R2/yw==">'

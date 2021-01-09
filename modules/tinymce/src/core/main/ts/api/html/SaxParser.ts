@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
@@ -273,7 +273,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
       comment(restoreDataUris(value, base64Extract));
     };
 
-    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).getOr(value);
+    const processAttr = (value: string) => restoreDataUris(value, base64Extract);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';

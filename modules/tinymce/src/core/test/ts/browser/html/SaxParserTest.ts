@@ -1058,8 +1058,22 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     const parser = SaxParser(counter, schema);
 
     writer.reset();
-    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
-    LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+    parser.parse(
+      'a' +
+      '<img src="data:image/gif;base64,R0/yw==" />' +
+      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      'c'
+    );
+    LegacyUnit.equal(writer.getContent(),
+      'a' +
+      '<img src="data:image/gif;base64,R0/yw==" />' +
+      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      'c'
+    );
   });
 
   Pipeline.async({}, suite.toSteps({}), success, failure);
