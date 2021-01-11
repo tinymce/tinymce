@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.RemoveTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -22,15 +22,10 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TestCase-TBA: Lists: Remove UL at single LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -46,7 +41,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at start LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -70,7 +65,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at start empty LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li><br></li>' +
@@ -94,7 +89,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at middle LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -120,7 +115,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at middle empty LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -146,7 +141,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at end LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -170,7 +165,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at end empty LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -194,7 +189,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -233,7 +228,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -273,7 +268,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove OL on a deep nested LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -332,7 +327,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove empty UL between two textblocks', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<div>a</div>' +
       '<ul>' +
@@ -354,7 +349,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove indented list with single item', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -383,7 +378,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove indented list with multiple items', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -415,7 +410,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove indented list with multiple items and paragraph', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li>a</li>' +

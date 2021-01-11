@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver//Theme';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -23,15 +23,10 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     },
     content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -48,7 +43,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at end of single LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     const content = '<ul><li><span>a</span></li></ul>';
     editor.setContent(content);
 
@@ -69,7 +64,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at end of single LI in UL with STRONG', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     const content = '<ul><li><span>a</span><strong>b</strong></li></ul>';
     editor.setContent(content);
 
@@ -90,7 +85,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -113,7 +108,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -137,7 +132,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of start LI in UL inside UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -168,7 +163,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -200,7 +195,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI above in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -224,7 +219,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of LI with BR padded empty LI above in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -248,7 +243,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at empty LI (IE)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -272,7 +267,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI with STRING and BR above in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -296,7 +291,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at nested LI with adjacent BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>1' +
@@ -322,7 +317,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at LI selected with triple-click in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -355,7 +350,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at partially selected list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>abc</p>' +
       '<ul>' +
@@ -392,7 +387,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   // Delete
 
   it('TestCase-TBA: Lists: Delete at end of single LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -413,7 +408,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of first LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -435,7 +430,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of middle LI in UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -459,7 +454,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of start LI in UL inside UL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -489,7 +484,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of middle LI in UL inside UL with', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -521,7 +516,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of LI before empty LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -545,7 +540,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of LI before BR padded empty LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -569,7 +564,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at end of LI before empty LI with STRONG', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -593,7 +588,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at nested LI with adjacent BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>1' +
@@ -619,7 +614,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at BR before text in LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>1</li>' +
@@ -637,7 +632,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace merge li elements', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     // IE allows you to place the caret inside a LI without children
     editor.setContent(
       '<ul>' +
@@ -662,7 +657,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at block inside li element into li without block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li>1</li>' +
@@ -686,7 +681,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at block inside li element into li with block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -710,7 +705,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at block inside li element into li with multiple block elements', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li><p>1</p><p>2</p></li>' +
@@ -734,7 +729,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at block inside li element into li without block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -758,7 +753,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at block inside li element into li with block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
@@ -782,7 +777,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Delete at block inside li element into li with multiple block elements', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li>1</li>' +
@@ -806,7 +801,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('Backspace from indented list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li>a' +
@@ -839,7 +834,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('Delete into indented list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li>a' +
@@ -868,7 +863,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   });
 
   it('TestCase-TBA: Lists: Backspace at beginning of LI in UL inside UL and then undo', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.resetContent(
       '<ul>' +
         '<li>item 1</li>' +

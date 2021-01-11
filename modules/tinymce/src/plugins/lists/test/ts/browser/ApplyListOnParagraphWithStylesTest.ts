@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,12 +11,7 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Theme();
-    Plugin();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TBA: Lists: remove margin from p when applying list on it, but leave other styles', () => {
     const editor = hook.editor();

@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.OutdentTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -22,15 +22,10 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -61,7 +56,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in middle of OL in LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -97,7 +92,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in end of OL in LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -130,7 +125,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   // Nested lists in OL elements
 
   it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -160,7 +155,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in middle of OL in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -195,7 +190,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside first/last LI in inner OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>1' +
@@ -226,7 +221,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -258,7 +253,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in end of OL in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -288,7 +283,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside only child LI in OL in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -314,7 +309,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent multiple LI in OL and nested OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -338,7 +333,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent on li with inner block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li><p>a</p></li>' +
@@ -363,7 +358,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent on nested li with inner block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li>' +
@@ -388,7 +383,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('Outdent nested ul in ol', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li style="list-style-type: none;">' +
@@ -411,7 +406,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('Outdenting an item should not affect its attributes', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
         '<li style="color: red;" class="xyz">a' +
@@ -435,7 +430,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -466,7 +461,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute on both OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol start="2">' +
       '<li>a' +

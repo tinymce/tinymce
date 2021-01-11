@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -6,20 +6,15 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',
     toolbar: 'bullist',
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TBA: Lists: toggle bullet list on list with two empty LIs', async () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 3, 0 ], 1);

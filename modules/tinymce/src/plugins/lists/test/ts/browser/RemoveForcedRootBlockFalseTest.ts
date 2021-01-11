@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -23,15 +23,10 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce',
     forced_root_block: false
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TestCase-TBA: Lists: Remove UL with single LI in BR mode', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -47,7 +42,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -67,7 +62,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
   });
 
   it('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<div>a</div>' +
       '<ul>' +

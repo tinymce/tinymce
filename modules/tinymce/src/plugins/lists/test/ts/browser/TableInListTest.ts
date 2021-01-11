@@ -1,5 +1,5 @@
 import { UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -7,20 +7,15 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.TableInListTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     toolbar: 'bullist numlist indent outdent',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TBA: Lists: unlist table in list then add list inside table', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
@@ -30,7 +25,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
   });
 
   it('TBA: Lists: delete list in table test', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 1);
     editor.plugins.lists.backspaceDelete();
@@ -40,14 +35,14 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
   });
 
   it('TBA: Lists: focus on table cell in list does not activate button', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
     UiFinder.notExists(TinyDom.document(editor), 'div[aria-label="Bullet list"][aria-pressed="true"]');
   });
 
   it('TBA: Lists: indent and outdent li in ul in list in table in list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Increase indent"]');
@@ -59,7 +54,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
   });
 
   it('TBA: Lists: toggle from UL to OL in list in table in list only changes inner list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');

@@ -1,36 +1,12 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.InlineTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  Plugin();
-  Theme();
-
-  suite.test('TestCase-TBA: Lists: Remove UL in inline body element contained in LI', (editor) => {
-    editor.setContent('<ul><li>a</li></ul>');
-    editor.selection.setCursorLocation();
-    editor.execCommand('InsertUnorderedList');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace in LI in UL in inline body element contained within LI', (editor) => {
-    editor.setContent('<ul><li>a</li></ul>');
-    editor.focus();
-    editor.selection.select(editor.getBody(), true);
-    editor.selection.collapse(true);
-    editor.plugins.lists.backspaceDelete();
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'Lists: Inline tests', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.lists.InlineTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     plugins: 'lists',
     add_unload_trigger: false,
@@ -45,7 +21,24 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.InlineTest', (success, failure
         'font-style,text-decoration,float,margin,margin-top,margin-right,' +
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: Remove UL in inline body element contained in LI', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul>');
+    editor.selection.setCursorLocation();
+    editor.execCommand('InsertUnorderedList');
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+  });
+
+  it('TBA: Backspace in LI in UL in inline body element contained within LI', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul>');
+    editor.focus();
+    editor.selection.select(editor.getBody(), true);
+    editor.selection.collapse(true);
+    editor.plugins.lists.backspaceDelete();
+    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+  });
 });

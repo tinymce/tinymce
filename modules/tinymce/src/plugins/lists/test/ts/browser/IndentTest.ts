@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.IndentTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -22,22 +22,20 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  });
+  }, [ Plugin, Theme ]);
 
-  before(() => {
-    Plugin();
-    Theme();
+  beforeEach(() => {
+    hook.editor().focus();
   });
 
   it('TestCase-TBA: Lists: Indent single LI in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('Indent');
 
@@ -56,7 +54,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent middle LI in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -65,7 +63,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('Indent');
 
@@ -84,15 +81,13 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent single LI in OL and retain OLs list style in the new OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: lower-alpha;">' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ol>'
     );
-
-    editor.focus();
 
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('Indent');
@@ -109,7 +104,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent last LI in OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -117,7 +112,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 0);
     editor.execCommand('Indent');
 
@@ -135,7 +129,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent in table cell in table inside of list should not do anything', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>' +
@@ -148,7 +142,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'td', 0);
     editor.execCommand('Indent');
 
@@ -168,7 +161,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent last LI to same level as middle LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -180,7 +173,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 1);
     editor.execCommand('Indent');
 
@@ -199,7 +191,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent first LI and nested LI OL', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a' +
@@ -210,7 +202,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0, 'li li', 0);
     editor.execCommand('Indent');
 
@@ -232,7 +223,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent second LI to same level as nested LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -244,7 +235,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('Indent');
 
@@ -263,7 +253,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent second LI to same level as nested LI 2', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a' +
@@ -279,7 +269,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
     editor.execCommand('Indent');
 
@@ -299,7 +288,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent second and third LI', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -308,7 +297,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0, 'li:last', 0);
     editor.execCommand('Indent');
 
@@ -325,7 +313,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent second second li with next sibling to nested li', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -338,7 +326,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul > li:nth-child(2)', 1);
     editor.execCommand('Indent');
 
@@ -356,7 +343,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent on second li with inner block element', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li><p>a</p></li>' +
@@ -365,7 +352,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul > li:nth-child(2) > p', 0);
     editor.execCommand('Indent');
 
@@ -381,7 +367,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('Indent already indented last li, ul in ol', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li>a' +
@@ -392,7 +378,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 0);
     editor.execCommand('Indent');
 
@@ -412,14 +397,13 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent single LI in OL with start attribute', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol start="5">' +
       '<li>a</li>' +
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('Indent');
 
@@ -437,7 +421,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
   });
 
   it('TestCase-TBA: Lists: Indent first LI and nested LI OL with start attributes', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol start="2">' +
       '<li>a</li>' +
@@ -449,7 +433,6 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('Indent');
 

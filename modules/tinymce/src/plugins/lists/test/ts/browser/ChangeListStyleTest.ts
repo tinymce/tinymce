@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -6,20 +6,15 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TBA: Lists: ul to ol, cursor only in parent', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li>a</li><ul><li>b</li></ul></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');
@@ -28,7 +23,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: ul to ol, selection from parent to sublist', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul><li>a</li><ol><li>b</li></ol></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');
@@ -37,7 +32,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: ol to ul, cursor only in parent', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ol><li>a</li><ol><li>b</li></ol></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
@@ -46,7 +41,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: ol to ul, selection from parent to sublist', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ol><li>a</li><ul><li>b</li></ul></ol>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
@@ -55,7 +50,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: alpha to ol, cursor only in parent', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');
@@ -64,7 +59,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: alpha to ol, selection from parent to sublist', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Numbered list"]');
@@ -73,7 +68,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: alpha to ul, cursor only in parent', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
@@ -82,7 +77,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
   });
 
   it('TBA: Lists: alpha to ul, selection from parent to sublist', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');

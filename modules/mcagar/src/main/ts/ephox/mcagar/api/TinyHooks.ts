@@ -14,19 +14,25 @@ export interface ShadowRootHook<T extends EditorType> extends Hook<T> {
   readonly shadowRoot: () => SugarElement<ShadowRoot>;
 }
 
+export interface SetupElement {
+  readonly element: SugarElement<HTMLElement>;
+  readonly teardown: () => void;
+}
+
 const setupHooks = <T extends EditorType = EditorType>(
   settings: Record<string, any>,
   setupModules: Array<() => void>,
   focusOnInit: boolean,
-  createElement: () => Optional<SugarElement>,
-  teardown = Fun.noop
+  setupElement: () => Optional<SetupElement>
 ): Hook<T> => {
   let editor: T;
   let teardownEditor: () => void = Fun.noop;
   let hasFailure = false;
+  let setup: Optional<SetupElement>;
 
   before((done) => {
     Arr.each(setupModules, Fun.call);
+    setup = setupElement();
     Loader.setup({
       preInit: setupTinymceBaseUrl,
       run: (ed, success) => {
@@ -39,7 +45,7 @@ const setupHooks = <T extends EditorType = EditorType>(
       },
       success: Fun.noop,
       failure: done
-    }, settings, createElement());
+    }, settings, setup.map((s) => s.element));
   });
 
   afterEach(function () {
@@ -51,7 +57,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   after(() => {
     if (!hasFailure) {
       teardownEditor();
-      teardown();
+      setup.each((s) => s.teardown());
     }
   });
 
@@ -73,8 +79,8 @@ const bddSetupLight = <T extends EditorType = EditorType>(settings: Record<strin
   }, setupModules, focusOnInit, Optional.none);
 };
 
-const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record<string, any>, element: SugarElement, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
-  return setupHooks(settings, setupModules, focusOnInit, Fun.constant(Optional.some(element)));
+const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record<string, any>, setupElement: () => SetupElement, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
+  return setupHooks(settings, setupModules, focusOnInit, () => Optional.some(setupElement()));
 };
 
 const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): ShadowRootHook<T> => {
@@ -100,7 +106,7 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
     };
   });
 
-  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => Optional.from(editorDiv), () => teardown());
+  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => Optional.some({ element: editorDiv, teardown }));
 
   return {
     ...hooks,

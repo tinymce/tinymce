@@ -1,4 +1,4 @@
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -8,7 +8,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.ApplyTest', () => {
-  const hooks = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -23,15 +23,10 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  });
-
-  before(() => {
-    Plugin();
-    Theme();
-  });
+  }, [ Plugin, Theme ]);
 
   it('TestCase-TBA: Lists: Apply UL list to single P', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
     editor.focus();
@@ -43,7 +38,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to single empty P', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(LegacyUnit.trimBrs('<p><br></p>'), { format: 'raw' });
 
     editor.focus();
@@ -55,7 +50,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to multiple Ps', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -77,7 +72,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL list to single P', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
     editor.focus();
@@ -89,7 +84,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL list to single empty P', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(LegacyUnit.trimBrs('<p><br></p>'), { format: 'raw' });
 
     editor.focus();
@@ -101,7 +96,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL list to multiple Ps', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -124,7 +119,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL to UL list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -149,7 +144,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL list with collapsed selection', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -174,7 +169,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL to OL list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -199,7 +194,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL to OL list collapsed selection', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -224,7 +219,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL to P and merge with adjacent lists', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -251,7 +246,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL to OL and merge with adjacent lists', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -278,7 +273,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL to P and merge with adjacent lists', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -305,7 +300,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply OL to UL and merge with adjacent lists', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>1a</li>' +
@@ -337,7 +332,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL and DO not merge with adjacent lists because styles are different (exec has style)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -366,7 +361,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to P and DO not merge with adjacent lists because styles are different (exec has style)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -395,7 +390,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL and DO not merge with adjacent lists because styles are different (original has style)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: upper-roman;">' +
       '<li>a</li>' +
@@ -424,7 +419,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL should merge with adjacent lists because styles are the same (both have roman)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: upper-roman;">' +
       '<li>a</li>' +
@@ -451,7 +446,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL should merge with above list because styles are the same (both have lower-roman), but not below list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: lower-roman;">' +
       '<li>a</li>' +
@@ -480,7 +475,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL should merge with below lists because styles are the same (both have roman), but not above list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: upper-roman;">' +
       '<li>a</li>' +
@@ -509,7 +504,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply OL to UL and DO not merge with adjacent lists because classes are different', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol class="a">' +
       '<li>a</li>' +
@@ -538,7 +533,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to single text line', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.setContent('a');
     editor.focus();
@@ -553,7 +548,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to single text line with BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.setContent('a<br>');
     editor.focus();
@@ -568,7 +563,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to multiple lines separated by BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -596,7 +591,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('Apply UL list to multiple lines separated by BR and with trailing BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -622,7 +617,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to multiple formatted lines separated by BR', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -651,7 +646,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to br line and text block line', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -678,7 +673,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to text block line and br line', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -706,7 +701,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to all BR lines (SelectAll)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
 
     editor.setContent(
@@ -733,7 +728,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to all P lines (SelectAll)', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -755,7 +750,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to more than two paragraphs', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>a</p>' +
       '<p>b</p>' +
@@ -770,7 +765,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL with custom attributes', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
     editor.focus();
@@ -786,7 +781,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL and LI with custom attributes', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.focus();
 
@@ -811,7 +806,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Handle one empty unordered list items without error', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -833,7 +828,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Handle several empty unordered list items without error', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ul>' +
       '<li>a</li>' +
@@ -865,7 +860,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Handle one empty ordered list items without error', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -887,7 +882,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Handle several empty ordered list items without error', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
       '<li>a</li>' +
@@ -919,7 +914,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply list on paragraphs with list between', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>a</p>' +
       '<ol>' +
@@ -934,7 +929,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply unordered list on children on a fully selected ordered list', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li>a' +
@@ -952,7 +947,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply unordered list on empty table cell', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<table>' +
         '<tbody>' +
@@ -976,7 +971,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply unordered list on table cell with two lines br', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<table>' +
         '<tbody>' +
@@ -1003,7 +998,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TestCase-TBA: Lists: Apply UL list to single P with forced_root_block_attrs', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.settings.forced_root_block = 'p';
     editor.settings.forced_root_block_attrs = {
       'data-editor': '1'
@@ -1026,7 +1021,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TINY-3755: Lists: Apply list on mix of existing lists and other text blocks', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<ol>' +
         '<li>a</li>' +
@@ -1093,7 +1088,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   });
 
   it('TINY-3755: Lists: Apply lists with selection start and end on text blocks', () => {
-    const editor = hooks.editor();
+    const editor = hook.editor();
     editor.setContent(
       '<p>&nbsp;</p>' +
       '<ul>' +
