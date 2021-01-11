@@ -1,29 +1,48 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+interface Definition {
+  readonly inputContent: string;
+  readonly inputSelection: [ string, number ];
+  readonly command: string;
+  readonly listType: boolean | 'disc' | 'lower-roman';
+  readonly expectedContent: string;
+  readonly expectedSelection: [ string, number ];
+}
 
-  AdvListPlugin();
-  ListsPlugin();
-  Theme();
+describe('browser.tinymce.plugins.advlist.AdvlistPluginTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    plugins: 'advlist lists',
+    add_unload_trigger: false,
+    indent: false,
+    entities: 'raw',
+    valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
+    valid_styles: {
+      '*': 'list-style-type'
+    },
+    disable_nodechange: true,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ AdvListPlugin, ListsPlugin, Theme ]);
 
-  const listStyleTest = (title: string, definition) => {
-    suite.test(title, (editor) => {
-      editor.getBody().innerHTML = definition.inputContent;
+  const listStyleTest = (title: string, definition: Definition) => {
+    it(title, () => {
+      const editor = hook.editor();
+      editor.setContent(definition.inputContent, { format: 'raw' });
       LegacyUnit.setSelection(editor, definition.inputSelection[0], definition.inputSelection[1]);
       editor.execCommand(definition.command, false, { 'list-style-type': definition.listType });
+
       const rng = editor.selection.getRng();
       const expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
-      LegacyUnit.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');
+      assert.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');
       LegacyUnit.equalDom(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
-      LegacyUnit.equal(rng.startOffset, definition.expectedSelection[1], 'Selection offset should be equal');
+      assert.equal(rng.startOffset, definition.expectedSelection[1], 'Selection offset should be equal');
     });
   };
 
@@ -45,7 +64,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply unordered list style to an unordered list', {
+  listStyleTest('Apply ordered list style to an unordered list', {
     inputContent: '<ol><li>a</li></ol>',
     inputSelection: [ 'li:nth-child(1)', 0 ],
     command: 'ApplyUnorderedListStyle',
@@ -81,7 +100,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply ordered list style to an unordered list with a child unordered list', {
+  listStyleTest('Apply ordered list style to an ordered list with a child unordered list', {
     inputContent: '<ol><li>a<ul><li>b</li></ul></li></ol>',
     inputSelection: [ 'li:nth-child(1)', 0 ],
     command: 'ApplyOrderedListStyle',
@@ -90,7 +109,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply unordered list style to an unordered list with a child unordered list', {
+  listStyleTest('Apply unordered list style to an unordered list with a parent unordered list', {
     inputContent: '<ul><li>a<ul><li>b</li></ul></li></ul>',
     inputSelection: [ 'li:nth-child(1) > ul > li:nth-child(1)', 0 ],
     command: 'ApplyUnorderedListStyle',
@@ -99,7 +118,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1) > ul > li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply ordered list style to an ordered list with a child ordered list', {
+  listStyleTest('Apply ordered list style to an ordered list with a parent ordered list', {
     inputContent: '<ol><li>a<ol><li>b</li></ol></li></ol>',
     inputSelection: [ 'li:nth-child(1) > ol > li:nth-child(1)', 0 ],
     command: 'ApplyOrderedListStyle',
@@ -108,7 +127,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1) > ol > li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply ordered list style to an unordered list with a child ordered list', {
+  listStyleTest('Apply ordered list style to an ordered list with a parent unordered list', {
     inputContent: '<ul><li>a<ol><li>b</li></ol></li></ul>',
     inputSelection: [ 'li:nth-child(1) > ol > li:nth-child(1)', 0 ],
     command: 'ApplyOrderedListStyle',
@@ -117,7 +136,7 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedSelection: [ 'li:nth-child(1) > ol > li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply unordered list style to ordered list with a child unordered list', {
+  listStyleTest('Apply unordered list style to unordered list with a parent ordered list', {
     inputContent: '<ol><li>a<ul><li>b</li></ul></li></ol>',
     inputSelection: [ 'li:nth-child(1) > ul > li:nth-child(1)', 0 ],
     command: 'ApplyUnorderedListStyle',
@@ -179,19 +198,4 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.AdvlistPluginTest', (success
     expectedContent: '<ol><li>a<ul><li>b</li></ul></li></ol>',
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    plugins: 'advlist lists',
-    add_unload_trigger: false,
-    indent: false,
-    entities: 'raw',
-    valid_elements: 'li[style],ol[style],ul[style],dl,dt,dd,em,strong,span,#p,div,br',
-    valid_styles: {
-      '*': 'list-style-type'
-    },
-    disable_nodechange: true,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });
