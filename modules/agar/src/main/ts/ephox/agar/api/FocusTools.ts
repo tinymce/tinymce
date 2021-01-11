@@ -75,6 +75,9 @@ const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoo
     )
   );
 
+const pTryOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Promise<SugarElement<HTMLElement>> =>
+  Waiter.pTryUntil(label + '. Focus did not match: ' + selector, () => isOnSelector(label, doc, selector).getOrDie());
+
 const cSetFocus = <T extends Node, U extends Element>(label: string, selector: string): Chain<SugarElement<T>, SugarElement<U>> =>
   // Input: container
   Chain.control(
@@ -108,6 +111,8 @@ export {
   setFocus,
   isOn,
   isOnSelector,
+
+  pTryOnSelector,
 
   sSetActiveValue,
   sSetFocus,
