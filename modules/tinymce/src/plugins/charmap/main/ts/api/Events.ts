@@ -5,7 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-const fireInsertCustomChar = (editor, chr) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const fireInsertCustomChar = (editor: Editor, chr: string) => {
   return editor.fire('insertCustomChar', { chr });
 };
 
