@@ -19,6 +19,7 @@ Version 5.7.0 (TBD)
     Fixed events bound using `DOMUtils` not returning the correct result for `isDefaultPrevented` in some cases #TINY-6834
     Fixed the "Dropped file type is not supported" notification incorrectly showing when using an inline editor #TINY-6834
     Fixed an issue with external styles bleeding into TinyMCE #TINY-6735
+    Fixed an issue where parsing malformed comments could cause an infinite loop #TINY-6864
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
     Fixed the type signature for `editor.selection.setCursorLocation()` incorrectly allowing a node with no `offset` #TINY-6843
     Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
