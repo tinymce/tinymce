@@ -19,6 +19,7 @@
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
     "mocha/no-exclusive-tests": "error",
+    "mocha/no-identical-title": "error",
     "no-empty": "off",
     "no-underscore-dangle": "off",
     "one-var": "off",
