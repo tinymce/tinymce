@@ -32,7 +32,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
   it('TestCase-TBA: Lists: Apply UL list to single P', () => {
     const editor = hooks.editor();
-
     editor.setContent('<p>a</p>');
 
     editor.focus();
@@ -73,7 +72,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<li>b</li>' +
       '<li>c</li>' +
       '</ul>'
-    )
+    );
     assert.equal(editor.selection.getStart().nodeName, 'LI');
   });
 
@@ -576,7 +575,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       'a<br>' +
       'b<br>' +
       'c',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     editor.focus();
@@ -604,7 +603,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       'a<br>' +
       'b<br>' +
       'c<br>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     editor.focus();
@@ -630,7 +629,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<strong>a</strong><br>' +
       '<span>b</span><br>' +
       '<em>c</em>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     editor.focus();
@@ -714,7 +713,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       'a<br>' +
       'b<br>' +
       'c<br>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     editor.focus();
@@ -753,18 +752,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<li>c</li>' +
       '</ul>'
     );
-  });
-
-  it('TestCase-TBA: Lists: Apply UL list to single P', () => {
-    const editor = hooks.editor();
-    editor.setContent('<p>a</p>');
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'p', 0);
-    editor.execCommand('InsertUnorderedList');
-
-    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
-    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
   it('TestCase-TBA: Lists: Apply UL list to more than two paragraphs', () => {
@@ -976,7 +963,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
           '</tr>' +
         '</tbody>' +
       '</table>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     const rng = editor.dom.createRng();
@@ -1000,7 +987,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
           '</tr>' +
         '</tbody>' +
       '</table>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     const rng = editor.dom.createRng();
@@ -1011,7 +998,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     editor.execCommand('InsertUnorderedList');
     TinyAssertions.assertRawContent(
       editor,
-      '<table class="mce-item-table"><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>',
+      '<table class="mce-item-table"><tbody><tr><td><ul><li>a</li></ul>b</td></tr></tbody></table>'
     );
   });
 
@@ -1024,7 +1011,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
 
     editor.setContent(
       '<p data-editor="1">a</p>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
 
     editor.focus();
@@ -1120,7 +1107,7 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
         '<li>six</li>' +
       '</ol>' +
       '<p>After</p>',
-      { format: 'raw' },
+      { format: 'raw' }
     );
     editor.execCommand('SelectAll');
     editor.execCommand('InsertUnorderedList');

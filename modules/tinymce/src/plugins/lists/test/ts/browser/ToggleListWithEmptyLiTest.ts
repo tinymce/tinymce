@@ -1,33 +1,31 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
 
-import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Plugin from 'tinymce/plugins/lists/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', (success, failure) => {
-  ListsPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Lists: toggle bullet list on list with two empty LIs', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 3, 0 ], 1),
-        tinyUi.sWaitForUi('Wait for toolbar button to be active', 'button[aria-label="Bullet list"].tox-tbtn--enabled'),
-        tinyUi.sClickOnToolbar('click list', 'button[aria-label="Bullet list"]'),
-        tinyApis.sAssertContent('<p>a</p><p>&nbsp;</p><p>&nbsp;</p><p>b</p>')
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
+  const hooks = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',
     toolbar: 'bullist',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  });
+
+  before(() => {
+    Plugin();
+    Theme();
+  });
+
+  it('TBA: Lists: toggle bullet list on list with two empty LIs', async () => {
+    const editor = hooks.editor();
+    editor.focus();
+    editor.setContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 3, 0 ], 1);
+    // Wait for toolbar button to be active
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Bullet list"].tox-tbtn--enabled');
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
+    TinyAssertions.assertContent(editor, '<p>a</p><p>&nbsp;</p><p>&nbsp;</p><p>b</p>');
+  });
 });

@@ -1,19 +1,37 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.plugins.lists.RemoveTest', () => {
+  const hooks = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'lists',
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    indent: false,
+    entities: 'raw',
+    valid_elements:
+      'li[style|class|data-custom],ol[style|class|data-custom],' +
+      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,' +
+        'font-style,text-decoration,float,margin,margin-top,margin-right,' +
+        'margin-bottom,margin-left,display,position,top,left,list-style-type'
+    },
+    base_url: '/project/tinymce/js/tinymce'
+  });
 
-  Plugin();
-  Theme();
+  before(() => {
+    Plugin();
+    Theme();
+  });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at single LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at single LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '</ul>'
@@ -21,16 +39,15 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
-      '<p>a</p>'
-    );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at start LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at start LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -40,20 +57,21 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<p>a</p>' +
       '<ul>' +
       '<li>b</li>' +
       '<li>c</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at start empty LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at start empty LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li><br></li>' +
       '<li>b</li>' +
@@ -63,20 +81,21 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<p>\u00a0</p>' +
       '<ul>' +
       '<li>b</li>' +
       '<li>c</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at middle LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -86,9 +105,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>' +
@@ -97,11 +116,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>c</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle empty LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at middle empty LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li><br></li>' +
@@ -111,9 +131,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>' +
@@ -122,11 +142,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>c</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at end LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at end LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -136,20 +157,21 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>' +
       '<p>c</p>'
     );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at end empty LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at end empty LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -159,20 +181,21 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>' +
       '<p>\u00a0</p>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ol>' +
       '<li>a</li>' +
       '<ul>' +
@@ -186,9 +209,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ol>' +
       '<li>a' +
       '<ul>' +
@@ -206,11 +229,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>e</li>' +
       '</ol>'
     );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove UL at middle LI inside parent OL (html5)', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ol>' +
       '<li>a' +
       '<ul>' +
@@ -225,9 +249,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ol>' +
       '<li>a' +
       '<ul>' +
@@ -245,11 +269,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>e</li>' +
       '</ol>'
     );
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove OL on a deep nested LI', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove OL on a deep nested LI', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ol>' +
       '<li>a' +
       '<ol>' +
@@ -271,9 +296,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol ol li:nth-child(2)', 1);
-    LegacyUnit.execCommand(editor, 'InsertOrderedList');
+    editor.execCommand('InsertOrderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ol>' +
       '<li>a' +
       '<ol>' +
@@ -303,11 +328,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getStart().nodeName, 'P');
+    assert.equal(editor.selection.getStart().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove empty UL between two textblocks', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove empty UL between two textblocks', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<div>a</div>' +
       '<ul>' +
       '<li></li>' +
@@ -317,18 +343,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li:first', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<div>a</div>' +
       '<p>\u00a0</p>' +
       '<div>b</div>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with single item', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove indented list with single item', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -341,9 +368,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li li', 0, 'li li', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>' +
@@ -352,11 +379,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>c</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove indented list with multiple items', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -370,9 +398,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li li:first', 0, 'li li:last', 1);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>' +
@@ -382,12 +410,13 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '<li>d</li>' +
       '</ul>'
     );
-    LegacyUnit.equal((editor.selection.getStart().firstChild as Text).data, 'b');
-    LegacyUnit.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
+    assert.equal((editor.selection.getStart().firstChild as Text).data, 'b');
+    assert.equal((editor.selection.getEnd().firstChild as Text).data, 'c');
   });
 
-  suite.test('TestCase-TBA: Lists: Remove indented list with multiple items', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TestCase-TBA: Lists: Remove indented list with multiple items and paragraph', () => {
+    const editor = hooks.editor();
+    editor.setContent(
       '<ul>' +
         '<li>a</li>' +
         '<li><p>b</p></li>' +
@@ -397,9 +426,9 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
-    LegacyUnit.execCommand(editor, 'InsertUnorderedList');
+    editor.execCommand('InsertUnorderedList');
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
         '<li>a</li>' +
       '</ul>' +
@@ -409,24 +438,4 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.RemoveTest', (success, failure
       '</ul>'
     );
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'Link: Remove tests', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'lists',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    indent: false,
-    entities: 'raw',
-    valid_elements:
-      'li[style|class|data-custom],ol[style|class|data-custom],' +
-      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
-    valid_styles: {
-      '*': 'color,font-size,font-family,background-color,font-weight,' +
-        'font-style,text-decoration,float,margin,margin-top,margin-right,' +
-        'margin-bottom,margin-left,display,position,top,left,list-style-type'
-    },
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });
