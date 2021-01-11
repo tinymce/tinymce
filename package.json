@@ -28,7 +28,7 @@
     "browser-test-manual": "yarn -s grunt browser-manual",
     "phantomjs-test": "yarn -s grunt phantomjs-auto",
     "phantomjs-test-manual": "yarn -s grunt phantomjs-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json --polyfills Promise Symbol",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
@@ -39,9 +39,12 @@
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-prismjs": "^1.19.0",
     "@tinymce/eslint-plugin": "^1.7.1",
+    "@types/chai": "^4.2.14",
     "awesome-typescript-loader": "^5.2.0",
+    "chai": "^4.2.0",
     "chalk": "^4.1.0",
     "emojilib": "^2.4.0",
+    "eslint-plugin-mocha": "^8.0.0",
     "fast-check": "^1.18.1",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
