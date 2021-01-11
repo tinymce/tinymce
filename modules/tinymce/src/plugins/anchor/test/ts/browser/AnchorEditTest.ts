@@ -1,38 +1,30 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/anchor/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { sAddAnchor, sAssertAnchorPresence } from '../module/Helpers';
+import { pAddAnchor, pAssertAnchorPresence } from '../module/Helpers';
 
-UnitTest.asynctest('browser.tinymce.plugins.anchor.AnchorEditTest', (success, failure) => {
-  AnchorPlugin();
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Anchor: Add anchor, change anchor, undo anchor change then the anchor should be there as first entered', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('abc'),
-        sAddAnchor(tinyApis, tinyUi, 'abc', true),
-        sAssertAnchorPresence(tinyApis, 1, 'a.mce-item-anchor#abc'),
-        tinyApis.sSelect('a.mce-item-anchor', []),
-        tinyUi.sWaitForUi('Anchor toolbar button is highlighted', 'button[aria-label="Anchor"][aria-pressed="true"]'),
-        sAddAnchor(tinyApis, tinyUi, 'def', true),
-        sAssertAnchorPresence(tinyApis, 1, 'a.mce-item-anchor#def'),
-        tinyApis.sExecCommand('undo'),
-        tinyApis.sSetCursor([], 0),
-        tinyApis.sAssertContentPresence({ 'a.mce-item-anchor#abc': 1 }),
-        tinyUi.sWaitForUi('Anchor toolbar button is not highlighted', 'button[aria-label="Anchor"][aria-pressed="false"]')
-      ])
-      , onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.anchor.AnchorEditTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'anchor',
     toolbar: 'anchor',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: Add anchor, change anchor, undo anchor change then the anchor should be there as first entered', async () => {
+    const editor = hook.editor();
+    editor.setContent('abc');
+    await pAddAnchor(editor, 'abc', true);
+    await pAssertAnchorPresence(editor, 1, 'a.mce-item-anchor#abc');
+    TinySelections.select(editor, 'a.mce-item-anchor', []);
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Anchor"][aria-pressed="true"]');
+    await pAddAnchor(editor, 'def', true);
+    await pAssertAnchorPresence(editor, 1, 'a.mce-item-anchor#def');
+    editor.execCommand('undo');
+    TinySelections.setCursor(editor, [], 0);
+    TinyAssertions.assertContentPresence(editor, { 'a.mce-item-anchor#abc': 1 });
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Anchor"][aria-pressed="false"]');
+  });
 });

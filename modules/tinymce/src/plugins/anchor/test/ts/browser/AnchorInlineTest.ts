@@ -1,34 +1,26 @@
-import { Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { sAddAnchor } from '../module/Helpers';
+import { Keyboard, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-UnitTest.asynctest('Browser Test: .AnchorInlineTest', (success, failure) => {
-  AnchorPlugin();
-  SilverTheme();
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/anchor/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import { pAddAnchor } from '../module/Helpers';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({},
-      // Note: HTML should not be contained in the anchor because of the allow_html_in_named_anchor setting which is false by default
-      Log.steps('TBA', 'Anchor: Add anchor by selecting text content, then check that anchor is inserted correctly', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>abc 123</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 4, [ 0, 0 ], 7),
-        tinyActions.sContentKeystroke(Keys.space(), {}),
-        sAddAnchor(tinyApis, tinyUi, 'abc', true),
-        tinyApis.sAssertContent('<p>abc <a id="abc"></a>123</p>')
-      ])
-      , onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.anchor.AnchorInlineTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'anchor',
     toolbar: 'anchor',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  // Note: HTML should not be contained in the anchor because of the allow_html_in_named_anchor setting which is false by default
+  it('TBA: Add anchor by selecting text content, then check that anchor is inserted correctly', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc 123</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+    await pAddAnchor(editor, 'abc', true);
+    TinyAssertions.assertContent(editor, '<p>abc <a id="abc"></a>123</p>');
+  });
 });
