@@ -98,6 +98,9 @@ const pWaitForVisible = (message: string, container: SugarElement<Node>, selecto
 const pWaitForHidden = (message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<Element>> =>
   Chain.toPromise(cWaitForHidden(message, selector))(container);
 
+const pWaitForState = (message: string, container: SugarElement<Node>, selector: string, predicate: (element: SugarElement<any>) => boolean): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cWaitForState(message, selector, predicate))(container);
+
 export {
   findIn,
   findAllIn,
@@ -124,5 +127,6 @@ export {
 
   pWaitFor,
   pWaitForVisible,
-  pWaitForHidden
+  pWaitForHidden,
+  pWaitForState
 };
