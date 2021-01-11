@@ -1,10 +1,10 @@
 import { Chain } from '@ephox/agar';
-import { Global, Id, Strings, Type } from '@ephox/katamari';
+import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import Promise from '@ephox/wrap-promise-polyfill';
 import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
-import { setTinymceBaseUrl } from '../loader/Urls';
+import { setupTinymceBaseUrl } from '../loader/Urls';
 
 const errorMessageEditorRemoved = 'Editor Removed';
 
@@ -24,11 +24,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement, 
 
     const tinymce = Global.tinymce;
 
-    if (nuSettings.base_url) {
-      setTinymceBaseUrl(tinymce, nuSettings.base_url);
-    } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
-      setTinymceBaseUrl(Global.tinymce, '/project/node_modules/tinymce');
-    }
+    setupTinymceBaseUrl(tinymce, nuSettings);
 
     const targetSettings = SugarShadowDom.isInShadowRoot(element) ? ({ target: element.dom }) : ({ selector: '#' + randomId });
 

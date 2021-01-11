@@ -1,10 +1,10 @@
 import { after, afterEach, before } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import { Editor as EditorType } from '../alien/EditorTypes';
 import * as Loader from '../loader/Loader';
-import { setTinymceBaseUrl } from '../loader/Urls';
+import { setupTinymceBaseUrl } from '../loader/Urls';
 
 export interface Hook<T extends EditorType> {
   readonly editor: () => T;
@@ -13,14 +13,6 @@ export interface Hook<T extends EditorType> {
 export interface ShadowRootHook<T extends EditorType> extends Hook<T> {
   readonly shadowRoot: () => SugarElement<ShadowRoot>;
 }
-
-const setupBaseUrl = (tinymce: any, settings: Record<string, any>): void => {
-  if (settings.base_url) {
-    setTinymceBaseUrl(tinymce, settings.base_url);
-  } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
-    setTinymceBaseUrl(tinymce, '/project/node_modules/tinymce');
-  }
-};
 
 const setupHooks = <T extends EditorType = EditorType>(
   settings: Record<string, any>,
@@ -36,7 +28,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   before((done) => {
     Arr.each(setupModules, Fun.call);
     Loader.setup({
-      preInit: setupBaseUrl,
+      preInit: setupTinymceBaseUrl,
       run: (ed, success) => {
         editor = ed;
         teardownEditor = success;

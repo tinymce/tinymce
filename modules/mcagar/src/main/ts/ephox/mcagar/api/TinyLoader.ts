@@ -1,20 +1,12 @@
 import { TestLogs } from '@ephox/agar';
-import { Optional, Strings, Type } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
 import * as Loader from '../loader/Loader';
-import { setTinymceBaseUrl } from '../loader/Urls';
+import { setupTinymceBaseUrl } from '../loader/Urls';
 
 type FailureCallback = Loader.FailureCallback;
 type SuccessCallback = Loader.SuccessCallback;
-
-const setupBaseUrl = (tinymce: any, settings: Record<string, any>): void => {
-  if (settings.base_url) {
-    setTinymceBaseUrl(tinymce, settings.base_url);
-  } else if (!Type.isString(tinymce.baseURL) || !Strings.contains(tinymce.baseURL, '/project/')) {
-    setTinymceBaseUrl(tinymce, '/project/node_modules/tinymce');
-  }
-};
 
 const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   const nuSettings: Record<string, any> = {
@@ -25,7 +17,7 @@ const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>,
   };
 
   Loader.setup({
-    preInit: setupBaseUrl,
+    preInit: setupTinymceBaseUrl,
     run: callback,
     success,
     failure
@@ -34,7 +26,7 @@ const setupLight = (callback: Loader.RunCallback, settings: Record<string, any>,
 
 const setup = (callback: Loader.RunCallback, settings: Record<string, any>, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   Loader.setup({
-    preInit: setupBaseUrl,
+    preInit: setupTinymceBaseUrl,
     run: callback,
     success,
     failure
@@ -43,7 +35,7 @@ const setup = (callback: Loader.RunCallback, settings: Record<string, any>, succ
 
 const setupFromElement = (callback: Loader.RunCallback, settings: Record<string, any>, element: SugarElement, success: Loader.SuccessCallback, failure: Loader.FailureCallback): void => {
   Loader.setup({
-    preInit: setupBaseUrl,
+    preInit: setupTinymceBaseUrl,
     run: callback,
     success,
     failure

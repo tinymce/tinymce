@@ -6,14 +6,14 @@ import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
-const click = Clicks.click({ });
-const mouseOver = Clicks.mouseOver({ });
-const mouseDown = Clicks.mouseDown({ });
-const mouseUp = Clicks.mouseUp({ });
-const mouseMove = Clicks.mouseMove({ });
-const mouseOut = Clicks.mouseOut({ });
-const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number): void =>
-  Clicks.mouseMove({ dx, dy })(element);
+const click = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.click(settings)(element);
+const mouseOver = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOver(settings)(element);
+const mouseDown = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseDown(settings)(element);
+const mouseUp = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseUp(settings)(element);
+const mouseMove = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseMove(settings)(element);
+const mouseOut = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOut(settings)(element);
+const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Clicks.Settings, 'dx' | 'dy'>): void =>
+  Clicks.mouseMove({ ...settings, dx, dy })(element);
 
 // Custom event creation
 const cClickWith = Fun.compose(Chain.op, Clicks.click);
