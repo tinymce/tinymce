@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, PhantomSkipper, Pipeline, UiFinder
+} from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals, Result } from '@ephox/katamari';
@@ -82,7 +84,7 @@ UnitTest.asynctest('OxideCollectionComponentTest', (success, failure) => {
           ),
 
           // NOTE: We need a layout engine to use flex-wrap navigation.
-          navigator.userAgent.indexOf('PhantomJS') > -1 ?
+          PhantomSkipper.detect() ?
             FocusTools.sSetFocus('Force focus to F on phantom', SugarBody.body(), '.tox-collection__item:contains("F")')
             : Logger.t(
               'Checking the second collection: columns = auto',

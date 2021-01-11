@@ -1,3 +1,6 @@
+import { Failure } from '@ephox/bedrock-common';
+import Promise from '@ephox/wrap-promise-polyfill';
+
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
@@ -67,6 +70,24 @@ const predicate = <T>(p: (value: T) => boolean): Step<T, T> =>
     p(value) ? next(value) : die('predicate did not succeed');
   });
 
+const toPromise = <A, B>(step: Step<A, B>) => (a: A): Promise<B> => {
+  return new Promise(((resolve, reject) => {
+    step.runStep(a,
+      (b, _logs) => {
+        // TODO: What to do with logs? We lose them.
+        resolve(b);
+      }, (err, logs) => {
+        reject(Failure.prepFailure(err, logs));
+      },
+      TestLogs.init()
+    );
+  }));
+};
+
+const fromPromise = <T>(p: Promise<T>): Step<T, T> => Step.async((next, die) => {
+  p.then(next, die);
+});
+
 export const Step = {
   stateful,
   control,
@@ -79,5 +100,7 @@ export const Step = {
   fail,
   pass,
   raw,
-  predicate
+  predicate,
+  toPromise,
+  fromPromise
 };

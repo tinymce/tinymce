@@ -1,4 +1,4 @@
-import { Log, Pipeline, RealMouse, Waiter } from '@ephox/agar';
+import { Log, PhantomSkipper, Pipeline, RealMouse, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -14,7 +14,7 @@ UnitTest.asynctest('webdriver.tinymce.plugins.paste.CutTest', (success, failure)
   const platform = PlatformDetection.detect();
 
   /* Test does not work on Phantom */
-  if (window.navigator.userAgent.indexOf('PhantomJS') > -1) {
+  if (PhantomSkipper.detect()) {
     return success();
   }
 

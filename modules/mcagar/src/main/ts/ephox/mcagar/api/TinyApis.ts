@@ -1,14 +1,34 @@
-import { Assertions, Chain, Cursors, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
-import { Optional } from '@ephox/katamari';
-import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import { Assertions, Chain, Cursors, Step, StructAssert, Waiter } from '@ephox/agar';
+import { Fun } from '@ephox/katamari';
 import { Editor } from '../alien/EditorTypes';
-import * as TinySelections from '../selection/TinySelections';
+import * as TinyAssertions from './TinyAssertions';
+import * as TinySelections from './TinySelections';
 
 export interface Presence {
   [selector: string]: number;
 }
 
 export interface TinyApis {
+  getContent: () => string;
+  setContent: (html: string) => void;
+  setRawContent: (html: string) => void;
+  focus: () => void;
+  hasFocus: (expected: boolean) => void;
+  nodeChanged: () => void;
+  assertContent: (expected: string) => void;
+  assertContentPresence: (expected: Presence) => void;
+  assertContentStructure: (expected: StructAssert) => void;
+  assertSelection: (startPath: number[], soffset: number, finishPath: number[], foffset: number) => void;
+  setCursor: (elementPath: number[], offset: number) => void;
+  setSelectionFrom: (spec: Cursors.CursorSpec | Cursors.RangeSpec) => void;
+  setSelection: (startPath: number[], soffset: number, finishPath: number[], foffset: number) => void;
+  select: (selector: string, path: number[]) => void;
+  deleteSetting: (key: string) => void;
+  setSetting: (key: string, value: any) => void;
+  execCommand: (command: string, value?: any) => void;
+
+  pTryAssertFocus: (waitTime?: number) => Promise<void>;
+
   sSetContent: <T> (html: string) => Step<T, T>;
   sSetRawContent: <T> (html: string) => Step<T, T>;
   sFocus: <T> () => Step<T, T>;
@@ -25,148 +45,121 @@ export interface TinyApis {
   sDeleteSetting: <T> (key: string) => Step<T, T>;
   sSetSetting: <T> (key: string, value: any) => Step<T, T>;
   sExecCommand: <T> (command: string, value?: any) => Step<T, T>;
-  sTryAssertFocus: <T> () => Step<T, T>;
+  sTryAssertFocus: <T> (waitTime?: number) => Step<T, T>;
 
   cNodeChanged: <T> () => Chain<T, T>;
   cGetContent: <T> () => Chain<T, string>;
 }
 
 export const TinyApis = (editor: Editor): TinyApis => {
+  const getContent = (): string => editor.getContent();
+
   const setContent = (html: string): void => {
     editor.setContent(html);
   };
 
-  const sSetContent = <T>(html: string) => {
-    return Step.sync<T>(() => {
-      setContent(html);
-    });
+  const setRawContent = (html: string): void => {
+    editor.getBody().innerHTML = html;
   };
 
-  const sSetRawContent = <T>(html: string) => {
-    return Step.sync<T>(() => {
-      editor.getBody().innerHTML = html;
-    });
+  const nodeChanged = (): void => {
+    editor.nodeChanged();
   };
 
-  const lazyBody = (): SugarElement => {
-    return SugarElement.fromDom(editor.getBody());
+  const setSelectionFrom = Fun.curry(TinySelections.setSelectionFrom, editor);
+  const setCursor = Fun.curry(TinySelections.setCursor, editor);
+  const setSelection = Fun.curry(TinySelections.setSelection, editor);
+  const select = Fun.curry(TinySelections.select, editor);
+
+  const setSetting = (key: string, value: any): void => {
+    editor.settings[key] = value;
   };
+
+  const deleteSetting = (key: string): void => {
+    delete editor.settings[key];
+  };
+
+  const execCommand = (command: string, value?: any) => {
+    editor.execCommand(command, false, value);
+  };
+
+  const assertContent = Fun.curry(TinyAssertions.assertContent, editor);
+  const assertContentPresence = Fun.curry(TinyAssertions.assertContentPresence, editor);
+  const assertContentStructure = Fun.curry(TinyAssertions.assertContentStructure, editor);
+  const assertSelection = Fun.curry(TinyAssertions.assertSelection, editor);
+
+  const focus = (): void => {
+    editor.focus();
+  };
+
+  const hasFocus = (expected: boolean): void => {
+    Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
+  };
+
+  const sSetContent = <T>(html: string) => Step.sync<T>(() => {
+    setContent(html);
+  });
+
+  const sSetRawContent = <T>(html: string) => Step.sync<T>(() => {
+    setRawContent(html);
+  });
 
   // Has to be thunked, so it can remain polymorphic
-  const cNodeChanged = <T>() => Chain.op<T>(() => {
-    editor.nodeChanged();
+  const cNodeChanged = <T>() =>
+    Chain.op<T>(nodeChanged);
+
+  const sSetSelectionFrom = <T>(spec: Cursors.CursorSpec | Cursors.RangeSpec) => Step.sync<T>(() => {
+    setSelectionFrom(spec);
   });
 
-  const cSetDomSelection = Chain.op<Range>((range: Range) => {
-    editor.selection.setRng(range);
+  const sSetCursor = <T>(elementPath: number[], offset: number) =>
+    sSetSelection<T>(elementPath, offset, elementPath, offset);
+
+  const sSetSelection = <T>(startPath: number[], soffset: number, finishPath: number[], foffset: number) => Step.sync<T>(() => {
+    setSelection(startPath, soffset, finishPath, foffset);
   });
 
-  const cSelectElement: Chain<SugarElement, SugarElement> = Chain.op((target: SugarElement) => {
-    editor.selection.select(target.dom);
+  const sSetSetting = <T>(key: string, value: any) => Step.sync<T>(() => {
+    setSetting(key, value);
   });
 
-  const sSetSelectionFrom = <T>(spec: Cursors.CursorSpec | Cursors.RangeSpec) => {
-    const path = Cursors.pathFrom(spec);
-    return sSetSelection<T>(path.startPath, path.soffset, path.finishPath, path.foffset);
-  };
-
-  const sSetCursor = <T>(elementPath: number[], offset: number) => {
-    return sSetSelection<T>(elementPath, offset, elementPath, offset);
-  };
-
-  const sSetSelection = <T>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Step<T, T> => {
-    return Chain.asStep<T, SugarElement>(lazyBody(), [
-      TinySelections.cCreateDomSelection(startPath, soffset, finishPath, foffset),
-      cSetDomSelection,
-      cNodeChanged()
-    ]);
-  };
-
-  const sSetSetting = <T>(key: string, value: any): Step<T, T> => {
-    return Step.sync(() => {
-      editor.settings[key] = value;
-    });
-  };
-
-  const sDeleteSetting = <T>(key: string): Step<T, T> => {
-    return Step.sync<T>(() => {
-      delete editor.settings[key];
-    });
-  };
-
-  const sSelect = <T> (selector: string, path: number[]) => {
-    return Chain.asStep<T, SugarElement>(lazyBody(), [
-      UiFinder.cFindIn(selector),
-      Cursors.cFollow(path),
-      cSelectElement
-    ]);
-  };
-
-  const cGetContent = <T>() => Chain.injectThunked<T, string>(() => editor.getContent());
-
-  const sExecCommand = <T>(command: string, value?: any) => {
-    return Step.sync<T>(() => {
-      editor.execCommand(command, false, value);
-    });
-  };
-
-  const sAssertContent = <T>(expected: string) => {
-    return Chain.asStep<T, any>({}, [
-      cGetContent(),
-      Assertions.cAssertHtml('Checking TinyMCE content', expected)
-    ]);
-  };
-
-  const sAssertContentPresence = <T>(expected: Presence) => {
-    return Assertions.sAssertPresence<T>(
-      () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
-      expected,
-      lazyBody()
-    );
-  };
-
-  const sAssertContentStructure = <T>(expected: StructAssert) => {
-    return Assertions.sAssertStructure<T>(
-      'Asserting the structure of tiny content.',
-      expected,
-      lazyBody()
-    );
-  };
-
-  // const sAssertSelectionFrom = (expected) => {
-  // TODO
-  // };
-
-  const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
-    const expected = Cursors.calculateOne(root, expPath);
-    const message = () => {
-      const actual = SugarElement.fromDom(actElement);
-      const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-      return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
-    };
-    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
-    Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
-  };
-
-  const sAssertSelection = <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-    return Step.sync<T>(() => {
-      const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
-      assertPath('start', lazyBody(), startPath, soffset, actual.startContainer, actual.startOffset);
-      assertPath('finish', lazyBody(), finishPath, foffset, actual.endContainer, actual.endOffset);
-    });
-  };
-
-  const sFocus = <T>() => Step.sync<T>(() => {
-    editor.focus();
+  const sDeleteSetting = <T>(key: string) => Step.sync<T>(() => {
+    deleteSetting(key);
   });
+
+  const sSelect = <T>(selector: string, path: number[]) => Step.sync<T>(() => {
+    TinySelections.select(editor, selector, path);
+  });
+
+  const cGetContent = <T>() => Chain.injectThunked<T, string>(getContent);
+
+  const sExecCommand = <T>(command: string, value?: any) => Step.sync<T>(() => {
+    execCommand(command, value);
+  });
+
+  const sAssertContent = <T>(expected: string) => Step.sync<T>(() => {
+    assertContent(expected);
+  });
+
+  const sAssertContentPresence = <T>(expected: Presence) => Step.sync<T>(() => {
+    assertContentPresence(expected);
+  });
+
+  const sAssertContentStructure = <T>(expected: StructAssert) => Step.sync<T>(() => {
+    assertContentStructure(expected);
+  });
+
+  const sAssertSelection = <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Step.sync<T>(() => {
+    assertSelection(startPath, soffset, finishPath, foffset);
+  });
+
+  const sFocus = <T>() => Step.sync<T>(focus);
 
   const sHasFocus = <T>(expected: boolean) => Step.sync<T>(() => {
-    Assertions.assertEq('Assert whether editor hasFocus', expected, editor.hasFocus());
+    hasFocus(expected);
   });
 
-  const sNodeChanged = <T>() => Step.sync<T>(() => {
-    editor.nodeChanged();
-  });
+  const sNodeChanged = <T>() => Step.sync<T>(nodeChanged);
 
   const sTryAssertFocus = <T>(waitTime?: number) => Waiter.sTryUntil<T, T>(
     'Waiting for focus',
@@ -175,7 +168,30 @@ export const TinyApis = (editor: Editor): TinyApis => {
     waitTime
   );
 
+  const pTryAssertFocus = (waitTime?: number) =>
+    Step.toPromise(sTryAssertFocus<void>(waitTime))(undefined);
+
   return {
+    getContent,
+    setContent,
+    setRawContent,
+    nodeChanged,
+    setSelectionFrom,
+    setCursor,
+    setSelection,
+    select,
+    setSetting,
+    deleteSetting,
+    execCommand,
+    assertContent,
+    assertContentStructure,
+    assertContentPresence,
+    assertSelection,
+    focus,
+    hasFocus,
+
+    pTryAssertFocus,
+
     sSetContent,
     cGetContent,
     sSetRawContent,
@@ -191,7 +207,6 @@ export const TinyApis = (editor: Editor): TinyApis => {
     sSetCursor,
     sSelect,
     sExecCommand,
-    // sAssertSelectionFrom: sAssertSelectionFrom,
     sAssertSelection,
     sTryAssertFocus,
     sFocus,

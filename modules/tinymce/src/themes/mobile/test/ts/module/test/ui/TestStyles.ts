@@ -1,4 +1,4 @@
-import { Assertions, Chain, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Chain, PhantomSkipper, UiFinder, Waiter } from '@ephox/agar';
 import { Id } from '@ephox/katamari';
 import { Attribute, Class, Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -28,7 +28,7 @@ const sWaitForToolstrip = (realm) => {
     Chain.asStep(realm.element, [
       UiFinder.cFindIn('.tinymce-mobile-toolstrip'),
       Chain.op((toolstrip) => {
-        if (navigator.userAgent.indexOf('PhantomJS') === -1) {
+        if (!PhantomSkipper.detect()) {
           Assertions.assertEq('Checking toolstrip is flex', 'flex', Css.get(toolstrip, 'display'));
         }
       })

@@ -1,4 +1,5 @@
 import { DataType, Http } from '@ephox/jax';
+import Promise from '@ephox/wrap-promise-polyfill';
 import { Chain } from '../api/Chain';
 import { Step } from '../api/Step';
 
@@ -25,7 +26,14 @@ const cPerform = <T> (path: string): Chain<T, T> =>
     postInfo(path, info, die, next);
   });
 
+const pPerform = (path: string, info: any): Promise<{}> => {
+  return new Promise(((resolve, reject) => {
+    postInfo(path, info, reject, resolve);
+  }));
+};
+
 export {
   sPerform,
-  cPerform
+  cPerform,
+  pPerform
 };

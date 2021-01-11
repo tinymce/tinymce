@@ -1,4 +1,4 @@
-import { Assert, TestLabel, UnitTest } from '@ephox/bedrock-client';
+import { Assert, TestError, TestLabel } from '@ephox/bedrock-client';
 import { Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
@@ -21,8 +21,8 @@ const toChain = <B, C>(method: (label: TestLabel, expected: B, actual: C) => voi
       method.call(undefined, label, expected, actual);
     });
 
-const textError = (label: string, expected: string, actual: string): UnitTest.HtmlDiffError => {
-  const err: Partial<UnitTest.HtmlDiffError> = new Error(label);
+const textError = (label: string, expected: string, actual: string): TestError.HtmlDiffAssertionError => {
+  const err: Partial<TestError.HtmlDiffAssertionError> = new Error(label);
   err.diff = {
     expected,
     actual,
@@ -31,7 +31,7 @@ const textError = (label: string, expected: string, actual: string): UnitTest.Ht
   err.label = label;
   err.name = 'HtmlAssertion';
 
-  return err as UnitTest.HtmlDiffError;
+  return err as TestError.HtmlDiffAssertionError;
 };
 
 const assertHtml = (label: TestLabel, expected: string, actual: string): void => {

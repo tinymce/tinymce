@@ -1,9 +1,8 @@
-import { Assertions, Chain, Cursors, StructAssert, UiFinder } from '@ephox/agar';
-import { Optional } from '@ephox/katamari';
-import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+import { Chain, Cursors, StructAssert } from '@ephox/agar';
 import { Editor } from '../alien/EditorTypes';
-import * as TinySelections from '../selection/TinySelections';
 import { Presence } from './TinyApis';
+import * as TinyAssertions from './TinyAssertions';
+import * as TinySelections from './TinySelections';
 
 export interface ApiChains {
   cNodeChanged: <T extends Editor> () => Chain<T, T>;
@@ -23,10 +22,6 @@ export interface ApiChains {
   cFocus: Chain<Editor, Editor>;
   cAssertSelection: <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Chain<T, T>;
 }
-
-const lazyBody = (editor: Editor): SugarElement<HTMLElement> => {
-  return SugarElement.fromDom(editor.getBody());
-};
 
 const cNodeChanged = <T extends Editor>(): Chain<T, T> => Chain.op((editor: T) => {
   editor.nodeChanged();
@@ -55,9 +50,7 @@ const cSetCursor = <T extends Editor>(elementPath: number[], offset: number): Ch
 
 const cSetSelection = <T extends Editor>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    const range = TinySelections.createDomSelection(lazyBody(editor), startPath, soffset, finishPath, foffset);
-    editor.selection.setRng(range);
-    editor.nodeChanged();
+    TinySelections.setSelection(editor, startPath, soffset, finishPath, foffset);
   });
 };
 
@@ -75,9 +68,7 @@ const cDeleteSetting = <T extends Editor>(key: string): Chain<T, T> => {
 
 const cSelect = <T extends Editor>(selector: string, path: number[]): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    const container = UiFinder.findIn(lazyBody(editor), selector).getOrDie();
-    const target = Cursors.calculateOne(container, path);
-    editor.selection.select(target.dom);
+    TinySelections.select(editor, selector, path);
   });
 };
 
@@ -93,46 +84,25 @@ const cExecCommand = <T extends Editor>(command: string, value?: any): Chain<T, 
 
 const cAssertContent = <T extends Editor>(expected: string): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    Assertions.assertHtml('Checking TinyMCE content', expected, editor.getContent());
+    TinyAssertions.assertContent(editor, expected);
   });
 };
 
 const cAssertContentPresence = <T extends Editor>(expected: Presence): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    Assertions.assertPresence(
-      () => 'Asserting the presence of selectors inside tiny content. Complete list: ' + JSON.stringify(expected) + '\n',
-      expected,
-      lazyBody(editor)
-    );
+    TinyAssertions.assertContentPresence(editor, expected);
   });
 };
 
 const cAssertContentStructure = <T extends Editor>(expected: StructAssert): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    return Assertions.assertStructure(
-      'Asserting the structure of tiny content.',
-      expected,
-      lazyBody(editor)
-    );
+    TinyAssertions.assertContentStructure(editor, expected);
   });
-};
-
-const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
-  const expected = Cursors.calculateOne(root, expPath);
-  const message = () => {
-    const actual = SugarElement.fromDom(actElement);
-    const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-    return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
-  };
-  Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
-  Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
 const cAssertSelection = <T extends Editor>(startPath: number[], soffset: number, finishPath: number[], foffset: number): Chain<T, T> => {
   return Chain.op((editor: T) => {
-    const actual = Optional.from(editor.selection.getRng()).getOrDie('Failed to get range');
-    assertPath('start', lazyBody(editor), startPath, soffset, actual.startContainer, actual.startOffset);
-    assertPath('finish', lazyBody(editor), finishPath, foffset, actual.endContainer, actual.endOffset);
+    TinyAssertions.assertSelection(editor, startPath, soffset, finishPath, foffset);
   });
 };
 

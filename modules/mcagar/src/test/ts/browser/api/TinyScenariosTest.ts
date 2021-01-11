@@ -1,4 +1,4 @@
-import { Arbitraries, Assertions, Pipeline, Step } from '@ephox/agar';
+import { Arbitraries, Assertions, PhantomSkipper, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarNode } from '@ephox/sugar';
@@ -7,12 +7,10 @@ import { TinyApis } from 'ephox/mcagar/api/TinyApis';
 import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
 import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
-const isPhantom = navigator.userAgent.indexOf('PhantomJS') > -1;
-
 UnitTest.asynctest('TinyScenariosTest', (success, failure) => {
 
   const platform = PlatformDetection.detect();
-  if (isPhantom) {
+  if (PhantomSkipper.detect()) {
     // eslint-disable-next-line no-console
     console.log('Skipping TinyScenariosTest as PhantomJS has dodgy selection/style implementation and returns false positives.');
     success();
