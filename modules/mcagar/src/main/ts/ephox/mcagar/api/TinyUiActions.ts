@@ -38,11 +38,17 @@ const clickOnUi = <T extends Element>(editor: Editor, selector: string): SugarEl
   return elem;
 };
 
-const submitDialog = (editor: Editor, selector: string): void => {
+const clickDialogButton = (editor: Editor, selector: string, buttonSelector: string) => {
   const dialog = UiFinder.findIn(getUiRoot(editor), selector).getOrDie();
-  const button = UiFinder.findIn(dialog, getThemeSelectors().dialogSubmitSelector).getOrDie();
+  const button = UiFinder.findIn(dialog, buttonSelector).getOrDie();
   Mouse.click(button);
 };
+
+const submitDialog = (editor: Editor, selector: string): void =>
+  clickDialogButton(editor, selector, getThemeSelectors().dialogSubmitSelector);
+
+const closeDialog = (editor: Editor, selector: string): void =>
+  clickDialogButton(editor, selector, getThemeSelectors().dialogCloseSelector);
 
 const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitFor(`Waiting for a UI element matching '${selector}' to exist`, getUiRoot(editor), selector);
@@ -55,6 +61,7 @@ export {
   clickOnMenu,
   clickOnUi,
   submitDialog,
+  closeDialog,
 
   pWaitForPopup,
   pWaitForUi
