@@ -1,7 +1,8 @@
+import Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 
 export default () => {
-  const Plugin = (_editor, _url) => {
+  const Plugin = (_editor: Editor, _url: string) => {
     return {
       getMetadata: () => {
         return {

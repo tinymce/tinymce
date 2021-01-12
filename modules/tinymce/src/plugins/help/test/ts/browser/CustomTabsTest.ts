@@ -1,149 +1,152 @@
-import { Chain, Logger, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Html, SugarElement } from '@ephox/sugar';
-import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import Editor from '../../../../../core/main/ts/api/Editor';
-import Theme from '../../../../../themes/silver/main/ts/Theme';
+import { Html, SugarDocument } from '@ephox/sugar';
+import { assert } from 'chai';
 
-UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/help/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  HelpPlugin();
-  Theme();
-
-  const doc = SugarElement.fromDom(document);
-
-  const compareTabNames = (expectedNames: string[]) => Chain.op((editor: Editor) => {
-    editor.execCommand('mceHelp');
-    const actualTabs = UiFinder.findAllIn(doc, 'div.tox-dialog__body-nav-item.tox-tab');
-    const actualNames: string[] = Arr.map(actualTabs, (tab) => Html.get(tab));
-    Arr.map(expectedNames, (x, i) => assert.eq(x, actualNames[i], `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`));
+describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
   });
 
-  const makeStep = (config: Object, expectedTabNames: string[]) => Chain.asStep({}, [
-    McEditor.cFromSettings(config),
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.read('editor', compareTabNames(expectedTabNames)),
-      NamedChain.output('editor')
-    ]),
-    McEditor.cRemove
-  ]);
+  const compareTabNames = (editor: Editor, expectedNames: string[]) => {
+    editor.execCommand('mceHelp');
+    const actualTabs = UiFinder.findAllIn(SugarDocument.getDocument(), 'div.tox-dialog__body-nav-item.tox-tab');
+    const actualNames = Arr.map(actualTabs, (tab) => Html.get(tab));
+    Arr.map(expectedNames, (x, i) => {
+      assert.equal(actualNames[i], x, 'Tab names did not match');
+    });
+  };
 
-  Pipeline.async({}, [
-    Logger.t('Default help dialog', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce'
-    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ])),
+  Arr.each([
+    {
+      label: 'TINY-3535: Default help dialog',
+      expectedTabNames: [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ],
+      settings: { }
+    },
 
-    Logger.t('Test help_tabs with pre-registered and new tabs', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      help_tabs: [
-        'shortcuts',
-        'plugins',
-        {
-          name: 'versions', // this will override the default versions tab
-          title: 'Version',
-          items: [{
-            type: 'htmlpanel',
-            html: '<p>This is a custom version panel...</p>'
-          }]
-        },
-        {
-          name: 'extraTab1',
-          title: 'Extra1',
-          items: [{
-            type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>'
-          }]
-        }
-      ]
-    }, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ])),
-
-    Logger.t('Test addTab() with a new tab', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      setup: (editor) => {
-        editor.on('init', () => {
-          editor.plugins.help.addTab({
+    {
+      label: 'TINY-3535: help_tabs with pre-registered and new tabs',
+      expectedTabNames: [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ],
+      settings: {
+        help_tabs: [
+          'shortcuts',
+          'plugins',
+          {
+            name: 'versions', // this will override the default versions tab
+            title: 'Version',
+            items: [{
+              type: 'htmlpanel',
+              html: '<p>This is a custom version panel...</p>'
+            }]
+          },
+          {
             name: 'extraTab1',
             title: 'Extra1',
             items: [{
               type: 'htmlpanel',
               html: '<p>This is an extra tab</p>'
             }]
-          });
-        });
+          }
+        ]
       }
-    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ])),
+    },
 
-    Logger.t('Test help_tabs and addTab()', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      help_tabs: [
-        'shortcuts',
-        'extraTab2',
-        'plugins',
-        {
-          name: 'versions', // this will override the default versions tab
-          title: 'Version',
-          items: [{
-            type: 'htmlpanel',
-            html: '<p>This is a custom version panel...</p>'
-          }]
-        },
-        {
-          name: 'extraTab1',
-          title: 'Extra1',
-          items: [{
-            type: 'htmlpanel',
-            html: '<p>This is an extra tab</p>'
-          }]
+    {
+      label: 'TINY-3535: addTab() with a new tab',
+      expectedTabNames: [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ],
+      settings: {
+        setup: (editor: Editor) => {
+          editor.on('init', () => {
+            editor.plugins.help.addTab({
+              name: 'extraTab1',
+              title: 'Extra1',
+              items: [{
+                type: 'htmlpanel',
+                html: '<p>This is an extra tab</p>'
+              }]
+            });
+          });
         }
-      ],
-      setup: (editor) => {
-        editor.on('init', () => {
-          editor.plugins.help.addTab({
-            name: 'extraTab2',
-            title: 'Extra2',
-            items: [{
-              type: 'htmlpanel',
-              html: '<p>This is another extra tab</p>'
-            }]
-          });
-          editor.plugins.help.addTab({
-            name: 'extraTab3',
-            title: 'Extra3',
-            items: [{
-              type: 'htmlpanel',
-              html: '<p>This is yet another extra tab, but this one should not render</p>'
-            }]
-          });
-        });
       }
-    }, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ])),
+    },
 
-    Logger.t('Test things do not break if a tab name does not have a spec', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      help_tabs: [
-        'shortcuts',
-        'plugins',
-        'versions',
-        'unknown'
-      ]
-    }, [ 'Handy Shortcuts', 'Plugins', 'Version' ]))
-  ], success, failure);
+    {
+      label: 'TINY-3535: help_tabs and addTab()',
+      expectedTabNames: [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ],
+      settings: {
+        help_tabs: [
+          'shortcuts',
+          'extraTab2',
+          'plugins',
+          {
+            name: 'versions', // this will override the default versions tab
+            title: 'Version',
+            items: [{
+              type: 'htmlpanel',
+              html: '<p>This is a custom version panel...</p>'
+            }]
+          },
+          {
+            name: 'extraTab1',
+            title: 'Extra1',
+            items: [{
+              type: 'htmlpanel',
+              html: '<p>This is an extra tab</p>'
+            }]
+          }
+        ],
+        setup: (editor: Editor) => {
+          editor.on('init', () => {
+            editor.plugins.help.addTab({
+              name: 'extraTab2',
+              title: 'Extra2',
+              items: [{
+                type: 'htmlpanel',
+                html: '<p>This is another extra tab</p>'
+              }]
+            });
+            editor.plugins.help.addTab({
+              name: 'extraTab3',
+              title: 'Extra3',
+              items: [{
+                type: 'htmlpanel',
+                html: '<p>This is yet another extra tab, but this one should not render</p>'
+              }]
+            });
+          });
+        }
+      }
+    },
+
+    {
+      label: 'TINY-3535: things do not break if a tab name does not have a spec',
+      expectedTabNames: [ 'Handy Shortcuts', 'Plugins', 'Version' ],
+      settings: {
+        help_tabs: [
+          'shortcuts',
+          'plugins',
+          'versions',
+          'unknown'
+        ]
+      }
+    }
+  ], (test) => {
+    it(test.label, async () => {
+      const editor = await McEditor.pFromSettings<Editor>({
+        plugins: 'help',
+        toolbar: 'help',
+        base_url: '/project/tinymce/js/tinymce',
+        ...test.settings
+      });
+      compareTabNames(editor, test.expectedTabNames);
+      McEditor.remove(editor);
+    });
+  });
 });
