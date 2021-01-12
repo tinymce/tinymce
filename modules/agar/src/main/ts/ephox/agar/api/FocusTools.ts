@@ -106,6 +106,7 @@ const sSetActiveValue = <T>(doc: SugarElement<Document | ShadowRoot>, newValue: 
 export {
   setActiveValue,
   setFocus,
+  getFocused,
   isOn,
   isOnSelector,
 
