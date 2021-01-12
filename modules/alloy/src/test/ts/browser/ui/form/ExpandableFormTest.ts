@@ -1,4 +1,4 @@
-import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, PhantomSkipper, Step, Touch, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Focus, Value } from '@ephox/sugar';
 
@@ -15,13 +15,12 @@ import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as TestForm from 'ephox/alloy/test/form/TestForm';
-import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('ExpandableFormTest', (success, failure) => {
 
   // Seems to have stopped working on phantomjs
-  if (PhantomSkipper.skip()) {
+  if (PhantomSkipper.detect()) {
     return success();
   }
 

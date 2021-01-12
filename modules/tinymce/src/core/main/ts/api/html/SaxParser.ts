@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Strings, Type } from '@ephox/katamari';
 import { Base64Extract, extractBase64DataUris, restoreDataUris } from '../../html/Base64Uris';
 import Tools from '../util/Tools';
 import Entities from './Entities';
@@ -132,7 +132,7 @@ const findEndTagIndex = (schema: Schema, html: string, startIndex: number): numb
   let count = 1, index, matches;
 
   const shortEndedElements = schema.getShortEndedElements();
-  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_\:\.]+)((?:\s+[^"\'>]+(?:(?:"[^"]*")|(?:\'[^\']*\')|[^>]*))*|\/|\s+)>/g;
+  const tokenRegExp = /<([!?\/])?([A-Za-z0-9\-_:.]+)(\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\s*|\/)>/g;
   tokenRegExp.lastIndex = index = startIndex;
 
   while ((matches = tokenRegExp.exec(html))) {
@@ -168,7 +168,7 @@ const findCommentEndIndex = (html: string, isBogus: boolean, startIndex: number 
       const endIndex = lcHtml.indexOf('>', startIndex);
       return endIndex !== -1 ? endIndex : lcHtml.length;
     } else {
-      const endCommentRegexp = /--!?>/;
+      const endCommentRegexp = /--!?>/g;
       endCommentRegexp.lastIndex = startIndex;
       const match = endCommentRegexp.exec(html);
       return match ? match.index + match[0].length : lcHtml.length;
@@ -273,7 +273,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
       comment(restoreDataUris(value, base64Extract));
     };
 
-    const processAttr = (value: string) => Obj.get(base64Extract.uris, value).getOr(value);
+    const processAttr = (value: string) => restoreDataUris(value, base64Extract);
 
     const processMalformedComment = (value: string, startIndex: number) => {
       const startTag = value || '';
@@ -368,7 +368,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
       '(?:!(--)?)|' + // Start malformed comment
       '(?:\\?([^\\s\\/<>]+) ?([\\w\\W]*?)[?/]>)|' + // PI
       '(?:\\/([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)>)|' + // End element
-      `(?:([A-Za-z][A-Za-z0-9\\-_\\:\\.]*)((?:\\s+[^"'>]+(?:(?:"[^"]*")|(?:'[^']*')|[^>]*))*|\\/|\\s+)>)` + // Start element
+      `(?:([A-Za-z][A-Za-z0-9\\-_:.]*)(\\s(?:[^'">]+(?:"[^"]*"|'[^']*'))*[^"'>]*(?:"[^">]*|'[^'>]*)?|\\s*|\\/)>)` + // Start element
       ')', 'g');
 
     const attrRegExp = /([\w:\-]+)(?:\s*=\s*(?:(?:\"((?:[^\"])*)\")|(?:\'((?:[^\'])*)\')|([^>\s]+)))?/g;

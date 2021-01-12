@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
 
-const insertChar = (editor, chr) => {
+const insertChar = (editor: Editor, chr: string) => {
   const evtChr = Events.fireInsertCustomChar(editor, chr).chr;
   editor.execCommand('mceInsertContent', false, evtChr);
 };

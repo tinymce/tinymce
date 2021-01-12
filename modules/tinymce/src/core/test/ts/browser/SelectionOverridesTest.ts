@@ -1,4 +1,4 @@
-import { Pipeline } from '@ephox/agar';
+import { PhantomSkipper, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
@@ -8,7 +8,6 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, failure) => {
   const suite = LegacyUnit.createSuite<Editor>();
-  const isPhantomJs = /PhantomJS/.test(window.navigator.userAgent);
 
   Theme();
 
@@ -47,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.core.SelectionOverridesTest', (success, fail
   });
 
   suite.test('offscreen copy of cE=false block remains offscreen', (editor) => {
-    if (!isPhantomJs) {
+    if (!PhantomSkipper.detect()) {
       editor.setContent(
         '<table contenteditable="false" style="width: 100%; table-layout: fixed">' +
         '<tbody><tr><td>1</td><td>2</td></tr></tbody>' +

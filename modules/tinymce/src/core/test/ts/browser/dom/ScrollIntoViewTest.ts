@@ -1,4 +1,4 @@
-import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Cursors, GeneralSteps, Logger, PhantomSkipper, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -192,15 +192,11 @@ UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, fail
     ];
   };
 
-  const isPhantomJs = () => {
-    return /PhantomJS/.test(window.navigator.userAgent);
-  };
-
   TinyLoader.setup((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
 
     // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
-    Pipeline.async({}, isPhantomJs() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
+    Pipeline.async({}, PhantomSkipper.detect() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
     height: 500,

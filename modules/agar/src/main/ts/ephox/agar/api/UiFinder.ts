@@ -13,6 +13,24 @@ const findIn = (container: SugarElement<any>, selector: string): Result<SugarEle
 const findAllIn = (container: SugarElement<any>, selector: string): SugarElement<any>[] =>
   UiSearcher.findAllIn(container, selector);
 
+const exists = (container: SugarElement<Node>, selector: string): void => {
+  findIn(container, selector).fold(
+    () => {
+      throw new Error('Expected ' + selector + ' to exist.');
+    },
+    Fun.noop
+  );
+};
+
+const notExists = (container: SugarElement<Node>, selector: string): void => {
+  return findIn(container, selector).fold(
+    Fun.noop,
+    () => {
+      throw new Error('Expected ' + selector + ' not to exist.');
+    }
+  );
+};
+
 const cWaitFor = (message: string, selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
   cWaitForState(message, selector, Fun.always);
 
@@ -50,34 +68,16 @@ const cWaitForState = (message: string, selector: string, predicate: (element: S
   );
 
 const sExists = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
-  Step.async<T>((next, die) => {
-    findIn(container, selector).fold(die, next);
-  });
+  Step.sync<T>(() => exists(container, selector));
 
 const sNotExists = <T>(container: SugarElement<any>, selector: string): Step<T, T> =>
-  Step.async<T>((next, die) => {
-    findIn(container, selector).fold(() => {
-      next();
-    }, () => {
-      die('Expected ' + selector + ' not to exist.');
-    });
-  });
+  Step.sync<T>(() => notExists(container, selector));
 
 const cExists = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
-  Chain.async((container: SugarElement<any>, next, die) => {
-    findIn(container, selector).fold(
-      () => die('Expected ' + selector + ' to exist.'),
-      () => next(container)
-    );
-  });
+  Chain.op((container: SugarElement<any>) => exists(container, selector));
 
 const cNotExists = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
-  Chain.async((container: SugarElement<any>, next, die) => {
-    findIn(container, selector).fold(
-      () => next(container),
-      () => die('Expected ' + selector + ' not to exist.')
-    );
-  });
+  Chain.op((container: SugarElement<any>) => notExists(container, selector));
 
 const cFindIn = (selector: string): Chain<SugarElement<any>, SugarElement<any>> =>
   Chain.binder((container: SugarElement<any>) =>
@@ -89,9 +89,23 @@ const cFindAllIn = (selector: string): Chain<SugarElement<any>, SugarElement<any
     findAllIn(container, selector)
   );
 
+const pWaitFor = (message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cWaitFor(message, selector))(container);
+
+const pWaitForVisible = (message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cWaitForVisible(message, selector))(container);
+
+const pWaitForHidden = (message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cWaitForHidden(message, selector))(container);
+
+const pWaitForState = (message: string, container: SugarElement<Node>, selector: string, predicate: (element: SugarElement<any>) => boolean): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cWaitForState(message, selector, predicate))(container);
+
 export {
   findIn,
   findAllIn,
+  exists,
+  notExists,
 
   sExists,
   sNotExists,
@@ -109,5 +123,10 @@ export {
   cWaitForState,
 
   cFindIn,
-  cFindAllIn
+  cFindAllIn,
+
+  pWaitFor,
+  pWaitForVisible,
+  pWaitForHidden,
+  pWaitForState
 };

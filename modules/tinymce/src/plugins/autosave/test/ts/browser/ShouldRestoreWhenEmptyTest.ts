@@ -1,59 +1,64 @@
-import { Chain, Logger, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { Assert, before, describe, it } from '@ephox/bedrock-client';
+import { Editor as McEditor, TinyAssertions } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', (success, failure) => {
-  Theme();
-  Plugin();
-
-  const cAssertHasDraft = (expected: boolean) => Chain.op((editor: Editor) => {
-    Assert.eq(`should${!expected ? 'n\'t' : ''} have draft`, expected, editor.plugins.autosave.hasDraft());
-  });
-
-  const cStoreDraft = Chain.op((editor: Editor) => {
-    editor.plugins.autosave.storeDraft();
-  });
-
-  const cRemoveDraft = Chain.op((editor: Editor) => {
-    editor.plugins.autosave.removeDraft();
-  });
-
-  const cAddUndoLevel = Chain.op((editor: Editor) => {
-    editor.undoManager.add();
+describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
   });
 
   const testingPrefix = Math.random().toString(36).substring(7);
-  Pipeline.async({}, [
-    Logger.t('should restore draft when empty with setting', Chain.asStep({}, [
-      McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
-      cAssertHasDraft(false),
-      ApiChains.cSetContent('<p>X</p>'),
-      cAddUndoLevel,
-      cStoreDraft,
-      cAssertHasDraft(true),
-      McEditor.cRemove,
-      McEditor.cFromSettings({ autosave_restore_when_empty: true, base_url: '/project/tinymce/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
-      cAssertHasDraft(true),
-      ApiChains.cAssertContent('<p>X</p>'),
-      cRemoveDraft,
-      McEditor.cRemove
-    ])),
-    Logger.t(`shouldn't restore draft when empty without setting`, Chain.asStep({}, [
-      McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
-      cAssertHasDraft(false),
-      ApiChains.cSetContent('<p>X</p>'),
-      cAddUndoLevel,
-      cStoreDraft,
-      cAssertHasDraft(true),
-      McEditor.cRemove,
-      McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce', plugins: 'autosave', autosave_prefix: testingPrefix }),
-      cAssertHasDraft(true),
-      ApiChains.cAssertContent(''),
-      cRemoveDraft,
-      McEditor.cRemove
-    ]))
-  ], () => success(), failure);
+  const settings = {
+    base_url: '/project/tinymce/js/tinymce',
+    plugins: 'autosave',
+    autosave_prefix: testingPrefix
+  };
+
+  const assertHasDraft = (editor: Editor, expected: boolean) => {
+    Assert.eq(`should${!expected ? 'n\'t' : ''} have draft`, expected, editor.plugins.autosave.hasDraft());
+  };
+
+  const storeDraft = (editor: Editor) => {
+    editor.plugins.autosave.storeDraft();
+  };
+
+  const removeDraft = (editor: Editor) => {
+    editor.plugins.autosave.removeDraft();
+  };
+
+  const addUndoLevel = (editor: Editor) => {
+    editor.undoManager.add();
+  };
+
+  const setupAndAssertBaseState = async (content: string) => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    assertHasDraft(editor, false);
+    editor.setContent(content);
+    addUndoLevel(editor);
+    storeDraft(editor);
+    assertHasDraft(editor, true);
+    McEditor.remove(editor);
+  };
+
+  it('should restore draft when empty with setting', async () => {
+    await setupAndAssertBaseState('<p>X</p>');
+    const editor = await McEditor.pFromSettings<Editor>({ ...settings, autosave_restore_when_empty: true });
+    assertHasDraft(editor, true);
+    TinyAssertions.assertContent(editor, '<p>X</p>');
+    removeDraft(editor);
+    McEditor.remove(editor);
+  });
+
+  it(`shouldn't restore draft when empty without setting`, async () => {
+    await setupAndAssertBaseState('<p>X</p>');
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    assertHasDraft(editor, true);
+    TinyAssertions.assertContent(editor, '');
+    removeDraft(editor);
+    McEditor.remove(editor);
+  });
 });

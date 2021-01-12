@@ -1,4 +1,6 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
+import {
+  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Mouse, PhantomSkipper, Pipeline, Step, UiFinder
+} from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
@@ -57,7 +59,7 @@ UnitTest.asynctest('OxideGridCollectionMenuTest', (success, failure) => {
           ]),
 
           // Without layout, the flatgrid cannot be calculated on phantom
-          navigator.userAgent.indexOf('PhantomJS') > -1 ? Step.pass : GeneralSteps.sequence([
+          PhantomSkipper.detect() ? Step.pass : GeneralSteps.sequence([
             FocusTools.sTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]'),
             Keyboard.sKeydown(doc, Keys.right(), { }),
             FocusTools.sTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]'),

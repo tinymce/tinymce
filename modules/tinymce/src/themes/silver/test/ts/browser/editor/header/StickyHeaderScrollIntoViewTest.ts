@@ -1,4 +1,4 @@
-import { Assertions, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Cursors, GeneralSteps, Logger, PhantomSkipper, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Scroll, SugarElement, SugarLocation } from '@ephox/sugar';
@@ -40,8 +40,6 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
     Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
     Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, true, Math.abs(y - actualY) < 5);
   });
-
-  const isPhantomJs = () => /PhantomJS/.test(window.navigator.userAgent);
 
   TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
@@ -88,7 +86,7 @@ UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderScro
     ];
 
     // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
-    Pipeline.async({}, isPhantomJs() ? [ ] : steps, onSuccess, onFailure);
+    Pipeline.async({}, PhantomSkipper.detect() ? [ ] : steps, onSuccess, onFailure);
   }, {
     add_unload_trigger: false,
     inline: true,

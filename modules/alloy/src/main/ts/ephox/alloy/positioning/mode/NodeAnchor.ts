@@ -1,5 +1,6 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
+import { SugarBody } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
@@ -12,12 +13,15 @@ import * as ContentAnchorCommon from './ContentAnchorCommon';
 const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Origins.OriginAdt): Optional<Anchoring> => {
   const rootPoint = ContainerOffsets.getRootPoint(component, origin, anchorInfo);
 
-  return anchorInfo.node.bind((target) => {
-    const rect = target.dom.getBoundingClientRect();
-    const nodeBox = ContentAnchorCommon.capRect(rect.left, rect.top, rect.width, rect.height);
-    const elem = anchorInfo.node.getOr(component.element);
-    return ContentAnchorCommon.calcNewAnchor(nodeBox, rootPoint, anchorInfo, origin, elem);
-  });
+  return anchorInfo.node
+    // Ensure the node is still attached, otherwise we can't get a valid client rect for a detached node
+    .filter(SugarBody.inBody)
+    .bind((target) => {
+      const rect = target.dom.getBoundingClientRect();
+      const nodeBox = ContentAnchorCommon.capRect(rect.left, rect.top, rect.width, rect.height);
+      const elem = anchorInfo.node.getOr(component.element);
+      return ContentAnchorCommon.calcNewAnchor(nodeBox, rootPoint, anchorInfo, origin, elem);
+    });
 };
 
 export default [

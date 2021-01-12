@@ -4,7 +4,6 @@ import { Cell, Fun, Obj } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Focus, SelectorFind, SugarBody } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
 UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failure) => {
@@ -81,8 +80,7 @@ UnitTest.asynctest('Inline editor Context Toolbar Lookup test', (success, failur
           sResetNames(),
           tinyApis.sSetCursor([], 0),
           Step.wait(50), // Need to wait a little for the context toolbar lookup to run
-          // IE will fire the lookup twice
-          Env.browser.isIE() ? sAssertNames([ 'div', 'div' ], [ 'div', 'div' ], [ 'div', 'div' ]) : sAssertNames([ 'div' ], [ 'div' ], [ 'div' ])
+          sAssertNames([ 'div' ], [ 'div' ], [ 'div' ])
         ]),
 
         Log.stepsAsStep('TINY-4571', 'Context toolbar click outside to inside', [

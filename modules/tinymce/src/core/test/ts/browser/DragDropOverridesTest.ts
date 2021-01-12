@@ -42,7 +42,7 @@ UnitTest.asynctest('browser.tinymce.core.DragDropOverridesTest', (success, failu
           const button = 0, screenX = (rect.left + rect.width / 2), screenY = (rect.top + rect.height / 2);
 
           editor.fire('mousedown', { button, screenX, screenY, target });
-          editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, target });
+          editor.fire('mousemove', { button, screenX: screenX + 20, screenY: screenY + 20, clientX: 0, clientY: 0, target });
           editor.dom.fire(document.body, 'mouseup');
 
           Assertions.assertEq('Should fire dragend event', true, fired.get());

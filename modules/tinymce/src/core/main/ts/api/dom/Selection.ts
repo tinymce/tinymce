@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 import { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
@@ -63,7 +64,10 @@ interface EditorSelection {
   serializer: DomSerializer;
   editor: Editor;
   collapse: (toStart?: boolean) => void;
-  setCursorLocation: (node?: Node, offset?: number) => void;
+  setCursorLocation: {
+    (node: Node, offset: number): void;
+    (): void;
+  };
   getContent: {
     (args: { format: 'tree' } & GetSelectionContent.GetSelectionContentArgs): AstNode;
     (args?: GetSelectionContent.GetSelectionContentArgs): string;
@@ -78,7 +82,7 @@ interface EditorSelection {
   getNode: () => Element;
   getSel: () => Selection | null;
   setRng: (rng: Range, forward?: boolean) => void;
-  getRng: () => Range | null;
+  getRng: () => Range;
   getStart: (real?: boolean) => Element;
   getEnd: (real?: boolean) => Element;
   getSelectedBlocks: (startElm?: Element, endElm?: Element) => Element[];
@@ -127,14 +131,14 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const setCursorLocation = (node?: Node, offset?: number) => {
     const rng = dom.createRng();
 
-    if (!node) {
-      moveEndPoint(dom, rng, editor.getBody(), true);
-      setRng(rng);
-    } else {
+    if (Type.isNonNullable(node) && Type.isNonNullable(offset)) {
       rng.setStart(node, offset);
       rng.setEnd(node, offset);
       setRng(rng);
       collapse(false);
+    } else {
+      moveEndPoint(dom, rng, editor.getBody(), true);
+      setRng(rng);
     }
   };
 
@@ -288,7 +292,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @see http://www.quirksmode.org/dom/range_intro.html
    * @see http://www.dotvoid.com/2001/03/using-the-range-object-in-mozilla/
    */
-  const getRng = (): Range | null => {
+  const getRng = (): Range => {
     let selection, rng, elm;
 
     const tryCompareBoundaryPoints = (how, sourceRange, destinationRange) => {
@@ -304,15 +308,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       }
     };
 
-    if (!win) {
-      return null;
-    }
-
     const doc = win.document;
-
-    if (typeof doc === 'undefined' || doc === null) {
-      return null;
-    }
 
     if (editor.bookmark !== undefined && EditorFocus.hasFocus(editor) === false) {
       const bookmark = SelectionBookmark.getRng(editor);

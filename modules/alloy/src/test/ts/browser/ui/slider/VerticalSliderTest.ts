@@ -1,4 +1,4 @@
-import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, Step, UiFinder, Waiter } from '@ephox/agar';
+import { Chain, FocusTools, Keyboard, Keys, Logger, NamedChain, PhantomSkipper, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -8,13 +8,12 @@ import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Slider } from 'ephox/alloy/api/ui/Slider';
-import * as PhantomSkipper from 'ephox/alloy/test/PhantomSkipper';
 
 UnitTest.asynctest('Browser Test: ui.slider.VerticalSliderTest', (success, failure) => {
 
-  // Tests requiring 'flex' do not currently work on phantom. Use the remote  to see how it is
+  // Tests requiring 'flex' do not currently work on phantom. Use the remote to see how it is
   // viewed as an invalid value.
-  if (PhantomSkipper.skip()) {
+  if (PhantomSkipper.detect()) {
     return success();
   }
   GuiSetup.setup((_store, _doc, _body) => GuiFactory.build(

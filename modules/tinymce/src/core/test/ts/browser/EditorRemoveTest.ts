@@ -19,6 +19,11 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
     Assert.eq('element does not have the expected style', expected, textareaElement.style.display);
   });
 
+  let uncaughtErrors: PromiseRejectionEvent[] = [];
+  const recordError = (ev: PromiseRejectionEvent) => {
+    uncaughtErrors.push(ev);
+  };
+
   const cCreateEditor = Chain.injectThunked(() => new Editor('editor', {}, EditorManager));
 
   const cRemoveEditor = Chain.op((editor: any) => editor.remove());
@@ -27,6 +32,51 @@ UnitTest.asynctest('browser.tinymce.core.EditorRemoveTest', (success, failure) =
     Logger.t('remove editor without initializing it', Chain.asStep({}, [
       cCreateEditor,
       cRemoveEditor
+    ])),
+
+    Logger.t('remove editor after stylesheets load', Chain.asStep({}, [
+      Chain.op(() => {
+        // setup monitoring for uncaught errors
+        uncaughtErrors = [];
+        window.addEventListener('unhandledrejection', recordError);
+      }),
+      Chain.control(
+        McEditor.cFromHtml('<textarea></textarea>', {
+          ...settings,
+          setup: (editor: Editor) => {
+            editor.on('LoadContent', () => {
+              // Hook the function called when stylesheets are loaded
+              // so we can remove the editor right after starting to load them.
+              const realLoadAll = editor.ui.styleSheetLoader.loadAll;
+              editor.ui.styleSheetLoader.loadAll = (...args) => {
+                realLoadAll.apply(editor.ui.styleSheetLoader, args);
+                editor.remove();
+              };
+            });
+          }
+        }), (f, value, next, die, logs) => {
+          f(value, (value2, logs2) => {
+            die('Expected editor would not load completely', logs2);
+          }, (err, logs2) => {
+            // As we have deliberately removed the editor during the loading process
+            // we have to intercept the error that is thrown by McEditor.cFromHtml.
+            if (err === McEditor.errorMessageEditorRemoved) {
+              next(value, logs2);
+            } else {
+              die(err, logs2);
+            }
+          }, logs);
+        }
+      ),
+      Chain.wait(50), // to allow the stylesheet loading to finish
+      Chain.op(() => {
+        // teardown monitoring for uncaught errors
+        window.removeEventListener('unhandledrejection', recordError);
+        // check for uncaught promise errors
+        if (uncaughtErrors.length > 0) {
+          throw uncaughtErrors[0].reason;
+        }
+      })
     ])),
 
     Logger.t('remove editor where the body has been removed', Chain.asStep({}, [

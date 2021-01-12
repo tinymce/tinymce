@@ -22,6 +22,7 @@ import * as Logger from './Logger';
 import { Monitor } from './Monitor';
 import * as Mouse from './Mouse';
 import { NamedChain } from './NamedChain';
+import * as PhantomSkipper from './PhantomSkipper';
 import { Pipeline } from './Pipeline';
 import * as PropertySteps from './PropertySteps';
 import * as RealClipboard from './RealClipboard';
@@ -57,6 +58,7 @@ export {
   Monitor,
   Mouse,
   NamedChain,
+  PhantomSkipper,
   Pipeline,
   PropertySteps,
   RealClipboard,

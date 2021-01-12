@@ -1,4 +1,6 @@
+import { Failure } from '@ephox/bedrock-common';
 import { Arr, Fun, Result } from '@ephox/katamari';
+import Promise from '@ephox/wrap-promise-polyfill';
 
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
@@ -213,6 +215,23 @@ const predicate = <T>(p: (value: T) => boolean): Chain<T, T> =>
   on((input, next, die, logs) =>
     p(input) ? next(input, logs) : die('predicate did not succeed', logs));
 
+const toPromise = <A, B>(c: Chain<A, B>) => (a: A): Promise<B> =>
+  new Promise((resolve, reject) => {
+    c.runChain(a,
+      (b, _logs) => {
+        // TODO: What to do with logs? We lose them.
+        resolve(b);
+      }, (err, logs) => {
+        reject(Failure.prepFailure(err, logs));
+      },
+      TestLogs.init()
+    );
+  });
+
+const fromPromise = <A, B>(f: (a: A) => Promise<B>): Chain<A, B> => Chain.async((input, next, die) => {
+  f(input).then(next, die);
+});
+
 export const Chain = {
   on,
   op,
@@ -238,6 +257,9 @@ export const Chain = {
   debugging,
   log,
   label,
+
+  toPromise,
+  fromPromise,
 
   pipeline,
   predicate

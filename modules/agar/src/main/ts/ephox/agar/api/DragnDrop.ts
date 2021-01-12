@@ -97,6 +97,9 @@ const cDragnDrop = <T extends Element> (fromSelector: string, toSelector: string
 const sDragnDrop = <T>(fromSelector: string, toSelector: string, prevented?: boolean): Step<T, T> =>
   Chain.asStep(SugarBody.body(), [ cDragnDrop(fromSelector, toSelector, prevented) ]);
 
+const pDragnDrop = (fromSelector: string, toSelector: string, prevented?: boolean): Promise<SugarElement<Element>> =>
+  Chain.toPromise(cDragnDrop(fromSelector, toSelector, prevented))(SugarBody.body());
+
 const sDropFiles = <T>(files: File[], toSelector: string, prevented?: boolean): Step<T, T> => Chain.asStep(SugarBody.body(), [
   UiFinder.cFindIn(toSelector),
   cDropFiles(files, prevented)
@@ -106,6 +109,9 @@ const cDropFiles = <T extends Element> (files: File[], prevented?: boolean): Cha
   Chain.op((elm) => {
     dropFiles(files, elm, prevented);
   });
+
+const pDropFiles = <T extends Element> (elm: SugarElement<T>, files: File[], prevented?: boolean): Promise<SugarElement<T>> =>
+  Chain.toPromise(cDropFiles<T>(files, prevented))(elm);
 
 const sDropItems = <T> (items: Item[], toSelector: string, prevented?: boolean): Step<T, T> => Chain.asStep(SugarBody.body(), [
   UiFinder.cFindIn(toSelector),
@@ -117,6 +123,9 @@ const cDropItems = <T extends Element> (items: Item[], prevented?: boolean): Cha
     dropItems(items, elm, prevented);
   });
 
+const pDropItems = <T extends Element> (elm: SugarElement<T>, items: Item[], prevented?: boolean): Promise<SugarElement<T>> =>
+  Chain.toPromise(cDropItems<T>(items, prevented))(elm);
+
 export {
   isDraggable,
   dragnDrop,
@@ -124,9 +133,12 @@ export {
   dropItems,
   cDragnDrop,
   sDragnDrop,
+  pDragnDrop,
   sDropFiles,
   cDropFiles,
+  pDropFiles,
   sDropItems,
   cDropItems,
+  pDropItems,
   getDragImage
 };
