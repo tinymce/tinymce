@@ -64,7 +64,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistPluginTest', () => {
     expectedSelection: [ 'li:nth-child(1)', 0 ]
   });
 
-  listStyleTest('Apply ordered list style to an unordered list', {
+  listStyleTest('Apply unordered list style to an ordered list', {
     inputContent: '<ol><li>a</li></ol>',
     inputSelection: [ 'li:nth-child(1)', 0 ],
     command: 'ApplyUnorderedListStyle',
