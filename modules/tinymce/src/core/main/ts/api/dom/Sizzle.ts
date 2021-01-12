@@ -1263,6 +1263,8 @@ Expr = Sizzle.selectors = {
         function (elem, context, xml) {
           input[0] = elem;
           matcher(input, null, xml, results);
+          // Don't keep the element (issue #299)
+          input[0] = null;
           return !results.pop();
         };
     }),
@@ -1738,10 +1740,13 @@ function matcherFromTokens(tokens) {
       return indexOf.call(checkContext, elem) > -1;
     }, implicitRelative, true),
     matchers = [ function (elem, context, xml) {
-      return (!leadingRelative && (xml || context !== outermostContext)) || (
+      const ret = (!leadingRelative && (xml || context !== outermostContext)) || (
         (checkContext = context).nodeType ?
           matchContext(elem, context, xml) :
           matchAnyContext(elem, context, xml));
+      // Avoid hanging onto element (issue #299)
+      checkContext = null;
+      return ret;
     } ];
 
   for (; i < len; i++) {
