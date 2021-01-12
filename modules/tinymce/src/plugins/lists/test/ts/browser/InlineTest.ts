@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
@@ -29,7 +29,7 @@ describe('browser.tinymce.plugins.lists.InlineTest', () => {
     editor.setContent('<ul><li>a</li></ul>');
     editor.selection.setCursorLocation();
     editor.execCommand('InsertUnorderedList');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 
   it('TBA: Backspace in LI in UL in inline body element contained within LI', () => {
@@ -39,6 +39,6 @@ describe('browser.tinymce.plugins.lists.InlineTest', () => {
     editor.selection.select(editor.getBody(), true);
     editor.selection.collapse(true);
     editor.plugins.lists.backspaceDelete();
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 });

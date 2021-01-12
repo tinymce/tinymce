@@ -11,11 +11,10 @@ describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
     plugins: 'lists',
     toolbar: 'bullist',
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   it('TBA: toggle bullet list on list with two empty LIs', async () => {
     const editor = hook.editor();
-    editor.focus();
     editor.setContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 3, 0 ], 1);
     // Wait for toolbar button to be active

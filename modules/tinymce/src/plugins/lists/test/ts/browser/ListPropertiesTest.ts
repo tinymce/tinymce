@@ -1,4 +1,3 @@
-// import { UiFinder } from '@ephox/agar';
 import { FocusTools, Keyboard, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';

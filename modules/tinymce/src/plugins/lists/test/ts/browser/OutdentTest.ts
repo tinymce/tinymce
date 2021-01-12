@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   it('TBA: Outdent inside LI in beginning of OL in LI', () => {
     const editor = hook.editor();
@@ -37,7 +37,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li', 1);
     editor.execCommand('Outdent');
 
@@ -69,7 +68,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li:nth-child(2)', 1);
     editor.execCommand('Outdent');
 
@@ -104,7 +102,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li:last', 1);
     editor.execCommand('Outdent');
 
@@ -136,7 +133,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li', 1);
     editor.execCommand('Outdent');
 
@@ -167,7 +163,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li:nth-child(2)', 1);
     editor.execCommand('Outdent');
 
@@ -203,7 +198,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li:nth-child(1)', 0, 'ol ol li:nth-child(2)', 1);
     editor.execCommand('Outdent');
 
@@ -234,7 +228,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li:first', 0);
     editor.execCommand('Outdent');
 
@@ -264,7 +257,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li:last', 1);
     editor.execCommand('Outdent');
 
@@ -294,7 +286,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol li', 0);
     editor.execCommand('Outdent');
 
@@ -320,7 +311,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0, 'li li', 1);
     editor.execCommand('Outdent');
 
@@ -342,7 +332,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(2) p', 0);
     editor.execCommand('Outdent');
 
@@ -369,7 +358,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(1) li p', 0);
     editor.execCommand('Outdent');
 
@@ -394,7 +382,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul', 0);
     editor.execCommand('Outdent');
 
@@ -417,7 +404,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul ul li', 0);
     editor.execCommand('Outdent');
 
@@ -442,7 +428,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li', 1);
     editor.execCommand('Outdent');
 
@@ -473,7 +458,6 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li', 1);
     editor.execCommand('Outdent');
 

@@ -25,7 +25,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockAttrsTest', () => {
     forced_root_block_attrs: {
       'data-editor': '1'
     }
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   it('TBA: Remove UL with forced_root_block_attrs', () => {
     const editor = hook.editor();
@@ -35,7 +35,6 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockAttrsTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('InsertUnorderedList');
 

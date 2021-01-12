@@ -15,7 +15,6 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
 
   it('TBA: remove margin from p when applying list on it, but leave other styles', () => {
     const editor = hook.editor();
-
     editor.setContent('<p style="color: blue;margin: 30px;margin-right: 30px;margin-bottom: 30px;margin-left: 30px;margin-top: 30px;">test</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
@@ -24,7 +23,6 @@ describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () 
 
   it('TBA: remove padding from p when applying list on it, but leave other styles', () => {
     const editor = hook.editor();
-
     editor.setContent('<p style="color: red;padding: 30px;padding-right: 30px;padding-bottom: 30px;padding-left: 30px;padding-top: 30px;">test</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');

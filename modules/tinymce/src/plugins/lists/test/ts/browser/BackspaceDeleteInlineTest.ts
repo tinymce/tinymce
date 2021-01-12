@@ -1,6 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
@@ -45,8 +46,8 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
     const body = editor.getBody();
     editor.selection.setCursorLocation(body.firstChild.firstChild, 0);
     editor.plugins.lists.backspaceDelete();
-    LegacyUnit.equal(DomQuery('#lists ul').length, 3);
-    LegacyUnit.equal(DomQuery('#lists li').length, 3);
+    assert.lengthOf(DomQuery('#lists ul'), 3);
+    assert.lengthOf(DomQuery('#lists li'), 3);
   });
 
   it('TBA: Delete at end of LI on body UL', () => {
@@ -54,7 +55,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
     const body = editor.getBody();
     editor.selection.setCursorLocation(body.firstChild.firstChild, 1);
     editor.plugins.lists.backspaceDelete(true);
-    LegacyUnit.equal(DomQuery('#lists ul').length, 3);
-    LegacyUnit.equal(DomQuery('#lists li').length, 3);
+    assert.lengthOf(DomQuery('#lists ul'), 3);
+    assert.lengthOf(DomQuery('#lists li'), 3);
   });
 });

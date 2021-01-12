@@ -29,7 +29,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -41,7 +40,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.setContent(LegacyUnit.trimBrs('<p><br></p>'), { format: 'raw' });
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -57,7 +55,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -75,7 +72,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -87,7 +83,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.setContent(LegacyUnit.trimBrs('<p><br></p>'), { format: 'raw' });
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -103,7 +98,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0, 'p:last', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -128,7 +122,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0, 'li:last', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -153,7 +146,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -178,7 +170,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0, 'li:last', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -203,7 +194,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -230,7 +220,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -257,7 +246,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol li', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -284,7 +272,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('InsertOrderedList');
 
@@ -313,7 +300,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList');
 
@@ -343,7 +329,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
 
@@ -372,7 +357,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.execCommand('InsertOrderedList', null, { 'list-style-type': 'lower-alpha' });
 
@@ -401,7 +385,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList');
 
@@ -430,7 +413,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList', false, { 'list-style-type': 'upper-roman' });
 
@@ -457,7 +439,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
 
@@ -486,7 +467,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList', false, { 'list-style-type': 'lower-roman' });
 
@@ -515,7 +495,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li', 1);
     editor.execCommand('InsertOrderedList');
 
@@ -536,7 +515,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.setContent('a');
-    editor.focus();
 
     LegacyUnit.setSelection(editor, 'body', 0);
     editor.execCommand('InsertUnorderedList');
@@ -551,7 +529,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.setContent('a<br>');
-    editor.focus();
 
     LegacyUnit.setSelection(editor, 'body', 0);
     editor.execCommand('InsertUnorderedList');
@@ -573,7 +550,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       { format: 'raw' }
     );
 
-    editor.focus();
     editor.execCommand('SelectAll');
     editor.execCommand('InsertUnorderedList');
 
@@ -601,7 +577,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       { format: 'raw' }
     );
 
-    editor.focus();
     editor.execCommand('SelectAll');
     editor.execCommand('InsertUnorderedList');
 
@@ -627,7 +602,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       { format: 'raw' }
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'strong', 0, 'em', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -680,7 +654,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>a</p>' +
       'b'
     );
-    editor.focus();
 
     const rng = editor.dom.createRng();
     rng.setStart(editor.getBody().firstChild.firstChild, 0);
@@ -711,7 +684,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       { format: 'raw' }
     );
 
-    editor.focus();
     editor.execCommand('SelectAll');
     editor.execCommand('InsertUnorderedList');
 
@@ -735,7 +707,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    editor.focus();
     editor.execCommand('SelectAll');
     editor.execCommand('InsertUnorderedList');
 
@@ -757,7 +728,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '<p>c</p>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p:nth-child(1)', 0, 'p:nth-child(3)', 1);
     editor.execCommand('InsertUnorderedList', false, { 'list-style-type': null });
 
@@ -768,7 +738,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList', false, {
       'list-attributes': {
@@ -783,7 +752,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
   it('TBA: Apply UL and LI with custom attributes', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
-    editor.focus();
 
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList', false, {
@@ -842,7 +810,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -896,7 +863,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:first', 0, 'li:last', 0);
     editor.execCommand('InsertOrderedList');
 
@@ -1009,7 +975,6 @@ describe('browser.tinymce.plugins.lists.ApplyTest', () => {
       { format: 'raw' }
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList');
 

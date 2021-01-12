@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
         'margin-bottom,margin-left,display,position,top,left,list-style-type'
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   it('TBA: Remove UL at single LI', () => {
     const editor = hook.editor();
@@ -32,7 +32,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -50,7 +49,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -74,7 +72,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -98,7 +95,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -124,7 +120,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -150,7 +145,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -174,7 +168,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:last', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -202,7 +195,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -242,7 +234,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ul li:nth-child(2)', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -289,7 +280,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ol>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'ol ol ol li:nth-child(2)', 1);
     editor.execCommand('InsertOrderedList');
 
@@ -336,7 +326,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '<div>b</div>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li:first', 0);
     editor.execCommand('InsertUnorderedList');
 
@@ -361,7 +350,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li', 0, 'li li', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -391,7 +379,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'li li:first', 0, 'li li:last', 1);
     editor.execCommand('InsertUnorderedList');
 
@@ -419,7 +406,6 @@ describe('browser.tinymce.plugins.lists.RemoveTest', () => {
       '</ul>'
     );
 
-    editor.focus();
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.execCommand('InsertUnorderedList');
 
