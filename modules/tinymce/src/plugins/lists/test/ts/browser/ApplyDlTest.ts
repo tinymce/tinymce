@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TestCase-TBA: Lists: Apply DL list to multiple Ps', () => {
+  it('TBA: Apply DL list to multiple Ps', () => {
     const editor = hook.editor();
 
     editor.setContent(
@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     assert.equal(editor.selection.getStart().nodeName, 'DT');
   });
 
-  it('TestCase-TBA: Lists: Apply OL list to single P', () => {
+  it('TBA: Apply OL list to single P', () => {
     const editor = hook.editor();
 
     editor.setContent('<p>a</p>');
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  it('TestCase-TBA: Lists: Apply DL to P and merge with adjacent lists', () => {
+  it('TBA: Apply DL to P and merge with adjacent lists', () => {
     const editor = hook.editor();
 
     editor.setContent(
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     assert.equal(editor.selection.getStart().nodeName, 'DT');
   });
 
-  it('TestCase-TBA: Lists: Indent single DT in DL', () => {
+  it('TBA: Indent single DT in DL', () => {
     const editor = hook.editor();
 
     editor.setContent(
@@ -112,7 +112,7 @@ describe('browser.tinymce.plugins.lists.ApplyDlTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  it('TestCase-TBA: Lists: Outdent single DD in DL', () => {
+  it('TBA: Outdent single DD in DL', () => {
     const editor = hook.editor();
 
     editor.setContent(

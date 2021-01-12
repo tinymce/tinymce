@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockAttrsTest', () => {
     }
   }, [ Plugin, Theme ]);
 
-  it('TestCase-TBA: Lists: Remove UL with forced_root_block_attrs', () => {
+  it('TBA: Remove UL with forced_root_block_attrs', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +

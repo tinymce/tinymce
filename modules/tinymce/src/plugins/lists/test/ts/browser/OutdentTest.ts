@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI', () => {
+  it('TBA: Outdent inside LI in beginning of OL in LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in middle of OL in LI', () => {
+  it('TBA: Outdent inside LI in middle of OL in LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -91,7 +91,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in end of OL in LI', () => {
+  it('TBA: Outdent inside LI in end of OL in LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -124,7 +124,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
 
   // Nested lists in OL elements
 
-  it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in OL', () => {
+  it('TBA: Outdent inside LI in beginning of OL in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -154,7 +154,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in middle of OL in OL', () => {
+  it('TBA: Outdent inside LI in middle of OL in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -189,7 +189,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside first/last LI in inner OL', () => {
+  it('TBA: Outdent inside first/last LI in inner OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -220,7 +220,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     LegacyUnit.equal(editor.selection.getRng().endContainer.nodeValue, '3');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside first LI in inner OL where OL is single child of parent LI', () => {
+  it('TBA: Outdent inside first LI in inner OL where OL is single child of parent LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -252,7 +252,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in end of OL in OL', () => {
+  it('TBA: Outdent inside LI in end of OL in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -282,7 +282,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside only child LI in OL in OL', () => {
+  it('TBA: Outdent inside only child LI in OL in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -308,7 +308,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent multiple LI in OL and nested OL', () => {
+  it('TBA: Outdent multiple LI in OL and nested OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -332,7 +332,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Outdent on li with inner block element', () => {
+  it('TBA: Outdent on li with inner block element', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -357,7 +357,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Outdent on nested li with inner block element', () => {
+  it('TBA: Outdent on nested li with inner block element', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -429,7 +429,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute', () => {
+  it('TBA: Outdent inside LI in beginning of OL in LI with start attribute', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -460,7 +460,7 @@ describe('browser.tinymce.plugins.lists.OutdentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Outdent inside LI in beginning of OL in LI with start attribute on both OL', () => {
+  it('TBA: Outdent inside LI in beginning of OL in LI with start attribute on both OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol start="2">' +

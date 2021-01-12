@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     hook.editor().focus();
   });
 
-  it('TestCase-TBA: Lists: Indent single LI in OL', () => {
+  it('TBA: Indent single LI in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent middle LI in OL', () => {
+  it('TBA: Indent middle LI in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -80,7 +80,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent single LI in OL and retain OLs list style in the new OL', () => {
+  it('TBA: Indent single LI in OL and retain OLs list style in the new OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol style="list-style-type: lower-alpha;">' +
@@ -103,7 +103,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Indent last LI in OL', () => {
+  it('TBA: Indent last LI in OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -128,7 +128,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent in table cell in table inside of list should not do anything', () => {
+  it('TBA: Indent in table cell in table inside of list should not do anything', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -160,7 +160,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'TD');
   });
 
-  it('TestCase-TBA: Lists: Indent last LI to same level as middle LI', () => {
+  it('TBA: Indent last LI to same level as middle LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -190,7 +190,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent first LI and nested LI OL', () => {
+  it('TBA: Indent first LI and nested LI OL', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol>' +
@@ -222,7 +222,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent second LI to same level as nested LI', () => {
+  it('TBA: Indent second LI to same level as nested LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -252,7 +252,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent second LI to same level as nested LI 2', () => {
+  it('TBA: Indent second LI to same level as nested LI 2', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -287,7 +287,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent second and third LI', () => {
+  it('TBA: Indent second and third LI', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -312,7 +312,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Indent second second li with next sibling to nested li', () => {
+  it('TBA: Indent second second li with next sibling to nested li', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -342,7 +342,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Indent on second li with inner block element', () => {
+  it('TBA: Indent on second li with inner block element', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -396,7 +396,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     );
   });
 
-  it('TestCase-TBA: Lists: Indent single LI in OL with start attribute', () => {
+  it('TBA: Indent single LI in OL with start attribute', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol start="5">' +
@@ -420,7 +420,7 @@ describe('browser.tinymce.plugins.lists.IndentTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  it('TestCase-TBA: Lists: Indent first LI and nested LI OL with start attributes', () => {
+  it('TBA: Indent first LI and nested LI OL with start attributes', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ol start="2">' +

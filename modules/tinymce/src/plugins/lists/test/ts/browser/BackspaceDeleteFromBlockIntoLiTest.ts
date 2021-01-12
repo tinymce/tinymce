@@ -13,7 +13,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: Lists: backspace from p inside div into li', () => {
+  it('TBA: backspace from p inside div into li', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li></ul><div><p><br /></p></div>');
@@ -22,7 +22,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
   });
 
-  it('TBA: Lists: backspace from p inside blockquote into li', () => {
+  it('TBA: backspace from p inside blockquote into li', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li></ul><blockquote><p><br /></p></blockquote>');
@@ -31,7 +31,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
   });
 
-  it('TBA: Lists: backspace from b inside p inside blockquote into li', () => {
+  it('TBA: backspace from b inside p inside blockquote into li', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li></ul><blockquote><p><b><br /></b></p></blockquote>');
@@ -40,7 +40,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
   });
 
-  it('TBA: Lists: backspace from span inside p inside blockquote into li', () => {
+  it('TBA: backspace from span inside p inside blockquote into li', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li></ul><blockquote><p><span class="x"><br /></span></p></blockquote>');
@@ -49,7 +49,7 @@ describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
   });
 
-  it('TBA: Lists: backspace from p into li', () => {
+  it('TBA: backspace from p into li', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li></ul><p><br /></p>');

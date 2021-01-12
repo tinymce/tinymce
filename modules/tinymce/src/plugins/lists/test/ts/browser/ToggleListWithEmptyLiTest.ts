@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.lists.ToggleListWithEmptyLiTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: Lists: toggle bullet list on list with two empty LIs', async () => {
+  it('TBA: toggle bullet list on list with two empty LIs', async () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<ul><li>a</li><li>&nbsp;</li><li>&nbsp;</li><li>b</li></ul>');

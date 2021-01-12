@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: Lists: unlist table in list then add list inside table', () => {
+  it('TBA: unlist table in list then add list inside table', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li><table><tbody><tr><td><p>a</p></td><td>b</td></tr></tbody></table></li></ul>');
   });
 
-  it('TBA: Lists: delete list in table test', () => {
+  it('TBA: delete list in table test', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 1);
@@ -34,14 +34,14 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li><table><tbody><tr><td><p>&nbsp;</p></td><td><p>b</p></td></tr></tbody></table></li></ul>');
   });
 
-  it('TBA: Lists: focus on table cell in list does not activate button', () => {
+  it('TBA: focus on table cell in list does not activate button', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
     UiFinder.notExists(TinyDom.document(editor), 'div[aria-label="Bullet list"][aria-pressed="true"]');
   });
 
-  it('TBA: Lists: indent and outdent li in ul in list in table in list', () => {
+  it('TBA: indent and outdent li in ul in list in table in list', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1);
@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     TinyAssertions.assertContent(editor, '<ul><li><table><tbody><tr><td><ul><li><p>a</p></li></ul><p>b</p></td><td><p>b</p></td></tr></tbody></table></li></ul>');
   });
 
-  it('TBA: Lists: toggle from UL to OL in list in table in list only changes inner list', () => {
+  it('TBA: toggle from UL to OL in list in table in list only changes inner list', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td><ul><li><p>a</p></li><li><p>b</p></li></ul></td><td><p>b</p></td></tr></tbody></table></li></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ], 1);

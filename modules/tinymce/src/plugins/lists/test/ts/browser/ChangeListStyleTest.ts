@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: Lists: ul to ol, cursor only in parent', () => {
+  it('TBA: ul to ol, cursor only in parent', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>a</li><ul><li>b</li></ul></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
   });
 
-  it('TBA: Lists: ul to ol, selection from parent to sublist', () => {
+  it('TBA: ul to ol, selection from parent to sublist', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>a</li><ol><li>b</li></ol></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
   });
 
-  it('TBA: Lists: ol to ul, cursor only in parent', () => {
+  it('TBA: ol to ul, cursor only in parent', () => {
     const editor = hook.editor();
     editor.setContent('<ol><li>a</li><ol><li>b</li></ol></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
   });
 
-  it('TBA: Lists: ol to ul, selection from parent to sublist', () => {
+  it('TBA: ol to ul, selection from parent to sublist', () => {
     const editor = hook.editor();
     editor.setContent('<ol><li>a</li><ul><li>b</li></ul></ol>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
@@ -49,7 +49,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
   });
 
-  it('TBA: Lists: alpha to ol, cursor only in parent', () => {
+  it('TBA: alpha to ol, cursor only in parent', () => {
     const editor = hook.editor();
     editor.setContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
   });
 
-  it('TBA: Lists: alpha to ol, selection from parent to sublist', () => {
+  it('TBA: alpha to ol, selection from parent to sublist', () => {
     const editor = hook.editor();
     editor.setContent('<ul style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ul>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
   });
 
-  it('TBA: Lists: alpha to ul, cursor only in parent', () => {
+  it('TBA: alpha to ul, cursor only in parent', () => {
     const editor = hook.editor();
     editor.setContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.lists.ChangeListStyleTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
   });
 
-  it('TBA: Lists: alpha to ul, selection from parent to sublist', () => {
+  it('TBA: alpha to ul, selection from parent to sublist', () => {
     const editor = hook.editor();
     editor.setContent('<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);

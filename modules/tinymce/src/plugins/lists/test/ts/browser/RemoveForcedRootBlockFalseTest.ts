@@ -25,7 +25,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     forced_root_block: false
   }, [ Plugin, Theme ]);
 
-  it('TestCase-TBA: Lists: Remove UL with single LI in BR mode', () => {
+  it('TBA: Remove UL with single LI in BR mode', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -41,7 +41,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     assert.equal(editor.selection.getStart().nodeName, 'BODY');
   });
 
-  it('TestCase-TBA: Lists: Remove UL with multiple LI in BR mode', () => {
+  it('TBA: Remove UL with multiple LI in BR mode', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.lists.RemoveForcedRootBlockFalseTest', () => {
     assert.equal(editor.selection.getStart().nodeName, 'BODY');
   });
 
-  it('TestCase-TBA: Lists: Remove empty UL between two textblocks in BR mode', () => {
+  it('TBA: Remove empty UL between two textblocks in BR mode', () => {
     const editor = hook.editor();
     editor.setContent(
       '<div>a</div>' +
