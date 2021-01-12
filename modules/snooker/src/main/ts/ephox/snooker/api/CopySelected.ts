@@ -115,7 +115,7 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, hous
   const tableSize = TableSize.getTableSize(replica);
   tableSize.adjustTableWidth(widthDelta);
 
-  // TODO: If using relative widths, ensure cell and column widths are redistributed
+  // TODO TINY-6863: If using relative widths, ensure cell and column widths are redistributed
 };
 
 const getTableWidthDelta = (table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, stats: StatsStruct): number => {
