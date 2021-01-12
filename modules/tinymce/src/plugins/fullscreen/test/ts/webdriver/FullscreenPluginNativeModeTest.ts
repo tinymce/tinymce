@@ -1,23 +1,27 @@
-import { Chain, Log, NamedChain, Pipeline, RealMouse, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { PhantomSkipper, RealMouse, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import { getFullscreenElement } from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
-import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Plugin from 'tinymce/plugins/fullscreen/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', (success, failure) => {
-  FullscreenPlugin();
-  SilverTheme();
-
-  const cSetupEditor = McEditor.cFromSettings({
-    plugins: 'fullscreen',
-    toolbar: 'fullscreen',
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
-    fullscreen_native: true
+describe('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', () => {
+  before(function () {
+    if (PhantomSkipper.detect() || /HeadlessChrome/.test(window.navigator.userAgent)) {
+      this.skip();
+    }
   });
 
-  const cIsFullscreen = (fullscreen: boolean) => Waiter.cTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), (_v) => {
+  TinyHooks.bddSetup<Editor>({
+    plugins: 'fullscreen',
+    toolbar: 'fullscreen',
+    base_url: '/project/tinymce/js/tinymce',
+    fullscreen_native: true
+  }, [ Plugin, Theme ]);
+
+  const pIsFullscreen = (fullscreen: boolean) => Waiter.pTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), () => {
     if (fullscreen) {
       return getFullscreenElement(document) === document.body;
     } else {
@@ -25,32 +29,11 @@ UnitTest.asynctest('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeM
     }
   });
 
-  const unsupportedBrowser = (() => {
-    if (/HeadlessChrome/.test(window.navigator.userAgent)) {
-      return 'headless Chrome';
-    } else if (/PhantomJS/.test(window.navigator.userAgent)) {
-      return 'PhantomJs';
-    }
-    return '';
-  })();
-
-  const skipInUnsupportedBrowsers = (step: Step<unknown, unknown>) => unsupportedBrowser ? Step.log('Skipping test as ' + unsupportedBrowser + ' can not run it') : step;
-
-  Pipeline.async({}, [
-    skipInUnsupportedBrowsers(
-      Log.chainsAsStep('TBA', 'FullScreen: Toggle fullscreen on with real click, check document.fullscreenElement, toggle fullscreen off, check document.fullscreenElement', [
-        NamedChain.asChain([
-          NamedChain.write('editor', cSetupEditor),
-          NamedChain.direct('editor', Chain.mapper((editor) => editor.getContainer()), 'container'),
-          NamedChain.direct('container', UiFinder.cFindIn('button[title="Fullscreen"]'), 'button'),
-          NamedChain.read('editor', cIsFullscreen(false)),
-          NamedChain.read('button', RealMouse.cClick()),
-          NamedChain.read('editor', cIsFullscreen(true)),
-          NamedChain.read('button', RealMouse.cClick()),
-          NamedChain.read('editor', cIsFullscreen(false)),
-          NamedChain.read('editor', McEditor.cRemove)
-        ])
-      ])
-    )
-  ], success, failure);
+  it('TBA: Toggle fullscreen on with real click, check document.fullscreenElement, toggle fullscreen off, check document.fullscreenElement', async () => {
+    await pIsFullscreen(false);
+    await RealMouse.pClickOn('button[title="Fullscreen"]');
+    await pIsFullscreen(true);
+    await RealMouse.pClickOn('button[title="Fullscreen"]');
+    await pIsFullscreen(false);
+  });
 });
