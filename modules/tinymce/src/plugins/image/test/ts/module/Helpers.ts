@@ -1,7 +1,9 @@
-import { Assertions, Chain, Guard, Mouse, UiControls, UiFinder } from '@ephox/agar';
-import { Arr, Obj, Result } from '@ephox/katamari';
-import { TinyUi } from '@ephox/mcagar';
+import { Assertions, Mouse, UiFinder } from '@ephox/agar';
+import { Obj, Type } from '@ephox/katamari';
+import { TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
 export interface ImageDialogData {
@@ -24,6 +26,8 @@ export interface ImageDialogData {
   borderstyle: string;
 }
 
+const dialogSelector = 'div[role="dialog"]';
+
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
   title: 'label.tox-label:contains("Image title") + input.tox-textfield',
@@ -44,178 +48,107 @@ export const advancedTabSelectors = {
   borderstyle: 'label.tox-label:contains("Border style") + div.tox-listboxfield > .tox-listbox'
 };
 
-const cGetTopmostDialog = Chain.control(
-  Chain.fromChains([
-    Chain.inject(SugarBody.body()),
-    UiFinder.cFindIn('[role=dialog]')
-  ]),
-  Guard.addLogging('Get top most dialog')
-);
+const isObjWithValue = (value: ImageDialogData[keyof ImageDialogData]): value is { value: string } =>
+  Type.isObject(value) && Obj.has(value as Record<string, any>, 'value');
 
-const cGotoAdvancedTab = Chain.fromChains([
-  Chain.inject(SugarBody.body()),
-  UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
-  Mouse.cClick
-]);
+const gotoAdvancedTab = (): void => {
+  const tab = UiFinder.findIn(SugarBody.body(), 'div.tox-tab:contains(Advanced)').getOrDie();
+  Mouse.click(tab);
+};
 
-const cSetFieldValue = (selector, value) => Chain.fromChains([
-  Chain.inject(SugarBody.body()),
-  UiFinder.cFindIn(selector),
-  Chain.op(Focus.focus),
-  Chain.op((element) => {
-    if (element.dom.type === 'checkbox') {
-      Checked.set(element, value);
-    } else if (Class.has(element, 'tox-listbox')) {
-      Attribute.set(element, 'data-value', value);
-    } else {
-      Value.set(element, value);
-    }
-  })
-]);
+const setFieldValue = (selector: string, value: string | boolean): SugarElement<HTMLElement> => {
+  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  Focus.focus(element);
+  if (element.dom.type === 'checkbox' && Type.isBoolean(value)) {
+    Checked.set(element, value);
+  } else if (Class.has(element, 'tox-listbox')) {
+    Attribute.set(element, 'data-value', value);
+  } else {
+    Value.set(element, String(value));
+  }
+  return element;
+};
 
-const cSetTabFieldValues = (data, tabSelectors) => {
-  const chains = Arr.flatten(Obj.mapToArray(tabSelectors, (value, key): Chain<any, any>[] => {
+const setTabFieldValues = (data: Partial<ImageDialogData>, tabSelectors: Record<string, string>): void => {
+  Obj.each(tabSelectors, (value, key: keyof Omit<ImageDialogData, 'dimensions'>) => {
     if (Obj.has(data, key)) {
-      const newValue = typeof data[key] === 'object' ? data[key].value : data[key];
-      return [ cSetFieldValue(tabSelectors[key], newValue) ];
-    } else if (Obj.has(data, 'dimensions') && Obj.has(data.dimensions, key)) {
-      return [ cSetFieldValue(tabSelectors[key], data.dimensions[key]) ];
-    } else {
-      return [];
+      const obj = data[key];
+      const newValue = isObjWithValue(obj) ? obj.value : obj;
+      setFieldValue(tabSelectors[key], newValue);
+    } else if (Obj.has(data, 'dimensions') && Obj.has(data.dimensions as Record<string, string>, key)) {
+      setFieldValue(tabSelectors[key], data.dimensions[key]);
     }
-  }));
-  return Chain.fromChains(chains);
+  });
 };
 
-const cFillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false) => {
-  const updateAdvTabFields = [
-    cGotoAdvancedTab,
-    cSetTabFieldValues(data, advancedTabSelectors)
-  ];
-
-  const updateDialogFields = [
-    cSetTabFieldValues(data, generalTabSelectors),
-    ...hasAdvanced ? updateAdvTabFields : []
-  ];
-
-  return Chain.control(
-    Chain.fromIsolatedChains([
-      Chain.fromParent(cGetTopmostDialog, updateDialogFields)
-    ]),
-    Guard.addLogging('Fill active dialog')
-  );
+const fillActiveDialog = (data: Partial<ImageDialogData>, hasAdvanced = false): void => {
+  setTabFieldValues(data, generalTabSelectors);
+  if (hasAdvanced) {
+    gotoAdvancedTab();
+    setTabFieldValues(data, advancedTabSelectors);
+  }
 };
 
-const cFakeEvent = (name: string) => Chain.control(
-  Chain.op((elm: SugarElement) => {
-    const evt = document.createEvent('HTMLEvents');
-    evt.initEvent(name, true, true);
-    elm.dom.dispatchEvent(evt);
-  }),
-  Guard.addLogging('Fake event')
-);
+const fakeEvent = (elm: SugarElement<Node>, name: string): void => {
+  const evt = document.createEvent('HTMLEvents');
+  evt.initEvent(name, true, true);
+  elm.dom.dispatchEvent(evt);
+};
 
-const cSetInputValue = (selector: string, value: string) => Chain.fromChains([
-  cSetFieldValue(selector, value),
-  cFakeEvent('input')
-]);
+const setInputValue = (selector: string, value: string): SugarElement<HTMLElement> => {
+  const field = setFieldValue(selector, value);
+  fakeEvent(field, 'input');
+  return field;
+};
 
-const cSetSelectValue = (selector: string, value: string) => Chain.fromChains([
-  cSetFieldValue(selector, value),
-  cFakeEvent('change')
-]);
+const setSelectValue = (selector: string, value: string): SugarElement<HTMLElement> => {
+  const field = setFieldValue(selector, value);
+  fakeEvent(field, 'change');
+  return field;
+};
 
-const cExecCommand = (command: string, value?: any, args?: any) => Chain.control(
-  Chain.op((editor: Editor) => {
-    editor.execCommand(command, value, args);
-  }),
-  Guard.addLogging('Execute command')
-);
+const pWaitForDialog = (editor: Editor): Promise<SugarElement<Element>> =>
+  TinyUiActions.pWaitForPopup(editor, dialogSelector);
 
-const cTinyUI = Chain.control(
-  Chain.binder(
-    (editor: Editor) => Result.value(TinyUi(editor))
-  ),
-  Guard.addLogging('Bind UI elements to selectors')
-);
+const submitDialog = (editor: Editor): void =>
+  TinyUiActions.submitDialog(editor, dialogSelector);
 
-const cWaitForDialog = () => Chain.control(
-  Chain.fromIsolatedChains([
-    cTinyUI,
-    Chain.on((tinyUi, next, die, logs) => {
-      const subchain = tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]');
-      Chain.pipeline([ subchain ], (value, newLogs) => next(value, newLogs), die, logs);
-    })
-  ]),
-  Guard.addLogging('Wait for dialog')
-);
+const cleanHtml = (html: string): string =>
+  html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
-const cSubmitDialog = () => Chain.control(
-  Chain.fromIsolatedChainsWith(SugarBody.body(), [
-    Mouse.cClickOn('.tox-button:contains("Save")')
-  ]),
-  Guard.addLogging('Submit dialog')
-);
+const assertCleanHtml = (label: string, editor: Editor, expected: string): void =>
+  Assertions.assertHtml(label, expected, cleanHtml(editor.getContent()));
 
-const cleanHtml = (html: string) => html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
+const assertInputValue = (selector: string, expected: string): void => {
+  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  const value = Value.get(element);
+  assert.equal(value, expected, `input value should be ${expected}`);
+};
 
-const cAssertCleanHtml = (label: string, expected: string) => Chain.control(
-  Chain.fromIsolatedChains([
-    Chain.mapper((editor: Editor) => cleanHtml(editor.getContent())),
-    Assertions.cAssertHtml(label, expected)
-  ]),
-  Guard.addLogging('Assert clean html')
-);
+const assertInputCheckbox = (selector: string, expectedState: boolean): void => {
+  const element = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  const value = Checked.get(element);
+  assert.equal(value, expectedState, `input value should be ${expectedState}`);
+};
 
-const cAssertInputValue = (selector: string, value: string) => Chain.fromChainsWith(SugarBody.body(), [
-  UiFinder.cFindIn(selector),
-  UiControls.cGetValue,
-  Assertions.cAssertEq(`input value should be ${value}`, value)
-]);
-
-const cAssertInputCheckbox = (selector: string, expectedState: boolean) => Chain.fromChainsWith(SugarBody.body(), [
-  UiFinder.cFindIn(selector),
-  Chain.mapper((elm: SugarElement<HTMLInputElement>) => elm.dom.checked),
-  Assertions.cAssertEq(`input value should be ${expectedState}`, expectedState)
-]);
-
-const cSetListBoxItem = (selector: string, itemText: string) => Chain.fromChainsWith(SugarBody.body(), [
-  UiFinder.cFindIn(selector),
-  Mouse.cClick,
-  Chain.inject(SugarBody.body()),
-  UiFinder.cWaitForVisible('Wait for list to open', '.tox-menu.tox-collection--list'),
-  UiFinder.cFindIn('.tox-collection__item-label:contains(' + itemText + ')'),
-  Chain.binder((elm) => Result.fromOption(Traverse.parent(elm), 'Failed to find parent')),
-  Mouse.cClick
-]);
-
-const cOpFromChains = (chains: Chain<any, any>[]) => Chain.control(
-  // TODO: Another API case.
-  Chain.on((value, next, die, logs) => {
-    Chain.pipeline([ Chain.inject(value) ].concat(chains), (_, newLogs) => next(value, newLogs), die, logs);
-  }),
-  Guard.addLogging('Chain operations')
-);
-
-const silverSettings = {
-  theme: 'silver',
-  plugins: 'image',
-  indent: false,
-  base_url: '/project/tinymce/js/tinymce'
+const pSetListBoxItem = async (selector: string, itemText: string): Promise<void> => {
+  const listBox = UiFinder.findIn(SugarBody.body(), selector).getOrDie();
+  Mouse.click(listBox);
+  await UiFinder.pWaitForVisible('Wait for list to open', SugarBody.body(), '.tox-menu.tox-collection--list');
+  const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item-label:contains(' + itemText + ')').getOrDie();
+  const itemParent = Traverse.parent(item).getOrDie('Failed to find list box item parent');
+  Mouse.click(itemParent);
 };
 
 export {
-  silverSettings,
-  cFillActiveDialog,
-  cFakeEvent,
-  cExecCommand,
-  cSetInputValue,
-  cSetSelectValue,
-  cWaitForDialog,
-  cSubmitDialog,
-  cAssertCleanHtml,
-  cAssertInputValue,
-  cAssertInputCheckbox,
-  cOpFromChains,
-  cSetListBoxItem
+  fillActiveDialog,
+  fakeEvent,
+  setInputValue,
+  setSelectValue,
+  pWaitForDialog,
+  submitDialog,
+  assertCleanHtml,
+  assertInputValue,
+  assertInputCheckbox,
+  pSetListBoxItem
 };

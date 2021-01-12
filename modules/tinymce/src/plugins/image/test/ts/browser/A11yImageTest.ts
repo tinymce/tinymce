@@ -1,149 +1,157 @@
-import { Assertions, Chain, GeneralSteps, Log, Pipeline, UiControls, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attribute, SugarBody } from '@ephox/sugar';
+import { Cursors, UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Attribute, SugarBody, Value } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cFillActiveDialog, generalTabSelectors, ImageDialogData } from '../module/Helpers';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.A11yImageTest', (success, failure) => {
-  SilverTheme();
-  Plugin();
+import { fillActiveDialog, generalTabSelectors, ImageDialogData, pWaitForDialog, submitDialog } from '../module/Helpers';
 
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const api = TinyApis(editor);
-    const ui = TinyUi(editor);
-
-    const sInitAndOpenDialog = (content: string, cursorPos: any) => GeneralSteps.sequence([
-      api.sSetSetting('image_advtab', true),
-      api.sSetSetting('image_dimensions', false),
-      api.sSetContent(content),
-      api.sSetSelection(cursorPos.elementPath, cursorPos.startOffset, cursorPos.elementPath, cursorPos.endOffset),
-      api.sExecCommand('mceImage', true),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]')
-    ]);
-
-    const createTestOnContent = (name: string, data: Partial<ImageDialogData>, cursorPos: Record<string, number | Array<number>>, initialContent: string, expectedContent: string) => Log.stepsAsStep('TBA', 'Image: ' + name, [
-      sInitAndOpenDialog(initialContent, cursorPos),
-      Chain.asStep({}, [
-        cFillActiveDialog(data, true)
-      ]),
-      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      api.sAssertContent(expectedContent)
-    ]);
-
-    const createTestOnEmptyEditor = (name: string, data: Partial<ImageDialogData>, expectedContent: string) => createTestOnContent(name, data, { elementPath: [ 0 ], startOffset: 0, endOffset: 0 }, '', expectedContent);
-
-    const testUiStateDisabled = Log.stepsAsStep('FOAM-11', 'Test image UI state', [
-      api.sExecCommand('mceImage', true),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      UiFinder.sExists(SugarBody.body(), generalTabSelectors.alt + ':disabled'),
-      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
-    ]);
-
-    const testUiStateEnabled = (alt: string) => Log.stepsAsStep('FOAM-11', 'Test image UI state', [
-      api.sExecCommand('mceImage', true),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      Chain.asStep(SugarBody.body(), [
-        UiFinder.cFindIn(generalTabSelectors.alt),
-        UiControls.cGetValue,
-        Assertions.cAssertEq('Assert input value', alt)
-      ]),
-      ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-      UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
-    ]);
-
-    const suiteArr = [
-      Log.stepsAsStep('TBA', 'Check the decorative checkbox toggles the alt text input', [
-        sInitAndOpenDialog('', { elementPath: [ 0 ], offset: 0 }),
-        Chain.asStep({}, [
-          Chain.inject(SugarBody.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'))
-        ]),
-        ui.sClickOnUi('Click on decorative checkbox', generalTabSelectors.decorative),
-        Chain.asStep({}, [
-          Chain.inject(SugarBody.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled')
-        ]),
-        ui.sClickOnUi('Click on decorative checkbox', generalTabSelectors.decorative),
-        Chain.asStep({}, [
-          Chain.inject(SugarBody.body()),
-          UiFinder.cWaitForState('Check alt text input is enabled', generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'))
-        ]),
-        ui.sClickOnUi('click save', 'div[role="dialog"] button:contains("Save")'),
-        UiFinder.sNotExists(SugarBody.body(), 'div[role="dialog"]')
-      ]),
-      createTestOnEmptyEditor(
-        'Image with alt text',
-        {
-          alt: 'alt',
-          src: {
-            value: 'src'
-          }
-        },
-        '<p><img src="src" alt="alt" /></p>'
-      ),
-      testUiStateEnabled('alt'),
-      createTestOnEmptyEditor(
-        'Decorative image',
-        {
-          src: {
-            value: 'src'
-          },
-          decorative: true
-        },
-        '<p><img role="presentation" src="src" alt="" /></p>'
-      ),
-      testUiStateDisabled,
-      createTestOnEmptyEditor(
-        'Decorative image (should ignore alt text value)',
-        {
-          alt: 'alt',
-          src: {
-            value: 'src'
-          },
-          decorative: true
-        },
-        '<p><img role="presentation" src="src" alt="" /></p>'
-      ),
-      testUiStateDisabled,
-      createTestOnContent(
-        'Decorative image to informative image',
-        {
-          alt: 'alt',
-          src: {
-            value: 'src'
-          },
-          decorative: false
-        },
-        { elementPath: [ 0 ], startOffset: 0, endOffset: 1 },
-        '<p><img role="presentation" src="src" alt="" /></p>',
-        '<p><img src="src" alt="alt" /></p>'
-      ),
-      testUiStateEnabled('alt'),
-      createTestOnContent(
-        'Informative image to decorative image',
-        {
-          alt: 'alt',
-          src: {
-            value: 'src'
-          },
-          decorative: true
-        },
-        { elementPath: [ 0 ], startOffset: 0, endOffset: 1 },
-        '<p><img src="src" alt="alt" /></p>',
-        '<p><img role="presentation" src="src" alt="" /></p>'
-      ),
-      testUiStateDisabled
-    ];
-    Pipeline.async({}, suiteArr, onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.A11yImageTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const pInitAndOpenDialog = async (editor: Editor, content: string, cursorPos: Cursors.RangeSpec | Cursors.CursorSpec) => {
+    editor.settings.image_advtab = true;
+    editor.settings.image_dimensions = false;
+    editor.setContent(content);
+    TinySelections.setSelectionFrom(editor, cursorPos);
+    editor.execCommand('mceImage');
+    await pWaitForDialog(editor);
+  };
+
+  const pCreateTestOnContent = async (editor: Editor, data: Partial<ImageDialogData>, cursorPos: Cursors.RangeSpec | Cursors.CursorSpec, initialContent: string, expectedContent: string) => {
+    await pInitAndOpenDialog(editor, initialContent, cursorPos);
+    fillActiveDialog(data, true);
+    TinyUiActions.clickOnUi(editor, 'div[role="dialog"] button:contains("Save")');
+    TinyAssertions.assertContent(editor, expectedContent);
+  };
+
+  const pCreateTestOnEmptyEditor = (editor: Editor, data: Partial<ImageDialogData>, expectedContent: string) =>
+    pCreateTestOnContent(editor, data, { element: [ 0 ], offset: 0 }, '', expectedContent);
+
+  const pTestUiStateDisabled = async (editor: Editor) => {
+    editor.execCommand('mceImage');
+    await pWaitForDialog(editor);
+    UiFinder.exists(SugarBody.body(), generalTabSelectors.alt + ':disabled');
+    submitDialog(editor);
+    UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
+  };
+
+  const pTestUiStateEnabled = async (editor: Editor, alt: string) => {
+    editor.execCommand('mceImage');
+    await pWaitForDialog(editor);
+    const altElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.alt).getOrDie();
+    const value = Value.get(altElem);
+    assert.equal(value, alt, 'Assert input value');
+    submitDialog(editor);
+    UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
+  };
+
+  it('TBA: Check the decorative checkbox toggles the alt text input', async () => {
+    const editor = hook.editor();
+    await pInitAndOpenDialog(editor, '', { element: [ 0 ], offset: 0 });
+    await UiFinder.pWaitForState('Check alt text input is enabled', SugarBody.body(), generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'));
+    TinyUiActions.clickOnUi(editor, generalTabSelectors.decorative);
+    await UiFinder.pWaitForState('Check alt text input is disabled', SugarBody.body(), generalTabSelectors.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
+    TinyUiActions.clickOnUi(editor, generalTabSelectors.decorative);
+    await UiFinder.pWaitForState('Check alt text input is enabled', SugarBody.body(), generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'));
+    submitDialog(editor);
+    UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
+  });
+
+  it ('FOAM-11: Image with alt text', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnEmptyEditor(
+      editor,
+      {
+        alt: 'alt',
+        src: {
+          value: 'src'
+        }
+      },
+      '<p><img src="src" alt="alt" /></p>'
+    );
+    await pTestUiStateEnabled(editor, 'alt');
+  });
+
+  it('FOAM-11: Decorative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnEmptyEditor(
+      editor,
+      {
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      '<p><img role="presentation" src="src" alt="" /></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('FOAM-11: Decorative image (should ignore alt text value)', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnEmptyEditor(
+      editor,
+      {
+        alt: 'alt',
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      '<p><img role="presentation" src="src" alt="" /></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('FOAM-11: Decorative image to informative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        alt: 'alt',
+        src: {
+          value: 'src'
+        },
+        decorative: false
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img role="presentation" src="src" alt="" /></p>',
+      '<p><img src="src" alt="alt" /></p>'
+    );
+    await pTestUiStateEnabled(editor, 'alt');
+  });
+
+  it('FOAM-11: Informative image to decorative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        alt: 'alt',
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img src="src" alt="alt" /></p>',
+      '<p><img role="presentation" src="src" alt="" /></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
 });

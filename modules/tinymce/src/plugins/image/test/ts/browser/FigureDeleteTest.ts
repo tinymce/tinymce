@@ -1,53 +1,40 @@
-import { Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Mouse } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-import { cSetInputValue, cSubmitDialog, generalTabSelectors } from '../module/Helpers';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/image/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.FigureDeleteTest', (success, failure) => {
+import { generalTabSelectors, pWaitForDialog, setInputValue, submitDialog } from '../module/Helpers';
 
-  SilverTheme();
-  ImagePlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'Image: removing src in dialog should remove figure element', [
-        tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
-        tinyApis.sSetSelection([], 1, [], 2),
-        tinyUi.sClickOnToolbar('click on image button', 'button[aria-label="Insert/edit image"]'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          cSetInputValue(generalTabSelectors.src, ''),
-          cSubmitDialog()
-        ]),
-        tinyApis.sAssertContent('')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Image: clicking caption textbox removes figure and adds image only', [
-        tinyApis.sSetContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>'),
-        tinyApis.sSetSelection([], 1, [], 2),
-        tinyUi.sClickOnToolbar('click on image button', 'button[aria-label="Insert/edit image"]'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-          UiFinder.cFindIn('label:contains("Show caption") input[type="checkbox"]'),
-          Mouse.cClick,
-          cSubmitDialog()
-        ]),
-        tinyApis.sAssertContentPresence({ img: 1, figure: 0, figcaption: 0 })
-      ])
-
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     image_caption: true,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: removing src in dialog should remove figure element', async () => {
+    const editor = hook.editor();
+    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
+    TinySelections.setSelection(editor, [], 1, [], 2);
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    setInputValue(generalTabSelectors.src, '');
+    submitDialog(editor);
+    TinyAssertions.assertContent(editor, '');
+  });
+
+  it('TBA: clicking caption textbox removes figure and adds image only', async () => {
+    const editor = hook.editor();
+    editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
+    TinySelections.setSelection(editor, [], 1, [], 2);
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    const dialog = await pWaitForDialog(editor);
+    Mouse.clickOn(dialog, 'label:contains("Show caption") input[type="checkbox"]');
+    submitDialog(editor);
+    TinyAssertions.assertContentPresence(editor, { img: 1, figure: 0, figcaption: 0 });
+  });
 });
