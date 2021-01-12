@@ -10,8 +10,8 @@ import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
 
-const getFocused = (doc: SugarElement<Document | ShadowRoot>): Result<SugarElement<HTMLElement>, string> => {
-  return Focus.active(doc).fold(
+const getFocused = <T extends HTMLElement>(doc: SugarElement<Document | ShadowRoot>): Result<SugarElement<T>, string> => {
+  return Focus.active<T>(doc).fold(
     () => Result.error('Could not find active element'),
     Result.value
   );

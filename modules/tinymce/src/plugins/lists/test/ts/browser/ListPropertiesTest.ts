@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
-import { SugarBody, SugarDocument, SugarElement, Value } from '@ephox/sugar';
+import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -38,11 +38,11 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
   const updateDialog = (currentValue: string, newValue: string) => {
     const doc = SugarDocument.getDocument();
     FocusTools.isOnSelector('Check focus is on the input field', doc, inputSelector);
-    const input = FocusTools.getFocused(doc).getOrDie();
-    assert.equal(Value.get(input as SugarElement<HTMLInputElement>), currentValue, 'Initial input value matches');
-    UiControls.setValue(input as SugarElement<HTMLInputElement>, newValue);
+    const input = FocusTools.getFocused<HTMLInputElement>(doc).getOrDie();
+    assert.equal(Value.get(input), currentValue, 'Initial input value matches');
+    UiControls.setValue(input, newValue);
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
-    assert.equal(Value.get(input as SugarElement<HTMLInputElement>), newValue, 'Updated input value matches');
+    assert.equal(Value.get(input), newValue, 'Updated input value matches');
   };
 
   it('TINY-3915: List properties context menu not shown for DL', async () => {
