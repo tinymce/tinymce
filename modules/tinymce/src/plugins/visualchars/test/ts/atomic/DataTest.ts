@@ -1,22 +1,18 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import * as Data from 'tinymce/plugins/visualchars/core/Data';
 
-UnitTest.test('atomic.tinymce.plugins.visualchars.DataTest', () => {
-  Assert.eq(
-    'should return correct selector',
-    'span.mce-a,span.mce-b',
-    Data.charMapToSelector({ a: 'a', b: 'b' })
-  );
+describe('atomic.tinymce.plugins.visualchars.DataTest', () => {
+  it('should return correct selector', () => {
+    assert.equal('span.mce-a,span.mce-b', Data.charMapToSelector({ a: 'a', b: 'b' }));
+  });
 
-  Assert.eq(
-    'should return correct regexp',
-    '/[ab]/',
-    Data.charMapToRegExp({ a: 'a', b: 'b' }).toString()
-  );
+  it('should return correct regexp', () => {
+    assert.equal('/[ab]/', Data.charMapToRegExp({ a: 'a', b: 'b' }).toString());
+  });
 
-  Assert.eq(
-    'should return correct global regexp',
-    '/[ab]/g',
-    Data.charMapToRegExp({ a: 'a', b: 'b' }, true).toString()
-  );
+  it('should return correct global regexp', () => {
+    assert.equal('/[ab]/g', Data.charMapToRegExp({ a: 'a', b: 'b' }, true).toString());
+  });
 });

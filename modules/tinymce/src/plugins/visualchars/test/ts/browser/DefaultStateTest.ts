@@ -1,35 +1,31 @@
-import { Keyboard, Keys, Pipeline, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { Keyboard, Keys, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { sAssertNbspStruct, sAssertSpanStruct } from '../module/test/Utils';
+import { assertNbspStruct, assertSpanStruct } from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualchars.DefaultStateTest', (success, failure) => {
-  Plugin();
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
-      // Need to trigger a keydown event to get the visual chars to show after calling set content
-      Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), Keys.space(), { }),
-      Waiter.sTryUntil('Wait for visual chars to show', tinyApis.sAssertContentStructure(sAssertSpanStruct)),
-      tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(sAssertNbspStruct),
-      tinyUi.sClickOnToolbar('click on visualchars button', 'button'),
-      tinyApis.sAssertContentStructure(sAssertSpanStruct)
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.visualchars.DefaultStateTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'visualchars',
     toolbar: 'visualchars',
     base_url: '/project/tinymce/js/tinymce',
     visualchars_default_state: true
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('tests the default visualchars state', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a&nbsp;&nbsp;b</p>', { format: 'raw' });
+
+    // Need to trigger a keydown event to get the visual chars to show after calling set content
+    Keyboard.activeKeydown(TinyDom.document(editor), Keys.space(), { });
+    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertSpanStruct));
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to disappear', () => TinyAssertions.assertContentStructure(editor, assertNbspStruct));
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await Waiter.pTryUntil('wait for visual chars to appear', () => TinyAssertions.assertContentStructure(editor, assertSpanStruct));
+  });
 });
