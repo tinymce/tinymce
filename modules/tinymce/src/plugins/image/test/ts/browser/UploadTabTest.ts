@@ -1,214 +1,199 @@
-import { Assertions, Chain, FileInput, Files, GeneralSteps, Log, Logger, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, FileInput, Files, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, Value } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
+import { pWaitForDialog } from '../module/Helpers';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImagePluginTest', (success, failure) => {
+describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
   const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
-
-  SilverTheme();
-  Plugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const api = TinyApis(editor);
-    const ui = TinyUi(editor);
-
-    const sAssertImageTab = (title: string, isPresent: boolean) => Logger.t('Assert image tab is present', GeneralSteps.sequence([
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      Chain.asStep({}, [
-        ui.cWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-        Chain.op((container) => {
-          const expected = {};
-          expected['.tox-tab:contains("' + title + '")'] = isPresent ? 1 : 0;
-          Assertions.assertPresence('Asserting presence', expected, container);
-        })
-      ]),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]));
-
-    const sTriggerUpload = (fileExtension: string = 'png') => Logger.t('Trigger upload', Step.async((next, die) => {
-      Conversions.uriToBlob(b64).then((blob) => {
-        Pipeline.async({}, [
-          FileInput.sRunOnPatchedFileInput([ Files.createFile(`logo.${fileExtension}`, 0, blob) ], Chain.asStep({}, [
-            // cPopupToDialog('div[role="dialog"]'),
-            ui.cWaitForPopup('Locate popup', 'div[role="dialog"]'),
-            UiFinder.cFindIn('button:contains("Browse for an image")'),
-            Mouse.cClick
-          ]))
-        ], next, die);
-      });
-    }));
-
-    const uploadTabNotPresent = Log.stepsAsStep('TBA', 'Image: Upload tab should not be present without images_upload_url or images_upload_handler', [
-      api.sSetContent('<p><img src="' + src + '" /></p>'),
-      api.sSelect('img', []),
-      sAssertImageTab('Upload', false)
-    ]);
-
-    const uploadTabPresentOnUploadUrl = Log.stepsAsStep('TBA', 'Image: Upload tab should be present when images_upload_url is set to some truthy value', [
-      api.sSetContent('<p><img src="' + src + '" /></p>'),
-      api.sSelect('img', []),
-      api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
-      api.sSetSetting('images_upload_url', 'postAcceptor.php'),
-      sAssertImageTab('Upload', true),
-      sAssertImageTab('Advanced', false),
-      api.sSetSetting('image_advtab', true),
-      api.sDeleteSetting('images_upload_url'),
-      sAssertImageTab('Upload', false),
-      sAssertImageTab('Advanced', true)
-    ]);
-
-    const uploadTabNotPresentOnUploadUrlWithUploadTabDisabled = Log.stepsAsStep('TBA', 'Image: Upload tab should be not be present when images_upload_url is set to some truthy value and image_uploadtab is set to false', [
-      api.sSetContent('<p><img src="' + src + '" /></p>'),
-      api.sSelect('img', []),
-      api.sSetSetting('image_uploadtab', false),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
-      sAssertImageTab('Upload', false),
-      api.sSetSetting('image_advtab', true),
-      api.sDeleteSetting('image_uploadtab'),
-      sAssertImageTab('Upload', true)
-    ]);
-
-    const uploadTabPresentOnUploadHandler = Log.stepsAsStep('TBA', 'Image: Upload tab should be present when images_upload_handler is set to some truthy value', [
-      api.sSetContent('<p><img src="' + src + '" /></p>'),
-      api.sSelect('img', []),
-      api.sSetSetting('image_advtab', false), // make sure that Advanced tab appears separately
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
-      sAssertImageTab('Upload', true),
-      sAssertImageTab('Advanced', false),
-      api.sSetSetting('image_advtab', true),
-      api.sDeleteSetting('images_upload_handler'),
-      sAssertImageTab('Upload', false),
-      sAssertImageTab('Advanced', true)
-    ]);
-
-    const sAssertSrcTextValue = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to expected value', Chain.asStep(SugarBody.body(), [
-      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-      Chain.op((input) => {
-        Assertions.assertEq('Assert field source value ', expectedValue, input.dom.value);
-      })
-    ]), 10, 10000);
-
-    const sAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.sTryUntil('Waited for input to change to start with expected value', Chain.asStep(SugarBody.body(), [
-      UiFinder.cFindIn('label.tox-label:contains("Source") + div > div > input.tox-textfield'),
-      Chain.op((input) => {
-        Assertions.assertEq('Assert field source value ', true, Strings.startsWith(input.dom.value, expectedValue));
-      })
-    ]), 10, 10000);
-
-    const uploadWithCustomRoute = Log.stepsAsStep('TBA', 'Image: Image uploader test with custom route', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_url', '/custom/imageUpload'),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload(),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValue('uploaded_image.jpg'),
-      api.sDeleteSetting('images_upload_url'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]);
-
-    const uploadWithCustomHandler = Log.stepsAsStep('TBA', 'Image: Image uploader test with images_upload_handler', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => success('file.jpg')),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload(),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValue('file.jpg'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]);
-
-    const uploadCustomHandlerBase64String = Log.stepsAsStep('TBA', 'Image: Test that we get full base64 string in images_upload_handler', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.base64())),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload(),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValue(b64.split(',')[1]),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]);
-
-    const uploadWithError = Log.stepsAsStep('TNY-6020', 'Image: Image uploader test with upload error', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success, failure) => failure('Error occurred')),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload(),
-      ui.sWaitForUi('Wait for an alert dialog to appear', '.tox-alert-dialog'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-alert-dialog .tox-button:contains("OK")'),
-      UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog'),
-      UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]);
-
-    const uploadWithAutomaticUploadsDisabled = Log.stepsAsStep('TBA', 'Image: Image uploader test with automatic uploads disabled', [
-      api.sSetContent(''),
-      api.sSetSetting('automatic_uploads', false),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload(),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValueStartsWith('blob:'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
-      api.sDeleteSetting('automatic_uploads')
-    ]);
-
-    const uploadWithCustomImageFileTypes = Log.stepsAsStep('TINY-6224', 'Image: Image uploader respects `images_file_types` setting', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (_blobInfo, success) => success('logo.svg')),
-      api.sSetSetting('images_file_types', 'svg'),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload('svg'),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValue('logo.svg'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")'),
-      api.sDeleteSetting('images_file_types')
-    ]);
-
-    const uploadWithAlternativeExtension = Log.stepsAsStep('TINY-6622', 'Image: Image uploader retains the file name/extension', [
-      api.sSetContent(''),
-      api.sSetSetting('images_upload_handler', (blobInfo, success) => success(blobInfo.filename())),
-      ui.sClickOnToolbar('Trigger Image dialog', 'button[aria-label="Insert/edit image"]'),
-      ui.sWaitForPopup('Wait for Image dialog', 'div[role="dialog"]'),
-      ui.sClickOnUi('Switch to Upload tab', '.tox-tab:contains("Upload")'),
-      sTriggerUpload('jfif'),
-      ui.sWaitForUi('Wait for General tab to activate', '.tox-tab:contains("General")'),
-      sAssertSrcTextValue('logo.jfif'),
-      ui.sClickOnUi('Close dialog', 'button:contains("Cancel")')
-    ]);
-
-    Pipeline.async({}, [
-      uploadTabNotPresent,
-      uploadTabPresentOnUploadUrl,
-      uploadTabNotPresentOnUploadUrlWithUploadTabDisabled,
-      uploadTabPresentOnUploadHandler,
-      uploadWithCustomRoute,
-      uploadWithCustomHandler,
-      uploadCustomHandlerBase64String,
-      uploadWithError,
-      uploadWithAutomaticUploadsDisabled,
-      uploadWithCustomImageFileTypes,
-      uploadWithAlternativeExtension
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const closeDialog = (editor: Editor) =>
+    TinyUiActions.closeDialog(editor, 'div[role="dialog"]');
+
+  const pAssertImageTab = async (editor: Editor, title: string, isPresent: boolean) => {
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    const dialog = await pWaitForDialog(editor);
+    const expected = {
+      ['.tox-tab:contains("' + title + '")']: isPresent ? 1 : 0
+    };
+    Assertions.assertPresence('Asserting presence', expected, dialog);
+    closeDialog(editor);
+  };
+
+  const pTriggerUpload = async (editor: Editor, fileExtension: string = 'png') => {
+    const blob = await Conversions.uriToBlob(b64);
+    await FileInput.pRunOnPatchedFileInput([ Files.createFile(`logo.${fileExtension}`, 0, blob) ], async () => {
+      const dialog = await pWaitForDialog(editor);
+      const button = UiFinder.findIn(dialog, 'button:contains("Browse for an image")').getOrDie();
+      Mouse.click(button);
+    });
+  };
+
+  const pAssertSrcTextValue = (expectedValue: string) => Waiter.pTryUntil('Waited for input to change to expected value', () => {
+    const input = UiFinder.findIn(SugarBody.body(), 'label.tox-label:contains("Source") + div > div > input.tox-textfield').getOrDie();
+    assert.equal(Value.get(input), expectedValue, 'Assert field source value ');
+  }, 10, 10000);
+
+  const pAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.pTryUntil('Waited for input to change to start with expected value', () => {
+    const input = UiFinder.findIn(SugarBody.body(), 'label.tox-label:contains("Source") + div > div > input.tox-textfield').getOrDie();
+    assert.isTrue(Strings.startsWith(Value.get(input), expectedValue), 'Assert field source value');
+  }, 10, 10000);
+
+  it('TBA: Upload tab should not be present without images_upload_url or images_upload_handler', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="' + src + '" /></p>');
+    TinySelections.select(editor, 'img', []);
+    await pAssertImageTab(editor, 'Upload', false);
+  });
+
+  it('TBA: Upload tab should be present when images_upload_url is set to some truthy value', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="' + src + '" /></p>');
+    TinySelections.select(editor, 'img', []);
+    editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
+    editor.settings.images_upload_url = 'postAcceptor.php';
+    await pAssertImageTab(editor, 'Upload', true);
+    await pAssertImageTab(editor, 'Advanced', false);
+    editor.settings.image_advtab = true;
+    delete editor.settings.images_upload_url;
+    await pAssertImageTab(editor, 'Upload', false);
+    await pAssertImageTab(editor, 'Advanced', true);
+  });
+
+  it('TBA: Upload tab should be not be present when images_upload_url is set to some truthy value and image_uploadtab is set to false', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="' + src + '" /></p>');
+    TinySelections.select(editor, 'img', []);
+    editor.settings.image_uploadtab = false;
+    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    await pAssertImageTab(editor, 'Upload', false);
+    editor.settings.image_advtab = true;
+    delete editor.settings.image_uploadtab;
+    await pAssertImageTab(editor, 'Upload', true);
+  });
+
+  it('TBA: Upload tab should be present when images_upload_handler is set to some truthy value', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="' + src + '" /></p>');
+    TinySelections.select(editor, 'img', []);
+    editor.settings.image_advtab = false; // make sure that Advanced tab appears separately
+    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    await pAssertImageTab(editor, 'Upload', true);
+    await pAssertImageTab(editor, 'Advanced', false);
+    editor.settings.image_advtab = true;
+    delete editor.settings.images_upload_handler;
+    await pAssertImageTab(editor, 'Upload', false);
+    await pAssertImageTab(editor, 'Advanced', true);
+  });
+
+  it('TBA: Image uploader test with custom route', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_url = '/custom/imageUpload';
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValue('uploaded_image.jpg');
+    delete editor.settings.images_upload_url;
+    closeDialog(editor);
+  });
+
+  it('TBA: Image uploader test with images_upload_handler', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValue('file.jpg');
+    closeDialog(editor);
+  });
+
+  it('TBA: Test that we get full base64 string in images_upload_handler', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.base64());
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValue(b64.split(',')[1]);
+    closeDialog(editor);
+  });
+
+  it('TNY-6020: Image uploader test with upload error', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_handler = (blobInfo, success, failure) => failure('Error occurred');
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForUi(editor, '.tox-alert-dialog');
+    TinyUiActions.clickOnUi(editor, '.tox-alert-dialog .tox-button:contains("OK")');
+    UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog');
+    UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")');
+    closeDialog(editor);
+  });
+
+  it('TBA: Image uploader test with automatic uploads disabled', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.automatic_uploads = false;
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValueStartsWith('blob:');
+    closeDialog(editor);
+    delete editor.settings.automatic_uploads;
+  });
+
+  it('TINY-6224: Image uploader respects `images_file_types` setting', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_handler = (_blobInfo, success) => success('logo.svg');
+    editor.settings.images_file_types = 'svg';
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor, 'svg');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValue('logo.svg');
+    closeDialog(editor);
+    delete editor.settings.images_file_types;
+  });
+
+  it('TINY-6622: Image uploader retains the file name/extension', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.filename());
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor, 'jfif');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
+    await pAssertSrcTextValue('logo.jfif');
+    closeDialog(editor);
+  });
 });
