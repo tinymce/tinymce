@@ -1,4 +1,4 @@
-import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import { ResizeWire } from '../api/ResizeWire';
@@ -98,6 +98,16 @@ const findInWarehouse = (warehouse: Warehouse, element: SugarElement): Optional<
   Arr.find(r.cells, (e) => Compare.eq(element, e.element))
 );
 
+const extractCells = (warehouse: Warehouse, target: TargetSelection, predicate: (detail: DetailExt) => boolean): Optional<DetailExt[]> => {
+  const details = Arr.map(target.selection, (cell) => {
+    return TableLookup.cell(cell)
+      .bind((lc) => findInWarehouse(warehouse, lc))
+      .filter(predicate);
+  });
+  const cells = Optionals.cat(details);
+  return Optionals.someIf(cells.length > 0, cells);
+};
+
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
@@ -144,28 +154,25 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       });
   };
 
-const onCell = (warehouse: Warehouse, target: TargetElement): Optional<DetailExt> => TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell));
+const onCell = (warehouse: Warehouse, target: TargetElement): Optional<DetailExt> =>
+  TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell));
 
-const onPaste = (warehouse: Warehouse, target: TargetPaste): Optional<ExtractPaste> => TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell).map((details) => {
-  const value: ExtractPaste = {
-    ...details,
-    generators: target.generators,
-    clipboard: target.clipboard
-  };
-  return value;
-}));
-
-const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Optional<ExtractPasteRows> => {
-  const details = Arr.map(target.selection, (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
-  const cells = Optionals.cat(details);
-  return cells.length > 0 ? Optional.some(
-    {
-      cells,
+const onPaste = (warehouse: Warehouse, target: TargetPaste): Optional<ExtractPaste> =>
+  TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell).map((details) => {
+    const value: ExtractPaste = {
+      ...details,
       generators: target.generators,
       clipboard: target.clipboard
-    }
-  ) : Optional.none();
-};
+    };
+    return value;
+  }));
+
+const onPasteByEditor = (warehouse: Warehouse, target: TargetPasteRows): Optional<ExtractPasteRows> =>
+  extractCells(warehouse, target, Fun.always).map((cells) => ({
+    cells,
+    generators: target.generators,
+    clipboard: target.clipboard
+  }));
 
 const onMergable = (_warehouse: Warehouse, target: TargetMergable): Optional<ExtractMergable> =>
   target.mergable;
@@ -173,11 +180,8 @@ const onMergable = (_warehouse: Warehouse, target: TargetMergable): Optional<Ext
 const onUnmergable = (_warehouse: Warehouse, target: TargetUnmergable): Optional<SugarElement[]> =>
   target.unmergable;
 
-const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<DetailExt[]> => {
-  const details = Arr.map(target.selection, (cell) => TableLookup.cell(cell).bind((lc) => findInWarehouse(warehouse, lc)));
-  const cells = Optionals.cat(details);
-  return cells.length > 0 ? Optional.some(cells) : Optional.none();
-};
+const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<DetailExt[]> =>
+  extractCells(warehouse, target, Fun.always);
 
 // Custom unlocked extractors
 
@@ -185,7 +189,7 @@ const onUnlockedCell = (warehouse: Warehouse, target: TargetElement): Optional<S
   onCell(warehouse, target).filter((detail) => !detail.isLocked);
 
 const onUnlockedCells = (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
-  onCells(warehouse, target).map((details) => Arr.filter(details, (detail) => !detail.isLocked)).filter((details) => details.length > 0);
+  extractCells(warehouse, target, (detail) => !detail.isLocked);
 
 const isUnlockedTableCell = (warehouse: Warehouse, cell: SugarElement) => findInWarehouse(warehouse, cell).exists((detail) => !detail.isLocked);
 const allUnlocked = (warehouse: Warehouse, cells: SugarElement[]) => Arr.forall(cells, (cell) => isUnlockedTableCell(warehouse, cell));

@@ -10,10 +10,10 @@ import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 interface CommandTest {
-  cmd: string;
-  value?: any;
-  table: string;
-  tableStructure: StructAssertBasic | StructAssertAdv;
+  readonly cmd: string;
+  readonly value?: any;
+  readonly table: string;
+  readonly tableStructure: StructAssertBasic | StructAssertAdv;
 }
 
 UnitTest.asynctest('browser.tinymce.plugins.table.command.CommandsOnLockedColumnsTest', (success, failure) => {
@@ -32,11 +32,9 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.CommandsOnLockedColumn
     if (events.length > 0) {
       Arr.each(events, (event) => {
         const tableElm = SugarElement.fromDom(event.table);
-        Assertions.assertEq('Cell style commands do not modify table structure', event.structure, false);
-        Assertions.assertEq('Cell style commands modify table style', event.style, true);
-        Assertions.assertEq('Expected events should have been fired', true, SugarNode.isTag('table')(tableElm));
-        Assertions.assertEq('Should not have structure modified', false, events[0].structure);
-        Assertions.assertEq('Should have style modified', true, events[0].style);
+        Assertions.assertEq('Commands do not modify table structure', false, event.structure);
+        Assertions.assertEq('Commands modify table style', true, event.style);
+        Assertions.assertEq('Expected table in event', true, SugarNode.isTag('table')(tableElm));
       });
     }
     Assertions.assertEq('Expected events should have been fired', expectedEvents, Arr.map(events, (event) => event.type));

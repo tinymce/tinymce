@@ -3,28 +3,13 @@ import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { Generators } from 'ephox/snooker/api/Generators';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
-import { RunOperationOutput, TargetElement, TargetPaste, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';
 import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 
-type OperationSingle<T> = (
-  wire: ResizeWire,
-  table: SugarElement,
-  target: T,
-  generators: Generators,
-) => Optional<RunOperationOutput>;
-
 const isResizable = Fun.always;
-
-type OperationMultiple<T> = (
-  wire: ResizeWire,
-  table: SugarElement,
-  target: T,
-  generators: Generators,
-) => Optional<RunOperationOutput>;
 
 interface TargetLocation {
   readonly section: number;
@@ -33,9 +18,9 @@ interface TargetLocation {
 }
 
 interface ExpCell {
-  section: number;
-  row: number;
-  column: number;
+  readonly section: number;
+  readonly row: number;
+  readonly column: number;
 }
 
 const checkOld = (
@@ -43,7 +28,7 @@ const checkOld = (
   optExpCell: Optional<ExpCell>,
   expectedHtml: string,
   input: string,
-  operation: OperationSingle<TargetElement>,
+  operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
   column: number
@@ -78,7 +63,7 @@ const checkOldMultiple = (
   optExpCell: Optional<ExpCell>,
   expectedHtml: string,
   input: string,
-  operation: OperationMultiple<TargetSelection>,
+  operation: OperationCallback<TargetSelection>,
   paths: TargetLocation[]
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
@@ -115,7 +100,7 @@ const checkPaste = (
   expectedHtml: string,
   input: string,
   pasteHtml: string,
-  operation: OperationSingle<TargetPasteRows>,
+  operation: OperationCallback<TargetPasteRows>,
   section: number,
   row: number,
   column: number
@@ -147,7 +132,7 @@ const checkPasteRaw = (
   expectedHtml: string,
   inputTable: string,
   pastedTableHTML: string,
-  operation: OperationSingle<TargetPaste>,
+  operation: OperationCallback<TargetPaste>,
   section: number,
   row: number,
   column: number
@@ -178,7 +163,7 @@ const checkStructure = (
   expCell: ExpCell,
   expected: string[][],
   input: string,
-  operation: OperationSingle<TargetElement>,
+  operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
   column: number
@@ -209,7 +194,7 @@ const checkDelete = (
   optExpCell: Optional<ExpCell>,
   optExpectedHtml: Optional<{ ie: string; normal: string }>,
   input: string,
-  operation: OperationSingle<TargetSelection>,
+  operation: OperationCallback<TargetSelection>,
   cells: ExpCell[],
   platform: ReturnType<typeof PlatformDetection.detect>
 ): void => {
@@ -242,7 +227,6 @@ const checkDelete = (
     // If that is the case our table should not have any parent element because has been removed
     // from the DOM
     Assertions.assertEq(label + ': The table was expected to be removed from the DOM', false, Traverse.parent(table).isSome());
-    // assert.eq(false, Traverse.parent(table).isSome(), 'The table was expected to be removed from the DOM');
 
   }, (expectedHtml) => {
     if (platform.browser.isIE() || platform.browser.isEdge()) {

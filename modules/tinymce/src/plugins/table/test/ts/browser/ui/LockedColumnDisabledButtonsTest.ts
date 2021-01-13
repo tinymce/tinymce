@@ -8,8 +8,8 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 interface ButtonDetails {
-  name: string;
-  label: string;
+  readonly name: string;
+  readonly label: string;
 }
 
 UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTest', (success, failure) => {
@@ -66,6 +66,19 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
     '</tbody>' +
     '</table>';
 
+    const multiCellSelectionTable = '<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-locked-cols="0">' +
+    '<tbody>' +
+    '<tr>' +
+    `<td data-mce-selected="1" data-mce-first-selected="1" style="width: 50%;">a</td>` +
+    `<td data-mce-selected="1" data-mce-last-selected="1" style="width: 50%;">b</td>` +
+    '</tr>' +
+    '<tr>' +
+    `<td style="width: 50%;">c</td>` +
+    `<td style="width: 50%;">d</td>` +
+    '</tr>' +
+    '</tbody>' +
+    '</table>';
+
     const mergeCellTable = `<table data-snooker-locked-cols="0">` +
     `<tbody>` +
     `<tr>` +
@@ -112,14 +125,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      Log.stepsAsStep('TINY-6765', 'Column buttons should be disabled when locked column is selected', [
-        sPopulateTableClipboard('col'),
-        tinyApis.sSetContent(table),
-        tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-        sAssertToolbarButtons(columnButtons, true),
-        sSelectContextMenuItem(2),
-        sAssertMenuButtons(columnButtons, true)
-      ]),
+      Log.stepsAsStep('TINY-6765', 'Column buttons should be disabled when locked column is selected',
+        Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
+          return [
+            sPopulateTableClipboard('col'),
+            tinyApis.sSetContent(tableHtml),
+            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
+            sAssertToolbarButtons(columnButtons, true),
+            sSelectContextMenuItem(2),
+            sAssertMenuButtons(columnButtons, true)
+          ];
+        })
+      ),
       Log.stepsAsStep('TINY-6765', 'Column buttons should not be disabled when locked column is not selected', [
         sPopulateTableClipboard('col'),
         tinyApis.sSetContent(table),

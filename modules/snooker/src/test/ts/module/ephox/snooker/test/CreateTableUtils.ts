@@ -1,9 +1,9 @@
 import { Arr } from '@ephox/katamari';
 
 interface TableConfig {
-  numCols: number;
-  colgroup: boolean;
-  lockedColumns: number[];
+  readonly numCols: number;
+  readonly colgroup: boolean;
+  readonly lockedColumns: number[];
 }
 
 const generateTestTable = (bodyContent: string[], headerContent: string[], footerContent: string[], config: TableConfig): string => {
