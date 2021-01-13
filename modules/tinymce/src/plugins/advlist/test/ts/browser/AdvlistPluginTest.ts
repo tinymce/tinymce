@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistPluginTest', () => {
       const rng = editor.selection.getRng();
       const expectedElm = editor.dom.select(definition.expectedSelection[0])[0];
 
-      assert.equal(editor.getContent(), definition.expectedContent, 'Editor content should be equal');
+      TinyAssertions.assertContent(editor, definition.expectedContent);
       LegacyUnit.equalDom(rng.startContainer.parentNode, expectedElm, 'Selection elements should be equal');
       assert.equal(rng.startOffset, definition.expectedSelection[1], 'Selection offset should be equal');
     });
