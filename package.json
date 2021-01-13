@@ -44,7 +44,7 @@
     "chai": "^4.2.0",
     "chalk": "^4.1.0",
     "emojilib": "^2.4.0",
-    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-mocha": "^7.0.0",
     "fast-check": "^1.18.1",
     "grunt": "^1.0.2",
     "grunt-contrib-clean": "^2.0.0",
