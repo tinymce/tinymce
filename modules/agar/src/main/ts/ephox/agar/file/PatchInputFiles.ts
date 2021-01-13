@@ -65,7 +65,11 @@ const cRunOnPatchedFileInput = (files: File[], chain: Chain<any, any>): Chain<an
   cUnpatchInputElement
 ]);
 
+const pRunOnPatchedFileInput = (files: File[], action: () => Promise<void>): Promise<void > =>
+  Chain.toPromise(cRunOnPatchedFileInput(files, Chain.fromPromise(action)))(undefined);
+
 export {
   sRunOnPatchedFileInput,
-  cRunOnPatchedFileInput
+  cRunOnPatchedFileInput,
+  pRunOnPatchedFileInput
 };
