@@ -1,5 +1,5 @@
-import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     plugins: 'autolink',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     editor.setContent('<p>' + url + dot + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, '\n');
-    assert.equal(editor.getContent(), `<p><a href="${expectedUrl || url}">${url}</a></p><p>${withDotAtTheEnd ? '.' : '&nbsp;'}</p>`, 'Create link with newline');
+    TinyAssertions.assertContent(editor, `<p><a href="${expectedUrl || url}">${url}</a></p><p>${withDotAtTheEnd ? '.' : '&nbsp;'}</p>`);
   };
 
   const assertNoLink = (editor: Editor, input: string, text?: string): void => {
@@ -54,10 +54,6 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     const dot = withDotAtTheEnd ? '.' : '';
     assert.equal(typeUrl(editor, (input + dot)), `<p><a href="${link}">${text || input}</a>${dot}&nbsp;</p>`, 'Should be convert to link');
   };
-
-  beforeEach(() => {
-    hook.editor().focus();
-  });
 
   it('TBA: Correct urls ended with space', () => {
     const editor = hook.editor();
