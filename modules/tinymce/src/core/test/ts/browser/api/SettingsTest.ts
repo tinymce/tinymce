@@ -23,8 +23,8 @@ describe('browser.tinymce.core.api.SettingsTest', () => {
   });
 
   it('shouldUseContentCssCors', () => {
-    assert.equal(Settings.shouldUseContentCssCors(new Editor('id', {}, EditorManager)), false, 'Should default content_css_cors to false');
-    assert.equal(Settings.shouldUseContentCssCors(new Editor('id', { content_css_cors: true }, EditorManager)), true, 'Should return true if content_css_cors is set');
+    assert.isFalse(Settings.shouldUseContentCssCors(new Editor('id', {}, EditorManager)), 'Should default content_css_cors to false');
+    assert.isTrue(Settings.shouldUseContentCssCors(new Editor('id', { content_css_cors: true }, EditorManager)), 'Should return true if content_css_cors is set');
   });
 
   it('getReferrerPolicy', () => {

@@ -18,7 +18,7 @@ describe('atomic.tinymce.core.util.LazyEvaluatorTest', () => {
       }
     ];
 
-    assert.equal(LazyEvaluator.evaluateUntil(operations, [ 123, 'x' ]).isNone(), true, 'Should return none');
+    assert.isTrue(LazyEvaluator.evaluateUntil(operations, [ 123, 'x' ]).isNone(), 'Should return none');
     assert.equal(LazyEvaluator.evaluateUntil(operations, [ 1, 'a' ]).getOrDie(1), 1, 'Should return first item');
     assert.equal(LazyEvaluator.evaluateUntil(operations, [ 2, 'b' ]).getOrDie(2), 2, 'Should return second item');
     assert.equal(LazyEvaluator.evaluateUntil(operations, [ 3, 'c' ]).getOrDie(3), 3, 'Should return third item');

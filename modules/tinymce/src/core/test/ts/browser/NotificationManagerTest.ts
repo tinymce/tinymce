@@ -182,9 +182,9 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         assert.equal(modified.text, 'Modified notification text', 'Should have modified text');
         assert.equal(modified.type, 'success', 'Should have modified type');
         assert.equal(modified.icon, 'user', 'Should have modified icon');
-        assert.equal(modified.progressBar, false, 'Should have modified progressBar');
+        assert.isFalse(modified.progressBar, 'Should have modified progressBar');
         assert.equal(modified.timeout, 5, 'Should have modified timeout');
-        assert.equal(modified.closeButton, false, 'Should have modified closeButton');
+        assert.isFalse(modified.closeButton, 'Should have modified closeButton');
       });
 
       it('TBA: Should not open notification if editor is removed', () => {

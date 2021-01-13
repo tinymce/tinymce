@@ -388,10 +388,10 @@ describe('browser.tinymce.core.html.NodeTest', () => {
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('span', 1));
-    assert.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
+    assert.isFalse(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be false since the predicate says true.');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('b', 1));
-    assert.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
+    assert.isTrue(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be true since the predicate says false.');
   });
 });
