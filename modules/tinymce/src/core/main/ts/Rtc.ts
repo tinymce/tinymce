@@ -25,7 +25,7 @@ import * as FilterNode from './html/FilterNode';
 import { getSelectedContentInternal, GetSelectionContentArgs } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoLevelType, UndoManager } from './undo/UndoManagerTypes';
+import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
 import { addVisualInternal } from './view/VisualAidsImpl';
 
 const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
@@ -39,11 +39,11 @@ const getInsertContext = (editor: Editor) => Optional.from(editor.selection.getS
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
   undoManager: {
-    undo: () => void;
-    redo: () => void;
+    undo: () => UndoLevel;
+    redo: () => UndoLevel;
     hasUndo: () => boolean;
     hasRedo: () => boolean;
-    transact: (fn: () => void) => void;
+    transact: (fn: () => void) => UndoLevel;
     reset: () => void;
     clear: () => void;
     ignore: (fn: () => void) => void;
@@ -128,14 +128,6 @@ interface RtcEditor extends Editor {
   rtcInstance: RtcAdaptor;
 }
 
-const createDummyUndoLevel = (): UndoLevel => ({
-  type: UndoLevelType.Complete,
-  fragments: [],
-  content: '',
-  bookmark: null,
-  beforeBookmark: null
-});
-
 const createSerializer = (editor: Editor, inner?: boolean) => {
   const settings = editor.settings;
   return HtmlSerializer({
@@ -200,22 +192,13 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
     undoManager: {
       beforeChange: ignore,
       addUndoLevel: unsupported,
-      undo: () => {
-        rtcEditor.undoManager.undo();
-        return createDummyUndoLevel();
-      },
-      redo: () => {
-        rtcEditor.undoManager.redo();
-        return createDummyUndoLevel();
-      },
+      undo: () => rtcEditor.undoManager.undo(),
+      redo: () => rtcEditor.undoManager.redo(),
       clear: () => rtcEditor.undoManager.clear(),
       reset: () => rtcEditor.undoManager.reset(),
       hasUndo: () => rtcEditor.undoManager.hasUndo(),
       hasRedo: () => rtcEditor.undoManager.hasRedo(),
-      transact: (_undoManager, _locks, fn) => {
-        rtcEditor.undoManager.transact(fn);
-        return createDummyUndoLevel();
-      },
+      transact: (_undoManager, _locks, fn) => rtcEditor.undoManager.transact(fn),
       ignore: (_locks, callback) => rtcEditor.undoManager.ignore(callback),
       extra: (_undoManager, _index, callback1, callback2) => rtcEditor.undoManager.extra(callback1, callback2)
     },
@@ -265,7 +248,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
 
         rtcEditor.editor.insertContent(fragment);
       },
-      addVisual: (_elm) => {}
+      addVisual: ignore
     },
     selection: {
       getContent: (format, args) => {
