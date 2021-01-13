@@ -14,6 +14,8 @@ export interface ShadowRootHook<T extends EditorType> extends Hook<T> {
   readonly shadowRoot: () => SugarElement<ShadowRoot>;
 }
 
+const hookNotRun = Fun.die('The setup hooks have not run yet');
+
 const setupHooks = <T extends EditorType = EditorType>(
   settings: Record<string, any>,
   setupModules: Array<() => void>,
@@ -21,7 +23,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   createElement: () => Optional<SugarElement>,
   teardown = Fun.noop
 ): Hook<T> => {
-  let editor: T | undefined;
+  let lazyEditor: () => T = hookNotRun;
   let teardownEditor: () => void = Fun.noop;
   let hasFailure = false;
 
@@ -30,7 +32,7 @@ const setupHooks = <T extends EditorType = EditorType>(
     Loader.setup({
       preInit: setupTinymceBaseUrl,
       run: (ed, success) => {
-        editor = ed;
+        lazyEditor = Fun.constant(ed);
         teardownEditor = success;
         if (focusOnInit) {
           ed.focus();
@@ -55,12 +57,12 @@ const setupHooks = <T extends EditorType = EditorType>(
     }
 
     // Cleanup references
-    editor = undefined;
+    lazyEditor = hookNotRun;
     teardownEditor = Fun.noop;
   });
 
   return {
-    editor: () => editor as T
+    editor: () => lazyEditor()
   };
 };
 
@@ -82,8 +84,8 @@ const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record
 };
 
 const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): ShadowRootHook<T> => {
-  let shadowRoot: SugarElement<ShadowRoot> | undefined;
-  let editorDiv: SugarElement<HTMLElement> | undefined;
+  let lazyShadowRoot: () => SugarElement<ShadowRoot> = hookNotRun;
+  let editorDiv: Optional<SugarElement<HTMLElement>>;
   let teardown: () => void = Fun.noop;
 
   before(function () {
@@ -94,26 +96,28 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
     const shadowHost = SugarElement.fromTag('div', document);
 
     Insert.append(SugarBody.body(), shadowHost);
-    shadowRoot = SugarElement.fromDom(shadowHost.dom.attachShadow({ mode: 'open' }));
-    editorDiv = SugarElement.fromTag('div', document);
+    const sr = SugarElement.fromDom(shadowHost.dom.attachShadow({ mode: 'open' }));
+    const div: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
-    Insert.append(shadowRoot, editorDiv);
+    Insert.append(sr, div);
 
+    lazyShadowRoot = Fun.constant(sr);
+    editorDiv = Optional.some(div);
     teardown = () => {
       Remove.remove(shadowHost);
 
       // Cleanup references
-      shadowRoot = undefined;
-      editorDiv = undefined;
+      lazyShadowRoot = hookNotRun;
+      editorDiv = Optional.none();
       teardown = Fun.noop;
     };
   });
 
-  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => Optional.from(editorDiv), () => teardown());
+  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => editorDiv, () => teardown());
 
   return {
     ...hooks,
-    shadowRoot: () => shadowRoot as SugarElement<ShadowRoot>
+    shadowRoot: () => lazyShadowRoot()
   };
 };
 
