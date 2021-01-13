@@ -15,11 +15,10 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  const waitForVisualBlocks = async (editor: Editor, waitUntilEnabled: boolean = true) => {
-    return await Waiter.pTryUntil('Wait for background css to be applied to first element', () => {
+  const pWaitForVisualBlocks = (editor: Editor, waitUntilEnabled: boolean = true) =>
+    Waiter.pTryUntil('Wait for background css to be applied to first element', () => {
       const p = TinyDom.fromDom(editor.getBody().firstChild);
       const background = Css.get(p, 'background-image');
-
       if (waitUntilEnabled) {
         assert.include(background, 'url(', 'Paragraph should have a url background');
         assert.isTrue(Class.has(TinyDom.body(editor), 'mce-visualblocks'), 'Visual blocks class should exist');
@@ -28,16 +27,15 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
         assert.isFalse(Class.has(TinyDom.body(editor), 'mce-visualblocks'), 'Visual blocks class should not exist');
       }
     });
-  };
 
   it('TBA: Toggle on/off visualblocks and compute previews', async () => {
     const editor = hook.editor();
     editor.execCommand('mceVisualBlocks');
-    await waitForVisualBlocks(editor);
+    await pWaitForVisualBlocks(editor);
     assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
 
     editor.execCommand('mceVisualBlocks');
-    await waitForVisualBlocks(editor, false);
+    await pWaitForVisualBlocks(editor, false);
     assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
   });
 });
