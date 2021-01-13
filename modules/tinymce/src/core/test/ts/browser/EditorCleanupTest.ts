@@ -11,7 +11,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 const assertPageLinkPresence = (url: string, exists: boolean): void => {
   const links = document.head.querySelectorAll(`link[href="${url}"]`);
-  assert.equal(exists, links.length > 0, `Should have link with url="${url}"`);
+  assert.equal(links.length > 0, exists, `Should have link with url="${url}"`);
 };
 
 const testCleanup = (comment: string, settings: RawEditorSettings, html: string = '<div></div>', fn: (editor) => void = Fun.noop) => {
@@ -25,7 +25,7 @@ const testCleanup = (comment: string, settings: RawEditorSettings, html: string 
     // first, remove the id of the element, as that's inserted from McEditor.cFromHtml and is out of our control
     Attribute.remove(element, 'id');
     // assert that the html of the element is correct
-    assert.equal(html, Truncate.getHtml(element), comment + ' all properties on the element should be cleaned up');
+    assert.equal(Truncate.getHtml(element), html, comment + ' all properties on the element should be cleaned up');
     // remove the element
     Remove.remove(element);
   });

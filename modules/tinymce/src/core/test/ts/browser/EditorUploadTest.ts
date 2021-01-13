@@ -282,7 +282,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.equal(uploadCount, 1, 'Should only be one upload.');
       }
 
-      assert.equal('<p><img src="myimage.png" /></p>', editor.getContent(), 'uploadConcurrentImages');
+      assert.equal(editor.getContent(), '<p><img src="myimage.png" /></p>', 'uploadConcurrentImages');
       LegacyUnit.equalDom(result[0].element, editor.$('img')[0]);
       assert.isTrue(result[0].status, 'uploadConcurrentImages');
     };
@@ -352,7 +352,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assertEventsLength(2);
 
         // This is in exact since the status of the image can be pending or failed meaning it should try again
-        assert.equal(uploadCount >= 1, true, 'Should at least be one.');
+        assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
       }
 
       assert.isUndefined(editor.$('img')[0], 'No element in the editor');

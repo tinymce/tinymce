@@ -32,7 +32,7 @@ describe('atomic.tinymce.core.keyboard.MatchKeysTest', () => {
       state.set([]);
 
       const matches = MatchKeys.match(patterns, event);
-      assert.isTrue(matches.length > 0, 'Should have some matches');
+      assert.isAbove(matches.length, 0, 'Should have some matches');
 
       Arr.find(matches, (pattern) => {
         return pattern.action();

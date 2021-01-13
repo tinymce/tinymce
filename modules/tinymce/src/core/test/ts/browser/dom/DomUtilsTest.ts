@@ -101,19 +101,19 @@ describe('browser.tinymce.core.dom.DOMUtils', () => {
     DOM.add(document.body, 'div', { id: 'test' });
 
     DOM.get('test').className = 'abc 123 xyz';
-    assert.equal(DOM.hasClass('test', 'abc'), true, 'incorrect hasClass result');
-    assert.equal(DOM.hasClass('test', '123'), true, 'incorrect hasClass result');
-    assert.equal(DOM.hasClass('test', 'xyz'), true, 'incorrect hasClass result');
-    assert.equal(DOM.hasClass('test', 'aaa'), false, 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', 'abc'), 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', '123'), 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', 'xyz'), 'incorrect hasClass result');
+    assert.isFalse(DOM.hasClass('test', 'aaa'), 'incorrect hasClass result');
 
     DOM.get('test').className = 'abc';
-    assert.equal(DOM.hasClass('test', 'abc'), true, 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', 'abc'), 'incorrect hasClass result');
 
     DOM.get('test').className = 'aaa abc';
-    assert.equal(DOM.hasClass('test', 'abc'), true, 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', 'abc'), 'incorrect hasClass result');
 
     DOM.get('test').className = 'abc aaa';
-    assert.equal(DOM.hasClass('test', 'abc'), true, 'incorrect hasClass result');
+    assert.isTrue(DOM.hasClass('test', 'abc'), 'incorrect hasClass result');
 
     DOM.remove('test');
   });

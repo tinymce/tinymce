@@ -19,8 +19,8 @@ describe('browser.tinymce.core.selection.SimpleTableModel', () => {
     assert.equal(tableModel.width, expectedWidth, 'Should be expected width');
   };
 
-  const assertHeight = (tableModel: SimpleTableModel.TableModel, expectedWidth: number) => {
-    assert.equal(tableModel.rows.length, expectedWidth, 'Should be expected height');
+  const assertHeight = (tableModel: SimpleTableModel.TableModel, expectedHeight: number) => {
+    assert.equal(tableModel.rows.length, expectedHeight, 'Should be expected height');
   };
 
   const assertModelAsHtml = (tableModel: SimpleTableModel.TableModel, expectedHtml: string) => {

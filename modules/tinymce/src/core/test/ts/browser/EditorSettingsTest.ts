@@ -120,7 +120,7 @@ describe('browser.tinymce.core.EditorSettingsTest', () => {
       assert.equal(settings.id, 'id', 'Should have the specified id');
       assert.equal(settings.document_base_url, 'documentBaseUrl', 'Should have the specified documentBaseUrl');
       assert.equal(settings.userSetting, 'b', 'Should have the specified userSetting');
-      assert.equal(settings.validate, true, 'Should have the forced validate setting');
+      assert.isTrue(settings.validate, 'Should have the forced validate setting');
       assert.equal(settings.theme, isPhone ? 'mobile' : 'silver', 'Should have the default theme');
       assert.equal(settings.plugins, isPhone ? '' : 'a', 'Should have the specified default plugin');
       assert.equal(settings.defaultSetting, 'a', 'Should have the default setting');

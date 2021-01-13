@@ -385,7 +385,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     eventUtils.unbind(null, 'click', Fun.noop);
     eventUtils.fire(null, 'click', {});
     eventUtils.clean(null);
-    assert.equal(true, true, 'No exception');
+    assert.ok(true, 'No exception');
   });
 
   it('bind ready when page is loaded', () => {
@@ -490,7 +490,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     testObj.isDefaultPrevented = testCallback;
     eventUtils.fire(window, 'testEvent', testObj);
 
-    assert.equal(testObj.isDefaultPrevented !== testCallback, true, 'Is overwritten by our isDefaultPrevented');
+    assert.notEqual(testObj.isDefaultPrevented, testCallback, 'Is overwritten by our isDefaultPrevented');
     assert.equal(typeof testObj.isPropagationStopped, 'function', 'Has our isPropagationStopped');
     assert.equal(typeof testObj.isImmediatePropagationStopped, 'function', 'Has our isImmediatePropagationStopped');
   });

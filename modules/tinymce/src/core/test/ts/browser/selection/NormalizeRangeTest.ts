@@ -43,7 +43,7 @@ describe('browser.tinymce.core.selection.NormalizeRangeTest', () => {
   context('Non normalize non collapsed selections', () => {
     it('Should not normalize on indexed selected at root level', () => {
       setHtml('<input>');
-      const range = normalizeRange( [], 0, [], 1);
+      const range = normalizeRange([], 0, [], 1);
       assertRangeNone(range);
     });
 

@@ -152,14 +152,14 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const editor = hook.editor();
     editor.setContent('<table><tr><td contenteditable="false">x</td></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('td')[0], true);
-    assert.equal(true, rng === null, 'Should be null since TD is not a valid caret target');
+    assert.isNull(rng, 'Should be null since TD is not a valid caret target');
   });
 
   it('showCaret at TH', () => {
     const editor = hook.editor();
     editor.setContent('<table><tr><th contenteditable="false">x</th></tr></table>');
     const rng = editor._selectionOverrides.showCaret(1, editor.dom.select('th')[0], true);
-    assert.equal(true, rng === null, 'Should be null since TH is not a valid caret target');
+    assert.isNull(rng, 'Should be null since TH is not a valid caret target');
   });
 
   it('showCaret block on specific element', () => {
@@ -175,11 +175,11 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     editor.setContent('<p contenteditable="false">a</p><p contenteditable="false" data-no-cef="true">b</p>');
 
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[0], true);
-    assert.equal(true, rng !== null, 'Should return a range');
+    assert.isNotNull(rng, 'Should return a range');
     editor._selectionOverrides.hideFakeCaret();
 
     rng = editor._selectionOverrides.showCaret(1, editor.dom.select('p[contenteditable=false]')[1], false);
-    assert.equal(true, rng === null, 'Should not return a range excluded by ShowCaret event');
+    assert.isNull(rng, 'Should not return a range excluded by ShowCaret event');
     editor._selectionOverrides.hideFakeCaret();
   });
 
@@ -197,8 +197,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const caretContainer = editor.dom.select('p[data-mce-caret=before]')[0];
     editor._selectionOverrides.showBlockCaretContainer(caretContainer);
 
-    assert.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
-    assert.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    assert.isFalse(caretContainer.hasAttribute('data-mce-bogus'), 'Bogus attribute should have been removed');
+    assert.isFalse(caretContainer.hasAttribute('data-mce-caret'), 'Caret attribute should have been removed');
     assert.equal(editor.getContent(), '<p>\u00a0</p><p contenteditable="false">a</p>');
   });
 
@@ -216,8 +216,8 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const caretContainer = editor.dom.select('p[data-mce-caret=after]')[0];
     editor._selectionOverrides.showBlockCaretContainer(caretContainer);
 
-    assert.equal(caretContainer.hasAttribute('data-mce-bogus'), false, 'Bogus attribute should have been removed');
-    assert.equal(caretContainer.hasAttribute('data-mce-caret'), false, 'Caret attribute should have been removed');
+    assert.isFalse(caretContainer.hasAttribute('data-mce-bogus'), 'Bogus attribute should have been removed');
+    assert.isFalse(caretContainer.hasAttribute('data-mce-caret'), 'Caret attribute should have been removed');
     assert.equal(editor.getContent(), '<p contenteditable="false">a</p><p>\u00a0</p>');
   });
 
