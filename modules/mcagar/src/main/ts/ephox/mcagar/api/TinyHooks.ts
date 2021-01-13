@@ -21,7 +21,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   createElement: () => Optional<SugarElement>,
   teardown = Fun.noop
 ): Hook<T> => {
-  let editor: T;
+  let editor: T | undefined;
   let teardownEditor: () => void = Fun.noop;
   let hasFailure = false;
 
@@ -33,7 +33,7 @@ const setupHooks = <T extends EditorType = EditorType>(
         editor = ed;
         teardownEditor = success;
         if (focusOnInit) {
-          editor.focus();
+          ed.focus();
         }
         done();
       },
@@ -53,10 +53,14 @@ const setupHooks = <T extends EditorType = EditorType>(
       teardownEditor();
       teardown();
     }
+
+    // Cleanup references
+    editor = undefined;
+    teardownEditor = Fun.noop;
   });
 
   return {
-    editor: () => editor
+    editor: () => editor as T
   };
 };
 
@@ -78,8 +82,8 @@ const bddSetupFromElement = <T extends EditorType = EditorType>(settings: Record
 };
 
 const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): ShadowRootHook<T> => {
-  let shadowRoot: SugarElement<ShadowRoot>;
-  let editorDiv: SugarElement<HTMLElement>;
+  let shadowRoot: SugarElement<ShadowRoot> | undefined;
+  let editorDiv: SugarElement<HTMLElement> | undefined;
   let teardown: () => void = Fun.noop;
 
   before(function () {
@@ -97,6 +101,11 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
 
     teardown = () => {
       Remove.remove(shadowHost);
+
+      // Cleanup references
+      shadowRoot = undefined;
+      editorDiv = undefined;
+      teardown = Fun.noop;
     };
   });
 
@@ -104,7 +113,7 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
 
   return {
     ...hooks,
-    shadowRoot: () => shadowRoot
+    shadowRoot: () => shadowRoot as SugarElement<ShadowRoot>
   };
 };
 
