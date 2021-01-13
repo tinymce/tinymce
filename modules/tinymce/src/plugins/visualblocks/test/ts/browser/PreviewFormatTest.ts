@@ -1,45 +1,43 @@
-import { Assertions, Log, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { Class, Css, SugarElement } from '@ephox/sugar';
+import { Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Class, Css } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import VisualBlocksPlugin from 'tinymce/plugins/visualblocks/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/visualblocks/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', (success, failure) => {
-  Theme();
-  VisualBlocksPlugin();
-
-  const sWaitForVisualBlocks = (editor) => {
-    return Waiter.sTryUntil('Wait for background css to be applied to first element', Step.sync(() => {
-      const p = SugarElement.fromDom(editor.getBody().firstChild);
-      const background = Css.get(p, 'background-image');
-      Assertions.assertEq('Paragraph should have a url background', true, background.indexOf('url(') === 0);
-    }));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'VisualBlocks: Toggle on/off visualblocks and compute previews', [
-        tinyApis.sExecCommand('mceVisualBlocks'),
-        sWaitForVisualBlocks(editor),
-        Step.sync(() => {
-          Assertions.assertEq('Visual blocks class should exist', true, Class.has(SugarElement.fromDom(editor.getBody()), 'mce-visualblocks'));
-          Assertions.assertEq('Should not have a border property', true, editor.formatter.getCssText('h1').indexOf('border:1px dashed') === -1);
-        }),
-        tinyApis.sExecCommand('mceVisualBlocks'),
-        Step.sync(() => {
-          Assertions.assertEq('Visual blocks class should not exist', false, Class.has(SugarElement.fromDom(editor.getBody()), 'mce-visualblocks'));
-          Assertions.assertEq('Should not have a border property', true, editor.formatter.getCssText('h1').indexOf('border:1px dashed') === -1);
-          Assertions.assertEq('Visual blocks class should still not exist', false, Class.has(SugarElement.fromDom(editor.getBody()), 'mce-visualblocks'));
-        })
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const waitForVisualBlocks = async (editor: Editor, waitUntilEnabled: boolean = true) => {
+    return await Waiter.pTryUntil('Wait for background css to be applied to first element', () => {
+      const p = TinyDom.fromDom(editor.getBody().firstChild);
+      const background = Css.get(p, 'background-image');
+
+      if (waitUntilEnabled) {
+        assert.include(background, 'url(', 'Paragraph should have a url background');
+        assert.isTrue(Class.has(TinyDom.body(editor), 'mce-visualblocks'), 'Visual blocks class should exist');
+      } else {
+        assert.notInclude(background, 'url(', 'Paragraph should not have a url background');
+        assert.isFalse(Class.has(TinyDom.body(editor), 'mce-visualblocks'), 'Visual blocks class should not exist');
+      }
+    });
+  };
+
+  it('TBA: Toggle on/off visualblocks and compute previews', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceVisualBlocks');
+    await waitForVisualBlocks(editor);
+    assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
+
+    editor.execCommand('mceVisualBlocks');
+    await waitForVisualBlocks(editor, false);
+    assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
+  });
 });
