@@ -38,28 +38,38 @@ const getInsertContext = (editor: Editor) => Optional.from(editor.selection.getS
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
-  undo: () => void;
-  redo: () => void;
-  hasUndo: () => boolean;
-  hasRedo: () => boolean;
-  transact: (fn: () => void) => void;
-  reset: () => void;
-  clear: () => void;
-  ignore: (fn: () => void) => void;
-  extra: (fn1: () => void, fn2: () => void) => void;
-  canApplyFormat: (format: string) => boolean;
-  matchFormat: (format: string, vars: Record<string, string>) => boolean;
-  closestFormat: (formats: string) => string;
-  applyFormat: (format: string, vars: Record<string, string>) => void;
-  removeFormat: (format: string, vars: Record<string, string>) => void;
-  toggleFormat: (format: string, vars: Record<string, string>) => void;
-  formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
-  getContent: () => AstNode | null;
-  setContent: (node: AstNode) => void;
-  insertContent: (node: AstNode) => void;
-  getSelectedContent: () => AstNode | null;
-  getRawModel: () => any;
-  isRemote: boolean;
+  undoManager: {
+    undo: () => void;
+    redo: () => void;
+    hasUndo: () => boolean;
+    hasRedo: () => boolean;
+    transact: (fn: () => void) => void;
+    reset: () => void;
+    clear: () => void;
+    ignore: (fn: () => void) => void;
+    extra: (fn1: () => void, fn2: () => void) => void;
+  };
+  formatter: {
+    canApply: (format: string) => boolean;
+    match: (format: string, vars: Record<string, string>) => boolean;
+    closest: (formats: string) => string;
+    apply: (format: string, vars: Record<string, string>) => void;
+    remove: (format: string, vars: Record<string, string>) => void;
+    toggle: (format: string, vars: Record<string, string>) => void;
+    formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
+  };
+  editor: {
+    getContent: () => AstNode | null;
+    setContent: (node: AstNode) => void;
+    insertContent: (node: AstNode) => void;
+  };
+  selection: {
+    getContent: () => AstNode | null;
+  };
+  rtc: {
+    getRawModel: () => any;
+    isRemote: boolean;
+  };
 }
 
 /** A copy of the TinyMCE api definitions that the plugin overrides  */
@@ -191,39 +201,39 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       beforeChange: ignore,
       addUndoLevel: unsupported,
       undo: () => {
-        rtcEditor.undo();
+        rtcEditor.undoManager.undo();
         return createDummyUndoLevel();
       },
       redo: () => {
-        rtcEditor.redo();
+        rtcEditor.undoManager.redo();
         return createDummyUndoLevel();
       },
-      clear: () => rtcEditor.clear(),
-      reset: () => rtcEditor.reset(),
-      hasUndo: () => rtcEditor.hasUndo(),
-      hasRedo: () => rtcEditor.hasRedo(),
+      clear: () => rtcEditor.undoManager.clear(),
+      reset: () => rtcEditor.undoManager.reset(),
+      hasUndo: () => rtcEditor.undoManager.hasUndo(),
+      hasRedo: () => rtcEditor.undoManager.hasRedo(),
       transact: (_undoManager, _locks, fn) => {
-        rtcEditor.transact(fn);
+        rtcEditor.undoManager.transact(fn);
         return createDummyUndoLevel();
       },
-      ignore: (_locks, callback) => rtcEditor.ignore(callback),
-      extra: (_undoManager, _index, callback1, callback2) => rtcEditor.extra(callback1, callback2)
+      ignore: (_locks, callback) => rtcEditor.undoManager.ignore(callback),
+      extra: (_undoManager, _index, callback1, callback2) => rtcEditor.undoManager.extra(callback1, callback2)
     },
     formatter: {
-      match: (name, vars?, _node?) => rtcEditor.matchFormat(name, defaultVars(vars)),
+      match: (name, vars?, _node?) => rtcEditor.formatter.match(name, defaultVars(vars)),
       matchAll: unsupported,
       matchNode: unsupported,
-      canApply: (name) => rtcEditor.canApplyFormat(name),
-      closest: (names) => rtcEditor.closestFormat(names),
-      apply: (name, vars, _node) => rtcEditor.applyFormat(name, defaultVars(vars)),
-      remove: (name, vars, _node, _similar?) => rtcEditor.removeFormat(name, defaultVars(vars)),
-      toggle: (name, vars, _node) => rtcEditor.toggleFormat(name, defaultVars(vars)),
-      formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatChanged(formats, callback, similar)
+      canApply: (name) => rtcEditor.formatter.canApply(name),
+      closest: (names) => rtcEditor.formatter.closest(names),
+      apply: (name, vars, _node) => rtcEditor.formatter.apply(name, defaultVars(vars)),
+      remove: (name, vars, _node, _similar?) => rtcEditor.formatter.remove(name, defaultVars(vars)),
+      toggle: (name, vars, _node) => rtcEditor.formatter.toggle(name, defaultVars(vars)),
+      formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatter.formatChanged(formats, callback, similar)
     },
     editor: {
       getContent: (args, format) => {
         if (format === 'html' || format === 'tree') {
-          const fragment = rtcEditor.getContent();
+          const fragment = rtcEditor.editor.getContent();
           const serializer = createSerializer(tinymceEditor, true);
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
@@ -237,7 +247,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
         const fragment = isTreeNode(content) ?
           content :
           tinymceEditor.parser.parse(content, { isRootContent: true, insert: true });
-        rtcEditor.setContent(fragment);
+        rtcEditor.editor.setContent(fragment);
         return content;
       },
       insertContent: (value, _details) => {
@@ -253,14 +263,14 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
           FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), fragment);
         }
 
-        rtcEditor.insertContent(fragment);
+        rtcEditor.editor.insertContent(fragment);
       },
       addVisual: (_elm) => {}
     },
     selection: {
       getContent: (format, args) => {
         if (format === 'html' || format === 'tree') {
-          const fragment = rtcEditor.getSelectedContent();
+          const fragment = rtcEditor.selection.getContent();
           const serializer = createSerializer(tinymceEditor);
 
           runSerializerFiltersOnFragment(tinymceEditor, fragment);
@@ -272,7 +282,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       }
     },
     raw: {
-      getModel: () => Optional.some(rtcEditor.getRawModel())
+      getModel: () => Optional.some(rtcEditor.rtc.getRawModel())
     }
   };
 };
@@ -333,7 +343,7 @@ export const setup = (editor: Editor): Optional<Promise<boolean>> => {
     (rtc) => Optional.some(
       rtc.setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
-        return rtcEditor.isRemote;
+        return rtcEditor.rtc.isRemote;
       }, (err) => {
         // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
         editorCast.rtcInstance = makeNoopAdaptor();
