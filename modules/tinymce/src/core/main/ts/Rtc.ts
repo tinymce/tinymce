@@ -66,8 +66,10 @@ interface RtcRuntimeApi {
   selection: {
     getContent: () => AstNode | null;
   };
-  rtc: {
+  raw: {
     getRawModel: () => any;
+  };
+  rtc: {
     isRemote: boolean;
   };
 }
@@ -265,7 +267,7 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       }
     },
     raw: {
-      getModel: () => Optional.some(rtcEditor.rtc.getRawModel())
+      getModel: () => Optional.some(rtcEditor.raw.getRawModel())
     }
   };
 };
