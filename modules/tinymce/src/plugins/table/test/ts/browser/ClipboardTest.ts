@@ -600,6 +600,64 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
     );
   });
 
+  suite.test('TestCase-TINY-6765: Table: mceTablePasteColBefore command with locked columns', (editor) => {
+    editor.setContent(
+      '<table data-snooker-locked-cols="0">' +
+      '<colgroup><col><col></colgroup>' +
+      '<tbody>' +
+      '<tr><td>1</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>3</td></tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    selectOne(editor, 'tr td:nth-child(1)');
+    editor.execCommand('mceTableCopyCol');
+    selectOne(editor, 'tr td:nth-child(2)');
+    editor.execCommand('mceTablePasteColBefore');
+
+    LegacyUnit.equal(
+      cleanTableHtml(editor.getContent()),
+
+      '<table data-snooker-locked-cols="0">' +
+      '<colgroup><col /><col /><col /></colgroup>' +
+      '<tbody>' +
+      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+  });
+
+  suite.test('TestCase-TINY-6765: Table: mceTablePasteColAfter command with locked columns', (editor) => {
+    editor.setContent(
+      '<table data-snooker-locked-cols="1">' +
+      '<colgroup><col><col></colgroup>' +
+      '<tbody>' +
+      '<tr><td>1</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>3</td></tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    selectOne(editor, 'tr td:nth-child(2)');
+    editor.execCommand('mceTableCopyCol');
+    selectOne(editor, 'tr td:nth-child(1)');
+    editor.execCommand('mceTablePasteColAfter');
+
+    LegacyUnit.equal(
+      cleanTableHtml(editor.getContent()),
+
+      '<table data-snooker-locked-cols="2">' +
+      '<colgroup><col /><col /><col /></colgroup>' +
+      '<tbody>' +
+      '<tr><td>1</td><td>2</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>3</td></tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+  });
+
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     Pipeline.async({}, Log.steps('TBA', 'Table: Test Clipboard', suite.toSteps(editor)), onSuccess, onFailure);
   }, {

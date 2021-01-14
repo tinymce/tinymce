@@ -12,6 +12,12 @@ interface ButtonDetails {
   readonly label: string;
 }
 
+enum TableContextMenu {
+  Cell,
+  Row,
+  Column
+}
+
 UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTest', (success, failure) => {
   Theme();
   Plugin();
@@ -20,21 +26,37 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
     { name: 'table', label: 'Table' }
   ];
 
-  const columnButtons: ButtonDetails[] = [
+  const colBeforeButtons: ButtonDetails[] = [
     { name: 'tableinsertcolbefore', label: 'Insert column before' },
-    { name: 'tableinsertcolafter', label: 'Insert column after' },
-    { name: 'tabledeletecol', label: 'Delete column' },
-    { name: 'tablecopycol', label: 'Delete column' },
-    { name: 'tablecutcol', label: 'Cut column' },
     { name: 'tablepastecolbefore', label: 'Paste column before' },
-    { name: 'tablepastecolafter', label: 'Paste column after' },
+  ];
+
+  const colAfterButtons: ButtonDetails[] = [
+    { name: 'tableinsertcolafter', label: 'Insert column after' },
+    { name: 'tablepastecolafter', label: 'Paste column after' }
+  ];
+
+  const colRemoveButtons: ButtonDetails[] = [
+    { name: 'tabledeletecol', label: 'Delete column' },
+    { name: 'tablecutcol', label: 'Cut column' },
+  ];
+
+  const colCopyButton: ButtonDetails[] = [
+    { name: 'tablecopycol', label: 'Copy column' }
+  ];
+
+  const columnButtons: ButtonDetails[] = [
+    ...colBeforeButtons,
+    ...colAfterButtons,
+    ...colRemoveButtons,
+    ...colCopyButton
   ];
 
   const rowButtons: ButtonDetails[] = [
     { name: 'tableinsertrowbefore', label: 'Insert row before' },
     { name: 'tableinsertrowafter', label: 'Insert row after' },
     { name: 'tabledeleterow', label: 'Delete row' },
-    { name: 'tablecopyrow', label: 'Delete row' },
+    { name: 'tablecopyrow', label: 'Copy row' },
     { name: 'tablecutrow', label: 'Cut row' },
     { name: 'tablepasterowbefore', label: 'Paste row before' },
     { name: 'tablepasterowafter', label: 'Paste row after' },
@@ -53,28 +75,28 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     const doc = SugarElement.fromDom(document);
 
-    const table = '<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-locked-cols="0">' +
+    const table = '<table data-snooker-locked-cols="0">' +
     '<tbody>' +
     '<tr>' +
-    `<td style="width: 50%;">a</td>` +
-    `<td style="width: 50%;">b</td>` +
+    `<td>a</td>` +
+    `<td>b</td>` +
     '</tr>' +
     '<tr>' +
-    `<td style="width: 50%;">c</td>` +
-    `<td style="width: 50%;">d</td>` +
+    `<td>c</td>` +
+    `<td>d</td>` +
     '</tr>' +
     '</tbody>' +
     '</table>';
 
-    const multiCellSelectionTable = '<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-locked-cols="0">' +
+    const multiCellSelectionTable = '<table data-snooker-locked-cols="0">' +
     '<tbody>' +
     '<tr>' +
-    `<td data-mce-selected="1" data-mce-first-selected="1" style="width: 50%;">a</td>` +
-    `<td data-mce-selected="1" data-mce-last-selected="1" style="width: 50%;">b</td>` +
+    `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
+    `<td data-mce-selected="1" data-mce-last-selected="1">b</td>` +
     '</tr>' +
     '<tr>' +
-    `<td style="width: 50%;">c</td>` +
-    `<td style="width: 50%;">d</td>` +
+    `<td>c</td>` +
+    `<td>d</td>` +
     '</tr>' +
     '</tbody>' +
     '</table>';
@@ -125,15 +147,27 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      Log.stepsAsStep('TINY-6765', 'Column buttons should be disabled when locked column is selected',
+      Log.stepsAsStep('TINY-6765', 'ColBefore, ColAfter, ColRemove buttons should be disabled when locked column is selected',
         Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml),
             tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons(columnButtons, true),
-            sSelectContextMenuItem(2),
-            sAssertMenuButtons(columnButtons, true)
+            sAssertToolbarButtons([ ...colBeforeButtons, ...colAfterButtons, ...colRemoveButtons ], true),
+            sSelectContextMenuItem(TableContextMenu.Column),
+            sAssertMenuButtons([ ...colBeforeButtons, ...colAfterButtons, ...colRemoveButtons ], true)
+          ];
+        })
+      ),
+      Log.stepsAsStep('TINY-6765', 'ColCopy button should not be disabled when locked column is selected',
+        Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
+          return [
+            sPopulateTableClipboard('col'),
+            tinyApis.sSetContent(tableHtml),
+            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
+            sAssertToolbarButtons(colCopyButton, false),
+            sSelectContextMenuItem(TableContextMenu.Column),
+            sAssertMenuButtons(colCopyButton, false)
           ];
         })
       ),
@@ -142,7 +176,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
         sAssertToolbarButtons(columnButtons, false),
-        sSelectContextMenuItem(2),
+        sSelectContextMenuItem(TableContextMenu.Column),
         sAssertMenuButtons(columnButtons, false)
       ]),
       Log.stepsAsStep('TINY-6765', 'Row buttons should not be disabled when locked column is in the table', [
@@ -150,18 +184,18 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
         tinyApis.sSetContent(table),
         tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
         sAssertToolbarButtons(rowButtons, false),
-        sSelectContextMenuItem(1),
+        sSelectContextMenuItem(TableContextMenu.Row),
         sAssertMenuButtons(rowButtons, false)
       ]),
       Log.stepsAsStep('TINY-6765', 'Cell buttons should be disabled when locked column is selected', [
         tinyApis.sSetContent(mergeCellTable),
         tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
         sAssertToolbarButtonState(cellButtons[0].label, true),
-        sSelectContextMenuItem(0),
+        sSelectContextMenuItem(TableContextMenu.Cell),
         sAssertMenuButtonState(cellButtons[0].label, true),
         tinyApis.sSetContent(splitCellTable),
         sAssertToolbarButtonState(cellButtons[1].label, true),
-        sSelectContextMenuItem(0),
+        sSelectContextMenuItem(TableContextMenu.Cell),
         sAssertMenuButtonState(cellButtons[1].label, true)
       ])
     ], onSuccess, onFailure);
