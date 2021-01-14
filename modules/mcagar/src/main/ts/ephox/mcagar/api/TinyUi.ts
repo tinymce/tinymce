@@ -3,8 +3,17 @@ import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom, Visibility } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import { getThemeSelectors } from './ThemeSelectors';
+import * as TinyUiActions from './TinyUiActions';
 
 export interface TinyUi {
+  clickOnToolbar: (elector: string) => void;
+  clickOnMenu: (selector: string) => void;
+  clickOnUi: (selector: string) => void;
+  submitDialog: (selector: string) => void;
+
+  pWaitForUi: (selector: string) => Promise<SugarElement>;
+  pWaitForPopup: (selector: string) => Promise<SugarElement>;
+
   sClickOnToolbar: <T> (label: string, selector: string) => Step<T, T>;
   sClickOnMenu: <T> (label: string, selector: string) => Step<T, T>;
   sClickOnUi: <T> (label: string, selector: string) => Step<T, T>;
@@ -26,20 +35,17 @@ export interface TinyUi {
 }
 
 export const TinyUi = (editor: Editor): TinyUi => {
-  const dialogRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
-  const toolstripRoot = SugarElement.fromDom(editor.getContainer());
+  const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
   const editorRoot = SugarElement.fromDom(editor.getBody());
 
-  const cDialogRoot = Chain.inject(dialogRoot);
+  const clickOnToolbar = Fun.curry(TinyUiActions.clickOnToolbar, editor);
+  const clickOnMenu = Fun.curry(TinyUiActions.clickOnMenu, editor);
+  const clickOnUi = Fun.curry(TinyUiActions.clickOnUi, editor);
+  const submitDialog = Fun.curry(TinyUiActions.submitDialog, editor);
+  const pWaitForUi = Fun.curry(TinyUiActions.pWaitForUi, editor);
+  const pWaitForPopup = Fun.curry(TinyUiActions.pWaitForPopup, editor);
 
-  const cGetToolbarRoot = Chain.fromChainsWith<SugarElement, SugarElement, SugarElement>(toolstripRoot, [
-    Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().toolBarSelector(editor)))
-  ]);
-
-  const cGetMenuRoot = Chain.fromChainsWith<SugarElement, SugarElement, SugarElement>(toolstripRoot, [
-    Chain.binder((container: SugarElement) => UiFinder.findIn(container, getThemeSelectors().menuBarSelector))
-  ]);
-
+  const cUiRoot = Chain.inject(uiRoot);
   const cEditorRoot = Chain.inject(editorRoot);
 
   const cFindIn = (cRoot: Chain<SugarElement, SugarElement>, selector: string) => {
@@ -49,26 +55,17 @@ export const TinyUi = (editor: Editor): TinyUi => {
     ]);
   };
 
-  const sClickOnToolbar = <T>(label: string, selector: string) => {
-    return Chain.asStep<T, any>({}, [
-      cFindIn(cGetToolbarRoot, selector),
-      Mouse.cClick
-    ]);
-  };
+  const sClickOnToolbar = <T>(label: string, selector: string) => Step.label(label, Step.sync<T>(() => {
+    TinyUiActions.clickOnToolbar(editor, selector);
+  }));
 
-  const sClickOnMenu = <T>(label: string, selector: string) => {
-    return Chain.asStep<T, any>({}, [
-      cFindIn(cGetMenuRoot, selector),
-      Mouse.cClick
-    ]);
-  };
+  const sClickOnMenu = <T>(label: string, selector: string) => Step.label(label, Step.sync<T>(() => {
+    TinyUiActions.clickOnMenu(editor, selector);
+  }));
 
-  const sClickOnUi = <T>(label: string, selector: string) => {
-    return Chain.asStep<T, any>({}, [
-      cFindIn(cDialogRoot, selector),
-      Mouse.cClick
-    ]);
-  };
+  const sClickOnUi = <T>(label: string, selector: string) => Step.label(label, Step.sync<T>(() => {
+    TinyUiActions.clickOnUi(editor, selector);
+  }));
 
   const sWaitForUi = <T>(label: string, selector: string) => {
     return Chain.asStep<T, any>({}, [
@@ -84,7 +81,7 @@ export const TinyUi = (editor: Editor): TinyUi => {
 
   const cWaitForState = <T>(hasState: (element: SugarElement) => boolean) => {
     return (label: string, selector: string) => {
-      return Chain.fromChainsWith<SugarElement, T, SugarElement>(dialogRoot, [
+      return Chain.fromChainsWith<SugarElement, T, SugarElement>(uiRoot, [
         UiFinder.cWaitForState(label, selector, hasState)
       ]);
     };
@@ -134,7 +131,7 @@ export const TinyUi = (editor: Editor): TinyUi => {
 
   const sFillDialogWith = <T>(data: Record<string, any>, selector: string) => {
     return Chain.asStep<T, any>({}, [
-      cFindIn(cDialogRoot, selector),
+      cFindIn(cUiRoot, selector),
       cFillDialogWith(data)
     ]);
   };
@@ -148,12 +145,20 @@ export const TinyUi = (editor: Editor): TinyUi => {
 
   const sSubmitDialog = <T>(selector: string) => {
     return Chain.asStep<T, any>({}, [
-      cFindIn(cDialogRoot, selector),
+      cFindIn(cUiRoot, selector),
       cSubmitDialog()
     ]);
   };
 
   return {
+    clickOnToolbar,
+    clickOnMenu,
+    clickOnUi,
+    submitDialog,
+
+    pWaitForUi,
+    pWaitForPopup,
+
     sClickOnToolbar,
     sClickOnMenu,
     sClickOnUi,

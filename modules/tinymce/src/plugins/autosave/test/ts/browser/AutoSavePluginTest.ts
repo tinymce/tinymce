@@ -1,23 +1,26 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  Plugin();
-  Theme();
+describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'autosave',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
   const checkIfEmpty = (editor: Editor, html: string, isEmpty: boolean): void => {
     const result = isEmpty ? 'empty.' : 'not empty.';
 
-    Assert.eq('The HTML "' + html + '" is ' + result, editor.plugins.autosave.isEmpty(html), isEmpty);
+    assert.equal(editor.plugins.autosave.isEmpty(html), isEmpty, `The HTML "${html}" is ${result}`);
   };
 
-  suite.test('TestCase-TBA: AutoSave: isEmpty true', (editor) => {
+  it('TBA: isEmpty true', () => {
+    const editor = hook.editor();
     checkIfEmpty(editor, '', true);
     checkIfEmpty(editor, '   ', true);
     checkIfEmpty(editor, '\t\t\t', true);
@@ -36,7 +39,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
     checkIfEmpty(editor, '<p><br data-mce-bogus="true" /><br data-mce-bogus="true" /></p>', true);
   });
 
-  suite.test('TestCase-TBA: AutoSave: isEmpty false', (editor) => {
+  it('TBA: isEmpty false', () => {
+    const editor = hook.editor();
     checkIfEmpty(editor, 'X', false);
     checkIfEmpty(editor, '   X', false);
     checkIfEmpty(editor, '\t\t\tX', false);
@@ -58,25 +62,27 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
     checkIfEmpty(editor, '<img src="x" />', false);
   });
 
-  suite.test('TestCase-TBA: AutoSave: hasDraft/storeDraft/restoreDraft', (editor) => {
-    Assert.eq('Check if it starts with a draft', editor.plugins.autosave.hasDraft(), false);
+  it('TBA: hasDraft/storeDraft/restoreDraft', () => {
+    const editor = hook.editor();
+    assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it starts with a draft');
 
     editor.setContent('X');
     editor.undoManager.add();
     editor.plugins.autosave.storeDraft();
 
-    Assert.eq('Check that adding a draft adds a draft', editor.plugins.autosave.hasDraft(), true);
+    assert.isTrue(editor.plugins.autosave.hasDraft(), 'Check that adding a draft adds a draft');
 
     editor.setContent('Y');
     editor.undoManager.add();
 
     editor.plugins.autosave.restoreDraft();
-    Assert.eq('Check that a draft can be restored', editor.getContent(), '<p>X</p>');
+    assert.equal(editor.getContent(), '<p>X</p>', 'Check that a draft can be restored');
     editor.plugins.autosave.removeDraft();
   });
 
-  suite.test('TestCase-TBA: AutoSave: recognises location hash change', (editor) => {
-    Assert.eq('Check if it starts with a draft', editor.plugins.autosave.hasDraft(), false);
+  it('TBA: recognises location hash change', () => {
+    const editor = hook.editor();
+    assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it starts with a draft');
 
     editor.setContent('X');
     editor.undoManager.add();
@@ -84,16 +90,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autosave.AutoSavePluginTest', (succe
 
     window.location.hash = 'test' + Math.random().toString(36).substring(7);
 
-    Assert.eq('Check if it notices a hash change', editor.plugins.autosave.hasDraft(), false);
+    assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it notices a hash change');
 
     window.history.replaceState('', document.title, window.location.pathname + window.location.search);
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'AutoSave: Test autosave isEmpty true/false, drafts and location hash change', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'autosave',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

@@ -1,51 +1,30 @@
-import { Chain, FocusTools, Guard, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
-import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { FocusTools } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
 
-const cFakeEvent = (name) => {
-  return Chain.control(
-    Chain.op((elm: SugarElement) => {
-      const evt = document.createEvent('HTMLEvents');
-      evt.initEvent(name, true, true);
-      elm.dom.dispatchEvent(evt);
-    }),
-    Guard.addLogging('Fake event')
-  );
-};
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/charmap/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import { fakeEvent } from '../module/Helpers';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', (success, failure) => {
-
-  CharmapPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = SugarElement.fromDom(document);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Charmap: User defined charmap', [
-        tinyApis.sFocus(),
-        tinyApis.sFocus(),
-        tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
-        tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"]'),
-        FocusTools.sTryOnSelector('Focus should have moved to input', doc, 'input'),
-        FocusTools.sSetActiveValue(doc, 'A'),
-        Chain.asStep(doc, [
-          FocusTools.cGetFocused,
-          cFakeEvent('input')
-        ]),
-        tinyUi.sWaitForUi('wait for character A', '.tox-collection .tox-collection__item-icon:contains(A)')
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'charmap',
     toolbar: 'charmap',
     charmap: [[ 'A'.charCodeAt(0), 'A' ]],
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: User defined charmap', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
+    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await FocusTools.pTryOnSelector('Focus should have moved to input', doc, 'input');
+    const input = FocusTools.setActiveValue(doc, 'A');
+    fakeEvent(input, 'input');
+    await TinyUiActions.pWaitForUi(editor, '.tox-collection .tox-collection__item-icon:contains(A)');
+  });
 });

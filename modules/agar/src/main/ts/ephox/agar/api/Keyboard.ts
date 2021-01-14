@@ -1,9 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement, Traverse } from '@ephox/sugar';
+import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
-import { Chain } from './Chain';
-import * as FocusTools from './FocusTools';
 import { Step } from './Step';
 
 /*
@@ -19,14 +17,14 @@ const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifie
   });
 };
 
-const cFakeKey = (types: string[], keyvalue: number, modifiers: MixedKeyModifiers) => Chain.op((dispatcher: SugarElement<any>) => {
-  fakeKeys(types)(keyvalue, modifiers, dispatcher);
-});
+const activeFakeKeys = (types: string[]) => (doc: SugarElement<Document>, value: number, modifiers: MixedKeyModifiers) => {
+  const focused = Focus.active(doc).getOrDie('Could not find active element');
+  fakeKeys(types)(value, modifiers, focused);
+};
 
-const sFakeKey = (types: string[]) => <T>(doc: SugarElement<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Chain.asStep<T, SugarElement>(doc, [
-  FocusTools.cGetFocused,
-  cFakeKey(types, keyvalue, modifiers)
-]);
+const sFakeKey = (types: string[]) => <T>(doc: SugarElement<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Step.sync(() => {
+  activeFakeKeys(types)(doc, keyvalue, modifiers);
+});
 
 const keydownTypes = [ 'keydown' ];
 const keyupTypes = [ 'keyup' ];
@@ -39,6 +37,11 @@ const keyup = fakeKeys(keyupTypes);
 const keypress = fakeKeys(keypressTypes);
 const keystroke = fakeKeys(keystrokeTypes);
 
+const activeKeydown = activeFakeKeys(keydownTypes);
+const activeKeyup = activeFakeKeys(keyupTypes);
+const activeKeypress = activeFakeKeys(keypressTypes);
+const activeKeystroke = activeFakeKeys(keystrokeTypes);
+
 const sKeydown = sFakeKey(keydownTypes);
 const sKeyup = sFakeKey(keyupTypes);
 const sKeypress = sFakeKey(keypressTypes);
@@ -49,6 +52,11 @@ export {
   keyup,
   keypress,
   keystroke,
+
+  activeKeydown,
+  activeKeyup,
+  activeKeypress,
+  activeKeystroke,
 
   sKeydown,
   sKeyup,

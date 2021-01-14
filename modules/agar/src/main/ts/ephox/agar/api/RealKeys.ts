@@ -55,6 +55,12 @@ const sSendKeysOn = <T>(selector: string, keys: KeyPressAdt[]): Step<T, T> =>
     keys: toSimpleFormat(keys)
   });
 
+const pSendKeysOn = (selector: string, keys: KeyPressAdt[]): Promise<{}> =>
+  SeleniumAction.pPerform('/keys', {
+    selector,
+    keys: toSimpleFormat(keys)
+  });
+
 const combo = (modifiers: MixedKeyModifiers, letter: string): KeyPressAdt => {
   const mods = modifierList(newModifiers(modifiers));
   return adt.combo(mods, letter);
@@ -68,6 +74,7 @@ export const RealKeys = {
   combo,
   backspace,
   text,
-  sSendKeysOn
+  sSendKeysOn,
+  pSendKeysOn
   // TODO: sSendKeysTo (and sSendKeys) which tags the element so that it can pass through a selector
 };

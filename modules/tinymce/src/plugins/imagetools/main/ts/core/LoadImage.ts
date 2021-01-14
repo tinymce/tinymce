@@ -15,7 +15,8 @@ const loadImage = (image: HTMLImageElement): Promise<HTMLImageElement> => {
     };
 
     if (image.complete) {
-      resolve(image);
+      // Need a timeout due to IE 11 not setting the complete state correctly
+      setTimeout(() => resolve(image), 0);
     } else {
       image.addEventListener('load', loaded);
     }

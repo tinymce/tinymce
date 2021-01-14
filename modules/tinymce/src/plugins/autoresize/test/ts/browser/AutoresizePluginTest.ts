@@ -1,4 +1,4 @@
-import { Assertions, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
+import { Assertions, Log, Logger, PhantomSkipper, Pipeline, Step, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
@@ -46,7 +46,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autoresize.AutoresizePluginTest', (s
 
     Pipeline.async({},
       // These tests doesn't work on phantom since measuring things seems broken there
-      navigator.userAgent.indexOf('PhantomJS') === -1 ?
+      !PhantomSkipper.detect() ?
         [
           Step.sync(() => {
             editor.on('ResizeEditor', () => {

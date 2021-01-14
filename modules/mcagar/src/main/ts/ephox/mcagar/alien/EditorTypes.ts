@@ -13,6 +13,7 @@ export interface Selection {
 export interface Editor {
   id: string;
   settings: Record<string, any>;
+  inline: boolean;
 
   dom: any;
   editorCommands: any;

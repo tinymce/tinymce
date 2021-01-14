@@ -5,15 +5,16 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Actions from '../core/Actions';
 import * as CharMap from '../core/CharMap';
 
-const get = (editor) => {
+const get = (editor: Editor) => {
   const getCharMap = () => {
     return CharMap.getCharMap(editor);
   };
 
-  const insertChar = (chr) => {
+  const insertChar = (chr: string) => {
     Actions.insertChar(editor, chr);
   };
 

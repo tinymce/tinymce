@@ -1,4 +1,4 @@
-import { Assertions, Chain, Log, Pipeline, Step } from '@ephox/agar';
+import { Assertions, Chain, Log, PhantomSkipper, Pipeline, Step } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarElement } from '@ephox/sugar';
@@ -11,10 +11,6 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', (success, failur
   Theme();
 
   const hiddenScrollbar = Scroll.scrollBarWidth() === 0;
-
-  const isPhantomJs = () => {
-    return /PhantomJS/.test(window.navigator.userAgent);
-  };
 
   const getIframeClientRect = (editor) => {
     return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe').map((elm) => {
@@ -78,7 +74,7 @@ UnitTest.asynctest('browser.tinymce.core.EditorViewIframeTest', (success, failur
       tinyApis.sSetContent('<div style="width: 5000px; height: 5000px">X</div>')
     );
 
-    Pipeline.async({}, isPhantomJs() ? [] : [
+    Pipeline.async({}, PhantomSkipper.detect() ? [] : [
       Log.stepsAsStep('TBA', 'isXYInContentArea without borders, margin', [
         sSetBodyStyles(editor, { border: '0', margin: '0' }),
         sSetContentToBigDiv,

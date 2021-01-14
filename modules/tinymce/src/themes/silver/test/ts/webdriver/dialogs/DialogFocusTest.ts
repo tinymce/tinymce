@@ -1,4 +1,4 @@
-import { FocusTools, Pipeline, RealMouse, Step } from '@ephox/agar';
+import { FocusTools, PhantomSkipper, Pipeline, RealMouse, Step } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
@@ -10,10 +10,9 @@ import TestExtras from '../../module/TestExtras';
 
 UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
   const platform = PlatformDetection.detect();
-  const isPhantomJs = /PhantomJS/.test(window.navigator.userAgent);
 
   // This test won't work on PhantomJS or on all Mac OS browsers (webdriver actions appear to be ignored)
-  if (isPhantomJs || platform.os.isOSX()) {
+  if (PhantomSkipper.detect() || platform.os.isOSX()) {
     return success();
   }
 

@@ -275,6 +275,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     parser.parse('<p ></p>');
     LegacyUnit.equal(writer.getContent(), '<p></p>', 'Parse start elements with whitespace only attribs part.');
     LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse start elements with whitespace only attribs part (counts).');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<p title="gre>gererg"/>');
+    LegacyUnit.equal(writer.getContent(), '<p title="gre&gt;gererg"></p>', 'Parse elements with quoted > characters.');
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1 }, 'Parse elements with quoted > characters (counts).');
   });
 
   suite.test('Parse style elements', () => {
@@ -514,6 +521,13 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     parser.parse('<! value --!>');
     LegacyUnit.equal(writer.getContent(), '<!-- value --!-->', 'Parse comment with exclamation and missing hyphens.');
     LegacyUnit.deepEqual(counter.counts, { comment: 1 }, 'Parse comment with exclamation and missing hyphens counts.');
+
+    counter = createCounter(writer);
+    parser = SaxParser(counter, schema);
+    writer.reset();
+    parser.parse('<!-- first --><p>&nbsp;</p><!-- second');
+    LegacyUnit.equal(writer.getContent(), '<!-- first --><p>\u00a0</p><!-- second-->', 'Parse comment with no end sequence.');
+    LegacyUnit.deepEqual(counter.counts, { start: 1, end: 1, text: 1, comment: 2 }, 'Parse comment with no end sequence counts.');
   });
 
   suite.test('Parse PI', () => {
@@ -919,6 +933,7 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     testFindEndTag('<img>', 3, 3);
     testFindEndTag('<b></b>', 3, 7);
     testFindEndTag('<b><img></b>', 3, 12);
+    testFindEndTag('<tag                                               ', 0, 0);
     testFindEndTag('<b><!-- </b> --></b>', 3, 20);
     testFindEndTag('<span><b><i>a<img>b</i><b>c</b></b></span>', 9, 35);
   });
@@ -1050,8 +1065,22 @@ UnitTest.asynctest('browser.tinymce.core.html.SaxParserTest', (success, failure)
     const parser = SaxParser(counter, schema);
 
     writer.reset();
-    parser.parse('a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
-    LegacyUnit.equal(writer.getContent(), 'a<img src="data:image/gif;base64,R0/yw==" /><img src="data:image/jpeg;base64,R1/yw==" /><!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->b');
+    parser.parse(
+      'a' +
+      '<img src="data:image/gif;base64,R0/yw==" />' +
+      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      'c'
+    );
+    LegacyUnit.equal(writer.getContent(),
+      'a' +
+      '<img src="data:image/gif;base64,R0/yw==" />' +
+      '<img src="data:image/jpeg;base64,R1/yw==" />' +
+      '<div style="background-image: url(\'data:image/png;base64,R2/yw==\')">b</div>' +
+      '<!-- <img src="data:image/jpeg;base64,R1/yw==" /> -->' +
+      'c'
+    );
   });
 
   Pipeline.async({}, suite.toSteps({}), success, failure);
