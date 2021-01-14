@@ -8,9 +8,6 @@
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import { ParserArgs } from './api/html/DomParser';
-import AstNode from './api/html/Node';
-import HtmlSerializer from './api/html/Serializer';
 import Promise from './api/util/Promise';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
@@ -21,20 +18,11 @@ import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatCha
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
 import * as ToggleFormat from './fmt/ToggleFormat';
-import * as FilterNode from './html/FilterNode';
 import { getSelectedContentInternal, GetSelectionContentArgs } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
 import { addVisualInternal } from './view/VisualAidsImpl';
-
-const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
-
-const runSerializerFiltersOnFragment = (editor: Editor, fragment: AstNode) => {
-  FilterNode.filter(editor.serializer.getNodeFilters(), editor.serializer.getAttributeFilters(), fragment);
-};
-
-const getInsertContext = (editor: Editor) => Optional.from(editor.selection.getStart(true)).map((elm) => elm.nodeName.toLowerCase());
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
@@ -59,12 +47,12 @@ interface RtcRuntimeApi {
     formatChanged: (formats: string, callback: FormatChangeCallback, similar: boolean) => UnbindFormatChanged;
   };
   editor: {
-    getContent: () => AstNode | null;
-    setContent: (node: AstNode) => void;
-    insertContent: (node: AstNode) => void;
+    getContent: (args: GetContentArgs) => Content;
+    setContent: (content: Content, args: SetContentArgs) => Content;
+    insertContent: (content: Content) => void;
   };
   selection: {
-    getContent: () => AstNode | null;
+    getContent: (args: GetSelectionContentArgs) => Content;
   };
   raw: {
     getRawModel: () => any;
@@ -129,21 +117,6 @@ interface RtcPluginApi {
 interface RtcEditor extends Editor {
   rtcInstance: RtcAdaptor;
 }
-
-const createSerializer = (editor: Editor, inner?: boolean) => {
-  const settings = editor.settings;
-  return HtmlSerializer({
-    inner,
-
-    // Writer settings
-    element_format: settings.element_format,
-    entities: settings.entities,
-    entity_encoding: settings.entity_encoding,
-    indent: settings.indent,
-    indent_after: settings.indent_after,
-    indent_before: settings.indent_before
-  });
-};
 
 const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   undoManager: {
@@ -216,55 +189,13 @@ const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAda
       formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatter.formatChanged(formats, callback, similar)
     },
     editor: {
-      getContent: (args, format) => {
-        if (format === 'html' || format === 'tree') {
-          const fragment = rtcEditor.editor.getContent();
-          const serializer = createSerializer(tinymceEditor, true);
-
-          runSerializerFiltersOnFragment(tinymceEditor, fragment);
-
-          return format === 'tree' ? fragment : serializer.serialize(fragment);
-        } else {
-          return makePlainAdaptor(tinymceEditor).editor.getContent(args, format);
-        }
-      },
-      setContent: (content, _args) => {
-        const fragment = isTreeNode(content) ?
-          content :
-          tinymceEditor.parser.parse(content, { isRootContent: true, insert: true });
-        rtcEditor.editor.setContent(fragment);
-        return content;
-      },
-      insertContent: (value, _details) => {
-        const contextArgs = getInsertContext(tinymceEditor).fold(
-          () => ({ }),
-          (context) => ({ context })
-        );
-        const parserArgs: ParserArgs = { ...contextArgs, insert: true };
-        const fragment = isTreeNode(value) ? value : tinymceEditor.parser.parse(value, parserArgs);
-        const parser = tinymceEditor.parser;
-
-        if (parserArgs.invalid) {
-          FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), fragment);
-        }
-
-        rtcEditor.editor.insertContent(fragment);
-      },
+      getContent: (args, _format) => rtcEditor.editor.getContent(args),
+      setContent: (content, args) => rtcEditor.editor.setContent(content, args),
+      insertContent: (content, _details) => rtcEditor.editor.insertContent(content),
       addVisual: ignore
     },
     selection: {
-      getContent: (format, args) => {
-        if (format === 'html' || format === 'tree') {
-          const fragment = rtcEditor.selection.getContent();
-          const serializer = createSerializer(tinymceEditor);
-
-          runSerializerFiltersOnFragment(tinymceEditor, fragment);
-
-          return format === 'tree' ? fragment : serializer.serialize(fragment);
-        } else {
-          return makePlainAdaptor(tinymceEditor).selection.getContent(format, args);
-        }
-      }
+      getContent: (_format, args) => rtcEditor.selection.getContent(args)
     },
     raw: {
       getModel: () => Optional.some(rtcEditor.raw.getRawModel())
