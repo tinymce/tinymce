@@ -38,7 +38,7 @@ export const isBoolean: (value: any) => value is boolean =
 export const isUndefined: (a: any) => a is undefined =
   eq(undefined);
 
-export const isNullable = (a: any): boolean =>
+export const isNullable = (a: any): a is null | undefined =>
   a === null || a === undefined;
 
 export const isNonNullable = <A> (a: A | null | undefined): a is NonNullable<A> =>
