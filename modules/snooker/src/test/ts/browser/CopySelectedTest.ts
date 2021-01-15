@@ -1,13 +1,15 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
+import { LOCKED_COL_ATTR } from 'ephox/snooker/util/LockedColumnUtils';
 
 interface TestData {
   selected: boolean;
   html: string;
   rowspan?: string;
   colspan?: string;
+  locked?: boolean;
 }
 
 UnitTest.test('CopySelectedTest', () => {
@@ -21,12 +23,13 @@ UnitTest.test('CopySelectedTest', () => {
 
   // data objects for input/expected
   const data = (selected: boolean) => {
-    return (text: string, rowspan?: number, colspan?: number): TestData => {
+    return (text: string, rowspan?: number, colspan?: number, locked?: boolean): TestData => {
       return {
         selected,
         html: text,
         rowspan: rowspan === undefined ? undefined : String(rowspan),
-        colspan: colspan === undefined ? undefined : String(colspan)
+        colspan: colspan === undefined ? undefined : String(colspan),
+        locked: !!locked
       };
     };
   };
@@ -41,9 +44,10 @@ UnitTest.test('CopySelectedTest', () => {
 
   // generate a table structure from a nested array
   const generateInput = (input: TestData[][]) => {
+    const lockedCols: Record<number, true> = {};
     const table = SugarElement.fromTag('table');
     const rows = Arr.map(input, (row) => {
-      const cells = Arr.map(row, (cell) => {
+      const cells = Arr.map(row, (cell, idx) => {
         const td = SugarElement.fromTag('td');
         if (cell.rowspan !== undefined) {
           Attribute.set(td, 'rowspan', cell.rowspan);
@@ -53,6 +57,9 @@ UnitTest.test('CopySelectedTest', () => {
         }
         if (cell.selected) {
           Class.add(td, SEL_CLASS);
+        }
+        if (cell.locked) {
+          lockedCols[idx] = true;
         }
         Html.set(td, cell.html);
         return td;
@@ -65,6 +72,11 @@ UnitTest.test('CopySelectedTest', () => {
       return [ SugarElement.fromText('\n'), row ];
     });
     InsertAll.append(table, withNewlines.concat(SugarElement.fromText('\n')));
+    // Add locked col attribute to table
+    if (Obj.size(lockedCols) > 0) {
+      const lockedColStr = Obj.keys(lockedCols).join(',');
+      Attribute.set(table, LOCKED_COL_ATTR, lockedColStr);
+    }
     return table;
   };
 
@@ -72,6 +84,9 @@ UnitTest.test('CopySelectedTest', () => {
     const table = generateInput(input);
 
     const replica = CopySelected.extract(table, '.' + SEL_CLASS);
+
+    // Verify locked col attribute is not present in replica table
+    assert.eq(false, Attribute.has(replica, LOCKED_COL_ATTR));
 
     // Now verify that the table matches the nested array structure of expected
     const assertWithInfo = <T> (exp: T, actual: T, info: string) => {
@@ -259,4 +274,17 @@ UnitTest.test('CopySelectedTest', () => {
       [ ns('L', 1, 2), ns('M', 1, 1) ]
     ]
   );
+  // //////////////////////////////////////////////////
+  check('single column, simple with locked cells',
+    [
+      [ s('A') ],
+      [ s('D') ],
+      [ s('G') ]
+    ],
+    [
+      [ s('A', 1, 1, true), ns('B', 1, 1), ns('C', 1, 1) ],
+      [ s('D', 1, 1, true), ns('E', 1, 1), ns('F', 1, 1) ],
+      [ s('G', 1, 1, true), ns('H', 1, 1), ns('I', 1, 1) ]
+    ]);
+// //////////////////////////////////////////////////
 });

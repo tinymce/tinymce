@@ -6,7 +6,7 @@ import * as GridRow from '../model/GridRow';
 export const LOCKED_COL_ATTR = 'data-snooker-locked-cols';
 
 const getLockedColumnsFromTable = (table: SugarElement<HTMLTableElement>): Optional<Record<number, true>> =>
-  Attribute.getOpt(table, 'data-snooker-locked-cols')
+  Attribute.getOpt(table, LOCKED_COL_ATTR)
     .bind((lockedColStr) => Optional.from(lockedColStr.match(/\d+/g)))
     .map((lockedColArr) => Arr.map(lockedColArr, (lockedCol) => parseInt(lockedCol, 10)))
     .map((lockedCols) => Arr.mapToObject(lockedCols, Fun.always));
