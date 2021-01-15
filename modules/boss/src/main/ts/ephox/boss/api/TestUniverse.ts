@@ -105,6 +105,7 @@ export const TestUniverse = (raw: Gene): TestUniverse => {
       isText: Properties.isText,
       isComment: Properties.isComment,
       isElement: Properties.isElement,
+      isSpecial: Properties.isSpecial,
       setText: Properties.setText,
       getText: Properties.getText,
       isEmptyTag: Properties.isEmptyTag,

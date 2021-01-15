@@ -30,6 +30,10 @@ const isElement = (item: Gene): boolean => {
   return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
 };
 
+const isSpecial = (item: Gene): boolean => {
+  return item.name === 'SPECIAL_GENE';
+}
+
 const getText = (item: Gene): string => {
   return Optional.from(item.text).getOrDie('Text not available on this node');
 };
@@ -58,6 +62,7 @@ export {
   isText,
   isComment,
   isElement,
+  isSpecial,
   getText,
   setText,
   isEmptyTag,
