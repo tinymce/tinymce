@@ -159,46 +159,48 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
   }
 });
 
-const makeRtcAdaptor = (tinymceEditor: Editor, rtcEditor: RtcRuntimeApi): RtcAdaptor => {
+const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
   const defaultVars = (vars: Record<string, string>) => Type.isObject(vars) ? vars : {};
   const unsupported = Fun.die('Unimplemented feature for rtc');
+  const { undoManager, formatter, editor, selection, raw } = rtcEditor;
   const ignore = Fun.noop;
+
   return {
     undoManager: {
       beforeChange: ignore,
       addUndoLevel: unsupported,
-      undo: () => rtcEditor.undoManager.undo(),
-      redo: () => rtcEditor.undoManager.redo(),
-      clear: () => rtcEditor.undoManager.clear(),
-      reset: () => rtcEditor.undoManager.reset(),
-      hasUndo: () => rtcEditor.undoManager.hasUndo(),
-      hasRedo: () => rtcEditor.undoManager.hasRedo(),
-      transact: (_undoManager, _locks, fn) => rtcEditor.undoManager.transact(fn),
-      ignore: (_locks, callback) => rtcEditor.undoManager.ignore(callback),
-      extra: (_undoManager, _index, callback1, callback2) => rtcEditor.undoManager.extra(callback1, callback2)
+      undo: () => undoManager.undo(),
+      redo: () => undoManager.redo(),
+      clear: () => undoManager.clear(),
+      reset: () => undoManager.reset(),
+      hasUndo: () => undoManager.hasUndo(),
+      hasRedo: () => undoManager.hasRedo(),
+      transact: (_undoManager, _locks, fn) => undoManager.transact(fn),
+      ignore: (_locks, callback) => undoManager.ignore(callback),
+      extra: (_undoManager, _index, callback1, callback2) => undoManager.extra(callback1, callback2)
     },
     formatter: {
-      match: (name, vars?, _node?) => rtcEditor.formatter.match(name, defaultVars(vars)),
+      match: (name, vars?, _node?) => formatter.match(name, defaultVars(vars)),
       matchAll: unsupported,
       matchNode: unsupported,
-      canApply: (name) => rtcEditor.formatter.canApply(name),
-      closest: (names) => rtcEditor.formatter.closest(names),
-      apply: (name, vars, _node) => rtcEditor.formatter.apply(name, defaultVars(vars)),
-      remove: (name, vars, _node, _similar?) => rtcEditor.formatter.remove(name, defaultVars(vars)),
-      toggle: (name, vars, _node) => rtcEditor.formatter.toggle(name, defaultVars(vars)),
-      formatChanged: (_rfl, formats, callback, similar) => rtcEditor.formatter.formatChanged(formats, callback, similar)
+      canApply: (name) => formatter.canApply(name),
+      closest: (names) => formatter.closest(names),
+      apply: (name, vars, _node) => formatter.apply(name, defaultVars(vars)),
+      remove: (name, vars, _node, _similar?) => formatter.remove(name, defaultVars(vars)),
+      toggle: (name, vars, _node) => formatter.toggle(name, defaultVars(vars)),
+      formatChanged: (_rfl, formats, callback, similar) => formatter.formatChanged(formats, callback, similar)
     },
     editor: {
-      getContent: (args, _format) => rtcEditor.editor.getContent(args),
-      setContent: (content, args) => rtcEditor.editor.setContent(content, args),
-      insertContent: (content, _details) => rtcEditor.editor.insertContent(content),
+      getContent: (args, _format) => editor.getContent(args),
+      setContent: (content, args) => editor.setContent(content, args),
+      insertContent: (content, _details) => editor.insertContent(content),
       addVisual: ignore
     },
     selection: {
-      getContent: (_format, args) => rtcEditor.selection.getContent(args)
+      getContent: (_format, args) => selection.getContent(args)
     },
     raw: {
-      getModel: () => Optional.some(rtcEditor.raw.getRawModel())
+      getModel: () => Optional.some(raw.getRawModel())
     }
   };
 };
@@ -258,7 +260,7 @@ export const setup = (editor: Editor): Optional<Promise<boolean>> => {
     },
     (rtc) => Optional.some(
       rtc.setup().then((rtcEditor) => {
-        editorCast.rtcInstance = makeRtcAdaptor(editor, rtcEditor);
+        editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
         return rtcEditor.rtc.isRemote;
       }, (err) => {
         // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
