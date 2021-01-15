@@ -338,33 +338,75 @@ const resize = Adjustments.adjustWidthTo;
  * before: false - If a locked column is the last column in the selection, then inserting/pasting columns after should be a noop.
  * Note: If there are locked columns contained in the selection then they should not count towards the count of the number of columns inserted before (this doesn't have any affect when pasting)
  */
-const unlockedColumns = (before: boolean, details: Structs.DetailExt[]): Optional<Structs.DetailExt[]> => {
-  const getter = before ? Arr.head : Arr.last;
-  const isLocked = getter(details).exists((col) => col.isLocked);
+// const unlockedColumns = (before: boolean, details: Structs.DetailExt[]): Optional<Structs.DetailExt[]> => {
+//   const getter = before ? Arr.head : Arr.last;
+//   const isLocked = getter(details).exists((col) => col.isLocked);
 
-  if (isLocked) {
-    return Optional.none();
+//   if (isLocked) {
+//     return Optional.none();
+//   } else {
+//     const unlockedColumns = Arr.filter(details, (column) => !column.isLocked);
+//     return Optional.some(unlockedColumns).filter((arr) => arr.length > 0);
+//   }
+// };
+
+// const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+//   RunOperation.onCells(warehouse, target).bind((details) => unlockedColumns(before, details));
+
+// const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
+//   RunOperation.onPasteByEditor(warehouse, target).bind((details) => {
+//     return unlockedColumns(before, details.cells).map((unlockedCells) => ({ ...details, cells: unlockedCells }));
+//   });
+
+const test = (before: boolean, warehouse: Warehouse, details: Structs.DetailExt[]) => {
+  const columnIsLocked = (index: number) => Arr.exists(details, (detail) => detail.column === index && detail.isLocked);
+  if (before) {
+    return columnIsLocked(0);
   } else {
-    const unlockedColumns = Arr.filter(details, (column) => !column.isLocked);
-    return Optional.some(unlockedColumns).filter((arr) => arr.length > 0);
+    const width = warehouse.grid.columns;
+    return columnIsLocked(width - 1);
   }
 };
 
+// const unlockedSelection = (before: boolean, details: Structs.DetailExt[]): Structs.DetailExt[] => {
+//   const columns = ColUtils.uniqueColumns(details);
+//   const target = before ? columns[0] : columns[columns.length - 1];
+//   const targetIndex = before ? target.column : target.column + target.colspan;
+//   return Arr.filter(details, (detail) => detail.column === targetIndex || !detail.isLocked);
+// };
+
+// const columnBeforeExtractor = (baseExtractor: T) => (warehouse: Warehouse, target: RunOperation.TargetElement) =>
+
+// const firstSelectedColIsLocked = (details: Structs.DetailExt[]) => Arr.exists(details, (detail) => detail.column === 0 && detail.isLocked);
+
+const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<Structs.DetailExt> =>
+  RunOperation.onCell(warehouse, target).filter((detail) => !test(before, warehouse, [ detail ]));
+
+// Also need to filter out any locked columns that isn't the selected
+// const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+//   RunOperation.onCells(warehouse, target).filter((details) => !test(before, warehouse, details)).map((details) => unlockedSelection(before, details));
+
+// Not filtering out locked columns as that creates a contradiction where the locked column at the start or end of the selection is included in the count. Could try and do further filtering in the operations but that doesn't seem worth it
 const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
-  RunOperation.onCells(warehouse, target).bind((details) => unlockedColumns(before, details));
+  RunOperation.onCells(warehouse, target).filter((details) => !test(before, warehouse, details));
 
 const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
-  RunOperation.onPasteByEditor(warehouse, target).bind((details) => {
-    return unlockedColumns(before, details.cells).map((unlockedCells) => ({ ...details, cells: unlockedCells }));
-  });
+  RunOperation.onPasteByEditor(warehouse, target).filter((details) => !test(before, warehouse, details.cells));
+
+// TODO: For insertbefore, pastebefore and insertafter, pasteafter change
+// Need to consider both single and plural operation forms
+// If insertbefore, pastebefore- operation should be a noop if first column in table is selected at it is the first selected column
+// If insertafter, pasteafter- operation should be a noop if last column in table is selected at it is the last selected column
 
 export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), resize, Fun.noop, Generators.modification);
+// export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), resize, Fun.noop, Generators.modification);
-export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
+export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), resize, Fun.noop, Generators.modification);
+// export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), resize, Fun.noop, Generators.modification);
 export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);

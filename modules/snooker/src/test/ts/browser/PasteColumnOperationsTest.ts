@@ -343,7 +343,7 @@ UnitTest.test('PasteColumnOperationsTest', () => {
   );
 
   Assertions.checkPaste(
-    'TINY-6765: Test pasting cols (before) with locked column as selection - should be a noop',
+    'TINY-6765: Test that pasting cols (before) is a noop when the first column in the table is locked and selected',
 
     generateTestTable(
       [
@@ -369,15 +369,15 @@ UnitTest.test('PasteColumnOperationsTest', () => {
   );
 
   Assertions.checkPaste(
-    'TINY-6765: Test pasting cols (after) with locked column as selection - should be a noop',
+    'TINY-6765: Test that pasting cols (after) is not a noop when the first column in the table is locked and selected',
 
     generateTestTable(
       [
-        '<tr><td>A2</td><td>B2</td></tr>',
-        '<tr><td>A3</td><td>B3</td></tr>'
+        '<tr><td>A2</td><td>X1</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>X2</td><td>B3</td></tr>'
       ],
       [], [],
-      { numCols: 2, colgroup: false, lockedColumns: [ 0 ] }
+      { numCols: 3, colgroup: false, lockedColumns: [ 0 ] }
     ),
 
     generateTestTable(
@@ -392,6 +392,110 @@ UnitTest.test('PasteColumnOperationsTest', () => {
     '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
 
     TableOperations.pasteColsAfter, 0, 0, 0
+  );
+
+  Assertions.checkPaste(
+    'TINY-6765: Test that pasting cols (before) is not a noop when the last column in the table is locked and selected',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>X1</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>X2</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: false, lockedColumns: [ 2 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
+
+    TableOperations.pasteColsBefore, 0, 0, 1
+  );
+
+  Assertions.checkPaste(
+    'TINY-6765: Test that pasting cols (after) is a noop when the last column in the table is locked and selected',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
+
+    TableOperations.pasteColsAfter, 0, 0, 1
+  );
+
+  Assertions.checkPaste(
+    'TINY-6765: Test that pasting cols (before) is not a noop when the selected locked column is not the first or last column',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>X1</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>X2</td><td>B3</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 4, colgroup: false, lockedColumns: [ 2 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
+
+    TableOperations.pasteColsBefore, 0, 0, 1
+  );
+
+  Assertions.checkPaste(
+    'TINY-6765: Test that pasting cols (after) is not a noop when the selected locked column is not the first or last column',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>X1</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>X2</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 4, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: false, lockedColumns: [ 1 ] }
+    ),
+
+    '<tr><td>X1</td></tr><tr><td>X2</td></tr>',
+
+    TableOperations.pasteColsAfter, 0, 0, 1
   );
 
   // TODO: Need a way to test multi-cell selections - will require something like Asserstions.pasteMultiple or Assertions.checkPaste should be changed to take an array

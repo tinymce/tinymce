@@ -26,7 +26,8 @@ const insertRowAt = (grid: Structs.RowCells[], index: number, example: number, c
 const getElementFor = (row: Structs.RowCells, column: number, section: string, withinSpan: boolean, example: number, comparator: CompElm, substitution: Subst): Structs.ElementNew => {
   if (section === 'colgroup' || !withinSpan) {
     const cell = GridRow.getCell(row, example);
-    return Structs.elementnew(substitution(cell.element, comparator), true, cell.isLocked);
+    // locked is explicitly set to false so the newly inserted column doesn't inherit example column locked state
+    return Structs.elementnew(substitution(cell.element, comparator), true, false);
   } else {
     return GridRow.getCell(row, column);
   }

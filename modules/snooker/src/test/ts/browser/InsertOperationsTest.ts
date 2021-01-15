@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 import { generateTestTable } from 'ephox/snooker/test/CreateTableUtils';
@@ -549,40 +549,13 @@ UnitTest.test('InsertOperationsTest', () => {
     TableOperations.insertRowAfter, 1, 0, 0
   );
 
-  Arr.each([ TableOperations.insertColumnBefore, TableOperations.insertColumnAfter ], (op) => {
-    Assertions.checkOld(
-      'TINY-6765: Check that column cannot be inserted before or after if start of selection is a locked column (collapsed)',
-      Optional.none(),
-
-      generateTestTable(
-        [
-          '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
-          '<tr><td>A2</td><td>B2</td></tr>'
-        ],
-        [], [],
-        { numCols: 2, colgroup: true, lockedColumns: [ 0 ] }
-      ),
-
-      generateTestTable(
-        [
-          '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
-          '<tr><td>A2</td><td>B2</td></tr>'
-        ],
-        [], [],
-        { numCols: 2, colgroup: true, lockedColumns: [ 0 ] }
-      ),
-
-      op, 1, 0, 0
-    );
-  });
-
-  Assertions.checkOldMultiple(
-    'TINY-6765: Check that column cannot be inserted before if start of selection is a locked column (multi-col selection)',
+  Assertions.checkOld(
+    'TINY-6765: Check column cannot be inserted before if first column is selected and is locked (collapsed)',
     Optional.none(),
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
+        '<tr><td>A1</td><td>B1</td></tr>',
         '<tr><td>A2</td><td>B2</td></tr>'
       ],
       [], [],
@@ -591,7 +564,32 @@ UnitTest.test('InsertOperationsTest', () => {
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 0 ] }
+    ),
+
+    TableOperations.insertColumnBefore, 1, 0, 0
+  );
+
+  Assertions.checkOldMultiple(
+    'TINY-6765: Check column cannot be inserted before if first column is selected and is locked (multi-col selection)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 0 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td></tr>',
         '<tr><td>A2</td><td>B2</td></tr>'
       ],
       [], [],
@@ -605,13 +603,38 @@ UnitTest.test('InsertOperationsTest', () => {
     ]
   );
 
-  Assertions.checkOldMultiple(
-    'TINY-6765: Check that column cannot be inserted after if end of selection is a locked column (multi-col selection)',
+  Assertions.checkOld(
+    'TINY-6765: Check column can be inserted after if first column is selected and is locked (collapsed)',
+    Optional.some({ section: 1, row: 0, column: 1 }),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>?</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>?</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [ 0 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 0 ] }
+    ),
+
+    TableOperations.insertColumnAfter, 1, 0, 0
+  );
+
+  Assertions.checkOld(
+    'TINY-6765: Check column cannot be inserted after if last column is selected and is locked (collapsed)',
     Optional.none(),
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
+        '<tr><td>A1</td><td>B1</td></tr>',
         '<tr><td>A2</td><td>B2</td></tr>'
       ],
       [], [],
@@ -620,7 +643,32 @@ UnitTest.test('InsertOperationsTest', () => {
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td></tr>',
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    TableOperations.insertColumnAfter, 1, 0, 1
+  );
+
+  Assertions.checkOldMultiple(
+    'TINY-6765: Check column cannot be inserted after if last column is selected and is locked (multi-col selection)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td></tr>',
         '<tr><td>A2</td><td>B2</td></tr>'
       ],
       [], [],
@@ -634,56 +682,131 @@ UnitTest.test('InsertOperationsTest', () => {
     ]
   );
 
-  Assertions.checkOldMultiple(
-    'TINY-6765: Check that column can be inserted before if start of selection is a not a locked column but a locked column is in the selection (locked column should not count towards the number of columns inserted before)',
-    Optional.some({ section: 1, row: 0, column: 0 }),
+  Assertions.checkOld(
+    'TINY-6765: Check column can be inserted before if last column is selected and is locked (collapsed)',
+    Optional.none(),
 
     generateTestTable(
       [
-        '<tr><td>?</td><td>?</td><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td><td>C1</td></tr>',
-        '<tr><td>?</td><td>?</td><td>A2</td><td>B2</td><td>C2</td></tr>'
+        '<tr><td>A1</td><td>?</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>?</td><td>B2</td></tr>'
       ],
       [], [],
-      { numCols: 5, colgroup: true, lockedColumns: [ 3 ] }
+      { numCols: 3, colgroup: true, lockedColumns: [ 2 ] }
     ),
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td><td>C1</td></tr>',
+        '<tr><td>A1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    TableOperations.insertColumnBefore, 1, 0, 1
+  );
+
+  Assertions.checkOld(
+    'TINY-6765: Check that column can be inserted before if start of selection is a locked column that is not the first column in the table (collapsed)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>?</td><td>B1</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>?</td><td>B2</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 4, colgroup: true, lockedColumns: [ 2 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>C1</td></tr>',
         '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
       ],
       [], [],
       { numCols: 3, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    TableOperations.insertColumnBefore, 1, 0, 1
+  );
+
+  Assertions.checkOld(
+    'TINY-6765: Check that column can be inserted after if end of selection is a locked column that is not the last column in the table (collapsed)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>?</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>?</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 4, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    TableOperations.insertColumnAfter, 1, 0, 1
+  );
+
+  Assertions.checkOldMultiple(
+    'TINY-6765: Check that column can be inserted before if start of selection is a locked column that is not the first column in the table (multi-col selection) (locked column should count towards the number of columns inserted before)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>?</td><td>?</td><td>?</td><td>B1</td><td>C1</td><td>D1</td></tr>',
+        '<tr><td>A2</td><td>?</td><td>?</td><td>?</td><td>B2</td><td>C2</td><td>D2</td></tr>'
+      ],
+      [], [],
+      { numCols: 7, colgroup: true, lockedColumns: [ 4, 6 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>'
+      ],
+      [], [],
+      { numCols: 4, colgroup: true, lockedColumns: [ 1, 3 ] }
     ),
 
     TableOperations.insertColumnsBefore,
     [
-      { section: 1, row: 0, column: 0 },
       { section: 1, row: 0, column: 1 },
-      { section: 1, row: 0, column: 2 }
+      { section: 1, row: 0, column: 2 },
+      { section: 1, row: 0, column: 3 }
     ]
   );
 
   Assertions.checkOldMultiple(
-    'TINY-6765: Check that column can be inserted after if end of selection is a not a locked column but a locked column is in the selection (locked column should not count towards the number of columns inserted after)',
-    Optional.some({ section: 1, row: 0, column: 3 }),
+    'TINY-6765: Check that column can be inserted after if end of selection is a locked column that is not the last column in the table (multi-col selection) (locked columns should count towards the number of columns inserted after)',
+    Optional.none(),
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td><td>C1</td><td>?</td><td>?</td></tr>',
-        '<tr><td>A2</td><td>B2</td><td>C2</td><td>?</td><td>?</td></tr>'
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>?</td><td>?</td><td>?</td><td>D1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>?</td><td>?</td><td>?</td><td>D2</td></tr>'
       ],
       [], [],
-      { numCols: 5, colgroup: true, lockedColumns: [ 1 ] }
+      { numCols: 7, colgroup: true, lockedColumns: [ 0, 2 ] }
     ),
 
     generateTestTable(
       [
-        '<tr><td>' + generateTestTable([ '<tr><td>1A</td><td>1B</td></tr>', '<tr><td>2A</td><td>2B</td></tr>' ], [], [], { numCols: 2, colgroup: true, lockedColumns: [] }) + 'A1</td><td>B1</td><td>C1</td></tr>',
-        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
+        '<tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td></tr>'
       ],
       [], [],
-      { numCols: 3, colgroup: true, lockedColumns: [ 1 ] }
+      { numCols: 4, colgroup: true, lockedColumns: [ 0, 2 ] }
     ),
 
     TableOperations.insertColumnsAfter,
