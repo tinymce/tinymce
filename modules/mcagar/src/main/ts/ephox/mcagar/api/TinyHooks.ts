@@ -106,7 +106,7 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
     };
   });
 
-  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => Optional.some({ element: editorDiv, teardown }));
+  const hooks = setupHooks<T>(settings, setupModules, focusOnInit, () => Optional.from(editorDiv).map((element) => ({ element, teardown })));
 
   return {
     ...hooks,
