@@ -1,7 +1,10 @@
 import { Arr, Fun, Unicode } from '@ephox/katamari';
-import * as NodeType from 'tinymce/core/dom/NodeType';
 
-const charCodeToKeyCode = (charCode) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const isText = (node: Node): node is Text => node.nodeType === 3;
+
+const charCodeToKeyCode = (charCode: number): number => {
   const lookup = {
     '0': 48, '1': 49, '2': 50, '3': 51, '4': 52, '5': 53, '6': 54, '7': 55, '8': 56, '9': 57, 'a': 65, 'b': 66, 'c': 67,
     'd': 68, 'e': 69, 'f': 70, 'g': 71, 'h': 72, 'i': 73, 'j': 74, 'k': 75, 'l': 76, 'm': 77, 'n': 78, 'o': 79, 'p': 80, 'q': 81,
@@ -12,11 +15,11 @@ const charCodeToKeyCode = (charCode) => {
   return lookup[String.fromCharCode(charCode)];
 };
 
-const needsNbsp = (rng: Range, chr: string) => {
+const needsNbsp = (rng: Range, chr: string): boolean => {
   const container = rng.startContainer;
   const offset = rng.startOffset;
 
-  if (chr === ' ' && NodeType.isText(container)) {
+  if (chr === ' ' && isText(container)) {
     if (container.data[offset - 1] === ' ' || offset === container.data.length) {
       return true;
     }
@@ -25,10 +28,13 @@ const needsNbsp = (rng: Range, chr: string) => {
   return false;
 };
 
-const type = (editor, chr) => {
-  let keyCode, charCode, evt, rng, offset;
+const type = (editor: Editor, chr: string | number | Record<string, number | string | boolean>): void => {
+  let keyCode: number;
+  let charCode: number;
+  let evt: Record<string, any>;
+  let offset: number;
 
-  const fakeEvent = (target, type, evt) => {
+  const fakeEvent = (target: Node, type: string, evt: Record<string, any>) => {
     editor.dom.fire(target, type, evt);
   };
 
@@ -68,25 +74,27 @@ const type = (editor, chr) => {
 
   if (!evt.isDefaultPrevented()) {
     if (keyCode === 8) {
-      if (editor.getDoc().selection) {
-        rng = editor.getDoc().selection.createRange();
+      const selection: any = (editor.getDoc() as any).selection;
+      if (selection) {
+        const legacyRng: any = selection.createRange();
 
-        if (rng.text.length === 0) {
-          rng.moveStart('character', -1);
-          rng.select();
+        if (legacyRng.text.length === 0) {
+          legacyRng.moveStart('character', -1);
+          legacyRng.select();
         }
 
-        rng.execCommand('Delete', false, null);
+        legacyRng.execCommand('Delete', false, null);
       } else {
-        rng = editor.selection.getRng();
+        const rng = editor.selection.getRng();
 
         if (rng.collapsed) {
           if (rng.startContainer.nodeType === 1) {
-            const nodes = rng.startContainer.childNodes, lastNode = nodes[nodes.length - 1];
+            const nodes = rng.startContainer.childNodes;
+            const lastNode = nodes[nodes.length - 1];
 
             // If caret is at <p>abc|</p> and after the abc text node then move it to the end of the text node
             // Expand the range to include the last char <p>ab[c]</p> since IE 11 doesn't delete otherwise
-            if (rng.startOffset >= nodes.length - 1 && lastNode && lastNode.nodeType === 3 && lastNode.data.length > 0) {
+            if (rng.startOffset >= nodes.length - 1 && lastNode && isText(lastNode) && lastNode.data.length > 0) {
               rng.setStart(lastNode, lastNode.data.length - 1);
               rng.setEnd(lastNode, lastNode.data.length);
               editor.selection.setRng(rng);
@@ -106,9 +114,9 @@ const type = (editor, chr) => {
         editor.getDoc().execCommand('Delete', false, null);
       }
     } else if (typeof chr === 'string') {
-      rng = editor.selection.getRng(true);
+      const rng = editor.selection.getRng();
 
-      if (rng.startContainer.nodeType === 3 && rng.collapsed) {
+      if (isText(rng.startContainer) && rng.collapsed) {
         rng.startContainer.insertData(rng.startOffset, needsNbsp(rng, chr) ? Unicode.nbsp : chr);
         rng.setStart(rng.startContainer, rng.startOffset + 1);
         rng.collapse(true);
@@ -123,7 +131,7 @@ const type = (editor, chr) => {
   fakeEvent(startElm, 'keyup', evt);
 };
 
-const typeString = (editor, str) => {
+const typeString = (editor: Editor, str: string): void => {
   Arr.each(str.split(''), Fun.curry(type, editor));
 };
 

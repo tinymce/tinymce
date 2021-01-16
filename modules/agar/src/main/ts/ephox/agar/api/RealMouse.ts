@@ -12,6 +12,12 @@ const sActionOn = <T>(selector: string, type: string): Step<T, T> =>
     type
   });
 
+const pActionOn = (selector: string, type: string): Promise<{}> =>
+  SeleniumAction.pPerform('/mouse', {
+    selector,
+    type
+  });
+
 const sMoveToOn = <T>(selector: string): Step<T, T> =>
   sActionOn<T>(selector, 'move');
 
@@ -48,11 +54,28 @@ const cClick = (): Chain<SugarElement<Element>, SugarElement<Element>> =>
     })
   ]);
 
+const pClickOn = (selector: string): Promise<{}> =>
+  pActionOn(selector, 'click');
+
+const pUpOn = (selector: string): Promise<{}> =>
+  pActionOn(selector, 'up');
+
+const pDownOn = (selector: string): Promise<{}> =>
+  pActionOn(selector, 'down');
+
+const pMoveToOn = (selector: string): Promise<{}> =>
+  pActionOn(selector, 'click');
+
 export {
   sMoveToOn,
   sDownOn,
   sUpOn,
   sClickOn,
   cClick,
-  BedrockIdAttribute
+  BedrockIdAttribute,
+
+  pClickOn,
+  pUpOn,
+  pDownOn,
+  pMoveToOn
 };

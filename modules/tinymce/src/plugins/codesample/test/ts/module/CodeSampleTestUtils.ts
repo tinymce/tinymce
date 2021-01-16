@@ -1,29 +1,32 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Logger, Mouse, Step, UiFinder, Waiter } from '@ephox/agar';
-import { SugarElement, TextContent } from '@ephox/sugar';
+import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
+import { TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
 
 const dialogSelector = 'div.tox-dialog';
-const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert/edit code sample"]';
+const toolbarButtonSelector = 'button[aria-label="Insert/edit code sample"]';
 
-const sSetLanguage = (newLanguage) => Logger.t('Changing language to ' + newLanguage, Step.sync(() => {
-  const select: any = document.querySelector('div[role="dialog"] select');
+const setLanguage = (newLanguage: string) => {
+  const select: HTMLSelectElement = document.querySelector('div[role="dialog"] select');
   select.value = newLanguage;
-}));
+};
 
-const sSetTextareaContent = (content) => Logger.t('Changing textarea content to ' + content, Step.sync(() => {
-  const textarea: any = document.querySelector('div[role="dialog"] textarea');
+const setTextareaContent = (content: string) => {
+  const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
   textarea.value = content;
-}));
+};
 
-const sAssertCodeSampleDialog = (expectedLanguage, expectedContent) => Logger.t('Assert dialog language and content', Step.sync(() => {
-  const select: any = document.querySelector('div[role="dialog"] select');
-  Assertions.assertEq('Asseting language dropdown is ' + expectedLanguage, select.value, expectedLanguage);
-  const textarea: any = document.querySelector('div[role="dialog"] textarea');
-  Assertions.assertEq('Asserting textarea content is ' + expectedContent, textarea.value, expectedContent);
-}));
+const assertCodeSampleDialog = (expectedLanguage: string, expectedContent: string) => {
+  const select: HTMLSelectElement = document.querySelector('div[role="dialog"] select');
+  assert.equal(select.value, expectedLanguage, 'Asserting language dropdown is ' + expectedLanguage);
+  const textarea: HTMLTextAreaElement = document.querySelector('div[role="dialog"] textarea');
+  assert.equal(textarea.value, expectedContent, 'Asserting textarea content is ' + expectedContent);
+};
 
-const sAssertEditorContentStructure = (editorBody, language, _content) => Logger.t('Assert editor contents structure', Waiter.sTryUntil(
+const pAssertEditorContentStructure = (editorBody: SugarElement<HTMLElement>, language: string) => Waiter.pTryUntil(
   'Assert content',
-  Assertions.sAssertStructure(
+  () => Assertions.assertStructure(
     'Asserting editor structure',
     ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
@@ -38,51 +41,48 @@ const sAssertEditorContentStructure = (editorBody, language, _content) => Logger
         s.anything()
       ]
     })),
-    SugarElement.fromDom(editorBody)
-  ), 100, 3000));
+    editorBody
+  )
+);
 
-const sAssertPreText = (container: SugarElement, selector, expected) => Logger.t('Assert PRE content', Chain.asStep(container, [
-  UiFinder.cFindIn(selector),
-  Chain.op((snippet) => {
-    const text = TextContent.get(snippet);
-    return Assertions.assertEq('Assert ' + selector + ' has innerText ' + expected, expected, text);
-  })
-]));
+const assertPreText = (container: SugarElement<Node>, selector: string, expected: string) => {
+  const snippet = UiFinder.findIn(container, selector).getOrDie();
+  const text = TextContent.get(snippet);
+  assert.equal(text, expected, 'Assert ' + selector + ' has innerText ' + expected);
+};
 
-const sOpenDialogAndAssertInitial = (editor, docBody, language, content) => GeneralSteps.sequence(Logger.ts('Open dialog and assert initial language and content', [
-  Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-  UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-  sAssertCodeSampleDialog(language, content)
-]));
+const pOpenDialogAndAssertInitial = async (editor: Editor, language: string, content: string) => {
+  TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+  await UiFinder.pWaitForVisible('Waited for dialog to be visible', SugarBody.body(), dialogSelector);
+  assertCodeSampleDialog(language, content);
+};
 
-const sSubmitDialog = (docBody) => GeneralSteps.sequence(Logger.ts('Focus on the dialog and click on the Save button to close the dialog', [
-  FocusTools.sSetFocus('Focus dialog', docBody, dialogSelector),
-  Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-  Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
-]));
+const pSubmitDialog = async (editor: Editor) => {
+  TinyUiActions.submitDialog(editor, dialogSelector);
+  await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
+};
 
-const sCancelDialog = (docBody) => GeneralSteps.sequence(Logger.ts('Click on the Cancel button to close the dialog', [
-  Mouse.sClickOn(docBody, 'button:contains(Cancel)'),
-  Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector), 100, 3000)
-]));
+const pCancelDialog = async (editor: Editor) => {
+  TinyUiActions.closeDialog(editor, dialogSelector);
+  await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
+};
 
-const sAssertEditorContents = (editorBody, language, content, selector) =>
+const pAssertEditorContents = async (editorBody: SugarElement<HTMLElement>, language: string, content: string, selector: string) => {
   /*
    * Since the syntax highlighting wraps tokens in spans which would be annoying to assert, we assert
    * the overall structure of the editor's content, then exact match the textContent of the pre tag
    * to ensure it matches the content we set originally.
    */
-  GeneralSteps.sequence(Logger.ts('Assert overall structure of editor content', [
-    sAssertEditorContentStructure(editorBody, language, content),
-    sAssertPreText(SugarElement.fromDom(editorBody), selector, content)
-  ]));
+  await pAssertEditorContentStructure(editorBody, language);
+  assertPreText(editorBody, selector, content);
+};
 
 export {
-  sSetLanguage,
-  sSetTextareaContent,
-  sAssertCodeSampleDialog,
-  sOpenDialogAndAssertInitial,
-  sSubmitDialog,
-  sCancelDialog,
-  sAssertEditorContents
+  setLanguage,
+  setTextareaContent,
+  assertCodeSampleDialog,
+  pOpenDialogAndAssertInitial,
+  pSubmitDialog,
+  pCancelDialog,
+  pAssertEditorContents
 };

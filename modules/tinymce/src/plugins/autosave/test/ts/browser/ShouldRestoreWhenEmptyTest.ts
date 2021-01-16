@@ -1,5 +1,6 @@
-import { Assert, before, describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Editor as McEditor, TinyAssertions } from '@ephox/mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
@@ -19,7 +20,7 @@ describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
   };
 
   const assertHasDraft = (editor: Editor, expected: boolean) => {
-    Assert.eq(`should${!expected ? 'n\'t' : ''} have draft`, expected, editor.plugins.autosave.hasDraft());
+    assert.equal(editor.plugins.autosave.hasDraft(), expected, `should${!expected ? 'n\'t' : ''} have draft`);
   };
 
   const storeDraft = (editor: Editor) => {
@@ -34,7 +35,7 @@ describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
     editor.undoManager.add();
   };
 
-  const setupAndAssertBaseState = async (content: string) => {
+  const pSetupAndAssertBaseState = async (content: string) => {
     const editor = await McEditor.pFromSettings<Editor>(settings);
     assertHasDraft(editor, false);
     editor.setContent(content);
@@ -45,7 +46,7 @@ describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
   };
 
   it('should restore draft when empty with setting', async () => {
-    await setupAndAssertBaseState('<p>X</p>');
+    await pSetupAndAssertBaseState('<p>X</p>');
     const editor = await McEditor.pFromSettings<Editor>({ ...settings, autosave_restore_when_empty: true });
     assertHasDraft(editor, true);
     TinyAssertions.assertContent(editor, '<p>X</p>');
@@ -54,7 +55,7 @@ describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
   });
 
   it(`shouldn't restore draft when empty without setting`, async () => {
-    await setupAndAssertBaseState('<p>X</p>');
+    await pSetupAndAssertBaseState('<p>X</p>');
     const editor = await McEditor.pFromSettings<Editor>(settings);
     assertHasDraft(editor, true);
     TinyAssertions.assertContent(editor, '');
