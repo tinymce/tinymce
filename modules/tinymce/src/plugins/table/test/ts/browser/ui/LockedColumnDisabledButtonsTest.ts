@@ -75,28 +75,34 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     const doc = SugarElement.fromDom(document);
 
-    const table = '<table data-snooker-locked-cols="0">' +
+    const table = (lockedColumns: number[] = [ 0 ]) =>
+      `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
     '<tbody>' +
     '<tr>' +
     `<td>a</td>` +
     `<td>b</td>` +
+    `<td>c</td>` +
     '</tr>' +
     '<tr>' +
-    `<td>c</td>` +
     `<td>d</td>` +
+    `<td>e</td>` +
+    `<td>f</td>` +
     '</tr>' +
     '</tbody>' +
     '</table>';
 
-    const multiCellSelectionTable = '<table data-snooker-locked-cols="0">' +
+    const multiCellSelectionTable = (lockedColumns: number[] = [ 0 ]) =>
+      `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
     '<tbody>' +
     '<tr>' +
     `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
-    `<td data-mce-selected="1" data-mce-last-selected="1">b</td>` +
+    `<td data-mce-selected="1">b</td>` +
+    `<td data-mce-selected="1" data-mce-last-selected="1">c</td>` +
     '</tr>' +
     '<tr>' +
-    `<td>c</td>` +
     `<td>d</td>` +
+    `<td>e</td>` +
+    `<td>f</td>` +
     '</tr>' +
     '</tbody>' +
     '</table>';
@@ -147,20 +153,52 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      Log.stepsAsStep('TINY-6765', 'ColBefore, ColAfter, ColRemove buttons should be disabled when locked column is selected',
-        Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
+      Log.stepsAsStep('TINY-6765', 'ColBefore, ColRemove buttons should be disabled when locked column is selected and it is the first column in the table',
+        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml),
             tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons([ ...colBeforeButtons, ...colAfterButtons, ...colRemoveButtons ], true),
+            sAssertToolbarButtons([ ...colBeforeButtons, ...colRemoveButtons ], true),
             sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colBeforeButtons, ...colAfterButtons, ...colRemoveButtons ], true)
+            sAssertMenuButtons([ ...colBeforeButtons, ...colRemoveButtons ], true)
           ];
         })
       ),
-      Log.stepsAsStep('TINY-6765', 'ColCopy button should not be disabled when locked column is selected',
+      Log.stepsAsStep('TINY-6765', 'ColAfter, ColRemove buttons should be disabled when locked column is selected and it is the last column in the table',
         Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
+          return [
+            sPopulateTableClipboard('col'),
+            tinyApis.sSetContent(tableHtml([ 2 ])),
+            tinyApis.sSetCursor([ 0, 0, 0, 2 ], 0),
+            sAssertToolbarButtons([ ...colAfterButtons, ...colRemoveButtons ], true),
+            sSelectContextMenuItem(TableContextMenu.Column),
+            sAssertMenuButtons([ ...colAfterButtons, ...colRemoveButtons ], true)
+          ];
+        })
+      ),
+      Log.stepsAsStep('TINY-6765', ' ColRemove buttons should be disabled when locked column is selected',
+        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
+          return [
+            sPopulateTableClipboard('col'),
+            tinyApis.sSetContent(tableHtml),
+            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
+            sAssertToolbarButtons([ ...colRemoveButtons ], true),
+            sSelectContextMenuItem(TableContextMenu.Column),
+            sAssertMenuButtons([ ...colRemoveButtons ], true)
+          ];
+        })
+      ),
+      Log.stepsAsStep('TINY-6765', 'ColBefore, ColAfter buttons should not be disabled when locked column is selected but is not the first or last column in the table', [
+        sPopulateTableClipboard('col'),
+        tinyApis.sSetContent(table()),
+        tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
+        sAssertToolbarButtons([ ...colBeforeButtons, ...colAfterButtons ], false),
+        sSelectContextMenuItem(TableContextMenu.Column),
+        sAssertMenuButtons([ ...colBeforeButtons, ...colAfterButtons ], false)
+      ]),
+      Log.stepsAsStep('TINY-6765', 'ColCopy button should not be disabled when locked column is selected',
+        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml),
@@ -173,7 +211,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
       ),
       Log.stepsAsStep('TINY-6765', 'Column buttons should not be disabled when locked column is not selected', [
         sPopulateTableClipboard('col'),
-        tinyApis.sSetContent(table),
+        tinyApis.sSetContent(table()),
         tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
         sAssertToolbarButtons(columnButtons, false),
         sSelectContextMenuItem(TableContextMenu.Column),
@@ -181,7 +219,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
       ]),
       Log.stepsAsStep('TINY-6765', 'Row buttons should not be disabled when locked column is in the table', [
         sPopulateTableClipboard('row'),
-        tinyApis.sSetContent(table),
+        tinyApis.sSetContent(table()),
         tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
         sAssertToolbarButtons(rowButtons, false),
         sSelectContextMenuItem(TableContextMenu.Row),

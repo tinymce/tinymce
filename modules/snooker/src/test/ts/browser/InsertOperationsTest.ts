@@ -683,6 +683,31 @@ UnitTest.test('InsertOperationsTest', () => {
   );
 
   Assertions.checkOld(
+    'TINY-6765: Check column cannot be inserted after if colspan column is selected, is locked and would result in a column being inserted at the end of the table (collapsed)',
+    Optional.none(),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td colspan="2">B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td colspan="2">B1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [ 1 ] }
+    ),
+
+    TableOperations.insertColumnAfter, 1, 0, 1
+  );
+
+  Assertions.checkOld(
     'TINY-6765: Check column can be inserted before if last column is selected and is locked (collapsed)',
     Optional.none(),
 

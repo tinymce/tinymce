@@ -1,7 +1,7 @@
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
-import { RunOperation, TableLookup, Warehouse } from '@ephox/snooker';
+import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Util from '../core/Util';
@@ -11,8 +11,9 @@ import * as TableSelection from './TableSelection';
 export interface SelectionTargets {
   readonly onSetupTable: (api: UiApi) => () => void;
   readonly onSetupCellOrRow: (api: UiApi) => () => void;
-  readonly onSetupColumn: (api: UiApi) => () => void;
-  readonly onSetupPasteable: (getClipboardData: () => Optional<SugarElement[]>, rowOrCol: 'row' | 'column') => (api: UiApi) => () => void;
+  readonly onSetupColumn: (lockedDisable: LockedDisable) => (api: UiApi) => () => void;
+  readonly onSetupPasteable: (getClipboardData: () => Optional<SugarElement[]>) => (api: UiApi) => () => void;
+  readonly onSetupPasteableColumn: (getClipboardData: () => Optional<SugarElement[]>, lockedDisable: LockedDisable) => (api: UiApi) => () => void;
   readonly onSetupMergeable: (api: UiApi) => () => void;
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
@@ -22,8 +23,21 @@ export interface SelectionTargets {
 interface ExtractedSelectionDetatils {
   readonly mergeable: boolean;
   readonly unmergeable: boolean;
-  readonly unlockedSelection: boolean;
+  readonly locked: Record<LockedDisableStrs, boolean>;
 }
+
+/*
+onAny - disable if any column in the selection is locked
+onFirst - disable if the first column in the table is selected and is locked
+onLast - disable if the the last column in the table is selected and is locked
+*/
+export enum LockedDisable {
+  onAny = 'onAny',
+  onFirst = 'onFirst',
+  onLast = 'onLast'
+}
+
+type LockedDisableStrs = keyof typeof LockedDisable;
 
 type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
 
@@ -51,12 +65,24 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     const tableOpt = TableLookup.table(targets.element);
     return tableOpt.map((table) => {
       const warehouse = Warehouse.fromTable(table);
-      const selectedCells = RunOperation.onCells(warehouse, targets).getOr([]);
+      const selectedCells = RunOperation.onCells(warehouse, targets).getOr([] as Structs.DetailExt[]);
+
+      const locked = Arr.foldl(selectedCells, (acc, cell) => {
+        if (cell.isLocked) {
+          acc.onAny = true;
+          if (cell.column === 0) {
+            acc.onFirst = true;
+          } else if (cell.column + cell.colspan === warehouse.grid.columns) {
+            acc.onLast = true;
+          }
+        }
+        return acc;
+      }, { onAny: false, onFirst: false, onLast: false });
+
       return {
         mergeable: RunOperation.onUnlockedMergable(warehouse, targets).isSome(),
         unmergeable: RunOperation.onUnlockedUnmergable(warehouse, targets).isSome(),
-        // Can't use onUnlockedCells as it will be Optional.some if both unlocked and locked columns are selected
-        unlockedSelection: Arr.forall(selectedCells, (cell) => !cell.isLocked)
+        locked
       };
     });
   };
@@ -90,12 +116,16 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     };
   };
 
+  const isDisabledFromLocked = (lockedDisable: LockedDisable) =>
+    selectionDetails.exists((details) => details.locked[lockedDisable]);
+
   const onSetupTable = (api: UiApi) => onSetup(api, (_) => false);
   const onSetupCellOrRow = (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element));
-  const onSetupColumn = (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element) || isDisabledForSelection('unlockedSelection'));
-  const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>, rowOrCol: 'row' | 'column') => (api: UiApi) => onSetup(api, (targets) =>
-    isCaption(targets.element) || getClipboardData().isNone() || (rowOrCol === 'column' && isDisabledForSelection('unlockedSelection'))
-  );
+  const onSetupColumn = (lockedDisable: LockedDisable) => (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element) || isDisabledFromLocked(lockedDisable));
+  const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api: UiApi) =>
+    onSetup(api, (targets) => isCaption(targets.element) || getClipboardData().isNone());
+  const onSetupPasteableColumn = (getClipboardData: () => Optional<SugarElement[]>, lockedDisable: LockedDisable) => (api: UiApi) =>
+    onSetup(api, (targets) => isCaption(targets.element) || getClipboardData().isNone() || isDisabledFromLocked(lockedDisable));
   // TODO: Ideally mergeable and unmergable would be Optional.none if selection is in locked columns
   const onSetupMergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('mergeable'));
   const onSetupUnmergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('unmergeable'));
@@ -107,6 +137,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupCellOrRow,
     onSetupColumn,
     onSetupPasteable,
+    onSetupPasteableColumn,
     onSetupMergeable,
     onSetupUnmergeable,
     resetTargets,
