@@ -1,89 +1,76 @@
-import { Assertions, Chain, GeneralSteps, Log, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import { Html } from '@ephox/sugar';
-import ImagetoolsPlugin from 'tinymce/plugins/imagetools/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Assertions, Mouse, UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { Html, SugarBody, SugarElement } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/imagetools/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as ImageUtils from '../module/test/ImageUtils';
 
-// TODO: This needs to be looked at again once notifications come back
-
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', (success, failure) => {
+describe('browser.tinymce.plugins.imagetools.ImageToolsErrorTest', () => {
   const uploadHandlerState = ImageUtils.createStateContainer();
-
   const corsUrl = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
 
-  ImagetoolsPlugin();
-  SilverTheme();
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'imagetools',
+    automatic_uploads: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-  const sAssertErrorMessage = (html) => {
-    return Step.label('Check notification message', Chain.asStep(TinyDom.fromDom(document.body), [
-      UiFinder.cWaitFor('Find notification', '.tox-notification__body > p'),
-      Chain.label('Get notification HTML', Chain.mapper(Html.get)),
-      Chain.label('Assert HTML matches expected', Assertions.cAssertHtml('Message html does not match', html))
-    ]));
+  const pAssertErrorMessage = async (html: string) => {
+    const content = await UiFinder.pWaitFor('Find notification', SugarBody.body(), '.tox-notification__body > p') as SugarElement<HTMLElement>;
+    const actualHtml = Html.get(content);
+    Assertions.assertHtml('Message html does not match', html, actualHtml);
   };
 
-  const sCloseErrorMessage = Step.label('Close error message', Chain.asStep(TinyDom.fromDom(document.body), [
-    UiFinder.cWaitFor('Could not find notification', '.tox-notification > button'),
-    Mouse.cClick
-  ]));
+  const pCloseErrorMessage = async () => {
+    const button = await UiFinder.pWaitFor('Could not find notification', SugarBody.body(), '.tox-notification > button');
+    Mouse.click(button);
+  };
 
-  TinyLoader.setupLight(
-    (editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
+  const pTestImageToolsError = async (proxyUrl: string, apiKey: string, errorMessage: string) => {
+    const editor = hook.editor();
+    uploadHandlerState.resetState();
+    editor.settings.imagetools_proxy = proxyUrl;
+    editor.settings.api_key = apiKey;
+    await ImageUtils.pLoadImage(editor, corsUrl);
+    TinySelections.select(editor, 'img', []);
+    editor.execCommand('mceImageFlipHorizontal');
+    await pAssertErrorMessage(errorMessage);
+    await pCloseErrorMessage();
+    editor.setContent('');
+  };
 
-      const sTestImageToolsError = (testId, description, proxyUrl, apiKey, errorMessage) => Log.step(
-        testId, description, GeneralSteps.sequence([
-          uploadHandlerState.sResetState,
-          Step.label('Set image proxy URL', tinyApis.sSetSetting('imagetools_proxy', proxyUrl)),
-          Step.label('Set API key', tinyApis.sSetSetting('api_key', apiKey)),
-          ImageUtils.sLoadImage(editor, corsUrl),
-          Step.label('Select image', tinyApis.sSelect('img', [])),
-          ImageUtils.sExecCommand(editor, 'mceImageFlipHorizontal'),
-          sAssertErrorMessage(errorMessage),
-          sCloseErrorMessage,
-          Step.label('Clear editor content', tinyApis.sSetContent(''))
-        ])
-      );
+  it('TBA: Incorrect service url no api key', () =>
+    pTestImageToolsError('http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL')
+  );
 
-      const tests = [
+  it('TBA: Incorrect service url with api key', () =>
+    pTestImageToolsError('http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL')
+  );
 
-        sTestImageToolsError('TBA', 'Incorrect service url no api key',
-          'http://0.0.0.0.0.0/', undefined, 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
+  it('TBA: 403 no api key', () =>
+    pTestImageToolsError('/custom/403', undefined, 'ImageProxy HTTP error: Rejected request')
+  );
 
-        sTestImageToolsError('TBA', 'Incorrect service url with api key',
-          'http://0.0.0.0.0.0/', 'fake_key', 'ImageProxy HTTP error: Incorrect Image Proxy URL'),
+  it('TBA: 403 with api key', () =>
+    pTestImageToolsError('/custom/403', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message')
+  );
 
-        sTestImageToolsError('TBA', '403 no api key',
-          '/custom/403', undefined, 'ImageProxy HTTP error: Rejected request'),
+  it('TBA: 403 with api key and return error data', () =>
+    pTestImageToolsError('/custom/403data', 'fake_key', 'ImageProxy Service error: Unknown service error')
+  );
 
-        sTestImageToolsError('TBA', '403 with api key',
-          '/custom/403', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
+  it('TBA: 404 no api key', () =>
+    pTestImageToolsError('/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy')
+  );
 
-        sTestImageToolsError('TBA', '403 with api key and return error data',
-          '/custom/403data', 'fake_key', 'ImageProxy Service error: Unknown service error'),
+  it('TBA: 404 with api key', () =>
+    pTestImageToolsError('/custom/404', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message')
+  );
 
-        sTestImageToolsError('TBA', '404 no api key',
-          '/custom/404', undefined, 'ImageProxy HTTP error: Could not find Image Proxy'),
-
-        sTestImageToolsError('TBA', '404 with api key',
-          '/custom/404', 'fake_key', 'ImageProxy Service error: Invalid JSON in service error message'),
-
-        sTestImageToolsError('TBA', '404 with api key and return error data',
-          '/custom/404data', 'fake_key', 'ImageProxy Service error: Failed to load image.')
-
-      ];
-
-      Pipeline.async({}, tests, onSuccess, onFailure);
-    },
-    {
-      theme: 'silver',
-      plugins: 'imagetools',
-      automatic_uploads: false,
-      base_url: '/project/tinymce/js/tinymce'
-    },
-    success,
-    failure
+  it('TBA: 404 with api key and return error data', () =>
+    pTestImageToolsError('/custom/404data', 'fake_key', 'ImageProxy Service error: Failed to load image.')
   );
 });
