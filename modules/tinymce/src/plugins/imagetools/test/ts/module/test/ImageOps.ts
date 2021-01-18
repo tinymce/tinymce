@@ -1,146 +1,101 @@
-import { Chain, Guard, Logger, Mouse, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { Fun, Result } from '@ephox/katamari';
-import { TinyDom, TinyUi } from '@ephox/mcagar';
-import { Attribute } from '@ephox/sugar';
+import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Arr, Fun } from '@ephox/katamari';
+import { TinyUiActions } from '@ephox/mcagar';
+import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
 
-export default (editor) => {
-  const ui = TinyUi(editor);
+import Editor from 'tinymce/core/api/Editor';
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
 
-  const cHasState = (predicate) => {
-    return Chain.control(
-      Chain.binder((element) => {
-        return predicate(element) ? Result.value(element) : Result.error(`Predicate didn't match.`);
-      }),
-      Guard.addLogging('Assert element has state')
-    );
-  };
+export interface ImageOps {
+  readonly pExecToolbar: (editor: Editor, label: string) => Promise<void>;
+  readonly pExecDialog: (editor: Editor, label: string) => Promise<void>;
+  readonly pClickContextToolbarButton: (toolbar: SugarElement<Node>, label: string) => Promise<void>;
+}
 
-  const cWaitForState = (predicate) => {
-    return Chain.control(
-      cHasState(predicate),
-      Guard.tryUntil('Predicate has failed.', 10, 3000)
-    );
-  };
+const orientationActions = [
+  'Rotate counterclockwise',
+  'Rotate clockwise',
+  'Flip vertically',
+  'Flip horizontally'
+];
 
-  const cDragDrop = Chain.control(
-    Chain.fromChains([
-      UiFinder.cFindIn('.tox-slider__handle'),
-      Mouse.cMouseDown,
-      Mouse.cMouseMoveTo(5, 0),
-      Mouse.cMouseUpTo(5, 0)
-    ]),
-    Guard.addLogging('Drag and drop')
-  );
+const adjustmentActions = [
+  'Brightness',
+  'Contrast',
+  'Color levels',
+  'Gamma'
+];
 
-  const cExecCommandFromDialog = (label) => {
-    let cInteractWithUi;
+const isOrientationAction = (action: string) => Arr.contains(orientationActions, action);
+const isAdjustmentAction = (action: string) => Arr.contains(adjustmentActions, action);
 
-    switch (label) {
-      case 'Rotate counterclockwise':
-      case 'Rotate clockwise':
-      case 'Flip vertically':
-      case 'Flip horizontally':
-        // Orientation operations, like Flip or Rotate are grouped in a sub-panel
-        cInteractWithUi = cClickToolbarButton(label);
-        label = 'Orientation';
-        break;
+const doDragDrop = (dialog: SugarElement<Node>) => {
+  const handle = UiFinder.findIn(dialog, '.tox-slider__handle').getOrDie();
+  Mouse.mouseDown(handle);
+  Mouse.mouseMoveTo(handle, 5, 0);
+  Mouse.mouseUpTo(handle, 5, 0);
+};
 
-      case 'Brightness':
-      case 'Contrast':
-      case 'Color levels':
-      case 'Gamma':
-        cInteractWithUi = cDragDrop;
-        break;
+const pAction = (dialog: SugarElement<Node>, action: string): Promise<void> => {
+  if (isOrientationAction(action)) {
+    return pClickContextToolbarButton(dialog, action);
+  } else if (isAdjustmentAction(action)) {
+    return new PromisePolyfill((resolve) => {
+      doDragDrop(dialog);
+      resolve();
+    });
+  } else {
+    return Waiter.pWait(1);
+  }
+};
 
-      default:
-        cInteractWithUi = Chain.wait(1);
-    }
+const pExecCommandFromDialog = async (editor: Editor, toolbar: SugarElement<Node>, action: string) => {
+  await pClickContextToolbarButton(toolbar, 'Edit image');
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  await Waiter.pWait(200);
+  const buttonLabel = isOrientationAction(action) ? 'Orientation' : action;
+  await pClickContextToolbarButton(dialog, buttonLabel);
+  await pAction(dialog, action);
+  await Waiter.pWait(200);
+  await pClickButton(dialog, 'Apply');
+  await pClickButton(dialog, 'Save');
+  await pWaitForDialogClose();
+};
 
-    return Chain.control(
-      Chain.fromChains([
-        cClickToolbarButton('Edit image'),
-        Chain.fromParent(ui.cWaitForPopup('wait for Edit Image dialog', '[role="dialog"]'), [
-          ui.cWaitForUi('wait for canvas', '.tox-image-tools__image > img'),
-          Chain.wait(200),
-          cClickToolbarButton(label),
-          cInteractWithUi,
-          Chain.wait(200),
-          cClickButton('Apply'),
-          cClickButton('Save'),
-          cWaitForDialogClose()
-        ])
-      ]),
-      Guard.addLogging(`Execute ${label} command from dialog`)
-    );
-  };
+const pWaitForDialogClose = () =>
+  Waiter.pTryUntil('Waiting for dialog to go away', () => UiFinder.notExists(SugarBody.body(), '[role="dialog"]'));
 
-  const cWaitForUi = (label, selector) => {
-    return Chain.control(
-      UiFinder.cWaitForState(label, selector, Fun.always),
-      Guard.addLogging('Wait for UI')
-    );
-  };
+const pClickButton = async (dialog: SugarElement<Node>, text: string) => {
+  const button = await UiFinder.pWaitFor('Wait for dialog button to be enabled', dialog, 'button:contains(' + text + '):not(:disabled)');
+  Mouse.click(button);
+};
 
-  const cWaitForDialogClose = () => Chain.control(
-    UiFinder.cNotExists('[role="dialog"]'),
-    Guard.tryUntil('Waiting for dialog to go away', 10, 3000)
-  );
+const pClickContextToolbarButton = async (toolbar: SugarElement<Node>, label: string) => {
+  const button = await UiFinder.pWaitFor('Wait for toolbar button to be enabled', toolbar, 'button[aria-label="' + label + '"]:not(:disabled)');
+  Mouse.click(button);
+};
 
-  const cClickButton = (text) => {
-    return Chain.control(
-      Chain.fromChains([
-        cWaitForUi('wait for ' + text + ' button', 'button:contains(' + text + ')'),
-        cWaitForState((el) => {
-          return Attribute.get(el, 'disabled') === undefined;
-        }),
-        Mouse.cClick
-      ]),
-      Guard.addLogging('Wait for UI')
-    );
-  };
+const pWaitForUrlChange = (imgEl: SugarElement<Element>, origUrl: string | undefined) =>
+  Waiter.pTryUntilPredicate('Wait for url change', () => Attribute.get(imgEl, 'src') !== origUrl);
 
-  const cClickToolbarButton = (label) => {
-    return Chain.control(
-      Chain.fromChains([
-        UiFinder.cFindIn('button[aria-label="' + label + '"]'),
-        cWaitForState((el) => {
-          return Attribute.get(el, 'disabled') === undefined;
-        }),
-        Mouse.cClick
-      ]),
-      Guard.addLogging('Wait for UI')
-    );
-  };
+const pExec = async (execFromToolbar: boolean, editor: Editor, label: string) => {
+  const imgEl = SugarElement.fromDom(editor.selection.getNode());
+  const origUrl = Attribute.get(imgEl, 'src');
 
-  const sWaitForUrlChange = (imgEl, origUrl) => {
-    return Logger.t('Wait for url change', Chain.asStep(imgEl, [
-      cWaitForState((el) => {
-        return Attribute.get(el, 'src') !== origUrl;
-      })
-    ]));
-  };
+  Mouse.click(imgEl);
+  const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
 
-  const sExec = (execFromToolbar, label) => {
-    return Logger.t(`Execute ${label}`, Step.async((next, die) => {
-      const imgEl = TinyDom.fromDom(editor.selection.getNode());
-      const origUrl = Attribute.get(imgEl, 'src');
+  if (execFromToolbar) {
+    await pClickContextToolbarButton(toolbar, label);
+  } else {
+    await pExecCommandFromDialog(editor, toolbar, label);
+  }
 
-      Pipeline.async({}, [
-        Chain.asStep(imgEl, [
-          Mouse.cClick,
-          ui.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'),
-          execFromToolbar ? cClickToolbarButton(label) : cExecCommandFromDialog(label)
-        ]),
-        sWaitForUrlChange(imgEl, origUrl)
-      ], () => {
-        next();
-      }, die);
-    }));
-  };
+  await pWaitForUrlChange(imgEl, origUrl);
+};
 
-  return {
-    sExecToolbar: Fun.curry(sExec, true),
-    sExecDialog: Fun.curry(sExec, false),
-    cClickToolbarButton
-  };
+export const ImageOps: ImageOps = {
+  pExecToolbar: Fun.curry(pExec, true),
+  pExecDialog: Fun.curry(pExec, false),
+  pClickContextToolbarButton
 };
