@@ -57,6 +57,6 @@ In 2019 the decision was made to transition our codebase to a monorepo. For info
 
 As an open source product, we encourage and support the active development of our software.
 
-## Compiling and contributing
+## Want more information?
 
 Visit the [TinyMCE website](https://tiny.cloud/) and check out the [TinyMCE documentation](https://www.tiny.cloud/docs/).
