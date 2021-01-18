@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
@@ -10,20 +10,20 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
   const setupElement = () => {
-    const div = document.createElement('div');
-    div.innerHTML = (
+    const div = SugarElement.fromTag('div');
+    Html.set(div, (
       '<div id="lists">' +
       '<ul><li>before</li></ul>' +
       '<ul id="inline"><li>x</li></ul>' +
       '<ul><li>after</li></ul>' +
       '</div>'
-    );
-    document.body.appendChild(div);
+    ));
+    Insert.append(SugarBody.body(), div);
 
     return {
-      element: SugarElement.fromDom(div),
+      element: div,
       teardown: () => {
-        document.body.removeChild(div);
+        Remove.remove(div);
       },
     };
   };
