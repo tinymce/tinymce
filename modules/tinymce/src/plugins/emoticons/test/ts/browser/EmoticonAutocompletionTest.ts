@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
@@ -18,15 +18,13 @@ describe('browser.tinymce.plugins.emoticons.AutocompletionTest', () => {
   // NOTE: This is almost identical to charmap
   it('TBA: Autocomplete, trigger an autocomplete and check it appears', async () => {
     const editor = hook.editor();
-    const editorDoc = TinyDom.document(editor);
-
     editor.setContent('<p>:ha</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
-    Keyboard.activeKeypress(editorDoc, 'a'.charCodeAt(0), { });
+    TinyContentActions.keypress(editor, 'a'.charCodeAt(0));
     await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter .tox-collection__item');
-    Keyboard.activeKeydown(editorDoc, Keys.right(), { });
-    Keyboard.activeKeydown(editorDoc, Keys.right(), { });
-    Keyboard.activeKeydown(editorDoc, Keys.enter(), { });
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>😂</p>');
   });
 });

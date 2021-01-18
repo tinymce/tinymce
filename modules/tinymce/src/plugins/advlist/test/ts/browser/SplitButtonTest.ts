@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SelectorFind, SugarDocument } from '@ephox/sugar';
@@ -214,13 +214,13 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Numbered list');
     assertNumListStructure();
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape(), {});
+    TinyUiActions.keydown(editor, Keys.escape());
   });
 
   it('Check bullet list toolbar button structure', async () => {
     const editor = hook.editor();
     await pClickOnSplitBtnFor(editor, 'Bullet list');
     assertBullListStructure();
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape(), {});
+    TinyUiActions.keydown(editor, Keys.escape());
   });
 });

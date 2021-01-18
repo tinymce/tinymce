@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Insert, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -35,9 +35,9 @@ describe('browser.tinymce.core.init.InitEditorThemeFunctionInlineTest', () => {
     const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
     const editorElement = SelectorFind.descendant(body, '#' + editor.id + '_parent').getOrDie('No elm');
 
-    Assertions.assertDomEq('Should be expected editor container element', editorElement, SugarElement.fromDom(editor.getContainer()));
-    Assertions.assertDomEq('Should be expected editor body element', targetElement, SugarElement.fromDom(editor.getBody()));
-    Assertions.assertDomEq('Should be expected editor target element', targetElement, SugarElement.fromDom(editor.getElement()));
-    Assertions.assertDomEq('Should be expected content area container', targetElement, SugarElement.fromDom(editor.getContentAreaContainer()));
+    Assertions.assertDomEq('Should be expected editor container element', editorElement, TinyDom.container(editor));
+    Assertions.assertDomEq('Should be expected editor body element', targetElement, TinyDom.body(editor));
+    Assertions.assertDomEq('Should be expected editor target element', targetElement, TinyDom.targetElement(editor));
+    Assertions.assertDomEq('Should be expected content area container', targetElement, TinyDom.contentAreaContainer(editor));
   });
 });

@@ -1,7 +1,7 @@
-import { ApproxStructure, Keyboard, Keys, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -153,27 +153,27 @@ describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], END, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0));
   });
@@ -187,19 +187,19 @@ describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(START));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspOutside(BEFORE));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(START));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(END));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspOutside(AFTER));
   });
@@ -213,39 +213,39 @@ describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 0));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 1));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 1));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 1));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1));
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
     TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1));
   });

@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { pWaitForDialog } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
@@ -26,7 +25,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
 
   const pAssertImageTab = async (editor: Editor, title: string, isPresent: boolean) => {
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    const dialog = await pWaitForDialog(editor);
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
       ['.tox-tab:contains("' + title + '")']: isPresent ? 1 : 0
     };
@@ -37,7 +36,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const pTriggerUpload = async (editor: Editor, fileExtension: string = 'png') => {
     const blob = await Conversions.uriToBlob(b64);
     await FileInput.pRunOnPatchedFileInput([ Files.createFile(`logo.${fileExtension}`, 0, blob) ], async () => {
-      const dialog = await pWaitForDialog(editor);
+      const dialog = await TinyUiActions.pWaitForDialog(editor);
       const button = UiFinder.findIn(dialog, 'button:contains("Browse for an image")').getOrDie();
       Mouse.click(button);
     });
@@ -105,7 +104,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.images_upload_url = '/custom/imageUpload';
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
@@ -119,7 +118,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.images_upload_handler = (blobInfo, success) => success('file.jpg');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
@@ -132,7 +131,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.base64());
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
@@ -145,7 +144,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.images_upload_handler = (blobInfo, success, failure) => failure('Error occurred');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-alert-dialog');
@@ -160,7 +159,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.automatic_uploads = false;
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
@@ -175,7 +174,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.settings.images_upload_handler = (_blobInfo, success) => success('logo.svg');
     editor.settings.images_file_types = 'svg';
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor, 'svg');
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
@@ -189,7 +188,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent('');
     editor.settings.images_upload_handler = (blobInfo, success) => success(blobInfo.filename());
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor, 'jfif');
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');

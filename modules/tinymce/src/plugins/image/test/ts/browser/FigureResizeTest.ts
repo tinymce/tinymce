@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { fillActiveDialog, pWaitForDialog, submitDialog } from '../module/Helpers';
+import { fillActiveDialog } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
   it('TBA: resizing image in figure', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
 
     fillActiveDialog({
       src: {
@@ -50,7 +50,7 @@ describe('browser.tinymce.plugins.image.FigureResizeTest', () => {
       },
       caption: true
     });
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
 
     const body = TinyDom.body(editor);
     const img = UiFinder.findIn(body, 'figure > img').getOrDie();

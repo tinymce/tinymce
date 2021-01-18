@@ -1,20 +1,24 @@
-import { Mouse, UiFinder } from '@ephox/agar';
+import { Keyboard, Mouse, UiFinder } from '@ephox/agar';
+import { Type } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { Editor } from '../alien/EditorTypes';
-import { getThemeSelectors } from './ThemeSelectors';
-import { TinyDom } from './TinyDom';
+import { Editor } from '../../alien/EditorTypes';
+import { getThemeSelectors } from '../ThemeSelectors';
+import { TinyDom } from '../TinyDom';
+
+const getUiDoc = (editor: Editor) =>
+  SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
 
 const getUiRoot = (editor: Editor) =>
-  SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
+  SugarShadowDom.getContentContainer(getUiDoc(editor));
 
 const getToolbarRoot = (editor: Editor) => {
-  const editorContainerRoot = SugarElement.fromDom(editor.getContainer());
+  const editorContainerRoot = TinyDom.container(editor);
   const elem = UiFinder.findIn(editorContainerRoot, getThemeSelectors().toolBarSelector(editor));
   return elem.getOrDie();
 };
 
 const getMenuRoot = (editor: Editor) => {
-  const editorContainerRoot = SugarElement.fromDom(editor.getContainer());
+  const editorContainerRoot = TinyDom.container(editor);
   const elem = UiFinder.findIn(editorContainerRoot, getThemeSelectors().menuBarSelector);
   return elem.getOrDie();
 };
@@ -45,11 +49,15 @@ const clickDialogButton = (editor: Editor, selector: string, buttonSelector: str
   Mouse.click(button);
 };
 
-const submitDialog = (editor: Editor, selector: string): void =>
-  clickDialogButton(editor, selector, getThemeSelectors().dialogSubmitSelector);
+const submitDialog = (editor: Editor, selector?: string): void => {
+  const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
+  clickDialogButton(editor, dialogSelector, getThemeSelectors().dialogSubmitSelector);
+};
 
-const closeDialog = (editor: Editor, selector: string): void =>
-  clickDialogButton(editor, selector, getThemeSelectors().dialogCloseSelector);
+const closeDialog = (editor: Editor, selector?: string): void => {
+  const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
+  clickDialogButton(editor, dialogSelector, getThemeSelectors().dialogCloseSelector);
+};
 
 const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitFor(`Waiting for a UI element matching '${selector}' to exist`, getUiRoot(editor), selector);
@@ -57,18 +65,42 @@ const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Elem
 const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitForVisible(`Waiting for a popup matching '${selector}' to be visible`, getUiRoot(editor), selector);
 
+const pWaitForDialog = (editor: Editor, selector?: string): Promise<SugarElement> => {
+  const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
+  return UiFinder.pWaitForVisible(`Waiting for a dialog matching '${dialogSelector}' to be visible`, getUiRoot(editor), dialogSelector);
+};
+
 const pTriggerContextMenu = async (editor: Editor, target: string, menu: string): Promise<void> => {
   Mouse.contextMenuOn(TinyDom.body(editor), target);
   await pWaitForPopup(editor, menu);
 };
 
+const keydown = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
+  Keyboard.activeKeydown(getUiDoc(editor), keyvalue, modifiers);
+
+const keyup = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
+  Keyboard.activeKeyup(getUiDoc(editor), keyvalue, modifiers);
+
+const keypress = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
+  Keyboard.activeKeypress(getUiDoc(editor), keyvalue, modifiers);
+
+const keystroke = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
+  Keyboard.activeKeystroke(getUiDoc(editor), keyvalue, modifiers);
+
 export {
   clickOnToolbar,
   clickOnMenu,
   clickOnUi,
+
   submitDialog,
   closeDialog,
 
+  keydown,
+  keypress,
+  keystroke,
+  keyup,
+
+  pWaitForDialog,
   pWaitForPopup,
   pWaitForUi,
   pTriggerContextMenu

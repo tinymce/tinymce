@@ -1,10 +1,9 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Hierarchy } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as TypeText from '../module/test/TypeText';
 
 const clickMiddleOf = (editor: Editor, elementPath: number[]) => {
   const element = Hierarchy.follow(TinyDom.body(editor), elementPath).getOrDie().dom as HTMLElement;
@@ -51,7 +50,7 @@ describe('browser.tinymce.core.ClickContentEditableFalseTest', () => {
     clickMiddleOf(editor, [ 0, 1 ]);
     clickMiddleOf(editor, [ 0, 1 ]);
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'c');
+    TinyContentActions.type(editor, 'c');
     TinyAssertions.assertContent(editor, '<div contenteditable="true"><p contenteditable="false">a</p><p>bc</p></div>');
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
   });

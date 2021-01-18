@@ -1,6 +1,6 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -180,23 +180,23 @@ describe('browser.tinymce.plugins.fullpage.FullPageDialogPluginTest', () => {
       selectors.titleInput
     );
     FocusTools.setActiveValue(doc, 'the nu title');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'the nu keywords');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'the nu description');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'the nu robots');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'the nu author');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'the nu encoding');
     FocusTools.isOnSelector('last', doc, selectors.encodingInput);
 
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.isOnSelector('The cancel button should be focused', doc, 'button:contains("Cancel")');
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.isOnSelector('The save button should be focused', doc, 'button:contains("Save")');
-    Keyboard.activeKeydown(doc, Keys.enter(), { });
+    TinyUiActions.keydown(editor, Keys.enter());
     UiFinder.notExists(SugarBody.body(), 'div.tox-dialog');
 
     openDialog(editor);

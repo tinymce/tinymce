@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
@@ -52,7 +52,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
       assertCaretAtZwsp(editor);
     });
@@ -62,7 +62,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -72,7 +72,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#">x</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -82,7 +82,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#">x</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -94,7 +94,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 0, [ 0, 0, 1 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -104,7 +104,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -114,7 +114,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -124,7 +124,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), {});
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -136,10 +136,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#">a</a></p><p><a href="#">b</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 1, 0, 0 ], 1, [ 1, 0, 0 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -149,10 +149,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#">a</a></p><p><a href="#">b</a></p>');
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinySelections.setCursor(editor, [ 1, 0 ], 0);
       assertCaretAtZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
       assertCaretAtZwsp(editor);
     });
@@ -162,10 +162,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#">a</a></p><p>b<a href="#">c</a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -175,10 +175,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#">a</a>b</p><p><a href="#">c</a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinySelections.setCursor(editor, [ 1, 0 ], 0);
       assertCaretAtZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -190,10 +190,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0 ], 1, [ 0, 1, 0, 0 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -203,10 +203,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       assertCaretAtZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
       assertCaretAtZwsp(editor);
     });
@@ -216,10 +216,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -229,10 +229,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       assertCaretAtZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -242,10 +242,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 1, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
       assertCaretAtZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
       assertCaretAtZwsp(editor);
     });
@@ -255,10 +255,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -270,7 +270,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
       assertCaretAtZwsp(editor);
     });
@@ -280,7 +280,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
       assertCaretAtZwsp(editor);
     });
@@ -290,7 +290,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -300,7 +300,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
       assertCaretAfterZwsp(editor);
     });
@@ -318,7 +318,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyContentActions.keystroke(editor, Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() });
       TinyAssertions.assertSelection(editor, [ 0, 2 ], 3, [ 0, 2 ], 3);
     });
 
@@ -327,7 +327,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
       editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyContentActions.keystroke(editor, Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() });
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     });
   });

@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { fillActiveDialog, generalTabSelectors, ImageDialogData, pWaitForDialog, submitDialog } from '../module/Helpers';
+import { fillActiveDialog, generalTabSelectors, ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     editor.setContent(content);
     TinySelections.setSelectionFrom(editor, cursorPos);
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
   };
 
   const pCreateTestOnContent = async (editor: Editor, data: Partial<ImageDialogData>, cursorPos: Cursors.RangeSpec | Cursors.CursorSpec, initialContent: string, expectedContent: string) => {
@@ -39,19 +39,19 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
 
   const pTestUiStateDisabled = async (editor: Editor) => {
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     UiFinder.exists(SugarBody.body(), generalTabSelectors.alt + ':disabled');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   };
 
   const pTestUiStateEnabled = async (editor: Editor, alt: string) => {
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     const altElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.alt).getOrDie();
     const value = Value.get(altElem);
     assert.equal(value, alt, 'Assert input value');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   };
 
@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     await UiFinder.pWaitForState('Check alt text input is disabled', SugarBody.body(), generalTabSelectors.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
     TinyUiActions.clickOnUi(editor, generalTabSelectors.decorative);
     await UiFinder.pWaitForState('Check alt text input is enabled', SugarBody.body(), generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'));
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   });
 

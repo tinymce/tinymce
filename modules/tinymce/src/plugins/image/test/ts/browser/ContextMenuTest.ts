@@ -1,12 +1,10 @@
-import { Keyboard, Keys, Waiter } from '@ephox/agar';
+import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
-import { SugarDocument } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { pWaitForDialog, submitDialog } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -24,8 +22,8 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   };
 
   const pWaitForAndSubmitDialog = async (editor: Editor) => {
-    await pWaitForDialog(editor);
-    submitDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
+    TinyUiActions.submitDialog(editor);
   };
 
   it('TBA: Opening context menus on a selected figure', async () => {
@@ -34,7 +32,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     // Note: A fake caret will be the first element in the dom
     TinySelections.setSelection(editor, [], 1, [], 2);
     await pOpenContextMenu(editor, 'figure.image');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
@@ -45,7 +43,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     // Note: A fake caret will be the first element in the dom
     TinySelections.setCursor(editor, [ 2, 0 ], 1);
     await pOpenContextMenu(editor, 'figure.image');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
   });
@@ -55,7 +53,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     editor.setContent('<p><img src="image.png" /></p><p>Second paragraph</p>', { format: 'raw' });
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await pOpenContextMenu(editor, 'img');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });
@@ -65,7 +63,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
     editor.setContent('<p><img src="image.png" /></p><p>Second paragraph</p>', { format: 'raw' });
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
     await pOpenContextMenu(editor, 'img');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     await pWaitForAndSubmitDialog(editor);
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });

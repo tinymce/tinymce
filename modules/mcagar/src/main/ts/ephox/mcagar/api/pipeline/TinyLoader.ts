@@ -2,8 +2,8 @@ import { TestLogs } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import 'tinymce';
-import * as Loader from '../loader/Loader';
-import { setupTinymceBaseUrl } from '../loader/Urls';
+import * as Loader from '../../loader/Loader';
+import { setupTinymceBaseUrl } from '../../loader/Urls';
 
 type FailureCallback = Loader.FailureCallback;
 type SuccessCallback = Loader.SuccessCallback;

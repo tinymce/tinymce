@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.anchor.AnchorAlertTest', () => {
     const editor = hook.editor();
     editor.setContent('');
     await pAddAnchor(editor, '');
-    await TinyUiActions.pWaitForPopup(editor, alertDialogSelector);
+    await TinyUiActions.pWaitForDialog(editor, alertDialogSelector);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(OK)');
     await Waiter.pTryUntil('Alert dialog should close', () => UiFinder.notExists(SugarBody.body(), alertDialogSelector));
     await Waiter.pTryUntil('Anchor Dialog should not close', () => UiFinder.exists(SugarBody.body(), dialogSelector));

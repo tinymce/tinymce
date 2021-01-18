@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.charmap.CharmapUserDefinedTest', () => {
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should have moved to input', doc, 'input');
     const input = FocusTools.setActiveValue(doc, 'A');
     fakeEvent(input, 'input');

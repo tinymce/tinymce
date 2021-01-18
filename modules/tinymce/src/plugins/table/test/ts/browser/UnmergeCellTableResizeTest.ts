@@ -1,6 +1,6 @@
 import { Assertions, Chain, Guard, Keyboard, Keys, Log, NamedChain, TestLogs, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor, TinyDom } from '@ephox/mcagar';
+import { McEditor, TinyDom } from '@ephox/mcagar';
 import { SelectorFind } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -299,7 +299,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
   );
 
   NamedChain.pipeline(Log.chains('TBA', 'Table: Resize table, merge and split cells, assert the table width does not change', [
-    NamedChain.write('editor', Editor.cFromSettings({
+    NamedChain.write('editor', McEditor.cFromSettings({
       plugins: 'table',
       width: 400,
       theme: 'silver',
@@ -318,6 +318,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.UnmergeCellTableResizeTest', (
     NamedChain.read('editor', cAssertWidth('with whole table merged and split', mergeWholeTable)),
     NamedChain.read('editor', cMergeResizeSplitAssertWidth('resized after merge and then split', mergeResizeSplit)),
 
-    NamedChain.read('editor', Editor.cRemove)
+    NamedChain.read('editor', McEditor.cRemove)
   ]), success, failure, TestLogs.init());
 });

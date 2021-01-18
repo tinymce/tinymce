@@ -1,6 +1,6 @@
 import { Assertions, Chain, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor, UiChains } from '@ephox/mcagar';
+import { ApiChains, McEditor, UiChains } from '@ephox/mcagar';
 import { SugarBody, Visibility } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -17,7 +17,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123</p><p><span contenteditable="false">CEF</span>456</p>');
       TinySelections.setCursor(editor, [ 1, 1 ], 3);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+      TinyContentActions.keystroke(editor, Keys.home());
       TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
     });
 
@@ -25,7 +25,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><span contenteditable="false">CEF</span></p>');
       TinySelections.setCursor(editor, [ 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+      TinyContentActions.keystroke(editor, Keys.home());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     });
 
@@ -33,7 +33,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123</p><p><span contenteditable="false">CEF</span>456<br>789</p>');
       TinySelections.setSelection(editor, [ 1, 1 ], 3, [ 1, 1 ], 3);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+      TinyContentActions.keystroke(editor, Keys.home());
       TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
     });
 
@@ -41,7 +41,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123</p><p><span contenteditable="false">CEF</span><br>456</p>');
       TinySelections.setCursor(editor, [ 1, 2 ], 3);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+      TinyContentActions.keystroke(editor, Keys.home());
       TinyAssertions.assertSelection(editor, [ 1, 2 ], 3, [ 1, 2 ], 3);
     });
 
@@ -49,7 +49,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+      TinyContentActions.keystroke(editor, Keys.home());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
@@ -60,7 +60,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123<span contenteditable="false">CEF</span></p><p>456</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+      TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 2 ], 1, [ 0, 2 ], 1);
     });
 
@@ -68,7 +68,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><span contenteditable="false">CEF</span></p>');
       TinySelections.setCursor(editor, [ 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+      TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     });
 
@@ -76,7 +76,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123<br>456<span contenteditable="false">CEF</span></p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 2 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+      TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 4 ], 1, [ 0, 4 ], 1);
     });
 
@@ -84,7 +84,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123<br><span contenteditable="false">CEF</span></p><p>456</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+      TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     });
 
@@ -92,7 +92,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>123</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+      TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
   });

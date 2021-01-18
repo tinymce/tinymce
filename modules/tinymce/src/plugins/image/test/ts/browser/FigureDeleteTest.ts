@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { generalTabSelectors, pWaitForDialog, setInputValue, submitDialog } from '../module/Helpers';
+import { generalTabSelectors, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -21,9 +21,9 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
     editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     setInputValue(generalTabSelectors.src, '');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContent(editor, '');
   });
 
@@ -32,9 +32,9 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
     editor.setContent('<figure class="image"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" /><figcaption>x</figcaption></figure>');
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    const dialog = await pWaitForDialog(editor);
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(dialog, 'label:contains("Show caption") input[type="checkbox"]');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContentPresence(editor, { img: 1, figure: 0, figcaption: 0 });
   });
 });

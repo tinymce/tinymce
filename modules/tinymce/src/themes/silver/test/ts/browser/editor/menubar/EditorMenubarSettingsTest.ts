@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Id, Result } from '@ephox/katamari';
-import { Editor as McagarEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -10,7 +10,7 @@ import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) => {
   SilverTheme();
 
-  const cCreateEditorWithMenubar = (menubar) => McagarEditor.cFromSettings({
+  const cCreateEditorWithMenubar = (menubar) => McEditor.cFromSettings({
     menubar,
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
@@ -42,7 +42,7 @@ UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for container', '.tox-tinymce'), '_tiny'),
         NamedChain.direct('body', cCountNumber('.tox-menubar'), 'numMenubars'),
         NamedChain.direct('numMenubars', Assertions.cAssertEq('Should be no menubars', 0), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -54,7 +54,7 @@ UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
         NamedChain.direct('menubar', cAssertIsDefaultMenubar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -66,7 +66,7 @@ UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
         NamedChain.direct('menubar', cAssertIsDefaultMenubar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -87,7 +87,7 @@ UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ])

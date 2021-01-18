@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/anchor/Plugin';
@@ -19,7 +19,7 @@ describe('browser.tinymce.plugins.anchor.AnchorInlineTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc 123</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+    TinyContentActions.keystroke(editor, Keys.space());
     await pAddAnchor(editor, 'abc', true);
     TinyAssertions.assertContent(editor, '<p>abc <a id="abc"></a>123</p>');
   });

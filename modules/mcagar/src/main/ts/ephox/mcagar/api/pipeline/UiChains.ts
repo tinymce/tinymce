@@ -1,8 +1,8 @@
 import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
-import { Editor } from '../alien/EditorTypes';
-import { getThemeSelectors } from './ThemeSelectors';
+import { Editor } from '../../alien/EditorTypes';
+import { getThemeSelectors } from '../ThemeSelectors';
 
 export interface UiChains {
   cClickOnToolbar: <T extends Editor> (label: string, selector: string) => Chain<T, T>;
