@@ -1,17 +1,33 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr } from '@ephox/katamari';
+import { SugarElement, SugarNode } from '@ephox/sugar';
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TransformOperations from 'ephox/snooker/operate/TransformOperations';
+import * as MockStructs from 'ephox/snooker/test/MockStructs';
 import TestGenerator from 'ephox/snooker/test/TestGenerator';
 
 UnitTest.test('TransformOperationsTest', () => {
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  let originalElements: Structs.ElementNew[] = [];
+  let expectedElements: Structs.ElementNew[] = [];
+
+  const clearElements = () => {
+    originalElements = [];
+    expectedElements = [];
+  };
+
+  // Original
+  const enO = (text: string, isNew: boolean, elemType: keyof HTMLElementTagNameMap = 'td') =>
+    MockStructs.getElementNew(originalElements, elemType, text, isNew);
+
+  // Expected
+  const enE = (text: string, isNew: boolean, elemType: keyof HTMLElementTagNameMap = 'td') =>
+    MockStructs.getElementNew(expectedElements, elemType, text, isNew);
 
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
-      return Structs.rowcells(row, 'tbody');
+      const hasCol = Arr.exists(row, (elementNew) => SugarNode.isTag('col')(elementNew.element));
+      return Structs.rowcells(row, hasCol ? 'colgroup' : 'tbody');
     });
   };
 
@@ -19,68 +35,83 @@ UnitTest.test('TransformOperationsTest', () => {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, (row, i) => {
       Arr.each(row.cells, (cell, j) => {
-        assert.eq(cell.element, actual[i].cells[j].element);
-        assert.eq(cell.isNew, actual[i].cells[j].isNew);
+        assert.eq(
+          cell.element.dom.innerText,
+          actual[i].cells[j].element.dom.innerText,
+          `innerText expected: "${cell.element.dom.innerText}". actual: "${actual[i].cells[j].element.dom.innerText}"`);
+        assert.eq(cell.isNew, actual[i].cells[j].isNew, 'isNew value matches');
       });
       assert.eq(row.section, actual[i].section);
     });
   };
+
+  const comparator = (a: SugarElement, b: SugarElement) => a.dom.innerText === b.dom.innerText;
 
   // Test basic changing to header (column)
   (() => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceColumn(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceColumn(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
       assertGrids(structExpected, actual);
+      clearElements();
     };
 
     check([
-      [ en('h(a)_0', true) ]
+      [ enO('h(a)_0', true) ]
     ], [
-      [ en('a', false) ]
+      [ enE('a', false) ]
+    ], 0);
+
+    // should not modify col elements
+    check([
+      [ enE('a', false, 'col'), enE('b', false, 'col') ],
+      [ enE('h(c)_0', true), enE('d', false) ],
+    ], [
+      [ enO('a', false, 'col'), enO('b', false, 'col') ],
+      [ enO('c', false), enO('d', false) ],
     ], 0);
 
     check([
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('h(c)_0', true), en('d', false) ],
-      [ en('e', false), en('h(f)_1', true), en('h(f)_1', true) ]
+      [ enE('a', false), enE('a', false), enE('a', false) ],
+      [ enE('b', false), enE('h(c)_0', true), enE('d', false) ],
+      [ enE('e', false), enE('h(f)_1', true), enE('h(f)_1', true) ]
     ], [
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('c', false), en('d', false) ],
-      [ en('e', false), en('f', false), en('f', false) ]
+      [ enO('a', false), enO('a', false), enO('a', false) ],
+      [ enO('b', false), enO('c', false), enO('d', false) ],
+      [ enO('e', false), enO('f', false), enO('f', false) ]
     ], 1);
 
     check([
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('h(c)_0', true), en('d', false) ],
-      [ en('f', false), en('f', false), en('f', false) ]
+      [ enE('a', false), enE('a', false), enE('a', false) ],
+      [ enE('b', false), enE('h(c)_0', true), enE('d', false) ],
+      [ enE('f', false), enE('f', false), enE('f', false) ]
     ], [
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('c', false), en('d', false) ],
-      [ en('f', false), en('f', false), en('f', false) ]
+      [ enO('a', false), enO('a', false), enO('a', false) ],
+      [ enO('b', false), enO('c', false), enO('d', false) ],
+      [ enO('f', false), enO('f', false), enO('f', false) ]
     ], 1);
 
     check([
-      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
-      [ en('h(b)_1', true), en('c', false), en('d', false) ],
-      [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('h(a)_0', true) ],
+      [ enE('h(b)_1', true), enE('c', false), enE('d', false) ],
+      [ enE('h(f)_2', true), enE('h(f)_2', true), enE('h(f)_2', true) ]
     ], [
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('c', false), en('d', false) ],
-      [ en('f', false), en('f', false), en('f', false) ]
+      [ enO('a', false), enO('a', false), enO('a', false) ],
+      [ enO('b', false), enO('c', false), enO('d', false) ],
+      [ enO('f', false), enO('f', false), enO('f', false) ]
     ], 0);
 
     check([
-      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
-      [ en('h(a)_0', true), en('h(a)_0', true), en('h(a)_0', true) ],
-      [ en('h(b)_1', true), en('c', false), en('d', false) ],
-      [ en('h(f)_2', true), en('h(f)_2', true), en('h(f)_2', true) ]
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('h(a)_0', true) ],
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('h(a)_0', true) ],
+      [ enE('h(b)_1', true), enE('c', false), enE('d', false) ],
+      [ enE('h(f)_2', true), enE('h(f)_2', true), enE('h(f)_2', true) ]
     ], [
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('a', false), en('a', false), en('a', false) ],
-      [ en('b', false), en('c', false), en('d', false) ],
-      [ en('f', false), en('f', false), en('f', false) ]
+      [ enO('a', false), enO('a', false), enO('a', false) ],
+      [ enO('a', false), enO('a', false), enO('a', false) ],
+      [ enO('b', false), enO('c', false), enO('d', false) ],
+      [ enO('f', false), enO('f', false), enO('f', false) ]
     ], 0);
   })();
 
@@ -89,55 +120,57 @@ UnitTest.test('TransformOperationsTest', () => {
     const check = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], index: number) => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
-      const actual = TransformOperations.replaceRow(structGrid, index, Fun.tripleEquals, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
+      const actual = TransformOperations.replaceRow(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
       assertGrids(structExpected, actual);
+      clearElements();
     };
 
     check([[]], [[]], 0);
+
     check([
-      [ en('h(a)_0', true) ]
+      [ enE('h(a)_0', true) ]
     ], [
-      [ en('a', false) ]
+      [ enO('a', false) ]
     ], 0);
 
     check([
-      [ en('a', false), en('b', false), en('e', false) ],
-      [ en('a', false), en('h(c)_0', true), en('h(f)_1', true) ],
-      [ en('a', false), en('d', false), en('h(f)_1', true) ]
+      [ enE('a', false), enE('b', false), enE('e', false) ],
+      [ enE('a', false), enE('h(c)_0', true), enE('h(f)_1', true) ],
+      [ enE('a', false), enE('d', false), enE('h(f)_1', true) ]
     ], [
-      [ en('a', false), en('b', false), en('e', false) ],
-      [ en('a', false), en('c', false), en('f', false) ],
-      [ en('a', false), en('d', false), en('f', false) ]
+      [ enO('a', false), enO('b', false), enO('e', false) ],
+      [ enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('d', false), enO('f', false) ]
     ], 1);
 
     check([
-      [ en('a', false), en('b', false), en('f', false) ],
-      [ en('a', false), en('h(c)_0', true), en('f', false) ],
-      [ en('a', false), en('d', false), en('f', false) ]
+      [ enE('a', false), enE('b', false), enE('f', false) ],
+      [ enE('a', false), enE('h(c)_0', true), enE('f', false) ],
+      [ enE('a', false), enE('d', false), enE('f', false) ]
     ], [
-      [ en('a', false), en('b', false), en('f', false) ],
-      [ en('a', false), en('c', false), en('f', false) ],
-      [ en('a', false), en('d', false), en('f', false) ]
+      [ enO('a', false), enO('b', false), enO('f', false) ],
+      [ enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('d', false), enO('f', false) ]
     ], 1);
 
     check([
-      [ en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
-      [ en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
-      [ en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
+      [ enE('h(a)_0', true), enE('h(b)_1', true), enE('h(f)_2', true) ],
+      [ enE('h(a)_0', true), enE('c', false), enE('h(f)_2', true) ],
+      [ enE('h(a)_0', true), enE('d', false), enE('h(f)_2', true) ]
     ], [
-      [ en('a', false), en('b', false), en('f', false) ],
-      [ en('a', false), en('c', false), en('f', false) ],
-      [ en('a', false), en('d', false), en('f', false) ]
+      [ enO('a', false), enO('b', false), enO('f', false) ],
+      [ enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('d', false), enO('f', false) ]
     ], 0);
 
     check([
-      [ en('h(a)_0', true), en('h(a)_0', true), en('h(b)_1', true), en('h(f)_2', true) ],
-      [ en('h(a)_0', true), en('h(a)_0', true), en('c', false), en('h(f)_2', true) ],
-      [ en('h(a)_0', true), en('h(a)_0', true), en('d', false), en('h(f)_2', true) ]
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('h(b)_1', true), enE('h(f)_2', true) ],
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('c', false), enE('h(f)_2', true) ],
+      [ enE('h(a)_0', true), enE('h(a)_0', true), enE('d', false), enE('h(f)_2', true) ]
     ], [
-      [ en('a', false), en('a', false), en('b', false), en('f', false) ],
-      [ en('a', false), en('a', false), en('c', false), en('f', false) ],
-      [ en('a', false), en('a', false), en('d', false), en('f', false) ]
+      [ enO('a', false), enO('a', false), enO('b', false), enO('f', false) ],
+      [ enO('a', false), enO('a', false), enO('c', false), enO('f', false) ],
+      [ enO('a', false), enO('a', false), enO('d', false), enO('f', false) ]
     ], 0);
   })();
 });

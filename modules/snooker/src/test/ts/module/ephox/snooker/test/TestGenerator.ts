@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 export default (): SimpleGenerators => {
@@ -18,10 +19,16 @@ export default (): SimpleGenerators => {
     return r;
   };
 
-  const replace = (name: string) => {
-    const r = 'h(' + name + ')_' + replaceCounter;
-    replaceCounter++;
-    return r;
+  const replace = (elem: SugarElement) => {
+    if (elem?.dom) {
+      elem.dom.innerText = 'h(' + elem.dom.innerText + ')_' + replaceCounter;
+      replaceCounter++;
+      return elem;
+    } else {
+      const r = 'h(' + elem + ')_' + replaceCounter;
+      replaceCounter++;
+      return r;
+    }
   };
 
   return {
