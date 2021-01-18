@@ -2,6 +2,6 @@
 # Format: [package_name]@[new_version]
 
 agar@5.2.0
-mcagar@5.2.0
+mcagar@6.0.0
 snooker@7.2.0
 sugar@7.1.0

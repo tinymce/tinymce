@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -10,7 +10,6 @@ import { getParentCaretContainer, isCaretNode } from 'tinymce/core/fmt/FormatCon
 import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as TypeText from '../../module/test/TypeText';
 
 describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -51,7 +50,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>a<strong>x</strong></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -103,7 +102,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong>x</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -156,7 +155,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
     removeCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>ax</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -183,7 +182,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
     applyCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong><strong>x</strong></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -217,7 +216,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p>a<br></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>a<strong>x</strong></p>');
     assertNormalizedContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -252,7 +251,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><strong>a<br></strong></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong>x</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -304,7 +303,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       });
     }));
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>ax</p>\n<p>&nbsp;</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -327,11 +326,11 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     applyCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'Hello');
+    TinyContentActions.type(editor, 'Hello');
     TinyAssertions.assertContent(editor, '<p><strong>Hello</strong></p>');
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 6, [ 0, 0, 0, 0 ], 6);
     removeCaretFormat(editor, 'bold', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'world');
+    TinyContentActions.type(editor, 'world');
     TinyAssertions.assertContent(editor, '<p><strong>Hello</strong>world</p>');
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 6, [ 0, 1, 0 ], 6);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
@@ -482,7 +481,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><span style="text-decoration: underline; font-size: 18px;">a</span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'underline', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline; font-size: 18px;">a</span><span style="font-size: 18px;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -513,7 +512,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><span style="text-decoration: underline; font-size: 18px;"><br></span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     removeCaretFormat(editor, 'underline', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="font-size: 18px;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -543,7 +542,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;"><br></span></span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
     removeCaretFormat(editor, 'underline', {});
-    TypeText.typeContentAtSelection(TinyDom.document(editor), 'x');
+    TinyContentActions.type(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="color: red;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [

@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { Focus, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';

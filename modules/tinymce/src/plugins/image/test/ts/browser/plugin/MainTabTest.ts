@@ -1,11 +1,11 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { assertCleanHtml, fillActiveDialog, pWaitForDialog, submitDialog } from '../../module/Helpers';
+import { assertCleanHtml, fillActiveDialog } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
   it('TBA: all image dialog ui options on empty editor', async () => {
     const editor = hook.editor();
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
 
     fillActiveDialog({
       src: { value: 'src' },
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
       },
       caption: true
     });
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, (
       '<figure class="image">' +
       '<img class="class1" src="src" alt="alt" width="100" height="200" />' +

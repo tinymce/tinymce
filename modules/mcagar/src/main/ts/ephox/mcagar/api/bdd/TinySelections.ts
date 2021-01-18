@@ -1,7 +1,7 @@
 import { Cursors, UiFinder } from '@ephox/agar';
-import { Editor } from '../alien/EditorTypes';
-import { createDomSelection } from '../selection/SelectionTools';
-import { TinyDom } from './TinyDom';
+import { Editor } from '../../alien/EditorTypes';
+import { createDomSelection } from '../../selection/SelectionTools';
+import { TinyDom } from '../TinyDom';
 
 const setSelection = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number, fireNodeChange: boolean = true): void => {
   const rng = createDomSelection(TinyDom.body(editor), startPath, soffset, finishPath, foffset);

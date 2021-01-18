@@ -1,6 +1,6 @@
 import { Chain, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
+import { McEditor, TinyApis } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';

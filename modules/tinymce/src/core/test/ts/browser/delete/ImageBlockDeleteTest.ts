@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -16,7 +16,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<img src="about:blank" class="block">b</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), {});
+      TinyContentActions.keystroke(editor, Keys.delete());
       TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
     });
 
@@ -24,7 +24,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p><p><img src="about:blank" class="block"></p><p>b</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), {});
+      TinyContentActions.keystroke(editor, Keys.delete());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 1);
     });
   });
@@ -34,7 +34,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<img src="about:blank" class="block">b</p>');
       TinySelections.setCursor(editor, [ 0, 2 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), {});
+      TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
     });
 
@@ -42,7 +42,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p><p><img src="about:blank" class="block"></p><p>b</p>');
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), {});
+      TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 1);
     });
   });
@@ -52,7 +52,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<img src="about:blank">b</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), {});
+      TinyContentActions.keystroke(editor, Keys.delete());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
@@ -60,7 +60,7 @@ describe('browser.tinymce.core.delete.ImageBlockDeleteTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>a<img src="about:blank">b</p>');
       TinySelections.setCursor(editor, [ 0, 2 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), {});
+      TinyContentActions.keystroke(editor, Keys.backspace());
       TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
     });
   });

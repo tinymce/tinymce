@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
-import { SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -26,8 +26,8 @@ describe('browser.tinymce.core.init.InitEditorNoThemeIframeTest', () => {
     const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
     const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
 
-    Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.getContainer()));
-    Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.getContentAreaContainer()));
-    Assertions.assertDomEq('Should be expected element', targetElement, SugarElement.fromDom(editor.getElement()));
+    Assertions.assertDomEq('Should be expected element', editorElement, TinyDom.container(editor));
+    Assertions.assertDomEq('Should be expected element', editorElement, TinyDom.contentAreaContainer(editor));
+    Assertions.assertDomEq('Should be expected element', targetElement, TinyDom.targetElement(editor));
   });
 });

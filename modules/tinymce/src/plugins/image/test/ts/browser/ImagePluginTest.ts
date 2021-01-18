@@ -6,9 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import {
-  advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData, pWaitForDialog, setInputValue, submitDialog
-} from '../module/Helpers';
+import { advancedTabSelectors, assertInputValue, fillActiveDialog, ImageDialogData, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -23,13 +21,13 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     editor.setContent(content);
     TinySelections.setSelectionFrom(editor, cursorPos);
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
   };
 
   const pCreateTestWithContent = async (editor: Editor, content: string, cursorPos: Cursors.CursorSpec | Cursors.RangeSpec, data: Partial<ImageDialogData>, expectedContent: string) => {
     await pInitAndOpenDialog(editor, content, cursorPos);
     fillActiveDialog(data, true);
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContent(editor, expectedContent);
   };
 
@@ -41,7 +39,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Advanced")');
     setInputValue(advancedTabSelectors.style, style);
     assertion();
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
   };
 
   it('TBA: Advanced image dialog margin space options on empty editor', () =>

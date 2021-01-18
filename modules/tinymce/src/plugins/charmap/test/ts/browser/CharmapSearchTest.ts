@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
@@ -32,7 +32,7 @@ describe('browser.tinymce.plugins.charmap.SearchTest', () => {
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on', doc, 'input'); // TODO: Remove duped startup of these tests
     const input = FocusTools.setActiveValue(doc, 'euro');
     fakeEvent(input, 'input');
@@ -44,9 +44,9 @@ describe('browser.tinymce.plugins.charmap.SearchTest', () => {
         assert.equal(value, '€', 'Search should show euro');
       }
     );
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     await FocusTools.pTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item');
-    Keyboard.activeKeydown(doc, Keys.enter(), { });
+    TinyUiActions.keydown(editor, Keys.enter());
     await Waiter.pTryUntil(
       'Waiting for content update',
       () => TinyAssertions.assertContent(editor, '<p>&euro;</p>')

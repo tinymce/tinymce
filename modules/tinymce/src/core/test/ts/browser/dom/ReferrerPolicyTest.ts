@@ -1,5 +1,5 @@
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 

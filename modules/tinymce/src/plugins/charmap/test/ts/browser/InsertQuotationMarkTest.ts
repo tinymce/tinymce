@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.charmap.InsertQuotationMarkTest', () => {
   it('TBA: Open dialog, click on the All tab and click on Quotation Mark and then assert Quotation Mark is inserted', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
-    const dialog = await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(dialog, '.tox-dialog__body-nav-item:contains(All)');
     Mouse.clickOn(dialog, '.tox-collection .tox-collection__item-icon:contains(")');
     TinyAssertions.assertContent(editor, '<p>"</p>');

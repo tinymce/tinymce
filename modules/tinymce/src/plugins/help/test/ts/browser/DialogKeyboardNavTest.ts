@@ -1,23 +1,24 @@
-import { FocusTools, Keyboard, Keys, Mouse } from '@ephox/agar';
+import { FocusTools, Keys, Mouse } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/help/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
-  const hook = TinyHooks.bddSetupLight({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'help',
     toolbar: 'help',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ], true);
 
   // Tab key press
-  const pressTabKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.tab(), { });
+  const pressTabKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
 
   // Down arrow key press to nav between tabs
-  const pressDownArrowKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down(), { });
+  const pressDownArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
 
   // Assert focus is on the expected form element
   const pAssertFocusOnItem = (label: string, selector: string) => FocusTools.pTryOnSelector(
@@ -34,49 +35,53 @@ describe('browser.tinymce.plugins.help.DialogKeyboardNavTest', () => {
   });
 
   it('TBA: test the tab key navigation cycles through all focusable fields in Handy Shortcuts tab', async () => {
+    const editor = hook.editor();
     selectTab('.tox-dialog__body-nav-item:contains("Handy Shortcuts")');
     await pAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Handy Shortcuts Items', '.tox-dialog__table');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Close Button', '.tox-button:contains("Close")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Handy Shortcuts Tab', '.tox-dialog__body-nav-item:contains("Handy Shortcuts")');
-    pressDownArrowKey();
+    pressDownArrowKey(editor);
   });
 
   it('TBA: test the tab key navigation cycles through all focusable fields in Keyboard Nav tab', async () => {
+    const editor = hook.editor();
     selectTab('.tox-dialog__body-nav-item:contains("Keyboard Navigation")');
     await pAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Installed Plugins', 'div[role="document"]');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Close Button', '.tox-button:contains("Close")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Keyboard Nav Tab', '.tox-dialog__body-nav-item:contains("Keyboard Navigation")');
-    pressDownArrowKey();
+    pressDownArrowKey(editor);
   });
 
   it('TBA: test the tab key navigation cycles through all focusable fields in Plugins tab', async () => {
+    const editor = hook.editor();
     selectTab('.tox-dialog__body-nav-item:contains("Plugins")');
     await pAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Installed Plugins', 'div[role="document"]');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Close Button', '.tox-button:contains("Close")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Plugins Tab', '.tox-dialog__body-nav-item:contains("Plugins")');
-    pressDownArrowKey();
+    pressDownArrowKey(editor);
   });
 
   it('TBA: test the tab key navigation cycles through all focusable fields in Version tab', async () => {
+    const editor = hook.editor();
     selectTab('.tox-dialog__body-nav-item:contains("Version")');
     await pAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('TinyMCE Version', 'div[role="document"]');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Close Button', '.tox-button:contains("Close")');
-    pressTabKey();
+    pressTabKey(editor);
     await pAssertFocusOnItem('Version Tab', '.tox-dialog__body-nav-item:contains("Version")');
   });
 });

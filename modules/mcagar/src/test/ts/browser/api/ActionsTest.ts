@@ -1,8 +1,8 @@
 import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
-import { ActionChains } from 'ephox/mcagar/api/ActionChains';
-import * as Editor from 'ephox/mcagar/api/Editor';
+import * as McEditor from 'ephox/mcagar/api/McEditor';
+import { ActionChains } from 'ephox/mcagar/api/pipeline/ActionChains';
 
 UnitTest.asynctest('ActionTest', (success, failure) => {
   let count: number;
@@ -33,7 +33,7 @@ UnitTest.asynctest('ActionTest', (success, failure) => {
   ]);
 
   const sTestStep = Chain.asStep({}, [
-    Editor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
+    McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
       code: 88,
@@ -55,7 +55,7 @@ UnitTest.asynctest('ActionTest', (success, failure) => {
       }
     }),
     Waiter.cTryUntilPredicate('Wait for 2 assertions', (_x) => count === 2),
-    Editor.cRemove
+    McEditor.cRemove
   ]);
 
   Pipeline.async({}, [

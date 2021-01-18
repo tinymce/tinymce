@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { assertInputValue, generalTabSelectors, pSetListBoxItem, pWaitForDialog, setInputValue } from '../module/Helpers';
+import { assertInputValue, generalTabSelectors, pSetListBoxItem, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImageListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.image.ImageListTest', () => {
       { title: 'Cat', value: 'mycat.jpg' }
     ];
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     await pSetListBoxItem(generalTabSelectors.images, 'Dog');
     assertInputValue(generalTabSelectors.src, 'mydog.jpg');
     setInputValue(generalTabSelectors.src, 'mycat.jpg');

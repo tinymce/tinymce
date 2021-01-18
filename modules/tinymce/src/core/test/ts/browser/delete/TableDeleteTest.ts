@@ -1,7 +1,7 @@
-import { Assertions, Keyboard, Keys } from '@ephox/agar';
+import { Assertions, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Attribute, Html, Remove, Replication, SelectorFilter } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -47,7 +47,7 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
     assert.isFalse(returnVal, 'Should return false since the operation is a noop');
   };
 
-  const keyboardBackspace = (editor: Editor) => Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), {});
+  const keyboardBackspace = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.backspace());
 
   context('Delete selected cells or cell ranges', () => {
     it('Collapsed range should be noop', () => {

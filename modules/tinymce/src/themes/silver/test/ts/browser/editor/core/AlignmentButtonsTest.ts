@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Id, Result } from '@ephox/katamari';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import Theme from 'tinymce/themes/silver/Theme';

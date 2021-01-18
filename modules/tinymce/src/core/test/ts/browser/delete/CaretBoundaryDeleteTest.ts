@@ -1,7 +1,7 @@
-import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
@@ -39,7 +39,7 @@ describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span>&nbsp;</p>');
     TinySelections.setSelection(editor, [ 0, 2 ], 1, [ 0, 2 ], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
@@ -61,7 +61,7 @@ describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span>&nbsp;</p>');
     TinySelections.setSelection(editor, [ 0, 2 ], 1, [ 0, 2 ], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
@@ -81,7 +81,7 @@ describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span>&nbsp;abc</p>');
     TinySelections.setSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 4);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
@@ -102,10 +102,10 @@ describe('browser.tinymce.core.delete.CaretBoundaryDeleteTest', () => {
     editor.setContent('<p><video controls="controls"><source src="custom/video.mp4" /></video></p>');
     TinySelections.select(editor, 'video', []);
     // Pressing right will add a fake caret, which will be removed when we press backspace
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     KeyUtils.type(editor, 'a');
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
