@@ -13,6 +13,7 @@ You can access a [full featured demo of TinyMCE](https://www.tiny.cloud/docs/dem
 ## Get started with TinyMCE
 
 [TinyMCE Cloud Deployment Quick Start Guide](https://www.tiny.cloud/docs/quick-start/)
+
 [TinyMCE Self-hosted Deployment Guide](https://www.tiny.cloud/docs/general-configuration-guide/advanced-install/)
 
 TinyMCE provides a range of configuration options that allow you to integrate it into your application. Start customizing with a [basic setup](https://www.tiny.cloud/docs/general-configuration-guide/basic-setup/).
