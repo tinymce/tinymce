@@ -29,8 +29,8 @@ const setupHooks = <T extends EditorType = EditorType>(
 ): Hook<T> => {
   let lazyEditor: () => T = hookNotRun;
   let teardownEditor: () => void = Fun.noop;
+  let setup: Optional<SetupElement> = Optional.none();
   let hasFailure = false;
-  let setup: Optional<SetupElement>;
 
   before((done) => {
     Arr.each(setupModules, Fun.call);
@@ -65,6 +65,7 @@ const setupHooks = <T extends EditorType = EditorType>(
     // Cleanup references
     lazyEditor = hookNotRun;
     teardownEditor = Fun.noop;
+    setup = Optional.none();
   });
 
   return {
