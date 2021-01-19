@@ -35,22 +35,20 @@ describe('atomic.robin.zone.AvoidSpecialTest', () => {
 
   it('skips special and CEF elements while walking the entire document', () => {
     const zones = ZoneWalker.walk(doc, root, root, 'en_us', WordDecision.fromItem, ZoneViewports.anything());
-    for (let id of [ '1.1', '1.2', '3.1' ]) {
-      assert.isTrue(idInZone(id, zones), 'Zones contains ' + id);
-    }
-    for (let id of [ '2.1', '2.2', '4.1' ]) {
-      assert.isFalse(idInZone(id, zones), 'Zone does not contain ' + id);
-    }
+    Arr.each([ '1.1', '1.2', '3.1' ], (id) => assert.isTrue(idInZone(id, zones), 'Zones contains ' + id));
+    Arr.each([ '2.1', '2.2', '4.1' ], (id) => assert.isFalse(idInZone(id, zones), 'Zone does not contain ' + id));
   });
 
   it('skips special elements while walking through special elements', () => {
     const ele = doc.find(root, '2').getOrDie();
+    assert.isTrue(doc.property().isSpecial(ele), 'Ensure nobody changed the document without updating this test');
     const zones = ZoneWalker.walk(doc, ele, ele, 'en_us', WordDecision.fromItem, ZoneViewports.anything());
     assert.isEmpty(zones);
   });
 
   it('skips CEF elements while walking through CEF elements', () => {
     const ele = doc.find(root, '4').getOrDie();
+    assert.isTrue(doc.property().isNonEditable(ele), 'Ensure nobody changed the document without updating this test');
     const zones = ZoneWalker.walk(doc, ele, ele, 'en_us', WordDecision.fromItem, ZoneViewports.anything());
     assert.isEmpty(zones);
   });

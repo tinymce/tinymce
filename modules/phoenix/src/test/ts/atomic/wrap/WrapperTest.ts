@@ -44,7 +44,7 @@ UnitTest.test('WrapperTest', () => {
     const actual = Wrapper.reuse(doc, start, startOffset, finish, finishOffset, predicate, nu);
     assert.eq(expected, TestRenders.ids(actual));
     assert.eq(postTest, doc.shortlog((item) => {
-      return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
+      return doc.property().isText(item) ? `text(${doc.property().getText(item)})` : item.id;
     }));
   };
 
