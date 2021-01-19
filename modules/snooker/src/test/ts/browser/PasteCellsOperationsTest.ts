@@ -263,15 +263,15 @@ UnitTest.test('PasteCellsOperationsTest', () => {
   );
 
   Assertions.checkPasteRaw(
-    'TINY-6765: Test pasting 1x1 table on table with only locked columns - check that locked columns are not pasted into',
+    'TINY-6765: Test pasting 1x1 table on table with only locked columns - check that locked columns are not pasted into (first and last locked columns should remain as first and last columns)',
 
     generateTestTable(
       [
-        '<tr><td>A1</td><td>B1</td><td>P1</td></tr>',
-        '<tr><td>A2</td><td>B2</td><td>?</td></tr>'
+        '<tr><td>A1</td><td>P1</td><td>B1</td></tr>',
+        '<tr><td>A2</td><td>?</td><td>B2</td></tr>'
       ],
       [], [],
-      { numCols: 2, colgroup: false, lockedColumns: [ 0, 1 ] }
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 2 ] }
     ),
 
     generateTestTable(
@@ -293,15 +293,15 @@ UnitTest.test('PasteCellsOperationsTest', () => {
   );
 
   Assertions.checkPasteRaw(
-    'TINY-6765: Test pasting 2x2 table on table with interspersed locked columns (1) - check that locked columns are not pasted into',
+    'TINY-6765: Test pasting 2x2 table on table with interspersed locked columns (1) - check that locked columns are not pasted into (first and last locked columns should remain as first and last columns)',
 
     generateTestTable(
       [
-        '<tr><td>A1</td><td>P1</td><td>C1</td><td>P3</td></tr>',
-        '<tr><td>A2</td><td>P2</td><td>C2</td><td>P4</td></tr>'
+        '<tr><td>A1</td><td>P1</td><td>P3</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>P2</td><td>P4</td><td>C2</td></tr>'
       ],
       [], [],
-      { numCols: 3, colgroup: false, lockedColumns: [ 0, 2 ] }
+      { numCols: 3, colgroup: false, lockedColumns: [ 0, 3 ] }
     ),
 
     generateTestTable(
@@ -326,16 +326,16 @@ UnitTest.test('PasteCellsOperationsTest', () => {
   );
 
   Assertions.checkPasteRaw(
-    'TINY-6765: Test pasting 2x2 table on table with interspersed locked columns (2) - check that locked columns are not pasted into',
+    'TINY-6765: Test pasting 2x2 table on table with interspersed locked columns (2) - check that locked columns are not pasted into (first and last locked columns should remain as first and last columns)',
 
     generateTestTable(
       [
-        '<tr><td>A1</td><td>B1</td><td>C1</td><td>?</td></tr>',
-        '<tr><td>A2</td><td>P1</td><td>C2</td><td>P3</td></tr>',
-        '<tr><td>?</td><td>P2</td><td>?</td><td>P4</td></tr>'
+        '<tr><td>A1</td><td>B1</td><td>?</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>P1</td><td>P3</td><td>C2</td></tr>',
+        '<tr><td>?</td><td>P2</td><td>P4</td><td>?</td></tr>'
       ],
       [], [],
-      { numCols: 3, colgroup: false, lockedColumns: [ 0, 2 ] }
+      { numCols: 3, colgroup: false, lockedColumns: [ 0, 3 ] }
     ),
 
     generateTestTable(
@@ -345,6 +345,40 @@ UnitTest.test('PasteCellsOperationsTest', () => {
       ],
       [], [],
       { numCols: 2, colgroup: false, lockedColumns: [ 0, 2 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>P1</td><td>P3</td></tr>',
+        '<tr><td>P2</td><td>P4</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [] }
+    ),
+
+    TableOperations.pasteCells, 0, 1, 1
+  );
+
+  Assertions.checkPasteRaw(
+    'TINY-6765: Test pasting 2x2 table on table with only locked columns check that locked columns are not pasted into (first and last locked columns should remain as first and last columns)',
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>?</td><td>?</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>P1</td><td>P3</td><td>C2</td></tr>',
+        '<tr><td>?</td><td>?</td><td>P2</td><td>P4</td><td>?</td></tr>'
+      ],
+      [], [],
+      { numCols: 3, colgroup: false, lockedColumns: [ 0, 1, 4 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A1</td><td>B1</td><td>C1</td></tr>',
+        '<tr><td>A2</td><td>B2</td><td>C2</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 1, 2 ] }
     ),
 
     generateTestTable(

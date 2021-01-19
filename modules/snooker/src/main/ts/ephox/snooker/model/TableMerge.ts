@@ -36,13 +36,13 @@ const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], g
   const endRow = startRow + mergeHeight;
   const endCol = startCol + mergeWidth + lockedColumns.length;
   const lockedColumnObj = Arr.mapToObject(lockedColumns, Fun.always);
-  let skipped = 0;
+  let skippedCol = 0;
   // embrace the mutation - I think this is easier to follow? To discuss.
   for (let r = startRow; r < endRow; r++) {
-    skipped = 0;
+    skippedCol = 0;
     for (let c = startCol; c < endCol; c++) {
       if (lockedColumnObj[c]) {
-        skipped++;
+        skippedCol++;
         continue;
       }
 
@@ -50,7 +50,8 @@ const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], g
         // mutation within mutation, it's mutatception
         MergingOperations.unmerge(gridA, GridRow.getCellElement(gridA[r], c), comparator, generator.cell);
       }
-      const newCell = GridRow.getCell(gridB[r - startRow], c - startCol - skipped);
+      const gridBColIndex = c - startCol - skippedCol;
+      const newCell = GridRow.getCell(gridB[r - startRow], gridBColIndex);
       const newCellElm = newCell.element;
       const replacement = generator.replace(newCellElm);
       GridRow.mutateCell(gridA[r], c, Structs.elementnew(replacement, true, newCell.isLocked));
@@ -70,14 +71,19 @@ const getValidStartAddress = (currentStartAddress: Structs.Address, grid: Struct
   };
 };
 
+const getLockedColumnsWithinBounds = (startAddress: Structs.Address, grid: Structs.RowCells[], lockedColumns: number[]) =>
+  Arr.filter(lockedColumns, (colNum) => colNum >= startAddress.column && colNum <= GridRow.cellLength(grid[0]) + startAddress.column);
+
 const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Result<Structs.RowCells[], string> => {
   const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
   const validStartAddress = getValidStartAddress(startAddress, gridA, lockedColumns);
-  const lockedColumnsWithinBounds = Arr.filter(lockedColumns, (colNum) => colNum >= validStartAddress.column && colNum <= GridRow.cellLength(gridB[0]) + validStartAddress.column);
+  const lockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridB, lockedColumns);
 
   const result = Fitment.measure(validStartAddress, gridA, gridB);
-  // Need to subtract extra delta for locked columns between startAddress and the startAdress + gridB column count as
-  // locked column cells cannot be merged into. Therefore, extra column cells need to be added to gridA to allow gridB cells to be merged
+  /*
+    Need to subtract extra delta for locked columns between startAddress and the startAdress + gridB column count as
+    locked column cells cannot be merged into. Therefore, extra column cells need to be added to gridA to allow gridB cells to be merged
+  */
   return result.map((diff) => {
     const delta: Fitment.Delta = {
       ...diff,
@@ -85,7 +91,11 @@ const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: 
     };
 
     const fittedGrid = Fitment.tailor(gridA, delta, generator);
-    return mergeTables(validStartAddress, fittedGrid, gridB, generator, comparator, lockedColumnsWithinBounds);
+
+    // Need to recalculate lockedColumnsWithinBounds as tailoring may have inserted columns before last locked column which changes the locked index
+    const newLockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(fittedGrid);
+    const newLockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridB, newLockedColumns);
+    return mergeTables(validStartAddress, fittedGrid, gridB, generator, comparator, newLockedColumnsWithinBounds);
   });
 };
 
@@ -99,29 +109,44 @@ const insertCols = (index: number, gridA: Structs.RowCells[], gridB: Structs.Row
   const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
 
   return Arr.map(fittedOldGrid, (gridRow, i) => {
-    const newCells = gridRow.cells.slice(0, index).concat(fittedNewGrid[i].cells).concat(gridRow.cells.slice(index, gridRow.cells.length));
-    return GridRow.setCells(gridRow, newCells);
+    return GridRow.addCells(gridRow, index, fittedNewGrid[i].cells);
   });
 };
+
+/*
+  Inserting rows with locked columns
+  - Tailor gridA first (this needs to be done first as the position of the locked columns may change when tailoring gridA and the location of the locked columns needs to be stable before tailoring gridB)
+    - measure delta between gridA and gridB (pasted rows) - if negative colDelta, gridA needs extra columns added to match gridB
+    - need to calculate how many columns in gridB cannot be directly inserted into gridA - this is how many extra columns need to be added to gridA (this consideres the fact locked column cannot be inserted into)
+      - nonLockedGridA + lockedGridA - gridB = colDelta (By subtracting locked column count, can get required diff)
+    - tailor gridA by adding the required extra columns if necessary either at the end of gridA or before the last column depending on whether it is locked
+  - Recalculate where the locked columns are in gridA after tailoring
+  - Measure and determine if extra columns need to be added to gridB (locked columns should not count towards the delta as colFilling (adding extra columns) for locked columns is handled separately)
+  - Do a lockedColFill on gridB
+  - Tailor gridB by adding extra columns to end of gridB if required
+*/
 
 const insertRows = (index: number, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Structs.RowCells[] => {
   MergingOperations.splitRows(gridA, index, comparator, generator.cell);
 
   const locked = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
-  const diff = Fitment.measureWidth(gridB, gridA);
-  // Don't want the locked columns to count towards to the colDelta as column filling for locked columns is handled separately
+  const diff = Fitment.measureWidth(gridA, gridB);
   const delta: Fitment.Delta = {
     ...diff,
-    colDelta: diff.colDelta + locked.length
+    colDelta: diff.colDelta - locked.length
   };
-  const fittedGridB = Fitment.lockedColFill(gridB, generator, locked);
-  const fittedNewGrid = Fitment.tailor(fittedGridB, delta, generator);
-
-  // Don't need to worry about locked columns in this pass,
-  // as gridB (pasted row) has already been adjusted to include cells for the locked columns and should match gridA column count
-  const secondDelta = Fitment.measureWidth(gridA, fittedNewGrid);
-  const fittedOldGrid = Fitment.tailor(gridA, secondDelta, generator);
+  const fittedOldGrid = Fitment.tailor(gridA, delta, generator);
   const { cols: oldCols, rows: oldRows } = GridRow.extractGridDetails(fittedOldGrid);
+
+  const newLocked = LockedColumnUtils.getLockedColumnsFromGrid(fittedOldGrid);
+  const secondDiff = Fitment.measureWidth(gridB, gridA);
+  // Don't want the locked columns to count towards to the colDelta as column filling for locked columns is handled separately
+  const secondDelta: Fitment.Delta = {
+    ...secondDiff,
+    colDelta: secondDiff.colDelta + newLocked.length
+  };
+  const fittedGridB = Fitment.lockedColFill(gridB, generator, newLocked);
+  const fittedNewGrid = Fitment.tailor(fittedGridB, secondDelta, generator);
 
   return oldCols.concat(oldRows.slice(0, index)).concat(fittedNewGrid).concat(oldRows.slice(index, oldRows.length));
 };

@@ -347,16 +347,16 @@ UnitTest.test('PasteRowOperationsTest', () => {
   );
 
   Assertions.checkPaste(
-    'TINY-6765: Test pasting rows (before) into table where there are locked columns - should wrap around locked columns',
+    'TINY-6765: Test pasting rows (before) into table where there are locked columns - should wrap around locked columns (last locked column should remain as last column)',
 
     generateTestTable(
       [
-        '<tr><td>A2</td><td>B2</td><td>C2</td><td>?</td></tr>',
-        '<tr><td>?</td><td>X1</td><td>?</td><td>X2</td></tr>',
-        '<tr><td>A3</td><td>B3</td><td>C3</td><td>?</td></tr>'
+        '<tr><td>A2</td><td>B2</td><td>?</td><td>C2</td></tr>',
+        '<tr><td>?</td><td>X1</td><td>X2</td><td>?</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>?</td><td>C3</td></tr>'
       ],
       [], [],
-      { numCols: 2, colgroup: false, lockedColumns: [ 0, 2 ] }
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 3 ] }
     ),
 
     generateTestTable(
@@ -374,16 +374,16 @@ UnitTest.test('PasteRowOperationsTest', () => {
   );
 
   Assertions.checkPaste(
-    'TINY-6765: Test pasting rows (after) into table where there are locked columns - should wrap around locked columns',
+    'TINY-6765: Test pasting rows (after) into table where there are locked columns - should wrap around locked columns (last locked column should remain as last column)',
 
     generateTestTable(
       [
-        '<tr><td>A2</td><td>B2</td><td>C2</td><td>?</td></tr>',
-        '<tr><td>A3</td><td>B3</td><td>C3</td><td>?</td></tr>',
-        '<tr><td>?</td><td>X1</td><td>?</td><td>X2</td></tr>'
+        '<tr><td>A2</td><td>B2</td><td>?</td><td>C2</td></tr>',
+        '<tr><td>A3</td><td>B3</td><td>?</td><td>C3</td></tr>',
+        '<tr><td>?</td><td>X1</td><td>X2</td><td>?</td></tr>'
       ],
       [], [],
-      { numCols: 2, colgroup: false, lockedColumns: [ 0, 2 ] }
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 3 ] }
     ),
 
     generateTestTable(
@@ -398,6 +398,33 @@ UnitTest.test('PasteRowOperationsTest', () => {
     '<tr><td>X1</td><td>X2</td></tr>',
 
     TableOperations.pasteRowsAfter, 0, 1, 0
+  );
+
+  Assertions.checkPaste(
+    'TINY-6765: Test pasting rows (after) into table where all columns are locked - (first and last locked column should remain as first and last column)',
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>?</td><td>?</td><td>B2</td></tr>',
+        '<tr><td>?</td><td>X1</td><td>X2</td><td>?</td></tr>',
+        '<tr><td>A3</td><td>?</td><td>?</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 3 ] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [ 0, 1 ] }
+    ),
+
+    '<tr><td>X1</td><td>X2</td></tr>',
+
+    TableOperations.pasteRowsAfter, 0, 0, 0
   );
 
   Assertions.checkPaste(

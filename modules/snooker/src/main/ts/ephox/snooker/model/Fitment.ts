@@ -68,14 +68,14 @@ const generateElements = (amount: number, generator: () => SugarElement, isLocke
 const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, lockedColumns: Record<number, boolean>): Structs.RowCells[] =>
   grid.concat(Arr.range(amount, () => {
     const row = grid[grid.length - 1];
-    const elements = generateElements(row.cells.length, getGenerator(row, generators), (idx) => lockedColumns[idx]);
+    const elements = generateElements(row.cells.length, getGenerator(row, generators), (idx) => !!lockedColumns[idx]);
     return GridRow.setCells(row, elements);
   }));
 
-const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
+const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, startIndex: number): Structs.RowCells[] =>
   Arr.map(grid, (row) => {
     const newChildren = generateElements(amount, getGenerator(row, generators), Fun.never);
-    return GridRow.setCells(row, row.cells.concat(newChildren));
+    return GridRow.addCells(row, startIndex, newChildren);
   });
 
 const lockedColFill = (grid: Structs.RowCells[], generators: SimpleGenerators, lockedColumns: number[]): Structs.RowCells[] =>
@@ -90,9 +90,13 @@ const lockedColFill = (grid: Structs.RowCells[], generators: SimpleGenerators, l
 const tailor = (gridA: Structs.RowCells[], delta: Delta, generators: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
   const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
-  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators);
   const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
-  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators, Arr.mapToObject(lockedColumns, Fun.always));
+  const gridWidth = GridRow.cellLength(gridA[0]);
+  const isLastColLocked = Arr.exists(lockedColumns, (locked) => locked === gridWidth - 1 );
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators, isLastColLocked ? gridWidth - 1 : gridWidth);
+  // Need to recalculate locked column positions
+  const newLockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(modifiedCols);
+  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators, Arr.mapToObject(newLockedColumns, Fun.always));
 };
 
 export { measure, measureWidth, measureHeight, tailor, lockedColFill };
