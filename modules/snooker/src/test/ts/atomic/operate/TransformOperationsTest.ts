@@ -1,6 +1,8 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { SugarElement, SugarNode, TextContent } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import { Generators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TransformOperations from 'ephox/snooker/operate/TransformOperations';
@@ -16,13 +18,16 @@ UnitTest.test('TransformOperationsTest', () => {
     expectedElements = [];
   };
 
-  // Original
-  const enO = (text: string, isNew: boolean, elemType: keyof HTMLElementTagNameMap = 'td') =>
-    MockStructs.getElementNew(originalElements, elemType, text, isNew);
+  const en = (elements: Structs.ElementNew[]) => (text: string, isNew: boolean, elemType: 'td' | 'th' | 'col' = 'td') => {
+    const elementNew = MockStructs.getElementNew(elements, elemType, text, isNew);
+    elements.push(elementNew);
+    return elementNew;
+  };
 
   // Expected
-  const enE = (text: string, isNew: boolean, elemType: keyof HTMLElementTagNameMap = 'td') =>
-    MockStructs.getElementNew(expectedElements, elemType, text, isNew);
+  const enE = en(expectedElements);
+  // Actual
+  const enO = en(originalElements);
 
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
@@ -31,21 +36,18 @@ UnitTest.test('TransformOperationsTest', () => {
     });
   };
 
-  const assertGrids = (expected: Structs.RowCells[], actual: Structs.RowCells[]) => {
-    assert.eq(expected.length, actual.length);
+  const assertGrids = (actual: Structs.RowCells[], expected: Structs.RowCells[]) => {
+    assert.lengthOf(actual, expected.length);
     Arr.each(expected, (row, i) => {
       Arr.each(row.cells, (cell, j) => {
-        assert.eq(
-          cell.element.dom.innerText,
-          actual[i].cells[j].element.dom.innerText,
-          `innerText expected: "${cell.element.dom.innerText}". actual: "${actual[i].cells[j].element.dom.innerText}"`);
-        assert.eq(cell.isNew, actual[i].cells[j].isNew, 'isNew value matches');
+        const actualCell = actual[i].cells[j];
+        assert.equal(TextContent.get(actualCell.element), TextContent.get(cell.element));
       });
-      assert.eq(row.section, actual[i].section);
+      assert.equal(actual[i].section, row.section);
     });
   };
 
-  const comparator = (a: SugarElement, b: SugarElement) => a.dom.innerText === b.dom.innerText;
+  const comparator = (a: SugarElement, b: SugarElement) => TextContent.get(a) === TextContent.get(b);
 
   // Test basic changing to header (column)
   (() => {
@@ -53,7 +55,7 @@ UnitTest.test('TransformOperationsTest', () => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceColumn(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
-      assertGrids(structExpected, actual);
+      assertGrids(actual, structExpected);
       clearElements();
     };
 
@@ -121,7 +123,7 @@ UnitTest.test('TransformOperationsTest', () => {
       const structExpected = mapToStructGrid(expected);
       const structGrid = mapToStructGrid(grid);
       const actual = TransformOperations.replaceRow(structGrid, index, comparator, Generators.transform('scope', 'td')(TestGenerator()).replaceOrInit);
-      assertGrids(structExpected, actual);
+      assertGrids(actual, structExpected);
       clearElements();
     };
 
