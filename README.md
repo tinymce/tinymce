@@ -50,7 +50,7 @@ Sometimes your business requirements can be quite unique, and you need the freed
 
 For the professional software teams that require more in-depth efficiency, compliance or collaborative features built to enterprise-grade standards, please [get in touch with our team](https://www.tiny.cloud/contact/).
 
-Tiny also offers dedicated SLA's and support for professional development teams.
+Tiny also offers dedicated SLAs and support for professional development teams.
 
 ## Compiling and contributing
 
