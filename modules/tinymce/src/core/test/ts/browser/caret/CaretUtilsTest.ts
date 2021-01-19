@@ -1,31 +1,25 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { LegacyUnit } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import $ from 'tinymce/core/api/dom/DomQuery';
-import Env from 'tinymce/core/api/Env';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CaretUtils from 'tinymce/core/caret/CaretUtils';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import * as CaretAsserts from '../../module/test/CaretAsserts';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+describe('browser.tinymce.core.CaretUtilTest', () => {
   const assertRange = CaretAsserts.assertRange;
   const createRange = CaretAsserts.createRange;
-  const viewBlock = ViewBlock();
-
-  if (!Env.ceFalse) {
-    return;
-  }
+  const viewBlock = ViewBlock.bddSetup();
 
   const ZWSP = Zwsp.ZWSP;
 
-  const getRoot = () => {
-    return viewBlock.get();
-  };
+  const getRoot = viewBlock.get;
 
-  const setupHtml = (html) => {
+  const setupHtml = (html: string) => {
     viewBlock.update(html);
 
     // IE messes zwsp up on innerHTML so we need to first set markers then replace then using dom operations
@@ -33,58 +27,54 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     replaceWithZwsp(viewBlock.get());
   };
 
-  const replaceWithZwsp = (node) => {
-    for (let i = 0; i < node.childNodes.length; i++) {
-      const childNode = node.childNodes[i];
-
+  const replaceWithZwsp = (node: Node) => {
+    Arr.each(node.childNodes, (childNode) => {
       if (childNode.nodeType === 3) {
         childNode.nodeValue = childNode.nodeValue.replace(/__ZWSP__/, ZWSP);
       } else {
         replaceWithZwsp(childNode);
       }
-    }
+    });
   };
 
-  const findElm = (selector) => {
-    return $(selector, getRoot())[0];
-  };
+  const findElm = (selector: string) => $(selector, getRoot())[0];
 
-  suite.test('isForwards', () => {
-    LegacyUnit.equal(CaretUtils.isForwards(1), true);
-    LegacyUnit.equal(CaretUtils.isForwards(10), true);
-    LegacyUnit.equal(CaretUtils.isForwards(0), false);
-    LegacyUnit.equal(CaretUtils.isForwards(-1), false);
-    LegacyUnit.equal(CaretUtils.isForwards(-10), false);
+  it('isForwards', () => {
+    assert.isTrue(CaretUtils.isForwards(1));
+    assert.isTrue(CaretUtils.isForwards(10));
+    assert.isFalse(CaretUtils.isForwards(0));
+    assert.isFalse(CaretUtils.isForwards(-1));
+    assert.isFalse(CaretUtils.isForwards(-10));
   });
 
-  suite.test('isBackwards', () => {
-    LegacyUnit.equal(CaretUtils.isBackwards(1), false);
-    LegacyUnit.equal(CaretUtils.isBackwards(10), false);
-    LegacyUnit.equal(CaretUtils.isBackwards(0), false);
-    LegacyUnit.equal(CaretUtils.isBackwards(-1), true);
-    LegacyUnit.equal(CaretUtils.isBackwards(-10), true);
+  it('isBackwards', () => {
+    assert.isFalse(CaretUtils.isBackwards(1));
+    assert.isFalse(CaretUtils.isBackwards(10));
+    assert.isFalse(CaretUtils.isBackwards(0));
+    assert.isTrue(CaretUtils.isBackwards(-1));
+    assert.isTrue(CaretUtils.isBackwards(-10));
   });
 
-  suite.test('findNode', () => {
+  it('findNode', () => {
     setupHtml('<b>abc</b><b><i>123</i></b>def');
 
-    const isBold = (node) => {
+    const isBold = (node: Node) => {
       return node.nodeName === 'B';
     };
 
-    const isText = (node) => {
+    const isText = (node: Node) => {
       return node.nodeType === 3;
     };
 
     LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), 1, isBold, getRoot()), getRoot().firstChild);
     LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), 1, isText, getRoot()), getRoot().firstChild.firstChild);
-    LegacyUnit.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isBold, getRoot().childNodes[1]) === null, true);
-    LegacyUnit.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isText, getRoot().childNodes[1]).nodeName, '#text');
+    assert.isNull(CaretUtils.findNode(getRoot().childNodes[1], 1, isBold, getRoot().childNodes[1]));
+    assert.equal(CaretUtils.findNode(getRoot().childNodes[1], 1, isText, getRoot().childNodes[1]).nodeName, '#text');
     LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), -1, isBold, getRoot()), getRoot().childNodes[1]);
     LegacyUnit.equalDom(CaretUtils.findNode(getRoot(), -1, isText, getRoot()), getRoot().lastChild);
   });
 
-  suite.test('getEditingHost', () => {
+  it('getEditingHost', () => {
     setupHtml('<span contentEditable="true"><span contentEditable="false"></span></span>');
 
     LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot(), getRoot()), getRoot());
@@ -92,7 +82,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     LegacyUnit.equalDom(CaretUtils.getEditingHost(getRoot().firstChild.firstChild, getRoot()), getRoot().firstChild);
   });
 
-  suite.test('getParentBlock', () => {
+  it('getParentBlock', () => {
     setupHtml('<p>abc</p><div><p><table><tr><td>X</td></tr></p></div>');
 
     LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('p:first')), findElm('p:first'));
@@ -101,26 +91,26 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     LegacyUnit.equalDom(CaretUtils.getParentBlock(findElm('table')), findElm('table'));
   });
 
-  suite.test('isInSameBlock', () => {
+  it('isInSameBlock', () => {
     setupHtml('<p>abc</p><p>def<b>ghj</b></p>');
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameBlock(
+    assert.isFalse(CaretUtils.isInSameBlock(
       CaretPosition(findElm('p:first').firstChild, 0),
       CaretPosition(findElm('p:last').firstChild, 0)
-    ), false);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameBlock(
+    assert.isTrue(CaretUtils.isInSameBlock(
       CaretPosition(findElm('p:first').firstChild, 0),
       CaretPosition(findElm('p:first').firstChild, 0)
-    ), true);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameBlock(
+    assert.isTrue(CaretUtils.isInSameBlock(
       CaretPosition(findElm('p:last').firstChild, 0),
       CaretPosition(findElm('b').firstChild, 0)
-    ), true);
+    ));
   });
 
-  suite.test('isInSameEditingHost', () => {
+  it('isInSameEditingHost', () => {
     setupHtml(
       '<p>abc</p>' +
       'def' +
@@ -130,33 +120,33 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
       '</span>'
     );
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameEditingHost(
+    assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first').firstChild, 0),
       CaretPosition(findElm('p:first').firstChild, 1)
-    ), true);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameEditingHost(
+    assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first').firstChild, 0),
       CaretPosition(getRoot().childNodes[1], 1)
-    ), true);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameEditingHost(
+    assert.isTrue(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('span span:first').firstChild, 0),
       CaretPosition(findElm('span span:first').firstChild, 1)
-    ), true);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameEditingHost(
+    assert.isFalse(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('p:first').firstChild, 0),
       CaretPosition(findElm('span span:first').firstChild, 1)
-    ), false);
+    ));
 
-    LegacyUnit.strictEqual(CaretUtils.isInSameEditingHost(
+    assert.isFalse(CaretUtils.isInSameEditingHost(
       CaretPosition(findElm('span span:first').firstChild, 0),
       CaretPosition(findElm('span span:last').firstChild, 1)
-    ), false);
+    ));
   });
 
-  suite.test('normalizeRange', () => {
+  it('normalizeRange', () => {
     setupHtml(
       'abc<span contentEditable="false">1</span>def'
     );
@@ -167,7 +157,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange deep', () => {
+  it('normalizeRange deep', () => {
     setupHtml(
       '<i><b>abc</b></i><span contentEditable="false">1</span><i><b>def</b></i>'
     );
@@ -184,7 +174,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('b:last').firstChild, 0)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange break at candidate', () => {
+  it('normalizeRange break at candidate', () => {
     setupHtml(
       '<p><b>abc</b><input></p><p contentEditable="false">1</p><p><input><b>abc</b></p>'
     );
@@ -199,7 +189,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     );
   });
 
-  suite.test('normalizeRange at block caret container', () => {
+  it('normalizeRange at block caret container', () => {
     setupHtml(
       '<p data-mce-caret="before">\u00a0</p><p contentEditable="false">1</p><p data-mce-caret="after">\u00a0</p>'
     );
@@ -210,7 +200,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(findElm('p:last').firstChild, 1)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange at inline caret container', () => {
+  it('normalizeRange at inline caret container', () => {
     setupHtml(
       'abc<span contentEditable="false">1</span>def'
     );
@@ -232,7 +222,7 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().childNodes[3], 1)), createRange(getRoot(), 3));
   });
 
-  suite.test('normalizeRange at inline caret container (combined)', () => {
+  it('normalizeRange at inline caret container (combined)', () => {
     setupHtml(
       'abc' + ZWSP + '<span contentEditable="false">1</span>' + ZWSP + 'def'
     );
@@ -243,17 +233,11 @@ UnitTest.asynctest('browser.tinymce.core.CaretUtilTest', (success, failure) => {
     assertRange(CaretUtils.normalizeRange(-1, getRoot(), createRange(getRoot().lastChild, 1)), createRange(getRoot(), 2));
   });
 
-  suite.test('normalizeRange at inline caret container after block', () => {
+  it('normalizeRange at inline caret container after block', () => {
     setupHtml(
       '<p><span contentEditable="false">1</span></p>' + ZWSP + 'abc'
     );
 
     assertRange(CaretUtils.normalizeRange(1, getRoot(), createRange(getRoot().lastChild, 0)), createRange(getRoot().lastChild, 0));
   });
-
-  viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), () => {
-    viewBlock.detach();
-    success();
-  }, failure);
 });

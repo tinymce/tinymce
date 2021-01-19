@@ -1,8 +1,12 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
-UnitTest.test('atomic.tinymce.core.text.ZwspTest', () => {
-  Assert.eq('ZWSP should be FEFF', '\uFEFF', Zwsp.ZWSP);
-  Assert.eq('isZwsp(ZWSP) should be true', true, Zwsp.isZwsp(Zwsp.ZWSP));
-  Assert.eq('ZWSP should be stripped out', 'ab', Zwsp.trim('a' + Zwsp.ZWSP + 'b'));
+describe('atomic.tinymce.core.text.ZwspTest', () => {
+  it('Zero-width space', () => {
+    assert.equal(Zwsp.ZWSP, '\uFEFF', 'ZWSP should be FEFF');
+    assert.isTrue(Zwsp.isZwsp(Zwsp.ZWSP), 'isZwsp(ZWSP) should be true');
+    assert.equal(Zwsp.trim('a' + Zwsp.ZWSP + 'b'), 'ab', 'ZWSP should be stripped out');
+  });
 });

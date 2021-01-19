@@ -1,62 +1,58 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as CefDeleteAction from 'tinymce/core/delete/CefDeleteAction';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+type DeleteActionAdt = CefDeleteAction.DeleteActionAdt;
 
-  const cSetHtml = (html) => {
-    return Chain.op(() => {
-      viewBlock.update(html);
-    });
+describe('browser.tinymce.core.delete.CefDeleteActionTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
+
+  const setHtml = viewBlock.update;
+
+  const readAction = (forward: boolean, cursorPath: number[], cursorOffset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
+    const rng = document.createRange();
+    rng.setStart(container.dom, cursorOffset);
+    rng.setEnd(container.dom, cursorOffset);
+    return CefDeleteAction.read(viewBlock.get(), forward, rng);
   };
 
-  const cReadAction = (forward, cursorPath, cursorOffset) => {
-    return Chain.mapper((viewBlock: any) => {
-      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), cursorPath).getOrDie();
-      const rng = document.createRange();
-      rng.setStart(container.dom, cursorOffset);
-      rng.setEnd(container.dom, cursorOffset);
-      return CefDeleteAction.read(viewBlock.get(), forward, rng);
-    });
+  const assertRemoveElementAction = (actionOpt: Optional<DeleteActionAdt>, elementPath: number[]) => {
+    const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
+    const action = actionOpt.getOrDie();
+    const value = actionValue(action) as SugarElement<Element>;
+    assert.equal(actionName(action), 'remove', 'Should be expected action type');
+    Assertions.assertDomEq('Should be expected element', element, value);
   };
 
-  const cAssertRemoveElementAction = (elementPath) => {
-    return Chain.op((actionOption: Optional<any>) => {
-      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
-      const action = actionOption.getOrDie();
-      Assertions.assertEq('Should be expected action type', 'remove', actionName(action));
-      Assertions.assertDomEq('Should be expected element', element, actionValue(action));
-    });
+  const assertMoveToElementAction = (actionOpt: Optional<DeleteActionAdt>, elementPath: number[]) => {
+    const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
+    const action = actionOpt.getOrDie();
+    const value = actionValue(action) as SugarElement<Element>;
+    assert.equal(actionName(action), 'moveToElement', 'Should be expected action type');
+    Assertions.assertDomEq('Should be expected element', element, value);
   };
 
-  const cAssertMoveToElementAction = (elementPath) => {
-    return Chain.op((actionOption: Optional<any>) => {
-      const element = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
-      const action = actionOption.getOrDie();
-      Assertions.assertEq('Should be expected action type', 'moveToElement', actionName(action));
-      Assertions.assertDomEq('Should be expected element', element, actionValue(action));
-    });
+  const assertMoveToPositionAction = (actionOpt: Optional<DeleteActionAdt>, elementPath: number[], offset: number) => {
+    const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
+    const action = actionOpt.getOrDie();
+    const value = actionValue(action) as CaretPosition;
+    assert.equal(actionName(action), 'moveToPosition', 'Should be expected action type');
+    Assertions.assertDomEq('Should be expected container', container, SugarElement.fromDom(value.container()));
+    assert.equal(value.offset(), offset, 'Should be expected offset');
   };
 
-  const cAssertMoveToPositionAction = (elementPath, offset) => {
-    return Chain.op((actionOption: Optional<any>) => {
-      const container = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), elementPath).getOrDie();
-      const action = actionOption.getOrDie();
-      Assertions.assertEq('Should be expected action type', 'moveToPosition', actionName(action));
-      Assertions.assertDomEq('Should be expected container', container, SugarElement.fromDom(actionValue(action).container()));
-      Assertions.assertEq('Should be expected offset', offset, actionValue(action).offset());
-    });
+  const assertActionNone = (action: Optional<DeleteActionAdt>) => {
+    assert.isTrue(action.isNone(), 'Action value should be none');
   };
 
-  const cAssertActionNone = Chain.op((actionOption: Optional<any>) => {
-    Assertions.assertEq('Action value should be none', true, actionOption.isNone());
-  });
-
-  const actionName = (action) => {
+  const actionName = (action: DeleteActionAdt) => {
     return action.fold(
       Fun.constant('remove'),
       Fun.constant('moveToElement'),
@@ -64,244 +60,269 @@ UnitTest.asynctest('browser.tinymce.core.delete.CefDeleteActionTest', (success, 
     );
   };
 
-  const actionValue = (action) => {
-    return action.fold(
+  const actionValue = (action: DeleteActionAdt) => {
+    return action.fold<SugarElement<Element> | CaretPosition>(
       SugarElement.fromDom,
       SugarElement.fromDom,
       Fun.identity
     );
   };
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('None actions where caret is not near a cef element', GeneralSteps.sequence([
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cReadAction(true, [ 0, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cReadAction(false, [ 0, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cReadAction(true, [ 0, 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p>'),
-        cReadAction(false, [ 0, 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 0, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
-        cReadAction(false, [ 0, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p>b</p>'),
-        cReadAction(true, [ 1, 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it not next to ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p>b</p>'),
-        cReadAction(false, [ 1, 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is after the last ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(true, [], 2),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is before the first ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(false, [], 0),
-        cAssertActionNone
-      ]))
-    ])),
+  context('None actions where caret is not near a cef element', () => {
+    it('Should be no action since it is not next to ce=false (delete, start block)', () => {
+      setHtml('<p>a</p>');
+      const actionOpt = readAction(true, [ 0, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('MoveToElement actions where caret is near a cef element', GeneralSteps.sequence([
-      Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 0, 0 ], 1),
-        cAssertMoveToElementAction([ 1 ])
-      ])),
-      Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p>a</p>'),
-        cReadAction(false, [ 1, 0 ], 0),
-        cAssertMoveToElementAction([ 0 ])
-      ])),
-      Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p><em>a</em></p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 0, 0, 0 ], 1),
-        cAssertMoveToElementAction([ 1 ])
-      ])),
-      Logger.t('Should be moveToElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p><em>a</em></p>'),
-        cReadAction(false, [ 1, 0, 0 ], 0),
-        cAssertMoveToElementAction([ 0 ])
-      ])),
-      Logger.t('Should be moveToElement since it is delete after ce=false before another ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 1 ], 0),
-        cAssertMoveToElementAction([ 2 ])
-      ])),
-      Logger.t('Should be moveToElement since it is backspace before a ce=false element before a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
-        cReadAction(false, [ 1 ], 0),
-        cAssertMoveToElementAction([ 0 ])
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (backspace, start block)', () => {
+      setHtml('<p>a</p>');
+      const actionOpt = readAction(false, [ 0, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('RemoveElement actions where caret is near a cef element', GeneralSteps.sequence([
-      Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(true, [], 0),
-        cAssertRemoveElementAction([ 0 ])
-      ])),
-      Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(true, [], 1),
-        cAssertRemoveElementAction([ 1 ])
-      ])),
-      Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(false, [], 2),
-        cAssertRemoveElementAction([ 1 ])
-      ])),
-      Logger.t('Should be removeElement action since it next to a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>'),
-        cReadAction(false, [], 1),
-        cAssertRemoveElementAction([ 0 ])
-      ])),
-      Logger.t('Should be removeElement since it is backspace after a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>'),
-        cReadAction(false, [ 1 ], 0),
-        cAssertRemoveElementAction([ 0 ])
-      ])),
-      Logger.t('Should be removeElement since it is delete before a ce=false', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 1 ], 0),
-        cAssertRemoveElementAction([ 2 ])
-      ])),
-      Logger.t('Should be removeElement since the block you are deleting from is empty', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>'),
-        cReadAction(true, [ 1 ], 0),
-        cAssertRemoveElementAction([ 1 ])
-      ])),
-      Logger.t('Should be removeElement since the block you are deleting from is empty', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>'),
-        cReadAction(false, [ 1 ], 0),
-        cAssertRemoveElementAction([ 1 ])
-      ])),
-      Logger.t('Should be removeElement since caret positioned before BR', Chain.asStep(viewBlock, [
-        cSetHtml('<p><span contenteditable="false">A</span>\ufeff<br /><span contenteditable="false">B</span></p>'),
-        cReadAction(true, [ 0 ], 1),
-        cAssertRemoveElementAction([ 0, 2 ])
-      ])),
-      Logger.t('Should be removeElement since caret positioned after BR', Chain.asStep(viewBlock, [
-        cSetHtml('<p><span contenteditable="false">A</span><br />\ufeff<span contenteditable="false">B</span></p>'),
-        cReadAction(false, [ 0 ], 3),
-        cAssertRemoveElementAction([ 0, 1 ])
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (delete, end block)', () => {
+      setHtml('<p>a</p>');
+      const actionOpt = readAction(true, [ 0, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('moveToPosition actions where caret is to be moved from cef to normal content between blocks', GeneralSteps.sequence([
-      Logger.t('Should be moveToPosition action since we are after a ce=false and moving forwards to normal content', Chain.asStep(viewBlock, [
-        cSetHtml('<p contenteditable="false">a</p><p>b</p>'),
-        cReadAction(true, [], 1),
-        cAssertMoveToPositionAction([ 1, 0 ], 0)
-      ])),
-      Logger.t('Should be moveToPosition action since we are before a ce=false and moving backwards to normal content', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p contenteditable="false">b</p>'),
-        cReadAction(false, [], 1),
-        cAssertMoveToPositionAction([ 0, 0 ], 1)
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (backspace, end block)', () => {
+      setHtml('<p>a</p>');
+      const actionOpt = readAction(false, [ 0, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('Delete after inline cef should not do anything', GeneralSteps.sequence([
-      Logger.t('Should be no action since it is a delete after cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b>b</p>'),
-        cReadAction(true, [ 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is a delete after cef to no position', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b></p>'),
-        cReadAction(true, [ 0 ], 1),
-        cAssertActionNone
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (delete, trailing cef)', () => {
+      setHtml('<p>a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 0, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('Backspace before inline cef should not do anything', GeneralSteps.sequence([
-      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a<b contenteditable="false">b</b></p>'),
-        cReadAction(false, [ 0, 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is a backspace before cef to no position', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b></p>'),
-        cReadAction(false, [ 0 ], 0),
-        cAssertActionNone
-      ]))
-    ])),
+    it('Should be no action since its not next to ce=false (backspace, trailing cef)', () => {
+      setHtml('<p>a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [ 0, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('Backspace/delete into cef table cell should not remove the cell', GeneralSteps.sequence([
-      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td contenteditable="false">1</td><td>2</td></tr></tbody></table>'),
-        cReadAction(false, [ 0, 0, 0, 1, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<table><tbody><tr><td>1</td><td contenteditable="false">2</td></tr></tbody></table>'),
-        cReadAction(true, [ 0, 0, 0, 0, 0 ], 1),
-        cAssertActionNone
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (delete, leading cef)', () => {
+      setHtml('<p contenteditable="false">a</p><p>b</p>');
+      const actionOpt = readAction(true, [ 1, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('Backspace/delete into cef list item should not remove the item', GeneralSteps.sequence([
-      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<ul><li contenteditable="false">1</li><li>2</li></ul>'),
-        cReadAction(false, [ 0, 1, 0 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since it is a backspace before cef to text', Chain.asStep(viewBlock, [
-        cSetHtml('<ul><li>1</li><li contenteditable="false">2</li></ul>'),
-        cReadAction(true, [ 0, 0, 0 ], 1),
-        cAssertActionNone
-      ]))
-    ])),
+    it('Should be no action since it is not next to ce=false (backspace, leading cef)', () => {
+      setHtml('<p contenteditable="false">a</p><p>b</p>');
+      const actionOpt = readAction(false, [ 1, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
 
-    Logger.t('Should not produce actions if cefs are inline between blocks', GeneralSteps.sequence([
-      Logger.t('Should be no action since delete from after inline cef to before inline cef is handled by merge', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>'),
-        cReadAction(true, [ 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since backspace from before inline cef to after inline cef is handled by merge', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>'),
-        cReadAction(false, [ 1 ], 0),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since delete from after inline cef to normal content is handled by merge', Chain.asStep(viewBlock, [
-        cSetHtml('<p><b contenteditable="false">a</b></p><p>b</p>'),
-        cReadAction(true, [ 0 ], 1),
-        cAssertActionNone
-      ])),
-      Logger.t('Should be no action since backspace from before inline cef to normal content is handled by merge', Chain.asStep(viewBlock, [
-        cSetHtml('<p>a</p><p><b contenteditable="false">b</b></p>'),
-        cReadAction(false, [ 1 ], 0),
-        cAssertActionNone
-      ]))
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+    it('Should be no action since it is after the last ce=false', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [], 2);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since it is before the first ce=false', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [], 0);
+      assertActionNone(actionOpt);
+    });
+  });
+
+  context('MoveToElement actions where caret is near a cef element', () => {
+    it('Should be moveToElement action since it next to a ce=false (delete, block)', () => {
+      setHtml('<p>a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 0, 0 ], 1);
+      assertMoveToElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be moveToElement action since it next to a ce=false (backspace, block)', () => {
+      setHtml('<p contenteditable="false">b</p><p>a</p>');
+      const actionOpt = readAction(false, [ 1, 0 ], 0);
+      assertMoveToElementAction(actionOpt, [ 0 ]);
+    });
+
+    it('Should be moveToElement action since it next to a ce=false (delete, inline)', () => {
+      setHtml('<p><em>a</em></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 0, 0, 0 ], 1);
+      assertMoveToElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be moveToElement action since it next to a ce=false (backspace, inline)', () => {
+      setHtml('<p contenteditable="false">b</p><p><em>a</em></p>');
+      const actionOpt = readAction(false, [ 1, 0, 0 ], 0);
+      assertMoveToElementAction(actionOpt, [ 0 ]);
+    });
+
+    it('Should be moveToElement since it is delete after ce=false before another ce=false', () => {
+      setHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 1 ], 0);
+      assertMoveToElementAction(actionOpt, [ 2 ]);
+    });
+
+    it('Should be moveToElement since it is backspace before a ce=false element before a ce=false', () => {
+      setHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [ 1 ], 0);
+      assertMoveToElementAction(actionOpt, [ 0 ]);
+    });
+  });
+
+  context('RemoveElement actions where caret is near a cef element', () => {
+    it('Should be removeElement action since it next to a ce=false (delete before cefs)', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [], 0);
+      assertRemoveElementAction(actionOpt, [ 0 ]);
+    });
+
+    it('Should be removeElement action since it next to a ce=false (delete between cefs)', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [], 1);
+      assertRemoveElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be removeElement action since it next to a ce=false (backspace end cefs)', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [], 2);
+      assertRemoveElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be removeElement action since it next to a ce=false (backspace between cefs)', () => {
+      setHtml('<p contenteditable="false">a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [], 1);
+      assertRemoveElementAction(actionOpt, [ 0 ]);
+    });
+
+    it('Should be removeElement since it is backspace after a ce=false', () => {
+      setHtml('<p contenteditable="false">b</p><p data-mce-caret="after"><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [ 1 ], 0);
+      assertRemoveElementAction(actionOpt, [ 0 ]);
+    });
+
+    it('Should be removeElement since it is delete before a ce=false', () => {
+      setHtml('<p contenteditable="false">b</p><p data-mce-caret="before"><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 1 ], 0);
+      assertRemoveElementAction(actionOpt, [ 2 ]);
+    });
+
+    it('Should be removeElement since the block you are deleting from is empty (delete)', () => {
+      setHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(true, [ 1 ], 0);
+      assertRemoveElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be removeElement since the block you are deleting from is empty (backspace)', () => {
+      setHtml('<p contenteditable="false">b</p><p><br></p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [ 1 ], 0);
+      assertRemoveElementAction(actionOpt, [ 1 ]);
+    });
+
+    it('Should be removeElement since caret positioned before BR', () => {
+      setHtml('<p><span contenteditable="false">A</span>\ufeff<br /><span contenteditable="false">B</span></p>');
+      const actionOpt = readAction(true, [ 0 ], 1);
+      assertRemoveElementAction(actionOpt, [ 0, 2 ]);
+    });
+
+    it('Should be removeElement since caret positioned after BR', () => {
+      setHtml('<p><span contenteditable="false">A</span><br />\ufeff<span contenteditable="false">B</span></p>');
+      const actionOpt = readAction(false, [ 0 ], 3);
+      assertRemoveElementAction(actionOpt, [ 0, 1 ]);
+    });
+  });
+
+  context('moveToPosition actions where caret is to be moved from cef to normal content between blocks', () => {
+    it('Should be moveToPosition action since we are after a ce=false and moving forwards to normal content', () => {
+      setHtml('<p contenteditable="false">a</p><p>b</p>');
+      const actionOpt = readAction(true, [], 1);
+      assertMoveToPositionAction(actionOpt, [ 1, 0 ], 0);
+    });
+
+    it('Should be moveToPosition action since we are before a ce=false and moving backwards to normal content', () => {
+      setHtml('<p>a</p><p contenteditable="false">b</p>');
+      const actionOpt = readAction(false, [], 1);
+      assertMoveToPositionAction(actionOpt, [ 0, 0 ], 1);
+    });
+  });
+
+  context('Delete after inline cef should not do anything', () => {
+    it('Should be no action since it is a delete after cef to text', () => {
+      setHtml('<p><b contenteditable="false">a</b>b</p>');
+      const actionOpt = readAction(true, [ 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since it is a delete after cef to no position', () => {
+      setHtml('<p><b contenteditable="false">a</b></p>');
+      const actionOpt = readAction(true, [ 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+  });
+
+  context('Backspace before inline cef should not do anything', () => {
+    it('Should be no action since it is a backspace before cef to text', () => {
+      setHtml('<p>a<b contenteditable="false">b</b></p>');
+      const actionOpt = readAction(false, [ 0, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since it is a backspace before cef to no position', () => {
+      setHtml('<p><b contenteditable="false">a</b></p>');
+      const actionOpt = readAction(false, [ 0 ], 0);
+      assertActionNone(actionOpt);
+    });
+  });
+
+  context('Backspace/delete into cef table cell should not remove the cell', () => {
+    it('Should be no action since it is a backspace before cef to text (backspace)', () => {
+      setHtml('<table><tbody><tr><td contenteditable="false">1</td><td>2</td></tr></tbody></table>');
+      const actionOpt = readAction(false, [ 0, 0, 0, 1, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since it is a backspace before cef to text (delete)', () => {
+      setHtml('<table><tbody><tr><td>1</td><td contenteditable="false">2</td></tr></tbody></table>');
+      const actionOpt = readAction(true, [ 0, 0, 0, 0, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+  });
+
+  context('Backspace/delete into cef list item should not remove the item', () => {
+    it('Should be no action since it is a backspace before cef to text (backspace)', () => {
+      setHtml('<ul><li contenteditable="false">1</li><li>2</li></ul>');
+      const actionOpt = readAction(false, [ 0, 1, 0 ], 0);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since it is a backspace before cef to text (delete)', () => {
+      setHtml('<ul><li>1</li><li contenteditable="false">2</li></ul>');
+      const actionOpt = readAction(true, [ 0, 0, 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+  });
+
+  context('Should not produce actions if cefs are inline between blocks', () => {
+    it('Should be no action since delete from after inline cef to before inline cef is handled by merge', () => {
+      setHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>');
+      const actionOpt = readAction(true, [ 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since backspace from before inline cef to after inline cef is handled by merge', () => {
+      setHtml('<p><b contenteditable="false">a</b></p><p><b contenteditable="false">b</b></p>');
+      const actionOpt = readAction(false, [ 1 ], 0);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since delete from after inline cef to normal content is handled by merge', () => {
+      setHtml('<p><b contenteditable="false">a</b></p><p>b</p>');
+      const actionOpt = readAction(true, [ 0 ], 1);
+      assertActionNone(actionOpt);
+    });
+
+    it('Should be no action since backspace from before inline cef to normal content is handled by merge', () => {
+      setHtml('<p>a</p><p><b contenteditable="false">b</b></p>');
+      const actionOpt = readAction(false, [ 1 ], 0);
+      assertActionNone(actionOpt);
+    });
+  });
 });

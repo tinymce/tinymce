@@ -1,119 +1,117 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import Writer from 'tinymce/core/api/html/Writer';
 
-UnitTest.asynctest('browser.tinymce.core.html.WriterTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-
-  suite.test('Comment', () => {
-    let writer;
+describe('browser.tinymce.core.html.WriterTest', () => {
+  it('Comment', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.comment('text');
-    LegacyUnit.equal(writer.getContent(), '<!--text-->');
+    assert.equal(writer.getContent(), '<!--text-->');
 
     writer = Writer();
     writer.comment('');
-    LegacyUnit.equal(writer.getContent(), '<!---->');
+    assert.equal(writer.getContent(), '<!---->');
   });
 
-  suite.test('CDATA', () => {
-    let writer;
+  it('CDATA', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.cdata('text');
-    LegacyUnit.equal(writer.getContent(), '<![CDATA[text]]>');
+    assert.equal(writer.getContent(), '<![CDATA[text]]>');
 
     writer = Writer();
     writer.cdata('');
-    LegacyUnit.equal(writer.getContent(), '<![CDATA[]]>');
+    assert.equal(writer.getContent(), '<![CDATA[]]>');
   });
 
-  suite.test('PI', () => {
-    let writer;
+  it('PI', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.pi('xml', 'someval');
-    LegacyUnit.equal(writer.getContent(), '<?xml someval?>');
+    assert.equal(writer.getContent(), '<?xml someval?>');
 
     writer = Writer();
     writer.pi('xml');
-    LegacyUnit.equal(writer.getContent(), '<?xml?>');
+    assert.equal(writer.getContent(), '<?xml?>');
 
     writer = Writer();
     writer.pi('xml', 'encoding="UTF-8" < >');
-    LegacyUnit.equal(writer.getContent(), '<?xml encoding="UTF-8" &lt; &gt;?>');
+    assert.equal(writer.getContent(), '<?xml encoding="UTF-8" &lt; &gt;?>');
   });
 
-  suite.test('Doctype', () => {
-    let writer;
+  it('Doctype', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.doctype(' text');
-    LegacyUnit.equal(writer.getContent(), '<!DOCTYPE text>');
+    assert.equal(writer.getContent(), '<!DOCTYPE text>');
 
     writer = Writer();
     writer.doctype('');
-    LegacyUnit.equal(writer.getContent(), '<!DOCTYPE>');
+    assert.equal(writer.getContent(), '<!DOCTYPE>');
   });
 
-  suite.test('Text', () => {
-    let writer;
+  it('Text', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.text('te<xt');
-    LegacyUnit.equal(writer.getContent(), 'te&lt;xt');
+    assert.equal(writer.getContent(), 'te&lt;xt');
 
     writer = Writer();
     writer.text('');
-    LegacyUnit.equal(writer.getContent(), '');
+    assert.equal(writer.getContent(), '');
   });
 
-  suite.test('Text raw', () => {
-    let writer;
+  it('Text raw', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.text('te<xt', true);
-    LegacyUnit.equal(writer.getContent(), 'te<xt');
+    assert.equal(writer.getContent(), 'te<xt');
 
     writer = Writer();
     writer.text('', true);
-    LegacyUnit.equal(writer.getContent(), '');
+    assert.equal(writer.getContent(), '');
   });
 
-  suite.test('Start', () => {
-    let writer;
+  it('Start', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.start('b');
-    LegacyUnit.equal(writer.getContent(), '<b>');
+    assert.equal(writer.getContent(), '<b>');
 
     writer = Writer();
     writer.start('b', [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
-    LegacyUnit.equal(writer.getContent(), '<b attr1="value1" attr2="value2">');
+    assert.equal(writer.getContent(), '<b attr1="value1" attr2="value2">');
 
     writer = Writer();
     writer.start('b', [{ name: 'attr1', value: 'val<"ue1' }]);
-    LegacyUnit.equal(writer.getContent(), '<b attr1="val&lt;&quot;ue1">');
+    assert.equal(writer.getContent(), '<b attr1="val&lt;&quot;ue1">');
 
     writer = Writer();
     writer.start('img', [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }], true);
-    LegacyUnit.equal(writer.getContent(), '<img attr1="value1" attr2="value2" />');
+    assert.equal(writer.getContent(), '<img attr1="value1" attr2="value2" />');
 
     writer = Writer();
     writer.start('br', null, true);
-    LegacyUnit.equal(writer.getContent(), '<br />');
+    assert.equal(writer.getContent(), '<br />');
   });
 
-  suite.test('End', () => {
+  it('End', () => {
     const writer = Writer();
     writer.end('b');
-    LegacyUnit.equal(writer.getContent(), '</b>');
+    assert.equal(writer.getContent(), '</b>');
   });
 
-  suite.test('Indentation', () => {
-    let writer;
+  it('Indentation', () => {
+    let writer: Writer;
 
     writer = Writer({ indent: true, indent_before: 'p', indent_after: 'p' });
     writer.start('p');
@@ -124,36 +122,34 @@ UnitTest.asynctest('browser.tinymce.core.html.WriterTest', (success, failure) =>
     writer.start('p');
     writer.text('a');
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p><span>a</span></p>\n<p>a</p>');
+    assert.equal(writer.getContent(), '<p><span>a</span></p>\n<p>a</p>');
 
     writer = Writer({ indent: true, indent_before: 'p', indent_after: 'p' });
     writer.start('p');
     writer.text('a');
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), '<p>a</p>');
+    assert.equal(writer.getContent(), '<p>a</p>');
   });
 
-  suite.test('Entities', () => {
-    let writer;
+  it('Entities', () => {
+    let writer: Writer;
 
     writer = Writer();
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`);
+    assert.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;\u00e5\u00e4\u00f6">&lt;&gt;"'&amp;\u00e5\u00e4\u00f6</p>`);
 
     writer = Writer({ entity_encoding: 'numeric' });
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`);
+    assert.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&#229;&#228;&#246;">&lt;&gt;"'&amp;&#229;&#228;&#246;</p>`);
 
     writer = Writer({ entity_encoding: 'named' });
     writer.start('p', [{ name: 'title', value: `<>"'&\u00e5\u00e4\u00f6` }]);
     writer.text(`<>"'&\u00e5\u00e4\u00f6`);
     writer.end('p');
-    LegacyUnit.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
+    assert.equal(writer.getContent(), `<p title="&lt;&gt;&quot;'&amp;&aring;&auml;&ouml;">&lt;&gt;"'&amp;&aring;&auml;&ouml;</p>`);
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

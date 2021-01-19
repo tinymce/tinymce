@@ -1,18 +1,22 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { ApproxStructure, UiFinder, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import { insertOrUpdateImage } from 'tinymce/plugins/image/core/ImageSelection';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (success, failure) => {
-  Plugin();
-  Theme();
+describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'image',
+    indent: false,
+    inline: true,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-  const sUpdateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => Step.sync(() => {
+  const updateImageOrFigure = (editor: Editor, data: Partial<ImageData>) => {
     insertOrUpdateImage(editor, {
       src: 'image.png',
       alt: '',
@@ -29,184 +33,181 @@ UnitTest.asynctest('browser.tinymce.plugins.image.core.ImageSelectionTest', (suc
       isDecorative: false,
       ...data
     });
+  };
+
+  const pWaitForDragHandles = (editor: Editor) =>
+    Waiter.pTryUntil('wait for draghandles', () => UiFinder.exists(TinyDom.body(editor), '#mceResizeHandlenw'));
+
+  it('Insert image, size 100x100', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    updateImageOrFigure(editor, {
+      src: 'image.png',
+      height: '100',
+      width: '100'
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('div', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('img', {
+                attrs: {
+                  src: str.is('image.png'),
+                  alt: str.is(''),
+                  width: str.is('100'),
+                  height: str.is('100')
+                }
+              }),
+              s.element('br', {})
+            ]
+          }),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+        ]
+      });
+    }));
   });
 
-  const sWaitForDragHandles = (editor: any): Step<any, any> => Waiter.sTryUntil('wait for draghandles', UiFinder.sExists(SugarElement.fromDom(editor.getBody()), '#mceResizeHandlenw'), 10, 5000);
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('Insert image, size 100x100', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([ 0 ], 0),
-        sUpdateImageOrFigure(editor, {
-          src: 'image.png',
-          height: '100',
-          width: '100'
-        }),
-        sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return s.element('div', {
+  it('Insert figure, size 100x100', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p></p>');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    updateImageOrFigure(editor, {
+      src: 'image.png',
+      caption: true,
+      height: '100',
+      width: '100'
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('div', {
+        children: [
+          s.element('figure', {
+            attrs: {
+              class: str.is('image'),
+              contenteditable: str.is('false')
+            },
             children: [
-              s.element('p', {
-                children: [
-                  s.element('img', {
-                    attrs: {
-                      src: str.is('image.png'),
-                      alt: str.is(''),
-                      width: str.is('100'),
-                      height: str.is('100')
-                    }
-                  }),
-                  s.element('br', {})
-                ]
-              }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
-            ]
-          });
-        }))
-      ])),
-      Logger.t('Insert figure, size 100x100', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p></p>'),
-        tinyApis.sSetCursor([ 0 ], 0),
-        sUpdateImageOrFigure(editor, {
-          src: 'image.png',
-          caption: true,
-          height: '100',
-          width: '100'
-        }),
-        sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return s.element('div', {
-            children: [
-              s.element('figure', {
+              s.element('img', {
                 attrs: {
-                  class: str.is('image'),
-                  contenteditable: str.is('false')
+                  src: str.is('image.png'),
+                  alt: str.is(''),
+                  width: str.is('100'),
+                  height: str.is('100')
+                }
+              }),
+              s.element('figcaption', {
+                attrs: {
+                  contenteditable: str.is('true')
                 },
                 children: [
-                  s.element('img', {
-                    attrs: {
-                      src: str.is('image.png'),
-                      alt: str.is(''),
-                      width: str.is('100'),
-                      height: str.is('100')
-                    }
-                  }),
-                  s.element('figcaption', {
-                    attrs: {
-                      contenteditable: str.is('true')
-                    },
-                    children: [
-                      s.text(str.is('Caption'))
-                    ]
-                  })
+                  s.text(str.is('Caption'))
                 ]
-              }),
-              s.element('p', {}),
-              s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+              })
             ]
-          });
-        }))
-      ])),
-      Logger.t('Update figure, new dimensions and src', GeneralSteps.sequence([
-        tinyApis.sSetContent('<figure class="image" contenteditable="false">' +
-          '<img src="image.png" alt="" width="200" height="200">' +
-          '<figcaption contenteditable="true">Caption</figcaption>' +
-          '</figure>'),
-        tinyApis.sSelect('figure', []),
-        sUpdateImageOrFigure(editor, {
-          src: 'updated-image.png',
-          caption: true,
-          height: '100',
-          width: '100'
-        }),
-        sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return s.element('div', {
+          }),
+          s.element('p', {}),
+          s.anything(),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+        ]
+      });
+    }));
+  });
+
+  it('Update figure, new dimensions and src', async () => {
+    const editor = hook.editor();
+    editor.setContent('<figure class="image" contenteditable="false">' +
+      '<img src="image.png" alt="" width="200" height="200">' +
+      '<figcaption contenteditable="true">Caption</figcaption>' +
+      '</figure>');
+    TinySelections.select(editor, 'figure', []);
+    updateImageOrFigure(editor, {
+      src: 'updated-image.png',
+      caption: true,
+      height: '100',
+      width: '100'
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('div', {
+        children: [
+          s.element('figure', {
+            attrs: {
+              class: str.is('image'),
+              contenteditable: str.is('false')
+            },
             children: [
-              s.element('figure', {
+              s.element('img', {
                 attrs: {
-                  class: str.is('image'),
-                  contenteditable: str.is('false')
+                  'src': str.is('updated-image.png'),
+                  'alt': str.is(''),
+                  'width': str.is('100'),
+                  'height': str.is('100'),
+                  'data-mce-src': str.is('updated-image.png')
+                }
+              }),
+              s.element('figcaption', {
+                attrs: {
+                  contenteditable: str.is('true')
                 },
                 children: [
-                  s.element('img', {
-                    attrs: {
-                      'src': str.is('updated-image.png'),
-                      'alt': str.is(''),
-                      'width': str.is('100'),
-                      'height': str.is('100'),
-                      'data-mce-src': str.is('updated-image.png')
-                    }
-                  }),
-                  s.element('figcaption', {
-                    attrs: {
-                      contenteditable: str.is('true')
-                    },
-                    children: [
-                      s.text(str.is('Caption'))
-                    ]
-                  })
+                  s.text(str.is('Caption'))
                 ]
-              }),
-              s.anything(),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+              })
             ]
-          });
-        }))
-      ])),
-      Logger.t('Update image, new dimensions and src', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>' +
-          '<img src="image.png" alt="" width="200" height="200">' +
-          '</p>'),
-        tinyApis.sSelect('img', []),
-        sUpdateImageOrFigure(editor, {
-          src: 'updated-image.png',
-          height: '100',
-          width: '100'
-        }),
-        sWaitForDragHandles(editor),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return s.element('div', {
+          }),
+          s.anything(),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+        ]
+      });
+    }));
+  });
+
+  it('Update image, new dimensions and src', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>' +
+      '<img src="image.png" alt="" width="200" height="200">' +
+      '</p>');
+    TinySelections.select(editor, 'img', []);
+    updateImageOrFigure(editor, {
+      src: 'updated-image.png',
+      height: '100',
+      width: '100'
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('div', {
+        children: [
+          s.element('p', {
             children: [
-              s.element('p', {
-                children: [
-                  s.element('img', {
-                    attrs: {
-                      'src': str.is('updated-image.png'),
-                      'alt': str.is(''),
-                      'width': str.is('100'),
-                      'height': str.is('100'),
-                      'data-mce-src': str.is('updated-image.png')
-                    }
-                  })
-                ]
-              }),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
-              s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+              s.element('img', {
+                attrs: {
+                  'src': str.is('updated-image.png'),
+                  'alt': str.is(''),
+                  'width': str.is('100'),
+                  'height': str.is('100'),
+                  'data-mce-src': str.is('updated-image.png')
+                }
+              })
             ]
-          });
-        }))
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    plugins: 'image',
-    indent: false,
-    inline: true,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+          }),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlenw') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlene') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlese') }}),
+          s.element('div', { attrs: { id: str.is('mceResizeHandlesw') }})
+        ]
+      });
+    }));
+  });
 });

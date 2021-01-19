@@ -1,42 +1,16 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
 import Editor from 'tinymce/core/api/Editor';
-import EditorManager from 'tinymce/core/api/EditorManager';
 import Plugin from 'tinymce/plugins/lists/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  Plugin();
-  SilverTheme();
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI on body UL', (editor) => {
-    editor.focus();
-    editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 0);
-    editor.plugins.lists.backspaceDelete();
-    LegacyUnit.equal(DomQuery('#lists ul').length, 3);
-    LegacyUnit.equal(DomQuery('#lists li').length, 3);
-  });
-
-  suite.test('TestCase-TBA: Lists: Delete at end of LI on body UL', (editor) => {
-    editor.focus();
-    editor.selection.setCursorLocation(editor.getBody().firstChild.firstChild, 1);
-    editor.plugins.lists.backspaceDelete(true);
-    LegacyUnit.equal(DomQuery('#lists ul').length, 3);
-    LegacyUnit.equal(DomQuery('#lists li').length, 3);
-  });
-
-  const teardown = (editor, div) => {
-    editor.remove();
-    div.parentNode.removeChild(div);
-  };
-
-  const setup = (success, failure) => {
+describe('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', () => {
+  const setupElement = () => {
     const div = document.createElement('div');
-
     div.innerHTML = (
       '<div id="lists">' +
       '<ul><li>before</li></ul>' +
@@ -44,28 +18,44 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteInlineTest', (s
       '<ul><li>after</li></ul>' +
       '</div>'
     );
-
     document.body.appendChild(div);
 
-    EditorManager.init({
-      selector: '#inline',
-      inline: true,
-      add_unload_trigger: false,
-      skin: false,
-      plugins: 'lists',
-      disable_nodechange: true,
-      init_instance_callback: (editor) => {
-        Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete inline tests', suite.toSteps(editor)), () => {
-          teardown(editor, div);
-          success();
-        }, failure);
+    return {
+      element: SugarElement.fromDom(div),
+      teardown: () => {
+        document.body.removeChild(div);
       },
-      valid_styles: {
-        '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
-        'margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
-      }
-    });
+    };
   };
 
-  setup(success, failure);
+  const hook = TinyHooks.bddSetupFromElement<Editor>({
+    selector: '#inline',
+    inline: true,
+    add_unload_trigger: false,
+    skin: false,
+    plugins: 'lists',
+    disable_nodechange: true,
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
+      'margin,margin-top,margin-right,margin-bottom,margin-left,display,position,top,left,list-style-type'
+    }
+  }, setupElement, [ Plugin, Theme ], true);
+
+  it('TBA: Backspace at beginning of LI on body UL', () => {
+    const editor = hook.editor();
+    const body = editor.getBody();
+    editor.selection.setCursorLocation(body.firstChild.firstChild, 0);
+    editor.plugins.lists.backspaceDelete();
+    assert.lengthOf(DomQuery('#lists ul'), 3);
+    assert.lengthOf(DomQuery('#lists li'), 3);
+  });
+
+  it('TBA: Delete at end of LI on body UL', () => {
+    const editor = hook.editor();
+    const body = editor.getBody();
+    editor.selection.setCursorLocation(body.firstChild.firstChild, 1);
+    editor.plugins.lists.backspaceDelete(true);
+    assert.lengthOf(DomQuery('#lists ul'), 3);
+    assert.lengthOf(DomQuery('#lists li'), 3);
+  });
 });

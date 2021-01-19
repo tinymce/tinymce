@@ -1,83 +1,83 @@
-import { ApproxStructure, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElements, SugarFragment } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.selection.RangeInsertNode', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.selection.RangeInsertNode', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  const sRangeInsertNode = (editor: Editor, node: Node | DocumentFragment) => Step.sync(() => {
+  const insertNode = (editor: Editor, node: Node | DocumentFragment) => {
     rangeInsertNode(editor.dom, editor.selection.getRng(), node);
-  });
+  };
 
   const fragmentFromHtml = (html: string, scope: Document): DocumentFragment =>
     SugarFragment.fromElements(SugarElements.fromHtml(html, scope), scope).dom;
 
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const doc = editor.getDoc();
+  beforeEach(() => {
+    hook.editor().focus();
+  });
 
-    Pipeline.async({}, [
-      Logger.t('Insert node at start of text', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sRangeInsertNode(editor, doc.createTextNode('X')),
-        tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => s.element('body', {
+  it('Insert node at start of text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    insertNode(editor, editor.getDoc().createTextNode('X'));
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str, _arr) => s.element('body', {
+        children: [
+          s.element('p', {
             children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('X')),
-                  s.text(str.is('a'))
-                ]
-              })
+              s.text(str.is('X')),
+              s.text(str.is('a'))
             ]
-          }))
-        )
-      ])),
-      Logger.t('Insert node at end of text', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 1),
-        sRangeInsertNode(editor, doc.createTextNode('X')),
-        tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => s.element('body', {
+          })
+        ]
+      }))
+    );
+  });
+
+  it('Insert node at end of text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    insertNode(editor, editor.getDoc().createTextNode('X'));
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str, _arr) => s.element('body', {
+        children: [
+          s.element('p', {
             children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('a')),
-                  s.text(str.is('X'))
-                ]
-              })
+              s.text(str.is('a')),
+              s.text(str.is('X'))
             ]
-          }))
-        )
-      ])),
-      Logger.t('Insert document fragment at start of text', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetRawContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sRangeInsertNode(editor, fragmentFromHtml('X', doc)),
-        tinyApis.sAssertContentStructure(
-          ApproxStructure.build((s, str, _arr) => s.element('body', {
+          })
+        ]
+      }))
+    );
+  });
+
+  it('Insert document fragment at start of text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    insertNode(editor, fragmentFromHtml('X', editor.getDoc()));
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str, _arr) => s.element('body', {
+        children: [
+          s.element('p', {
             children: [
-              s.element('p', {
-                children: [
-                  s.text(str.is('X')),
-                  s.text(str.is('a'))
-                ]
-              })
+              s.text(str.is('X')),
+              s.text(str.is('a'))
             ]
-          }))
-        )
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+          })
+        ]
+      }))
+    );
+  });
 });

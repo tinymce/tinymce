@@ -1,6 +1,7 @@
-import { cRunOnPatchedFileInput, sRunOnPatchedFileInput } from '../file/PatchInputFiles';
+import { cRunOnPatchedFileInput, sRunOnPatchedFileInput, pRunOnPatchedFileInput } from '../file/PatchInputFiles';
 
 export {
   sRunOnPatchedFileInput,
-  cRunOnPatchedFileInput
+  cRunOnPatchedFileInput,
+  pRunOnPatchedFileInput
 };

@@ -1,73 +1,73 @@
-import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
-import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
+import { assert } from 'chai';
 
-UnitTest.asynctest('browser.tinymce.core.dom.StyleSheetLoaderTest', (success, failure) => {
+import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
+
+describe('browser.tinymce.core.dom.StyleSheetLoaderTest', () => {
   const contentCss = '/project/tinymce/js/tinymce/skins/content/default/content.css';
   const skinCss = '/project/tinymce/js/tinymce/skins/ui/oxide/skin.css';
-  const loader = StyleSheetLoader(document, {
-    maxLoadTime: 500,
-    contentCssCors: true,
-    referrerPolicy: 'origin'
+  let loader: StyleSheetLoader;
+
+  const baseLinkExists = (url: string, head: SugarElement<HTMLHeadElement>) => {
+    const links = SelectorFilter.descendants(head, `link[href="${url}"]`);
+    assert.lengthOf(links, 1, 'Should have one link loaded');
+    assert.equal(Attribute.get(links[0], 'referrerPolicy'), 'origin', 'Should have referrer policy attribute');
+    assert.equal(Attribute.get(links[0], 'crossorigin'), 'anonymous', 'Should have crossorigin attribute');
+  };
+
+  const linkExists = (url: string) => baseLinkExists(url, SugarHead.head());
+
+  const linkNotExists = (url: string) => UiFinder.notExists(SugarHead.head(), `link[href="${url}"]`);
+
+  const pLoadUrl = (url: string) => new PromisePolyfill((resolve, reject) => {
+    loader.load(url, resolve, () => reject('Failed to load url: ' + url));
   });
 
-  const sBaseLinkExists = (url: string, head: SugarElement<HTMLHeadElement>) =>
-    Step.sync(() => {
-      const links = SelectorFilter.descendants(head, `link[href="${url}"]`);
-      Assert.eq('Should have one link loaded', true, links.length === 1);
-      Assert.eq('Should have referrer policy attribute', 'origin', Attribute.get(links[0], 'referrerPolicy'));
-      Assert.eq('Should have crossorigin attribute', 'anonymous', Attribute.get(links[0], 'crossorigin'));
+  const pLoadAllUrls = (urls: string[]) => new PromisePolyfill((resolve, reject) => {
+    loader.loadAll(urls, resolve, (failedUrls) => reject('Failed to load urls: ' + failedUrls.join(', ')));
+  });
+
+  const unloadUrl = (url: string) => loader.unload(url);
+
+  const unloadAllUrls = (urls: string[]) => loader.unloadAll(urls);
+
+  before(() => {
+    loader = StyleSheetLoader(document, {
+      maxLoadTime: 500,
+      contentCssCors: true,
+      referrerPolicy: 'origin'
     });
-
-  const sLinkExists = (url: string) =>
-    sBaseLinkExists(url, SugarHead.head());
-
-  const sLinkNotExists = (url: string) =>
-    UiFinder.sNotExists(SugarHead.head(), `link[href="${url}"]`);
-
-  const sLoadUrl = (url: string) => Step.async((next, die) => {
-    loader.load(url, next, () => die('Failed to load url: ' + url));
   });
 
-  const sLoadAllUrls = (urls: string[]) => Step.async((next, die) => {
-    loader.loadAll(urls, next, (failedUrls) => die('Failed to load urls: ' + failedUrls.join(', ')));
+  it('TINY-3926: Load and then unload removes the loaded stylesheet', async () => {
+    await pLoadUrl(contentCss);
+    linkExists(contentCss);
+    unloadUrl(contentCss);
+    linkNotExists(contentCss);
   });
 
-  const sUnloadUrl = (url: string) => Step.sync(() => {
-    loader.unload(url);
+  it('TINY-3926: Load and then unload all urls should leave no stylesheets', async () => {
+    await pLoadAllUrls([ contentCss, skinCss ]);
+    linkExists(contentCss);
+    linkExists(skinCss);
+    unloadAllUrls([ skinCss, contentCss ]);
+    linkNotExists(contentCss);
+    linkNotExists(skinCss);
   });
 
-  const sUnloadAllUrls = (urls: string[]) => Step.sync(() => {
-    loader.unloadAll(urls);
+  it('TINY-3926: Unload removes loaded stylesheets, but only on last reference', async () => {
+    // Load 2 links and ensure only one link is loaded
+    await pLoadUrl(contentCss);
+    await pLoadUrl(contentCss);
+    linkExists(contentCss);
+    // Unload once shouldn't remove the link
+    unloadUrl(contentCss);
+    linkExists(contentCss);
+    // Unload a second time should remove since the stylesheet was loaded twice
+    unloadUrl(contentCss);
+    linkNotExists(contentCss);
   });
-
-  Pipeline.async({}, [
-    Log.stepsAsStep('TINY-3926', 'Load and then unload removes the loaded stylesheet', [
-      sLoadUrl(contentCss),
-      sLinkExists(contentCss),
-      sUnloadUrl(contentCss),
-      sLinkNotExists(contentCss)
-    ]),
-    Log.stepsAsStep('TINY-3926', 'Load and then unload all urls should leave no stylesheets', [
-      sLoadAllUrls([ contentCss, skinCss ]),
-      sLinkExists(contentCss),
-      sLinkExists(skinCss),
-      sUnloadAllUrls([ skinCss, contentCss ]),
-      sLinkNotExists(contentCss),
-      sLinkNotExists(skinCss)
-    ]),
-    Log.stepsAsStep('TINY-3926', 'Unload removes loaded stylesheets, but only on last reference', [
-      // Load 2 links and ensure only one link is loaded
-      sLoadUrl(contentCss),
-      sLoadUrl(contentCss),
-      sLinkExists(contentCss),
-      // Unload once shouldn't remove the link
-      sUnloadUrl(contentCss),
-      sLinkExists(contentCss),
-      // Unload a second time should remove since the stylesheet was loaded twice
-      sUnloadUrl(contentCss),
-      sLinkNotExists(contentCss)
-    ])
-  ], success, failure);
 });

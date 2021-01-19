@@ -1,37 +1,33 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 
-UnitTest.asynctest('browser.tinymce.core.file.UploadStatusTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-
-  suite.test('hasBlobUri/markPending', () => {
+describe('browser.tinymce.core.file.UploadStatusTest', () => {
+  it('hasBlobUri/markPending', () => {
     const status = UploadStatus();
 
-    LegacyUnit.strictEqual(status.hasBlobUri('nonexisting_uri'), false);
+    assert.isFalse(status.hasBlobUri('nonexisting_uri'));
     status.markPending('existing_uri');
-    LegacyUnit.strictEqual(status.isPending('existing_uri'), true);
-    LegacyUnit.strictEqual(status.isUploaded('existing_uri'), false);
-    LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), true);
+    assert.isTrue(status.isPending('existing_uri'));
+    assert.isFalse(status.isUploaded('existing_uri'));
+    assert.isTrue(status.hasBlobUri('existing_uri'));
 
     status.markUploaded('existing_uri', 'uri');
-    LegacyUnit.strictEqual(status.isPending('existing_uri'), false);
-    LegacyUnit.strictEqual(status.isUploaded('existing_uri'), true);
-    LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), true);
-    LegacyUnit.strictEqual(status.getResultUri('existing_uri'), 'uri');
+    assert.isFalse(status.isPending('existing_uri'));
+    assert.isTrue(status.isUploaded('existing_uri'));
+    assert.isTrue(status.hasBlobUri('existing_uri'));
+    assert.strictEqual(status.getResultUri('existing_uri'), 'uri');
 
     status.markUploaded('existing_uri2', 'uri2');
-    LegacyUnit.strictEqual(status.isPending('existing_uri'), false);
-    LegacyUnit.strictEqual(status.isUploaded('existing_uri'), true);
-    LegacyUnit.strictEqual(status.hasBlobUri('existing_uri2'), true);
-    LegacyUnit.strictEqual(status.getResultUri('existing_uri2'), 'uri2');
+    assert.isFalse(status.isPending('existing_uri'));
+    assert.isTrue(status.isUploaded('existing_uri'));
+    assert.isTrue(status.hasBlobUri('existing_uri2'));
+    assert.strictEqual(status.getResultUri('existing_uri2'), 'uri2');
 
     status.markPending('existing_uri');
-    LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), true);
+    assert.isTrue(status.hasBlobUri('existing_uri'));
     status.removeFailed('existing_uri');
-    LegacyUnit.strictEqual(status.hasBlobUri('existing_uri'), false);
+    assert.isFalse(status.hasBlobUri('existing_uri'));
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

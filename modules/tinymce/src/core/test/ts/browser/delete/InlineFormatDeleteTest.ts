@@ -1,86 +1,258 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', (success, failure) => {
+describe('browser.tinymce.core.delete.InlineFormatDelete', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false
+  }, [ Theme ], true);
 
-  Theme();
-
-  const sDelete = (editor) => {
-    return Step.sync(() => {
-      const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
+  const doDelete = (editor: Editor) => {
+    const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
+    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
   };
 
-  const sDeleteNoop = (editor) => {
-    return Step.sync(() => {
-      const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
+  const noopDelete = (editor: Editor) => {
+    const returnVal = InlineFormatDelete.backspaceDelete(editor, true);
+    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
   };
 
-  const sBackspace = (editor, _forward?) => {
-    return Step.sync(() => {
-      const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
+  const doBackspace = (editor: Editor) => {
+    const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
+    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
   };
 
-  const sBackspaceNoop = (editor, _forward?) => {
-    return Step.sync(() => {
-      const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
+  const noopBackspace = (editor: Editor) => {
+    const returnVal = InlineFormatDelete.backspaceDelete(editor, false);
+    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
   };
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  context('Backspace/delete in unformatted plain text', () => {
+    it('Backspace after plain text should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>a</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
 
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Logger.t('Backspace/delete in unformatted plain text', GeneralSteps.sequence([
-        Logger.t('Backspace after plain text should do nothing', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([ 0, 0 ], 1),
-          sBackspaceNoop(editor),
-          tinyApis.sAssertContent('<p>a</p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('Delete before plain text should do nothing', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>a</p>'),
-          tinyApis.sSetCursor([ 0, 0 ], 0),
-          sDeleteNoop(editor),
-          tinyApis.sAssertContent('<p>a</p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
-        ])),
-        Logger.t('Backspace in middle of plain text should do nothing', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>ab</p>'),
-          tinyApis.sSetCursor([ 0, 0 ], 1),
-          sBackspaceNoop(editor),
-          tinyApis.sAssertContent('<p>ab</p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('Delete in middle of plain text should do nothing', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>ab</p>'),
-          tinyApis.sSetCursor([ 0, 0 ], 1),
-          sDeleteNoop(editor),
-          tinyApis.sAssertContent('<p>ab</p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('Delete in middle of caret format span should do nothing', GeneralSteps.sequence([
-          tinyApis.sSetRawContent('<p>a<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#65279;</strong></span>b</p>'),
-          tinyApis.sSetCursor([ 0, 1 ], 0),
-          sDeleteNoop(editor),
-          tinyApis.sAssertSelection([ 0, 1 ], 0, [ 0, 1 ], 0),
-          tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, _arr) => {
-              return s.element('body', {
+    it('Delete before plain text should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      noopDelete(editor);
+      TinyAssertions.assertContent(editor, '<p>a</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    });
+
+    it('Backspace in middle of plain text should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      noopBackspace(editor);
+      TinyAssertions.assertContent(editor, '<p>ab</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Delete in middle of plain text should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      noopDelete(editor);
+      TinyAssertions.assertContent(editor, '<p>ab</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('Delete in middle of caret format span should do nothing', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret"><strong>&#65279;</strong></span>b</p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1 ], 0);
+      noopDelete(editor);
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 0);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
                 children: [
-                  s.element('p', {
+                  s.text(str.is('a')),
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.text(str.is(Zwsp.ZWSP))
+                        ]
+                      })
+                    ]
+                  }),
+                  s.text(str.is('b'))
+                ]
+              })
+            ]
+          });
+        })
+      );
+    });
+
+  });
+
+  context('Backspace/delete in at last character', () => {
+    it('Backspace after last character in formatted element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em>a</em></strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.element('em', {
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Delete before last character in formatted element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em>a</em></strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      doDelete(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('span', {
+                    attrs: {
+                      'id': str.is('_mce_caret'),
+                      'data-mce-bogus': str.is('1')
+                    },
+                    children: [
+                      s.element('strong', {
+                        children: [
+                          s.element('em', {
+                            children: [
+                              s.text(str.is(Zwsp.ZWSP))
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Backspace before last character in formatted element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><em>a</em><strong>b</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      noopBackspace(editor);
+      TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+    });
+
+    it('Delete after last character in formatted element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><em>a</em><strong>b</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      noopDelete(editor);
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('Backspace after last character in formatted element with sibling in format parent', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><ins><strong><em>a</em></strong>b</ins></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
+      doBackspace(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('ins', {
+                    children: [
+                      s.element('span', {
+                        attrs: {
+                          'id': str.is('_mce_caret'),
+                          'data-mce-bogus': str.is('1')
+                        },
+                        children: [
+                          s.element('strong', {
+                            children: [
+                              s.element('em', {
+                                children: [
+                                  s.text(str.is(Zwsp.ZWSP))
+                                ]
+                              })
+                            ]
+                          })
+                        ]
+                      }),
+                      s.text(str.is('b'))
+                    ]
+                  })
+                ]
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0);
+    });
+
+    it('Delete after last character in formatted element with sibling in format parent', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><ins>a<strong><em>b</em></strong></ins></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
+      doDelete(editor);
+      TinyAssertions.assertContentStructure(editor,
+        ApproxStructure.build((s, str, _arr) => {
+          return s.element('body', {
+            children: [
+              s.element('p', {
+                children: [
+                  s.element('ins', {
                     children: [
                       s.text(str.is('a')),
                       s.element('span', {
@@ -91,39 +263,6 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', (success, f
                         children: [
                           s.element('strong', {
                             children: [
-                              s.text(str.is(Zwsp.ZWSP))
-                            ]
-                          })
-                        ]
-                      }),
-                      s.text(str.is('b'))
-                    ]
-                  })
-                ]
-              });
-            })
-          )
-        ]))
-      ])),
-      Logger.t('Backspace/delete in at last character', GeneralSteps.sequence([
-        Logger.t('Backspace after last character in formatted element', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong><em>a</em></strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-          sBackspace(editor),
-          tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element('p', {
-                    children: [
-                      s.element('span', {
-                        attrs: {
-                          'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1')
-                        },
-                        children: [
-                          s.element('strong', {
-                            children: [
                               s.element('em', {
                                 children: [
                                   s.text(str.is(Zwsp.ZWSP))
@@ -136,142 +275,13 @@ UnitTest.asynctest('browser.tinymce.core.delete.InlineFormatDelete', (success, f
                     ]
                   })
                 ]
-              });
-            })
-          ),
-          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
-        ])),
-        Logger.t('Delete before last character in formatted element', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong><em>a</em></strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-          sDelete(editor),
-          tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element('p', {
-                    children: [
-                      s.element('span', {
-                        attrs: {
-                          'id': str.is('_mce_caret'),
-                          'data-mce-bogus': str.is('1')
-                        },
-                        children: [
-                          s.element('strong', {
-                            children: [
-                              s.element('em', {
-                                children: [
-                                  s.text(str.is(Zwsp.ZWSP))
-                                ]
-                              })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              });
-            })
-          ),
-          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
-        ])),
-        Logger.t('Backspace before last character in formatted element', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><em>a</em><strong>b</strong></p>'),
-          tinyApis.sSetCursor([ 0, 1, 0 ], 0),
-          sBackspaceNoop(editor),
-          tinyApis.sAssertSelection([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0)
-        ])),
-        Logger.t('Delete after last character in formatted element', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><em>a</em><strong>b</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-          sDeleteNoop(editor),
-          tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-        ])),
-        Logger.t('Backspace after last character in formatted element with sibling in format parent', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><ins><strong><em>a</em></strong>b</ins></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0, 0 ], 1),
-          sBackspace(editor),
-          tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element('p', {
-                    children: [
-                      s.element('ins', {
-                        children: [
-                          s.element('span', {
-                            attrs: {
-                              'id': str.is('_mce_caret'),
-                              'data-mce-bogus': str.is('1')
-                            },
-                            children: [
-                              s.element('strong', {
-                                children: [
-                                  s.element('em', {
-                                    children: [
-                                      s.text(str.is(Zwsp.ZWSP))
-                                    ]
-                                  })
-                                ]
-                              })
-                            ]
-                          }),
-                          s.text(str.is('b'))
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              });
-            })
-          ),
-          tinyApis.sAssertSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 0)
-        ])),
-        Logger.t('Delete after last character in formatted element with sibling in format parent', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><ins>a<strong><em>b</em></strong></ins></p>'),
-          tinyApis.sSetCursor([ 0, 0, 1, 0, 0 ], 0),
-          sDelete(editor),
-          tinyApis.sAssertContentStructure(
-            ApproxStructure.build((s, str, _arr) => {
-              return s.element('body', {
-                children: [
-                  s.element('p', {
-                    children: [
-                      s.element('ins', {
-                        children: [
-                          s.text(str.is('a')),
-                          s.element('span', {
-                            attrs: {
-                              'id': str.is('_mce_caret'),
-                              'data-mce-bogus': str.is('1')
-                            },
-                            children: [
-                              s.element('strong', {
-                                children: [
-                                  s.element('em', {
-                                    children: [
-                                      s.text(str.is(Zwsp.ZWSP))
-                                    ]
-                                  })
-                                ]
-                              })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              });
-            })
-          ),
-          tinyApis.sAssertSelection([ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0, 0 ], 0)
-        ]))
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    base_url: '/project/tinymce/js/tinymce',
-    indent: false
-  }, success, failure);
+              })
+            ]
+          });
+        })
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0, 0 ], 0);
+    });
+
+  });
 });
