@@ -1,51 +1,48 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomParser from 'tinymce/core/api/html/DomParser';
+import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import * as InsertList from 'tinymce/core/content/InsertList';
 
-UnitTest.asynctest('browser.tinymce.core.content.InsertListTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+describe('browser.tinymce.core.content.InsertListTest', () => {
   const schema = Schema({});
 
-  const createFragment = (html) => {
+  const createFragment = (html: string): AstNode => {
     const parser = DomParser({ validate: false });
     const fragment = parser.parse(html);
-
     return fragment;
   };
 
-  const createDomFragment = (html): DocumentFragment => {
+  const createDomFragment = (html: string): DocumentFragment => {
     return DOMUtils.DOM.createFragment(html);
   };
 
-  suite.test('isListFragment', () => {
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ol><li>x</li></ol>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<meta><ul><li>x</li></ul>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p><br></p>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p></p>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>\u00a0</p>')), true);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>x</p>')), false);
-    LegacyUnit.equal(InsertList.isListFragment(schema, createFragment('<div></div>')), false);
+  it('isListFragment', () => {
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ol><li>x</li></ol>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<meta><ul><li>x</li></ul>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><span id="mce_marker"></span>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p><br></p>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p></p>')));
+    assert.isTrue(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>\u00a0</p>')));
+    assert.isFalse(InsertList.isListFragment(schema, createFragment('<ul><li>x</li></ul><p>x</p>')));
+    assert.isFalse(InsertList.isListFragment(schema, createFragment('<div></div>')));
   });
 
-  suite.test('listItems', () => {
+  it('listItems', () => {
     const list = createDomFragment('<ul><li>a</li><li>b</li><li>c</li></ul>').firstChild as HTMLUListElement;
 
-    LegacyUnit.equal(InsertList.listItems(list).length, 3);
-    LegacyUnit.equal(InsertList.listItems(list)[0].nodeName, 'LI');
+    assert.lengthOf(InsertList.listItems(list), 3);
+    assert.equal(InsertList.listItems(list)[0].nodeName, 'LI');
   });
 
-  suite.test('trimListItems', () => {
+  it('trimListItems', () => {
     const list = createDomFragment('<ul><li>a</li><li>b</li><li></li></ul>').firstChild as HTMLUListElement;
 
-    LegacyUnit.equal(InsertList.listItems(list).length, 3);
-    LegacyUnit.equal(InsertList.trimListItems(InsertList.listItems(list)).length, 2);
+    assert.lengthOf(InsertList.listItems(list), 3);
+    assert.lengthOf(InsertList.trimListItems(InsertList.listItems(list)), 2);
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

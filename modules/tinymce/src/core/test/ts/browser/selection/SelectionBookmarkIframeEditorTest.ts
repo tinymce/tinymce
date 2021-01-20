@@ -1,121 +1,92 @@
-import { Assertions, Cursors, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest',
-  (success, failure) => {
+describe('browser.tinymce.core.selection.SelectionBookmarkIframeEditorTest', () => {
+  const browser = PlatformDetection.detect().browser;
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
+  const testDivId = 'testDiv1234';
 
-    Theme();
-    const testDivId = 'testDiv1234';
+  const removeTestDiv = () => {
+    const input = document.querySelector('#' + testDivId);
+    input.parentNode.removeChild(input);
+  };
 
-    const sRemoveTestDiv = Step.sync(() => {
-      const input = document.querySelector('#' + testDivId);
-      input.parentNode.removeChild(input);
-    });
+  const addTestDiv = () => {
+    const div = document.createElement('div');
+    div.innerHTML = 'xxx';
+    div.contentEditable = 'true';
+    div.id = testDivId;
+    document.body.appendChild(div);
+  };
 
-    const sAddTestDiv = Step.sync(() => {
-      const div = document.createElement('div');
-      div.innerHTML = 'xxx';
-      div.contentEditable = 'true';
-      div.id = testDivId;
-      document.body.appendChild(div);
-    });
+  const focusDiv = () => {
+    const input = document.querySelector<HTMLDivElement>('#' + testDivId);
+    input.focus();
+  };
 
-    const focusDiv = () => {
-      const input: any = document.querySelector('#' + testDivId);
-      input.focus();
-    };
+  before(function () {
+    // Only run on IE as other browsers support multiple selection
+    if (!browser.isIE()) {
+      this.skip();
+    }
+    addTestDiv();
+  });
 
-    const setSelection = (editor, start, soffset, finish, foffset) => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
-      const fc = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), start).getOrDie();
+  after(() => {
+    if (browser.isIE()) {
+      removeTestDiv();
+    }
+  });
 
-      const rng = document.createRange();
-      rng.setStart(sc.dom, soffset);
-      rng.setEnd(fc.dom, foffset);
+  it('assert selection after no nodechanged, should not restore', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
 
-      editor.selection.setRng(rng);
-    };
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
+    focusDiv();
 
-    const assertPath = (label, root, expPath, expOffset, actElement, actOffset) => {
-      const expected = Cursors.calculateOne(root, expPath);
-      const message = () => {
-        const actual = SugarElement.fromDom(actElement);
-        const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-        return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
-      };
-      Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
-      Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
-    };
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+  });
 
-    const assertSelection = (editor, startPath, soffset, finishPath, foffset) => {
-      const actual = editor.selection.getRng();
-      const root = SugarElement.fromDom(editor.getBody());
-      assertPath('start', root, startPath, soffset, actual.startContainer, actual.startOffset);
-      assertPath('finish', root, finishPath, foffset, actual.endContainer, actual.endOffset);
-    };
+  it('assert selection after nodechanged, should restore', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
 
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const browser = PlatformDetection.detect().browser;
-      Pipeline.async({}, browser.isIE() ? [ // Only run on IE
-        sAddTestDiv,
-        Logger.t('assert selection after no nodechanged, should not restore', Step.sync(() => {
-          editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    focusDiv();
 
-          setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
-          editor.nodeChanged();
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+  });
 
-          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-          focusDiv();
+  it('assert selection after keyup, should restore', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
 
-          assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
-        })),
-        Logger.t('assert selection after nodechanged, should restore', Step.sync(() => {
-          editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
+    editor.fire('keyup', { } as KeyboardEvent);
+    focusDiv();
 
-          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
-          editor.nodeChanged();
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+  });
 
-          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-          editor.nodeChanged();
-          focusDiv();
+  it('assert selection after mouseup, should restore', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
 
-          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-        })),
-        Logger.t('assert selection after keyup, should restore', Step.sync(() => {
-          editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
+    editor.fire('mouseup', { } as MouseEvent);
+    focusDiv();
 
-          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
-          editor.nodeChanged();
-
-          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-          editor.fire('keyup', { });
-          focusDiv();
-
-          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-        })),
-        Logger.t('assert selection after mouseup, should restore', Step.sync(() => {
-          editor.setContent('<p>a</p><p>b</p>');
-
-          setSelection(editor, [ 0 ], 0, [ 0 ], 0);
-          editor.nodeChanged();
-
-          setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-          editor.fire('mouseup', { });
-          focusDiv();
-
-          assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-        })),
-        sRemoveTestDiv
-      ] : [], onSuccess, onFailure);
-    }, {
-      plugins: '',
-      toolbar: '',
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
-  }
-);
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+  });
+});

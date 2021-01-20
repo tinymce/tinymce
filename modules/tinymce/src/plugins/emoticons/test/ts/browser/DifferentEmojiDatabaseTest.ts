@@ -1,10 +1,13 @@
-import { Assertions, Chain, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
-import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Editor as McEditor, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/emoticons/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 const getFilename = (url: string) => {
   const m = /([^\/\\]+)$/.exec(url);
@@ -14,44 +17,36 @@ const getFilename = (url: string) => {
   return '';
 };
 
-UnitTest.asynctest('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', (success, failure) => {
-  EmoticonsPlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
+  });
 
-  const sTestEditorWithSettings = (categories, databaseUrl) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
-      const tinyUi = TinyUi(editor);
-
-      Pipeline.async({}, [
-        tinyApis.sFocus(),
-        tinyUi.sClickOnToolbar('click emoticons', 'button'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
-        ]),
-        Waiter.sTryUntil(
-          'Wait for emojis to load',
-          UiFinder.sNotExists(SugarBody.body(), '.tox-spinner')
-        ),
-        Chain.asStep(SugarBody.body(), [
-          UiFinder.cFindAllIn('[role="tab"]'),
-          Chain.mapper((elements: SugarElement[]) => Arr.map(elements, (elm: SugarElement) => elm.dom.textContent)),
-          Assertions.cAssertEq('Categories match', categories)
-        ])
-      ], onSuccess, onFailure);
-    }, {
+  const pTestEditorWithSettings = async (categories: string[], databaseUrl: string) => {
+    const editor = await McEditor.pFromSettings<Editor>({
       plugins: 'emoticons',
       toolbar: 'emoticons',
-      theme: 'silver',
       base_url: '/project/tinymce/js/tinymce',
       emoticons_database_url: databaseUrl,
       emoticons_database_id: 'tinymce.plugins.emoticons.' + getFilename(databaseUrl)
-    }, onStepSuccess, onStepFailure);
-  });
+    });
 
-  Pipeline.async({},
-    Log.steps('TBA', 'Emoticon: Loading databases from different urls', [
-      sTestEditorWithSettings([ 'All', 'People' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js'),
-      sTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis-alt.js')
-    ]), success, failure);
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await Waiter.pTryUntil(
+      'Wait for emojis to load',
+      () => UiFinder.notExists(SugarBody.body(), '.tox-spinner')
+    );
+
+    const tabs = UiFinder.findAllIn(SugarBody.body(), '[role="tab"]');
+    const actualCategories = Arr.map(tabs, (elm) => elm.dom.textContent);
+    assert.deepEqual(actualCategories, categories, 'Categories match');
+    McEditor.remove(editor);
+  };
+
+  it('TBA: Loading databases from different urls ', async () => {
+    await pTestEditorWithSettings([ 'All', 'People' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis.js');
+    await pTestEditorWithSettings([ 'All', 'Travel and Places' ], '/project/tinymce/src/plugins/emoticons/test/js/test-emojis-alt.js');
+  });
 });

@@ -17,8 +17,8 @@ const hasFocus = (element: SugarElement<Node>): boolean => {
 };
 
 // Note: assuming that activeElement will always be a HTMLElement (maybe we should add a runtime check?)
-const active = (root: RootNode = SugarDocument.getDocument()): Optional<SugarElement<HTMLElement>> =>
-  Optional.from(root.dom.activeElement as HTMLElement).map(SugarElement.fromDom);
+const active = <T extends HTMLElement>(root: RootNode = SugarDocument.getDocument()): Optional<SugarElement<T>> =>
+  Optional.from(root.dom.activeElement as T).map(SugarElement.fromDom);
 
 /** Focus the specified element, unless one of its descendents already has focus. */
 const focusInside = (element: SugarElement<HTMLElement>): void => {

@@ -1,105 +1,111 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as ElementType from 'tinymce/core/dom/ElementType';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ElementTypeTest', (success, failure) => {
-  const sCheckElement = (name, predicate, expectedValue) => {
-    return Step.sync(() => {
-      Assertions.assertEq('Should be the expected value for specified element', expectedValue, predicate(SugarElement.fromTag(name)));
-    });
+describe('browser.tinymce.core.dom.ElementTypeTest', () => {
+  const checkElement = (name: string, predicate: (elm: SugarElement<Node>) => boolean, expectedValue: boolean) => {
+    assert.equal(predicate(SugarElement.fromTag(name)), expectedValue, 'Should be the expected value for specified element');
   };
 
-  const sCheckText = (predicate) => {
-    return Step.sync(() => {
-      Assertions.assertEq('Should be false for non element', false, predicate(SugarElement.fromText('text')));
-    });
+  const checkText = (predicate: (elm: SugarElement<Node>) => boolean) => {
+    assert.isFalse(predicate(SugarElement.fromText('text')), 'Should be false for non element');
   };
 
-  Pipeline.async({}, [
-    Logger.t('Check block elements', GeneralSteps.sequence([
-      sCheckElement('p', ElementType.isBlock, true),
-      sCheckElement('h1', ElementType.isBlock, true),
-      sCheckElement('table', ElementType.isBlock, true),
-      sCheckElement('span', ElementType.isBlock, false),
-      sCheckElement('b', ElementType.isBlock, false),
-      sCheckText(ElementType.isBlock)
-    ])),
-    Logger.t('Check inline elements', GeneralSteps.sequence([
-      sCheckElement('b', ElementType.isInline, true),
-      sCheckElement('span', ElementType.isInline, true),
-      sCheckElement('p', ElementType.isInline, false),
-      sCheckElement('h1', ElementType.isInline, false),
-      sCheckText(ElementType.isInline)
-    ])),
-    Logger.t('Check tables', GeneralSteps.sequence([
-      sCheckElement('b', ElementType.isTable, false),
-      sCheckElement('p', ElementType.isTable, false),
-      sCheckElement('table', ElementType.isTable, true),
-      sCheckText(ElementType.isTable)
-    ])),
-    Logger.t('Check heading elements', GeneralSteps.sequence([
-      sCheckElement('h1', ElementType.isHeading, true),
-      sCheckElement('h2', ElementType.isHeading, true),
-      sCheckElement('span', ElementType.isHeading, false),
-      sCheckElement('table', ElementType.isHeading, false),
-      sCheckText(ElementType.isHeading)
-    ])),
-    Logger.t('Check text block elements', GeneralSteps.sequence([
-      sCheckElement('p', ElementType.isTextBlock, true),
-      sCheckElement('h1', ElementType.isTextBlock, true),
-      sCheckElement('table', ElementType.isTextBlock, false),
-      sCheckText(ElementType.isTextBlock)
-    ])),
-    Logger.t('Check void elements', GeneralSteps.sequence([
-      sCheckElement('img', ElementType.isVoid, true),
-      sCheckElement('hr', ElementType.isVoid, true),
-      sCheckElement('h1', ElementType.isVoid, false),
-      sCheckElement('span', ElementType.isVoid, false),
-      sCheckText(ElementType.isVoid)
-    ])),
-    Logger.t('Check table cell elements', GeneralSteps.sequence([
-      sCheckElement('th', ElementType.isTableCell, true),
-      sCheckElement('td', ElementType.isTableCell, true),
-      sCheckElement('h1', ElementType.isTableCell, false),
-      sCheckElement('span', ElementType.isTableCell, false),
-      sCheckText(ElementType.isTableCell)
-    ])),
-    Logger.t('Check br elements', GeneralSteps.sequence([
-      sCheckElement('br', ElementType.isBr, true),
-      sCheckElement('b', ElementType.isBr, false),
-      sCheckText(ElementType.isBr)
-    ])),
-    Logger.t('Check list item elements', GeneralSteps.sequence([
-      sCheckElement('br', ElementType.isListItem, false),
-      sCheckElement('div', ElementType.isListItem, false),
-      sCheckElement('li', ElementType.isListItem, true),
-      sCheckElement('dd', ElementType.isListItem, true),
-      sCheckElement('dt', ElementType.isListItem, true),
-      sCheckText(ElementType.isListItem)
-    ])),
-    Logger.t('Check list elements', GeneralSteps.sequence([
-      sCheckElement('br', ElementType.isList, false),
-      sCheckElement('div', ElementType.isList, false),
-      sCheckElement('ul', ElementType.isList, true),
-      sCheckElement('ol', ElementType.isList, true),
-      sCheckElement('dl', ElementType.isList, true),
-      sCheckText(ElementType.isList)
-    ])),
-    Logger.t('Check table section elements', GeneralSteps.sequence([
-      sCheckElement('br', ElementType.isTableSection, false),
-      sCheckElement('div', ElementType.isTableSection, false),
-      sCheckElement('thead', ElementType.isTableSection, true),
-      sCheckElement('tbody', ElementType.isTableSection, true),
-      sCheckElement('tfoot', ElementType.isTableSection, true),
-      sCheckText(ElementType.isTableSection)
-    ])),
-    Logger.t('Check whitespace preserve elements', GeneralSteps.sequence([
-      sCheckElement('br', ElementType.isWsPreserveElement, false),
-      sCheckElement('div', ElementType.isWsPreserveElement, false),
-      sCheckElement('pre', ElementType.isWsPreserveElement, true),
-      sCheckElement('textarea', ElementType.isWsPreserveElement, true),
-      sCheckText(ElementType.isWsPreserveElement)
-    ]))
-  ], success, failure);
+  it('Check block elements', () => {
+    checkElement('p', ElementType.isBlock, true);
+    checkElement('h1', ElementType.isBlock, true);
+    checkElement('table', ElementType.isBlock, true);
+    checkElement('span', ElementType.isBlock, false);
+    checkElement('b', ElementType.isBlock, false);
+    checkText(ElementType.isBlock);
+  });
+
+  it('Check inline elements', () => {
+    checkElement('b', ElementType.isInline, true);
+    checkElement('span', ElementType.isInline, true);
+    checkElement('p', ElementType.isInline, false);
+    checkElement('h1', ElementType.isInline, false);
+    checkText(ElementType.isInline);
+  });
+
+  it('Check tables', () => {
+    checkElement('b', ElementType.isTable, false);
+    checkElement('p', ElementType.isTable, false);
+    checkElement('table', ElementType.isTable, true);
+    checkText(ElementType.isTable);
+  });
+
+  it('Check heading elements', () => {
+    checkElement('h1', ElementType.isHeading, true);
+    checkElement('h2', ElementType.isHeading, true);
+    checkElement('span', ElementType.isHeading, false);
+    checkElement('table', ElementType.isHeading, false);
+    checkText(ElementType.isHeading);
+  });
+
+  it('Check text block elements', () => {
+    checkElement('p', ElementType.isTextBlock, true);
+    checkElement('h1', ElementType.isTextBlock, true);
+    checkElement('table', ElementType.isTextBlock, false);
+    checkText(ElementType.isTextBlock);
+  });
+
+  it('Check void elements', () => {
+    checkElement('img', ElementType.isVoid, true);
+    checkElement('hr', ElementType.isVoid, true);
+    checkElement('h1', ElementType.isVoid, false);
+    checkElement('span', ElementType.isVoid, false);
+    checkText(ElementType.isVoid);
+  });
+
+  it('Check table cell elements', () => {
+    checkElement('th', ElementType.isTableCell, true);
+    checkElement('td', ElementType.isTableCell, true);
+    checkElement('h1', ElementType.isTableCell, false);
+    checkElement('span', ElementType.isTableCell, false);
+    checkText(ElementType.isTableCell);
+  });
+
+  it('Check br elements', () => {
+    checkElement('br', ElementType.isBr, true);
+    checkElement('b', ElementType.isBr, false);
+    checkText(ElementType.isBr);
+  });
+
+  it('Check list item elements', () => {
+    checkElement('br', ElementType.isListItem, false);
+    checkElement('div', ElementType.isListItem, false);
+    checkElement('li', ElementType.isListItem, true);
+    checkElement('dd', ElementType.isListItem, true);
+    checkElement('dt', ElementType.isListItem, true);
+    checkText(ElementType.isListItem);
+  });
+
+  it('Check list elements', () => {
+    checkElement('br', ElementType.isList, false);
+    checkElement('div', ElementType.isList, false);
+    checkElement('ul', ElementType.isList, true);
+    checkElement('ol', ElementType.isList, true);
+    checkElement('dl', ElementType.isList, true);
+    checkText(ElementType.isList);
+  });
+
+  it('Check table section elements', () => {
+    checkElement('br', ElementType.isTableSection, false);
+    checkElement('div', ElementType.isTableSection, false);
+    checkElement('thead', ElementType.isTableSection, true);
+    checkElement('tbody', ElementType.isTableSection, true);
+    checkElement('tfoot', ElementType.isTableSection, true);
+    checkText(ElementType.isTableSection);
+  });
+
+  it('Check whitespace preserve elements', () => {
+    checkElement('br', ElementType.isWsPreserveElement, false);
+    checkElement('div', ElementType.isWsPreserveElement, false);
+    checkElement('pre', ElementType.isWsPreserveElement, true);
+    checkElement('textarea', ElementType.isWsPreserveElement, true);
+    checkText(ElementType.isWsPreserveElement);
+  });
 });

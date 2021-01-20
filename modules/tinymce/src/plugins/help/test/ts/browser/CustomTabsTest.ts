@@ -1,49 +1,45 @@
-import { Chain, Logger, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Editor as McEditor } from '@ephox/mcagar';
-import { Html, SugarElement } from '@ephox/sugar';
-import HelpPlugin from 'tinymce/plugins/help/Plugin';
-import Editor from '../../../../../core/main/ts/api/Editor';
-import Theme from '../../../../../themes/silver/main/ts/Theme';
+import { Html, SugarDocument } from '@ephox/sugar';
+import { assert } from 'chai';
 
-UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import Plugin from 'tinymce/plugins/help/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  HelpPlugin();
-  Theme();
-
-  const doc = SugarElement.fromDom(document);
-
-  const compareTabNames = (expectedNames: string[]) => Chain.op((editor: Editor) => {
-    editor.execCommand('mceHelp');
-    const actualTabs = UiFinder.findAllIn(doc, 'div.tox-dialog__body-nav-item.tox-tab');
-    const actualNames: string[] = Arr.map(actualTabs, (tab) => Html.get(tab));
-    Arr.map(expectedNames, (x, i) => assert.eq(x, actualNames[i], `Tab names did not match. Expected: ${expectedNames}. Actual: ${actualNames}`));
+describe('browser.tinymce.plugins.help.CustomTabsTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
   });
 
-  const makeStep = (config: Object, expectedTabNames: string[]) => Chain.asStep({}, [
-    McEditor.cFromSettings(config),
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.read('editor', compareTabNames(expectedTabNames)),
-      NamedChain.output('editor')
-    ]),
-    McEditor.cRemove
-  ]);
+  const compareTabNames = (editor: Editor, expectedNames: string[]) => {
+    editor.execCommand('mceHelp');
+    const actualTabs = UiFinder.findAllIn(SugarDocument.getDocument(), 'div.tox-dialog__body-nav-item.tox-tab');
+    const actualNames = Arr.map(actualTabs, (tab) => Html.get(tab));
+    Arr.map(expectedNames, (x, i) => {
+      assert.equal(actualNames[i], x, 'Tab names did not match');
+    });
+  };
 
-  Pipeline.async({}, [
-    Logger.t('Default help dialog', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce'
-    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ])),
+  const pCreateEditor = (settings: RawEditorSettings) => McEditor.pFromSettings<Editor>({
+    plugins: 'help',
+    toolbar: 'help',
+    base_url: '/project/tinymce/js/tinymce',
+    ...settings
+  });
 
-    Logger.t('Test help_tabs with pre-registered and new tabs', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
+  it('TINY-3535: Default help dialog', async () => {
+    const editor = await pCreateEditor({});
+    compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Version' ]);
+    McEditor.remove(editor);
+  });
+
+  it('TINY-3535: help_tabs with pre-registered and new tabs', async () => {
+    const editor = await pCreateEditor({
       help_tabs: [
         'shortcuts',
         'plugins',
@@ -64,13 +60,13 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           }]
         }
       ]
-    }, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ])),
+    });
+    compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version', 'Extra1' ]);
+    McEditor.remove(editor);
+  });
 
-    Logger.t('Test addTab() with a new tab', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
+  it('TINY-3535: addTab() with a new tab', async () => {
+    const editor = await pCreateEditor({
       setup: (editor) => {
         editor.on('init', () => {
           editor.plugins.help.addTab({
@@ -83,13 +79,13 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           });
         });
       }
-    }, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ])),
+    });
+    compareTabNames(editor, [ 'Handy Shortcuts', 'Keyboard Navigation', 'Plugins', 'Extra1', 'Version' ]);
+    McEditor.remove(editor);
+  });
 
-    Logger.t('Test help_tabs and addTab()', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
+  it('TINY-3535: help_tabs and addTab()', async () => {
+    const editor = await pCreateEditor({
       help_tabs: [
         'shortcuts',
         'extraTab2',
@@ -131,19 +127,21 @@ UnitTest.asynctest('Custom Help Tabs test', (success, failure) => {
           });
         });
       }
-    }, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ])),
+    });
+    compareTabNames(editor, [ 'Handy Shortcuts', 'Extra2', 'Plugins', 'Version', 'Extra1' ]);
+    McEditor.remove(editor);
+  });
 
-    Logger.t('Test things do not break if a tab name does not have a spec', makeStep({
-      plugins: 'help',
-      toolbar: 'help',
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
+  it('TINY-3535: things do not break if a tab name does not have a spec', async () => {
+    const editor = await pCreateEditor({
       help_tabs: [
         'shortcuts',
         'plugins',
         'versions',
         'unknown'
       ]
-    }, [ 'Handy Shortcuts', 'Plugins', 'Version' ]))
-  ], success, failure);
+    });
+    compareTabNames(editor, [ 'Handy Shortcuts', 'Plugins', 'Version' ]);
+    McEditor.remove(editor);
+  });
 });

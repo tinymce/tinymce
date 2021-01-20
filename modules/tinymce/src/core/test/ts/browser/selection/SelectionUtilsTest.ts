@@ -1,75 +1,71 @@
-import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as SelectionUtils from 'tinymce/core/selection/SelectionUtils';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionUtilsTest', (success, failure) => {
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.selection.SelectionUtilsTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  const cSetHtml = (html) => {
-    return Chain.op(() => {
-      viewBlock.update(html);
-    });
+  const setHtml = viewBlock.update;
+
+  const hasAllContentsSelected = (startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
+    const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
+
+    const rng = document.createRange();
+    rng.setStart(sc.dom, startOffset);
+    rng.setEnd(ec.dom, endOffset);
+
+    return SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(viewBlock.get()), rng);
   };
 
-  const cHasAllContentsSelected = (startPath, startOffset, endPath, endOffset) => {
-    return Chain.mapper((viewBlock: any) => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const ec = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), endPath).getOrDie();
-      const rng = document.createRange();
+  it('All text is selected in paragraph (single character)', () => {
+    setHtml('<p>a</p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1);
+    assert.isTrue(selected, 'Should be true since all contents is selected');
+  });
 
-      rng.setStart(sc.dom, startOffset);
-      rng.setEnd(ec.dom, endOffset);
+  it('All text is selected in paragraph (multiple characters)', () => {
+    setHtml('<p>ab</p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 2);
+    assert.isTrue(selected, 'Should be true since all contents is selected');
+  });
 
-      return SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(viewBlock.get()), rng);
-    });
-  };
+  it('All text is selected in paragraph and sub element', () => {
+    setHtml('<p>a<b>b</b></p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 1, 0 ], 1);
+    assert.isTrue(selected, 'Should be true since all contents is selected');
+  });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('All text is selected in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>a</p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
-      Assertions.cAssertEq('Should be true since all contents is selected', true)
-    ])),
-    Logger.t('All text is selected in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 2),
-      Assertions.cAssertEq('Should be true since all contents is selected', true)
-    ])),
-    Logger.t('All text is selected in paragraph and sub element', Chain.asStep(viewBlock, [
-      cSetHtml('<p>a<b>b</b></p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 1, 0 ], 1),
-      Assertions.cAssertEq('Should be true since all contents is selected', true)
-    ])),
-    Logger.t('All text is selected in paragraph and with traling br', Chain.asStep(viewBlock, [
-      cSetHtml('<p>a<br></p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
-      Assertions.cAssertEq('Should be true since all contents is selected', true)
-    ])),
-    Logger.t('Collapsed range in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>a</p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 0),
-      Assertions.cAssertEq('Should be false since only some contents is selected', false)
-    ])),
-    Logger.t('Partial text selection in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1),
-      Assertions.cAssertEq('Should be false since only some contents is selected', false)
-    ])),
-    Logger.t('Partial text selection in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>ab</p>'),
-      cHasAllContentsSelected([ 0, 0 ], 1, [ 0, 0 ], 2),
-      Assertions.cAssertEq('Should be false since only some contents is selected', false)
-    ])),
-    Logger.t('Partial mixed selection in paragraph', Chain.asStep(viewBlock, [
-      cSetHtml('<p>a<b>bc</b></p>'),
-      cHasAllContentsSelected([ 0, 0 ], 1, [ 0, 1, 0 ], 1),
-      Assertions.cAssertEq('Should be false since only some contents is selected', false)
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  it('All text is selected in paragraph and with trailing br', () => {
+    setHtml('<p>a<br></p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1);
+    assert.isTrue(selected, 'Should be true since all contents is selected');
+  });
+
+  it('Collapsed range in paragraph', () => {
+    setHtml('<p>a</p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 0);
+    assert.isFalse(selected, 'Should be false since only some contents is selected');
+  });
+
+  it('Partial text selection in paragraph (first character)', () => {
+    setHtml('<p>ab</p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 0, [ 0, 0 ], 1);
+    assert.isFalse(selected, 'Should be false since only some contents is selected');
+  });
+
+  it('Partial text selection in paragraph (last character)', () => {
+    setHtml('<p>ab</p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 1, [ 0, 0 ], 2);
+    assert.isFalse(selected, 'Should be false since only some contents is selected');
+  });
+
+  it('Partial mixed selection in paragraph', () => {
+    setHtml('<p>a<b>bc</b></p>');
+    const selected = hasAllContentsSelected([ 0, 0 ], 1, [ 0, 1, 0 ], 1);
+    assert.isFalse(selected, 'Should be false since only some contents is selected');
+  });
 });

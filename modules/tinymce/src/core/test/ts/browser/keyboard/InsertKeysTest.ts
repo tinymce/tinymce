@@ -1,329 +1,350 @@
-import { Chain, Cursors, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Waiter } from '@ephox/agar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Insert, SugarElement } from '@ephox/sugar';
+import { Hierarchy, Insert, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const browser = PlatformDetection.detect().browser;
-
-UnitTest.asynctest('browser.tinymce.core.keyboard.InsertKeysTest', (success, failure) => {
-  Theme();
-
-  const sFireInsert = (editor: Editor) => Step.sync(() => {
-    editor.fire('input', { isComposing: false } as InputEvent);
-  });
-
-  const sFireKeyPress = (editor: Editor) => Step.sync(() => {
-    editor.fire('keypress');
-  });
-
-  const sInsertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-    Cursors.cFollow(path),
-    Chain.op((elm) => {
-      Arr.each(Arr.range(count, Fun.identity), () => {
-        insert(elm, SugarElement.fromDom(document.createTextNode('')));
-      });
-    })
-  ]);
-
-  const sPrependEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => sInsertEmptyTextNodesAt(editor, count, path, Insert.before);
-
-  const sAppendEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => sInsertEmptyTextNodesAt(editor, count, path, Insert.after);
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('Insert key in text with in nbsp text node', GeneralSteps.sequence([
-        Logger.t('Nbsp at first character position', GeneralSteps.sequence([
-          Logger.t('Insert in text node with nbsp at start of block', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>&nbsp;a</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<p>&nbsp;a</p>')
-          ])),
-          Logger.t('Insert in text in node with leading nbsp after inline with trailing space', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a<em>b </em>&nbsp;c</p>'),
-            tinyApis.sSetCursor([ 0, 2 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 2 ], 2, [ 0, 2 ], 2),
-            tinyApis.sAssertContent('<p>a<em>b </em>&nbsp;c</p>')
-          ])),
-          Logger.t('Insert in text in node with leading nbsp after inline', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a<em>b</em>&nbsp;c</p>'),
-            tinyApis.sSetCursor([ 0, 2 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 2 ], 2, [ 0, 2 ], 2),
-            tinyApis.sAssertContent('<p>a<em>b</em> c</p>')
-          ])),
-          Logger.t('Insert in text in node with leading nbsp after inline with trailing nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a<em>b&nbsp;</em>&nbsp;c</p>'),
-            tinyApis.sSetCursor([ 0, 2 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 2 ], 2, [ 0, 2 ], 2),
-            tinyApis.sAssertContent('<p>a<em>b&nbsp;</em> c</p>')
-          ])),
-          Logger.t('Insert at beginning of text node with leading nbsp after a br', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a<br />&nbsp;b</p>'),
-            tinyApis.sSetCursor([ 0, 2 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 2 ], 0, [ 0, 2 ], 0),
-            tinyApis.sAssertContent('<p>a<br />&nbsp;b</p>')
-          ])),
-          Logger.t('Insert at beginning of text node with leading nbsp within inline element followed by br', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a<br /><em>&nbsp;b</em></p>'),
-            tinyApis.sSetCursor([ 0, 2, 0 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 2, 0 ], 0, [ 0, 2, 0 ], 0),
-            tinyApis.sAssertContent('<p>a<br /><em>&nbsp;b</em></p>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp at last character position', GeneralSteps.sequence([
-          Logger.t('Insert in text node with nbsp at end of block', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            tinyApis.sAssertContent('<p>a&nbsp;</p>')
-          ])),
-          Logger.t('Insert in text in node with leading nbsp after inline with trailing space', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;<em> b</em>c</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            tinyApis.sAssertContent('<p>a&nbsp;<em> b</em>c</p>')
-          ])),
-          Logger.t('Insert in text in node with traling nbsp before inline', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;<em>b</em>c</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            tinyApis.sAssertContent('<p>a <em>b</em>c</p>')
-          ])),
-          Logger.t('Insert in text in node with trailing nbsp before inline with leading nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;<em>&nbsp;b</em>c</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            tinyApis.sAssertContent('<p>a <em>&nbsp;b</em>c</p>')
-          ])),
-          Logger.t('Insert in text in node with single middle nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;b</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 3),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 3, [ 0, 0 ], 3),
-            tinyApis.sAssertContent('<p>a b</p>')
-          ])),
-          Logger.t('Insert in text in node with multiple middle nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;b&nbsp;c&nbsp;d</p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 7),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 7, [ 0, 0 ], 7),
-            tinyApis.sAssertContent('<p>a b c d</p>')
-          ])),
-          Logger.t('Insert in text node multiple nbsps between inline elements', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p><em>a</em>&nbsp;&nbsp;<em>b</em></p>'),
-            tinyApis.sSetCursor([ 0, 1 ], 1),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            tinyApis.sAssertContent('<p><em>a</em> &nbsp;<em>b</em></p>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp at fragmented text', GeneralSteps.sequence([
-          Logger.t('Insert nbsp at end of text block with leading empty text nodes should retain the nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>&nbsp;a</p>'),
-            sPrependEmptyTextNodesAt(editor, 3, [ 0, 0 ]),
-            tinyApis.sSetCursor([ 0, 3 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 3 ], 2, [ 0, 3 ], 2),
-            tinyApis.sAssertContent('<p>&nbsp;a</p>')
-          ])),
-          Logger.t('Insert nbsp at end of text block with trailing empty text nodes should retain the nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>a&nbsp;</p>'),
-            sAppendEmptyTextNodesAt(editor, 3, [ 0, 0 ]),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<p>a&nbsp;</p>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp at img', GeneralSteps.sequence([
-          Logger.t('Insert nbsp before an image at start of a block should not remove the nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p>&nbsp;<img src="about:blank" /></p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 1),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1),
-            tinyApis.sAssertContent('<p>&nbsp;<img src="about:blank" /></p>')
-          ])),
-          Logger.t('Insert nbsp between two images should remove nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p><img src="about:blank" />&nbsp;<img src="about:blank" /></p>'),
-            tinyApis.sSetCursor([ 0, 1 ], 1),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            tinyApis.sAssertContent('<p><img src="about:blank" /> <img src="about:blank" /></p>')
-          ])),
-          Logger.t('Insert nbsp after an image at the end of a block should not remove the nbsp', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<p><img src="about:blank" />&nbsp;</p>'),
-            tinyApis.sSetCursor([ 0, 1 ], 1),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            tinyApis.sAssertContent('<p><img src="about:blank" />&nbsp;</p>')
-          ]))
-        ])),
-
-        Logger.t('Insert in text on IE using keypress', GeneralSteps.sequence(browser.isIE() ? [
-          tinyApis.sFocus(),
-          tinyApis.sSetContent('<p>a&nbsp;b</p>'),
-          tinyApis.sSetCursor([ 0, 0 ], 3),
-          sFireKeyPress(editor),
-          Waiter.sTryUntil('', tinyApis.sAssertContent('<p>a b</p>'), 10, 1000),
-          tinyApis.sAssertSelection([ 0, 0 ], 3, [ 0, 0 ], 3)
-        ] : [])),
-
-        Logger.t('Nbsp in pre', GeneralSteps.sequence([
-          Logger.t('Trim nbsp at beginning of text in pre element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre>&nbsp;a</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre> a</pre>')
-          ])),
-          Logger.t('Trim nbsp at end of text in pre element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre>a&nbsp;</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre>a </pre>')
-          ])),
-          Logger.t('Trim nbsp middle of text in pre element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre>a&nbsp;b</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre>a b</pre>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp in pre: white-space: pre-wrap', GeneralSteps.sequence([
-          Logger.t('Trim nbsp at start of text in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">&nbsp;a</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;"> a</pre>')
-          ])),
-          Logger.t('Trim nbsp at end of text in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">a&nbsp;</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;">a </pre>')
-          ])),
-          Logger.t('Trim nbsp in middle of text in in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-wrap;">a&nbsp;b</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-wrap;">a b</pre>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp in pre: white-space: pre-line', GeneralSteps.sequence([
-          Logger.t('Do not trim nbsp at beginning of text in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-line;">&nbsp;a</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-line;">&nbsp;a</pre>')
-          ])),
-          Logger.t('Do not trim nbsp at end of text in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-line;">a&nbsp;</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-line;">a&nbsp;</pre>')
-          ])),
-          Logger.t('Trim nbsp in middle of text in in white-space: pre-line element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<pre style="white-space: pre-line;">a&nbsp;b</pre>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<pre style="white-space: pre-line;">a b</pre>')
-          ]))
-        ])),
-
-        Logger.t('Nbsp before/after block', GeneralSteps.sequence([
-          Logger.t('Do not trim nbsp before a block element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<div>a&nbsp;<p>b</p></div>'),
-            tinyApis.sSetCursor([ 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-            tinyApis.sAssertContent('<div>a&nbsp;<p>b</p></div>')
-          ])),
-          Logger.t('Do not trim nbsp after a block element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<div><p>b</p>&nbsp;a</div>'),
-            tinyApis.sSetCursor([ 0, 1 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 1 ], 2, [ 0, 1 ], 2),
-            tinyApis.sAssertContent('<div><p>b</p>&nbsp;a</div>')
-          ])),
-          Logger.t('Do not trim nbsp in an inline before a block element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<div><em>a&nbsp;</em><p>b</p></div>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2),
-            tinyApis.sAssertContent('<div><em>a&nbsp;</em><p>b</p></div>')
-          ])),
-          Logger.t('Do not trim nbsp in an inline after a block element', GeneralSteps.sequence([
-            tinyApis.sFocus(),
-            tinyApis.sSetContent('<div><p>b</p><em>&nbsp;a</em></div>'),
-            tinyApis.sSetCursor([ 0, 1, 0 ], 2),
-            sFireInsert(editor),
-            tinyApis.sAssertSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2),
-            tinyApis.sAssertContent('<div><p>b</p><em>&nbsp;a</em></div>')
-          ]))
-        ]))
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
+  const browser = PlatformDetection.detect().browser;
+  const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const fireInsert = (editor: Editor) => {
+    editor.fire('input', { isComposing: false } as InputEvent);
+  };
+
+  const fireKeyPress = (editor: Editor) => {
+    editor.fire('keypress');
+  };
+
+  const insertEmptyTextNodesAt = (editor: Editor, count: number, path: number[], insert: (marker: SugarElement, element: SugarElement) => void) => {
+    const elm = Hierarchy.follow(TinyDom.body(editor), path).getOrDie('Could not follow path');
+    Arr.each(Arr.range(count, Fun.identity), () => {
+      insert(elm, SugarElement.fromDom(document.createTextNode('')));
+    });
+  };
+
+  const prependEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => insertEmptyTextNodesAt(editor, count, path, Insert.before);
+
+  const appendEmptyTextNodesAt = (editor: Editor, count: number, path: number[]) => insertEmptyTextNodesAt(editor, count, path, Insert.after);
+
+  beforeEach(() => {
+    hook.editor().focus();
+  });
+
+  context('Insert key in text with in nbsp text node', () => {
+    context('Nbsp at first character position', () => {
+      it('Insert in text node with nbsp at start of block', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>&nbsp;a</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<p>&nbsp;a</p>');
+      });
+
+      it('Insert in text in node with leading nbsp after inline with trailing space', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a<em>b </em>&nbsp;c</p>');
+        TinySelections.setCursor(editor, [ 0, 2 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 2, [ 0, 2 ], 2);
+        TinyAssertions.assertContent(editor, '<p>a<em>b </em>&nbsp;c</p>');
+      });
+
+      it('Insert in text in node with leading nbsp after inline', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a<em>b</em>&nbsp;c</p>');
+        TinySelections.setCursor(editor, [ 0, 2 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 2, [ 0, 2 ], 2);
+        TinyAssertions.assertContent(editor, '<p>a<em>b</em> c</p>');
+      });
+
+      it('Insert in text in node with leading nbsp after inline with trailing nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a<em>b&nbsp;</em>&nbsp;c</p>');
+        TinySelections.setCursor(editor, [ 0, 2 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 2, [ 0, 2 ], 2);
+        TinyAssertions.assertContent(editor, '<p>a<em>b&nbsp;</em> c</p>');
+      });
+
+      it('Insert at beginning of text node with leading nbsp after a br', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a<br />&nbsp;b</p>');
+        TinySelections.setCursor(editor, [ 0, 2 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 2 ], 0, [ 0, 2 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a<br />&nbsp;b</p>');
+      });
+
+      it('Insert at beginning of text node with leading nbsp within inline element followed by br', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a<br /><em>&nbsp;b</em></p>');
+        TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 2, 0 ], 0, [ 0, 2, 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a<br /><em>&nbsp;b</em></p>');
+      });
+    });
+
+    context('Nbsp at last character position', () => {
+      it('Insert in text node with nbsp at end of block', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a&nbsp;</p>');
+      });
+
+      it('Insert in text in node with leading nbsp after inline with trailing space', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;<em> b</em>c</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a&nbsp;<em> b</em>c</p>');
+      });
+
+      it('Insert in text in node with trailing nbsp before inline', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;<em>b</em>c</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a <em>b</em>c</p>');
+      });
+
+      it('Insert in text in node with trailing nbsp before inline with leading nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;<em>&nbsp;b</em>c</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 0);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+        TinyAssertions.assertContent(editor, '<p>a <em>&nbsp;b</em>c</p>');
+      });
+
+      it('Insert in text in node with single middle nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;b</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 3);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 3, [ 0, 0 ], 3);
+        TinyAssertions.assertContent(editor, '<p>a b</p>');
+      });
+
+      it('Insert in text in node with multiple middle nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;b&nbsp;c&nbsp;d</p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 7);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 7, [ 0, 0 ], 7);
+        TinyAssertions.assertContent(editor, '<p>a b c d</p>');
+      });
+
+      it('Insert in text node multiple nbsps between inline elements', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><em>a</em>&nbsp;&nbsp;<em>b</em></p>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+        TinyAssertions.assertContent(editor, '<p><em>a</em> &nbsp;<em>b</em></p>');
+      });
+    });
+
+    context('Nbsp at fragmented text', () => {
+      it('Insert nbsp at end of text block with leading empty text nodes should retain the nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>&nbsp;a</p>');
+        prependEmptyTextNodesAt(editor, 3, [ 0, 0 ]);
+        TinySelections.setCursor(editor, [ 0, 3 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 3 ], 2, [ 0, 3 ], 2);
+        TinyAssertions.assertContent(editor, '<p>&nbsp;a</p>');
+      });
+
+      it('Insert nbsp at end of text block with trailing empty text nodes should retain the nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a&nbsp;</p>');
+        appendEmptyTextNodesAt(editor, 3, [ 0, 0 ]);
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<p>a&nbsp;</p>');
+      });
+    });
+
+    context('Nbsp at img', () => {
+      it('Insert nbsp before an image at start of a block should not remove the nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>&nbsp;<img src="about:blank" /></p>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 1);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+        TinyAssertions.assertContent(editor, '<p>&nbsp;<img src="about:blank" /></p>');
+      });
+
+      it('Insert nbsp between two images should remove nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><img src="about:blank" />&nbsp;<img src="about:blank" /></p>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank" /> <img src="about:blank" /></p>');
+      });
+
+      it('Insert nbsp after an image at the end of a block should not remove the nbsp', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><img src="about:blank" />&nbsp;</p>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 1);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+        TinyAssertions.assertContent(editor, '<p><img src="about:blank" />&nbsp;</p>');
+      });
+    });
+
+    it('Insert in text on IE using keypress', async function () {
+      if (!browser.isIE()) {
+        this.skip();
+      }
+      const editor = hook.editor();
+      editor.setContent('<p>a&nbsp;b</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 3);
+      fireKeyPress(editor);
+      await Waiter.pTryUntil('', () => TinyAssertions.assertContent(editor, '<p>a b</p>'), 10, 1000);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 3, [ 0, 0 ], 3);
+    });
+
+    context('Nbsp in pre', () => {
+      it('Trim nbsp at beginning of text in pre element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre>&nbsp;a</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre> a</pre>');
+      });
+
+      it('Trim nbsp at end of text in pre element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre>a&nbsp;</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre>a </pre>');
+      });
+
+      it('Trim nbsp middle of text in pre element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre>a&nbsp;b</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre>a b</pre>');
+      });
+    });
+
+    context('Nbsp in pre: white-space: pre-wrap', () => {
+      it('Trim nbsp at start of text in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-wrap;">&nbsp;a</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-wrap;"> a</pre>');
+      });
+
+      it('Trim nbsp at end of text in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-wrap;">a&nbsp;</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-wrap;">a </pre>');
+      });
+
+      it('Trim nbsp in middle of text in in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-wrap;">a&nbsp;b</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-wrap;">a b</pre>');
+      });
+    });
+
+    describe('Nbsp in pre: white-space: pre-line', () => {
+      it('Do not trim nbsp at beginning of text in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-line;">&nbsp;a</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-line;">&nbsp;a</pre>');
+      });
+
+      it('Do not trim nbsp at end of text in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-line;">a&nbsp;</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-line;">a&nbsp;</pre>');
+      });
+
+      it('Trim nbsp in middle of text in in white-space: pre-line element', () => {
+        const editor = hook.editor();
+        editor.setContent('<pre style="white-space: pre-line;">a&nbsp;b</pre>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<pre style="white-space: pre-line;">a b</pre>');
+      });
+    });
+
+    context('Nbsp before/after block', () => {
+      it('Do not trim nbsp before a block element', () => {
+        const editor = hook.editor();
+        editor.setContent('<div>a&nbsp;<p>b</p></div>');
+        TinySelections.setCursor(editor, [ 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<div>a&nbsp;<p>b</p></div>');
+      });
+
+      it('Do not trim nbsp after a block element', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><p>b</p>&nbsp;a</div>');
+        TinySelections.setCursor(editor, [ 0, 1 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+        TinyAssertions.assertContent(editor, '<div><p>b</p>&nbsp;a</div>');
+      });
+
+      it('Do not trim nbsp in an inline before a block element', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><em>a&nbsp;</em><p>b</p></div>');
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<div><em>a&nbsp;</em><p>b</p></div>');
+      });
+
+      it('Do not trim nbsp in an inline after a block element', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><p>b</p><em>&nbsp;a</em></div>');
+        TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+        fireInsert(editor);
+        TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
+        TinyAssertions.assertContent(editor, '<div><p>b</p><em>&nbsp;a</em></div>');
+      });
+    });
+  });
 });

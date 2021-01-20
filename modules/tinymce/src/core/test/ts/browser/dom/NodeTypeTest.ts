@@ -1,106 +1,102 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import $ from 'tinymce/core/api/dom/DomQuery';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 
-UnitTest.asynctest('browser.tinymce.core.dom.NodeTypeTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+describe('browser.tinymce.core.dom.NodeTypeTest', () => {
+  it('isText/isElement/isComment', () => {
+    assert.isTrue(NodeType.isText(document.createTextNode('x')));
+    assert.isFalse(NodeType.isText(null));
+    assert.isFalse(NodeType.isText(document.createElement('div')));
+    assert.isFalse(NodeType.isText(document.createComment('x')));
 
-  suite.test('isText/isElement/isComment', () => {
-    LegacyUnit.strictEqual(NodeType.isText(document.createTextNode('x')), true);
-    LegacyUnit.strictEqual(NodeType.isText(null), false);
-    LegacyUnit.strictEqual(NodeType.isText(document.createElement('div')), false);
-    LegacyUnit.strictEqual(NodeType.isText(document.createComment('x')), false);
+    assert.isTrue(NodeType.isElement(document.createElement('div')));
+    assert.isFalse(NodeType.isElement(null));
+    assert.isFalse(NodeType.isElement(document.createTextNode('x')));
+    assert.isFalse(NodeType.isElement(document.createComment('x')));
 
-    LegacyUnit.strictEqual(NodeType.isElement(document.createElement('div')), true);
-    LegacyUnit.strictEqual(NodeType.isElement(null), false);
-    LegacyUnit.strictEqual(NodeType.isElement(document.createTextNode('x')), false);
-    LegacyUnit.strictEqual(NodeType.isElement(document.createComment('x')), false);
-
-    LegacyUnit.strictEqual(NodeType.isComment(document.createComment('x')), true);
-    LegacyUnit.strictEqual(NodeType.isComment(null), false);
-    LegacyUnit.strictEqual(NodeType.isComment(document.createTextNode('x')), false);
-    LegacyUnit.strictEqual(NodeType.isComment(document.createElement('div')), false);
+    assert.isTrue(NodeType.isComment(document.createComment('x')));
+    assert.isFalse(NodeType.isComment(null));
+    assert.isFalse(NodeType.isComment(document.createTextNode('x')));
+    assert.isFalse(NodeType.isComment(document.createElement('div')));
   });
 
-  suite.test('isBr', () => {
-    LegacyUnit.strictEqual(NodeType.isBr(null), false);
-    LegacyUnit.strictEqual(NodeType.isBr(document.createTextNode('x')), false);
-    LegacyUnit.strictEqual(NodeType.isBr(document.createElement('br')), true);
-    LegacyUnit.strictEqual(NodeType.isBr(document.createComment('x')), false);
+  it('isBr', () => {
+    assert.isFalse(NodeType.isBr(null));
+    assert.isFalse(NodeType.isBr(document.createTextNode('x')));
+    assert.isTrue(NodeType.isBr(document.createElement('br')));
+    assert.isFalse(NodeType.isBr(document.createComment('x')));
   });
 
-  suite.test('isContentEditableTrue', () => {
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(null), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createComment('x')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createTextNode('x')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue(document.createElement('div')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="true"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="trUe"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="false"></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="fAlse"></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableTrue($('<div contentEditable="inherit"></div>')[0]), false);
+  it('isContentEditableTrue', () => {
+    assert.isFalse(NodeType.isContentEditableTrue(null));
+    assert.isFalse(NodeType.isContentEditableTrue(document.createComment('x')));
+    assert.isFalse(NodeType.isContentEditableTrue(document.createTextNode('x')));
+    assert.isFalse(NodeType.isContentEditableTrue(document.createElement('div')));
+    assert.isTrue(NodeType.isContentEditableTrue($('<div contentEditable="true"></div>')[0]));
+    assert.isTrue(NodeType.isContentEditableTrue($('<div contentEditable="trUe"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="false"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="fAlse"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableTrue($('<div contentEditable="inherit"></div>')[0]));
   });
 
-  suite.test('isContentEditableFalse', () => {
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(null), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createComment('x')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createTextNode('x')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse(document.createElement('div')), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="true"></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="trUe"></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="false"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="fAlse"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isContentEditableFalse($('<div contentEditable="inherit"></div>')[0]), false);
+  it('isContentEditableFalse', () => {
+    assert.isFalse(NodeType.isContentEditableFalse(null));
+    assert.isFalse(NodeType.isContentEditableFalse(document.createComment('x')));
+    assert.isFalse(NodeType.isContentEditableFalse(document.createTextNode('x')));
+    assert.isFalse(NodeType.isContentEditableFalse(document.createElement('div')));
+    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="true"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="trUe"></div>')[0]));
+    assert.isTrue(NodeType.isContentEditableFalse($('<div contentEditable="false"></div>')[0]));
+    assert.isTrue(NodeType.isContentEditableFalse($('<div contentEditable="fAlse"></div>')[0]));
+    assert.isFalse(NodeType.isContentEditableFalse($('<div contentEditable="inherit"></div>')[0]));
   });
 
-  suite.test('matchNodeNames', () => {
+  it('matchNodeNames', () => {
     const matchNodeNames = NodeType.matchNodeNames([ 'a', 'div', '#text' ]);
 
-    LegacyUnit.strictEqual(matchNodeNames(null), false);
-    LegacyUnit.strictEqual(matchNodeNames(document.createTextNode('x')), true);
-    LegacyUnit.strictEqual(matchNodeNames(document.createElement('a')), true);
-    LegacyUnit.strictEqual(matchNodeNames(document.createElement('div')), true);
-    LegacyUnit.strictEqual(matchNodeNames(document.createElement('b')), false);
+    assert.isFalse(matchNodeNames(null));
+    assert.isTrue(matchNodeNames(document.createTextNode('x')));
+    assert.isTrue(matchNodeNames(document.createElement('a')));
+    assert.isTrue(matchNodeNames(document.createElement('div')));
+    assert.isFalse(matchNodeNames(document.createElement('b')));
   });
 
-  suite.test('hasPropValue', () => {
+  it('hasPropValue', () => {
     const hasTabIndex3 = NodeType.hasPropValue('tabIndex', 3);
 
-    LegacyUnit.strictEqual(hasTabIndex3(null), false);
-    LegacyUnit.strictEqual(hasTabIndex3($('<div tabIndex="3"></div>')[0]), true);
-    LegacyUnit.strictEqual(hasTabIndex3(document.createElement('div')), false);
-    LegacyUnit.strictEqual(hasTabIndex3(document.createElement('b')), false);
+    assert.isFalse(hasTabIndex3(null));
+    assert.isTrue(hasTabIndex3($('<div tabIndex="3"></div>')[0]));
+    assert.isFalse(hasTabIndex3(document.createElement('div')));
+    assert.isFalse(hasTabIndex3(document.createElement('b')));
   });
 
-  suite.test('isBogus', () => {
-    LegacyUnit.strictEqual(NodeType.isBogus($('<div data-mce-bogus="1"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isBogus($('<div data-mce-bogus="all"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isBogus($('<div></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isBogus(document.createTextNode('test')), false);
-    LegacyUnit.strictEqual(NodeType.isBogus(null), false);
+  it('isBogus', () => {
+    assert.isTrue(NodeType.isBogus($('<div data-mce-bogus="1"></div>')[0]));
+    assert.isTrue(NodeType.isBogus($('<div data-mce-bogus="all"></div>')[0]));
+    assert.isFalse(NodeType.isBogus($('<div></div>')[0]));
+    assert.isFalse(NodeType.isBogus(document.createTextNode('test')));
+    assert.isFalse(NodeType.isBogus(null));
   });
 
-  suite.test('isBogusAll', () => {
-    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="1"></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div data-mce-bogus="all"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isBogusAll($('<div></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isBogusAll(document.createTextNode('test')), false);
-    LegacyUnit.strictEqual(NodeType.isBogusAll(null), false);
+  it('isBogusAll', () => {
+    assert.isFalse(NodeType.isBogusAll($('<div data-mce-bogus="1"></div>')[0]));
+    assert.isTrue(NodeType.isBogusAll($('<div data-mce-bogus="all"></div>')[0]));
+    assert.isFalse(NodeType.isBogusAll($('<div></div>')[0]));
+    assert.isFalse(NodeType.isBogusAll(document.createTextNode('test')));
+    assert.isFalse(NodeType.isBogusAll(null));
   });
 
-  suite.test('hasAttribute', () => {
-    LegacyUnit.strictEqual(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]), false);
+  it('hasAttribute', () => {
+    assert.isTrue(NodeType.hasAttribute('x')($('<div x="1"></div>')[0]));
+    assert.isFalse(NodeType.hasAttribute('y')($('<div x="1"></div>')[0]));
   });
 
-  suite.test('isTable', () => {
-    LegacyUnit.strictEqual(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]), true);
-    LegacyUnit.strictEqual(NodeType.isTable($('<div></div>')[0]), false);
-    LegacyUnit.strictEqual(NodeType.isTable(document.createTextNode('test')), false);
-    LegacyUnit.strictEqual(NodeType.isTable(null), false);
+  it('isTable', () => {
+    assert.isTrue(NodeType.isTable($('<table><tr><td></td></tr></table>')[0]));
+    assert.isFalse(NodeType.isTable($('<div></div>')[0]));
+    assert.isFalse(NodeType.isTable(document.createTextNode('test')));
+    assert.isFalse(NodeType.isTable(null));
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

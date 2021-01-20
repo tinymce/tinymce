@@ -1,4 +1,4 @@
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { KAssert } from '@ephox/katamari-assertions';
 import * as InsertAll from 'ephox/sugar/api/dom/InsertAll';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
@@ -15,8 +15,11 @@ UnitTest.test('CheckedTest', () => {
   InsertAll.append(container, [ alpha, beta, gamma ]);
 
   KAssert.eqNone('eq', Checked.find(container));
+  Assert.eq('Alpha checked value should be false', false, Checked.get(alpha));
   Checked.set(beta, true);
+  Assert.eq('Beta checked value should be true', true, Checked.get(beta));
   KAssert.eqSome('eq', 'beta', Checked.find(container).map(Value.get));
   Checked.set(alpha, true);
+  Assert.eq('Alpha checked value should be true', true, Checked.get(alpha));
   KAssert.eqSome('eq', 'alpha', Checked.find(container).map(Value.get));
 });

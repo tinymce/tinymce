@@ -1,60 +1,36 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
-import { Hierarchy, SugarElement } from '@ephox/sugar';
-import EditorManager from 'tinymce/core/api/EditorManager';
+import { Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Editor as McEditor, TinyAssertions } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.focus.CefFocusTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.focus.CefFocusTest', () => {
+  before(() => Theme());
 
-  const sCreateInlineEditor = (html) => {
-    return Chain.asStep({}, [
-      McEditor.cFromHtml(html, {
-        inline: true,
-        base_url: '/project/tinymce/js/tinymce'
-      })
-    ]);
-  };
+  const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
+    menubar: false,
+    inline: true,
+    base_url: '/project/tinymce/js/tinymce'
+  });
 
-  const sAssertSelection = (editorIndex, startPath, startOffset, endPath, endOffset) => {
-    return Step.sync(() => {
-      const editor = EditorManager.get(editorIndex);
-      const startContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), startPath).getOrDie();
-      const endContainer = Hierarchy.follow(SugarElement.fromDom(editor.getBody()), endPath).getOrDie();
-      const rng = editor.selection.getRng();
+  it('Focus editors', async () => {
+    const editor1 = await pCreateInlineEditor('<div class="tinymce"><p contenteditable="false">a</p></div>');
+    const editor2 = await pCreateInlineEditor('<div class="tinymce"><p contenteditable="false">b</p></div>');
+    editor1.getBody().focus();
+    editor2.getBody().focus();
 
-      Assertions.assertDomEq('Should be expected from start container', startContainer, SugarElement.fromDom(rng.startContainer));
-      Assertions.assertEq('Should be expected from start offset', startOffset, rng.startOffset);
-      Assertions.assertDomEq('Should be expected end container', endContainer, SugarElement.fromDom(rng.endContainer));
-      Assertions.assertEq('Should be expected end offset', endOffset, rng.endOffset);
+    await Waiter.pTryUntil('Wait for selection to move', () => {
+      TinyAssertions.assertSelection(editor2, [ 0 ], 0, [ 0 ], 0);
     });
-  };
+    const caretElm0 = editor1.getBody().querySelector('[data-mce-caret]');
+    const caretElm1 = editor2.getBody().querySelector('[data-mce-caret]');
 
-  const sRemoveEditors = Chain.asStep({}, [
-    Chain.injectThunked(() => EditorManager.get(1)),
-    McEditor.cRemove,
-    Chain.injectThunked(() => EditorManager.get(0)),
-    McEditor.cRemove
-  ]);
+    assert.isNull(caretElm0, 'Should not be a caret element present editor q');
+    assert.isNotNull(caretElm1, 'Should be a caret element present editor 1');
 
-  Pipeline.async({}, [
-    Logger.t('Focus editors', GeneralSteps.sequence([
-      sCreateInlineEditor('<div class="tinymce"><p contenteditable="false">a</p></div>'),
-      sCreateInlineEditor('<div class="tinymce"><p contenteditable="false">b</p></div>'),
-      Step.sync(() => {
-        EditorManager.get(0).getBody().focus();
-        EditorManager.get(1).getBody().focus();
-      }),
-      Waiter.sTryUntil('Wait for selection to move', sAssertSelection(1, [ 0 ], 0, [ 0 ], 0), 10, 3000),
-      Step.sync(() => {
-        const caretElm0 = EditorManager.get(0).getBody().querySelector('[data-mce-caret]');
-        const caretElm1 = EditorManager.get(1).getBody().querySelector('[data-mce-caret]');
-
-        Assertions.assertEq('Should not be a caret element present editor 0', false, !!caretElm0);
-        Assertions.assertEq('Should be a caret element present editor 1', true, !!caretElm1);
-      }),
-      sRemoveEditors
-    ]))
-  ], success, failure);
+    McEditor.remove(editor2);
+    McEditor.remove(editor1);
+  });
 });

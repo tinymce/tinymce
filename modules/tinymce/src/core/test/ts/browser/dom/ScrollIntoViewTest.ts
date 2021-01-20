@@ -1,206 +1,206 @@
-import { Assertions, Cursors, GeneralSteps, Logger, PhantomSkipper, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, Cursors, PhantomSkipper, Waiter } from '@ephox/agar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
+import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ScrollIntoViewTest', (success, failure) => {
+interface State {
+  readonly elm: HTMLElement;
+  readonly alignToTop: boolean;
+}
 
-  Theme();
+interface StateAndHandler {
+  readonly handler: (e: EditorEvent<ScrollIntoViewEvent>) => void;
+  readonly state: Cell<Partial<State>>;
+}
 
-  const sScrollReset = (editor: Editor) => {
-    return Step.sync(() => {
-      editor.getWin().scrollTo(0, 0);
+describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
+  // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
+  PhantomSkipper.bddSetup();
+  const hook = TinyHooks.bddSetup<Editor>({
+    add_unload_trigger: false,
+    height: 500,
+    base_url: '/project/tinymce/js/tinymce',
+    content_style: 'body.mce-content-body  { margin: 0 }'
+  }, [ Theme ], true);
+
+  const scrollReset = (editor: Editor) => {
+    editor.getWin().scrollTo(0, 0);
+  };
+
+  const pSetContent = async (editor: Editor, html: string) => {
+    editor.setContent(html);
+    await Waiter.pTryUntil('Wait for scrollHeight to be updated', () => {
+      assert.isAbove(editor.getBody().scrollHeight, 100, 'Scroll body should be more than 100');
     });
   };
 
-  const sSetContent = (editor: Editor, tinyApis: TinyApis, html: string) => {
-    return GeneralSteps.sequence([
-      tinyApis.sSetContent(html),
-      Waiter.sTryUntil('Wait for scrollHeight to be updated', Step.sync(() => {
-        Assertions.assertEq('Scroll body should be more than 100', true, editor.getBody().scrollHeight > 100);
-      }))
-    ]);
+  const scrollIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
+    editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
   };
 
-  const sScrollIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
-    return Step.sync(() => {
-      editor.selection.scrollIntoView(editor.dom.select(selector)[0], alignToTop);
-    });
+  const scrollElementIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
+    ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
   };
 
-  const sScrollElementIntoView = (editor: Editor, selector: string, alignToTop?: boolean) => {
-    return Step.sync(() => {
-      ScrollIntoView.scrollElementIntoView(editor, editor.dom.select(selector)[0], alignToTop);
-    });
-  };
-
-  const sScrollRangeIntoView = (editor: Editor, path: number[], offset: number) => Step.sync(() => {
-    const x = Cursors.calculateOne(SugarElement.fromDom(editor.getBody()), path);
+  const scrollRangeIntoView = (editor: Editor, path: number[], offset: number) => {
+    const x = Cursors.calculateOne(TinyDom.body(editor), path);
     const rng = editor.dom.createRng();
     rng.setStart(x.dom, offset);
     rng.setEnd(x.dom, offset);
 
     ScrollIntoView.scrollRangeIntoView(editor, rng);
+  };
+
+  const assertScrollPosition = (editor: Editor, x: number, y: number) => {
+    const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
+    const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
+    assert.equal(actualX, x, `Scroll position X should be expected value: ${x} got ${actualX}`);
+    assert.equal(actualY, y, `Scroll position Y should be expected value: ${y} got ${actualY}`);
+  };
+
+  const assertApproxScrollPosition = (editor: Editor, x: number, y: number) => {
+    const actualX = editor.dom.getViewPort(editor.getWin()).x;
+    const actualY = editor.dom.getViewPort(editor.getWin()).y;
+    assert.isBelow(Math.abs(x - actualX), 5, `Scroll position X should be expected value: ${x} got ${actualX}`);
+    assert.isBelow(Math.abs(y - actualY), 5, `Scroll position Y should be expected value: ${y} got ${actualY}`);
+  };
+
+  const bindScrollIntoViewEvent = (editor: Editor): StateAndHandler => {
+    const state = Cell({});
+
+    const handler = (e: EditorEvent<ScrollIntoViewEvent>) => {
+      e.preventDefault();
+      state.set({
+        elm: e.elm,
+        alignToTop: e.alignToTop
+      });
+    };
+
+    editor.on('ScrollIntoView', handler);
+
+    return {
+      handler,
+      state
+    };
+  };
+
+  const assertScrollIntoViewEventInfo = (editor: Editor, value: StateAndHandler, expectedElementSelector: string, expectedAlignToTop: boolean) => {
+    const state = value.state.get();
+    const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
+    const actualTarget = SugarElement.fromDom(state.elm);
+    Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
+    assert.equal(state.alignToTop, expectedAlignToTop, 'Align to top should be expected value');
+    editor.off('ScrollIntoView', value.handler);
+  };
+
+  beforeEach(() => {
+    scrollReset(hook.editor());
   });
 
-  const sAssertScrollPosition = (editor: Editor, x: number, y: number) => {
-    return Step.sync(() => {
-      const actualX = Math.round(editor.dom.getViewPort(editor.getWin()).x);
-      const actualY = Math.round(editor.dom.getViewPort(editor.getWin()).y);
-      Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, x, actualX);
-      Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, y, actualY);
+  context('Public Selection API', () => {
+    it('Scroll to element align to bottom', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      scrollIntoView(editor, 'div:nth-child(2)', false);
+      assertScrollPosition(editor, 0, 648);
     });
-  };
 
-  const sAssertApproxScrollPosition = (editor: Editor, x: number, y: number) => {
-    return Step.sync(() => {
-      const actualX = editor.dom.getViewPort(editor.getWin()).x;
-      const actualY = editor.dom.getViewPort(editor.getWin()).y;
-      Assertions.assertEq(`Scroll position X should be expected value: ${x} got ${actualX}`, true, Math.abs(x - actualX) < 5);
-      Assertions.assertEq(`Scroll position Y should be expected value: ${y} got ${actualY}`, true, Math.abs(y - actualY) < 5);
+    it('Scroll to element align to top', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      scrollIntoView(editor, 'div:nth-child(2)', true);
+      assertScrollPosition(editor, 0, 1000);
     });
-  };
 
-  const mBindScrollIntoViewEvent = (editor: Editor) => {
-    return Step.stateful((_value, next, _die) => {
-      const state = Cell({});
-
-      const handler = (e) => {
-        e.preventDefault();
-        state.set({
-          elm: e.elm,
-          alignToTop: e.alignToTop
-        });
-      };
-
-      editor.on('ScrollIntoView', handler);
-
-      next({
-        handler,
-        state
-      });
+    it(`Scroll to element already in view shouldn't do anything`, async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
+      editor.getWin().scrollTo(0, 900);
+      scrollIntoView(editor, 'div:nth-child(2)');
+      assertScrollPosition(editor, 0, 900);
     });
-  };
 
-  const mAssertScrollIntoViewEventInfo = (editor: Editor, expectedElementSelector: string, expectedAlignToTop: boolean) => {
-    return Step.stateful((value: any, next, _die) => {
-      const expectedTarget = SugarElement.fromDom(editor.dom.select(expectedElementSelector)[0]);
-      const actualTarget = SugarElement.fromDom(value.state.get().elm);
-      Assertions.assertDomEq('Target should be expected element', expectedTarget, actualTarget);
-      Assertions.assertEq('Align to top should be expected value', expectedAlignToTop, value.state.get().alignToTop);
-      editor.off('ScrollIntoView', value.handler);
-      next({});
+    it('Scroll to element with height larger than viewport should align to top', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
+      scrollIntoView(editor, 'div:nth-child(3)');
+      assertScrollPosition(editor, 0, 1050);
     });
-  };
+  });
 
-  const steps = (editor: Editor, tinyApis: TinyApis) => {
-    return [
-      tinyApis.sFocus(),
-      Logger.t('Public Selection API', GeneralSteps.sequence([
-        Logger.t('Scroll to element align to bottom', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollIntoView(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 648)
-        ])),
-        Logger.t('Scroll to element align to top', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollIntoView(editor, 'div:nth-child(2)', true),
-          sAssertScrollPosition(editor, 0, 1000)
-        ])),
-        Logger.t(`Scroll to element already in view shouldn't do anything`, GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
-          Step.sync(() => {
-            editor.getWin().scrollTo(0, 900);
-          }),
-          sScrollIntoView(editor, 'div:nth-child(2)'),
-          sAssertScrollPosition(editor, 0, 900)
-        ])),
-        Logger.t('Scroll to element with height larger than viewport should align to top', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>'),
-          sScrollIntoView(editor, 'div:nth-child(3)'),
-          sAssertScrollPosition(editor, 0, 1050)
-        ]))
-      ])),
-      Logger.t('Private ScrollElementIntoView', GeneralSteps.sequence([
-        Logger.t('Scroll to element align to bottom', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollElementIntoView(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 648)
-        ])),
-        Logger.t('Scroll to element align to top', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollElementIntoView(editor, 'div:nth-child(2)', true),
-          sAssertScrollPosition(editor, 0, 1000)
-        ]))
-      ])),
-      Logger.t('Private ScrollRangeIntoView', GeneralSteps.sequence([
-        Logger.t('Scroll up/down', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          sScrollRangeIntoView(editor, [ 1, 0 ], 0),
-          sAssertApproxScrollPosition(editor, 0, 618), // Height of the text content/cursor
-          sScrollRangeIntoView(editor, [ 0, 0 ], 0),
-          sAssertApproxScrollPosition(editor, 0, 0),
-          sScrollRangeIntoView(editor, [ 2, 0 ], 0),
-          sAssertApproxScrollPosition(editor, 0, 668)
-        ]))
-      ])),
-      Logger.t('Override scrollIntoView event', GeneralSteps.sequence([
-        Logger.t('Scroll to element align to bottom', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          mBindScrollIntoViewEvent(editor),
-          sScrollIntoView(editor, 'div:nth-child(2)', false),
-          mAssertScrollIntoViewEventInfo(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 0)
-        ])),
-        Logger.t('Scroll to element align to top', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          mBindScrollIntoViewEvent(editor),
-          sScrollIntoView(editor, 'div:nth-child(2)', true),
-          mAssertScrollIntoViewEventInfo(editor, 'div:nth-child(2)', true),
-          sAssertScrollPosition(editor, 0, 0)
-        ])),
-        Logger.t('Scroll to element align to bottom (private api)', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          mBindScrollIntoViewEvent(editor),
-          sScrollElementIntoView(editor, 'div:nth-child(2)', false),
-          mAssertScrollIntoViewEventInfo(editor, 'div:nth-child(2)', false),
-          sAssertScrollPosition(editor, 0, 0)
-        ])),
-        Logger.t('Scroll to element align to top (private api)', GeneralSteps.sequence([
-          sScrollReset(editor),
-          sSetContent(editor, tinyApis, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>'),
-          mBindScrollIntoViewEvent(editor),
-          sScrollElementIntoView(editor, 'div:nth-child(2)', true),
-          mAssertScrollIntoViewEventInfo(editor, 'div:nth-child(2)', true),
-          sAssertScrollPosition(editor, 0, 0)
-        ]))
-      ]))
-    ];
-  };
+  context('Private ScrollElementIntoView', () => {
+    it('Scroll to element align to bottom', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      scrollElementIntoView(editor, 'div:nth-child(2)', false);
+      assertScrollPosition(editor, 0, 648);
+    });
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+    it('Scroll to element align to top', async () => {
+      const editor = hook.editor();
+      scrollReset(editor);
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      scrollElementIntoView(editor, 'div:nth-child(2)', true);
+      assertScrollPosition(editor, 0, 1000);
+    });
+  });
 
-    // Only run scrolling tests on real browsers doesn't seem to work on phantomjs for some reason
-    Pipeline.async({}, PhantomSkipper.detect() ? [ ] : steps(editor, tinyApis), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    height: 500,
-    base_url: '/project/tinymce/js/tinymce',
-    content_style: 'body.mce-content-body  { margin: 0 }'
-  }, success, failure);
+  context('Private ScrollRangeIntoView', () => {
+    it('Scroll up/down', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      scrollRangeIntoView(editor, [ 1, 0 ], 0);
+      assertApproxScrollPosition(editor, 0, 618); // Height of the text content/cursor
+      scrollRangeIntoView(editor, [ 0, 0 ], 0);
+      assertApproxScrollPosition(editor, 0, 0);
+      scrollRangeIntoView(editor, [ 2, 0 ], 0);
+      assertApproxScrollPosition(editor, 0, 668);
+    });
+  });
+
+  context('Override scrollIntoView event', () => {
+    it('Scroll to element align to bottom', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      const value = bindScrollIntoViewEvent(editor);
+      scrollIntoView(editor, 'div:nth-child(2)', false);
+      assertScrollIntoViewEventInfo(editor, value, 'div:nth-child(2)', false);
+      assertScrollPosition(editor, 0, 0);
+    });
+
+    it('Scroll to element align to top', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      const value = bindScrollIntoViewEvent(editor);
+      scrollIntoView(editor, 'div:nth-child(2)', true);
+      assertScrollIntoViewEventInfo(editor, value, 'div:nth-child(2)', true);
+      assertScrollPosition(editor, 0, 0);
+    });
+
+    it('Scroll to element align to bottom (private api)', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      const value = bindScrollIntoViewEvent(editor);
+      scrollElementIntoView(editor, 'div:nth-child(2)', false);
+      assertScrollIntoViewEventInfo(editor, value, 'div:nth-child(2)', false);
+      assertScrollPosition(editor, 0, 0);
+    });
+
+    it('Scroll to element align to top (private api)', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+      const value = bindScrollIntoViewEvent(editor);
+      scrollElementIntoView(editor, 'div:nth-child(2)', true);
+      assertScrollIntoViewEventInfo(editor, value, 'div:nth-child(2)', true);
+      assertScrollPosition(editor, 0, 0);
+    });
+  });
 });

@@ -1,28 +1,18 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
-UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  suite.test('getContainer/getContentAreaContainer', (editor) => {
-    LegacyUnit.equal(editor.getContainer().id, 'editorContainer', 'Should be the new editorContainer element');
-    LegacyUnit.equal(editor.getContainer().nodeType, 1, 'Should be an element');
-    LegacyUnit.equal(editor.getContentAreaContainer().id, 'iframeContainer', 'Should be the new iframeContainer element');
-    LegacyUnit.equal(editor.getContentAreaContainer().nodeType, 1, 'Should be an element');
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.init.EditorCustomThemeTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
     automatic_uploads: false,
     entities: 'raw',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    theme: (editor, targetnode) => {
+    theme: (editor: Editor, targetnode: HTMLElement) => {
       const editorContainer = document.createElement('div');
       editorContainer.id = 'editorContainer';
 
@@ -45,5 +35,13 @@ UnitTest.asynctest('browser.tinymce.core.init.EditorCustomThemeTest', (success, 
         editorContainer
       };
     }
-  }, success, failure);
+  }, []);
+
+  it('getContainer/getContentAreaContainer', () => {
+    const editor = hook.editor();
+    assert.equal(editor.getContainer().id, 'editorContainer', 'Should be the new editorContainer element');
+    assert.equal(editor.getContainer().nodeType, 1, 'Should be an element');
+    assert.equal(editor.getContentAreaContainer().id, 'iframeContainer', 'Should be the new iframeContainer element');
+    assert.equal(editor.getContentAreaContainer().nodeType, 1, 'Should be an element');
+  });
 });

@@ -1,12 +1,13 @@
-import { GeneralSteps, Keyboard, Step } from '@ephox/agar';
+import { Keyboard, Step } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
-const insertCharAtRange = (rng, chr) => {
+const insertCharAtRange = (rng: Range, chr: string): Range => {
   const outRng = rng.cloneRange();
   const sc = rng.startContainer, so = rng.startOffset;
 
   if (sc.nodeType === 3) {
-    sc.insertData(so, chr);
+    (sc as Text).insertData(so, chr);
     outRng.setStart(sc, so + 1);
     outRng.setEnd(sc, so + 1);
   } else {
@@ -25,7 +26,7 @@ const insertCharAtRange = (rng, chr) => {
   return outRng;
 };
 
-const insertCharAtSelection = (doc, chr) => {
+const insertCharAtSelection = (doc: Document, chr: string): void => {
   const sel = doc.defaultView.getSelection();
 
   if (sel.rangeCount >= 1) {
@@ -34,29 +35,26 @@ const insertCharAtSelection = (doc, chr) => {
     sel.removeAllRanges();
     sel.addRange(newRange);
   } else {
-    throw new Error('Can not type at an non existing range selection');
+    throw new Error('Cannot type at an non existing range selection');
   }
 };
 
-const sInsertCharAtSelection = (doc, chr) => {
-  return Step.sync(() => {
-    insertCharAtSelection(doc.dom, chr);
-  });
+const typeChar = (doc: SugarElement<Document>, chr: string): void => {
+  Keyboard.activeKeydown(doc, chr.charCodeAt(0), { });
+  Keyboard.activeKeypress(doc, chr.charCodeAt(0), { });
+  insertCharAtSelection(doc.dom, chr);
+  Keyboard.activeKeyup(doc, chr.charCodeAt(0), { });
 };
 
-const sTypeChar = (doc, chr) => {
-  return GeneralSteps.sequence([
-    Keyboard.sKeydown(doc, chr, {}),
-    Keyboard.sKeypress(doc, chr, {}),
-    sInsertCharAtSelection(doc, chr),
-    Keyboard.sKeyup(doc, chr, {})
-  ]);
+const typeContentAtSelection = (doc: SugarElement<Document>, text: string): void => {
+  Arr.map(text.split(''), Fun.curry(typeChar, doc));
 };
 
-const sTypeContentAtSelection = (doc, text) => {
-  return GeneralSteps.sequence(Arr.map(text.split(''), Fun.curry(sTypeChar, doc)));
-};
+const sTypeContentAtSelection = <T>(doc: SugarElement<Document>, text: string): Step<T, T> => Step.sync(() => {
+  typeContentAtSelection(doc, text);
+});
 
 export {
+  typeContentAtSelection,
   sTypeContentAtSelection
 };
