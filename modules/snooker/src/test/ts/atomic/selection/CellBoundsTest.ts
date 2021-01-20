@@ -1,20 +1,25 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as CellBounds from 'ephox/snooker/selection/CellBounds';
 
 UnitTest.test('CellBounds.isWithin Test', () => {
-  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(fakeEle as SugarElement, cells, section);
+  const createCell = (text: string): SugarElement => {
+    const elem = SugarElement.fromTag('td');
+    TextContent.set(elem, text);
+    return elem;
+  };
+  const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
+  const f = (cells: Structs.Detail[], section: 'tbody') => Structs.rowdata(SugarElement.fromTag('tr'), cells, section);
 
   const testTableA = [
-    f('r1', [ s('a', 1, 1), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),
-    f('r2', [ s('f', 1, 1), s('g', 1, 1), s('h', 1, 2), s('i', 1, 1) ], 'tbody'),
-    f('r3', [ s('l', 1, 1), s('m', 1, 1), s('n', 1, 3) ], 'tbody'),
-    f('r4', [ s('o', 1, 1), s('p', 1, 1), s('q', 1, 2), s('r', 1, 1) ], 'tbody'),
-    f('r5', [ s('s', 1, 1), s('t', 1, 1), s('u', 1, 1), s('v', 1, 1), s('z', 1, 1) ], 'tbody')
+    f([ s('a', 1, 1), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1) ], 'tbody'),
+    f([ s('f', 1, 1), s('g', 1, 1), s('h', 1, 2), s('i', 1, 1) ], 'tbody'),
+    f([ s('l', 1, 1), s('m', 1, 1), s('n', 1, 3) ], 'tbody'),
+    f([ s('o', 1, 1), s('p', 1, 1), s('q', 1, 2), s('r', 1, 1) ], 'tbody'),
+    f([ s('s', 1, 1), s('t', 1, 1), s('u', 1, 1), s('v', 1, 1), s('z', 1, 1) ], 'tbody')
   ];
   const inputA = Warehouse.generate(testTableA);
 
@@ -39,10 +44,10 @@ UnitTest.test('CellBounds.isWithin Test', () => {
 
   // 'element', 'rowspan', 'colspan'
   const testTableB = [
-    f('r1', [ s('a', 3, 1), s('b', 1, 1), s('c', 1, 1), s('d', 2, 1) ], 'tbody'),
-    f('r2', [ s('e', 2, 2) ], 'tbody'),
-    f('r3', [ s('f', 2, 1) ], 'tbody'),
-    f('r4', [ s('g', 1, 3) ], 'tbody')
+    f([ s('a', 3, 1), s('b', 1, 1), s('c', 1, 1), s('d', 2, 1) ], 'tbody'),
+    f([ s('e', 2, 2) ], 'tbody'),
+    f([ s('f', 2, 1) ], 'tbody'),
+    f([ s('g', 1, 3) ], 'tbody')
   ];
   const inputB = Warehouse.generate(testTableB);
 
@@ -55,11 +60,11 @@ UnitTest.test('CellBounds.isWithin Test', () => {
   checkWithin(false, inputB, bounds0To2, 1, 3);
 
   const testTableC = [
-    f('r1', [ s('a', 1, 1), s('b', 1, 3), s('c', 1, 1) ], 'tbody'),
-    f('r2', [ s('d', 3, 1), s('e', 1, 1), s('f', 1, 1), s('g', 1, 2) ], 'tbody'),
-    f('r3', [ s('h', 1, 3), s('i', 2, 1) ], 'tbody'),
-    f('r4', [ s('j', 1, 2), s('k', 1, 1) ], 'tbody'),
-    f('r5', [ s('l', 1, 1), s('m', 1, 1), s('n', 1, 1), s('o', 1, 1), s('p', 1, 1) ], 'tbody')
+    f([ s('a', 1, 1), s('b', 1, 3), s('c', 1, 1) ], 'tbody'),
+    f([ s('d', 3, 1), s('e', 1, 1), s('f', 1, 1), s('g', 1, 2) ], 'tbody'),
+    f([ s('h', 1, 3), s('i', 2, 1) ], 'tbody'),
+    f([ s('j', 1, 2), s('k', 1, 1) ], 'tbody'),
+    f([ s('l', 1, 1), s('m', 1, 1), s('n', 1, 1), s('o', 1, 1), s('p', 1, 1) ], 'tbody')
   ];
   const inputC = Warehouse.generate(testTableC);
   const boundsC = Structs.bounds(1, 2, 4, 2 );

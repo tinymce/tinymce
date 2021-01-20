@@ -1,6 +1,6 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Recalculations from 'ephox/snooker/resize/Recalculations';
@@ -37,25 +37,31 @@ UnitTest.test('RecalculationsTest', () => {
 
     Arr.each(expected, (expt) => {
       assert.eq(expt.columns, Arr.map(actualColumnWidth, (cell) => ({
-        element: cell.element,
+        element: TextContent.get(cell.element),
         width: cell.width
       })));
 
       assert.eq(expt.widths, Arr.map(actualCellWidth, (cell) => ({
-        element: cell.element,
+        element: TextContent.get(cell.element),
         width: cell.width
       })));
 
       assert.eq(expt.heights, Arr.map(actualCellHeight, (cell) => ({
-        element: cell.element,
+        element: TextContent.get(cell.element),
         height: cell.height
       })));
     });
   };
 
-  const makeDetail = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
-  const makeRow = (fakeEle: any, cells: Structs.Detail[]) => Structs.rowdata(fakeEle as SugarElement, cells, 'tbody');
-  const makeColumnGroup = (fakeEle: any, cols: Structs.Detail[]) => Structs.rowdata(fakeEle as SugarElement, cols, 'colgroup');
+  const createCell = (text: string): SugarElement => {
+    const elm = SugarElement.fromTag('td');
+    TextContent.set(elm, text);
+    return elm;
+  };
+
+  const makeDetail = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
+  const makeRow = (cells: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('tr'), cells, 'tbody');
+  const makeColumnGroup = (cols: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('col'), cols, 'colgroup');
 
   check(
     [
@@ -70,7 +76,7 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [
+      makeRow([
         makeDetail('a', 1, 1)
       ])
     ],
@@ -92,10 +98,10 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeColumnGroup('c1', [
+      makeColumnGroup([
         makeDetail('c', 1, 1)
       ]),
-      makeRow('r1', [
+      makeRow([
         makeDetail('a', 1, 1)
       ])
     ],
@@ -112,8 +118,8 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [ makeDetail('a00', 1, 1), makeDetail('a01', 1, 1) ]),
-      makeRow('r1', [ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ])
+      makeRow([ makeDetail('a00', 1, 1), makeDetail('a01', 1, 1) ]),
+      makeRow([ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ])
     ],
     dimensions([ 20, 20 ], [ 15, 9 ])
   );
@@ -128,9 +134,9 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeColumnGroup('c1', [ makeDetail('c00', 1, 1), makeDetail('c01', 1, 1) ]),
-      makeRow('r0', [ makeDetail('a00', 1, 1), makeDetail('a01', 1, 1) ]),
-      makeRow('r1', [ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ])
+      makeColumnGroup([ makeDetail('c00', 1, 1), makeDetail('c01', 1, 1) ]),
+      makeRow([ makeDetail('a00', 1, 1), makeDetail('a01', 1, 1) ]),
+      makeRow([ makeDetail('a10', 1, 1), makeDetail('a11', 1, 1) ])
     ],
     dimensions([ 20, 20 ], [ 15, 9 ])
   );
@@ -145,8 +151,8 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [ makeDetail('a', 2, 2) ]),
-      makeRow('r1', []) // optional
+      makeRow([ makeDetail('a', 2, 2) ]),
+      makeRow([]) // optional
     ],
     dimensions([ 20, 20, 99999 ], [ 30, 30, 999999 ])
   );
@@ -161,8 +167,8 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [ makeDetail('a', 2, 2), makeDetail('b', 1, 1) ]),
-      makeRow('r1', [ makeDetail('c', 1, 1) ])
+      makeRow([ makeDetail('a', 2, 2), makeDetail('b', 1, 1) ]),
+      makeRow([ makeDetail('c', 1, 1) ])
     ],
     dimensions([ 20, 20, 15, 99999 ], [ 30, 30, 999999 ])
   );
@@ -176,8 +182,8 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [ makeDetail('a', 2, 2), makeDetail('b', 1, 1) ]),
-      makeRow('r1', [ makeDetail('c', 1, 1) ])
+      makeRow([ makeDetail('a', 2, 2), makeDetail('b', 1, 1) ]),
+      makeRow([ makeDetail('c', 1, 1) ])
     ],
     dimensions([ 20, 10, 11 ], [ 15, 13 ]));
 
@@ -199,9 +205,9 @@ UnitTest.test('RecalculationsTest', () => {
       )
     ],
     [
-      makeRow('r0', [ makeDetail('g', 1, 1), makeDetail('h', 1, 1), makeDetail('i', 1, 1), makeDetail('j', 1, 1), makeDetail('k', 1, 3) ]),
-      makeRow('r1', [ makeDetail('l', 1, 1), makeDetail('m', 3, 2), makeDetail('n', 1, 1), makeDetail('o', 1, 1), makeDetail('p', 1, 1), makeDetail('q', 1, 1) ]),
-      makeRow('r2', [ makeDetail('r', 2, 1), makeDetail('s', 1, 1), makeDetail('t', 2, 1), makeDetail('u', 1, 1), makeDetail('v', 1, 1) ])
+      makeRow([ makeDetail('g', 1, 1), makeDetail('h', 1, 1), makeDetail('i', 1, 1), makeDetail('j', 1, 1), makeDetail('k', 1, 3) ]),
+      makeRow([ makeDetail('l', 1, 1), makeDetail('m', 3, 2), makeDetail('n', 1, 1), makeDetail('o', 1, 1), makeDetail('p', 1, 1), makeDetail('q', 1, 1) ]),
+      makeRow([ makeDetail('r', 2, 1), makeDetail('s', 1, 1), makeDetail('t', 2, 1), makeDetail('u', 1, 1), makeDetail('v', 1, 1) ])
     ],
     dimensions([ 10, 10, 10, 10, 10, 10, 10 ], [ 20, 15, 10 ])
   );

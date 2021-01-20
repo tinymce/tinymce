@@ -1,24 +1,29 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SugarElement, TextContent } from '@ephox/sugar';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
 
 UnitTest.test('WarehouseTest', () => {
   const check = (expected: Record<string, string>, input: Structs.RowData<Structs.Detail>[]) => {
     const actual = Warehouse.generate(input);
-    assert.eq(expected, Obj.map(actual.access, (x) => x.element));
+    assert.eq(expected, Obj.map(actual.access, (x) => TextContent.get(x.element)));
   };
 
-  const s = (fakeEle: any, rowspan: number, colspan: number) => Structs.detail(fakeEle as SugarElement, rowspan, colspan);
-  const f = (fakeEle: any, cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(fakeEle as SugarElement, cells, section);
+  const createCell = (text: string): SugarElement => {
+    const elem = SugarElement.fromTag('td');
+    TextContent.set(elem, text);
+    return elem;
+  };
+  const s = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
+  const f = (cells: Structs.Detail[], section: 'tbody' | 'thead' | 'tfoot') => Structs.rowdata(SugarElement.fromTag('tr'), cells, section);
 
   const testTable = [
-    f('r1', [ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),
-    f('r2', [ s('g', 1, 1), s('h', 1, 1), s('i', 1, 1), s('j', 1, 1), s('k', 1, 3) ], 'tbody'),
-    f('f3', [ s('l', 1, 1), s('m', 3, 2), s('n', 1, 1), s('o', 1, 1), s('p', 1, 1), s('q', 1, 1) ], 'tfoot'),
-    f('f4', [ s('r', 2, 1), s('s', 1, 1), s('t', 2, 1), s('u', 1, 1), s('v', 1, 1) ], 'tfoot'),
-    f('r5', [ s('w', 1, 1), s('x', 1, 1), s('y', 1, 1) ], 'tfoot')
+    f([ s('a', 1, 2), s('b', 1, 1), s('c', 1, 1), s('d', 1, 1), s('e', 1, 1), s('f', 1, 1) ], 'thead'),
+    f([ s('g', 1, 1), s('h', 1, 1), s('i', 1, 1), s('j', 1, 1), s('k', 1, 3) ], 'tbody'),
+    f([ s('l', 1, 1), s('m', 3, 2), s('n', 1, 1), s('o', 1, 1), s('p', 1, 1), s('q', 1, 1) ], 'tfoot'),
+    f([ s('r', 2, 1), s('s', 1, 1), s('t', 2, 1), s('u', 1, 1), s('v', 1, 1) ], 'tfoot'),
+    f([ s('w', 1, 1), s('x', 1, 1), s('y', 1, 1) ], 'tfoot')
   ];
 
   check({
@@ -65,7 +70,7 @@ UnitTest.test('WarehouseTest', () => {
     '0,2': 'a'
   },
   [
-    f('r0', [ s('a', 1, 3) ], 'tbody')
+    f([ s('a', 1, 3) ], 'tbody')
   ]
   );
 });

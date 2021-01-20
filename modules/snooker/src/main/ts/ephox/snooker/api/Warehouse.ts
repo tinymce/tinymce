@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
@@ -54,10 +54,6 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>):
   return columnsGroup;
 };
 
-// This is used to protect against atomic tests
-// TODO: Remmove when tests have been converted to use real SugarElements
-const isSugarElement = (elm: any): elm is SugarElement => Type.isNonNullable(elm.dom?.nodeType);
-
 /*
  * From a list of list of Detail, generate three pieces of information:
  *  1. the grid size
@@ -76,8 +72,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   const cells: Structs.RowData<Structs.DetailExt>[] = [];
   let columns: Record<number, Structs.ColumnExt> = {};
 
-  const tableOpt = Arr.head(list).map((rowData) => rowData.element).filter(isSugarElement).bind(TableLookup.table);
-  // const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
+  const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<number, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
 
   let maxRows = 0;
