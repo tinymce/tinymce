@@ -23,13 +23,13 @@ UnitTest.test('CopySelectedTest', () => {
 
   // data objects for input/expected
   const data = (selected: boolean) => {
-    return (text: string, rowspan?: number, colspan?: number, locked?: boolean): TestData => {
+    return (text: string, rowspan?: number, colspan?: number, locked: boolean = false): TestData => {
       return {
         selected,
         html: text,
         rowspan: rowspan === undefined ? undefined : String(rowspan),
         colspan: colspan === undefined ? undefined : String(colspan),
-        locked: !!locked
+        locked
       };
     };
   };

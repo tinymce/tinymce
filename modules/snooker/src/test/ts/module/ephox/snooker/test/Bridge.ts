@@ -57,7 +57,8 @@ const createCell = (): SugarElement<HTMLTableDataCellElement> => {
   return tag;
 };
 
-// Added this for testing pasting and merging as Fitmet.tailor expects cell to not rely on previous cell
+// This is used for testing pasting as the real paste generator (TableFill.ts) differs from the standard generator
+// e.g. creates a cell that does not rely on the previous cell
 const pasteGenerators: SimpleGenerators = {
   col: () => SugarElement.fromTag('col'),
   colgroup: () => SugarElement.fromTag('colgroup'),

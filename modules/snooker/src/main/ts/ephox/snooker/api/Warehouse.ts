@@ -55,6 +55,7 @@ const generateColumns = <T extends Structs.Detail>(rowData: Structs.RowData<T>):
 };
 
 // This is used to protect against atomic tests
+// TODO: Remmove when tests have been converted to use real SugarElements
 const isSugarElement = (elm: any): elm is SugarElement => Type.isNonNullable(elm.dom?.nodeType);
 
 /*
@@ -76,6 +77,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   let columns: Record<number, Structs.ColumnExt> = {};
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).filter(isSugarElement).bind(TableLookup.table);
+  // const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
   const lockedColumns: Record<number, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
 
   let maxRows = 0;

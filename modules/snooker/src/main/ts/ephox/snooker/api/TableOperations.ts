@@ -208,9 +208,8 @@ const opSplitCellIntoRows = (grid: Structs.RowCells[], detail: Structs.DetailExt
 
 const opEraseColumns = (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) => {
   const columns = ColUtils.uniqueColumns(details);
-  const columnNums = Arr.map(columns, (column) => column.column);
 
-  const newGrid = ModificationOperations.deleteColumnsAt(grid, columnNums);
+  const newGrid = ModificationOperations.deleteColumnsAt(grid, Arr.map(columns, (column) => column.column));
   const cursor = elementFromGrid(newGrid, columns[0].row, columns[0].column);
   return outcome(newGrid, cursor);
 };
@@ -333,25 +332,29 @@ const resize = Adjustments.adjustWidthTo;
 
 // Custom selection extractors
 
-const firstLastLocked = (before: boolean, warehouse: Warehouse, details: Structs.DetailExt[]) => {
-  if (before) {
-    return Arr.exists(details, (detail) => detail.column === 0 && detail.isLocked);
-  } else {
-    const width = warehouse.grid.columns;
-    return Arr.exists(details, (detail) => detail.column + detail.colspan === width && detail.isLocked);
-  }
-};
+const firstColumnIsLocked = (_warehouse: Warehouse, details: Structs.DetailExt[]) =>
+  Arr.exists(details, (detail) => detail.column === 0 && detail.isLocked);
+// TODO: Maybe have an Arr.existsR which would be more efficient for most cases below
+const lastColumnIsLocked = (warehouse: Warehouse, details: Structs.DetailExt[]) =>
+  Arr.exists(details, (detail) => detail.column + detail.colspan >= warehouse.grid.columns && detail.isLocked);
 
 const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<Structs.DetailExt> =>
-  RunOperation.onCell(warehouse, target).filter((detail) => !firstLastLocked(before, warehouse, [ detail ]));
+  RunOperation.onCell(warehouse, target).filter((detail) => {
+    const checkLocked = before ? firstColumnIsLocked : lastColumnIsLocked;
+    return !checkLocked(warehouse, [ detail ]);
+  });
 
-// Not filtering out locked columns as that creates a contradiction where the locked column at the start or end of the selection is included in the count.
-// Could try and do further filtering in the operations but that doesn't seem worth it
 const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
-  RunOperation.onCells(warehouse, target).filter((details) => !firstLastLocked(before, warehouse, details));
+  RunOperation.onCells(warehouse, target).filter((details) => {
+    const checkLocked = before ? firstColumnIsLocked : lastColumnIsLocked;
+    return !checkLocked(warehouse, details);
+  });
 
 const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
-  RunOperation.onPasteByEditor(warehouse, target).filter((details) => !firstLastLocked(before, warehouse, details.cells));
+  RunOperation.onPasteByEditor(warehouse, target).filter((details) => {
+    const checkLocked = before ? firstColumnIsLocked : lastColumnIsLocked;
+    return !checkLocked(warehouse, details.cells);
+  });
 
 export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);

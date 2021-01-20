@@ -112,12 +112,11 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, hous
       Attribute.remove(cell, 'colspan');
     });
   }
+  // Remove any attributes that should not be in the replicated table
+  Attribute.remove(replica, LOCKED_COL_ATTR);
 
   const tableSize = TableSize.getTableSize(replica);
   tableSize.adjustTableWidth(widthDelta);
-
-  // Remove any attributes that should not be in the replicated table
-  Attribute.remove(replica, LOCKED_COL_ATTR);
 
   // TODO TINY-6863: If using relative widths, ensure cell and column widths are redistributed
 };

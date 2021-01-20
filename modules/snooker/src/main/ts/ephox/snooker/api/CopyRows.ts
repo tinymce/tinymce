@@ -9,6 +9,8 @@ import { Warehouse } from './Warehouse';
 
 const copyRows = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement>[]> => {
   const warehouse = Warehouse.fromTable(table);
+  // Cannot use onUnlockedCells like extractor here as if only cells in a locked column are selected, then this will be Optional.none and
+  // there is now no way of knowing which rows are selected
   const details = onCells(warehouse, target);
 
   return details.bind((selectedCells) => {

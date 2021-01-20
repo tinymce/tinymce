@@ -81,8 +81,7 @@ const splitCellIntoRows = (grid: Structs.RowCells[], exampleRow: number, example
 const deleteColumnsAt = (grid: Structs.RowCells[], columns: number[]): Structs.RowCells[] =>
   Arr.bind(grid, (row) => {
     const existingCells = row.cells;
-    const sorted = Arr.sort(columns);
-    const cells = Arr.foldr(sorted, (acc, column) => column >= 0 && column < acc.length ? acc.slice(0, column).concat(acc.slice(column + 1)) : acc, existingCells);
+    const cells = Arr.foldr(columns, (acc, column) => column >= 0 && column < acc.length ? acc.slice(0, column).concat(acc.slice(column + 1)) : acc, existingCells);
     return cells.length > 0 ? [ Structs.rowcells(cells, row.section) ] : [];
   });
 

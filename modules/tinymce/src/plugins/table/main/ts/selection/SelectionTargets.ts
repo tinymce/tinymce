@@ -31,7 +31,7 @@ onAny - disable if any column in the selection is locked
 onFirst - disable if the first column in the table is selected and is locked
 onLast - disable if the the last column in the table is selected and is locked
 */
-export enum LockedDisable {
+export const enum LockedDisable {
   onAny = 'onAny',
   onFirst = 'onFirst',
   onLast = 'onLast'
