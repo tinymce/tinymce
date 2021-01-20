@@ -132,11 +132,15 @@ const transform = <K extends keyof HTMLElementTagNameMap> (scope: string | null,
     };
 
     const replaceOrInit = (element: SugarElement, comparator: (a: SugarElement, b: SugarElement) => boolean) => {
-      return find(element, comparator).fold(() => {
-        return makeNew(element);
-      }, (p) => {
-        return comparator(element, p.item) ? p.sub : makeNew(element);
-      });
+      if (SugarNode.name(element) === 'col') {
+        return element;
+      } else {
+        return find(element, comparator).fold(() => {
+          return makeNew(element);
+        }, (p) => {
+          return comparator(element, p.item) ? p.sub : makeNew(element);
+        });
+      }
     };
 
     return {

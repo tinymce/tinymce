@@ -1,6 +1,7 @@
 import { FocusTools, Keyboard, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -10,6 +11,14 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { fakeEvent } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
+  before(function () {
+    // TODO: TINY-6905: Test is flaking on Chromium Edge 86, so we need to investigate
+    const platform = PlatformDetection.detect();
+    if (platform.browser.isChrome() && platform.os.isWindows()) {
+      this.skip();
+    }
+  });
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
