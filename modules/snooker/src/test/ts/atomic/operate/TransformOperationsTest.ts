@@ -47,7 +47,7 @@ UnitTest.test('TransformOperationsTest', () => {
     });
   };
 
-  const comparator = (a: SugarElement, b: SugarElement) => TextContent.get(a) === TextContent.get(b);
+  const comparator = (a: SugarElement<Node>, b: SugarElement<Node>) => TextContent.get(a) === TextContent.get(b);
 
   // Test basic changing to header (column)
   (() => {
