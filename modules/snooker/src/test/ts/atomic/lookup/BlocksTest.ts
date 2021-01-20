@@ -5,7 +5,7 @@ import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as Blocks from 'ephox/snooker/lookup/Blocks';
 
 UnitTest.test('BlocksTest', () => {
-  const createCell = (text: string): SugarElement => {
+  const createCell = (text: string): SugarElement<HTMLTableCellElement> => {
     const elem = SugarElement.fromTag('td');
     TextContent.set(elem, text);
     return elem;

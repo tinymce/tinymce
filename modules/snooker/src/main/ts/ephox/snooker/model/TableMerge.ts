@@ -36,10 +36,9 @@ const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], g
   const endRow = startRow + mergeHeight;
   const endCol = startCol + mergeWidth + lockedColumns.length;
   const lockedColumnObj = Arr.mapToObject(lockedColumns, Fun.always);
-  let skippedCol = 0;
   // embrace the mutation - I think this is easier to follow? To discuss.
   for (let r = startRow; r < endRow; r++) {
-    skippedCol = 0;
+    let skippedCol = 0;
     for (let c = startCol; c < endCol; c++) {
       if (lockedColumnObj[c]) {
         skippedCol++;
@@ -64,10 +63,10 @@ const getValidStartAddress = (currentStartAddress: Structs.Address, grid: Struct
   const gridColLength = GridRow.cellLength(grid[0]);
   const possibleColAddresses = Arr.range(gridColLength - currentStartAddress.column, (num) => num + currentStartAddress.column);
   // Find a starting column address that isn't a locked column
-  const validColAdress = Arr.find(possibleColAddresses, (num) => Arr.forall(lockedColumns, (col) => col !== num)).getOr(gridColLength - 1);
+  const validColAddress = Arr.find(possibleColAddresses, (num) => Arr.forall(lockedColumns, (col) => col !== num)).getOr(gridColLength - 1);
   return {
     ...currentStartAddress,
-    column: validColAdress
+    column: validColAddress
   };
 };
 
@@ -81,7 +80,7 @@ const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: 
 
   const result = Fitment.measure(validStartAddress, gridA, gridB);
   /*
-    Need to subtract extra delta for locked columns between startAddress and the startAdress + gridB column count as
+    Need to subtract extra delta for locked columns between startAddress and the startAddress + gridB column count as
     locked column cells cannot be merged into. Therefore, extra column cells need to be added to gridA to allow gridB cells to be merged
   */
   return result.map((diff) => {

@@ -53,12 +53,11 @@ UnitTest.test('RecalculationsTest', () => {
     });
   };
 
-  const createCell = (text: string): SugarElement => {
-    const elm = SugarElement.fromTag('td');
-    TextContent.set(elm, text);
-    return elm;
+  const createCell = (text: string): SugarElement<HTMLTableCellElement> => {
+    const elem = SugarElement.fromTag('td');
+    TextContent.set(elem, text);
+    return elem;
   };
-
   const makeDetail = (elemText: string, rowspan: number, colspan: number) => Structs.detail(createCell(elemText), rowspan, colspan);
   const makeRow = (cells: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('tr'), cells, 'tbody');
   const makeColumnGroup = (cols: Structs.Detail[]) => Structs.rowdata(SugarElement.fromTag('col'), cols, 'colgroup');

@@ -13,9 +13,10 @@ import * as TableTestUtils from '../../module/test/TableTestUtils';
 type TableModifiedEvent = EditorEvent<TableEventData>;
 
 interface Cursor {
-  start: number[];
-  offset: number;
+  readonly start: number[];
+  readonly offset: number;
 }
+
 interface CommandTest {
   readonly cmd: string;
   readonly value?: any;

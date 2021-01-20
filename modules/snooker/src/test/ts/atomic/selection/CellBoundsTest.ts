@@ -6,7 +6,7 @@ import { Warehouse } from 'ephox/snooker/api/Warehouse';
 import * as CellBounds from 'ephox/snooker/selection/CellBounds';
 
 UnitTest.test('CellBounds.isWithin Test', () => {
-  const createCell = (text: string): SugarElement => {
+  const createCell = (text: string): SugarElement<HTMLTableCellElement> => {
     const elem = SugarElement.fromTag('td');
     TextContent.set(elem, text);
     return elem;

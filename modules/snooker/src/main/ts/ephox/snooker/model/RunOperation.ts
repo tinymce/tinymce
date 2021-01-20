@@ -133,25 +133,23 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       };
     });
 
-    return output.fold(
-      () => Optional.none<RunOperationOutput>(),
-      (out) => {
-        const newElements = Redraw.render(table, out.grid);
-        const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
-        adjustment(table, out.grid, tableSizing);
-        postAction(table);
-        Bars.refresh(wire, table);
-        // Update locked cols attribute
-        Attribute.remove(table, LockedColumnUtils.LOCKED_COL_ATTR);
-        if (out.lockedColumns.length > 0) {
-          Attribute.set(table, LockedColumnUtils.LOCKED_COL_ATTR, out.lockedColumns.join(','));
-        }
-        return Optional.some({
-          cursor: out.cursor,
-          newRows: newElements.newRows,
-          newCells: newElements.newCells
-        });
+    return output.bind((out) => {
+      const newElements = Redraw.render(table, out.grid);
+      const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
+      adjustment(table, out.grid, tableSizing);
+      postAction(table);
+      Bars.refresh(wire, table);
+      // Update locked cols attribute
+      Attribute.remove(table, LockedColumnUtils.LOCKED_COL_ATTR);
+      if (out.lockedColumns.length > 0) {
+        Attribute.set(table, LockedColumnUtils.LOCKED_COL_ATTR, out.lockedColumns.join(','));
+      }
+      return Optional.some({
+        cursor: out.cursor,
+        newRows: newElements.newRows,
+        newCells: newElements.newCells
       });
+    });
   };
 
 const onCell = (warehouse: Warehouse, target: TargetElement): Optional<DetailExt> =>

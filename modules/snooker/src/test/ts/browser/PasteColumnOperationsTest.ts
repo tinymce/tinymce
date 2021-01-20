@@ -498,6 +498,9 @@ UnitTest.test('PasteColumnOperationsTest', () => {
     TableOperations.pasteColsAfter, 0, 0, 1
   );
 
-  // TODO: Need a way to test multi-cell selections - will require something like Asserstions.pasteMultiple or Assertions.checkPaste should be changed to take an array
-  // TODO: Test colgroup tables with locked column not around selection
+  /*
+  TINY-6910
+  TODO: Need a way to test multi-cell selections - will require something like Asserstions.pasteMultiple or Assertions.checkPaste should be changed to take an array
+  TODO: Test colgroup tables with locked column not around selection
+  */
 });

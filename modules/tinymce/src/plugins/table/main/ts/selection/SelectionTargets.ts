@@ -1,12 +1,26 @@
-import { Menu, Toolbar } from '@ephox/bridge';
 import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from './TableSelection';
+
+type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
+
+/*
+onAny - disable if any column in the selection is locked
+onFirst - disable if the first column in the table is selected and is locked
+onLast - disable if the the last column in the table is selected and is locked
+*/
+export const enum LockedDisable {
+  onAny = 'onAny',
+  onFirst = 'onFirst',
+  onLast = 'onLast'
+}
+type LockedDisableStrs = keyof typeof LockedDisable;
 
 export interface SelectionTargets {
   readonly onSetupTable: (api: UiApi) => () => void;
@@ -20,34 +34,19 @@ export interface SelectionTargets {
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
-interface ExtractedSelectionDetatils {
+interface ExtractedSelectionDetails {
   readonly mergeable: boolean;
   readonly unmergeable: boolean;
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
 
-/*
-onAny - disable if any column in the selection is locked
-onFirst - disable if the first column in the table is selected and is locked
-onLast - disable if the the last column in the table is selected and is locked
-*/
-export const enum LockedDisable {
-  onAny = 'onAny',
-  onFirst = 'onFirst',
-  onLast = 'onLast'
-}
-
-type LockedDisableStrs = keyof typeof LockedDisable;
-
-type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;
-
 export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
   const changeHandlers = Cell([]);
-  let selectionDetails = Optional.none<ExtractedSelectionDetatils>();
+  let selectionDetails = Optional.none<ExtractedSelectionDetails>();
 
-  const isCaption = (elem: SugarElement<HTMLTableCaptionElement | HTMLTableCellElement>): elem is SugarElement<HTMLTableCaptionElement> => SugarNode.name(elem) === 'caption';
-  const isDisabledForSelection = (key: keyof ExtractedSelectionDetatils) => selectionDetails.forall((details) => !details[key]);
+  const isCaption = SugarNode.isTag('caption');
+  const isDisabledForSelection = (key: keyof ExtractedSelectionDetails) => selectionDetails.forall((details) => !details[key]);
 
   const findTargets = (): Optional<RunOperation.CombinedTargets> => TableSelection.getSelectionStartCellOrCaption(Util.getSelectionStart(editor))
     .bind((cellOrCaption) => {
@@ -61,7 +60,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
       });
     });
 
-  const getExtractedDetails = (targets: RunOperation.CombinedTargets): Optional<ExtractedSelectionDetatils> => {
+  const getExtractedDetails = (targets: RunOperation.CombinedTargets): Optional<ExtractedSelectionDetails> => {
     const tableOpt = TableLookup.table(targets.element);
     return tableOpt.map((table) => {
       const warehouse = Warehouse.fromTable(table);
@@ -126,7 +125,6 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetup(api, (targets) => isCaption(targets.element) || getClipboardData().isNone());
   const onSetupPasteableColumn = (getClipboardData: () => Optional<SugarElement[]>, lockedDisable: LockedDisable) => (api: UiApi) =>
     onSetup(api, (targets) => isCaption(targets.element) || getClipboardData().isNone() || isDisabledFromLocked(lockedDisable));
-  // TODO: Ideally mergeable and unmergable would be Optional.none if selection is in locked columns
   const onSetupMergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('mergeable'));
   const onSetupUnmergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('unmergeable'));
 

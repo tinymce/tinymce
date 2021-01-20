@@ -230,7 +230,7 @@ UnitTest.test('PasteCellsOperationsTest', () => {
     TableOperations.pasteCells, 0, 0, 0
   );
 
-  // TODO: Add colspan and rowspan tests
+  // TODO: TINY-6910: Add colspan and rowspan tests
 
   Assertions.checkPasteRaw(
     'TINY-6765: Test pasting 1x1 table on selected locked column - check that locked column is not pasted into',

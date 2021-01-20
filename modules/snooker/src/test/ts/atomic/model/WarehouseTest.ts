@@ -10,7 +10,7 @@ UnitTest.test('WarehouseTest', () => {
     assert.eq(expected, Obj.map(actual.access, (x) => TextContent.get(x.element)));
   };
 
-  const createCell = (text: string): SugarElement => {
+  const createCell = (text: string): SugarElement<HTMLTableCellElement> => {
     const elem = SugarElement.fromTag('td');
     TextContent.set(elem, text);
     return elem;

@@ -229,8 +229,6 @@ UnitTest.test('ModificationOperationsTest', () => {
 
     checkBody([], [[ en('a', false), en('b', false) ]], [ 0, 1 ]);
     checkBody([[ en('b', false) ]], [[ en('a', false), en('b', false), en('c', false) ]], [ 0, 2 ]);
-    // Out of order, duplicates and out of bounds
-    checkBody([[ en('a', false) ]], [[ en('a', false), en('b', false), en('c', false) ]], [ 3, 1, 2, 1 ]);
     checkBody(
       [
         [ en('a', false), en('c', false) ],
