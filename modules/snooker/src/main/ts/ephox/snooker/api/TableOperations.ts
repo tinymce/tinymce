@@ -76,10 +76,12 @@ const opInsertRowBefore = (grid: Structs.RowCells[], detail: Structs.DetailExt, 
 };
 
 const opInsertRowsBefore = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
-  const example = details[0].row;
   const targetIndex = details[0].row;
   const rows = uniqueRows(details);
-  const newGrid = Arr.foldl(rows, (newG, _row) => ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
+  const newGrid = Arr.foldr(rows, (acc, row) => {
+    const newG = ModificationOperations.insertRowAt(acc.grid, targetIndex, row.row + acc.delta, comparator, genWrappers.getOrInit);
+    return { grid: newG, delta: acc.delta + 1 };
+  }, { grid, delta: 0 }).grid;
   return bundle(newGrid, targetIndex, details[0].column);
 };
 
@@ -92,9 +94,10 @@ const opInsertRowAfter = (grid: Structs.RowCells[], detail: Structs.DetailExt, c
 
 const opInsertRowsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
   const rows = uniqueRows(details);
-  const example = rows[rows.length - 1].row;
   const targetIndex = rows[rows.length - 1].row + rows[rows.length - 1].rowspan;
-  const newGrid = Arr.foldl(rows, (newG, _row) => ModificationOperations.insertRowAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
+  const newGrid = Arr.foldr(rows, (newG, row) => {
+    return ModificationOperations.insertRowAt(newG, targetIndex, row.row, comparator, genWrappers.getOrInit);
+  }, grid);
   return bundle(newGrid, targetIndex, details[0].column);
 };
 
@@ -107,9 +110,11 @@ const opInsertColumnBefore = (grid: Structs.RowCells[], detail: Structs.DetailEx
 
 const opInsertColumnsBefore = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
   const columns = ColUtils.uniqueColumns(details);
-  const example = columns[0].column;
   const targetIndex = columns[0].column;
-  const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
+  const newGrid = Arr.foldr(columns, (acc, col) => {
+    const newG = ModificationOperations.insertColumnAt(acc.grid, targetIndex, col.column + acc.delta, comparator, genWrappers.getOrInit);
+    return { grid: newG, delta: acc.delta + 1 };
+  }, { grid, delta: 0 }).grid;
   return bundle(newGrid, details[0].row, targetIndex);
 };
 
@@ -121,10 +126,11 @@ const opInsertColumnAfter = (grid: Structs.RowCells[], detail: Structs.DetailExt
 };
 
 const opInsertColumnsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
-  const example = details[details.length - 1].column;
   const targetIndex = details[details.length - 1].column + details[details.length - 1].colspan;
   const columns = ColUtils.uniqueColumns(details);
-  const newGrid = Arr.foldl(columns, (newG, _row) => ModificationOperations.insertColumnAt(newG, targetIndex, example, comparator, genWrappers.getOrInit), grid);
+  const newGrid = Arr.foldr(columns, (newG, col) => {
+    return ModificationOperations.insertColumnAt(newG, targetIndex, col.column, comparator, genWrappers.getOrInit);
+  }, grid);
   return bundle(newGrid, details[0].row, targetIndex);
 };
 
