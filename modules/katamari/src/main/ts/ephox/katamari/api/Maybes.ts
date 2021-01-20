@@ -57,7 +57,7 @@ export interface Just<T> {
 }
 
 // Not exported, instead duplicated in Maybe.ts as an identical type to make
-// imports nice for consumers
+// imports nice for consumers. Redefined here to avoid looped imports.
 type Maybe<T> = Nothing | Just<T>;
 
 // --- Identities ---
