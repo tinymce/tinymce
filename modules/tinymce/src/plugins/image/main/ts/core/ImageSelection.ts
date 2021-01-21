@@ -5,9 +5,9 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj } from "@ephox/katamari";
+import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { SchemaMap } from "tinymce/core/api/html/Schema";
+import { SchemaMap } from 'tinymce/core/api/html/Schema';
 import { create, defaultData, ImageData, isFigure, read, write } from './ImageData';
 import * as Utils from './Utils';
 
@@ -37,12 +37,12 @@ const splitTextBlock = (editor: Editor, figure: HTMLElement) => {
   const dom = editor.dom;
   const textBlockElements: SchemaMap = Obj.filter(
     editor.schema.getTextBlockElements(),
-    (_, parentElm) => !editor.schema.isValidChild(parentElm, "figure")
+    (_, parentElm) => !editor.schema.isValidChild(parentElm, 'figure')
   );
 
   const textBlock = dom.getParent(
     figure.parentNode,
-    (node: Node) => !!textBlockElements[node.nodeName],
+    (node: Node) => Obj.hasNonNullableKey(textBlockElements, node.nodeName),
     editor.getBody()
   );
 
