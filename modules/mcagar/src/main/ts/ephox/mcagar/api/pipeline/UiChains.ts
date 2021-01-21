@@ -1,4 +1,4 @@
-import { Chain, Mouse, NamedChain, UiFinder } from '@ephox/agar';
+import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
 import { Editor } from '../../alien/EditorTypes';
@@ -43,12 +43,15 @@ const cGetMenuRoot = Chain.fromChains<Editor, SugarElement>([
 ]);
 
 const cClickOnWithin = <T>(label: string, selector: string, cContext: Chain<T, SugarElement>): Chain<T, T> => {
-  return NamedChain.asChain([
-    NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
-    NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-    NamedChain.direct('ui', Mouse.cClick, '_'),
-    NamedChain.outputInput
-  ]);
+  return Chain.control(
+    NamedChain.asChain([
+      NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
+      NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
+      NamedChain.direct('ui', Mouse.cClick, '_'),
+      NamedChain.outputInput
+    ]),
+    Guard.addLogging(label)
+  );
 };
 
 const cClickOnUi = <T>(label: string, selector: string): Chain<T, T> => {
