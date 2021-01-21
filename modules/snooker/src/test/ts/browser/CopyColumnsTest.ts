@@ -149,39 +149,21 @@ UnitTest.test('CopyColumnsTest', () => {
   check(
     'Test copying column from colgroup table with locked column - selection in locked column (0)',
     defaultTable(true, [ 0 ]),
-    (
-      '<colgroup><col></colgroup>' +
-      '<tr><td scope="col">H1</td></tr>' +
-      '<tr><td>A2</td></tr>' +
-      '<tr><td>A3</td></tr>' +
-      '<tr><td>F1</td></tr>'
-    ),
+    '',
     2, 0, 0
   );
 
   check(
     'Test copying column from colgroup table with locked column - selection in locked column (1)',
     defaultTable(true, [ 1 ]),
-    (
-      '<colgroup><col></colgroup>' +
-      '<tr><td scope="col">H2</td></tr>' +
-      '<tr><td>B2</td></tr>' +
-      '<tr><td>B3</td></tr>' +
-      '<tr><td>F2</td></tr>'
-    ),
+    '',
     2, 0, 1
   );
 
   check(
     'Test copying column from colgroup table with multiple locked columns',
     defaultTable(true, [ 0, 1 ]),
-    (
-      '<colgroup><col></colgroup>' +
-      '<tr><td scope="col">H2</td></tr>' +
-      '<tr><td>B2</td></tr>' +
-      '<tr><td>B3</td></tr>' +
-      '<tr><td>F2</td></tr>'
-    ),
+    '',
     2, 1, 1
   );
 });

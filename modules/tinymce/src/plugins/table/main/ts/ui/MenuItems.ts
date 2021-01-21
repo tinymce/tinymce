@@ -120,7 +120,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Copy column',
     icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
   editor.ui.registry.addMenuItem('tablepastecolumnbefore', {
     text: 'Paste column before',

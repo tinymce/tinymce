@@ -153,39 +153,39 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
     Pipeline.async({}, [
       tinyApis.sFocus(),
-      Log.stepsAsStep('TINY-6765', 'ColBefore, ColRemove buttons should be disabled when locked column is selected and it is the first column in the table',
+      Log.stepsAsStep('TINY-6765', 'ColBefore, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the first column in the table',
         Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml),
             tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons([ ...colBeforeButtons, ...colRemoveButtons ], true),
+            sAssertToolbarButtons([ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true),
             sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colBeforeButtons, ...colRemoveButtons ], true)
+            sAssertMenuButtons([ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true)
           ];
         })
       ),
-      Log.stepsAsStep('TINY-6765', 'ColAfter, ColRemove buttons should be disabled when locked column is selected and it is the last column in the table',
+      Log.stepsAsStep('TINY-6765', 'ColAfter, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the last column in the table',
         Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml([ 2 ])),
             tinyApis.sSetCursor([ 0, 0, 0, 2 ], 0),
-            sAssertToolbarButtons([ ...colAfterButtons, ...colRemoveButtons ], true),
+            sAssertToolbarButtons([ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true),
             sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colAfterButtons, ...colRemoveButtons ], true)
+            sAssertMenuButtons([ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true)
           ];
         })
       ),
-      Log.stepsAsStep('TINY-6765', ' ColRemove buttons should be disabled when locked column is selected',
+      Log.stepsAsStep('TINY-6765', ' ColRemove, ColCopy buttons should be disabled when locked column is selected',
         Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
           return [
             sPopulateTableClipboard('col'),
             tinyApis.sSetContent(tableHtml),
             tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons([ ...colRemoveButtons ], true),
+            sAssertToolbarButtons([ ...colRemoveButtons, ...colCopyButton ], true),
             sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colRemoveButtons ], true)
+            sAssertMenuButtons([ ...colRemoveButtons, ...colCopyButton ], true)
           ];
         })
       ),
@@ -197,18 +197,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
         sSelectContextMenuItem(TableContextMenu.Column),
         sAssertMenuButtons([ ...colBeforeButtons, ...colAfterButtons ], false)
       ]),
-      Log.stepsAsStep('TINY-6765', 'ColCopy button should not be disabled when locked column is selected',
-        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
-          return [
-            sPopulateTableClipboard('col'),
-            tinyApis.sSetContent(tableHtml),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons(colCopyButton, false),
-            sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons(colCopyButton, false)
-          ];
-        })
-      ),
       Log.stepsAsStep('TINY-6765', 'Column buttons should not be disabled when locked column is not selected', [
         sPopulateTableClipboard('col'),
         tinyApis.sSetContent(table()),

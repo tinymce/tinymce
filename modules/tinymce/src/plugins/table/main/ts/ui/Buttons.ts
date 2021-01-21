@@ -142,7 +142,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Copy column',
     icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addButton('tablepastecolbefore', {

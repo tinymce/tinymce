@@ -611,7 +611,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '</table>'
     );
 
-    selectOne(editor, 'tr td:nth-child(1)');
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(2) td:nth-child(2)');
+    // Only the second column should be copied as the first column is locked
     editor.execCommand('mceTableCopyCol');
     selectOne(editor, 'tr td:nth-child(2)');
     editor.execCommand('mceTablePasteColBefore');
@@ -622,8 +623,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table data-snooker-locked-cols="0">' +
       '<colgroup><col /><col /><col /></colgroup>' +
       '<tbody>' +
-      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>2</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>3</td><td>3</td></tr>' +
       '</tbody>' +
       '</table>'
     );
@@ -640,7 +641,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '</table>'
     );
 
-    selectOne(editor, 'tr td:nth-child(2)');
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(2) td:nth-child(2)');
+    // Only the first column should be copied as the second column is locked
     editor.execCommand('mceTableCopyCol');
     selectOne(editor, 'tr td:nth-child(1)');
     editor.execCommand('mceTablePasteColAfter');
@@ -651,8 +653,8 @@ UnitTest.asynctest('browser.tinymce.plugins.table.ClipboardTest', (success, fail
       '<table data-snooker-locked-cols="2">' +
       '<colgroup><col /><col /><col /></colgroup>' +
       '<tbody>' +
-      '<tr><td>1</td><td>2</td><td>2</td></tr>' +
-      '<tr><td>2</td><td>3</td><td>3</td></tr>' +
+      '<tr><td>1</td><td>1</td><td>2</td></tr>' +
+      '<tr><td>2</td><td>2</td><td>3</td></tr>' +
       '</tbody>' +
       '</table>'
     );
