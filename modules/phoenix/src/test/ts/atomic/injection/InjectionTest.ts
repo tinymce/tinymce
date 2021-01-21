@@ -27,7 +27,7 @@ UnitTest.test('InsertAtTest', () => {
     const start = Finder.get(universe, element);
     Injection.atStartOf(universe, start, offset, injection);
     assert.eq(expected, universe.shortlog((item) => {
-      return universe.property().isText(item) ? `text(${universe.property().getText(item)})` : item.id;
+      return universe.property().isText(item) ? `text("${universe.property().getText(item)}")` : item.id;
     }));
   };
 
