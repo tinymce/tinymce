@@ -2,6 +2,7 @@ import { Mouse, UiFinder } from '@ephox/agar';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { Editor } from '../alien/EditorTypes';
 import { getThemeSelectors } from './ThemeSelectors';
+import { TinyDom } from './TinyDom';
 
 const getUiRoot = (editor: Editor) =>
   SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
@@ -56,6 +57,11 @@ const pWaitForUi = (editor: Editor, selector: string): Promise<SugarElement<Elem
 const pWaitForPopup = (editor: Editor, selector: string): Promise<SugarElement<Element>> =>
   UiFinder.pWaitForVisible(`Waiting for a popup matching '${selector}' to be visible`, getUiRoot(editor), selector);
 
+const pTriggerContextMenu = async (editor: Editor, target: string, menu: string): Promise<void> => {
+  Mouse.contextMenuOn(TinyDom.body(editor), target);
+  await pWaitForPopup(editor, menu);
+};
+
 export {
   clickOnToolbar,
   clickOnMenu,
@@ -64,5 +70,6 @@ export {
   closeDialog,
 
   pWaitForPopup,
-  pWaitForUi
+  pWaitForUi,
+  pTriggerContextMenu
 };

@@ -1,32 +1,27 @@
-import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
 import { Attribute, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest',
-  (success, failure) => {
+describe('browser.tinymce.core.init.InitIframeEditorWithCustomAttrsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    iframe_attrs: {
+      'id': 'x',
+      'data-custom1': 'a',
+      'data-custom2': 'b'
+    }
+  }, [ Theme ]);
 
-    Theme();
+  it('Check if iframe element has the right custom attributes', () => {
+    const editor = hook.editor();
+    const ifr = SugarElement.fromDom(editor.iframeElement);
 
-    TinyLoader.setup((editor, onSuccess, onFailure) => {
-      Pipeline.async({}, [
-        Logger.t('Check if iframe has the right custom attributes', Step.sync(() => {
-          const ifr = SugarElement.fromDom(editor.iframeElement);
-
-          Assertions.assertEq('Id should not be the defined x', true, Attribute.get(ifr, 'id') !== 'x');
-          Assertions.assertEq('Custom attribute whould have the right value', 'a', Attribute.get(ifr, 'data-custom1'));
-          Assertions.assertEq('Custom attribute whould have the right value', 'b', Attribute.get(ifr, 'data-custom2'));
-        }))
-      ], onSuccess, onFailure);
-    }, {
-      base_url: '/project/tinymce/js/tinymce',
-      iframe_attrs: {
-        'id': 'x',
-        'data-custom1': 'a',
-        'data-custom2': 'b'
-      }
-    }, success, failure);
-  }
-);
+    assert.notEqual(Attribute.get(ifr, 'id'), 'x', 'Id should not be the defined x');
+    assert.equal(Attribute.get(ifr, 'data-custom1'), 'a', 'Custom attribute should have the right value');
+    assert.equal(Attribute.get(ifr, 'data-custom2'), 'b', 'Custom attribute should have the right value');
+  });
+});

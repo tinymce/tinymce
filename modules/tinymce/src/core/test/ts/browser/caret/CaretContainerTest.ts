@@ -1,177 +1,162 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import DomQuery from 'tinymce/core/api/dom/DomQuery';
-import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.CaretContainerTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-  const viewBlock = ViewBlock();
+describe('browser.tinymce.core.CaretContainerTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  if (!Env.ceFalse) {
-    return;
-  }
+  const getRoot = viewBlock.get;
+  const setupHtml = viewBlock.update;
 
-  const getRoot = () => {
-    return viewBlock.get();
-  };
-
-  const setupHtml = (html) => {
-    viewBlock.update(html);
-  };
-
-  suite.test('isCaretContainer', () => {
-    LegacyUnit.equal(CaretContainer.isCaretContainer(document.createTextNode('text')), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainer(DomQuery('<span></span>')[0]), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1"></span>')[0]), true);
-    LegacyUnit.equal(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1">x</span>')[0].firstChild), true);
-    LegacyUnit.equal(CaretContainer.isCaretContainer(document.createTextNode(Zwsp.ZWSP)), true);
+  it('isCaretContainer', () => {
+    assert.isFalse(CaretContainer.isCaretContainer(document.createTextNode('text')));
+    assert.isFalse(CaretContainer.isCaretContainer(DomQuery('<span></span>')[0]));
+    assert.isTrue(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1"></span>')[0]));
+    assert.isTrue(CaretContainer.isCaretContainer(DomQuery('<span data-mce-caret="1">x</span>')[0].firstChild));
+    assert.isTrue(CaretContainer.isCaretContainer(document.createTextNode(Zwsp.ZWSP)));
   });
 
-  suite.test('isCaretContainerBlock', () => {
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(document.createTextNode('text')), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(DomQuery('<span></span>')[0]), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1"></span>')[0]), true);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild), true);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(document.createTextNode(Zwsp.ZWSP)), false);
+  it('isCaretContainerBlock', () => {
+    assert.isFalse(CaretContainer.isCaretContainerBlock(document.createTextNode('text')));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(DomQuery('<span></span>')[0]));
+    assert.isTrue(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1"></span>')[0]));
+    assert.isTrue(CaretContainer.isCaretContainerBlock(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild));
+    assert.isFalse(CaretContainer.isCaretContainerBlock(document.createTextNode(Zwsp.ZWSP)));
   });
 
-  suite.test('isCaretContainerInline', () => {
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(document.createTextNode('text')), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(DomQuery('<span></span>')[0]), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1"></span>')[0]), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(document.createTextNode(Zwsp.ZWSP)), true);
+  it('isCaretContainerInline', () => {
+    assert.isFalse(CaretContainer.isCaretContainerInline(document.createTextNode('text')));
+    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span></span>')[0]));
+    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1"></span>')[0]));
+    assert.isFalse(CaretContainer.isCaretContainerInline(DomQuery('<span data-mce-caret="1">a</span>')[0].firstChild));
+    assert.isTrue(CaretContainer.isCaretContainerInline(document.createTextNode(Zwsp.ZWSP)));
   });
 
-  suite.test('insertInline before element', () => {
+  it('insertInline before element', () => {
     setupHtml('<span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, true), getRoot().firstChild);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), true);
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().firstChild));
   });
 
-  suite.test('insertInline after element', () => {
+  it('insertInline after element', () => {
     setupHtml('<span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().lastChild);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), true);
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().lastChild));
   });
 
-  suite.test('insertInline between elements', () => {
+  it('insertInline between elements', () => {
     setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().lastChild, true), getRoot().childNodes[1]);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]), true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().childNodes[1]));
   });
 
-  suite.test('insertInline before element with ZWSP', () => {
+  it('insertInline before element with ZWSP', () => {
     setupHtml('abc' + Zwsp.ZWSP + '<span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().firstChild), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+    assert.isFalse(CaretContainer.isCaretContainerInline(getRoot().firstChild));
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
-  suite.test('insertInline after element with ZWSP', () => {
+  it('insertInline after element with ZWSP', () => {
     setupHtml('<span contentEditable="false">1</span>' + Zwsp.ZWSP + 'abc');
     LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().firstChild, false), getRoot().childNodes[1]);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().lastChild), false);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+    assert.isFalse(CaretContainer.isCaretContainerInline(getRoot().lastChild));
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
-  suite.test('insertBlock before element', () => {
+  it('insertBlock before element', () => {
     setupHtml('<span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, true), getRoot().firstChild);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().firstChild), true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().firstChild));
   });
 
-  suite.test('insertBlock after element', () => {
+  it('insertBlock after element', () => {
     setupHtml('<span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertBlock('p', getRoot().firstChild, false), getRoot().lastChild);
-    LegacyUnit.equal(CaretContainer.isCaretContainerBlock(getRoot().lastChild), true);
+    assert.isTrue(CaretContainer.isCaretContainerBlock(getRoot().lastChild));
   });
 
-  suite.test('insertBlock between elements', () => {
+  it('insertBlock between elements', () => {
     setupHtml('<span contentEditable="false">1</span><span contentEditable="false">1</span>');
     LegacyUnit.equalDom(CaretContainer.insertInline(getRoot().lastChild, true), getRoot().childNodes[1]);
-    LegacyUnit.equal(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]), true);
+    assert.isTrue(CaretContainer.isCaretContainerInline(getRoot().childNodes[1]));
   });
 
-  suite.test('startsWithCaretContainer', () => {
+  it('startsWithCaretContainer', () => {
     setupHtml(Zwsp.ZWSP + 'abc');
-    LegacyUnit.equal(CaretContainer.startsWithCaretContainer(getRoot().firstChild), true);
+    assert.isTrue(CaretContainer.startsWithCaretContainer(getRoot().firstChild));
   });
 
-  suite.test('endsWithCaretContainer', () => {
+  it('endsWithCaretContainer', () => {
     setupHtml('abc');
     const textNode = viewBlock.get().firstChild as Text;
     textNode.appendData(Zwsp.ZWSP);
-    LegacyUnit.equal(CaretContainer.endsWithCaretContainer(getRoot().firstChild), true);
+    assert.isTrue(CaretContainer.endsWithCaretContainer(getRoot().firstChild));
   });
 
-  suite.test('hasContent', () => {
+  it('hasContent', () => {
     setupHtml('<span contentEditable="false">1</span>');
     const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true);
-    LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), false);
+    assert.isFalse(CaretContainer.hasContent(caretContainerBlock));
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
-    LegacyUnit.equal(CaretContainer.hasContent(caretContainerBlock), true);
+    assert.isTrue(CaretContainer.hasContent(caretContainerBlock));
   });
 
-  suite.test('showCaretContainerBlock', () => {
+  it('showCaretContainerBlock', () => {
     setupHtml('<span contentEditable="false">1</span>');
     const caretContainerBlock = CaretContainer.insertBlock('p', getRoot().firstChild, true) as HTMLElement;
     caretContainerBlock.insertBefore(document.createTextNode('a'), caretContainerBlock.firstChild);
     CaretContainer.showCaretContainerBlock(caretContainerBlock);
-    LegacyUnit.equal(caretContainerBlock.outerHTML, '<p>a</p>');
+    assert.equal(caretContainerBlock.outerHTML, '<p>a</p>');
   });
 
-  suite.test('prependInline', () => {
+  it('prependInline', () => {
     setupHtml('a');
     const caretContainerTextNode = CaretContainer.prependInline(getRoot().firstChild) as Text;
-    LegacyUnit.equal(caretContainerTextNode.data, Zwsp.ZWSP + 'a');
+    assert.equal(caretContainerTextNode.data, Zwsp.ZWSP + 'a');
   });
 
-  suite.test('prependInline 2', () => {
+  it('prependInline 2', () => {
     setupHtml('<b>a</b>');
-    LegacyUnit.equal(CaretContainer.prependInline(getRoot().firstChild), null);
-    LegacyUnit.equal(CaretContainer.prependInline(null), null);
+    assert.isNull(CaretContainer.prependInline(getRoot().firstChild));
+    assert.isNull(CaretContainer.prependInline(null));
   });
 
-  suite.test('appendInline', () => {
+  it('appendInline', () => {
     setupHtml('a');
     const caretContainerTextNode = CaretContainer.appendInline(getRoot().firstChild) as Text;
-    LegacyUnit.equal(caretContainerTextNode.data, 'a' + Zwsp.ZWSP);
+    assert.equal(caretContainerTextNode.data, 'a' + Zwsp.ZWSP);
   });
 
-  suite.test('isBeforeInline', () => {
+  it('isBeforeInline', () => {
     setupHtml(Zwsp.ZWSP + 'a');
-    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)), true);
-    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)), false);
+    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)));
+    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)));
   });
-  suite.test('isBeforeInline 2', () => {
+
+  it('isBeforeInline 2', () => {
     setupHtml('a');
     viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
-    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)), true);
-    LegacyUnit.equal(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)), false);
+    assert.isTrue(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 0)));
+    assert.isFalse(CaretContainer.isBeforeInline(CaretPosition(getRoot().firstChild, 1)));
   });
 
-  suite.test('isAfterInline', () => {
+  it('isAfterInline', () => {
     setupHtml(Zwsp.ZWSP + 'a');
-    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)), true);
-    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)), false);
+    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)));
+    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)));
   });
 
-  suite.test('isAfterInline 2', () => {
+  it('isAfterInline 2', () => {
     setupHtml('a');
     viewBlock.get().insertBefore(document.createTextNode(Zwsp.ZWSP), viewBlock.get().firstChild);
-    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)), true);
-    LegacyUnit.equal(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)), false);
+    assert.isTrue(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 1)));
+    assert.isFalse(CaretContainer.isAfterInline(CaretPosition(getRoot().firstChild, 0)));
   });
-
-  viewBlock.attach();
-  Pipeline.async({}, suite.toSteps({}), () => {
-    viewBlock.detach();
-    success();
-  }, failure);
 });

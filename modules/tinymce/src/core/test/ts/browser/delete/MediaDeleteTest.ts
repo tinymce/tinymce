@@ -1,13 +1,18 @@
-import { ApproxStructure, GeneralSteps, Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.MediaDeleteTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
 
-  const sAssertEmptyEditorStructure = (tinyApis: TinyApis) => tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) =>
+  const assertEmptyEditorStructure = (editor: Editor) => TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
     s.element('body', {
       children: [
         s.element('p', {
@@ -23,53 +28,55 @@ UnitTest.asynctest('browser.tinymce.core.delete.MediaDeleteTest', (success, fail
     })
   ));
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
+  Arr.each([
+    { type: 'video', content: '<video controls="controls"><source src="custom/video.mp4" /></video>', skip: false },
+    { type: 'audio', content: '<audio controls="controls"><source src="custom/audio.mp3" /></audio>', skip: false },
+    // Firefox won't render without a valid embed/object, so skip
+    { type: 'embed', content: '<embed src="custom/video.mp4" />', skip: Env.browser.isFirefox() },
+    { type: 'object', content: '<object data="custom/file.pdf"></object>', skip: Env.browser.isFirefox() }
+  ], (test) => {
+    const { type, content } = test;
 
-    const sTestMedia = (type: string, content: string) => GeneralSteps.sequence([
-      Log.stepsAsStep('TINY-4211', 'Backspace selected node with padd editor', [
-        tinyApis.sSetContent(content),
-        tinyApis.sSelect(type, []),
-        tinyActions.sContentKeystroke(Keys.backspace()),
-        sAssertEmptyEditorStructure(tinyApis)
-      ]),
-      Log.stepsAsStep('TINY-4211', 'Delete selected node with padd editor', [
-        tinyApis.sSetContent(content),
-        tinyApis.sSelect(type, []),
-        tinyActions.sContentKeystroke(Keys.delete()),
-        sAssertEmptyEditorStructure(tinyApis)
-      ]),
-      Log.stepsAsStep('TINY-4211', 'Backspace after media', [
-        tinyApis.sSetContent(`<p>before${content}</p>`),
-        tinyApis.sSelect(type, []),
-        tinyActions.sContentKeystroke(Keys.right()),
-        tinyActions.sContentKeystroke(Keys.backspace()),
-        tinyApis.sAssertContent('<p>before</p>')
-      ]),
-      Log.stepsAsStep('TINY-4211', 'Delete before media', [
-        tinyApis.sSetContent(`<p>${content}after</p>`),
-        tinyApis.sSelect(type, []),
-        tinyActions.sContentKeystroke(Keys.left()),
-        tinyActions.sContentKeystroke(Keys.delete()),
-        tinyApis.sAssertContent('<p>after</p>')
-      ])
-    ]);
+    context(`${type} media`, () => {
+      before(function () {
+        if (test.skip) {
+          this.skip();
+        }
+      });
 
-    // Firefox won't render without a valid embed/object
-    const optionalTests = Env.browser.isFirefox() ? [ ] : [
-      sTestMedia('embed', '<embed src="custom/video.mp4" />'),
-      sTestMedia('object', '<object data="custom/file.pdf"></object>')
-    ];
+      it('TINY-4211: Backspace selected node with padd editor', () => {
+        const editor = hook.editor();
+        editor.setContent(content);
+        TinySelections.select(editor, type, []);
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+        assertEmptyEditorStructure(editor);
+      });
 
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      sTestMedia('video', '<video controls="controls"><source src="custom/video.mp4" /></video>'),
-      sTestMedia('audio', '<audio controls="controls"><source src="custom/audio.mp3" /></audio>'),
-      ...optionalTests
-    ], onSuccess, onFailure);
-  }, {
-    indent: true,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+      it('TINY-4211: Delete selected node with padd editor', () => {
+        const editor = hook.editor();
+        editor.setContent(content);
+        TinySelections.select(editor, type, []);
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+        assertEmptyEditorStructure(editor);
+      });
+
+      it('TINY-4211: Backspace after media', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>before${content}</p>`);
+        TinySelections.select(editor, type, []);
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+        TinyAssertions.assertContent(editor, '<p>before</p>');
+      });
+
+      it('TINY-4211: Delete before media', () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>${content}after</p>`);
+        TinySelections.select(editor, type, []);
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+        TinyAssertions.assertContent(editor, '<p>after</p>');
+      });
+    });
+  });
 });

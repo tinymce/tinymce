@@ -1,25 +1,28 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, Log, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { ApproxStructure, Assertions, Keyboard, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SelectorFind, SugarDocument } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', (success, failure) => {
-  AdvListPlugin();
-  ListsPlugin();
-  Theme();
+describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'advlist lists',
+    advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
+    advlist_number_styles: 'default,circle,square',
+    toolbar: 'numlist bullist',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ AdvListPlugin, ListsPlugin, Theme ]);
 
-  const clickOnSplitBtnFor = (label) => Log.stepsAsStep('TBA', `ADVlist: Test split menu for ${label} has the correct Dom structure`, [
-    Mouse.sClickOn(SugarBody.body(), '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron'),
-    Waiter.sTryUntil(
-      `Waiting for ${label} menu to appear`,
-      UiFinder.sExists(SugarBody.body(), '.tox-menu.tox-selected-menu')
-    )
-  ]);
+  const pClickOnSplitBtnFor = async (editor: Editor, label: string) => {
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
+  };
 
-  const assertNumListStructure = () => Step.sync(() => {
+  const assertNumListStructure = () => {
     Assertions.assertStructure('A basic alert dialog should have these components',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-tiered-menu') ],
@@ -85,11 +88,11 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', (success, 
           })
         ]
       })),
-      SugarElement.fromDom(document.querySelector('.tox-tiered-menu'))
+      SelectorFind.descendant(SugarDocument.getDocument(), '.tox-tiered-menu').getOrDie('Cannot find menu')
     );
-  });
+  };
 
-  const assertBullListStructure = () => Step.sync(() => {
+  const assertBullListStructure = () => {
     Assertions.assertStructure('A basic alert dialog should have these components',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-tiered-menu') ],
@@ -203,25 +206,21 @@ UnitTest.asynctest('browser.tinymce.plugins.advlist.SplitButtonTest', (success, 
           })
         ]
       })),
-      SugarElement.fromDom(document.querySelector('.tox-tiered-menu'))
+      SelectorFind.descendant(SugarDocument.getDocument(), '.tox-tiered-menu').getOrDie('Cannot find menu')
     );
+  };
+
+  it('Check numbered list toolbar button structure', async () => {
+    const editor = hook.editor();
+    await pClickOnSplitBtnFor(editor, 'Numbered list');
+    assertNumListStructure();
+    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape(), {});
   });
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, [
-
-      clickOnSplitBtnFor('Numbered list'),
-      assertNumListStructure(),
-      Keyboard.sKeydown(SugarElement.fromDom(document), Keys.escape(), { }),
-      clickOnSplitBtnFor('Bullet list'),
-      assertBullListStructure()
-
-    ], onSuccess, onFailure);
-  }, {
-    plugins: 'advlist lists',
-    advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
-    advlist_number_styles: 'default,circle,square',
-    toolbar: 'numlist bullist',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  it('Check bullet list toolbar button structure', async () => {
+    const editor = hook.editor();
+    await pClickOnSplitBtnFor(editor, 'Bullet list');
+    assertBullListStructure();
+    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape(), {});
+  });
 });

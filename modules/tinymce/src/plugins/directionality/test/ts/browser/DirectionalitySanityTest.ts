@@ -1,55 +1,50 @@
-import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { ApproxStructure } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-import DirectionalityPlugin from 'tinymce/plugins/directionality/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Plugin from 'tinymce/plugins/directionality/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.directionality.DirectionalitySanityTest', (success, failure) => {
+describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () => {
+  const hook = TinyHooks.bddSetupLight({
+    plugins: 'directionality',
+    toolbar: 'ltr rtl',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-    DirectionalityPlugin();
-    SilverTheme();
+  it('TBA: Set and select content, click on the Right to left toolbar button and assert direction is right to left', () => {
+    const editor = hook.editor();
+    editor.setContent('a');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            attrs: {
+              dir: str.is('rtl')
+            }
+          })
+        ]
+      });
+    }));
+  });
 
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const tinyUi = TinyUi(editor);
-      const tinyApis = TinyApis(editor);
-
-      Pipeline.async({},
-        Log.steps('TBA', 'Directionality: Set and select content, click on the Right to left toolbar button and assert direction is right to left. Now, click on the Left to right button and assert direction is left to right', [
-          tinyApis.sSetContent('a'),
-          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
-          tinyUi.sClickOnToolbar('click on ltr btn', 'button[title="Right to left"]'),
-          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  attrs: {
-                    dir: str.is('rtl')
-                  }
-                })
-              ]
-            });
-          })),
-          tinyUi.sClickOnToolbar('click on rtl btn', 'button[title="Left to right"]'),
-          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-            return s.element('body', {
-              children: [
-                s.element('p', {
-                  attrs: {
-                    dir: str.is('ltr')
-                  }
-                })
-              ]
-            });
-          }))
-        ])
-        , onSuccess, onFailure);
-    }, {
-      plugins: 'directionality',
-      toolbar: 'ltr rtl',
-      base_url: '/project/tinymce/js/tinymce',
-      theme: 'silver'
-    }, success, failure);
-  }
-);
+  it('TBA: Set and select content, click on the Left to right toolbar button and assert direction is left to right', () => {
+    const editor = hook.editor();
+    editor.setContent('<p dir="rtl">a</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            attrs: {
+              dir: str.is('ltr')
+            }
+          })
+        ]
+      });
+    }));
+  });
+});

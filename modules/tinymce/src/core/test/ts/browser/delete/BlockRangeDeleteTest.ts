@@ -1,147 +1,161 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.delete.BlockRangeDeleteTest', (success, failure) => {
-
-  Theme();
-
-  const sDelete = (editor) => {
-    return Step.sync(() => {
-      const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
-  };
-
-  const sDeleteNoop = (editor) => {
-    return Step.sync(() => {
-      const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
-  };
-
-  const sBackspace = (editor, _forward?) => {
-    return Step.sync(() => {
-      const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return true since the operation should have done something', true, returnVal);
-    });
-  };
-
-  const sBackspaceNoop = (editor, _forward?) => {
-    return Step.sync(() => {
-      const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
-      Assertions.assertEq('Should return false since the operation is a noop', false, returnVal);
-    });
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Logger.t('Backspace on collapsed range should be a noop', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 1),
-        sBackspaceNoop(editor),
-        tinyApis.sAssertContent('<p>a</p>'),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Delete on collapsed range should be a noop', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 1),
-        sDeleteNoop(editor),
-        tinyApis.sAssertContent('<p>a</p>'),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Backspace on range between simple blocks should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 1, 0 ], 0),
-        sBackspace(editor),
-        tinyApis.sAssertContent('<p>ab</p>'),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Delete on range between simple blocks should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 1, 0 ], 0),
-        sDelete(editor),
-        tinyApis.sAssertContent('<p>ab</p>'),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Backspace from red span to h1 should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<h1>ab</h1><p><span style="color: red;">cd</span></p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 1, [ 1, 0, 0 ], 1),
-        sBackspace(editor),
-        tinyApis.sAssertContent('<h1>a<span style="color: red;">d</span></h1>'),
-        tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-      ])),
-      Logger.t('Delete from red span to h1 should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><span style="color: red;">ab</span></p><h1>cd</h1>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 1, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<p><span style="color: red;">a</span>d</p>'),
-        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Delete from li to li should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<ul><li>ab</li><li>cd</li></ul>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 1, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<ul><li>ad</li></ul>'),
-        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Delete from nested li to li should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<ul><li>ab<ul><li>cd</li></ul></li></ul>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 1, 0, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<ul><li>ad</li></ul>'),
-        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Delete from li to nested li should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<ul><li>ab<ul><li>cd</li></ul></li><li>ef</li></ul>'),
-        tinyApis.sSetSelection([ 0, 0, 1, 0, 0 ], 1, [ 0, 1, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<ul><li>ab<ul><li>cf</li></ul></li></ul>'),
-        tinyApis.sAssertSelection([ 0, 0, 1, 0, 0 ], 1, [ 0, 0, 1, 0, 0 ], 1)
-      ])),
-      Logger.t('Delete from deep nested li to li should merge', GeneralSteps.sequence([
-        tinyApis.sSetContent('<ul><li>ab<ul><li>cd<ul><li>ef</li></li></ul></li></ul>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 1, 0, 1, 0, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<ul><li>af</li></ul>'),
-        tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-      ])),
-      Logger.t('Delete on selection of everything should empty editor', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent(''),
-        tinyApis.sAssertSelection([ 0 ], 0, [ 0 ], 0),
-        tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return s.element('body', {
-            children: [
-              s.element('p', { children: [ s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}) ] })
-            ]
-          });
-        }))
-      ])),
-      Logger.t('Backspace selected paragraphs in td should produce an padded empty cell and also not delete the whole table', GeneralSteps.sequence([
-        tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
-        tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1, 0 ], 1),
-        sBackspace(editor),
-        tinyApis.sAssertContent('<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>'),
-        tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
-      ])),
-      Logger.t('Delete selected paragraphs in td should produce an padded empty cell and also not delete the whole table', GeneralSteps.sequence([
-        tinyApis.sSetContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>'),
-        tinyApis.sSetSelection([ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1, 0 ], 1),
-        sDelete(editor),
-        tinyApis.sAssertContent('<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>'),
-        tinyApis.sAssertSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0)
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.delete.BlockRangeDeleteTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  }, success, failure);
+  }, [ Theme ], true);
+
+  const doDelete = (editor: Editor) => {
+    const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
+    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
+  };
+
+  const noopDelete = (editor: Editor) => {
+    const returnVal = BlockRangeDelete.backspaceDelete(editor, true);
+    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
+  };
+
+  const doBackspace = (editor: Editor) => {
+    const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
+    assert.isTrue(returnVal, 'Should return true since the operation should have done something');
+  };
+
+  const noopBackspace = (editor: Editor) => {
+    const returnVal = BlockRangeDelete.backspaceDelete(editor, false);
+    assert.isFalse(returnVal, 'Should return false since the operation is a noop');
+  };
+
+  it('Backspace on collapsed range should be a noop', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    noopBackspace(editor);
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+  });
+
+  it('Delete on collapsed range should be a noop', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    noopDelete(editor);
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+  });
+
+  it('Backspace on range between simple blocks should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 0);
+    doBackspace(editor);
+    TinyAssertions.assertContent(editor, '<p>ab</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+  });
+
+  it('Delete on range between simple blocks should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 0);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<p>ab</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+  });
+
+  it('Backspace from red span to h1 should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<h1>ab</h1><p><span style="color: red;">cd</span></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0, 0 ], 1);
+    doBackspace(editor);
+    TinyAssertions.assertContent(editor, '<h1>a<span style="color: red;">d</span></h1>');
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+  });
+
+  it('Delete from red span to h1 should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span style="color: red;">ab</span></p><h1>cd</h1>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 1, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<p><span style="color: red;">a</span>d</p>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+  });
+
+  it('Delete from li to li should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab</li><li>cd</li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 1, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<ul><li>ad</li></ul>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+  });
+
+  it('Delete from nested li to li should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab<ul><li>cd</li></ul></li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 1, 0, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<ul><li>ad</li></ul>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+  });
+
+  it('Delete from li to nested li should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab<ul><li>cd</li></ul></li><li>ef</li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 1, 0, 0 ], 1, [ 0, 1, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<ul><li>ab<ul><li>cf</li></ul></li></ul>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 1, 0, 0 ], 1, [ 0, 0, 1, 0, 0 ], 1);
+  });
+
+  it('Delete from deep nested li to li should merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab<ul><li>cd<ul><li>ef</li></li></ul></li></ul>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 1, 0, 1, 0, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<ul><li>af</li></ul>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+  });
+
+  it('Delete on selection of everything should empty editor', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '');
+    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinyAssertions.assertContentStructure(editor,
+      ApproxStructure.build((s, str) => {
+        return s.element('body', {
+          children: [
+            s.element('p', { children: [ s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}) ] })
+          ]
+        });
+      })
+    );
+  });
+
+  it('Backspace selected paragraphs in td should produce an padded empty cell and also not delete the whole table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>');
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1, 0 ], 1);
+    doBackspace(editor);
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+  });
+
+  it('Delete selected paragraphs in td should produce an padded empty cell and also not delete the whole table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>');
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 1, 0 ], 1);
+    doDelete(editor);
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td><p>&nbsp;</p></td></tr></tbody></table>');
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
+  });
 });

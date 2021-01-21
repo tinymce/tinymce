@@ -1,13 +1,24 @@
-import { Assertions, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { getAll as getDefaultIcons } from '@tinymce/oxide-icons-default';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import IconManager from 'tinymce/core/api/IconManager';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.init.InitEditorIconTest', () => {
+  const overrideIcon = '<svg>override-icon</svg>';
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    icons: 'custom',
+    icons_url: '/project/tinymce/src/core/test/assets/icons/custom/icons.js',
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor) => {
+      editor.ui.registry.addIcon('custom-icon', overrideIcon);
+    }
+  }, [ Theme ]);
 
   // Copy of '/src/core/test/assets/icons/custom''. For assertion in test.
   const customIconPack = {
@@ -17,30 +28,15 @@ UnitTest.asynctest('browser.tinymce.core.init.InitEditorIconTest', (success, fai
     }
   };
 
-  const overrideIcon = '<svg>override-icon</svg>';
+  it('TBA: Should have been able to load custom icon pack', () => {
+    UiFinder.notExists(SugarBody.body(), '.tox-notification');
+    assert.deepEqual(IconManager.get('custom'), customIconPack, 'IconManager should have custom icon pack');
+  });
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const icons = editor.ui.registry.getAll().icons;
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Should have been able to load custom icon pack', [
-        UiFinder.sNotExists(SugarBody.body(), '.tox-notification'),
-        Assertions.sAssertEq('IconManager should have custom icon pack', customIconPack, IconManager.get('custom'))
-      ]),
-      Log.stepsAsStep('TBA', 'Icon overrides', [
-        Assertions.sAssertEq('Manual icon override', overrideIcon, icons['custom-icon']),
-        Assertions.sAssertEq('Icon pack icon', customIconPack.icons.bold, icons.bold),
-        Assertions.sAssertEq('Default pack icon', getDefaultIcons().italic, icons.italic)
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    icons: 'custom',
-    icons_url: '/project/tinymce/src/core/test/assets/icons/custom/icons.js',
-    base_url: '/project/tinymce/js/tinymce',
-    statusbar: false,
-    menubar: false,
-    setup: (editor) => {
-      editor.ui.registry.addIcon('custom-icon', overrideIcon);
-    }
-  }, success, failure);
+  it('TBA: Icon overrides', () => {
+    const icons = hook.editor().ui.registry.getAll().icons;
+    assert.equal(icons['custom-icon'], overrideIcon, 'Manual icon override');
+    assert.equal(icons.bold, customIconPack.icons.bold, 'Icon pack icon');
+    assert.equal(icons.italic, getDefaultIcons().italic, 'Default pack icon');
+  });
 });

@@ -1,6 +1,14 @@
+import { after, afterEach, before } from '@ephox/bedrock-client';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
-export default () => {
+interface ViewBlock {
+  readonly attach: (preventDuplicates?: boolean) => void;
+  readonly detach: () => void;
+  readonly update: (html: string) => void;
+  readonly get: () => HTMLElement;
+}
+
+const ViewBlock = (): ViewBlock => {
   const domElm = DOMUtils.DOM.create('div', {
     style: 'position: absolute; right: 10px; top: 10px;'
   });
@@ -31,3 +39,23 @@ export default () => {
     get
   };
 };
+
+export const bddSetup = (preventDuplicates?: boolean) => {
+  const viewBlock = ViewBlock();
+  let hasFailure = false;
+
+  before(() => viewBlock.attach(preventDuplicates));
+  afterEach(function () {
+    if (this.currentTest?.isFailed() === true) {
+      hasFailure = true;
+    }
+  });
+  after(() => {
+    if (!hasFailure) {
+      viewBlock.detach();
+    }
+  });
+  return viewBlock;
+};
+
+export default ViewBlock;

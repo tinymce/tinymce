@@ -1,15 +1,26 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.FormatterCheckTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    indent: false,
+    extended_valid_elements: 'b,i,span[style|class|contenteditable]',
+    entities: 'raw',
+    convert_fonts_to_spans: false,
+    forced_root_block: false,
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
+        'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
+    },
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  Theme();
-
-  suite.test('Selected style element text', (editor) => {
+  it('Selected style element text', () => {
+    const editor = hook.editor();
     editor.focus();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b></p>';
@@ -17,40 +28,44 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
+    assert.isTrue(editor.formatter.match('bold'), 'Selected style element text');
   });
 
-  suite.test('Selected style element with css styles', (editor) => {
+  it('Selected style element with css styles', () => {
+    const editor = hook.editor();
     editor.formatter.register('color', { inline: 'span', styles: { color: '#ff0000' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('color'), true, 'Selected style element with css styles');
+    assert.isTrue(editor.formatter.match('color'), 'Selected style element with css styles');
   });
 
-  suite.test('Selected style element with css styles indexed', (editor) => {
+  it('Selected style element with css styles indexed', () => {
+    const editor = hook.editor();
     editor.formatter.register('color', { inline: 'span', styles: [ 'color' ] });
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('color'), true, 'Selected style element with css styles');
+    assert.isTrue(editor.formatter.match('color'), 'Selected style element with css styles');
   });
 
-  suite.test('Selected style element with attributes', (editor) => {
+  it('Selected style element with attributes', () => {
+    const editor = hook.editor();
     editor.formatter.register('fontsize', { inline: 'font', attributes: { size: '7' }});
     editor.getBody().innerHTML = '<p><font size="7">1234</font></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('font')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('font')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('fontsize'), true, 'Selected style element with attributes');
+    assert.isTrue(editor.formatter.match('fontsize'), 'Selected style element with attributes');
   });
 
-  suite.test('Selected style element text multiple formats', (editor) => {
+  it('Selected style element text multiple formats', () => {
+    const editor = hook.editor();
     editor.formatter.register('multiple', [
       { inline: 'b' },
       { inline: 'strong' }
@@ -60,70 +75,77 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     rng.setStart(editor.dom.select('strong')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('strong')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('multiple'), true, 'Selected style element text multiple formats');
+    assert.isTrue(editor.formatter.match('multiple'), 'Selected style element text multiple formats');
   });
 
-  suite.test('Selected complex style element', (editor) => {
+  it('Selected complex style element', () => {
+    const editor = hook.editor();
     editor.formatter.register('complex', { inline: 'span', styles: { fontWeight: 'bold' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000; font-weight:bold">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('complex'), true, 'Selected complex style element');
+    assert.isTrue(editor.formatter.match('complex'), 'Selected complex style element');
   });
 
-  suite.test('Selected non style element text', (editor) => {
+  it('Selected non style element text', () => {
+    const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p>1234</p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), false, 'Selected non style element text');
+    assert.isFalse(editor.formatter.match('bold'), 'Selected non style element text');
   });
 
-  suite.test('Selected partial style element (start)', (editor) => {
+  it('Selected partial style element (start)', () => {
+    const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b>1234</b>5678</p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('b')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected partial style element (start)');
+    assert.isTrue(editor.formatter.match('bold'), 'Selected partial style element (start)');
   });
 
-  suite.test('Selected partial style element (end)', (editor) => {
+  it('Selected partial style element (end)', () => {
+    const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p>1234<b>5678</b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('b')[0].lastChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), false, 'Selected partial style element (end)');
+    assert.isFalse(editor.formatter.match('bold'), 'Selected partial style element (end)');
   });
 
-  suite.test('Selected element text with parent inline element', (editor) => {
+  it('Selected element text with parent inline element', () => {
+    const editor = hook.editor();
     editor.formatter.register('bold', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b><em><span>1234</span></em></b></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected element text with parent inline element');
+    assert.isTrue(editor.formatter.match('bold'), 'Selected element text with parent inline element');
   });
 
-  suite.test('Selected element match with variable', (editor) => {
+  it('Selected element match with variable', () => {
+    const editor = hook.editor();
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
     editor.getBody().innerHTML = '<p><span style="color:#ff0000">1234</span></p>';
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('complex', { color: '#ff0000' }), true, 'Selected element match with variable');
+    assert.isTrue(editor.formatter.match('complex', { color: '#ff0000' }), 'Selected element match with variable');
   });
 
-  suite.test('Selected element match with variable and function', (editor) => {
+  it('Selected element match with variable and function', () => {
+    const editor = hook.editor();
     editor.formatter.register('complex', {
       inline: 'span',
       styles: {
@@ -138,22 +160,25 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('complex', { color: '#ff00' }), true, 'Selected element match with variable and function');
+    assert.isTrue(editor.formatter.match('complex', { color: '#ff00' }), 'Selected element match with variable and function');
   });
 
-  suite.test('matchAll', (editor) => {
+  it('matchAll', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><b><i>a</i></b></p>';
     LegacyUnit.setSelection(editor, 'i', 0, 'i', 1);
-    LegacyUnit.equal(editor.formatter.matchAll([ 'bold', 'italic', 'underline' ]), [ 'italic', 'bold' ]);
+    assert.sameMembers(editor.formatter.matchAll([ 'bold', 'italic', 'underline' ]), [ 'italic', 'bold' ]);
   });
 
-  suite.test('canApply', (editor) => {
+  it('canApply', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
-    LegacyUnit.equal(editor.formatter.canApply('bold'), true);
+    assert.isTrue(editor.formatter.canApply('bold'));
   });
 
-  suite.test('Custom onmatch handler', (editor) => {
+  it('Custom onmatch handler', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       onmatch: (elm) => {
@@ -163,12 +188,13 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
 
     editor.setContent('<p><span class="a">a</span><span class="x">b</span></p>');
     LegacyUnit.setSelection(editor, 'span:nth-child(1)', 0, 'span:nth-child(1)', 0);
-    LegacyUnit.equal(editor.formatter.match('format'), false, 'Should not match since the onmatch matches on x classes.');
+    assert.isFalse(editor.formatter.match('format'), 'Should not match since the onmatch matches on x classes.');
     LegacyUnit.setSelection(editor, 'span:nth-child(2)', 0, 'span:nth-child(2)', 0);
-    LegacyUnit.equal(editor.formatter.match('format'), true, 'Should match since the onmatch matches on x classes.');
+    assert.isTrue(editor.formatter.match('format'), 'Should match since the onmatch matches on x classes.');
   });
 
-  suite.test('formatChanged complex format', (editor) => {
+  it('formatChanged complex format', () => {
+    const editor = hook.editor();
     let newState, newArgs;
 
     editor.formatter.register('complex', { inline: 'span', styles: { color: '%color' }});
@@ -184,34 +210,25 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     // Check apply
     editor.formatter.apply('complex', { color: '#FF0000' });
     editor.nodeChanged();
-    LegacyUnit.equal(newState, true);
-    LegacyUnit.equal(newArgs.format, 'complex');
+    assert.isTrue(newState);
+    assert.equal(newArgs.format, 'complex');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild.firstChild);
-    LegacyUnit.equal(newArgs.parents.length, 2);
+    assert.lengthOf(newArgs.parents, 2);
 
     // Check remove
     editor.formatter.remove('complex', { color: '#FF0000' });
     editor.nodeChanged();
-    LegacyUnit.equal(newState, false);
-    LegacyUnit.equal(newArgs.format, 'complex');
+    assert.isFalse(newState);
+    assert.equal(newArgs.format, 'complex');
     LegacyUnit.equalDom(newArgs.node, editor.getBody().firstChild);
-    LegacyUnit.equal(newArgs.parents.length, 1);
+    assert.lengthOf(newArgs.parents, 1);
 
     // Unbind the format change handler
     handler.unbind();
   });
 
-  suite.test('Selected style element text', (editor) => {
-    editor.formatter.register('bold', { inline: 'b' });
-    editor.getBody().innerHTML = '<p><b>1234</b></p>';
-    const rng = editor.dom.createRng();
-    rng.setStart(editor.dom.select('b')[0].firstChild, 0);
-    rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
-    editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('bold'), true, 'Selected style element text');
-  });
-
-  suite.test('Match on link format', (editor) => {
+  it('Match on link format', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML =
       '<p><a href="http://www.test.com">http://www.test.com</a></p>' +
       '<p>Normal text</p>' +
@@ -223,39 +240,24 @@ UnitTest.asynctest('browser.tinymce.core.FormatterCheckTest', (success, failure)
     rng.setStart(editor.dom.select('a')[0].firstChild, 1);
     rng.setEnd(editor.dom.select('a')[0].firstChild, 1);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('link'), true, 'Match on link format');
+    assert.isTrue(editor.formatter.match('link'), 'Match on link format');
 
     // Check link format does not match on normal text
     rng.setStart(editor.dom.select('p')[1].firstChild, 0);
     rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on normal text');
+    assert.isFalse(editor.formatter.match('link'), 'No match on normal text');
 
     // Check link format does not match on bare anchor
     rng.setStart(editor.dom.select('a')[1].firstChild, 2);
     rng.setStart(editor.dom.select('a')[1].firstChild, 2);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on bare anchor');
+    assert.isFalse(editor.formatter.match('link'), 'No match on bare anchor');
 
     // Check link format does not match on named anchor
     rng.setStart(editor.dom.select('a')[2], 0);
     rng.setEnd(editor.dom.select('a')[2], 0);
     editor.selection.setRng(rng);
-    LegacyUnit.equal(editor.formatter.match('link'), false, 'No match on named anchor');
+    assert.isFalse(editor.formatter.match('link'), 'No match on named anchor');
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    indent: false,
-    extended_valid_elements: 'b,i,span[style|class|contenteditable]',
-    entities: 'raw',
-    convert_fonts_to_spans: false,
-    forced_root_block: false,
-    valid_styles: {
-      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
-        'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
-    },
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

@@ -1,25 +1,21 @@
-import { GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.content.EditorContentForcedRootBlockTest', (success, failure) => {
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('getContent empty editor depending on forced_root_block setting', GeneralSteps.sequence([
-        tinyApis.sSetRawContent('<p><br></p>'),
-        tinyApis.sAssertContent('<p>&nbsp;</p>'),
-        tinyApis.sSetRawContent('<div><br></div>'),
-        tinyApis.sAssertContent('')
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.content.EditorContentForcedRootBlockTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     inline: true,
     forced_root_block: 'div'
-  }, success, failure);
+  }, [ Theme ]);
+
+  it('getContent empty editor depending on forced_root_block setting', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><br></p>', { format: 'raw' });
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p>');
+    editor.setContent('<div><br></div>', { format: 'raw' });
+    TinyAssertions.assertContent(editor, '');
+  });
 });

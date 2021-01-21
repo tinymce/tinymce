@@ -12,6 +12,7 @@ Version 5.7.0 (TBD)
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
+    Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859
     Fixed table width style was removed when copying #TINY-6664
     Fixed base64 URLs used in style attributes were corrupted when parsing HTML #TINY-6828

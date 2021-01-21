@@ -1,30 +1,26 @@
-import { Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
+
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.FontsizeFormatTest', (success, failure) => {
-
-  Theme();
-
-  const sAssertMenuItemCount = (expected, _editor) => {
-    return Step.sync(() => {
-      const actual = document.querySelectorAll('.tox-collection__item').length;
-      Assert.eq('Should be correct count', expected, actual);
-    });
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      tinyUi.sClickOnToolbar('Could not find fontsize select', 'button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke'),
-      tinyUi.sWaitForUi('Menu did not appear', 'div.tox-menu.tox-collection.tox-collection--list.tox-selected-menu'),
-      sAssertMenuItemCount(1, editor)
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.fmt.FontsizeFormatTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'fontsizeselect',
     fontsize_formats: '1em',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const assertMenuItemCount = (expected: number) => {
+    const actual = document.querySelectorAll('.tox-collection__item').length;
+    assert.equal(actual, expected, 'Should be correct count');
+  };
+
+  it('Check fontsize format toolbar button', async () => {
+    const editor = hook.editor();
+    TinyUiActions.clickOnToolbar(editor, 'button.tox-tbtn.tox-tbtn--select.tox-tbtn--bespoke');
+    await TinyUiActions.pWaitForUi(editor, 'div.tox-menu.tox-collection.tox-collection--list.tox-selected-menu');
+    assertMenuItemCount(1);
+  });
 });

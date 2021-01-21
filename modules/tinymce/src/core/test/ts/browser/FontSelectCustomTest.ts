@@ -1,58 +1,15 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Strings } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement, TextContent } from '@ephox/sugar';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { SugarBody, TextContent } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', (success, failure) => {
-  Theme();
-
-  const sAssertSelectBoxDisplayValue = (editor, title, expectedValue) => {
-    return Chain.asStep(SugarElement.fromDom(document.body), [
-      UiFinder.cFindIn('*[title="' + title + '"]'),
-      Chain.mapper(Fun.compose(Strings.trim, TextContent.get)),
-      Assertions.cAssertEq('Should be the expected display value', expectedValue)
-    ]);
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('Font family and font size on initial page load', GeneralSteps.sequence([
-        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Arial')
-      ])),
-
-      Logger.t('Font family with spaces and numbers in the name with legacy font elements', GeneralSteps.sequence([
-        tinyApis.sSetRawContent(`<p><font face="'bookshelf symbol 7'" size="1">a</font></p>`),
-        tinyApis.sFocus(),
-        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-        tinyApis.sNodeChanged(),
-        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '8pt'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7')
-      ])),
-
-      Logger.t('Font family with spaces and numbers in the name', GeneralSteps.sequence([
-        tinyApis.sSetContent(`<p style="font-family: 'bookshelf symbol 7';" </p>`),
-        tinyApis.sFocus(),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        tinyApis.sNodeChanged(),
-        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7')
-      ])),
-
-      Logger.t('Font family with quoted font names', GeneralSteps.sequence([
-        tinyApis.sSetContent(`<p style="font-family: 'bauhaus 93';" </p>`),
-        tinyApis.sFocus(),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        tinyApis.sNodeChanged(),
-        sAssertSelectBoxDisplayValue(editor, 'Font sizes', '12px'),
-        sAssertSelectBoxDisplayValue(editor, 'Fonts', 'Bauhaus 93')
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.FontSelectCustomTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'fontsizeselect fontselect',
     content_style: [
@@ -62,5 +19,47 @@ UnitTest.asynctest('browser.tinymce.core.FontSelectCustomTest', (success, failur
     ].join(''),
     font_formats: 'Arial=arial; Arial Black=arial black; Arial Narrow=arial narrow; Bauhaus 93="bauhaus 93"; Bookman Old Style=bookman old style; Bookshelf Symbol 7=bookshelf symbol 7; Times New Roman=times new roman, times;',
     fontsize_formats: '8pt=1 12pt 12.75pt 13pt 24pt 32pt'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const assertSelectBoxDisplayValue = (editor, title, expectedValue) => {
+    const selectBox = UiFinder.findIn(SugarBody.body(), '*[title="' + title + '"]').getOrDie();
+    const value = Fun.compose(Strings.trim, TextContent.get)(selectBox);
+    assert.equal(value, expectedValue, 'Should be the expected display value');
+  };
+
+  it('Font family and font size on initial page load', () => {
+    const editor = hook.editor();
+    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
+    assertSelectBoxDisplayValue(editor, 'Fonts', 'Arial');
+  });
+
+  it('Font family with spaces and numbers in the name with legacy font elements', () => {
+    const editor = hook.editor();
+    editor.setContent(`<p><font face="'bookshelf symbol 7'" size="1">a</font></p>`, { format: 'raw' });
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.nodeChanged();
+    assertSelectBoxDisplayValue(editor, 'Font sizes', '8pt');
+    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7');
+  });
+
+  it('Font family with spaces and numbers in the name', () => {
+    const editor = hook.editor();
+    editor.setContent(`<p style="font-family: 'bookshelf symbol 7';"></p>`);
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.nodeChanged();
+    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
+    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bookshelf Symbol 7');
+  });
+
+  it('Font family with quoted font names', () => {
+    const editor = hook.editor();
+    editor.setContent(`<p style="font-family: 'bauhaus 93';"></p>`);
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    editor.nodeChanged();
+    assertSelectBoxDisplayValue(editor, 'Font sizes', '12px');
+    assertSelectBoxDisplayValue(editor, 'Fonts', 'Bauhaus 93');
+  });
 });

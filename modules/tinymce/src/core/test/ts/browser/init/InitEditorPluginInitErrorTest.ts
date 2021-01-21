@@ -1,46 +1,50 @@
-import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import PluginManager from 'tinymce/core/api/PluginManager';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
+import PluginManager from 'tinymce/core/api/PluginManager';
 import Theme from 'tinymce/themes/silver/Theme';
 import ErrorHelper from '../../module/test/ErrorHelpers';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorPluginInitErrorTest', (success, failure) => {
-  Theme();
-
+describe('browser.tinymce.core.init.InitEditorPluginInitErrorTest', () => {
   const errorHelper = ErrorHelper();
-
-  PluginManager.add('errorplugin', () => {
-    throw new Error('Failed to initialize plugin');
+  before(() => {
+    PluginManager.add('errorplugin', () => {
+      throw new Error('Failed to initialize plugin');
+    });
   });
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Editor is responsive after using a plugin that throws an error during init', [
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sAssertContent('<p>a</p>')
-      ]),
-      Log.step('TBA', `Failed plugin shouldn't be registered`, Step.sync(() => {
-        Assertions.assertEq(`Plugin shouldn't be registered`, undefined, editor.plugins.errorplugin);
-      })),
-      Log.step('TBA', 'Notification opened detailing plugin failed to init', Step.sync(() => {
-        const notifications = editor.notificationManager.getNotifications();
-        Assertions.assertEq('Notification should exist', 1, notifications.length);
-        const notification = notifications[0];
-        Assertions.assertEq('Notification should have a message', 'Failed to initialize plugin: errorplugin', notification.settings.text);
-        Assertions.assertEq('Notification should be an error', 'error', notification.settings.type);
-        notification.close();
-      })),
-      Log.step('TBA', 'Plugin load error should be reported',
-        errorHelper.sAssertErrorLogged('Error is reported', 'Failed to initialize plugin: errorplugin')
-      )
-    ], onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'errorplugin',
-    setup: (editor) => errorHelper.trackErrors(editor, 'PluginLoadError')
-  }, success, failure);
+    setup: (editor: Editor) => {
+      errorHelper.trackErrors(editor, 'PluginLoadError');
+    }
+  }, [ Theme ]);
+
+  it('TBA: Editor is responsive after using a plugin that throws an error during init', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+  });
+
+  it(`TBA: Failed plugin shouldn't be registered`, () => {
+    const editor = hook.editor();
+    assert.isUndefined(editor.plugins.errorplugin, `Plugin shouldn't be registered`);
+  });
+
+  it('TBA: Notification opened detailing plugin failed to init', () => {
+    const editor = hook.editor();
+    const notifications = editor.notificationManager.getNotifications();
+    assert.lengthOf(notifications, 1, 'Notification should exist');
+    const notification = notifications[0];
+    assert.equal(notification.settings.text, 'Failed to initialize plugin: errorplugin', 'Notification should have a message');
+    assert.equal(notification.settings.type, 'error', 'Notification should be an error');
+    notification.close();
+  });
+
+  it('TBA: Plugin load error should be reported', () => {
+    return errorHelper.pAssertErrorLogged('Error is reported', 'Failed to initialize plugin: errorplugin');
+  });
 });

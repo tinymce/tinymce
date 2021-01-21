@@ -1,54 +1,49 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.content.EditorResetContentTest', (success, failure) => {
-  Theme();
-
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const sResetContent = (content?: string) => Step.sync(() => {
-      editor.resetContent(content);
-    });
-
-    const sAssertEditorState = (content: string) => Step.sync(() => {
-      const html = editor.getContent();
-      Assertions.assertHtml('Editor content should be expected html', content, html);
-      Assertions.assertEq('Editor should not be dirty', false, editor.isDirty());
-      Assertions.assertEq('UndoManager should not have any undo levels', false, editor.undoManager.hasUndo());
-      Assertions.assertEq('UndoManager should not have any redo levels', false, editor.undoManager.hasRedo());
-      Assertions.assertEq('Editor start content should match the original content', '<p><br data-mce-bogus="1"></p>', editor.startContent);
-    });
-
-    Pipeline.async({}, [
-      Logger.t('Reset editor content/state with initial content', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>some</p><p>content</p>'),
-        sResetContent(),
-        sAssertEditorState('')
-      ])),
-      Logger.t('Reset editor content/state with custom content', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>some</p><p>content</p>'),
-        sResetContent('<p>html</p>'),
-        sAssertEditorState('<p>html</p>')
-      ])),
-      Logger.t('Reset editor content/state with multiple undo levels', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>some</p><p>content</p>'),
-        Step.sync(() => editor.undoManager.add()),
-        tinyApis.sSetContent('<p>some</p><p>other</p><p>content</p>'),
-        Step.sync(() => editor.undoManager.add()),
-        tinyApis.sNodeChanged(),
-        Step.sync(() => {
-          Assertions.assertEq('Editor should be dirty', true, editor.isDirty());
-          Assertions.assertEq('UndoManager should have some undo levels', true, editor.undoManager.hasUndo());
-        }),
-        sResetContent('<p>html</p>'),
-        sAssertEditorState('<p>html</p>')
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.content.EditorResetContentTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ]);
+
+  const assertEditorState = (editor: Editor, content: string) => {
+    const html = editor.getContent();
+    Assertions.assertHtml('Editor content should be expected html', content, html);
+    assert.isFalse(editor.isDirty(), 'Editor should not be dirty');
+    assert.isFalse(editor.undoManager.hasUndo(), 'UndoManager should not have any undo levels');
+    assert.isFalse(editor.undoManager.hasRedo(), 'UndoManager should not have any redo levels');
+    assert.equal(editor.startContent, '<p><br data-mce-bogus="1"></p>', 'Editor start content should match the original content');
+  };
+
+  it('Reset editor content/state with initial content', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some</p><p>content</p>');
+    editor.resetContent();
+    assertEditorState(editor, '');
+  });
+
+  it('Reset editor content/state with custom content', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some</p><p>content</p>');
+    editor.resetContent('<p>html</p>');
+    assertEditorState(editor, '<p>html</p>');
+  });
+
+  it('Reset editor content/state with multiple undo levels', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some</p><p>content</p>');
+    editor.undoManager.add();
+    editor.setContent('<p>some</p><p>other</p><p>content</p>');
+    editor.undoManager.add();
+    editor.nodeChanged();
+    assert.isTrue(editor.isDirty(), 'Editor should be dirty');
+    assert.isTrue(editor.undoManager.hasUndo(), 'UndoManager should have some undo levels');
+    editor.resetContent('<p>html</p>');
+    assertEditorState(editor, '<p>html</p>');
+  });
 });

@@ -1,22 +1,34 @@
-import { Assertions, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.FormatterApplyTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    indent: false,
+    extended_valid_elements: 'b[id|style|title],i[id|style|title],span[id|class|style|title|contenteditable],font[face|size]',
+    entities: 'raw',
+    convert_fonts_to_spans: false,
+    forced_root_block: false,
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
+        'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
+    },
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  Theme();
-
-  const getContent = (editor) => {
+  const getContent = (editor: Editor) => {
     return editor.getContent().toLowerCase().replace(/[\r]+/g, '');
   };
 
-  suite.test('apply inline to a list', (editor) => {
+  it('apply inline to a list', () => {
+    const editor = hook.editor();
     editor.focus();
     editor.formatter.register('format', {
       inline: 'b',
@@ -28,14 +40,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><b>1234</b></p><ul><li><b>first element</b></li><li><b>second element</b></li></ul><p><b>5678</b></p>',
       'selection of a list'
     );
   });
 
-  suite.test('Toggle OFF - Inline element on selected text', (editor) => {
+  it('Toggle OFF - Inline element on selected text', () => {
+    const editor = hook.editor();
     // Toggle OFF - Inline element on selected text
     editor.formatter.register('format', {
       inline: 'b',
@@ -47,10 +60,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('b')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>');
   });
 
-  suite.test('Toggle OFF - Inline element on partially selected text', (editor) => {
+  it('Toggle OFF - Inline element on partially selected text', () => {
+    const editor = hook.editor();
     // Toggle OFF - Inline element on partially selected text
     editor.formatter.register('format', {
       inline: 'b',
@@ -62,10 +76,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('b')[0].firstChild, 2);
     editor.selection.setRng(rng);
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p>1<b>23</b>4</p>');
+    assert.equal(getContent(editor), '<p>1<b>23</b>4</p>');
   });
 
-  suite.test('Toggle OFF - Inline element on partially selected text in start/end elements', (editor) => {
+  it('Toggle OFF - Inline element on partially selected text in start/end elements', () => {
+    const editor = hook.editor();
     // Toggle OFF - Inline element on partially selected text in start/end elements
     editor.formatter.register('format', {
       inline: 'b',
@@ -77,10 +92,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('b')[1].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p>1<b>234</b></p><p><b>123</b>4</p>');
+    assert.equal(getContent(editor), '<p>1<b>234</b></p><p><b>123</b>4</p>');
   });
 
-  suite.test('Toggle OFF - Inline element with data attribute', (editor) => {
+  it('Toggle OFF - Inline element with data attribute', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', { inline: 'b' });
     editor.getBody().innerHTML = '<p><b data-x="1">1</b></p>';
     const rng = editor.dom.createRng();
@@ -88,10 +104,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('b')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p>1</p>');
+    assert.equal(getContent(editor), '<p>1</p>');
   });
 
-  suite.test('Toggle ON - NO inline element on selected text', (editor) => {
+  it('Toggle ON - NO inline element on selected text', () => {
+    const editor = hook.editor();
     // Inline element on selected text
     editor.formatter.register('format', {
       inline: 'b',
@@ -103,12 +120,13 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element on selected text');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element on selected text');
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
+    assert.equal(getContent(editor), '<p>1234</p>', 'Toggle ON - NO inline element on selected text');
   });
 
-  suite.test('Selection spanning from within format to outside format with toggle off', (editor) => {
+  it('Selection spanning from within format to outside format with toggle off', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       toggle: false
@@ -119,10 +137,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
     editor.selection.setRng(rng);
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>', 'Extend formating if start of selection is already formatted');
   });
 
-  suite.test('Inline element on partially selected text', (editor) => {
+  it('Inline element on partially selected text', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -132,12 +151,13 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
+    assert.equal(getContent(editor), '<p>1<b>23</b>4</p>', 'Inline element on partially selected text');
     editor.formatter.toggle('format');
-    LegacyUnit.equal(getContent(editor), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
+    assert.equal(getContent(editor), '<p>1234</p>', 'Toggle ON - NO inline element on partially selected text');
   });
 
-  suite.test('Inline element on partially selected text in start/end elements', (editor) => {
+  it('Inline element on partially selected text in start/end elements', () => {
+    const editor = hook.editor();
     // Inline element on partially selected text in start/end elements
     editor.formatter.register('format', {
       inline: 'b'
@@ -148,10 +168,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[1].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>1<b>234</b></p><p><b>123</b>4</p>');
+    assert.equal(getContent(editor), '<p>1<b>234</b></p><p><b>123</b>4</p>');
   });
 
-  suite.test('Inline element on selected element', (editor) => {
+  it('Inline element on selected element', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -161,10 +182,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element on selected element');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element on selected element');
   });
 
-  suite.test('Inline element on multiple selected elements', (editor) => {
+  it('Inline element on multiple selected elements', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -174,10 +196,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p><p><b>1234</b></p>', 'Inline element on multiple selected elements');
+    assert.equal(getContent(editor), '<p><b>1234</b></p><p><b>1234</b></p>', 'Inline element on multiple selected elements');
   });
 
-  suite.test('Inline element on multiple selected elements with various childnodes', (editor) => {
+  it('Inline element on multiple selected elements with various childnodes', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -187,14 +210,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><b><em>1234</em>5678<span>9</span></b></p><p><b><em>1234</em>5678<span>9</span></b></p>',
       'Inline element on multiple selected elements with various childnodes'
     );
   });
 
-  suite.test('Inline element with attributes', (editor) => {
+  it('Inline element with attributes', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       attributes: {
@@ -208,10 +232,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b id="value2" title="value1">1234</b></p>', 'Inline element with attributes');
+    assert.equal(getContent(editor), '<p><b id="value2" title="value1">1234</b></p>', 'Inline element with attributes');
   });
 
-  suite.test('Inline element with styles', (editor) => {
+  it('Inline element with styles', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
@@ -225,10 +250,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
+    assert.equal(getContent(editor), '<p><b style=\"color: #ff0000; font-size: 10px;\">1234</b></p>', 'Inline element with styles');
   });
 
-  suite.test('Inline element with attributes and styles', (editor) => {
+  it('Inline element with attributes and styles', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       attributes: {
@@ -246,14 +272,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><b id="value2" style="color: #ff0000; font-size: 10px;" title="value1">1234</b></p>',
       'Inline element with attributes and styles'
     );
   });
 
-  suite.test('Inline element with wrapable parents', (editor) => {
+  it('Inline element with wrapable parents', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -263,10 +290,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('span')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>x<b><em><span>1234</span></em></b>y</p>', 'Inline element with wrapable parents');
+    assert.equal(getContent(editor), '<p>x<b><em><span>1234</span></em></b>y</p>', 'Inline element with wrapable parents');
   });
 
-  suite.test('Inline element with redundant child', (editor) => {
+  it('Inline element with redundant child', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -276,10 +304,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element with redundant child');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element with redundant child');
   });
 
-  suite.test('Inline element with redundant parent', (editor) => {
+  it('Inline element with redundant parent', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -289,10 +318,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a<em>1234</em>b</b></p>', 'Inline element with redundant parent');
+    assert.equal(getContent(editor), '<p><b>a<em>1234</em>b</b></p>', 'Inline element with redundant parent');
   });
 
-  suite.test('Inline element with redundant child of similar type 1', (editor) => {
+  it('Inline element with redundant child of similar type 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -304,10 +334,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0], 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a1234b</b></p>', 'Inline element with redundant child of similar type 1');
+    assert.equal(getContent(editor), '<p><b>a1234b</b></p>', 'Inline element with redundant child of similar type 1');
   });
 
-  suite.test('Inline element with redundant child of similar type 2', (editor) => {
+  it('Inline element with redundant child of similar type 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -322,10 +353,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 2');
+    assert.equal(getContent(editor), '<p><b>1234</b></p>', 'Inline element with redundant child of similar type 2');
   });
 
-  suite.test('Inline element with redundant children of similar types', (editor) => {
+  it('Inline element with redundant children of similar types', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -342,10 +374,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a12345678b</b></p>', 'Inline element with redundant children of similar types');
+    assert.equal(getContent(editor), '<p><b>a12345678b</b></p>', 'Inline element with redundant children of similar types');
   });
 
-  suite.test('Inline element with redundant parent 1', (editor) => {
+  it('Inline element with redundant parent 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -357,10 +390,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><strong>a<em>1234</em>b</strong></p>', 'Inline element with redundant parent 1');
+    assert.equal(getContent(editor), '<p><strong>a<em>1234</em>b</strong></p>', 'Inline element with redundant parent 1');
   });
 
-  suite.test('Inline element with redundant parent 2', (editor) => {
+  it('Inline element with redundant parent 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -375,10 +409,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>', 'Inline element with redundant parent 2');
+    assert.equal(getContent(editor), '<p><span style="font-weight: bold;">a<em>1234</em>b</span></p>', 'Inline element with redundant parent 2');
   });
 
-  suite.test('Inline element with redundant parents of similar types', (editor) => {
+  it('Inline element with redundant parents of similar types', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', [{
       inline: 'b'
     }, {
@@ -395,14 +430,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('em')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="font-weight: bold;"><strong><b>a<em>1234</em>b</b></strong></span></p>',
       'Inline element with redundant parents of similar types'
     );
   });
 
-  suite.test('Inline element merged with parent and child', (editor) => {
+  it('Inline element merged with parent and child', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -412,10 +448,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('b')[0].lastChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>a<b>123456</b>b</p>', 'Inline element merged with parent and child');
+    assert.equal(getContent(editor), '<p>a<b>123456</b>b</p>', 'Inline element merged with parent and child');
   });
 
-  suite.test('Inline element merged with child 1', (editor) => {
+  it('Inline element merged with child 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -428,10 +465,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-weight: bold;">a1234b</span></p>', 'Inline element merged with child 1');
+    assert.equal(getContent(editor), '<p><span style="font-weight: bold;">a1234b</span></p>', 'Inline element merged with child 1');
   });
 
-  suite.test('Inline element merged with child 2', (editor) => {
+  it('Inline element merged with child 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -444,14 +482,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style=\"font-weight: bold;\">a<span style=\"color: #ff0000;\">1234</span>b</span></p>',
       'Inline element merged with child 2'
     );
   });
 
-  suite.test('Inline element merged with child 3', (editor) => {
+  it('Inline element merged with child 3', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -464,14 +503,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style=\"font-weight: bold;\">a<span id=\"id\">1234</span>b</span></p>',
       'Inline element merged with child 3'
     );
   });
 
-  suite.test('Inline element merged with child 3', (editor) => {
+  it('Inline element merged with child 4', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -484,10 +524,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 3');
+    assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">1234</span></p>', 'Inline element merged with child 4');
   });
 
-  suite.test('Inline element merged with child 4', (editor) => {
+  it('Inline element merged with child 5', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -500,10 +541,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 4');
+    assert.equal(getContent(editor), '<p><span style="color: #00ff00;">1234</span></p>', 'Inline element merged with child 5');
   });
 
-  suite.test('Inline element with attributes merged with child 1', (editor) => {
+  it('Inline element with attributes merged with child 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'font',
       attributes: {
@@ -516,10 +558,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><font face="arial" size="7">1234</font></p>', 'Inline element with attributes merged with child 1');
+    assert.equal(getContent(editor), '<p><font face="arial" size="7">1234</font></p>', 'Inline element with attributes merged with child 1');
   });
 
-  suite.test('Inline element with attributes merged with child 2', (editor) => {
+  it('Inline element with attributes merged with child 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'font',
       attributes: {
@@ -532,10 +575,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><font size="7">a1234b</font></p>', 'Inline element with attributes merged with child 2');
+    assert.equal(getContent(editor), '<p><font size="7">a1234b</font></p>', 'Inline element with attributes merged with child 2');
   });
 
-  suite.test('Inline element merged with left sibling', (editor) => {
+  it('Inline element merged with left sibling', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -545,10 +589,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>12345678</b></p>', 'Inline element merged with left sibling');
+    assert.equal(getContent(editor), '<p><b>12345678</b></p>', 'Inline element merged with left sibling');
   });
 
-  suite.test('Inline element merged with right sibling', (editor) => {
+  it('Inline element merged with right sibling', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -558,10 +603,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>12345678</b></p>', 'Inline element merged with right sibling');
+    assert.equal(getContent(editor), '<p><b>12345678</b></p>', 'Inline element merged with right sibling');
   });
 
-  suite.test('Inline element merged with left and right siblings', (editor) => {
+  it('Inline element merged with left and right siblings', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -571,10 +617,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].childNodes[1], 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
+    assert.equal(getContent(editor), '<p><b>123456</b></p>', 'Inline element merged with left and right siblings');
   });
 
-  suite.test('Inline element merged with data attributed left sibling', (editor) => {
+  it('Inline element merged with data attributed left sibling', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -584,10 +631,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].lastChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b data-x="1">12345678</b></p>', 'Inline element merged with left sibling');
+    assert.equal(getContent(editor), '<p><b data-x="1">12345678</b></p>', 'Inline element merged with left sibling');
   });
 
-  suite.test(`Don't merge siblings with whitespace between 1`, (editor) => {
+  it(`Don't merge siblings with whitespace between 1`, () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -597,10 +645,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].lastChild, 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 1`);
+    assert.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 1`);
   });
 
-  suite.test(`Don't merge siblings with whitespace between 1`, (editor) => {
+  it(`Don't merge siblings with whitespace between 2`, () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -610,10 +659,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 2`);
+    assert.equal(getContent(editor), '<p><b>a</b> <b>b</b></p>', `Don't merge siblings with whitespace between 2`);
   });
 
-  suite.test('Inline element not merged in exact mode', (editor) => {
+  it('Inline element not merged in exact mode', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -627,14 +677,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="color: #00ff00;"><span style="color: #ff0000;">1234</span></span></p>',
       'Inline element not merged in exact mode'
     );
   });
 
-  suite.test('Inline element merged in exact mode', (editor) => {
+  it('Inline element merged in exact mode', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -648,10 +699,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
+    assert.equal(getContent(editor), '<p><span style="color: #ff0000;">1234</span></p>', 'Inline element merged in exact mode');
   });
 
-  suite.test('Deep left branch', (editor) => {
+  it('Deep left branch', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -661,14 +713,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[2].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><em><i><ins>1<b>234</b></ins></i></em><b><em>text1</em><em>text2</em></b></p><p><b><em>5678</em></b></p><p><b>9012</b></p>',
       'Deep left branch'
     );
   });
 
-  suite.test('Deep right branch', (editor) => {
+  it('Deep right branch', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -678,14 +731,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('em')[3].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><b>9012</b></p><p><b><em>5678</em></b></p><p><b><em><i><ins>1234</ins></i></em><em>text1</em></b><em><b>text</b>2</em></p>',
       'Deep right branch'
     );
   });
 
-  suite.test('Full element text selection on two elements with a table in the middle', (editor) => {
+  it('Full element text selection on two elements with a table in the middle', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -695,14 +749,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><b>1234</b></p><table><tbody><tr><td><b>123</b></td></tr></tbody></table><p><b>5678</b></p>',
       'Full element text selection on two elements with a table in the middle'
     );
   });
 
-  suite.test('Inline element on selected text with variables', (editor) => {
+  it('Inline element on selected text with variables', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
@@ -721,10 +776,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
       color: '#ff0000',
       title: 'title'
     });
-    LegacyUnit.equal(getContent(editor), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
+    assert.equal(getContent(editor), '<p><b style="color: #ff0000;" title="title">1234</b></p>', 'Inline element on selected text');
   });
 
-  suite.test('Remove redundant children', (editor) => {
+  it('Remove redundant children', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -739,10 +795,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span style=\"font-family: arial;\">1234</span></p>', 'Remove redundant children');
+    assert.equal(getContent(editor), '<p><span style=\"font-family: arial;\">1234</span></p>', 'Remove redundant children');
   });
 
-  suite.test('Inline element on selected text with function values', (editor) => {
+  it('Inline element on selected text with function values', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b',
       styles: {
@@ -765,10 +822,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
       color: '#ff',
       title: 'title'
     });
-    LegacyUnit.equal(getContent(editor), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
+    assert.equal(getContent(editor), '<p><b style="color: #ff00ff;" title="title2">1234</b></p>', 'Inline element on selected text with function values');
   });
 
-  suite.test('Block element on selected text', (editor) => {
+  it('Block element on selected text', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -778,10 +836,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div>', 'Block element on selected text');
+    assert.equal(getContent(editor), '<div>1234</div>', 'Block element on selected text');
   });
 
-  suite.test('Block element on partially selected text', (editor) => {
+  it('Block element on partially selected text', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -791,10 +850,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div>', 'Block element on partially selected text');
+    assert.equal(getContent(editor), '<div>1234</div>', 'Block element on partially selected text');
   });
 
-  suite.test('Block element on selected element', (editor) => {
+  it('Block element on selected element', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -804,10 +864,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div>', 'Block element on selected element');
+    assert.equal(getContent(editor), '<div>1234</div>', 'Block element on selected element');
   });
 
-  suite.test('Block element on selected elements', (editor) => {
+  it('Block element on selected elements', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -817,10 +878,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div><div>5678</div>', 'Block element on selected elements');
+    assert.equal(getContent(editor), '<div>1234</div><div>5678</div>', 'Block element on selected elements');
   });
 
-  suite.test('Block element on selected elements with attributes', (editor) => {
+  it('Block element on selected elements with attributes', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div',
       attributes: {
@@ -833,10 +895,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div title="test">1234</div><div title="test">5678</div>', 'Block element on selected elements with attributes');
+    assert.equal(getContent(editor), '<div title="test">1234</div><div title="test">5678</div>', 'Block element on selected elements with attributes');
   });
 
-  suite.test('Block element on nested element', (editor) => {
+  it('Block element on nested element', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'p'
     });
@@ -846,10 +909,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div><p>1234</p></div>', 'Block element on nested element');
+    assert.equal(getContent(editor), '<div><p>1234</p></div>', 'Block element on nested element');
   });
 
-  suite.test('Block element on selected non wrapped text 1', (editor) => {
+  it('Block element on selected non wrapped text 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -859,10 +923,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody().firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div>', 'Block element on selected non wrapped text 1');
+    assert.equal(getContent(editor), '<div>1234</div>', 'Block element on selected non wrapped text 1');
   });
 
-  suite.test('Block element on selected non wrapped text 2', (editor) => {
+  it('Block element on selected non wrapped text 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -872,10 +937,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody().lastChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 2');
+    assert.equal(getContent(editor), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 2');
   });
 
-  suite.test('Block element on selected non wrapped text 3', (editor) => {
+  it('Block element on selected non wrapped text 3', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'div'
     });
@@ -885,10 +951,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 7);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
+    assert.equal(getContent(editor), '<div>1234</div><div>4567</div><div>8910</div>', 'Block element on selected non wrapped text 3');
   });
 
-  suite.test('Block element wrapper 1', (editor) => {
+  it('Block element wrapper 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'blockquote',
       wrapper: true
@@ -899,10 +966,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<blockquote><h1>1234</h1><p>5678</p></blockquote>', 'Block element wrapper 1');
+    assert.equal(getContent(editor), '<blockquote><h1>1234</h1><p>5678</p></blockquote>', 'Block element wrapper 1');
   });
 
-  suite.test('Block element wrapper 2', (editor) => {
+  it('Block element wrapper 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'blockquote',
       wrapper: true
@@ -913,10 +981,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('h1')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 2');
+    assert.equal(getContent(editor), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 2');
   });
 
-  suite.test('Block element wrapper 3', (editor) => {
+  it('Block element wrapper 3', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'blockquote',
       wrapper: true
@@ -927,10 +996,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.getBody(), 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
+    assert.equal(getContent(editor), '<blockquote><h1>1234</h1></blockquote>', 'Block element wrapper 3');
   });
 
-  suite.test('Apply format on single element that matches a selector 1', (editor) => {
+  it('Apply format on single element that matches a selector 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       selector: 'p',
       attributes: {
@@ -947,14 +1017,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p class="a b c" style="color: #ff0000;" title="test">1234</p>',
       'Apply format on single element that matches a selector'
     );
   });
 
-  suite.test('Apply format on single element parent that matches a selector 2', (editor) => {
+  it('Apply format on single element parent that matches a selector 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       selector: 'div',
       attributes: {
@@ -971,14 +1042,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('div')[0], 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<div class="a b c" style="color: #ff0000;" title="test"><p>1234</p><p>test</p><p>1234</p></div>',
       'Apply format on single element parent that matches a selector'
     );
   });
 
-  suite.test('Apply format on multiple elements that matches a selector 2', (editor) => {
+  it('Apply format on multiple elements that matches a selector 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       selector: 'p',
       attributes: {
@@ -995,14 +1067,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[1].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p class="a b c" style="color: #ff0000;" title="test">1234</p><div>test</div><p class="a b c" style="color: #ff0000;" title="test">1234</p>',
       'Apply format on multiple elements that matches a selector'
     );
   });
 
-  suite.test('Apply format on top of existing selector element', (editor) => {
+  it('Apply format on top of existing selector element', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       selector: 'p',
       attributes: {
@@ -1019,14 +1092,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[0].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p class="c d a b" style="color: #00ff00;" title="test2">1234</p>',
       'Apply format on top of existing selector element'
     );
   });
 
-  suite.test('Format on single li that matches a selector', (editor) => {
+  it('Format on single li that matches a selector', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       selector: 'li',
@@ -1044,14 +1118,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('div')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<div><span class="a b c" style="color: #ff0000;" title="test">text</span></div>',
       'Apply format on single element that matches a selector'
     );
   });
 
-  suite.test('Format on single div that matches a selector', (editor) => {
+  it('Format on single div that matches a selector', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       selector: 'div',
@@ -1069,14 +1144,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('div')[0], 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<div class="a b c" style="color: #ff0000;" title="test">text</div>',
       'Apply format on single element that matches a selector'
     );
   });
 
-  suite.test('Bold and italics is applied to text that is not highlighted', (editor) => {
+  it('Bold and italics is applied to text that is not highlighted', () => {
+    const editor = hook.editor();
     const rng = editor.dom.createRng();
     editor.setContent('<p><span style="font-family: Arial;"><strong>test1 test2</strong> test3 test4 test5 test6</span></p>');
     rng.setStart(editor.dom.select('strong')[0].firstChild, 6);
@@ -1084,14 +1160,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.focus();
     editor.selection.setRng(rng);
     editor.execCommand('Italic');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style="font-family: Arial;"><strong>test1 <em>test2</em></strong> test3 test4 test5 test6</span></p>',
       'Selected text should be bold.'
     );
   });
 
-  suite.test('Apply color format to links as well', (editor) => {
+  it('Apply color format to links as well', () => {
+    const editor = hook.editor();
     editor.setContent('<p>123<a href="#">abc</a>456</p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('p')[0].firstChild, 0);
@@ -1107,14 +1184,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     });
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style="color: #ff0000;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
 
-  suite.test('Color on link element', (editor) => {
+  it('Color on link element', () => {
+    const editor = hook.editor();
     editor.setContent('<p><span style="font-size: 10px;">123<a href="#">abc</a>456</span></p>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('span')[0].firstChild, 0);
@@ -1130,50 +1208,54 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     });
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style="color: #ff0000; font-size: 10px;">123<a style="color: #ff0000;" href="#">abc</a>456</span></p>',
       `Link should have it's own color.`
     );
   });
 
-  suite.test('Applying formats in lists', (editor) => {
+  it('Applying formats in lists', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('li')[0].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li><h1>text</h1><ul><li>nested</li></ul></li></ul>',
       'heading should not automatically apply to sublists'
     );
   });
 
-  suite.test('Applying block format to first character in li', (editor) => {
+  it('Applying block format to first character in li', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>ab</li><li>cd</li>');
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 0, 'li:nth-child(1)', 0);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li><h1>ab</h1></li><li>cd</li></ul>',
       'heading should be applied to first li'
     );
   });
 
-  suite.test('Applying block format to li wrapped in block', (editor) => {
+  it('Applying block format to li wrapped in block', () => {
+    const editor = hook.editor();
     editor.setContent('<div><ul><li>ab</li><li>cd</li></ul></div>');
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1, 'li:nth-child(1)', 1);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<div><ul><li><h1>ab</h1></li><li>cd</li></ul></div>',
       'heading should be applied to first li only'
     );
   });
 
-  suite.test('Applying formats on a list including child nodes', (editor) => {
+  it('Applying formats on a list including child nodes', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', { inline: 'strong' });
     editor.setContent('<ol><li>a</li><li>b<ul><li>c</li><li>d<br /><ol><li>e</li><li>f</li></ol></li></ul></li><li>g</li></ol>');
     const rng = editor.dom.createRng();
@@ -1181,7 +1263,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('li')[6].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ol><li><strong>a</strong></li><li><strong>b</strong><ul><li><strong>c</strong></li><li><strong>d</strong>' +
       '<br /><ol><li><strong>e</strong></li><li><strong>f</strong></li></ol></li></ul></li><li><strong>g</strong>' +
@@ -1190,63 +1272,68 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Block format on li element', (editor) => {
+  it('Block format on li element', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>text<ul><li>nested</li></ul></li></ul>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('li')[1].firstChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li><h1>text</h1><ul><li><h1>nested</h1></li></ul></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
   });
 
-  suite.test('Block on li element 2', (editor) => {
+  it('Block on li element 2', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[0].lastChild, 1);
     rng.setEnd(editor.dom.select('li')[0].lastChild, 2);
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li>before<ul><li>nested</li></ul><h1>after</h1></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
   });
 
-  suite.test('Block on li element 3', (editor) => {
+  it('Block on li element 3', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[1].firstChild, 0);
     rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li>before<ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>',
       'heading should automatically apply to sublists, when selection spans the sublist'
     );
   });
 
-  suite.test('Block on li element 4', (editor) => {
+  it('Block on li element 4', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>before<ul><li>nested</li></ul>after</li></ul>');
     const rng = editor.dom.createRng();
     rng.setStart(editor.dom.select('li')[0].firstChild, 0);
     rng.setEnd(editor.dom.select('li')[0].lastChild, 1);
     editor.selection.setRng(rng);
     editor.formatter.apply('h1');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul><li><h1>before</h1><ul><li><h1>nested</h1></li></ul><h1>after</h1></li></ul>',
       'heading should apply correctly when selection is after a sublist'
     );
   });
 
-  suite.test('Underline colors 1', (editor) => {
+  it('Underline colors 1', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -1256,14 +1343,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.setContent(`<p><span style="font-family: 'arial black'; text-decoration: underline;">test</span></p>`);
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       `<p><span style="color: #ff0000; font-family: 'arial black'; text-decoration: underline;">test</span></p>`,
       'Coloring an underlined text should result in a colored underline'
     );
   });
 
-  suite.test('Underline colors 2', (editor) => {
+  it('Underline colors 2', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       exact: true,
@@ -1274,7 +1362,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.setContent(`<p><span style="font-family: 'arial black'; color: rgb(255, 0, 0);">test</span></p>`);
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style="text-decoration: underline;"><span style="color: #ff0000; font-family: ' +
       `'arial black'; text-decoration: underline;">test</span></span></p>`,
@@ -1282,7 +1370,8 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Underline colors 3', (editor) => {
+  it('Underline colors 3', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       exact: true,
@@ -1296,7 +1385,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
     editor.execCommand('SelectAll');
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black';"><em>` +
       '<strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong>' +
@@ -1304,7 +1393,8 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Underline colors 4', (editor) => {
+  it('Underline colors 4', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -1320,13 +1410,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('span')[1].firstChild, 9);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;' +
+    assert.equal(getContent(editor), '<p style="font-size: 22pt;"><span style="text-decoration: underline;"><span style="color: yellow;' +
       ' text-decoration: underline;">yellow<span style="color: #ff0000; text-decoration: underline;">red</span>yellow</span></span></p>',
     'Coloring an colored underdlined text should result in newly colored underline'
     );
   });
 
-  suite.test('Underline colors 5', (editor) => {
+  it('Underline colors 5', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       exact: true,
@@ -1346,7 +1437,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('span')[4].lastChild, 5);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       `<p><span style="text-decoration: underline;"><span style="font-family: 'arial black','avant garde';"` +
       `><em><strong>This is some <span style="color: #ff0000; text-decoration: underline;">example</span></strong` +
@@ -1359,7 +1450,8 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Underline colors 6', (editor) => {
+  it('Underline colors 6', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       exact: true,
@@ -1374,14 +1466,15 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
     editor.formatter.remove('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style="text-decoration: underline;">This is some text.</span></p>',
       'Children nodes that are underlined should be removed if their parent nodes are underlined'
     );
   });
 
-  suite.test('Underline colors 7', (editor) => {
+  it('Underline colors 7', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       exact: true,
@@ -1398,7 +1491,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('span')[1].firstChild, 4);
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<p><span style=\"text-decoration: underline;\">This is <span style=\"background-color: #ff0000;\">' +
       'some</span> text.</span></p>',
@@ -1406,97 +1499,107 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Caret format inside single block word', (editor) => {
+  it('Caret format inside single block word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p>');
+    assert.equal(editor.getContent(), '<p><b>abc</b></p>');
   });
 
-  suite.test('Caret format inside non-ascii single block word', (editor) => {
+  it('Caret format inside non-ascii single block word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>noël</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>noël</b></p>');
+    assert.equal(editor.getContent(), '<p><b>noël</b></p>');
   });
 
-  suite.test('Caret format inside first block word', (editor) => {
+  it('Caret format inside first block word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc 123</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b> 123</p>');
+    assert.equal(editor.getContent(), '<p><b>abc</b> 123</p>');
   });
 
-  suite.test('Caret format inside last block word', (editor) => {
+  it('Caret format inside last block word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc 123</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc <b>123</b></p>');
+    assert.equal(editor.getContent(), '<p>abc <b>123</b></p>');
   });
 
-  suite.test('Caret format inside middle block word', (editor) => {
+  it('Caret format inside middle block word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc 123 456</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 5, 'p', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc <b>123</b> 456</p>');
+    assert.equal(editor.getContent(), '<p>abc <b>123</b> 456</p>');
   });
 
-  suite.test('Caret format on word separated by non breaking space', (editor) => {
+  it('Caret format on word separated by non breaking space', () => {
+    const editor = hook.editor();
     editor.setContent('<p>one&nbsp;two</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
+    assert.equal(editor.getContent(), '<p><b>one</b>\u00a0two</p>');
   });
 
-  suite.test('Caret format inside single inline wrapped word', (editor) => {
+  it('Caret format inside single inline wrapped word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc <em>123</em> 456</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'em', 1, 'em', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
+    assert.equal(editor.getContent(), '<p>abc <b><em>123</em></b> 456</p>');
   });
 
-  suite.test('Caret format inside word before similar format', (editor) => {
+  it('Caret format inside word before similar format', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc 123 <b>456</b></p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
+    assert.equal(editor.getContent(), '<p><b>abc</b> 123 <b>456</b></p>');
   });
 
-  suite.test('Caret format inside last inline wrapped word', (editor) => {
+  it('Caret format inside last inline wrapped word', () => {
+    const editor = hook.editor();
     editor.setContent('<p>abc <em>abc 123</em> 456</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'em', 5, 'em', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
+    assert.equal(editor.getContent(), '<p>abc <em>abc <b>123</b></em> 456</p>');
   });
 
-  suite.test('Caret format before text', (editor) => {
+  it('Caret format before text', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'b'
@@ -1504,10 +1607,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    LegacyUnit.equal(editor.getContent(), '<p><b>b</b>a</p>');
+    assert.equal(editor.getContent(), '<p><b>b</b>a</p>');
   });
 
-  suite.test('Caret format after text', (editor) => {
+  it('Caret format after text', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'b'
@@ -1515,20 +1619,22 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     LegacyUnit.setSelection(editor, 'p', 1, 'p', 1);
     editor.formatter.apply('format');
     KeyUtils.type(editor, 'b');
-    LegacyUnit.equal(editor.getContent(), '<p>a<b>b</b></p>');
+    assert.equal(editor.getContent(), '<p>a<b>b</b></p>');
   });
 
-  suite.test('Caret format and no key press', (editor) => {
+  it('Caret format and no key press', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+    assert.equal(editor.getContent(), '<p>a</p>');
   });
 
-  suite.test('Caret format and arrow left', (editor) => {
+  it('Caret format and arrow left', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'b'
@@ -1538,10 +1644,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     KeyUtils.type(editor, {
       keyCode: 37
     });
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+    assert.equal(editor.getContent(), '<p>a</p>');
   });
 
-  suite.test('Caret format and arrow right', (editor) => {
+  it('Caret format and arrow right', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'b'
@@ -1551,10 +1658,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     KeyUtils.type(editor, {
       keyCode: 39
     });
-    LegacyUnit.equal(editor.getContent(), '<p>a</p>');
+    assert.equal(editor.getContent(), '<p>a</p>');
   });
 
-  suite.test('Caret format and backspace', (editor) => {
+  it('Caret format and backspace', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -1567,31 +1675,34 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
 
     editor.formatter.apply('format');
     KeyUtils.type(editor, '\b');
-    LegacyUnit.equal(editor.getContent(), '<p>ab</p>');
+    assert.equal(editor.getContent(), '<p>ab</p>');
   });
 
-  suite.test('Caret format on word in li with word in parent li before it', (editor) => {
+  it('Caret format on word in li with word in parent li before it', () => {
+    const editor = hook.editor();
     editor.setContent('<ul><li>one<ul><li>two</li></ul></li></ul>');
     editor.formatter.register('format', {
       inline: 'b'
     });
     LegacyUnit.setSelection(editor, 'ul li li', 1, 'ul li li', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
+    assert.equal(editor.getContent(), '<ul><li>one<ul><li><b>two</b></li></ul></li></ul>');
   });
 
-  suite.test('Format caret with multiple formats', (editor) => {
+  it('Format caret with multiple formats', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><br></p>';
     editor.formatter.register('format1', { inline: 'b' });
     editor.formatter.register('format2', { inline: 'i' });
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.formatter.apply('format1');
     editor.formatter.apply('format2');
-    LegacyUnit.equal(1, editor.dom.select('b').length, 'Should be one b element');
-    LegacyUnit.equal(1, editor.dom.select('i').length, 'Should be one i element');
+    assert.equal(1, editor.dom.select('b').length, 'Should be one b element');
+    assert.equal(1, editor.dom.select('i').length, 'Should be one i element');
   });
 
-  suite.test('Selector format on whole contents', (editor) => {
+  it('Selector format on whole contents', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'span',
@@ -1600,30 +1711,33 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p class="test">a</p>');
+    assert.equal(editor.getContent(), '<p class="test">a</p>');
   });
 
-  suite.test('format inline on contentEditable: false block', (editor) => {
+  it('format inline on contentEditable: false block', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
+    assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'Text is not bold');
   });
 
-  suite.test('format block on contentEditable: false block', (editor) => {
+  it('format block on contentEditable: false block', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       block: 'h1'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     editor.selection.select(editor.getBody().childNodes[1]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
+    assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p>', 'P is not h1');
   });
 
-  suite.test('contentEditable: false on start and contentEditable: true on end', (editor) => {
+  it('contentEditable: false on start and contentEditable: true on end', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
@@ -1633,30 +1747,33 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     rng.setEnd(editor.dom.select('p')[2].firstChild, 3);
     editor.selection.setRng(rng);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
+    assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false">def</p><p><b>ghi</b></p>', 'Text in last paragraph is bold');
   });
 
-  suite.test('contentEditable: true on start and contentEditable: false on end', (editor) => {
+  it('contentEditable: true on start and contentEditable: false on end', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false">def</p>');
     LegacyUnit.setSelection(editor, 'p:nth-child(1)', 0, 'p:nth-child(2)', 3);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
+    assert.equal(editor.getContent(), '<p><b>abc</b></p><p contenteditable="false">def</p>', 'Text in first paragraph is bold');
   });
 
-  suite.test('contentEditable: true inside contentEditable: false', (editor) => {
+  it('contentEditable: true inside contentEditable: false', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'b'
     });
     editor.setContent('<p>abc</p><p contenteditable="false"><span contenteditable="true">def</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
+    assert.equal(editor.getContent(), '<p>abc</p><p contenteditable="false"><span contenteditable="true"><b>def</b></span></p>', 'Text is bold');
   });
 
-  suite.test('Del element wrapping blocks', (editor) => {
+  it('Del element wrapping blocks', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.register('format', {
@@ -1664,30 +1781,33 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
       wrapper: true
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<del><p>a</p></del>');
+    assert.equal(getContent(editor), '<del><p>a</p></del>');
   });
 
-  suite.test('Del element replacing block', (editor) => {
+  it('Del element replacing block', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.register('format', {
       block: 'del'
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<del>a</del>');
+    assert.equal(getContent(editor), '<del>a</del>');
   });
 
-  suite.test('Del element as inline', (editor) => {
+  it('Del element as inline', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.register('format', {
       inline: 'del'
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><del>a</del></p>');
+    assert.equal(getContent(editor), '<p><del>a</del></p>');
   });
 
-  suite.test('Align specified table element with collapsed: false and selection collapsed', (editor) => {
+  it('Align specified table element with collapsed: false and selection collapsed', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>a</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
     editor.formatter.register('format', {
@@ -1698,10 +1818,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
       }
     });
     editor.formatter.apply('format', {}, editor.getBody().firstChild);
-    LegacyUnit.equal(getContent(editor), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
+    assert.equal(getContent(editor), '<table style="float: right;"><tbody><tr><td>a</td></tr></tbody></table>');
   });
 
-  suite.test('Align nested table cell to same as parent', (editor) => {
+  it('Align nested table cell to same as parent', () => {
+    const editor = hook.editor();
     editor.setContent(
       '<table>' +
       '<tbody>' +
@@ -1731,7 +1852,7 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
 
     editor.formatter.apply('format', {}, editor.$('td td')[0]);
 
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<table>' +
       '<tbody>' +
@@ -1751,7 +1872,8 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     );
   });
 
-  suite.test('Apply ID format to around existing bookmark node', (editor) => {
+  it('Apply ID format to around existing bookmark node', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a<span id="b" data-mce-type="bookmark"></span>b</p>';
 
     const rng = editor.dom.createRng();
@@ -1767,44 +1889,48 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     });
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), '<p><span id="id">a<span data-mce-type="bookmark" id="b"></span>b</span></p>');
+    assert.equal(HtmlUtils.normalizeHtml(editor.getBody().innerHTML), '<p><span id="id">a<span data-mce-type="bookmark" id="b"></span>b</span></p>');
   });
 
-  suite.test('Bug #5134 - TinyMCE removes formatting tags in the getContent', (editor) => {
+  it('Bug #5134 - TinyMCE removes formatting tags in the getContent', () => {
+    const editor = hook.editor();
     editor.setContent('');
     editor.formatter.register('format', {
       inline: 'strong',
       toggle: false
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '', 'empty TinyMCE');
+    assert.equal(getContent(editor), '', 'empty TinyMCE');
     editor.selection.setContent('a');
-    LegacyUnit.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
   });
 
-  suite.test('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', (editor) => {
+  it('Bug #5134 - TinyMCE removes formatting tags in the getContent - typing', () => {
+    const editor = hook.editor();
     editor.setContent('');
     editor.formatter.register('format', {
       inline: 'strong',
       toggle: false
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '', 'empty TinyMCE');
+    assert.equal(getContent(editor), '', 'empty TinyMCE');
     KeyUtils.type(editor, 'a');
-    LegacyUnit.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
+    assert.equal(getContent(editor), '<strong>a</strong>', 'bold text inside TinyMCE');
   });
 
-  suite.test('Bug #5453 - TD contents with BR gets wrapped in block format', (editor) => {
+  it('Bug #5453 - TD contents with BR gets wrapped in block format', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>abc<br />123</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 1, 'td', 1);
     editor.formatter.register('format', {
       block: 'h1'
     });
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>');
+    assert.equal(getContent(editor), '<table><tbody><tr><td><h1>abc</h1>123</td></tr></tbody></table>');
   });
 
-  suite.test('Bug #6471 - Merge left/right style properties', (editor) => {
+  it('Bug #6471 - Merge left/right style properties', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -1818,10 +1944,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.formatter.apply('format');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="font-weight: bold;">abc</span></p>');
   });
 
-  suite.test('merge_with_parents', (editor) => {
+  it('merge_with_parents', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', {
       inline: 'span',
       styles: {
@@ -1832,169 +1959,187 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.setContent('<p><span style="color: red">a</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(editor.getContent(), '<p><span style="color: red; font-weight: bold;">a</span></p>');
+    assert.equal(editor.getContent(), '<p><span style="color: red; font-weight: bold;">a</span></p>');
   });
 
-  suite.test('Format selection from with end at beginning of block', (editor) => {
+  it('Format selection from with end at beginning of block', () => {
+    const editor = hook.editor();
     editor.setContent(`<div id='a'>one</div><div id='b'>two</div>`);
     editor.focus();
     LegacyUnit.setSelection(editor, '#a', 0, '#b', 0);
     editor.execCommand('formatBlock', false, 'h1');
-    LegacyUnit.equal(getContent(editor), '<h1 id="a">one</h1><div id="b">two</div>');
+    assert.equal(getContent(editor), '<h1 id="a">one</h1><div id="b">two</div>');
   });
 
-  suite.test('Format selection over fragments', (editor) => {
+  it('Format selection over fragments', () => {
+    const editor = hook.editor();
     editor.setContent('<p><strong>a</strong>bc<em>d</em></p>');
     LegacyUnit.setSelection(editor, 'strong', 1, 'em', 0);
     editor.formatter.apply('underline');
-    LegacyUnit.equal(getContent(editor), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
+    assert.equal(getContent(editor), '<p><strong>a</strong><span style="text-decoration: underline;">bc</span><em>d</em></p>');
   });
 
-  suite.test(`Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged`, (editor) => {
+  it(`Child wrapper having the same format as the immediate parent, shouldn't be removed if it also has other formats merged`, () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>';
     LegacyUnit.setSelection(editor, 'span span', 0, 'span span', 1);
     editor.formatter.apply('fontname', { value: 'verdana' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-family: verdana;">a <span style="color: #ff0000;">b</span>c</span></p>');
   });
 
-  suite.test('FontName should not toggle', (editor) => {
+  it('FontName should not toggle', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.formatter.toggle('fontname', { value: 'arial' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.toggle('fontname', { value: 'arial' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-family: arial;">abc</span></p>');
   });
 
-  suite.test('FontSize should not toggle', (editor) => {
+  it('FontSize should not toggle', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>abc</p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 3);
     editor.formatter.toggle('fontsize', { value: '14pt' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.toggle('fontsize', { value: '14pt' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-size: 14pt;">abc</span></p>');
   });
 
-  suite.test('All the nested childNodes having fontSize should receive backgroundColor as well', (editor) => {
+  it('All the nested childNodes having fontSize should receive backgroundColor as well', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a <span style="font-size: 36pt;">b</span> c</p>';
     editor.selection.select(editor.dom.select('p')[0]);
 
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="background-color: #ff0000;">a <span style="font-size: 36pt; background-color: #ff0000;">b</span> c</span></p>'
     );
 
     editor.formatter.remove('hilitecolor', { value: '#ff0000' });
-    LegacyUnit.equal(getContent(editor), '<p>a <span style="font-size: 36pt;">b</span> c</p>');
+    assert.equal(getContent(editor), '<p>a <span style="font-size: 36pt;">b</span> c</p>');
   });
 
-  suite.test('Formatter should wrap elements that have data-mce-bogus attribute, rather then attempt to inject styles into it', (editor) => {
+  it('Formatter should wrap elements that have data-mce-bogus attribute, rather then attempt to inject styles into it', () => {
+    const editor = hook.editor();
     // add a class to retain bogus element
     editor.getBody().innerHTML = '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>';
     editor.selection.select(editor.dom.select('span')[0]);
 
     editor.formatter.apply('fontname', { value: 'verdana' });
 
-    LegacyUnit.equal(editor.getBody().innerHTML,
+    assert.equal(editor.getBody().innerHTML,
       '<p>That is a <span style="font-family: verdana;" data-mce-style="font-family: verdana;"><span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span></span> text</p>');
 
-    LegacyUnit.equal(getContent(editor),
+    assert.equal(getContent(editor),
       '<p>that is a <span style="font-family: verdana;">misespelled</span> text</p>');
 
     editor.selection.select(editor.dom.select('span')[0]);
     editor.formatter.remove('fontname', { value: 'verdana' });
 
-    LegacyUnit.equal(editor.getBody().innerHTML,
+    assert.equal(editor.getBody().innerHTML,
       '<p>That is a <span class="mce-spellchecker-word" data-mce-bogus="1">misespelled</span> text</p>');
 
-    LegacyUnit.equal(getContent(editor),
+    assert.equal(getContent(editor),
       '<p>that is a misespelled text</p>');
   });
 
-  suite.test('TINY-1180: Formatting gets applied outside the currently selected range', (editor) => {
+  it('TINY-1180: Formatting gets applied outside the currently selected range', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a <em><em>em</em> </em></p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'em em', 0);
     editor.formatter.apply('strikethrough');
-    LegacyUnit.equal(getContent(editor), '<p><span style="text-decoration: line-through;">a </span><em><em>em</em> </em></p>');
+    assert.equal(getContent(editor), '<p><span style="text-decoration: line-through;">a </span><em><em>em</em> </em></p>');
   });
 
-  suite.test('Superscript on subscript removes the subscript element', (editor) => {
+  it('Superscript on subscript removes the subscript element', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><sub>a</sub></p>';
     LegacyUnit.setSelection(editor, 'sub', 0, 'sub', 1);
     editor.formatter.apply('superscript');
-    LegacyUnit.equal(getContent(editor), '<p><sup>a</sup></p>');
+    assert.equal(getContent(editor), '<p><sup>a</sup></p>');
   });
 
-  suite.test('Subscript on superscript removes the superscript element', (editor) => {
+  it('Subscript on superscript removes the superscript element', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><sup>a</sup></p>';
     LegacyUnit.setSelection(editor, 'sup', 0, 'sup', 1);
     editor.formatter.apply('subscript');
-    LegacyUnit.equal(getContent(editor), '<p><sub>a</sub></p>');
+    assert.equal(getContent(editor), '<p><sub>a</sub></p>');
   });
 
-  suite.test(`TINY-782: Can't apply sub/sup to word on own line with large font`, (editor) => {
+  it(`TINY-782: Can't apply sub/sup to word on own line with large font`, () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><span style="font-size: 18px;">abc</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('superscript');
-    LegacyUnit.equal(getContent(editor), '<p><sup>abc</sup></p>');
+    assert.equal(getContent(editor), '<p><sup>abc</sup></p>');
   });
 
-  suite.test('TINY-782: Apply sub/sup to range with multiple font sizes', (editor) => {
+  it('TINY-782: Apply sub/sup to range with multiple font sizes', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a<span style="font-size: 18px;">b</span><span style="font-size: 24px;">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'span:nth-child(2)', 1);
     editor.formatter.apply('superscript');
-    LegacyUnit.equal(getContent(editor), '<p><sup>abc</sup></p>');
+    assert.equal(getContent(editor), '<p><sup>abc</sup></p>');
   });
 
-  suite.test('TINY-671: Background color on nested font size bug', (editor) => {
+  it('TINY-671: Background color on nested font size bug', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><strong><span style="font-size: 18px;">abc</span></strong></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 3);
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="background-color: #ff0000;"><strong><span style="font-size: 18px; background-color: #ff0000;">abc</span></strong></span></p>');
+    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;"><strong><span style="font-size: 18px; background-color: #ff0000;">abc</span></strong></span></p>');
   });
 
-  suite.test('Background color over range of font sizes', (editor) => {
+  it('Background color over range of font sizes', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a<span style="font-size: 18px;">b</span><span style="font-size: 24px;">c</span></p>';
     LegacyUnit.setSelection(editor, 'p', 0, 'span:nth-child(2)', 1);
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="background-color: #ff0000;">a<span style="font-size: 18px; background-color: #ff0000;">b</span><span style="font-size: 24px; background-color: #ff0000;">c</span></span></p>'
     );
   });
 
-  suite.test('TINY-865: Font size removed when changing background color', (editor) => {
+  it('TINY-865: Font size removed when changing background color', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> ' +
       '<span style="font-size: 36pt;">b</span> <span style="font-size: 8pt;">c</span></span></p>'
     );
     LegacyUnit.setSelection(editor, 'span span:nth-child(2)', 0, 'span span:nth-child(2)', 1);
     editor.formatter.apply('hilitecolor', { value: '#ff0000' });
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="background-color: #ffff00;"><span style="font-size: 8pt;">a</span> <span ' +
       'style="font-size: 36pt; background-color: #ff0000;">b</span> <span style="font-size: 8pt;">c</span></span></p>'
     );
   });
 
-  suite.test(`TINY-935: Text color, then size, then change color wraps span doesn't change color`, (editor) => {
+  it(`TINY-935: Text color, then size, then change color wraps span doesn't change color`, () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p><span style="color: #00ff00; font-size: 14pt;">text</span></p>';
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
     editor.formatter.apply('forecolor', { value: '#ff0000' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="color: #ff0000; font-size: 14pt;">text</span></p>');
+    assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-size: 14pt;">text</span></p>');
   });
 
-  suite.test('GH-3519: Font family selection does not work after changing font size', (editor) => {
+  it('GH-3519: Font family selection does not work after changing font size', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = `<p><span style="font-size: 14pt; font-family: 'comic sans ms', sans-serif;">text</span></p>`;
     LegacyUnit.setSelection(editor, 'span', 0, 'span', 4);
     editor.formatter.apply('fontname', { value: 'verdana' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
+    assert.equal(getContent(editor), '<p><span style="font-size: 14pt; font-family: verdana;">text</span></p>');
   });
 
-  suite.test('Formatter should remove similar styles when clear_child_styles is set to true', (editor) => {
+  it('Formatter should remove similar styles when clear_child_styles is set to true', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
       '<del style="font-family: Arial; font-size: 13px">b</del>' +
@@ -2006,13 +2151,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, clear_child_styles: true });
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-family: arial;">b</del>c</span></p>'
     );
   });
 
-  suite.test(`If links=true, formatter shouldn't remove similar styles from links even if clear_child_styles=true`, (editor) => {
+  it(`If links=true, formatter shouldn't remove similar styles from links even if clear_child_styles=true`, () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p>a<a href="#">b</a>c</p>';
 
     editor.selection.select(editor.dom.select('p')[0]);
@@ -2020,13 +2166,14 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }, links: true, clear_child_styles: true });
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="font-size: 14px;">a<a style="font-size: 14px;" href="#">b</a>c</span></p>'
     );
   });
 
-  suite.test(`Formatter should remove similar styles when clear_child_styles isn't defined`, (editor) => {
+  it(`Formatter should remove similar styles when clear_child_styles isn't defined`, () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<p><span style="font-family: Arial; font-size: 13px">a</span>' +
       '<del style="font-family: Arial; font-size: 13px">b</del>' +
@@ -2038,75 +2185,83 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.formatter.register('format', { inline: 'span', styles: { fontSize: '14px' }});
     editor.formatter.apply('format');
 
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p><span style="font-size: 14px;"><span style="font-family: arial;">a</span><del style="font-size: 13px; font-family: arial;">b</del>c</span></p>'
     );
   });
 
-  suite.test('register/unregister', (editor) => {
+  it('register/unregister', () => {
+    const editor = hook.editor();
     editor.formatter.register('format', { inline: 'span' });
     Assertions.assertEq('Should have format', true, !!editor.formatter.get('format'));
     editor.formatter.unregister('format');
     Assertions.assertEq('Should not have format', false, !!editor.formatter.get('format'));
   });
 
-  suite.test('Get all formats', (editor) => {
+  it('Get all formats', () => {
+    const editor = hook.editor();
     Assertions.assertEq('Should have a bunch of formats', true, Obj.keys(editor.formatter.get()).length > 0);
   });
 
-  suite.test('Apply ceFalseOverride format', (editor) => {
+  it('Apply ceFalseOverride format', () => {
+    const editor = hook.editor();
     editor.setContent('<p contenteditable="false">a</p><div contenteditable="false">b</div>');
     editor.formatter.register('format', { selector: 'div', classes: [ 'a' ], ceFalseOverride: true });
 
     editor.selection.select(editor.dom.select('p')[0]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p contenteditable="false">a</p><div contenteditable="false">b</div>'
     );
 
     editor.selection.select(editor.dom.select('div')[0]);
     editor.formatter.apply('format');
-    LegacyUnit.equal(
+    assert.equal(
       getContent(editor),
       '<p contenteditable="false">a</p><div class="a" contenteditable="false">b</div>'
     );
   });
 
-  suite.test('Apply defaultBlock format', (editor) => {
+  it('Apply defaultBlock format', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = 'a<br>b';
     editor.formatter.register('format', { selector: 'div', defaultBlock: 'div', classes: [ 'a' ] });
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<div class="a">a</div>b');
+    assert.equal(getContent(editor), '<div class="a">a</div>b');
   });
 
-  suite.test('Apply format including trailing space', (editor) => {
+  it('Apply format including trailing space', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a b</p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 2);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a </b>b</p>');
+    assert.equal(getContent(editor), '<p><b>a </b>b</p>');
   });
 
-  suite.test('Apply format on single space', (editor) => {
+  it('Apply format on single space', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a&nbsp; &nbsp; &nbsp;b</p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>a\u00a0<b> </b>\u00a0 \u00a0b</p>');
+    assert.equal(getContent(editor), '<p>a\u00a0<b> </b>\u00a0 \u00a0b</p>');
   });
 
-  suite.test('Apply format on multiple spaces', (editor) => {
+  it('Apply format on multiple spaces', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a&nbsp; &nbsp; &nbsp;b</p>');
     editor.formatter.register('format', { inline: 'b' });
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 5);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p>a\u00a0<b> \u00a0 </b>\u00a0b</p>');
+    assert.equal(getContent(editor), '<p>a\u00a0<b> \u00a0 </b>\u00a0b</p>');
   });
 
-  suite.test('Apply format with onformat handler', (editor) => {
+  it('Apply format with onformat handler', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p>');
     editor.formatter.register('format', {
       inline: 'span',
@@ -2116,10 +2271,11 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     });
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><span class="x">a</span></p>');
+    assert.equal(getContent(editor), '<p><span class="x">a</span></p>');
   });
 
-  suite.test('Apply format to triple clicked selection (webkit)', (editor) => {
+  it('Apply format to triple clicked selection (webkit)', () => {
+    const editor = hook.editor();
     editor.setContent('<p>a</p><ul><li>a</li><li>b</li></ul>');
     editor.formatter.register('format', { inline: 'b' });
 
@@ -2129,40 +2285,27 @@ UnitTest.asynctest('browser.tinymce.core.FormatterApplyTest', (success, failure)
     editor.selection.setRng(rng);
 
     editor.formatter.apply('format');
-    LegacyUnit.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
+    assert.equal(getContent(editor), '<p><b>a</b></p><ul><li>a</li><li>b</li></ul>');
   });
 
-  suite.test('Applying background color to partially selected contents', (editor) => {
+  it('Applying background color to partially selected contents', () => {
+    const editor = hook.editor();
     editor.setContent('<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">cd</span><strong>ef</strong></span></p>');
     LegacyUnit.setSelection(editor, 'span span', 1, 'strong', 1);
     editor.formatter.apply('hilitecolor', { value: '#00ff00' });
-    LegacyUnit.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: #00ff00;">d</span></span><strong><span style="background-color: #00ff00;">e</span>f</strong></span></p>');
+    assert.equal(getContent(editor), '<p><span style="background-color: #ff0000;">ab<span style="font-size: 32px;">c<span style="background-color: #00ff00;">d</span></span><strong><span style="background-color: #00ff00;">e</span>f</strong></span></p>');
   });
 
-  suite.test('Apply format to node outside fake table selection', (editor) => {
+  it('Apply format to node outside fake table selection', () => {
+    const editor = hook.editor();
     editor.setContent('<p>test</p><table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table>');
     LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
     const para = editor.dom.select('p')[0];
     // Apply to custom node
     editor.formatter.apply('bold', { }, para);
-    LegacyUnit.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
+    assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
     // Apply to current fake table selection
     editor.formatter.apply('bold');
-    LegacyUnit.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+    assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    indent: false,
-    extended_valid_elements: 'b[id|style|title],i[id|style|title],span[id|class|style|title|contenteditable],font[face|size]',
-    entities: 'raw',
-    convert_fonts_to_spans: false,
-    forced_root_block: false,
-    valid_styles: {
-      '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
-          'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align'
-    },
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

@@ -1,24 +1,22 @@
-import { Assertions, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.EditorForcedSettingsTest', (success, failure) => {
-
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, [
-      Assertions.sAssertEq('Validate should always be true', true, editor.settings.validate),
-      Assertions.sAssertEq('Validate should true since inline was set to true', true, editor.inline)
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.EditorForcedSettingsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-
     // Setting exposed as another forced setting
     inline: true,
-
     // Settings that are to be forced
     validate: false
-  }, success, failure);
+  }, [ Theme ]);
+
+  it('Validate forced settings', () => {
+    const editor = hook.editor();
+    assert.isTrue(editor.settings.validate, 'Validate should always be true');
+    assert.isTrue(editor.inline, 'Validate should true since inline was set to true');
+  });
 });

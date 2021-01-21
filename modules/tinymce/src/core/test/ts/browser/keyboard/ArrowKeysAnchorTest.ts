@@ -1,20 +1,24 @@
-import { ApproxStructure, Assertions, GeneralSteps, Keys, Logger, Pipeline, Step, StructAssert } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Keyboard, Keys, StructAssert } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success, failure) => {
-  const BEFORE = true, AFTER = false;
-  const START = true, END = false;
+describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
+  const BEFORE = true;
+  const AFTER = false;
+  const START = true;
+  const END = false;
 
-  Theme();
-
-  const addGeckoBr = (s, str, children) => {
+  const addGeckoBr = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, children: StructAssert[]) => {
     if (Env.gecko) {
       return [].concat(children).concat(s.element('br', { attrs: { 'data-mce-bogus': str.is('1') }}));
     } else {
@@ -23,21 +27,25 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success
   };
 
   const anchorSurroundedWithText = (expectedText: string) => {
-    return ApproxStructure.build((s, str/* , arr*/) => {
-      return s.element('p', {
+    return ApproxStructure.build((s, str) => {
+      return s.element('body', {
         children: [
-          s.text(str.is('a')),
-          s.element('a', {
-            attrs: {
-              'data-mce-selected': str.is('inline-boundary'),
-              'data-mce-href': str.is('#'),
-              'href': str.is('#')
-            },
+          s.element('p', {
             children: [
-              s.text(str.is(expectedText))
+              s.text(str.is('a')),
+              s.element('a', {
+                attrs: {
+                  'data-mce-selected': str.is('inline-boundary'),
+                  'data-mce-href': str.is('#'),
+                  'href': str.is('#')
+                },
+                children: [
+                  s.text(str.is(expectedText))
+                ]
+              }),
+              s.text(str.is('c'))
             ]
-          }),
-          s.text(str.is('c'))
+          })
         ]
       });
     });
@@ -48,28 +56,32 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success
   };
 
   const anchorSurroundedWithZwspOutside = (before: boolean) => {
-    return ApproxStructure.build((s, str/* , arr*/) => {
-      return s.element('p', {
+    return ApproxStructure.build((s, str) => {
+      return s.element('body', {
         children: [
-          s.text(str.is('a' + (before ? Zwsp.ZWSP : ''))),
-          s.element('a', {
-            attrs: {
-              'data-mce-selected': str.none('inline-boundary'),
-              'data-mce-href': str.is('#'),
-              'href': str.is('#')
-            },
+          s.element('p', {
             children: [
-              s.text(str.is('b'))
+              s.text(str.is('a' + (before ? Zwsp.ZWSP : ''))),
+              s.element('a', {
+                attrs: {
+                  'data-mce-selected': str.none('inline-boundary'),
+                  'data-mce-href': str.is('#'),
+                  'href': str.is('#')
+                },
+                children: [
+                  s.text(str.is('b'))
+                ]
+              }),
+              s.text(str.is((before === false ? Zwsp.ZWSP : '') + 'c'))
             ]
-          }),
-          s.text(str.is((before === false ? Zwsp.ZWSP : '') + 'c'))
+          })
         ]
       });
     });
   };
 
   const anchorsZwspOutside = (texts: string[], before: boolean, index: number) => {
-    return ApproxStructure.build((s, str/* , arr*/) => {
+    return ApproxStructure.build((s, str) => {
       const children = Arr.map(texts, (text, i) => {
         return Arr.flatten([
           index === i && before ? [ s.text(str.is(Zwsp.ZWSP)) ] : [ ],
@@ -92,14 +104,18 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success
         ]);
       });
 
-      return s.element('p', {
-        children: addGeckoBr(s, str, Arr.flatten(children))
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: addGeckoBr(s, str, Arr.flatten(children))
+          })
+        ]
       });
     });
   };
 
   const anchorsZwspInside = (texts: string[], start: boolean, index: number) => {
-    return ApproxStructure.build((s, str/* , arr*/) => {
+    return ApproxStructure.build((s, str) => {
       const children = Arr.map(texts, (text, i) => {
         const zwspText = start ? Zwsp.ZWSP + text : text + Zwsp.ZWSP;
 
@@ -118,144 +134,119 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', (success
         );
       });
 
-      return s.element('p', {
-        children: addGeckoBr(s, str, children)
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: addGeckoBr(s, str, children)
+          })
+        ]
       });
     });
   };
 
-  const sAssertContentStructure = (editor: Editor, expected: StructAssert) => {
-    return Step.sync(() => {
-      const actual = SugarElement.fromHtml(editor.getBody().innerHTML);
-      return Assertions.assertStructure('Should be the same structure', expected, actual);
-    });
-  };
+  it('Test arrow keys with single anchor', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="#">b</a></p>');
 
-  const sAssertCursor = (tinyApis: TinyApis, elementPath: number[], offset: number) => {
-    return tinyApis.sAssertSelection(elementPath, offset, elementPath, offset);
-  };
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.nodeChanged();
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0));
 
-  const sTestArrowsSingleAnchor = (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) => {
-    return Logger.t('sTestArrowsSingleAnchor', GeneralSteps.sequence([
-      tinyApis.sSetContent('<p><a href="#">b</a></p>'),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0));
 
-      tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-      tinyApis.sNodeChanged(),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0));
 
-      tinyActions.sContentKeystroke(Keys.left(), { }),
-      sAssertCursor(tinyApis, [ 0, 0 ], 0),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0));
 
-      tinyActions.sContentKeystroke(Keys.left(), { }),
-      sAssertCursor(tinyApis, [ 0, 0 ], 0),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'b' ], BEFORE, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'b' ], END, 0));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'b' ], START, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'b' ], END, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0));
+  });
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1 ], 1),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0)),
+  it('Test arrow keys with anchor surrounded by text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a<a href="#">b</a>c</p>');
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1 ], 1),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'b' ], AFTER, 0))
-    ]));
-  };
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+    editor.nodeChanged();
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(START));
 
-  const sTestArrowsAnchorSurroundedByText = (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) => {
-    return Logger.t('sTestArrowsAnchorSurroundedByText', GeneralSteps.sequence([
-      tinyApis.sSetContent('<p>a<a href="#">b</a>c</p>'),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspOutside(BEFORE));
 
-      tinyApis.sSetCursor([ 0, 1, 0 ], 0),
-      tinyApis.sNodeChanged(),
-      sAssertCursor(tinyApis, [ 0, 1, 0 ], 1),
-      sAssertContentStructure(editor, anchorSurroundedWithZwspInside(START)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(START));
 
-      tinyActions.sContentKeystroke(Keys.left(), { }),
-      sAssertCursor(tinyApis, [ 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorSurroundedWithZwspOutside(BEFORE)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspInside(END));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1, 0 ], 1),
-      sAssertContentStructure(editor, anchorSurroundedWithZwspInside(START)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorSurroundedWithZwspOutside(AFTER));
+  });
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1, 0 ], 1),
-      sAssertContentStructure(editor, anchorSurroundedWithZwspInside(END)),
+  it('Test arrow keys with multiple anchors', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="#">a</a><a href="#">b</a></p>');
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 2 ], 1),
-      sAssertContentStructure(editor, anchorSurroundedWithZwspOutside(AFTER))
-    ]));
-  };
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.nodeChanged();
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0));
 
-  const sTestArrowsMultipleAnchors = (tinyApis: TinyApis, tinyActions: TinyActions, editor: Editor) => {
-    return Logger.t('sTestArrowsMultipleAnchors', GeneralSteps.sequence([
-      tinyApis.sSetContent('<p><a href="#">a</a><a href="#">b</a></p>'),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0));
 
-      tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-      tinyApis.sNodeChanged(),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0));
 
-      tinyActions.sContentKeystroke(Keys.left(), { }),
-      sAssertCursor(tinyApis, [ 0, 0 ], 0),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0));
 
-      tinyActions.sContentKeystroke(Keys.left(), { }),
-      sAssertCursor(tinyApis, [ 0, 0 ], 0),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 0));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 1));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 0, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 0)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 1));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1 ], 1),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], BEFORE, 1)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 1));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], START, 1)),
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1));
 
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 1, 0 ], 1),
-      sAssertContentStructure(editor, anchorsZwspInside([ 'a', 'b' ], END, 1)),
-
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 2 ], 1),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1)),
-
-      tinyActions.sContentKeystroke(Keys.right(), { }),
-      sAssertCursor(tinyApis, [ 0, 2 ], 1),
-      sAssertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1))
-    ]));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      sTestArrowsSingleAnchor(tinyApis, tinyActions, editor),
-      sTestArrowsAnchorSurroundedByText(tinyApis, tinyActions, editor),
-      sTestArrowsMultipleAnchors(tinyApis, tinyActions, editor)
-    ], onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+    TinyAssertions.assertContentStructure(editor, anchorsZwspOutside([ 'a', 'b' ], AFTER, 1));
+  });
 });

@@ -1,183 +1,192 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
-import * as Zwsp from 'tinymce/core/text/Zwsp';
+import { ZWSP } from 'tinymce/core/text/Zwsp';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.InlineUtilsTest', (success, failure) => {
-  const ZWSP = Zwsp.ZWSP;
+interface ElementPosition {
+  readonly elm: SugarElement<Node>;
+  readonly pos: CaretPosition;
+}
 
-  const cCreateElement = (html) => {
-    return Chain.injectThunked(() => {
-      return SugarElement.fromHtml(html);
-    });
+describe('browser.tinymce.core.keyboard.InlineUtilsTest', () => {
+  const normalizePosition = (elm: SugarElement<Node>, forward: boolean, path: number[], offset: number): ElementPosition => {
+    const container = Hierarchy.follow(elm, path).getOrDie();
+    const pos = CaretPosition(container.dom, offset);
+    return {
+      pos: InlineUtils.normalizePosition(forward, pos),
+      elm
+    };
   };
 
-  const cNormalizePosition = (forward, path, offset) => {
-    return Chain.mapper((elm: any) => {
-      const container = Hierarchy.follow(elm, path).getOrDie();
-      const pos = CaretPosition(container.dom, offset);
-      return { pos: InlineUtils.normalizePosition(forward, pos), elm };
-    });
+  const assertPosition = (elmPos: ElementPosition, path: number[], expectedOffset: number) => {
+    const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
+    Assertions.assertDomEq('Should be expected container', SugarElement.fromDom(elmPos.pos.container()), expectedContainer);
+    assert.equal(elmPos.pos.offset(), expectedOffset, 'Should be expected offset');
   };
 
-  const cAssertPosition = (path, expectedOffset) => {
-    return Chain.mapper((elmPos: any) => {
-      const expectedContainer = Hierarchy.follow(elmPos.elm, path).getOrDie();
-      Assertions.assertDomEq('Should be expected container', SugarElement.fromDom(elmPos.pos.container()), expectedContainer);
-      Assertions.assertEq('Should be expected offset', elmPos.pos.offset(), expectedOffset);
-      return {};
-    });
+  const splitAt = (elm: SugarElement<Node>, path: number[], offset: number) => {
+    const textNode = Hierarchy.follow(elm, path).filter(SugarNode.isText).getOrDie();
+    textNode.dom.splitText(offset);
   };
 
-  const cSplitAt = (path, offset) => {
-    return Chain.mapper((elm: any) => {
-      const textNode = Hierarchy.follow(elm, path).filter(SugarNode.isText).getOrDie();
-      textNode.dom.splitText(offset);
-      return elm;
-    });
-  };
-
-  const createFakeEditor = (settings) => {
+  const createFakeEditor = (settings: RawEditorSettings): Editor => {
     return {
       settings,
       getParam: (name: string, defaultVal?: any, _type?: string) => settings[name] || defaultVal
     } as any;
   };
 
-  Pipeline.async({}, [
-    Logger.t('isInlineTarget with various editor settings', Step.sync(() => {
-      Assertions.assertEq('Links should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a href="a">').dom));
-      Assertions.assertEq('Code should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<code>').dom));
-      Assertions.assertEq('Annotations should be inline target', true, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<span class="mce-annotation"></span>').dom));
-      Assertions.assertEq('None link anchor should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a>').dom));
-      Assertions.assertEq('Bold should not be inline target', false, InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<b>').dom));
-      Assertions.assertEq('Bold should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
-        inline_boundaries_selector: 'b'
-      }), SugarElement.fromHtml('<b>').dom));
-      Assertions.assertEq('Italic should be inline target if configured', true, InlineUtils.isInlineTarget(createFakeEditor({
-        inline_boundaries_selector: 'b,i'
-      }), SugarElement.fromHtml('<i>').dom));
-    })),
+  it('isInlineTarget with various editor settings', () => {
+    assert.isTrue(InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a href="a">').dom), 'Links should be inline target');
+    assert.isTrue(InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<code>').dom), 'Code should be inline target');
+    assert.isTrue(InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<span class="mce-annotation"></span>').dom), 'Annotations should be inline target');
+    assert.isFalse(InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<a>').dom), 'None link anchor should not be inline target');
+    assert.isFalse(InlineUtils.isInlineTarget(createFakeEditor({ }), SugarElement.fromHtml('<b>').dom), 'Bold should not be inline target');
+    assert.isTrue(InlineUtils.isInlineTarget(createFakeEditor({
+      inline_boundaries_selector: 'b'
+    }), SugarElement.fromHtml('<b>').dom), 'Bold should be inline target if configured');
+    assert.isTrue(InlineUtils.isInlineTarget(createFakeEditor({
+      inline_boundaries_selector: 'b,i'
+    }), SugarElement.fromHtml('<i>').dom), 'Italic should be inline target if configured');
+  });
 
-    Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
-      Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(true, [ 0 ], 0),
-        cAssertPosition([ 0 ], 1)
-      ])),
-      Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(true, [ 0 ], 1),
-        cAssertPosition([ 0 ], 1)
-      ])),
-      Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(true, [ 0 ], 1),
-        cAssertPosition([ 0 ], 2)
-      ])),
-      Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(true, [ 0 ], 2),
-        cAssertPosition([ 0 ], 2)
-      ]))
-    ])),
+  context('normalizePosition on text forwards', () => {
+    it('normalizePosition start of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 0);
+      assertPosition(elmPos, [ 0 ], 1);
+    });
 
-    Logger.t('normalizePosition on text backwards', GeneralSteps.sequence([
-      Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(false, [ 0 ], 2),
-        cAssertPosition([ 0 ], 1)
-      ])),
-      Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cNormalizePosition(false, [ 0 ], 1),
-        cAssertPosition([ 0 ], 1)
-      ])),
-      Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(false, [ 0 ], 1),
-        cAssertPosition([ 0 ], 0)
-      ])),
-      Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cNormalizePosition(false, [ 0 ], 0),
-        cAssertPosition([ 0 ], 0)
-      ]))
-    ])),
+    it('normalizePosition end of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 1);
+      assertPosition(elmPos, [ 0 ], 1);
+    });
 
-    Logger.t('normalizePosition on element forwards', GeneralSteps.sequence([
-      Logger.t('normalizePosition start of zwsp before element', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(true, [ 0 ], 0),
-        cAssertPosition([], 1)
-      ])),
-      Logger.t('normalizePosition end of zwsp before element', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(true, [ 0 ], 1),
-        cAssertPosition([], 1)
-      ])),
-      Logger.t('normalizePosition start of zwsp after element', Chain.asStep({}, [
-        cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(true, [ 1 ], 0),
-        cAssertPosition([], 2)
-      ])),
-      Logger.t('normalizePosition end of zwsp after element', Chain.asStep({}, [
-        cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(true, [ 1 ], 1),
-        cAssertPosition([], 2)
-      ]))
-    ])),
+    it('normalizePosition start of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 1);
+      assertPosition(elmPos, [ 0 ], 2);
+    });
 
-    Logger.t('normalizePosition on element backwards', GeneralSteps.sequence([
-      Logger.t('normalizePosition end of zwsp after element', Chain.asStep({}, [
-        cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(false, [ 1 ], 1),
-        cAssertPosition([], 1)
-      ])),
-      Logger.t('normalizePosition start of zwsp after element', Chain.asStep({}, [
-        cCreateElement('<p><input>' + ZWSP + '</p>'),
-        cNormalizePosition(false, [ 1 ], 0),
-        cAssertPosition([], 1)
-      ])),
-      Logger.t('normalizePosition end of zwsp before element', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(false, [ 0 ], 1),
-        cAssertPosition([], 0)
-      ])),
-      Logger.t('normalizePosition start of zwsp before element', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + '<input></p>'),
-        cNormalizePosition(false, [ 0 ], 0),
-        cAssertPosition([], 0)
-      ]))
-    ])),
+    it('normalizePosition end of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 2);
+      assertPosition(elmPos, [ 0 ], 2);
+    });
+  });
 
-    Logger.t('normalizePosition on text forwards', GeneralSteps.sequence([
-      Logger.t('normalizePosition start of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cSplitAt([ 0 ], 1),
-        cNormalizePosition(true, [ 0 ], 0),
-        cAssertPosition([ 1 ], 0)
-      ])),
-      Logger.t('normalizePosition end of zwsp before text', Chain.asStep({}, [
-        cCreateElement('<p>' + ZWSP + 'a</p>'),
-        cSplitAt([ 0 ], 1),
-        cNormalizePosition(true, [ 0 ], 1),
-        cAssertPosition([ 1 ], 0)
-      ])),
-      Logger.t('normalizePosition start of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cSplitAt([ 0 ], 1),
-        cNormalizePosition(true, [ 1 ], 0),
-        cAssertPosition([], 2)
-      ])),
-      Logger.t('normalizePosition end of zwsp after text', Chain.asStep({}, [
-        cCreateElement('<p>a' + ZWSP + '</p>'),
-        cSplitAt([ 0 ], 1),
-        cNormalizePosition(true, [ 1 ], 1),
-        cAssertPosition([], 2)
-      ]))
-    ]))
-  ], success, failure);
+  context('normalizePosition on text backwards', () => {
+    it('normalizePosition end of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 2);
+      assertPosition(elmPos, [ 0 ], 1);
+    });
+
+    it('normalizePosition start of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 1);
+      assertPosition(elmPos, [ 0 ], 1);
+    });
+
+    it('normalizePosition end of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 1);
+      assertPosition(elmPos, [ 0 ], 0);
+    });
+
+    it('normalizePosition start of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 0);
+      assertPosition(elmPos, [ 0 ], 0);
+    });
+  });
+
+  context('normalizePosition on element forwards', () => {
+    it('normalizePosition start of zwsp before element', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + '<input></p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 0);
+      assertPosition(elmPos, [], 1);
+    });
+
+    it('normalizePosition end of zwsp before element', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + '<input></p>');
+      const elmPos = normalizePosition(elm, true, [ 0 ], 1);
+      assertPosition(elmPos, [], 1);
+    });
+
+    it('normalizePosition start of zwsp after element', () => {
+      const elm = SugarElement.fromHtml('<p><input>' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, true, [ 1 ], 0);
+      assertPosition(elmPos, [], 2);
+    });
+
+    it('normalizePosition end of zwsp after element', () => {
+      const elm = SugarElement.fromHtml('<p><input>' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, true, [ 1 ], 1);
+      assertPosition(elmPos, [], 2);
+    });
+  });
+
+  context('normalizePosition on element backwards', () => {
+    it('normalizePosition end of zwsp after element', () => {
+      const elm = SugarElement.fromHtml('<p><input>' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, false, [ 1 ], 1);
+      assertPosition(elmPos, [], 1);
+    });
+
+    it('normalizePosition start of zwsp after element', () => {
+      const elm = SugarElement.fromHtml('<p><input>' + ZWSP + '</p>');
+      const elmPos = normalizePosition(elm, false, [ 1 ], 0);
+      assertPosition(elmPos, [], 1);
+    });
+
+    it('normalizePosition end of zwsp before element', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + '<input></p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 1);
+      assertPosition(elmPos, [], 0);
+    });
+
+    it('normalizePosition start of zwsp before element', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + '<input></p>');
+      const elmPos = normalizePosition(elm, false, [ 0 ], 0);
+      assertPosition(elmPos, [], 0);
+    });
+  });
+
+  context('normalizePosition on fragmented text forwards', () => {
+    it('normalizePosition start of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      splitAt(elm, [ 0 ], 1);
+      const elmPos = normalizePosition(elm, true, [ 0 ], 0);
+      assertPosition(elmPos, [ 1 ], 0);
+    });
+
+    it('normalizePosition end of zwsp before text', () => {
+      const elm = SugarElement.fromHtml('<p>' + ZWSP + 'a</p>');
+      splitAt(elm, [ 0 ], 1);
+      const elmPos = normalizePosition(elm, true, [ 0 ], 1);
+      assertPosition(elmPos, [ 1 ], 0);
+    });
+
+    it('normalizePosition start of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      splitAt(elm, [ 0 ], 1);
+      const elmPos = normalizePosition(elm, true, [ 1 ], 0);
+      assertPosition(elmPos, [], 2);
+    });
+
+    it('normalizePosition end of zwsp after text', () => {
+      const elm = SugarElement.fromHtml('<p>a' + ZWSP + '</p>');
+      splitAt(elm, [ 0 ], 1);
+      const elmPos = normalizePosition(elm, true, [ 1 ], 1);
+      assertPosition(elmPos, [], 2);
+    });
+  });
 });

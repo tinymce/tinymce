@@ -1,400 +1,397 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit } from '@ephox/mcagar';
-import AstNode from 'tinymce/core/api/html/Node';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 
-UnitTest.asynctest('browser.tinymce.core.html.NodeTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
+import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
 
-  const ok = (value, label?) => {
-    return LegacyUnit.equal(value, true, label);
-  };
+describe('browser.tinymce.core.html.NodeTest', () => {
+  const emptyAttributes = [] as Attributes;
 
-  suite.test('construction', () => {
+  it('construction', () => {
     let node;
 
     node = new AstNode('#text', 3);
-    LegacyUnit.equal(node.name, '#text');
-    LegacyUnit.equal(node.type, 3);
+    assert.equal(node.name, '#text');
+    assert.equal(node.type, 3);
 
     node = new AstNode('#comment', 8);
-    LegacyUnit.equal(node.name, '#comment');
-    LegacyUnit.equal(node.type, 8);
+    assert.equal(node.name, '#comment');
+    assert.equal(node.type, 8);
 
     node = new AstNode('b', 1);
-    LegacyUnit.equal(node.name, 'b');
-    LegacyUnit.equal(node.type, 1);
-    LegacyUnit.deepEqual(node.attributes, []);
+    assert.equal(node.name, 'b');
+    assert.equal(node.type, 1);
+    assert.deepEqual(node.attributes, []);
 
     node = new AstNode('#pi', 7);
-    LegacyUnit.equal(node.name, '#pi');
-    LegacyUnit.equal(node.type, 7);
+    assert.equal(node.name, '#pi');
+    assert.equal(node.type, 7);
 
     node = new AstNode('#doctype', 10);
-    LegacyUnit.equal(node.name, '#doctype');
-    LegacyUnit.equal(node.type, 10);
+    assert.equal(node.name, '#doctype');
+    assert.equal(node.type, 10);
 
     node = new AstNode('#cdata', 4);
-    LegacyUnit.equal(node.name, '#cdata');
-    LegacyUnit.equal(node.type, 4);
+    assert.equal(node.name, '#cdata');
+    assert.equal(node.type, 4);
 
     node = new AstNode('#frag', 11);
-    LegacyUnit.equal(node.name, '#frag');
-    LegacyUnit.equal(node.type, 11);
+    assert.equal(node.name, '#frag');
+    assert.equal(node.type, 11);
   });
 
-  suite.test('append inside empty node', () => {
+  it('append inside empty node', () => {
     const root = new AstNode('#frag', 11);
     const node = root.append(new AstNode('b', 1));
-    LegacyUnit.equal(root.firstChild.parent === root, true);
-    LegacyUnit.equal(root.firstChild.next, undefined);
-    LegacyUnit.equal(root.firstChild.prev, undefined);
-    LegacyUnit.equal(root.firstChild.firstChild, undefined);
-    LegacyUnit.equal(root.firstChild.lastChild, undefined);
-    LegacyUnit.equal(node.parent === root, true);
-    LegacyUnit.equal(node.next, undefined);
-    LegacyUnit.equal(node.prev, undefined);
-    LegacyUnit.equal(node.firstChild, undefined);
-    LegacyUnit.equal(node.lastChild, undefined);
+    assert.equal(root.firstChild.parent === root, true);
+    assert.isUndefined(root.firstChild.next);
+    assert.isUndefined(root.firstChild.prev);
+    assert.isUndefined(root.firstChild.firstChild);
+    assert.isUndefined(root.firstChild.lastChild);
+    assert.equal(node.parent === root, true);
+    assert.isUndefined(node.next);
+    assert.isUndefined(node.prev);
+    assert.isUndefined(node.firstChild);
+    assert.isUndefined(node.lastChild);
   });
 
-  suite.test('append node after node', () => {
+  it('append node after node', () => {
     const root = new AstNode('#frag', 11);
     const node2 = root.append(new AstNode('a', 1));
     const node = root.append(new AstNode('b', 1));
-    ok(root.firstChild.parent === root, 'root.firstChild.parent === root');
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node, 'root.firstChild');
-    ok(root.firstChild.next === node, 'root.firstChild.next');
-    LegacyUnit.equal(root.firstChild.prev, undefined, 'root.firstChild.prev');
-    LegacyUnit.equal(root.firstChild.firstChild, undefined, 'root.firstChild.firstChild');
-    LegacyUnit.equal(root.firstChild.lastChild, undefined, 'root.firstChild.lastChild');
-    ok(node2.parent === root, 'node2.parent === root');
-    ok(node2.next === node, 'node2.next');
-    LegacyUnit.equal(node2.prev, undefined, 'node2.prev');
-    LegacyUnit.equal(node2.firstChild, undefined, 'node2.firstChild');
-    LegacyUnit.equal(node2.lastChild, undefined, 'node2.lastChild');
-    ok(node.parent === root, 'node.parent === root');
-    LegacyUnit.equal(node.next, undefined, 'node.next');
-    ok(node.prev === node2, 'node.prev');
-    LegacyUnit.equal(node.firstChild, undefined, 'node.firstChild');
-    LegacyUnit.equal(node.lastChild, undefined, 'node.lastChild');
+    assert.strictEqual(root.firstChild.parent, root, 'root.firstChild.parent === root');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node, 'root.firstChild');
+    assert.strictEqual(root.firstChild.next, node, 'root.firstChild.next');
+    assert.isUndefined(root.firstChild.prev, 'root.firstChild.prev');
+    assert.isUndefined(root.firstChild.firstChild, 'root.firstChild.firstChild');
+    assert.isUndefined(root.firstChild.lastChild, 'root.firstChild.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent === root');
+    assert.strictEqual(node2.next, node, 'node2.next');
+    assert.isUndefined(node2.prev, 'node2.prev');
+    assert.isUndefined(node2.firstChild, 'node2.firstChild');
+    assert.isUndefined(node2.lastChild, 'node2.lastChild');
+    assert.strictEqual(node.parent, root, 'node.parent === root');
+    assert.isUndefined(node.next, 'node.next');
+    assert.strictEqual(node.prev, node2, 'node.prev');
+    assert.isUndefined(node.firstChild, 'node.firstChild');
+    assert.isUndefined(node.lastChild, 'node.lastChild');
   });
 
-  suite.test('append existing node before other existing node', () => {
+  it('append existing node before other existing node', () => {
     const root = new AstNode('#frag', 11);
     const node = root.append(new AstNode('a', 1));
     const node2 = root.append(new AstNode('b', 1));
     root.append(node);
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node, 'root.lastChild');
-    LegacyUnit.equal(node.next, null, 'node.next');
-    ok(node.prev === node2, 'node.prev');
-    ok(node.parent === root, 'node.parent');
-    ok(node2.parent === root, 'node2.parent');
-    LegacyUnit.equal(node2.prev, undefined, 'node2.prev');
-    ok(node2.next === node, 'node2.next');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node, 'root.lastChild');
+    assert.equal(node.next, null, 'node.next');
+    assert.strictEqual(node.prev, node2, 'node.prev');
+    assert.strictEqual(node.parent, root, 'node.parent');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
+    assert.equal(node2.prev, undefined, 'node2.prev');
+    assert.strictEqual(node2.next, node, 'node2.next');
   });
 
-  suite.test('remove unattached node', () => {
-    ok(!new AstNode('#text', 3).remove().parent);
+  it('remove unattached node', () => {
+    assert.isUndefined(new AstNode('#text', 3).remove().parent);
   });
 
-  suite.test('remove single child', () => {
+  it('remove single child', () => {
     const root = new AstNode('#frag', 11);
     root.append(new AstNode('p', 1));
     const node = root.firstChild.remove();
-    LegacyUnit.equal(root.firstChild, undefined);
-    LegacyUnit.equal(root.lastChild, undefined);
-    LegacyUnit.equal(node.parent, null);
-    LegacyUnit.equal(node.next, null);
-    LegacyUnit.equal(node.prev, null);
-    LegacyUnit.equal(node.name, 'p');
+    assert.isUndefined(root.firstChild);
+    assert.isUndefined(root.lastChild);
+    assert.isNull(node.parent);
+    assert.isNull(node.next);
+    assert.isNull(node.prev);
+    assert.equal(node.name, 'p');
   });
 
-  suite.test('remove middle node', () => {
+  it('remove middle node', () => {
     const root = new AstNode('#frag', 11);
     const node = root.append(new AstNode('a', 1));
     const node2 = root.append(new AstNode('b', 1));
     const node3 = root.append(new AstNode('c', 1));
     node2.remove();
-    LegacyUnit.equal(node2.parent, null);
-    LegacyUnit.equal(node2.next, null);
-    LegacyUnit.equal(node2.prev, null);
-    ok(root.firstChild === node, 'root.firstChild');
-    ok(root.lastChild === node3, 'root.lastChild');
-    ok(node.next === node3, 'node.next');
-    LegacyUnit.equal(node.prev, undefined, 'node.prev');
-    LegacyUnit.equal(node3.prev === node, true, 'node3.prev');
-    LegacyUnit.equal(node3.next, undefined, 'node3.next');
+    assert.isNull(node2.parent);
+    assert.isNull(node2.next);
+    assert.isNull(node2.prev);
+    assert.strictEqual(root.firstChild, node, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node3, 'root.lastChild');
+    assert.strictEqual(node.next, node3, 'node.next');
+    assert.equal(node.prev, undefined, 'node.prev');
+    assert.strictEqual(node3.prev, node, 'node3.prev');
+    assert.equal(node3.next, undefined, 'node3.next');
   });
 
-  suite.test('insert after last', () => {
+  it('insert after last', () => {
     const fragment = new AstNode('#frag', 11);
     const root = fragment.append(new AstNode('body', 1));
     const node = root.append(new AstNode('a', 1));
     const node2 = root.insert(new AstNode('x', 1), node);
-    ok(root.firstChild === node, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node.next === node2, 'node.next');
-    ok(node2.prev === node, 'node2.prev');
-    ok(node2.parent === root, 'node3.next');
+    assert.strictEqual(root.firstChild, node, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node.next, node2, 'node.next');
+    assert.strictEqual(node2.prev, node, 'node2.prev');
+    assert.strictEqual(node2.parent, root, 'node3.next');
   });
 
-  suite.test('insert before first', () => {
+  it('insert before first', () => {
     const fragment = new AstNode('#frag', 11);
     const root = fragment.append(new AstNode('body', 1));
     const node = root.append(new AstNode('a', 1));
     const node2 = root.insert(new AstNode('x', 1), node, true);
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node, 'root.lastChild');
-    ok(node2.parent === root, 'node2.lastChild');
-    ok(node2.next === node, 'node2.next');
-    ok(node2.prev === undefined, 'node2.prev');
-    ok(node.parent === root, 'node.lastChild');
-    ok(node.next === undefined, 'node.next');
-    ok(node.prev === node2, 'node.prev');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.lastChild');
+    assert.strictEqual(node2.next, node, 'node2.next');
+    assert.strictEqual(node2.prev, undefined, 'node2.prev');
+    assert.strictEqual(node.parent, root, 'node.lastChild');
+    assert.strictEqual(node.next, undefined, 'node.next');
+    assert.strictEqual(node.prev, node2, 'node.prev');
   });
 
-  suite.test('insert before second', () => {
+  it('insert before second', () => {
     const fragment = new AstNode('#frag', 11);
     const root = fragment.append(new AstNode('body', 1));
     const node = root.append(new AstNode('a', 1));
     const node2 = root.append(new AstNode('b', 1));
     const node3 = root.insert(new AstNode('x', 1), node2, true);
-    ok(root.firstChild === node, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node3.parent === root, 'node3.parent');
-    ok(node3.next === node2, 'node3.next');
-    ok(node3.prev === node, 'node3.prev');
+    assert.strictEqual(root.firstChild, node, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node3.parent, root, 'node3.parent');
+    assert.strictEqual(node3.next, node2, 'node3.next');
+    assert.strictEqual(node3.prev, node, 'node3.prev');
   });
 
-  suite.test('insert after and between two nodes', () => {
+  it('insert after and between two nodes', () => {
     const fragment = new AstNode('#frag', 11);
     const root = fragment.append(new AstNode('body', 1));
     const node = root.append(new AstNode('a', 1));
     const node2 = root.append(new AstNode('b', 1));
     const node3 = root.insert(new AstNode('x', 1), node);
-    ok(root.firstChild === node, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node.next === node3, 'node.next');
-    ok(node2.prev === node3, 'node2.prev');
-    ok(node3.parent === root, 'node3.next');
-    ok(node3.next === node2, 'node3.next');
-    ok(node3.prev === node, 'node3.prev');
+    assert.strictEqual(root.firstChild, node, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node.next, node3, 'node.next');
+    assert.strictEqual(node2.prev, node3, 'node2.prev');
+    assert.strictEqual(node3.parent, root, 'node3.next');
+    assert.strictEqual(node3.next, node2, 'node3.next');
+    assert.strictEqual(node3.prev, node, 'node3.prev');
   });
 
-  suite.test('replace single child', () => {
+  it('replace single child', () => {
     const root = new AstNode('#frag', 11);
     const node1 = root.append(new AstNode('b', 1));
     const node2 = root.append(new AstNode('em', 1));
     node1.replace(node2);
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node2.parent === root, 'node2.parent');
-    ok(!node2.next, 'node2.next');
-    ok(!node2.prev, 'node2.prev');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
+    assert.isNull(node2.next, 'node2.next');
+    assert.isUndefined(node2.prev, 'node2.prev');
   });
 
-  suite.test('replace first child', () => {
+  it('replace first child', () => {
     const root = new AstNode('#frag', 11);
     const node1 = root.append(new AstNode('b', 1));
     const node2 = root.append(new AstNode('em', 1));
     const node3 = root.append(new AstNode('b', 1));
     node1.replace(node2);
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node3, 'root.lastChild');
-    ok(node2.parent === root, 'node2.parent');
-    ok(node2.next === node3, 'node2.next');
-    ok(!node2.prev, 'node2.prev');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node3, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
+    assert.strictEqual(node2.next, node3, 'node2.next');
+    assert.isUndefined(node2.prev, 'node2.prev');
   });
 
-  suite.test('replace last child', () => {
+  it('replace last child', () => {
     const root = new AstNode('#frag', 11);
     const node1 = root.append(new AstNode('b', 1));
     const node3 = root.append(new AstNode('b', 1));
     const node2 = root.append(new AstNode('em', 1));
     node3.replace(node2);
-    ok(root.firstChild === node1, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node2.parent === root, 'node2.parent');
-    ok(!node2.next, 'node2.next');
-    ok(node2.prev === node1, 'node2.prev');
+    assert.strictEqual(root.firstChild, node1, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
+    assert.isNull(node2.next, 'node2.next');
+    assert.strictEqual(node2.prev, node1, 'node2.prev');
   });
 
-  suite.test('replace middle child', () => {
+  it('replace middle child', () => {
     const root = new AstNode('#frag', 11);
     const node1 = root.append(new AstNode('b', 1));
     const node2 = root.append(new AstNode('b', 1));
     const node3 = root.append(new AstNode('b', 1));
     const node4 = root.append(new AstNode('em', 1));
     node2.replace(node4);
-    ok(root.firstChild === node1, 'root.firstChild');
-    ok(root.lastChild === node3, 'root.lastChild');
-    ok(node4.parent === root, 'node4.parent');
-    ok(node4.next === node3, 'node4.next');
-    ok(node4.prev === node1, 'node4.prev');
+    assert.strictEqual(root.firstChild, node1, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node3, 'root.lastChild');
+    assert.strictEqual(node4.parent, root, 'node4.parent');
+    assert.strictEqual(node4.next, node3, 'node4.next');
+    assert.strictEqual(node4.prev, node1, 'node4.prev');
   });
 
-  suite.test('attr', () => {
-    let node;
+  it('attr', () => {
+    let node: AstNode;
 
     node = new AstNode('b', 1);
-    LegacyUnit.deepEqual(node.attributes, []);
+    assert.deepEqual(node.attributes, emptyAttributes);
     node.attr('attr1', 'value1');
-    LegacyUnit.equal(node.attr('attr1'), 'value1');
-    LegacyUnit.equal(node.attr('attr2'), undefined);
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1' });
+    assert.equal(node.attr('attr1'), 'value1');
+    assert.isUndefined(node.attr('attr2'));
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }]);
+    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'value1' });
 
     node = new AstNode('b', 1);
-    LegacyUnit.deepEqual(node.attributes, []);
+    assert.deepEqual(node.attributes, emptyAttributes);
     node.attr('attr1', 'value1');
     node.attr('attr1', 'valueX');
-    LegacyUnit.equal(node.attr('attr1'), 'valueX');
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'valueX' });
+    assert.equal(node.attr('attr1'), 'valueX');
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'valueX' }]);
+    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'valueX' });
 
     node = new AstNode('b', 1);
-    LegacyUnit.deepEqual(node.attributes, []);
+    assert.deepEqual(node.attributes, emptyAttributes);
     node.attr('attr1', 'value1');
     node.attr('attr2', 'value2');
-    LegacyUnit.equal(node.attr('attr1'), 'value1');
-    LegacyUnit.equal(node.attr('attr2'), 'value2');
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { attr1: 'value1', attr2: 'value2' });
+    assert.equal(node.attr('attr1'), 'value1');
+    assert.equal(node.attr('attr2'), 'value2');
+    assert.deepEqual(node.attributes, [{ name: 'attr1', value: 'value1' }, { name: 'attr2', value: 'value2' }]);
+    assert.deepEqual(node.attributes.map as Record<string, string>, { attr1: 'value1', attr2: 'value2' });
 
     node = new AstNode('b', 1);
-    LegacyUnit.deepEqual(node.attributes, []);
+    assert.deepEqual(node.attributes, emptyAttributes);
     node.attr('attr1', 'value1');
     node.attr('attr1', null);
-    LegacyUnit.equal(node.attr('attr1'), undefined);
-    LegacyUnit.deepEqual(node.attributes, []);
-    LegacyUnit.deepEqual(node.attributes.map, {});
+    assert.isUndefined(node.attr('attr1'));
+    assert.deepEqual(node.attributes, emptyAttributes);
+    assert.deepEqual(node.attributes.map as Record<string, string>, {});
 
     node = new AstNode('b', 1);
     node.attr({ a: '1', b: '2' });
-    LegacyUnit.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }]);
-    LegacyUnit.deepEqual(node.attributes.map, { a: '1', b: '2' });
+    assert.deepEqual(node.attributes, [{ name: 'a', value: '1' }, { name: 'b', value: '2' }]);
+    assert.deepEqual(node.attributes.map as Record<string, string>, { a: '1', b: '2' });
 
     node = new AstNode('b', 1);
     node.attr(null);
-    LegacyUnit.deepEqual(node.attributes, []);
-    LegacyUnit.deepEqual(node.attributes.map, {});
+    assert.deepEqual(node.attributes, emptyAttributes);
+    assert.deepEqual(node.attributes.map as Record<string, string>, {});
   });
 
-  suite.test('clone', () => {
-    let node, clone;
+  it('clone', () => {
+    let node: AstNode;
+    let clone: AstNode;
 
     node = new AstNode('#text', 3);
     node.value = 'value';
     clone = node.clone();
-    LegacyUnit.equal(clone.name, '#text');
-    LegacyUnit.equal(clone.type, 3);
-    LegacyUnit.equal(clone.value, 'value');
-    LegacyUnit.equal(clone.parent, undefined);
-    LegacyUnit.equal(clone.next, undefined);
-    LegacyUnit.equal(clone.prev, undefined);
+    assert.equal(clone.name, '#text');
+    assert.equal(clone.type, 3);
+    assert.equal(clone.value, 'value');
+    assert.isUndefined(clone.parent);
+    assert.isUndefined(clone.next);
+    assert.isUndefined(clone.prev);
 
     const root = new AstNode('#frag', 11);
     node = new AstNode('#text', 3);
     node.value = 'value';
     root.append(node);
-    LegacyUnit.equal(clone.name, '#text');
-    LegacyUnit.equal(clone.type, 3);
-    LegacyUnit.equal(clone.value, 'value');
-    LegacyUnit.equal(clone.parent, undefined);
-    LegacyUnit.equal(clone.next, undefined);
-    LegacyUnit.equal(clone.prev, undefined);
+    assert.equal(clone.name, '#text');
+    assert.equal(clone.type, 3);
+    assert.equal(clone.value, 'value');
+    assert.isUndefined(clone.parent);
+    assert.isUndefined(clone.next);
+    assert.isUndefined(clone.prev);
 
     node = new AstNode('b', 1);
     node.attr('id', 'id');
     node.attr('class', 'class');
     node.attr('title', 'title');
     clone = node.clone();
-    LegacyUnit.equal(clone.name, 'b');
-    LegacyUnit.equal(clone.type, 1);
-    LegacyUnit.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }]);
-    LegacyUnit.deepEqual(clone.attributes.map, { class: 'class', title: 'title' });
+    assert.equal(clone.name, 'b');
+    assert.equal(clone.type, 1);
+    assert.deepEqual(clone.attributes, [{ name: 'class', value: 'class' }, { name: 'title', value: 'title' }]);
+    assert.deepEqual(clone.attributes.map as Record<string, string>, { class: 'class', title: 'title' });
   });
 
-  suite.test('unwrap', () => {
+  it('unwrap', () => {
     let root, node1, node2;
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('b', 1));
     node2 = node1.append(new AstNode('em', 1));
     node1.unwrap();
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node2, 'root.lastChild');
-    ok(node2.parent === root, 'node2.parent');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node2, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('b', 1));
     node2 = node1.append(new AstNode('em', 1));
     const node3 = node1.append(new AstNode('span', 1));
     node1.unwrap();
-    ok(root.firstChild === node2, 'root.firstChild');
-    ok(root.lastChild === node3, 'root.lastChild');
-    ok(node2.parent === root, 'node2.parent');
-    ok(node3.parent === root, 'node3.parent');
+    assert.strictEqual(root.firstChild, node2, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node3, 'root.lastChild');
+    assert.strictEqual(node2.parent, root, 'node2.parent');
+    assert.strictEqual(node3.parent, root, 'node3.parent');
   });
 
-  suite.test('empty', () => {
+  it('empty', () => {
     const root = new AstNode('#frag', 11);
     const node1 = root.append(new AstNode('b', 1));
     node1.empty();
-    ok(root.firstChild === node1, 'root.firstChild');
-    ok(root.lastChild === node1, 'root.firstChild');
-    ok(!node1.firstChild, 'node1.firstChild');
-    ok(!node1.lastChild, 'node1.firstChild');
+    assert.strictEqual(root.firstChild, node1, 'root.firstChild');
+    assert.strictEqual(root.lastChild, node1, 'root.firstChild');
+    assert.isNull(node1.firstChild, 'node1.firstChild');
+    assert.isNull(node1.lastChild, 'node1.firstChild');
   });
 
-  suite.test('isEmpty', () => {
-    let root, node1, node2;
+  it('isEmpty', () => {
+    let root: AstNode;
+    let node1: AstNode;
+    let node2: AstNode;
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('p', 1));
     node2 = node1.append(new AstNode('b', 1));
-    ok(root.isEmpty({ img: 1 }), 'Is empty 1');
-    ok(node1.isEmpty({ img: 1 }), 'Is empty 2');
+    assert.isTrue(root.isEmpty({ img: 1 }), 'Is empty 1');
+    assert.isTrue(node1.isEmpty({ img: 1 }), 'Is empty 2');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('p', 1));
     node2 = node1.append(new AstNode('img', 1));
-    ok(!root.isEmpty({ img: 1 }), 'Is not empty 1');
-    ok(!node1.isEmpty({ img: 1 }), 'Is not empty 2');
+    assert.isFalse(root.isEmpty({ img: 1 }), 'Is not empty 1');
+    assert.isFalse(node1.isEmpty({ img: 1 }), 'Is not empty 2');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('p', 1));
     node2 = node1.append(new AstNode('#text', 3));
     node2.value = 'X';
-    ok(!root.isEmpty({ img: 1 }), 'Is not empty 3');
-    ok(!node1.isEmpty({ img: 1 }), 'Is not empty 4');
+    assert.isFalse(root.isEmpty({ img: 1 }), 'Is not empty 3');
+    assert.isFalse(node1.isEmpty({ img: 1 }), 'Is not empty 4');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('p', 1));
     node2 = node1.append(new AstNode('#text', 3));
     node2.value = '';
-    ok(root.isEmpty({ img: 1 }), 'Is empty 4');
-    ok(node1.isEmpty({ img: 1 }), 'Is empty 5');
+    assert.isTrue(root.isEmpty({ img: 1 }), 'Is empty 4');
+    assert.isTrue(node1.isEmpty({ img: 1 }), 'Is empty 5');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('a', 1)).attr('name', 'x');
-    ok(!root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
+    assert.isFalse(root.isEmpty({ img: 1 }), 'Contains anchor with name attribute.');
 
-    const isSpan = (node) => {
+    const isSpan = (node: AstNode) => {
       return node.name === 'span';
     };
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('span', 1));
-    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), false, 'Should be false since the predicate says true.');
+    assert.isFalse(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be false since the predicate says true.');
 
     root = new AstNode('#frag', 11);
     node1 = root.append(new AstNode('b', 1));
-    LegacyUnit.equal(root.isEmpty({ img: 1 }, {}, isSpan), true, 'Should be true since the predicate says false.');
+    assert.isTrue(root.isEmpty({ img: 1 }, {}, isSpan), 'Should be true since the predicate says false.');
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });
