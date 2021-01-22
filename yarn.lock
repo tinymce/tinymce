@@ -202,10 +202,10 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^11.0.1":
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-11.0.1.tgz#5905bc76a962f4ecf71c7864f18ac6efbff6ae7e"
-  integrity sha512-oltxebvydNfi+fLIllTxM1JV59DPAwb/g/Y0zYX5l61CZgbPayib2SxLToGXr6/+jjhlNPjiHMDPN5iyxcgIDg==
+"@ephox/bedrock-server@^11.0.2":
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-11.0.2.tgz#fc8fbfbb6a011e8e779c9f8fd5080a40147aafff"
+  integrity sha512-epwQr6RrqM9VWcmzpnnCSiLiwO3suubEN8I06U7BgQrAIaMsPquZiGWhkkiluMjKP17gVKfiYjvQ0xmRekED2g==
   dependencies:
     "@ephox/bedrock-client" "^11.0.0"
     "@ephox/bedrock-common" "^11.0.0"
