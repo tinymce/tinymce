@@ -18,8 +18,8 @@ UnitTest.test('TransformOperationsTest', () => {
     expectedElements = [];
   };
 
-  const en = (elements: Structs.ElementNew[]) => (text: string, isNew: boolean, elemType: 'td' | 'th' | 'col' = 'td') => {
-    const elementNew = MockStructs.getElementNew(elements, elemType, text, isNew);
+  const en = (elements: Structs.ElementNew[]) => (text: string, isNew: boolean, elemType: 'td' | 'th' | 'col' = 'td', isLocked: boolean = false) => {
+    const elementNew = MockStructs.getElementNew(elements, elemType, text, isNew, isLocked);
     elements.push(elementNew);
     return elementNew;
   };

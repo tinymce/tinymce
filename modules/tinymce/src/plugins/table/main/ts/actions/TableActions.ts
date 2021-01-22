@@ -30,6 +30,9 @@ export type PasteTableAction = TableAction<RunOperation.TargetPaste>;
 export type AdvancedPasteTableAction = TableAction<RunOperation.TargetPasteRows>;
 export type ElementTableAction = TableAction<RunOperation.TargetElement>;
 
+type GuardFn = (table: SugarElement<HTMLTableElement>) => boolean;
+type MutateFn = (e1: SugarElement<any>, e2: SugarElement<any>) => void;
+
 export interface TableActions {
   deleteRow: CombinedTargetsTableAction;
   deleteColumn: CombinedTargetsTableAction;
@@ -56,7 +59,8 @@ export interface TableActions {
 export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selections: Selections): TableActions => {
   const isTableBody = (editor: Editor) => SugarNode.name(Util.getBody(editor)) === 'table';
 
-  const lastRowGuard = (table: SugarElement<HTMLTableElement>) => isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
+  const lastRowGuard = (table: SugarElement<HTMLTableElement>) =>
+    isTableBody(editor) === false || TableGridSize.getGridSize(table).rows > 1;
 
   const lastColumnGuard = (table: SugarElement<HTMLTableElement>) =>
     isTableBody(editor) === false || TableGridSize.getGridSize(table).columns > 1;
@@ -64,7 +68,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
-  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard, mutate, lazyWire, effect: Events.TableEventData) =>
+  const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
       const wire = lazyWire();

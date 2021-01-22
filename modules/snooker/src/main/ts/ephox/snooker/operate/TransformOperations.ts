@@ -16,7 +16,7 @@ const replaceIn = (grid: Structs.RowCells[], targets: Structs.ElementNew[], comp
 
   return Arr.map(grid, (row) => {
     return GridRow.mapCells(row, (cell) => {
-      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true) : cell;
+      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true, cell.isLocked) : cell;
     });
   });
 };

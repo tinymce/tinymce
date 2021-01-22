@@ -2,13 +2,16 @@ import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import * as Structs from '../api/Structs';
 
-const addCell = (gridRow: Structs.RowCells, index: number, cell: Structs.ElementNew): Structs.RowCells => {
-  const cells = gridRow.cells;
-  const before = cells.slice(0, index);
-  const after = cells.slice(index);
-  const newCells = before.concat([ cell ]).concat(after);
+const addCells = (gridRow: Structs.RowCells, index: number, cells: Structs.ElementNew[]): Structs.RowCells => {
+  const existingCells = gridRow.cells;
+  const before = existingCells.slice(0, index);
+  const after = existingCells.slice(index);
+  const newCells = before.concat(cells).concat(after);
   return setCells(gridRow, newCells);
 };
+
+const addCell = (gridRow: Structs.RowCells, index: number, cell: Structs.ElementNew): Structs.RowCells =>
+  addCells(gridRow, index, [ cell ]);
 
 const mutateCell = (gridRow: Structs.RowCells, index: number, cell: Structs.ElementNew): void => {
   const cells = gridRow.cells;
@@ -47,6 +50,7 @@ const extractGridDetails = (grid: Structs.RowCells[]): { rows: Structs.RowCells[
 
 export {
   addCell,
+  addCells,
   setCells,
   mutateCell,
   getCell,

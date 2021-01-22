@@ -3,6 +3,7 @@ import { Attribute, Insert, Remove, Replication, Selectors, SugarElement } from 
 import * as DetailsList from '../model/DetailsList';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';
+import { LOCKED_COL_ATTR } from '../util/LockedColumnUtils';
 import { DetailExt, RowData } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
@@ -111,6 +112,8 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, hous
       Attribute.remove(cell, 'colspan');
     });
   }
+  // Remove any attributes that should not be in the replicated table
+  Attribute.remove(replica, LOCKED_COL_ATTR);
 
   const tableSize = TableSize.getTableSize(replica);
   tableSize.adjustTableWidth(widthDelta);
