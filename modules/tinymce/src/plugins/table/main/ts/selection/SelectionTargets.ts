@@ -71,7 +71,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
           acc.onAny = true;
           if (cell.column === 0) {
             acc.onFirst = true;
-          } else if (cell.column + cell.colspan === warehouse.grid.columns) {
+          } else if (cell.column + cell.colspan >= warehouse.grid.columns) {
             acc.onLast = true;
           }
         }

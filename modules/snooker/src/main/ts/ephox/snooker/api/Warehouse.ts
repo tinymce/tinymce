@@ -73,7 +73,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
   let columns: Record<number, Structs.ColumnExt> = {};
 
   const tableOpt = Arr.head(list).map((rowData) => rowData.element).bind(TableLookup.table);
-  const lockedColumns: Record<number, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
+  const lockedColumns: Record<string, true> = tableOpt.bind(LockedColumnUtils.getLockedColumnsFromTable).getOr({});
 
   let maxRows = 0;
   let maxColumns = 0;
@@ -92,7 +92,7 @@ const generate = <T extends Structs.Detail>(list: Structs.RowData<T>[]): Warehou
           start++;
         }
 
-        const isLocked = Obj.hasNonNullableKey(lockedColumns, start);
+        const isLocked = Obj.hasNonNullableKey(lockedColumns, start.toString());
         const current = Structs.extended(rowCell.element, rowCell.rowspan, rowCell.colspan, rowCount, start, isLocked);
 
         // Occupy all the (row, column) positions that this cell spans for.
