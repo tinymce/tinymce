@@ -9,6 +9,8 @@
 // Fullscreen mode
 //
 
+@fullscreen-container-background-color: transparent;
+
 .tox-fullscreen {
   border: 0;
   height: 100%;
@@ -29,6 +31,7 @@
 }
 
 .tox.tox-tinymce.tox-fullscreen {
+  background-color: @fullscreen-container-background-color;
   z-index: @z-index-fullscreen;
 }
 
