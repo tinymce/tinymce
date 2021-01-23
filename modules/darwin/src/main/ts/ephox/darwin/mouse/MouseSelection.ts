@@ -1,4 +1,4 @@
-import { Singleton } from '@ephox/katamari';
+import { Singleton, Type } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -18,14 +18,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
   const cursor = Singleton.value<SugarElement>();
   const clearstate = cursor.clear;
 
-  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mousedown = (event: EventArgs) => {
-    annotations.clear(container);
-    findCell(event.target, isRoot).each(cursor.set);
-  };
-
-  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseover = (event: EventArgs) => {
+  const applySelection = (event: EventArgs<MouseEvent>) => {
     cursor.on((start) => {
       annotations.clearBeforeUpdate(container);
       findCell(event.target, isRoot).each((finish) => {
@@ -46,7 +39,23 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseup = (_event?: EventArgs) => {
+  const mousedown = (event: EventArgs<MouseEvent>) => {
+    annotations.clear(container);
+    findCell(event.target, isRoot).each(cursor.set);
+  };
+
+  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+  const mouseover = (event: EventArgs<MouseEvent>) => {
+    applySelection(event);
+  };
+
+  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+  const mouseup = (event?: EventArgs<MouseEvent>) => {
+    if (Type.isNonNullable(event)) {
+      // Needed as Firefox will change the selection between the mouseover and mouseup when selecting
+      // just 2 cells as it supports multiple ranges
+      applySelection(event);
+    }
     clearstate();
   };
 
