@@ -1,25 +1,24 @@
-import { Chain, Keys, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ActionChains, ApiChains, Editor } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyAssertions, TinyContentActions, TinySelections } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyInlineTest', (success, failure) => {
-
-  Theme();
+describe('browser.tinymce.core.keyboard.EnterKeyInlineTest', () => {
+  before(() => Theme());
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     inline: true
   };
 
-  Pipeline.async({}, [
-    Logger.t('Pressing shift+enter in brMode inside a h1 should insert a br', Chain.asStep({}, [
-      Editor.cFromHtml('<h1>ab</h1>', { ...settings, forced_root_block: false }),
-      ApiChains.cFocus,
-      ApiChains.cSetCursor([ 0 ], 1),
-      ActionChains.cContentKeystroke(Keys.enter(), { shift: true }),
-      ApiChains.cAssertContent('a<br />b'),
-      Editor.cRemove
-    ]))
-  ], success, failure);
+  it('Pressing shift+enter in brMode inside a h1 should insert a br', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<h1>ab</h1>', { ...settings, forced_root_block: false });
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    TinyContentActions.keystroke(editor, Keys.enter(), { shift: true });
+    TinyAssertions.assertContent(editor, 'a<br />b');
+    McEditor.remove(editor);
+  });
 });

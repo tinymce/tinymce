@@ -1,48 +1,15 @@
-import { Chain, Guard, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Mouse, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-import { cAssertCleanHtml, cAssertInputValue, cSetInputValue, generalTabSelectors } from '../module/Helpers';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/image/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, failure) => {
-  SilverTheme();
-  ImagePlugin();
+import { assertCleanHtml, assertInputValue, generalTabSelectors, setInputValue } from '../module/Helpers';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Image: image proportion constrains should work directly', [
-        tinyUi.sClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
-        Chain.asStep({}, [
-          Chain.fromParent(tinyUi.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-            [
-              Chain.fromChains([
-                UiFinder.cFindIn('button.tox-browse-url'),
-                Mouse.cClick
-              ]),
-              Chain.control(
-                cAssertInputValue(generalTabSelectors.width, '1'),
-                Guard.tryUntil('did not find width input with value 1')
-              ),
-              cSetInputValue(generalTabSelectors.height, '5'),
-              Chain.control(
-                cAssertInputValue(generalTabSelectors.width, '5'),
-                Guard.tryUntil('did not find width input with value 5')
-              )
-            ]
-          ),
-          tinyUi.cSubmitDialog(),
-          Chain.inject(editor),
-          cAssertCleanHtml('Checking output', '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="5" height="5" /></p>')
-        ])
-      ])
-
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.ImageResizeTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     base_url: '/project/tinymce/js/tinymce',
@@ -51,5 +18,17 @@ UnitTest.asynctest('browser.tinymce.plugins.image.ImageResizeTest', (success, fa
       console.log('file picker pressed');
       callback('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
     }
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: image proportion constrains should work directly', async () => {
+    const editor = hook.editor();
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    Mouse.clickOn(dialog, 'button.tox-browse-url');
+    await Waiter.pTryUntil('did not find width input with value 1', () => assertInputValue(generalTabSelectors.width, '1'));
+    setInputValue(generalTabSelectors.height, '5');
+    await Waiter.pTryUntil('did not find width input with value 5', () => assertInputValue(generalTabSelectors.width, '5'));
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="5" height="5" /></p>');
+  });
 });

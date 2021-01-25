@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.code.CodeTextareaTest', () => {
 
   const pOpenDialog = async (editor: Editor) => {
     editor.execCommand('mceCodeEditor');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
   };
 
   const getWhiteSpace = (editor: Editor) => {

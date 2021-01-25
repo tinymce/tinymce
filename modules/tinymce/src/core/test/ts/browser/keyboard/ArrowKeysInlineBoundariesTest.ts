@@ -1,285 +1,334 @@
-import { Assertions, GeneralSteps, Keys, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 import * as WordSelection from 'tinymce/core/selection/WordSelection';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest',
-  (success, failure) => {
-    const os = PlatformDetection.detect().os;
+describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
+  const detect = PlatformDetection.detect();
+  const browser = detect.browser;
+  const os = detect.os;
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
 
-    Theme();
+  const assertCaretAtZwsp = (editor: Editor) => {
+    const rng = editor.selection.getRng();
+    const sc = rng.startContainer;
+    const so = rng.startOffset;
+    assert.isTrue(NodeType.isText(sc), 'Start container should be a text node');
+    const chr = (sc as Text).data.substr(so, 1);
+    assert.equal(chr, Zwsp.ZWSP, 'Should be zwsp at caret');
+  };
 
-    const sAssertCaretAtZwsp = (editor) => {
-      return Step.sync(() => {
-        const rng = editor.selection.getRng();
-        const sc = rng.startContainer, so = rng.startOffset;
-        const chr = sc.data.substr(so, 1);
-        Assertions.assertEq('Should be zwsp at caret', chr, Zwsp.ZWSP);
-      });
-    };
+  const assertCaretAfterZwsp = (editor: Editor) => {
+    const rng = editor.selection.getRng();
+    const sc = rng.startContainer;
+    const so = rng.startOffset;
+    assert.isTrue(NodeType.isText(sc), 'Start container should be a text node');
+    const chr = (sc as Text).data.substr(so - 1, 1);
+    assert.equal(chr, Zwsp.ZWSP, 'Should be after a zwsp at caret');
+  };
 
-    const sAssertCaretAfterZwsp = (editor) => {
-      return Step.sync(() => {
-        const rng = editor.selection.getRng();
-        const sc = rng.startContainer, so = rng.startOffset;
-        const chr = sc.data.substr(so - 1, 1);
-        Assertions.assertEq('Should be after a zwsp at caret', chr, Zwsp.ZWSP);
-      });
-    };
+  // TODO: This function was needed to make tests pass on Firefox and IE, but it is likely hiding bugs in the arrow navigation
+  const legacySetRawContent = (editor: Editor, content: string) => {
+    if (browser.isIE() || browser.isFirefox()) {
+      editor.getBody().innerHTML = content;
+    } else {
+      editor.setContent(content, { format: 'raw' });
+    }
+  };
 
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
-      const tinyActions = TinyActions(editor);
+  context('Arrow keys anchor with text', () => {
+    it('From start to end inside anchor over text', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+      assertCaretAtZwsp(editor);
+    });
 
-      Pipeline.async({}, [
-        tinyApis.sFocus(),
-        Logger.t('Arrow keys anchor with text', GeneralSteps.sequence([
-          Logger.t('From start to end inside anchor over text', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">x</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From start to before anchor with text', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">x</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From end to after anchor with text', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">x</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From end to start inside anchor over text', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">x</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ]))
-        ])),
+    it('From start to before anchor with text', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#">x</a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+      assertCaretAtZwsp(editor);
+    });
 
-        Logger.t('Arrow keys anchor with image', GeneralSteps.sequence([
-          Logger.t('From start to end inside anchor over img', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#"><img src="#"></a></p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 1 ], 0, [ 0, 0, 1 ], 0),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From start to before on anchor with img', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#"><img src="#"></a></p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From end to after on anchor with img', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#"><img src="#"></a></p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From end to start inside anchor over img', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#"><img src="#"></a></p>'),
-            tinyApis.sSetCursor([ 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ]))
-        ])),
+    it('From end to after anchor with text', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#">x</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
 
-        Logger.t('Arrow keys between blocks', GeneralSteps.sequence([
-          Logger.t('From end of anchor text to after anchor to start of anchor in next paragraph', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">a</a></p><p><a href="#">b</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sSetCursor([ 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 1, 0, 0 ], 1, [ 1, 0, 0 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From start of anchor text to before anchor to end of anchor in previous paragraph', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">a</a></p><p><a href="#">b</a></p>'),
-            tinyApis.sSetCursor([ 1, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sSetCursor([ 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From end of anchor text to after anchor to but not to next paragraph', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">a</a></p><p>b<a href="#">c</a></p>'),
-            tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sSetCursor([ 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From start of anchor text to before anchor to end of anchor but not to previous paragraph', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<p><a href="#">a</a>b</p><p><a href="#">c</a></p>'),
-            tinyApis.sSetCursor([ 1, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sSetCursor([ 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor)
-          ]))
-        ])),
+    it('From end to start inside anchor over text', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#">x</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+  });
 
-        Logger.t('Arrow keys between lists', GeneralSteps.sequence([
-          Logger.t('From end of anchor text to after anchor to start of anchor in next list item', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sSetCursor([ 0, 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 1, 0, 0 ], 1, [ 0, 1, 0, 0 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From start of anchor text to before anchor to end of anchor in previous list item', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 1, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sSetCursor([ 0, 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From end of anchor text to after anchor to but not to next list item', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sSetCursor([ 0, 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
-          Logger.t('From start of anchor text to before anchor to end of anchor but not to previous list item', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 1, 0, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sSetCursor([ 0, 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From start of anchor to before anchor but not to previous list item anchor', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 1, 1, 0 ], 0),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sSetCursor([ 0, 1, 0 ], 1),
-            sAssertCaretAtZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.left(), { }),
-            tinyApis.sAssertSelection([ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1),
-            sAssertCaretAtZwsp(editor)
-          ])),
-          Logger.t('From end of anchor to after anchor but not to next list item anchor', GeneralSteps.sequence([
-            tinyApis.sSetRawContent('<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>'),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-            tinyApis.sNodeChanged(),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sSetCursor([ 0, 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor),
-            tinyActions.sContentKeystroke(Keys.right(), { }),
-            tinyApis.sAssertSelection([ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1),
-            sAssertCaretAfterZwsp(editor)
-          ])),
+  context('Arrow keys anchor with image', () => {
+    it('From start to end inside anchor over img', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 0, [ 0, 0, 1 ], 0);
+      assertCaretAtZwsp(editor);
+    });
 
-          Logger.t('Arrow keys at anchor + code', GeneralSteps.sequence([
-            Logger.t('From start to end inside anchor + code over text', GeneralSteps.sequence([
-              tinyApis.sSetRawContent('<p><a href="#"><code>x</code></a></p>'),
-              tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-              tinyApis.sNodeChanged(),
-              tinyActions.sContentKeystroke(Keys.right(), { }),
-              tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1),
-              sAssertCaretAtZwsp(editor)
-            ])),
-            Logger.t('From start to before anchor + code with text', GeneralSteps.sequence([
-              tinyApis.sSetRawContent('<p><a href="#"><code>x</code></a></p>'),
-              tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-              tinyApis.sNodeChanged(),
-              tinyActions.sContentKeystroke(Keys.left(), { }),
-              tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-              sAssertCaretAtZwsp(editor)
-            ])),
-            Logger.t('From end to after anchor + code with text', GeneralSteps.sequence([
-              tinyApis.sSetRawContent('<p><a href="#"><code>x</code></a></p>'),
-              tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-              tinyApis.sNodeChanged(),
-              tinyActions.sContentKeystroke(Keys.right(), { }),
-              tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0, 1 ], 1),
-              sAssertCaretAfterZwsp(editor)
-            ])),
-            Logger.t('From end to start inside anchor + code over text', GeneralSteps.sequence([
-              tinyApis.sSetRawContent('<p><a href="#"><code>x</code></a></p>'),
-              tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-              tinyApis.sNodeChanged(),
-              tinyActions.sContentKeystroke(Keys.left(), { }),
-              tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1),
-              sAssertCaretAfterZwsp(editor)
-            ]))
-          ])),
+    it('From start to before on anchor with img', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#"><img src="#"></a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+      assertCaretAtZwsp(editor);
+    });
 
-          Logger.t('Ctrl+arrow keys at anchor', GeneralSteps.sequence(
-            WordSelection.hasSelectionModifyApi(editor) ? [
-              Logger.t('Ctrl+Arrow right from inline boundary to next word', GeneralSteps.sequence([
-                tinyApis.sSetRawContent('<p>aa <a href="#">bb</a> cc</p>'),
-                tinyApis.sSetCursor([ 0, 1, 0 ], 2),
-                tinyApis.sNodeChanged(),
-                tinyActions.sContentKeystroke(Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() }),
-                tinyApis.sAssertSelection([ 0, 2 ], 3, [ 0, 2 ], 3)
-              ])),
-              Logger.t('Ctrl+Arrow left from inline boundary to previous word', GeneralSteps.sequence([
-                tinyApis.sSetRawContent('<p>aa <a href="#">bb</a> cc</p>'),
-                tinyApis.sSetCursor([ 0, 1, 0 ], 0),
-                tinyApis.sNodeChanged(),
-                tinyActions.sContentKeystroke(Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() }),
-                tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
-              ]))
-            ] : []
-          ))
-        ]))
-      ], onSuccess, onFailure);
-    }, {
-      add_unload_trigger: false,
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
-  }
-);
+    it('From end to after on anchor with img', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From end to start inside anchor over img', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#"><img src="#"></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+  });
+
+  context('Arrow keys between blocks', () => {
+    it('From end of anchor text to after anchor to start of anchor in next paragraph', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#">a</a></p><p><a href="#">b</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinySelections.setCursor(editor, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 1, 0, 0 ], 1, [ 1, 0, 0 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From start of anchor text to before anchor to end of anchor in previous paragraph', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#">a</a></p><p><a href="#">b</a></p>');
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From end of anchor text to after anchor to but not to next paragraph', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#">a</a></p><p>b<a href="#">c</a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinySelections.setCursor(editor, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From start of anchor text to before anchor to end of anchor but not to previous paragraph', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#">a</a>b</p><p><a href="#">c</a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinySelections.setCursor(editor, [ 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+    });
+  });
+
+  context('Arrow keys between lists', () => {
+    it('From end of anchor text to after anchor to start of anchor in next list item', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0 ], 1, [ 0, 1, 0, 0 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From start of anchor text to before anchor to end of anchor in previous list item', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li><a href="#">b</a></li></ul>');
+      TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From end of anchor text to after anchor to but not to next list item', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From start of anchor text to before anchor to end of anchor but not to previous list item', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From start of anchor to before anchor but not to previous list item anchor', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li><a href="#">a</a></li><li>b<a href="#">c</a></li></ul>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1, 1, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+      assertCaretAtZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From end of anchor to after anchor but not to next list item anchor', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<ul><li><a href="#">a</a>b</li><li><a href="#">c</a></li></ul>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinySelections.setCursor(editor, [ 0, 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 1 ], 1, [ 0, 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+  });
+
+  context('Arrow keys at anchor + code', () => {
+    it('From start to end inside anchor + code over text', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From start to before anchor + code with text', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><a href="#"><code>x</code></a></p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+      assertCaretAtZwsp(editor);
+    });
+
+    it('From end to after anchor + code with text', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right());
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+
+    it('From end to start inside anchor + code over text', () => {
+      const editor = hook.editor();
+      legacySetRawContent(editor, '<p><a href="#"><code>x</code></a></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left());
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0 ], 1);
+      assertCaretAfterZwsp(editor);
+    });
+  });
+
+  context('Ctrl+arrow keys at anchor', () => {
+    before(function () {
+      if (!WordSelection.hasSelectionModifyApi(hook.editor())) {
+        this.skip();
+      }
+    });
+
+    it('Ctrl+Arrow right from inline boundary to next word', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.right(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyAssertions.assertSelection(editor, [ 0, 2 ], 3, [ 0, 2 ], 3);
+    });
+
+    it('Ctrl+Arrow left from inline boundary to previous word', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>aa <a href="#">bb</a> cc</p>', { format: 'raw' });
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      editor.nodeChanged();
+      TinyContentActions.keystroke(editor, Keys.left(), { ctrl: !os.isOSX(), alt: os.isOSX() });
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    });
+  });
+});

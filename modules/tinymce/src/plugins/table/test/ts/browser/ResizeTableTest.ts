@@ -1,7 +1,7 @@
 import { Assertions, Chain, Log, Mouse, NamedChain, Pipeline, TestLogs } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { ApiChains, McEditor } from '@ephox/mcagar';
 import { TableGridSize } from '@ephox/snooker';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';

@@ -1,59 +1,46 @@
-import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
-import CodePlugin from 'tinymce/plugins/codesample/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/codesample/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as TestUtils from '../module/CodeSampleTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.codesample.DblClickCodesampleTest', (success, failure) => {
-
-  CodePlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-
-    const dialogSelector = 'div.tox-dialog';
-    const docBody = SugarElement.fromDom(document.body);
-    const editorBody = editor.contentDocument.body;
-    const markupContent = '<p>hello world</p>';
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({},
-      [
-        Log.stepsAsStep(
-          'TBA',
-          'CodeSample: TBA-Open the dialog and check it has the right initial values. ' +
-          'Set the codesample content, submit and check the editor content changes correctly. ' +
-          'Double-click on the editor and check if the dialog opens with the correct language and content.', [
-            TestUtils.sOpenDialogAndAssertInitial(editor, docBody, 'markup', ''),
-            TestUtils.sSetTextareaContent(markupContent),
-            TestUtils.sSubmitDialog(docBody),
-            TestUtils.sAssertEditorContents(editorBody, 'markup', markupContent, 'pre.language-markup'),
-            Step.sync(() => {
-              const pre = editor.getBody().querySelector('pre');
-              editor.fire('dblclick', { target: pre });
-            }),
-            UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-            TestUtils.sAssertCodeSampleDialog('markup', markupContent)
-          ]
-        ),
-
-        Log.stepsAsStep('TBA', 'CodeSample: Selecting code sample should update button state', [
-          tinyApis.sSetContent('<p>abc</p><pre class="language-markup"><code></code></pre>'),
-          tinyApis.sSelect('p', []),
-          tinyApis.sNodeChanged(),
-          UiFinder.sNotExists(docBody, 'button[aria-pressed="true"]'),
-          tinyApis.sSelect('pre.language-markup', []),
-          tinyApis.sNodeChanged(),
-          UiFinder.sExists(docBody, 'button[aria-pressed="true"]')
-        ])
-      ]
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.codesample.CodeSampleSelectionTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'codesample',
-    theme: 'silver',
     toolbar: 'codesample',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const dialogSelector = 'div.tox-dialog';
+  const markupContent = '<p>hello world</p>';
+
+  it('TBA: Open the dialog and check it has the right initial values. ' +
+    'Set the codesample content, submit and check the editor content changes correctly. ' +
+    'Double-click on the editor and check if the dialog opens with the correct language and content.', async () => {
+    const editor = hook.editor();
+    await TestUtils.pOpenDialogAndAssertInitial(editor, 'markup', '');
+    TestUtils.setTextareaContent(markupContent);
+    await TestUtils.pSubmitDialog(editor);
+    await TestUtils.pAssertEditorContents(TinyDom.body(editor), 'markup', markupContent, 'pre.language-markup');
+    const pre = editor.getBody().querySelector('pre');
+    editor.fire('dblclick', { target: pre } as unknown as MouseEvent);
+    await UiFinder.pWaitForVisible('Waited for dialog to be visible', SugarBody.body(), dialogSelector);
+    TestUtils.assertCodeSampleDialog('markup', markupContent);
+    await TestUtils.pCancelDialog(editor);
+  });
+
+  it('TBA: Selecting code sample should update button state', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc</p><pre class="language-markup"><code></code></pre>');
+    TinySelections.select(editor, 'p', []);
+    editor.nodeChanged();
+    UiFinder.notExists(TinyDom.body(editor), 'button[aria-pressed="true"]');
+    TinySelections.select(editor, 'pre.language-markup', []);
+    editor.nodeChanged();
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-pressed="true"]');
+  });
 });

@@ -1,8 +1,10 @@
-import { Log, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
@@ -11,10 +13,20 @@ import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as HtmlUtils from '../module/test/HtmlUtils';
 
-UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.EditorTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    selector: 'textarea',
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    custom_elements: 'custom1,~custom2',
+    extended_valid_elements: 'custom1,custom2,script[*]',
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  const sEventChange = (editor: Editor) => Log.step('TBA', 'Event: change', Step.sync(() => {
+  it('TBA: Event: change', () => {
+    const editor = hook.editor();
     let level, lastLevel;
 
     editor.on('change', (e) => {
@@ -24,13 +36,14 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
 
     editor.setContent('');
     editor.insertContent('a');
-    Assert.eq('Event: change', '<p>a</p>', level.content.toLowerCase());
-    Assert.eq('Event: change', editor.undoManager.data[0].content, lastLevel.content);
+    assert.equal(level.content.toLowerCase(), '<p>a</p>', 'Event: change');
+    assert.equal(lastLevel.content, editor.undoManager.data[0].content, 'Event: change');
 
     editor.off('change');
-  }));
+  });
 
-  const sEventBeforeExecCommand = (editor: Editor) => Log.step('TBA', 'Event: beforeExecCommand', Step.sync(() => {
+  it('TBA: Event: beforeExecCommand', () => {
+    const editor = hook.editor();
     let cmd, ui, value;
 
     editor.on('BeforeExecCommand', (e) => {
@@ -43,111 +56,116 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
 
     editor.setContent('');
     editor.insertContent('a');
-    Assert.eq('BeforeExecCommand', '', editor.getContent());
-    Assert.eq('BeforeExecCommand', 'mceInsertContent', cmd);
-    Assert.eq('BeforeExecCommand', false, ui);
-    Assert.eq('BeforeExecCommand', 'a', value);
+    assert.equal(editor.getContent(), '', 'BeforeExecCommand');
+    assert.equal(cmd, 'mceInsertContent', 'BeforeExecCommand');
+    assert.isFalse(ui, 'BeforeExecCommand');
+    assert.equal(value, 'a', 'BeforeExecCommand');
 
     editor.off('BeforeExecCommand');
     editor.setContent('');
     editor.insertContent('a');
-    Assert.eq('BeforeExecCommand', '<p>a</p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<p>a</p>', 'BeforeExecCommand');
+  });
 
-  const sRelativeUrls = (editor: Editor) => Log.step('TBA', 'urls - relativeURLs', Step.sync(() => {
+  it('TBA: urls - relativeURLs', () => {
+    const editor = hook.editor();
     editor.settings.relative_urls = true;
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="test.html">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="../test.html">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="../test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="../test.html">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="test/test.html">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="test/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="test/test.html">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="/test.html">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="../../../test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="../../../test.html">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="../../../test/file.htm">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="../../../test/file.htm">test</a></p>', 'urls - relativeURLs');
 
     editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
-    Assert.eq('urls - relativeURLs', '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - relativeURLs');
+  });
 
-  const sAbsoluteUrls = (editor: Editor) => Log.step('TBA', 'urls - absoluteURLs', Step.sync(() => {
+  it('TBA: urls - absoluteURLs', () => {
+    const editor = hook.editor();
     editor.settings.relative_urls = false;
     editor.settings.remove_script_host = true;
     editor.documentBaseURI = new URI('http://www.site.com/dirA/dirB/dirC/');
 
     editor.setContent('<a href="test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="../test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="/dirA/dirB/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="test/test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="/dirA/dirB/dirC/test/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
     editor.settings.relative_urls = false;
     editor.settings.remove_script_host = false;
 
     editor.setContent('<a href="test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="../test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="test/test.html">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.site.com/dirA/dirB/dirC/test/test.html">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="http://www.somesite.com/test/file.htm">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="http://www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="//www.site.com/test/file.htm">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="//www.site.com/test/file.htm">test</a></p>', editor.getContent());
+    assert.equal(editor.getContent(), '<p><a href="//www.site.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
 
     editor.setContent('<a href="//www.somesite.com/test/file.htm">test</a>');
-    Assert.eq('urls - absoluteURLs', '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<p><a href="//www.somesite.com/test/file.htm">test</a></p>', 'urls - absoluteURLs');
+  });
 
-  const sWebkidSerializationRangeBug = (editor: Editor) => Log.step('TBA', 'WebKit Serialization range bug', Step.sync(() => {
+  it('TBA: WebKit Serialization range bug', () => {
     if (Env.webkit) {
+      const editor = hook.editor();
       // Note that if we create the P with this invalid content directly, Chrome cleans it up differently to other browsers so we don't
       // wind up testing the serialization functionality we were aiming for and the test fails.
       const p = editor.dom.create('p', {}, '123<table><tbody><tr><td>X</td></tr></tbody></table>456');
       editor.dom.replace(p, editor.getBody().firstChild);
 
-      Assert.eq('WebKit Serialization range bug', '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', editor.getContent());
+      assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
     }
-  }));
+  });
 
-  const sEditorMethodsGetParam = (editor: Editor) => Log.step('TBA', 'editor_methods - getParam', Step.sync(() => {
+  it('TBA: editor_methods - getParam', () => {
+    const editor = hook.editor();
     editor.settings.test = 'a,b,c';
-    Assert.eq('editor_methods - getParam', 'c', editor.getParam('test', '', 'hash').c);
+    assert.equal(editor.getParam('test', '', 'hash').c, 'c', 'editor_methods - getParam');
 
     editor.settings.test = 'a';
-    Assert.eq('editor_methods - getParam', 'a', editor.getParam('test', '', 'hash').a);
+    assert.equal(editor.getParam('test', '', 'hash').a, 'a', 'editor_methods - getParam');
 
     editor.settings.test = 'a=b';
-    Assert.eq('editor_methods - getParam', 'b', editor.getParam('test', '', 'hash').a);
+    assert.equal(editor.getParam('test', '', 'hash').a, 'b', 'editor_methods - getParam');
 
     editor.settings.test = 'a=b;c=d,e';
-    Assert.eq('editor_methods - getParam', 'd,e', editor.getParam('test', '', 'hash').c);
+    assert.equal(editor.getParam('test', '', 'hash').c, 'd,e', 'editor_methods - getParam');
 
     editor.settings.test = 'a=b,c=d';
-    Assert.eq('editor_methods - getParam', 'd', editor.getParam('test', '', 'hash').c);
-  }));
+    assert.equal(editor.getParam('test', '', 'hash').c, 'd', 'editor_methods - getParam');
+  });
 
-  const sSetContent = (editor: Editor) => Log.step('TBA', 'setContent', Step.sync(() => {
+  it('TBA: setContent', () => {
+    const editor = hook.editor();
     let count;
 
     const callback = (e) => {
@@ -159,63 +177,68 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     editor.on('BeforeSetContent', callback);
     count = 0;
     editor.setContent('<p>test</p>');
-    Assert.eq('setContent', '<p>X</p>', editor.getContent());
-    Assert.eq('setContent', 2, count);
+    assert.equal(editor.getContent(), '<p>X</p>', 'setContent');
+    assert.equal(count, 2, 'setContent');
     editor.off('SetContent', callback);
     editor.off('BeforeSetContent', callback);
 
     count = 0;
     editor.setContent('<p>test</p>');
-    Assert.eq('setContent', '<p>test</p>', editor.getContent());
-    Assert.eq('setContent', 0, count);
-  }));
+    assert.equal(editor.getContent(), '<p>test</p>', 'setContent');
+    assert.equal(count, 0, 'setContent');
+  });
 
-  const sSetContentWithCommentBug = (editor: Editor) => Log.step('TBA', 'setContent with comment bug #4409', Step.sync(() => {
+  it('TBA: setContent with comment bug #4409', () => {
+    const editor = hook.editor();
     editor.setContent('<!-- x --><br>');
     editor.settings.disable_nodechange = false;
     editor.nodeChanged();
     editor.settings.disable_nodechange = true;
-    Assert.eq('setContent with comment bug #4409', '<!-- x --><p>\u00a0</p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<!-- x --><p>\u00a0</p>', 'setContent with comment bug #4409');
+  });
 
-  const sCustomElements = (editor: Editor) => Log.step('TBA', 'custom elements', Step.sync(() => {
+  it('TBA: custom elements', () => {
+    const editor = hook.editor();
     editor.setContent('<custom1>c1</custom1><custom2>c1</custom2>');
-    Assert.eq('custom elements', '<custom1>c1</custom1><p><custom2>c1</custom2></p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<custom1>c1</custom1><p><custom2>c1</custom2></p>', 'custom elements');
+  });
 
-  const sStoreRestoreTabindex = (editor: Editor) => Log.step('TBA', 'Store/restore tabindex', Step.sync(() => {
+  it('TBA: Store/restore tabindex', () => {
+    const editor = hook.editor();
     editor.setContent('<span tabindex="42">abc</span>');
-    Assert.eq('Store/restore tabindex', '<p><span data-mce-tabindex="42">abc</span></p>', editor.getContent({ format: 'raw' }).toLowerCase());
-    Assert.eq('Store/restore tabindex', '<p><span tabindex="42">abc</span></p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent({ format: 'raw' }).toLowerCase(), '<p><span data-mce-tabindex="42">abc</span></p>', 'Store/restore tabindex');
+    assert.equal(editor.getContent(), '<p><span tabindex="42">abc</span></p>', 'Store/restore tabindex');
+  });
 
-  const sShowHideIsHiddenAndEvents = (editor: Editor) => Log.step('TBA', 'show/hide/isHidden and events', Step.sync(() => {
+  it('TBA: show/hide/isHidden and events', () => {
+    const editor = hook.editor();
     let lastEvent;
 
     editor.on('show hide', (e) => {
       lastEvent = e;
     });
 
-    Assert.eq('Initial isHidden state', false, editor.isHidden());
+    assert.isFalse(editor.isHidden(), 'Initial isHidden state');
 
     editor.hide();
-    Assert.eq('After hide isHidden state', true, editor.isHidden());
-    Assert.eq('show/hide/isHidden and events', 'hide', lastEvent.type);
+    assert.isTrue(editor.isHidden(), 'After hide isHidden state');
+    assert.equal('hide', lastEvent.type, 'show/hide/isHidden and events');
 
     lastEvent = null;
     editor.hide();
-    Assert.eq('show/hide/isHidden and events', null, lastEvent);
+    assert.isNull(lastEvent, 'show/hide/isHidden and events');
 
     editor.show();
-    Assert.eq('After show isHidden state', false, editor.isHidden());
-    Assert.eq('show/hide/isHidden and events', 'show', lastEvent.type);
+    assert.isFalse(editor.isHidden(), 'After show isHidden state');
+    assert.equal(lastEvent.type, 'show', 'show/hide/isHidden and events');
 
     lastEvent = null;
     editor.show();
-    Assert.eq('show/hide/isHidden and events', null, lastEvent);
-  }));
+    assert.isNull(lastEvent, 'show/hide/isHidden and events');
+  });
 
-  const sHideSaveContentAndHiddenStateWhileSaving = (editor: Editor) => Log.step('TBA', 'hide save content and hidden state while saving', Step.sync(() => {
+  it('TBA: hide save content and hidden state while saving', () => {
+    const editor = hook.editor();
     let lastEvent, hiddenStateWhileSaving;
 
     editor.on('SaveContent', (e) => {
@@ -227,28 +250,31 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     editor.hide();
 
     const elm: any = document.getElementById(editor.id);
-    Assert.eq('False isHidden state while saving', false, hiddenStateWhileSaving);
-    Assert.eq('hide save content and hidden state while saving', '<p>xyz</p>', lastEvent.content);
-    Assert.eq('hide save content and hidden state while saving', '<p>xyz</p>', elm.value);
+    assert.isFalse(hiddenStateWhileSaving, 'False isHidden state while saving');
+    assert.equal(lastEvent.content, '<p>xyz</p>', 'hide save content and hidden state while saving');
+    assert.equal(elm.value, '<p>xyz</p>', 'hide save content and hidden state while saving');
 
     editor.show();
-  }));
+  });
 
-  const sInsertContent = (editor: Editor) => Log.stepsAsStep('', 'insertContent', [
-    Step.sync(() => editor.setContent('<p>ab</p>')),
-    TinyApis(editor).sSetCursor([ 0, 0 ], 1),
-    Step.sync(() => editor.insertContent('c')),
-    Step.sync(() => Assert.eq('insertContent', '<p>acb</p>', editor.getContent()))
-  ]);
+  it('TBA: insertContent', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>ab</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.insertContent('c');
+    assert.equal(editor.getContent(), '<p>acb</p>', 'insertContent');
+  });
 
-  const sInserContentMerge = (editor: Editor) => Log.stepsAsStep('', 'insertContent merge', [
-    Step.sync(() => editor.setContent('<p><strong>a</strong></p>')),
-    TinyApis(editor).sSetCursor([ 0, 0 ], 1),
-    Step.sync(() => editor.insertContent('<em><strong>b</strong></em>', { merge: true })),
-    Step.sync(() => Assert.eq('insertContent merge', '<p><strong>a<em>b</em></strong></p>', editor.getContent()))
-  ]);
+  it('TBA: insertContent merge', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><strong>a</strong></p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.insertContent('<em><strong>b</strong></em>', { merge: true });
+    assert.equal(editor.getContent(), '<p><strong>a<em>b</em></strong></p>', 'insertContent merge');
+  });
 
-  const sAddCommand = (editor: Editor) => Log.step('TBA', 'addCommand', Step.sync(() => {
+  it('TBA: addCommand', () => {
+    const editor = hook.editor();
     const scope = {};
     let lastScope, lastArgs;
 
@@ -262,17 +288,18 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     editor.addCommand('CustomCommand2', callback);
 
     editor.execCommand('CustomCommand1', false, 'value', { extra: true });
-    Assert.eq('addCommand', false, lastArgs[0]);
-    Assert.eq('addCommand', 'value', lastArgs[1]);
-    Assert.eq('addCommand', true, lastScope === scope);
+    assert.isFalse(lastArgs[0], 'addCommand');
+    assert.equal( lastArgs[1], 'value', 'addCommand');
+    assert.strictEqual(lastScope, scope, 'addCommand');
 
     editor.execCommand('CustomCommand2');
-    Assert.eq('addCommand', 'undefined', typeof lastArgs[0]);
-    Assert.eq('addCommand', 'undefined', typeof lastArgs[1]);
-    Assert.eq('addCommand', true, lastScope === editor);
-  }));
+    assert.isUndefined(lastArgs[0], 'addCommand');
+    assert.isUndefined(lastArgs[1], 'addCommand');
+    assert.strictEqual(lastScope, editor, 'addCommand');
+  });
 
-  const sAddQuertyStateHandler = (editor: Editor) => Log.step('TBA', 'addQueryStateHandler', Step.sync(() => {
+  it('TBA: addQueryStateHandler', () => {
+    const editor = hook.editor();
     const scope = {};
     let lastScope, currentState;
 
@@ -286,33 +313,37 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     editor.addQueryStateHandler('CustomCommand2', callback);
 
     currentState = false;
-    Assert.eq('addQueryStateHandler', false, editor.queryCommandState('CustomCommand1'));
-    Assert.eq('Scope is not custom scope', true, lastScope === scope);
+    assert.equal(false, editor.queryCommandState('CustomCommand1'), 'addQueryStateHandler');
+    assert.equal(true, lastScope === scope, 'Scope is not custom scope');
 
     currentState = true;
-    Assert.eq('addQueryStateHandler', true, editor.queryCommandState('CustomCommand2'));
-    Assert.eq('Scope is not editor', true, lastScope === editor);
-  }));
+    assert.equal(true, editor.queryCommandState('CustomCommand2'), 'addQueryStateHandler');
+    assert.equal(true, lastScope === editor, 'Scope is not editor');
+  });
 
-  const sBlockScriptExecution = (editor: Editor) => Log.step('TBA', 'Block script execution', Step.sync(() => {
+  it('TBA: Block script execution', () => {
+    const editor = hook.editor();
     editor.setContent('<script></script><script type="x"></script><script type="mce-x"></script><p>x</p>');
-    Assert.eq('Block script execution',
+    assert.equal(
       HtmlUtils.cleanHtml(editor.getBody().innerHTML),
       '<script type="mce-no/type"></script>' +
       '<script type="mce-x"></script>' +
       '<script type="mce-x"></script>' +
-      '<p>x</p>'
+      '<p>x</p>',
+      'Block script execution'
     );
-    Assert.eq('Block script execution',
+    assert.equal(
       editor.getContent(),
       '<script></script>' +
       '<script type="x"></script>' +
       '<script type="x"></script>' +
-      '<p>x</p>'
+      '<p>x</p>',
+      'Block script execution'
     );
-  }));
+  });
 
-  const sAddQueryValueHandler = (editor: Editor) => Log.step('TBA', 'addQueryValueHandler', Step.sync(() => {
+  it('TBA: addQueryValueHandler', () => {
+    const editor = hook.editor();
     const scope = {};
     let lastScope, currentValue;
 
@@ -326,15 +357,16 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     editor.addQueryValueHandler('CustomCommand2', callback);
 
     currentValue = 'a';
-    Assert.eq('addQueryValueHandler', 'a', editor.queryCommandValue('CustomCommand1'));
-    Assert.eq('Scope is not custom scope', true, lastScope === scope);
+    assert.equal(editor.queryCommandValue('CustomCommand1'), 'a', 'addQueryValueHandler');
+    assert.strictEqual(lastScope, scope, 'Scope is not custom scope');
 
     currentValue = 'b';
-    Assert.eq('addQueryValueHandler', 'b', editor.queryCommandValue('CustomCommand2'));
-    Assert.eq('Scope is not editor', true, lastScope === editor);
-  }));
+    assert.equal(editor.queryCommandValue('CustomCommand2'), 'b', 'addQueryValueHandler');
+    assert.strictEqual(lastScope, editor, 'Scope is not editor');
+  });
 
-  const sSetDirtyIsDirty = (editor: Editor) => Log.step('TBA', 'setDirty/isDirty', Step.sync(() => {
+  it('TBA: setDirty/isDirty', () => {
+    const editor = hook.editor();
     let lastArgs = null;
 
     editor.on('dirty', (e) => {
@@ -342,24 +374,25 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     });
 
     editor.setDirty(false);
-    Assert.eq('setDirty/isDirty', null, lastArgs);
-    Assert.eq('setDirty/isDirty', false, editor.isDirty());
+    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(true);
-    Assert.eq('setDirty/isDirty', 'dirty', lastArgs.type);
-    Assert.eq('setDirty/isDirty', true, editor.isDirty());
+    assert.equal(lastArgs.type, 'dirty', 'setDirty/isDirty');
+    assert.isTrue( editor.isDirty(), 'setDirty/isDirty');
 
     lastArgs = null;
     editor.setDirty(true);
-    Assert.eq('setDirty/isDirty', null, lastArgs);
-    Assert.eq('setDirty/isDirty', true, editor.isDirty());
+    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isTrue(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(false);
-    Assert.eq('setDirty/isDirty', null, lastArgs);
-    Assert.eq('setDirty/isDirty', false, editor.isDirty());
-  }));
+    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
+  });
 
-  const sSetMode = (editor: Editor) => Log.step('TBA', 'setMode', Step.sync(() => {
+  it('TBA: setMode', () => {
+    const editor = hook.editor();
     let clickCount = 0;
 
     const isDisabled = (selector) => {
@@ -372,143 +405,104 @@ UnitTest.asynctest('browser.tinymce.core.EditorTest', (success, failure) => {
     });
 
     editor.dom.fire(editor.getBody(), 'click');
-    Assert.eq('setMode', 1, clickCount);
+    assert.equal(clickCount, 1, 'setMode');
 
     editor.setMode('readonly');
-    Assert.eq('setMode', true, isDisabled('.tox-editor-container button:last'));
+    assert.isTrue(isDisabled('.tox-editor-container button:last'), 'setMode');
     editor.dom.fire(editor.getBody(), 'click');
-    Assert.eq('setMode', 1, clickCount);
+    assert.equal(clickCount, 1, 'setMode');
 
     editor.setMode('design');
     editor.dom.fire(editor.getBody(), 'click');
-    Assert.eq('setMode', false, isDisabled('.tox-editor-container button:last'));
-    Assert.eq('setMode', 2, clickCount);
-  }));
+    assert.isFalse(isDisabled('.tox-editor-container button:last'), 'setMode');
+    assert.equal(clickCount, 2, 'setMode');
+  });
 
-  const sTranslate = (editor: Editor) => Log.step('TBA', 'translate', Step.sync(() => {
+  it('TBA: translate', () => {
+    const editor = hook.editor();
     EditorManager.addI18n('en', {
       'input i18n': 'output i18n',
       'value:{0}{1}': 'value translation:{0}{1}'
     });
 
-    Assert.eq('translate', 'output i18n', editor.translate('input i18n'));
-    Assert.eq('translate', 'value translation:ab', editor.translate([ 'value:{0}{1}', 'a', 'b' ]));
-  }));
+    assert.equal(editor.translate('input i18n'), 'output i18n', 'translate');
+    assert.equal(editor.translate([ 'value:{0}{1}', 'a', 'b' ]), 'value translation:ab', 'translate');
+  });
 
-  const sTreatSomeParagraphsAsEmptyContents = (editor: Editor) => Log.step('TBA', 'Treat some paragraphs as empty contents', Step.sync(() => {
+  it('TBA: Treat some paragraphs as empty contents', () => {
+    const editor = hook.editor();
     editor.setContent('<p><br /></p>');
-    Assert.eq('Treat some paragraphs as empty contents', '', editor.getContent());
+    assert.equal(editor.getContent(), '', 'Treat some paragraphs as empty contents');
 
     editor.setContent('<p>\u00a0</p>');
-    Assert.eq('Treat some paragraphs as empty contents', '', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '', 'Treat some paragraphs as empty contents');
+  });
 
-  const sKamerWordBoundaries = (editor: Editor) => Log.step('TBA', 'kamer word boundaries', Step.sync(() => {
+  it('TBA: kamer word boundaries', () => {
+    const editor = hook.editor();
     editor.setContent('<p>!\u200b!\u200b!</p>');
-    Assert.eq('kamer word boundaries', '<p>!\u200b!\u200b!</p>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<p>!\u200b!\u200b!</p>', 'kamer word boundaries');
+  });
 
-  const sPreserveWhitespacePreElements = (editor: Editor) => Log.step('TBA', 'Preserve whitespace pre elements', Step.sync(() => {
+  it('TBA: Preserve whitespace pre elements', () => {
+    const editor = hook.editor();
     editor.setContent('<pre> </pre>');
-    Assert.eq('kamer word boundaries', '<pre> </pre>', editor.getContent());
-  }));
+    assert.equal(editor.getContent(), '<pre> </pre>', 'kamer word boundaries');
+  });
 
-  const sHasFocus = (editor: Editor) => Log.step('TBA', 'hasFocus', Step.sync(() => {
+  it('TBA: hasFocus', () => {
+    const editor = hook.editor();
     editor.focus();
-    Assert.eq('hasFocus', true, editor.hasFocus());
+    assert.isTrue(editor.hasFocus(), 'hasFocus');
 
     const input = document.createElement('input');
     document.body.appendChild(input);
 
     input.focus();
-    Assert.eq('hasFocus', false, editor.hasFocus());
+    assert.isFalse(editor.hasFocus(), 'hasFocus');
 
     editor.focus();
-    Assert.eq('hasFocus', true, editor.hasFocus());
+    assert.isTrue(editor.hasFocus(), 'hasFocus');
 
     input.parentNode.removeChild(input);
-  }));
+  });
 
-  const sHasPlugin = (editor: Editor) => {
-    const sCheckWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => Step.sync(() => {
+  context('hasPlugin', () => {
+    const checkWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => {
+      const editor = hook.editor();
       editor.settings.plugins = plugins;
-      Assert.eq(title, expected, editor.hasPlugin(plugin));
-    });
+      assert.equal(editor.hasPlugin(plugin), expected, title);
+    };
 
-    const sCheckWithManager = (title: string, plugins: string, plugin: string, addToManager: boolean, expected: boolean) => Step.sync(() => {
+    const checkWithManager = (title: string, plugins: string, plugin: string, addToManager: boolean, expected: boolean) => {
+      const editor = hook.editor();
       if (addToManager) {
         PluginManager.add('ParticularPlugin', Fun.noop);
       }
 
       editor.settings.plugins = plugins;
-      Assert.eq(title, editor.hasPlugin(plugin, true), expected);
+      assert.equal(editor.hasPlugin(plugin, true), expected, title);
 
       if (addToManager) {
         PluginManager.remove('ParticularPlugin');
       }
+    };
+
+    it('TINY-766: Checking without requiring a plugin to be loaded', () => {
+      checkWithoutManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', false);
+      checkWithoutManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true);
+      checkWithoutManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true);
+      checkWithoutManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true);
+      checkWithoutManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', false);
     });
 
-    return Log.stepsAsStep('TINY-766', 'hasPlugin',
-      [
-        Log.stepsAsStep('TINY-766', 'Checking without requiring a plugin to be loaded', [
-          sCheckWithoutManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', false),
-          sCheckWithoutManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true),
-          sCheckWithoutManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true),
-          sCheckWithoutManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true),
-          sCheckWithoutManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', false)
-        ]),
-
-        Log.stepsAsStep('TINY-766', 'Checking while requiring a plugin to be loaded', [
-          sCheckWithManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', true, false),
-          sCheckWithManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true, true),
-          sCheckWithManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true, true),
-          sCheckWithManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true, true),
-          sCheckWithManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', true, false),
-          sCheckWithManager('Plugin which has not loaded does not return true', 'Has ParticularPlugin In List', 'ParticularPlugin', false, false)
-        ])
-      ]
-    );
-  };
-
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    Pipeline.async({},
-      [
-        sEventChange(editor),
-        sEventBeforeExecCommand(editor),
-        sRelativeUrls(editor),
-        sAbsoluteUrls(editor),
-        sWebkidSerializationRangeBug(editor),
-        sEditorMethodsGetParam(editor),
-        sSetContent(editor),
-        sSetContentWithCommentBug(editor),
-        sCustomElements(editor),
-        sStoreRestoreTabindex(editor),
-        sShowHideIsHiddenAndEvents(editor),
-        sHideSaveContentAndHiddenStateWhileSaving(editor),
-        sInsertContent(editor),
-        sInserContentMerge(editor),
-        sAddCommand(editor),
-        sAddQuertyStateHandler(editor),
-        sBlockScriptExecution(editor),
-        sAddQueryValueHandler(editor),
-        sSetDirtyIsDirty(editor),
-        sSetMode(editor),
-        sTranslate(editor),
-        sTreatSomeParagraphsAsEmptyContents(editor),
-        sKamerWordBoundaries(editor),
-        sPreserveWhitespacePreElements(editor),
-        sHasFocus(editor),
-        sHasPlugin(editor)
-      ],
-      onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    custom_elements: 'custom1,~custom2',
-    extended_valid_elements: 'custom1,custom2,script[*]',
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    it('TINY-766: Checking while requiring a plugin to be loaded', () => {
+      checkWithManager('Plugin does not exist', 'Plugin Is Not Here', 'ParticularPlugin', true, false);
+      checkWithManager('Plugin does exist with spaces', 'Has ParticularPlugin In List', 'ParticularPlugin', true, true);
+      checkWithManager('Plugin does exist with commas', 'Has,ParticularPlugin,In,List', 'ParticularPlugin', true, true);
+      checkWithManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true, true);
+      checkWithManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', true, false);
+      checkWithManager('Plugin which has not loaded does not return true', 'Has ParticularPlugin In List', 'ParticularPlugin', false, false);
+    });
+  });
 });

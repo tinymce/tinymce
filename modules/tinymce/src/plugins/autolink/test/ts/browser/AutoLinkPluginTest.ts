@@ -1,18 +1,26 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 import fc from 'fast-check';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Plugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as KeyUtils from '../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
+  before(function () {
+    if (Env.browser.isIE() || Env.browser.isEdge()) {
+      this.skip();
+    }
+  });
 
-  Theme();
-  Plugin();
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'autolink',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
   const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
@@ -27,7 +35,7 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     editor.setContent('<p>' + modifiedurl + '</p>');
     LegacyUnit.setSelection(editor, 'p', modifiedurl.length);
     KeyUtils.type(editor, ')');
-    Assert.eq('Create a link of an eclipsed url', `<p>(<a href="${expectedUrl || url}">${url + dot}</a>)</p>`, editor.getContent());
+    assert.equal(editor.getContent(), `<p>(<a href="${expectedUrl || url}">${url + dot}</a>)</p>`, 'Create a link of an eclipsed url');
   };
 
   const typeNewlineURL = (editor: Editor, url: string, expectedUrl?: string, withDotAtTheEnd?: boolean): void => {
@@ -35,26 +43,20 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     editor.setContent('<p>' + url + dot + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
     KeyUtils.type(editor, '\n');
-    Assert.eq('Create link with newline', `<p><a href="${expectedUrl || url}">${url}</a></p><p>${withDotAtTheEnd ? '.' : '&nbsp;'}</p>`, editor.getContent());
+    TinyAssertions.assertContent(editor, `<p><a href="${expectedUrl || url}">${url}</a></p><p>${withDotAtTheEnd ? '.' : '&nbsp;'}</p>`);
   };
 
   const assertNoLink = (editor: Editor, input: string, text?: string): void => {
-    Assert.eq('Should not convert to link', `<p>${text || input}&nbsp;</p>`, typeUrl(editor, input));
+    assert.equal(typeUrl(editor, input), `<p>${text || input}&nbsp;</p>`, 'Should not convert to link');
   };
 
   const assertIsLink = (editor: Editor, input: string, link: string, withDotAtTheEnd?: boolean, text?: string): void => {
     const dot = withDotAtTheEnd ? '.' : '';
-    Assert.eq('Should be convert to link', `<p><a href="${link}">${text || input}</a>${dot}&nbsp;</p>`, typeUrl(editor, (input + dot)));
+    assert.equal(typeUrl(editor, (input + dot)), `<p><a href="${link}">${text || input}</a>${dot}&nbsp;</p>`, 'Should be convert to link');
   };
 
-  const test = (label: string, runTest: (editor: Editor) => void): void => {
-    suite.test(label, (editor) => {
-      editor.focus();
-      runTest(editor);
-    });
-  };
-
-  test('TestCase-TBA: AutoLink: Correct urls ended with space', (editor) => {
+  it('TBA: Correct urls ended with space', () => {
+    const editor = hook.editor();
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
     assertIsLink(editor, 'ssh://www.domain.com', 'ssh://www.domain.com');
@@ -66,31 +68,36 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     assertIsLink(editor, 'first-last@domain.com', 'mailto:first-last@domain.com');
   });
 
-  test('TINY-4773: AutoLink: Unexpected urls ended with space', (editor) => {
+  it('TINY-4773: AutoLink: Unexpected urls ended with space', () => {
+    const editor = hook.editor();
     assertIsLink(editor, 'first-last@domain', 'mailto:first-last@domain'); // No .com or similar needed.
     assertIsLink(editor, 'first-last@()', 'mailto:first-last@()'); // Anything goes after the @.
     assertIsLink(editor, 'first-last@¶¶KJ', 'mailto:first-last@&para;&para;KJ', false, 'first-last@&para;&para;KJ'); // Anything goes after the @
   });
 
-  test('TINY-4773: AutoLink: text which should not work', (editor) => {
+  it('TINY-4773: AutoLink: text which should not work', () => {
+    const editor = hook.editor();
     assertNoLink(editor, 'first-last@@domain@.@com'); // We only accept one @
     assertNoLink(editor, 'first-last@¶¶KJ@', 'first-last@&para;&para;KJ@'); // Anything goes after the @
     assertNoLink(editor, 'first-last@'); // We only accept one @
   });
 
-  test('TINY-4773: AutoLink: multiple @ characters', (editor) => {
+  it('TINY-4773: AutoLink: multiple @ characters', () => {
+    const editor = hook.editor();
     fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
       assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
     }));
   });
 
-  test('TINY-4773: AutoLink: ending in @ character', (editor) => {
+  it('TINY-4773: AutoLink: ending in @ character', () => {
+    const editor = hook.editor();
     fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
       assertNoLink(editor, `${s1}@`, `${s1}@`);
     }));
   });
 
-  test('TestCase-TBA: AutoLink: Urls ended with )', (editor) => {
+  it('TBA: Urls ended with )', () => {
+    const editor = hook.editor();
     typeAnEclipsedURL(editor, 'http://www.domain.com');
     typeAnEclipsedURL(editor, 'https://www.domain.com');
     typeAnEclipsedURL(editor, 'ssh://www.domain.com');
@@ -99,7 +106,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     typeAnEclipsedURL(editor, 'www.domain.com', 'http://www.domain.com');
   });
 
-  test('TestCase-TBA: AutoLink: Urls ended with new line', (editor) => {
+  it('TBA: Urls ended with new line', () => {
+    const editor = hook.editor();
     typeNewlineURL(editor, 'http://www.domain.com');
     typeNewlineURL(editor, 'https://www.domain.com');
     typeNewlineURL(editor, 'ssh://www.domain.com');
@@ -108,8 +116,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     typeNewlineURL(editor, 'www.domain.com', 'http://www.domain.com', true);
   });
 
-  test('TestCase-TBA: AutoLink: Url inside blank formatting wrapper', (editor) => {
-    editor.focus();
+  it('TBA: Url inside blank formatting wrapper', () => {
+    const editor = hook.editor();
     editor.setContent('<p><br></p>');
     editor.selection.setCursorLocation(editor.getBody().firstChild, 0);
     editor.execCommand('Bold');
@@ -121,7 +129,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     );
   });
 
-  suite.test(`TestCase-TBA: AutoLink: default_link_target='_self'`, (editor) => {
+  it(`TBA: default_link_target='_self'`, () => {
+    const editor = hook.editor();
     editor.settings.default_link_target = '_self';
     LegacyUnit.equal(
       typeUrl(editor, 'http://www.domain.com'),
@@ -130,7 +139,8 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.default_link_target;
   });
 
-  test('TestCase-TBA: AutoLink: link_default_protocol=https', (editor) => {
+  it('TBA: link_default_protocol=https', () => {
+    const editor = hook.editor();
     editor.settings.link_default_protocol = 'https';
     assertIsLink(editor, 'http://www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'https://www.domain.com', 'https://www.domain.com');
@@ -144,19 +154,11 @@ UnitTest.asynctest('browser.tinymce.plugins.autolink.AutoLinkPluginTest', (succe
     delete editor.settings.link_default_protocol;
   });
 
-  test('TestCase-TBA: AutoLink: link_default_protocol=http', (editor) => {
+  it('TBA: link_default_protocol=http', () => {
+    const editor = hook.editor();
     editor.settings.link_default_protocol = 'http';
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com');
     assertIsLink(editor, 'www.domain.com', 'http://www.domain.com', true);
     delete editor.settings.link_default_protocol;
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const steps = Env.browser.isIE() || Env.browser.isEdge() ? [] : suite.toSteps(editor);
-    Pipeline.async({}, Log.steps('TBA', 'AutoLink: Test autolink url inputs', steps), onSuccess, onFailure);
-  }, {
-    plugins: 'autolink',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

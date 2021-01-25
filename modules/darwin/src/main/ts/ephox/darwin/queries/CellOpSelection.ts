@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { RunOperation, Structs } from '@ephox/snooker';
+import { RunOperation } from '@ephox/snooker';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import { Ephemera } from '../api/Ephemera';
 import * as TableSelection from '../api/TableSelection';
@@ -31,7 +31,7 @@ const mergable = (table: SugarElement<HTMLTableElement>, selections: Selections,
         return Optional.none();
       } else {
         return TableSelection.retrieveBox(table, ephemera.firstSelectedSelector, ephemera.lastSelectedSelector)
-          .map((bounds: Structs.Bounds) => ({ bounds, cells }));
+          .map((bounds) => ({ bounds, cells }));
       }
     },
     Optional.none

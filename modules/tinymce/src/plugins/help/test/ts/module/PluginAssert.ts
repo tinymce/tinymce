@@ -1,15 +1,11 @@
-import { Assertions, Chain, Guard, Logger, Mouse, UiFinder } from '@ephox/agar';
-import { TinyDom } from '@ephox/mcagar';
+import { Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { SugarDocument } from '@ephox/sugar';
 
-export const sAssert = (errString, objStruc, waitOn, clickOn) => {
-  return Logger.t('Assert structure in dialog', Chain.asStep(TinyDom.fromDom(document.body), [
-    UiFinder.cWaitFor('Could not find notification', waitOn),
-    Mouse.cClickOn(clickOn),
-    Chain.control(
-      Chain.op((panel) => {
-        Assertions.assertPresence(errString, objStruc, panel);
-      }),
-      Guard.tryUntil('Keep waiting', 100, 4000)
-    )
-  ]));
+export const pAssert = async (message: string, expected: Record<string, number>, waitOnSelector: string, clickOnSelector: string) => {
+  const dialog = await UiFinder.pWaitFor('Could not find dialog', SugarDocument.getDocument(), waitOnSelector);
+  Mouse.clickOn(dialog, clickOnSelector);
+  await Waiter.pTryUntil(
+    'Waiting for expected structure',
+    () => Assertions.assertPresence(message, expected, dialog)
+  );
 };

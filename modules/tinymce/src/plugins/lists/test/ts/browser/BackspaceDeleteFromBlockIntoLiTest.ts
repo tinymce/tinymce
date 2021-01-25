@@ -1,61 +1,56 @@
-import { Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-import ListsPlugin from 'tinymce/plugins/lists/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/lists/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Browser Test: .RemoveTrailingBlockquoteTest', (success, failure) => {
-
-  ListsPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Lists: backspace from p inside div into li', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li></ul><div><p><br /></p></div>'),
-        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.backspace(), { }),
-        tinyApis.sAssertContent('<ul><li>a</li></ul>')
-      ]),
-      Log.stepsAsStep('TBA', 'Lists: backspace from p inside blockquote into li', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li></ul><blockquote><p><br /></p></blockquote>'),
-        tinyApis.sSetCursor([ 1, 0, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.backspace(), { }),
-        tinyApis.sAssertContent('<ul><li>a</li></ul>')
-      ]),
-      Log.stepsAsStep('TBA', 'Lists: backspace from b inside p inside blockquote into li', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li></ul><blockquote><p><b><br /></b></p></blockquote>'),
-        tinyApis.sSetCursor([ 1, 0, 0, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.backspace(), { }),
-        tinyApis.sAssertContent('<ul><li>a</li></ul>')
-      ]),
-      Log.stepsAsStep('TBA', 'Lists: backspace from span inside p inside blockquote into li', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li></ul><blockquote><p><span class="x"><br /></span></p></blockquote>'),
-        tinyApis.sSetCursor([ 1, 0, 0, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.backspace(), { }),
-        tinyApis.sAssertContent('<ul><li>a</li></ul>')
-      ]),
-      Log.stepsAsStep('TBA', 'Lists: backspace from p into li', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<ul><li>a</li></ul><p><br /></p>'),
-        tinyApis.sSetCursor([ 1, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.backspace(), { }),
-        tinyApis.sAssertContent('<ul><li>a</li></ul>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',
     toolbar: '',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: backspace from p inside div into li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul><div><p><br /></p></div>');
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
+  });
+
+  it('TBA: backspace from p inside blockquote into li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul><blockquote><p><br /></p></blockquote>');
+    TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
+  });
+
+  it('TBA: backspace from b inside p inside blockquote into li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul><blockquote><p><b><br /></b></p></blockquote>');
+    TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
+  });
+
+  it('TBA: backspace from span inside p inside blockquote into li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul><blockquote><p><span class="x"><br /></span></p></blockquote>');
+    TinySelections.setCursor(editor, [ 1, 0, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
+  });
+
+  it('TBA: backspace from p into li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>a</li></ul><p><br /></p>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+    TinyAssertions.assertContent(editor, '<ul><li>a</li></ul>');
+  });
 });

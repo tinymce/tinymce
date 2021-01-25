@@ -1,107 +1,96 @@
-import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { FocusTools, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import {
-  cAssertCleanHtml, cAssertInputCheckbox, cAssertInputValue, cFillActiveDialog, cSubmitDialog, cWaitForDialog, generalTabSelectors
-} from '../module/Helpers';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.DescriptiveImageDialogTest', (success, failure) => {
+import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabSelectors } from '../module/Helpers';
 
-  SilverTheme();
-  Plugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const api = TinyApis(editor);
-    const doc = SugarElement.fromDom(document);
-
-    const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
-    const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
-
-    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Insert Image Dialog basic keyboard navigation cycle ', [
-        api.sExecCommand('mceImage'),
-        sAssertFocused('Source', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Descriptive', '.tox-checkbox__input'),
-        sPressTab,
-        sAssertFocused('Description', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Width', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Height', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Constraint proportions', 'button.tox-lock'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ]),
-      Log.chainsAsStep('TBA', 'Image update with empty alt should remove the existing alt attribute', [
-        Chain.inject(editor),
-        ApiChains.cSetContent('<p><img src="#1" alt="alt1" /></p>'),
-        ApiChains.cSetSelection([ 0 ], 0, [ 0 ], 1),
-        ApiChains.cExecCommand('mceImage', true),
-        cWaitForDialog(),
-        Chain.fromParent(Chain.identity, [
-          cAssertInputValue(generalTabSelectors.src, '#1'),
-          cAssertInputValue(generalTabSelectors.alt, 'alt1')
-        ]),
-        cFillActiveDialog({
-          src: {
-            value: 'src'
-          },
-          alt: ''
-        }),
-        cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img src="src" /></p>')
-      ]),
-      Log.chainsAsStep('TBA', 'Image update with decorative toggled on should produce empty alt and role=presentation', [
-        Chain.inject(editor),
-        ApiChains.cSetContent('<p><img src="#1" alt="alt1" /></p>'),
-        ApiChains.cSetSelection([ 0 ], 0, [ 0 ], 1),
-        ApiChains.cExecCommand('mceImage', true),
-        cWaitForDialog(),
-        Chain.fromParent(Chain.identity, [
-          cAssertInputValue(generalTabSelectors.src, '#1'),
-          cAssertInputValue(generalTabSelectors.alt, 'alt1'),
-          cAssertInputCheckbox(generalTabSelectors.decorative, false)
-        ]),
-        cFillActiveDialog({
-          decorative: true
-        }),
-        cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img role="presentation" src="#1" alt="" /></p>')
-      ]),
-      Log.chainsAsStep('TBA', 'Image update with decorative toggled off should produce empty alt and role=presentation', [
-        Chain.inject(editor),
-        ApiChains.cSetContent('<p><img role="presentation" src="#1" alt="" /></p>'),
-        ApiChains.cSetSelection([ 0 ], 0, [ 0 ], 1),
-        ApiChains.cExecCommand('mceImage', true),
-        cWaitForDialog(),
-        Chain.fromParent(Chain.identity, [
-          cAssertInputValue(generalTabSelectors.src, '#1'),
-          cAssertInputValue(generalTabSelectors.alt, ''),
-          cAssertInputCheckbox(generalTabSelectors.decorative, true)
-        ]),
-        cFillActiveDialog({
-          decorative: false
-        }),
-        cSubmitDialog(),
-        cAssertCleanHtml('Checking output', '<p><img src="#1" /></p>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.DescriptiveImageDialogTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
     a11y_advanced_options: true
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
+  const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());
+
+  const pAssertFocused = (name: string, selector: string) => FocusTools.pTryOnSelector(name, SugarDocument.getDocument(), selector);
+
+  it('TBA: Insert Image Dialog basic keyboard navigation cycle', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceImage');
+    await pAssertFocused('Source', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Descriptive', '.tox-checkbox__input');
+    pressTab(editor);
+    await pAssertFocused('Description', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Width', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Height', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Constraint proportions', 'button.tox-lock');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
+
+  it('TBA: Image update with empty alt should remove the existing alt attribute', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, 'alt1');
+    fillActiveDialog({
+      src: {
+        value: 'src'
+      },
+      alt: ''
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="src" /></p>');
+  });
+
+  it('TBA: Image update with decorative toggled on should produce empty alt and role=presentation', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, 'alt1');
+    assertInputCheckbox(generalTabSelectors.decorative, false);
+    fillActiveDialog({
+      decorative: true
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt="" /></p>');
+  });
+
+  it('TBA: Image update with decorative toggled off should produce empty alt and role=presentation', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img role="presentation" src="#1" alt="" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    fillActiveDialog({
+      decorative: false
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="#1" /></p>');
+  });
 });

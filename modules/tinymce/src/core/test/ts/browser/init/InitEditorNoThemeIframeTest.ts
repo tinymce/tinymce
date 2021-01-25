@@ -1,33 +1,33 @@
-import { Assertions, GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 
-UnitTest.asynctest('browser.tinymce.core.init.InitEditorNoThemeIframeTest', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Logger.t('Tests if the editor is responsive after setting theme to false', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sAssertContent('<p>a</p>')
-      ])),
-      Logger.t('Editor element properties', Step.sync(() => {
-        const body = SugarElement.fromDom(document.body);
-        const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
-        const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
-
-        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.editorContainer));
-        Assertions.assertDomEq('Should be expected element', editorElement, SugarElement.fromDom(editor.contentAreaContainer));
-        Assertions.assertDomEq('Should be expected element', targetElement, SugarElement.fromDom(editor.getElement()));
-      }))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.init.InitEditorNoThemeIframeTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
     theme: false,
     base_url: '/project/tinymce/js/tinymce',
     init_instance_callback: (editor) => {
       editor.fire('SkinLoaded');
     }
-  }, success, failure);
+  }, []);
+
+  it('Tests if the editor is responsive after setting theme to false', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinyAssertions.assertContent(editor, '<p>a</p>');
+  });
+
+  it('Editor element properties', () => {
+    const editor = hook.editor();
+    const body = SugarBody.body();
+    const targetElement = SelectorFind.descendant(body, '#' + editor.id).getOrDie('No elm');
+    const editorElement = Traverse.nextSibling(targetElement).getOrDie('No elm');
+
+    Assertions.assertDomEq('Should be expected element', editorElement, TinyDom.container(editor));
+    Assertions.assertDomEq('Should be expected element', editorElement, TinyDom.contentAreaContainer(editor));
+    Assertions.assertDomEq('Should be expected element', targetElement, TinyDom.targetElement(editor));
+  });
 });

@@ -1,6 +1,6 @@
 import { Keyboard, Step } from '@ephox/agar';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { Editor } from '../alien/EditorTypes';
+import { Editor } from '../../alien/EditorTypes';
 
 export interface TinyActions {
   sContentKeydown: <T> (code: number, modifiers?: Record<string, any>) => Step<T, T>;

@@ -1,3 +1,4 @@
+import { Assertions } from '@ephox/agar';
 import { assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
@@ -11,7 +12,7 @@ UnitTest.test('ModificationOperationsTest', () => {
   const en = (content: string, isNew: boolean) => {
     const elem = SugarElement.fromTag('td');
     Html.set(elem, content);
-    return Structs.elementnew(elem, isNew);
+    return Structs.elementnew(elem, isNew, false);
   };
   const mapToStructGrid = (grid: Structs.ElementNew[][]) => {
     return Arr.map(grid, (row) => {
@@ -23,7 +24,7 @@ UnitTest.test('ModificationOperationsTest', () => {
     assert.eq(expected.length, actual.length);
     Arr.each(expected, (row, i) => {
       Arr.each(row.cells, (cell, j) => {
-        assert.eq(cell.element, actual[i].cells[j].element);
+        Assertions.assertHtml('Expected elements to have the same HTML', Html.getOuter(cell.element), Html.getOuter(actual[i].cells[j].element));
         assert.eq(cell.isNew, actual[i].cells[j].isNew);
       });
       assert.eq(row.section, actual[i].section);
@@ -181,7 +182,7 @@ UnitTest.test('ModificationOperationsTest', () => {
   // Test basic delete column
   (() => {
     const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], index: number) => {
-      const actual = ModificationOperations.deleteColumnsAt(grid, index, index);
+      const actual = ModificationOperations.deleteColumnsAt(grid, [ index ]);
       assertGrids(expected, actual);
     };
 
@@ -211,6 +212,41 @@ UnitTest.test('ModificationOperationsTest', () => {
         r([ en('a', false), en('b', false), en('b', false) ], 'thead'),
         r([ en('c', false), en('c', false), en('c', false) ], 'tbody')
       ], 1);
+  })();
+
+  // Test delete multiple columns
+  (() => {
+    const check = (expected: Structs.RowCells[], grid: Structs.RowCells[], indexes: number[]) => {
+      const actual = ModificationOperations.deleteColumnsAt(grid, indexes);
+      assertGrids(expected, actual);
+    };
+
+    const checkBody = (expected: Structs.ElementNew[][], grid: Structs.ElementNew[][], indexes: number[]) => {
+      const structExpected = mapToStructGrid(expected);
+      const structGrid = mapToStructGrid(grid);
+      check(structExpected, structGrid, indexes);
+    };
+
+    checkBody([], [[ en('a', false), en('b', false) ]], [ 0, 1 ]);
+    checkBody([[ en('b', false) ]], [[ en('a', false), en('b', false), en('c', false) ]], [ 0, 2 ]);
+    checkBody(
+      [
+        [ en('a', false), en('c', false) ],
+        [ en('c', false), en('c', false) ]
+      ],
+      [
+        [ en('a', false), en('b', false), en('c', false) ],
+        [ en('c', false), en('c', false), en('c', false) ]
+      ], [ 1 ]);
+    check(
+      [
+        r([ en('a', false) ], 'thead'),
+        r([ en('c', false) ], 'tbody')
+      ],
+      [
+        r([ en('a', false), en('b', false), en('c', false) ], 'thead'),
+        r([ en('c', false), en('c', false), en('c', false) ], 'tbody')
+      ], [ 1, 2 ]);
   })();
 
   // Test basic delete row

@@ -1,54 +1,54 @@
-import { Assertions, Chain, FocusTools, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
+import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
+import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cFakeEvent } from '../module/test/Utils';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/emoticons/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import { fakeEvent } from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.emoticons.SearchTest', (success, failure) => {
-  EmoticonsPlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.emoticons.SearchTest', () => {
+  before(function () {
+    // TODO: TINY-6905: Test is flaking on Chromium Edge 86, so we need to investigate
+    const platform = PlatformDetection.detect();
+    if (platform.browser.isChrome() && platform.os.isWindows()) {
+      this.skip();
+    }
+  });
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = SugarElement.fromDom(document);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Emoticons: Open dialog, Search for "rainbow", Rainbow should be first option', [
-        tinyApis.sFocus(),
-        tinyUi.sClickOnToolbar('click emoticons', 'button'),
-        tinyUi.sWaitForPopup('wait for popup', 'div[role="dialog"]'),
-        FocusTools.sTryOnSelector('Focus should start on input', doc, 'input'),
-        FocusTools.sSetActiveValue(doc, 'rainbow'),
-        Chain.asStep(doc, [
-          FocusTools.cGetFocused,
-          cFakeEvent('input')
-        ]),
-        Waiter.sTryUntil(
-          'Wait until rainbow is the first choice (search should filter)',
-          Chain.asStep(SugarBody.body(), [
-            UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => Attribute.get(item, 'data-collection-item-value')),
-            Assertions.cAssertEq('Search should show rainbow', '🌈')
-          ])
-        ),
-        Keyboard.sKeydown(doc, Keys.tab(), { }),
-        FocusTools.sTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item'),
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
-        Waiter.sTryUntil(
-          'Waiting for content update',
-          tinyApis.sAssertContent('<p>🌈</p>')
-        )
-      ])
-      , onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
     toolbar: 'emoticons',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
     emoticons_database_url: '/project/tinymce/src/plugins/emoticons/main/js/emojis.js'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: Open dialog, Search for "rainbow", Rainbow should be first option', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await TinyUiActions.pWaitForDialog(editor);
+    await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
+    const input = FocusTools.setActiveValue(doc, 'rainbow');
+    fakeEvent(input, 'input');
+    await Waiter.pTryUntil(
+      'Wait until rainbow is the first choice (search should filter)',
+      () => {
+        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
+        const value = Attribute.get(item, 'data-collection-item-value');
+        assert.equal(value, '🌈', 'Search should show rainbow');
+      }
+    );
+    TinyUiActions.keydown(editor, Keys.tab());
+    await FocusTools.pTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item');
+    TinyUiActions.keydown(editor, Keys.enter());
+    await Waiter.pTryUntil(
+      'Waiting for content update',
+      () => TinyAssertions.assertContent(editor, '<p>🌈</p>')
+    );
+  });
 });

@@ -1,15 +1,21 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.WindowManagerTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    indent: false,
+    entities: 'raw',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  Theme();
-
-  suite.test('OpenWindow/CloseWindow events', (editor) => {
+  it('OpenWindow/CloseWindow events', () => {
+    const editor = hook.editor();
     let openWindowArgs, closeWindowArgs;
 
     editor.on('CloseWindow', (e) => {
@@ -30,19 +36,9 @@ UnitTest.asynctest('browser.tinymce.core.WindowManagerTest', (success, failure) 
       buttons: []
     });
 
-    LegacyUnit.equal(openWindowArgs.type, 'openwindow');
-    LegacyUnit.equal(closeWindowArgs.type, 'closewindow');
+    assert.equal(openWindowArgs.type, 'openwindow');
+    assert.equal(closeWindowArgs.type, 'closewindow');
 
     editor.off('CloseWindow OpenWindow');
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    indent: false,
-    entities: 'raw',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

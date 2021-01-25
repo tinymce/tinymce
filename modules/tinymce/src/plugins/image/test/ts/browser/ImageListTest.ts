@@ -1,42 +1,30 @@
-import { Chain, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-import { cAssertInputValue, cSetInputValue, cSetListBoxItem, generalTabSelectors } from '../module/Helpers';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/image/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.ImageListTest', (success, failure) => {
+import { assertInputValue, generalTabSelectors, pSetListBoxItem, setInputValue } from '../module/Helpers';
 
-  SilverTheme();
-  ImagePlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Image: click image list, check that source changes, change source and check that image list changes', [
-        tinyApis.sSetSetting('image_list', [
-          { title: 'Dog', value: 'mydog.jpg' },
-          { title: 'Cat', value: 'mycat.jpg' }
-        ]),
-        tinyUi.sClickOnToolbar('click image button', 'button[aria-label="Insert/edit image"]'),
-        tinyUi.sWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        Chain.asStep({}, [
-          cSetListBoxItem(generalTabSelectors.images, 'Dog')
-        ]),
-        Chain.asStep({}, [
-          cAssertInputValue(generalTabSelectors.src, 'mydog.jpg'),
-          cSetInputValue(generalTabSelectors.src, 'mycat.jpg'),
-          cAssertInputValue(generalTabSelectors.src, 'mycat.jpg')
-        ])
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.ImageListTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: click image list, check that source changes, change source and check that image list changes', async () => {
+    const editor = hook.editor();
+    editor.settings.image_list = [
+      { title: 'Dog', value: 'mydog.jpg' },
+      { title: 'Cat', value: 'mycat.jpg' }
+    ];
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await TinyUiActions.pWaitForDialog(editor);
+    await pSetListBoxItem(generalTabSelectors.images, 'Dog');
+    assertInputValue(generalTabSelectors.src, 'mydog.jpg');
+    setInputValue(generalTabSelectors.src, 'mycat.jpg');
+    assertInputValue(generalTabSelectors.src, 'mycat.jpg');
+  });
 });

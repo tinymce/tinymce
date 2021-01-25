@@ -16,7 +16,7 @@ const insertRowAt = (grid: Structs.RowCells[], index: number, example: number, c
 
   const between = GridRow.mapCells(rows[example], (ex, c) => {
     const withinSpan = index > 0 && index < rows.length && comparator(GridRow.getCellElement(rows[index - 1], c), GridRow.getCellElement(rows[index], c));
-    const ret = withinSpan ? GridRow.getCell(rows[index], c) : Structs.elementnew(substitution(ex.element, comparator), true);
+    const ret = withinSpan ? GridRow.getCell(rows[index], c) : Structs.elementnew(substitution(ex.element, comparator), true, ex.isLocked);
     return ret;
   });
 
@@ -25,7 +25,9 @@ const insertRowAt = (grid: Structs.RowCells[], index: number, example: number, c
 
 const getElementFor = (row: Structs.RowCells, column: number, section: string, withinSpan: boolean, example: number, comparator: CompElm, substitution: Subst): Structs.ElementNew => {
   if (section === 'colgroup' || !withinSpan) {
-    return Structs.elementnew(substitution(GridRow.getCellElement(row, example), comparator), true);
+    const cell = GridRow.getCell(row, example);
+    // locked is explicitly set to false so the newly inserted column doesn't inherit example column locked state
+    return Structs.elementnew(substitution(cell.element, comparator), true, false);
   } else {
     return GridRow.getCell(row, column);
   }
@@ -51,7 +53,8 @@ const splitCellIntoColumns = (grid: Structs.RowCells[], exampleRow: number, exam
   const index = exampleCol + 1; // insert after
   return Arr.map(grid, (row, i) => {
     const isTargetCell = (i === exampleRow);
-    const sub = isTargetCell ? Structs.elementnew(substitution(GridRow.getCellElement(row, exampleCol), comparator), true) : GridRow.getCell(row, exampleCol);
+    const cell = GridRow.getCell(row, exampleCol);
+    const sub = isTargetCell ? Structs.elementnew(substitution(cell.element, comparator), true, cell.isLocked) : cell;
     return GridRow.addCell(row, index, sub);
   });
 };
@@ -69,22 +72,18 @@ const splitCellIntoRows = (grid: Structs.RowCells[], exampleRow: number, example
 
   const between = GridRow.mapCells(rows[exampleRow], (ex, i) => {
     const isTargetCell = (i === exampleCol);
-    return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true) : ex;
+    return isTargetCell ? Structs.elementnew(substitution(ex.element, comparator), true, ex.isLocked) : ex;
   });
 
   return cols.concat(before).concat([ between ]).concat(after);
 };
 
-const deleteColumnsAt = (grid: Structs.RowCells[], start: number, finish: number): Structs.RowCells[] => {
-  const rows = Arr.map(grid, (row) => {
-    const cells = row.cells.slice(0, start).concat(row.cells.slice(finish + 1));
-    return Structs.rowcells(cells, row.section);
+const deleteColumnsAt = (grid: Structs.RowCells[], columns: number[]): Structs.RowCells[] =>
+  Arr.bind(grid, (row) => {
+    const existingCells = row.cells;
+    const cells = Arr.foldr(columns, (acc, column) => column >= 0 && column < acc.length ? acc.slice(0, column).concat(acc.slice(column + 1)) : acc, existingCells);
+    return cells.length > 0 ? [ Structs.rowcells(cells, row.section) ] : [];
   });
-  // We should filter out rows that have no columns for easy deletion
-  return Arr.filter(rows, (row) => {
-    return row.cells.length > 0;
-  });
-};
 
 const deleteRowsAt = (grid: Structs.RowCells[], start: number, finish: number): Structs.RowCells[] => {
   const { rows, cols } = GridRow.extractGridDetails(grid);

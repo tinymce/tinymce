@@ -3,10 +3,10 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
-import { TinyApis } from 'ephox/mcagar/api/TinyApis';
+import { TinyApis } from 'ephox/mcagar/api/pipeline/TinyApis';
+import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
+import { TinyScenarios } from 'ephox/mcagar/api/pipeline/TinyScenarios';
 import { TinyDom } from 'ephox/mcagar/api/TinyDom';
-import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
-import { TinyScenarios } from 'ephox/mcagar/api/TinyScenarios';
 
 UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure) => {
 

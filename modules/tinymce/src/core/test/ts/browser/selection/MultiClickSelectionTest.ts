@@ -1,49 +1,33 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.selection.MultiClickSelectionTest', (success, failure) => {
-  Theme();
-
-  const sFakeMultiClick = (editor: Editor, clickCount) => Step.sync(() => {
-    editor.fire('click', { detail: clickCount } as MouseEvent);
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const testXClicksNormalisation = (clickCount) => GeneralSteps.sequence([
-      Logger.t('Normalize selection from index text node to text node offsets with ' + clickCount + ' clicks', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>abc</p>'),
-        tinyApis.sSetSelection([ 0 ], 0, [ 0 ], 1),
-        sFakeMultiClick(editor, clickCount),
-        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 3)
-      ])),
-      Logger.t('Normalize selection start in text node end after paragraph with ' + clickCount + ' clicks', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>abc</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [], 1),
-        sFakeMultiClick(editor, clickCount),
-        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 3)
-      ]))
-    ]);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      testXClicksNormalisation(3),
-      testXClicksNormalisation(4),
-      testXClicksNormalisation(5),
-      testXClicksNormalisation(6),
-      testXClicksNormalisation(7),
-      testXClicksNormalisation(8),
-      testXClicksNormalisation(9),
-      testXClicksNormalisation(10)
-    ], onSuccess, onFailure);
-  }, {
-    plugins: '',
-    toolbar: '',
+describe('browser.tinymce.core.selection.MultiClickSelectionTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
-}
-);
+  }, [ Theme ], true);
+
+  const fakeMultiClick = (editor: Editor, clickCount) => {
+    editor.fire('click', { detail: clickCount } as MouseEvent);
+  };
+
+  for (let clickCount = 3; clickCount <= 10; clickCount++) {
+    it(`Normalize selection from index text node to text node offsets with ${clickCount} clicks`, () => {
+      const editor = hook.editor();
+      editor.setContent('<p>abc</p>');
+      TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+      fakeMultiClick(editor, clickCount);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+    });
+
+    it(`Normalize selection start in text node end after paragraph with ${clickCount} clicks`, () => {
+      const editor = hook.editor();
+      editor.setContent('<p>abc</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [], 1);
+      fakeMultiClick(editor, clickCount);
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+    });
+  }
+});

@@ -1,28 +1,40 @@
-import { Chain, Logger, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ContentCssCorsTest', (success, failure) => {
-  Theme();
-
-  const cAssertCorsLinkPresence = (expected: boolean) => Chain.op((editor: Editor) => {
-    const corsLinks = editor.getDoc().querySelectorAll('link[crossorigin="anonymous"]');
-    Assert.eq('should have link with crossorigin="anonymous"', expected, corsLinks.length > 0);
+describe('browser.tinymce.core.dom.ContentCssCorsTest', () => {
+  before(function () {
+    // The crossorigin attribute isn't supported in IE11
+    if (Env.ie && Env.ie < 12) {
+      this.skip();
+    }
+    Theme();
   });
 
-  Pipeline.async({}, Env.ie < 12 ? [] : [
-    Logger.t('assert crossorigin link presence with setting set', Chain.asStep({}, [
-      McEditor.cFromSettings({ content_css_cors: true, base_url: '/project/tinymce/js/tinymce' }),
-      cAssertCorsLinkPresence(true),
-      McEditor.cRemove
-    ])),
-    Logger.t('assert crossorigin link presence with no setting set', Chain.asStep({}, [
-      McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
-      cAssertCorsLinkPresence(false),
-      McEditor.cRemove
-    ]))
-  ], () => success(), failure);
+  const settings = {
+    base_url: '/project/tinymce/js/tinymce',
+    menubar: false,
+    toolbar: false
+  };
+
+  const assertCorsLinkPresence = (editor: Editor, expected: boolean) => {
+    const corsLinks = editor.getDoc().querySelectorAll('link[crossorigin="anonymous"]');
+    assert.equal(corsLinks.length > 0, expected, 'should have link with crossorigin="anonymous"');
+  };
+
+  it('assert crossorigin link presence with setting set', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ ...settings, content_css_cors: true });
+    assertCorsLinkPresence(editor, true);
+    McEditor.remove(editor);
+  });
+
+  it('assert crossorigin link presence with no setting set', async () => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    assertCorsLinkPresence(editor, false);
+    McEditor.remove(editor);
+  });
 });

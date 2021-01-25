@@ -1,88 +1,88 @@
-import { Chain, Logger, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor } from '@ephox/mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import AstNode from 'tinymce/core/api/html/Node';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.content.EditorContentNotInitializedTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
+  before(() => Theme());
 
   const settings = {
+    menubar: false,
+    toolbar: false,
+    statusbar: false,
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  const cCreateEditor = Chain.injectThunked(() => new Editor('editor', {}, EditorManager));
+  const createEditor = () => new Editor('editor', settings, EditorManager);
 
-  const cSetContentAndAssertReturn = (content) => Chain.op((editor: any) => {
+  const setContentAndAssertReturn = (editor: Editor, content: AstNode | string) => {
     const actual = editor.setContent(content);
+    assert.deepEqual(actual, content, 'should return what you tried to set');
+  };
 
-    Assert.eq('should return what you tried to set', content, actual);
-  });
-  const cGetAndAssertContent = (expected, tree?) => Chain.op((editor: any) => {
+  const getAndAssertContent = (editor: Editor, expected: AstNode | string, tree?: boolean) => {
     const actual = tree ? editor.getContent({ format: 'tree' }) : editor.getContent();
+    assert.deepEqual(actual, expected, 'content should be equal');
+  };
 
-    Assert.eq('content should be equal', expected, actual);
-  });
-
-  const cRemoveBodyElement = Chain.op((editor: any) => {
+  const removeBodyElement = (editor: Editor) => {
     const body = editor.getBody();
     body.parentNode.removeChild(body);
+  };
+
+  it('set content on editor without initializing it', () => {
+    const editor = createEditor();
+    setContentAndAssertReturn(editor, 'hello');
+    McEditor.remove(editor);
   });
 
-  Pipeline.async({}, [
-    Logger.t('set content on editor without initializing it', Chain.asStep({}, [
-      cCreateEditor,
-      cSetContentAndAssertReturn('hello'),
-      McEditor.cRemove
-    ])),
+  it('set content on editor where the body has been removed', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
+    removeBodyElement(editor);
+    setContentAndAssertReturn(editor, 'hello');
+    McEditor.remove(editor);
+  });
 
-    Logger.t('set content on editor where the body has been removed', Chain.asStep({}, [
-      McEditor.cFromHtml('<textarea></textarea>', settings),
-      cRemoveBodyElement,
-      cSetContentAndAssertReturn('hello'),
-      McEditor.cRemove
-    ])),
+  it('get content on editor without initializing it', () => {
+    const editor = createEditor();
+    getAndAssertContent(editor, '');
+    McEditor.remove(editor);
+  });
 
-    Logger.t('get content on editor without initializing it', Chain.asStep({}, [
-      cCreateEditor,
-      cGetAndAssertContent(''),
-      McEditor.cRemove
-    ])),
+  it('get content on editor where the body has been removed', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
+    removeBodyElement(editor);
+    getAndAssertContent(editor, '');
+    McEditor.remove(editor);
+  });
 
-    Logger.t('get content on editor where the body has been removed', Chain.asStep({}, [
-      McEditor.cFromHtml('<textarea></textarea>', settings),
-      cRemoveBodyElement,
-      cGetAndAssertContent(''),
-      McEditor.cRemove
-    ])),
+  it('set tree content on editor without initializing it', () => {
+    const editor = createEditor();
+    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    McEditor.remove(editor);
+  });
 
-    Logger.t('set tree content on editor without initializing it', Chain.asStep({}, [
-      cCreateEditor,
-      cSetContentAndAssertReturn(new AstNode('p', 1)),
-      McEditor.cRemove
-    ])),
+  it('set tree content on editor where the body has been removed', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
+    removeBodyElement(editor);
+    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    McEditor.remove(editor);
+  });
 
-    Logger.t('set tree content on editor where the body has been removed', Chain.asStep({}, [
-      McEditor.cFromHtml('<textarea></textarea>', settings),
-      cRemoveBodyElement,
-      cSetContentAndAssertReturn(new AstNode('p', 1)),
-      McEditor.cRemove
-    ])),
+  it('get tree content on editor without initializing it', () => {
+    const editor = createEditor();
+    getAndAssertContent(editor, new AstNode('body', 11), true);
+    McEditor.remove(editor);
+  });
 
-    Logger.t('get tree content on editor without initializing it', Chain.asStep({}, [
-      cCreateEditor,
-      cGetAndAssertContent(new AstNode('body', 11), true),
-      McEditor.cRemove
-    ])),
-
-    Logger.t('get tree content on editor where the body has been removed', Chain.asStep({}, [
-      McEditor.cFromHtml('<textarea></textarea>', settings),
-      cRemoveBodyElement,
-      cGetAndAssertContent(new AstNode('body', 11), true),
-      McEditor.cRemove
-    ]))
-  ], success, failure);
+  it('get tree content on editor where the body has been removed', async () => {
+    const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
+    removeBodyElement(editor);
+    getAndAssertContent(editor, new AstNode('body', 11), true);
+    McEditor.remove(editor);
+  });
 });

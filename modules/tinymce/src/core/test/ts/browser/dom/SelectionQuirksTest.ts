@@ -1,94 +1,72 @@
-import { Assertions, GeneralSteps, Keyboard, Keys, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { Keys, Monitor, Mouse } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.dom.SelectionQuirksTest', (success, failure) => {
-
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-    let count;
-
-    // hijack editor.selection.normalize() to count how many times it will be invoked
-    const backupNormalize = editor.selection.normalize;
-    const normalize = (...args: any[]) => {
-      count = count === undefined ? 1 : count + 1;
-      backupNormalize.apply(this, args);
-    };
-    editor.selection.normalize = normalize;
-
-    const sResetNormalizeCounter = () => {
-      return Step.sync(() => {
-        count = 0;
-      });
-    };
-
-    const sAssertNormalizeCounter = (expected) => {
-      return Step.sync(() => {
-        Assertions.assertEq('checking normalization counter', expected, count);
-      });
-    };
-
-    const sClickBody = (editor) => {
-      return Step.sync(() => {
-        const target = editor.getBody();
-
-        editor.fire('mousedown', { target });
-        editor.fire('mouseup', { target });
-        editor.fire('click', { target });
-      });
-    };
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-
-      Logger.t('Test normalization for floated images', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a<img src="about:blank" style="float: right"></p>'),
-        tinyApis.sSetSelection([ 0 ], 1, [ 0 ], 2),
-        Step.sync(() => {
-          const selection = editor.selection.getSel();
-          Assertions.assertEq('Anchor node should be the paragraph not the text node', 'P', selection.anchorNode.nodeName);
-          Assertions.assertEq('Anchor offset should be the element index', 1, selection.anchorOffset);
-        })
-      ])),
-
-      Logger.t('Normalize on key events when range is collapsed', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([], 1, [], 1),
-        tinyActions.sContentKeystroke(Keys.escape(), {}),
-        tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
-      ])),
-
-      Logger.t('Normalize on mouse events when range is expanded', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([], 0, [], 1),
-        sClickBody(editor),
-        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 1)
-      ])),
-
-      Logger.t('Normalize on mouse events when range is collapsed', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>a</p><p>b</p>'),
-        tinyApis.sSetSelection([], 1, [], 1),
-        sClickBody(editor),
-        tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0)
-      ])),
-
-      Logger.t('Normalization during operations with modifier keys, should run only once in the end when user releases modifier key.', GeneralSteps.sequence([
-        sResetNormalizeCounter(),
-        tinyApis.sSetContent('<p><b>a</b><i>a</i></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0 ], 0),
-        Keyboard.sKeyup(SugarElement.fromDom(editor.getDoc()), Keys.left(), { shift: true }),
-        sAssertNormalizeCounter(0),
-        Keyboard.sKeyup(SugarElement.fromDom(editor.getDoc()), 17, {}), // single ctrl
-        sAssertNormalizeCounter(1),
-        tinyApis.sAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0)
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ], true);
+  let normalizeMonitor: Monitor<Range>;
+
+  before(() => {
+    const editor = hook.editor();
+    // hijack editor.selection.normalize() to count how many times it will be invoked
+    normalizeMonitor = Monitor(0, editor.selection.normalize);
+    editor.selection.normalize = normalizeMonitor.run;
+  });
+
+  const resetNormalizeCounter = () => normalizeMonitor.clear();
+
+  const assertNormalizeCounter = (expected: number) => {
+    assert.equal(normalizeMonitor.get(), expected, 'checking normalization counter');
+  };
+
+  it('Test normalization for floated images', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a<img src="about:blank" style="float: right"></p>');
+    TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2);
+    const selection = editor.selection.getSel();
+    assert.equal(selection.anchorNode.nodeName, 'P', 'Anchor node should be the paragraph not the text node');
+    assert.equal(selection.anchorOffset, 1, 'Anchor offset should be the element index');
+  });
+
+  it('Normalize on key events when range is collapsed', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [], 1, [], 1);
+    TinyContentActions.keystroke(editor, Keys.escape());
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+  });
+
+  it('Normalize on mouse events when range is expanded', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [], 0, [], 1);
+    Mouse.trueClick(TinyDom.body(editor));
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+  });
+
+  it('Normalize on mouse events when range is collapsed', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p><p>b</p>');
+    TinySelections.setSelection(editor, [], 1, [], 1);
+    Mouse.trueClick(TinyDom.body(editor));
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+  });
+
+  it('Normalization during operations with modifier keys, should run only once in the end when user releases modifier key.', () => {
+    const editor = hook.editor();
+    resetNormalizeCounter();
+    editor.setContent('<p><b>a</b><i>a</i></p>');
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 0);
+    TinyContentActions.keyup(editor, Keys.left(), { shift: true });
+    assertNormalizeCounter(0);
+    TinyContentActions.keyup(editor, 17, { }); // single ctrl
+    assertNormalizeCounter(1);
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+  });
 });

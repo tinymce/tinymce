@@ -1,7 +1,7 @@
 import { Generators, PropertySteps, Step } from '@ephox/agar';
 import { Html, SimRange, SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
-import { Editor } from '../alien/EditorTypes';
+import { Editor } from '../../alien/EditorTypes';
 
 type ContentGenerator = any;
 interface SelectionExclusions { containers: (container: SugarElement) => boolean }

@@ -1,40 +1,37 @@
-import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Editor } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
-import ImagePlugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
 
-import {
-  cAssertCleanHtml, cExecCommand, cFakeEvent, cFillActiveDialog, cOpFromChains, cSubmitDialog, cWaitForDialog, generalTabSelectors, silverSettings
-} from '../../module/Helpers';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/image/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Image recognizes relative src url and prepends absolute image_prepend_url setting.', (success, failure) => {
-  SilverTheme();
-  ImagePlugin();
+import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
+
+describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
   const prependUrl = 'http://abc.local/images/';
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Image: image recognizes relative src url and prepends absolute image_prepend_url setting.', [
-      Editor.cFromSettings({
-        ...silverSettings,
-        image_prepend_url: prependUrl
-      }),
-      cExecCommand('mceImage', true),
-      cWaitForDialog(),
-      cFillActiveDialog({
-        src: {
-          value: 'src'
-        },
-        alt: 'alt'
-      }),
-      cOpFromChains([
-        Chain.inject(SugarBody.body()),
-        UiFinder.cFindIn(generalTabSelectors.src),
-        cFakeEvent('change')
-      ]),
-      cSubmitDialog(),
-      cAssertCleanHtml('Checking output', '<p><img src="' + prependUrl + 'src" alt="alt" /></p>'),
-      Editor.cRemove
-    ])
-  ], () => success(), failure);
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'image',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce',
+    image_prepend_url: prependUrl
+  }, [ Plugin, Theme ]);
+
+  it('TBA: image recognizes relative src url and prepends absolute image_prepend_url setting.', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+
+    fillActiveDialog({
+      src: {
+        value: 'src'
+      },
+      alt: 'alt'
+    });
+    const srcElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.src).getOrDie();
+    fakeEvent(srcElem, 'change');
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt" /></p>');
+  });
 });

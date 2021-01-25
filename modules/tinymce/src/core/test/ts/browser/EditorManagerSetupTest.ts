@@ -1,16 +1,10 @@
-import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import EditorManager from 'tinymce/core/api/EditorManager';
-import Theme from 'tinymce/themes/silver/Theme';
-import ViewBlock from '../module/test/ViewBlock';
+import * as ViewBlock from '../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.EditorManagerSetupTest', (success, failure) => {
-  const viewBlock = ViewBlock();
-
-  Theme();
-
-  viewBlock.attach();
-
+const storeState = () => {
   // Store the original data
   const origBaseURL = EditorManager.baseURL;
   const origBaseURI = EditorManager.baseURI;
@@ -19,23 +13,27 @@ UnitTest.asynctest('browser.tinymce.core.EditorManagerSetupTest', (success, fail
   const origTinyMCE = (window as any).tinymce;
   delete (window as any).tinymce;
 
-  Pipeline.async({}, [
-    Logger.t('script baseURL and suffix with script in svg', Step.sync(() => {
-      viewBlock.update('<svg><script>!function(){}();</script></svg><script src="http://localhost/nonexistant/tinymce.min.js" type="application/javascript"></script>');
-      EditorManager.setup();
-      Assertions.assertEq('BaseURL is interpreted from the script src', EditorManager.baseURL, 'http://localhost/nonexistant');
-      Assertions.assertEq('Suffix is interpreted from the script src', EditorManager.suffix, '.min');
-    }))
-  ], () => {
-    viewBlock.detach();
-
+  return () => {
     // Restore the original values
     EditorManager.baseURL = origBaseURL;
     EditorManager.baseURI = origBaseURI;
     EditorManager.documentBaseURL = origDocumentBaseURL;
     EditorManager.suffix = origSuffix;
     (window as any).tinymce = origTinyMCE;
+  };
+};
 
-    success();
-  }, failure);
+describe('browser.tinymce.core.EditorManagerSetupTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
+  let restoreState: () => void;
+
+  beforeEach(() => restoreState = storeState());
+  afterEach(() => restoreState());
+
+  it('script baseURL and suffix with script in svg', () => {
+    viewBlock.update('<svg><script>!function(){}();</script></svg><script src="http://localhost/nonexistant/tinymce.min.js" type="application/javascript"></script>');
+    EditorManager.setup();
+    assert.equal(EditorManager.baseURL, 'http://localhost/nonexistant', 'BaseURL is interpreted from the script src');
+    assert.equal(EditorManager.suffix, '.min', 'Suffix is interpreted from the script src');
+  });
 });

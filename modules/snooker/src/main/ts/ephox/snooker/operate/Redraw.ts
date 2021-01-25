@@ -40,7 +40,7 @@ const generateSection = (table: SugarElement<HTMLTableElement>, sectionName: Sec
   return section;
 };
 
-const render = <T extends DetailNew> (table: SugarElement, grid: RowDataNew<T>[]): NewRowsAndCells => {
+const render = <T extends DetailNew> (table: SugarElement<HTMLTableElement>, grid: RowDataNew<T>[]): NewRowsAndCells => {
   const newRows: SugarElement[] = [];
   const newCells: SugarElement[] = [];
 

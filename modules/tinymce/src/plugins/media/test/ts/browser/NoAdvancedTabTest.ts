@@ -1,6 +1,6 @@
 import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor, UiChains } from '@ephox/mcagar';
+import { McEditor, UiChains } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -14,7 +14,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
   Pipeline.async({}, [
     Log.chainsAsStep('TBA', 'Media: if alt source and poster set to false, do not show advance tab', [
       Chain.fromParent(
-        Editor.cFromSettings({
+        McEditor.cFromSettings({
           plugins: [ 'media' ],
           toolbar: 'media',
           media_alt_source: false,
@@ -29,13 +29,13 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
             UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
             Utils.cNotExists('div.tox-tab:contains(Advanced)')
           ]),
-          Editor.cRemove
+          McEditor.cRemove
         ]
       )
     ]),
     Log.chainsAsStep('TBA', 'Media: if alt source and poster not set to false, show advance tab', [
       Chain.fromParent(
-        Editor.cFromSettings({
+        McEditor.cFromSettings({
           plugins: [ 'media' ],
           toolbar: 'media',
           theme: 'silver',
@@ -48,7 +48,7 @@ UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, 
             UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
             Utils.cExists('div.tox-tab:contains(Advanced)')
           ]),
-          Editor.cRemove
+          McEditor.cRemove
         ]
       )
     ])

@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Log, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { Editor as McEditor, TinyApis, TinyUi } from '@ephox/mcagar';
+import { McEditor, TinyApis, TinyUi } from '@ephox/mcagar';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';

@@ -1,19 +1,33 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver//Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'lists',
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    indent: false,
+    entities: 'raw',
+    valid_elements:
+      'li[style|class|data-custom],ol[style|class|data-custom],' +
+      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
+    valid_styles: {
+      '*': 'color,font-size,font-family,background-color,font-weight,' +
+        'font-style,text-decoration,float,margin,margin-top,margin-right,' +
+        'margin-bottom,margin-left,display,position,top,left,list-style-type'
+    },
+    content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-  Plugin();
-  Theme();
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of single LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '</ul>'
@@ -23,16 +37,15 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
-      '<p>a</p>'
-    );
+    TinyAssertions.assertContent(editor, '<p>a</p>');
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', (editor) => {
+  it('TBA: Backspace at end of single LI in UL', () => {
+    const editor = hook.editor();
     const content = '<ul><li><span>a</span></li></ul>';
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
+    editor.setContent(content);
 
     editor.focus();
     // Special set rng, puts selection here: <li><span>a</span>|</li>
@@ -45,14 +58,15 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     editor.plugins.lists.backspaceDelete();
 
     // The content doesn't change here as it's not a real backspace, we're just ensuring the "delete list" code doesn't fire
-    LegacyUnit.equal(editor.getContent(), content);
+    TinyAssertions.assertContent(editor, content);
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at end of single LI in UL', (editor) => {
+  it('TBA: Backspace at end of single LI in UL with STRONG', () => {
+    const editor = hook.editor();
     const content = '<ul><li><span>a</span><strong>b</strong></li></ul>';
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(content);
+    editor.setContent(content);
 
     editor.focus();
     // Special set rng, puts selection here: <li><span>a</span><strong>|b</strong></li>
@@ -65,13 +79,14 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     editor.plugins.lists.backspaceDelete();
 
     // The content doesn't change here as it's not a real backspace, we're just ensuring the "delete list" code doesn't fire
-    LegacyUnit.equal(editor.getContent(), content);
+    TinyAssertions.assertContent(editor, content);
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'STRONG');
+    assert.equal(editor.selection.getNode().nodeName, 'STRONG');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of first LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -82,18 +97,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<p>a</p>' +
       '<ul>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of middle LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -105,18 +121,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>ab</li>' +
       '<li>c</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of start LI in UL inside UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of start LI in UL inside UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -131,7 +148,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li li', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b' +
@@ -142,11 +159,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of middle LI in UL inside UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -162,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li li:nth-child(2)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -173,105 +191,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of single LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li', 0);
-    editor.plugins.lists.backspaceDelete();
-
-    LegacyUnit.equal(editor.getContent(),
-      '<p>a</p>'
-    );
-
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of first LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '<li>b</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li', 0);
-    editor.plugins.lists.backspaceDelete();
-
-    LegacyUnit.equal(editor.getContent(),
-      '<p>a</p>' +
-      '<ul>' +
-      '<li>b</li>' +
-      '</ul>'
-    );
-
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a</li>' +
-      '<li>b</li>' +
-      '<li>c</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
-    editor.plugins.lists.backspaceDelete();
-
-    LegacyUnit.equal(editor.getContent(),
-      '<ul>' +
-      '<li>ab</li>' +
-      '<li>c</li>' +
-      '</ul>'
-    );
-
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of middle LI in UL inside UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
-      '<ul>' +
-      '<li>a' +
-      '<ul>' +
-      '<li>b</li>' +
-      '<li>c</li>' +
-      '<li>d</li>' +
-      '</ul>' +
-      '</li>' +
-      '</ul>'
-    );
-
-    editor.focus();
-    LegacyUnit.setSelection(editor, 'li li:nth-child(2)', 0);
-    editor.plugins.lists.backspaceDelete();
-
-    LegacyUnit.equal(editor.getContent(),
-      '<ul>' +
-      '<li>a' +
-      '<ul>' +
-      '<li>bc</li>' +
-      '<li>d</li>' +
-      '</ul>' +
-      '</li>' +
-      '</ul>'
-    );
-
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-  });
-
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI above in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at beginning of LI with empty LI above in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li></li>' +
@@ -283,18 +208,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(3)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
+    assert.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with BR padded empty LI above in UL', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at beginning of LI with BR padded empty LI above in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li><br></li>' +
@@ -306,18 +232,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(3)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
+    assert.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at empty LI (IE)', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at empty LI (IE)', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li></li>' +
@@ -329,18 +256,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
+    assert.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI with empty LI with STRING and BR above in UL', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at beginning of LI with empty LI with STRING and BR above in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li><strong><br></strong></li>' +
@@ -352,18 +280,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(3)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'b');
+    assert.equal(editor.selection.getNode().innerHTML, 'b');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at nested LI with adjacent BR', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at nested LI with adjacent BR', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>1' +
       '<ul>' +
@@ -383,12 +312,13 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'ul ul ul li', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(), '<ul><li>1<ul><li></li><li>2</li></ul></li><li>3</li></ul>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    TinyAssertions.assertContent(editor, '<ul><li>1<ul><li></li><li>2</li></ul></li><li>3</li></ul>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at LI selected with triple-click in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at LI selected with triple-click in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b' +
@@ -404,7 +334,8 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 0, 'li:nth-child(2)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(LegacyUnit.trimBrs(editor.getContent()),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
       '<li>b' +
       '<ul>' +
@@ -415,11 +346,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at partially selected list', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Backspace at partially selected list', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<p>abc</p>' +
       '<ul>' +
       '<li>a</li>' +
@@ -436,7 +368,8 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'p', 1, 'li:nth-child(2)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(LegacyUnit.trimBrs(editor.getContent()),
+    TinyAssertions.assertContent(
+      editor,
       '<p>ab</p>' +
       '<ul>' +
       '<li style="list-style-type: none;">' +
@@ -448,13 +381,14 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
   // Delete
 
-  suite.test('TestCase-TBA: Lists: Delete at end of single LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Delete at end of single LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '</ul>'
@@ -464,17 +398,18 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of first LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Delete at end of first LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -485,17 +420,18 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>ab</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Delete at end of middle LI in UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
@@ -507,18 +443,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>bc</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of start LI in UL inside UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Delete at end of start LI in UL inside UL', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -533,7 +470,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -543,11 +480,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of middle LI in UL inside UL', (editor) => {
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+  it('TBA: Delete at end of middle LI in UL inside UL with', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -563,7 +501,7 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li li:nth-child(2)', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a' +
       '<ul>' +
@@ -574,11 +512,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at end of LI before empty LI', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li></li>' +
@@ -590,18 +529,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
+    assert.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before BR padded empty LI', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at end of LI before BR padded empty LI', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li><br></li>' +
@@ -613,18 +553,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
+    assert.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at end of LI before empty LI with STRONG', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at end of LI before empty LI with STRONG', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li><strong><br></strong></li>' +
@@ -636,18 +577,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '<li>b</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().innerHTML, 'a');
+    assert.equal(editor.selection.getNode().innerHTML, 'a');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at nested LI with adjacent BR', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at nested LI with adjacent BR', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>1' +
       '<ul>' +
@@ -667,12 +609,13 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     editor.selection.setCursorLocation(editor.$('ul ul li')[0], 0);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(editor.getContent(), '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    TinyAssertions.assertContent(editor, '<ul><li>1<ul><li>2</li></ul></li><li>3</li></ul>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at BR before text in LI', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at BR before text in LI', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
       '<li>1</li>' +
       '<li>2<br></li>' +
@@ -684,13 +627,14 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     editor.selection.setCursorLocation(editor.$('li')[1], 1);
     editor.plugins.lists.backspaceDelete(false);
 
-    LegacyUnit.equal(editor.getContent(), '<ul><li>1</li><li>2</li><li>3</li></ul>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    TinyAssertions.assertContent(editor, '<ul><li>1</li><li>2</li><li>3</li></ul>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace merge li elements', (editor) => {
+  it('TBA: Backspace merge li elements', () => {
+    const editor = hook.editor();
     // IE allows you to place the caret inside a LI without children
-    editor.getBody().innerHTML = LegacyUnit.trimBrs(
+    editor.setContent(
       '<ul>' +
       '<li>a</li>' +
       '<li></li>' +
@@ -702,18 +646,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
 
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(editor,
       '<ul>' +
       '<li>a</li>' +
       '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
-    LegacyUnit.equal(editor.selection.getRng().startContainer.nodeType, 3, 'Should be a text node');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getRng().startContainer.nodeType, 3, 'Should be a text node');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li without block element', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at block inside li element into li without block element', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li>1</li>' +
         '<li><p>2</p></li>' +
@@ -725,18 +670,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'p', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ul>' +
         '<li>12</li>' +
         '<li>3</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with block element', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at block inside li element into li with block element', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
         '<li><p>2</p></li>' +
@@ -748,18 +694,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(2) p', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li><p>12</p></li>' +
         '<li>3</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at block inside li element into li with multiple block elements', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Backspace at block inside li element into li with multiple block elements', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li><p>1</p><p>2</p></li>' +
         '<li><p>3</p></li>' +
@@ -771,18 +718,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(2) p', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li><p>1</p><p>2</p>3</li>' +
         '<li>4</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li without block element', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at block inside li element into li without block element', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
         '<li>2</li>' +
@@ -794,18 +742,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'p', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li><p>12</p></li>' +
         '<li>3</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with block element', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at block inside li element into li with block element', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li><p>1</p></li>' +
         '<li><p>2</p></li>' +
@@ -817,18 +766,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(1) p', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li><p>12</p></li>' +
         '<li>3</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('TestCase-TBA: Lists: Delete at block inside li element into li with multiple block elements', (editor) => {
-    editor.getBody().innerHTML = (
+  it('TBA: Delete at block inside li element into li with multiple block elements', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ul>' +
         '<li>1</li>' +
         '<li><p>2</p><p>3</p></li>' +
@@ -840,18 +790,19 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'li:nth-child(1)', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li>1<p>2</p><p>3</p></li>' +
         '<li>4</li>' +
       '</ul>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Backspace from indented list', (editor) => {
-    editor.getBody().innerHTML = (
+  it('Backspace from indented list', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ol>' +
         '<li>a' +
           '<ol>' +
@@ -869,8 +820,8 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'ol li ol li ol li:nth-child(1)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ol>' +
         '<li>a' +
           '<ol>' +
@@ -879,11 +830,12 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
         '</li>' +
       '</ol>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Delete into indented list', (editor) => {
-    editor.getBody().innerHTML = (
+  it('Delete into indented list', () => {
+    const editor = hook.editor();
+    editor.setContent(
       '<ol>' +
         '<li>a' +
           '<ol>' +
@@ -901,17 +853,18 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
     LegacyUnit.setSelection(editor, 'ol li:nth-child(1)', 1);
     editor.plugins.lists.backspaceDelete(true);
 
-    LegacyUnit.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ol>' +
         '<li>ab</li>' +
       '</ol>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('TestCase-TBA: Lists: Backspace at beginning of LI in UL inside UL and then undo', (editor) => {
-    editor.resetContent((
+  it('TBA: Backspace at beginning of LI in UL inside UL and then undo', () => {
+    const editor = hook.editor();
+    editor.resetContent(
       '<ul>' +
         '<li>item 1</li>' +
         '<li>item 2' +
@@ -925,33 +878,35 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
         '</li>' +
         '<li>item 3</li>' +
       '</ul>'
-    ));
+    );
 
     editor.focus();
     LegacyUnit.setSelection(editor, 'li li:nth-child(1)', 0);
     editor.plugins.lists.backspaceDelete();
 
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
-    '<li>item 1</li>' +
-    '<li>item 2</li>' +
-    '<li>item 2.1' +
-      '<ul>' +
-        '<li style="list-style-type: none;">' +
+        '<li>item 1</li>' +
+        '<li>item 2</li>' +
+        '<li>item 2.1' +
           '<ul>' +
-            '<li>item 2.2</li>' +
+            '<li style="list-style-type: none;">' +
+              '<ul>' +
+                '<li>item 2.2</li>' +
+              '</ul>' +
+            '</li>' +
           '</ul>' +
         '</li>' +
-      '</ul>' +
-    '</li>' +
-    '<li>item 3</li>' +
-  '</ul>'
+        '<li>item 3</li>' +
+      '</ul>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
 
     editor.undoManager.undo();
-    LegacyUnit.equal(editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<ul>' +
         '<li>item 1</li>' +
         '<li>item 2' +
@@ -967,25 +922,4 @@ UnitTest.asynctest('browser.tinymce.plugins.lists.BackspaceDeleteTest', (success
       '</ul>'
     );
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'Lists: Backspace delete tests', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'lists',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    indent: false,
-    entities: 'raw',
-    valid_elements:
-      'li[style|class|data-custom],ol[style|class|data-custom],' +
-      'ul[style|class|data-custom],dl,dt,dd,em,strong,span,#p,div,br',
-    valid_styles: {
-      '*': 'color,font-size,font-family,background-color,font-weight,' +
-        'font-style,text-decoration,float,margin,margin-top,margin-right,' +
-        'margin-bottom,margin-left,display,position,top,left,list-style-type'
-    },
-    content_style: '.mce-content-body { line-height: normal; }', // Breaks tests in phantomjs unless we have this
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

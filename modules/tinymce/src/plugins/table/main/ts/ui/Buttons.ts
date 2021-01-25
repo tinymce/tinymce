@@ -8,7 +8,7 @@
 import Editor from 'tinymce/core/api/Editor';
 import { getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
-import { SelectionTargets } from '../selection/SelectionTargets';
+import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -86,21 +86,21 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Insert column before',
     onAction: cmd('mceTableInsertColBefore'),
     icon: 'table-insert-column-before',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onFirst)
   });
 
   editor.ui.registry.addButton('tableinsertcolafter', {
     tooltip: 'Insert column after',
     onAction: cmd('mceTableInsertColAfter'),
     icon: 'table-insert-column-after',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onLast)
   });
 
   editor.ui.registry.addButton('tabledeletecol', {
     tooltip: 'Delete column',
     onAction: cmd('mceTableDeleteCol'),
     icon: 'table-delete-column',
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addButton('tablecutrow', {
@@ -135,28 +135,28 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Cut column',
     icon: 'cut-column',
     onAction: cmd('mceTableCutCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addButton('tablecopycol', {
     tooltip: 'Copy column',
     icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addButton('tablepastecolbefore', {
     tooltip: 'Paste column before',
     icon: 'paste-column-before',
     onAction: cmd('mceTablePasteColBefore'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
   });
 
   editor.ui.registry.addButton('tablepastecolafter', {
     tooltip: 'Paste column after',
     icon: 'paste-column-after',
     onAction: cmd('mceTablePasteColAfter'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
   });
 
   editor.ui.registry.addButton('tableinsertdialog', {

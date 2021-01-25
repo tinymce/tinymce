@@ -1,38 +1,31 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-import ListsPlugin from 'tinymce/plugins/lists/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', (success, failure) => {
-
-  Theme();
-  ListsPlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Lists: remove margin from p when applying list on it, but leave other styles', [
-        tinyApis.sSetContent('<p style="color: blue;margin: 30px;margin-right: 30px;margin-bottom: 30px;margin-left: 30px;margin-top: 30px;">test</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        tinyUi.sClickOnToolbar('click bullist button', 'button[aria-label="Bullet list"]'),
-        tinyApis.sAssertContent('<ul><li style="color: blue;">test</li></ul>')
-      ]),
-      Log.stepsAsStep('TBA', 'Lists: remove padding from p when applying list on it, but leave other styles', [
-        tinyApis.sSetContent('<p style="color: red;padding: 30px;padding-right: 30px;padding-bottom: 30px;padding-left: 30px;padding-top: 30px;">test</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        tinyUi.sClickOnToolbar('click bullist button', 'button[aria-label="Bullet list"]'),
-        tinyApis.sAssertContent('<ul><li style="color: red;">test</li></ul>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.lists.ApplyListOnParagraphWithStylesTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',
     toolbar: 'numlist bullist',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: remove margin from p when applying list on it, but leave other styles', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="color: blue;margin: 30px;margin-right: 30px;margin-bottom: 30px;margin-left: 30px;margin-top: 30px;">test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
+    TinyAssertions.assertContent(editor, '<ul><li style="color: blue;">test</li></ul>');
+  });
+
+  it('TBA: remove padding from p when applying list on it, but leave other styles', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="color: red;padding: 30px;padding-right: 30px;padding-bottom: 30px;padding-left: 30px;padding-top: 30px;">test</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Bullet list"]');
+    TinyAssertions.assertContent(editor, '<ul><li style="color: red;">test</li></ul>');
+  });
 });
