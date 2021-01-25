@@ -210,7 +210,8 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
       });
     }));
   });
-  it('If <figure> is not valid child, it should split parent node', async () => {
+
+  it('TINY-6592: If <figure> is not valid child, it should split parent node', async () => {
     const editor = hook.editor();
     editor.setContent('<p>' +
 		      '<strong>A</strong>' +
@@ -250,7 +251,8 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
       })
     );
   });
-  it('If <figure> is valid child, it should not split parent node', async () => {
+
+  it('TINY-6592: If <figure> is valid child, it should not split parent node', async () => {
     const editor = hook.editor();
     editor.setContent('<div>' +
 		      '<strong>A</strong>' +
