@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { Editor as McEditor, TinyHooks } from '@ephox/mcagar';
+import { McEditor, TinyHooks } from '@ephox/mcagar';
 import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import { assert } from 'chai';
 

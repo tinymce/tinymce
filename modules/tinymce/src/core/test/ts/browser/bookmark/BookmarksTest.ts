@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Editor as McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
+import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
 import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 

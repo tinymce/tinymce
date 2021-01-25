@@ -38,7 +38,7 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): S
 
   if (Warehouse.hasColumns(warehouse)) {
     const groupElementNew = Arr.map(Warehouse.justColumns(warehouse), (column: Structs.Column): Structs.ElementNew =>
-      Structs.elementnew(column.element, isNew)
+      Structs.elementnew(column.element, isNew, false)
     );
 
     grid.push(Structs.rowcells(groupElementNew, 'colgroup'));
@@ -49,9 +49,9 @@ const toGrid = (warehouse: Warehouse, generators: Generators, isNew: boolean): S
     for (let columnIndex = 0; columnIndex < warehouse.grid.columns; columnIndex++) {
       // The element is going to be the element at that position, or a newly generated gap.
       const element = Warehouse.getAt(warehouse, rowIndex, columnIndex).map((item) =>
-        Structs.elementnew(item.element, isNew)
+        Structs.elementnew(item.element, isNew, item.isLocked)
       ).getOrThunk(() =>
-        Structs.elementnew(generators.gap(), true)
+        Structs.elementnew(generators.gap(), true, false)
       );
       rowCells.push(element);
     }

@@ -1,6 +1,7 @@
-import { Arr, Fun, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, Result } from '@ephox/katamari';
 import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
+import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import * as GridRow from './GridRow';
 
 export interface Delta {
@@ -58,29 +59,42 @@ const measureHeight = (gridA: Structs.RowCells[], gridB: Structs.RowCells[]): De
   };
 };
 
-const generateElements = <T> (cells: T[], row: Structs.RowCells, generators: SimpleGenerators) => {
-  const getGenerator = row.section === 'colgroup' ? generators.col : generators.cell;
-  return Arr.map(cells, () => Structs.elementnew(getGenerator(), true));
+const generateElements = (amount: number, row: Structs.RowCells, generators: SimpleGenerators, isLocked: (idx: number) => boolean): Structs.ElementNew[] => {
+  const generator = row.section === 'colgroup' ? generators.col : generators.cell;
+  return Arr.range(amount, (idx) => Structs.elementnew(generator(), true, isLocked(idx)));
 };
 
-const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
+const rowFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, lockedColumns: Record<string, boolean>): Structs.RowCells[] =>
   grid.concat(Arr.range(amount, () => {
     const row = grid[grid.length - 1];
-    return GridRow.setCells(row, generateElements(row.cells, row, generators));
+    const elements = generateElements(row.cells.length, row, generators, (idx) => Obj.has(lockedColumns, idx.toString()));
+    return GridRow.setCells(row, elements);
   }));
 
-const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators): Structs.RowCells[] =>
+const colFill = (grid: Structs.RowCells[], amount: number, generators: SimpleGenerators, startIndex: number): Structs.RowCells[] =>
   Arr.map(grid, (row) => {
-    const newChildren = generateElements(Arr.range(amount, Fun.identity), row, generators);
-    return GridRow.setCells(row, row.cells.concat(newChildren));
+    const newChildren = generateElements(amount, row, generators, Fun.never);
+    return GridRow.addCells(row, startIndex, newChildren);
+  });
+
+const lockedColFill = (grid: Structs.RowCells[], generators: SimpleGenerators, lockedColumns: number[]): Structs.RowCells[] =>
+  Arr.map(grid, (row) => {
+    return Arr.foldl(lockedColumns, (acc, colNum) => {
+      const newChild = generateElements(1, row, generators, Fun.always)[0];
+      return GridRow.addCell(acc, colNum, newChild);
+    }, row);
   });
 
 const tailor = (gridA: Structs.RowCells[], delta: Delta, generators: SimpleGenerators): Structs.RowCells[] => {
   const fillCols = delta.colDelta < 0 ? colFill : Fun.identity;
   const fillRows = delta.rowDelta < 0 ? rowFill : Fun.identity;
-
-  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators);
-  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators);
+  const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
+  const gridWidth = GridRow.cellLength(gridA[0]);
+  const isLastColLocked = Arr.exists(lockedColumns, (locked) => locked === gridWidth - 1);
+  const modifiedCols = fillCols(gridA, Math.abs(delta.colDelta), generators, isLastColLocked ? gridWidth - 1 : gridWidth);
+  // Need to recalculate locked column positions
+  const newLockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(modifiedCols);
+  return fillRows(modifiedCols, Math.abs(delta.rowDelta), generators, Arr.mapToObject(newLockedColumns, Fun.always));
 };
 
-export { measure, measureWidth, measureHeight, tailor };
+export { measure, measureWidth, measureHeight, tailor, lockedColFill };

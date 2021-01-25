@@ -1,7 +1,7 @@
-import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Keys } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -48,7 +48,7 @@ describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
         const editor = hook.editor();
         editor.setContent(content);
         TinySelections.select(editor, type, []);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+        TinyContentActions.keystroke(editor, Keys.backspace());
         assertEmptyEditorStructure(editor);
       });
 
@@ -56,7 +56,7 @@ describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
         const editor = hook.editor();
         editor.setContent(content);
         TinySelections.select(editor, type, []);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+        TinyContentActions.keystroke(editor, Keys.delete());
         assertEmptyEditorStructure(editor);
       });
 
@@ -64,8 +64,8 @@ describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
         const editor = hook.editor();
         editor.setContent(`<p>before${content}</p>`);
         TinySelections.select(editor, type, []);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+        TinyContentActions.keystroke(editor, Keys.right());
+        TinyContentActions.keystroke(editor, Keys.backspace());
         TinyAssertions.assertContent(editor, '<p>before</p>');
       });
 
@@ -73,8 +73,8 @@ describe('browser.tinymce.core.delete.MediaDeleteTest', () => {
         const editor = hook.editor();
         editor.setContent(`<p>${content}after</p>`);
         TinySelections.select(editor, type, []);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+        TinyContentActions.keystroke(editor, Keys.left());
+        TinyContentActions.keystroke(editor, Keys.delete());
         TinyAssertions.assertContent(editor, '<p>after</p>');
       });
     });

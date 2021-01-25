@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { Html, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 

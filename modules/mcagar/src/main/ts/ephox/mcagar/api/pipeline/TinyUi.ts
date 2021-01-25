@@ -1,9 +1,9 @@
 import { Assertions, Chain, Mouse, Step, UiFinder } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom, Visibility } from '@ephox/sugar';
-import { Editor } from '../alien/EditorTypes';
-import { getThemeSelectors } from './ThemeSelectors';
-import * as TinyUiActions from './TinyUiActions';
+import { Editor } from '../../alien/EditorTypes';
+import * as TinyUiActions from '../bdd/TinyUiActions';
+import { getThemeSelectors } from '../ThemeSelectors';
 
 export interface TinyUi {
   clickOnToolbar: (elector: string) => void;

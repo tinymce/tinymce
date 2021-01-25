@@ -1,7 +1,7 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -48,15 +48,15 @@ describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
         editor.setContent(content);
         TinySelections.select(editor, type, []);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+        TinyContentActions.keystroke(editor, Keys.left());
         TinyAssertions.assertContent(editor, `<p>${content}</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+        TinyContentActions.keystroke(editor, Keys.right());
         TinyAssertions.assertContent(editor, `<p>${content}</p>`);
         assertNode(editor, (node) => node.nodeName.toLowerCase() === type);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+        TinyContentActions.keystroke(editor, Keys.right());
         TinyAssertions.assertContent(editor, `<p>${content}</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
       });
@@ -66,19 +66,19 @@ describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
         editor.setContent(`<p>a</p><p>${content}</p><p>b</p>`);
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+        TinyContentActions.keystroke(editor, Keys.down());
         TinyAssertions.assertContent(editor, `<p>a</p><p>${content}</p><p>b</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+        TinyContentActions.keystroke(editor, Keys.down());
         TinyAssertions.assertContent(editor, `<p>a</p><p>${content}</p><p>b</p>`);
         assertNode(editor, (node) => NodeType.isElement(node) && node.innerHTML === 'b');
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+        TinyContentActions.keystroke(editor, Keys.up());
         TinyAssertions.assertContent(editor, `<p>a</p><p>${content}</p><p>b</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+        TinyContentActions.keystroke(editor, Keys.up());
         TinyAssertions.assertContent(editor, `<p>a</p><p>${content}</p><p>b</p>`);
         assertNode(editor, (node) => NodeType.isElement(node) && node.innerHTML === 'a');
       });
@@ -87,23 +87,23 @@ describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
         const editor = hook.editor();
         editor.setContent(`<p>a${content}</p>`);
         TinySelections.setCursor(editor, [ 0, 0 ], 0);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+        TinyContentActions.keystroke(editor, Keys.down());
         TinyAssertions.assertContent(editor, `<p>a${content}</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
         TinySelections.setCursor(editor, [ 0, 0 ], 0);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.end(), { });
+        TinyContentActions.keystroke(editor, Keys.end());
         TinyAssertions.assertContent(editor, `<p>a${content}</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
         editor.setContent(`<p>${content}a</p>`);
         TinySelections.setCursor(editor, [ 0, 2 ], 1);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+        TinyContentActions.keystroke(editor, Keys.up());
         TinyAssertions.assertContent(editor, `<p>${content}a</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
         TinySelections.setCursor(editor, [ 0, 2 ], 1);
-        Keyboard.activeKeystroke(TinyDom.document(editor), Keys.home(), { });
+        TinyContentActions.keystroke(editor, Keys.home());
         TinyAssertions.assertContent(editor, `<p>${content}a</p>`);
         assertStartContainer(editor, CaretContainer.isCaretContainerInline);
       });

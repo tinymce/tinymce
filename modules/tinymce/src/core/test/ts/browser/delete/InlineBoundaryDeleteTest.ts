@@ -1,7 +1,7 @@
-import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -45,7 +45,7 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
     editor.setContent(setupHtml);
     TinySelections.setCursor(editor, setupPath, setupOffset);
     editor.nodeChanged();
-    Keyboard.activeKeystroke(TinyDom.document(editor), key, { });
+    TinyContentActions.keystroke(editor, key);
     TinyAssertions.assertContent(editor, expectedHtml);
     assert.equal(readLocation(editor), expectedLocation, 'Should be expected location');
     TinyAssertions.assertSelection(editor, expectedPath, expectedOffset, expectedPath, expectedOffset);

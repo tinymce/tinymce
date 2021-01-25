@@ -8,7 +8,7 @@ UnitTest.test('TableCounterTest', () => {
   const dn = (fakeElement: any, rowspan: number, colspan: number, isNew: boolean) => Structs.detailnew(fakeElement as SugarElement, rowspan, colspan, isNew);
   const r = Structs.rowcells;
   const rd = Structs.rowdetails;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
 
   const check = (expected: Structs.RowDetails[], input: Structs.RowCells[]) => {
     const actual = Transitions.toDetails(input, Fun.tripleEquals);

@@ -4,25 +4,27 @@ import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
 import { Step } from './Step';
 
+export type KeyModifiers = MixedKeyModifiers;
+
 /*
   doc - document scope
   value - which keycode
   modifiers - { shift: BOOL, alt: BOOL }
   dispatcher - dispatch event from some element
 */
-const fakeKeys = (types: string[]) => (value: number, modifiers: MixedKeyModifiers, dispatcher: SugarElement<any>) => {
+const fakeKeys = (types: string[]) => (value: number, modifiers: KeyModifiers = {}, dispatcher: SugarElement<any>) => {
   const doc = Traverse.owner(dispatcher);
   Arr.each(types, (type) => {
     keyevent(type, doc, value, modifiers, dispatcher);
   });
 };
 
-const activeFakeKeys = (types: string[]) => (doc: SugarElement<Document>, value: number, modifiers: MixedKeyModifiers) => {
+const activeFakeKeys = (types: string[]) => (doc: SugarElement<Document | ShadowRoot>, value: number, modifiers: KeyModifiers = {}) => {
   const focused = Focus.active(doc).getOrDie('Could not find active element');
   fakeKeys(types)(value, modifiers, focused);
 };
 
-const sFakeKey = (types: string[]) => <T>(doc: SugarElement<any>, keyvalue: number, modifiers: MixedKeyModifiers): Step<T, T> => Step.sync(() => {
+const sFakeKey = (types: string[]) => <T>(doc: SugarElement<Document | ShadowRoot>, keyvalue: number, modifiers: KeyModifiers = {}): Step<T, T> => Step.sync(() => {
   activeFakeKeys(types)(doc, keyvalue, modifiers);
 });
 

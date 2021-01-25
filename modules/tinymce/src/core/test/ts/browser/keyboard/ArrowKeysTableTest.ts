@@ -1,7 +1,7 @@
-import { ApproxStructure, Keyboard, Keys, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -43,7 +43,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertContentStructure(editor, buildBody([ caretBefore(), table('1'), visualCaretBefore() ]));
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     });
@@ -53,7 +53,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), visualCaretAfter() ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
@@ -63,10 +63,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), table('2') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+      TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
@@ -76,10 +76,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table><table><tbody><tr><td>2</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 1, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), table('2') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretBefore(), table('2'), visualCaretBefore() ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+      TinyContentActions.keystroke(editor, Keys.left());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), caretAfter(), table('2'), visualCaretAfter() ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
@@ -89,7 +89,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertContentStructure(editor, buildBody([ block, table('1') ]));
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     });
@@ -99,7 +99,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), block ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
@@ -109,7 +109,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertContentStructure(editor, buildBody([ block, table('1') ]));
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     });
@@ -119,7 +119,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
       editor.setContent('<table><tbody><tr><td>1</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1') ]));
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertContentStructure(editor, buildBody([ table('1'), block ]));
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     });
@@ -137,7 +137,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
           </table>
         `);
       TinySelections.setCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
     });
 
@@ -152,7 +152,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 0 ], 0);
     });
 
@@ -168,7 +168,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 1, 0, 0, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
@@ -184,7 +184,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         <p>a<p>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
     });
 
@@ -199,7 +199,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
     });
 
@@ -214,7 +214,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 1, 1, 2 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 2 ], 0, [ 0, 0, 1, 1, 2 ], 0);
     });
 
@@ -229,7 +229,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0, 0 ], 0, [ 0, 0, 0, 1, 0, 0 ], 0);
     });
 
@@ -244,7 +244,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysTableTest', () => {
         </table>
       `);
       TinySelections.setCursor(editor, [ 0, 0, 1, 1, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 1, 0 ], 0, [ 0, 0, 1, 1, 1, 0 ], 0);
     });
   });

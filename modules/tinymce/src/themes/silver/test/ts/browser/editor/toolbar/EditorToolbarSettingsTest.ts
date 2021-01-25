@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Id, Result } from '@ephox/katamari';
-import { Editor as McagarEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import SilverTheme from 'tinymce/themes/silver/Theme';
@@ -10,7 +10,7 @@ import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
 UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) => {
   SilverTheme();
 
-  const cCreateEditorWithToolbar = (toolbarVal, toolbarVal1?, toolbarVal2?, toolbarVal9?, toolbarVal20?) => McagarEditor.cFromSettings({
+  const cCreateEditorWithToolbar = (toolbarVal, toolbarVal1?, toolbarVal2?, toolbarVal9?, toolbarVal20?) => McEditor.cFromSettings({
     toolbar: toolbarVal,
     toolbar1: toolbarVal1,
     toolbar2: toolbarVal2,
@@ -37,7 +37,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
         NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -49,7 +49,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -61,7 +61,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -87,7 +87,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -120,7 +120,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -170,7 +170,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -201,7 +201,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -213,7 +213,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
         NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -258,7 +258,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -291,7 +291,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -323,7 +323,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -367,7 +367,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -400,7 +400,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -450,7 +450,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -462,7 +462,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -474,7 +474,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
         NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -486,7 +486,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
         NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
         NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
         NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ]),
@@ -525,7 +525,7 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
             ]
           }))
         ), Id.generate('')),
-        NamedChain.direct('editor', McagarEditor.cRemove, Id.generate('')),
+        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
         NamedChain.bundle(Result.value)
       ])
     ])

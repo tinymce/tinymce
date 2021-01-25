@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -23,7 +23,7 @@ describe('browser.tinymce.core.delete.OutdentTest', () => {
     TinySelections.setCursor(editor, setupPath, setupOffset);
     editor.execCommand('indent');
     editor.nodeChanged();
-    Keyboard.activeKeystroke(TinyDom.document(editor), key, { });
+    TinyContentActions.keystroke(editor, key);
     normalizeBody(editor);
     TinyAssertions.assertContent(editor, expectedHtml);
     TinyAssertions.assertSelection(editor, expectedPath, expectedOffset, expectedPath, expectedOffset);

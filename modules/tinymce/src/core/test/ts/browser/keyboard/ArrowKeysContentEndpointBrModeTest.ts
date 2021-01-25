@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       const editor = hook.editor();
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertContent(editor, '<br /><figure><figcaption>a</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [], 0, [], 0);
     });
@@ -27,7 +27,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       const editor = hook.editor();
       editor.setContent('<figure><figcaption>a</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertRawContent(editor, '<figure><figcaption>a</figcaption></figure><br>');
       TinyAssertions.assertSelection(editor, [], 1, [], 1);
     });
@@ -36,7 +36,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       const editor = hook.editor();
       editor.setContent('<figure><figcaption>ab</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertRawContent(editor, '<br><figure><figcaption>ab</figcaption></figure>');
       TinyAssertions.assertSelection(editor, [], 0, [], 0);
     });
@@ -45,7 +45,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointBrModeTest', () 
       const editor = hook.editor();
       editor.setContent('<figure><figcaption>ab</figcaption></figure>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertRawContent(editor, '<figure><figcaption>ab</figcaption></figure><br>');
       TinyAssertions.assertSelection(editor, [], 1, [], 1);
     });

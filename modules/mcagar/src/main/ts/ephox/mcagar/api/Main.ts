@@ -1,35 +1,40 @@
-import { ActionChains } from './ActionChains';
-import { ApiChains } from './ApiChains';
-import * as Editor from './Editor';
-import * as LegacyUnit from './LegacyUnit';
-import * as RemoteTinyLoader from './RemoteTinyLoader';
-import { TinyActions } from './TinyActions';
-import { TinyApis } from './TinyApis';
-import * as TinyAssertions from './TinyAssertions';
+import * as TinyAssertions from './bdd/TinyAssertions';
+import * as TinyContentActions from './bdd/TinyContentActions';
+import * as TinyHooks from './bdd/TinyHooks';
+import * as TinySelections from './bdd/TinySelections';
+import * as TinyUiActions from './bdd/TinyUiActions';
+import * as LegacyUnit from './legacy/LegacyUnit';
+import * as McEditor from './McEditor';
+import { ActionChains } from './pipeline/ActionChains';
+import { ApiChains } from './pipeline/ApiChains';
+import * as RemoteTinyLoader from './pipeline/RemoteTinyLoader';
+import { TinyActions } from './pipeline/TinyActions';
+import { TinyApis } from './pipeline/TinyApis';
+import * as TinyLoader from './pipeline/TinyLoader';
+import { TinyScenarios } from './pipeline/TinyScenarios';
+import { TinyUi } from './pipeline/TinyUi';
+import { UiChains } from './pipeline/UiChains';
 import { TinyDom } from './TinyDom';
-import * as TinyHooks from './TinyHooks';
-import * as TinyLoader from './TinyLoader';
-import { TinyScenarios } from './TinyScenarios';
-import * as TinySelections from './TinySelections';
-import { TinyUi } from './TinyUi';
-import * as TinyUiActions from './TinyUiActions';
-import { UiChains } from './UiChains';
 
 export {
+  LegacyUnit,
+
   ActionChains,
   ApiChains,
-  Editor,
-  LegacyUnit,
+  RemoteTinyLoader,
   TinyActions,
   TinyApis,
-  TinyDom,
-  RemoteTinyLoader,
-  TinyAssertions,
-  TinyHooks,
   TinyLoader,
   TinyScenarios,
-  TinySelections,
   TinyUi,
-  TinyUiActions,
-  UiChains
+  UiChains,
+
+  McEditor,
+  TinyDom,
+
+  TinyAssertions,
+  TinyHooks,
+  TinySelections,
+  TinyContentActions,
+  TinyUiActions
 };

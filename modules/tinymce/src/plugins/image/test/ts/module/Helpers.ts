@@ -1,6 +1,5 @@
 import { Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { Obj, Type } from '@ephox/katamari';
-import { TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -25,8 +24,6 @@ export interface ImageDialogData {
   vspace: string;
   borderstyle: string;
 }
-
-const dialogSelector = 'div[role="dialog"]';
 
 export const generalTabSelectors = {
   src: 'label.tox-label:contains("Source") + div.tox-form__controls-h-stack div.tox-control-wrap input.tox-textfield',
@@ -107,12 +104,6 @@ const setSelectValue = (selector: string, value: string): SugarElement<HTMLEleme
   return field;
 };
 
-const pWaitForDialog = (editor: Editor): Promise<SugarElement<Element>> =>
-  TinyUiActions.pWaitForPopup(editor, dialogSelector);
-
-const submitDialog = (editor: Editor): void =>
-  TinyUiActions.submitDialog(editor, dialogSelector);
-
 const cleanHtml = (html: string): string =>
   html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
@@ -145,8 +136,6 @@ export {
   fakeEvent,
   setInputValue,
   setSelectValue,
-  pWaitForDialog,
-  submitDialog,
   assertCleanHtml,
   assertInputValue,
   assertInputCheckbox,

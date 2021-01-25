@@ -1,6 +1,6 @@
 import { Chain, Log, Pipeline, Step, Assertions } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { ApiChains, McEditor } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import SilverTheme from 'tinymce/themes/silver/Theme';

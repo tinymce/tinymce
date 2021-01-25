@@ -3,6 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
+
 import { composeList } from 'tinymce/plugins/lists/listModel/ComposeList';
 import { Entry } from 'tinymce/plugins/lists/listModel/Entry';
 import { normalizeEntries } from 'tinymce/plugins/lists/listModel/NormalizeEntries';

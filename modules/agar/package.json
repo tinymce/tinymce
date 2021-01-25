@@ -23,8 +23,8 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^10.0.0",
-    "@ephox/bedrock-common": "^10.0.0",
+    "@ephox/bedrock-client": "^11.0.0",
+    "@ephox/bedrock-common": "^11.0.0",
     "@ephox/jax": "^5.0.3",
     "@ephox/sand": "^4.0.3",
     "@ephox/sugar": "^7.0.3",

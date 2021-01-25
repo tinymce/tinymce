@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
@@ -44,7 +44,7 @@ describe('browser.tinymce.plugins.emoticons.AppendTest', () => {
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
     const tabList = UiFinder.findIn(SugarBody.body(), '[role="tablist"]').getOrDie();
     Assertions.assertStructure('check custom categories are shown', ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -65,9 +65,9 @@ describe('browser.tinymce.plugins.emoticons.AppendTest', () => {
         assert.equal(value, '⏲', 'Search should show custom clock');
       }
     );
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     await FocusTools.pTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item');
-    Keyboard.activeKeydown(doc, Keys.enter(), { });
+    TinyUiActions.keydown(editor, Keys.enter());
     await Waiter.pTryUntil(
       'Waiting for content update',
       () => TinyAssertions.assertContent(editor, '<p>⏲</p>')

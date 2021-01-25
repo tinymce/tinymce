@@ -1,7 +1,7 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Editor as McEditor } from '@ephox/mcagar';
-import { Attribute, Remove, SugarElement, Truncate } from '@ephox/sugar';
+import { McEditor, TinyDom } from '@ephox/mcagar';
+import { Attribute, Remove, Truncate } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -18,7 +18,7 @@ const testCleanup = (comment: string, settings: RawEditorSettings, html: string 
   it(comment, async () => {
     // spin the editor up and down, getting a reference to its target element in between
     const editor = await McEditor.pFromHtml<Editor>(html, { base_url: '/project/tinymce/js/tinymce', ...settings });
-    const element = SugarElement.fromDom(editor.getElement());
+    const element = TinyDom.targetElement(editor);
     // Run any additional chains
     fn(editor);
     editor.remove();

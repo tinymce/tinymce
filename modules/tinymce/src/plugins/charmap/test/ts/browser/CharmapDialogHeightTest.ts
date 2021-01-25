@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
 
     const tabPanel = UiFinder.findIn(body, '[role="dialog"] [role="tabpanel"]').getOrDie();

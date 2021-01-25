@@ -1,8 +1,8 @@
-import { Assertions, UiFinder } from '@ephox/agar';
+import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/mcagar';
-import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   const lastEventArgs = Cell(null);
 
   const getContentContainer = (editor: Editor) =>
-    SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
+    SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor)));
 
   const closeOnlyWindow = (editor: Editor) => {
     const dialogs = () => UiFinder.findAllIn(getContentContainer(editor), '[role="dialog"]');
@@ -24,12 +24,11 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   };
 
   const pWaitForDialog = async (editor: Editor, ariaLabel: string) => {
-    const contentContainer = getContentContainer(editor);
-    const dialog = await UiFinder.pWaitFor('Waiting for dialog', contentContainer, '[role="dialog"]');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
     if (Attribute.has(dialog, 'aria-labelledby')) {
       const labelledby = Attribute.get(dialog, 'aria-labelledby');
       const dialogLabel = SelectorFind.descendant<HTMLLabelElement>(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
-      Assertions.assertEq('Checking label text', ariaLabel, Html.get(dialogLabel));
+      assert.equal(Html.get(dialogLabel), ariaLabel, 'Checking label text');
     } else {
       throw new Error('Dialog did not have an aria-labelledby');
     }
@@ -43,11 +42,11 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   const assertHtmlAndBodyState = (editor: Editor, shouldExist: boolean) => {
     const existsFn = shouldExist ? UiFinder.exists : UiFinder.notExists;
     existsFn(SugarBody.body(), 'root:.tox-fullscreen');
-    existsFn(SugarElement.fromDom(document.documentElement), 'root:.tox-fullscreen');
+    existsFn(Traverse.documentElement(SugarDocument.getDocument()), 'root:.tox-fullscreen');
   };
 
   const assertEditorContainerAndSinkState = (editor: Editor, shouldExist: boolean) => {
-    const editorContainer = SugarElement.fromDom(editor.getContainer());
+    const editorContainer = TinyDom.container(editor);
     const existsFn = shouldExist ? UiFinder.exists : UiFinder.notExists;
     existsFn(editorContainer, 'root:.tox-fullscreen');
     assert.equal(Css.get(editorContainer, 'z-index'), shouldExist ? '1200' : 'auto', 'Editor container z-index');
@@ -58,7 +57,7 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
   };
 
   const assertShadowHostState = (editor: Editor, shouldExist: boolean) => {
-    const elm = SugarElement.fromDom(editor.getElement());
+    const elm = TinyDom.targetElement(editor);
     if (SugarShadowDom.isInShadowRoot(elm)) {
       const host = SugarShadowDom.getShadowRoot(elm)
         .map(SugarShadowDom.getShadowHost)

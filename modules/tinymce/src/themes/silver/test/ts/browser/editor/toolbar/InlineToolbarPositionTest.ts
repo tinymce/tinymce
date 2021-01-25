@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Log, Name
 import { Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { Editor as McEditor, TinyApis } from '@ephox/mcagar';
+import { McEditor, TinyApis } from '@ephox/mcagar';
 import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 

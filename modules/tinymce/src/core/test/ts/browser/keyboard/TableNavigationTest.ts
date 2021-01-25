@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -20,7 +20,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
       TinyAssertions.assertContent(editor, '<p>&nbsp;</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
     });
@@ -29,7 +29,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><caption>a</caption><tbody><tr><td>b</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
       TinyAssertions.assertContent(editor, '<table><caption>a</caption><tbody><tr><td>b</td></tr></tbody></table>');
     });
@@ -38,7 +38,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
       TinyAssertions.assertContent(editor, '<p>&nbsp;</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
     });
@@ -47,7 +47,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+      TinyContentActions.keystroke(editor, Keys.up());
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>');
     });
@@ -58,7 +58,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>');
     });
@@ -67,7 +67,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b<br></td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>');
     });
@@ -76,7 +76,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>&nbsp;</p>');
     });
@@ -85,7 +85,7 @@ describe('browser.tinymce.core.keyboard.TableNavigationTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 1);
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+      TinyContentActions.keystroke(editor, Keys.down());
       TinyAssertions.assertSelection(editor, [ 0, 0, 1, 1, 0 ], 1, [ 0, 0, 1, 1, 0 ], 1);
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>');
     });
