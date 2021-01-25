@@ -1,4 +1,3 @@
-// import { ApproxStructure, Assertions, Log, Pipeline } from '@ephox/agar';
 import { ApproxStructure, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
@@ -8,7 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
 import { assertSpanStruct, assertNbspStruct, assertStruct } from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.visualchars.PluginTest', () => {

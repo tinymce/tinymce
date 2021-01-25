@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.visualchars.DefaultStateTest', () => {
 
   it('tests the default visualchars state', async () => {
     const editor = hook.editor();
-    editor.setContent('<p>a&nbsp;&nbsp;b</p>', { format: 'raw' });
+    editor.setContent('<p>a&nbsp;&nbsp;b</p>');
 
     // Need to trigger a keydown event to get the visual chars to show after calling set content
     Keyboard.activeKeydown(TinyDom.document(editor), Keys.space(), { });
