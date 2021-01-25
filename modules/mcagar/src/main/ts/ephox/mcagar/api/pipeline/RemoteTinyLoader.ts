@@ -1,8 +1,8 @@
 import { TestLogs } from '@ephox/agar';
 import { Arr, FutureResult, Optional, Result } from '@ephox/katamari';
 import { Attribute, DomEvent, Insert, SugarBody, SugarElement } from '@ephox/sugar';
-import * as Loader from '../loader/Loader';
-import { setTinymceBaseUrl } from '../loader/Urls';
+import * as Loader from '../../loader/Loader';
+import { setTinymceBaseUrl } from '../../loader/Urls';
 
 const setupBaseUrl = (tinymce: any, settings: Record<string, any>) => {
   if (settings.base_url) {

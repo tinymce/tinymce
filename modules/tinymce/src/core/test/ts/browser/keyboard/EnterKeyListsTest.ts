@@ -1,17 +1,25 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-
-  Theme();
+describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    schema: 'html5',
+    extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
   const pressEnter = (editor: Editor, evt?: any) => {
-    const dom = editor.dom, target = editor.selection.getNode();
+    const dom = editor.dom;
+    const target = editor.selection.getNode();
 
     evt = Tools.extend({ keyCode: 13, shiftKey: false }, evt);
 
@@ -20,91 +28,101 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     dom.fire(target, 'keyup', evt);
   };
 
-  const trimBrsOnIE = (html) => {
+  const trimBrsOnIE = (html: string) => {
     return html.replace(/<br[^>]*>/gi, '');
   };
 
-  suite.test('Enter inside empty li in beginning of ol', (editor) => {
+  it('Enter inside empty li in beginning of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     LegacyUnit.setSelection(editor, 'li', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<p>\u00a0</p><ol><li>a</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter inside empty li at the end of ol', (editor) => {
+  it('Enter inside empty li at the end of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     LegacyUnit.setSelection(editor, 'li:last', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter inside empty li in the middle of ol', (editor) => {
+  it('Shift+Enter inside empty li in the middle of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li><li>b</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li><li>b</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter inside empty li in beginning of ol', (editor) => {
+  it('Shift+Enter inside empty li in beginning of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li><br><br></li><li>a</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.getBody().innerHTML, '<ol><li><br><br></li><li>a</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter inside empty li at the end of ol', (editor) => {
+  it('Shift+Enter inside empty li at the end of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li><li><br><br></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty li in the middle of ol with forced_root_block: false', (editor) => {
+  it('Enter inside empty li in the middle of ol with forced_root_block: false', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li:nth-child(2)')[0], 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br><ol><li>b</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
+    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br><ol><li>b</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'BODY');
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li in beginning of ol with forced_root_block: false', (editor) => {
+  it('Enter inside empty li in beginning of ol with forced_root_block: false', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li><br></li><li>a</li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[0], 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getBody().innerHTML, '<br><ol><li>a</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
+    assert.equal(editor.getBody().innerHTML, '<br><ol><li>a</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'BODY');
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li at the end of ol with forced_root_block: false', (editor) => {
+  it('Enter inside empty li at the end of ol with forced_root_block: false', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li></ol>';
     editor.selection.setCursorLocation(editor.dom.select('li')[1], 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'BODY');
+    assert.equal(editor.getBody().innerHTML, '<ol><li>a</li></ol><br>');
+    assert.equal(editor.selection.getNode().nodeName, 'BODY');
     editor.settings.forced_root_block = 'p';
   });
 
-  suite.test('Enter inside empty li in the middle of ol', (editor) => {
+  it('Enter inside empty li in the middle of ol', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li>a</li><li><br></li><li>b</li></ol>';
     LegacyUnit.setSelection(editor, 'li:nth-child(2)', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li>a</li></ol><p>\u00a0</p><ol><li>b</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
   // Nested lists in LI elements
 
-  suite.test('Enter inside empty LI in beginning of OL in LI', (editor) => {
+  it('Enter inside empty LI in beginning of OL in LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -120,7 +138,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
       '<li>' +
@@ -131,10 +149,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in middle of OL in LI', (editor) => {
+  it('Enter inside empty LI in middle of OL in LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -151,7 +170,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a' +
       '<ol>' +
@@ -166,10 +185,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in end of OL in LI', (editor) => {
+  it('Enter inside empty LI in end of OL in LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -185,7 +205,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a' +
       '<ol>' +
@@ -196,12 +216,13 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
   // Nested lists in OL elements
 
-  suite.test('Enter before nested list', (editor) => {
+  it('Enter before nested list', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a' +
@@ -217,7 +238,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
       '<li>\u00a0' +
@@ -229,10 +250,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in beginning of OL in OL', (editor) => {
+  it('Enter inside empty LI in beginning of OL in OL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -247,7 +269,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
       '<li>\u00a0</li>' +
@@ -257,10 +279,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in middle of OL in OL', (editor) => {
+  it('Enter inside empty LI in middle of OL in OL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -276,7 +299,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
       '<ol>' +
@@ -289,10 +312,11 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter inside empty LI in end of OL in OL', (editor) => {
+  it('Enter inside empty LI in end of OL in OL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = trimBrsOnIE(
       '<ol>' +
       '<li>a</li>' +
@@ -307,7 +331,7 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
     editor.focus();
     pressEnter(editor);
 
-    LegacyUnit.equal(editor.getContent(),
+    assert.equal(editor.getContent(),
       '<ol>' +
       '<li>a</li>' +
       '<ol>' +
@@ -317,166 +341,172 @@ UnitTest.asynctest('browser.tinymce.core.keyboard.EnterKeyListsTest', (success, 
       '</ol>'
     );
 
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Enter at beginning of first DT inside DL', (editor) => {
+  it('Enter at beginning of first DT inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dt>\u00a0</dt><dt>a</dt></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
+    assert.equal(editor.getContent(), '<dl><dt>\u00a0</dt><dt>a</dt></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at beginning of first DD inside DL', (editor) => {
+  it('Enter at beginning of first DD inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dd>\u00a0</dd><dd>a</dd></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
+    assert.equal(editor.getContent(), '<dl><dd>\u00a0</dd><dd>a</dd></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at beginning of middle DT inside DL', (editor) => {
+  it('Enter at beginning of middle DT inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dt>a</dt><dt>b</dt><dt>c</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt:nth-child(2)', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dt>a</dt><dt>\u00a0</dt><dt>b</dt><dt>c</dt></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
+    assert.equal(editor.getContent(), '<dl><dt>a</dt><dt>\u00a0</dt><dt>b</dt><dt>c</dt></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at beginning of middle DD inside DL', (editor) => {
+  it('Enter at beginning of middle DD inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dd>a</dd><dd>b</dd><dd>c</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd:nth-child(2)', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dd>a</dd><dd>\u00a0</dd><dd>b</dd><dd>c</dd></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
+    assert.equal(editor.getContent(), '<dl><dd>a</dd><dd>\u00a0</dd><dd>b</dd><dd>c</dd></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at end of last DT inside DL', (editor) => {
+  it('Enter at end of last DT inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dt>a</dt></dl>';
     LegacyUnit.setSelection(editor, 'dt', 1);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dt>a</dt><dt>\u00a0</dt></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DT');
+    assert.equal(editor.getContent(), '<dl><dt>a</dt><dt>\u00a0</dt></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DT');
   });
 
-  suite.test('Enter at end of last DD inside DL', (editor) => {
+  it('Enter at end of last DD inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dd>a</dd></dl>';
     LegacyUnit.setSelection(editor, 'dd', 1);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dd>a</dd><dd>\u00a0</dd></dl>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'DD');
+    assert.equal(editor.getContent(), '<dl><dd>a</dd><dd>\u00a0</dd></dl>');
+    assert.equal(editor.selection.getNode().nodeName, 'DD');
   });
 
-  suite.test('Enter at end of last empty DT inside DL', (editor) => {
+  it('Enter at end of last empty DT inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dt>a</dt><dt></dt></dl>';
     LegacyUnit.setSelection(editor, 'dt:nth-child(2)', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dt>a</dt></dl><p>\u00a0</p>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<dl><dt>a</dt></dl><p>\u00a0</p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at end of last empty DD inside DL', (editor) => {
+  it('Enter at end of last empty DD inside DL', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<dl><dd>a</dd><dd></dd></dl>';
     LegacyUnit.setSelection(editor, 'dd:nth-child(2)', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<dl><dd>a</dd></dl><p>\u00a0</p>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<dl><dd>a</dd></dl><p>\u00a0</p>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at beginning of P inside LI', (editor) => {
+  it('Enter at beginning of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<ol><li>\u00a0</li><li><p>abcd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li>\u00a0</li><li><p>abcd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter inside middle of P inside LI', (editor) => {
+  it('Enter inside middle of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>ab</p></li><li><p>cd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p>ab</p></li><li><p>cd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Enter at end of P inside LI', (editor) => {
+  it('Enter at end of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor);
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>abcd</p></li><li>\u00a0</li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'LI');
+    assert.equal(editor.getContent(), '<ol><li><p>abcd</p></li><li>\u00a0</li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
-  suite.test('Shift+Enter at beginning of P inside LI', (editor) => {
+  it('Shift+Enter at beginning of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p><br />abcd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter inside middle of P inside LI', (editor) => {
+  it('Shift+Enter inside middle of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p>ab<br />cd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+Enter at end of P inside LI', (editor) => {
+  it('Shift+Enter at end of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(
+    assert.equal(
       editor.getContent(),
       '<ol><li><p>abcd<br /><br /></p></li></ol>'
     );
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter at beginning of P inside LI', (editor) => {
+  it('Ctrl+Enter at beginning of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 0);
     pressEnter(editor, { ctrlKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>\u00a0</p><p>abcd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p>\u00a0</p><p>abcd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter inside middle of P inside LI', (editor) => {
+  it('Ctrl+Enter inside middle of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 2);
     pressEnter(editor, { ctrlKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>ab</p><p>cd</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p>ab</p><p>cd</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Ctrl+Enter at end of P inside LI', (editor) => {
+  it('Ctrl+Enter at end of P inside LI', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<ol><li><p>abcd</p></li></ol>';
     LegacyUnit.setSelection(editor, 'p', 4);
     pressEnter(editor, { ctrlKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ol><li><p>abcd</p><p>\u00a0</p></li></ol>');
-    LegacyUnit.equal(editor.selection.getNode().nodeName, 'P');
+    assert.equal(editor.getContent(), '<ol><li><p>abcd</p><p>\u00a0</p></li></ol>');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
   });
 
-  suite.test('Shift+enter in LI when forced_root_block: false', (editor) => {
+  it('Shift+enter in LI when forced_root_block: false', () => {
+    const editor = hook.editor();
     editor.settings.forced_root_block = false;
     editor.getBody().innerHTML = '<ul><li>text</li></ul>';
     LegacyUnit.setSelection(editor, 'li', 2);
     pressEnter(editor, { shiftKey: true });
-    LegacyUnit.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
+    assert.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
     editor.settings.forced_root_block = 'p';
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    schema: 'html5',
-    extended_valid_elements: 'div[id|style|contenteditable],span[id|style|contenteditable],#dt,#dd',
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

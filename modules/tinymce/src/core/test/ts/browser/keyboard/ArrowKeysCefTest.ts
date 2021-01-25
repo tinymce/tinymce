@@ -1,172 +1,186 @@
-import { GeneralSteps, Keys, Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 import Theme from 'tinymce/themes/silver/Theme';
 import * as KeyUtils from '../../module/test/KeyUtils';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.ArrowKeysCefTest', (success, failure) => {
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-    let scrollIntoViewCount = 0;
-    let keydownCount = 0;
-    editor.on('ScrollIntoView', () => scrollIntoViewCount++);
-    editor.on('keydown', () => keydownCount++);
-
-    const sScrollTo = (x: number, y: number) => Step.sync(() => editor.getWin().scrollTo(x, y));
-    const sResetScrollCount = Step.sync(() => scrollIntoViewCount = 0);
-    const sAssertScrollCount = (expected: number) => Step.sync(() => {
-      Assert.eq('ScrollIntoView count', expected, scrollIntoViewCount);
-    });
-
-    const sResetKeydownCount = Step.sync(() => keydownCount = 0);
-    const sAssertKeydownCount = (expected: number) => Step.sync(() => {
-      Assert.eq('Keydown count', expected, keydownCount);
-    });
-
-    const sAssertStartContainer = (f: (node: Node) => boolean) => Step.sync(() => {
-      const startContainer = editor.selection.getRng().startContainer;
-      Assert.eq('Check selection is in caret container', true, f(startContainer));
-    });
-
-    const sAssertNode = (f: (node: Node) => boolean) => Step.sync(() => {
-      const node = editor.selection.getNode();
-      Assert.eq('Check selection is node', true, f(node));
-    });
-
-    const sType = (text: string) => Step.sync(() => KeyUtils.type(editor, text));
-
-    // Firefox freezes up if loading media too quickly, so we need a small wait
-    const sMediaWait = Env.browser.isFirefox() ? Step.wait(20) : Step.pass;
-
-    const sExitPreTest = (arrow: number, offset: number, expectedContent: string) => GeneralSteps.sequence([
-      tinyApis.sSetContent('<pre>abc</pre>'),
-      tinyApis.sSetCursor([ 0, 0 ], 1),
-
-      tinyActions.sContentKeystroke(arrow),
-      tinyApis.sAssertContent('<pre>abc</pre>'),
-      sAssertNode((node) => node.nodeName === 'PRE'),
-
-      tinyApis.sSetCursor([ 0, 0 ], offset),
-      tinyActions.sContentKeystroke(arrow),
-      tinyApis.sAssertContent(expectedContent),
-      sAssertNode((node) => node.nodeName === 'P')
-    ]);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'left/right over cE=false inline', [
-        tinyApis.sSetContent('<span contenteditable="false">1</span>'),
-        tinyApis.sSelect('span', []),
-
-        tinyActions.sContentKeystroke(Keys.left()),
-        tinyApis.sAssertContent('<p><span contenteditable="false">1</span></p>'),
-        sAssertStartContainer(CaretContainer.isCaretContainerInline),
-
-        tinyActions.sContentKeystroke(Keys.right()),
-        tinyApis.sAssertContent('<p><span contenteditable="false">1</span></p>'),
-        sAssertNode(NodeType.isContentEditableFalse),
-
-        tinyActions.sContentKeystroke(Keys.right()),
-        tinyApis.sAssertContent('<p><span contenteditable="false">1</span></p>'),
-        sAssertStartContainer(CaretContainer.isCaretContainerInline)
-      ]),
-      Log.stepsAsStep('TBA', 'left/right over cE=false block', [
-        tinyApis.sSetContent('<p contenteditable="false">1</p>'),
-        tinyApis.sSelect('p[contenteditable=false]', []),
-
-        tinyActions.sContentKeystroke(Keys.left()),
-        tinyApis.sAssertContent('<p contenteditable="false">1</p>'),
-        sAssertStartContainer(CaretContainer.isCaretContainerBlock),
-
-        tinyActions.sContentKeystroke(Keys.right()),
-        tinyApis.sAssertContent('<p contenteditable="false">1</p>'),
-        sAssertNode(NodeType.isContentEditableFalse),
-
-        tinyActions.sContentKeystroke(Keys.right()),
-        tinyApis.sAssertContent('<p contenteditable="false">1</p>'),
-        sAssertStartContainer(CaretContainer.isCaretContainerBlock)
-      ]),
-      Log.stepsAsStep('TBA', 'left before cE=false block and type', [
-        tinyApis.sSetContent('<p contenteditable="false">1</p>'),
-        tinyApis.sSelect('p[contenteditable=false]', []),
-
-        tinyActions.sContentKeystroke(Keys.left()),
-        sType('a'),
-        tinyApis.sAssertContent('<p>a</p><p contenteditable="false">1</p>'),
-        sAssertStartContainer((node) => !CaretContainer.isCaretContainerBlock(node.parentNode))
-      ]),
-      Log.stepsAsStep('TBA', 'right after cE=false block and type', [
-        tinyApis.sSetContent('<p contenteditable="false">1</p>'),
-        tinyApis.sSelect('p[contenteditable=false]', []),
-
-        tinyActions.sContentKeystroke(Keys.right()),
-        sType('a'),
-        tinyApis.sAssertContent('<p contenteditable="false">1</p><p>a</p>'),
-        sAssertStartContainer((node) => !CaretContainer.isCaretContainerBlock(node.parentNode))
-      ]),
-      Log.stepsAsStep('TBA', 'up from P to inline cE=false', [
-        tinyApis.sSetContent('<p>a<span contentEditable="false">1</span></p><p>abc</p>'),
-        tinyApis.sSetCursor([ 1, 0 ], 3),
-
-        tinyActions.sContentKeystroke(Keys.up()),
-        sAssertStartContainer(CaretContainer.isCaretContainerInline)
-      ]),
-      Log.stepsAsStep('TBA', 'down from P to inline cE=false', [
-        tinyApis.sSetContent('<p>abc</p><p>a<span contentEditable="false">1</span></p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 3),
-
-        tinyActions.sContentKeystroke(Keys.down()),
-        sAssertStartContainer(CaretContainer.isCaretContainerInline)
-      ]),
-      Log.step('TBA', 'exit pre block (up)', sExitPreTest(Keys.up(), 0, '<p>&nbsp;</p><pre>abc</pre>')),
-      Log.step('TBA', 'exit pre block (left)', sExitPreTest(Keys.left(), 0, '<p>&nbsp;</p><pre>abc</pre>')),
-      Log.step('TBA', 'exit pre block (down)', sExitPreTest(Keys.down(), 3, '<pre>abc</pre><p>&nbsp;</p>')),
-      Log.step('TBA', 'exit pre block (right)', sExitPreTest(Keys.right(), 3, '<pre>abc</pre><p>&nbsp;</p>')),
-      Log.stepsAsStep('TINY-6226', 'Should move to line above when large cef element is inline', [
-        tinyApis.sSetContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3 with some more text</p>'),
-        sMediaWait,
-        sScrollTo(0, 400),
-        tinyApis.sSetCursor([ 2, 0 ], 26),
-        sResetScrollCount,
-        tinyActions.sContentKeystroke(Keys.up()),
-        sAssertScrollCount(1),
-        tinyApis.sAssertSelection([ 1, 1 ], 1, [ 1, 1 ], 1),
-        tinyActions.sContentKeystroke(Keys.up()),
-        sAssertScrollCount(2),
-        tinyApis.sAssertSelection([ 0, 0 ], 6, [ 0, 0 ], 6)
-      ]),
-      Log.stepsAsStep('TINY-6226', 'Should move to line below when large cef element is on next line', [
-        tinyApis.sSetContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3</p>'),
-        sMediaWait,
-        sScrollTo(0, 0),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sResetScrollCount,
-        tinyActions.sContentKeystroke(Keys.down()),
-        sAssertScrollCount(1),
-        tinyApis.sAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0),
-        tinyActions.sContentKeystroke(Keys.down()),
-        sAssertScrollCount(2),
-        tinyApis.sAssertSelection([ 2, 0 ], 0, [ 2, 0 ], 0)
-      ]),
-      Log.stepsAsStep('TINY-6471', 'Should not throw exception when line below when bogus cef is below', [
-        tinyApis.sSetRawContent('<p><br data-mce-bogus="1"></p><div contenteditable="false" data-mce-bogus="1"  style="user-select: none;"><div contenteditable="false" data-mce-bogus="1"></div></div>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sResetKeydownCount,
-        tinyActions.sContentKeystroke(Keys.down()),
-        tinyActions.sContentKeystroke(Keys.down()),
-        // Checking 2 events fired verifies the event handlers finished running, so an exception shouldn't have been raised
-        sAssertKeydownCount(2)
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     height: 200,
     indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor: Editor) => {
+      editor.on('ScrollIntoView', () => scrollIntoViewCount++);
+      editor.on('keydown', () => keydownCount++);
+    }
+  }, [ Theme ], true);
+  let scrollIntoViewCount = 0;
+  let keydownCount = 0;
+
+  const scrollTo = (editor: Editor, x: number, y: number) => editor.getWin().scrollTo(x, y);
+  const resetScrollCount = () => scrollIntoViewCount = 0;
+  const assertScrollCount = (expected: number) => {
+    assert.equal(scrollIntoViewCount, expected, 'ScrollIntoView count');
+  };
+
+  const resetKeydownCount = () => keydownCount = 0;
+  const assertKeydownCount = (expected: number) => {
+    assert.equal(keydownCount, expected, 'Keydown count');
+  };
+
+  const assertStartContainer = (editor: Editor, f: (node: Node) => boolean) => {
+    const startContainer = editor.selection.getRng().startContainer;
+    assert.isTrue(f(startContainer), 'Check selection is in caret container');
+  };
+
+  const assertNode = (editor: Editor, f: (node: Node) => boolean) => {
+    const node = editor.selection.getNode();
+    assert.isTrue(f(node), 'Check selection is node');
+  };
+
+  // Firefox freezes up if loading media too quickly, so we need a small wait
+  const pMediaWait = () => Env.browser.isFirefox() ? Waiter.pWait(20) : Waiter.pWait(0);
+
+  const exitPreTest = (arrow: number, offset: number, expectedContent: string) => () => {
+    const editor = hook.editor();
+    editor.setContent('<pre>abc</pre>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+
+    TinyContentActions.keystroke(editor, arrow);
+    TinyAssertions.assertContent(editor, '<pre>abc</pre>');
+    assertNode(editor, (node) => node.nodeName === 'PRE');
+
+    TinySelections.setCursor(editor, [ 0, 0 ], offset);
+    TinyContentActions.keystroke(editor, arrow);
+    TinyAssertions.assertContent(editor, expectedContent);
+    assertNode(editor, (node) => node.nodeName === 'P');
+  };
+
+  it('TBA: left/right over cE=false inline', () => {
+    const editor = hook.editor();
+    editor.setContent('<span contenteditable="false">1</span>');
+    TinySelections.select(editor, 'span', []);
+
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
+    assertStartContainer(editor, CaretContainer.isCaretContainerInline);
+
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
+    assertNode(editor, NodeType.isContentEditableFalse);
+
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
+    assertStartContainer(editor, CaretContainer.isCaretContainerInline);
+  });
+
+  it('TBA: left/right over cE=false block', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">1</p>');
+    TinySelections.select(editor, 'p[contenteditable=false]', []);
+
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
+    assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
+    assertNode(editor, NodeType.isContentEditableFalse);
+
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
+    assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
+  });
+
+  it('TBA: left before cE=false block and type', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">1</p>');
+    TinySelections.select(editor, 'p[contenteditable=false]', []);
+
+    TinyContentActions.keystroke(editor, Keys.left());
+    KeyUtils.type(editor, 'a');
+    TinyAssertions.assertContent(editor, '<p>a</p><p contenteditable="false">1</p>');
+    assertStartContainer(editor, (node) => !CaretContainer.isCaretContainerBlock(node.parentNode));
+  });
+
+  it('TBA: right after cE=false block and type', () => {
+    const editor = hook.editor();
+    editor.setContent('<p contenteditable="false">1</p>');
+    TinySelections.select(editor, 'p[contenteditable=false]', []);
+
+    TinyContentActions.keystroke(editor, Keys.right());
+    KeyUtils.type(editor, 'a');
+    TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p><p>a</p>');
+    assertStartContainer(editor, (node) => !CaretContainer.isCaretContainerBlock(node.parentNode));
+  });
+
+  it('TBA: up from P to inline cE=false', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a<span contentEditable="false">1</span></p><p>abc</p>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 3);
+
+    TinyContentActions.keystroke(editor, Keys.up());
+    assertStartContainer(editor, CaretContainer.isCaretContainerInline);
+  });
+
+  it('TBA: down from P to inline cE=false', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc</p><p>a<span contentEditable="false">1</span></p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+
+    TinyContentActions.keystroke(editor, Keys.down());
+    assertStartContainer(editor, CaretContainer.isCaretContainerInline);
+  });
+
+  it('TBA: exit pre block (up)', exitPreTest(Keys.up(), 0, '<p>&nbsp;</p><pre>abc</pre>'));
+  it('TBA: exit pre block (left)', exitPreTest(Keys.left(), 0, '<p>&nbsp;</p><pre>abc</pre>'));
+  it('TBA: exit pre block (down)', exitPreTest(Keys.down(), 3, '<pre>abc</pre><p>&nbsp;</p>'));
+  it('TBA: exit pre block (right)', exitPreTest(Keys.right(), 3, '<pre>abc</pre><p>&nbsp;</p>'));
+
+  it('TINY-6226: Should move to line above when large cef element is inline', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3 with some more text</p>');
+    await pMediaWait();
+    scrollTo(editor, 0, 400);
+    TinySelections.setCursor(editor, [ 2, 0 ], 26);
+    resetScrollCount();
+    TinyContentActions.keystroke(editor, Keys.up());
+    assertScrollCount(1);
+    TinyAssertions.assertSelection(editor, [ 1, 1 ], 1, [ 1, 1 ], 1);
+    TinyContentActions.keystroke(editor, Keys.up());
+    assertScrollCount(2);
+    TinyAssertions.assertSelection(editor, [ 0, 0 ], 6, [ 0, 0 ], 6);
+  });
+
+  it('TINY-6226: Should move to line below when large cef element is on next line', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Line 1</p><p><video height="400" width="200" src="custom/video.mp4" contenteditable="false"></video> Line 2</p><p>Line 3</p>');
+    await pMediaWait();
+    scrollTo(editor, 0, 0);
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    resetScrollCount();
+    TinyContentActions.keystroke(editor, Keys.down());
+    assertScrollCount(1);
+    TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.down());
+    assertScrollCount(2);
+    TinyAssertions.assertSelection(editor, [ 2, 0 ], 0, [ 2, 0 ], 0);
+  });
+
+  it('TINY-6471: Should not throw exception when line below when bogus cef is below', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><br data-mce-bogus="1"></p><div contenteditable="false" data-mce-bogus="1"  style="user-select: none;"><div contenteditable="false" data-mce-bogus="1"></div></div>', { format: 'raw' });
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    resetKeydownCount();
+    TinyContentActions.keystroke(editor, Keys.down());
+    TinyContentActions.keystroke(editor, Keys.down());
+    // Checking 2 events fired verifies the event handlers finished running, so an exception shouldn't have been raised
+    assertKeydownCount(2);
+  });
 });

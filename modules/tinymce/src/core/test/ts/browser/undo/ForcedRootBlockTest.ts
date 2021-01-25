@@ -1,20 +1,26 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
 import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.undo.ForcedRootBlockTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
 
-  Theme();
-
-  suite.test('createFromEditor forced_root_block: false', (editor) => {
+  it('createFromEditor', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<strong>a</strong> <span>b</span>';
 
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<strong>a</strong> <span>b</span>',
@@ -23,10 +29,11 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', (success, fa
     });
   });
 
-  suite.test('createFromEditor forced_root_block: false', (editor) => {
+  it('createFromEditor with iframes', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -40,15 +47,4 @@ UnitTest.asynctest('browser.tinymce.core.undo.ForcedRootBlockTest', (success, fa
       type: UndoLevelType.Fragmented
     });
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

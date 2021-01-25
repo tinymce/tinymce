@@ -1,75 +1,72 @@
-import { Assertions, Chain, Cleaner, Pipeline, Step } from '@ephox/agar';
-import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Global, Result } from '@ephox/katamari';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Global } from '@ephox/katamari';
+import { assert } from 'chai';
+
 import Resource from 'tinymce/core/api/Resource';
 
 declare const tinymce: { Resource: Resource };
 
-const install = () => {
+describe('Scripts test', () => {
   const origTiny = Global.tinymce;
-  Global.tinymce = {
-    Resource
-  };
-  const uninstall = () => {
+
+  before(() => {
+    Global.tinymce = {
+      Resource
+    };
+  });
+
+  after(() => {
     Global.tinymce = origTiny;
+  });
+
+  const testScript = (id: string, data: string) => `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
+
+  const addScript = (id: string, data: string) => {
+    tinymce.Resource.add(id, data);
   };
-  return uninstall;
-};
 
-const testScript = (id: string, data: string) => `data:text/javascript,tinymce.Resource.add('${id}', '${data}')`;
+  const loadScript = (id: string, url: string): Promise<any> =>
+    tinymce.Resource.load(id, url);
 
-const cScriptAdd = (id: string, data: string) => Chain.op<any>((_value) => {
-  tinymce.Resource.add(id, data);
-});
+  const assertLoadSuccess = (actual: Promise<string>, expectedData: string) => {
+    actual.then((data) => {
+      assert.equal(data, expectedData, 'Load succeeded but data did not match expected');
+    }, (err) => {
+      assert.fail('Load failed with error: ' + err);
+    });
+  };
 
-const cScriptLoad = (id: string, url: string) => Chain.async<any, Result<string, string>>((_input, next, _die) => {
-  tinymce.Resource.load(id, url).then((value) => {
-    next(Result.value(value));
-  }, (err) => {
-    next(Result.error(err));
+  const assertLoadFailure = (actual: Promise<string>, expectedErr: string): Promise<void> => {
+    return actual.then((data) => {
+      assert.fail('Expected failure but succeeded with value: ' + data);
+    }, (err) => {
+      assert.equal(err, expectedErr, 'Load failed but error did not match expected');
+    });
+  };
+
+  it('bundling', () => {
+    addScript('script.1', 'value.1');
+    const load = loadScript('script.1', '/custom/404');
+    return assertLoadSuccess(load, 'value.1');
   });
-});
 
-const cAssertLoadSuccess = (expectedData: string) => Chain.op<Result<string, string>>((actual) => {
-  actual.fold((err) => {
-    assert.fail('Load failed with error: ' + err);
-  }, (data) => {
-    Assertions.assertEq('Load succeeded but data did not match expected', expectedData, data);
+  it('async loading', () => {
+    const load = loadScript('script.2', testScript('script.2', 'value.2'));
+    return assertLoadSuccess(load, 'value.2');
   });
-});
 
-const cAssertLoadFailure = (expectedErr: string) => Chain.op<Result<string, string>>((actual) => {
-  actual.fold((err) => {
-    Assertions.assertEq('Load failed but error did not match expected', expectedErr, err);
-  }, (data) => {
-    assert.fail('Expected failure but succeeded with value: ' + data);
+  it('return cached value', () => {
+    const load = loadScript('script.2', testScript('script.2', 'value.3'));
+    return assertLoadSuccess(load, 'value.2');
   });
-});
 
-UnitTest.asynctest('Scripts test', (success, failure) => {
-  const cleanup = Cleaner();
-  cleanup.add(install());
-  Pipeline.async({}, [
-    Step.label('bundling', Chain.asStep({}, [
-      cScriptAdd('script.1', 'value.1'),
-      cScriptLoad('script.1', '/custom/404'),
-      cAssertLoadSuccess('value.1')
-    ])),
-    Step.label('async loading', Chain.asStep({}, [
-      cScriptLoad('script.2', testScript('script.2', 'value.2')),
-      cAssertLoadSuccess('value.2')
-    ])),
-    Step.label('return cached value', Chain.asStep({}, [
-      cScriptLoad('script.2', testScript('script.2', 'value.3')),
-      cAssertLoadSuccess('value.2')
-    ])),
-    Step.label('invalid URL fails', Chain.asStep({}, [
-      cScriptLoad('script.3', '/custom/404'),
-      cAssertLoadFailure('Script at URL "/custom/404" failed to load')
-    ])),
-    Step.label('invalid id fails', Chain.asStep({}, [
-      cScriptLoad('script.4', testScript('invalid-id', 'value.4')), // this takes 1 second to timeout
-      cAssertLoadFailure(`Script at URL "data:text/javascript,tinymce.Resource.add('invalid-id', 'value.4')" did not call \`tinymce.Resource.add('script.4', data)\` within 1 second`)
-    ]))
-  ], cleanup.wrap(success), cleanup.wrap(failure));
+  it('invalid URL fails', () => {
+    const load = loadScript('script.3', '/custom/404');
+    return assertLoadFailure(load, 'Script at URL "/custom/404" failed to load');
+  });
+
+  it('invalid id fails', () => {
+    const load = loadScript('script.4', testScript('invalid-id', 'value.4')); // this takes 1 second to timeout
+    return assertLoadFailure(load, `Script at URL "data:text/javascript,tinymce.Resource.add('invalid-id', 'value.4')" did not call \`tinymce.Resource.add('script.4', data)\` within 1 second`);
+  });
 });

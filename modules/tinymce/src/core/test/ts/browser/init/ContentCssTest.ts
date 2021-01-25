@@ -1,20 +1,25 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import { appendContentCssFromSettings } from 'tinymce/core/init/ContentCss';
 
-UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
+describe('browser.tinymce.core.init.ContentCssTest', () => {
   const baseUrl = EditorManager.documentBaseURL.replace(/\/$/, '');
   const skinsBaseUrl = EditorManager.baseURL + '/skins/content';
 
-  const testContentCss = (label: string, expectedContentCss: string[], inputContentCss: string[] | string | boolean) => {
-    const editor = new Editor('id', {
-      content_css: inputContentCss
-    }, EditorManager);
+  const testContentCss = (label: string, expectedContentCss: string[], inputContentCss: string[] | string | boolean, inline: boolean = false) => {
+    it(label, () => {
+      const editor = new Editor('id', {
+        content_css: inputContentCss,
+        inline
+      }, EditorManager);
 
-    appendContentCssFromSettings(editor);
+      appendContentCssFromSettings(editor);
 
-    Assert.eq(label, expectedContentCss, editor.contentCSS);
+      assert.deepEqual(editor.contentCSS, expectedContentCss, label);
+    });
   };
 
   testContentCss('Expected empty array on empty input', [], []);
@@ -31,13 +36,10 @@ UnitTest.test('browser.tinymce.core.init.ContentCssTest', () => {
   testContentCss('Expected array with absolute url from string with skin name', [ `${skinsBaseUrl}/document/content.css` ], 'document');
   testContentCss('Expected array with absolute url from array with skin name', [ `${skinsBaseUrl}/document/content.css` ], [ 'document' ]);
   testContentCss('Expected array with absolute url from string with skin name with dash', [ `${skinsBaseUrl}/business-letter/content.css` ], 'business-letter');
-  testContentCss('Expected empty array on empty input', [], []);
   testContentCss('Expected array with absolute url from a comma separated list of css files',
     [ `${baseUrl}/a.css`, `${baseUrl}/b.css` ],
     'a.css,b.css'
   );
 
-  const inlineEditor = new Editor('id', { content_css: 'document', inline: true }, EditorManager);
-  appendContentCssFromSettings(inlineEditor);
-  Assert.eq('Content skins should not load in inline mode', [ `${baseUrl}/document` ], inlineEditor.contentCSS);
+  testContentCss('Expected array without content skins for inline editors', [ `${baseUrl}/document` ], 'document', true);
 });

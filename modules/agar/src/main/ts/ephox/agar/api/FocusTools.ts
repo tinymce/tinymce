@@ -10,8 +10,8 @@ import * as UiControls from './UiControls';
 import * as UiFinder from './UiFinder';
 import * as Waiter from './Waiter';
 
-const getFocused = (doc: SugarElement<Document | ShadowRoot>): Result<SugarElement<HTMLElement>, string> => {
-  return Focus.active(doc).fold(
+const getFocused = <T extends HTMLElement>(doc: SugarElement<Document | ShadowRoot>): Result<SugarElement<T>, string> => {
+  return Focus.active<T>(doc).fold(
     () => Result.error('Could not find active element'),
     Result.value
   );
@@ -29,21 +29,21 @@ const setActiveValue = (doc: SugarElement<Document | ShadowRoot>, newValue: stri
   return focused;
 };
 
-const isOn = (label: string, element: SugarElement<Node>): Result<SugarElement<HTMLElement>, string> => {
+const isOn = (label: string, element: SugarElement<Node>): SugarElement<HTMLElement> => {
   const doc = SugarShadowDom.getRootNode(element);
   return getFocused(doc).bind((active) => {
     return Compare.eq(element, active) ? Result.value(active) : Result.error(
       label + '\nExpected focus: ' + Truncate.getHtml(element) + '\nActual focus: ' + Truncate.getHtml(active)
     );
-  });
+  }).getOrDie();
 };
 
-const isOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Result<SugarElement<HTMLElement>, string> => {
+const isOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): SugarElement<HTMLElement> => {
   return getFocused(doc).bind((active) => {
     return SizzleFind.matches(active, selector) ? Result.value(active) : Result.error(
       label + '\nExpected focus $("' + selector + '")]\nActual focus: ' + Truncate.getHtml(active)
     );
-  });
+  }).getOrDie();
 };
 
 const cGetFocused: Chain<SugarElement<Document | ShadowRoot>, SugarElement<HTMLElement>> =
@@ -52,16 +52,24 @@ const cGetFocused: Chain<SugarElement<Document | ShadowRoot>, SugarElement<HTMLE
 const cGetRootNode: Chain<SugarElement<Node>, SugarElement<Document | ShadowRoot>> =
   Chain.mapper(SugarShadowDom.getRootNode);
 
+const wrapInResult = <R>(f: () => R) => (): Result<R, string> => {
+  try {
+    return Result.value(f());
+  } catch (e) {
+    return Result.error(e.message);
+  }
+};
+
 const sIsOn = <T>(label: string, element: SugarElement<Node>): Step<T, T> =>
   Chain.asStep<T, SugarElement<Node>>(element, [
-    Chain.binder(() => isOn(label, element))
+    Chain.binder(wrapInResult(() => isOn(label, element)))
   ]);
 
 const sIsOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Step<T, T> =>
   Logger.t(
     `${label}: sIsOnSelector(${selector})`,
     Chain.asStep<T, SugarElement<Document | ShadowRoot>>(doc, [
-      Chain.binder(() => isOnSelector(label, doc, selector))
+      Chain.binder(wrapInResult(() => isOnSelector(label, doc, selector)))
     ])
   );
 
@@ -74,6 +82,9 @@ const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoo
       10, 4000
     )
   );
+
+const pTryOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Promise<SugarElement<HTMLElement>> =>
+  Waiter.pTryUntil(label + '. Focus did not match: ' + selector, () => isOnSelector(label, doc, selector));
 
 const cSetFocus = <T extends Node, U extends Element>(label: string, selector: string): Chain<SugarElement<T>, SugarElement<U>> =>
   // Input: container
@@ -106,8 +117,11 @@ const sSetActiveValue = <T>(doc: SugarElement<Document | ShadowRoot>, newValue: 
 export {
   setActiveValue,
   setFocus,
+  getFocused,
   isOn,
   isOnSelector,
+
+  pTryOnSelector,
 
   sSetActiveValue,
   sSetFocus,

@@ -1,107 +1,116 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
+import { Format } from 'tinymce/core/fmt/FormatTypes';
 import * as RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.fmt.RemoveFormatTest', (success, failure) => {
-  SilverTheme();
+describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
 
-  const sRemoveFormat = (editor, format) => {
-    return Step.sync(() => {
-      editor.formatter.register('format', format);
-      RemoveFormat.remove(editor, 'format');
-      editor.formatter.unregister('format');
-    });
+  const removeFormat = [{
+    selector: 'strong, em',
+    remove: 'all',
+    split: true,
+    expand: false
+  }];
+  const boldFormat = [{
+    inline: 'strong',
+    remove: 'all',
+    preserve_attributes: [ 'style', 'class' ]
+  }];
+
+  const doRemoveFormat = (editor: Editor, format: Format[]) => {
+    editor.formatter.register('format', format);
+    RemoveFormat.remove(editor, 'format');
+    editor.formatter.unregister('format');
   };
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const removeFormat = [{
-      selector: 'strong, em',
-      remove: 'all',
-      split: true,
-      expand: false
-    }];
-    const boldFormat = [{
-      inline: 'strong',
-      remove: 'all',
-      preserve_attributes: [ 'style', 'class' ]
-    }];
+  context('Remove format with collapsed selection', () => {
+    it('In middle of single word wrapped in strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>ab</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p>ab</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
 
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Logger.t('Remove format with collapsed selection', GeneralSteps.sequence([
-        Logger.t('In middle of single word wrapped in strong', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong>ab</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab</p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('In middle of first of two words wrapped in strong', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong>ab cd</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab <strong>cd</strong></p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('In middle of last of two words wrapped in strong', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong>ab cd</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 4),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p><strong>ab</strong> cd</p>'),
-          tinyApis.sAssertSelection([ 0, 1 ], 2, [ 0, 1 ], 2)
-        ])),
-        Logger.t('In middle of first of two words wrapped in strong, with the first wrapped in em as well', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong><em>ab</em> cd</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab <strong>cd</strong></p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 1, [ 0, 0 ], 1)
-        ])),
-        Logger.t('After first of two words, with multiple spaces wrapped in strong', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong>ab&nbsp; &nbsp;cd</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 2),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>ab&nbsp; &nbsp;<strong>cd</strong></p>'),
-          tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2)
-        ])),
-        Logger.t('Multiple spaces wrapped in strong and a letter', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>t<strong>&nbsp; t</strong></p>'),
-          tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 3),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p>t<strong>&nbsp; </strong>t</p>'),
-          tinyApis.sAssertSelection([ 0, 1 ], 1, [ 0 ], 3)
-        ])),
-        Logger.t('Before last of two words, with multiple spaces wrapped in strong', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><strong>ab&nbsp; &nbsp;cd</strong></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0 ], 5),
-          sRemoveFormat(editor, removeFormat),
-          tinyApis.sAssertContent('<p><strong>ab</strong>&nbsp; &nbsp;cd</p>'),
-          tinyApis.sAssertSelection([ 0, 1 ], 3, [ 0, 1 ], 3)
-        ]))
-      ])),
-      Logger.t('Remove single format with collapsed selection', GeneralSteps.sequence([
-        Logger.t('In middle of first of two words wrapped in strong and em', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><em><strong>ab cd</strong></em></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 1),
-          sRemoveFormat(editor, boldFormat),
-          tinyApis.sAssertContent('<p><em>ab <strong>cd</strong></em></p>'),
-          tinyApis.sAssertSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1)
-        ])),
-        Logger.t('After first of two words, with multiple spaces wrapped in strong and em', GeneralSteps.sequence([
-          tinyApis.sSetContent('<p><em><strong>ab&nbsp; &nbsp;cd</strong></em></p>'),
-          tinyApis.sSetCursor([ 0, 0, 0, 0 ], 2),
-          sRemoveFormat(editor, boldFormat),
-          tinyApis.sAssertContent('<p><em>ab&nbsp; &nbsp;<strong>cd</strong></em></p>'),
-          tinyApis.sAssertSelection([ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2)
-        ]))
-      ]))
-    ], onSuccess, onFailure);
-  }, {
-    base_url: '/project/tinymce/js/tinymce',
-    plugins: '',
-    toolbar: ''
-  }, success, failure);
+    it('In middle of first of two words wrapped in strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>ab cd</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p>ab <strong>cd</strong></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('In middle of last of two words wrapped in strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>ab cd</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p><strong>ab</strong> cd</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 2, [ 0, 1 ], 2);
+    });
+
+    it('In middle of first of two words wrapped in strong, with the first wrapped in em as well', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong><em>ab</em> cd</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p>ab <strong>cd</strong></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    it('After first of two words, with multiple spaces wrapped in strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>ab&nbsp; &nbsp;cd</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p>ab&nbsp; &nbsp;<strong>cd</strong></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+    });
+
+    it('Multiple spaces wrapped in strong and a letter', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>t<strong>&nbsp; t</strong></p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 3);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p>t<strong>&nbsp; </strong>t</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0 ], 3);
+    });
+
+    it('Before last of two words, with multiple spaces wrapped in strong', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><strong>ab&nbsp; &nbsp;cd</strong></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 5);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor, '<p><strong>ab</strong>&nbsp; &nbsp;cd</p>');
+      TinyAssertions.assertSelection(editor, [ 0, 1 ], 3, [ 0, 1 ], 3);
+    });
+  });
+
+  context('Remove single format with collapsed selection', () => {
+    it('In middle of first of two words wrapped in strong and em', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><em><strong>ab cd</strong></em></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
+      doRemoveFormat(editor, boldFormat);
+      TinyAssertions.assertContent(editor, '<p><em>ab <strong>cd</strong></em></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    });
+
+    it('After first of two words, with multiple spaces wrapped in strong and em', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><em><strong>ab&nbsp; &nbsp;cd</strong></em></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 2);
+      doRemoveFormat(editor, boldFormat);
+      TinyAssertions.assertContent(editor, '<p><em>ab&nbsp; &nbsp;<strong>cd</strong></em></p>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+    });
+  });
 });

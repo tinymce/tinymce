@@ -1,6 +1,6 @@
-import { Chain, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyAssertions, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewline from 'tinymce/core/newline/InsertNewLine';
@@ -8,30 +8,28 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 // With a few exceptions, it is considered invalid for the cursor to be immediately before a block level element. These tests address
 // known cases where it was possible to position the cursor in one of those locations.
-UnitTest.asynctest('browser.tinymce.core.selection.SelectBeforeBlock', (success, failure) => {
-  Theme();
+describe('browser.tinymce.core.selection.SelectBeforeBlock', () => {
+  before(() => Theme());
 
   const settings = {
     base_url: '/project/tinymce/js/tinymce'
   };
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TINY-4058', 'Ensure that pressing enter while inside PRE does not move cursor to invalid position', [
-      McEditor.cFromSettings({ ...settings, br_in_pre: false }),
-      ApiChains.cSetContent('<pre>Hello world</pre>'),
-      ApiChains.cSetCursor([ 0, 0 ], 0),
-      Chain.op<Editor>((editor) => InsertNewline.insert(editor, { } as EditorEvent<KeyboardEvent>)),
-      ApiChains.cAssertSelection([ 1, 0 ], 0, [ 1, 0 ], 0),
-      McEditor.cRemove
-    ]),
+  it('TINY-4058: Ensure that pressing enter while inside PRE does not move cursor to invalid position', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ ...settings, br_in_pre: false });
+    editor.setContent('<pre>Hello world</pre>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    InsertNewline.insert(editor, {} as EditorEvent<KeyboardEvent>);
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TINY-4058', 'Ensure that calling setcontent does not move cursor to invalid position', [
-      McEditor.cFromSettings(settings),
-      ApiChains.cFocus,
-      ApiChains.cSetContent('<pre>Hello world</pre>'),
-      Chain.op<Editor>((editor) => editor.selection.setCursorLocation()),
-      ApiChains.cAssertSelection([ 0, 0 ], 0, [ 0, 0 ], 0),
-      McEditor.cRemove
-    ])
-  ], success, failure);
+  it('TINY-4058: Ensure that calling setcontent does not move cursor to invalid position', async () => {
+    const editor = await McEditor.pFromSettings<Editor>(settings);
+    editor.focus();
+    editor.setContent('<pre>Hello world</pre>');
+    editor.selection.setCursorLocation();
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    McEditor.remove(editor);
+  });
 });

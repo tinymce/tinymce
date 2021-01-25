@@ -1,75 +1,78 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import { assert } from 'chai';
 
-UnitTest.asynctest('browser.tinymce.core.dom.ScriptLoaderTest', (success, failure) => {
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
+
+describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   const testScript = '/project/tinymce/src/core/test/assets/js/test.js';
   let loadedScripts: string[] = [];
   let loadedCount = 0;
 
-  const sLoadScript = (url: string) => Step.async((next, die) => {
+  const pLoadScript = (url: string) => {
     loadedScripts.push(url);
-    ScriptLoader.ScriptLoader.loadScript(url, () => {
-      loadedCount++;
-      next();
-    }, () => die('Failed to load script'));
-  });
+    return new PromisePolyfill((resolve, reject) => {
+      ScriptLoader.ScriptLoader.loadScript(url, () => {
+        loadedCount++;
+        resolve();
+      }, () => reject('Failed to load script'));
+    });
+  };
 
-  const sLoadScripts = (urls: string[]) => Step.async((next, die) => {
+  const pLoadScripts = (urls: string[]) => {
     loadedScripts.push(...urls);
     const scriptCount = urls.length;
-    ScriptLoader.ScriptLoader.loadScripts(urls, () => {
-      loadedCount += scriptCount;
-      next();
-    }, () => die('Failed to load scripts'));
-  });
+    return new PromisePolyfill((resolve, reject) => {
+      ScriptLoader.ScriptLoader.loadScripts(urls, () => {
+        loadedCount += scriptCount;
+        resolve();
+      }, () => reject('Failed to load scripts'));
+    });
+  };
 
-  const sAddToQueue = (url: string) => Step.sync(() => {
+  const addToQueue = (url: string) => {
     loadedScripts.push(url);
     ScriptLoader.ScriptLoader.add(url, () => loadedCount++);
+  };
+
+  const pLoadQueue = () => new PromisePolyfill((resolve, reject) => {
+    ScriptLoader.ScriptLoader.loadQueue(resolve, undefined, () => reject('Failed to load queued scripts'));
   });
 
-  const sLoadQueue = Step.async((next, die) => {
-    ScriptLoader.ScriptLoader.loadQueue(next, undefined, () => die('Failed to load queued scripts'));
-  });
+  const assertQueueLoadedCount = (count: number) => {
+    assert.equal(loadedCount, count, 'Loaded script count');
+  };
 
-  const sAssertQueueLoadedCount = (count: number) => Step.sync(() => {
-    Assert.eq('Loaded script count', count, loadedCount);
-  });
-
-  const sReset = () => Step.sync(() => {
+  afterEach(() => {
     Arr.each(loadedScripts, (url) => ScriptLoader.ScriptLoader.remove(url));
     loadedCount = 0;
     loadedScripts = [];
   });
 
-  Pipeline.async({}, [
-    Log.stepsAsStep('TBA', 'Load a single script', [
-      sLoadScript(testScript),
-      sAssertQueueLoadedCount(1),
-      sReset()
-    ]),
-    Log.stepsAsStep('TBA', 'Load scripts', [
-      sLoadScripts([ testScript ]),
-      sAssertQueueLoadedCount(1),
-      sReset()
-    ]),
-    Log.stepsAsStep('TBA', 'Load scripts via a queue', [
-      sAddToQueue(testScript),
-      sAssertQueueLoadedCount(0),
-      sLoadQueue,
-      sAssertQueueLoadedCount(1),
-      sReset()
-    ]),
-    Log.stepsAsStep('TINY-6570', 'Load a script multiple times via a queue', [
-      sAddToQueue(testScript),
-      sLoadQueue,
-      sAssertQueueLoadedCount(1),
-      sAddToQueue(testScript),
-      sLoadQueue,
-      sAssertQueueLoadedCount(2),
-      sReset()
-    ])
-  ], success, failure);
+  it('TBA: Load a single script', async () => {
+    await pLoadScript(testScript);
+    assertQueueLoadedCount(1);
+  });
+
+  it('TBA: Load scripts', async () => {
+    await pLoadScripts([ testScript ]);
+    assertQueueLoadedCount(1);
+  });
+
+  it('TBA: Load scripts via a queue', async () => {
+    addToQueue(testScript);
+    assertQueueLoadedCount(0);
+    await pLoadQueue();
+    assertQueueLoadedCount(1);
+  });
+
+  it('TINY-6570: Load a script multiple times via a queue', async () => {
+    addToQueue(testScript);
+    await pLoadQueue();
+    assertQueueLoadedCount(1);
+    addToQueue(testScript);
+    await pLoadQueue();
+    assertQueueLoadedCount(2);
+  });
 });

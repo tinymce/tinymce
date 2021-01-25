@@ -1,31 +1,30 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
-import { LegacyUnit } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import Promise from 'tinymce/core/api/util/Promise';
 
-UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite();
-
-  suite.asyncTest('Promise resolve', (_, done) => {
+describe('browser.tinymce.core.util.PromiseTest', () => {
+  it('Promise resolve', (done) => {
     new Promise((resolve) => {
       resolve('123');
     }).then((result) => {
-      LegacyUnit.equal('123', result);
+      assert.equal('123', result);
       done();
     });
   });
 
-  suite.asyncTest('Promise reject', (_, done) => {
+  it('Promise reject', (done) => {
     new Promise((resolve, reject) => {
       reject('123');
-    }).then(Fun.noop, (result) => {
-      LegacyUnit.equal('123', result);
+    }).then(() => {
+      done(new Error('Promise should not have resolved'));
+    }, (result) => {
+      assert.equal('123', result);
       done();
     });
   });
 
-  suite.asyncTest('Promise reject', (_, done) => {
+  it('Promise all', (done) => {
     const promises = [
       new Promise((resolve) => {
         resolve('123');
@@ -37,11 +36,9 @@ UnitTest.asynctest('browser.tinymce.core.util.PromiseTest', (success, failure) =
     ];
 
     Promise.all(promises).then((results) => {
-      LegacyUnit.equal('123', results[0]);
-      LegacyUnit.equal('456', results[1]);
+      assert.equal('123', results[0]);
+      assert.equal('456', results[1]);
       done();
     });
   });
-
-  Pipeline.async({}, suite.toSteps({}), success, failure);
 });

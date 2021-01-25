@@ -1,70 +1,80 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.FormatterClosestTest', (success, failure) => {
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const sAssertClosest = (names: string[], expectedName: string) =>
-      Step.sync(() => {
-        const actualName = editor.formatter.closest(names);
-        Assert.eq('Should match expected format name', expectedName, actualName);
-      });
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'Should return null since the caret is not inside a bold format', [
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'bold' ], null)
-      ]),
-      Log.stepsAsStep('TBA', 'Should return p block format since caret is inside a p', [
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'p', 'h1' ], 'p')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return h1 block format since caret is inside a h1', [
-        tinyApis.sSetContent('<h1>a</h1>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'p', 'h1' ], 'h1')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return italic inline format since caret is inside a em element', [
-        tinyApis.sSetContent('<p><em>a<em></p>'),
-        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-        sAssertClosest([ 'p', 'italic' ], 'italic')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return aligncenter selector format since caret is in a paragraph that is center aligned', [
-        tinyApis.sSetContent('<p style="text-align: center">a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'aligncenter', 'p' ], 'aligncenter')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return p block format since caret is inside a em inside a p element', [
-        tinyApis.sSetContent('<p><em>a<em></p>'),
-        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-        sAssertClosest([ 'p' ], 'p')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return aligncenter since that format is before the also matching p format', [
-        tinyApis.sSetContent('<p style="text-align: center">a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'aligncenter', 'p' ], 'aligncenter')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return p since that format is before the also matching aligncenter format', [
-        tinyApis.sSetContent('<p style="text-align: center">a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        sAssertClosest([ 'p', 'aligncenter' ], 'p')
-      ]),
-      Log.stepsAsStep('TBA', 'Should return aligncenter selector format since caret is inside a em inside a p element that is center aligned', [
-        tinyApis.sSetContent('<p style="text-align: center"><em>a<em></p>'),
-        tinyApis.sSetCursor([ 0, 0, 0 ], 0),
-        sAssertClosest([ 'aligncenter', 'p' ], 'aligncenter')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
+describe('browser.tinymce.core.FormatterClosestTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ], true);
+
+  const assertClosest = (names: string[], expectedName: string) => {
+    const actualName = hook.editor().formatter.closest(names);
+    assert.equal(actualName, expectedName, 'Should match expected format name');
+  };
+
+  it('TBA: Should return null since the caret is not inside a bold format', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'bold' ], null);
+  });
+
+  it('TBA: Should return p block format since caret is inside a p', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'p', 'h1' ], 'p');
+  });
+
+  it('TBA: Should return h1 block format since caret is inside a h1', () => {
+    const editor = hook.editor();
+    editor.setContent('<h1>a</h1>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'p', 'h1' ], 'h1');
+  });
+
+  it('TBA: Should return italic inline format since caret is inside a em element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><em>a<em></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    assertClosest([ 'p', 'italic' ], 'italic');
+  });
+
+  it('TBA: Should return aligncenter selector format since caret is in a paragraph that is center aligned', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="text-align: center">a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'aligncenter', 'p' ], 'aligncenter');
+  });
+
+  it('TBA: Should return p block format since caret is inside a em inside a p element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><em>a<em></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    assertClosest([ 'p' ], 'p');
+  });
+
+  it('TBA: Should return aligncenter since that format is before the also matching p format', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="text-align: center">a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'aligncenter', 'p' ], 'aligncenter');
+  });
+
+  it('TBA: Should return p since that format is before the also matching aligncenter format', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="text-align: center">a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    assertClosest([ 'p', 'aligncenter' ], 'p');
+  });
+
+  it('TBA: Should return aligncenter selector format since caret is inside a em inside a p element that is center aligned', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="text-align: center"><em>a<em></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    assertClosest([ 'aligncenter', 'p' ], 'aligncenter');
+  });
 });

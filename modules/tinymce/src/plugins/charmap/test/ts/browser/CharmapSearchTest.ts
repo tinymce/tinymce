@@ -1,73 +1,55 @@
-import { Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, SugarBody, SugarElement } from '@ephox/sugar';
-import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
+import { assert } from 'chai';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.SearchTest', (success, failure) => {
-  // TODO: TINY-6598: Test is broken on Chromium Edge 86, so we need to investigate
-  const platform = PlatformDetection.detect();
-  if (platform.browser.isChrome() && platform.os.isWindows()) {
-    return success();
-  }
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/charmap/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+import { fakeEvent } from '../module/Helpers';
 
-  // TODO: Replicate this test with only one category of characters.
-  CharmapPlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.charmap.SearchTest', () => {
+  before(function () {
+    // TODO: TINY-6905: Test is broken on Chromium Edge 86, so we need to investigate
+    const platform = PlatformDetection.detect();
+    if (platform.browser.isChrome() && platform.os.isWindows()) {
+      this.skip();
+    }
+  });
 
-  // Move into shared library
-  const cFakeEvent = (name) => {
-    return Chain.control(
-      Chain.op((elm: SugarElement) => {
-        const evt = document.createEvent('HTMLEvents');
-        evt.initEvent(name, true, true);
-        elm.dom.dispatchEvent(evt);
-      }),
-      Guard.addLogging('Fake event')
-    );
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = SugarElement.fromDom(document);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Charmap: Open dialog, Search for "euro", Euro should be first option', [
-        tinyApis.sFocus(),
-        tinyUi.sClickOnToolbar('click charmap', 'button[aria-label="Special character"]'),
-        Chain.asStep({}, [
-          tinyUi.cWaitForPopup('wait for popup', 'div[role="dialog"]')
-        ]),
-        FocusTools.sTryOnSelector('Focus should start on', doc, 'input'), // TODO: Remove duped startup of these tests
-        FocusTools.sSetActiveValue(doc, 'euro'),
-        Chain.asStep(doc, [
-          FocusTools.cGetFocused,
-          cFakeEvent('input')
-        ]),
-        Waiter.sTryUntil(
-          'Wait until Euro is the first choice (search should filter)',
-          Chain.asStep(SugarBody.body(), [
-            UiFinder.cFindIn('.tox-collection__item:first'),
-            Chain.mapper((item) => Attribute.get(item, 'data-collection-item-value')),
-            Assertions.cAssertEq('Search should show euro', '€')
-          ])
-        ),
-        Keyboard.sKeydown(doc, Keys.tab(), { }),
-        FocusTools.sTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item'),
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
-        Waiter.sTryUntil(
-          'Waiting for content update',
-          tinyApis.sAssertContent('<p>&euro;</p>')
-        )
-      ])
-      , onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'charmap',
     toolbar: 'charmap',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  // TODO: Replicate this test with only one category of characters.
+  it('TBA: Open dialog, Search for "euro", Euro should be first option', async () => {
+    const editor = hook.editor();
+    const body = SugarBody.body();
+    const doc = SugarDocument.getDocument();
+
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
+    await TinyUiActions.pWaitForDialog(editor);
+    await FocusTools.pTryOnSelector('Focus should start on', doc, 'input'); // TODO: Remove duped startup of these tests
+    const input = FocusTools.setActiveValue(doc, 'euro');
+    fakeEvent(input, 'input');
+    await Waiter.pTryUntil(
+      'Wait until Euro is the first choice (search should filter)',
+      () => {
+        const item = UiFinder.findIn(body, '.tox-collection__item:first').getOrDie();
+        const value = Attribute.get(item, 'data-collection-item-value');
+        assert.equal(value, '€', 'Search should show euro');
+      }
+    );
+    TinyUiActions.keydown(editor, Keys.tab());
+    await FocusTools.pTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item');
+    TinyUiActions.keydown(editor, Keys.enter());
+    await Waiter.pTryUntil(
+      'Waiting for content update',
+      () => TinyAssertions.assertContent(editor, '<p>&euro;</p>')
+    );
+  });
 });

@@ -1,22 +1,27 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
 import { UndoLevelType } from 'tinymce/core/undo/UndoManagerTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.core.undo.LevelsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    add_unload_trigger: false,
+    disable_nodechange: true,
+    entities: 'raw',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
 
-  Theme();
-
-  const getBookmark = (editor) => {
+  const getBookmark = (editor: Editor) => {
     return editor.selection.getBookmark(2, true);
   };
 
-  suite.test('createFragmentedLevel', () => {
-    LegacyUnit.deepEqual(Levels.createFragmentedLevel([ 'a', 'b' ]), {
+  it('createFragmentedLevel', () => {
+    assert.deepEqual(Levels.createFragmentedLevel([ 'a', 'b' ]), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -25,8 +30,8 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     });
   });
 
-  suite.test('createCompleteLevel', () => {
-    LegacyUnit.deepEqual(Levels.createCompleteLevel('a'), {
+  it('createCompleteLevel', () => {
+    assert.deepEqual(Levels.createCompleteLevel('a'), {
       beforeBookmark: null,
       bookmark: null,
       content: 'a',
@@ -35,8 +40,9 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     });
   });
 
-  suite.test('createFromEditor', (editor) => {
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+  it('createFromEditor', () => {
+    const editor = hook.editor();
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<p><br data-mce-bogus="1"></p>',
@@ -46,7 +52,7 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
 
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe>a<!--b-->c';
 
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -55,10 +61,11 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     });
   });
 
-  suite.test('createFromEditor removes bogus=al', (editor) => {
+  it('createFromEditor removes bogus=al', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<p data-mce-bogus="all">a</p> <span>b</span>';
 
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: ' <span>b</span>',
@@ -67,10 +74,11 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     });
   });
 
-  suite.test('createFromEditor removes bogus=all', (editor) => {
+  it('createFromEditor removes bogus=all', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span>';
 
-    LegacyUnit.deepEqual(Levels.createFromEditor(editor), {
+    assert.deepEqual(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -84,7 +92,8 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     });
   });
 
-  suite.test('applyToEditor to equal content with complete level', (editor) => {
+  it('applyToEditor to equal content with complete level', () => {
+    const editor = hook.editor();
     const level = Levels.createCompleteLevel('<p>a</p>');
     level.bookmark = { start: [ 1, 0, 0 ] };
 
@@ -92,11 +101,12 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>a</p>');
-    LegacyUnit.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.strictEqual(editor.getBody().innerHTML, '<p>a</p>');
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
   });
 
-  suite.test('applyToEditor to different content with complete level', (editor) => {
+  it('applyToEditor to different content with complete level', () => {
+    const editor = hook.editor();
     const level = Levels.createCompleteLevel('<p>b</p>');
     level.bookmark = { start: [ 1, 0, 0 ] };
 
@@ -104,11 +114,12 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>b</p>');
-    LegacyUnit.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.strictEqual(editor.getBody().innerHTML, '<p>b</p>');
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
   });
 
-  suite.test('applyToEditor to different content with fragmented level', (editor) => {
+  it('applyToEditor to different content with fragmented level', () => {
+    const editor = hook.editor();
     const level = Levels.createFragmentedLevel([ '<p>a</p>', '<p>b</p>' ]);
     level.bookmark = { start: [ 1, 0, 0 ] };
 
@@ -116,43 +127,32 @@ UnitTest.asynctest('browser.tinymce.core.undo.LevelsTest', (success, failure) =>
     LegacyUnit.setSelection(editor, 'p', 0);
     Levels.applyToEditor(editor, level, false);
 
-    LegacyUnit.strictEqual(editor.getBody().innerHTML, '<p>a</p><p>b</p>');
-    LegacyUnit.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
+    assert.strictEqual(editor.getBody().innerHTML, '<p>a</p><p>b</p>');
+    assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ] });
   });
 
-  suite.test('isEq', () => {
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
+  it('isEq', () => {
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
   });
 
-  suite.test('isEq ignore bogus elements', () => {
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
+  it('isEq ignore bogus elements', () => {
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
   });
 
-  suite.test('isEq passed undefined', () => {
-    LegacyUnit.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);
-    LegacyUnit.strictEqual(Levels.isEq(undefined, undefined), false);
-    LegacyUnit.strictEqual(Levels.isEq(Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+  it('isEq passed undefined', () => {
+    assert.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
+    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);
+    assert.strictEqual(Levels.isEq(undefined, undefined), false);
+    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, suite.toSteps(editor), onSuccess, onFailure);
-  }, {
-    selector: 'textarea',
-    add_unload_trigger: false,
-    disable_nodechange: true,
-    entities: 'raw',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
 });

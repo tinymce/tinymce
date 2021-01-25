@@ -14,6 +14,7 @@ const isModern = (): boolean => !isSilver();
 export interface ThemeSelectors {
   toolBarSelector: (editor: Editor) => string;
   menuBarSelector: string;
+  dialogSelector: string;
   dialogCloseSelector: string;
   dialogSubmitSelector: string;
 }
@@ -21,6 +22,7 @@ export interface ThemeSelectors {
 const ModernThemeSelectors: ThemeSelectors = {
   toolBarSelector: () => '.mce-toolbar-grp',
   menuBarSelector: '.mce-menubar',
+  dialogSelector: '.mce-window',
   dialogCloseSelector: 'div[role="button"]:contains(Cancel)',
   dialogSubmitSelector: 'div[role="button"].mce-primary'
 };
@@ -28,6 +30,7 @@ const ModernThemeSelectors: ThemeSelectors = {
 const SilverThemeSelectors: ThemeSelectors = {
   toolBarSelector: (editor: Editor) => Arr.exists([ editor.getParam('toolbar_mode'), editor.getParam('toolbar_drawer') ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
+  dialogSelector: 'div[role="dialog"]',
   dialogCloseSelector: '.tox-button:contains("Cancel")',
   dialogSubmitSelector: '.tox-button:contains("Save")'
 };

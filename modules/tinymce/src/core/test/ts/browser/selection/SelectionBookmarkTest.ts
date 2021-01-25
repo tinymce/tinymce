@@ -1,104 +1,80 @@
-import { Assertions, Chain, Logger, Pipeline } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { KAssert } from '@ephox/katamari-assertions';
 import { Hierarchy, Remove, SimRange, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import * as SelectionBookmark from 'tinymce/core/selection/SelectionBookmark';
-import ViewBlock from '../../module/test/ViewBlock';
+import * as ViewBlock from '../../module/test/ViewBlock';
 
-UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (success, failure) => {
+describe('browser.tinymce.core.selection.SelectionBookmarkTest', () => {
+  const viewBlock = ViewBlock.bddSetup();
 
-  const viewBlock = ViewBlock();
+  const setHtml = viewBlock.update;
 
-  const cSetHtml = (html: string) => {
-    return Chain.op((vb: any) => {
-      vb.update(html);
+  const setSelection = (startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
+    const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
+    const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
+    const win = Traverse.defaultView(sc);
+
+    WindowSelection.setExact(win.dom, sc, soffset, fc, foffset);
+  };
+
+  const getBookmark = (rootPath: number[]) => {
+    const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
+    return SelectionBookmark.getBookmark(root);
+  };
+
+  const validateBookmark = (bookmark: Optional<SimRange>, rootPath: number[]) => {
+    const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
+    return bookmark.bind((b) => SelectionBookmark.validate(root, b));
+  };
+
+  const assertNone = (x: Optional<unknown>) => {
+    assert.isTrue(x.isNone(), 'should be none');
+  };
+
+  const assertSome = (x: Optional<unknown>) => {
+    assert.isTrue(x.isSome(), 'should be some');
+  };
+
+  const assertSelection = (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
+    const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
+
+    const win = Traverse.defaultView(SugarElement.fromDom(viewBlock.get()));
+
+    const sel = WindowSelection.getExact(win.dom).getOrDie('no selection');
+
+    Assertions.assertDomEq('sc', sc, sel.start);
+    assert.equal(sel.soffset, startOffset, 'soffset');
+    Assertions.assertDomEq('fc', fc, sel.finish);
+    assert.equal(sel.foffset, finishOffset, 'foffset');
+  };
+
+  const manipulateBookmarkOffsets = (bookmark: Optional<SimRange>, startPad: number, finishPad: number) => {
+    return bookmark.map((bm) => {
+      return SimSelection.range(bm.start, bm.soffset + startPad, bm.finish, bm.foffset + finishPad);
     });
   };
 
-  const cSetSelection = (startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-    return Chain.op(() => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie('invalid startPath');
-      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie('invalid finishPath');
-      const win = Traverse.defaultView(sc);
-
-      WindowSelection.setExact(
-        win.dom, sc, soffset, fc, foffset
-      );
-    });
+  const deleteElement = (path: number[]) => {
+    Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).each(Remove.remove);
   };
 
-  const cGetBookmark = (rootPath: number[]) => {
-    return Chain.injectThunked(() => {
-      const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
-      return SelectionBookmark.getBookmark(root);
-    });
+  const assertBookmark = (bookmark: Optional<SimRange>, startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
+    const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
+    const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
+
+    const bookmarkRng = bookmark.getOrDie('no bookmark!');
+
+    Assertions.assertDomEq('sc', sc, bookmarkRng.start);
+    assert.equal(bookmarkRng.soffset, startOffset, 'soffset');
+    Assertions.assertDomEq('fc', fc, bookmarkRng.finish);
+    assert.equal(bookmarkRng.foffset, finishOffset, 'foffset');
   };
 
-  const cValidateBookmark = (rootPath: number[]) => {
-    return Chain.async((input: Optional<SimRange>, next) => {
-      const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
-
-      return input.each((b) => {
-        return next(SelectionBookmark.validate(root, b));
-      });
-    });
-  };
-
-  const cAssertNone = <T> () => Chain.op((x: Optional<T>) => {
-    KAssert.eqNone('should be none', x);
-  });
-
-  const cAssertSome = Chain.op((x: Optional<any>) => {
-    Assert.eq('should be some', true, x.isSome());
-  });
-
-  const cAssertSelection = (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
-    return Chain.op(() => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
-
-      const win = Traverse.defaultView(SugarElement.fromDom(viewBlock.get()));
-
-      const sel = WindowSelection.getExact(win.dom).getOrDie('no selection');
-
-      Assertions.assertDomEq('sc', sc, sel.start);
-      Assertions.assertEq('soffset', startOffset, sel.soffset);
-      Assertions.assertDomEq('fc', fc, sel.finish);
-      Assertions.assertEq('foffset', finishOffset, sel.foffset);
-    });
-  };
-
-  const cManipulateBookmarkOffsets = (startPad: number, finishPad: number) => {
-    return Chain.mapper((bookmark: Optional<SimRange>) => {
-      return bookmark
-        .map((bm) => {
-          return SimSelection.range(bm.start, bm.soffset + startPad, bm.finish, bm.foffset + finishPad);
-        });
-    });
-  };
-
-  const cDeleteElement = (path: number[]) => {
-    return Chain.op(() => {
-      Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), path).each(Remove.remove);
-    });
-  };
-
-  const cAssertBookmark = (startPath: number[], startOffset: number, finishPath: number[], finishOffset: number) => {
-    return Chain.op((input: Optional<SimRange>) => {
-      const sc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), startPath).getOrDie();
-      const fc = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), finishPath).getOrDie();
-
-      const bookmarkRng = input.getOrDie('no bookmark!');
-
-      Assertions.assertDomEq('sc', sc, bookmarkRng.start);
-      Assertions.assertEq('soffset', startOffset, bookmarkRng.soffset);
-      Assertions.assertDomEq('fc', fc, bookmarkRng.finish);
-      Assertions.assertEq('foffset', finishOffset, bookmarkRng.foffset);
-    });
-  };
-
-  const cSetSelectionFromBookmark = Chain.op((bookmark: Optional<SimRange>) => {
+  const setSelectionFromBookmark = (bookmark: Optional<SimRange>) => {
     bookmark.each((b) => {
       const root = SugarElement.fromDom(viewBlock.get());
       const win = Traverse.defaultView(root);
@@ -108,103 +84,105 @@ UnitTest.asynctest('browser.tinymce.core.selection.SelectionBookmarkTest', (succ
           WindowSelection.setExact(win.dom, rng.start, rng.soffset, rng.finish, rng.foffset);
         });
     });
+  };
+
+  it('attached element returns some', () => {
+    setHtml('hello');
+    setSelection([ 0 ], 0, [ 0 ], 1);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    setSelectionFromBookmark(bookmark);
+    assertSelection([ 0 ], 0, [ 0 ], 1);
   });
 
-  viewBlock.attach();
-  Pipeline.async({}, [
-    Logger.t('attached element returns some', Chain.asStep(viewBlock, [
-      cSetHtml('hello'),
-      cSetSelection([ 0 ], 0, [ 0 ], 1),
-      cGetBookmark([]),
-      cAssertSome,
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0 ], 0, [ 0 ], 1)
-    ])),
-    Logger.t('foffset too big', Chain.asStep(viewBlock, [
-      cSetHtml('hello'),
-      cSetSelection([ 0 ], 0, [ 0 ], 3),
-      cGetBookmark([]),
-      cManipulateBookmarkOffsets(0, 10),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0 ], 0, [ 0 ], 5)
-    ])),
-    Logger.t('soffset too small', Chain.asStep(viewBlock, [
-      cSetHtml('hello'),
-      cSetSelection([ 0 ], 0, [ 0 ], 3),
-      cGetBookmark([]),
-      cManipulateBookmarkOffsets(-2, 5),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0 ], 0, [ 0 ], 5)
-    ])),
-    Logger.t('both offsets too small', Chain.asStep(viewBlock, [
-      cSetHtml('hello'),
-      cSetSelection([ 0 ], 0, [ 0 ], 3),
-      cGetBookmark([]),
-      cManipulateBookmarkOffsets(-2, -5),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0 ], 0, [ 0 ], 0)
-    ])),
-    Logger.t('both offsets too small', Chain.asStep(viewBlock, [
-      cSetHtml('hello'),
-      cSetSelection([ 0 ], 0, [ 0 ], 3),
-      cGetBookmark([]),
-      cManipulateBookmarkOffsets(6, 6),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0 ], 5, [ 0 ], 5)
-    ])),
-    Logger.t('two p tags offsets too big', Chain.asStep(viewBlock, [
-      cSetHtml('<p>abc</p><p>123</p>'),
-      cSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-      cGetBookmark([]),
-      cAssertSome,
-      cManipulateBookmarkOffsets(4, 4),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0, 0 ], 3, [ 1, 0 ], 3)
-    ])),
-    Logger.t('two p tags, delete one and should be none', Chain.asStep(viewBlock, [
-      cSetHtml('<p>abc</p><p>123</p>'),
-      cSetSelection([ 0, 0 ], 0, [ 1, 0 ], 1),
-      cGetBookmark([]),
-      cAssertSome,
-      cDeleteElement([ 0 ]),
-      cValidateBookmark([]),
-      cAssertNone()
-    ])),
-    Logger.t('three p tags, delete middle and should be none', Chain.asStep(viewBlock, [
-      cSetHtml('<p>abc</p><p>xyz</p><p>123</p>'),
-      cSetSelection([ 0, 0 ], 0, [ 2, 0 ], 1),
-      cGetBookmark([]),
-      cAssertSome,
-      cDeleteElement([ 1 ]),
-      cValidateBookmark([]),
-      cSetSelectionFromBookmark,
-      cAssertSelection([ 0, 0 ], 0, [ 1, 0 ], 1)
-    ])),
-    Logger.t('backwards selection should set a non-backwards bookmark, one p tag', Chain.asStep(viewBlock, [
-      cSetHtml('<p>hello</p>'),
-      cSetSelection([ 0, 0 ], 5, [ 0, 0 ], 0),
-      cGetBookmark([]),
-      cAssertSome,
-      cValidateBookmark([]),
-      cAssertBookmark([ 0, 0 ], 0, [ 0, 0 ], 5)
-    ])),
-    Logger.t('backwards selection should set a non-backwards bookmark, two p tags', Chain.asStep(viewBlock, [
-      cSetHtml('<p>hello</p><p>world</p>'),
-      cSetSelection([ 1, 0 ], 3, [ 0, 0 ], 2),
-      cGetBookmark([]),
-      cAssertSome,
-      cValidateBookmark([]),
-      cAssertBookmark([ 0, 0 ], 2, [ 1, 0 ], 3)
-    ])),
-    Logger.t('readRange with with win without getSelection should return Optional.none', Chain.asStep({}, [
-      Chain.injectThunked(() => {
-        const mockWin = { getSelection: Fun.constant(null) } as Window;
-        return SelectionBookmark.readRange(mockWin);
-      }),
-      cAssertNone()
-    ]))
-  ], () => {
-    viewBlock.detach();
-    success();
-  }, failure);
+  it('foffset too big', () => {
+    setHtml('hello');
+    setSelection([ 0 ], 0, [ 0 ], 3);
+    const bookmark = getBookmark([]);
+    const newBookmark = manipulateBookmarkOffsets(bookmark, 0, 10);
+    setSelectionFromBookmark(newBookmark);
+    assertSelection([ 0 ], 0, [ 0 ], 5);
+  });
+
+  it('soffset too small', () => {
+    setHtml('hello');
+    setSelection([ 0 ], 0, [ 0 ], 3);
+    const bookmark = getBookmark([]);
+    const newBookmark = manipulateBookmarkOffsets(bookmark, -2, 5);
+    setSelectionFromBookmark(newBookmark);
+    assertSelection([ 0 ], 0, [ 0 ], 5);
+  });
+
+  it('both offsets too small', () => {
+    setHtml('hello');
+    setSelection([ 0 ], 0, [ 0 ], 3);
+    const bookmark = getBookmark([]);
+    const newBookmark = manipulateBookmarkOffsets(bookmark, -2, -5);
+    setSelectionFromBookmark(newBookmark);
+    assertSelection([ 0 ], 0, [ 0 ], 0);
+  });
+
+  it('both offsets too big', () => {
+    setHtml('hello');
+    setSelection([ 0 ], 0, [ 0 ], 3);
+    const bookmark = getBookmark([]);
+    const newBookmark = manipulateBookmarkOffsets(bookmark, 6, 6);
+    setSelectionFromBookmark(newBookmark);
+    assertSelection([ 0 ], 5, [ 0 ], 5);
+  });
+
+  it('two p tags offsets too big', () => {
+    setHtml('<p>abc</p><p>123</p>');
+    setSelection([ 0, 0 ], 0, [ 1, 0 ], 1);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    const newBookmark = manipulateBookmarkOffsets(bookmark, 4, 4);
+    setSelectionFromBookmark(newBookmark);
+    assertSelection([ 0, 0 ], 3, [ 1, 0 ], 3);
+  });
+
+  it('two p tags, delete one and should be none', () => {
+    setHtml('<p>abc</p><p>123</p>');
+    setSelection([ 0, 0 ], 0, [ 1, 0 ], 1);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    deleteElement([ 0 ]);
+    const validBookmark = validateBookmark(bookmark, []);
+    assertNone(validBookmark);
+  });
+
+  it('three p tags, delete middle and should be none', () => {
+    setHtml('<p>abc</p><p>xyz</p><p>123</p>');
+    setSelection([ 0, 0 ], 0, [ 2, 0 ], 1);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    deleteElement([ 1 ]);
+    const validBookmark = validateBookmark(bookmark, []);
+    setSelectionFromBookmark(validBookmark);
+    assertSelection([ 0, 0 ], 0, [ 1, 0 ], 1);
+  });
+
+  it('backwards selection should set a non-backwards bookmark, one p tag', () => {
+    setHtml('<p>hello</p>');
+    setSelection([ 0, 0 ], 5, [ 0, 0 ], 0);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    const validBookmark = validateBookmark(bookmark, []);
+    assertBookmark(validBookmark, [ 0, 0 ], 0, [ 0, 0 ], 5);
+  });
+
+  it('backwards selection should set a non-backwards bookmark, two p tags', () => {
+    setHtml('<p>hello</p><p>world</p>');
+    setSelection([ 1, 0 ], 3, [ 0, 0 ], 2);
+    const bookmark = getBookmark([]);
+    assertSome(bookmark);
+    const validBookmark = validateBookmark(bookmark, []);
+    assertBookmark(validBookmark, [ 0, 0 ], 2, [ 1, 0 ], 3);
+  });
+
+  it('readRange with with win without getSelection should return Optional.none', () => {
+    const mockWin = { getSelection: Fun.constant(null) } as Window;
+    const rngOpt = SelectionBookmark.readRange(mockWin);
+    assertNone(rngOpt);
+  });
 });

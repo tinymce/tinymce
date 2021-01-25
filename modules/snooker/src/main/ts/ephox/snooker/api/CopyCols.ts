@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, InsertAll, Replication, SugarElement } from '@ephox/sugar';
-import { onCells, TargetSelection } from '../model/RunOperation';
+import { onUnlockedCells, TargetSelection } from '../model/RunOperation';
 import * as CellUtils from '../util/CellUtils';
 import { Warehouse } from './Warehouse';
 
@@ -44,7 +44,7 @@ const generateRows = (house: Warehouse, minColRange: number, maxColRange: number
 
 const copyCols = (table: SugarElement, target: TargetSelection): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {
   const house = Warehouse.fromTable(table);
-  const details = onCells(house, target);
+  const details = onUnlockedCells(house, target);
   return details.map((selectedCells): SugarElement<HTMLTableRowElement | HTMLTableColElement>[] => {
     const lastSelectedCell = selectedCells[selectedCells.length - 1];
     const minColRange = selectedCells[0].column;

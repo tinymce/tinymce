@@ -1,34 +1,25 @@
-import { Assertions, Keys, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
+import { Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/autolink/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.autolink.EnterKeyTest', (success, failure) => {
-
-  Theme();
-  AutoLinkPlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({},
-      Log.steps('TINY-1202', 'AutoLink: Focus on editor, set content, set cursor at end of content, assert enter/return keystroke and keydown event', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>abcdefghijk</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 'abcdefghijk'.length),
-        tinyActions.sContentKeystroke(Keys.enter(), {}),
-        Step.sync(() => {
-          try {
-            editor.fire('keydown', { keyCode: 13 });
-          } catch (error) {
-            Assertions.assertEq('should not throw error', true, false);
-          }
-        })
-      ]), onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.autolink.EnterKeyTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'autolink',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TINY-1202: Focus on editor, set content, set cursor at end of content, assert enter/return keystroke and keydown event', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abcdefghijk</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 'abcdefghijk'.length);
+    TinyContentActions.keydown(editor, Keys.enter());
+    assert.doesNotThrow(() => {
+      editor.fire('keydown', { keyCode: Keys.enter() } as KeyboardEvent);
+    }, 'should not throw error');
+  });
 });

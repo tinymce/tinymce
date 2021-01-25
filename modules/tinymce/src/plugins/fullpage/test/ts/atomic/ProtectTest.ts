@@ -1,20 +1,18 @@
-import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import * as Protect from 'tinymce/plugins/fullpage/core/Protect';
 
-UnitTest.test('atomic.tinymce.plugins.fullpage.ProtectTest', () => {
-  const testProtect = () => {
-    Assertions.assertEq('', 'a<!--mce:protected b-->c', Protect.protectHtml([ /b/g ], 'abc'));
-    Assertions.assertEq('', 'a<!--mce:protected b-->cde<!--mce:protected f-->', Protect.protectHtml([ /b/g, /f/g ], 'abcdef'));
-    Assertions.assertEq('', 'a<!--mce:protected %3Cb%3E-->c', Protect.protectHtml([ /<b>/g ], 'a<b>c'));
-  };
+describe('atomic.tinymce.plugins.fullpage.ProtectTest', () => {
+  it('protectHtml', () => {
+    assert.equal(Protect.protectHtml([ /b/g ], 'abc'), 'a<!--mce:protected b-->c');
+    assert.equal(Protect.protectHtml([ /b/g, /f/g ], 'abcdef'), 'a<!--mce:protected b-->cde<!--mce:protected f-->');
+    assert.equal(Protect.protectHtml([ /<b>/g ], 'a<b>c'), 'a<!--mce:protected %3Cb%3E-->c');
+  });
 
-  const testUnprotect = () => {
-    Assertions.assertEq('', 'abc', Protect.unprotectHtml('a<!--mce:protected b-->c'));
-    Assertions.assertEq('', 'abcdef', Protect.unprotectHtml('a<!--mce:protected b-->cde<!--mce:protected f-->'));
-    Assertions.assertEq('', 'a<b>c', Protect.unprotectHtml('a<!--mce:protected %3Cb%3E-->c'));
-  };
-
-  testProtect();
-  testUnprotect();
+  it('unprotectHtml', () => {
+    assert.equal(Protect.unprotectHtml('a<!--mce:protected b-->c'), 'abc');
+    assert.equal(Protect.unprotectHtml('a<!--mce:protected b-->cde<!--mce:protected f-->'), 'abcdef');
+    assert.equal(Protect.unprotectHtml('a<!--mce:protected %3Cb%3E-->c'), 'a<b>c');
+  });
 });

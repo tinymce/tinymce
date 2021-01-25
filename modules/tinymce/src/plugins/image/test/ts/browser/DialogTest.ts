@@ -1,143 +1,142 @@
-import { FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { FocusTools, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.image.DialogTest', (success, failure) => {
-
-  SilverTheme();
-  Plugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const api = TinyApis(editor);
-    const doc = SugarElement.fromDom(document);
-
-    const sPressTab = Keyboard.sKeydown(doc, Keys.tab(), {});
-    const sPressEsc = Keyboard.sKeydown(doc, Keys.escape(), {});
-    const sPressDown = Keyboard.sKeydown(doc, Keys.down(), {});
-
-    const sAssertFocused = (name, selector) => FocusTools.sTryOnSelector(name, doc, selector);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Insert Image Dialog basic cycle ', [
-        api.sExecCommand('mceImage'),
-        sAssertFocused('Source', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Description', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Width', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Height', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Constraint proportions', 'button.tox-lock'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ]),
-
-      Log.stepsAsStep('TBA', 'Insert Image Dialog with filepicker cycle', [
-        api.sSetSetting('image_advtab', true),
-        api.sExecCommand('mceImage'),
-        sAssertFocused('Tab', '.tox-dialog__body-nav-item:contains("General")'),
-        sPressTab,
-        sAssertFocused('Source', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Description', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Width', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Height', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Constraint proportions', 'button.tox-lock'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ]),
-
-      Log.stepsAsStep('TBA', 'Insert Image Dialog with all options', [
-        api.sSetSetting('file_picker_callback', Fun.noop),
-        api.sSetSetting('image_class_list', [{ title: 'sample', value: 'sample' }]),
-        api.sSetSetting('image_list', [{ title: 'sample', value: 'sample' }]),
-        api.sSetSetting('image_caption', true),
-        api.sExecCommand('mceImage'),
-        sAssertFocused('Tab', '.tox-dialog__body-nav-item:contains("General")'),
-        sPressTab,
-        sAssertFocused('Source', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Source button', '.tox-browse-url'),
-        sPressTab,
-        sAssertFocused('Image list', '.tox-listbox'),
-        sPressTab,
-        sAssertFocused('Description', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Width', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Height', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Constraint proportions', 'button.tox-lock'),
-        sPressTab,
-        sAssertFocused('Class', '.tox-listbox'),
-        sPressTab,
-        sAssertFocused('Caption', 'input.tox-checkbox__input'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ]),
-
-      Log.stepsAsStep('TBA', 'Insert Image Dialog with advanced tab', [
-        api.sExecCommand('mceImage'),
-        sAssertFocused('Tab', '.tox-dialog__body-nav-item:contains("General")'),
-        sPressDown,
-        sAssertFocused('Tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
-        sPressTab,
-        sAssertFocused('Style', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Vertical space', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Horizontal space', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Border width', '.tox-textfield'),
-        sPressTab,
-        sAssertFocused('Border style', '.tox-listbox'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ]),
-
-      Log.stepsAsStep('TBA', 'Insert Image Dialog with upload tab', [
-        api.sSetSetting('images_upload_url', '/custom/imageUpload'),
-        api.sExecCommand('mceImage'),
-        sAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")'),
-        sPressDown,
-        sAssertFocused('Advanced tab', '.tox-dialog__body-nav-item:contains("Advanced")'),
-        sPressDown,
-        sAssertFocused('Upload tab', '.tox-dialog__body-nav-item:contains("Upload")'),
-        sPressTab,
-        sAssertFocused('Browse for an image', '.tox-dropzone button.tox-button'),
-        sPressTab,
-        sAssertFocused('Cancel', 'button.tox-button:contains("Cancel")'),
-        sPressTab,
-        sAssertFocused('Save', 'button.tox-button:contains("Save")'),
-        sPressEsc
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.image.DialogTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     toolbar: 'image',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
+  const pressEsc = (editor: Editor) => TinyUiActions.keydown(editor, Keys.escape());
+  const pressDown = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
+
+  const pAssertFocused = (name: string, selector: string) => FocusTools.pTryOnSelector(name, SugarDocument.getDocument(), selector);
+
+  it('TBA: Insert Image Dialog basic cycle', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceImage');
+    await pAssertFocused('Source', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Description', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Width', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Height', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Constraint proportions', 'button.tox-lock');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
+
+  it('TBA: Insert Image Dialog with filepicker cycle', async () => {
+    const editor = hook.editor();
+    editor.settings.image_advtab = true;
+    editor.execCommand('mceImage');
+    await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
+    pressTab(editor);
+    await pAssertFocused('Source', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Description', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Width', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Height', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Constraint proportions', 'button.tox-lock');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
+
+  it('TBA: Insert Image Dialog with all options', async () => {
+    const editor = hook.editor();
+    editor.settings.file_picker_callback = Fun.noop;
+    editor.settings.image_advtab = true;
+    editor.settings.image_class_list = [{ title: 'sample', value: 'sample' }];
+    editor.settings.image_list = [{ title: 'sample', value: 'sample' }];
+    editor.settings.image_caption = true;
+    editor.execCommand('mceImage');
+    await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
+    pressTab(editor);
+    await pAssertFocused('Source', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Source button', '.tox-browse-url');
+    pressTab(editor);
+    await pAssertFocused('Image list', '.tox-listbox');
+    pressTab(editor);
+    await pAssertFocused('Description', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Width', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Height', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Constraint proportions', 'button.tox-lock');
+    pressTab(editor);
+    await pAssertFocused('Class', '.tox-listbox');
+    pressTab(editor);
+    await pAssertFocused('Caption', 'input.tox-checkbox__input');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
+
+  it('TBA: Insert Image Dialog with advanced tab', async () => {
+    const editor = hook.editor();
+    editor.settings.image_advtab = true;
+    editor.execCommand('mceImage');
+    await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
+    pressDown(editor);
+    await pAssertFocused('Advanced tab', '.tox-dialog__body-nav-item:contains("Advanced")');
+    pressTab(editor);
+    await pAssertFocused('Style', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Vertical space', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Horizontal space', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Border width', '.tox-textfield');
+    pressTab(editor);
+    await pAssertFocused('Border style', '.tox-listbox');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
+
+  it('TBA: Insert Image Dialog with upload tab', async () => {
+    const editor = hook.editor();
+    editor.settings.image_advtab = true;
+    editor.settings.images_upload_url = '/custom/imageUpload';
+    editor.execCommand('mceImage');
+    await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
+    pressDown(editor);
+    await pAssertFocused('Advanced tab', '.tox-dialog__body-nav-item:contains("Advanced")');
+    pressDown(editor);
+    await pAssertFocused('Upload tab', '.tox-dialog__body-nav-item:contains("Upload")');
+    pressTab(editor);
+    await pAssertFocused('Browse for an image', '.tox-dropzone button.tox-button');
+    pressTab(editor);
+    await pAssertFocused('Cancel', 'button.tox-button:contains("Cancel")');
+    pressTab(editor);
+    await pAssertFocused('Save', 'button.tox-button:contains("Save")');
+    pressEsc(editor);
+  });
 });

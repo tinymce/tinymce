@@ -1,48 +1,44 @@
-import { GeneralSteps, Keys, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import * as TypeText from '../../module/test/TypeText';
 
-UnitTest.asynctest('browser.tinymce.core.keyboard.TypeTextAtCef', (success, failure) => {
-
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Logger.t('Type text before cef inline element', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><span contenteditable="false">a</span></p>'),
-        tinyApis.sSelect('p', [ 1 ]),
-        tinyActions.sContentKeystroke(Keys.left(), {}),
-        TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'bc'),
-        tinyApis.sAssertSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-        tinyApis.sAssertContent('<p>bc<span contenteditable="false">a</span></p>')
-      ])),
-      Logger.t('Type after cef inline element', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><span contenteditable="false">a</span></p>'),
-        tinyApis.sSelect('p', [ 1 ]),
-        tinyActions.sContentKeystroke(Keys.right(), {}),
-        TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'bc'),
-        tinyApis.sAssertSelection([ 0, 1 ], 3, [ 0, 1 ], 3),
-        tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc</p>')
-      ])),
-      Logger.t('Type between cef inline elements', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>'),
-        tinyApis.sSelect('p', [ 3 ]),
-        tinyActions.sContentKeystroke(Keys.left(), {}),
-        tinyActions.sContentKeystroke(Keys.left(), {}),
-        TypeText.sTypeContentAtSelection(SugarElement.fromDom(editor.getDoc()), 'bc'),
-        tinyApis.sAssertSelection([ 0, 1 ], 3, [ 0, 1 ], 3),
-        tinyApis.sAssertContent('<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>')
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.core.keyboard.TypeTextAtCef', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ], true);
+
+  it('Type text before cef inline element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span contenteditable="false">a</span></p>');
+    TinySelections.select(editor, 'p', [ 1 ]);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyContentActions.type(editor, 'bc');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 2);
+    TinyAssertions.assertContent(editor, '<p>bc<span contenteditable="false">a</span></p>');
+  });
+
+  it('Type after cef inline element', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span contenteditable="false">a</span></p>');
+    TinySelections.select(editor, 'p', [ 1 ]);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyContentActions.type(editor, 'bc');
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 3);
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span>bc</p>');
+  });
+
+  it('Type between cef inline elements', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>');
+    TinySelections.select(editor, 'p', [ 3 ]);
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyContentActions.keystroke(editor, Keys.left());
+    TinyContentActions.type(editor, 'bc');
+    TinyAssertions.assertSelection(editor, [ 0, 1 ], 3, [ 0, 1 ], 3);
+    TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>');
+  });
 });

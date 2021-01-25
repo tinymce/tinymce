@@ -84,8 +84,8 @@ const toPromise = <A, B>(step: Step<A, B>) => (a: A): Promise<B> => {
   }));
 };
 
-const fromPromise = <T>(p: Promise<T>): Step<T, T> => Step.async((next, die) => {
-  p.then(next, die);
+const fromPromise = <T>(p: () => Promise<unknown>): Step<T, T> => Step.async<T>((next, die) => {
+  p().then(next, die);
 });
 
 export const Step = {

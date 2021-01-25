@@ -25,6 +25,7 @@ def runTests(name, bedrockCommand) {
 def runBrowserTests(name, browser, os, bucket, buckets) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
+      " --chunk=200" +
       " --bedrock-os=" + os +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +

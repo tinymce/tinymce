@@ -1,37 +1,30 @@
-import { Keyboard, Keys, Log, PhantomSkipper, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
-import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { Keys, PhantomSkipper } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-UnitTest.asynctest('browser.tinymce.plugins.charmap.AutocompletionTest', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/charmap/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  CharmapPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const eDoc = SugarElement.fromDom(editor.getDoc());
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Charmap: Autocomplete, trigger an autocomplete and check it appears', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>:co</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 3),
-        Keyboard.sKeypress(eDoc, 'o'.charCodeAt(0), { }),
-        UiFinder.sWaitForVisible('Waiting for autocomplete menu', SugarBody.body(), '.tox-autocompleter'),
-        Keyboard.sKeydown(eDoc, Keys.enter(), { }),
-
-        // This assertion does not pass on Phantom. The editor content
-        // is empty. Not sure if it's an encoding issue for entities.
-        PhantomSkipper.detect() ? Step.pass : tinyApis.sAssertContent('<p>₡</p>')
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.charmap.AutocompletionTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'charmap',
     toolbar: 'charmap',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: Autocomplete, trigger an autocomplete and check it appears', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>:co</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
+    TinyContentActions.keypress(editor, 'o'.charCodeAt(0));
+    await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter');
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    // This assertion does not pass on Phantom. The editor content
+    // is empty. Not sure if it's an encoding issue for entities.
+    if (!PhantomSkipper.detect()) {
+      TinyAssertions.assertContent(editor, '<p>₡</p>');
+    }
+  });
 });

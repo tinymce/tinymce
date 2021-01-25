@@ -1,31 +1,35 @@
-import { Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import * as TrimNode from 'tinymce/core/dom/TrimNode';
 
-UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) => {
-
+describe('browser.tinymce.core.dom.TrimNodeTest', () => {
   const dom = DOMUtils(document, {});
 
-  const sTestTrim = (inputHtml: string, expectedTrimmedHtml: string) => {
-    return Step.sync(() => {
+  const testTrim = (label: string, inputHtml: string, expectedTrimmedHtml: string) => {
+    it(label, () => {
       const elm = document.createElement('div');
       elm.innerHTML = inputHtml;
       TrimNode.trimNode(dom, elm.firstChild);
 
       const actual = elm.innerHTML;
-      Assert.eq('is correct trimmed html', expectedTrimmedHtml, actual);
+      assert.equal(actual, expectedTrimmedHtml, 'is correct trimmed html');
     });
   };
 
-  const sTestTrimDocumentNode = Step.sync(() => {
-    const expected = document.implementation.createHTMLDocument('test');
-    const actual = TrimNode.trimNode(dom, expected);
+  testTrim('Empty span should be removed', '<p><span></span>x</p>', '<p>x</p>');
+  testTrim('Non-empty span should not be removed', '<p><span>x</span>&nbsp;</p>', '<p><span>x</span>&nbsp;</p>');
+  testTrim('Nbsp between inline elements should not be removed', '<p><span>x</span>&nbsp;<span>x</span></p>', '<p><span>x</span>&nbsp;<span>x</span></p>');
+  testTrim('Bookmarks should not be removed 1', '<p><span data-mce-type="bookmark"></span> y</p>', '<p><span data-mce-type="bookmark"></span> y</p>');
+  testTrim('Bookmarks should not be removed 2', '<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>', '<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>');
+  testTrim('Trailing nbsp within inline element should not be removed', '<p><strong><span>x</span>&nbsp;</strong></p>', '<p><strong><span>x</span>&nbsp;</strong></p>');
+  testTrim('Anchor should not be removed', '<p><a id="anchor"></a><span>x</span></p>', '<p><a id="anchor"></a><span>x</span></p>');
+  testTrim('Bogus BR should not be removed', '<p><br data-mce-bogus="1"></p>', '<p><br data-mce-bogus="1"></p>');
+  testTrim('Space between inline elements should not be removed', '<p><strong>x</strong> <em>y</em></p>', '<p><strong>x</strong> <em>y</em></p>');
+  testTrim('New line between inline elements should not be removed', '<pre><strong>x</strong>\n<em>y</em></pre>', '<pre><strong>x</strong>\n<em>y</em></pre>');
 
-    Assert.eq('Should return document as is', true, actual === expected);
-  });
-
-  const sTestTrimFragmentedTextNode = Step.sync(() => {
+  it('Fragmented text node', () => {
     const emptyTextNode = document.createTextNode(' ');
     const elm = document.createElement('div');
     elm.innerHTML = '<strong>abc</strong>abc';
@@ -34,21 +38,13 @@ UnitTest.asynctest('browser.tinymce.core.dom.TrimNodeTest', (success, failure) =
 
     const actual = TrimNode.trimNode(dom, elm);
 
-    Assert.eq('Empty text node shouldn\'t be trimmed', ' <strong>abc</strong> abc', actual.innerHTML);
+    assert.equal(actual.innerHTML, ' <strong>abc</strong> abc', 'Empty text node shouldn\'t be trimmed');
   });
 
-  Pipeline.async({}, [
-    sTestTrim('<p><span></span>x</p>', '<p>x</p>'),
-    sTestTrim('<p><span>x</span>&nbsp;</p>', '<p><span>x</span>&nbsp;</p>'),
-    sTestTrim('<p><span>x</span>&nbsp;<span>x</span></p>', '<p><span>x</span>&nbsp;<span>x</span></p>'),
-    sTestTrim('<p><span data-mce-type="bookmark"></span> y</p>', '<p><span data-mce-type="bookmark"></span> y</p>'),
-    sTestTrim('<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>', '<p>a <span>b <span data-mce-type="bookmark"></span> c</span></p>'),
-    sTestTrim('<p><strong><span>x</span>&nbsp;</strong></p>', '<p><strong><span>x</span>&nbsp;</strong></p>'),
-    sTestTrim('<p><a id="anchor"></a><span>x</span></p>', '<p><a id="anchor"></a><span>x</span></p>'),
-    sTestTrim('<p><br data-mce-bogus="1"></p>', '<p><br data-mce-bogus="1"></p>'),
-    sTestTrim('<p><strong>x</strong> <em>y</em></p>', '<p><strong>x</strong> <em>y</em></p>'),
-    sTestTrim('<pre><strong>x</strong>\n<em>y</em></pre>', '<pre><strong>x</strong>\n<em>y</em></pre>'),
-    sTestTrimFragmentedTextNode,
-    sTestTrimDocumentNode
-  ], success, failure);
+  it('Document node', () => {
+    const expected = document.implementation.createHTMLDocument('test');
+    const actual = TrimNode.trimNode(dom, expected);
+
+    assert.strictEqual(actual, expected, 'Should return document as is');
+  });
 });

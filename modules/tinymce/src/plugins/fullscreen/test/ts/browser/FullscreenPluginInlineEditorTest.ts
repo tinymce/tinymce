@@ -1,29 +1,23 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEditorTest', (success, failure) => {
-
-  FullscreenPlugin();
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, [ Log.step('TBA', 'FullScreen: Assert isFullscreen api function is present and fullscreen button is absent',
-      Step.sync(() => {
-        Assert.eq('should have isFullsceen api function', false, editor.plugins.fullscreen.isFullscreen());
-        Assert.eq('should not have the fullscreen button', 'undefined', typeof editor.ui.registry.getAll().buttons.fullscreen);
-      })
-    ) ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.fullscreen.FullScreenPluginInlineEditorTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     plugins: 'fullscreen link',
     toolbar: 'fullscreen link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ FullscreenPlugin, LinkPlugin, Theme ]);
+
+  it('TBA: Assert isFullscreen api function is present and fullscreen button is absent', () => {
+    const editor = hook.editor();
+    assert.isFalse(editor.plugins.fullscreen.isFullscreen(), 'should have isFullscreen api function');
+    assert.isUndefined(editor.ui.registry.getAll().buttons.fullscreen, 'should not have the fullscreen button');
+  });
 });

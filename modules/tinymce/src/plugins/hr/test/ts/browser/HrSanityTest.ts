@@ -1,34 +1,28 @@
-import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { ApproxStructure } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-import HrPlugin from 'tinymce/plugins/hr/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/hr/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.fullscreen.HrSanitytest', (success, failure) => {
-
-  HrPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, Log.steps('TBA', 'HorizontalRule: Click on the horizontal rule toolbar button and assert hr is added to the editor', [
-      tinyUi.sClickOnToolbar('click on hr button', 'button[aria-label="Horizontal line"]'),
-      tinyApis.sAssertContentStructure(ApproxStructure.build((s, _str) => {
-        return s.element('body', {
-          children: [
-            s.element('hr', {}),
-            s.anything()
-          ]
-        });
-      }))
-    ]), onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.hr.HrSanitytest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'hr',
     toolbar: 'hr',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: Click on the horizontal rule toolbar button and assert hr is added to the editor', () => {
+    const editor = hook.editor();
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Horizontal line"]');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s) => {
+      return s.element('body', {
+        children: [
+          s.element('hr', {}),
+          s.anything()
+        ]
+      });
+    }));
+  });
 });
