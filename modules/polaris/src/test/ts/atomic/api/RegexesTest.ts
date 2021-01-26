@@ -20,7 +20,8 @@ UnitTest.test('RegexesTest', () => {
     `http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com?-.~_!$&'()*+,;=:%40:80%2f::::::@e#-.~_!$&'()*+,;=:%40:80%2f::::::@e`,
     'http://xn--domain.com',
     'www.google.ca/index.htm?id=/bla/bla',
-    'https://www.amazon.com.au/gp/product/B0798R2WXG/ref=s9_acsd_top_hd_bw_b5QhTfX_c_x_w?pf_rd_m=ANEGB3WVEVKZB&pf_rd_s=merchandised-search-4&pf_rd_r=KF6SD7C0M69MKF2FR9CC&pf_rd_t=101&pf_rd_p=8ad3bdba-b846-5350-9c00-72c2cb7191dd&pf_rd_i=4975211051'
+    'https://www.amazon.com.au/gp/product/B0798R2WXG/ref=s9_acsd_top_hd_bw_b5QhTfX_c_x_w?pf_rd_m=ANEGB3WVEVKZB&pf_rd_s=merchandised-search-4&pf_rd_r=KF6SD7C0M69MKF2FR9CC&pf_rd_t=101&pf_rd_p=8ad3bdba-b846-5350-9c00-72c2cb7191dd&pf_rd_i=4975211051',
+    'https://www.birddoctor.net/refId,56511/refDownload.pml'
   ];
 
   // More cases, http://formvalidation.io/validators/uri/
