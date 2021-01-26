@@ -1,16 +1,17 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Regex from 'ephox/katamari/api/Regex';
 
-UnitTest.test('Regex.escapeRegExp', () => {
-  Assert.eq('period, asterisc', 'abcd\\.', Regex.escapeRegExp('abcd.'));
-  Assert.eq('asterisc', 'abc\\*d', Regex.escapeRegExp('abc*d'));
-  Assert.eq('plus', '\\+abcd', Regex.escapeRegExp('+abcd'));
-  Assert.eq('Question mark', '\\?abcd', Regex.escapeRegExp('?abcd'));
-  Assert.eq('Caret', '\\^abcd', Regex.escapeRegExp('^abcd'));
-  Assert.eq('Dollar Sign', '\\$abcd', Regex.escapeRegExp('$abcd'));
-  Assert.eq('Pip', '\\|abcd', Regex.escapeRegExp('|abcd'));
-  Assert.eq('Curly Brackets', '\\{abcd\\}', Regex.escapeRegExp('{abcd}'));
-  Assert.eq('Parenthesis', '\\(abcd\\)', Regex.escapeRegExp('(abcd)'));
-  Assert.eq('Square Brackets', '\\[abcd\\]', Regex.escapeRegExp('[abcd]'));
-  Assert.eq('All', '\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]', Regex.escapeRegExp('.*+?^${}()|[]'));
+describe('Regex.escapeRegExp', () => {
+  assert.equal('abcd\\.', Regex.escapeRegExp('abcd.'), 'period, asterisc',);
+  assert.equal('abc\\*d', Regex.escapeRegExp('abc*d'), 'asterisc',);
+  assert.equal('\\+abcd', Regex.escapeRegExp('+abcd'), 'plus',);
+  assert.equal('\\?abcd', Regex.escapeRegExp('?abcd'), 'Question mark',);
+  assert.equal('\\^abcd', Regex.escapeRegExp('^abcd'), 'Caret',);
+  assert.equal('\\$abcd', Regex.escapeRegExp('$abcd'), 'Dollar Sign',);
+  assert.equal('\\|abcd', Regex.escapeRegExp('|abcd'), 'Pip',);
+  assert.equal('\\{abcd\\}', Regex.escapeRegExp('{abcd}'), 'Curly Brackets',);
+  assert.equal('\\(abcd\\)', Regex.escapeRegExp('(abcd)'), 'Parenthesis',);
+  assert.equal('\\[abcd\\]', Regex.escapeRegExp('[abcd]'), 'Square Brackets',);
+  assert.equal('\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]', Regex.escapeRegExp('.*+?^${}()|[]'), 'All',);
 });
