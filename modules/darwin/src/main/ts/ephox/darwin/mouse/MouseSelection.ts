@@ -8,7 +8,7 @@ export interface MouseSelection {
   readonly clearstate: () => void;
   readonly mousedown: (event: EventArgs<MouseEvent>) => void;
   readonly mouseover: (event: EventArgs<MouseEvent>) => void;
-  readonly mouseup: (event?: EventArgs<MouseEvent>) => void;
+  readonly mouseup: (event: EventArgs<MouseEvent>) => void;
 }
 
 const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
@@ -18,14 +18,7 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
   const cursor = Singleton.value<SugarElement>();
   const clearstate = cursor.clear;
 
-  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mousedown = (event: EventArgs) => {
-    annotations.clear(container);
-    findCell(event.target, isRoot).each(cursor.set);
-  };
-
-  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseover = (event: EventArgs) => {
+  const applySelection = (event: EventArgs<MouseEvent>) => {
     cursor.on((start) => {
       annotations.clearBeforeUpdate(container);
       findCell(event.target, isRoot).each((finish) => {
@@ -46,7 +39,21 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseup = (_event?: EventArgs) => {
+  const mousedown = (event: EventArgs<MouseEvent>) => {
+    annotations.clear(container);
+    findCell(event.target, isRoot).each(cursor.set);
+  };
+
+  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+  const mouseover = (event: EventArgs<MouseEvent>) => {
+    applySelection(event);
+  };
+
+  /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
+  const mouseup = (event: EventArgs<MouseEvent>) => {
+    // Needed as Firefox will change the selection between the mouseover and mouseup when selecting
+    // just 2 cells as Firefox supports multiple selection ranges
+    applySelection(event);
     clearstate();
   };
 
