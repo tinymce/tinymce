@@ -85,7 +85,6 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
             stack.set(stack.get().concat([
               {
                 bar: oldContents,
-                // TODO: Not working
                 focus: Focus.active(SugarShadowDom.getRootNode(comp.element))
               }
             ]));
