@@ -1,6 +1,6 @@
-import { Keyboard, Keys, Waiter } from '@ephox/agar';
+import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -52,12 +52,12 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<pre>abc</pre>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), arrow, { });
+    TinyContentActions.keystroke(editor, arrow);
     TinyAssertions.assertContent(editor, '<pre>abc</pre>');
     assertNode(editor, (node) => node.nodeName === 'PRE');
 
     TinySelections.setCursor(editor, [ 0, 0 ], offset);
-    Keyboard.activeKeystroke(TinyDom.document(editor), arrow, { });
+    TinyContentActions.keystroke(editor, arrow);
     TinyAssertions.assertContent(editor, expectedContent);
     assertNode(editor, (node) => node.nodeName === 'P');
   };
@@ -67,15 +67,15 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<span contenteditable="false">1</span>');
     TinySelections.select(editor, 'span', []);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
     assertStartContainer(editor, CaretContainer.isCaretContainerInline);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
     assertNode(editor, NodeType.isContentEditableFalse);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">1</span></p>');
     assertStartContainer(editor, CaretContainer.isCaretContainerInline);
   });
@@ -85,15 +85,15 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p contenteditable="false">1</p>');
     TinySelections.select(editor, 'p[contenteditable=false]', []);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
     assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
     assertNode(editor, NodeType.isContentEditableFalse);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), { });
+    TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p>');
     assertStartContainer(editor, CaretContainer.isCaretContainerBlock);
   });
@@ -103,7 +103,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p contenteditable="false">1</p>');
     TinySelections.select(editor, 'p[contenteditable=false]', []);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.left(), { });
+    TinyContentActions.keystroke(editor, Keys.left());
     KeyUtils.type(editor, 'a');
     TinyAssertions.assertContent(editor, '<p>a</p><p contenteditable="false">1</p>');
     assertStartContainer(editor, (node) => !CaretContainer.isCaretContainerBlock(node.parentNode));
@@ -114,7 +114,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p contenteditable="false">1</p>');
     TinySelections.select(editor, 'p[contenteditable=false]', []);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.right(), {});
+    TinyContentActions.keystroke(editor, Keys.right());
     KeyUtils.type(editor, 'a');
     TinyAssertions.assertContent(editor, '<p contenteditable="false">1</p><p>a</p>');
     assertStartContainer(editor, (node) => !CaretContainer.isCaretContainerBlock(node.parentNode));
@@ -125,7 +125,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p>a<span contentEditable="false">1</span></p><p>abc</p>');
     TinySelections.setCursor(editor, [ 1, 0 ], 3);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+    TinyContentActions.keystroke(editor, Keys.up());
     assertStartContainer(editor, CaretContainer.isCaretContainerInline);
   });
 
@@ -134,7 +134,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p>abc</p><p>a<span contentEditable="false">1</span></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
 
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+    TinyContentActions.keystroke(editor, Keys.down());
     assertStartContainer(editor, CaretContainer.isCaretContainerInline);
   });
 
@@ -150,10 +150,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     scrollTo(editor, 0, 400);
     TinySelections.setCursor(editor, [ 2, 0 ], 26);
     resetScrollCount();
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+    TinyContentActions.keystroke(editor, Keys.up());
     assertScrollCount(1);
     TinyAssertions.assertSelection(editor, [ 1, 1 ], 1, [ 1, 1 ], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.up(), { });
+    TinyContentActions.keystroke(editor, Keys.up());
     assertScrollCount(2);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 6, [ 0, 0 ], 6);
   });
@@ -165,10 +165,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     scrollTo(editor, 0, 0);
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     resetScrollCount();
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+    TinyContentActions.keystroke(editor, Keys.down());
     assertScrollCount(1);
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+    TinyContentActions.keystroke(editor, Keys.down());
     assertScrollCount(2);
     TinyAssertions.assertSelection(editor, [ 2, 0 ], 0, [ 2, 0 ], 0);
   });
@@ -178,8 +178,8 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     editor.setContent('<p><br data-mce-bogus="1"></p><div contenteditable="false" data-mce-bogus="1"  style="user-select: none;"><div contenteditable="false" data-mce-bogus="1"></div></div>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     resetKeydownCount();
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.down(), { });
+    TinyContentActions.keystroke(editor, Keys.down());
+    TinyContentActions.keystroke(editor, Keys.down());
     // Checking 2 events fired verifies the event handlers finished running, so an exception shouldn't have been raised
     assertKeydownCount(2);
   });

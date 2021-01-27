@@ -2,7 +2,7 @@ import { PhantomSkipper } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { Css, Scroll, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Css, Scroll, SelectorFind } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,7 +16,7 @@ describe('browser.tinymce.core.EditorViewTest', () => {
     if (editor.inline) {
       return editor.getBody().getBoundingClientRect();
     } else {
-      return SelectorFind.descendant(SugarElement.fromDom(editor.getContentAreaContainer()), 'iframe')
+      return SelectorFind.descendant(TinyDom.contentAreaContainer(editor), 'iframe')
         .map((elm) => elm.dom.getBoundingClientRect())
         .getOrDie();
     }

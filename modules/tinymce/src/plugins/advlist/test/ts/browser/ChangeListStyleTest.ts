@@ -1,8 +1,6 @@
-import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
-import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
@@ -24,13 +22,7 @@ describe('browser.tinymce.plugins.advlist.ChangeListStyleTest', () => {
         base_url: '/project/tinymce/js/tinymce'
       }, [ AdvListPlugin, ListsPlugin, Theme ]);
 
-      const pWaitForMenu = (editor: Editor) => Waiter.pTryUntil(
-        'Waiting for menu to appear',
-        () => {
-          const contentContainer = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())));
-          UiFinder.exists(contentContainer, '.tox-menu.tox-selected-menu');
-        }
-      );
+      const pWaitForMenu = (editor: Editor) => TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
 
       it('ul to alpha, cursor only in parent', async () => {
         const editor = hook.editor();

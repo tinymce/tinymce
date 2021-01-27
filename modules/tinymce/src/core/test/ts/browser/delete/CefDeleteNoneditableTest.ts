@@ -1,7 +1,7 @@
 import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, arr) => s.element('body', {
@@ -50,7 +50,7 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+    TinyContentActions.keystroke(editor, Keys.delete());
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, arr) => s.element('body', {
@@ -83,7 +83,7 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     editor.setContent('<div class="mceNonEditable"><span class="mceEditable"><span class="mceNonEditable">az</span> b</span> c</div><p>d</p>');
     TinySelections.select(editor, 'div>span', [ 0 ]);
     Keyboard.sKeydown(TinyDom.document(editor), Keys.right(), { });
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -117,8 +117,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
-    Keyboard.activeKeydown(TinyDom.document(editor), Keys.right(), { });
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 1, [ 0, 1 ], 1);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
@@ -151,8 +151,8 @@ describe('browser.tinymce.core.delete.CefDeleteNoneditableTest', () => {
     const editor = hook.editor();
     editor.setContent('<div class="mceNonEditable"><span class="mceNonEditable">a</span> b</div><p>c</p>');
     TinySelections.select(editor, 'div.mceNonEditable', [ 0 ]);
-    Keyboard.activeKeydown(TinyDom.document(editor), Keys.left(), { });
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.delete(), { });
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyContentActions.keystroke(editor, Keys.delete());
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {

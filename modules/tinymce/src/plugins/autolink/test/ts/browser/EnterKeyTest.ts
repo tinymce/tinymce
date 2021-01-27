@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.autolink.EnterKeyTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abcdefghijk</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'abcdefghijk'.length);
-    Keyboard.activeKeydown(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keydown(editor, Keys.enter());
     assert.doesNotThrow(() => {
       editor.fire('keydown', { keyCode: Keys.enter() } as KeyboardEvent);
     }, 'should not throw error');

@@ -7,7 +7,7 @@ import * as MergingOperations from 'ephox/snooker/operate/MergingOperations';
 UnitTest.test('MergeOperationsTest', () => {
   const b = Structs.bounds;
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
 
   // Test basic merge.
   (() => {

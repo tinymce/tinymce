@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Editor as McEditor, TinyUiActions } from '@ephox/mcagar';
+import { McEditor, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.emoticons.DifferentEmojiDatabaseTest', () => {
     });
 
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await Waiter.pTryUntil(
       'Wait for emojis to load',
       () => UiFinder.notExists(SugarBody.body(), '.tox-spinner')

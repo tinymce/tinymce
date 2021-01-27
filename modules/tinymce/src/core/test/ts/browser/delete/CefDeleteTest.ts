@@ -1,6 +1,6 @@
-import { ApproxStructure, Keyboard, Keys } from '@ephox/agar';
+import { ApproxStructure, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -12,7 +12,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
 
   const fakeBackspaceKeyOnRange = (editor: Editor) => {
     editor.getDoc().execCommand('Delete', false, null);
-    Keyboard.activeKeyup(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keyup(editor, Keys.backspace());
   };
 
   it('Should padd empty ce=true inside ce=false when everything is deleted', () => {
@@ -75,7 +75,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false">a</div>');
     TinySelections.setSelection(editor, [], 1, [], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
@@ -100,7 +100,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false">a</div>');
     TinySelections.setSelection(editor, [], 2, [], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {
@@ -125,7 +125,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false">a</div><p>b</p>');
     TinySelections.setSelection(editor, [], 2, [], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.backspace(), { });
+    TinyContentActions.keystroke(editor, Keys.backspace());
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => {

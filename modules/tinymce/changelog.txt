@@ -1,16 +1,19 @@
 Version 5.7.0 (TBD)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
     Added new data to the `TableModified` event to describe whether the table's `structure`, `style`, or both were modified #TINY-6643
+    Added a new locked column feature to tables that allows column operations to be prevented on certain columns #TINY-6765
     Added `video` and `audio` live embed support for the `media` plugin #TINY-6229
     Added the ability to resize `video` and `iframe` media elements #TINY-6229
     Added new `font_css` setting for fonts to be added to both containing document and the editor #TINY-6199
     Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
+    Added Oxide variable to define the container background color in fullscreen mode #TINY-6903
     Changed copying table columns or entire tables will now retain an appropriate width when pasted #TINY-6664
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
+    Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859
     Fixed table width style was removed when copying #TINY-6664
     Fixed base64 URLs used in style attributes were corrupted when parsing HTML #TINY-6828

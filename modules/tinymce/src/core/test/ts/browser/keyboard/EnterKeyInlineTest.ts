@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { Editor as McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
+import { McEditor, TinyAssertions, TinyContentActions, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -17,7 +17,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyInlineTest', () => {
     const editor = await McEditor.pFromHtml<Editor>('<h1>ab</h1>', { ...settings, forced_root_block: false });
     editor.focus();
     TinySelections.setCursor(editor, [ 0 ], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { shift: true });
+    TinyContentActions.keystroke(editor, Keys.enter(), { shift: true });
     TinyAssertions.assertContent(editor, 'a<br />b');
     McEditor.remove(editor);
   });

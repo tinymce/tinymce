@@ -3,28 +3,13 @@ import { assert } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
 import { ResizeWire } from 'ephox/snooker/api/ResizeWire';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
-import { RunOperationOutput, TargetElement, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';
 import * as Bars from 'ephox/snooker/resize/Bars';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 
-type OperationSingle<T> = (
-  wire: ResizeWire,
-  table: SugarElement,
-  target: T,
-  generators: Generators,
-) => Optional<RunOperationOutput>;
-
 const isResizable = Fun.always;
-
-type OperationMultiple<T> = (
-  wire: ResizeWire,
-  table: SugarElement,
-  target: T,
-  generators: Generators,
-) => Optional<RunOperationOutput>;
 
 interface TargetLocation {
   readonly section: number;
@@ -32,11 +17,18 @@ interface TargetLocation {
   readonly column: number;
 }
 
+interface ExpCell {
+  readonly section: number;
+  readonly row: number;
+  readonly column: number;
+}
+
 const checkOld = (
-  expCell: { section: number; row: number; column: number },
+  label: string,
+  optExpCell: Optional<ExpCell>,
   expectedHtml: string,
   input: string,
-  operation: OperationSingle<TargetElement>,
+  operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
   column: number
@@ -45,29 +37,33 @@ const checkOld = (
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const result = operation(wire, table, {
-    element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie()
+    element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not find element')
   }, Bridge.generators);
 
-  const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
-  assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
-
-  // Presence.assertHas(expected, table, 'checking the operation on table: ' + Html.getOuter(table));
+  optExpCell.each((expCell) => {
+    const actualPath = Hierarchy.path(
+      table,
+      result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
+    ).getOrDie(label + ': could not find path');
+    assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+  });
 
   // Let's get rid of size information.
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
 
-  assert.eq(expectedHtml, Html.getOuter(table));
+  Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
   Remove.remove(table);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
 
 const checkOldMultiple = (
-  expCell: { section: number; row: number; column: number },
+  label: string,
+  optExpCell: Optional<ExpCell>,
   expectedHtml: string,
   input: string,
-  operation: OperationMultiple<TargetSelection>,
+  operation: OperationCallback<TargetSelection>,
   paths: TargetLocation[]
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
@@ -76,29 +72,35 @@ const checkOldMultiple = (
   const result = operation(wire, table,
     {
       selection: Arr.map(paths, (path) =>
-        Hierarchy.follow(table, [ path.section, path.row, path.column, 0 ]).getOrDie()
+        Hierarchy.follow(table, [ path.section, path.row, path.column, 0 ]).getOrDie(label + ': could not follow path')
       )
     },
     Bridge.generators
   );
 
-  const actualPath = Hierarchy.path(table, result.getOrDie().cursor.getOrDie()).getOrDie('could not find path');
-  assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+  optExpCell.each((expCell) => {
+    const actualPath = Hierarchy.path(
+      table,
+      result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
+    ).getOrDie(label + ': could not find path');
+    assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
+  });
 
   // Let's get rid of size information.
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));
   Arr.each(all, (elem) => Css.remove(elem, 'width') );
-  assert.eq(expectedHtml, Html.getOuter(table));
+  Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
   Remove.remove(table);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
 
 const checkPaste = (
+  label: string,
   expectedHtml: string,
   input: string,
   pasteHtml: string,
-  operation: OperationSingle<TargetPasteRows>,
+  operation: OperationCallback<TargetPasteRows>,
   section: number,
   row: number,
   column: number
@@ -112,25 +114,56 @@ const checkPaste = (
     wire,
     table,
     {
-      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie() ],
+      selection: [ Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not follow selection') ],
       clipboard: SelectorFilter.descendants(pasteTable, 'tr'),
-      // Impossible type! This might work in some restricted circumstances.
-      generators: Bridge.generators as SimpleGenerators
+      generators: Bridge.pasteGenerators
     },
     Bridge.generators
   );
 
-  assert.eq(expectedHtml, Html.getOuter(table));
+  Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
+  Remove.remove(table);
+  // Ensure all the resize bars are destroyed before of running the next test.
+  Bars.destroy(wire);
+};
+
+const checkPasteRaw = (
+  label: string,
+  expectedHtml: string,
+  inputTable: string,
+  pastedTableHTML: string,
+  operation: OperationCallback<TargetPaste>,
+  section: number,
+  row: number,
+  column: number
+): void => {
+  const table = SugarElement.fromHtml<HTMLTableElement>(inputTable);
+  Insert.append(SugarBody.body(), table);
+  const wire = ResizeWire.only(SugarBody.body(), isResizable);
+
+  const pasteTable = SugarElement.fromHtml<HTMLTableElement>(pastedTableHTML);
+  operation(
+    wire,
+    table,
+    {
+      element: Hierarchy.follow(table, [ section, row, column, 0 ]).getOrDie(label + ': could not follow selection'),
+      clipboard: pasteTable,
+      generators: Bridge.pasteGenerators
+    },
+    Bridge.generators
+  );
+
+  Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
   Remove.remove(table);
   // Ensure all the resize bars are destroyed before of running the next test.
   Bars.destroy(wire);
 };
 
 const checkStructure = (
-  expCell: { section: number; row: number; column: number},
+  expCell: ExpCell,
   expected: string[][],
   input: string,
-  operation: OperationSingle<TargetElement>,
+  operation: OperationCallback<TargetElement>,
   section: number,
   row: number,
   column: number
@@ -157,18 +190,19 @@ const checkStructure = (
 };
 
 const checkDelete = (
-  optExpCell: Optional<{ section: number; row: number; column: number }>,
+  label: string,
+  optExpCell: Optional<ExpCell>,
   optExpectedHtml: Optional<{ ie: string; normal: string }>,
   input: string,
-  operation: OperationSingle<TargetSelection>,
-  cells: { section: number; row: number; column: number }[],
+  operation: OperationCallback<TargetSelection>,
+  cells: ExpCell[],
   platform: ReturnType<typeof PlatformDetection.detect>
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
   const wire = ResizeWire.only(SugarBody.body(), isResizable);
   const cellz = Arr.map(cells, (cell) =>
-    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie('Could not find cell')
+    Hierarchy.follow(table, [ cell.section, cell.row, cell.column, 0 ]).getOrDie(label + ': could not find cell')
   );
 
   const result = operation(wire, table, {
@@ -179,8 +213,8 @@ const checkDelete = (
   optExpCell.each((expCell) => {
     const actualPath = Hierarchy.path(
       table,
-      result.getOrDie().cursor.getOrDie('could not find cursor')
-    ).getOrDie('could not find path');
+      result.getOrDie(label + ': could not get result').cursor.getOrDie(label + ': could not find cursor')
+    ).getOrDie(label + ': could not find path');
     assert.eq([ expCell.section, expCell.row, expCell.column ], actualPath);
   });
 
@@ -192,13 +226,13 @@ const checkDelete = (
     // the result of a delete operation can be by definition the deletion of the table itself.
     // If that is the case our table should not have any parent element because has been removed
     // from the DOM
-    assert.eq(false, Traverse.parent(table).isSome(), 'The table was expected to be removed from the DOM');
+    Assertions.assertEq(label + ': The table was expected to be removed from the DOM', false, Traverse.parent(table).isSome());
 
   }, (expectedHtml) => {
     if (platform.browser.isIE() || platform.browser.isEdge()) {
-      assert.eq(expectedHtml.ie, Html.getOuter(table));
+      Assertions.assertHtml(label, expectedHtml.ie, Html.getOuter(table));
     } else {
-      assert.eq(expectedHtml.normal, Html.getOuter(table));
+      Assertions.assertHtml(label, expectedHtml.normal, Html.getOuter(table));
     }
     Remove.remove(table);
   });
@@ -244,7 +278,7 @@ const checkUnmerge = (
   label: string,
   expected: string,
   input: string,
-  unmergablePaths: { section: number; row: number; column: number }[]
+  unmergablePaths: ExpCell[]
 ): void => {
   const table = SugarElement.fromHtml<HTMLTableElement>(input);
   Insert.append(SugarBody.body(), table);
@@ -271,6 +305,7 @@ export {
   checkOld,
   checkOldMultiple,
   checkPaste,
+  checkPasteRaw,
   checkStructure,
   checkDelete,
   checkMerge,

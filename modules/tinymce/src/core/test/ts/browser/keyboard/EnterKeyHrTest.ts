@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -15,7 +15,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<hr /><p>a</p>');
     TinySelections.setCursor(editor, [], 0);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>&nbsp;</p><hr /><p>a</p>');
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 0);
   });
@@ -24,7 +24,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<hr /><p>a</p>');
     TinySelections.setCursor(editor, [], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<hr /><p>&nbsp;</p><p>a</p>');
     TinyAssertions.assertSelection(editor, [ 2, 0 ], 0, [ 2, 0 ], 0);
   });
@@ -33,7 +33,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><hr /><p>b</p>');
     TinySelections.setCursor(editor, [], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>a</p><p>&nbsp;</p><hr /><p>b</p>');
     TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
   });
@@ -42,7 +42,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><hr /><p>b</p>');
     TinySelections.setCursor(editor, [], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>a</p><hr /><p>&nbsp;</p><p>b</p>');
     TinyAssertions.assertSelection(editor, [ 3, 0 ], 0, [ 3, 0 ], 0);
   });
@@ -51,7 +51,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><hr />');
     TinySelections.setCursor(editor, [], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>a</p><p>&nbsp;</p><hr />');
     TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
   });
@@ -60,7 +60,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><hr />');
     TinySelections.setCursor(editor, [], 2);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), { });
+    TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>a</p><hr /><p>&nbsp;</p>');
     TinyAssertions.assertSelection(editor, [ 2 ], 0, [ 2 ], 0);
   });

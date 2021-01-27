@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
-import { Editor as McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
+import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/mcagar';
 import { Focus, Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 

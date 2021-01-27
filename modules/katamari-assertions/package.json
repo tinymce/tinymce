@@ -15,7 +15,7 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/bedrock-client": "^10.0.0",
+    "@ephox/bedrock-client": "^11.0.0",
     "@ephox/dispute": "^1.0.3",
     "@ephox/katamari": "^7.1.1",
     "@ephox/wrap-promise-polyfill": "^2.2.0",

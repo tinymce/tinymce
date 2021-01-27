@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.emoticons.ImageEmoticonTest', () => {
     const doc = SugarDocument.getDocument();
 
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await TinyUiActions.pWaitForPopup(editor, 'div[role="dialog"]');
+    await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on input', doc, 'input');
     const input = FocusTools.setActiveValue(doc, 'dog');
     fakeEvent(input, 'input');
@@ -36,9 +36,9 @@ describe('browser.tinymce.plugins.emoticons.ImageEmoticonTest', () => {
         assert.equal(src, 'https://twemoji.maxcdn.com/v/13.0.1/72x72/1f436.png', 'Search should show a dog');
       }
     );
-    Keyboard.activeKeydown(doc, Keys.tab(), { });
+    TinyUiActions.keydown(editor, Keys.tab());
     await FocusTools.pTryOnSelector('Focus should have moved to collection', doc, '.tox-collection__item');
-    Keyboard.activeKeydown(doc, Keys.enter(), { });
+    TinyUiActions.keydown(editor, Keys.enter());
     await Waiter.pTryUntil(
       'Waiting for content update',
       () => TinyAssertions.assertContentPresence(editor, {

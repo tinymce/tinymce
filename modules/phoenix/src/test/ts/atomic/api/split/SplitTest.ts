@@ -38,7 +38,8 @@ UnitTest.test('api.Split.(split,splitByPair)', () => {
     const actual = Split.splitByPair(input.universe, input.item, start, finish);
     assert.eq(middle, actual.text);
     assert.eq(expected, input.universe.shortlog((item) => {
-      return item.name === 'TEXT_GENE' ? 'text("' + item.text + '")' : item.id;
+      const props = input.universe.property();
+      return props.isText(item) ? `text("${props.getText(item)}")` : item.id;
     }));
   };
   // probably never happens, but just in case

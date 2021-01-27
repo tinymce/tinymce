@@ -1,6 +1,6 @@
 import { Assertions, Chain, Guard, Log, NamedChain, TestLogs, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor, TinyDom } from '@ephox/mcagar';
+import { McEditor, TinyDom } from '@ephox/mcagar';
 import { SelectorFind } from '@ephox/sugar';
 
 import Plugin from 'tinymce/plugins/table/Plugin';
@@ -180,7 +180,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
   );
 
   NamedChain.pipeline(Log.chains('TBA', 'Table: Insert columns, erase column and assert the table width does not change', [
-    NamedChain.write('editor', Editor.cFromSettings({
+    NamedChain.write('editor', McEditor.cFromSettings({
       plugins: 'table',
       width: 400,
       theme: 'silver',
@@ -194,7 +194,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', 
     NamedChain.read('editor', cAssertWidth('with caption', tableWithCaption)),
     NamedChain.read('editor', cAssertWidth('with nested tables', nestedTables)),
 
-    NamedChain.read('editor', Editor.cRemove)
+    NamedChain.read('editor', McEditor.cRemove)
   ]),
   success, failure, TestLogs.init());
 });

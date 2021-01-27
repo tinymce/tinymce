@@ -10,7 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import { hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
-import { SelectionTargets } from '../selection/SelectionTargets';
+import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -95,44 +95,44 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     text: 'Insert column before',
     icon: 'table-insert-column-before',
     onAction: cmd('mceTableInsertColBefore'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onFirst)
   });
   editor.ui.registry.addMenuItem('tableinsertcolumnafter', {
     text: 'Insert column after',
     icon: 'table-insert-column-after',
     onAction: cmd('mceTableInsertColAfter'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onLast)
   });
   editor.ui.registry.addMenuItem('tabledeletecolumn', {
     text: 'Delete column',
     icon: 'table-delete-column',
     onAction: cmd('mceTableDeleteCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addMenuItem('tablecutcolumn', {
     text: 'Cut column',
     icon: 'cut-column',
     onAction: cmd('mceTableCutCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
   editor.ui.registry.addMenuItem('tablecopycolumn', {
     text: 'Copy column',
     icon: 'duplicate-column',
     onAction: cmd('mceTableCopyCol'),
-    onSetup: selectionTargets.onSetupCellOrRow
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
   editor.ui.registry.addMenuItem('tablepastecolumnbefore', {
     text: 'Paste column before',
     icon: 'paste-column-before',
     onAction: cmd('mceTablePasteColBefore'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onFirst)
   });
   editor.ui.registry.addMenuItem('tablepastecolumnafter', {
     text: 'Paste column after',
     icon: 'paste-column-after',
     onAction: cmd('mceTablePasteColAfter'),
-    onSetup: selectionTargets.onSetupPasteable(clipboard.getColumns)
+    onSetup: selectionTargets.onSetupPasteableColumn(clipboard.getColumns, LockedDisable.onLast)
   });
 
   const column: Menu.NestedMenuItemSpec = {

@@ -1,6 +1,6 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
-import { Editor } from '../alien/EditorTypes';
-import { TinyDom } from './TinyDom';
+import { Editor } from '../../alien/EditorTypes';
+import { TinyDom } from '../TinyDom';
 
 type SyncTestCallback<T> = (initValue: T) => void;
 type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;

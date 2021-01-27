@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import * as TinyLoader from 'ephox/mcagar/api/TinyLoader';
+import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
 
 UnitTest.asynctest('TinyLoader should fail (instead of timeout) when exception is thrown in callback function', (success, failure) => {
   TinyLoader.setup(() => {
