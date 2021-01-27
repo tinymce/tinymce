@@ -36,8 +36,12 @@ describe('browser.tinymce.plugins.table.TwoCellsSelectionTest', () => {
     const endCell = UiFinder.findIn(TinyDom.body(editor), endCellSelector).getOrDie();
 
     // Drag over the 2 cells to select them
-    Mouse.mouseDown(startCell);
     Mouse.mouseOver(startCell);
+    Mouse.mouseDown(startCell);
+
+    // Note: This additional mouseover is here to trigger/test the same cell checks in MouseSelection.ts
+    Mouse.mouseOver(startCell);
+
     Mouse.mouseOver(endCell);
     Mouse.mouseUp(endCell);
   };

@@ -1,4 +1,4 @@
-import { Singleton, Type } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 import { SelectionAnnotation } from '../api/SelectionAnnotation';
 import { WindowBridge } from '../api/WindowBridge';
@@ -8,7 +8,7 @@ export interface MouseSelection {
   readonly clearstate: () => void;
   readonly mousedown: (event: EventArgs<MouseEvent>) => void;
   readonly mouseover: (event: EventArgs<MouseEvent>) => void;
-  readonly mouseup: (event?: EventArgs<MouseEvent>) => void;
+  readonly mouseup: (event: EventArgs<MouseEvent>) => void;
 }
 
 const findCell = (target: SugarElement, isRoot: (e: SugarElement) => boolean) =>
@@ -50,12 +50,10 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement, is
   };
 
   /* Keep this as lightweight as possible when we're not in a table selection, it runs constantly */
-  const mouseup = (event?: EventArgs<MouseEvent>) => {
-    if (Type.isNonNullable(event)) {
-      // Needed as Firefox will change the selection between the mouseover and mouseup when selecting
-      // just 2 cells as it supports multiple ranges
-      applySelection(event);
-    }
+  const mouseup = (event: EventArgs<MouseEvent>) => {
+    // Needed as Firefox will change the selection between the mouseover and mouseup when selecting
+    // just 2 cells as Firefox supports multiple selection ranges
+    applySelection(event);
     clearstate();
   };
 
