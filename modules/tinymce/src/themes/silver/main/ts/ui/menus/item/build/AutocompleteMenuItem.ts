@@ -59,7 +59,7 @@ const replaceText = (text: string, matchText: string): string => {
   const translated = I18n.translate(text);
   const encoded = encodeText(translated);
   if (matchText.length > 0) {
-    const escapedMatchRegex = new RegExp(Regex.escapeRegExp(matchText), 'gi');
+    const escapedMatchRegex = new RegExp(Regex.escape(matchText), 'gi');
     return encoded.replace(escapedMatchRegex, (match) => `<span class="tox-autocompleter-highlight">${match}</span>`);
   } else {
     return encoded;
