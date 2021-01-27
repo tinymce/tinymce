@@ -1,15 +1,13 @@
 import { Mouse, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import {
-  assertCleanHtml, assertInputValue, fakeEvent, fillActiveDialog, generalTabSelectors, pWaitForDialog, setInputValue, submitDialog
-} from '../module/Helpers';
+import { assertCleanHtml, assertInputValue, fakeEvent, fillActiveDialog, generalTabSelectors, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -28,14 +26,14 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.setContent('<p><img src="#1" title="title" /></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     assertInputValue(generalTabSelectors.src, '#1');
     assertInputValue(generalTabSelectors.title, 'title');
     fillActiveDialog({
       src: { value: '#2' },
       title: ''
     });
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="#2" /></p>');
   });
 
@@ -44,7 +42,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.setContent('<p><img src="https://www.google.com/logos/google.jpg"  width="200" height="200"/></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     assertInputValue(generalTabSelectors.src, 'https://www.google.com/logos/google.jpg');
     assertInputValue(generalTabSelectors.height, '200');
     assertInputValue(generalTabSelectors.width, '200');
@@ -53,7 +51,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     fakeEvent(input, 'change');
     assertInputValue(generalTabSelectors.height, '');
     assertInputValue(generalTabSelectors.width, '');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '');
   });
 
@@ -61,10 +59,10 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     const editor = hook.editor();
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(SugarBody.body(), 'button[title="Source"]');
     await Waiter.pTryUntil('Wait for width to be populated', () => assertInputValue(generalTabSelectors.width, '200'));
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200" /></p>');
   });
 });

@@ -1,6 +1,6 @@
 import { Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';

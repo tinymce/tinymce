@@ -1,13 +1,13 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors, pWaitForDialog, submitDialog } from '../../module/Helpers';
+import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
   const prependUrl = 'http://abc.local/images/';
@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
   it('TBA: image recognizes relative src url and prepends absolute image_prepend_url setting.', async () => {
     const editor = hook.editor();
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
 
     fillActiveDialog({
       src: {
@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
     });
     const srcElem = UiFinder.findIn(SugarBody.body(), generalTabSelectors.src).getOrDie();
     fakeEvent(srcElem, 'change');
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt" /></p>');
   });
 });

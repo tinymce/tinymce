@@ -39,6 +39,7 @@ export interface DetailNew extends Detail {
 export interface DetailExt extends Detail {
   readonly row: number;
   readonly column: number;
+  readonly isLocked: boolean;
 }
 
 export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
@@ -62,6 +63,7 @@ export interface RowDataNew<T> extends RowData<T> {
 export interface ElementNew {
   readonly element: SugarElement;
   readonly isNew: boolean;
+  readonly isLocked: boolean;
 }
 
 export interface RowDetails {
@@ -126,12 +128,13 @@ const detailnew = (element: SugarElement<HTMLTableCellElement>, rowspan: number,
   isNew
 });
 
-const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, row: number, column: number): DetailExt => ({
+const extended = (element: SugarElement<HTMLTableCellElement>, rowspan: number, colspan: number, row: number, column: number, isLocked: boolean): DetailExt => ({
   element,
   rowspan,
   colspan,
   row,
-  column
+  column,
+  isLocked
 });
 
 const rowdata = <T> (element: SugarElement<HTMLTableRowElement | HTMLTableColElement>, cells: T[], section: Section): RowData<T> => ({
@@ -140,9 +143,10 @@ const rowdata = <T> (element: SugarElement<HTMLTableRowElement | HTMLTableColEle
   section
 });
 
-const elementnew = (element: SugarElement, isNew: boolean): ElementNew => ({
+const elementnew = (element: SugarElement, isNew: boolean, isLocked: boolean): ElementNew => ({
   element,
-  isNew
+  isNew,
+  isLocked
 });
 
 const rowdatanew = <T> (element: SugarElement, cells: T[], section: Section, isNew: boolean): RowDataNew<T> => ({

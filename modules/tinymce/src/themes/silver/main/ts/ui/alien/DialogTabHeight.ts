@@ -8,7 +8,7 @@
 import { AlloyComponent, AlloyEvents, Replacing, SystemEvents, TabbarTypes, TabSection } from '@ephox/alloy';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Focus, Height, SelectorFind, SugarElement, Traverse, Width } from '@ephox/sugar';
+import { Css, Focus, Height, SelectorFind, SugarElement, SugarShadowDom, Traverse, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 import { formResizeEvent } from '../general/FormEvents';
 
@@ -131,7 +131,7 @@ const setMode = (allTabs: Array<Partial<TabbarTypes.TabButtonWithViewSpec>>) => 
       AlloyEvents.run(formResizeEvent, (comp, _se) => {
         const dialog = comp.element;
         getTabview(dialog).each((tabview) => {
-          const oldFocus = Focus.active();
+          const oldFocus = Focus.active(SugarShadowDom.getRootNode(tabview));
           Css.set(tabview, 'visibility', 'hidden');
           const oldHeight = Css.getRaw(tabview, 'height').map((h) => parseInt(h, 10));
           Css.remove(tabview, 'height');

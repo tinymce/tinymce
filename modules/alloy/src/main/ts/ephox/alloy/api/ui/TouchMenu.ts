@@ -1,5 +1,5 @@
 import { Cell, Fun, Optional } from '@ephox/katamari';
-import { EventArgs, Focus } from '@ephox/sugar';
+import { EventArgs, Focus, SugarShadowDom } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
 import { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
@@ -168,7 +168,8 @@ const factory: CompositeSketchFactory<TouchMenuDetail, TouchMenuSpec> = (detail,
             Highlighting.dehighlightAll(iMenu);
 
             // INVESTIGATE: Should this focus.blur be called? Should it only be called here?
-            Focus.active().each(Focus.blur);
+            const dos = SugarShadowDom.getRootNode(component.element);
+            Focus.active(dos).each(Focus.blur);
 
             // could not find an item, so check the button itself
             const hoverF = ElementFromPoint.insideComponent(component, e.clientX, e.clientY).fold(

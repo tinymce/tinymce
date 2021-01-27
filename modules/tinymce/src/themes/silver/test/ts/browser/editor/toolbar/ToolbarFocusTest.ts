@@ -1,6 +1,6 @@
 import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { ApiChains, McEditor } from '@ephox/mcagar';
 import { SugarDocument, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';

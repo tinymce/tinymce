@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor as McEditor, UiChains } from '@ephox/mcagar';
+import { McEditor, UiChains } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar';
 import * as Styles from 'tinymce/themes/mobile/style/Styles';

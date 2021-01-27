@@ -1,11 +1,11 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { assertCleanHtml, fillActiveDialog, pWaitForDialog, submitDialog } from '../../module/Helpers';
+import { assertCleanHtml, fillActiveDialog } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
   it('TBA: image dialog image_dimensions: false', async () => {
     const editor = hook.editor();
     editor.execCommand('mceImage');
-    await pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
 
     fillActiveDialog({
       src: {
@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.image.plugin.DimensionsFalseTest', () => {
       },
       alt: 'alt'
     });
-    submitDialog(editor);
+    TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="src" alt="alt" /></p>');
   });
 });

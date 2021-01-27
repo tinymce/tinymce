@@ -1,9 +1,9 @@
 import { Assertions, Cursors, StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
-import { Editor } from '../alien/EditorTypes';
-import { Presence } from './TinyApis';
-import { TinyDom } from './TinyDom';
+import { Editor } from '../../alien/EditorTypes';
+import { Presence } from '../pipeline/TinyApis';
+import { TinyDom } from '../TinyDom';
 
 const assertPath = (label: string, root: SugarElement, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
   const expected = Cursors.calculateOne(root, expPath);

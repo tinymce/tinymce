@@ -1,6 +1,6 @@
-import { ApproxStructure, Keyboard, Keys, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
@@ -17,7 +17,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyAnchorTest', () => {
     TinySelections.setCursor(editor, elementPath, offset);
   };
 
-  const enterKey = (editor: Editor) => Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter(), {});
+  const enterKey = (editor: Editor) => TinyContentActions.keystroke(editor, Keys.enter());
 
   const addGeckoBr = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, children: StructAssert[]) => {
     if (Env.gecko) {

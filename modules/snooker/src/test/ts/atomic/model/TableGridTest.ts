@@ -6,7 +6,7 @@ import * as TableGrid from 'ephox/snooker/model/TableGrid';
 
 UnitTest.test('TableGrid.subgrid test', () => {
   const r = Structs.rowcells;
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
 
   const check = (expected: { colspan: number; rowspan: number }, row: number, column: number, grid: Structs.RowCells[]) => {
     const actual = TableGrid.subgrid(grid, row, column, Fun.tripleEquals);

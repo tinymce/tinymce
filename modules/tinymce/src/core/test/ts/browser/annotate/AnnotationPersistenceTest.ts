@@ -1,5 +1,5 @@
 import { before, describe, it } from '@ephox/bedrock-client';
-import { Editor as McEditor, TinyAssertions, TinySelections } from '@ephox/mcagar';
+import { McEditor, TinyAssertions, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import { AnnotatorSettings } from 'tinymce/core/api/Annotator';

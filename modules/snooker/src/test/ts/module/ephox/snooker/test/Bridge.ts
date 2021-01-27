@@ -1,6 +1,6 @@
 import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode } from '@ephox/sugar';
-import { Generators } from 'ephox/snooker/api/Generators';
+import { Attribute, Css, Hierarchy, Insert, Replication, SugarElement, SugarNode, TextContent } from '@ephox/sugar';
+import { Generators, SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import { TargetMergable } from 'ephox/snooker/model/RunOperation';
 
@@ -28,6 +28,9 @@ const generators: Generators = {
     Css.getRaw(prev.element, 'width').each((w) => {
       Css.set(tag, 'width', w);
     });
+    Css.getRaw(prev.element, 'color').each((c) => {
+      Css.set(tag, 'color', c);
+    });
     return tag;
   },
   replace: (cell, tag, attrs) => {
@@ -51,7 +54,25 @@ const generators: Generators = {
   colgroup: () => SugarElement.fromTag('colgroup')
 };
 
+const createCell = (): SugarElement<HTMLTableCellElement> => {
+  const tag = SugarElement.fromTag('td');
+  TextContent.set(tag, '?');
+  return tag;
+};
+
+// This is used for testing pasting as the real paste generator (TableFill.ts) differs from the standard generator
+// e.g. creates a cell that does not rely on the previous cell
+const pasteGenerators: SimpleGenerators = {
+  col: () => SugarElement.fromTag('col'),
+  colgroup: () => SugarElement.fromTag('colgroup'),
+  row: () => SugarElement.fromTag('tr'),
+  cell: createCell,
+  replace: (cell: SugarElement) => cell,
+  gap: createCell
+};
+
 export {
   targetStub,
-  generators
+  generators,
+  pasteGenerators
 };

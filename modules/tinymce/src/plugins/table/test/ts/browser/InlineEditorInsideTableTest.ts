@@ -1,6 +1,6 @@
 import { Chain, Guard, Log, Mouse, NamedChain, Pipeline, Step, TestLogs, UiFinder } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Editor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { Attribute, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -72,7 +72,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InlineEditorInsideTableTest', 
         Mouse.cMouseOver,
         cNotExists(SugarBody.body(), 'div[data-row="0"]')
       ]), '_'),
-      NamedChain.read('editor', Editor.cRemove),
+      NamedChain.read('editor', McEditor.cRemove),
       NamedChain.read('container', Chain.op((div) => Remove.remove(div)))
     ], next, die, initLogs);
   });

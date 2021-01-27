@@ -13,7 +13,7 @@ UnitTest.test('FitmentTest', () => {
   const tailorTest = Fitment.tailorTest;
   const mergeGridsTest = TableMerge.mergeTest;
 
-  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew);
+  const en = (fakeElement: any, isNew: boolean) => Structs.elementnew(fakeElement as SugarElement, isNew, false);
 
   const check = <T extends (...args: A) => void, A extends any[]>(test: T, ...args: A) => {
     test.apply(null, args);

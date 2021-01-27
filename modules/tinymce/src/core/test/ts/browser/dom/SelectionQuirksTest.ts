@@ -1,6 +1,6 @@
-import { Keyboard, Keys, Monitor, Mouse } from '@ephox/agar';
+import { Keys, Monitor, Mouse } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -38,7 +38,7 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><p>b</p>');
     TinySelections.setSelection(editor, [], 1, [], 1);
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.escape(), { });
+    TinyContentActions.keystroke(editor, Keys.escape());
     TinyAssertions.assertSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 0);
   });
 
@@ -63,9 +63,9 @@ describe('browser.tinymce.core.dom.SelectionQuirksTest', () => {
     resetNormalizeCounter();
     editor.setContent('<p><b>a</b><i>a</i></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 0);
-    Keyboard.activeKeyup(TinyDom.document(editor), Keys.left(), { shift: true });
+    TinyContentActions.keyup(editor, Keys.left(), { shift: true });
     assertNormalizeCounter(0);
-    Keyboard.activeKeyup(TinyDom.document(editor), 17, { }); // single ctrl
+    TinyContentActions.keyup(editor, 17, { }); // single ctrl
     assertNormalizeCounter(1);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });

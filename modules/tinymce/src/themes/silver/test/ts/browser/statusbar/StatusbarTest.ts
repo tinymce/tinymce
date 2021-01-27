@@ -1,6 +1,6 @@
 import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Editor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Wordcount from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -99,7 +99,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
   });
 
   const makeStep = (config, structureLabel, editorStructure) => Chain.asStep({}, [
-    Editor.cFromSettings(config),
+    McEditor.cFromSettings(config),
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
       NamedChain.direct('editor', cSetContent('<p><strong>hello world</strong></p>'), ''),
@@ -110,7 +110,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
       )), 'assertion'),
       NamedChain.output('editor')
     ]),
-    Editor.cRemove
+    McEditor.cRemove
   ]);
 
   Pipeline.async({}, [
@@ -192,7 +192,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     )),
 
     Log.step('TBA', 'Full statusbar - check element path on content change', Chain.asStep({}, [
-      Editor.cFromSettings({
+      McEditor.cFromSettings({
         theme: 'silver',
         base_url: '/project/tinymce/js/tinymce',
         toolbar: 'bold',
@@ -261,7 +261,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
         )), 'assertion2'),
         NamedChain.output('editor')
       ]),
-      Editor.cRemove
+      McEditor.cRemove
     ]))
   ], success, failure);
 });

@@ -1,119 +1,100 @@
-import { Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
-import { TinyApis, TinyDom, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import ImageOps from '../module/test/ImageOps';
+import { ImageOps } from '../module/test/ImageOps';
 import * as ImageUtils from '../module/test/ImageUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.imagetools.ContextToolbarTest', (success, failure) => {
-  Theme();
-  ImagePlugin();
-  ImageToolsPlugin();
+describe('browser.tinymce.plugins.imagetools.ContextToolbarTest', () => {
+  const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.gif';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = SugarElement.fromDom(document);
-    const imgOps = ImageOps(editor);
-
-    const srcUrl = '/project/tinymce/src/plugins/imagetools/demo/img/dogleft.gif';
-
-    const sOpenContextToolbar = (source) => GeneralSteps.sequence([
-      ImageUtils.sLoadImage(editor, source, { width: 460, height: 598 }),
-      tinyApis.sSelect('img', []),
-      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Rotate counterclockwise"]')
-    ]);
-
-    // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
-    const sPressKeyboardShortcutKey = Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), 120, { ctrl: true });
-    const sPressRightArrowKey = Keyboard.sKeydown(doc, Keys.right(), { });
-
-    // Assert focus is on the expected toolbar button
-    const sAssertFocusOnItem = (label, selector) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-
-    const sWaitForDialogOpenThenCloseDialog = (childSelector: string) => {
-      const selector = 'div[role="dialog"]';
-      return GeneralSteps.sequence([
-        Chain.asStep(editor, [
-          tinyUi.cWaitForPopup('wait for dialog', 'div.tox-dialog__title'),
-          tinyUi.cWaitForPopup('wait for dialog child element', childSelector),
-          UiChains.cCloseDialog(selector)
-        ]),
-        Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(TinyDom.fromDom(document.body), selector), 50, 5000)
-      ]);
-    };
-
-    const getImageSrc = () => {
-      const dom = editor.dom;
-      const element = dom.getParent(editor.selection.getStart(), 'img');
-      return dom.getAttrib(element, 'src');
-    };
-
-    const cGetImageSrc = Chain.injectThunked(getImageSrc);
-
-    const cClickContextToolbarButton = (label) => Chain.fromParent(tinyUi.cWaitForPopup('wait for Imagetools toolbar', '.tox-pop__dialog div'), [
-      imgOps.cClickToolbarButton(label)
-    ]);
-
-    const sAssertImageFlip = (label) => Chain.asStep({ editor }, [
-      Chain.label(`Assert ${label}`,
-        NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-          Chain.label('Store img src before flip', NamedChain.write('srcBeforeFlip', cGetImageSrc)),
-          Chain.label('Flip image', NamedChain.read('editor', cClickContextToolbarButton(label))),
-          Waiter.cTryUntilPredicate('Wait for image to flip', (state: Record<string, any>) => {
-            const oldSrc = Optional.from(state.srcBeforeFlip).getOrDie();
-            const newSrc = getImageSrc();
-            return newSrc !== oldSrc;
-          })
-        ]))
-    ]);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'ImageTools: context toolbar keyboard navigation test', [
-        sOpenContextToolbar(srcUrl),
-        sPressKeyboardShortcutKey,
-        sAssertFocusOnItem('Rotate counterclockwise button', 'button[aria-label="Rotate counterclockwise"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Rotate clockwise button', 'button[aria-label="Rotate clockwise"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Flip vertically button', 'button[aria-label="Flip vertically"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Flip horizontally button', 'button[aria-label="Flip horizontally"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Edit image button', 'button[aria-label="Edit image"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Image options button', 'button[aria-label="Image options"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Rotate counterclockwise button', 'button[aria-label="Rotate counterclockwise"]')
-      ]),
-      Log.stepsAsStep('TBA', 'ImageTools: context toolbar functionality test', [
-        sOpenContextToolbar(srcUrl),
-        imgOps.sExecToolbar('Rotate counterclockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="598"][height="460"]': 1 })),
-        imgOps.sExecToolbar('Rotate clockwise'),
-        Waiter.sTryUntil('Wait for image to be rotated', tinyApis.sAssertContentPresence({ 'img[width="460"][height="598"]': 1 })),
-        sAssertImageFlip('Flip horizontally'),
-        sAssertImageFlip('Flip vertically'),
-        Chain.asStep({}, [ cClickContextToolbarButton('Edit image') ]),
-        /* Previously there was a fixed wait here, waiting for the dialog to display.
-        Without this wait, you can't see the dialog if you're watching the test.
-        However, the below DOM assertions insist that the dialog is, indeed, there.
-        */
-        sWaitForDialogOpenThenCloseDialog('div.tox-image-tools__image>img'),
-        Chain.asStep({}, [ cClickContextToolbarButton('Image options') ]),
-        sWaitForDialogOpenThenCloseDialog('div.tox-form')
-      ])
-    ], onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image imagetools',
     base_url: '/project/tinymce/js/tinymce',
     height: 900
-  }, success, failure);
+  }, [ ImagePlugin, ImageToolsPlugin, Theme ], true);
+
+  const pOpenContextToolbar = async (editor: Editor, source: string) => {
+    await ImageUtils.pLoadImage(editor, source, { width: 460, height: 598 });
+    TinySelections.select(editor, 'img', []);
+    await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Rotate counterclockwise"]');
+  };
+
+  // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
+  const pressKeyboardShortcutKey = (editor: Editor) => TinyContentActions.keydown(editor, 120, { ctrl: true });
+  const pressRightArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.right());
+
+  // Assert focus is on the expected toolbar button
+  const pAssertFocusOnItem = (label: string, selector: string) =>
+    FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
+
+  const pWaitForDialogOpenThenCloseDialog = async (editor: Editor, childSelector: string) => {
+    await TinyUiActions.pWaitForDialog(editor);
+    await TinyUiActions.pWaitForPopup(editor, childSelector);
+    TinyUiActions.closeDialog(editor);
+    await Waiter.pTryUntil('Wait for dialog to close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
+  };
+
+  const getImageSrc = (editor: Editor) => {
+    const dom = editor.dom;
+    const element = dom.getParent(editor.selection.getStart(), 'img');
+    return dom.getAttrib(element, 'src');
+  };
+
+  const pClickContextToolbarButton = async (editor: Editor, label: string) => {
+    const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
+    await ImageOps.pClickContextToolbarButton(toolbar, label);
+  };
+
+  const pAssertImageFlip = async (editor: Editor, label: string) => {
+    const srcBeforeFlip = getImageSrc(editor);
+    await pClickContextToolbarButton(editor, label);
+    await Waiter.pTryUntilPredicate('Wait for image to flip', () => {
+      const newSrc = getImageSrc(editor);
+      return newSrc !== srcBeforeFlip;
+    });
+  };
+
+  it('TBA: context toolbar keyboard navigation test', async () => {
+    const editor = hook.editor();
+    await pOpenContextToolbar(editor, srcUrl);
+    pressKeyboardShortcutKey(editor);
+    await pAssertFocusOnItem('Rotate counterclockwise button', 'button[aria-label="Rotate counterclockwise"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Rotate clockwise button', 'button[aria-label="Rotate clockwise"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Flip vertically button', 'button[aria-label="Flip vertically"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Flip horizontally button', 'button[aria-label="Flip horizontally"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Edit image button', 'button[aria-label="Edit image"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Image options button', 'button[aria-label="Image options"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Rotate counterclockwise button', 'button[aria-label="Rotate counterclockwise"]');
+  });
+
+  it('TBA: context toolbar functionality test', async () => {
+    const editor = hook.editor();
+    await pOpenContextToolbar(editor, srcUrl);
+    await ImageOps.pExecToolbar(editor, 'Rotate counterclockwise');
+    await Waiter.pTryUntil('Wait for image to be rotated', () => TinyAssertions.assertContentPresence(editor, { 'img[width="598"][height="460"]': 1 }));
+    await ImageOps.pExecToolbar(editor, 'Rotate clockwise');
+    await Waiter.pTryUntil('Wait for image to be rotated', () => TinyAssertions.assertContentPresence(editor, { 'img[width="460"][height="598"]': 1 }));
+    await pAssertImageFlip(editor, 'Flip horizontally');
+    await pAssertImageFlip(editor, 'Flip vertically');
+    await pClickContextToolbarButton(editor, 'Edit image');
+    /* Previously there was a fixed wait here, waiting for the dialog to display.
+    Without this wait, you can't see the dialog if you're watching the test.
+    However, the below DOM assertions insist that the dialog is, indeed, there.
+    */
+    await pWaitForDialogOpenThenCloseDialog(editor, 'div.tox-image-tools__image>img');
+    await pClickContextToolbarButton(editor, 'Image options');
+    await pWaitForDialogOpenThenCloseDialog(editor, 'div.tox-form');
+  });
 });

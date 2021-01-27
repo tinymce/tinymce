@@ -1,6 +1,6 @@
 import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, Editor as McEditor } from '@ephox/mcagar';
+import { ApiChains, McEditor } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSections from 'tinymce/plugins/table/core/TableSections';

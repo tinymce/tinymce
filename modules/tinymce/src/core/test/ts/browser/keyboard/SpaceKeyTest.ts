@@ -1,6 +1,6 @@
-import { Keyboard, Keys } from '@ephox/agar';
+import { Keys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -21,7 +21,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a <a href="#">b</a> c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
       TinyAssertions.assertContent(editor, '<p>a <a href="#">&nbsp;b</a> c</p>');
     });
@@ -31,7 +31,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a <a href="#">b</a> c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
       TinyAssertions.assertContent(editor, '<p>a <a href="#">b&nbsp;</a> c</p>');
     });
@@ -41,7 +41,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a<a href="#">b</a>c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
       TinyAssertions.assertContent(editor, '<p>a<a href="#"> b</a>c</p>');
     });
@@ -51,7 +51,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a<a href="#">b</a>c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
       TinyAssertions.assertContent(editor, '<p>a<a href="#">b </a>c</p>');
     });
@@ -61,7 +61,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a<a href="#"> b</a>c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
       TinyAssertions.assertContent(editor, '<p>a<a href="#">&nbsp; b</a>c</p>');
     });
@@ -71,7 +71,7 @@ describe('browser.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>a<a href="#">b </a>c</p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
       editor.nodeChanged();
-      Keyboard.activeKeystroke(TinyDom.document(editor), Keys.space(), { });
+      TinyContentActions.keystroke(editor, Keys.space());
       TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 3, [ 0, 1, 0 ], 3);
       TinyAssertions.assertContent(editor, '<p>a<a href="#">b &nbsp;</a>c</p>');
     });

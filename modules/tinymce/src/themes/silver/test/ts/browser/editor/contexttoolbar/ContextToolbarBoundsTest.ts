@@ -2,7 +2,7 @@ import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline } from '@
 import { Bounds, Boxes } from '@ephox/alloy';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Editor as McEditor } from '@ephox/mcagar';
+import { McEditor } from '@ephox/mcagar';
 import { Css, Scroll, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import SilverTheme from 'tinymce/themes/silver/Theme';

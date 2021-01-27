@@ -3,6 +3,7 @@ declare let tinymce: any;
 export default (init: ShadowRootInit) => {
 
   const shadowHost = document.getElementById('shadow-host');
+  shadowHost.tabIndex = 1;
 
   const shadow = shadowHost.attachShadow(init);
 

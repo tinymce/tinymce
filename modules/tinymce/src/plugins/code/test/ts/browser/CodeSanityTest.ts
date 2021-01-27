@@ -13,7 +13,6 @@ describe('browser.tinymce.plugins.code.CodeSanityTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  const dialogSelector = 'div[role="dialog"]';
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Source code"]';
 
   const setTextareaContent = (content: string) => {
@@ -29,25 +28,25 @@ describe('browser.tinymce.plugins.code.CodeSanityTest', () => {
   it('TBA: Set content in empty editor and assert values', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
-    await TinyUiActions.pWaitForPopup(editor, dialogSelector);
+    await TinyUiActions.pWaitForDialog(editor);
     assertTextareaContent('');
     setTextareaContent('<em>a</em>');
-    TinyUiActions.submitDialog(editor, dialogSelector);
+    TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContent(editor, '<p><em>a</em></p>');
 
     // Reopen dialog and check textarea content is correct
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
-    await TinyUiActions.pWaitForPopup(editor, dialogSelector);
+    await TinyUiActions.pWaitForDialog(editor);
     assertTextareaContent('<p><em>a</em></p>');
-    TinyUiActions.closeDialog(editor, dialogSelector);
+    TinyUiActions.closeDialog(editor);
   });
 
   it('TBA: Change source code and assert editor content changes', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
-    await TinyUiActions.pWaitForPopup(editor, dialogSelector);
+    await TinyUiActions.pWaitForDialog(editor);
     setTextareaContent('<strong>b</strong>');
-    TinyUiActions.submitDialog(editor, dialogSelector);
+    TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContent(editor, '<p><strong>b</strong></p>');
   });
 });

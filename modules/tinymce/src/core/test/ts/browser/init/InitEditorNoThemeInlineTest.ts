@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
-import { SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -30,9 +30,9 @@ describe('browser.tinymce.core.init.InitEditorNoThemeInlineTest', () => {
 
     // TODO FIXME this seems like an odd exception
     assert.isNull(editor.getContainer(), 'Should be null since inline without a theme does not set editorContainer');
-    Assertions.assertDomEq('Should be expected editor body element', targetElement, SugarElement.fromDom(editor.getBody()));
-    Assertions.assertDomEq('Should be expected editor target element', targetElement, SugarElement.fromDom(editor.getElement()));
-    Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, SugarElement.fromDom(editor.getContentAreaContainer()));
+    Assertions.assertDomEq('Should be expected editor body element', targetElement, TinyDom.body(editor));
+    Assertions.assertDomEq('Should be expected editor target element', targetElement, TinyDom.targetElement(editor));
+    Assertions.assertDomEq('Editor.contentAreaContainer should equal target element', targetElement, TinyDom.contentAreaContainer(editor));
     assert.isTrue(nextElement.isNone(), 'Should be no element after target');
   });
 });

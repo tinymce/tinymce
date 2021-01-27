@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
@@ -31,17 +31,17 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
 
   const openDialog = async (editor: Editor, contextMenuSelector: string) => {
     await openContextMenu(editor, contextMenuSelector);
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     await TinyUiActions.pWaitForUi(editor, '[role=dialog]');
   };
 
-  const updateDialog = (currentValue: string, newValue: string) => {
+  const updateDialog = (editor: Editor, currentValue: string, newValue: string) => {
     const doc = SugarDocument.getDocument();
     FocusTools.isOnSelector('Check focus is on the input field', doc, inputSelector);
     const input = FocusTools.getFocused<HTMLInputElement>(doc).getOrDie();
     assert.equal(Value.get(input), currentValue, 'Initial input value matches');
     UiControls.setValue(input, newValue);
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter(), {});
+    TinyUiActions.keydown(editor, Keys.enter());
     assert.equal(Value.get(input), newValue, 'Updated input value matches');
   };
 
@@ -74,10 +74,10 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     await openDialog(editor, 'ol > li');
-    updateDialog('1', '5');
+    updateDialog(editor, '1', '5');
     TinyAssertions.assertContent(editor, '<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
     await openDialog(editor, 'ol > li');
-    updateDialog('5', '1');
+    updateDialog(editor, '5', '1');
     TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
   });
 
@@ -86,10 +86,10 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.setContent('<ul><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
     await openDialog(editor, 'ol > li');
-    updateDialog('1', '5');
+    updateDialog(editor, '1', '5');
     TinyAssertions.assertContent(editor, '<ul><li>Root Item<ol start="5"><li>Item 1</li><li>Item 2</li></ol></li></ul>');
     await openDialog(editor, 'ol > li');
-    updateDialog('5', '1');
+    updateDialog(editor, '5', '1');
     TinyAssertions.assertContent(editor, '<ul><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ul>');
   });
 
@@ -98,10 +98,10 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.setContent('<ol><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
     await openDialog(editor, 'ol > li');
-    updateDialog('1', '5');
+    updateDialog(editor, '1', '5');
     TinyAssertions.assertContent(editor, '<ol><li>Root Item<ol start="5"><li>Item 1</li><li>Item 2</li></ol></li></ol>');
     await openDialog(editor, 'ol ol > li');
-    updateDialog('5', '1');
+    updateDialog(editor, '5', '1');
     TinyAssertions.assertContent(editor, '<ol><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
   });
 
@@ -110,7 +110,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.setContent('<ol><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('mceListProps');
-    updateDialog('1', '10');
+    updateDialog(editor, '1', '10');
     TinyAssertions.assertContent(editor, '<ol start="10"><li>Root Item<ol><li>Item 1</li><li>Item 2</li></ol></li></ol>');
   });
 

@@ -1,7 +1,7 @@
 import { Chain, GeneralSteps, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { Editor as McEditor, TinyActions, TinyApis, TinyUi } from '@ephox/mcagar';
+import { McEditor, TinyActions, TinyApis, TinyUi } from '@ephox/mcagar';
 import { Css, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';

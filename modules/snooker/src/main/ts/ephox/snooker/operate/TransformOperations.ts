@@ -16,7 +16,7 @@ const replaceIn = (grid: Structs.RowCells[], targets: Structs.ElementNew[], comp
 
   return Arr.map(grid, (row) => {
     return GridRow.mapCells(row, (cell) => {
-      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true) : cell;
+      return isTarget(cell) ? Structs.elementnew(substitution(cell.element, comparator), true, cell.isLocked) : cell;
     });
   });
 };
@@ -32,7 +32,8 @@ const notStartColumn = (row: Structs.RowCells, index: number, comparator: CompEl
 // substitution :: (item, comparator) -> item
 const replaceColumn = (grid: Structs.RowCells[], index: number, comparator: CompElm, substitution: Subst): Structs.RowCells[] => {
   // Make this efficient later.
-  const targets = Arr.bind(grid, (row, i) => {
+  const rows = GridRow.extractGridDetails(grid).rows;
+  const targets = Arr.bind(rows, (row, i) => {
     // check if already added.
     const alreadyAdded = notStartRow(grid, i, index, comparator) || notStartColumn(row, index, comparator);
     return alreadyAdded ? [] : [ GridRow.getCell(row, index) ];

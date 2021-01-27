@@ -16,7 +16,9 @@ const merge = (grid: Structs.RowCells[], bounds: Structs.Bounds, comparator: Com
   for (let i = bounds.startRow; i <= bounds.finishRow; i++) {
     for (let j = bounds.startCol; j <= bounds.finishCol; j++) {
       // We can probably simplify this again now that we aren't reusing merge.
-      GridRow.mutateCell(rows[i], j, Structs.elementnew(substitution(), false));
+      const row = rows[i];
+      const isLocked = GridRow.getCell(row, j).isLocked;
+      GridRow.mutateCell(row, j, Structs.elementnew(substitution(), false, isLocked));
     }
   }
   return grid;
@@ -30,11 +32,13 @@ const unmerge = (grid: Structs.RowCells[], target: SugarElement, comparator: Com
   // tslint:disable-next-line:prefer-for-of
   for (let i = 0; i < rows.length; i++) {
     for (let j = 0; j < GridRow.cellLength(rows[0]); j++) {
-      const current = GridRow.getCellElement(rows[i], j);
-      const isToReplace = comparator(current, target);
+      const row = rows[i];
+      const currentCell = GridRow.getCell(row, j);
+      const currentCellElm = currentCell.element;
+      const isToReplace = comparator(currentCellElm, target);
 
       if (isToReplace === true && first === false) {
-        GridRow.mutateCell(rows[i], j, Structs.elementnew(substitution(), true));
+        GridRow.mutateCell(row, j, Structs.elementnew(substitution(), true, currentCell.isLocked));
       } else if (isToReplace === true) {
         first = false;
       }
@@ -60,7 +64,7 @@ const splitCols = (grid: Structs.RowCells[], index: number, comparator: CompElm,
       const isToReplace = comparator(current.element, prevCell.element);
 
       if (isToReplace) {
-        GridRow.mutateCell(row, index, Structs.elementnew(substitution(), true));
+        GridRow.mutateCell(row, index, Structs.elementnew(substitution(), true, current.isLocked));
       }
     });
   }
@@ -79,7 +83,8 @@ const splitRows = (grid: Structs.RowCells[], index: number, comparator: CompElm,
       let replacement = Optional.none<SugarElement>();
       for (let i = index; i < rows.length; i++) {
         for (let j = 0; j < GridRow.cellLength(rows[0]); j++) {
-          const current = rows[i].cells[j];
+          const row = rows[i];
+          const current = GridRow.getCell(row, j);
           const isToReplace = comparator(current.element, cell.element);
 
           if (isToReplace) {
@@ -87,7 +92,7 @@ const splitRows = (grid: Structs.RowCells[], index: number, comparator: CompElm,
               replacement = Optional.some(substitution());
             }
             replacement.each((sub) => {
-              GridRow.mutateCell(rows[i], j, Structs.elementnew(sub, true));
+              GridRow.mutateCell(row, j, Structs.elementnew(sub, true, current.isLocked));
             });
           }
         }
