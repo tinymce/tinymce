@@ -30,6 +30,7 @@ Version 5.7.0 (TBD)
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
     Fixed the type signature for `editor.selection.setCursorLocation()` incorrectly allowing a node with no `offset` #TINY-6843
     Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
+    Fixed inserting multiple rows or columns in a table cloning from the incorrect source row or column #TINY-6906
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)
