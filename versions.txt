@@ -3,5 +3,6 @@
 
 agar@5.2.0
 mcagar@6.0.0
+polaris@4.0.4
 snooker@7.2.0
 sugar@7.1.0
