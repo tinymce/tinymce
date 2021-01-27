@@ -1,11 +1,12 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Optional } from '@ephox/katamari';
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import * as Assertions from 'ephox/snooker/test/Assertions';
 
 describe('browser.snooker.InsertMultipleOperationsTest', () => {
   context('insertColumnsBefore', () => {
     it('TBA: the same number of columns are inserted that are selected', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 1 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 1 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>?</td><td>?</td><td>B1</td><td>C1</td></tr>' +
         '<tr><td>A2</td><td>?</td><td>?</td><td>B2</td><td>C2</td></tr>' +
@@ -24,7 +25,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TBA: the same number of columns are inserted when the range selection includes a colspan', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 1 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 1 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>?</td><td>?</td><td colspan="2">B1</td></tr>' +
         '<tr><td>A2</td><td>?</td><td>?</td><td>B2</td><td>C2</td></tr>' +
@@ -43,7 +44,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TINY-6906: copy each individual column when inserting new columns', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 0 }),
         '<table><tbody>' +
         '<tr><td style="color: red;">?</td><td style="color: blue;">?</td><td style="color: red;">A1</td><td style="color: blue;">B1</td></tr>' +
         '<tr><td style="color: red;">?</td><td style="color: blue;">?</td><td style="color: red;">A2</td><td style="color: blue;">B2</td></tr>' +
@@ -64,7 +65,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
 
   context('insertColumnsAfter', () => {
     it('TBA: the same number of columns are inserted that are selected', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 2 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 2 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td><td>?</td><td>?</td><td>C1</td></tr>' +
         '<tr><td>A2</td><td>B2</td><td>?</td><td>?</td><td>C2</td></tr>' +
@@ -83,7 +84,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TBA: the same number of columns are inserted when the range selection includes a colspan', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 1 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 1 }),
         '<table><tbody>' +
         '<tr><td colspan="2">A1</td><td>?</td><td>?</td><td>C1</td></tr>' +
         '<tr><td>A2</td><td>B2</td><td>?</td><td>?</td><td>C2</td></tr>' +
@@ -102,7 +103,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TINY-6906: copy each individual column when inserting new columns', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 2 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 2 }),
         '<table><tbody>' +
         '<tr><td style="color: red;">A1</td><td style="color: blue;">B1</td><td style="color: red;">?</td><td style="color: blue;">?</td></tr>' +
         '<tr><td style="color: red;">A2</td><td style="color: blue;">B2</td><td style="color: red;">?</td><td style="color: blue;">?</td></tr>' +
@@ -123,7 +124,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
 
   context('insertRowsBefore', () => {
     it('TBA: the same number of rows are inserted that are selected', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 1, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 1, column: 0 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
         '<tr><td>?</td><td>?</td></tr>' +
@@ -146,7 +147,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TBA: the same number of rows are inserted when the range selection includes a rowspan', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 1, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 1, column: 0 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
         '<tr><td>?</td><td>?</td></tr>' +
@@ -169,7 +170,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TINY-6906: copy each individual rows when inserting new rows', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 0, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 0, column: 0 }),
         '<table><tbody>' +
         '<tr><td style="color: red;">?</td><td style="color: red;">?</td></tr>' +
         '<tr><td style="color: blue;">?</td><td style="color: blue;">?</td></tr>' +
@@ -192,7 +193,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
 
   context('insertRowsAfter', () => {
     it('TBA: the same number of rows are inserted that are selected', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 2, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 2, column: 0 }),
         '<table><tbody>' +
         '<tr><td>A1</td><td>B1</td></tr>' +
         '<tr><td>A2</td><td>B2</td></tr>' +
@@ -215,7 +216,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TBA: the same number of rows are inserted when the range selection includes a rowspan', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 2, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 2, column: 0 }),
         '<table><tbody>' +
         '<tr><td rowspan="2">A1</td><td>B1</td></tr>' +
         '<tr><td>B2</td></tr>' +
@@ -238,7 +239,7 @@ describe('browser.snooker.InsertMultipleOperationsTest', () => {
     });
 
     it('TINY-6906: copy each individual row when inserting new rows', () => {
-      Assertions.checkOldMultiple({ section: 0, row: 2, column: 0 },
+      Assertions.checkOldMultiple('', Optional.some({ section: 0, row: 2, column: 0 }),
         '<table><tbody>' +
         '<tr><td style="color: red;">A1</td><td style="color: red;">B1</td></tr>' +
         '<tr><td style="color: blue;">A2</td><td style="color: blue;">B2</td></tr>' +
