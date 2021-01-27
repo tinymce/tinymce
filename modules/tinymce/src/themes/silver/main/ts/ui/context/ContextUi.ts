@@ -9,7 +9,7 @@ import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
-import { Class, Css, EventArgs, Focus, SugarElement, Width } from '@ephox/sugar';
+import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 import Delay from 'tinymce/core/api/util/Delay';
 
 const forwardSlideEvent = Id.generate('forward-slide');
@@ -57,21 +57,22 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
         }),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {
+          const elem = comp.element;
           // If it was partially through a slide, clear that and measure afresh
-          Css.remove(comp.element, 'width');
-          const currentWidth = Width.get(comp.element);
+          Css.remove(elem, 'width');
+          const currentWidth = Width.get(elem);
 
           InlineView.setContent(comp, se.event.contents);
-          Class.add(comp.element, resizingClass);
-          const newWidth = Width.get(comp.element);
-          Css.set(comp.element, 'width', currentWidth + 'px');
+          Class.add(elem, resizingClass);
+          const newWidth = Width.get(elem);
+          Css.set(elem, 'width', currentWidth + 'px');
           InlineView.getContent(comp).each((newContents) => {
             se.event.focus.bind((f) => {
               Focus.focus(f);
-              return Focus.search(comp.element);
+              return Focus.search(elem);
             }).orThunk(() => {
               Keying.focusIn(newContents);
-              return Focus.active();
+              return Focus.active(SugarShadowDom.getRootNode(elem));
             });
           });
           Delay.setTimeout(() => {
@@ -84,8 +85,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
             stack.set(stack.get().concat([
               {
                 bar: oldContents,
-                // TODO: Not working
-                focus: Focus.active()
+                focus: Focus.active(SugarShadowDom.getRootNode(comp.element))
               }
             ]));
           });

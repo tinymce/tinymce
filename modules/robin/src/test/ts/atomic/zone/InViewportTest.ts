@@ -69,7 +69,7 @@ UnitTest.asyncTest('atomic.robin.zone.InViewportTest', (success, failure) => {
     visit(doc.get());
 
     Arr.each(elements, (el) => {
-      const isText = el.name === 'TEXT_GENE';
+      const isText = doc.property().isText(el);
       const withinViewport = viewport.assess(el).fold(Fun.never, Fun.always, Fun.never);
 
       const equalsOrInside = (g1: Gene, g2Id: string): boolean => {

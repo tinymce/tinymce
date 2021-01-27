@@ -54,6 +54,7 @@ export interface Universe<E, D> {
     isText: (element: E) => boolean;
     isComment: (element: E) => boolean;
     isElement: (element: E) => boolean;
+    isSpecial: (element: E) => boolean;
     getText: (element: E) => string;
     setText: (element: E, value: string) => void;
     isBoundary: (element: E) => boolean;

@@ -28,6 +28,9 @@ const generators: Generators = {
     Css.getRaw(prev.element, 'width').each((w) => {
       Css.set(tag, 'width', w);
     });
+    Css.getRaw(prev.element, 'color').each((c) => {
+      Css.set(tag, 'color', c);
+    });
     return tag;
   },
   replace: (cell, tag, attrs) => {

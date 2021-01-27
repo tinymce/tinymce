@@ -14,8 +14,10 @@ Version 5.7.0 (TBD)
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
     Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
+    Fixed a number of table operations not working when selecting 2 table cells on Mozilla Firefox #TINY-3897
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859
     Fixed table width style was removed when copying #TINY-6664
+    Fixed focus lost while typing in the `charmap` or `emoticons` dialogs when the editor is rendered in a shadow root #TINY-6904
     Fixed base64 URLs used in style attributes were corrupted when parsing HTML #TINY-6828
     Fixed the order of CSS precedence of `content_style` and `content_css` in the `preview` and `template` plugins. `content_style` now has precedence #TINY-6529
     Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
@@ -28,6 +30,7 @@ Version 5.7.0 (TBD)
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
     Fixed the type signature for `editor.selection.setCursorLocation()` incorrectly allowing a node with no `offset` #TINY-6843
     Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
+    Fixed inserting multiple rows or columns in a table cloning from the incorrect source row or column #TINY-6906
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)

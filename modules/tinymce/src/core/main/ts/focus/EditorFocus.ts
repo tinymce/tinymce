@@ -6,7 +6,7 @@
  */
 
 import { Optional } from '@ephox/katamari';
-import { Compare, Focus, SugarElement } from '@ephox/sugar';
+import { Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -66,10 +66,14 @@ const hasInlineFocus = (editor: Editor): boolean => {
   return rawBody && hasElementFocus(SugarElement.fromDom(rawBody));
 };
 
-const hasUiFocus = (editor: Editor): boolean =>
+const hasUiFocus = (editor: Editor): boolean => {
+  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement()));
   // Editor container is the obvious one (Menubar, Toolbar, Status bar, Sidebar) and dialogs and menus are in an auxiliary element (silver theme specific)
   // This can't use Focus.search() because only the theme has this element reference
-  Focus.active().filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom) && FocusController.isUIElement(editor, elem.dom)).isSome();
+  return Focus.active(dos)
+    .filter((elem) => !FocusController.isEditorContentAreaElement(elem.dom) && FocusController.isUIElement(editor, elem.dom))
+    .isSome();
+};
 
 const hasFocus = (editor: Editor): boolean => editor.inline ? hasInlineFocus(editor) : hasIframeFocus(editor);
 
