@@ -41,6 +41,13 @@ export default (): Universe<SugarElement, Document> => {
     Attribute.setAll(destination, as);
   };
 
+  const isSpecial = (element: SugarElement<Node>) => {
+    const tag = SugarNode.name(element);
+    return Arr.contains([
+      'script', 'noscript', 'iframe', 'noframes', 'noembed', 'title', 'style', 'textarea', 'xmp'
+    ], tag);
+  };
+
   return {
     up: Fun.constant({
       selector: SelectorFind.ancestor,
@@ -95,6 +102,7 @@ export default (): Universe<SugarElement, Document> => {
       isText: SugarNode.isText,
       isComment: SugarNode.isComment,
       isElement: SugarNode.isElement,
+      isSpecial,
       getText: SugarText.get,
       setText: SugarText.set,
       isBoundary,
