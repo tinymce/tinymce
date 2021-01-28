@@ -166,7 +166,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
       Log.stepsAsStep('TBA', 'Table: extractDataFromRowElement', [
         tinyApis.sSetContent(
           '<table style="border-collapse: collapse;" border="1"><tbody>' +
-          '<tr scope="row" class="foo" style="height:30px; ' +
+          '<tr class="foo" style="height:30px; ' +
           'background-color: #333333; text-align:left; vertical-align:middle; ' +
           'border-style: dashed; border-color: #d91111"><td>a</td></tr>' +
           '</tbody></table>'
@@ -176,7 +176,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failur
           Chain.op((tr) => {
             const rowData = Helpers.extractDataFromRowElement(editor, tr.dom, true);
             Assertions.assertEq('Extracts height', '30px', rowData.height);
-            // Assertions.assertEq('Extracts scope', 'row', rowData.scope); // Chrome won't set a scope on a tr?
             Assertions.assertEq('Extracts class', 'foo', rowData.class);
             Assertions.assertEq('Extracts align', 'left', rowData.align);
             Assertions.assertEq('Extracts type', 'body', rowData.type);
