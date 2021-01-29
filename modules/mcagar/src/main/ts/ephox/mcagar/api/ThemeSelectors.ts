@@ -15,6 +15,7 @@ export interface ThemeSelectors {
   toolBarSelector: (editor: Editor) => string;
   menuBarSelector: string;
   dialogSelector: string;
+  dialogCancelSelector: string;
   dialogCloseSelector: string;
   dialogSubmitSelector: string;
 }
@@ -23,7 +24,8 @@ const ModernThemeSelectors: ThemeSelectors = {
   toolBarSelector: () => '.mce-toolbar-grp',
   menuBarSelector: '.mce-menubar',
   dialogSelector: '.mce-window',
-  dialogCloseSelector: 'div[role="button"]:contains(Cancel)',
+  dialogCancelSelector: 'div[role="button"]:contains(Cancel)',
+  dialogCloseSelector: 'div[role="button"].mce-close',
   dialogSubmitSelector: 'div[role="button"].mce-primary'
 };
 
@@ -31,7 +33,8 @@ const SilverThemeSelectors: ThemeSelectors = {
   toolBarSelector: (editor: Editor) => Arr.exists([ editor.getParam('toolbar_mode'), editor.getParam('toolbar_drawer') ], (s) => s === 'floating' || s === 'sliding') ? '.tox-toolbar-overlord' : '.tox-toolbar',
   menuBarSelector: '.tox-menubar',
   dialogSelector: 'div[role="dialog"]',
-  dialogCloseSelector: '.tox-button:contains("Cancel")',
+  dialogCancelSelector: '.tox-button:contains("Cancel")',
+  dialogCloseSelector: '.tox-button[title="Close"]',
   dialogSubmitSelector: '.tox-button:contains("Save")'
 };
 

@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   }, [ Plugin, Theme ]);
 
   const closeDialog = (editor: Editor) =>
-    TinyUiActions.closeDialog(editor, 'div[role="dialog"]');
+    TinyUiActions.cancelDialog(editor);
 
   const pAssertImageTab = async (editor: Editor, title: string, isPresent: boolean) => {
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
