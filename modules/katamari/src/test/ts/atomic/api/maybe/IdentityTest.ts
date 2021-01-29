@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
-import * as Fun from 'ephox/katamari/api/Fun';
-import * as Maybes from 'ephox/katamari/api/Maybes';
 import { assert } from 'chai';
 import fc from 'fast-check';
+import * as Fun from 'ephox/katamari/api/Fun';
+import * as Maybes from 'ephox/katamari/api/Maybes';
 
 describe('atomic.katamari.maybe.IdentityTest', () => {
   it('allows creating "Just" maybes', () => {

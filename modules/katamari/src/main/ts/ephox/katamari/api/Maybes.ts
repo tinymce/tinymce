@@ -33,7 +33,6 @@ import * as Type from './Type';
 // - Optional is deprecated (but still in very wide use) and you should try to
 // migrate over to Maybe where you can
 
-
 // --- Types ---
 
 // Technically, this will compile down to 0 for Nothing, and 1 for Just. If

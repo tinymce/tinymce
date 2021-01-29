@@ -1,8 +1,8 @@
 import { context, describe } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Maybe } from 'ephox/katamari/api/Maybe';
 import * as Maybes from 'ephox/katamari/api/Maybes';
-import { assert } from 'chai';
 
 const boom = Fun.die('this should not be called');
 const nothing = Maybes.nothing<never>();
