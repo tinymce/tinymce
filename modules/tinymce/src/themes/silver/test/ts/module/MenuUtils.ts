@@ -1,12 +1,15 @@
-import { Assertions, Chain, GeneralSteps, Logger, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
+import { Arr } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
+import { assert } from 'chai';
 
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 
 export interface OpenNestedMenus {
-  label: string;
-  selector: string;
+  readonly label: string;
+  readonly selector: string;
 }
 
 const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
@@ -17,70 +20,57 @@ const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
   return type === ToolbarMode.sliding ? slidingClass : floatingClass;
 };
 
-const sOpenMenuWithSelector = (label: string, selector: string) => Logger.t(
-  `Trying to open menu: ${label}`,
-  GeneralSteps.sequence([
-    Mouse.sClickOn(SugarBody.body(), selector),
-    Chain.asStep(SugarBody.body(), [
-      UiFinder.cWaitForVisible('Waiting for menu', '[role="menu"]')
-    ])
-  ])
-);
-
-const sOpenMore = (type: ToolbarMode) => Logger.t(
-  'Trying to open more drawer',
-  GeneralSteps.sequence([
-    Mouse.sClickOn(SugarBody.body(), 'button[title="More..."]'),
-    UiFinder.sWaitForVisible('Waiting for more drawer to open', SugarBody.body(), getToolbarSelector(type, true))
-  ])
-);
-
-const sCloseMore = (type: ToolbarMode) => Logger.t(
-  'Trying to close more drawer',
-  GeneralSteps.sequence([
-    Mouse.sClickOn(SugarBody.body(), 'button[title="More..."]'),
-    Waiter.sTryUntil('Waiting for more drawer to close', UiFinder.sNotExists(SugarBody.body(), getToolbarSelector(type, false)))
-  ])
-);
-
-const sOpenAlignMenu = (label: string) => {
-  const selector = 'button[aria-label="Align"]';
-  return sOpenMenuWithSelector(label, selector);
+const pOpenMenuWithSelector = async (label: string, selector: string) => {
+  Mouse.clickOn(SugarBody.body(), selector);
+  await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
 };
 
-const sOpenMenu = (label: string, menuText: string) => {
+const pOpenMore = async (type: ToolbarMode) => {
+  Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
+  await UiFinder.pWaitForVisible('Waiting for more drawer to open', SugarBody.body(), getToolbarSelector(type, true));
+};
+
+const pCloseMore = async (type: ToolbarMode) => {
+  Mouse.clickOn(SugarBody.body(), 'button[title="More..."]');
+  await Waiter.pTryUntil('Waiting for more drawer to close', () => UiFinder.notExists(SugarBody.body(), getToolbarSelector(type, false)));
+};
+
+const pOpenAlignMenu = (label: string) => {
+  const selector = 'button[aria-label="Align"]';
+  return pOpenMenuWithSelector(label, selector);
+};
+
+const pOpenMenu = (label: string, menuText: string) => {
   const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
   const btnText = menuTextParts[0];
   const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
   const selector = `button:contains(${btnText})${pseudo}`;
-  return sOpenMenuWithSelector(label, selector);
+  return pOpenMenuWithSelector(label, selector);
 };
 
-const sOpenNestedMenus = (menus: OpenNestedMenus[]) => {
-  const openMenusSequence = menus.map((menu) => sOpenMenuWithSelector(menu.label, menu.selector));
-  return GeneralSteps.sequence(openMenusSequence);
-};
+const pOpenNestedMenus = (menus: OpenNestedMenus[]) =>
+  Arr.foldl(menus, (p, menu) => p.then(async () => {
+    await pOpenMenuWithSelector(menu.label, menu.selector);
+  }), PromisePolyfill.resolve());
 
-const sAssertMoreDrawerInViewport = (type: ToolbarMode) => Chain.asStep(SugarBody.body(), [
-  UiFinder.cFindIn(getToolbarSelector(type, true)),
-  Chain.op((drawer) => {
-    const winBox = Boxes.win();
-    const drawerBox = Boxes.box(drawer);
-    // -1 from the bottom to account for the negative margin
-    const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
-    Assertions.assertEq('Check more drawer is shown within the viewport', inViewport, true);
-  })
-]);
+const assertMoreDrawerInViewport = (type: ToolbarMode) => {
+  const toolbar = UiFinder.findIn(SugarBody.body(), getToolbarSelector(type, true)).getOrDie();
+  const winBox = Boxes.win();
+  const drawerBox = Boxes.box(toolbar);
+  // -1 from the bottom to account for the negative margin
+  const inViewport = drawerBox.x >= winBox.x && drawerBox.bottom - 1 <= winBox.bottom;
+  assert.isTrue(inViewport, 'Check more drawer is shown within the viewport');
+};
 
 export {
   // generic methods
-  sOpenMenuWithSelector,
-  sOpenMenu,
-  sOpenNestedMenus,
+  pOpenMenuWithSelector,
+  pOpenMenu,
+  pOpenNestedMenus,
 
   // specific pre-composed
-  sOpenAlignMenu,
-  sOpenMore,
-  sCloseMore,
-  sAssertMoreDrawerInViewport
+  pOpenAlignMenu,
+  pOpenMore,
+  pCloseMore,
+  assertMoreDrawerInViewport
 };

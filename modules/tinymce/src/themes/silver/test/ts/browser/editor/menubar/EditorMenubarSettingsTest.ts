@@ -1,22 +1,28 @@
-import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Id, Result } from '@ephox/katamari';
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) => {
-  SilverTheme();
+import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 
-  const cCreateEditorWithMenubar = (menubar) => McEditor.cFromSettings({
+describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarSettingsTest', () => {
+  before(() => {
+    Theme();
+  });
+
+  const pCreateEditorWithMenubar = (menubar: boolean | string | undefined) => McEditor.pFromSettings<Editor>({
     menubar,
-    theme: 'silver',
+    toolbar: false,
+    statusbar: false,
     base_url: '/project/tinymce/js/tinymce'
   });
 
-  const cAssertIsDefaultMenubar = Assertions.cAssertStructure(
+  const assertIsDefaultMenubar = (menubar: SugarElement<HTMLElement>) => Assertions.assertStructure(
     'Checking structure of tox-menubar is "default"',
     ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox-menubar') ],
@@ -27,69 +33,49 @@ UnitTest.asynctest('Editor (Silver) menubar settings test', (success, failure) =
               html: str.is(x)
             }),
             // chevron
-            s.element('div', { })
+            s.element('div', {})
           ]
         })
       )
-    }))
+    })),
+    menubar
   );
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Testing menubar: false should not create menubar at all', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithMenubar(false)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for container', '.tox-tinymce'), '_tiny'),
-        NamedChain.direct('body', cCountNumber('.tox-menubar'), 'numMenubars'),
-        NamedChain.direct('numMenubars', Assertions.cAssertEq('Should be no menubars', 0), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: false should not create a menubar at all', async () => {
+    const editor = await pCreateEditorWithMenubar(false);
+    const numMenubars = countNumber(SugarBody.body(), '.tox-menubar');
+    assert.equal(numMenubars, 0, 'Should be no menubars');
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing menubar: true should create default menubar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithMenubar(true)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
-        NamedChain.direct('menubar', cAssertIsDefaultMenubar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: true should create default menubar', async () => {
+    const editor = await pCreateEditorWithMenubar(true);
+    const menubar = extractOnlyOne(SugarBody.body(), '.tox-menubar');
+    assertIsDefaultMenubar(menubar);
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing menubar: undefined should create default menubar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithMenubar(undefined)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
-        NamedChain.direct('menubar', cAssertIsDefaultMenubar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: undefined should create default menubar', async () => {
+    const editor = await pCreateEditorWithMenubar(undefined);
+    const menubar = extractOnlyOne(SugarBody.body(), '.tox-menubar');
+    assertIsDefaultMenubar(menubar);
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing menubar: "file edit" should create "file edit" menubar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithMenubar('file edit')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-menubar'), 'menubar'),
-        NamedChain.direct('menubar', Assertions.cAssertStructure(
-          'Checking menubar should have just file and edit',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-menubar') ],
-            children: [
-              s.element('button', { }),
-              s.element('button', { })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ])
-  ], () => success(), failure);
+  it('TBA: "file edit" should create "file edit" menubar', async () => {
+    const editor = await pCreateEditorWithMenubar('file edit');
+    const menubar = extractOnlyOne(SugarBody.body(), '.tox-menubar');
+    Assertions.assertStructure(
+      'Checking menubar should have just file and edit',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-menubar') ],
+        children: [
+          s.element('button', { }),
+          s.element('button', { })
+        ]
+      })),
+      menubar
+    );
+    McEditor.remove(editor);
+  });
 });

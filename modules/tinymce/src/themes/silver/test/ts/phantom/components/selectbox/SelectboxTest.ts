@@ -1,16 +1,15 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { renderSelectBox } from 'tinymce/themes/silver/ui/dialog/SelectBox';
-import { DisablingSteps } from '../../../module/DisablingSteps';
-import { DomSteps } from '../../../module/DomSteps';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import * as DomUtils from '../../../module/DomUtils';
+import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 
-UnitTest.asynctest('Selectbox component Test', (success, failure) => {
-
+describe('phantom.tinymce.themes.silver.components.selectbox.SelectboxTest', () => {
   const providers = {
     ...TestProviders,
     icons: (): Record<string, string> => ({
@@ -18,66 +17,68 @@ UnitTest.asynctest('Selectbox component Test', (success, failure) => {
     })
   };
 
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderSelectBox({
-        name: 'selector',
-        size: 1,
-        label: Optional.some('selector'),
-        disabled: false,
-        items: [
-          { value: 'one', text: 'One' },
-          { value: 'two', text: 'Two' },
-          { value: 'three', text: 'Three' }
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    renderSelectBox({
+      name: 'selector',
+      size: 1,
+      label: Optional.some('selector'),
+      disabled: false,
+      items: [
+        { value: 'one', text: 'One' },
+        { value: 'two', text: 'Two' },
+        { value: 'three', text: 'Three' }
+      ]
+    }, providers)
+  ));
+
+  it('Check basic structure', () => {
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-form__group') ],
+        children: [
+          s.element('label', {
+            classes: [ arr.has('tox-label') ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-selectfield') ],
+            children: [
+              s.element('select', {
+                value: str.is('one'),
+                attrs: {
+                  size: str.is('1')
+                },
+                children: [
+                  s.element('option', { value: str.is('one'), html: str.is('One') }),
+                  s.element('option', { value: str.is('two'), html: str.is('Two') }),
+                  s.element('option', { value: str.is('three'), html: str.is('Three') })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-selectfield__icon-js') ],
+                children: [
+                  s.element('svg', {})
+                ]
+              })
+            ]
+          })
         ]
-      }, providers)
-    ),
-    (_doc, _body, _gui, component, _store) => [
-      Assertions.sAssertStructure(
-        'Checking initial structure',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-form__group') ],
-          children: [
-            s.element('label', {
-              classes: [ arr.has('tox-label') ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-selectfield') ],
-              children: [
-                s.element('select', {
-                  value: str.is('one'),
-                  attrs: {
-                    size: str.is('1')
-                  },
-                  children: [
-                    s.element('option', { value: str.is('one'), html: str.is('One') }),
-                    s.element('option', { value: str.is('two'), html: str.is('Two') }),
-                    s.element('option', { value: str.is('three'), html: str.is('Three') })
-                  ]
-                }),
-                s.element('div', {
-                  classes: [ arr.has('tox-selectfield__icon-js') ],
-                  children: [
-                    s.element('svg', {})
-                  ]
-                })
-              ]
-            })
-          ]
-        })),
-        component.element
-      ),
+      })),
+      hook.component().element
+    );
+  });
 
-      RepresentingSteps.sSetValue('Choosing three', component, 'three'),
-      DomSteps.sAssertValue('After setting "three"', 'three', component, 'select'),
-      RepresentingSteps.sAssertComposedValue('Checking is three', 'three', component),
+  it('Representing state', () => {
+    const component = hook.component();
+    Representing.setValue(component, 'three');
+    DomUtils.assertValue('After setting "three"', component, 'select', 'three');
+    RepresentingUtils.assertComposedValue(component, 'three');
+  });
 
-      // Disabling state
-      DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
-      DisablingSteps.sSetDisabled('set disabled', component, true),
-      DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
-    ],
-    success,
-    failure
-  );
+  it('Disabling state', () => {
+    const component = hook.component();
+    assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
+    Disabling.set(component, true);
+    assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
+  });
 });
