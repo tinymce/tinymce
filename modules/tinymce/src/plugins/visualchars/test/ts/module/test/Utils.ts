@@ -1,7 +1,7 @@
 import { ApproxStructure, StructAssert } from '@ephox/agar';
 import { Unicode } from '@ephox/katamari';
 
-const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, _str) => s.element('body', {
+const assertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, _str) => s.element('body', {
   children: [
     s.element('p', {
       children: paraStruct
@@ -9,7 +9,7 @@ const sAssertStruct = (paraStruct: StructAssert[]) => ApproxStructure.build((s, 
   ]
 }));
 
-const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => [
+const assertSpanStruct = assertStruct(ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.element('span', {
     children: [
@@ -24,7 +24,7 @@ const sAssertSpanStruct = sAssertStruct(ApproxStructure.build((s, str) => [
   s.text(str.is('b'))
 ]));
 
-const sAssertNbspStruct = sAssertStruct(ApproxStructure.build((s, str) => [
+const assertNbspStruct = assertStruct(ApproxStructure.build((s, str) => [
   s.text(str.is('a')),
   s.text(str.is(Unicode.nbsp)),
   s.text(str.is(Unicode.nbsp)),
@@ -32,7 +32,7 @@ const sAssertNbspStruct = sAssertStruct(ApproxStructure.build((s, str) => [
 ]));
 
 export {
-  sAssertStruct,
-  sAssertNbspStruct,
-  sAssertSpanStruct
+  assertStruct,
+  assertNbspStruct,
+  assertSpanStruct
 };
