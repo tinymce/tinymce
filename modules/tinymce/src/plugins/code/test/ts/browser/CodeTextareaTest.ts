@@ -32,6 +32,6 @@ describe('browser.tinymce.plugins.code.CodeTextareaTest', () => {
   it('TBA: Verify if "white-space: pre-wrap" style is set on the textarea', async () => {
     const editor = hook.editor();
     await pAssertWhiteSpace(editor);
-    TinyUiActions.closeDialog(editor, 'div[role="dialog"]');
+    TinyUiActions.cancelDialog(editor);
   });
 });
