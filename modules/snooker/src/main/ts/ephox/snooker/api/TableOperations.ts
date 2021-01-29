@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Remove, SugarElement, SugarNode, Width } from '@ephox/sugar';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
@@ -26,6 +26,9 @@ type ExtractMergable = RunOperation.ExtractMergable;
 type ExtractPaste = RunOperation.ExtractPaste;
 type ExtractPasteRows = RunOperation.ExtractPasteRows;
 type TargetSelection = RunOperation.TargetSelection;
+
+interface ExtractColDetail { detail: Structs.DetailExt; pixelDelta: number }
+interface ExtractColsDetail { details: Structs.DetailExt[]; pixelDelta: number }
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
@@ -106,14 +109,16 @@ const opInsertRowsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[
   return bundle(newGrid, targetIndex, details[0].column);
 };
 
-const opInsertColumnBefore = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsModification) => {
+const opInsertColumnBefore = (grid: Structs.RowCells[], extractDetail: ExtractColDetail, comparator: CompElm, genWrappers: GeneratorsModification) => {
+  const detail = extractDetail.detail;
   const example = detail.column;
   const targetIndex = detail.column;
   const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row, targetIndex);
 };
 
-const opInsertColumnsBefore = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
+const opInsertColumnsBefore = (grid: Structs.RowCells[], extractDetail: ExtractColsDetail, comparator: CompElm, genWrappers: GeneratorsModification) => {
+  const details = extractDetail.details;
   const columns = ColUtils.uniqueColumns(details);
   const targetIndex = columns[0].column;
   const newGrid = Arr.foldr(columns, (acc, col) => {
@@ -123,14 +128,16 @@ const opInsertColumnsBefore = (grid: Structs.RowCells[], details: Structs.Detail
   return bundle(newGrid, details[0].row, targetIndex);
 };
 
-const opInsertColumnAfter = (grid: Structs.RowCells[], detail: Structs.DetailExt, comparator: CompElm, genWrappers: GeneratorsModification) => {
+const opInsertColumnAfter = (grid: Structs.RowCells[], extractDetail: ExtractColDetail, comparator: CompElm, genWrappers: GeneratorsModification) => {
+  const detail = extractDetail.detail;
   const example = detail.column;
   const targetIndex = detail.column + detail.colspan;
   const newGrid = ModificationOperations.insertColumnAt(grid, targetIndex, example, comparator, genWrappers.getOrInit);
   return bundle(newGrid, detail.row, targetIndex);
 };
 
-const opInsertColumnsAfter = (grid: Structs.RowCells[], details: Structs.DetailExt[], comparator: CompElm, genWrappers: GeneratorsModification) => {
+const opInsertColumnsAfter = (grid: Structs.RowCells[], extractDetail: ExtractColsDetail, comparator: CompElm, genWrappers: GeneratorsModification) => {
+  const details = extractDetail.details;
   const target = details[details.length - 1];
   const targetIndex = target.column + target.colspan;
   const columns = ColUtils.uniqueColumns(details);
@@ -212,8 +219,8 @@ const opSplitCellIntoRows = (grid: Structs.RowCells[], detail: Structs.DetailExt
   return bundle(newGrid, detail.row, detail.column);
 };
 
-const opEraseColumns = (grid: Structs.RowCells[], details: Structs.DetailExt[], _comparator: CompElm, _genWrappers: GeneratorsModification) => {
-  const columns = ColUtils.uniqueColumns(details);
+const opEraseColumns = (grid: Structs.RowCells[], extractDetail: ExtractColsDetail, _comparator: CompElm, _genWrappers: GeneratorsModification) => {
+  const columns = ColUtils.uniqueColumns(extractDetail.details);
 
   const newGrid = ModificationOperations.deleteColumnsAt(grid, Arr.map(columns, (column) => column.column));
   const cursor = elementFromGrid(newGrid, columns[0].row, columns[0].column);
@@ -335,6 +342,7 @@ export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Opti
 
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
+const adjustAndRedistribute = Adjustments.adjustAndRedistribute;
 
 // Custom selection extractors
 
@@ -344,17 +352,34 @@ const firstColumnIsLocked = (_warehouse: Warehouse, details: Structs.DetailExt[]
 const lastColumnIsLocked = (warehouse: Warehouse, details: Structs.DetailExt[]) =>
   Arr.exists(details, (detail) => detail.column + detail.colspan >= warehouse.grid.columns && detail.isLocked);
 
-const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<Structs.DetailExt> =>
+const getPixelDelta = (details: Structs.DetailExt[]) => {
+  const uniqueCols = ColUtils.uniqueColumns(details);
+  return Arr.foldl(uniqueCols, (acc, detail) => acc + Width.getOuter(detail.element), 0);
+};
+
+const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<ExtractColDetail> =>
   RunOperation.onCell(warehouse, target).filter((detail) => {
     const checkLocked = before ? firstColumnIsLocked : lastColumnIsLocked;
     return !checkLocked(warehouse, [ detail ]);
-  });
+  }).map((detail) => ({
+    detail,
+    pixelDelta: getPixelDelta([ detail ]),
+  }));
 
-const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
+const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
   RunOperation.onCells(warehouse, target).filter((details) => {
     const checkLocked = before ? firstColumnIsLocked : lastColumnIsLocked;
     return !checkLocked(warehouse, details);
-  });
+  }).map((details) => ({
+    details,
+    pixelDelta: getPixelDelta(details),
+  }));
+
+const eraseColumnsExtractor = (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
+  RunOperation.onUnlockedCells(warehouse, target).map((details) => ({
+    details,
+    pixelDelta: -getPixelDelta(details), // needs to be negative as we are removing columns
+  }));
 
 const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
   RunOperation.onPasteByEditor(warehouse, target).filter((details) => {
@@ -366,13 +391,13 @@ export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.
 export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), resize, Fun.noop, Generators.modification);
-export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), resize, Fun.noop, Generators.modification);
-export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), resize, Fun.noop, Generators.modification);
-export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), resize, Fun.noop, Generators.modification);
+export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), adjustAndRedistribute, Fun.noop, Generators.modification);
+export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), adjustAndRedistribute, Fun.noop, Generators.modification);
+export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), adjustAndRedistribute, Fun.noop, Generators.modification);
+export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), adjustAndRedistribute, Fun.noop, Generators.modification);
 export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
-export const eraseColumns = RunOperation.run(opEraseColumns, RunOperation.onUnlockedCells, resize, prune, Generators.modification);
+export const eraseColumns = RunOperation.run(opEraseColumns, eraseColumnsExtractor, adjustAndRedistribute, prune, Generators.modification);
 export const eraseRows = RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification);
 export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
 export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
