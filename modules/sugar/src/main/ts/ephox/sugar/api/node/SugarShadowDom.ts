@@ -41,11 +41,11 @@ export const createElement: {
   SugarElement.fromTag(tag, Traverse.documentOrOwner(dos).dom);
 
 /** Where style tags need to go. ShadowRoot or document head */
-export const getStyleContainer = (dos: RootNode): SugarElement<Node> =>
+export const getStyleContainer = (dos: RootNode): SugarElement<HTMLHeadElement | ShadowRoot> =>
   isShadowRoot(dos) ? dos : SugarHead.getHead(Traverse.documentOrOwner(dos));
 
 /** Where content needs to go. ShadowRoot or document body */
-export const getContentContainer = (dos: RootNode): SugarElement<Node> =>
+export const getContentContainer = (dos: RootNode): SugarElement<HTMLElement | ShadowRoot> =>
   // Can't use SugarBody.body without causing a circular module reference (since SugarBody.inBody uses SugarShadowDom)
   isShadowRoot(dos) ? dos : SugarElement.fromDom(Traverse.documentOrOwner(dos).dom.body);
 

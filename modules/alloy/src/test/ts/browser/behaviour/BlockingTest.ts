@@ -22,7 +22,7 @@ UnitTest.asyncTest('BlockingTest', (success, failure) => {
     ])
   });
 
-  const makeComponent = (store: TestStore, _doc: SugarElement<Document>, _body: SugarElement<HTMLBodyElement>) => {
+  const makeComponent = (store: TestStore, _doc: SugarElement<Document>, _body: SugarElement<Node>) => {
     const component = GuiFactory.build({
       dom: {
         tag: 'div'
