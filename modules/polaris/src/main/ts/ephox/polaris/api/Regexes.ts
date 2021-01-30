@@ -23,6 +23,8 @@
   - colons are only valid when followed directly by // or some text and then @ (TBIO-4867)
   - only include the fragment '#' if it has 1 or more trailing matches
   - only include the query '?' if it has 1 or more trailing matches
+  - allow commas in URL path
+  - exclude trailing comma and period in URL path
 
 (?:
   (?:[A-Za-z]{3,9}:(?:\/\/))
@@ -37,7 +39,12 @@
   (?:\.[A-Za-z0-9-]+)*
 )
 (?::[0-9]+)?
-(?:\/[-+~=%.,()\/\w]*)?
+(?:
+  \/
+  (?:
+     [-+~=.,%()\/\w]*[-+~=%()\/\w]
+   )?
+)?
 (?:
   \?
   (?:
@@ -53,7 +60,7 @@
 */
 const link = (): RegExp =>
   // eslint-disable-next-line max-len
-  /(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/[-+~=%.,()\/\w]*)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
+/(?:(?:[A-Za-z]{3,9}:(?:\/\/))(?:[-.~*+=!&;:'%@?^${}(),\w]+@)?[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*|(?:www\.|[-;:&=+$,.\w]+@)[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*)(?::[0-9]+)?(?:\/(?:[-+~=.,%()\/\w]*[-+~=%()\/\w])?)?(?:\?(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?(?:#(?:[-.~*+=!&;:'%@?^${}(),\/\w]+))?/g;
 
 const autolink = (): RegExp => {
   /*
