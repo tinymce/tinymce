@@ -253,7 +253,7 @@ UnitTest.test('RegexesTest', () => {
     'http://google.com/a,bc,d/,': 'http://google.com/a,bc,d/',
     'http://google.com/a,bc,d/.': 'http://google.com/a,bc,d/',
     'Visit, please, http://google.com/a,bc,d/. Good luck!': 'http://google.com/a,bc,d/',
-  }
+  };
   Obj.each(onlyWithPathLinks, (v, k) => {
     const match = Regexes.link().exec(k);
     if (match !== null) {
