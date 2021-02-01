@@ -231,6 +231,7 @@ UnitTest.test('RegexesTest', () => {
       assert.fail('expected ' + v + ' but did not match "' + k + '"');
     }
   });
+  
   const onlyWithPathLinks = { // Ignore trailing comma and period in URL path
     'http://google.com': 'http://google.com',
     'http://google.com.': 'http://google.com',
@@ -254,6 +255,7 @@ UnitTest.test('RegexesTest', () => {
     'http://google.com/a,bc,d/.': 'http://google.com/a,bc,d/',
     'Visit, please, http://google.com/a,bc,d/. Good luck!': 'http://google.com/a,bc,d/',
   };
+  
   Obj.each(onlyWithPathLinks, (v, k) => {
     const match = Regexes.link().exec(k);
     if (match !== null) {
