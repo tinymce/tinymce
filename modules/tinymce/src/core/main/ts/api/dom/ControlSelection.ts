@@ -10,6 +10,7 @@ import { Selectors, SugarElement } from '@ephox/sugar';
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
+import * as Rtc from '../../Rtc';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
@@ -19,7 +20,6 @@ import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import EditorSelection from './Selection';
-
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;
   showResizeRect: (elm: Element) => void;
@@ -248,7 +248,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     };
 
     // Set width/height properties
-    if (wasResizeStarted) {
+    if (!Rtc.isRtc(editor) && wasResizeStarted) {
       setSizeProp('width', width);
       setSizeProp('height', height);
     }
@@ -270,7 +270,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     if (wasResizeStarted) {
       Events.fireObjectResized(editor, selectedElm, width, height, 'corner-' + selectedHandle.name);
-      dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
+
+      if (!Rtc.isRtc(editor)) {
+        dom.setAttrib(selectedElm, 'style', dom.getAttrib(selectedElm, 'style'));
+      }
     }
     editor.nodeChanged();
   };
