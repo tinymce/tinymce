@@ -1,5 +1,5 @@
 import { Assertions, Pipeline, Step, TestLogs } from '@ephox/agar';
-import { Fun, Global, Merger, Obj } from '@ephox/katamari';
+import { Fun, Global, Merger, Obj, Optional } from '@ephox/katamari';
 import { DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import { AlloyComponent } from '../component/ComponentApi';
@@ -237,6 +237,21 @@ const addStyles = (dos: RootNode, styles: string[]): SugarElement<HTMLStyleEleme
 const removeStyles = (style: SugarElement<HTMLStyleElement>): void =>
   Remove.remove(style);
 
+const bddAddStyles = (dos: RootNode, styles: string[]): void => {
+  let style = Optional.none<SugarElement<HTMLStyleElement>>();
+
+  // Note: Don't use bedrock imports here so as to avoid requiring bedrock as a
+  // dependency. It'll still work the same, but we'll be missing the types.
+  Global.before(() => {
+    style = Optional.some(addStyles(dos, styles));
+  });
+
+  Global.after(() => {
+    style.each(Remove.remove);
+    style = Optional.none();
+  });
+};
+
 const mSetupKeyLogger = <T>(body: SugarElement<Node>): Step<T, T & KeyLoggerState> => Step.stateful((oldState, next, _die) => {
   next({
     ...oldState,
@@ -274,6 +289,8 @@ export {
   teardownKeyLogger,
   addStyles,
   removeStyles,
+
+  bddAddStyles,
 
   mSetupKeyLogger,
   mTeardownKeyLogger,
