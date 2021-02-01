@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
   const getTableWidth = (editor: Editor) =>
     SelectorFind.child<HTMLTableElement>(TinyDom.body(editor), 'table').map((table) => Width.get(table)).getOrDie();
 
-  // TODO: colspan
+  // TODO: tests for colspan #TINY-6949
   context('Responsive table', () => {
     context('table_column_resizing=preservetable', () => {
       it('will resize table because responsive tables cannot honour this setting', async () => {
