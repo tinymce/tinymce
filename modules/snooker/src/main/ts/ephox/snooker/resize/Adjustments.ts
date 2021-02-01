@@ -67,7 +67,7 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 };
 
 // Using the width of the added/removed columns gathered on extraction (pixelDelta), get and apply the new column sizes and overall table width delta
-const adjustAndRedistribute = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowData<T>[], details: { pixelDelta: number }, tableSize: TableSize, resizeBehaviour: ResizeBehaviour): void => {
+const adjustAndRedistributeWidths = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowData<T>[], details: { pixelDelta: number }, tableSize: TableSize, resizeBehaviour: ResizeBehaviour): void => {
   const warehouse = Warehouse.generate(list);
   const sizes = tableSize.getWidths(warehouse, tableSize);
   const tablePixelWidth = tableSize.pixelWidth();
@@ -85,4 +85,4 @@ const adjustWidthTo = <T extends Detail> (_table: SugarElement, list: RowData<T>
   recalculateAndApply(warehouse, widths, tableSize);
 };
 
-export { adjustWidth, adjustHeight, adjustWidthTo, adjustAndRedistribute };
+export { adjustWidth, adjustHeight, adjustWidthTo, adjustAndRedistributeWidths };

@@ -27,8 +27,15 @@ type ExtractPaste = RunOperation.ExtractPaste;
 type ExtractPasteRows = RunOperation.ExtractPasteRows;
 type TargetSelection = RunOperation.TargetSelection;
 
-interface ExtractColDetail { detail: Structs.DetailExt; pixelDelta: number }
-interface ExtractColsDetail { details: Structs.DetailExt[]; pixelDelta: number }
+interface ExtractColDetail {
+  readonly detail: Structs.DetailExt;
+  readonly pixelDelta: number;
+}
+
+interface ExtractColsDetail {
+  readonly details: Structs.DetailExt[];
+  readonly pixelDelta: number;
+}
 
 type CompElm = (e1: SugarElement, e2: SugarElement) => boolean;
 
@@ -342,7 +349,7 @@ export const getCellsType = <T>(cells: T[], headerPred: (x: T) => boolean): Opti
 
 // Only column modifications force a resizing. Everything else just tries to preserve the table as is.
 const resize = Adjustments.adjustWidthTo;
-const adjustAndRedistribute = Adjustments.adjustAndRedistribute;
+const adjustAndRedistributeWidths = Adjustments.adjustAndRedistributeWidths;
 
 // Custom selection extractors
 
@@ -391,13 +398,13 @@ export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.
 export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
 export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), adjustAndRedistribute, Fun.noop, Generators.modification);
-export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), adjustAndRedistribute, Fun.noop, Generators.modification);
-export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), adjustAndRedistribute, Fun.noop, Generators.modification);
-export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), adjustAndRedistribute, Fun.noop, Generators.modification);
+export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
+export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
+export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
+export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
 export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
 export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
-export const eraseColumns = RunOperation.run(opEraseColumns, eraseColumnsExtractor, adjustAndRedistribute, prune, Generators.modification);
+export const eraseColumns = RunOperation.run(opEraseColumns, eraseColumnsExtractor, adjustAndRedistributeWidths, prune, Generators.modification);
 export const eraseRows = RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification);
 export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.transform('row', 'th'));
 export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, Generators.transform('row', 'th'));

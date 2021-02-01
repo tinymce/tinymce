@@ -149,12 +149,10 @@ const preserveTable = (): ResizeBehaviour => {
     }
   };
 
-  const calcRedestributedWidths = (sizes: number[], _totalWidth: number, _pixelDelta: number, _isRelative: boolean) => {
-    return {
-      delta: 0,
-      newSizes: sizes,
-    };
-  };
+  const calcRedestributedWidths = (sizes: number[], _totalWidth: number, _pixelDelta: number, _isRelative: boolean) => ({
+    delta: 0,
+    newSizes: sizes,
+  });
 
   return {
     resizeTable,

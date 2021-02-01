@@ -68,7 +68,7 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
-  const colMutationOp = isResizeTableColumnResizing(editor) ? Fun.identity : CellMutations.halve;
+  const colMutationOp = isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
 
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
