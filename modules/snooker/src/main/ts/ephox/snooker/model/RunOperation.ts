@@ -112,7 +112,7 @@ const extractCells = (warehouse: Warehouse, target: TargetSelection, predicate: 
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
-type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour, info: INFO) => void;
+type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], info: INFO, tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour) => void;
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
@@ -139,7 +139,7 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       const newElements = Redraw.render(table, out.grid);
       const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
       const resizing = Optional.from(resizeBehaviour).getOrThunk(ResizeBehaviour.preserveTable);
-      adjustment(table, out.grid, tableSizing, resizing, out.info);
+      adjustment(table, out.grid, out.info, tableSizing, resizing);
       postAction(table);
       Bars.refresh(wire, table);
       // Update locked cols attribute

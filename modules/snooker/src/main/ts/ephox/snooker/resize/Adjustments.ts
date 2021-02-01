@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
-import * as ResizeBehaviour from '../api/ResizeBehaviour';
+import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowData } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
@@ -30,7 +30,7 @@ const recalculateAndApply = (warehouse: Warehouse, widths: number[], tableSize: 
   });
 };
 
-const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour.ResizeBehaviour, tableSize: TableSize): void => {
+const adjustWidth = (table: SugarElement, delta: number, index: number, resizing: ResizeBehaviour, tableSize: TableSize): void => {
   const warehouse = Warehouse.fromTable(table);
   const step = tableSize.getCellDelta(delta);
   const widths = tableSize.getWidths(warehouse, tableSize);
@@ -67,16 +67,18 @@ const adjustHeight = (table: SugarElement, delta: number, index: number, directi
 };
 
 // Using the width of the added/removed columns gathered on extraction (pixelDelta), get and apply the new column sizes and overall table width delta
-const adjustAndRedistribute = <T extends Detail> (table: SugarElement<HTMLTableElement>, list: RowData<T>[], tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour, details: { pixelDelta: number }): void => {
+const adjustAndRedistribute = <T extends Detail> (_table: SugarElement<HTMLTableElement>, list: RowData<T>[], details: { pixelDelta: number }, tableSize: TableSize, resizeBehaviour: ResizeBehaviour): void => {
   const warehouse = Warehouse.generate(list);
+  const sizes = tableSize.getWidths(warehouse, tableSize);
+  const tablePixelWidth = tableSize.pixelWidth();
 
-  const { newSizes, delta } = resizeBehaviour.getNewWidths(table, warehouse, tableSize, details.pixelDelta);
+  const { newSizes, delta } = resizeBehaviour.calcRedestributedWidths(sizes, tablePixelWidth, details.pixelDelta, tableSize.isRelative);
   recalculateAndApply(warehouse, newSizes, tableSize);
   tableSize.adjustTableWidth(delta);
 };
 
 // Ensure that the width of table cells match the passed in table information.
-const adjustWidthTo = <T extends Detail> (table: SugarElement, list: RowData<T>[], tableSize: TableSize): void => {
+const adjustWidthTo = <T extends Detail> (_table: SugarElement, list: RowData<T>[], _info: { }, tableSize: TableSize): void => {
   const warehouse = Warehouse.generate(list);
   const widths = tableSize.getWidths(warehouse, tableSize);
 

@@ -352,7 +352,7 @@ const firstColumnIsLocked = (_warehouse: Warehouse, details: Structs.DetailExt[]
 const lastColumnIsLocked = (warehouse: Warehouse, details: Structs.DetailExt[]) =>
   Arr.exists(details, (detail) => detail.column + detail.colspan >= warehouse.grid.columns && detail.isLocked);
 
-const getPixelDelta = (details: Structs.DetailExt[]) => {
+const getColumnsWidth = (details: Structs.DetailExt[]) => {
   const uniqueCols = ColUtils.uniqueColumns(details);
   return Arr.foldl(uniqueCols, (acc, detail) => acc + Width.getOuter(detail.element), 0);
 };
@@ -363,7 +363,7 @@ const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target
     return !checkLocked(warehouse, [ detail ]);
   }).map((detail) => ({
     detail,
-    pixelDelta: getPixelDelta([ detail ]),
+    pixelDelta: getColumnsWidth([ detail ]),
   }));
 
 const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
@@ -372,13 +372,13 @@ const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, targe
     return !checkLocked(warehouse, details);
   }).map((details) => ({
     details,
-    pixelDelta: getPixelDelta(details),
+    pixelDelta: getColumnsWidth(details),
   }));
 
 const eraseColumnsExtractor = (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
   RunOperation.onUnlockedCells(warehouse, target).map((details) => ({
     details,
-    pixelDelta: -getPixelDelta(details), // needs to be negative as we are removing columns
+    pixelDelta: -getColumnsWidth(details), // needs to be negative as we are removing columns
   }));
 
 const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>

@@ -1,7 +1,4 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
-import { TableSize } from './TableSize';
-import { Warehouse } from './Warehouse';
 
 type TableResizer = (delta: number) => void;
 
@@ -11,7 +8,8 @@ export interface ResizeBehaviour {
   readonly calcLeftEdgeDeltas: (sizes: number[], index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
   readonly calcMiddleDeltas: (sizes: number[], previousIndex: number, index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
   readonly calcRightEdgeDeltas: (sizes: number[], previousIndex: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
-  readonly getNewWidths: (table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, pixelDelta: number) => { delta: number; newSizes: number[] };
+  readonly calcRedestributedWidths: (sizes: number[], total: number, pixelDelta: number, isRelative: boolean) => { delta: number; newSizes: number[] };
+  // readonly calcRedestributedWidths: (table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, pixelDelta: number) => { delta: number; newSizes: number[] };
 }
 
 const zero = (array: number[]) => Arr.map(array, Fun.constant(0));
@@ -79,12 +77,10 @@ const resizeTable = (): ResizeBehaviour => {
     }
   };
 
-  const getNewWidths = (_table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, pixelDelta: number) => {
-    const sizes = tableSize.getWidths(warehouse, tableSize);
-
-    if (tableSize.isRelative) {
-      const tableWidth = tableSize.pixelWidth() + pixelDelta;
-      const ratio = tableWidth / tableSize.pixelWidth();
+  const calcRedestributedWidths = (sizes: number[], totalWidth: number, pixelDelta: number, isRelative: boolean) => {
+    if (isRelative) {
+      const tableWidth = totalWidth + pixelDelta;
+      const ratio = tableWidth / totalWidth;
       const newSizes = Arr.map(sizes, (size) => size / ratio);
       return {
         delta: (ratio * 100) - 100,
@@ -104,7 +100,7 @@ const resizeTable = (): ResizeBehaviour => {
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
     calcRightEdgeDeltas,
-    getNewWidths,
+    calcRedestributedWidths,
   };
 };
 
@@ -154,12 +150,10 @@ const preserveTable = (): ResizeBehaviour => {
     }
   };
 
-  const getNewWidths = (_table: SugarElement<HTMLTableElement>, warehouse: Warehouse, tableSize: TableSize, _pixelDelta: number) => {
-    const newSizes = tableSize.getWidths(warehouse, tableSize);
-
+  const calcRedestributedWidths = (sizes: number[], _totalWidth: number, _pixelDelta: number, _isRelative: boolean) => {
     return {
       delta: 0,
-      newSizes,
+      newSizes: sizes,
     };
   };
 
@@ -169,7 +163,7 @@ const preserveTable = (): ResizeBehaviour => {
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
     calcRightEdgeDeltas,
-    getNewWidths
+    calcRedestributedWidths
   };
 };
 
