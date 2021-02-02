@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableResizeTest', (success, failure) => {
+UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableSizeTest', (success, failure) => {
 
   Plugin();
   SilverTheme();
