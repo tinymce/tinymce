@@ -4,6 +4,7 @@
 agar@5.2.0
 darwin@6.0.0
 mcagar@6.0.0
+polaris@4.0.4
 snooker@8.0.0
 sugar@7.1.0
 boss@4.1.0
