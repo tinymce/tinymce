@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorFind, Width } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -34,9 +34,13 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     const beforeWidth = getTableWidth(editor);
     editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
     editor.execCommand(command);
-    const afterWidth = getTableWidth(editor);
-    // 2px margin of error, 30px margin of error for IE
-    assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
+    if (multiplier === 0) {
+      TinyAssertions.assertContent(editor, '');
+    } else {
+      const afterWidth = getTableWidth(editor);
+      // 2px margin of error, 30px margin of error for IE
+      assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
+    }
   };
 
   const performCommandsAndAssertWidths = (editor: Editor, content: string, multipliers: TableCommandMap) => {
@@ -263,7 +267,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         performCommandsAndAssertWidths(editor, content, {
           mceTableInsertColBefore: 1,
           mceTableInsertColAfter: 1,
-          mceTableDeleteCol: 1
+          mceTableDeleteCol: 0
         });
       });
 
@@ -290,7 +294,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         performCommandsAndAssertWidths(editor, content, {
           mceTableInsertColBefore: 1,
           mceTableInsertColAfter: 1,
-          mceTableDeleteCol: 1
+          mceTableDeleteCol: 0
         });
       });
     });
