@@ -8,6 +8,12 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
+interface TableCommandMap {
+  readonly mceTableInsertColBefore: number;
+  readonly mceTableInsertColAfter: number;
+  readonly mceTableDeleteCol: number;
+}
+
 describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
   /**
    * Test the width of tables before and after column operations
@@ -32,12 +38,6 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     // 2px margin of error, 30px margin of error for IE
     assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
   };
-
-  interface TableCommandMap {
-    readonly mceTableInsertColBefore: number;
-    readonly mceTableInsertColAfter: number;
-    readonly mceTableDeleteCol: number;
-  }
 
   const performCommandsAndAssertWidths = (editor: Editor, content: string, multipliers: TableCommandMap) => {
     editor.setContent(content);
