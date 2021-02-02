@@ -63,6 +63,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
+    editor.on('NeilsUntitledEvent', fireDismissPopups);
   });
 
   editor.on('remove', () => {
@@ -73,6 +74,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
+    editor.off('NeilsUntitledEvent', fireDismissPopups);
 
     onMousedown.unbind();
     onTouchstart.unbind();
