@@ -1,10 +1,9 @@
+import { Regex } from '@ephox/katamari';
 import { PRegExp } from './Types';
 import * as Unsafe from './Unsafe';
 
 /** Escapes regex characters in a string */
-const sanitise = (input: string): string => {
-  return input.replace(/[-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
-};
+const sanitise = Regex.escape;
 
 const word = (input: string): PRegExp => {
   const value = sanitise(input);
