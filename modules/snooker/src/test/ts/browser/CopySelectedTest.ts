@@ -12,6 +12,11 @@ interface TestData {
   locked?: boolean;
 }
 
+interface TableAttributes {
+  beforeCopy: Record<string, string | boolean | number>; // attributes to set on the table before copy
+  afterCopy: string[]; // attributes that should not be on the table after copy
+}
+
 UnitTest.test('CopySelectedTest', () => {
   // normally this is darwin ephemera, but doesn't actually matter what it is
   const SEL_CLASS = 'copy-selected';
@@ -80,17 +85,17 @@ UnitTest.test('CopySelectedTest', () => {
     return table;
   };
 
-  const check = (label: string, expected: TestData[][], input: TestData[][], tableAttributes?: { addBeforeCopy: Record<string, string | boolean | number>; removedAfterCopy: string[] }) => {
+  const check = (label: string, expected: TestData[][], input: TestData[][], tableAttributes?: TableAttributes) => {
     const table = generateInput(input);
     if (Type.isNonNullable(tableAttributes)) {
-      Attribute.setAll(table, tableAttributes.addBeforeCopy);
+      Attribute.setAll(table, tableAttributes.beforeCopy);
     }
 
     const replica = CopySelected.extract(table, '.' + SEL_CLASS);
 
     // Verify specified table attributes are not present in replica table
     if (Type.isNonNullable(tableAttributes)) {
-      Arr.each(tableAttributes.removedAfterCopy, (attrName) => {
+      Arr.each(tableAttributes.afterCopy, (attrName) => {
         assert.eq(false, Attribute.has(replica, attrName));
       });
     }
@@ -292,7 +297,7 @@ UnitTest.test('CopySelectedTest', () => {
       [ s('A', 1, 1, true), ns('B', 1, 1), ns('C', 1, 1) ],
       [ s('D', 1, 1, true), ns('E', 1, 1), ns('F', 1, 1) ],
       [ s('G', 1, 1, true), ns('H', 1, 1), ns('I', 1, 1) ]
-    ], { addBeforeCopy: {}, removedAfterCopy: [ LOCKED_COL_ATTR ] });
+    ], { beforeCopy: {}, afterCopy: [ LOCKED_COL_ATTR ] });
   // //////////////////////////////////////////////////
   check('single column, simple with removable table attributes',
     [
@@ -306,11 +311,11 @@ UnitTest.test('CopySelectedTest', () => {
       [ s('G', 1, 1), ns('H', 1, 1), ns('I', 1, 1) ]
     ],
     {
-      addBeforeCopy: {
+      beforeCopy: {
         [ LOCKED_COL_ATTR ]: '0',
         'data-snooker-col-series': 'numbers'
       },
-      removedAfterCopy: [ LOCKED_COL_ATTR, 'data-snooker-col-series' ]
+      afterCopy: [ LOCKED_COL_ATTR, 'data-snooker-col-series' ]
     }
   );
 // //////////////////////////////////////////////////
