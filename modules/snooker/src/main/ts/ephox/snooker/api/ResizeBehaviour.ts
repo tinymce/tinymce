@@ -5,9 +5,10 @@ type TableResizer = (delta: number) => void;
 export interface ResizeBehaviour {
   readonly resizeTable: (resizer: TableResizer, delta: number, isLastColumn: boolean) => void;
   readonly clampTableDelta: (sizes: number[], index: number, delta: number, minCellSize: number, isLastColumn: boolean) => number;
-  readonly calcLeftEdgeDeltas: (sizes: number[], index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
-  readonly calcMiddleDeltas: (sizes: number[], previousIndex: number, index: number, nextIndex: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
-  readonly calcRightEdgeDeltas: (sizes: number[], previousIndex: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => number[];
+  readonly calcLeftEdgeDeltas: (sizes: number[], index: number, nextIndex: number, delta: number, minCellSize: number, isRelative: boolean) => number[];
+  readonly calcMiddleDeltas: (sizes: number[], previousIndex: number, index: number, nextIndex: number, delta: number, minCellSize: number, isRelative: boolean) => number[];
+  readonly calcRightEdgeDeltas: (sizes: number[], previousIndex: number, index: number, delta: number, minCellSize: number, isRelative: boolean) => number[];
+  readonly calcRedestributedWidths: (sizes: number[], total: number, pixelDelta: number, isRelative: boolean) => { delta: number; newSizes: number[] };
 }
 
 const zero = (array: number[]) => Arr.map(array, Fun.constant(0));
@@ -51,27 +52,44 @@ const resizeTable = (): ResizeBehaviour => {
   };
 
   // Calculations for the inner columns/rows
-  const calcLeftEdgeDeltas = (sizes: number[], index: number, next: number, delta: number, minCellSize: number, relativeSizing: boolean) => {
-    if (relativeSizing) {
+  const calcLeftEdgeDeltas = (sizes: number[], index: number, next: number, delta: number, minCellSize: number, isRelative: boolean) => {
+    if (isRelative) {
       return calcRelativeDeltas(sizes, index, delta, minCellSize);
     } else {
       return calcFixedDeltas(sizes, index, next, delta, minCellSize);
     }
   };
 
-  const calcMiddleDeltas = (sizes: number[], _prev: number, index: number, next: number, delta: number, minCellSize: number, relativeSizing: boolean) =>
-    calcLeftEdgeDeltas(sizes, index, next, delta, minCellSize, relativeSizing);
+  const calcMiddleDeltas = (sizes: number[], _prev: number, index: number, next: number, delta: number, minCellSize: number, isRelative: boolean) =>
+    calcLeftEdgeDeltas(sizes, index, next, delta, minCellSize, isRelative);
 
   const resizeTable = (resizer: TableResizer, delta: number) =>
     resizer(delta);
 
   // Calculations for the last column/row resizer
-  const calcRightEdgeDeltas = (sizes: number[], _prev: number, index: number, delta: number, minCellSize: number, relativeSizing: boolean) => {
-    if (relativeSizing) {
+  const calcRightEdgeDeltas = (sizes: number[], _prev: number, index: number, delta: number, minCellSize: number, isRelative: boolean) => {
+    if (isRelative) {
       return calcRelativeDeltas(sizes, index, delta, minCellSize);
     } else {
       const clampedDelta = clampNegativeDelta(sizes, index, delta, minCellSize);
       return zero(sizes.slice(0, index)).concat([ clampedDelta ]);
+    }
+  };
+
+  const calcRedestributedWidths = (sizes: number[], totalWidth: number, pixelDelta: number, isRelative: boolean) => {
+    if (isRelative) {
+      const tableWidth = totalWidth + pixelDelta;
+      const ratio = tableWidth / totalWidth;
+      const newSizes = Arr.map(sizes, (size) => size / ratio);
+      return {
+        delta: (ratio * 100) - 100,
+        newSizes,
+      };
+    } else {
+      return {
+        delta: pixelDelta,
+        newSizes: sizes,
+      };
     }
   };
 
@@ -80,7 +98,8 @@ const resizeTable = (): ResizeBehaviour => {
     clampTableDelta: clampNegativeDelta,
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
-    calcRightEdgeDeltas
+    calcRightEdgeDeltas,
+    calcRedestributedWidths,
   };
 };
 
@@ -104,8 +123,8 @@ const preserveTable = (): ResizeBehaviour => {
   };
 
   // Calculations for the last column/row resizer
-  const calcRightEdgeDeltas = (sizes: number[], _prev: number, _index: number, delta: number, _minCellSize: number, relativeSizing: boolean) => {
-    if (relativeSizing) {
+  const calcRightEdgeDeltas = (sizes: number[], _prev: number, _index: number, delta: number, _minCellSize: number, isRelative: boolean) => {
+    if (isRelative) {
       return zero(sizes);
     } else {
       // Distribute the delta amongst all of the columns/rows
@@ -130,12 +149,18 @@ const preserveTable = (): ResizeBehaviour => {
     }
   };
 
+  const calcRedestributedWidths = (sizes: number[], _totalWidth: number, _pixelDelta: number, _isRelative: boolean) => ({
+    delta: 0,
+    newSizes: sizes,
+  });
+
   return {
     resizeTable,
     clampTableDelta,
     calcLeftEdgeDeltas,
     calcMiddleDeltas,
-    calcRightEdgeDeltas
+    calcRightEdgeDeltas,
+    calcRedestributedWidths
   };
 };
 
