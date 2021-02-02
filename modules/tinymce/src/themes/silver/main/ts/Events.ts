@@ -58,7 +58,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   const onEditorResize = () => broadcastOn(Channels.repositionPopups(), {});
   const onEditorProgress = (evt: EditorEvent<AfterProgressStateEvent>) => {
     if (evt.state) {
-      broadcastOn(Channels.dismissPopups(), { target: evt.target });
+      broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(editor.getContainer()) });
     }
   };
 
