@@ -3,7 +3,6 @@ import { after, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -34,21 +33,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
     hook.editor().setProgressState(false);
   });
 
-  it('cancels all open notifications when it opens', async () => {
-    const editor = hook.editor();
-    editor.notificationManager.open({
-      type: 'success',
-      text: 'lorem ipsum'
-    });
-
-    assert.isNotEmpty(editor.notificationManager.getNotifications(), 'Notification should be present');
-
-    editor.setProgressState(true);
-    await pWaitForThrobber();
-
-    assert.isEmpty(editor.notificationManager.getNotifications(), 'No notifications should be open');
-  });
-
   it('closes the context menu when it opens', async () => {
     const editor = hook.editor();
     editor.setContent('<p>Hello world</p>');
@@ -64,20 +48,21 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
 
   it('does not close things until the throbber actually opens', async () => {
     const editor = hook.editor();
-    editor.notificationManager.open({
-      type: 'success',
-      text: 'lorem ipsum'
-    });
+    await TinyUiActions.pTriggerContextMenu(editor, 'p', '.tox-menu');
 
     // Note: this will cook in the background while we run the next little bit of code
     editor.setProgressState(true, 300);
 
     await Waiter.pWait(150);
-    assert.isNotEmpty(editor.notificationManager.getNotifications(), 'The notification should not be closed yet');
+    await Waiter.pTryUntil('context menu should not be closed yet', () => {
+      UiFinder.exists(SugarBody.body(), '.tox-menu');
+    });
 
     // Wait for the background task to finish
     await pWaitForThrobber();
 
-    assert.isEmpty(editor.notificationManager.getNotifications(), 'The notification should be closed now');
+    await Waiter.pTryUntil('context menu should now be closed closed', () => {
+      UiFinder.notExists(SugarBody.body(), '.tox-menu');
+    });
   });
 });

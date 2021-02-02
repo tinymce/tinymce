@@ -95,12 +95,6 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
   };
 
-  const closeAll = () => {
-    Arr.each(notifications.slice(), (notification) => {
-      getImplementation().close(notification);
-    });
-  };
-
   const open = (spec: NotificationSpec, fireEvent: boolean = true) => {
     // Never open notification if editor has been removed.
     if (editor.removed || !EditorView.isEditorAttachedToDom(editor)) {
@@ -169,13 +163,11 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       Delay.requestAnimationFrame(reposition);
     });
 
-    editor.on('AfterProgressState', (evt) => {
-      if (evt.state) {
-        closeAll();
-      }
+    editor.on('remove', () => {
+      Arr.each(notifications.slice(), (notification) => {
+        getImplementation().close(notification);
+      });
     });
-
-    editor.on('remove', closeAll);
   };
 
   registerEvents(editor);
