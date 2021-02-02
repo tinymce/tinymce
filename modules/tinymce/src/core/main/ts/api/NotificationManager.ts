@@ -163,7 +163,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       Delay.requestAnimationFrame(reposition);
     });
 
-    editor.on('remove NeilsUntitledEvent', () => {
+    editor.on('remove AfterProgressState', () => {
       Arr.each(notifications.slice(), (notification) => {
         getImplementation().close(notification);
       });

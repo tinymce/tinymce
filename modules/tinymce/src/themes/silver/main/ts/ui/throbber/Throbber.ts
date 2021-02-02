@@ -73,11 +73,11 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
 
   const toggle = (state: boolean) => {
     if (state !== throbberState.get()) {
-      if (state) {
-        editor.fire('NeilsUntitledEvent');
-      }
       toggleThrobber(lazyThrobber(), state, sharedBackstage.providers);
       throbberState.set(state);
+      if (state) {
+        editor.fire('AfterProgressState');
+      }
     }
   };
 
