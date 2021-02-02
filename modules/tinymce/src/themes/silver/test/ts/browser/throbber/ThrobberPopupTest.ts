@@ -4,14 +4,16 @@ import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const pWaitForThrobber = async (): Promise<void> => {
-  await UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
-};
-
 describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
+
+  const pWaitForThrobber = async (): Promise<void> => {
+    await UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
+  };
+
   const hook = TinyHooks.bddSetup<Editor>({
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
@@ -38,6 +40,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       type: 'success',
       text: 'lorem ipsum'
     });
+
+    assert.isNotEmpty(editor.notificationManager.getNotifications(), 'Notification should be present');
 
     editor.setProgressState(true);
     await pWaitForThrobber();
