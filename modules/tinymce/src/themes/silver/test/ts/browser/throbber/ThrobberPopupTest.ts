@@ -1,5 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { after, describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
@@ -8,13 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
-
-  const pWaitForThrobber = async (): Promise<void> => {
-    await UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
-  };
-
   const hook = TinyHooks.bddSetup<Editor>({
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addMenuItem('test-item', {
@@ -29,7 +23,10 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
     contextmenu: 'test'
   }, [ Theme ]);
 
-  after(() => {
+  const pWaitForThrobber = () =>
+    UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
+
+  afterEach(() => {
     hook.editor().setProgressState(false);
   });
 
