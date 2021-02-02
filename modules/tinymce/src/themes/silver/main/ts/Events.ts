@@ -9,6 +9,8 @@ import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
+import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiSystem) => {
   const broadcastEvent = (name: string, evt: EventArgs) => {
@@ -49,11 +51,16 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
   // Window events
   const onWindowScroll = (evt: UIEvent) => broadcastEvent(SystemEvents.windowScroll(), DomEvent.fromRawEvent(evt));
   const onWindowResize = (evt: UIEvent) => {
-    broadcastOn(Channels.repositionPopups(), { });
+    broadcastOn(Channels.repositionPopups(), {});
     broadcastEvent(SystemEvents.windowResize(), DomEvent.fromRawEvent(evt));
   };
 
-  const onEditorResize = () => broadcastOn(Channels.repositionPopups(), { });
+  const onEditorResize = () => broadcastOn(Channels.repositionPopups(), {});
+  const onEditorProgress = (evt: EditorEvent<AfterProgressStateEvent>) => {
+    if (evt.state) {
+      broadcastOn(Channels.dismissPopups(), { target: SugarElement.fromDom(editor.getContainer()) });
+    }
+  };
 
   // Don't start listening to events until the UI has rendered
   editor.on('PostRender', () => {
@@ -63,6 +70,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.on('ScrollWindow', onWindowScroll);
     editor.on('ResizeWindow', onWindowResize);
     editor.on('ResizeEditor', onEditorResize);
+    editor.on('AfterProgressState', onEditorProgress);
   });
 
   editor.on('remove', () => {
@@ -73,6 +81,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMothership: Gui.GuiS
     editor.off('ScrollWindow', onWindowScroll);
     editor.off('ResizeWindow', onWindowResize);
     editor.off('ResizeEditor', onEditorResize);
+    editor.off('AfterProgressState', onEditorProgress);
 
     onMousedown.unbind();
     onTouchstart.unbind();

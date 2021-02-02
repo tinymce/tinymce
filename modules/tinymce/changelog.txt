@@ -7,6 +7,7 @@ Version 5.7.0 (TBD)
     Added new `font_css` setting for fonts to be added to both containing document and the editor #TINY-6199
     Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
     Added Oxide variable to define the container background color in fullscreen mode #TINY-6903
+    Added a new `AfterProgressState` event that's fired after `editor.setProgressState` calls complete #TINY-6686
     Added support for `table_column_resizing` when inserting or deleting columns #TINY-6711
     Changed copying table columns or entire tables will now retain an appropriate width when pasted #TINY-6664
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
@@ -14,6 +15,7 @@ Version 5.7.0 (TBD)
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
+    Changed `editor.setProgressState(true)` to close any open popups #TINY-6686
     Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
     Fixed a number of table operations not working when selecting 2 table cells on Mozilla Firefox #TINY-3897
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859
