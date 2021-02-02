@@ -1,17 +1,15 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { after, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 import { assert } from 'chai';
-import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const openThrobber = async (editor: Editor, delay?: number): Promise<void> => {
-  editor.setProgressState(true, delay);
-  await new Promise((resolve) => setTimeout(resolve, delay));
-  await UiFinder.pWaitForVisible('throbber to open', SugarBody.body(), '.tox-throbber');
-}
+const pWaitForThrobber = async (): Promise<void> => {
+  await UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
+};
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -30,48 +28,52 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
     contextmenu: 'test'
   }, [ Theme ]);
 
+  after(() => {
+    hook.editor().setProgressState(false);
+  });
+
   it('cancels all open notifications when it opens', async () => {
-    const ed = hook.editor();
-    ed.notificationManager.open({
+    const editor = hook.editor();
+    editor.notificationManager.open({
       type: 'success',
       text: 'lorem ipsum'
     });
 
-    await openThrobber(ed);
+    editor.setProgressState(true);
+    await pWaitForThrobber();
 
-    assert.isEmpty(ed.notificationManager.getNotifications(), 'No notifications should be open');
-    ed.setProgressState(false);
+    assert.isEmpty(editor.notificationManager.getNotifications(), 'No notifications should be open');
   });
 
   it('closes the context menu when it opens', async () => {
-    const ed = hook.editor();
-    ed.setContent('<p>Hello world</p>');
-    await TinyUiActions.pTriggerContextMenu(ed, 'p', '.tox-menu');
+    const editor = hook.editor();
+    editor.setContent('<p>Hello world</p>');
+    await TinyUiActions.pTriggerContextMenu(editor, 'p', '.tox-menu');
 
-    await openThrobber(ed);
+    editor.setProgressState(true);
+    await pWaitForThrobber();
 
     await Waiter.pTryUntil('context menu is closed', () => {
       UiFinder.notExists(SugarBody.body(), '.tox-menu');
     });
-    ed.setProgressState(false);
   });
 
   it('does not close things until the throbber actually opens', async () => {
-    const ed = hook.editor();
-    ed.notificationManager.open({
+    const editor = hook.editor();
+    editor.notificationManager.open({
       type: 'success',
       text: 'lorem ipsum'
     });
 
-    const doTheClose = openThrobber(ed, 300);
-    const assertInParallel = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 150));
-      assert.isNotEmpty(ed.notificationManager.getNotifications(), 'The notification should not be closed yet');
-    };
+    // Note: this will cook in the background while we run the next little bit of code
+    editor.setProgressState(true, 300);
 
-    await Promise.all([ doTheClose, assertInParallel() ]);
+    await Waiter.pWait(150);
+    assert.isNotEmpty(editor.notificationManager.getNotifications(), 'The notification should not be closed yet');
 
-    assert.isEmpty(ed.notificationManager.getNotifications(), 'The notification should now be closed');
-    ed.setProgressState(false);
+    // Wait for the background task to finish
+    await pWaitForThrobber();
+
+    assert.isEmpty(editor.notificationManager.getNotifications(), 'The notification should be closed now');
   });
 });
