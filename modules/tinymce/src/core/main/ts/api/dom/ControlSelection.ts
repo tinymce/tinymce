@@ -20,6 +20,7 @@ import { EditorEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import VK from '../util/VK';
 import EditorSelection from './Selection';
+
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;
   showResizeRect: (elm: Element) => void;
