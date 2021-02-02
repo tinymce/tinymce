@@ -6,8 +6,9 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
+describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
   /**
    * Test the width of tables before and after column operations
    * There is a 2 pixel delta allowed from the expected width, to account for table borders
@@ -23,13 +24,28 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
   const getTableWidth = (editor: Editor) =>
     SelectorFind.child<HTMLTableElement>(TinyDom.body(editor), 'table').map(Width.get).getOrDie();
 
-  const assertNewWidth = (editor: Editor, multiplier: number) => {
+  const assertWidth = (editor: Editor, multiplier: number, command: string) => {
     const beforeWidth = getTableWidth(editor);
     editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
-    editor.execCommand('mceTableInsertColAfter');
+    editor.execCommand(command);
     const afterWidth = getTableWidth(editor);
     // 2px margin of error, 30px margin of error for IE
     assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
+  };
+
+  interface TableCommandMap {
+    readonly mceTableInsertColBefore: number;
+    readonly mceTableInsertColAfter: number;
+    readonly mceTableDeleteCol: number;
+  }
+
+  const performCommandsAndAssertWidths = (editor: Editor, content: string, multipliers: TableCommandMap) => {
+    editor.setContent(content);
+    assertWidth(editor, multipliers.mceTableInsertColBefore, 'mceTableInsertColBefore');
+    editor.setContent(content);
+    assertWidth(editor, multipliers.mceTableInsertColAfter, 'mceTableInsertColAfter');
+    editor.setContent(content);
+    assertWidth(editor, multipliers.mceTableDeleteCol, 'mceTableDeleteCol');
   };
 
   // TODO: tests for colspan #TINY-6949
@@ -39,12 +55,12 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'preservetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: will resize table because responsive tables cannot honour this setting', () => {
         const editor = hook.editor();
-        editor.setContent(`
-          <table>
+        const content = (
+          `<table>
             <tbody>
               <tr>
                 <td></td>
@@ -55,14 +71,18 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
                 <td></td>
               </tr>
             </tbody>
-          </table>
-        `);
-        assertNewWidth(editor, 1.5);
+          </table>`
+        );
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
+        });
       });
 
       it('TINY-6711: will resize when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table>
             <tbody>
               <tr>
@@ -76,12 +96,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
 
       it('TINY-6711: will function with a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table>
             <colgroup>
               <col>
@@ -99,7 +123,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
     });
 
@@ -108,11 +136,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'responsive',
         table_column_resizing: 'resizetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table>
             <tbody>
               <tr>
@@ -126,12 +154,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1.5);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
+        });
       });
 
       it('TINY-6711: will resize when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table>
             <tbody>
               <tr>
@@ -145,12 +177,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
 
       it('TINY-6711: will function with a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table>
             <colgroup>
               <col>
@@ -168,7 +204,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
     });
   });
@@ -179,11 +219,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'preservetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 455px;">
             <tbody>
               <tr>
@@ -197,12 +237,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
       });
 
       it('TINY-6711: should preserve table width when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 455px;">
             <tbody>
               <tr>
@@ -216,12 +260,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
       });
 
       it('TINY-6711: will preserve width with a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 865px;">
             <colgroup>
               <col style="width: 432px;"/>
@@ -239,7 +287,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
       });
     });
 
@@ -248,11 +300,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'fixed',
         table_column_resizing: 'resizetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 674px">
             <tbody>
               <tr>
@@ -266,12 +318,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1.5);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
+        });
       });
 
       it('TINY-6711: should resize table when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 674px">
             <tbody>
               <tr>
@@ -285,12 +341,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
 
       it('TINY-6711: should resize table when using a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 432px;">
             <colgroup>
               <col style="width: 216px;"/>
@@ -308,7 +368,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
     });
   });
@@ -319,11 +383,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'preservetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: should preserve table width when inserting a column', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 50%;">
             <tbody>
               <tr style="height: 21px;">
@@ -337,12 +401,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
       });
 
       it('TINY-6711: should preserve table width when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 50%;">
             <tbody>
               <tr style="height: 21px;">
@@ -356,12 +424,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 0
+        });
       });
 
       it('TINY-6711: should preserve table width when using a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 57.8035%;">
             <colgroup>
               <col style="width: 49.9422%;"/>
@@ -379,7 +451,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 0
+        });
       });
     });
 
@@ -388,11 +464,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
         ...baseSettings,
         table_sizing_mode: 'relative',
         table_column_resizing: 'resizetable',
-      }, [ Plugin ]);
+      }, [ Plugin, Theme ]);
 
       it('TINY-6711: should should resize table when inserting a column', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table width: 33.3433%; border="1">
             <tbody>
               <tr>
@@ -406,12 +482,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 1.5);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
+        });
       });
 
       it('TINY-6711: should should resize table when inserting multiple columns', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table width: 33.3433%; border="1">
             <tbody>
               <tr>
@@ -425,12 +505,16 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
 
       it('TINY-6711: should should resize table when using a colgroup', () => {
         const editor = hook.editor();
-        editor.setContent(`
+        const content = (`
           <table style="width: 57.8035%;">
             <colgroup>
               <col style="width: 49.9422%;"/>
@@ -448,7 +532,11 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
             </tbody>
           </table>
         `);
-        assertNewWidth(editor, 2);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 2,
+          mceTableInsertColAfter: 2,
+          mceTableDeleteCol: 0
+        });
       });
     });
   });
