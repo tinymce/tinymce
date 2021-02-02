@@ -7,6 +7,7 @@ Version 5.7.0 (TBD)
     Added new `font_css` setting for fonts to be added to both containing document and the editor #TINY-6199
     Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
     Added Oxide variable to define the container background color in fullscreen mode #TINY-6903
+    Added support for `table_column_resizing` when inserting or deleting columns #TINY-6711
     Changed copying table columns or entire tables will now retain an appropriate width when pasted #TINY-6664
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
@@ -30,6 +31,7 @@ Version 5.7.0 (TBD)
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
     Fixed the type signature for `editor.selection.setCursorLocation()` incorrectly allowing a node with no `offset` #TINY-6843
     Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
+    Fixed figure elements incorrectly splitting from a valid parent element when editing the image within #TINY-6592
     Fixed inserting multiple rows or columns in a table cloning from the incorrect source row or column #TINY-6906
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783

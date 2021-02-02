@@ -36,7 +36,7 @@ describe('browser.tinymce.plugins.imagetools.ContextToolbarTest', () => {
   const pWaitForDialogOpenThenCloseDialog = async (editor: Editor, childSelector: string) => {
     await TinyUiActions.pWaitForDialog(editor);
     await TinyUiActions.pWaitForPopup(editor, childSelector);
-    TinyUiActions.closeDialog(editor);
+    TinyUiActions.cancelDialog(editor);
     await Waiter.pTryUntil('Wait for dialog to close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
   };
 
