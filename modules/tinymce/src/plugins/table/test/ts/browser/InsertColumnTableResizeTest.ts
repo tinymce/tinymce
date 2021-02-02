@@ -1,5 +1,6 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { SelectorFind, Width } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -17,6 +18,8 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   };
 
+  const platform = PlatformDetection.detect();
+
   const getTableWidth = (editor: Editor) =>
     SelectorFind.child<HTMLTableElement>(TinyDom.body(editor), 'table').map(Width.get).getOrDie();
 
@@ -25,7 +28,8 @@ describe('browser.tinymce.plugins.table.InsertColumnTableResizeTest', () => {
     editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
     editor.execCommand('mceTableInsertColAfter');
     const afterWidth = getTableWidth(editor);
-    assert.approximately(afterWidth, beforeWidth * multiplier, 2);
+    // 2px margin of error, 30px margin of error for IE
+    assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
   };
 
   // TODO: tests for colspan #TINY-6949
