@@ -12,7 +12,7 @@ import {
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { RepresentingConfigs } from '../alien/RepresentingConfigs';
 import { StoragedMenuButton, StoragedMenuItem } from '../button/MenuButton';
 import * as Dialogs from '../dialog/Dialogs';
@@ -39,12 +39,12 @@ const getHeader = (title: string, backstage: UiFactoryBackstage) => renderModalH
   draggable: backstage.dialog.isDraggableModal()
 }, backstage.shared.providers);
 
-const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBehaviour<any, any, any>>) => ({
+const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBehaviour<any, any, any>>, providers: UiFactoryBackstageProviders) => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-dialog__busy-spinner' ],
     attributes: {
-      'aria-label': message
+      'aria-label': providers.translate(message)
     },
     styles: {
       left: '0px',
@@ -60,10 +60,10 @@ const getBusySpec = (message: string, bs: Record<string, Behaviour.ConfiguredBeh
   }]
 });
 
-const getEventExtras = (lazyDialog: () => AlloyComponent, extra: WindowExtra) => ({
+const getEventExtras = (lazyDialog: () => AlloyComponent, providers: UiFactoryBackstageProviders, extra: WindowExtra) => ({
   onClose: () => extra.closeWindow(),
   onBlock: (blockEvent: FormBlockEvent) => {
-    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs));
+    ModalDialog.setBusy(lazyDialog(), (_comp, bs) => getBusySpec(blockEvent.message, bs, providers));
   },
   onUnblock: () => {
     ModalDialog.setIdle(lazyDialog());
