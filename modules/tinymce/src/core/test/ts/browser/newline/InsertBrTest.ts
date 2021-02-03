@@ -1,6 +1,9 @@
 import { ApproxStructure } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { Arr } from '@ephox/katamari';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { Height, Scroll, WindowVisualViewport } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as InsertBr from 'tinymce/core/newline/InsertBr';
@@ -110,5 +113,17 @@ describe('browser.tinymce.core.newline.InsertBrTest', () => {
       }))
     );
     TinyAssertions.assertSelection(editor, [ 0 ], 2, [ 0 ], 2);
+  });
+
+  it('Scrolls correctly to inserted br', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    Arr.range(100, () => InsertBr.insert(editor));
+    const { top } = Scroll.get(TinyDom.document(editor));
+    const offsetHeight = Height.get(TinyDom.body(editor));
+    const { height } = WindowVisualViewport.getBounds(editor.getWin());
+
+    TinyAssertions.assertCursor(editor, [ 0 ], 100); // assert cursor is at the last br
+    assert.isAtMost(offsetHeight - top, height, 'Editor should be scrolled to the bottom of the view');
   });
 });

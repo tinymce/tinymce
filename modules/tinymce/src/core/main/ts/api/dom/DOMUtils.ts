@@ -218,7 +218,10 @@ interface DOMUtils {
   };
   is: (elm: Node | Node[], selector: string) => boolean;
   add: (parentElm: RunArguments, name: string | Node, attrs?: Record<string, string | boolean | number>, html?: string | Node, create?: boolean) => HTMLElement;
-  create: (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node) => HTMLElement;
+  create: {
+    <K extends keyof HTMLElementTagNameMap>(name: K, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElementTagNameMap[K];
+    (name: string, attrs?: Record<string, string | boolean | number>, html?: string | Node): HTMLElement;
+  };
   createHTML: (name: string, attrs?: Record<string, string>, html?: string) => string;
   createFragment: (html?: string) => DocumentFragment;
   remove: <T extends Node>(node: string | T | T[] | DomQuery<T>, keepChildren?: boolean) => T | T[];
