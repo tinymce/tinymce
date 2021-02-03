@@ -37,7 +37,8 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
     });
 
   const assertBorderWidth = (element: HTMLElement, expectedWidth: string) => {
-    assert.equal(Css.get(SugarElement.fromDom(element), 'border-width'), expectedWidth);
+    // we need to use `border-left-width` rather than the short hand `border-width` for the computed value to be valid in Firefox
+    assert.equal(Css.get(SugarElement.fromDom(element), 'border-left-width'), expectedWidth);
   };
 
   it('TBA: Toggle on/off visualblocks and compute previews', async () => {
