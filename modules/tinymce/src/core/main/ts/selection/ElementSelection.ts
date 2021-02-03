@@ -93,6 +93,16 @@ const getNode = (root: Element, rng: Range): Element => {
         return startContainer;
       }
     }
+
+    if (startContainer.nodeType === 3 && endContainer.nodeType === 1) {
+      if (endContainer.childElementCount === 2) {
+        return endContainer.firstChild;
+      }
+
+      if (endContainer.childElementCount > 2) {
+        return startContainer.nextSibling;
+      }
+    }
   }
 
   if (elm && elm.nodeType === 3) {
