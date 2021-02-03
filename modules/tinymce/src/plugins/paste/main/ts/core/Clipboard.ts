@@ -325,10 +325,11 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
 
     const isPlainTextHtml = (internal === false && Newlines.isPlainText(content));
     const isImage = SmartPaste.isImageUrl(editor, content);
+    const isAbsoluteUrl = SmartPaste.isAbsoluteUrl(content);
 
     // If we got nothing from clipboard API and pastebin or the content is a plain text (with only
     // some BRs, Ps or DIVs as newlines) then we fallback to plain/text
-    if (!content.length || (isPlainTextHtml && !isImage)) {
+    if (!content.length || (isPlainTextHtml && !isImage && !isAbsoluteUrl)) {
       plainTextMode = true;
     }
 
