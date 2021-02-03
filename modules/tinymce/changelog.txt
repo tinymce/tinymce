@@ -35,7 +35,7 @@ Version 5.7.0 (TBD)
     Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
     Fixed figure elements incorrectly splitting from a valid parent element when editing the image within #TINY-6592
     Fixed inserting multiple rows or columns in a table cloning from the incorrect source row or column #TINY-6906
-    Fixed a bug where `br` elements were not scrolled into view upon insertion #TINY-6964
+    Fixed an issue where new lines were not scrolled into view when pressing Shift+Enter #TINY-6964
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)
