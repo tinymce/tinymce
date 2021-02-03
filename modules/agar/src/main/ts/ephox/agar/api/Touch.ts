@@ -5,6 +5,13 @@ import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
+const touchStart = Touches.touchstart;
+const touchStartAt = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchstartAt(dx, dy)(element);
+const touchEnd = Touches.touchend;
+const touchEndAt = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchendAt(dx, dy)(element);
+const touchMove = Touches.touchmove;
+const touchMoveTo = (element: SugarElement<any>, dx: number, dy: number): void => Touches.touchmoveTo(dx, dy)(element);
+
 const cTrigger = (selector: string, action: (ele: SugarElement<any>) => void) => Chain.async<SugarElement, SugarElement>((container, next, die) => {
   UiFinder.findIn(container, selector).fold(
     () => die('Could not find element: ' + selector),
@@ -60,6 +67,16 @@ const cTouchEnd = Chain.op(Touches.touchend);
 
 export {
   point,
+
+  tap,
+  trueTap,
+
+  touchStart,
+  touchStartAt,
+  touchEnd,
+  touchEndAt,
+  touchMove,
+  touchMoveTo,
 
   sTap,
   sTapOn,

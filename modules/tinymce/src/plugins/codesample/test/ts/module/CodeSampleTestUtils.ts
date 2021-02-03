@@ -63,7 +63,7 @@ const pSubmitDialog = async (editor: Editor) => {
 };
 
 const pCancelDialog = async (editor: Editor) => {
-  TinyUiActions.closeDialog(editor, dialogSelector);
+  TinyUiActions.cancelDialog(editor, dialogSelector);
   await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
 };
 

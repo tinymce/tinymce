@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { Attribute, Class, Html, InsertAll, SugarElement } from '@ephox/sugar';
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
 import { LOCKED_COL_ATTR } from 'ephox/snooker/util/LockedColumnUtils';
@@ -10,6 +10,11 @@ interface TestData {
   rowspan?: string;
   colspan?: string;
   locked?: boolean;
+}
+
+interface TableAttributes {
+  beforeCopy: Record<string, string | boolean | number>; // attributes to set on the table before copy
+  afterCopy: string[]; // attributes that should not be on the table after copy
 }
 
 UnitTest.test('CopySelectedTest', () => {
@@ -80,13 +85,20 @@ UnitTest.test('CopySelectedTest', () => {
     return table;
   };
 
-  const check = (label: string, expected: TestData[][], input: TestData[][]) => {
+  const check = (label: string, expected: TestData[][], input: TestData[][], tableAttributes?: TableAttributes) => {
     const table = generateInput(input);
+    if (Type.isNonNullable(tableAttributes)) {
+      Attribute.setAll(table, tableAttributes.beforeCopy);
+    }
 
     const replica = CopySelected.extract(table, '.' + SEL_CLASS);
 
-    // Verify locked col attribute is not present in replica table
-    assert.eq(false, Attribute.has(replica, LOCKED_COL_ATTR));
+    // Verify specified table attributes are not present in replica table
+    if (Type.isNonNullable(tableAttributes)) {
+      Arr.each(tableAttributes.afterCopy, (attrName) => {
+        assert.eq(false, Attribute.has(replica, attrName));
+      });
+    }
 
     // Now verify that the table matches the nested array structure of expected
     const assertWithInfo = <T> (exp: T, actual: T, info: string) => {
@@ -285,6 +297,26 @@ UnitTest.test('CopySelectedTest', () => {
       [ s('A', 1, 1, true), ns('B', 1, 1), ns('C', 1, 1) ],
       [ s('D', 1, 1, true), ns('E', 1, 1), ns('F', 1, 1) ],
       [ s('G', 1, 1, true), ns('H', 1, 1), ns('I', 1, 1) ]
-    ]);
+    ], { beforeCopy: {}, afterCopy: [ LOCKED_COL_ATTR ] });
+  // //////////////////////////////////////////////////
+  check('single column, simple with removable table attributes',
+    [
+      [ s('A') ],
+      [ s('D') ],
+      [ s('G') ]
+    ],
+    [
+      [ s('A', 1, 1), ns('B', 1, 1), ns('C', 1, 1) ],
+      [ s('D', 1, 1), ns('E', 1, 1), ns('F', 1, 1) ],
+      [ s('G', 1, 1), ns('H', 1, 1), ns('I', 1, 1) ]
+    ],
+    {
+      beforeCopy: {
+        [ LOCKED_COL_ATTR ]: '0',
+        'data-snooker-col-series': 'numbers'
+      },
+      afterCopy: [ LOCKED_COL_ATTR, 'data-snooker-col-series' ]
+    }
+  );
 // //////////////////////////////////////////////////
 });

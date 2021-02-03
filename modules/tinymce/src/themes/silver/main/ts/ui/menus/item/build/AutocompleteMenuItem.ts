@@ -7,7 +7,7 @@
 
 import { Behaviour, GuiFactory, ItemTypes, MaxHeight, Tooltipping } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
-import { Fun, Obj, Optional } from '@ephox/katamari';
+import { Fun, Obj, Optional, Regex } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import I18n from 'tinymce/core/api/util/I18n';
@@ -54,13 +54,12 @@ const tooltipBehaviour = (
     ])
     .getOr([]);
 
-const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
 const replaceText = (text: string, matchText: string): string => {
   const translated = I18n.translate(text);
   const encoded = encodeText(translated);
   if (matchText.length > 0) {
-    const escapedMatchRegex = new RegExp(escapeRegExp(matchText), 'gi');
+    const escapedMatchRegex = new RegExp(Regex.escape(matchText), 'gi');
     return encoded.replace(escapedMatchRegex, (match) => `<span class="tox-autocompleter-highlight">${match}</span>`);
   } else {
     return encoded;

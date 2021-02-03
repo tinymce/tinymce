@@ -41,7 +41,6 @@ export type TableData = {
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type RowData = {
   height: string;
-  scope: string;
   class: string;
   align: string;
   type: string;
@@ -283,7 +282,6 @@ const extractDataFromRowElement = (editor: Editor, elm: HTMLTableRowElement, has
   const dom = editor.dom;
   return {
     height: dom.getStyle(elm, 'height') || dom.getAttrib(elm, 'height'),
-    scope: dom.getAttrib(elm, 'scope'),
     class: dom.getAttrib(elm, 'class', ''),
     type: getRowType(editor, elm),
     align: getHAlignment(editor, elm),

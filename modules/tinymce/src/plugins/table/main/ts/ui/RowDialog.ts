@@ -24,7 +24,6 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 type RowData = Helpers.RowData;
 
 const updateSimpleProps = (modifier: DomModifier, data: RowData) => {
-  modifier.setAttrib('scope', data.scope);
   modifier.setAttrib('class', data.class);
   modifier.setStyle('height', Util.addPxSuffix(data.height));
 };

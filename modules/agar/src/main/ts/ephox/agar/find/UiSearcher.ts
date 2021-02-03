@@ -60,7 +60,7 @@ const selectAll = (element: SugarElement<any>, selector: string): Array<SugarEle
 
 const toResult = <T>(message: TestLabel, option: Optional<T>): Result<T, TestLabel> =>
   option.fold(
-    () => Result.error<T, TestLabel>(message),
+    () => Result.error<T, TestLabel>(TestLabel.asString(message)),
     Result.value
   );
 

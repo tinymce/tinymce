@@ -114,6 +114,8 @@ const clean = (replica: SugarElement<HTMLTableElement>, stats: StatsStruct, hous
   }
   // Remove any attributes that should not be in the replicated table
   Attribute.remove(replica, LOCKED_COL_ATTR);
+  // TODO: TINY-6944 - need to figure out a better way of handling this
+  Attribute.remove(replica, 'data-snooker-col-series'); // For advtable series column feature
 
   const tableSize = TableSize.getTableSize(replica);
   tableSize.adjustTableWidth(widthDelta);

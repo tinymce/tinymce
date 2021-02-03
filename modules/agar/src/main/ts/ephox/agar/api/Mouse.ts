@@ -14,6 +14,8 @@ const mouseMove = (element: SugarElement<Node>, settings: Clicks.Settings = { })
 const mouseOut = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOut(settings)(element);
 const mouseMoveTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Clicks.Settings, 'dx' | 'dy'> = { }): void =>
   Clicks.mouseMove({ ...settings, dx, dy })(element);
+const mouseUpTo = (element: SugarElement<Node>, dx: number, dy: number, settings: Omit<Clicks.Settings, 'dx' | 'dy'> = { }): void =>
+  Clicks.mouseUp({ ...settings, dx, dy })(element);
 
 // Custom event creation
 const cClickWith = Fun.compose(Chain.op, Clicks.click);
@@ -156,6 +158,7 @@ export {
   mouseOver,
   mouseDown,
   mouseUp,
+  mouseUpTo,
   mouseMove,
   mouseMoveTo,
   mouseOut,

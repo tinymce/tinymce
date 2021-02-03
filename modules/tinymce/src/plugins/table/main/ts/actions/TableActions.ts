@@ -8,11 +8,11 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { CellMutations, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
+import { CellMutations, ResizeBehaviour, ResizeWire, RunOperation, TableFill, TableGridSize, TableOperations } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import * as Events from '../api/Events';
-import { getCloneElements } from '../api/Settings';
+import { getCloneElements, isResizeTableColumnResizing } from '../api/Settings';
 import { getRowType, switchCellsType, switchSectionType } from '../core/TableSections';
 import * as Util from '../core/Util';
 import * as TableSize from '../queries/TableSize';
@@ -68,6 +68,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   // Optional.none gives the default cloneFormats.
   const cloneFormats = getCloneElements(editor);
 
+  const colMutationOp = isResizeTableColumnResizing(editor) ? Fun.noop : CellMutations.halve;
+
   const execute = <T> (operation: RunOperation.OperationCallback<T>, guard: GuardFn, mutate: MutateFn, lazyWire: () => ResizeWire, effect: Events.TableEventData) =>
     (table: SugarElement<HTMLTableElement>, target: T): Optional<TableActionResult> => {
       Util.removeDataStyle(table);
@@ -75,7 +77,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
       const doc = SugarElement.fromDom(editor.getDoc());
       const generators = TableFill.cellOperations(mutate, doc, cloneFormats);
       const sizing = TableSize.get(editor, table);
-      return guard(table) ? operation(wire, table, target, generators, sizing).bind((result) => {
+      const resizeBehaviour = isResizeTableColumnResizing(editor) ? ResizeBehaviour.resizeTable() : ResizeBehaviour.preserveTable();
+      return guard(table) ? operation(wire, table, target, generators, sizing, resizeBehaviour).bind((result) => {
         Arr.each(result.newRows, (row) => {
           Events.fireNewRow(editor, row.dom);
         });
@@ -103,9 +106,9 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
 
   const insertRowsAfter = execute(TableOperations.insertRowsAfter, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
-  const insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, CellMutations.halve, lazyWire, Events.structureModified);
+  const insertColumnsBefore = execute(TableOperations.insertColumnsBefore, Fun.always, colMutationOp, lazyWire, Events.structureModified);
 
-  const insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, CellMutations.halve, lazyWire, Events.structureModified);
+  const insertColumnsAfter = execute(TableOperations.insertColumnsAfter, Fun.always, colMutationOp, lazyWire, Events.structureModified);
 
   const mergeCells = execute(TableOperations.mergeCells, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 

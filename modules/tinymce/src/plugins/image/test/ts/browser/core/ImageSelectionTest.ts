@@ -210,4 +210,82 @@ describe('browser.tinymce.plugins.image.core.ImageSelectionTest', () => {
       });
     }));
   });
+
+  it('TINY-6592: If <figure> is not valid child, it should split parent node', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>' +
+		      '<strong>A</strong>' +
+		      '<img src="image.png>' +
+		      '<strong>B</strong>' +
+		      '</p>');
+    TinySelections.select(editor, 'img', []);
+    updateImageOrFigure(editor, {
+      caption: true // convert <img> to <figure>
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(
+      editor,
+      ApproxStructure.build((s, str) => {
+        return s.element('div', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element('strong', {
+                  children: [ s.text(str.is('A')) ]
+                })
+              ]
+            }),
+            s.element('figure', {
+              children: [ s.element('img', {}), s.element('figcaption', {}) ]
+            }),
+            s.element('p', {
+              children: [
+                s.element('strong', {
+                  children: [ s.text(str.is('B')) ]
+                })
+              ]
+            }),
+            s.theRest()
+          ]
+        });
+      })
+    );
+  });
+
+  it('TINY-6592: If <figure> is valid child, it should not split parent node', async () => {
+    const editor = hook.editor();
+    editor.setContent('<div>' +
+		      '<strong>A</strong>' +
+		      '<img src="image.png>' +
+		      '<strong>B</strong>' +
+		      '</div>');
+    TinySelections.select(editor, 'img', []);
+    updateImageOrFigure(editor, {
+      caption: true // convert <img> to <figure>
+    });
+    await pWaitForDragHandles(editor);
+    TinyAssertions.assertContentStructure(
+      editor,
+      ApproxStructure.build((s, str) => {
+        return s.element('div', {
+          children: [
+            s.element('div', {
+              children: [
+                s.element('strong', {
+                  children: [ s.text(str.is('A')) ]
+                }),
+                s.element('figure', {
+                  children: [ s.element('img', {}), s.element('figcaption', {}) ]
+                }),
+                s.element('strong', {
+                  children: [ s.text(str.is('B')) ]
+                })
+              ]
+            }),
+            s.theRest()
+          ]
+        });
+      })
+    );
+  });
 });

@@ -12,7 +12,9 @@ const getNextStep = <E, D>(
   viewport: ZoneViewports<E>,
   traverse: Traverse<E>
 ): Optional<Traverse<E>> => {
-  if (!universe.property().isBoundary(traverse.item)) {
+  if (universe.property().isSpecial(traverse.item) || universe.property().isNonEditable(traverse.item)) {
+    return Optional.some({ item: traverse.item, mode: Gather.sidestep });
+  } else if (!universe.property().isBoundary(traverse.item)) {
     return Optional.some(traverse);
   } else {
     // We are in a boundary, take the time to check where we are relative to the viewport

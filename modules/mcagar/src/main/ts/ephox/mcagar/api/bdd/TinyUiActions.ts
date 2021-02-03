@@ -54,6 +54,11 @@ const submitDialog = (editor: Editor, selector?: string): void => {
   clickDialogButton(editor, dialogSelector, getThemeSelectors().dialogSubmitSelector);
 };
 
+const cancelDialog = (editor: Editor, selector?: string): void => {
+  const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
+  clickDialogButton(editor, dialogSelector, getThemeSelectors().dialogCancelSelector);
+};
+
 const closeDialog = (editor: Editor, selector?: string): void => {
   const dialogSelector = Type.isUndefined(selector) ? getThemeSelectors().dialogSelector : selector;
   clickDialogButton(editor, dialogSelector, getThemeSelectors().dialogCloseSelector);
@@ -93,6 +98,7 @@ export {
   clickOnUi,
 
   submitDialog,
+  cancelDialog,
   closeDialog,
 
   keydown,

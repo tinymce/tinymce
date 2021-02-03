@@ -2,6 +2,13 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Gene } from '../api/Gene';
 import TagBoundaries from '../common/TagBoundaries';
 
+// Warning: not exhaustive
+export const enum GeneTypes {
+  Text = 'TEXT_GENE',
+  Comment = 'COMMENT_GENE',
+  Special = 'SPECIAL_GENE'
+}
+
 const children = (item: Gene): Gene[] => {
   return item.children;
 };
@@ -19,15 +26,19 @@ const document = (_item: Gene): undefined => {
 };
 
 const isText = (item: Gene): boolean => {
-  return item.name === 'TEXT_GENE';
+  return item.name === GeneTypes.Text;
 };
 
 const isComment = (item: Gene): boolean => {
-  return item.name === 'COMMENT_GENE';
+  return item.name === GeneTypes.Comment;
 };
 
 const isElement = (item: Gene): boolean => {
-  return item.name !== undefined && item.name !== 'TEXT_GENE' && item.name !== 'COMMENT_GENE';
+  return item.name !== undefined && item.name !== GeneTypes.Text && item.name !== GeneTypes.Comment;
+};
+
+const isSpecial = (item: Gene): boolean => {
+  return item.name === GeneTypes.Special;
 };
 
 const getText = (item: Gene): string => {
@@ -58,6 +69,7 @@ export {
   isText,
   isComment,
   isElement,
+  isSpecial,
   getText,
   setText,
   isEmptyTag,
