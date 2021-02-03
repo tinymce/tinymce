@@ -1,7 +1,7 @@
 import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { Class, Css } from '@ephox/sugar';
+import { Class, Css, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,7 +12,15 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'visualblocks',
     toolbar: 'visualblocks',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    content_style: `
+      h1 {
+        border: none;
+      }
+      .mce-visualblocks h1 {
+        border: 13px solid black;
+      }
+    `
   }, [ Plugin, Theme ]);
 
   const pWaitForVisualBlocks = (editor: Editor, waitUntilEnabled: boolean = true) =>
@@ -28,14 +36,22 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
       }
     });
 
+  const assertBorderWidth = (element: HTMLElement, expectedWidth: string) => {
+    assert.equal(Css.get(SugarElement.fromDom(element), 'border-width'), expectedWidth);
+  };
+
   it('TBA: Toggle on/off visualblocks and compute previews', async () => {
     const editor = hook.editor();
+    editor.setContent('<h1>something</h1>');
+    const h1 = editor.dom.select('h1')[0];
+    assertBorderWidth(h1, '0px');
+
     editor.execCommand('mceVisualBlocks');
     await pWaitForVisualBlocks(editor);
-    assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
+    assertBorderWidth(h1, '13px');
 
     editor.execCommand('mceVisualBlocks');
     await pWaitForVisualBlocks(editor, false);
-    assert.include(editor.formatter.getCssText('h1'), 'border:0px none', 'Should not have a border');
+    assertBorderWidth(h1, '0px');
   });
 });
