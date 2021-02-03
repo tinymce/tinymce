@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     content_style: `
       h1 {
-        border: none;
+        border: 2px solid black;
       }
       .mce-visualblocks h1 {
         border: 13px solid black;
@@ -44,7 +44,7 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
     const editor = hook.editor();
     editor.setContent('<h1>something</h1>');
     const h1 = editor.dom.select('h1')[0];
-    assertBorderWidth(h1, '0px');
+    assertBorderWidth(h1, '2px');  // content style is overriden so that all h1s have a 1px border
 
     editor.execCommand('mceVisualBlocks');
     await pWaitForVisualBlocks(editor);
@@ -52,6 +52,6 @@ describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {
 
     editor.execCommand('mceVisualBlocks');
     await pWaitForVisualBlocks(editor, false);
-    assertBorderWidth(h1, '0px');
+    assertBorderWidth(h1, '2px');
   });
 });
