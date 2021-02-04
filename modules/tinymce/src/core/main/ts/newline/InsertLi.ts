@@ -13,6 +13,10 @@ const hasFirstChild = (elm, name) => {
   return elm.firstChild && elm.firstChild.nodeName === name;
 };
 
+const isFirstChild = (elm: HTMLElement) => {
+  return elm.parentNode.firstChild === elm;
+};
+
 const hasParent = (elm, parentName) => {
   return elm && elm.parentNode && elm.parentNode.nodeName === parentName;
 };
@@ -68,7 +72,14 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
   if (isFirstOrLastLi(containerBlock, parentBlock, true) && isFirstOrLastLi(containerBlock, parentBlock, false)) {
     if (hasParent(containerBlock, 'LI')) {
       // Nested list is inside a LI
-      dom.insertAfter(newBlock, getContainerBlock(containerBlock));
+      const containerBlockParent = getContainerBlock(containerBlock);
+      dom.insertAfter(newBlock, containerBlockParent);
+
+      if (isFirstChild(containerBlock)) {
+        dom.remove(containerBlockParent);
+      } else {
+        dom.remove(containerBlock);
+      }
     } else {
       // Is first and last list item then replace the OL/UL with a text block
       dom.replace(newBlock, containerBlock);
@@ -83,11 +94,13 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
       // First LI in list then remove LI and add text block before list
       containerBlock.parentNode.insertBefore(newBlock, containerBlock);
     }
+    dom.remove(parentBlock);
   } else if (isFirstOrLastLi(containerBlock, parentBlock, false)) {
     // Last LI in list then remove LI and add text block after list
     dom.insertAfter(newBlock, getContainerBlock(containerBlock));
+    dom.remove(parentBlock);
   } else {
-    // Middle LI in list the split the list and insert a text block in the middle
+    // Middle LI in list then split the list and insert a text block in the middle
     // Extract after fragment and insert it after the current block
     containerBlock = getContainerBlock(containerBlock);
     const tmpRng = rng.cloneRange();
@@ -102,9 +115,9 @@ const insert = (editor: Editor, createNewBlock, containerBlock, parentBlock, new
       dom.insertAfter(fragment, containerBlock);
       dom.insertAfter(newBlock, containerBlock);
     }
+    dom.remove(parentBlock);
   }
 
-  dom.remove(parentBlock);
   NewLineUtils.moveToCaretPosition(editor, newBlock);
 };
 
