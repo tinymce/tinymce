@@ -1,11 +1,12 @@
-import { Chain, Log, Mouse, Pipeline } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Log, Mouse, Pipeline, UiFinder } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attribute, Height, SelectorFind, SugarElement, SugarLocation, Width } from '@ephox/sugar';
+import { Attribute, Height, SelectorFind, SugarBody, SugarElement, SugarLocation, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import I18n from 'tinymce/core/api/util/I18n';
 import { WindowParams } from 'tinymce/core/api/WindowManager';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -72,6 +73,22 @@ UnitTest.asyncTest('browser.tinymce.themes.silver.window.SilverDialogBlockTest',
         Assert.eq('Blocked state of the dialog', blocked, isBlocked);
       })
     ]);
+    const cAssertBusyStructure = (message: string) => Chain.fromIsolatedChainsWith(SugarBody.body(), [
+      UiFinder.cFindIn('.tox-dialog__busy-spinner'),
+      Assertions.cAssertStructure('Check busy structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+        attrs: {
+          'aria-label': str.is(message)
+        },
+        styles: {
+          position: str.is('absolute')
+        },
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-spinner') ]
+          })
+        ]
+      })))
+    ]);
     const cBlock = (message: string) => Chain.op<Dialog.DialogInstanceApi<{ fred: string }>>((api) => api.block(message));
     const cUnblock = Chain.op<Dialog.DialogInstanceApi<{ fred: string }>>((api) => api.unblock());
 
@@ -110,6 +127,23 @@ UnitTest.asyncTest('browser.tinymce.themes.silver.window.SilverDialogBlockTest',
         cUnblock,
         cAssertBlock(false),
         cClose
+      ]),
+
+      Log.chainsAsStep('TINY-6971', 'Ensure block messages are translated', [
+        Chain.op(() => {
+          I18n.setCode('de');
+          I18n.add('de', {
+            'Uploading image': 'Bild hochladen'
+          });
+        }),
+        cOpen(params),
+        cBlock('Uploading image'),
+        cAssertBlock(true),
+        cAssertBusyStructure('Bild hochladen'),
+        cClose,
+        Chain.op(() => {
+          I18n.setCode('en');
+        })
       ])
     ];
 
