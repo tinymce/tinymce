@@ -59,7 +59,6 @@ const getNode = (root: Element, rng: Range): Element => {
   const startOffset = rng.startOffset;
   const endOffset = rng.endOffset;
   elm = rng.commonAncestorContainer;
-
   // Handle selection a image or other control like element such as anchors
   if (!rng.collapsed) {
     if (startContainer === endContainer) {
@@ -75,7 +74,7 @@ const getNode = (root: Element, rng: Range): Element => {
     // return sel.anchorNode.childNodes[sel.anchorOffset];
 
     // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
-    // This happens when you double click an underlined word in FireFox.
+    // This happens when you double click an underlined word in FireFoxe
     if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
       if ((startContainer as Text).length === startOffset) {
         startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);
@@ -102,6 +101,11 @@ const getNode = (root: Element, rng: Range): Element => {
       if (endContainer.childElementCount > 2) {
         return startContainer.nextSibling;
       }
+    }
+
+    // IE Handle double click an anchor.
+    if (startContainer.nodeType === 1 && endContainer.nodeType === 3) {
+      return startContainer.firstChild;
     }
   }
 
