@@ -50,7 +50,9 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
                     { name: 'image7.jfif' },
                     { name: 'image8.gif' },
                     { name: 'image9.bmp' },
-                    { name: 'image10.webp' }
+                    { name: 'image10.webp' },
+                    { name: 'image11.PNG' },
+                    { name: 'image12.WEBP' },
                   ]
                 }
               }
@@ -73,7 +75,9 @@ UnitTest.asynctest('Dropzone component Test', (success, failure) => {
           { name: 'image7.jfif' },
           { name: 'image8.gif' },
           { name: 'image9.bmp' },
-          { name: 'image10.webp' }
+          { name: 'image10.webp' },
+          { name: 'image11.PNG' },
+          { name: 'image12.WEBP' },
         ], filesValue);
       })
     ],

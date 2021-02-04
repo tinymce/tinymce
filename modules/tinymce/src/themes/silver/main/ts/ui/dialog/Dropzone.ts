@@ -28,7 +28,7 @@ const defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getSetting('images_file_types', defaultImageFileTypes, 'string'));
-  const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name, `.${type}`));
+  const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type}`));
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
 };

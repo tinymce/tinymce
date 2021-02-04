@@ -61,7 +61,9 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
       'png',
       'gif',
       'bmp',
-      'webp'
+      'webp',
+      'PNG',
+      'WEBP',
     ], (image_file_type) => LegacyUnit.equal(
       SmartPaste.isImageUrl(editor, `https://www.site.com/file.${image_file_type}`),
       true,
@@ -87,6 +89,11 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.SmartPasteTest', (success, fai
       SmartPaste.isImageUrl(editor, 'https://www.site.com/file.svg'),
       true,
       'File type "svg" is valid when set by settings'
+    );
+    LegacyUnit.equal(
+      SmartPaste.isImageUrl(editor, 'https://www.site.com/file.SVG'),
+      true,
+      'File type "SVG" (capitals) is valid when set by settings'
     );
     delete editor.settings.images_file_types;
   });
