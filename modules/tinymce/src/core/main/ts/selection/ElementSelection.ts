@@ -74,7 +74,7 @@ const getNode = (root: Element, rng: Range): Element => {
     // return sel.anchorNode.childNodes[sel.anchorOffset];
 
     // Handle cases where the selection is immediately wrapped around a node and return that node instead of it's parent.
-    // This happens when you double click an underlined word in FireFoxe
+    // This happens when you double click an underlined word in FireFox.
     if (startContainer.nodeType === 3 && endContainer.nodeType === 3) {
       if ((startContainer as Text).length === startOffset) {
         startContainer = skipEmptyTextNodes(startContainer.nextSibling, true);

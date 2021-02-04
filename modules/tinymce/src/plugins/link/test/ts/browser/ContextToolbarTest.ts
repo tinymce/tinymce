@@ -54,6 +54,12 @@ UnitTest.asynctest('browser.tinymce.plugins.link.ContextToolbarTest', (success, 
           UiFinder.cWaitForState('check link content', '.tox-toolbar input', (ele) => ele.dom.value === 'http://www.google.com/')
         ])
       ]),
+      Log.stepsAsStep('TBA', 'enable button link after double click', [
+        tinyApis.sSetSetting('link_context_toolbar', true),
+        tinyApis.sSetContent('<a href="http://www.google.com/">test</a>'),
+        Mouse.sTrueDoubleClickOn(editorEle, 'a'),
+        tinyUi.sWaitForUi('Check the link button is enabled', 'button[aria-label="Link"].tox-tbtn--enabled')
+      ]),
       TestLinkUi.sClearHistory
     ], onSuccess, onFailure);
   }, {
