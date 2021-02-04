@@ -11,6 +11,7 @@
 
 @editor-header-box-shadow: none;
 @editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
+@editor-header-sticky-background-color: transparent;
 
 .tox {
   // styles for making statusbar appear above toolbars when making the editor height very small
@@ -46,6 +47,7 @@
 
 .tox.tox-tinymce--toolbar-sticky-on {
   .tox-editor-header {
+    background-color: @editor-header-sticky-background-color;
     box-shadow: @editor-header-sticky-box-shadow;
   }
 }
