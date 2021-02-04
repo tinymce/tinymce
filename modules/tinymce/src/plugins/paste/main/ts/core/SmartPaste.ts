@@ -33,7 +33,7 @@ const isAbsoluteUrl = (url: string) => {
 };
 
 const isImageUrl = (editor: Editor, url: string) => {
-  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url.toLowerCase(), `.${type}`));
+  return isAbsoluteUrl(url) && Arr.exists(Settings.getAllowedImageFileTypes(editor), (type) => Strings.endsWith(url.toLowerCase(), `.${type.toLowerCase()}`));
 };
 
 const createImage = (editor: Editor, url: string, pasteHtmlFn: typeof pasteHtml) => {
