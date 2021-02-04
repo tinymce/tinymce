@@ -7,14 +7,13 @@
 
 import { Fun } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
-import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as InlineUtils from '../keyboard/InlineUtils';
 import * as NormalizeRange from '../selection/NormalizeRange';
@@ -33,17 +32,8 @@ const hasRightSideContent = (schema: Schema, container, parentBlock) => {
   }
 };
 
-const scrollToBr = (dom: DOMUtils, selection: EditorSelection, brElm) => {
-  // Insert temp marker and scroll to that
-  const marker = dom.create('span', {}, '&nbsp;');
-  brElm.parentNode.insertBefore(marker, brElm);
-  selection.scrollIntoView(marker);
-  dom.remove(marker);
-};
-
-const moveSelectionToBr = (dom: DOMUtils, selection: EditorSelection, brElm, extraBr) => {
-  const rng = dom.createRng();
-
+const moveSelectionToBr = (editor: Editor, brElm: HTMLBRElement, extraBr: boolean) => {
+  const rng = editor.dom.createRng();
   if (!extraBr) {
     rng.setStartAfter(brElm);
     rng.setEndAfter(brElm);
@@ -51,8 +41,8 @@ const moveSelectionToBr = (dom: DOMUtils, selection: EditorSelection, brElm, ext
     rng.setStartBefore(brElm);
     rng.setEndBefore(brElm);
   }
-
-  selection.setRng(rng);
+  editor.selection.setRng(rng);
+  ScrollIntoView.scrollRangeIntoView(editor, rng);
 };
 
 const insertBrAtCaret = (editor: Editor, evt?) => {
@@ -61,7 +51,7 @@ const insertBrAtCaret = (editor: Editor, evt?) => {
   const selection = editor.selection;
   const dom = editor.dom;
   const rng = selection.getRng();
-  let brElm: HTMLElement;
+  let brElm: HTMLBRElement;
   let extraBr: boolean;
 
   NormalizeRange.normalize(dom, rng).each((normRng) => {
@@ -108,8 +98,7 @@ const insertBrAtCaret = (editor: Editor, evt?) => {
   brElm = dom.create('br');
   rangeInsertNode(dom, rng, brElm);
 
-  scrollToBr(dom, selection, brElm);
-  moveSelectionToBr(dom, selection, brElm, extraBr);
+  moveSelectionToBr(editor, brElm, extraBr);
   editor.undoManager.add();
 };
 
@@ -126,8 +115,7 @@ const insertBrAfter = (editor: Editor, inline) => {
 
   const br = SugarElement.fromTag('br');
   Insert.after(SugarElement.fromDom(inline), br);
-  scrollToBr(editor.dom, editor.selection, br.dom);
-  moveSelectionToBr(editor.dom, editor.selection, br.dom, false);
+  moveSelectionToBr(editor, br.dom, false);
   editor.undoManager.add();
 };
 
