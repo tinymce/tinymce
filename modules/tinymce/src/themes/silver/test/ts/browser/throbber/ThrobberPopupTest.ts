@@ -2,7 +2,7 @@ import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { NodeTypes, SugarBody } from '@ephox/sugar';
+import { Class, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -23,14 +23,9 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
         items: 'bold | italic',
         scope: 'node',
         position: 'selection',
-        predicate: (node: Node) => {
-          if (node.nodeType === NodeTypes.ELEMENT) {
-            const elem = node as HTMLElement;
-            if (elem.classList.contains('ctx-menu-me')) {
-              return true;
-            }
-          }
-          return false;
+        predicate: (n: Node) => {
+          const node = SugarElement.fromDom(n);
+          return SugarNode.isHTMLElement(node) && Class.has(node, 'ctx-menu-me');
         }
       });
     },

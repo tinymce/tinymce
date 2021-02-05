@@ -135,6 +135,11 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     );
   };
 
+  const close = () => {
+    lastAnchor.set(Optional.none());
+    InlineView.hide(contextbar);
+  };
+
   const forceHide = () => {
     InlineView.hide(contextbar);
   };
@@ -271,10 +276,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
 
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
-      () => {
-        lastAnchor.set(Optional.none());
-        InlineView.hide(contextbar);
-      },
+      close,
 
       (info) => {
         launchContext(info.toolbars, Optional.some(info.elem.dom));
@@ -310,23 +312,20 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
-          lastAnchor.set(Optional.none());
-          InlineView.hide(contextbar);
+          close();
         }
       }, 0);
     });
 
     editor.on('SwitchMode', () => {
       if (editor.mode.isReadOnly()) {
-        lastAnchor.set(Optional.none());
-        InlineView.hide(contextbar);
+        close();
       }
     });
 
     editor.on('AfterProgressState', (event) => {
       if (event.state) {
-        lastAnchor.set(Optional.none());
-        InlineView.hide(contextbar);
+        close();
       }
     });
 
