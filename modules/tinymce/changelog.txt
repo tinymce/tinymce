@@ -16,6 +16,7 @@ Version 5.7.0 (TBD)
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
     Changed `editor.setProgressState(true)` to close any open popups #TINY-6686
+    Fixed an issue where cell widths were lost when merging table cells #TINY-6901
     Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
     Fixed a number of table operations not working when selecting 2 table cells on Mozilla Firefox #TINY-3897
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859

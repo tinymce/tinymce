@@ -1,27 +1,30 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Css, Dimension, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import Tools from 'tinymce/core/api/util/Tools';
 import { TableEventData } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
-  type TableModifiedEvent = EditorEvent<TableEventData>;
+type TableModifiedEvent = EditorEvent<TableEventData>;
 
-  interface MergeCellTest {
-    readonly message: string;
-    readonly before: string;
-    readonly after: string;
-    readonly expectedEvents: TableModifiedEvent[];
-  }
+interface MergeCellTest {
+  readonly before: string;
+  readonly after: string;
+  readonly expectedEvents: TableModifiedEvent[];
+}
 
-  Plugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false,
+    setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
+  }, [ Plugin, Theme ]);
 
   let modifiedEvents = [];
   const logModifiedEvent = (event: TableModifiedEvent) => {
@@ -35,68 +38,145 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
   const clearEvents = () => modifiedEvents = [];
   const defaultEvent = { type: 'tablemodified', structure: true, style: false } as TableModifiedEvent;
 
-  const testCommand = (editor: Editor, command: string, tests: MergeCellTest[]) => {
-    Tools.each(tests, (test) => {
-      clearEvents();
-      editor.getBody().innerHTML = test.before;
-      editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
-      editor.selection.collapse(true);
-      editor.execCommand(command);
-      LegacyUnit.equal(cleanTableHtml(editor.getContent()), test.after, test.message);
-      LegacyUnit.equal(modifiedEvents, test.expectedEvents);
-    });
+  const testMerge = (editor: Editor, test: MergeCellTest) => {
+    clearEvents();
+    editor.setContent(test.before);
+    editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
+    editor.selection.collapse(true);
+    editor.execCommand('mceTableMergeCells');
+    assert.equal(cleanTableHtml(editor.getContent()), test.after);
+    assert.deepEqual(modifiedEvents, test.expectedEvents);
   };
 
   const cleanTableHtml = (html: string) => {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  suite.test('TestCase-TBA: Table: mceTableMergeCells', (editor) => {
-    testCommand(editor, 'mceTableMergeCells', [
-      {
-        message: 'Should merge all cells into one',
-        before: (
-          '<table>' +
+  const getWidth = (elem: SugarElement<Element>) => Dimension.parse(Css.getRaw(elem, 'width').getOrDie(), [ 'relative' ]).getOrDie().value;
+
+  it('TBA: Should merge all cells into one', () => {
+    const editor = hook.editor();
+    testMerge(editor, {
+      before: (
+        '<table>' +
           '<tbody>' +
           '<tr><td data-mce-selected="1" data-mce-first-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
           '<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1" data-mce-last-selected="1">b2</td></tr>' +
           '</tbody>' +
           '</table>'
-        ),
-        after: (
-          '<table>' +
+      ),
+      after: (
+        '<table>' +
           '<tbody>' +
           '<tr><td colspan="2" rowspan="2">' +
           'a1<br />b1<br />a2<br />b2' +
           '</td></tr><tr></tr>' +
           '</tbody>' +
           '</table>'
-        ),
-        expectedEvents: [ defaultEvent ],
-      },
-      {
-        message: 'Should merge cells in two cols/rows into one cell with colspan',
-        before: (
-          '<table>' +
+      ),
+      expectedEvents: [ defaultEvent ],
+    });
+  });
+
+  it('TBA: Should merge cells in two cols/rows into one cell with colspan', () => {
+    const editor = hook.editor();
+    testMerge(editor, {
+      before: (
+        '<table>' +
           '<tbody>' +
           '<tr><td data-mce-selected="1" data-mce-first-selected="1">a1</td><td data-mce-selected="1">b1</td></tr>' +
           '<tr><td data-mce-selected="1">a2</td><td data-mce-selected="1" data-mce-last-selected="1">b2</td></tr>' +
           '<tr><td>a3</td><td>b3</td></tr>' +
           '</tbody>' +
           '</table>'
-        ),
-        after: (
-          '<table>' +
+      ),
+      after: (
+        '<table>' +
           '<tbody>' +
           '<tr><td colspan="2" rowspan="2">a1<br />b1<br />a2<br />b2</td></tr>' +
           '<tr></tr>' +
           '<tr><td>a3</td><td>b3</td></tr>' +
           '</tbody>' +
+        '</table>'
+      ),
+      expectedEvents: [ defaultEvent ],
+    });
+  });
+
+  it('TBA: Should merge b3+c3 but not reduce a2a3', () => {
+    const editor = hook.editor();
+    testMerge(editor, {
+      before: (
+        '<table>' +
+            '<tbody>' +
+              '<tr>' +
+                '<td>a1</td>' +
+                '<td>b1</td>' +
+                '<td>c1</td>' +
+              '</tr>' +
+              '<tr>' +
+                '<td rowspan="2">a2a3</td>' +
+                '<td>b2</td>' +
+                '<td>c2</td>' +
+              '</tr>' +
+              '<tr>' +
+                '<td data-mce-selected="1" data-mce-first-selected="1">b3</td>' +
+                '<td data-mce-selected="1" data-mce-last-selected="1">c3</td>' +
+              '</tr>' +
+            '</tbody>' +
           '</table>'
-        ),
-        expectedEvents: [ defaultEvent ],
-      },
-      /*
+      ),
+      after: (
+        '<table>' +
+          '<tbody>' +
+            '<tr>' +
+              '<td>a1</td>' +
+              '<td>b1</td>' +
+            '<td>c1</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td rowspan="2">a2a3</td>' +
+              '<td>b2</td>' +
+              '<td>c2</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td colspan="2">b3<br />c3</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>'
+      ),
+      expectedEvents: [ defaultEvent ],
+    });
+  });
+
+  it('TINY-6901: Will apply correct size to cell with colspan after cell merge', () => {
+    const editor = hook.editor();
+    const before = (
+      '<table style="width: 25.4582%;">' +
+        '<tbody>' +
+          '<tr>' +
+            '<td style="width: 42.7414%;" data-mce-selected="1" data-mce-first-selected="1"></td>' +
+            '<td style="width: 51.8049%;" data-mce-selected="1" data-mce-last-selected="1"></td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td style="width: 42.7414%;"></td>' +
+            '<td style="width: 51.8049%;"></td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
+
+    editor.setContent(before);
+    const cols = SelectorFilter.descendants(TinyDom.body(editor), 'td[data-mce-selected]');
+    const totalColsWidth = Arr.foldl(cols, (acc, col) => acc + getWidth(col), 0);
+    editor.selection.select(cols[0].dom, true);
+    editor.selection.collapse(true);
+    editor.execCommand('mceTableMergeCells');
+    const colspan = SelectorFind.descendant(TinyDom.body(editor), 'td[colspan="2"]').getOrDie();
+    assert.closeTo(getWidth(colspan), totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
+  });
+
+  /*
       {
         message: 'Should remove all rowspans since the table is fully merged',
         before: (
@@ -181,51 +261,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
         )
       },
       */
-      {
-        message: 'Should merge b3+c3 but not reduce a2a3',
-        before: (
-          '<table>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td>a1</td>' +
-          '<td>b1</td>' +
-          '<td>c1</td>' +
-          '</tr>' +
-          '<tr>' +
-          '<td rowspan="2">a2a3</td>' +
-          '<td>b2</td>' +
-          '<td>c2</td>' +
-          '</tr>' +
-          '<tr>' +
-          '<td data-mce-selected="1" data-mce-first-selected="1">b3</td>' +
-          '<td data-mce-selected="1" data-mce-last-selected="1">c3</td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>'
-        ),
-        after: (
-          '<table>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td>a1</td>' +
-          '<td>b1</td>' +
-          '<td>c1</td>' +
-          '</tr>' +
-          '<tr>' +
-          '<td rowspan="2">a2a3</td>' +
-          '<td>b2</td>' +
-          '<td>c2</td>' +
-          '</tr>' +
-          '<tr>' +
-          '<td colspan="2">b3<br />c3</td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>'
-        ),
-        expectedEvents: [ defaultEvent ],
-      },
-
-      /*
+  /*
       {
         message: 'Should merge b1+c1 and reduce a2',
         before: (
@@ -290,19 +326,4 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.MergeCellCommandTest',
         )
       }
      */
-    ]);
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'Table: Test merge cell commands', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'table',
-    indent: false,
-    valid_styles: {
-      '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
-    },
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
-    setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
-  }, success, failure);
 });
