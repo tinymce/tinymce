@@ -2,7 +2,7 @@ import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { NodeTypes, SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -18,6 +18,20 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       });
       ed.ui.registry.addContextMenu('test', {
         update: Fun.constant('test-item')
+      });
+      ed.ui.registry.addContextToolbar('test-2', {
+        items: 'bold | italic',
+        scope: 'node',
+        position: 'selection',
+        predicate: (node: Node) => {
+          if (node.nodeType === NodeTypes.ELEMENT) {
+            const elem = node as HTMLElement;
+            if (elem.classList.contains('ctx-menu-me')) {
+              return true;
+            }
+          }
+          return false;
+        }
       });
     },
     contextmenu: 'test'
@@ -40,6 +54,22 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
 
     await Waiter.pTryUntil('context menu is closed', () => {
       UiFinder.notExists(SugarBody.body(), '.tox-menu');
+    });
+  });
+
+  it('closes the context toolbar on popup', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p class="ctx-menu-me">Hello World</p>');
+
+    await Waiter.pTryUntil('Waiting for context toolbar to open', () => {
+      UiFinder.findIn(SugarBody.body(), '.tox-pop');
+    });
+
+    editor.setProgressState(true);
+    await pWaitForThrobber();
+
+    await Waiter.pTryUntil('context toolbar is closed', () => {
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
     });
   });
 

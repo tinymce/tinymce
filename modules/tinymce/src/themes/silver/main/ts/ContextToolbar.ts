@@ -323,6 +323,13 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       }
     });
 
+    editor.on('AfterProgressState', (event) => {
+      if (event.state) {
+        lastAnchor.set(Optional.none());
+        InlineView.hide(contextbar);
+      }
+    });
+
     editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element).fold(
         () => {
