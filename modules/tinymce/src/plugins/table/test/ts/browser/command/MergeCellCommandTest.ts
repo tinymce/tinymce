@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
-import { Css, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Css, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -19,6 +19,13 @@ interface MergeCellTest {
 }
 
 describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    base_url: '/project/tinymce/js/tinymce',
+    indent: false,
+    setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
+  }, [ Plugin, Theme ]);
+
   let modifiedEvents = [];
   const logModifiedEvent = (event: TableModifiedEvent) => {
     modifiedEvents.push({
@@ -33,11 +40,11 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
 
   const testMerge = (editor: Editor, test: MergeCellTest) => {
     clearEvents();
-    editor.getBody().innerHTML = test.before;
+    editor.setContent(test.before, { format: 'raw' });
     editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
     editor.selection.collapse(true);
     editor.execCommand('mceTableMergeCells');
-    LegacyUnit.equal(cleanTableHtml(editor.getContent()), test.after);
+    assert.equal(cleanTableHtml(editor.getContent()), test.after);
     assert.deepEqual(modifiedEvents, test.expectedEvents);
   };
 
@@ -46,13 +53,6 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
   };
 
   const getWidthNumber = (widthStyle: string): number => Number(widthStyle.replace('%', ''));
-
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'table',
-    base_url: '/project/tinymce/js/tinymce',
-    indent: false,
-    setup: (ed: Editor) => ed.on('TableModified', logModifiedEvent),
-  }, [ Plugin, Theme ]);
 
   it('TBA: Should merge all cells into one', () => {
     const editor = hook.editor();
@@ -167,12 +167,12 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
     );
 
     editor.setContent(before);
-    const cols = editor.dom.select('td[data-mce-selected]');
-    const totalColsWidth = Arr.foldl(cols, (acc, col) => acc + getWidthNumber(Css.getRaw(SugarElement.fromDom(col), 'width').getOrDie()), 0);
-    editor.selection.select(cols[0], true);
+    const cols = SelectorFilter.descendants(TinyDom.body(editor), 'td[data-mce-selected]');
+    const totalColsWidth = Arr.foldl(cols, (acc, col) => acc + getWidthNumber(Css.getRaw(col, 'width').getOrDie()), 0);
+    editor.selection.select(cols[0].dom, true);
     editor.selection.collapse(true);
     editor.execCommand('mceTableMergeCells');
-    const colspan = SugarElement.fromDom(editor.dom.select('td[colspan="2"]')[0]);
+    const colspan = SelectorFind.descendant(TinyDom.body(editor), 'td[colspan="2"]').getOrDie();
     const width = getWidthNumber(Css.getRaw(colspan, 'width').getOrDie());
     assert.closeTo(width, totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
   });
