@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { Css, SelectorFilter, SelectorFind } from '@ephox/sugar';
+import { Css, Dimension, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
 
   const testMerge = (editor: Editor, test: MergeCellTest) => {
     clearEvents();
-    editor.setContent(test.before, { format: 'raw' });
+    editor.setContent(test.before);
     editor.selection.select(editor.dom.select('td[data-mce-selected]')[0], true);
     editor.selection.collapse(true);
     editor.execCommand('mceTableMergeCells');
@@ -52,7 +52,7 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
     return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
   };
 
-  const getWidthNumber = (widthStyle: string): number => Number(widthStyle.replace('%', ''));
+  const getWidth = (elem: SugarElement<Element>) => Dimension.parse(Css.getRaw(elem, 'width').getOrDie(), [ 'relative' ]).getOrDie().value;
 
   it('TBA: Should merge all cells into one', () => {
     const editor = hook.editor();
@@ -168,13 +168,12 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
 
     editor.setContent(before);
     const cols = SelectorFilter.descendants(TinyDom.body(editor), 'td[data-mce-selected]');
-    const totalColsWidth = Arr.foldl(cols, (acc, col) => acc + getWidthNumber(Css.getRaw(col, 'width').getOrDie()), 0);
+    const totalColsWidth = Arr.foldl(cols, (acc, col) => acc + getWidth(col), 0);
     editor.selection.select(cols[0].dom, true);
     editor.selection.collapse(true);
     editor.execCommand('mceTableMergeCells');
     const colspan = SelectorFind.descendant(TinyDom.body(editor), 'td[colspan="2"]').getOrDie();
-    const width = getWidthNumber(Css.getRaw(colspan, 'width').getOrDie());
-    assert.closeTo(width, totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
+    assert.closeTo(getWidth(colspan), totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
   });
 
   /*
