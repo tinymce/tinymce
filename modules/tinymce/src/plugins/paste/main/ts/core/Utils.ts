@@ -137,6 +137,7 @@ const createIdGenerator = (prefix: string) => {
 };
 
 const getImageMimeType = (ext: string): string => {
+  const lowerExt = ext.toLowerCase();
   const mimeOverrides = {
     jpg: 'jpeg',
     jpe: 'jpeg',
@@ -147,7 +148,7 @@ const getImageMimeType = (ext: string): string => {
     pjp: 'jpeg',
     svg: 'svg+xml'
   };
-  return Tools.hasOwn(mimeOverrides, ext) ? 'image/' + mimeOverrides[ext] : 'image/' + ext;
+  return Tools.hasOwn(mimeOverrides, lowerExt) ? 'image/' + mimeOverrides[lowerExt] : 'image/' + lowerExt;
 };
 
 export {
