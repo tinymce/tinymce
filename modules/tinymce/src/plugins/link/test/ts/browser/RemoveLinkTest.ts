@@ -19,7 +19,8 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Enable Removing link after double click', [
         tinyApis.sSetSetting('link_context_toolbar', true),
-        tinyApis.sSetContent('<a href="http://www.google.com/">test</a>'),
+        tinyApis.sSetContent('<p><a href="http://www.google.com/">test</a></p>'),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
         Mouse.sTrueDoubleClickOn(body, 'a'),
         tinyUi.sWaitForUi('Check the link button is enabled', 'button[aria-label="Remove link"]:not(.tox-tbtn--disabled)')
       ]),
