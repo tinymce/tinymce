@@ -46,6 +46,12 @@ const skipEmptyTextNodes = (node: Node, forwards: boolean) => {
   return node || orig;
 };
 
+const isAnchorPrevSibling = (element: Node): boolean =>
+  Traverse.prevSibling(SugarElement.fromDom(element)).fold(
+    Boolean,
+    (node) => node.dom.nodeName === 'A'
+  );
+
 const getNode = (root: Element, rng: Range): Element => {
   let elm, startContainer, endContainer;
 
@@ -93,18 +99,17 @@ const getNode = (root: Element, rng: Range): Element => {
       }
     }
 
-    if (startContainer.nodeType === 3 && endContainer.nodeType === 1) {
+    if (startContainer?.nodeType === 3 && endContainer?.nodeType === 1) {
       if (endContainer.childElementCount === 2) {
         return endContainer.firstChild;
       }
-
-      if (endContainer.childElementCount > 2) {
+      if (startOffset > endOffset || isAnchorPrevSibling(startContainer)) {
         return startContainer.nextSibling;
       }
     }
 
     // IE Handle double click an anchor.
-    if (startContainer.nodeType === 1 && endContainer.nodeType === 3) {
+    if (startContainer?.nodeType === 1 && endContainer?.nodeType === 3) {
       return startContainer.firstChild;
     }
   }
