@@ -14,7 +14,7 @@ const hasFirstChild = (elm, name) => {
 };
 
 const isFirstChild = (elm: HTMLElement) => {
-  return elm.parentNode.firstChild === elm;
+  return elm.parentNode?.firstChild === elm;
 };
 
 const hasParent = (elm, parentName) => {

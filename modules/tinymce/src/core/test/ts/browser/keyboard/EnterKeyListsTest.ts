@@ -523,7 +523,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
         '</li>' +
       '</ul>'
     );
-    editor.focus();
     TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
     TinyContentActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor,
@@ -549,7 +548,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
         '</li>' +
       '</ul>'
     );
-    editor.focus();
     TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
     TinyContentActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor,
