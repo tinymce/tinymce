@@ -44,7 +44,7 @@ const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverD
 
   const dialogEvents = SilverDialogEvents.initDialog(
     () => instanceApi,
-    SilverDialogCommon.getEventExtras(() => dialog, extra),
+    SilverDialogCommon.getEventExtras(() => dialog, backstage.shared.providers, extra),
     backstage.shared.getSink
   );
 

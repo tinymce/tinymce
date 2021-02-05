@@ -59,7 +59,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
     () => instanceApi,
     {
       onBlock: (event) => {
-        Blocking.block(dialog, (_comp, bs) => SilverDialogCommon.getBusySpec(event.message, bs));
+        Blocking.block(dialog, (_comp, bs) => SilverDialogCommon.getBusySpec(event.message, bs, backstage.shared.providers));
       },
       onUnblock: () => {
         Blocking.unblock(dialog);
