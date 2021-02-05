@@ -174,7 +174,7 @@ describe('browser.tinymce.plugins.table.command.MergeCellCommandTest', () => {
     editor.execCommand('mceTableMergeCells');
     const colspan = SugarElement.fromDom(editor.dom.select('td[colspan="2"]')[0]);
     const width = getWidthNumber(Css.getRaw(colspan, 'width').getOrDie());
-    assert.closeTo(width, totalColsWidth, 2, 'Check new col is similar width the the two cols that were merged');
+    assert.closeTo(width, totalColsWidth, 2, 'Check new cell is similar width the the two cells that were merged');
   });
 
   /*
