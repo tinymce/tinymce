@@ -16,52 +16,11 @@ You need to use `yarn` to install the mcagar devDependencies since `npm` doesn't
 
 # Usage
 
-Only modules inside the `api` package should be used in other projects. All other modules are implementation detail. The top modules are:
+Only modules inside the `api` package should be used in other projects. All other modules are implementation detail. There are two types of modules available: BDD and Pipelines.
 
-1. TinyActions
-2. TinyApis
-3. TinyDom
-4. TinyLoader
-5. TinyScenarios
-6. TinyUi
+BDD modules are useful when testing using behaviour driven development testing, such as with Mocha. For information, see the [BDD testing](docs/bdd.md) documentation.
 
-## TinyActions
-
-A collection of agar `Steps` which simulate key events to the editor UI and the editable areas.
-
-## TinyApis
-
-A collection of agar `Steps` and `Chains` used for:
-
-* getting, setting, and asserting content inside tinymce
-* getting, setting, and asserting the selection inside tinymce
-* focusing the editor
-* firing node changed events
-
-## TinyDom
-
-A module for creating the internal structures required for nodes and selection ranges
-
-## TinyLoader
-
-A module for creating a basic testing environment where an editor with specified settings is created, and is available for testing.
-
-## TinyScenarios
-
-A `Scenario` is a combination of initial content and selection. `TinyScenarios` uses `agar`'s generators based on [`jsverify`](https://www.npmjs.com/package/jsverify) structures. It can generate random content and selections for property-based testing.
-
-## TinyUi
-
-A collection of agar `Steps` and `Chains` used for:
-
-* clicking on toolbars, menus, and general UI
-* waiting for parts of UI
-* triggering context menus
-
-# Examples
-
-There are examples in the `src/test/js/browser/doc` directory.
-
+Pipeline modules are an in-house testing framework that relies on Agar Step and Chains to create a pipeline of actions to perform. The pipeline syntax is, at the time of writing, slowly being removed and will eventually be deprecated. For information, see the [Pipeline testing](docs/pipelines.md) documentation.
 
 # Running tests
 
