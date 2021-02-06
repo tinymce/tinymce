@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     } else {
       const afterWidth = getTableWidth(editor);
       // 2px margin of error, 30px margin of error for IE
-      assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2);
+      assert.approximately(afterWidth, beforeWidth * multiplier, platform.browser.isIE() ? 30 : 2, 'Assert table width');
     }
   };
 
@@ -133,6 +133,28 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableDeleteCol: 0
         });
       });
+
+      it('TINY-6711: will function with a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table>
+            <tbody>
+              <tr>
+                <td data-mce-selected="1" colspan="2"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
+        });
+      });
     });
 
     context('table_column_resizing=resizetable', () => {
@@ -212,6 +234,32 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableInsertColBefore: 2,
           mceTableInsertColAfter: 2,
           mceTableDeleteCol: 0
+        });
+      });
+
+      it('TINY-6711: will function with a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table>
+            <colgroup>
+              <col>
+              <col>
+            </colgroup>
+            <tbody>
+              <tr>
+                <td data-mce-selected="1" colspan="2"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
         });
       });
     });
@@ -297,6 +345,28 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableDeleteCol: 0
         });
       });
+
+      it('TINY-6711: will preserve width with a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table style="width: 455px;">
+            <tbody>
+              <tr>
+                <td data-mce-selected="1" style="width: 440.219px;" colspan="2"></td>
+              </tr>
+              <tr>
+                <td style="width: 184.219px;"></td>
+                <td style="width: 242.219px;"></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
+      });
     });
 
     context('table_column_resizing=resizetable', () => {
@@ -376,6 +446,29 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableInsertColBefore: 2,
           mceTableInsertColAfter: 2,
           mceTableDeleteCol: 0
+        });
+      });
+
+      it('TINY-6711: should resize table by single column width with a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table style="width: 455px;">
+            <tbody>
+              <tr>
+                <td data-mce-selected="1" style="width: 440.219px;" colspan="2"></td>
+              </tr>
+              <tr>
+                <td style="width: 184.219px;"></td>
+                <td style="width: 242.219px;"></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          // 184/(184+242) === 0.432 so the table should be adjusted by 43.2%
+          mceTableInsertColBefore: 1.432,
+          mceTableInsertColAfter: 1.432,
+          mceTableDeleteCol: 0.568
         });
       });
     });
@@ -461,6 +554,28 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableDeleteCol: 0
         });
       });
+
+      it('TINY-6711: should preserve table width when using a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table style="width: 50%;">
+            <tbody>
+              <tr style="height: 21px;">
+                <td data-mce-selected="1" style="width: 100%;" colspan="2"></td>
+              </tr>
+              <tr style="height: 22px;">
+                <td style="width: 50.6463%;"></td>
+                <td style="width: 49.3537%;"></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1,
+          mceTableInsertColAfter: 1,
+          mceTableDeleteCol: 1
+        });
+      });
     });
 
     context('table_column_resizing=resizetable', () => {
@@ -470,18 +585,18 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         table_column_resizing: 'resizetable',
       }, [ Plugin, Theme ]);
 
-      it('TINY-6711: should should resize table when inserting a column', () => {
+      it('TINY-6711: should resize table when inserting a column', () => {
         const editor = hook.editor();
         const content = (`
-          <table width: 33.3433%; border="1">
+          <table style="width: 33.3433%;" border="1">
             <tbody>
               <tr>
-                <td style="width: 47.0386%;"></td>
-                <td data-mce-selected="1" style="width: 47.9985%;"></td>
+                <td style="width: 47.4386%;"></td>
+                <td data-mce-selected="1" style="width: 47.5985%;"></td>
               </tr>
               <tr>
-                <td style="width: 47.0386%;"></td>
-                <td style="width: 47.9985%;"></td>
+                <td style="width: 47.4386%;"></td>
+                <td style="width: 47.5985%;"></td>
               </tr>
             </tbody>
           </table>
@@ -493,7 +608,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         });
       });
 
-      it('TINY-6711: should should resize table when inserting multiple columns', () => {
+      it('TINY-6711: should resize table when inserting multiple columns', () => {
         const editor = hook.editor();
         const content = (`
           <table width: 33.3433%; border="1">
@@ -516,7 +631,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
         });
       });
 
-      it('TINY-6711: should should resize table when using a colgroup', () => {
+      it('TINY-6711: should resize table when using a colgroup', () => {
         const editor = hook.editor();
         const content = (`
           <table style="width: 57.8035%;">
@@ -540,6 +655,28 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
           mceTableInsertColBefore: 2,
           mceTableInsertColAfter: 2,
           mceTableDeleteCol: 0
+        });
+      });
+
+      it('TINY-6711: should resize table width when using a colspan', () => {
+        const editor = hook.editor();
+        const content = (`
+          <table style="width: 33.3433%;" border="1">
+            <tbody>
+              <tr>
+                <td data-mce-selected="1" style="width: 95.0371%;" colspan="2"></td>
+              </tr>
+              <tr>
+                <td style="width: 47.4386%;"></td>
+                <td style="width: 47.5985%;"></td>
+              </tr>
+            </tbody>
+          </table>
+        `);
+        performCommandsAndAssertWidths(editor, content, {
+          mceTableInsertColBefore: 1.5,
+          mceTableInsertColAfter: 1.5,
+          mceTableDeleteCol: 0.5
         });
       });
     });

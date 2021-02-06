@@ -1,9 +1,9 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode, Width } from '@ephox/sugar';
+import * as Blocks from '../lookup/Blocks';
 import * as DetailsList from '../model/DetailsList';
 import * as GridRow from '../model/GridRow';
 import * as RunOperation from '../model/RunOperation';
-
 import * as TableMerge from '../model/TableMerge';
 import * as Transitions from '../model/Transitions';
 import * as MergingOperations from '../operate/MergingOperations';
@@ -359,9 +359,14 @@ const firstColumnIsLocked = (_warehouse: Warehouse, details: Structs.DetailExt[]
 const lastColumnIsLocked = (warehouse: Warehouse, details: Structs.DetailExt[]) =>
   Arr.exists(details, (detail) => detail.column + detail.colspan >= warehouse.grid.columns && detail.isLocked);
 
-const getColumnsWidth = (details: Structs.DetailExt[]) => {
+const getColumnsWidth = (warehouse: Warehouse, details: Structs.DetailExt[]) => {
+  const columns = Blocks.columns(warehouse);
   const uniqueCols = ColUtils.uniqueColumns(details);
-  return Arr.foldl(uniqueCols, (acc, detail) => acc + Width.getOuter(detail.element), 0);
+  return Arr.foldl(uniqueCols, (acc, detail) => {
+    const column = columns[detail.column];
+    const colWidth = column.map(Width.getOuter).getOr(0);
+    return acc + colWidth;
+  }, 0);
 };
 
 const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetElement): Optional<ExtractColDetail> =>
@@ -370,7 +375,7 @@ const insertColumnExtractor = (before: boolean) => (warehouse: Warehouse, target
     return !checkLocked(warehouse, [ detail ]);
   }).map((detail) => ({
     detail,
-    pixelDelta: getColumnsWidth([ detail ]),
+    pixelDelta: getColumnsWidth(warehouse, [ detail ]),
   }));
 
 const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
@@ -379,13 +384,13 @@ const insertColumnsExtractor = (before: boolean) => (warehouse: Warehouse, targe
     return !checkLocked(warehouse, details);
   }).map((details) => ({
     details,
-    pixelDelta: getColumnsWidth(details),
+    pixelDelta: getColumnsWidth(warehouse, details),
   }));
 
 const eraseColumnsExtractor = (warehouse: Warehouse, target: TargetSelection): Optional<ExtractColsDetail> =>
   RunOperation.onUnlockedCells(warehouse, target).map((details) => ({
     details,
-    pixelDelta: -getColumnsWidth(details), // needs to be negative as we are removing columns
+    pixelDelta: -getColumnsWidth(warehouse, details), // needs to be negative as we are removing columns
   }));
 
 const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target: RunOperation.TargetPasteRows): Optional<ExtractPasteRows> =>
