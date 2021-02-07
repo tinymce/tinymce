@@ -1,6 +1,5 @@
-import { GeneralSteps, Log, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
@@ -8,66 +7,52 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.DataAttributeTest', (success, failure) => {
-  Plugin();
-  Theme();
-
-  const sTestEmbedContentFromUrlWithAttribute = (editor: Editor, api: TinyApis, ui: TinyUi, url: string, content: string) => {
-    return Logger.t(`Assert embeded ${content} from ${url} with attribute`, GeneralSteps.sequence([
-      api.sSetContent(''),
-      Utils.sOpenDialog(ui),
-      Utils.sPasteSourceValue(ui, url),
-      // We can't assert the DOM because tab panels don't render hidden tabs, so we check the data model
-      Utils.sAssertEmbedData(ui, content),
-      Utils.sSubmitAndReopen(ui),
-      Utils.sAssertSourceValue(ui, url),
-      Utils.sCloseDialog(ui)
-    ]));
-  };
-  const sTestEmbedContentFromUrl2 = (editor: Editor, api: TinyApis, ui: TinyUi, url: string, url2: string, content: string, content2: string) => {
-    return Logger.t(`Assert embeded ${content} from ${url} and ${content2} from ${url2}`, GeneralSteps.sequence([
-      api.sSetContent(''),
-      Utils.sOpenDialog(ui),
-      Utils.sPasteSourceValue(ui, url),
-      Utils.sAssertEmbedData(ui, content),
-      Utils.sSubmitAndReopen(ui),
-      Utils.sAssertSourceValue(ui, url),
-      Utils.sPasteSourceValue(ui, url2),
-      Utils.sAssertEmbedData(ui, content2),
-      Utils.sCloseDialog(ui)
-    ]));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const ui = TinyUi(editor);
-    const api = TinyApis(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Media: Test embeded content from url with attribute', [
-        sTestEmbedContentFromUrlWithAttribute(editor, api, ui,
-          'a',
-          '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
-        ),
-        sTestEmbedContentFromUrl2(editor, api, ui, 'a', 'b',
-          '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
-          '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
-        ),
-        Utils.sTestEmbedContentFromUrl(api, ui,
-          'a',
-          '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
-        ),
-        Utils.sAssertSizeRecalcConstrained(ui),
-        Utils.sAssertSizeRecalcUnconstrained(ui),
-        Utils.sAssertSizeRecalcConstrainedReopen(ui)
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.media.DataAttributeTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    theme: 'silver',
     media_url_resolver: (data, resolve) => {
       resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const pTestEmbedContentFromUrlWithAttribute = async (editor: Editor, url: string, content: string) => {
+    editor.setContent('');
+    await Utils.pOpenDialog(editor);
+    await Utils.pPasteSourceValue(editor, url);
+    // We can't assert the DOM because tab panels don't render hidden tabs, so we check the data model
+    await Utils.pAssertEmbedData(editor, content);
+    await Utils.pSubmitAndReopen(editor);
+    await Utils.pAssertSourceValue(editor, url);
+    TinyUiActions.closeDialog(editor);
+  };
+  const pTestEmbedContentFromUrl2 = async (editor: Editor, url: string, url2: string, content: string, content2: string) => {
+    editor.setContent('');
+    await Utils.pOpenDialog(editor);
+    await Utils.pPasteSourceValue(editor, url);
+    await Utils.pAssertEmbedData(editor, content);
+    await Utils.pSubmitAndReopen(editor);
+    await Utils.pAssertSourceValue(editor, url);
+    await Utils.pPasteSourceValue(editor, url2);
+    await Utils.pAssertEmbedData(editor, content2);
+    TinyUiActions.closeDialog(editor);
+  };
+
+  it('TBA: Test embedded content from url with attribute', async () => {
+    const editor = hook.editor();
+    await pTestEmbedContentFromUrlWithAttribute(editor, 'a',
+      '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
+    );
+    await pTestEmbedContentFromUrl2(editor, 'a', 'b',
+      '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>',
+      '<div data-ephox-embed-iri="b" style="max-width: 300px; max-height: 150px"></div>'
+    );
+    await Utils.pTestEmbedContentFromUrl(editor, 'a',
+      '<div data-ephox-embed-iri="a" style="max-width: 300px; max-height: 150px"></div>'
+    );
+    await Utils.pAssertSizeRecalcConstrained(editor);
+    await Utils.pAssertSizeRecalcUnconstrained(editor);
+    await Utils.pAssertSizeRecalcConstrainedReopen(editor);
+  });
 });
