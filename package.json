@@ -37,7 +37,7 @@
     "@ephox/oxide-icons-tools": "^2.1.1",
     "@ephox/swag": "^4.3.0",
     "@ephox/wrap-jsverify": "^2.0.1",
-    "@ephox/wrap-prismjs": "^1.19.0",
+    "@ephox/wrap-prismjs": "^1.23.0",
     "@tinymce/eslint-plugin": "^1.7.1",
     "@types/chai": "^4.2.14",
     "awesome-typescript-loader": "^5.2.0",
