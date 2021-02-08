@@ -50,7 +50,7 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
       container
     );
 
-  const assetWidth = (uiContainer: SugarElement<Node>, maxWidth: number, minWidth: number = 0) => {
+  const assertWidth = (uiContainer: SugarElement<Node>, maxWidth: number, minWidth: number = 0) => {
     const overlord = UiFinder.findIn(uiContainer, '.tox-toolbar-overlord').getOrDie();
     const widthString = Css.get(overlord, 'width') || '0px';
     const width = parseInt(widthString.replace('px', ''), 10);
@@ -72,11 +72,11 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
     const uiContainer = TinyDom.container(editor);
 
     structureTest(editor, uiContainer, expectedWidth);
-    assetWidth(uiContainer, expectedWidth, expectedWidth - 100);
+    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
     editor.setContent(Arr.range(100, () => '<p></p>').join(''));
     Scroll.to(0, 500);
     await UiFinder.pWaitForVisible('Wait to be docked', SugarBody.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header');
-    assetWidth(uiContainer, expectedWidth, expectedWidth - 100);
+    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
 
     // Run optional additional actions
     if (Type.isNonNullable(pActions)) {
@@ -110,6 +110,6 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () 
     width: 400
   }, 400, async (editor) => {
     await pOpenMore(ToolbarMode.sliding);
-    assetWidth(SugarElement.fromDom(editor.getContainer()), 400, 300);
+    assertWidth(SugarElement.fromDom(editor.getContainer()), 400, 300);
   }));
 });
