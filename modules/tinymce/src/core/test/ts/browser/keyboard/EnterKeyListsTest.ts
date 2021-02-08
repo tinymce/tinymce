@@ -1,5 +1,6 @@
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -508,5 +509,55 @@ describe('browser.tinymce.core.keyboard.EnterKeyListsTest', () => {
     pressEnter(editor, { shiftKey: true });
     assert.equal(editor.getContent(), '<ul><li>te<br />xt</li></ul>');
     editor.settings.forced_root_block = 'p';
+  });
+
+  it('TINY-5974: Should be able to outdent empty list using enter key', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>' +
+          'a' +
+          '<ul>' +
+            '<li>\u00a0</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>\u00a0</li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-5974: Should be able to outdent empty nested list using enter key', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a' +
+            '<ul>' +
+              '<li style="list-style-type: none;">' +
+                '<ul>' +
+                  '<li>\u00a0</li>' +
+                '</ul>' +
+              '</li>' +
+            '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0, 0 ], 0);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor,
+      '<ul>' +
+        '<li>a' +
+          '<ul>' +
+            '<li>\u00a0</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
   });
 });
