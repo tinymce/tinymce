@@ -10,8 +10,6 @@ import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 
 const open = (editor: Editor) => {
-  const dom = editor.dom;
-
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
   if (!isOlNode(currentList)) {
@@ -32,7 +30,7 @@ const open = (editor: Editor) => {
       ]
     },
     initialData: {
-      start: dom.getAttrib(currentList, 'start') || '1'
+      start: editor.dom.getAttrib(currentList, 'start') || '1'
     },
     buttons: [
       {
@@ -49,8 +47,8 @@ const open = (editor: Editor) => {
     ],
     onSubmit: (api) => {
       const data = api.getData();
-      editor.undoManager.transact(() => {
-        dom.setAttrib(getParentList(editor), 'start', data.start === '1' ? '' : data.start);
+      editor.execCommand('SetListAttributes', false, {
+        start: data.start === '1' ? '' : data.start
       });
       api.close();
     }

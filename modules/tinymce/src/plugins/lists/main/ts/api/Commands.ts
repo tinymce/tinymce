@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { setParentListAttributes } from '../actions/Attributes';
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
+import { getParentList } from '../core/Selection';
 import * as Dialog from '../ui/Dialog';
 
 const queryListCommandState = (editor, listName) => {
   return () => {
-    const parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+    const parentList = getParentList(editor);
     return parentList && parentList.nodeName === listName;
   };
 };
@@ -45,6 +47,10 @@ const register = (editor) => {
 
   editor.addCommand('mceListProps', () => {
     Dialog.open(editor);
+  });
+
+  editor.addCommand('SetListAttributes', (ui, detail) => {
+    setParentListAttributes(editor, detail);
   });
 
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));

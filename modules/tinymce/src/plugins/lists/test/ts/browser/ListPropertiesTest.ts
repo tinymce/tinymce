@@ -132,4 +132,43 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:contains("List properties"):not(.tox-collection__item--state-disabled)');
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
   });
+
+  it('TINY-6907: List properties command is used to update the DOM', async () => {
+    const editor = hook.editor();
+
+    const blockCommand = (event) => {
+      if (event.command.toLowerCase() === 'setlistattributes') {
+        event.preventDefault();
+      }
+    };
+
+    // block the command to ensure dialog changes don't work without it
+    editor.on('BeforeExecCommand', blockCommand);
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    await openDialog(editor, 'ol > li');
+    updateDialog(editor, '1', '5');
+    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+
+    // restore the command after the test
+    editor.off('BeforeExecCommand', blockCommand);
+  });
+
+  it('TINY-6907: SetListAttributes command sets the start attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('SetListAttributes', false, { start: 5 });
+    TinyAssertions.assertContent(editor, '<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
+  it('TINY-6907: SetListAttributes command does not break when used on a paragraph', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some text</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+
+    editor.execCommand('SetListAttributes', false, { start: 5 });
+    TinyAssertions.assertContent(editor, '<p>some text</p>');
+  });
 });
