@@ -2,7 +2,7 @@ import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { Class, Focus, Insert, Remove, SugarBody, SugarElement, SugarNode, Visibility } from '@ephox/sugar';
+import { Class, Focus, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
