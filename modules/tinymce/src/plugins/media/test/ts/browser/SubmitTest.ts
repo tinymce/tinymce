@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as Utils from '../module/test/Utils';
 
 describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
