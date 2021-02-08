@@ -1,8 +1,8 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { Class, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
+import { Class, Focus, Insert, Remove, SugarBody, SugarElement, SugarNode, Visibility } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -52,7 +52,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
     });
   });
 
-  it('closes the context toolbar on popup', async () => {
+  it('closes the context toolbar when it opens', async () => {
     const editor = hook.editor();
     editor.setContent('<p class="ctx-menu-me">Hello World</p>');
 
@@ -65,6 +65,48 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
 
     await Waiter.pTryUntil('context toolbar is closed', () => {
       UiFinder.notExists(SugarBody.body(), '.tox-pop');
+    });
+  });
+
+  context('correctly re-opens (or does not re-open) the context toolbar when it closes', () => {
+    beforeEach(async () => {
+      const editor = hook.editor();
+      editor.setContent('<p class="ctx-menu-me">Hello World</p>');
+
+      await Waiter.pTryUntil('Waiting for context toolbar to open', () => {
+        UiFinder.findIn(SugarBody.body(), '.tox-pop');
+      });
+
+      editor.setProgressState(true);
+      await pWaitForThrobber();
+    });
+
+    it('re-opens the context toolbar if focus is on the editor', async () => {
+      const editor = hook.editor();
+      editor.setProgressState(false);
+      await Waiter.pTryUntil('context toolbar is open again', () => {
+        UiFinder.exists(SugarBody.body(), '.tox-pop');
+      });
+    });
+
+    it('does not re-open the context toolbar if focus is not on the editor', async () => {
+      // blur the editor
+      const input = SugarElement.fromTag('input');
+      Insert.append(SugarBody.body(), input);
+      Focus.focus(input);
+
+      // close the throbber
+      const editor = hook.editor();
+      editor.setProgressState(false);
+      await UiFinder.pWaitForState('throbber is closed', SugarBody.body(), '.tox-throbber', Fun.not(Visibility.isVisible));
+      // give the context toolbar time to re-open (note: it should not re-open during this time)
+      await Waiter.pWait(50);
+
+      // ensure that the context toolbar does not re-open
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
+
+      // clean up
+      Remove.remove(input);
     });
   });
 
