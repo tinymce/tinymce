@@ -1,6 +1,6 @@
 Version 5.7.0 (TBD)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
-    Added new data to the `TableModified` event to describe whether the table `structure`, `style`, or both was modified #TINY-6643
+    Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made #TINY-6643
     Added `video` and `audio` live embed support for the `media` plugin #TINY-6229
     Added the ability to resize `video` and `iframe` media elements #TINY-6229
     Added a new `font_css` setting for adding fonts to both the editor and the parent document #TINY-6199
