@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     ]
   }, [ Plugin, Theme ]);
 
-  it('TBA: Media: Object retain as is', () => {
+  it('TBA: Object retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
       '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355">' +
@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: Embed retain as is', () => {
+  it('TBA: Embed retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
       '<embed src="320x240.ogg" width="100" height="200">text<a href="#">link</a></embed>'
@@ -50,7 +50,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: Video retain as is', () => {
+  it('TBA: Video retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
       '<video src="320x240.ogg" autoplay loop controls>text<a href="#">link</a></video>'
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: Iframe retain as is', () => {
+  it('TBA: Iframe retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
       '<iframe src="320x240.ogg" allowfullscreen>text<a href="#">link</a></iframe>'
@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: Audio retain as is', () => {
+  it('TBA: Audio retained as is', () => {
     const editor = hook.editor();
     editor.setContent(
       '<audio src="sound.mp3">' +
@@ -93,7 +93,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: Resize complex object', () => {
+  it('TBA: Resize complex object', () => {
     const editor = hook.editor();
     editor.settings.media_live_embeds = false;
     editor.setContent(
@@ -134,7 +134,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     delete editor.settings.media_live_embeds;
   });
 
-  it('TBA: Media: Media script elements', () => {
+  it('TBA: Media script elements', () => {
     const editor = hook.editor();
     editor.setContent(
       '<script src="http://media1.tinymce.com/123456"></sc' + 'ript>' +
@@ -157,7 +157,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     );
   });
 
-  it('TBA: Media: XSS content', () => {
+  it('TBA: XSS content', () => {
     const editor = hook.editor();
     const testXss = (input: string, expectedOutput: string) => {
       editor.setContent(input);
