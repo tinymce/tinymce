@@ -52,23 +52,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
     });
   });
 
-  it('closes the context toolbar when it opens', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p class="ctx-menu-me">Hello World</p>');
-
-    await Waiter.pTryUntil('Waiting for context toolbar to open', () => {
-      UiFinder.findIn(SugarBody.body(), '.tox-pop');
-    });
-
-    editor.setProgressState(true);
-    await pWaitForThrobber();
-
-    await Waiter.pTryUntil('context toolbar is closed', () => {
-      UiFinder.notExists(SugarBody.body(), '.tox-pop');
-    });
-  });
-
-  context('correctly re-opens (or does not re-open) the context toolbar when it closes', () => {
+  context('context toolbar', () => {
     beforeEach(async () => {
       const editor = hook.editor();
       editor.setContent('<p class="ctx-menu-me">Hello World</p>');
@@ -81,7 +65,13 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       await pWaitForThrobber();
     });
 
-    it('re-opens the context toolbar if focus is on the editor', async () => {
+    it('closed by throbber opening', async () => {
+      await Waiter.pTryUntil('context toolbar is closed', () => {
+        UiFinder.notExists(SugarBody.body(), '.tox-pop');
+      });
+    });
+
+    it('re-opens when the throbber closes', async () => {
       const editor = hook.editor();
       editor.setProgressState(false);
       await Waiter.pTryUntil('context toolbar is open again', () => {
@@ -89,7 +79,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       });
     });
 
-    it('does not re-open the context toolbar if focus is not on the editor', async () => {
+    it('does not re-open when the throbber closes - if there is no focus on the editor', async () => {
       // blur the editor
       const input = SugarElement.fromTag('input');
       Insert.append(SugarBody.body(), input);
