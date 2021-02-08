@@ -52,7 +52,7 @@ describe('browser.tinymce.plugins.table.ModifyColumnsTableResizeTest', () => {
     assertWidth(editor, multipliers.mceTableDeleteCol, 'mceTableDeleteCol');
   };
 
-  // TODO: tests for colspan #TINY-6949
+  // TODO: more complex tests for colspan #TINY-6949
   context('Responsive table', () => {
     context('table_column_resizing=preservetable', () => {
       const hook = TinyHooks.bddSetupLight<Editor>({

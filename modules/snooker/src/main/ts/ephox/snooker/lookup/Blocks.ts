@@ -3,13 +3,15 @@ import { SugarElement } from '@ephox/sugar';
 import { DetailExt } from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 
+type ValidCellFn = (cell: SugarElement<HTMLTableCellElement>) => boolean;
+
 /*
  * Identify for each column, a cell that has colspan 1. Note, this
  * may actually fail, and future work will be to calculate column
  * sizes that are only available through the difference of two
  * spanning columns.
  */
-const columns = (warehouse: Warehouse, isValidCell: (detail: SugarElement<HTMLTableCellElement>) => boolean = Fun.always): Optional<SugarElement<HTMLTableCellElement>>[] => {
+const columns = (warehouse: Warehouse, isValidCell: ValidCellFn = Fun.always): Optional<SugarElement<HTMLTableCellElement>>[] => {
   const grid = warehouse.grid;
   const cols = Arr.range(grid.columns, Fun.identity);
   const rowsArr = Arr.range(grid.rows, Fun.identity);
