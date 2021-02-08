@@ -6,7 +6,7 @@ Version 5.7.0 (TBD)
     Added a new `font_css` setting for adding fonts to both the editor and the parent document #TINY-6199
     Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
     Added an Oxide variable to define the container background color in fullscreen mode #TINY-6903
-    Added Oxide variables to set toolbar backgrounds colors for inline and sticky toolbars #TINY-6009
+    Added Oxide variables for setting the toolbar background colors for inline and sticky toolbars #TINY-6009
     Added a new `AfterProgressState` event that is fired after `editor.setProgressState` calls complete #TINY-6686
     Added support for `table_column_resizing` when inserting or deleting columns #TINY-6711
     Changed table and table column copy behavior to retain an appropriate width when pasted #TINY-6664
