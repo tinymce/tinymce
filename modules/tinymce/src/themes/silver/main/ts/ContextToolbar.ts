@@ -191,12 +191,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     });
   }));
 
-  type ContextToolbarButtonTypes =
-    Toolbar.ToolbarButtonSpec
-    | Toolbar.ToolbarMenuButtonSpec
-    | Toolbar.ToolbarSplitButtonSpec
-    | Toolbar.ToolbarToggleButtonSpec
-    | Toolbar.GroupToolbarButtonSpec;
+  type ContextToolbarButtonTypes = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarSplitButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.GroupToolbarButtonSpec;
 
   const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonTypes>, ctx: InlineContent.ContextToolbar) =>
     identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras, Optional.some([ 'form:' ]));
