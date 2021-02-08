@@ -1,57 +1,35 @@
-import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { McEditor, UiChains } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.media.NoAdvancedTabTest', (success, failure) => {
-  Plugin();
-  Theme();
+describe('browser.tinymce.plugins.media.NoAdvancedTabTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: [ 'media' ],
+    toolbar: 'media',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Media: if alt source and poster set to false, do not show advance tab', [
-      Chain.fromParent(
-        McEditor.cFromSettings({
-          plugins: [ 'media' ],
-          toolbar: 'media',
-          media_alt_source: false,
-          media_poster: false,
-          theme: 'silver',
-          base_url: '/project/tinymce/js/tinymce'
-        }),
-        [
-          Chain.fromChains([
-            UiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
-            Chain.inject(SugarBody.body()),
-            UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
-            Utils.cNotExists('div.tox-tab:contains(Advanced)')
-          ]),
-          McEditor.cRemove
-        ]
-      )
-    ]),
-    Log.chainsAsStep('TBA', 'Media: if alt source and poster not set to false, show advance tab', [
-      Chain.fromParent(
-        McEditor.cFromSettings({
-          plugins: [ 'media' ],
-          toolbar: 'media',
-          theme: 'silver',
-          base_url: '/project/tinymce/js/tinymce'
-        }),
-        [
-          Chain.fromChains([
-            UiChains.cClickOnToolbar('click button', 'button[aria-label="Insert/edit media"]'),
-            Chain.inject(SugarBody.body()),
-            UiFinder.cWaitForVisible('wait for popup', 'div.tox-dialog'),
-            Utils.cExists('div.tox-tab:contains(Advanced)')
-          ]),
-          McEditor.cRemove
-        ]
-      )
-    ])
-  ], () => success(), failure);
+  it('TBA: if alt source and poster set to false, do not show advanced tab', async () => {
+    const editor = hook.editor();
+    editor.settings.media_alt_source = false;
+    editor.settings.media_poster = false;
+    const dialog = await Utils.pOpenDialog(editor);
+    UiFinder.notExists(dialog, 'div.tox-tab:contains(Advanced)');
+    TinyUiActions.closeDialog(editor);
+  });
 
+  it('TBA: if alt source and poster not set to false, show advanced tab', async () => {
+    const editor = hook.editor();
+    delete editor.settings.media_alt_source;
+    delete editor.settings.media_poster;
+    const dialog = await Utils.pOpenDialog(editor);
+    UiFinder.exists(dialog, 'div.tox-tab:contains(Advanced)');
+    TinyUiActions.closeDialog(editor);
+  });
 });

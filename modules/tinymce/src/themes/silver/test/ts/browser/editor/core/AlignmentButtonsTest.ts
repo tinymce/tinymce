@@ -1,57 +1,50 @@
-import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Id, Result } from '@ephox/katamari';
-import { McEditor } from '@ephox/mcagar';
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
-import { cExtractOnlyOne } from '../../../module/UiChainUtils';
 
-UnitTest.asynctest('Editor alignment toolbar buttons test', (success, failure) => {
-  Theme();
+import { extractOnlyOne } from '../../../module/UiUtils';
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Testing toolbar: toolbar alignment buttons', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', McEditor.cFromSettings({
-          toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
-          theme: 'silver',
-          base_url: '/project/tinymce/js/tinymce'
-        })),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', Assertions.cAssertStructure(
-          'Checking toolbar should have just alignment buttons',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar') ],
+describe('browser.tinymce.themes.silver.editor.core.AlignmentButtonsTest', () => {
+  TinyHooks.bddSetupLight<Editor>({
+    toolbar: 'alignleft aligncenter alignright alignjustify alignnone',
+    toolbar_mode: 'wrap',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ]);
+
+  it('TBA: Toolbar alignment buttons structure', () => {
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just alignment buttons',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
             children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar__group') ],
-                children: [
-                  s.element('button', {
-                    attrs: { title: str.is('Align left') }
-                  }),
-                  s.element('button', {
-                    attrs: { title: str.is('Align center') }
-                  }),
-                  s.element('button', {
-                    attrs: { title: str.is('Align right') }
-                  }),
-                  s.element('button', {
-                    attrs: { title: str.is('Justify') }
-                  }),
-                  s.element('button', {
-                    attrs: { title: str.is('No alignment') }
-                  })
-                ]
+              s.element('button', {
+                attrs: { title: str.is('Align left') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('Align center') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('Align right') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('Justify') }
+              }),
+              s.element('button', {
+                attrs: { title: str.is('No alignment') }
               })
             ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ])
-  ], success, failure);
+          })
+        ]
+      })),
+      toolbar
+    );
+  });
 });

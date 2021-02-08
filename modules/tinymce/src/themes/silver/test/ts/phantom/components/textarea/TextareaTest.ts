@@ -1,57 +1,57 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
-import { DisablingSteps } from '../../../module/DisablingSteps';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 
-UnitTest.asynctest('Textarea component Test', (success, failure) => {
+describe('phantom.tinymce.themes.silver.components.textarea.TextareaTest', () => {
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    renderTextarea({
+      name: 'textarea',
+      label: Optional.some('LabelA'),
+      placeholder: Optional.none(),
+      maximized: false,
+      disabled: false
+    }, TestProviders)
+  ));
 
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderTextarea({
-        name: 'textarea',
-        label: Optional.some('LabelA'),
-        placeholder: Optional.none(),
-        maximized: false,
-        disabled: false
-      }, TestProviders)
-    ),
-    (_doc, _body, _gui, component, _store) =>
-      // TODO: Fix dupe with Input test. Test Ctrl+Enter.
-      [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-form__group') ],
-            children: [
-              s.element('label', {
-                classes: [ arr.has('tox-label') ],
-                html: str.is('LabelA')
-              }),
-              s.element('textarea', {
-                classes: [ arr.has('tox-textarea') ],
-                attrs: {
-                  'data-alloy-tabstop': str.is('true')
-                }
-              })
-            ]
-          })),
-          component.element
-        ),
+  // TODO: Fix dupe with Input test. Test Ctrl+Enter.
+  it('Check basic structure', () => {
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-form__group') ],
+        children: [
+          s.element('label', {
+            classes: [ arr.has('tox-label') ],
+            html: str.is('LabelA')
+          }),
+          s.element('textarea', {
+            classes: [ arr.has('tox-textarea') ],
+            attrs: {
+              'data-alloy-tabstop': str.is('true')
+            }
+          })
+        ]
+      })),
+      hook.component().element
+    );
+  });
 
-        RepresentingSteps.sSetValue('basic', component, 'New-Value'),
-        RepresentingSteps.sAssertComposedValue('basic', 'New-Value', component),
+  it('Representing state', () => {
+    const component = hook.component();
+    Representing.setValue(component, 'New-Value');
+    RepresentingUtils.assertComposedValue(component, 'New-Value');
+  });
 
-        // Disabling state
-        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
-        DisablingSteps.sSetDisabled('set disabled', component, true),
-        DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
-      ],
-    success,
-    failure
-  );
+  it('Disabling state', () => {
+    const component = hook.component();
+    assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
+    Disabling.set(component, true);
+    assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
+  });
 });

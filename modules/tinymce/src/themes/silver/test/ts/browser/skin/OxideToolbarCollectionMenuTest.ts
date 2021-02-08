@@ -1,173 +1,158 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('OxideToolbarCollectionMenuTest', (success, failure) => {
-  Theme();
-
+describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', () => {
   const store = TestHelpers.TestStore();
+  const hook = TinyHooks.bddSetup<Editor>({
+    toolbar: 'toolbar-collection',
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (ed: Editor) => {
+      ed.ui.registry.addSplitButton('toolbar-collection', {
+        type: 'splitbutton',
+        columns: 3,
+        presets: 'listpreview',
+        fetch: (callback) => {
+          callback(
+            Arr.map([ 'A', 'B', 'C', 'D', 'E', 'F' ], (letter) => ({
+              type: 'choiceitem',
+              value: `${letter}`,
+              icon: 'fake-icon-name',
+              text: `${letter}-button`,
+              onAction: store.adder(`${letter}-onAction`)
+            }))
+          );
+        },
+        onAction: store.adder('onAction'),
+        onItemAction: store.adder('onItemAction')
+      });
+    }
+  }, [ Theme ]);
 
-  TinyLoader.setup(
-    (editor, onSuccess, onFailure) => {
-      const doc = SugarElement.fromDom(document);
-
-      Pipeline.async({ }, Logger.ts(
-        'Check structure of toolbar collection',
-        [
-          Mouse.sClickOn(SugarBody.body(), '.tox-split-button__chevron'),
-          UiFinder.sWaitForVisible('Waiting for menu', SugarBody.body(), '[role="menu"]'),
-          Chain.asStep(SugarBody.body(), [
-            UiFinder.cFindIn('[role="menu"]'),
-            Assertions.cAssertStructure(
-              'Checking menu structure',
-              ApproxStructure.build((s, str, arr) => s.element('div', {
-                classes: [
-                  arr.has('tox-menu'),
-                  arr.has('tox-collection'),
-                  arr.has('tox-collection--toolbar'),
-                  arr.has('tox-collection--toolbar-lg')
-                ],
+  it('Check structure of toolbar collection', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    Mouse.clickOn(SugarBody.body(), '.tox-split-button__chevron');
+    const menu = await TinyUiActions.pWaitForPopup(editor, '[role="menu"]');
+    Assertions.assertStructure(
+      'Checking menu structure',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [
+          arr.has('tox-menu'),
+          arr.has('tox-collection'),
+          arr.has('tox-collection--toolbar'),
+          arr.has('tox-collection--toolbar-lg')
+        ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-collection__group') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('A-button')
+                },
                 children: [
                   s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
+                    classes: [ arr.has('tox-collection__item-icon') ],
                     children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('A-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('B-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('C-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-collection__group') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('D-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('E-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
-                        attrs: {
-                          title: str.is('F-button')
-                        },
-                        children: [
-                          s.element('div', {
-                            classes: [ arr.has('tox-collection__item-icon') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      })
+                      s.element('svg', {})
                     ]
                   })
                 ]
-              }))
-            )
-          ]),
-          FocusTools.sTryOnSelector('Focus should start on A', doc, '.tox-collection__item[title="A-button"]'),
-          Keyboard.sKeydown(doc, Keys.down(), { }),
-          FocusTools.sTryOnSelector('Focus should move to D', doc, '.tox-collection__item[title="D-button"]'),
-          Keyboard.sKeydown(doc, Keys.right(), { }),
-          FocusTools.sTryOnSelector('Focus should move to E', doc, '.tox-collection__item[title="E-button"]')
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('B-button')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__item-icon') ],
+                    children: [
+                      s.element('svg', {})
+                    ]
+                  })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('C-button')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__item-icon') ],
+                    children: [
+                      s.element('svg', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-collection__group') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('D-button')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__item-icon') ],
+                    children: [
+                      s.element('svg', {})
+                    ]
+                  })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('E-button')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__item-icon') ],
+                    children: [
+                      s.element('svg', {})
+                    ]
+                  })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
+                attrs: {
+                  title: str.is('F-button')
+                },
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-collection__item-icon') ],
+                    children: [
+                      s.element('svg', {})
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
         ]
-      ), onSuccess, onFailure);
-    },
-    {
-      theme: 'silver',
-      menubar: true,
-      toolbar: 'toolbar-collection',
-      base_url: '/project/tinymce/js/tinymce',
-      setup: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('toolbar-collection', {
-          type: 'splitbutton',
-          columns: 3,
-          presets: 'listpreview',
-          fetch: (callback) => {
-            callback(
-              Arr.map([ 'A', 'B', 'C', 'D', 'E', 'F' ], (letter) => ({
-                type: 'choiceitem',
-                value: `${letter}`,
-                icon: 'fake-icon-name',
-                text: `${letter}-button`,
-                onAction: store.adder(`${letter}-onAction`)
-              } as Menu.ChoiceMenuItemSpec))
-            );
-          },
-          onAction: store.adder('onAction'),
-          onItemAction: store.adder('onItemAction')
-        });
-      }
-    },
-    success,
-    failure
-  );
+      })),
+      menu
+    );
+
+    await FocusTools.pTryOnSelector('Focus should start on A', doc, '.tox-collection__item[title="A-button"]');
+    TinyUiActions.keydown(editor, Keys.down());
+    await FocusTools.pTryOnSelector('Focus should move to D', doc, '.tox-collection__item[title="D-button"]');
+    TinyUiActions.keydown(editor, Keys.right());
+    await FocusTools.pTryOnSelector('Focus should move to E', doc, '.tox-collection__item[title="E-button"]');
+  });
 });

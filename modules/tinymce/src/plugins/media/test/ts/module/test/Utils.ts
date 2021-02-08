@@ -1,8 +1,9 @@
-import { Assertions, Chain, GeneralSteps, Guard, Logger, Mouse, Step, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Assert } from '@ephox/bedrock-client';
+import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Type } from '@ephox/katamari';
-import { TinyApis, TinyUi } from '@ephox/mcagar';
-import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyUiActions } from '@ephox/mcagar';
+import { Focus, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
 const selectors = {
@@ -10,289 +11,208 @@ const selectors = {
   width: '.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield',
   height: '.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield',
   embed: 'label:contains(Paste your embed code below:) + textarea.tox-textarea',
-  saveButton: 'button.tox-button:contains(Save)',
-  xClose: 'button[aria-label=Close]',
   lockIcon: 'button.tox-lock',
   embedButton: 'div.tox-tab:contains(Embed)',
   poster: 'label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'
 };
 
-const sOpenDialog = (ui: TinyUi) => {
-  return Logger.t('Open dialog', GeneralSteps.sequence([
-    ui.sClickOnToolbar('Click on media button, there should be only 1 button in the toolbar', 'div.tox-toolbar__group > button'),
-    ui.sWaitForPopup('wait for popup', 'div.tox-dialog-wrap')
-  ]));
+const pOpenDialog = async (editor: Editor) => {
+  TinyUiActions.clickOnToolbar(editor, 'div.tox-toolbar__group > button');
+  return await TinyUiActions.pWaitForDialog(editor);
 };
 
-const cFindInDialog = (selector: string) => (ui: TinyUi) => Chain.control(
-  Chain.fromChains([
-    ui.cWaitForPopup('Wait for popup', 'div[role="dialog"]'),
-    UiFinder.cFindIn(selector)
-  ]),
-  Guard.addLogging(`Find ${selector} in dialog`)
-);
+const findInDialog = (dialog: SugarElement<HTMLElement>, selector: string) =>
+  UiFinder.findIn(dialog, selector).getOrDie();
 
-const cGetValueOn = (selector: string) => (ui: TinyUi) => Chain.control(
-  Chain.fromChains([
-    cFindInDialog(selector)(ui),
-    UiControls.cGetValue
-  ]),
-  Guard.addLogging('Get value')
-);
-
-const cSetValueOn = (selector: string, newValue: string) => (ui: TinyUi) => Chain.control(
-  Chain.fromChains([
-    cFindInDialog(selector)(ui),
-    UiControls.cSetValue(newValue)
-  ]),
-  Guard.addLogging('Set value')
-);
-
-const sAssertFieldValue = (selector: string) => (ui: TinyUi, value: string) => Waiter.sTryUntil(`Wait for new ${selector} value`,
-  Chain.asStep({}, [
-    cGetValueOn(selector)(ui),
-    Assertions.cAssertEq(`Assert ${value} value`, value)
-  ]), 20, 3000
-);
-
-const sAssertWidthValue = sAssertFieldValue(selectors.width);
-const sAssertHeightValue = sAssertFieldValue(selectors.height);
-const sAssertSourceValue = sAssertFieldValue(selectors.source);
-
-const sSetValueAndTrigger = (selector: string, value: string, events: string[]) => (ui: TinyUi) => Logger.t(`Set ${value} and trigger ${events.join(',')}`, Chain.asStep({}, [
-  Chain.fromChains([
-    cFindInDialog(selector)(ui),      // get the element
-    Chain.op(Focus.focus),            // fire focusin, required by sizeinput to recalc ratios
-    cSetValueOn(selector, value)(ui), // change the value
-    ...Arr.map(events, (event) => cFakeEvent(event)),                 // fire [change, input etc],
-    Chain.wait(0) // Wait needed as paste event is triggered async
-  ])
-]));
-
-const sPasteSourceValue = (ui: TinyUi, value: string) => {
-  return sSetValueAndTrigger(selectors.source, value, [ 'paste' ])(ui);
+const pFindInDialog = (selector: string) => async (editor: Editor) => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  return findInDialog(dialog, selector);
 };
 
-const sPastePosterValue = (ui: TinyUi, value: string) => sSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(ui);
-
-const sChangeWidthValue = (ui: TinyUi, value: string) => {
-  return sSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(ui);
+const getValueOn = (dialog: SugarElement<HTMLElement>, selector: string) => {
+  const elem = findInDialog(dialog, selector);
+  return UiControls.getValue(elem);
 };
 
-const sChangeHeightValue = (ui: TinyUi, value: string) => {
-  return sSetValueAndTrigger(selectors.height, value, [ 'input', 'change' ])(ui);
+const setValueOn = (dialog: SugarElement<HTMLElement>, selector: string, newValue: string) => {
+  const elem = findInDialog(dialog, selector);
+  UiControls.setValue(elem, newValue);
 };
 
-const sAssertSizeRecalcConstrained = (ui: TinyUi) => {
-  return Logger.t('Asset constrained size recalculation', GeneralSteps.sequence([
-    sOpenDialog(ui),
-    sPasteSourceValue(ui, 'http://test.se'),
-    sAssertHeightAndWidth(ui, '150', '300'),
-    sChangeWidthValue(ui, '350'),
-    sAssertHeightAndWidth(ui, '175', '350'),
-    sChangeHeightValue(ui, '100'),
-    sAssertHeightAndWidth(ui, '100', '200'),
-    sCloseDialog(ui)
-  ]));
-};
-
-const sAssertSizeRecalcConstrainedReopen = (ui: TinyUi) => {
-  return Logger.t('Assert constrained size recalculation on dialog reopen', GeneralSteps.sequence([
-    sOpenDialog(ui),
-    sPasteSourceValue(ui, 'http://test.se'),
-    sAssertHeightAndWidth(ui, '150', '300'),
-    sChangeWidthValue(ui, '350'),
-    sAssertHeightAndWidth(ui, '175', '350'),
-    sChangeHeightValue(ui, '100'),
-    sAssertHeightAndWidth(ui, '100', '200'),
-    sSubmitAndReopen(ui),
-    sAssertHeightAndWidth(ui, '100', '200'),
-    sChangeWidthValue(ui, '350'),
-    sAssertHeightAndWidth(ui, '175', '350'),
-    sCloseDialog(ui)
-  ]));
-};
-
-const sAssertSizeRecalcUnconstrained = (ui: TinyUi) => {
-  return Logger.t('Assert unconstrained size recalculation', GeneralSteps.sequence([
-    sOpenDialog(ui),
-    sPasteSourceValue(ui, 'http://test.se'),
-    ui.sClickOnUi('click checkbox', selectors.lockIcon),
-    sAssertHeightAndWidth(ui, '150', '300'),
-    sChangeWidthValue(ui, '350'),
-    sAssertHeightAndWidth(ui, '150', '350'),
-    sChangeHeightValue(ui, '100'),
-    sAssertHeightAndWidth(ui, '100', '350'),
-    sCloseDialog(ui)
-  ]));
-};
-
-const sCloseDialog = (ui: TinyUi) => {
-  return Logger.t('Close dialog', ui.sClickOnUi('Click cancel button', selectors.xClose));
-};
-
-const cFakeEvent = (name: string) => {
-  return Chain.control(
-    Chain.op((elm: SugarElement) => {
-      const element: HTMLElement = elm.dom;
-      // NOTE we can't fake a paste event here.
-      let event;
-      if (Type.isFunction(Event)) {
-        event = new Event(name, {
-          bubbles: true,
-          cancelable: true
-        });
-      } else { // support IE
-        event = document.createEvent('Event');
-        event.initEvent(name, true, true);
-      }
-      element.dispatchEvent(event);
-    }),
-    Guard.addLogging(`Fake event ${name}`)
+const pAssertFieldValue = (selector: string) => async (editor: Editor, expected: string) => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  await Waiter.pTryUntil(`Wait for new ${selector} value`,
+    () => {
+      const value = getValueOn(dialog, selector);
+      assert.equal(value, expected, `Assert ${expected} value`);
+    }, 20, 3000
   );
 };
 
-const cFindFilepickerInput = cFindInDialog(selectors.source);
+const pAssertWidthValue = pAssertFieldValue(selectors.width);
+const pAssertHeightValue = pAssertFieldValue(selectors.height);
+const pAssertSourceValue = pAssertFieldValue(selectors.source);
 
-const cFindTextarea = cFindInDialog(selectors.embed);
+const pSetValueAndTrigger = (selector: string, value: string, events: string[]) => async (editor: Editor) => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  const elem = findInDialog(dialog, selector);                  // get the element
+  Focus.focus(elem);                                            // fire focusin, required by sizeinput to recalc ratios
+  setValueOn(dialog, selector, value);                          // change the value
+  Arr.map(events, (event) => fakeEvent(elem, event)); // fire [change, input etc],
+  await Waiter.pWait(0);                                  // Wait needed as paste event is triggered async
+};
 
-const cSetSourceInput = (ui: TinyUi, value: string) => {
-  return Chain.control(
-    Chain.fromChains([
-      cFindFilepickerInput(ui),
-      UiControls.cSetValue(value)
-    ]),
-    Guard.addLogging(`Set source input ${value}`)
+const pPasteSourceValue = (editor: Editor, value: string) =>
+  pSetValueAndTrigger(selectors.source, value, [ 'paste' ])(editor);
+
+const pPastePosterValue = (editor: Editor, value: string) =>
+  pSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(editor);
+
+const pChangeWidthValue = (editor: Editor, value: string) =>
+  pSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(editor);
+
+const pChangeHeightValue = (editor: Editor, value: string) =>
+  pSetValueAndTrigger(selectors.height, value, [ 'input', 'change' ])(editor);
+
+const pAssertSizeRecalcConstrained = async (editor: Editor) => {
+  await pOpenDialog(editor);
+  await pPasteSourceValue(editor, 'http://test.se');
+  await pAssertHeightAndWidth(editor, '150', '300');
+  await pChangeWidthValue(editor, '350');
+  await pAssertHeightAndWidth(editor, '175', '350');
+  await pChangeHeightValue(editor, '100');
+  await pAssertHeightAndWidth(editor, '100', '200');
+  TinyUiActions.closeDialog(editor);
+};
+
+const pAssertSizeRecalcConstrainedReopen = async (editor: Editor) => {
+  await pOpenDialog(editor);
+  await pPasteSourceValue(editor, 'http://test.se');
+  await pAssertHeightAndWidth(editor, '150', '300');
+  await pChangeWidthValue(editor, '350');
+  await pAssertHeightAndWidth(editor, '175', '350');
+  await pChangeHeightValue(editor, '100');
+  await pAssertHeightAndWidth(editor, '100', '200');
+  await pSubmitAndReopen(editor);
+  await pAssertHeightAndWidth(editor, '100', '200');
+  await pChangeWidthValue(editor, '350');
+  await pAssertHeightAndWidth(editor, '175', '350');
+  TinyUiActions.closeDialog(editor);
+};
+
+const pAssertSizeRecalcUnconstrained = async (editor: Editor) => {
+  await pOpenDialog(editor);
+  await pPasteSourceValue(editor, 'http://test.se');
+  TinyUiActions.clickOnUi(editor, selectors.lockIcon);
+  await pAssertHeightAndWidth(editor, '150', '300');
+  await pChangeWidthValue(editor, '350');
+  await pAssertHeightAndWidth(editor, '150', '350');
+  await pChangeHeightValue(editor, '100');
+  await pAssertHeightAndWidth(editor, '100', '350');
+  TinyUiActions.closeDialog(editor);
+};
+
+const fakeEvent = (elem: SugarElement<HTMLElement>, name: string) => {
+  const element: HTMLElement = elem.dom;
+  // NOTE we can't fake a paste event here.
+  let event: Event;
+  if (Type.isFunction(Event)) {
+    event = new Event(name, {
+      bubbles: true,
+      cancelable: true
+    });
+  } else { // support IE
+    event = document.createEvent('Event');
+    event.initEvent(name, true, true);
+  }
+  element.dispatchEvent(event);
+};
+
+const pFindFilepickerInput = pFindInDialog(selectors.source);
+const pFindTextarea = pFindInDialog(selectors.embed);
+
+const pSetSourceInput = async (editor: Editor, value: string) => {
+  const input = await pFindFilepickerInput(editor);
+  UiControls.setValue(input, value);
+  return input;
+};
+
+const pPasteTextareaValue = async (editor: Editor, value: string) => {
+  const button = await pFindInDialog(selectors.embedButton)(editor);
+  Mouse.click(button);
+  const embed = await pFindInDialog(selectors.embed)(editor);
+  UiControls.setValue(embed, value);
+  fakeEvent(embed, 'paste');
+  // Need to wait for the post paste event to fire
+  await Waiter.pWait(50);
+};
+
+const pAssertEmbedData = async (editor: Editor, content: string) => {
+  TinyUiActions.clickOnUi(editor, selectors.embedButton);
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  await Waiter.pTryUntil('Textarea should have a proper value',
+    () => {
+      const elem = findInDialog(dialog, selectors.embed);
+      const value = UiControls.getValue(elem);
+      assert.equal(value, content, 'embed content');
+    }
   );
+  TinyUiActions.clickOnUi(editor, '.tox-tab:contains("General")');
 };
 
-const sPasteTextareaValue = (ui: TinyUi, value: string) => {
-  return Logger.t(`Paste text area ${value}`, Chain.asStep({}, [
-    Chain.fromChains([
-      cFindInDialog(selectors.embedButton)(ui),
-      Mouse.cClick,
-      cFindInDialog(selectors.embed)(ui),
-      UiControls.cSetValue(value)
-    ]),
-    cFakeEvent('paste'),
-    // Need to wait for the post paste event to fire
-    Chain.wait(50)
-  ]));
+const pTestEmbedContentFromUrl = async (editor: Editor, url: string, content: string) => {
+  editor.setContent('');
+  await pOpenDialog(editor);
+  await pPasteSourceValue(editor, url);
+  await pAssertEmbedData(editor, content);
+  TinyUiActions.closeDialog(editor);
 };
 
-const sAssertEmbedData = (ui: TinyUi, content: string) => {
-  return GeneralSteps.sequence([
-    ui.sClickOnUi('Switch to Embed tab', '.tox-tab:contains("Embed")'),
-    Waiter.sTryUntil('Textarea should have a proper value',
-      Chain.asStep(SugarBody.body(), [
-        cFindInDialog(selectors.embed)(ui),
-        UiControls.cGetValue,
-        Assertions.cAssertEq('embed content', content)
-      ]), 1, 3000),
-    ui.sClickOnUi('Switch to General tab', '.tox-tab:contains("General")')
-  ]);
-};
+const pSetFormItemNoEvent = pSetSourceInput;
 
-const sTestEmbedContentFromUrl = (apis: TinyApis, ui: TinyUi, url: string, content: string) => {
-  return Logger.t(`Assert embed ${content} from ${url}`, GeneralSteps.sequence([
-    apis.sSetContent(''),
-    sOpenDialog(ui),
-    sPasteSourceValue(ui, url),
-    sAssertEmbedData(ui, content),
-    sCloseDialog(ui)
-  ]));
-};
-
-const sSetFormItemNoEvent = (ui: TinyUi, value: string) => {
-  return Logger.t(`Set form item ${value}`, Chain.asStep({}, [
-    cSetSourceInput(ui, value)
-  ]));
-};
-
-const sAssertEditorContent = (apis: TinyApis, editor: Editor, expected: string) => {
-  return Waiter.sTryUntil('Wait for editor value',
-    Chain.asStep({}, [
-      apis.cGetContent(),
-      Assertions.cAssertHtml('Assert body content', expected)
-    ]), 10, 3000
+const pAssertEditorContent = (editor: Editor, expected: string) =>
+  Waiter.pTryUntil('Wait for editor value',
+    () => TinyAssertions.assertContent(editor, expected)
   );
+
+const pSubmitAndReopen = async (editor: Editor) => {
+  TinyUiActions.submitDialog(editor);
+  await pOpenDialog(editor);
 };
 
-const sSubmitDialog = (ui: TinyUi) => {
-  return Logger.t('Submit dialog', ui.sClickOnUi('Click submit button', selectors.saveButton));
+const pSetHeightAndWidth = async (editor: Editor, height: string, width: string) => {
+  await pChangeWidthValue(editor, width);
+  await pChangeHeightValue(editor, height);
 };
 
-const sSubmitAndReopen = (ui: TinyUi) => {
-  return Logger.t('Submit and reopen dialog', GeneralSteps.sequence([
-    sSubmitDialog(ui),
-    sOpenDialog(ui)
-  ]));
+const pAssertHeightAndWidth = async (editor: Editor, height: string, width: string) => {
+  await pAssertWidthValue(editor, width);
+  await pAssertHeightValue(editor, height);
 };
-
-const sSetSetting = (editorSetting: Record<string, any>, key: string, value: any) => {
-  return Logger.t(`Set setting ${key}: ${value}`, Step.sync(() => {
-    editorSetting[key] = value;
-  }));
-};
-
-const cNotExists = (selector: string) => Chain.control(
-  Chain.op((container: SugarElement) => {
-    UiFinder.findIn(container, selector).fold(
-      () => Assert.eq('should not find anything', true, true),
-      () => Assert.eq('Expected ' + selector + ' not to exist.', true, false)
-    );
-  }),
-  Guard.addLogging(`Assert ${selector} does not exist`)
-);
-
-const cExists = (selector: string) => Chain.control(
-  Chain.op((container: SugarElement) => {
-    UiFinder.findIn(container, selector).fold(
-      () => Assert.eq('Expected ' + selector + ' to exist.', true, false),
-      () => Assert.eq('found element', true, true)
-    );
-  }),
-  Guard.addLogging(`Assert ${selector} exists`)
-);
-
-const sSetHeightAndWidth = (ui: TinyUi, height: string, width: string) => Logger.t(`Set height and width to ${height}x${width}`, GeneralSteps.sequence([
-  sChangeWidthValue(ui, width),
-  sChangeHeightValue(ui, height)
-]));
-
-const sAssertHeightAndWidth = (ui: TinyUi, height: string, width: string) => Logger.t('Check height and width updated', GeneralSteps.sequence([
-  sAssertWidthValue(ui, width),
-  sAssertHeightValue(ui, height)
-]));
 
 export {
-  cSetSourceInput,
-  cFindTextarea,
-  cFakeEvent,
-  cFindInDialog,
-  sOpenDialog,
-  sCloseDialog,
-  sSubmitDialog,
-  sTestEmbedContentFromUrl,
-  sSetFormItemNoEvent,
-  sAssertEditorContent,
-  sSetSetting,
-  sSubmitAndReopen,
-  sAssertWidthValue,
-  sAssertHeightValue,
-  sPasteSourceValue,
-  sPastePosterValue,
-  sAssertSizeRecalcConstrained,
-  sAssertSizeRecalcConstrainedReopen,
-  sAssertSizeRecalcUnconstrained,
-  sAssertEmbedData,
-  sAssertSourceValue,
-  sChangeWidthValue,
-  sChangeHeightValue,
-  sPasteTextareaValue,
-  sSetHeightAndWidth,
-  sAssertHeightAndWidth,
-  selectors,
-  cExists,
-  cNotExists
+  pSetSourceInput,
+  pFindTextarea,
+  fakeEvent,
+  pFindInDialog,
+  pOpenDialog,
+  pTestEmbedContentFromUrl,
+  pSetFormItemNoEvent,
+  pAssertEditorContent,
+  pSubmitAndReopen,
+  pAssertWidthValue,
+  pAssertHeightValue,
+  pPasteSourceValue,
+  pPastePosterValue,
+  pAssertSizeRecalcConstrained,
+  pAssertSizeRecalcConstrainedReopen,
+  pAssertSizeRecalcUnconstrained,
+  pAssertEmbedData,
+  pAssertSourceValue,
+  pChangeWidthValue,
+  pChangeHeightValue,
+  pPasteTextareaValue,
+  pSetHeightAndWidth,
+  pAssertHeightAndWidth,
+  selectors
 };

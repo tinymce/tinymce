@@ -1,56 +1,57 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { renderInput } from 'tinymce/themes/silver/ui/dialog/TextField';
-import { DisablingSteps } from '../../../module/DisablingSteps';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 
-UnitTest.asynctest('Input component Test', (success, failure) => {
+describe('phantom.tinymce.themes.silver.components.input.InputTest', () => {
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    renderInput({
+      name: 'input',
+      label: Optional.some('LabelA'),
+      inputMode: Optional.none(),
+      placeholder: Optional.none(),
+      maximized: false,
+      disabled: false
+    }, TestProviders)
+  ));
 
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderInput({
-        name: 'input',
-        label: Optional.some('LabelA'),
-        inputMode: Optional.none(),
-        placeholder: Optional.none(),
-        maximized: false,
-        disabled: false
-      }, TestProviders)
-    ),
-    (_doc, _body, _gui, component, _store) => [
-      Assertions.sAssertStructure(
-        'Checking initial structure',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-form__group') ],
-          children: [
-            s.element('label', {
-              classes: [ arr.has('tox-label') ],
-              html: str.is('LabelA')
-            }),
-            s.element('input', {
-              classes: [ arr.has('tox-textfield') ],
-              attrs: {
-                'data-alloy-tabstop': str.is('true')
-              }
-            })
-          ]
-        })),
-        component.element
-      ),
+  it('Check basic structure', () => {
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-form__group') ],
+        children: [
+          s.element('label', {
+            classes: [ arr.has('tox-label') ],
+            html: str.is('LabelA')
+          }),
+          s.element('input', {
+            classes: [ arr.has('tox-textfield') ],
+            attrs: {
+              'data-alloy-tabstop': str.is('true')
+            }
+          })
+        ]
+      })),
+      hook.component().element
+    );
+  });
 
-      RepresentingSteps.sSetValue('Setting to new value', component, 'New-Value'),
-      RepresentingSteps.sAssertComposedValue('After setting value on form field', 'New-Value', component),
+  it('Representing state', () => {
+    const component = hook.component();
+    Representing.setValue(component, 'New-Value');
+    RepresentingUtils.assertComposedValue(component, 'New-Value');
+  });
 
-      // Disabling state
-      DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
-      DisablingSteps.sSetDisabled('set disabled', component, true),
-      DisablingSteps.sAssertDisabled('enabled > disabled', true, component)
-    ],
-    success,
-    failure
-  );
+  it('Disabling state', () => {
+    const component = hook.component();
+    assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
+    Disabling.set(component, true);
+    assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
+  });
 });

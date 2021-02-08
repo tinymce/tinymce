@@ -31,19 +31,37 @@ const getRawH = (cell: SugarElement): string => {
 const justCols = (warehouse: Warehouse): Optional<SugarElement<HTMLTableColElement>>[] =>
   Arr.map(Warehouse.justColumns(warehouse), (column) => Optional.from(column.element));
 
+const hasRawStyle = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>, prop: 'width' | 'height') =>
+  Css.getRaw(cell, prop).isSome();
+
 // Col elements don't have valid computed widths/positions, so treat them as invalid if they don't have a raw width
 const isValidColumn = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): boolean =>
-  !isCol(cell) || Css.getRaw(cell, 'width').isSome();
+  !isCol(cell) || hasRawStyle(cell, 'width');
 
-const getDimension = <T>(cellOpt: Optional<SugarElement>, index: number, backups: Optional<number>[], filter: (cell: SugarElement) => boolean, getter: (cell: SugarElement) => T, fallback: (deduced: Optional<number>) => T): T =>
+const getDimension = <T>(
+  cellOpt: Optional<SugarElement>,
+  index: number,
+  backups: Optional<number>[],
+  filter: (cell: SugarElement) => boolean,
+  getter: (cell: SugarElement) => T,
+  fallback: (deduced: Optional<number>) => T
+): T =>
   cellOpt.filter(filter).fold(
     // Can't just read the width of a cell, so calculate.
     () => fallback(Util.deduce(backups, index)),
     (cell) => getter(cell)
   );
 
-const getWidthFrom = <T>(warehouse: Warehouse, table: SugarElement<HTMLTableElement>, getWidth: (cell: SugarElement, tableSize: TableSize) => T, fallback: (deduced: Optional<number>) => T, tableSize: TableSize): T[] => {
-  const columnCells = Blocks.columns(warehouse);
+const getWidthFrom = <T>(
+  warehouse: Warehouse,
+  table: SugarElement<HTMLTableElement>,
+  getWidth: (cell: SugarElement, tableSize: TableSize) => T,
+  fallback: (deduced: Optional<number>) => T,
+  tableSize: TableSize
+): T[] => {
+  // Only treat a cell as being valid for a column representation if it has a raw width, otherwise we won't be able to calculate the expected width.
+  // This is needed as one cell may have a width but others may not, so we need to try and use one with a specified width first.
+  const columnCells = Blocks.columns(warehouse, (cell) => hasRawStyle(cell, 'width'));
   const columns: Optional<SugarElement>[] = Warehouse.hasColumns(warehouse) ? justCols(warehouse) : columnCells;
 
   const backups = [ Optional.some(width.edge(table)) ].concat(Arr.map(width.positions(columnCells, table), (pos) =>

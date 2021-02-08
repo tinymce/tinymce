@@ -1,35 +1,22 @@
-import { Assertions, Chain, Guard, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, McEditor, UiChains } from '@ephox/mcagar';
-import { SugarBody, Visibility } from '@ephox/sugar';
+import { UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.ShowHideTest', (success, failure) => {
-  Theme();
-
+describe('browser.tinymce.themes.silver.editor.ShowHideTest', () => {
   const base_url = '/project/tinymce/js/tinymce';
 
-  const cWaitForVisible = UiChains.cWaitForState(Visibility.isVisible);
-  const cWaitForInvisible = (label: string, selector: string) => Chain.control(
-    Chain.fromIsolatedChains([
-      Chain.injectThunked(SugarBody.body),
-      Chain.exists([
-        UiFinder.cNotExists(selector),
-        Chain.fromIsolatedChains([
-          UiFinder.cFindIn(selector),
-          Chain.mapper(Visibility.isVisible),
-          Assertions.cAssertEq(label, false)
-        ])
-      ])
-    ]),
-    Guard.tryUntil(label)
-  );
+  before(() => {
+    Theme();
+  });
 
-  const cHide = Chain.op((editor: Editor) => editor.hide());
-  const cShow = Chain.op((editor: Editor) => editor.show());
+  const pWaitForVisible = (label: string, selector: string) => UiFinder.pWaitForVisible(label, SugarBody.body(), selector);
+  const pWaitForHidden = (label: string, selector: string) => UiFinder.pWaitForHidden(label, SugarBody.body(), selector);
 
-  const cOpenDialog = Chain.op((editor: Editor) => editor.windowManager.open({
+  const openDialog = (editor: Editor) => editor.windowManager.open({
     title: 'Dummy dialog',
     body: {
       type: 'panel',
@@ -46,60 +33,58 @@ UnitTest.asynctest('browser.tinymce.themes.silver.ShowHideTest', (success, failu
         text: 'Ok'
       }
     ]
-  }));
+  });
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TINY-6048', 'Inline editor should hide UI on editor hide', [
-      McEditor.cFromSettings({ base_url, inline: true }),
-      // Bring out the UI
-      ApiChains.cFocus,
-      cWaitForVisible('UI should be on the screen', '.tox-toolbar'),
-      // Hide the editor
-      cHide,
-      cWaitForInvisible('UI should not be on the screen', '.tox-toolbar'),
-      // Bring the editor back
-      cShow,
-      cWaitForVisible('UI should be back on the scren', '.tox-toolbar'),
-      McEditor.cRemove
-    ]),
+  it('TINY-6048: Inline editor should hide UI on editor hide', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ base_url, inline: true });
+    // Bring out the UI
+    editor.focus();
+    await pWaitForVisible('UI should be on the screen', '.tox-toolbar');
+    // Hide the editor
+    editor.hide();
+    await pWaitForHidden('UI should not be on the screen', '.tox-toolbar');
+    // Bring the editor back
+    editor.show();
+    await pWaitForVisible('UI should be back on the screen', '.tox-toolbar');
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TINY-6048', 'Iframe editor should hide UI on editor hide', [
-      McEditor.cFromSettings({ base_url }),
-      cWaitForVisible('UI should be on the screen', '.tox-toolbar'),
-      cHide,
-      cWaitForInvisible('UI should not be on the screen', '.tox-toolbar'),
-      cShow,
-      cWaitForVisible('UI should be back on the screen', '.tox-toolbar'),
-      McEditor.cRemove
-    ]),
+  it('TINY-6048: Iframe editor should hide UI on editor hide', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ base_url });
+    await pWaitForVisible('UI should be on the screen', '.tox-toolbar');
+    editor.hide();
+    await pWaitForHidden('UI should not be on the screen', '.tox-toolbar');
+    editor.show();
+    await pWaitForVisible('UI should be back on the screen', '.tox-toolbar');
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TINY-6048', 'Inline editor should close dialogs on editor hide', [
-      McEditor.cFromSettings({ base_url, inline: true }),
-      // Bring out the UI
-      ApiChains.cFocus,
-      cOpenDialog,
-      cWaitForVisible('Dialog should be on the screen', '.tox-dialog'),
-      // Hide the editor
-      cHide,
-      cWaitForInvisible('Dialog should not be on the screen', '.tox-dialog'),
-      // Bring the editor back
-      cShow,
-      cWaitForVisible('Dialog should be back on the scren', '.tox-dialog'),
-      McEditor.cRemove
-    ]),
+  it('TINY-6048: Inline editor should close dialogs on editor hide', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ base_url, inline: true });
+    // Bring out the UI
+    editor.focus();
+    openDialog(editor);
+    await pWaitForVisible('Dialog should be on the screen', '.tox-dialog');
+    // Hide the editor
+    editor.hide();
+    await pWaitForHidden('Dialog should not be on the screen', '.tox-dialog');
+    // Bring the editor back
+    editor.show();
+    await pWaitForVisible('Dialog should be back on the screen', '.tox-dialog');
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TINY-6048', 'Iframe editor should close dialogs on editor hide', [
-      McEditor.cFromSettings({ base_url }),
-      // Bring out the UI
-      cOpenDialog,
-      cWaitForVisible('Dialog should be on the screen', '.tox-dialog'),
-      // Hide the editor
-      cHide,
-      cWaitForInvisible('Dialog should not be on the screen', '.tox-dialog'),
-      // Bring the editor back
-      cShow,
-      cWaitForVisible('Dialog should be back on the scren', '.tox-dialog'),
-      McEditor.cRemove
-    ])
-  ], success, failure);
+  it('TINY-6048: Iframe editor should close dialogs on editor hide', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({ base_url });
+    // Bring out the UI
+    openDialog(editor);
+    await pWaitForVisible('Dialog should be on the screen', '.tox-dialog');
+    // Hide the editor
+    editor.hide();
+    await pWaitForHidden('Dialog should not be on the screen', '.tox-dialog');
+    // Bring the editor back
+    editor.show();
+    await pWaitForVisible('Dialog should be back on the screen', '.tox-dialog');
+    McEditor.remove(editor);
+  });
 });

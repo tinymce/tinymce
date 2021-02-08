@@ -1,23 +1,24 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Mouse, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Cell } from '@ephox/katamari';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-import TestExtras from '../../module/TestExtras';
+import * as TestExtras from '../../module/TestExtras';
 
-UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
-  const helpers = TestExtras();
-  const windowManager = WindowManager.setup(helpers.extras);
-
-  const currentApi = Cell<Dialog.UrlDialogInstanceApi>({ } as any);
-
+describe('phantom.tinymce.themes.silver.window.SilverUrlDialogTest', () => {
   const store = TestHelpers.TestStore();
+  const helpers = TestExtras.bddSetup();
+  let windowManager: WindowManagerImpl;
+  let dialogApi: Dialog.UrlDialogInstanceApi;
+  before(() => {
+    windowManager = WindowManager.setup(helpers.extras());
+  });
 
-  const sTestOpen = Chain.asStep({ }, [
-    Chain.injectThunked(() => windowManager.openUrl({
+  const openDialog = () => {
+    dialogApi = windowManager.openUrl({
       title: 'Silver Test Modal URL Dialog',
       url: '/project/tinymce/src/themes/silver/test/html/iframe.html',
       buttons: [
@@ -32,58 +33,48 @@ UnitTest.asynctest('WindowManager:url-dialog Test', (success, failure) => {
       onClose: store.adder('onClose'),
       onAction: store.adder('onAction'),
       onMessage: store.adder('onMessage')
-    }, () => store.adder('closeWindow')())),
+    }, () => store.adder('closeWindow')());
+  };
 
-    Chain.op((dialogApi) => {
-      currentApi.set(dialogApi);
-    })
-  ]);
+  const closeDialog = () => {
+    Mouse.clickOn(SugarBody.body(), '[aria-label="Close"]');
+    UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
+  };
 
-  const sTestClose = GeneralSteps.sequence([
-    Mouse.sClickOn(SugarBody.body(), '[aria-label="Close"]'),
-    UiFinder.sNotExists(SugarBody.body(), '[role="dialog"]')
-  ]);
-
-  Pipeline.async({}, [
-    sTestOpen,
-    Assertions.sAssertStructure('"tox-dialog__scroll-disable" should exist on the body',
+  const assertScrollLock = (enabled: boolean) => {
+    Assertions.assertStructure(`"tox-dialog__scroll-disable" ${ enabled ? 'should' : 'should not' } exist on the body`,
       ApproxStructure.build((s, str, arr) => s.element('body', {
-        classes: [ arr.has('tox-dialog__disable-scroll') ]
+        classes: [ enabled ? arr.has('tox-dialog__disable-scroll') : arr.not('tox-dialog__disable-scroll') ]
       })),
       SugarBody.body()
-    ),
-    Waiter.sTryUntil(
+    );
+  };
+
+  it('Open a dialog, send message, close and assert events', async () => {
+    openDialog();
+    assertScrollLock(true);
+    await Waiter.pTryUntil(
       'Waiting for an initial message to be received from the iframe',
-      store.sAssertEq('Checking stuff', [ 'onMessage' ])
-    ),
-    Step.label('Sending message to iframe', Step.sync(() => {
-      // Send a message to the iframe
-      currentApi.get().sendMessage({ message: 'Some message' });
-    })),
-    Waiter.sTryUntil(
+      () => store.assertEq('Checking stuff', [ 'onMessage' ])
+    );
+    // Send a message to the iframe
+    dialogApi.sendMessage({ message: 'Some message' });
+    await Waiter.pTryUntil(
       'Waiting for the reply message to be received from the iframe',
-      store.sAssertEq('Checking stuff', [ 'onMessage', 'onMessage' ])
-    ),
-    Mouse.sClickOn(SugarBody.body(), 'button:contains("Barny Text")'),
-    sTestClose,
-    Waiter.sTryUntil(
+      () => store.assertEq('Checking stuff', [ 'onMessage', 'onMessage' ])
+    );
+    Mouse.clickOn(SugarBody.body(), 'button:contains("Barny Text")');
+    closeDialog();
+    await Waiter.pTryUntil(
       'Waiting for all dialog events when closing',
-      store.sAssertEq('Checking stuff', [
+      () => store.assertEq('Checking stuff', [
         'onMessage',
         'onMessage',
         'onAction',
         'closeWindow',
         'onClose'
       ])
-    ),
-    Assertions.sAssertStructure('"tox-dialog__scroll-disable" should have been removed from the body',
-      ApproxStructure.build((s, str, arr) => s.element('body', {
-        classes: [ arr.not('tox-dialog__disable-scroll') ]
-      })),
-      SugarBody.body()
-    )
-  ], () => {
-    helpers.destroy();
-    success();
-  }, failure);
+    );
+    assertScrollLock(false);
+  });
 });

@@ -1,65 +1,57 @@
-import { ApproxStructure, Assertions, Chain, Log, NamedChain, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { ApproxStructure, Assertions, StructAssert } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyDom } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Editor (Silver) directionality test', (success, failure) => {
-  Theme();
-
-  EditorManager.addI18n('ar', {
-    Bold: 'Bold test',
-    _dir: 'rtl'
+describe('browser.tinymce.themes.silver.editor.SilverEditorDirectionalityTest', () => {
+  before(() => {
+    Theme();
+    EditorManager.addI18n('ar', {
+      Bold: 'Bold test',
+      _dir: 'rtl'
+    });
   });
 
-  const cGetEditorContainer = Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getContainer()));
+  const setContent = (editor: Editor, content: string) =>
+    editor.editorCommands.execCommand('mceSetContent', false, content);
 
-  const cSetContent = (content: string) => Chain.mapper((editor: any) => {
-    return editor.editorCommands.execCommand('mceSetContent', false, content);
-  });
+  const pTest = async (config: RawEditorSettings, label: string, editorStructure: StructAssert) => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      ...config
+    });
+    setContent(editor, '<p>Hello world!</p>');
+    Assertions.assertStructure(
+      label,
+      editorStructure,
+      TinyDom.container(editor)
+    );
+    McEditor.remove(editor);
+  };
 
-  const makeStep = (config, label, editorStructure) => Chain.asStep({}, [
-    McEditor.cFromSettings(config),
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cSetContent('<p>Hello world!</p>'), ''),
-      NamedChain.direct('editor', cGetEditorContainer, 'editorContainer'),
-      NamedChain.direct('editorContainer', Assertions.cAssertStructure(
-        label,
-        editorStructure
-      ), 'assertion'),
-      NamedChain.output('editor')
-    ]),
-    McEditor.cRemove
-  ]);
+  it('TBA: Test directionality of the editor UI when set to use a rtl language', () => pTest(
+    {
+      language: 'ar',
+    },
+    'Directionality of the editor UI should be `rtl` when using a rtl language',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      attrs: { dir: str.is('rtl') }
+    }))
+  ));
 
-  Pipeline.async({}, [
-    Log.step('TBA', 'Test directionality of the editor UI when set to use a rtl language', makeStep(
-      {
-        theme: 'silver',
-        language: 'ar',
-        base_url: '/project/tinymce/js/tinymce'
-      },
-      'Directionality of the editor UI should be `rtl` when using a rtl language',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        attrs: { dir: str.is('rtl') }
-      }))
-    )),
-
-    Log.step('TBA', 'Test directionality of the editor UI when set to use a language without directionality', makeStep(
-      {
-        theme: 'silver',
-        language: 'en',
-        base_url: '/project/tinymce/js/tinymce'
-      },
-      'Directionality of the editor UI should not be set when using a language without directionality',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        attrs: { dir: str.none() }
-      }))
-    ))
-  ], success, failure);
+  it('TBA: Test directionality of the editor UI when set to use a language without directionality', () => pTest(
+    {
+      language: 'en',
+    },
+    'Directionality of the editor UI should not be set when using a language without directionality',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      attrs: { dir: str.none() }
+    }))
+  ));
 });

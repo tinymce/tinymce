@@ -10,7 +10,7 @@ import {
   Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
 } from '@ephox/alloy';
 import { InlineContent, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, Focus, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -133,6 +133,11 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       contextToolbarBounds.y,
       contextToolbarBounds.bottom
     );
+  };
+
+  const close = () => {
+    lastAnchor.set(Optional.none());
+    InlineView.hide(contextbar);
   };
 
   const forceHide = () => {
@@ -271,10 +276,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
 
     const scopes = getScopes();
     ToolbarLookup.lookup(scopes, editor).fold(
-      () => {
-        lastAnchor.set(Optional.none());
-        InlineView.hide(contextbar);
-      },
+      close,
 
       (info) => {
         launchContext(info.toolbars, Optional.some(info.elem.dom));
@@ -290,9 +292,9 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     }
   };
 
-  const resetTimer = (t) => {
+  const asyncOpen = () => {
     clearTimer();
-    timer.set(t);
+    timer.set(Delay.setEditorTimeout(editor, launchContextToolbar, 0));
   };
 
   editor.on('init', () => {
@@ -302,37 +304,35 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
     editor.on('click keyup focus SetContent ObjectResized ResizeEditor', () => {
       // Fixing issue with chrome focus on img.
-      resetTimer(
-        Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-      );
+      asyncOpen();
     });
 
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
-          lastAnchor.set(Optional.none());
-          InlineView.hide(contextbar);
+          close();
         }
       }, 0);
     });
 
     editor.on('SwitchMode', () => {
       if (editor.mode.isReadOnly()) {
-        lastAnchor.set(Optional.none());
-        InlineView.hide(contextbar);
+        close();
+      }
+    });
+
+    editor.on('AfterProgressState', (event) => {
+      if (event.state) {
+        close();
+      } else if (editor.hasFocus()) {
+        asyncOpen();
       }
     });
 
     editor.on('NodeChange', (_e) => {
       Focus.search(contextbar.element).fold(
-        () => {
-          resetTimer(
-            Delay.setEditorTimeout(editor, launchContextToolbar, 0)
-          );
-        },
-        (_) => {
-
-        }
+        asyncOpen,
+        Fun.noop
       );
     });
   });

@@ -8,7 +8,6 @@
 // Note: Need to use a type here, as types are iterable whereas interfaces are not
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type MediaData = {
-  allowFullscreen?: boolean;
   source: string;
   sourcemime?: string;
   width?: string;
@@ -18,6 +17,11 @@ export type MediaData = {
   altsource: string;
   altsourcemime?: string;
   type?: 'ephox-embed-iri' | 'script' | 'object' | 'iframe' | 'embed' | 'video' | 'audio';
+
+  // properties loaded from attributes
+  allowfullscreen?: string | boolean;
+  src?: string;
+  'data-ephox-embed'?: string;
 };
 
 export interface DialogSubData {

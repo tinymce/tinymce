@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Chain, Guard, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
@@ -62,19 +62,23 @@ const structWithTitleAndIcon = (d) => (s, str, arr) => s.element('div', {
   ]
 });
 
-const sWaitForAutocompleteToOpen = UiFinder.sWaitForVisible('Wait for autocompleter to appear', SugarBody.body(), '.tox-autocompleter div[role="menu"]');
-
-const sWaitForAutocompleteToClose = Waiter.sTryUntil(
-  'Autocompleter should disappear',
-  UiFinder.sNotExists(SugarBody.body(), '.tox-autocompleter div[role="menu"]'),
-  100,
-  1000
+const pWaitForAutocompleteToOpen = () => UiFinder.pWaitForVisible(
+  'Wait for autocompleter to appear',
+  SugarBody.body(),
+  '.tox-autocompleter div[role="menu"]'
 );
 
-const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Chain.asStep(SugarBody.body(), [
-  UiFinder.cFindIn('.tox-autocompleter'),
-  Chain.control(
-    Assertions.cAssertStructure(
+const pWaitForAutocompleteToClose = () => Waiter.pTryUntil(
+  'Autocompleter should disappear',
+  () => UiFinder.notExists(SugarBody.body(), '.tox-autocompleter div[role="menu"]'),
+  50
+);
+
+const pAssertAutocompleterStructure = async (structure: AutocompleterStructure) => {
+  const autocompleter = UiFinder.findIn(SugarBody.body(), '.tox-autocompleter').getOrDie();
+  await Waiter.pTryUntil(
+    'Waiting for autocompleter structure to match',
+    () => Assertions.assertStructure(
       'Checking the autocompleter',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-autocompleter') ],
@@ -99,20 +103,20 @@ const sAssertAutocompleterStructure = (structure: AutocompleterStructure) => Cha
             }))
           })
         ]
-      }))
-    ),
-    Guard.tryUntil('Waiting for autocompleter structure to match', 100, 1000)
-  )
-]);
+      })),
+      autocompleter
+    )
+  );
+};
 
 export {
   AutocompleterGridStructure,
   AutocompleterListStructure,
   AutocompleterStructure,
-  sAssertAutocompleterStructure,
+  pAssertAutocompleterStructure,
   structWithTitleAndIcon,
   structWithTitleAndIconAndText,
   structWithTitleAndText,
-  sWaitForAutocompleteToClose,
-  sWaitForAutocompleteToOpen
+  pWaitForAutocompleteToClose,
+  pWaitForAutocompleteToOpen
 };
