@@ -17,6 +17,8 @@ export default () => {
     if (editor.hasPlugin('rtc', true) === false) {
       Keyboard.setup(editor);
       Commands.register(editor);
+    } else {
+      Commands.registerDialog(editor);
     }
 
     Buttons.register(editor);

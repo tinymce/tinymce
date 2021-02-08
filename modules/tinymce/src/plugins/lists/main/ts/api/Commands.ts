@@ -18,6 +18,12 @@ const queryListCommandState = (editor, listName) => {
   };
 };
 
+const registerDialog = (editor) => {
+  editor.addCommand('mceListProps', () => {
+    Dialog.open(editor);
+  });
+};
+
 const register = (editor) => {
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
@@ -45,9 +51,7 @@ const register = (editor) => {
     flattenListSelection(editor);
   });
 
-  editor.addCommand('mceListProps', () => {
-    Dialog.open(editor);
-  });
+  registerDialog(editor);
 
   editor.addCommand('SetListAttributes', (ui, detail) => {
     setParentListAttributes(editor, detail);
@@ -59,5 +63,6 @@ const register = (editor) => {
 };
 
 export {
+  registerDialog,
   register
 };
