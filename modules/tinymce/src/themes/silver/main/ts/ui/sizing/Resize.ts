@@ -21,7 +21,7 @@ export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight, originalWidth) => {
+export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight: number, originalWidth: number) => {
   const dimensions: EditorDimensions = {};
 
   dimensions.height = Utils.calcCappedSize(originalHeight + deltas.top, getMinHeightSetting(editor), getMaxHeightSetting(editor));

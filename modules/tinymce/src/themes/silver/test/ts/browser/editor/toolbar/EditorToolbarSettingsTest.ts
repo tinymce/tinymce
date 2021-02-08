@@ -1,80 +1,130 @@
-import { ApproxStructure, Assertions, Log, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Id, Result } from '@ephox/katamari';
+import { ApproxStructure, Assertions } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import SilverTheme from 'tinymce/themes/silver/Theme';
-import { cCountNumber, cExtractOnlyOne } from '../../../module/UiChainUtils';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) => {
-  SilverTheme();
+import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 
-  const cCreateEditorWithToolbar = (toolbarVal, toolbarVal1?, toolbarVal2?, toolbarVal9?, toolbarVal20?) => McEditor.cFromSettings({
+describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarSettingsTest', () => {
+  before(() => {
+    Theme();
+  });
+
+  const pCreateEditorWithToolbar = (
+    toolbarVal: boolean | string | string[] | Record<string, any> | undefined,
+    toolbarVal1?: string,
+    toolbarVal2?: string,
+    toolbarVal9?: string,
+    toolbarVal20?: string
+  ) => McEditor.pFromSettings<Editor>({
     toolbar: toolbarVal,
     toolbar1: toolbarVal1,
     toolbar2: toolbarVal2,
     toolbar9: toolbarVal9,
     toolbar20: toolbarVal20,
-    theme: 'silver',
+    menubar: false,
+    statusbar: false,
     base_url: '/project/tinymce/js/tinymce'
   });
 
-  const cAssertIsDefaultToolbar = Assertions.cAssertStructure(
+  const assertIsDefaultToolbar = (toolbar: SugarElement<HTMLElement>) => Assertions.assertStructure(
     'Checking structure of tox-toolbar is "default"',
     ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox-toolbar') ],
       children: Arr.map([ 1, 2, 3, 4, 5 ], (_) => // Technically meant to be 6 groups by default but the link and image plugins aren't loaded here so whatever
         s.element('div', { classes: [ arr.has('tox-toolbar__group') ] }))
-    }))
+    })),
+    toolbar
   );
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Testing toolbar: false should not create toolbar at all', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(false)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
-        NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: false should not create toolbar at all', async () => {
+    const editor = await pCreateEditorWithToolbar(false);
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 0, 'Should be no toolbars');
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing toolbar: true should create default toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: true should create default toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(true);
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    assertIsDefaultToolbar(toolbar);
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing toolbar: undefined should create default toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(undefined)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+  it('TBA: undefined should create default toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(undefined);
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    assertIsDefaultToolbar(toolbar);
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic" should create "bold italic" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar('bold italic')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
+  it('TBA: "bold italic" should create "bold italic" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar('bold italic');
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold and italic',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            children: [
+              s.element('button', { }),
+              s.element('button', { })
+            ]
+          })
+        ]
+      })),
+      toolbar
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: "bold italic | stufffffed | strikethrough underline" should create "bold italic | strikethrough underline" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar('bold italic | stufffffed | strikethrough underline');
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have bold, italic, strikethrough and underline',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            children: [
+              s.element('button', { }),
+              s.element('button', { })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            children: [
+              s.element('button', { }),
+              s.element('button', { })
+            ]
+          })
+        ]
+      })),
+      toolbar
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: ["bold italic", "underline | strikethrough"] should create "bold italic" and "underline | strikethrough" toolbars', async () => {
+    const editor = await pCreateEditorWithToolbar([ 'bold italic', 'underline | strikethrough' ]);
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 2, 'Should be two toolbars');
+    Assertions.assertStructure(
+      'Checking toolbar1 should have bold italic and and toolbar 2 should have underline',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
             classes: [ arr.has('tox-toolbar') ],
             children: [
               s.element('div', {
@@ -85,22 +135,243 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
                 ]
               })
             ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { })
+                ]
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
 
-    Log.chainsAsStep('TBA', 'Testing toolbar: "bold italic | stufffffed | strikethrough underline" should create "bold italic | strikethrough underline" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar('bold italic | stufffffed | strikethrough underline')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', Assertions.cAssertStructure(
-          'Checking toolbar should have bold, italic, strikethrough and underline',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
+  it('TBA: ["bold"] should create "bold" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar([ 'bold' ]);
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: empty array should not create toolbar at all', async () => {
+    const editor = await pCreateEditorWithToolbar([]);
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 0, 'Should be no toolbars');
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar: "link", toolbar1: "bold italic underline" and toolbar2: "strikethrough" should create a "bold italic underline" toolbar and a "strikethrough" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar('link', 'bold italic underline', 'strikethrough');
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 2, 'Should be two toolbars');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold and italic',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar1: "bold italic underline" and toolbar2: ["strikethrough"] should create "bold italic underline" toolbar and ignore toolbar2', async () => {
+    const editor = await pCreateEditorWithToolbar(true, 'bold italic underline', [ 'strikethrough' ] as any);
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold, italic and underline',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', {}),
+                  s.element('button', {}),
+                  s.element('button', {})
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar: false and toolbar2: "bold italic" should create "bold italic" toolbar and ignore toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(false, false as any, 'bold italic');
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold and italic',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar: empty array and toolbar1: "bold italic" and toolbar2: "strikethrough" should create a "bold italic" toolbar and a "strikethrough" toolbar and ignore toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar([], 'bold italic', 'strikethrough');
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 2, 'Should be two toolbars');
+    Assertions.assertStructure(
+      'Checking toolbar 1 should have bold and italic and toolbar 2 should have strikethrough',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar1: false and toolbar2: "bold italic underline" should create "bold italic underline toolbar and ignore toolbar1', async () => {
+    const editor = await pCreateEditorWithToolbar(true, false as any, 'bold italic underline');
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have just bold, italic and underline',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-toolbar__group') ],
+                children: [
+                  s.element('button', { }),
+                  s.element('button', { }),
+                  s.element('button', { })
+                ]
+              })
+            ]
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar1: "bold italic | underline" and toolbar9: "strikethrough" should create a "bold italic | underline" toolbar and a "strikethrough" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(true, 'bold italic | underline', false as any, 'strikethrough');
+    const overlord = extractOnlyOne(SugarBody.body(), '.tox-toolbar-overlord');
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 2, 'Should be two toolbars');
+    Assertions.assertStructure(
+      'Checking toolbar 1 should have bold, italic and underline and toolbar 2 should have strikethrough',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar-overlord') ],
+        children: [
+          s.element('div', {
             classes: [ arr.has('tox-toolbar') ],
             children: [
               s.element('div', {
@@ -113,421 +384,85 @@ UnitTest.asynctest('Editor (Silver) toolbar settings test', (success, failure) =
               s.element('div', {
                 classes: [ arr.has('tox-toolbar__group') ],
                 children: [
-                  s.element('button', { }),
                   s.element('button', { })
                 ]
               })
             ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing toolbar: ["bold italic", "underline | strikethrough"] should create "bold italic" and "underline | strikethrough" toolbars', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar([ 'bold italic', 'underline | strikethrough' ])),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar1 should have bold italic and and toolbar 2 should have underline',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing toolbar: ["bold"] should create "bold" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar([ 'bold' ])),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing toolbar: empty array should not create toolbar at all', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar([])),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
-        NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: "link", toolbar1: "bold italic underline" and toolbar2: "strikethrough" should create a "bold italic underline" toolbar and a "strikethrough" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar('link', 'bold italic underline', 'strikethrough')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: "bold italic underline" and toolbar2: ["strikethrough"] should create "bold italic underline" toolbar and ignore toolbar2', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic underline', [ 'strikethrough' ])),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold, italic and underline',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: false and toolbar2: "bold italic" should create "bold italic" toolbar and ignore toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(false, false, 'bold italic')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold and italic',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar: empty array and toolbar1: "bold italic" and toolbar2: "strikethrough" should create a "bold italic" toolbar and a "strikethrough" toolbar and ignore toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar([], 'bold italic', 'strikethrough')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar 1 should have bold and italic and toolbar 2 should have strikethrough',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: false and toolbar2: "bold italic underline" should create "bold italic underline toolbar and ignore toolbar1', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true, false, 'bold italic underline')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar should have just bold, italic and underline',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: "bold italic | underline" and toolbar9: "strikethrough" should create a "bold italic | underline" toolbar and a "strikethrough" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true, 'bold italic | underline', false, 'strikethrough')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar-overlord'), 'multiple-toolbars'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'toolbars'),
-        NamedChain.direct('toolbars', Assertions.cAssertEq('Should be two toolbars', 2), 'toolbars'),
-        NamedChain.direct('multiple-toolbars', Assertions.cAssertStructure(
-          'Checking toolbar 1 should have bold, italic and underline and toolbar 2 should have strikethrough',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-toolbar-overlord') ],
-            children: [
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { }),
-                      s.element('button', { })
-                    ]
-                  }),
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-toolbar__group') ],
-                    children: [
-                      s.element('button', { })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar1: [] and toolbar2: false should create default toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true, [], false)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing multiple toolbars: toolbar25: "bold italic underline" should create default toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(true, false, false, false, 'bold italic underline')),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', cAssertIsDefaultToolbar, Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing invalid toolbar type should not create a toolbar at all', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar(1)),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cCountNumber('.tox-toolbar'), 'numToolbars'),
-        NamedChain.direct('numToolbars', Assertions.cAssertEq('Should be no toolbars', 0), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ]),
-
-    Log.chainsAsStep('TBA', 'Testing toolbar with toolbar group names: toolbar: [ { name: "history", items: [ "undo", "redo" ] }, { name: "formatting", items: [ "bold", "italic" ] } ] should create a "undo redo | bold italic" toolbar', [
-      NamedChain.asChain([
-        NamedChain.writeValue('body', SugarBody.body()),
-        NamedChain.write('editor', cCreateEditorWithToolbar([{ name: 'history', items: [ 'undo', 'redo' ] }, { name: 'formatting', items: [ 'bold', 'italic' ] }])),
-        NamedChain.direct('body', UiFinder.cWaitForVisible('Waiting for menubar', '.tox-menubar'), '_menubar'),
-        NamedChain.direct('body', cExtractOnlyOne('.tox-toolbar'), 'toolbar'),
-        NamedChain.direct('toolbar', Assertions.cAssertStructure(
-          'Checking toolbar should have undo, redo, bold and italic',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
+          }),
+          s.element('div', {
             classes: [ arr.has('tox-toolbar') ],
             children: [
               s.element('div', {
                 classes: [ arr.has('tox-toolbar__group') ],
-                attrs: {
-                  title: str.is('history')
-                },
                 children: [
-                  s.element('button', { }),
-                  s.element('button', { })
-                ]
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-toolbar__group') ],
-                attrs: {
-                  title: str.is('formatting')
-                },
-                children: [
-                  s.element('button', { }),
                   s.element('button', { })
                 ]
               })
             ]
-          }))
-        ), Id.generate('')),
-        NamedChain.direct('editor', McEditor.cRemove, Id.generate('')),
-        NamedChain.bundle(Result.value)
-      ])
-    ])
-  ], () => success(), failure);
+          })
+        ]
+      })),
+      overlord
+    );
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar1: [] and toolbar2: false should create default toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(true, [] as any, false as any);
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    assertIsDefaultToolbar(toolbar);
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar25: "bold italic underline" should create default toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar(true, false as any, false as any, false as any, 'bold italic underline');
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    assertIsDefaultToolbar(toolbar);
+    McEditor.remove(editor);
+  });
+
+  it('TBA: invalid toolbar type should not create a toolbar at all', async () => {
+    const editor = await pCreateEditorWithToolbar(1 as any);
+    const numToolbars = countNumber(SugarBody.body(), '.tox-toolbar');
+    assert.equal(numToolbars, 0, 'Should be no toolbars');
+    McEditor.remove(editor);
+  });
+
+  it('TBA: toolbar with toolbar group names: toolbar: [ { name: "history", items: [ "undo", "redo" ] }, { name: "formatting", items: [ "bold", "italic" ] } ] should create a "undo redo | bold italic" toolbar', async () => {
+    const editor = await pCreateEditorWithToolbar([
+      { name: 'history', items: [ 'undo', 'redo' ] },
+      { name: 'formatting', items: [ 'bold', 'italic' ] }
+    ]);
+    const toolbar = extractOnlyOne(SugarBody.body(), '.tox-toolbar');
+    Assertions.assertStructure(
+      'Checking toolbar should have undo, redo, bold and italic',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            attrs: {
+              title: str.is('history')
+            },
+            children: [
+              s.element('button', {}),
+              s.element('button', {})
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            attrs: {
+              title: str.is('formatting')
+            },
+            children: [
+              s.element('button', {}),
+              s.element('button', {})
+            ]
+          })
+        ]
+      })),
+      toolbar
+    );
+    McEditor.remove(editor);
+  });
 });

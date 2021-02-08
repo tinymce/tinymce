@@ -1,41 +1,37 @@
-import { Chain, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { McEditor, TinyApis } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { McEditor } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
+
 import * as StickyUtils from '../../../module/StickyHeaderUtils';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlacementTest ', (success, failure) => {
-  Theme();
+describe('browser.tinymce.themes.silver.editor.header.StickyHeaderInitialPlacementTest ', () => {
+  before(() => {
+    Theme();
+  });
 
-  const sTestStickyHeader = (toolbarLocation: ToolbarLocation, height: number, expectDocked: boolean) => {
-    const isToolbarTop = toolbarLocation === ToolbarLocation.top;
-
-    return Chain.asStep(SugarBody.body(), [
-      McEditor.cFromSettings({
-        theme: 'silver',
+  Arr.each([
+    { location: ToolbarLocation.top, height: 2000, expectDocked: false },
+    { location: ToolbarLocation.bottom, height: 500, expectDocked: false },
+    { location: ToolbarLocation.bottom, height: 2000, expectDocked: true }
+  ], (test) => {
+    it(`Test toolbar initial placement with toolbar_location: ${test.location} and height: ${test.height}`, async () => {
+      const editor = await McEditor.pFromSettings<Editor>({
         base_url: '/project/tinymce/js/tinymce',
-        height,
-        toolbar_location: toolbarLocation,
+        height: test.height,
+        toolbar_location: test.location,
         toolbar_sticky: true
-      }),
-      Chain.runStepsOnValue((editor) => {
-        const tinyApis = TinyApis(editor);
-
-        return Log.steps('TINY-4644', 'Test toolbar initial placement with toolbar_location: ' + toolbarLocation + ' and height: ' + height, [
-          tinyApis.sFocus(),
-          ...expectDocked ? [ StickyUtils.sAssertHeaderDocked(isToolbarTop) ] : [ ],
-          StickyUtils.sAssertEditorClasses(expectDocked)
-        ]);
-      }),
-      McEditor.cRemove
-    ]);
-  };
-
-  Pipeline.async({}, [
-    sTestStickyHeader(ToolbarLocation.top, 2000, false),
-    sTestStickyHeader(ToolbarLocation.bottom, 500, false),
-    sTestStickyHeader(ToolbarLocation.bottom, 2000, true)
-  ], success, failure);
+      });
+      editor.focus();
+      if (test.expectDocked) {
+        const isToolbarTop = test.location === ToolbarLocation.top;
+        await StickyUtils.pAssertHeaderDocked(isToolbarTop);
+      }
+      StickyUtils.assertEditorClasses(test.expectDocked);
+      McEditor.remove(editor);
+    });
+  });
 });

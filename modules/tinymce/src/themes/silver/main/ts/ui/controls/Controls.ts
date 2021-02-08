@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, AlloyEvents } from '@ephox/alloy';
-import { Cell } from '@ephox/katamari';
+import { Cell, Type } from '@ephox/katamari';
 
 export interface GetApiType<T> {
   getApi: (comp: AlloyComponent) => T;
@@ -15,7 +15,7 @@ export interface GetApiType<T> {
 export type OnDestroy<T> = (controlApi: T) => void;
 
 export interface OnControlAttachedType<T> extends GetApiType<T> {
-  onSetup: (controlApi: T) => OnDestroy<T>; // TODO: check: no change here?
+  onSetup: (controlApi: T) => OnDestroy<T> | void;
 }
 
 const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent) => {
@@ -29,7 +29,7 @@ const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cel
   const run = runWithApi(info, comp);
   run((api) => {
     const onDestroy = info.onSetup(api);
-    if (onDestroy !== null && onDestroy !== undefined) {
+    if (Type.isFunction(onDestroy)) {
       editorOffCell.set(onDestroy);
     }
   });

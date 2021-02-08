@@ -1,14 +1,14 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { InlineContent } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import { ContextTypes } from 'tinymce/themes/silver/ContextToolbar';
 import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarLookup';
 
-UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, failure) => {
-
-  const createToolbar = (items): InlineContent.ContextToolbar => ({
+describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPrioritisationTest', () => {
+  const createToolbar = (items: string): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
     items,
     predicate: Fun.always,
@@ -40,7 +40,9 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
   const assertMatch = (nodeCandidates: ContextTypes[], editorCandidates: ContextTypes[], expectedCandidates: ContextTypes[]) => {
     const elem = SugarElement.fromHtml('<span>test</span>');
     matchStartNode(elem, nodeCandidates, editorCandidates).each((result) => {
-      Arr.map(result.toolbars, (t, i) => Assert.eq('Assert toolbars are equal', t, expectedCandidates[i]));
+      Arr.each(result.toolbars, (t, i) => {
+        assert.equal(t, expectedCandidates[i], 'Assert toolbars are equal');
+      });
     });
   };
 
@@ -50,28 +52,25 @@ UnitTest.asynctest('Context toolbar prioritisation on lookup test', (success, fa
   // 3. only show max 1 context form
   // 4. concatenate all available context toolbars if no context form
 
-  Pipeline.async({ }, [
-    Log.step('TINY-4495', 'Assert toolbar lookup prioritises forms over toolbars', Step.sync(() => {
-      const form = createForm();
-      assertMatch([ createToolbar('bold'), form ], [], [ form ]);
-    })),
+  it('TINY-4495: Assert toolbar lookup prioritises forms over toolbars', () => {
+    const form = createForm();
+    assertMatch([ createToolbar('bold'), form ], [], [ form ]);
+  });
 
-    Log.step('TINY-4495', 'Assert toolbar lookup prioritises node scoped context FORMS over editor scoped context FORMS', Step.sync(() => {
-      const nodeScoped = [ createForm() ];
-      const editorScoped = [ createForm() ];
-      assertMatch(nodeScoped, editorScoped, nodeScoped);
-    })),
+  it('TINY-4495: Assert toolbar lookup prioritises node scoped context FORMS over editor scoped context FORMS', () => {
+    const nodeScoped = [ createForm() ];
+    const editorScoped = [ createForm() ];
+    assertMatch(nodeScoped, editorScoped, nodeScoped);
+  });
 
-    Log.step('TINY-4495', 'Assert toolbar lookup only returns one form', Step.sync(() => {
-      const form = createForm();
-      assertMatch([ form, createForm(), createForm() ], [], [ form ]);
-    })),
+  it('TINY-4495: Assert toolbar lookup only returns one form', () => {
+    const form = createForm();
+    assertMatch([ form, createForm(), createForm() ], [], [ form ]);
+  });
 
-    Log.step('TINY-4495', 'Assert toolbar lookup concatenates node scoped context TOOLBARS and editor scoped context TOOLBARS', Step.sync(() => {
-      const nodeScoped = [ createToolbar('a') ];
-      const editorScoped = [ createToolbar('b') ];
-      assertMatch(nodeScoped, editorScoped, Arr.flatten([ nodeScoped, editorScoped ]));
-    }))
-  ], success, failure);
-
+  it('TINY-4495: Assert toolbar lookup concatenates node scoped context TOOLBARS and editor scoped context TOOLBARS', () => {
+    const nodeScoped = [ createToolbar('a') ];
+    const editorScoped = [ createToolbar('b') ];
+    assertMatch(nodeScoped, editorScoped, Arr.flatten([ nodeScoped, editorScoped ]));
+  });
 });

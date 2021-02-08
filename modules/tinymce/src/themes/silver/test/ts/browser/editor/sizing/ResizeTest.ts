@@ -1,72 +1,16 @@
-import { Assertions, Chain, Guard, Mouse, NamedChain, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
+import { Mouse, UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
-
 import Theme from 'tinymce/themes/silver/Theme';
-import { cResizeToPos } from '../../../module/UiChainUtils';
 
-UnitTest.asynctest('Editor resize test', (success, failure) => {
-  Theme();
+import { resizeToPos } from '../../../module/UiUtils';
 
-  TinyLoader.setup((editor: Editor, onSuccess, onFailure) => {
-    const cAssertEditorSize = (expectedWidth: number, expectedHeight: number) => Chain.control(
-      Chain.op((container: SugarElement) => {
-        Assertions.assertEq(`Editor should be ${expectedHeight}px high`, expectedHeight, container.dom.offsetHeight);
-        Assertions.assertEq(`Editor should be ${expectedWidth}px wide`, expectedWidth, container.dom.offsetWidth);
-      }),
-      Guard.addLogging('Ensure that the editor has resized')
-    );
-
-    Pipeline.async({ }, [
-      Chain.asStep(SugarBody.body(), [
-        Chain.op(() => {
-          // Add a border to ensure we're using the correct height/width (ie border-box sizing)
-          editor.dom.setStyles(editor.getContainer(), {
-            border: '2px solid #ccc'
-          });
-        }),
-        Chain.label('Test resize with max/min sizing', NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), Chain.identity, 'body'),
-          NamedChain.writeValue('container', SugarElement.fromDom(editor.getContainer())),
-          NamedChain.direct('body', UiFinder.cFindIn('.tox-statusbar__resize-handle'), 'resizeHandle'),
-
-          // Shrink to 300px
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(400, 400, 300, 300), '_'),
-          NamedChain.direct('container', cAssertEditorSize(300, 300), '_'),
-
-          // Enlarge to 450px
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(300, 300, 450, 450), '_'),
-          NamedChain.direct('container', cAssertEditorSize(450, 450), '_'),
-
-          // Try to shrink to below min height
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(450, 450, 450, 250), '_'),
-          NamedChain.direct('container', cAssertEditorSize(450, 300), '_'),
-
-          // Try to enlarge to above max height
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(450, 300, 450, 550), '_'),
-          NamedChain.direct('container', cAssertEditorSize(450, 500), '_'),
-
-          // Try to shrink to below min width
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(450, 500, 250, 500), '_'),
-          NamedChain.direct('container', cAssertEditorSize(300, 500), '_'),
-
-          // Try to enlarge to above max width
-          NamedChain.direct('resizeHandle', Mouse.cMouseDown, '_'),
-          NamedChain.direct('body', cResizeToPos(300, 500, 550, 500), '_'),
-          NamedChain.direct('container', cAssertEditorSize(500, 500), '_')
-        ]))
-      ])
-    ], onSuccess, onFailure);
-  },
-  {
-    theme: 'silver',
+describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     resize: 'both',
     min_height: 300,
@@ -75,5 +19,54 @@ UnitTest.asynctest('Editor resize test', (success, failure) => {
     width: 400,
     max_height: 500,
     max_width: 500
-  }, success, failure);
+  }, [ Theme ]);
+
+  const assertEditorSize = (container: SugarElement<HTMLElement>, expectedWidth: number, expectedHeight: number) => {
+    assert.equal(container.dom.offsetHeight, expectedHeight, `Editor should be ${expectedHeight}px high`);
+    assert.equal(container.dom.offsetWidth, expectedWidth, `Editor should be ${expectedWidth}px wide`);
+  };
+
+  before(() => {
+    const editor = hook.editor();
+    // Add a border to ensure we're using the correct height/width (ie border-box sizing)
+    editor.dom.setStyles(editor.getContainer(), {
+      border: '2px solid #ccc'
+    });
+  });
+
+  it('Test resize with max/min sizing', () => {
+    const editor = hook.editor();
+    const container = TinyDom.container(editor);
+    const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+
+    // Shrink to 300px
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(400, 400, 300, 300);
+    assertEditorSize(container, 300, 300);
+
+    // Enlarge to 450px
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(300, 300, 450, 450);
+    assertEditorSize(container, 450, 450);
+
+    // Try to shrink to below min height
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(450, 450, 450, 250);
+    assertEditorSize(container, 450, 300);
+
+    // Try to enlarge to above max height
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(450, 300, 450, 550);
+    assertEditorSize(container, 450, 500);
+
+    // Try to shrink to below min width
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(450, 500, 250, 500);
+    assertEditorSize(container, 300, 500);
+
+    // Try to enlarge to above max width
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(300, 500, 550, 500);
+    assertEditorSize(container, 500, 500);
+  });
 });

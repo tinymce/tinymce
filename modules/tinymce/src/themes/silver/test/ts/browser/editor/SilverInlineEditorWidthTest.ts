@@ -1,19 +1,23 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Logger, Pipeline, Step, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Type } from '@ephox/katamari';
+import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
-import { sOpenMore } from '../../module/MenuUtils';
 
-UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
-  Theme();
+import { pOpenMore } from '../../module/MenuUtils';
 
-  const sStructureTest = (editor: Editor, container: SugarElement, maxWidth: number) => Logger.t('Check basic container structure and actions', GeneralSteps.sequence([
-    Assertions.sAssertStructure(
+describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
+  before(() => {
+    Theme();
+  });
+
+  const structureTest = (editor: Editor, container: SugarElement<Node>, maxWidth: number) =>
+    Assertions.assertStructure(
       'Container structure',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-tinymce'), arr.has('tox-tinymce-inline') ],
@@ -44,70 +48,68 @@ UnitTest.asynctest('Inline Editor (Silver) width test', (success, failure) => {
         ]
       })),
       container
-    )
-  ]));
+    );
 
-  const sAssetWidth = (uiContainer: SugarElement, maxWidth: number, minWidth: number = 0) => Chain.asStep(uiContainer, [
-    UiFinder.cFindIn('.tox-toolbar-overlord'),
-    Chain.op((toolbar) => {
-      const widthString = Css.get(toolbar, 'width') || '0px';
-      const width = parseInt(widthString.replace('px', ''), 10);
-      Assertions.assertEq(`Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`, true, width <= maxWidth);
-      Assertions.assertEq(`Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`, true, width >= minWidth);
-    })
-  ]);
+  const assertWidth = (uiContainer: SugarElement<Node>, maxWidth: number, minWidth: number = 0) => {
+    const overlord = UiFinder.findIn(uiContainer, '.tox-toolbar-overlord').getOrDie();
+    const widthString = Css.get(overlord, 'width') || '0px';
+    const width = parseInt(widthString.replace('px', ''), 10);
+    assert.isAtMost(width, maxWidth, `Toolbar with should be less than ${maxWidth}px - ${width}<=${maxWidth}`);
+    assert.isAtLeast(width, minWidth, `Toolbar with should be greater than ${minWidth}px - ${width}>=${minWidth}`);
+  };
 
-  const sTestRender = (label: string, settings: Record<string, any>, expectedWidth: number, additionalSteps: (editor: Editor, apis) => Step<any, any>[] = Fun.constant([])) => Step.label(label, Step.raw((_, done, die, logs) => {
-    TinyLoader.setup((editor, onSuccess, onFailure) => {
-      const uiContainer = SugarElement.fromDom(editor.getContainer());
-      const tinyApis = TinyApis(editor);
-
-      Pipeline.async({}, [
-        Step.sync(() => Scroll.to(0, 0)),
-        tinyApis.sFocus(),
-        sStructureTest(editor, uiContainer, expectedWidth),
-        sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-        tinyApis.sSetContent(Arr.range(100, () => '<p></p>').join('')),
-        Step.sync(() => Scroll.to(0, 500)),
-        UiFinder.sWaitForVisible('Wait to be docked', SugarBody.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header'),
-        sAssetWidth(uiContainer, expectedWidth, expectedWidth - 100),
-        ...additionalSteps(editor, tinyApis)
-      ], onSuccess, onFailure, logs);
-    },
-    {
-      theme: 'silver',
+  const testRender = (settings: Record<string, any>, expectedWidth: number, pActions?: (editor: Editor) => Promise<void>) => async () => {
+    Scroll.to(0, 0);
+    const editor = await McEditor.pFromSettings<Editor>({
       menubar: false,
       inline: true,
       base_url: '/project/tinymce/js/tinymce',
       toolbar_mode: 'floating',
       ...settings
-    }, done, die
-    );
-  }));
+    });
+    editor.focus();
+    await UiFinder.pWaitForVisible('Wait for the editor to show', SugarBody.body(), '.tox-editor-header');
+    const uiContainer = TinyDom.container(editor);
 
-  Pipeline.async({}, [
-    sTestRender('Check max-width is 400px when set via init', { width: 400 }, 400),
-    sTestRender('Check max-width is 400px when set via element', {
-      setup: (ed: Editor) => {
-        Css.set(SugarElement.fromDom(ed.getElement()), 'width', '400px');
-      }
-    }, 400),
-    sTestRender('Check max-width is constrained to the body width when no width set', {
-      setup: (ed: Editor) => {
-        ed.on('PreInit', () => {
-          Css.set(SugarBody.body(), 'width', '400px');
-        });
-        ed.on('Remove', () => {
-          Css.remove(SugarBody.body(), 'width');
-        });
-      }
-    }, 400),
-    sTestRender('Check width when expanding sliding toolbar while docked', {
-      toolbar_mode: 'sliding',
-      width: 400
-    }, 400, (editor) => [
-      sOpenMore(ToolbarMode.sliding),
-      sAssetWidth(SugarElement.fromDom(editor.getContainer()), 400, 300)
-    ])
-  ], success, failure);
+    structureTest(editor, uiContainer, expectedWidth);
+    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
+    editor.setContent(Arr.range(100, () => '<p></p>').join(''));
+    Scroll.to(0, 500);
+    await UiFinder.pWaitForVisible('Wait to be docked', SugarBody.body(), '.tox-tinymce--toolbar-sticky-on .tox-editor-header');
+    assertWidth(uiContainer, expectedWidth, expectedWidth - 100);
+
+    // Run optional additional actions
+    if (Type.isNonNullable(pActions)) {
+      await pActions(editor);
+    }
+
+    McEditor.remove(editor);
+  };
+
+  it('Check max-width is 400px when set via init', testRender({ width: 400 }, 400));
+
+  it('Check max-width is 400px when set via element', testRender({
+    setup: (ed: Editor) => {
+      Css.set(SugarElement.fromDom(ed.getElement()), 'width', '400px');
+    }
+  }, 400));
+
+  it('Check max-width is constrained to the body width when no width set', testRender({
+    setup: (ed: Editor) => {
+      ed.on('PreInit', () => {
+        Css.set(SugarBody.body(), 'width', '400px');
+      });
+      ed.on('remove', () => {
+        Css.remove(SugarBody.body(), 'width');
+      });
+    }
+  }, 400));
+
+  it('Check width when expanding sliding toolbar while docked', testRender({
+    toolbar_mode: 'sliding',
+    width: 400
+  }, 400, async (editor) => {
+    await pOpenMore(ToolbarMode.sliding);
+    assertWidth(SugarElement.fromDom(editor.getContainer()), 400, 300);
+  }));
 });

@@ -1,25 +1,35 @@
-import { Chain, UiFinder } from '@ephox/agar';
-import { Assert } from '@ephox/bedrock-client';
-import { TinyUi } from '@ephox/mcagar';
+import { UiFinder, Waiter } from '@ephox/agar';
+import { TinyUiActions } from '@ephox/mcagar';
 import { Css, SugarBody } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
-const sOpenContextMenu = (tinyUi: TinyUi, editor: Editor, selector: string) => Chain.asStep(editor, [
-  tinyUi.cTriggerContextMenu('trigger context menu', selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]'),
-  Chain.wait(0)
-]);
+const pOpenContextMenu = async (editor: Editor, selector: string) => {
+  await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
+  await Waiter.pWait(0);
+};
 
-const sAssertContentMenuPosition = (left: number, top: number, diff: number = 3) => Chain.asStep(SugarBody.body(), [
-  UiFinder.cFindIn('.tox-silver-sink .tox-menu.tox-collection'),
-  Chain.op((menu) => {
-    const topStyle = parseInt(Css.getRaw(menu, 'top').getOr('0').replace('px', ''), 10);
-    const leftStyle = parseInt(Css.getRaw(menu, 'left').getOr('0').replace('px', ''), 10);
-    Assert.eq(`Assert context menu top position - ${topStyle}px ~= ${top}px`, true, Math.abs(topStyle - top) <= diff);
-    Assert.eq(`Assert context menu left position - ${leftStyle}px ~= ${left}px`, true, Math.abs(leftStyle - left) <= diff);
-  })
-]);
+const assertContentMenuPosition = (left: number, top: number, diff: number = 3) => {
+  const menu = UiFinder.findIn(SugarBody.body(), '.tox-silver-sink .tox-menu.tox-collection').getOrDie();
+  const topStyle = parseInt(Css.getRaw(menu, 'top').getOr('0').replace('px', ''), 10);
+  const leftStyle = parseInt(Css.getRaw(menu, 'left').getOr('0').replace('px', ''), 10);
+  assert.approximately(topStyle, top, diff, `Assert context menu top position - ${topStyle}px ~= ${top}px`);
+  assert.approximately(leftStyle, left, diff, `Assert context menu left position - ${leftStyle}px ~= ${left}px`);
+};
+
+// Wait for dialog to open and close dialog
+const pWaitForAndCloseDialog = async (editor: Editor) => {
+  await TinyUiActions.pWaitForDialog(editor);
+  TinyUiActions.cancelDialog(editor);
+  await Waiter.pTryUntil(
+    'Wait for dialog to close',
+    () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]')
+  );
+};
 
 export {
-  sOpenContextMenu,
-  sAssertContentMenuPosition
+  pOpenContextMenu,
+  pWaitForAndCloseDialog,
+  assertContentMenuPosition
 };
