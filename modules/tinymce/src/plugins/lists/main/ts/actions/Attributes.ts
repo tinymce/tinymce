@@ -6,9 +6,10 @@
  */
 
 import { Obj } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { getParentList } from '../core/Selection';
 
-export const setParentListAttributes = (editor, attrs) => {
+export const setParentListAttributes = (editor: Editor, attrs: Record<string, string>) => {
   const parentList = getParentList(editor);
   editor.undoManager.transact(() =>
     Obj.each(attrs, (v, k) => editor.dom.setAttrib(parentList, k, v))

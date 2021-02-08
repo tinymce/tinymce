@@ -5,26 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import { setParentListAttributes } from '../actions/Attributes';
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
 import { getParentList } from '../core/Selection';
 import * as Dialog from '../ui/Dialog';
 
-const queryListCommandState = (editor, listName) => {
+const queryListCommandState = (editor: Editor, listName: string) => {
   return () => {
     const parentList = getParentList(editor);
     return parentList && parentList.nodeName === listName;
   };
 };
 
-const registerDialog = (editor) => {
+const registerDialog = (editor: Editor) => {
   editor.addCommand('mceListProps', () => {
     Dialog.open(editor);
   });
 };
 
-const register = (editor) => {
+const register = (editor: Editor) => {
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 

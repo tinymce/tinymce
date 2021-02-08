@@ -5,6 +5,8 @@ import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/PublicApi';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -136,7 +138,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
   it('TINY-6907: List properties command is used to update the DOM', async () => {
     const editor = hook.editor();
 
-    const blockCommand = (event) => {
+    const blockCommand = (event: EditorEvent<ExecCommandEvent>) => {
       if (event.command.toLowerCase() === 'setlistattributes') {
         event.preventDefault();
       }
