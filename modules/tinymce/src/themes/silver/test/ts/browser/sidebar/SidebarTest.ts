@@ -1,81 +1,22 @@
-import { ApproxStructure, Assertions, Chain, GeneralSteps, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import { Sidebar } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
 interface EventLog {
-  name: string;
-  index: number;
+  readonly name: string;
+  readonly index: number;
 }
 
-UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', (success, failure) => {
+describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
   const store = TestHelpers.TestStore();
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-
-    const sClickAndAssertEvents = (tooltip, expected: EventLog[]) => {
-      return GeneralSteps.sequence([
-        store.sClear,
-        tinyUi.sClickOnToolbar('Toggle sidebar', 'button[aria-label="' + tooltip + '"]'),
-        Waiter.sTryUntil('Checking sidebar callbacks', store.sAssertEq('Asserting sidebar callbacks', expected))
-      ]);
-    };
-
-    Pipeline.async(editor, Log.steps('TBA', 'Sidebar actions test', [
-      Chain.asStep(SugarBody.body(), [
-        UiFinder.cFindIn('.tox-sidebar-wrap .tox-sidebar'),
-        Assertions.cAssertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-sidebar') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-sidebar__slider') ],
-              children: [
-                s.element('div', {
-                  classes: [ arr.has('tox-sidebar__pane-container') ],
-                  children: [
-                    s.element('div', {
-                      classes: [ arr.has('tox-sidebar__pane') ],
-                      styles: { display: str.is('none') },
-                      attrs: { 'aria-hidden': str.is('true') }
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-sidebar__pane') ],
-                      styles: { display: str.is('none') },
-                      attrs: { 'aria-hidden': str.is('true') }
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-sidebar__pane') ],
-                      styles: { display: str.is('none') },
-                      attrs: { 'aria-hidden': str.is('true') }
-                    })
-                  ]
-                })
-              ]
-            })
-          ]
-        })))
-      ]),
-      Waiter.sTryUntil('Checking initial events', store.sAssertEq('Asserting intial render and hide of sidebar', [
-        { name: 'mysidebar1:render', index: 0 },
-        { name: 'mysidebar2:render', index: 1 },
-        { name: 'mysidebar3:render', index: 2 },
-        { name: 'mysidebar1:hide', index: 0 },
-        { name: 'mysidebar2:hide', index: 1 },
-        { name: 'mysidebar3:hide', index: 2 }
-      ])),
-      sClickAndAssertEvents('My sidebar 1', [{ name: 'mysidebar1:show', index: 0 }]),
-      sClickAndAssertEvents('My sidebar 2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]),
-      sClickAndAssertEvents('My sidebar 3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]),
-      sClickAndAssertEvents('My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }])
-    ]), onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
     setup: (editor) => {
@@ -113,5 +54,64 @@ UnitTest.asynctest('browser.tinymce.themes.silver.sidebar.SidebarTest', (success
         onHide: logEvent('mysidebar3:hide')
       });
     }
-  }, success, failure);
+  }, [ Theme ]);
+
+  const pClickAndAssertEvents = async (editor: Editor, tooltip: string, expected: EventLog[]) => {
+    store.clear();
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="' + tooltip + '"]');
+    await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', expected));
+  };
+
+  it('TBA: Sidebar initial events test', async () => {
+    await Waiter.pTryUntil('Checking initial events', () => store.assertEq('Asserting initial render and hide of sidebar', [
+      { name: 'mysidebar1:render', index: 0 },
+      { name: 'mysidebar2:render', index: 1 },
+      { name: 'mysidebar3:render', index: 2 },
+      { name: 'mysidebar1:hide', index: 0 },
+      { name: 'mysidebar2:hide', index: 1 },
+      { name: 'mysidebar3:hide', index: 2 }
+    ]));
+  });
+
+  it('TBA: Sidebar structure test', () => {
+    const sidebar = UiFinder.findIn(SugarBody.body(), '.tox-sidebar-wrap .tox-sidebar').getOrDie();
+    Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-sidebar') ],
+      children: [
+        s.element('div', {
+          classes: [ arr.has('tox-sidebar__slider') ],
+          children: [
+            s.element('div', {
+              classes: [ arr.has('tox-sidebar__pane-container') ],
+              children: [
+                s.element('div', {
+                  classes: [ arr.has('tox-sidebar__pane') ],
+                  styles: { display: str.is('none') },
+                  attrs: { 'aria-hidden': str.is('true') }
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-sidebar__pane') ],
+                  styles: { display: str.is('none') },
+                  attrs: { 'aria-hidden': str.is('true') }
+                }),
+                s.element('div', {
+                  classes: [ arr.has('tox-sidebar__pane') ],
+                  styles: { display: str.is('none') },
+                  attrs: { 'aria-hidden': str.is('true') }
+                })
+              ]
+            })
+          ]
+        })
+      ]
+    })), sidebar);
+  });
+
+  it('TBA: Sidebar actions test', async () => {
+    const editor = hook.editor();
+    await pClickAndAssertEvents(editor, 'My sidebar 1', [{ name: 'mysidebar1:show', index: 0 }]);
+    await pClickAndAssertEvents(editor, 'My sidebar 2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]);
+    await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]);
+    await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }]);
+  });
 });

@@ -77,7 +77,7 @@ const cellOperations = (mutate: (e1: SugarElement, e2: SugarElement) => void, do
     Css.remove(clone, 'height');
     // dont inherit the width of spanning columns
     if (prev.colspan !== 1) {
-      Css.remove(prev.element, 'width');
+      Css.remove(clone, 'width');
     }
   };
 

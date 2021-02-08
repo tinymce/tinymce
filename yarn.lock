@@ -283,10 +283,10 @@
   resolved "https://registry.yarnpkg.com/@ephox/wrap-jsverify/-/wrap-jsverify-2.0.1.tgz#8984b292eeab3bd570eab773541650d257793d4d"
   integrity sha512-RSSsUFBV9uVUPzmCRvYXZBEZhVahYXs/j0JVgCy0CrbS98nV60BeYd97QB37sr05Lv7haLWzKf9XAcVAO7M8Ng==
 
-"@ephox/wrap-prismjs@^1.19.0":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.22.0.tgz#ffc8a161b6e4419790bf711ee6609062c1c77e08"
-  integrity sha512-KHsAfBULvJuGMe5vjBoHTrJAClRGK2Lv0R5klMqBwGdtc3oC4syAYoR9IW6Fin5d0vJxu2+v7M+x+P/hkJnHag==
+"@ephox/wrap-prismjs@^1.23.0":
+  version "1.23.0"
+  resolved "https://registry.yarnpkg.com/@ephox/wrap-prismjs/-/wrap-prismjs-1.23.0.tgz#e88bf8cb90a7a1b3cae31d3522bbcff6acf655e6"
+  integrity sha512-cHLD68yPMEstz9dArfGY3cNZ7aH1aySZRbHb3rGROrrIgkYZT/X26p5EyY9M8pqfgMSml79rhho44a5cd+P/CQ==
 
 "@ephox/wrap-promise-polyfill@^2.2.0":
   version "2.2.0"

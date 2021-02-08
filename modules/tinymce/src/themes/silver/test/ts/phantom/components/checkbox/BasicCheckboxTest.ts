@@ -1,119 +1,107 @@
-import { ApproxStructure, Assertions, Chain, Keyboard, Keys, Logger, Step, UiFinder } from '@ephox/agar';
-import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
-import I18n from 'tinymce/core/api/util/I18n';
-
+import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
+import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { DisablingSteps } from '../../../module/DisablingSteps';
+import TestProviders from '../../../module/TestProviders';
 
-UnitTest.asynctest('Checkbox component Test', (success, failure) => {
+describe('phantom.tinymce.themes.silver.components.checkbox.Checkbox component Test', () => {
   const providers = {
+    ...TestProviders,
     icons: (): Record<string, string> => ({
       selected: '<svg></svg>',
       unselected: '<svg></svg>'
-    }),
-    menuItems: (): Record<string, any> => ({}),
-    translate: I18n.translate,
-    isDisabled: Fun.never,
-    getSetting: (_settingName: string, defaultVal: any) => defaultVal
+    })
   };
 
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderCheckbox({
-        label: 'TestCheckbox',
-        name: 'test-check-box',
-        disabled: false
-      }, providers)
-    ),
-    (_doc, _body, _gui, component, _store) => {
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    renderCheckbox({
+      label: 'TestCheckbox',
+      name: 'test-check-box',
+      disabled: false
+    }, providers)
+  ));
 
-      const sAssertCheckboxState = (label: string, expChecked: boolean) => Logger.t(
-        label,
-        Chain.asStep(component.element, [
-          UiFinder.cFindIn('input'),
-          Chain.op((input) => {
-            const node = input.dom as HTMLInputElement;
-            Assertions.assertEq('Checking "checked" flag', expChecked, node.checked);
-            Assertions.assertEq('Checking "indeterminate" flag', false, node.indeterminate);
-          })
-        ])
-      );
+  const assertCheckboxState = (label: string, component: AlloyComponent, expChecked: boolean) => {
+    const input = UiFinder.findIn(component.element, 'input').getOrDie();
+    const node = input.dom as HTMLInputElement;
+    assert.equal(node.checked, expChecked, label + ' - checking "checked" flag');
+    assert.isFalse(node.indeterminate, label + ' - checking "indeterminate" flag');
+  };
 
-      const sSetCheckboxState = (state: boolean) => Step.sync(() => {
-        Representing.setValue(component, state);
-      });
+  const setCheckboxState = (component: AlloyComponent, state: boolean) => {
+    Representing.setValue(component, state);
+  };
 
-      const sPressKeyOnCheckbox = (keyCode: number, modifiers: object) => Chain.asStep(component.element, [
-        UiFinder.cFindIn('input'),
-        Chain.op((input) => {
-          Keyboard.keydown(keyCode, modifiers, input);
-        })
-      ]);
+  const pressKeyOnCheckbox = (component: AlloyComponent, keyCode: number, modifiers: Record<string, boolean> = {}) => {
+    const input = UiFinder.findIn(component.element, 'input').getOrDie();
+    Keyboard.keydown(keyCode, modifiers, input);
+  };
 
-      return [
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, str, arr) => s.element('label', {
-            classes: [ arr.has('tox-checkbox') ],
+  it('Check basic structure', () => {
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, str, arr) => s.element('label', {
+        classes: [ arr.has('tox-checkbox') ],
+        children: [
+          s.element('input', {
+            classes: [ arr.has('tox-checkbox__input') ],
+            attrs: {
+              type: str.is('checkbox')
+            }
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-checkbox__icons') ],
             children: [
-              s.element('input', {
-                classes: [ arr.has('tox-checkbox__input') ],
-                attrs: {
-                  type: str.is('checkbox')
-                }
-              }),
-              s.element('div', {
-                classes: [ arr.has('tox-checkbox__icons') ],
-                children: [
-                  s.element('span', {
-                    classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__checked') ],
-                    html: str.startsWith('<svg')
-                  }),
-                  s.element('span', {
-                    classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked') ],
-                    html: str.startsWith('<svg')
-                  })
-                ]
+              s.element('span', {
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__checked') ],
+                html: str.startsWith('<svg')
               }),
               s.element('span', {
-                classes: [ arr.has('tox-checkbox__label') ],
-                html: str.is('TestCheckbox')
+                classes: [ arr.has('tox-icon'), arr.has('tox-checkbox-icon__unchecked') ],
+                html: str.startsWith('<svg')
               })
             ]
-          })),
-          component.element
-        ),
+          }),
+          s.element('span', {
+            classes: [ arr.has('tox-checkbox__label') ],
+            html: str.is('TestCheckbox')
+          })
+        ]
+      })),
+      hook.component().element
+    );
+  });
 
-        // Representing state updates
-        sAssertCheckboxState('Initial checkbox state', false),
-        DisablingSteps.sAssertDisabled('Initial disabled state', false, component),
-        sSetCheckboxState(true),
-        sAssertCheckboxState('initial > checked', true),
-        sSetCheckboxState(false),
-        sAssertCheckboxState('checked > unchecked', false),
-        sSetCheckboxState(true),
-        sAssertCheckboxState('unchecked > checked', true),
+  it('Representing state updates', () => {
+    const component = hook.component();
+    assertCheckboxState('Initial checkbox state', component, false);
+    assert.isFalse(Disabling.isDisabled(component), 'Initial disabled state');
+    setCheckboxState(component, true);
+    assertCheckboxState('initial > checked', component, true);
+    setCheckboxState(component, false);
+    assertCheckboxState('checked > unchecked', component, false);
+    setCheckboxState(component, true);
+    assertCheckboxState('unchecked > checked', component, true);
+  });
 
-        // Disabling state
-        DisablingSteps.sSetDisabled('set disabled', component, true),
-        DisablingSteps.sAssertDisabled('enabled > disabled', true, component),
-        DisablingSteps.sSetDisabled('set enabled', component, false),
-        DisablingSteps.sAssertDisabled('disabled > enabled', false, component),
+  it('Disabling state', () => {
+    const component = hook.component();
+    Disabling.set(component, true);
+    assert.isTrue(Disabling.isDisabled(component), 'enabled > disabled');
+    Disabling.set(component, false);
+    assert.isFalse(Disabling.isDisabled(component), 'disabled > enabled');
+  });
 
-        // Keyboard events
-        sPressKeyOnCheckbox(Keys.space(), { }),
-        sAssertCheckboxState('checked > unchecked', false),
-        sPressKeyOnCheckbox(Keys.space(), { }),
-        sAssertCheckboxState('unchecked > checked', true),
-        sPressKeyOnCheckbox(Keys.enter(), { }),
-        sAssertCheckboxState('checked > unchecked', false),
-        sPressKeyOnCheckbox(Keys.enter(), { }),
-        sAssertCheckboxState('unchecked > checked', true)
-      ];
-    },
-    success,
-    failure
-  );
+  it('Keyboard events', () => {
+    const component = hook.component();
+    pressKeyOnCheckbox(component, Keys.space());
+    assertCheckboxState('checked > unchecked', component, false);
+    pressKeyOnCheckbox(component, Keys.space());
+    assertCheckboxState('unchecked > checked', component, true);
+    pressKeyOnCheckbox(component, Keys.enter());
+    assertCheckboxState('checked > unchecked', component, false);
+    pressKeyOnCheckbox(component, Keys.enter());
+    assertCheckboxState('unchecked > checked', component, true);
+  });
 });

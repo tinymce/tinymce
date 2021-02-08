@@ -1,13 +1,14 @@
-import { ApproxStructure, Assertions, FocusTools, GeneralSteps, Keyboard, Keys, Logger, Step } from '@ephox/agar';
-import { AlloyComponent, Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys } from '@ephox/agar';
+import { Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
+import { SugarDocument } from '@ephox/sugar';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 import TestProviders from '../../module/TestProviders';
 
-UnitTest.asynctest('Toolbar Test', (success, failure) => {
+describe('phantom.tinymce.themes.silver.toolbar.ToolbarTest', () => {
   const providers = TestProviders;
 
   const makeButton = (t: string) => ({
@@ -22,132 +23,119 @@ UnitTest.asynctest('Toolbar Test', (success, failure) => {
     ])
   });
 
-  TestHelpers.GuiSetup.setup(
-    (store, _doc, _body) => GuiFactory.build(
-      renderToolbar({
-        type: ToolbarMode.default,
-        uid: 'test-toolbar-uid',
-        onEscape: store.adderH('onEscape'),
-        cyclicKeying: true,
-        providers,
-        initGroups: [
-          {
-            title: Optional.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
-          },
-          {
-            title: Optional.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
-          },
-          {
-            title: Optional.some('another group title'), items: Arr.map([ 'six' ], makeButton)
-          }
-        ]
-      })
-    ),
-    (doc, _body, _gui, toolbar: AlloyComponent, _store) => [
-      TestHelpers.GuiSetup.mAddStyles(doc, [
-        '.tox-toolbar { padding: 0.3em; background: blue; display: flex; flex-direction: row;}',
-        '.tox-toolbar__group { background: black; color: white; display: flex; margin: 0.2em; }',
-        '.test-toolbar-item { margin: 0.2em; padding: 0.2em; display: flex; }'
-      ]),
-      Assertions.sAssertStructure(
-        'Initial structure of toolbar',
-        ApproxStructure.build((s, str, arr) => s.element('div', {
-          classes: [ arr.has('tox-toolbar') ],
-          children: [
-            s.element('div', {
-              classes: [ arr.has('tox-toolbar__group') ],
-              attrs: {
-                title: str.none()
-              },
-              children: [
-                s.element('span', {
-                  html: str.is('one')
-                }),
-                s.element('span', {
-                  html: str.is('two')
-                }),
-                s.element('span', {
-                  html: str.is('three')
-                })
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-toolbar__group') ],
-              attrs: {
-                title: str.is('group title')
-              },
-              children: [
-                s.element('span', {
-                  html: str.is('four')
-                }),
-                s.element('span', {
-                  html: str.is('five')
-                })
-              ]
-            }),
-            s.element('div', {
-              classes: [ arr.has('tox-toolbar__group') ],
-              attrs: {
-                title: str.is('another group title')
-              },
-              children: [
-                s.element('span', {
-                  html: str.is('six')
-                })
-              ]
-            })
-          ]
-        })),
-        toolbar.element
-      ),
+  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+    renderToolbar({
+      type: ToolbarMode.default,
+      uid: 'test-toolbar-uid',
+      onEscape: store.adderH('onEscape'),
+      cyclicKeying: true,
+      providers,
+      initGroups: [
+        {
+          title: Optional.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
+        },
+        {
+          title: Optional.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
+        },
+        {
+          title: Optional.some('another group title'), items: Arr.map([ 'six' ], makeButton)
+        }
+      ]
+    })
+  ));
 
-      Step.sync(() => {
-        Keying.focusIn(toolbar);
-      }),
+  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    '.tox-toolbar { padding: 0.3em; background: blue; display: flex; flex-direction: row;}',
+    '.tox-toolbar__group { background: black; color: white; display: flex; margin: 0.2em; }',
+    '.test-toolbar-item { margin: 0.2em; padding: 0.2em; display: flex; }'
+  ]);
 
-      Logger.t(
-        'General navigation of toolbar',
-        GeneralSteps.sequence([
-          FocusTools.sTryOnSelector('Checking focus is on "one"', doc, 'span:contains("one")'),
-          Keyboard.sKeydown(doc, Keys.right(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "two"', doc, 'span:contains("two")'),
-
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "four"', doc, 'span:contains("four")')
-        ])
-      ),
-
-      Logger.t(
-        'Changing the toolbar contents',
-        Step.sync(() => {
-          const groups = Arr.map([
-            {
-              title: Optional.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
+  it('Check structure of toolbars', () => {
+    const toolbar = hook.component();
+    Assertions.assertStructure(
+      'Initial structure of toolbar',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-toolbar') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            attrs: {
+              title: str.none()
             },
-            {
-              title: Optional.none<string>(), items: Arr.map([ 'C' ], makeButton)
-            }
-          ], renderToolbarGroup);
-          Toolbar.setGroups(toolbar, groups);
-          Keying.focusIn(toolbar);
-        })
-      ),
+            children: [
+              s.element('span', {
+                html: str.is('one')
+              }),
+              s.element('span', {
+                html: str.is('two')
+              }),
+              s.element('span', {
+                html: str.is('three')
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            attrs: {
+              title: str.is('group title')
+            },
+            children: [
+              s.element('span', {
+                html: str.is('four')
+              }),
+              s.element('span', {
+                html: str.is('five')
+              })
+            ]
+          }),
+          s.element('div', {
+            classes: [ arr.has('tox-toolbar__group') ],
+            attrs: {
+              title: str.is('another group title')
+            },
+            children: [
+              s.element('span', {
+                html: str.is('six')
+              })
+            ]
+          })
+        ]
+      })),
+      toolbar.element
+    );
 
-      Logger.t(
-        'General navigation of changed toolbar',
-        GeneralSteps.sequence([
-          FocusTools.sTryOnSelector('Checking focus is on "A"', doc, 'span:contains("A")'),
-          Keyboard.sKeydown(doc, Keys.right(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "B"', doc, 'span:contains("B")'),
+    it('Check general keyboard navigation of the toolbar', async () => {
+      const doc = SugarDocument.getDocument();
+      Keying.focusIn(toolbar);
 
-          Keyboard.sKeydown(doc, Keys.tab(), { }),
-          FocusTools.sTryOnSelector('Checking focus is on "C"', doc, 'span:contains("C")')
-        ])
-      ),
+      await FocusTools.pTryOnSelector('Checking focus is on "one"', doc, 'span:contains("one")');
+      Keyboard.activeKeydown(doc, Keys.right());
+      await FocusTools.pTryOnSelector('Checking focus is on "two"', doc, 'span:contains("two")');
 
-      TestHelpers.GuiSetup.mRemoveStyles
-    ],
-    success,
-    failure
-  );
+      Keyboard.activeKeydown(doc, Keys.tab());
+      await FocusTools.pTryOnSelector('Checking focus is on "four"', doc, 'span:contains("four")');
+    });
+
+    it('Changing the toolbar contents and checking the keyboard navigation', async () => {
+      const doc = SugarDocument.getDocument();
+      const groups = Arr.map([
+        {
+          title: Optional.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
+        },
+        {
+          title: Optional.none<string>(), items: Arr.map([ 'C' ], makeButton)
+        }
+      ], renderToolbarGroup);
+
+      Toolbar.setGroups(toolbar, groups);
+      Keying.focusIn(toolbar);
+
+      await FocusTools.pTryOnSelector('Checking focus is on "A"', doc, 'span:contains("A")');
+      Keyboard.activeKeydown(doc, Keys.right());
+      await FocusTools.pTryOnSelector('Checking focus is on "B"', doc, 'span:contains("B")');
+
+      Keyboard.activeKeydown(doc, Keys.tab());
+      await FocusTools.pTryOnSelector('Checking focus is on "C"', doc, 'span:contains("C")');
+    });
+  });
 });

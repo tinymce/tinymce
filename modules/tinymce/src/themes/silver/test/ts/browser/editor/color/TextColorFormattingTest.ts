@@ -1,15 +1,24 @@
-import { ApproxStructure, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import Env from 'tinymce/core/api/Env';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 
-UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
-  if (Env.browser.isIE()) {
-    return success();
-  }
-  SilverTheme();
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
+
+describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', () => {
+  before(function () {
+    const browser = PlatformDetection.detect().browser;
+    if (browser.isIE()) {
+      this.skip();
+    }
+  });
+
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    toolbar: 'forecolor backcolor',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme ], true);
 
   const backcolorTitleStruct = ApproxStructure.build((s, str) =>
     s.element('body', {
@@ -106,66 +115,57 @@ UnitTest.asynctest('TextColorFormattingTest', (success, failure) => {
       ]
     }));
 
-  TinyLoader.setupInBodyAndShadowRoot((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
+  it('TBA: Forecolor on non breaking space', async () => {
+    const editor = hook.editor();
+    editor.setContent(`Hello${Unicode.nbsp}world`);
+    TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 6);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
+    TinyAssertions.assertContentStructure(editor, forecolorStruct);
+  });
 
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'TextColor: Forecolor on non breaking space', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),
-        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 6),
-        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
-        tinyApis.sAssertContentStructure(forecolorStruct)
-      ]),
-      Log.stepsAsStep('TBA', 'TextColor: Backcolor on non breaking space', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),
-        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 6),
-        tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
-        tinyApis.sAssertContentStructure(backcolorStruct)
-      ]),
-      Log.stepsAsStep('TBA', 'TextColor: Forecolor for a special char', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('圓'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 1),
-        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
-        tinyApis.sAssertContentStructure(forecolorTitleStruct)
+  it('TBA: Backcolor on non breaking space', async () => {
+    const editor = hook.editor();
+    editor.setContent(`Hello${Unicode.nbsp}world`);
+    TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 6);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
+    TinyAssertions.assertContentStructure(editor, backcolorStruct);
+  });
 
-      ]),
-      Log.stepsAsStep('TBA', 'TextColor: Backcolor for a special char that is 4-Byte UTF-8', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p>&#142037;</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 2),
-        tinyUi.sClickOnToolbar('click backcolor', '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('click red color', 'div[title="Red"]'),
-        tinyApis.sAssertContentStructure(backcolorTitleStruct)
-      ]),
-      Log.stepsAsStep('TINY-4838', 'TextColor: Remove forecolor with collapsed selection', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(`Hello${Unicode.nbsp}world`),
-        tinyApis.sSetSelection([ 0, 0 ], 2, [ 0, 0 ], 2),
-        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('select blue color', 'div[data-mce-color="#3598DB"]'),
-        tinyApis.sAssertContentStructure(forecolorTextStruct),
-        tinyUi.sClickOnToolbar('click forecolor', '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron'),
-        tinyUi.sWaitForUi('wait for color swatch to open', '.tox-swatches'),
-        tinyUi.sClickOnUi('select remove color', 'div[title="Remove color"]'),
-        tinyApis.sAssertContent('<p>Hello&nbsp;world</p>')
-      ])
-    ], onSuccess, onFailure);
+  it('TBA: Forecolor for a special char', async () => {
+    const editor = hook.editor();
+    editor.setContent('圓');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
+    TinyAssertions.assertContentStructure(editor, forecolorTitleStruct);
+  });
 
-  }, {
-    plugins: '',
-    toolbar: 'forecolor backcolor fontsizeselect',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  it('TBA: Backcolor for a special char that is 4-Byte UTF-8', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>&#142037;</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Background color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
+    TinyAssertions.assertContentStructure(editor, backcolorTitleStruct);
+  });
+
+  it('TINY-4838: Remove forecolor with collapsed selection', async () => {
+    const editor = hook.editor();
+    editor.setContent(`Hello${Unicode.nbsp}world`);
+    TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
+    TinyAssertions.assertContentStructure(editor, forecolorTextStruct);
+    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+    TinyUiActions.clickOnUi(editor, 'div[title="Remove color"]');
+    TinyAssertions.assertContent(editor, '<p>Hello&nbsp;world</p>');
+  });
 });

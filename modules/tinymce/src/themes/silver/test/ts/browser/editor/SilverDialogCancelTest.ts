@@ -1,46 +1,35 @@
-import { Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-UnitTest.asynctest('Editor (Silver) Configuration Cancel test', (success, failure) => {
-  SilverTheme();
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  TinyLoader.setupLight(
-    (editor, onSuccess, onFailure) => {
-      const tinyUi = TinyUi(editor);
-
-      Pipeline.async({ }, Logger.ts(
-        'Dialog closes without error using cancel button',
-        [
-          tinyUi.sWaitForPopup('wait for window', 'div[role="dialog"].tox-dialog'),
-          tinyUi.sClickOnUi('click on Close button', 'div[role="dialog"] .tox-button--secondary')
-        ]
-      ), onSuccess, onFailure);
-    },
-    {
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce',
-      setup: (ed) => {
-        ed.on('init', () => {
-          ed.windowManager.open({
-            title: 'test',
-            body: {
-              type: 'panel',
-              items: []
-            },
-            buttons: [
-              {
-                type: 'cancel',
-                name: 'close',
-                text: 'Close'
-              }
-            ]
-          });
+describe('browser.tinymce.themes.silver.editor.SilverDialogCancelTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (ed: Editor) => {
+      ed.on('init', () => {
+        ed.windowManager.open({
+          title: 'test',
+          body: {
+            type: 'panel',
+            items: []
+          },
+          buttons: [
+            {
+              type: 'cancel',
+              name: 'cancel',
+              text: 'Cancel'
+            }
+          ]
         });
-      }
-    },
-    success,
-    failure
-  );
+      });
+    }
+  }, [ Theme ]);
+
+  it('Dialog closes without error using cancel button', async () => {
+    const editor = hook.editor();
+    await TinyUiActions.pWaitForDialog(editor, 'div[role="dialog"].tox-dialog');
+    TinyUiActions.cancelDialog(editor);
+  });
 });

@@ -1,45 +1,53 @@
-import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, McEditor } from '@ephox/mcagar';
-import { SugarDocument, SugarElement } from '@ephox/sugar';
+import { FocusTools, Keys } from '@ephox/agar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyContentActions, TinyDom, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', (success, failure) => {
-  SilverTheme();
+describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', () => {
+  before(() => {
+    Theme();
+  });
 
-  const cTestFocus = (label: string, settings: RawEditorSettings) => Chain.label(label, Chain.fromChains([
-    McEditor.cFromSettings({
+  const pTestFocus = async (settings: RawEditorSettings) => {
+    const editor = await McEditor.pFromSettings<Editor>({
       toolbar: 'undo redo | bold italic',
       menubar: false,
       statusbar: false,
       ...settings,
       base_url: '/project/tinymce/js/tinymce'
-    }),
-    ApiChains.cFocus,
-    Chain.runStepsOnValue((editor: Editor) => {
-      const editorDoc = SugarElement.fromDom(editor.getDoc());
-      const doc = SugarDocument.getDocument();
+    });
+    editor.focus();
+    const editorDoc = TinyDom.document(editor);
+    const doc = SugarDocument.getDocument();
 
-      return [
-        // Press the Alt+F10 key
-        Keyboard.sKeystroke(editorDoc, 121, { alt: true }),
-        FocusTools.sTryOnSelector('Assert toolbar is focused', doc, 'div[role=toolbar] .tox-tbtn'),
-        Keyboard.sKeystroke(doc, Keys.escape(), { }),
-        FocusTools.sTryOnSelector('Assert editor is focused', doc, 'iframe'),
-        FocusTools.sTryOnSelector('Assert editor is focused', editorDoc, 'body')
-      ];
-    }),
-    McEditor.cRemove
-  ]));
+    // Press the Alt+F10 key
+    TinyContentActions.keystroke(editor, 121, { alt: true });
+    await FocusTools.pTryOnSelector('Assert toolbar is focused', doc, 'div[role=toolbar] .tox-tbtn');
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('Assert editor is focused', doc, 'iframe');
+    await FocusTools.pTryOnSelector('Assert editor is focused', editorDoc, 'body');
+    McEditor.remove(editor);
+  };
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TINY-6230', 'Pressing Alt+F10 focuses the toolbar and escape from the toolbar will focus the editor', [
-      cTestFocus('Floating toolbar', { toolbar_mode: 'floating' }),
-      cTestFocus('Sliding toolbar', { toolbar_mode: 'sliding' }),
-      cTestFocus('Wrap toolbar', { toolbar_mode: 'wrap' }),
-      cTestFocus('Multiple toolbars', { toolbar: [ 'undo redo', 'bold italic' ] })
-    ])
-  ], success, failure);
+  context('Pressing Alt+F10 focuses the toolbar and escape from the toolbar will focus the editor', () => {
+    it('TINY-6230: Floating toolbar', () =>
+      pTestFocus({ toolbar_mode: 'floating' })
+    );
+
+    it('TINY-6230: Sliding toolbar', () =>
+      pTestFocus({ toolbar_mode: 'sliding' })
+    );
+
+    it('TINY-6230: Wrap toolbar', () =>
+      pTestFocus({ toolbar_mode: 'wrap' })
+    );
+
+    it('TINY-6230: Multiple toolbars', () =>
+      pTestFocus({ toolbar: [ 'undo redo', 'bold italic' ] })
+    );
+  });
 });

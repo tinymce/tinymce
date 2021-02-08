@@ -1,94 +1,29 @@
-import { GeneralSteps, Logger, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
-import Promise from 'tinymce/core/api/util/Promise';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
+import Theme from 'tinymce/themes/silver/Theme';
 
-import { sAssertAutocompleterStructure, sWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
+import { pAssertAutocompleterStructure, pWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 
-UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
-  SilverTheme();
+interface Scenario {
+  readonly action: (editor: Editor) => Promise<void>;
+  readonly assertion: (editor: Editor) => void;
+}
 
-  interface Scenario {
-    action: Step<any, any>;
-    postAction?: Step<any, any>;
-    assertion: Step<any, any>;
-    postAssertion?: Step<any, any>;
-  }
+interface ScenarioWithPostAction extends Scenario {
+  readonly postAction: (editor: Editor) => Promise<void>;
+  readonly postAssertion: (editor: Editor) => void;
+}
 
-  const sAssertInitialMenu = sAssertAutocompleterStructure({
-    type: 'list',
-    hasIcons: false,
-    groups: [
-      [
-        { title: 'a', text: 'a' },
-        { title: 'b', text: 'b' },
-        { title: 'c', text: 'c' },
-        { title: 'd', text: 'd' }
-      ],
-      [
-        { title: 'Load more...', text: 'Load more...' }
-      ]
-    ]
-  });
+const hasPostActions = (scenario: any): scenario is ScenarioWithPostAction =>
+  Obj.hasNonNullableKey(scenario, 'postAction');
 
-  const sAssertReloadedMenu = sAssertAutocompleterStructure({
-    type: 'list',
-    hasIcons: false,
-    groups: [
-      [
-        { title: 'ra', text: 'ra' },
-        { title: 'rb', text: 'rb' },
-        { title: 'rc', text: 'rc' },
-        { title: 'rd', text: 'rd' }
-      ]
-    ]
-  });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyActions = TinyActions(editor);
-    const tinyUi = TinyUi(editor);
-    const tinyApis = TinyApis(editor);
-
-    const sSetContentAndTrigger = (content: string, triggerCharCode: number) => GeneralSteps.sequence([
-      tinyApis.sSetContent(`<p>${content}</p>`),
-      tinyApis.sSetCursor([ 0, 0 ], content.length),
-      tinyApis.sNodeChanged(),
-      tinyActions.sContentKeypress(triggerCharCode, { }),
-      sWaitForAutocompleteToOpen
-    ]);
-
-    const sTestAutocompleter = (scenario: Scenario) => GeneralSteps.sequence([
-      sSetContentAndTrigger(':aa', ':'.charCodeAt(0)),
-      scenario.action,
-      scenario.assertion,
-      ...scenario.postAction ? [
-        scenario.postAction,
-        scenario.postAssertion
-      ] : []
-    ]);
-
-    Pipeline.async({ }, Logger.ts(
-      'Trigger autocompleter and reload items',
-      [
-        tinyApis.sFocus(),
-        sTestAutocompleter({
-          action: Step.pass,
-          assertion: sAssertInitialMenu,
-          postAction: GeneralSteps.sequence([
-            tinyUi.sClickOnUi('Click extra item', '.tox-collection__item:contains("Load more...")'),
-            tinyUi.sWaitForUi('Wait for menu to reload', '.tox-collection__item:contains("ra")')
-          ]),
-          postAssertion: sAssertReloadedMenu
-        })
-      ]
-    ), onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('Editor Autocompleter Reload test', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Colon', {
@@ -97,7 +32,7 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
         columns: 1,
         fetch: (pattern, maxResults, meta) => {
           const prefix = Obj.get(meta, 'prefix').getOr('');
-          return new Promise((resolve) => {
+          return new PromisePolyfill((resolve) => {
             const items: InlineContent.AutocompleterContents[] = Arr.map([ 'a', 'b', 'c', 'd' ], (item) => ({
               value: `item-${item}`,
               text: `${prefix}${item}`
@@ -123,5 +58,62 @@ UnitTest.asynctest('Editor Autocompleter Reload test', (success, failure) => {
         }
       });
     }
-  }, success, failure);
+  }, [ Theme ], true);
+
+  const pAssertInitialMenu = () => pAssertAutocompleterStructure({
+    type: 'list',
+    hasIcons: false,
+    groups: [
+      [
+        { title: 'a', text: 'a' },
+        { title: 'b', text: 'b' },
+        { title: 'c', text: 'c' },
+        { title: 'd', text: 'd' }
+      ],
+      [
+        { title: 'Load more...', text: 'Load more...' }
+      ]
+    ]
+  });
+
+  const pAssertReloadedMenu = () => pAssertAutocompleterStructure({
+    type: 'list',
+    hasIcons: false,
+    groups: [
+      [
+        { title: 'ra', text: 'ra' },
+        { title: 'rb', text: 'rb' },
+        { title: 'rc', text: 'rc' },
+        { title: 'rd', text: 'rd' }
+      ]
+    ]
+  });
+
+  const pSetContentAndTrigger = async (editor: Editor, content: string, triggerCharCode: number) => {
+    editor.setContent(`<p>${content}</p>`);
+    TinySelections.setCursor(editor, [ 0, 0 ], content.length);
+    TinyContentActions.keypress(editor, triggerCharCode);
+    await pWaitForAutocompleteToOpen();
+  };
+
+  const pTestAutocompleter = async (scenario: Scenario | ScenarioWithPostAction) => {
+    const editor = hook.editor();
+    await pSetContentAndTrigger(editor, ':aa', ':'.charCodeAt(0));
+    await scenario.action(editor);
+    scenario.assertion(editor);
+    if (hasPostActions(scenario)) {
+      await scenario.postAction(editor);
+      scenario.postAssertion(editor);
+    }
+  };
+
+  it('Trigger autocompleter and reload items', () => pTestAutocompleter({
+    action: () => PromisePolyfill.resolve(),
+    assertion: pAssertInitialMenu,
+    postAction: async (editor) => {
+      TinyUiActions.clickOnUi(editor, '.tox-collection__item:contains("Load more...")');
+      await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:contains("ra")');
+    },
+    postAssertion: pAssertReloadedMenu
+  }));
 });

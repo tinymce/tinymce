@@ -1,18 +1,10 @@
-import { Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-
-import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
+import { describe } from '@ephox/bedrock-client';
 import { ToolbarLocation, ToolbarMode } from 'tinymce/themes/silver/api/Settings';
-import Theme from 'tinymce/themes/silver/Theme';
-import { sTestStickyHeader } from '../../../module/StickyHeaderStep';
 
-UnitTest.asynctest('Editor with sticky toolbar', (success, failure) => {
-  Theme();
-  FullscreenPlugin();
+import { testStickyHeader } from '../../../module/StickyHeaderStep';
 
-  Pipeline.async({}, [
-    sTestStickyHeader(ToolbarMode.default, ToolbarLocation.top),
-    sTestStickyHeader(ToolbarMode.floating, ToolbarLocation.top),
-    sTestStickyHeader(ToolbarMode.sliding, ToolbarLocation.top)
-  ], success, failure);
+describe('browser.tinymce.themes.silver.editor.header.StickyHeaderTopTest', () => {
+  testStickyHeader(ToolbarMode.default, ToolbarLocation.top);
+  testStickyHeader(ToolbarMode.floating, ToolbarLocation.top);
+  testStickyHeader(ToolbarMode.sliding, ToolbarLocation.top);
 });

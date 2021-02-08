@@ -1,53 +1,44 @@
-import { Assertions, Chain, Logger, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
-import { RepresentingSteps } from '../../../module/ReperesentingSteps';
+import * as RepresentingUtils from '../../../module/RepresentingUtils';
 
-UnitTest.asynctest('ColorPicker component Test', (success, failure) => {
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      renderColorPicker({
-        label: Optional.some('ColorPicker label'),
-        name: 'col1'
-      })
-    ),
-    (_doc, _body, _gui, component, _store) => {
+describe('phantom.tinymce.themes.silver.components.colorpicker.ColorPickerTest', () => {
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    renderColorPicker({
+      label: Optional.some('ColorPicker label'),
+      name: 'col1'
+    })
+  ));
 
-      const sAssertColour = (label: string, expected: string, labelText: string) =>
-        Logger.t(
-          label,
-          Waiter.sTryUntil(
-            'Waiting until hex updates the other fields',
-            Chain.asStep(component.element, [
-              UiFinder.cFindIn(`label:contains("${labelText}") + input`),
-              UiControls.cGetValue,
-              Assertions.cAssertEq('Checking value in input', expected)
-            ])
-          )
-        );
+  const pAssertColour = (component: AlloyComponent, expected: string, labelText: string) =>
+    Waiter.pTryUntil(
+      'Waiting until hex updates the other fields',
+      () => {
+        const input = UiFinder.findIn(component.element, `label:contains("${labelText}") + input`).getOrDie();
+        const value = UiControls.getValue(input);
+        assert.equal(value, expected, 'Checking value in input');
+      }
+    );
 
-      return [
-        RepresentingSteps.sSetComposedValue(
-          'Let us set the colour picker!',
-          component,
-          '#ccaa33'
-        ),
+  it('Representing state', async () => {
+    const component = hook.component();
+    RepresentingUtils.setComposedValue(
+      component,
+      '#ccaa33'
+    );
 
-        sAssertColour('Red', '204', 'R'),
-        sAssertColour('Green', '170', 'G'),
-        sAssertColour('Blue', '51', 'B'),
+    await pAssertColour(component, '204', 'R');
+    await pAssertColour(component, '170', 'G');
+    await pAssertColour(component, '51', 'B');
 
-        RepresentingSteps.sAssertComposedValue(
-          'Checking composed value worked',
-          '#ccaa33',
-          component
-        )
-      ];
-    },
-    success,
-    failure
-  );
+    RepresentingUtils.assertComposedValue(
+      component,
+      '#ccaa33'
+    );
+  });
 });

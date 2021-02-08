@@ -1,98 +1,94 @@
-import { FocusTools, PhantomSkipper, Pipeline, RealMouse, Step } from '@ephox/agar';
+import { FocusTools, PhantomSkipper, RealMouse } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarElement } from '@ephox/sugar';
+import { SugarDocument } from '@ephox/sugar';
+import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
-import TestExtras from '../../module/TestExtras';
 
-UnitTest.asynctest('Dialog Focus Test (webdriver)', (success, failure) => {
-  const platform = PlatformDetection.detect();
+import * as TestExtras from '../../module/TestExtras';
 
-  // This test won't work on PhantomJS or on all Mac OS browsers (webdriver actions appear to be ignored)
-  if (PhantomSkipper.detect() || platform.os.isOSX()) {
-    return success();
-  }
+describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
+  const helpers = TestExtras.bddSetup();
 
-  const helpers = TestExtras();
-  const windowManager = WindowManager.setup(helpers.extras);
+  let windowManager: WindowManagerImpl;
+  before(function () {
+    // This test won't work on PhantomJS or on all Mac OS browsers (webdriver actions appear to be ignored)
+    const platform = PlatformDetection.detect();
+    if (PhantomSkipper.detect() || platform.os.isOSX()) {
+      this.skip();
+    }
 
-  const doc = SugarElement.fromDom(document);
+    windowManager = WindowManager.setup(helpers.extras());
+  });
 
-  const tests = [
-    TestHelpers.GuiSetup.mAddStyles(doc, [
-      '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
+  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
 
-      ':focus { outline: 3px solid green; !important; }'
-    ]),
+    ':focus { outline: 3px solid green; !important; }'
+  ]);
 
-    Step.sync(() => {
-      windowManager.open({
-        title: 'Custom Dialog',
-        body: {
-          type: 'panel',
-          items: [
-            {
-              name: 'input1',
-              type: 'input'
-            }
-          ]
-        },
-        buttons: [
+  it('Check dialog component can be focused', async () => {
+    windowManager.open({
+      title: 'Custom Dialog',
+      body: {
+        type: 'panel',
+        items: [
           {
-            type: 'cancel',
-            text: 'Close'
+            name: 'input1',
+            type: 'input'
           }
-        ],
-        initialData: {
-          input1: 'Dog'
+        ]
+      },
+      buttons: [
+        {
+          type: 'cancel',
+          text: 'Close'
         }
-      }, { }, Fun.noop);
-    }),
+      ],
+      initialData: {
+        input1: 'Dog'
+      }
+    }, { }, Fun.noop);
 
-    FocusTools.sTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should start on input',
-      doc,
+      SugarDocument.getDocument(),
       '.tox-textfield'
-    ),
+    );
 
-    RealMouse.sClickOn('body'),
+    await RealMouse.pClickOn('body');
 
-    FocusTools.sTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should be on body',
-      doc,
+      SugarDocument.getDocument(),
       'body'
-    ),
+    );
 
-    RealMouse.sClickOn('.tox-dialog'),
+    await RealMouse.pClickOn('.tox-dialog');
 
-    FocusTools.sTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should move to input after clicking on the dialog',
-      doc,
+      SugarDocument.getDocument(),
       '.tox-textfield'
-    ),
+    );
 
-    RealMouse.sClickOn('body'),
+    await RealMouse.pClickOn('body');
 
-    FocusTools.sTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should be on body (again)',
-      doc,
+      SugarDocument.getDocument(),
       'body'
-    ),
+    );
 
-    RealMouse.sClickOn('.tox-dialog__footer'),
+    await RealMouse.pClickOn('.tox-dialog__footer');
 
-    FocusTools.sTryOnSelector(
+    await FocusTools.pTryOnSelector(
       'focus should move to input after clicking on the dialog footer',
-      doc,
+      SugarDocument.getDocument(),
       '.tox-textfield'
-    )
-  ];
-
-  Pipeline.async({ }, tests, () => {
-    helpers.destroy();
-    success();
-  }, failure);
+    );
+  });
 });

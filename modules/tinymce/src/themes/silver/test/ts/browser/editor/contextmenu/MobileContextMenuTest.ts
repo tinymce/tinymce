@@ -1,105 +1,97 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Pipeline, Touch, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Touch, UiFinder, Waiter } from '@ephox/agar';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import ImageToolsPlugin from 'tinymce/plugins/imagetools/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
+import { pWaitForAndCloseDialog } from '../../../module/ContextMenuUtils';
+
+describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest', () => {
   const detection = PlatformDetection.detect();
-  const browser = detection.browser;
-  const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
-  if (!runTests) {
-    return success();
-  }
 
-  SilverTheme();
-  LinkPlugin();
-  ImagePlugin();
-  ImageToolsPlugin();
-  TablePlugin();
-
-  // Override the platform detection, so that it thinks we're on a touch device
-  PlatformDetection.override({
-    deviceType: {
-      ...detection.deviceType,
-      isTouch: Fun.always
+  before(function () {
+    const browser = detection.browser;
+    const runTests = browser.isChrome() || browser.isFirefox() || browser.isSafari();
+    if (!runTests) {
+      this.skip();
     }
+
+    // Override the platform detection, so that it thinks we're on a touch device
+    PlatformDetection.override({
+      deviceType: {
+        ...detection.deviceType,
+        isTouch: Fun.always
+      }
+    });
   });
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
+  after(() => {
+    PlatformDetection.override(detection);
+  });
 
-    const doc = SugarElement.fromDom(document);
-    const dialogRoot = SugarBody.body();
-    const editorBody = SugarElement.fromDom(editor.getBody());
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'image imagetools link table',
+    toolbar: 'image editimage link table',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce',
+    image_caption: true
+  }, [ ImagePlugin, ImageToolsPlugin, LinkPlugin, TablePlugin, Theme ], true);
 
-    const sOpenContextMenu = (target: string) => Chain.asStep(target, [
-      Chain.inject(editorBody),
-      UiFinder.cFindIn(target),
-      Touch.cTouchStart,
-      Chain.wait(500),
-      Chain.op(() => editor.fire('selectionchange')),
-      Touch.cTouchEnd,
-      Chain.wait(100),
-      Chain.inject(dialogRoot),
-      tinyUi.cWaitForPopup('trigger context menu', '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]')
-    ]);
+  const pOpenContextMenu = async (editor: Editor, target: string) => {
+    const targetElem = UiFinder.findIn(TinyDom.body(editor), target).getOrDie();
+    Touch.touchStart(targetElem);
+    await Waiter.pWait(500);
+    editor.fire('selectionchange');
+    Touch.touchEnd(targetElem);
+    await Waiter.pWait(100);
+    await TinyUiActions.pWaitForPopup(editor, '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]');
+  };
 
-    // Wait for dialog to open and close dialog
-    const sWaitForAndCloseDialog = GeneralSteps.sequence([
-      Chain.asStep(editor, [
-        tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        Touch.cTapOn('.tox-button:contains("Cancel")')
-      ]),
-      Waiter.sTryUntil(
-        'Wait for dialog to close',
-        UiFinder.sNotExists(TinyDom.fromDom(document.body), 'div[role="dialog"]')
-      )
-    ]);
+  const pressDownArrowKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
+  const pressEnterKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
+  const pressEscKey = () => Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
 
-    const sPressDownArrowKey = Keyboard.sKeydown(doc, Keys.down(), { });
-    const sPressEnterKey = Keyboard.sKeydown(doc, Keys.enter(), { });
-    const sPressEscKey = Keyboard.sKeydown(doc, Keys.escape(), {});
+  const repeatDownArrowKey = (index: number) => Arr.range(index, pressDownArrowKey);
 
-    const sRepeatDownArrowKey = (index) => GeneralSteps.sequence(Arr.range(index, () => sPressDownArrowKey));
+  const tableHtml = '<table style="width: 100%;">' +
+  '<tbody>' +
+    '<tr>' +
+      '<td></td>' +
+      '<td></td>' +
+    '</tr>' +
+    '<tr>' +
+      '<td></td>' +
+      '<td></td>' +
+    '</tr>' +
+  '</tbody>' +
+  '</table>';
 
-    const tableHtml = '<table style="width: 100%;">' +
-    '<tbody>' +
-      '<tr>' +
-        '<td></td>' +
-        '<td></td>' +
-      '</tr>' +
-      '<tr>' +
-        '<td></td>' +
-        '<td></td>' +
-      '</tr>' +
-    '</tbody>' +
+  const imgSrc = '../img/dogleft.jpg';
+
+  const contentInTableHtml = (content: string) => '<table style="width: 100%;">' +
+     '<tbody>' +
+        '<tr>' +
+          `<td>${content}</td>` +
+        '</tr>' +
+      '</tbody>' +
     '</table>';
 
-    const imgSrc = '../img/dogleft.jpg';
+  const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
+  const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
+  const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
 
-    const contentInTableHtml = (content: string) => '<table style="width: 100%;">' +
-       '<tbody>' +
-          '<tr>' +
-            `<td>${content}</td>` +
-          '</tr>' +
-        '</tbody>' +
-      '</table>';
-
-    const imageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100"/>');
-    const placeholderImageInTableHtml = contentInTableHtml('<img src="' + imgSrc + '" width="160" height="100" data-mce-placeholder="1"/>');
-    const linkInTableHtml = contentInTableHtml('<a href="http://tiny.cloud/">Tiny</a>');
-
-    // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
-    // a link is placed at the end of block elements there is no way to move the caret behind the link.
-    const sAssertRemoveLinkHtmlStructure = Assertions.sAssertStructure('Assert remove link', ApproxStructure.build((s, str) => s.element('body', {
+  // In Firefox we add a a bogus br element after the link that fixes a gecko link bug when,
+  // a link is placed at the end of block elements there is no way to move the caret behind the link.
+  const assertRemoveLinkHtmlStructure = (editor: Editor) => Assertions.assertStructure('Assert remove link',
+    ApproxStructure.build((s, str) => s.element('body', {
       children: [
         s.element('p', {
           children: [
@@ -108,130 +100,124 @@ UnitTest.asynctest('MobileContextMenuTest', (success, failure) => {
           ]
         })
       ]
-    })), editorBody);
+    })), TinyDom.body(editor)
+  );
 
-    const sAssertMenuItems = (items: string[]) => Chain.asStep(SugarBody.body(), [
-      Chain.fromParent(UiFinder.cFindIn(mobileContextMenuSelector), Arr.map(items, UiFinder.cExists))
+  const assertMenuItems = (items: string[]) => {
+    const contextMenu = UiFinder.findIn(SugarBody.body(), mobileContextMenuSelector).getOrDie();
+    Arr.each(items, (item) => UiFinder.exists(contextMenu, item));
+  };
+
+  const mobileContextMenuSelector = 'div.tox-collection--horizontal';
+  const selectors = {
+    link: '.tox-collection__item:contains("Link...")',
+    removelink: '.tox-collection__item:contains("Remove link")',
+    openlink: '.tox-collection__item:contains("Open link")',
+    cell: '.tox-collection__item:contains("Cell")',
+    row: '.tox-collection__item:contains("Row")',
+    column: '.tox-collection__item:contains("Column")',
+    tableprops: '.tox-collection__item:contains("Table properties")',
+    deletetable: '.tox-collection__item:contains("Delete table")',
+    image: '.tox-collection__item:contains("Image")',
+    editimage: '.tox-collection__item:contains("Edit image")'
+  };
+
+  it('TBA: Test context menus on empty editor', async () => {
+    const editor = hook.editor();
+    await pOpenContextMenu(editor, 'p');
+    assertMenuItems([ selectors.link ]);
+    pressEscKey();
+  });
+
+  it('TBA: Test context menus on a link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="http://tiny.cloud/">Tiny</a></p>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Ti'.length);
+    await pOpenContextMenu(editor, 'a');
+    assertMenuItems([
+      selectors.link,
+      selectors.removelink,
+      selectors.openlink
     ]);
+    pressEscKey();
+    await pOpenContextMenu(editor, 'a');
+    FocusTools.setFocus(SugarBody.body(), selectors.link);
+    pressDownArrowKey();
+    pressEnterKey();
+    assertRemoveLinkHtmlStructure(editor);
+  });
 
-    const mobileContextMenuSelector = 'div.tox-collection--horizontal';
-    const selectors = {
-      link: '.tox-collection__item:contains("Link...")',
-      removelink: '.tox-collection__item:contains("Remove link")',
-      openlink: '.tox-collection__item:contains("Open link")',
-      cell: '.tox-collection__item:contains("Cell")',
-      row: '.tox-collection__item:contains("Row")',
-      column: '.tox-collection__item:contains("Column")',
-      tableprops: '.tox-collection__item:contains("Table properties")',
-      deletetable: '.tox-collection__item:contains("Delete table")',
-      image: '.tox-collection__item:contains("Image")',
-      editimage: '.tox-collection__item:contains("Edit image")'
-    };
+  it('TBA: Test context menus on a table', async () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    await pOpenContextMenu(editor, 'td');
+    assertMenuItems([
+      selectors.link,
+      selectors.cell,
+      selectors.row,
+      selectors.column,
+      selectors.tableprops,
+      selectors.deletetable
+    ]);
+    FocusTools.setFocus(SugarBody.body(), selectors.tableprops);
+    pressEnterKey();
+    await pWaitForAndCloseDialog(editor);
+  });
 
-    const steps = [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'Test context menus on empty editor', [
-        sOpenContextMenu('p'),
-        sAssertMenuItems([ selectors.link ]),
-        sPressEscKey
-      ]),
-      Log.stepsAsStep('TBA', 'Test context menus on a link', [
-        tinyApis.sSetContent('<p><a href="http://tiny.cloud/">Tiny</a></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 'Ti'.length, [ 0, 0, 0 ], 'Ti'.length),
-        sOpenContextMenu('a'),
-        sAssertMenuItems([
-          selectors.link,
-          selectors.removelink,
-          selectors.openlink
-        ]),
-        sPressEscKey,
-        sOpenContextMenu('a'),
-        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
-        sPressDownArrowKey,
-        sPressEnterKey,
-        sAssertRemoveLinkHtmlStructure
-      ]),
-      Log.stepsAsStep('TBA', 'Test context menus on a table', [
-        tinyApis.sSetContent(tableHtml),
-        sOpenContextMenu('td'),
-        sAssertMenuItems([
-          selectors.link,
-          selectors.cell,
-          selectors.row,
-          selectors.column,
-          selectors.tableprops,
-          selectors.deletetable
-        ]),
-        FocusTools.sSetFocus('focus the table props item', SugarBody.body(), selectors.tableprops),
-        sPressEnterKey,
-        sWaitForAndCloseDialog
-      ]),
-      Log.stepsAsStep('TBA', 'Test context menus on image inside a table', [
-        tinyApis.sSetContent(imageInTableHtml),
-        sOpenContextMenu('img'),
-        sAssertMenuItems([
-          selectors.link,
-          selectors.image,
-          selectors.editimage,
-          selectors.cell,
-          selectors.row,
-          selectors.column,
-          selectors.tableprops,
-          selectors.deletetable
-        ]),
-        FocusTools.sSetFocus('focus the image item', SugarBody.body(), selectors.image),
-        sPressEnterKey,
-        sWaitForAndCloseDialog,
-        sOpenContextMenu('img'),
-        // Navigate to the "Image tools" menu item
-        FocusTools.sSetFocus('focus the first menu item', SugarBody.body(), selectors.link),
-        sRepeatDownArrowKey(2),
-        sPressEnterKey,
-        sWaitForAndCloseDialog
-      ]),
-      Log.stepsAsStep('TBA', 'Test context menus on link inside a table', [
-        tinyApis.sSetContent(linkInTableHtml),
-        sOpenContextMenu('a'),
-        sAssertMenuItems([
-          selectors.link,
-          selectors.removelink,
-          selectors.openlink,
-          selectors.cell,
-          selectors.row,
-          selectors.column,
-          selectors.tableprops,
-          selectors.deletetable
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Test context menus on placeholder image inside a table', [
-        // Placeholder images shouldn't show the image/image tools options
-        tinyApis.sSetContent(placeholderImageInTableHtml),
-        tinyApis.sSelect('img', []),
-        sOpenContextMenu('img'),
-        sAssertMenuItems([
-          selectors.link,
-          selectors.cell,
-          selectors.row,
-          selectors.column,
-          selectors.tableprops,
-          selectors.deletetable
-        ])
-      ])
-    ];
+  it('TBA: Test context menus on image inside a table', async () => {
+    const editor = hook.editor();
+    editor.setContent(imageInTableHtml);
+    await pOpenContextMenu(editor, 'img');
+    assertMenuItems([
+      selectors.link,
+      selectors.image,
+      selectors.editimage,
+      selectors.cell,
+      selectors.row,
+      selectors.column,
+      selectors.tableprops,
+      selectors.deletetable
+    ]);
+    FocusTools.setFocus(SugarBody.body(), selectors.image);
+    pressEnterKey();
+    await pWaitForAndCloseDialog(editor);
+    await pOpenContextMenu(editor, 'img');
+    // Navigate to the "Image tools" menu item
+    FocusTools.setFocus(SugarBody.body(), selectors.link);
+    repeatDownArrowKey(2);
+    pressEnterKey();
+    await pWaitForAndCloseDialog(editor);
+  });
 
-    Pipeline.async({}, steps, onSuccess, onFailure);
-  }, {
-    theme: 'silver',
-    plugins: 'image imagetools link table',
-    toolbar: 'image editimage link table',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce',
-    image_caption: true
-  }, () => {
-    PlatformDetection.override(detection);
-    success();
-  }, (err, logs) => {
-    PlatformDetection.override(detection);
-    failure(err, logs);
+  it('TBA: Test context menus on link inside a table', async () => {
+    const editor = hook.editor();
+    editor.setContent(linkInTableHtml);
+    await pOpenContextMenu(editor, 'a');
+    assertMenuItems([
+      selectors.link,
+      selectors.removelink,
+      selectors.openlink,
+      selectors.cell,
+      selectors.row,
+      selectors.column,
+      selectors.tableprops,
+      selectors.deletetable
+    ]);
+  });
+
+  it('TBA: Test context menus on placeholder image inside a table', async () => {
+    const editor = hook.editor();
+    // Placeholder images shouldn't show the image/image tools options
+    editor.setContent(placeholderImageInTableHtml);
+    TinySelections.select(editor, 'img', []);
+    await pOpenContextMenu(editor, 'img');
+    assertMenuItems([
+      selectors.link,
+      selectors.cell,
+      selectors.row,
+      selectors.column,
+      selectors.tableprops,
+      selectors.deletetable
+    ]);
   });
 });

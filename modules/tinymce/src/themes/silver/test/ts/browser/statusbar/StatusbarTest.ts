@@ -1,16 +1,19 @@
-import { ApproxStructure, Assertions, Chain, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { McEditor } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
-import Wordcount from 'tinymce/plugins/wordcount/Plugin';
+import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinyDom } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import WordcountPlugin from 'tinymce/plugins/wordcount/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
+describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
+  before(() => {
+    Theme();
+    WordcountPlugin(5);
+  });
 
-  Theme();
-  Wordcount(5);
-
-  const fullStatusbarSpec = (s, str, arr) => [
+  const fullStatusbarSpec: ApproxStructure.Builder<StructAssert[]> = (s, str, arr) => [
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
@@ -42,7 +45,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     })
   ];
 
-  const statusbarWithoutWordcountSpec = (s, str, arr) => [
+  const statusbarWithoutWordcountSpec: ApproxStructure.Builder<StructAssert[]> = (s, str, arr) => [
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
@@ -70,7 +73,7 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     })
   ];
 
-  const statusbarWithoutResizeSpec = (s, str, arr) => [
+  const statusbarWithoutResizeSpec: ApproxStructure.Builder<StructAssert[]> = (s, str, arr) => [
     s.element('div', {
       classes: [ arr.has('tox-statusbar__text-container') ],
       children: [
@@ -92,176 +95,150 @@ UnitTest.asynctest('Statusbar Structure Test', (success, failure) => {
     })
   ];
 
-  const cGetContainer = Chain.mapper((editor: any) => SugarElement.fromDom(editor.editorContainer));
+  const makeTest = (config: RawEditorSettings, structureLabel: string, editorStructure: StructAssert) => async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      ...config
+    });
+    editor.focus();
+    editor.setContent('<p><strong>hello world</strong></p>');
+    await Waiter.pTryUntil('Wait for editor structure', () => Assertions.assertStructure(structureLabel, editorStructure, TinyDom.container(editor)));
+    McEditor.remove(editor);
+  };
 
-  const cSetContent = (content: string) => Chain.mapper((editor: any) => {
-    return editor.editorCommands.execCommand('mceSetContent', false, content);
+  it('TBA: Full statusbar', makeTest(
+    { plugins: 'wordcount' },
+    'Full statusbar structure',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      children: [
+        s.anything(),
+        s.element('div', {
+          classes: [ arr.has('tox-statusbar') ],
+          children: fullStatusbarSpec(s, str, arr)
+        }),
+        s.theRest()
+      ]
+    }))
+  ));
+
+  it('TBA: Statusbar without wordcount', makeTest(
+    { },
+    'Statusbar structure without wordcount',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      children: [
+        s.anything(),
+        s.element('div', {
+          classes: [ arr.has('tox-statusbar') ],
+          children: statusbarWithoutWordcountSpec(s, str, arr)
+        }),
+        s.theRest()
+      ]
+    }))
+  ));
+
+  it('TBA: Statusbar without resize', makeTest(
+    { resize: false },
+    'Statusbar structure without resize',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      children: [
+        s.anything(),
+        s.element('div', {
+          classes: [ arr.has('tox-statusbar') ],
+          children: statusbarWithoutResizeSpec(s, str, arr)
+        }),
+        s.theRest()
+      ]
+    }))
+  ));
+
+  it('TBA: Remove statusbar', makeTest(
+    { statusbar: false },
+    'Editor without statusbar',
+    ApproxStructure.build((s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-tinymce') ],
+      children: [
+        s.anything(),
+        s.element('div', {
+          classes: [ arr.has('tox-throbber') ]
+        })
+      ]
+    }))
+  ));
+
+  it('TBA: Full statusbar - check element path on content change', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'bold',
+      resize: false,
+      branding: false
+    });
+    editor.focus();
+    editor.setContent('<p><strong>hello world</strong></p>');
+    const editorContainer = TinyDom.container(editor);
+
+    await Waiter.pTryUntil('', () => Assertions.assertStructure(
+      'Check p>strong element path',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tinymce') ],
+        children: [
+          s.anything(),
+          s.element('div', {
+            classes: [ arr.has('tox-statusbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-statusbar__text-container') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-statusbar__path') ],
+                    children: [
+                      s.element('div', { children: [ s.text(str.is('p')) ] }),
+                      s.element('div', { children: [ s.text(str.is(' » ')) ] }),
+                      s.element('div', { children: [ s.text(str.is('strong')) ] })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.theRest()
+        ]
+      })),
+      editorContainer
+    ));
+
+    const button = UiFinder.findIn(editorContainer, 'button[aria-label="Bold"]').getOrDie();
+    Mouse.trueClick(button);
+    await Waiter.pTryUntil('', () => Assertions.assertStructure(
+      'Check p element path',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-tinymce') ],
+        children: [
+          s.anything(),
+          s.element('div', {
+            classes: [ arr.has('tox-statusbar') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-statusbar__text-container') ],
+                children: [
+                  s.element('div', {
+                    classes: [ arr.has('tox-statusbar__path') ],
+                    children: [
+                      s.element('div', { children: [ s.text(str.is('p')) ] })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          s.theRest()
+        ]
+      })),
+      editorContainer
+    ));
+
+    McEditor.remove(editor);
   });
-
-  const makeStep = (config, structureLabel, editorStructure) => Chain.asStep({}, [
-    McEditor.cFromSettings(config),
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cSetContent('<p><strong>hello world</strong></p>'), ''),
-      NamedChain.direct('editor', cGetContainer, 'editorContainer'),
-      NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
-        structureLabel,
-        editorStructure
-      )), 'assertion'),
-      NamedChain.output('editor')
-    ]),
-    McEditor.cRemove
-  ]);
-
-  Pipeline.async({}, [
-    Log.step('TBA', 'Full statusbar', makeStep(
-      {
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        plugins: 'wordcount'
-      },
-      'Full statusbar structure',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        children: [
-          s.anything(),
-          s.element('div', {
-            classes: [ arr.has('tox-statusbar') ],
-            children: fullStatusbarSpec(s, str, arr)
-          }),
-          s.theRest()
-        ]
-      }))
-    )),
-
-    Log.step('TBA', 'Statusbar without wordcount', makeStep(
-      {
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce'
-      },
-      'Statusbar structure without wordcount',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        children: [
-          s.anything(),
-          s.element('div', {
-            classes: [ arr.has('tox-statusbar') ],
-            children: statusbarWithoutWordcountSpec(s, str, arr)
-          }),
-          s.theRest()
-        ]
-      }))
-    )),
-
-    Log.step('TBA', 'Statusbar without resize', makeStep(
-      {
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        resize: false
-      },
-      'Statusbar structure without resize',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        children: [
-          s.anything(),
-          s.element('div', {
-            classes: [ arr.has('tox-statusbar') ],
-            children: statusbarWithoutResizeSpec(s, str, arr)
-          }),
-          s.theRest()
-        ]
-      }))
-    )),
-
-    Log.step('TBA', 'Remove statusbar', makeStep(
-      {
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        statusbar: false
-      },
-      'Editor without statusbar',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-tinymce') ],
-        children: [
-          s.anything(),
-          s.element('div', {
-            classes: [ arr.has('tox-throbber') ]
-          })
-        ]
-      }))
-    )),
-
-    Log.step('TBA', 'Full statusbar - check element path on content change', Chain.asStep({}, [
-      McEditor.cFromSettings({
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 'bold',
-        resize: false,
-        branding: false
-      }),
-      NamedChain.asChain([
-        NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-        NamedChain.direct('editor', cSetContent('<p><strong>hello</strong></p>'), 'content'),
-        NamedChain.direct('editor', cGetContainer, 'editorContainer'),
-        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
-          'Check p>strong element path',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-tinymce') ],
-            children: [
-              s.anything(),
-              s.element('div', {
-                classes: [ arr.has('tox-statusbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-statusbar__text-container') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-statusbar__path') ],
-                        children: [
-                          s.element('div', { children: [ s.text(str.is('p')) ] }),
-                          s.element('div', { children: [ s.text(str.is(' » ')) ] }),
-                          s.element('div', { children: [ s.text(str.is('strong')) ] })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              }),
-              s.theRest()
-            ]
-          }))
-        )), 'assertion1'),
-        NamedChain.direct('editorContainer', UiFinder.cFindIn('button[aria-label="Bold"]'), 'button'),
-        NamedChain.direct('button', Mouse.cTrueClick, 'click'),
-        NamedChain.direct('editorContainer', Waiter.cTryUntil('', Assertions.cAssertStructure(
-          'Check p element path',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: [ arr.has('tox-tinymce') ],
-            children: [
-              s.anything(),
-              s.element('div', {
-                classes: [ arr.has('tox-statusbar') ],
-                children: [
-                  s.element('div', {
-                    classes: [ arr.has('tox-statusbar__text-container') ],
-                    children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-statusbar__path') ],
-                        children: [
-                          s.element('div', { children: [ s.text(str.is('p')) ] })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              }),
-              s.theRest()
-            ]
-          }))
-        )), 'assertion2'),
-        NamedChain.output('editor')
-      ]),
-      McEditor.cRemove
-    ]))
-  ], success, failure);
 });

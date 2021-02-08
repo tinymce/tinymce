@@ -1,61 +1,72 @@
-import { Chain, Log, Pipeline, Step, Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, McEditor } from '@ephox/mcagar';
+import { before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { McEditor } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
-import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { RawEditorSettings, ToolbarMode } from 'tinymce/core/api/SettingsTypes';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', (success, failure) => {
-  SilverTheme();
-
-  const sAssertToolbarToggleState = (editor: Editor, expected: boolean) => Step.sync(() => {
-    Assertions.assertEq('Expected toolbar toggle state to be ' + expected, expected, editor.queryCommandState('ToggleToolbarDrawer'));
+describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
+  before(() => {
+    Theme();
   });
 
-  const sToggleToolbar = (editor: Editor) => Step.sync(() => {
-    editor.execCommand('ToggleToolbarDrawer');
-  });
+  const assertToolbarToggleState = (editor: Editor, expected: boolean) => {
+    const state = editor.queryCommandState('ToggleToolbarDrawer');
+    assert.equal(state, expected, 'Expected toolbar toggle state to be ' + expected);
+  };
 
-  const cTestToggle = (label: string, settings: RawEditorSettings, shouldToggle: boolean) => Chain.label(label, Chain.fromChains([
-    McEditor.cFromSettings({
+  const pTestToggle = async (settings: RawEditorSettings, shouldToggle: boolean) => {
+    const editor = await McEditor.pFromSettings<Editor>({
       toolbar: 'undo redo | bold italic',
       menubar: false,
       statusbar: false,
       width: 200,
       ...settings,
       base_url: '/project/tinymce/js/tinymce'
-    }),
-    ApiChains.cFocus,
-    Chain.runStepsOnValue((editor: Editor) =>
-      [
-        sAssertToolbarToggleState(editor, false),
-        sToggleToolbar(editor),
-        sAssertToolbarToggleState(editor, shouldToggle),
-        sToggleToolbar(editor),
-        sAssertToolbarToggleState(editor, false)
-      ]
-    ),
-    McEditor.cRemove
-  ]));
+    });
+    editor.focus();
+    assertToolbarToggleState(editor, false);
+    editor.execCommand('ToggleToolbarDrawer');
+    assertToolbarToggleState(editor, shouldToggle);
+    editor.execCommand('ToggleToolbarDrawer');
+    assertToolbarToggleState(editor, false);
+    McEditor.remove(editor);
+  };
 
-  const cTestToolbarMode = (toolbarMode: 'floating' | 'sliding' | 'scrolling' | 'wrap', shouldToggle: boolean) =>
-    Log.chainsAsChain('TINY-6032', `Check toolbar toggling: ${toolbarMode}`, [
+  context(`Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, () => {
+    Arr.each<{ mode: ToolbarMode; shouldToggle: boolean }>([
+      { mode: 'floating', shouldToggle: true },
+      { mode: 'sliding', shouldToggle: true },
+      { mode: 'wrap', shouldToggle: false },
+      { mode: 'scrolling', shouldToggle: false }
+    ], (test) => {
       // Test iframe
-      cTestToggle(`${toolbarMode} toolbar`, { toolbar_mode: toolbarMode }, false),
-      cTestToggle(`${toolbarMode} toolbar - small width`, { toolbar_mode: toolbarMode, width: 50 }, shouldToggle),
-      // Test inline
-      cTestToggle(`${toolbarMode} toolbar (inline)`, { toolbar_mode: toolbarMode, inline: true }, false),
-      cTestToggle(`${toolbarMode} toolbar - small width (inline)`, { toolbar_mode: toolbarMode, width: 50, inline: true }, shouldToggle)
-    ]);
+      it(`TINY-6032: ${test.mode} toolbar`, () =>
+        pTestToggle({ toolbar_mode: test.mode }, false)
+      );
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TINY-6032', `Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, [
-      cTestToolbarMode('floating', true),
-      cTestToolbarMode('sliding', true),
-      cTestToolbarMode('wrap', false),
-      cTestToolbarMode('scrolling', false),
-      cTestToggle('Multiple toolbars', { toolbar: [ 'undo redo', 'bold italic' ] }, false),
-      cTestToggle('Multiple toolbars (inline)', { toolbar: [ 'undo redo', 'bold italic' ], inline: true }, false)
-    ])
-  ], success, failure);
+      it(`TINY-6032: ${test.mode} toolbar - small width`, () =>
+        pTestToggle({ toolbar_mode: test.mode, width: 50 }, test.shouldToggle)
+      );
+
+      // Test inline
+      it(`TINY-6032: ${test.mode} toolbar (inline)`, () =>
+        pTestToggle({ toolbar_mode: test.mode, inline: true }, false)
+      );
+
+      it(`TINY-6032: ${test.mode} toolbar - small width (inline)`, () =>
+        pTestToggle({ toolbar_mode: test.mode, width: 50, inline: true }, test.shouldToggle)
+      );
+    });
+
+    it('TINY-6032: Multiple toolbars', () =>
+      pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ] }, false)
+    );
+
+    it('TINY-6032: Multiple toolbars (inline)', () =>
+      pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ], inline: true }, false)
+    );
+  });
 });
