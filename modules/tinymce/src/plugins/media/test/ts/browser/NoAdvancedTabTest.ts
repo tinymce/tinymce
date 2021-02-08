@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.media.NoAdvancedTabTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: if alt source and poster set to false, do not show advance tab', async () => {
+  it('TBA: if alt source and poster set to false, do not show advanced tab', async () => {
     const editor = hook.editor();
     editor.settings.media_alt_source = false;
     editor.settings.media_poster = false;
@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.media.NoAdvancedTabTest', () => {
     TinyUiActions.closeDialog(editor);
   });
 
-  it('TBA: if alt source and poster not set to false, show advance tab', async () => {
+  it('TBA: if alt source and poster not set to false, show advanced tab', async () => {
     const editor = hook.editor();
     delete editor.settings.media_alt_source;
     delete editor.settings.media_poster;

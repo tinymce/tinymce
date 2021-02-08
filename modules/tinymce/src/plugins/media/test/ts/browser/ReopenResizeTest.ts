@@ -30,7 +30,7 @@ describe('browser.tinymce.plugins.media.ReopenResizeTest', () => {
     // assertContentStructure did not work because some
     // browsers insert BRs and some do not
     const images = editor.dom.select('img.mce-object');
-    assert.lengthOf(images, 1, 'assert raw content');
+    assert.lengthOf(images, 1, 'assert image is present');
   };
 
   it('TBA: Open dialog, set source value, assert width, close dialog. Reopen dialog, change width, close dialog and assert resize handles are present', async () => {

@@ -27,6 +27,7 @@ describe('browser.tinymce.plugins.media.DataAttributeTest', () => {
     await Utils.pAssertSourceValue(editor, url);
     TinyUiActions.closeDialog(editor);
   };
+
   const pTestEmbedContentFromUrl2 = async (editor: Editor, url: string, url2: string, content: string, content2: string) => {
     editor.setContent('');
     await Utils.pOpenDialog(editor);

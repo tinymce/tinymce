@@ -1,4 +1,4 @@
-import { Assertions, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyAssertions, TinyUiActions } from '@ephox/mcagar';
 import { Focus, SugarElement } from '@ephox/sugar';
@@ -148,14 +148,13 @@ const pPasteTextareaValue = async (editor: Editor, value: string) => {
 };
 
 const pAssertEmbedData = async (editor: Editor, content: string) => {
-  TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Embed")');
+  TinyUiActions.clickOnUi(editor, selectors.embedButton);
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   await Waiter.pTryUntil('Textarea should have a proper value',
     () => {
       const elem = findInDialog(dialog, selectors.embed);
       const value = UiControls.getValue(elem);
       assert.equal(value, content, 'embed content');
-      Assertions.cAssertEq('embed content', content);
     }
   );
   TinyUiActions.clickOnUi(editor, '.tox-tab:contains("General")');
