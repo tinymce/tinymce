@@ -88,7 +88,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       // close the throbber
       const editor = hook.editor();
       editor.setProgressState(false);
-      await UiFinder.pWaitForState('throbber is closed', SugarBody.body(), '.tox-throbber', Fun.not(Visibility.isVisible));
+      await UiFinder.pWaitForHidden('throbber is closed', SugarBody.body(), '.tox-throbber');
       // give the context toolbar time to re-open (note: it should not re-open during this time)
       await Waiter.pWait(50);
 
