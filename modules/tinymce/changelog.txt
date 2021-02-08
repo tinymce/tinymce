@@ -39,7 +39,7 @@ Version 5.7.0 (TBD)
     Fixed an issue where new lines were not scrolled into view when pressing Shift+Enter or Shift+Return #TINY-6964
     Fixed an issue where list elements would not be removed when outdenting using the Enter or Return key #TINY-5974
     Fixed an issue where file extensions with uppercase characters were treated as invalid #TINY-6940
-    Fixed dialog block messages were unable to be translated #TINY-6971
+    Fixed dialog block messages were not passed through TinyMCE's translation system #TINY-6971
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)
