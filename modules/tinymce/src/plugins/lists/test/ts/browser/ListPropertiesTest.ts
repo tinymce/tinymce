@@ -171,4 +171,13 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.execCommand('SetListAttributes', false, { start: 5 });
     TinyAssertions.assertContent(editor, '<p>some text</p>');
   });
+
+  it('TINY-6907: SetListAttributes command can remove the start attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('SetListAttributes', false, { start: '' });
+    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+  });
 });
