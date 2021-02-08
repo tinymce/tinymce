@@ -1,4 +1,5 @@
 import { after, before } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyDom } from '@ephox/mcagar';
 import { Insert, Remove, SugarElement } from '@ephox/sugar';
 
@@ -23,13 +24,14 @@ const setup = (editor: Editor, amount: number) => {
 };
 
 const bddSetup = (lazyEditor: () => Editor, amount: number) => {
-  let teardownScroll: () => void;
+  let teardownScroll: () => void = Fun.noop;
   before(() => {
     teardownScroll = setup(lazyEditor(), amount);
   });
 
   after(() => {
     teardownScroll();
+    teardownScroll = Fun.noop;
   });
 };
 
