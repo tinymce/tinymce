@@ -39,7 +39,7 @@ export default () => {
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo | sidebar1 | print preview media code link unlink'
+    toolbar: 'undo redo | sidebar1 | print preview media'
   };
 
   tinymce.init(settings);

@@ -47,10 +47,8 @@ const skipEmptyTextNodes = (node: Node, forwards: boolean) => {
 };
 
 const isAnchorPrevSibling = (element: Node): boolean =>
-  Traverse.prevSibling(SugarElement.fromDom(element)).fold(
-    Boolean,
-    (node) => node.dom.nodeName === 'A'
-  );
+  Traverse.prevSibling(SugarElement.fromDom(element))
+    .exists((node) => SugarNode.name(node) === 'a');
 
 const getNode = (root: Element, rng: Range): Element => {
   let elm, startContainer, endContainer;
@@ -99,18 +97,18 @@ const getNode = (root: Element, rng: Range): Element => {
       }
     }
 
-    if (startContainer?.nodeType === 3 && endContainer?.nodeType === 1) {
+    if (NodeType.isText(startContainer) && NodeType.isElement(endContainer)) {
       if (endContainer.childElementCount === 2) {
-        return endContainer.firstChild;
+        return endContainer.firstElementChild;
       }
       if (startOffset > endOffset || isAnchorPrevSibling(startContainer)) {
-        return startContainer.nextSibling;
+        return startContainer.nextElementSibling;
       }
     }
 
     // IE Handle double click an anchor.
-    if (startContainer?.nodeType === 1 && endContainer?.nodeType === 3) {
-      return startContainer.firstChild;
+    if (NodeType.isElement(startContainer) && NodeType.isText(endContainer)) {
+      return startContainer.firstElementChild;
     }
   }
 

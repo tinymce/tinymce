@@ -641,6 +641,22 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     );
   });
 
+  it('dbclick getNode', () => {
+    const editor = hook.editor();
+    const rng = editor.dom.createRng();
+
+    editor.setContent('<p id="p1"><a href="google.com" id="a1">dbclick test</a></br></p>');
+    rng.setStart(editor.dom.get('a1').firstChild, 0);
+    rng.setEnd(editor.dom.get('a1').parentElement, 0);
+    editor.selection.setRng(rng);
+
+    LegacyUnit.equalDom(
+      editor.selection.getNode(),
+      editor.dom.get('a1'),
+      'Get anchor if the startSelection is Text and endSelection is Element'
+    );
+  });
+
   it('normalize to text node from document', () => {
     const editor = hook.editor();
     let rng;
