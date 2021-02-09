@@ -165,6 +165,15 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinyAssertions.assertContent(editor, '<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
   });
 
+  it('TINY-6907: mceListUpdate command can remove the start attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { attrs: { start: '' }});
+    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
   it('TINY-6907: mceListUpdate command does not break when used on a paragraph', () => {
     const editor = hook.editor();
     editor.setContent('<p>some text</p>');
@@ -174,12 +183,12 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinyAssertions.assertContent(editor, '<p>some text</p>');
   });
 
-  it('TINY-6907: mceListUpdate command can remove the start attribute', () => {
+  it('TINY-6907: mceListUpdate command does not break when passed null', () => {
     const editor = hook.editor();
-    editor.setContent('<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.setContent('<p>some text</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    editor.execCommand('mceListUpdate', false, { attrs: { start: '' }});
-    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+    editor.execCommand('mceListUpdate', false, null);
+    TinyAssertions.assertContent(editor, '<p>some text</p>');
   });
 });

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
@@ -55,7 +56,9 @@ const register = (editor: Editor) => {
   registerDialog(editor);
 
   editor.addCommand('mceListUpdate', (ui, detail) => {
-    updateList(editor, detail);
+    if (Type.isObject(detail)) {
+      updateList(editor, detail);
+    }
   });
 
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));
