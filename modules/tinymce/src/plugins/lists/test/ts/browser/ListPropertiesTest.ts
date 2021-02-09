@@ -135,7 +135,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
   });
 
-  it('TINY-6907: List properties command is used to update the DOM', async () => {
+  it('TINY-6907: List properties dialog uses mceListUpdate command internally to update the DOM', async () => {
     const editor = hook.editor();
 
     const blockCommand = (event: EditorEvent<ExecCommandEvent>) => {
