@@ -31,7 +31,7 @@ const isFirstChild = (node: Node) => node.parentNode.firstChild === node;
 
 const isLastChild = (node: Node) => node.parentNode.lastChild === node;
 
-const isTextBlock = (editor: Editor, node: Node) => node && !!editor.schema.getTextBlockElements()[node.nodeName];
+const isTextBlock = (editor: Editor, node: Node): node is HTMLElement => node && !!editor.schema.getTextBlockElements()[node.nodeName];
 
 const isBlock = (node: Node, blockElements: Record<string, any>) => node && node.nodeName in blockElements;
 
