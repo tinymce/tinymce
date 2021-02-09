@@ -35,11 +35,11 @@ export default () => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
     },
     plugins: [
-      'print preview media link image'
+      'print preview media link image code tinycomments'
     ],
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo | sidebar1 | print preview media'
+    toolbar: 'undo redo | sidebar1 | print preview media code link | addcomment showcomments'
   };
 
   tinymce.init(settings);

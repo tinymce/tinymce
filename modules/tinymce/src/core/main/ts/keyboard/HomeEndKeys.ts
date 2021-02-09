@@ -8,6 +8,7 @@
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
 import * as CefNavigation from './CefNavigation';
+import * as InlineBoundariesNavigation from './InlineBoundariesNavigation';
 import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 
@@ -16,7 +17,9 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
     { keyCode: VK.END, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, true) },
     { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
     { keyCode: VK.END, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, true) },
-    { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) }
+    { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) },
+    { keyCode: VK.END, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.HOME, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) }
   ], evt).each((_) => {
     evt.preventDefault();
   });
