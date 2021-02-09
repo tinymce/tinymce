@@ -6,9 +6,9 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { setParentListAttributes } from '../actions/Attributes';
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
+import { updateList } from '../actions/Update';
 import { getParentList } from '../core/Selection';
 import * as Dialog from '../ui/Dialog';
 
@@ -54,8 +54,8 @@ const register = (editor: Editor) => {
 
   registerDialog(editor);
 
-  editor.addCommand('SetListAttributes', (ui, detail) => {
-    setParentListAttributes(editor, detail);
+  editor.addCommand('mceListUpdate', (ui, detail) => {
+    updateList(editor, detail);
   });
 
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));

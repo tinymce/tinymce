@@ -139,7 +139,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     const editor = hook.editor();
 
     const blockCommand = (event: EditorEvent<ExecCommandEvent>) => {
-      if (event.command.toLowerCase() === 'setlistattributes') {
+      if (event.command.toLowerCase() === 'mcelistupdate') {
         event.preventDefault();
       }
     };
@@ -156,30 +156,30 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.off('BeforeExecCommand', blockCommand);
   });
 
-  it('TINY-6907: SetListAttributes command sets the start attribute', () => {
+  it('TINY-6907: mceListUpdate command sets the start attribute', () => {
     const editor = hook.editor();
     editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
-    editor.execCommand('SetListAttributes', false, { start: 5 });
+    editor.execCommand('mceListUpdate', false, { attrs: { start: 5 }});
     TinyAssertions.assertContent(editor, '<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
   });
 
-  it('TINY-6907: SetListAttributes command does not break when used on a paragraph', () => {
+  it('TINY-6907: mceListUpdate command does not break when used on a paragraph', () => {
     const editor = hook.editor();
     editor.setContent('<p>some text</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
 
-    editor.execCommand('SetListAttributes', false, { start: 5 });
+    editor.execCommand('mceListUpdate', false, { attrs: { start: 5 }});
     TinyAssertions.assertContent(editor, '<p>some text</p>');
   });
 
-  it('TINY-6907: SetListAttributes command can remove the start attribute', () => {
+  it('TINY-6907: mceListUpdate command can remove the start attribute', () => {
     const editor = hook.editor();
     editor.setContent('<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
-    editor.execCommand('SetListAttributes', false, { start: '' });
+    editor.execCommand('mceListUpdate', false, { attrs: { start: '' }});
     TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
   });
 });

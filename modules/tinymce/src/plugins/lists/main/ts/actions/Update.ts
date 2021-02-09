@@ -9,9 +9,15 @@ import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getParentList } from '../core/Selection';
 
-export const setParentListAttributes = (editor: Editor, attrs: Record<string, string>) => {
+interface ListUpdate {
+  attrs?: Record<string, string>;
+}
+
+export const updateList = (editor: Editor, update: ListUpdate) => {
   const parentList = getParentList(editor);
-  editor.undoManager.transact(() =>
-    Obj.each(attrs, (v, k) => editor.dom.setAttrib(parentList, k, v))
-  );
+  editor.undoManager.transact(() => {
+    if (update.attrs) {
+      Obj.each(update.attrs, (v, k) => editor.dom.setAttrib(parentList, k, v));
+    }
+  });
 };

@@ -47,8 +47,10 @@ const open = (editor: Editor) => {
     ],
     onSubmit: (api) => {
       const data = api.getData();
-      editor.execCommand('SetListAttributes', false, {
-        start: data.start === '1' ? '' : data.start
+      editor.execCommand('mceListUpdate', false, {
+        attrs: {
+          start: data.start === '1' ? '' : data.start
+        }
       });
       api.close();
     }
