@@ -1,5 +1,6 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+import 'tinymce';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -13,8 +14,14 @@ import * as ViewBlock from '../module/test/ViewBlock';
 describe('browser.tinymce.core.EditorManagerTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
-  before(() => Theme());
-  after(() => EditorManager.remove());
+  before(() => {
+    Theme();
+    EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
+  });
+
+  after(() => {
+    EditorManager.remove();
+  });
 
   afterEach((done) => {
     Delay.setTimeout(() => {
@@ -27,8 +34,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     viewBlock.update('<textarea class="tinymce"></textarea>');
     EditorManager.init({
       selector: 'textarea.tinymce',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (editor1) => {
         assert.lengthOf(EditorManager.get(), 1);
         assert.equal(EditorManager.get(0), EditorManager.activeEditor);
@@ -52,8 +57,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
         // Re-init on same id
         EditorManager.init({
           selector: '#' + EditorManager.activeEditor.id,
-          skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-          content_css: '/project/tinymce/js/tinymce/skins/content/default'
         });
 
         assert.lengthOf(EditorManager.get(), 1);
@@ -82,8 +85,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
     EditorManager.init({
       selector: 'textarea',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       language: langCode,
       language_url: langUrl,
       init_instance_callback: (_ed) => {
@@ -103,8 +104,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
     EditorManager.init({
       selector: 'textarea',
-      skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-      content_css: '/project/tinymce/js/tinymce/skins/content/default',
       init_instance_callback: (editor1) => {
         Delay.setTimeout(() => {
           // Destroy the editor by setting innerHTML common ajax pattern
@@ -192,8 +191,6 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
       EditorManager.init({
         selector: invalidName + '.targetEditor',
-        skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
-        content_css: '/project/tinymce/js/tinymce/skins/content/default',
         inline: true
       });
 
