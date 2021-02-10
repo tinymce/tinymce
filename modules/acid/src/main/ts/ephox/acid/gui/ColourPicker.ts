@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema, SimulatedEvent, Sketcher
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema, SimulatedEvent, Sketcher, Slider
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
@@ -7,7 +7,6 @@ import { Hex } from '../api/colour/ColourTypes';
 import * as HexColour from '../api/colour/HexColour';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
-import { calcHex } from './Calculations';
 import * as ColourEvents from './ColourEvents';
 import * as HueSlider from './components/HueSlider';
 import * as RgbForm from './components/RgbForm';
@@ -40,6 +39,10 @@ const makeFactory = (
       paletteRgba: Cell(RgbaColour.red)
     };
 
+    const memSlider = Memento.record(
+      HueSlider.sliderFactory(translate, getClass)
+    );
+
     const memPalette = Memento.record(
       sbPalette.sketch({})
     );
@@ -47,11 +50,9 @@ const makeFactory = (
       rgbForm.sketch({})
     );
 
-    const updatePalette = (anyInSystem: AlloyComponent, hex: Hex) => {
+    const updatePalette = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
       memPalette.getOpt(anyInSystem).each((palette) => {
-        const rgba = RgbaColour.fromHex(hex);
-        state.paletteRgba.set(rgba);
-        sbPalette.setRgba(palette, rgba);
+        sbPalette.setHue(palette, hue);
       });
     };
 
@@ -61,9 +62,27 @@ const makeFactory = (
       });
     };
 
-    const runUpdates = (anyInSystem: AlloyComponent, hex: Hex, updates: ((anyInSystem: AlloyComponent, hex: Hex) => void)[]) => {
+    const updateSlider = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
+      memSlider.getOpt(anyInSystem).each((slider) => {
+        Slider.setValue(slider, { y: 100 - (hue / 360) * 100 });
+      });
+    };
+
+    const updatePaletteThumb = (anyInSystem: AlloyComponent, hex: Hex) => {
+      memPalette.getOpt(anyInSystem).each((palette) => {
+        sbPalette.setThumb(palette, hex);
+      });
+    };
+
+    const updateRgbaCell = (hex: Hex) => {
+      const rgba = RgbaColour.fromHex(hex);
+      state.paletteRgba.set(rgba);
+    };
+
+    const runUpdates = (anyInSystem: AlloyComponent, hex: Hex, hue: number, updates: ((anyInSystem: AlloyComponent, hex: Hex, hue: number) => void)[]) => {
+      updateRgbaCell(hex);
       Arr.each(updates, (update) => {
-        update(anyInSystem, hex);
+        update(anyInSystem, hex, hue);
       });
     };
 
@@ -72,20 +91,38 @@ const makeFactory = (
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
         const value = simulatedEvent.event.value;
         const oldRgb = state.paletteRgba.get();
+        const oldHex = HexColour.fromRgba(oldRgb);
         const hsvColour = HsvColour.fromRgb(oldRgb);
-        const newHsvColour = HsvColour.hsvColour(hsvColour.hue, value.x, (100 - value.y));
-        const rgb = RgbaColour.fromHsv(newHsvColour);
-        const nuHex = HexColour.fromRgba(rgb);
-        runUpdates(form, nuHex, updates);
+        const hue = hsvColour.hue;
+        const newHsvColour = HsvColour.hsvColour(hue, value.x, (100 - value.y));
+        const newRgb = RgbaColour.fromHsv(newHsvColour);
+        const newHex = HexColour.fromRgba(newRgb);
+        if (oldHex.value !== newHex.value) {
+          runUpdates(form, newHex, hue, updates);
+        }
       };
     };
 
     const sliderUpdates = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const value = simulatedEvent.event.value;
-        const hex = calcHex(value.y);
-        runUpdates(form, hex, updates);
+        const hue = ((100 - simulatedEvent.event.value.y) / 100) * 360; // transform 0-100 value to 0-360
+        const oldRgb = state.paletteRgba.get();
+        const hsvColour = HsvColour.fromRgb(oldRgb);
+        const newHsvColour = HsvColour.hsvColour(hue, hsvColour.saturation, hsvColour.value);
+        const newRgb = RgbaColour.fromHsv(newHsvColour);
+        const newHex = HexColour.fromRgba(newRgb);
+        runUpdates(form, newHex, hue, updates);
+      };
+    };
+
+    const fieldsUpdates = () => {
+      const updates = [ updatePalette, updateSlider, updatePaletteThumb ];
+      return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.FieldsUpdateEvent>) => {
+        const hex = simulatedEvent.event.hex;
+        const rgb = RgbaColour.fromHex(hex);
+        const hsvColour = HsvColour.fromRgb(rgb);
+        runUpdates(form, hex, hsvColour.hue, updates); // TODO: hue is a garbage value
       };
     };
 
@@ -94,13 +131,13 @@ const makeFactory = (
       dom: detail.dom,
       components: [
         memPalette.asSpec(),
-        HueSlider.sliderFactory(translate, getClass),
+        memSlider.asSpec(),
         memRgb.asSpec()
       ],
 
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('colour-picker-events', [
-          // AlloyEvents.run(ColourEvents.fieldsUpdate(), fieldsUpdates()),
+          AlloyEvents.run(ColourEvents.fieldsUpdate, fieldsUpdates()),
           AlloyEvents.run(ColourEvents.paletteUpdate, paletteUpdates()),
           AlloyEvents.run(ColourEvents.sliderUpdate, sliderUpdates())
         ]),

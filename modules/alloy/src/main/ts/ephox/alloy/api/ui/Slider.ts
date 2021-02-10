@@ -10,6 +10,9 @@ const Slider: SliderSketcher = Sketcher.composite<SliderSpec, SliderDetail, Slid
   partFields: SliderParts,
   factory: SliderUi.sketch,
   apis: {
+    setValue: (apis, slider, value) => {
+      apis.setValue(slider, value);
+    },
     resetToMin: (apis, slider) => {
       apis.resetToMin(slider);
     },
