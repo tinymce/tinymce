@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -283,9 +284,11 @@ const toggleSingleList = (editor, parentList: HTMLElement, listName: 'UL' | 'OL'
   }
 };
 
-const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', detail: ListDetail = {}) => {
+const toggleList = (editor: Editor, listName: 'UL' | 'OL' | 'DL', _detail: ListDetail | null) => {
   const parentList = Selection.getParentList(editor);
   const selectedSubLists = Selection.getSelectedSubLists(editor);
+
+  const detail = Type.isObject(_detail) ? _detail : {};
 
   if (selectedSubLists.length > 0) {
     toggleMultipleLists(editor, parentList, selectedSubLists, listName, detail);
