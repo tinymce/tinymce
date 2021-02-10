@@ -7,6 +7,7 @@ import { Hex } from '../api/colour/ColourTypes';
 import * as HexColour from '../api/colour/HexColour';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
+import * as Transformations from '../api/colour/Transformations';
 import * as ColourEvents from './ColourEvents';
 import * as HueSlider from './components/HueSlider';
 import * as RgbForm from './components/RgbForm';
@@ -35,8 +36,12 @@ const makeFactory = (
     const rgbForm = RgbForm.rgbFormFactory(translate, getClass, detail.onValidHex, detail.onInvalidHex);
     const sbPalette = SaturationBrightnessPalette.paletteFactory(translate, getClass);
 
+    const hueSliderToDegrees = (hue: number): number => (100 - hue) / 100 * 360;
+    const hueDegreesToSlider = (hue: number): number => 100 - (hue / 360) * 100;
+
     const state = {
-      paletteRgba: Cell(RgbaColour.red)
+      paletteRgba: Cell(RgbaColour.red),
+      paletteHue: Cell(0)
     };
 
     const memSlider = Memento.record(
@@ -64,7 +69,7 @@ const makeFactory = (
 
     const updateSlider = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
       memSlider.getOpt(anyInSystem).each((slider) => {
-        Slider.setValue(slider, { y: 100 - (hue / 360) * 100 });
+        Slider.setValue(slider, { y: hueDegreesToSlider(hue) });
       });
     };
 
@@ -74,13 +79,14 @@ const makeFactory = (
       });
     };
 
-    const updateRgbaCell = (hex: Hex) => {
+    const updateState = (hex: Hex, hue: number) => {
       const rgba = RgbaColour.fromHex(hex);
       state.paletteRgba.set(rgba);
+      state.paletteHue.set(hue);
     };
 
     const runUpdates = (anyInSystem: AlloyComponent, hex: Hex, hue: number, updates: ((anyInSystem: AlloyComponent, hex: Hex, hue: number) => void)[]) => {
-      updateRgbaCell(hex);
+      updateState(hex, hue);
       Arr.each(updates, (update) => {
         update(anyInSystem, hex, hue);
       });
@@ -92,13 +98,12 @@ const makeFactory = (
         const value = simulatedEvent.event.value;
         const oldRgb = state.paletteRgba.get();
         const oldHex = HexColour.fromRgba(oldRgb);
-        const hsvColour = HsvColour.fromRgb(oldRgb);
-        const hue = hsvColour.hue;
-        const newHsvColour = HsvColour.hsvColour(hue, value.x, (100 - value.y));
-        const newRgb = RgbaColour.fromHsv(newHsvColour);
-        const newHex = HexColour.fromRgba(newRgb);
+        const oldHue = state.paletteHue.get();
+        const newHsv = HsvColour.hsvColour(oldHue, value.x, (100 - value.y));
+        const newHex = Transformations.hsv2hex(newHsv);
+
         if (oldHex.value !== newHex.value) {
-          runUpdates(form, newHex, hue, updates);
+          runUpdates(form, newHex, oldHue, updates);
         }
       };
     };
@@ -106,12 +111,12 @@ const makeFactory = (
     const sliderUpdates = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
-        const hue = ((100 - simulatedEvent.event.value.y) / 100) * 360; // transform 0-100 value to 0-360
+        const hue = hueSliderToDegrees(simulatedEvent.event.value.y);
         const oldRgb = state.paletteRgba.get();
-        const hsvColour = HsvColour.fromRgb(oldRgb);
-        const newHsvColour = HsvColour.hsvColour(hue, hsvColour.saturation, hsvColour.value);
-        const newRgb = RgbaColour.fromHsv(newHsvColour);
-        const newHex = HexColour.fromRgba(newRgb);
+        const oldHsv = HsvColour.fromRgb(oldRgb);
+        const newHsv = HsvColour.hsvColour(hue, oldHsv.saturation, oldHsv.value);
+        const newHex = Transformations.hsv2hex(newHsv);
+
         runUpdates(form, newHex, hue, updates);
       };
     };
@@ -120,9 +125,9 @@ const makeFactory = (
       const updates = [ updatePalette, updateSlider, updatePaletteThumb ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.FieldsUpdateEvent>) => {
         const hex = simulatedEvent.event.hex;
-        const rgb = RgbaColour.fromHex(hex);
-        const hsvColour = HsvColour.fromRgb(rgb);
-        runUpdates(form, hex, hsvColour.hue, updates); // TODO: hue is a garbage value
+        const hsv = Transformations.hex2hsv(hex);
+
+        runUpdates(form, hex, hsv.hue, updates);
       };
     };
 
