@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></li></ul>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 0);
-    UiFinder.notExists(TinyDom.document(editor), 'div[aria-label="Bullet list"][aria-pressed="true"]');
+    UiFinder.notExists(TinyDom.container(editor), 'div[aria-label="Bullet list"][aria-pressed="true"]');
   });
 
   it('TBA: indent and outdent li in ul in list in table in list', () => {

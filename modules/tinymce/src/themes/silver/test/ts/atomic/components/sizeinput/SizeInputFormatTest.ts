@@ -1,14 +1,19 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import { formatSize } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
-UnitTest.test('SizeInputFormatTest', () => {
-  // pixel measurements do not get decimals
-  assert.eq('12px', formatSize({ value: 12, unit: 'px' }));
-  assert.eq('12px', formatSize({ value: 12.123, unit: 'px' }));
-  assert.eq('12', formatSize({ value: 12.123, unit: '' }));
-  assert.eq('100', formatSize({ value: 100.1, unit: '' }));
-  // percentages get up to 4 decimal places
-  assert.eq('1.1234%', formatSize({ value: 1.1234321, unit: '%' }));
-  assert.eq('1.12%', formatSize({ value: 1.12, unit: '%' }));
-  assert.eq('3%', formatSize({ value: 3, unit: '%' }));
+describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputFormatTest', () => {
+  it('pixel measurements do not get decimals', () => {
+    assert.equal(formatSize({ value: 12, unit: 'px' }), '12px');
+    assert.equal(formatSize({ value: 12.123, unit: 'px' }), '12px');
+    assert.equal(formatSize({ value: 12.123, unit: '' }), '12');
+    assert.equal(formatSize({ value: 100.1, unit: '' }), '100');
+  });
+
+  it('percentages get up to 4 decimal places', () => {
+    assert.equal(formatSize({ value: 1.1234321, unit: '%' }), '1.1234%');
+    assert.equal(formatSize({ value: 1.12, unit: '%' }), '1.12%');
+    assert.equal(formatSize({ value: 3, unit: '%' }), '3%');
+  });
 });

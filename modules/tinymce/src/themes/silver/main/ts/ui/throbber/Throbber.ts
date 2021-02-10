@@ -75,6 +75,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
     if (state !== throbberState.get()) {
       toggleThrobber(lazyThrobber(), state, sharedBackstage.providers);
       throbberState.set(state);
+      editor.fire('AfterProgressState', { state });
     }
   };
 

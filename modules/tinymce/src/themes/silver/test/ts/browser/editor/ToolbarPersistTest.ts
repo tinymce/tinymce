@@ -1,56 +1,41 @@
-import { Chain, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
-import { McEditor, UiChains } from '@ephox/mcagar';
-import { SugarElement, SugarBody, Insert, Focus, Remove, Visibility } from '@ephox/sugar';
+import { UiFinder, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { Focus, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.themes.silver.editor.ToolbarPersistTest', (success, failure) => {
-  Theme();
+describe('browser.tinymce.themes.silver.editor.ToolbarPersistTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    inline: true,
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar_persist: true
+  }, [ Theme ]);
 
-  const cWaitForHidden = UiChains.cWaitForState(Fun.not(Visibility.isVisible));
-
-  const cShowEditorUi = Chain.op((editor: Editor) => editor.ui.show());
-  const cHideEditorUi = Chain.op((editor: Editor) => editor.ui.hide());
-
-  const cFocusEditor = Chain.op((editor: Editor) => {
-    editor.focus();
-    editor.nodeChanged();
-  });
-
-  const cUnfocusEditor = Chain.op((_) => {
+  const unfocusEditor = () => {
     const div = SugarElement.fromTag('input');
     Insert.append(SugarBody.body(), div);
     Focus.focus(div);
     Remove.remove(div);
+  };
+
+  it('TINY-4847: With toolbar_persist focus & unfocus should not affect toolbar visibility', async () => {
+    const editor = hook.editor();
+    await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
+    unfocusEditor();
+    await Waiter.pWait(200); // Need to wait since nothing should happen.
+    await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
+
+    editor.ui.hide();
+
+    await UiFinder.pWaitForHidden('Wait for editor to be hidden', SugarBody.body(), '.tox-tinymce-inline');
+    editor.focus();
+    editor.nodeChanged();
+    await Waiter.pWait(200); // Need to wait since nothing should happen.
+    await UiFinder.pWaitForHidden('Wait for editor to be hidden', SugarBody.body(), '.tox-tinymce-inline');
+
+    editor.ui.show();
+    await TinyUiActions.pWaitForPopup(editor, '.tox-tinymce-inline');
   });
-
-  Pipeline.async({}, [
-    Log.chainsAsStep('TINY-4847', 'Test toolbar_persist. Focus & unfocus should not affect toolbar visibility', [
-      McEditor.cFromSettings({
-        theme: 'silver',
-        inline: true,
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar_persist: true
-      }),
-
-      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
-      cUnfocusEditor,
-      Chain.wait(200), // Need to wait since nothing should happen.
-      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
-
-      cHideEditorUi,
-
-      cWaitForHidden('Wait for editor to be hidden', '.tox-tinymce-inline'),
-      cFocusEditor,
-      Chain.wait(200), // Need to wait since nothing should happen.
-      cWaitForHidden('Wait for editor to be hidden', '.tox-tinymce-inline'),
-
-      cShowEditorUi,
-      UiChains.cWaitForPopup('Wait for editor to be visible', '.tox-tinymce-inline'),
-
-      McEditor.cRemove
-    ])
-  ], success, failure);
 });

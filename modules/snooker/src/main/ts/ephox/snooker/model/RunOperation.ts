@@ -1,6 +1,7 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
+import * as ResizeBehaviour from '../api/ResizeBehaviour';
 import { ResizeWire } from '../api/ResizeWire';
 import * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
@@ -111,15 +112,15 @@ const extractCells = (warehouse: Warehouse, target: TargetSelection, predicate: 
 type EqEle = (e1: SugarElement, e2: SugarElement) => boolean;
 type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: EqEle, w: GW) => TableOperationResult;
 type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
-type Adjustment = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], tableSize: TableSize) => void;
+type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement, grid: Structs.RowDataNew<T>[], info: INFO, tableSize: TableSize, resizeBehaviour: ResizeBehaviour.ResizeBehaviour) => void;
 type PostAction = (e: SugarElement) => void;
 type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
-export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, sizing?: TableSize) => Optional<RunOperationOutput>;
+export type OperationCallback<T> = (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: T, generators: Generators, sizing?: TableSize, resizeBehaviour?: ResizeBehaviour.ResizeBehaviour) => Optional<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper>
-(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: RAW, generators: Generators, sizing?: TableSize): Optional<RunOperationOutput> => {
+(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment<INFO>, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
+  (wire: ResizeWire, table: SugarElement<HTMLTableElement>, target: RAW, generators: Generators, sizing?: TableSize, resizeBehaviour?: ResizeBehaviour.ResizeBehaviour): Optional<RunOperationOutput> => {
     const warehouse = Warehouse.fromTable(table);
     const output = extract(warehouse, target).map((info) => {
       const model = fromWarehouse(warehouse, generators);
@@ -127,6 +128,7 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
       const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(result.grid);
       const grid = toDetailList(result.grid, generators);
       return {
+        info,
         grid,
         cursor: result.cursor,
         lockedColumns
@@ -136,7 +138,8 @@ const run = <RAW, INFO, GW extends GeneratorsWrapper>
     return output.bind((out) => {
       const newElements = Redraw.render(table, out.grid);
       const tableSizing = Optional.from(sizing).getOrThunk(() => TableSize.getTableSize(table));
-      adjustment(table, out.grid, tableSizing);
+      const resizing = Optional.from(resizeBehaviour).getOrThunk(ResizeBehaviour.preserveTable);
+      adjustment(table, out.grid, out.info, tableSizing, resizing);
       postAction(table);
       Bars.refresh(wire, table);
       // Update locked cols attribute

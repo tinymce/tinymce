@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.code.CodeSanityTest', () => {
     TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
     await TinyUiActions.pWaitForDialog(editor);
     assertTextareaContent('<p><em>a</em></p>');
-    TinyUiActions.closeDialog(editor);
+    TinyUiActions.cancelDialog(editor);
   });
 
   it('TBA: Change source code and assert editor content changes', async () => {

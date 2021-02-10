@@ -1,38 +1,34 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualchars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.visualchars.InlinePluginTest', (success, failure) => {
-  Plugin();
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TINY-6282', 'Editor should not steal focus when loaded inline with visualchars', [
-        tinyApis.sHasFocus(false), // NOTE: This is all we need to test.
-
-        // The following is to assert the visualchars plugin exists and is initialised. This ensures we are testing the correct case.
-        tinyApis.sSetContent('<p>a&nbsp;&nbsp;b</p>'),
-        tinyApis.sAssertContentPresence({
-          p: 1,
-          span: 0
-        }),
-        tinyApis.sExecCommand('mceVisualChars'),
-        tinyApis.sAssertContentPresence({
-          p: 1,
-          span: 2
-        })
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.visualchars.InlinePluginTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     inline: true,
     plugins: 'visualchars',
     toolbar: 'visualchars',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TINY-6282: Editor should not steal focus when loaded inline with visualchars', () => {
+    const editor = hook.editor();
+    assert.isFalse(editor.hasFocus()); // NOTE: This is all we need to test.
+
+    // The following is to assert the visualchars plugin exists and is initialised. This ensures we are testing the correct case.
+    editor.setContent('<p>a&nbsp;&nbsp;b</p>');
+    TinyAssertions.assertContentPresence(
+      editor,
+      { p: 1, span: 0 }
+    );
+
+    editor.execCommand('mceVisualChars');
+    TinyAssertions.assertContentPresence(
+      editor,
+      { p: 1, span: 2 }
+    );
+  });
 });

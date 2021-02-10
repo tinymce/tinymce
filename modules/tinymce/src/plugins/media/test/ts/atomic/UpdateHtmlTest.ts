@@ -1,14 +1,16 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import { MediaData } from 'tinymce/plugins/media/core/Types';
 import * as UpdateHtml from 'tinymce/plugins/media/core/UpdateHtml';
 
-UnitTest.test('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
-  const testHtmlUpdate = (description: string, html: string, newData: Partial<MediaData>, updateAll: boolean, expected: string) => {
+describe('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
+  const testHtmlUpdate = (html: string, newData: Partial<MediaData>, updateAll: boolean, expected: string) => {
     const actual = UpdateHtml.updateHtml(html, newData, updateAll);
-    Assert.eq(description, expected, actual);
+    assert.deepEqual(actual, expected);
   };
-  testHtmlUpdate(
-    'If not updating all, nothing new is added',
+
+  it('If not updating all, nothing new is added', () => testHtmlUpdate(
     '<video><source src="oldValue"/></video>',
     {
       source: 'source1',
@@ -19,10 +21,9 @@ UnitTest.test('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
     },
     false,
     '<video><source src="oldValue" /></video>'
-  );
+  ));
 
-  testHtmlUpdate(
-    'If updating all, add missing sources and attributes',
+  it('If updating all, add missing sources and attributes', () => testHtmlUpdate(
     '<video><source src="oldValue"/></video>',
     {
       source: 'source1',
@@ -33,5 +34,5 @@ UnitTest.test('atomic.tinymce.plugins.media.core.UpdateHtmlTest', () => {
     },
     true,
     '<video poster="poster"><source src="source1" type="source1mime" /><source src="source2" type="source2mime" /></video>'
-  );
+  ));
 });

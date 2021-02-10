@@ -20,6 +20,7 @@ import * as Obj from './Obj';
 import { Optional } from './Optional';
 import * as OptionalInstances from './OptionalInstances';
 import * as Optionals from './Optionals';
+import * as Regex from './Regex';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
 import * as ResultInstances from './ResultInstances';
@@ -61,6 +62,7 @@ export {
   Result,
   Results,
   ResultInstances,
+  Regex,
   Singleton,
   StringMatch,
   Strings,

@@ -18,7 +18,7 @@ import * as VideoScript from './VideoScript';
 export type DataToHtmlCallback = (data: MediaData) => string;
 
 const getIframeHtml = (data: MediaData) => {
-  const allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
+  const allowFullscreen = data.allowfullscreen ? ' allowFullscreen="1"' : '';
   return '<iframe src="' + data.source + '" width="' + data.width + '" height="' + data.height + '"' + allowFullscreen + '></iframe>';
 };
 
@@ -100,7 +100,7 @@ const dataToHtml = (editor: Editor, dataIn: MediaData) => {
   if (pattern) {
     data.source = pattern.url;
     data.type = pattern.type;
-    data.allowFullscreen = pattern.allowFullscreen;
+    data.allowfullscreen = pattern.allowFullscreen;
     data.width = data.width || String(pattern.w);
     data.height = data.height || String(pattern.h);
   }

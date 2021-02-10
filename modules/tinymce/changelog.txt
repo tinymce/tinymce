@@ -1,24 +1,29 @@
-Version 5.7.0 (TBD)
+Version 5.7.0 (2021-02-10)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
-    Added new data to the `TableModified` event to describe whether the table's `structure`, `style`, or both were modified #TINY-6643
-    Added a new locked column feature to tables that allows column operations to be prevented on certain columns #TINY-6765
+    Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made #TINY-6643
     Added `video` and `audio` live embed support for the `media` plugin #TINY-6229
     Added the ability to resize `video` and `iframe` media elements #TINY-6229
-    Added new `font_css` setting for fonts to be added to both containing document and the editor #TINY-6199
+    Added a new `font_css` setting for adding fonts to both the editor and the parent document #TINY-6199
     Added a new `ImageUploader` API to simplify uploading image data to the configured `images_upload_url` or `images_upload_handler` #TINY-4601
-    Added Oxide variable to define the container background color in fullscreen mode #TINY-6903
-    Changed copying table columns or entire tables will now retain an appropriate width when pasted #TINY-6664
+    Added an Oxide variable to define the container background color in fullscreen mode #TINY-6903
+    Added Oxide variables for setting the toolbar background colors for inline and sticky toolbars #TINY-6009
+    Added a new `AfterProgressState` event that is fired after `editor.setProgressState` calls complete #TINY-6686
+    Added support for `table_column_resizing` when inserting or deleting columns #TINY-6711
+    Changed table and table column copy behavior to retain an appropriate width when pasted #TINY-6664
     Changed the `lists` plugin to apply list styles to all text blocks within a selection #TINY-3755
     Changed the `advlist` plugin to log a console error message when the `list` plugin isn't enabled #TINY-6585
     Changed the z-index of the `setProgressState(true)` throbber so it does not hide notifications #TINY-6686
     Changed the type signature for `editor.selection.getRng()` incorrectly returning `null` #TINY-6843
     Changed some `SaxParser` regular expressions to improve performance #TINY-6823
+    Changed `editor.setProgressState(true)` to close any open popups #TINY-6686
+    Fixed `codesample` highlighting performance issues for some languages #TINY-6996
+    Fixed an issue where cell widths were lost when merging table cells #TINY-6901
     Fixed `col` elements incorrectly transformed to `th` elements when converting columns to header columns #TINY-6715
     Fixed a number of table operations not working when selecting 2 table cells on Mozilla Firefox #TINY-3897
     Fixed a memory leak by backporting an upstream Sizzle fix #TINY-6859
-    Fixed table width style was removed when copying #TINY-6664
+    Fixed table `width` style was removed when copying #TINY-6664
     Fixed focus lost while typing in the `charmap` or `emoticons` dialogs when the editor is rendered in a shadow root #TINY-6904
-    Fixed base64 URLs used in style attributes were corrupted when parsing HTML #TINY-6828
+    Fixed corruption of base64 URLs used in style attributes when parsing HTML #TINY-6828
     Fixed the order of CSS precedence of `content_style` and `content_css` in the `preview` and `template` plugins. `content_style` now has precedence #TINY-6529
     Fixed an issue where the image dialog tried to calculate image dimensions for an empty image URL #TINY-6611
     Fixed an issue where `scope` attributes on table cells would not change as expected when merging or unmerging cells #TINY-6486
@@ -29,9 +34,13 @@ Version 5.7.0 (TBD)
     Fixed an issue where parsing malformed comments could cause an infinite loop #TINY-6864
     Fixed incorrect return types on `editor.selection.moveToBookmark` #TINY-6504
     Fixed the type signature for `editor.selection.setCursorLocation()` incorrectly allowing a node with no `offset` #TINY-6843
-    Fixed incorrect behaviour when editor is destroyed while loading stylesheets #INT-2282
+    Fixed incorrect behavior when editor is destroyed while loading stylesheets #INT-2282
     Fixed figure elements incorrectly splitting from a valid parent element when editing the image within #TINY-6592
     Fixed inserting multiple rows or columns in a table cloning from the incorrect source row or column #TINY-6906
+    Fixed an issue where new lines were not scrolled into view when pressing Shift+Enter or Shift+Return #TINY-6964
+    Fixed an issue where list elements would not be removed when outdenting using the Enter or Return key #TINY-5974
+    Fixed an issue where file extensions with uppercase characters were treated as invalid #TINY-6940
+    Fixed dialog block messages were not passed through TinyMCE's translation system #TINY-6971
 Version 5.6.2 (2020-12-08)
     Fixed a UI rendering regression when the document body is using `display: flex` #TINY-6783
 Version 5.6.1 (2020-11-25)

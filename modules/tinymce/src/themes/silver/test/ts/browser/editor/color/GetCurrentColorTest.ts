@@ -1,44 +1,41 @@
-import { Log, Logger, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { assert } from 'chai';
 
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
-UnitTest.asynctest('GetCurrentColorTest', (success, failure) => {
-  SilverTheme();
+describe('browser.tinymce.themes.silver.editor.color.GetCurrentColorTest', () => {
+  before(function () {
+    const browser = PlatformDetection.detect().browser;
+    if (browser.isIE()) {
+      this.skip();
+    }
+  });
 
-  const browser = PlatformDetection.detect().browser;
-
-  const sAssertCurrentColor = (editor, format, label, expected) => Logger.t(`Assert current color ${expected}`,
-    Step.sync(() => {
-      const actual = ColorSwatch.getCurrentColor(editor, format);
-
-      Assert.eq(label, expected, actual);
-    })
-  );
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, browser.isIE() ? [] : [
-      Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found forecolor, not the parent color', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p style="color: blue;">hello <span style="color: red;">world</span></p>'),
-        tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2),
-        sAssertCurrentColor(editor, 'forecolor', 'should return red', 'red')
-      ]),
-      Log.stepsAsStep('TBA', 'TextColor: getCurrentColor should return the first found backcolor, not the parent color', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent('<p style="background-color: red;">hello <span style="background-color: blue;">world</span></p>'),
-        tinyApis.sSetSelection([ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2),
-        sAssertCurrentColor(editor, 'backcolor', 'should return blue', 'blue')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    plugins: '',
+  const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme ], true);
+
+  const assertCurrentColor = (editor: Editor, format: string, label: string, expected: string) => {
+    const actual = ColorSwatch.getCurrentColor(editor, format);
+    assert.equal(actual, expected, label);
+  };
+
+  it('TBA: getCurrentColor should return the first found forecolor, not the parent color', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="color: blue;">hello <span style="color: red;">world</span></p>');
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+    assertCurrentColor(editor, 'forecolor', 'should return red', 'red');
+  });
+
+  it('TBA: getCurrentColor should return the first found backcolor, not the parent color', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="background-color: red;">hello <span style="background-color: blue;">world</span></p>');
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 2);
+    assertCurrentColor(editor, 'backcolor', 'should return blue', 'blue');
+  });
 });

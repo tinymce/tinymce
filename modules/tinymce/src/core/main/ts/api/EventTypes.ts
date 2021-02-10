@@ -41,6 +41,8 @@ export interface WindowEvent<T extends Dialog.DialogData> { dialog: InstanceApi<
 
 export interface ProgressStateEvent { state: boolean; time?: number }
 
+export interface AfterProgressStateEvent { state: boolean }
+
 export interface PlaceholderToggleEvent { state: boolean }
 
 export interface LoadErrorEvent { message: string }
@@ -97,6 +99,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'CloseWindow': WindowEvent<any>;
   'OpenWindow': WindowEvent<any>;
   'ProgressState': ProgressStateEvent;
+  'AfterProgressState': AfterProgressStateEvent;
   'PlaceholderToggle': PlaceholderToggleEvent;
   'tap': TouchEvent;
   'longpress': TouchEvent;

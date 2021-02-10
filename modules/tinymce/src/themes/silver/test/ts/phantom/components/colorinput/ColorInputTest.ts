@@ -1,199 +1,189 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, Step, UiFinder, Waiter
-} from '@ephox/agar';
-import { AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { SelectorFind, SugarDocument, Traverse } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 
-import TestExtras from '../../../module/TestExtras';
+import * as TestExtras from '../../../module/TestExtras';
 
-const choiceItem: 'choiceitem' = 'choiceitem';
+type StringAssert = ReturnType<ApproxStructure.StringApi['is']>;
+type ArrayAssert = ReturnType<ApproxStructure.ArrayApi['has']>;
 
-// TODO: Expose properly through alloy.
-UnitTest.asynctest('Color input component Test', (success, failure) => {
-  const helpers = TestExtras();
-  const sink = SugarElement.fromDom(document.querySelector('.mce-silver-sink'));
+describe('phantom.tinymce.themes.silver.components.colorinput.ColorInputTest', () => {
+  const helpers = TestExtras.bddSetup();
 
-  TestHelpers.GuiSetup.setup(
-    (_store, _doc, _body) => GuiFactory.build(
-      Container.sketch({
-        dom: {
-          classes: [ 'colorinput-container' ]
-        },
-        components: [
-          renderColorInput({
-            name: 'alpha',
-            label: Optional.some('test-color-input')
-          }, helpers.shared, {
-            colorPicker: (_callback, _value) => {},
-            hasCustomColors: Fun.always,
-            getColors: () => [
-              { type: choiceItem, text: 'Turquoise', value: '#18BC9B' },
-              { type: choiceItem, text: 'Green', value: '#2FCC71' },
-              { type: choiceItem, text: 'Blue', value: '#3598DB' },
-              { type: choiceItem, text: 'Purple', value: '#9B59B6' },
-              { type: choiceItem, text: 'Navy Blue', value: '#34495E' }
-            ],
-            getColorCols: () => 3
-          })
-        ]
-      })
-    ),
-    (doc, _body, _gui, component, _store) => {
-      const input = component.getSystem().getByDom(
-        SelectorFind.descendant(component.element, 'input').getOrDie('Could not find input in colorinput')
-      ).getOrDie();
+  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    Container.sketch({
+      dom: {
+        classes: [ 'colorinput-container' ]
+      },
+      components: [
+        renderColorInput({
+          name: 'alpha',
+          label: Optional.some('test-color-input')
+        }, helpers.shared(), {
+          colorPicker: (_callback, _value) => {},
+          hasCustomColors: Fun.always,
+          getColors: () => [
+            { type: 'choiceitem', text: 'Turquoise', value: '#18BC9B' },
+            { type: 'choiceitem', text: 'Green', value: '#2FCC71' },
+            { type: 'choiceitem', text: 'Blue', value: '#3598DB' },
+            { type: 'choiceitem', text: 'Purple', value: '#9B59B6' },
+            { type: 'choiceitem', text: 'Navy Blue', value: '#34495E' }
+          ],
+          getColorCols: () => 3
+        })
+      ]
+    })
+  ));
 
-      const legend = component.getSystem().getByDom(
-        // Intentionally, only finding direct child
-        SelectorFind.descendant(component.element, 'span').getOrDie('Could not find legend in colorinput')
-      ).getOrDie();
+  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    '.tox-textbox-field-invalid input { outline: 2px solid red; }',
+    '.tox-color-input span { padding: 4px 8px; }',
+    '.tox-swatch { padding: 8px 4px }'
+  ]);
 
-      const sSetColorInputValue = (newValue: string) => Step.sync(() => {
-        // Once we put more identifying marks on a colorinput, use that instead.
-        const colorinput = component.components()[0];
-        Representing.setValue(colorinput, newValue);
-      });
+  const getInput = () => {
+    const component = hook.component();
+    return component.getSystem().getByDom(
+      SelectorFind.descendant(component.element, 'input').getOrDie('Could not find input in colorinput')
+    ).getOrDie();
+  };
 
-      const sOpenPicker = Logger.t(
-        'Clicking the legend should bring up the colorswatch',
-        GeneralSteps.sequence([
-          Mouse.sClickOn(legend.element, 'root:span'),
-          UiFinder.sWaitFor('Waiting for colorswatch to show up!', sink, '.tox-swatches')
-        ])
-      );
+  const getLegend = () => {
+    const component = hook.component();
+    return component.getSystem().getByDom(
+      // Intentionally, only finding direct child
+      SelectorFind.descendant(component.element, 'span').getOrDie('Could not find legend in colorinput')
+    ).getOrDie();
+  };
 
-      const sAssertFocusedValue = (label: string, expected: string) => Logger.t(label, Chain.asStep(sink, [
-        FocusTools.cGetActiveValue,
-        Assertions.cAssertEq('Checking value of focused element', expected)
-      ]));
+  const setColorInputValue = (component: AlloyComponent, newValue: string) => {
+    // Once we put more identifying marks on a colorinput, use that instead.
+    const colorinput = component.components()[0];
+    Representing.setValue(colorinput, newValue);
+  };
 
-      const sAssertLegendBackground = (label: string, f) => Assertions.sAssertStructure(
-        label + ': Checking background of legend button',
-        ApproxStructure.build((s, str, arr) => s.element('span', {
-          styles: {
-            'background-color': f(s, str, arr)
-          }
-        })),
-        legend.element
-      );
+  const pOpenPicker = async () => {
+    Mouse.clickOn(getLegend().element, 'root:span');
+    await UiFinder.pWaitFor('Waiting for colorswatch to show up!', helpers.sink(), '.tox-swatches');
+  };
 
-      const sAssertContainerClasses = (label: string, f) => Waiter.sTryUntil(
-        label + ': Checking classes on container',
-        Assertions.sAssertStructure(
-          'Checking classes only',
-          ApproxStructure.build((s, str, arr) => s.element('div', {
-            classes: f(s, str, arr)
-            // ignore children
-          })),
-          Traverse.parent(input.element).getOrDie('Could not find parent of input')
-        )
-      );
+  const assertFocusedValue = (label: string, expected: string) => {
+    const value = FocusTools.getActiveValue(helpers.sink());
+    assert.equal(value, expected, 'Checking value of focused element');
+  };
 
-      return [
-        TestHelpers.GuiSetup.mAddStyles(doc, [
-          '.tox-textbox-field-invalid input { outline: 2px solid red; }',
-          '.tox-color-input span { padding: 4px 8px; }',
-          '.tox-swatch { padding: 8px 4px }'
-        ]),
-        Assertions.sAssertStructure(
-          'Checking initial structure',
-          ApproxStructure.build((s, _str, _arr) => s.element('div', {
+  const assertLegendBackground = (label: string, f: ApproxStructure.Builder<StringAssert>) => Assertions.assertStructure(
+    label + ': Checking background of legend button',
+    ApproxStructure.build((s, str, arr) => s.element('span', {
+      styles: {
+        'background-color': f(s, str, arr)
+      }
+    })),
+    getLegend().element
+  );
+
+  const pAssertContainerClasses = (label: string, f: ApproxStructure.Builder<ArrayAssert[]>) => Waiter.pTryUntil(
+    label + ': Checking classes on container',
+    () => Assertions.assertStructure(
+      'Checking classes only',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: f(s, str, arr)
+        // ignore children
+      })),
+      Traverse.parent(getInput().element).getOrDie('Could not find parent of input')
+    )
+  );
+
+  it('Check basic structure', () => {
+    Assertions.assertStructure(
+      'Checking initial structure',
+      ApproxStructure.build((s, _str, _arr) => s.element('div', {
+        children: [
+          s.element('div', {
             children: [
+              // Ignore other information because it is subject to change. No oxide example yet.
+              s.element('label', {}),
               s.element('div', {
                 children: [
-                  // Ignore other information because it is subject to change. No oxide example yet.
-                  s.element('label', { }),
-                  s.element('div', {
-                    children: [
-                      s.element('input', { }),
-                      s.element('span', { })
-                    ]
-                  })
+                  s.element('input', {}),
+                  s.element('span', {})
                 ]
               })
             ]
-          })),
-          component.element
-        ),
+          })
+        ]
+      })),
+      hook.component().element
+    );
+  });
 
-        Logger.t(
-          'Initially, the colour should not be invalid',
-          GeneralSteps.sequence([
-            Assertions.sAssertEq('Invalidating.isInvalid', false, Invalidating.isInvalid(input))
-          ])
-        ),
+  it('Initially, the colour should not be invalid', () => {
+    assert.isFalse(Invalidating.isInvalid(getInput()), 'Invalidating.isInvalid');
+  });
 
-        Logger.t(
-          'Type an invalid colour: "notblue"',
-          GeneralSteps.sequence([
-            FocusTools.sSetFocus('Move focus to input field', component.element, 'input'),
-            FocusTools.sSetActiveValue(doc, 'notblue'),
-            Step.sync(() => {
-              AlloyTriggers.emit(input, NativeEvents.input());
-            }),
+  it('Type an invalid colour: "notblue"', async () => {
+    const component = hook.component();
+    const doc = hook.root();
+    FocusTools.setFocus(component.element, 'input');
+    FocusTools.setActiveValue(doc, 'notblue');
+    AlloyTriggers.emit(getInput(), NativeEvents.input());
 
-            sAssertContainerClasses('Post: typing invalid colour (notblue)', (_s, _str, arr) => [ arr.has('tox-textbox-field-invalid') ]),
-            sAssertLegendBackground('After typing invalid colour (notblue)', (_s, str, _arr) => str.none())
-          ])
-        ),
+    await pAssertContainerClasses('Post: typing invalid colour (notblue)', (_s, _str, arr) => [ arr.has('tox-textbox-field-invalid') ]);
+    assertLegendBackground('After typing invalid colour (notblue)', (_s, str, _arr) => str.none());
+  });
 
-        Logger.t(
-          'Type a valid colour',
-          GeneralSteps.sequence([
-            FocusTools.sSetActiveValue(doc, 'green'),
-            Step.sync(() => {
-              AlloyTriggers.emit(input, NativeEvents.input());
-            }),
-            sAssertContainerClasses('Post: typing colour (green)', (_s, _str, arr) => [ arr.not('tox-textbox-field-invalid') ]),
-            sAssertLegendBackground('After typing colour (green)', (_s, str, _arr) => str.is('green'))
-          ])
-        ),
+  it('Type a valid colour', async () => {
+    const component = hook.component();
+    const doc = hook.root();
+    FocusTools.setFocus(component.element, 'input');
+    FocusTools.setActiveValue(doc, 'green');
+    AlloyTriggers.emit(getInput(), NativeEvents.input());
+    await pAssertContainerClasses('Post: typing colour (green)', (_s, _str, arr) => [ arr.not('tox-textbox-field-invalid') ]);
+    assertLegendBackground('After typing colour (green)', (_s, str, _arr) => str.is('green'));
+  });
 
-        Log.stepsAsStep('TBA', 'Check that pressing enter inside the picker refocuses the colorinput', [
-          sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
-          Keyboard.sKeydown(doc, Keys.enter(), { }),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input'),
-          sAssertFocusedValue('After pressing <enter> in hex', '#18BC9B'),
-          UiFinder.sNotExists(sink, '.tox-swatches')
-        ]),
+  it('TBA: Check that pressing enter inside the picker refocuses the colorinput', async () => {
+    const doc = hook.root();
+    await pOpenPicker();
+    await FocusTools.pTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch');
+    Keyboard.activeKeydown(doc, Keys.enter());
+    await FocusTools.pTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container input');
+    assertFocusedValue('After pressing <enter> in hex', '#18BC9B');
+    UiFinder.notExists(helpers.sink(), '.tox-swatches');
+  });
 
-        Log.stepsAsStep('TBA', 'Check that pressing escape inside the picker refocuses the colorinput button', [
-          sOpenPicker,
-          FocusTools.sTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch'),
-          Keyboard.sKeydown(doc, Keys.escape(), { }),
-          FocusTools.sTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.mce-silver-sink) span'),
-          UiFinder.sNotExists(sink, '.tox-swatches')
-        ]),
+  it('TBA: Check that pressing escape inside the picker refocuses the colorinput button', async () => {
+    const doc = hook.root();
+    await pOpenPicker();
+    await FocusTools.pTryOnSelector('Focus should be on a swatch', doc, 'div.tox-swatch');
+    Keyboard.activeKeydown(doc, Keys.escape());
+    await FocusTools.pTryOnSelector('Focus should be back on colorinput button (after escape)', doc, '.colorinput-container > div:not(.mce-silver-sink) span');
+    UiFinder.notExists(helpers.sink(), '.tox-swatches');
+  });
 
-        Log.stepsAsStep('TBA', 'Check that validating an empty string passes (first time)', [
-          sSetColorInputValue(''),
-          Step.wait(50),
-          UiFinder.sNotExists(component.element, '.tox-textbox-field-invalid')
-        ]),
+  it('TBA: Check that validating an empty string passes (first time)', async () => {
+    const component = hook.component();
+    setColorInputValue(component, '');
+    await Waiter.pWait(50);
+    UiFinder.notExists(component.element, '.tox-textbox-field-invalid');
+  });
 
-        Log.stepsAsStep('TBA', 'Check that validating an incorrect value fails', [
-          sSetColorInputValue('dog'),
-          Step.wait(50),
-          UiFinder.sExists(component.element, '.tox-textbox-field-invalid')
-        ]),
+  it('TBA: Check that validating an incorrect value fails', async () => {
+    const component = hook.component();
+    setColorInputValue(component, 'dog');
+    await Waiter.pWait(50);
+    UiFinder.exists(component.element, '.tox-textbox-field-invalid');
+  });
 
-        Log.stepsAsStep('TBA', 'Check that validating an empty is string passes', [
-          sSetColorInputValue(''),
-          Step.wait(50),
-          UiFinder.sNotExists(component.element, '.tox-textbox-field-invalid')
-        ]),
-
-        TestHelpers.GuiSetup.mRemoveStyles
-      ];
-    }, () => {
-      helpers.destroy();
-      success();
-    },
-    failure
-  );
+  it('TBA: Check that validating an empty is string passes', async () => {
+    const component = hook.component();
+    setColorInputValue(component, '');
+    await Waiter.pWait(50);
+    UiFinder.notExists(component.element, '.tox-textbox-field-invalid');
+  });
 });

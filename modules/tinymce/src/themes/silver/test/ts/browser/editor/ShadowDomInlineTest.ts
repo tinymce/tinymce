@@ -1,21 +1,19 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader } from '@ephox/mcagar';
-import { SugarElementInstances } from '@ephox/sugar';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as Settings from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const tElement = SugarElementInstances.tElement;
-
-UnitTest.asynctest('Inline getUiContainer returns shadow root', (success, failure) => {
-
-  Theme();
-
-  TinyLoader.setupInShadowRoot((editor, shadowRoot, onSuccess) => {
-    Assert.eq('Should be shadow root', shadowRoot, Settings.getUiContainer(editor), tElement());
-
-    onSuccess();
-  }, {
+describe('browser.tinymce.themes.silver.editor.ShadowDomInlineTest', () => {
+  const hook = TinyHooks.bddSetupInShadowRoot<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     inline: true
-  }, () => success(), failure);
+  }, [ Theme ]);
+
+  it('UI container should be inside the shadow root', () => {
+    const editor = hook.editor();
+    Assertions.assertDomEq('Should be shadow root', hook.shadowRoot(), Settings.getUiContainer(editor));
+  });
 });

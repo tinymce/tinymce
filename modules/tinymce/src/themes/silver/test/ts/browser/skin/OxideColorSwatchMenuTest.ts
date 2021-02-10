@@ -1,145 +1,132 @@
-import { ApproxStructure, Assertions, Chain, FocusTools, Guard, Keyboard, Keys, Logger, Mouse, Pipeline, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { TestHelpers } from '@ephox/alloy';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('OxideColorSwatchMenuTest', (success, failure) => {
-  Theme();
-
+describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestHelpers.TestStore();
-
-  TinyLoader.setup(
-    (editor, onSuccess, onFailure) => {
-      const doc = SugarElement.fromDom(document);
-
-      const structColors = (values: string[]) => (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
-
-      const structColor = (value: string) => (s, str, arr) => s.element('div', {
-        classes: [ arr.has('tox-swatch') ],
-        styles: {
-          'background-color': str.is(value)
-        }
+  const hook = TinyHooks.bddSetup<Editor>({
+    toolbar: 'swatch-button',
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (ed: Editor) => {
+      ed.ui.registry.addSplitButton('swatch-button', {
+        type: 'splitbutton',
+        presets: 'color',
+        columns: 2,
+        fetch: (callback) => {
+          const items = Arr.map([
+            'green',
+            'red',
+            'blue',
+            'black',
+            'white'
+          ], (c): Menu.ChoiceMenuItemSpec => ({ type: 'choiceitem', text: c, value: c }));
+          callback(items.concat([
+            {
+              type: 'choiceitem',
+              text: 'Remove',
+              icon: 'fake-icon-name',
+              value: 'remove'
+            },
+            {
+              type: 'choiceitem',
+              text: 'Custom',
+              icon: 'fake-icon-name',
+              value: 'custom'
+            }
+          ]));
+        },
+        onAction: store.adder('onAction'),
+        onItemAction: store.adder('onItemAction')
       });
+    }
+  }, [ Theme ]);
 
-      const sFocusOnColor = (expected: string) => Chain.asStep(doc, [
-        FocusTools.cGetFocused,
-        Assertions.cAssertStructure('Checking focus is on ' + expected, ApproxStructure.build((s, str, arr) => structColor(expected)(s, str, arr)))
-      ]);
+  const structColor = (value: string): ApproxStructure.Builder<StructAssert> =>
+    (s, str, arr) => s.element('div', {
+      classes: [ arr.has('tox-swatch') ],
+      styles: {
+        'background-color': str.is(value)
+      }
+    });
 
-      Pipeline.async({ }, Logger.ts(
-        'Check structure of color swatch',
-        [
-          // Give a visual indication of focus
-          TestHelpers.GuiSetup.mAddStyles(doc, [
-            ':focus { transform: scale(0.8) }'
-          ]),
+  const structColors = (values: string[]): ApproxStructure.Builder<StructAssert[]> =>
+    (s, str, arr) => Arr.map(values, (v) => structColor(v)(s, str, arr));
 
-          Mouse.sClickOn(SugarBody.body(), '.tox-split-button__chevron'),
-          Chain.asStep(SugarBody.body(), [
-            Chain.control(
-              UiFinder.cFindIn('[role="menu"]'),
-              Guard.tryUntil('Waiting for menu')
-            ),
-            Assertions.cAssertStructure(
-              'Checking menu structure for color swatches',
-              ApproxStructure.build((s, str, arr) => s.element('div', {
-                classes: [ arr.has('tox-menu') ],
-                children: [
+  const focusOnColor = (expected: string) => {
+    const focused = FocusTools.getFocused(SugarDocument.getDocument()).getOrDie();
+    Assertions.assertStructure(
+      'Checking focus is on ' + expected,
+      ApproxStructure.build((s, str, arr) => structColor(expected)(s, str, arr)),
+      focused
+    );
+  };
+
+  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    ':focus { transform: scale(0.8) }'
+  ]);
+
+  it('Check structure of color swatch', async () => {
+    const editor = hook.editor();
+    Mouse.clickOn(SugarBody.body(), '.tox-split-button__chevron');
+    const menu = await Waiter.pTryUntil('Waiting for menu', () =>
+      UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
+    );
+    Assertions.assertStructure(
+      'Checking menu structure for color swatches',
+      ApproxStructure.build((s, str, arr) => s.element('div', {
+        classes: [ arr.has('tox-menu') ],
+        children: [
+          s.element('div', {
+            classes: [ arr.has('tox-swatches') ],
+            children: [
+              s.element('div', {
+                classes: [ arr.has('tox-swatches__row') ],
+                children: structColors([ 'green', 'red' ])(s, str, arr)
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-swatches__row') ],
+                children: structColors([ 'blue', 'black' ])(s, str, arr)
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-swatches__row') ],
+                children: (structColors([ 'white' ])(s, str, arr)).concat([
                   s.element('div', {
-                    classes: [ arr.has('tox-swatches') ],
+                    classes: [ arr.has('tox-swatch'), arr.has('tox-swatch--remove') ],
                     children: [
-                      s.element('div', {
-                        classes: [ arr.has('tox-swatches__row') ],
-                        children: structColors([ 'green', 'red' ])(s, str, arr)
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-swatches__row') ],
-                        children: structColors([ 'blue', 'black' ])(s, str, arr)
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-swatches__row') ],
-                        children: (structColors([ 'white' ])(s, str, arr)).concat([
-                          s.element('div', {
-                            classes: [ arr.has('tox-swatch'), arr.has('tox-swatch--remove') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ])
-                      }),
-                      s.element('div', {
-                        classes: [ arr.has('tox-swatches__row') ],
-                        children: [
-                          s.element('button', {
-                            classes: [ arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn') ],
-                            children: [
-                              s.element('svg', {})
-                            ]
-                          })
-                        ]
-                      })
+                      s.element('svg', {})
+                    ]
+                  })
+                ])
+              }),
+              s.element('div', {
+                classes: [ arr.has('tox-swatches__row') ],
+                children: [
+                  s.element('button', {
+                    classes: [ arr.has('tox-swatch'), arr.has('tox-swatches__picker-btn') ],
+                    children: [
+                      s.element('svg', {})
                     ]
                   })
                 ]
-              }))
-            )
-          ]),
-
-          sFocusOnColor('green'),
-          Keyboard.sKeydown(doc, Keys.down(), { }),
-          sFocusOnColor('blue'),
-          Keyboard.sKeydown(doc, Keys.right(), { }),
-          sFocusOnColor('black'),
-
-          TestHelpers.GuiSetup.mRemoveStyles
+              })
+            ]
+          })
         ]
-      ), onSuccess, onFailure);
-    },
-    {
-      theme: 'silver',
-      menubar: true,
-      toolbar: 'swatch-button',
-      base_url: '/project/tinymce/js/tinymce',
-      setup: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('swatch-button', {
-          type: 'splitbutton',
-          presets: 'color',
-          columns: 2,
-          fetch: (callback) => {
-            const items = Arr.map([
-              'green',
-              'red',
-              'blue',
-              'black',
-              'white'
-            ], (c) => ({ type: 'choiceitem', text: c, value: c } as Menu.ChoiceMenuItemSpec));
-            callback(items.concat([
-              {
-                type: 'choiceitem',
-                text: 'Remove',
-                icon: 'fake-icon-name',
-                value: 'remove'
-              },
-              {
-                type: 'choiceitem',
-                text: 'Custom',
-                icon: 'fake-icon-name',
-                value: 'custom'
-              }
-            ]));
-          },
-          onAction: store.adder('onAction'),
-          onItemAction: store.adder('onItemAction')
-        });
-      }
-    },
-    success,
-    failure
-  );
+      })),
+      menu
+    );
+
+    focusOnColor('green');
+    TinyUiActions.keydown(editor, Keys.down());
+    focusOnColor('blue');
+    TinyUiActions.keydown(editor, Keys.right());
+    focusOnColor('black');
+  });
 });

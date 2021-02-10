@@ -17,6 +17,12 @@ const getFocused = <T extends HTMLElement>(doc: SugarElement<Document | ShadowRo
   );
 };
 
+const getActiveValue = (element: SugarElement<Node>): string => {
+  const doc = SugarShadowDom.getRootNode(element);
+  const focused = getFocused(doc).getOrDie();
+  return UiControls.getValue(focused as SugarElement<any>);
+};
+
 const setFocus = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> => {
   const elem = UiFinder.findIn(container, selector).getOrDie();
   Focus.focus(elem);
@@ -115,6 +121,7 @@ const sSetActiveValue = <T>(doc: SugarElement<Document | ShadowRoot>, newValue: 
   Step.sync(() => setActiveValue(doc, newValue));
 
 export {
+  getActiveValue,
   setActiveValue,
   setFocus,
   getFocused,

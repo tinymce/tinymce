@@ -8,6 +8,12 @@ import * as ColumnSizes from 'ephox/snooker/resize/ColumnSizes';
 
 const noneTableHtml = '<table><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
 const pixelTableHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 200px;">A</td><td style="width: 200px;">A</td></tr></tbody></table>';
+const pixelTableMissingWidthsHtml = `<table style="width: 400px; border-collapse: collapse">
+  <tbody>
+    <tr><td>A</td><td style="width: 200px;">B</td></tr>
+    <tr><td style="width: 200px;">C</td><td>D</td></tr>
+  </tbody>
+</table>`;
 const tableWithSpansHtml = '<table style="width: 400px; border-collapse: collapse"><tbody><tr><td style="width: 400px;" colspan="2">A</td></tr></tbody></table>';
 const noneTableWithColsHtml = '<table><colgroup><col><col></colgroup><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
 
@@ -29,10 +35,11 @@ UnitTest.test('ColumnSizes.getPixelWidths', () => {
     Remove.remove(table);
   };
 
-  sTest('Pixel Table - Cell widths should be the raw size of the cell', pixelTableHtml, () => [ 200, 200 ]);
-  sTest('Pixel Table - Cell width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
-  sTest('None Table - Cell widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
-  sTest('None Table - Cell widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
+  sTest('Pixel Table - Column widths should be the raw size of the cell', pixelTableHtml, () => [ 200, 200 ]);
+  sTest('Pixel Table - Column widths with missing widths on some cells should be the raw size of the cell', pixelTableMissingWidthsHtml, () => [ 200, 200 ]);
+  sTest('Pixel Table - Column width should be the size of the table when using colspans', tableWithSpansHtml, () => [ 0, 400 ]);
+  sTest('None Table - Column widths should be the computed size of the cell', noneTableHtml, (width) => [ width, width ]);
+  sTest('None Table - Column widths for cols should be the computed size of the cell', noneTableWithColsHtml, (width) => [ width + 2, width + 2 ]); // Add 2 to account for the borders
 });
 
 UnitTest.test('ColumnSizes.getPixelHeights', () => {
@@ -47,7 +54,7 @@ UnitTest.test('ColumnSizes.getPixelHeights', () => {
 
   // Round to account for precision issues
   const roundedPixelHeights = Arr.map(pixelHeights, Math.round);
-  Assert.eq('Cell heights should be the computed size of the cell', [ cellHeight ], roundedPixelHeights);
+  Assert.eq('Row heights should be the computed size of the cell', [ cellHeight ], roundedPixelHeights);
 
   Remove.remove(table);
 });
