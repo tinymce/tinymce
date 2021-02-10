@@ -1,6 +1,6 @@
 {
   "name": "@ephox/katamari-assertions",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Bedrock test assertions for Katamari",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   "dependencies": {
     "@ephox/bedrock-client": "^11.0.0",
     "@ephox/dispute": "^1.0.3",
-    "@ephox/katamari": "^7.1.2",
+    "@ephox/katamari": "^7.1.3",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
     "tslib": "^2.0.0"
   },

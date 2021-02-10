@@ -5,9 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Settings from '../api/Settings';
 import CaretPosition from '../caret/CaretPosition';
+import * as BoundaryLocation from './BoundaryLocation';
 import * as BoundarySelection from './BoundarySelection';
 import * as InlineUtils from './InlineUtils';
 import * as NavigationUtils from './NavigationUtils';
@@ -18,13 +20,20 @@ const isInlineBoundaries = (editor: Editor) => {
 };
 
 const moveOutInlineBoundaries = (editor: Editor, forward: boolean) => {
-  if (isInlineBoundaries(editor)()) {
-    const node = editor.selection.getNode() as HTMLElement;
-    const pos = forward ? CaretPosition.after(node) : CaretPosition.before(node);
-    BoundarySelection.setCaretPosition(editor, pos);
-    return true;
-  }
-  return false;
+  const body = editor.getBody();
+  const pos = CaretPosition.fromRangeStart(editor.selection.getRng());
+  const newPost = forward ? CaretPosition.after : CaretPosition.before;
+  const move = (inline: HTMLElement) => BoundarySelection.setCaretPosition(editor, newPost(inline));
+
+  BoundaryLocation.readLocation((node) => InlineUtils.isInlineTarget(editor, node), body, pos).each((location) => {
+    location.fold(
+      Fun.noop,
+      move,
+      move,
+      Fun.noop
+    );
+  });
+  return true;
 };
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
