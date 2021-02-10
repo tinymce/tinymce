@@ -22,15 +22,17 @@ const moveOutInlineBoundaries = (editor: Editor, forward: boolean) => {
     const node = editor.selection.getNode() as HTMLElement;
     const pos = forward ? CaretPosition.after(node) : CaretPosition.before(node);
     BoundarySelection.setCaretPosition(editor, pos);
+    return true;
   }
+  return false;
 };
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean => {
-  const moved = NavigationUtils.moveToLineEndPoint(editor, forward, isInlineBoundaries(editor));
-  moveOutInlineBoundaries(editor, forward);
-  return moved;
+  NavigationUtils.moveToLineEndPoint(editor, forward, isInlineBoundaries(editor));
+  return moveOutInlineBoundaries(editor, forward);
 };
 
 export {
-  moveToLineEndPoint
+  moveToLineEndPoint,
+  moveOutInlineBoundaries
 };

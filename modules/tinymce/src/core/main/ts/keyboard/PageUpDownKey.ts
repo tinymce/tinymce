@@ -12,15 +12,15 @@ import * as MatchKeys from './MatchKeys';
 
 const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
-    { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
+    { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveOutInlineBoundaries, editor, false) },
+    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveOutInlineBoundaries, editor, true) }
   ], evt).each((_) => {
     evt.preventDefault();
   });
 };
 
 const setup = (editor: Editor) => {
-  editor.on('keydown', (evt) => {
+  editor.on('keyup', (evt) => {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, evt);
     }

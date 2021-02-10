@@ -53,6 +53,34 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
+    it('Home key should move caret if is an inline element', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test <a href="google.com">link</a> test</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 5);
+      TinyContentActions.keystroke(editor, Keys.home());
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+    });
+
+    context('Inline element', () => {
+      it('move caret at the begining on the line', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test <a href="google.com">link</a> test</p>');
+        TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+        TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 5);
+        TinyContentActions.keystroke(editor, Keys.home());
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      });
+
+      it('move caret at the beginning on the line (parent) if the first element is an inline element', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="google.com">link1</a> test <a href="google.com">link 2</a> test</p>');
+        TinySelections.setCursor(editor, [ 0, 2, 0 ], 0);
+        TinySelections.setSelection(editor, [ 0, 2, 0 ], 0, [ 0, 2, 0 ], 7);
+        TinyContentActions.keystroke(editor, Keys.home());
+        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      });
+    });
   });
 
   context('End key', () => {
@@ -94,6 +122,26 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.end());
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
+    });
+
+    context('Inline element', () => {
+      it('move caret at the end on the line', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test <a href="google.com">link</a> test</p>');
+        TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+        TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 5);
+        TinyContentActions.keystroke(editor, Keys.end());
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 5);
+      });
+
+      it('move caret at the beginning on the line (parent) if the first element is an inline element', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="google.com">link 1</a> test <a href="google.com">link 2</a></p>');
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+        TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 7);
+        TinyContentActions.keystroke(editor, Keys.end());
+        TinyAssertions.assertCursor(editor, [ 0 ], 3);
+      });
     });
   });
 });
