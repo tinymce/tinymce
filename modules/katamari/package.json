@@ -27,7 +27,7 @@
     "tsconfig.json",
     "README.md",
     "LEGAL.txt",
-    "CHANGELOG.txt",
+    "CHANGELOG.md",
     "LICENSE.txt"
   ],
   "main": "./lib/main/ts/ephox/katamari/api/Main.js",
