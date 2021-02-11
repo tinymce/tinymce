@@ -18,7 +18,7 @@
     "tsconfig.json",
     "readme.md",
     "LEGAL.txt",
-    "CHANGELOG.txt",
+    "CHANGELOG.md",
     "LICENSE.txt"
   ],
   "scripts": {
