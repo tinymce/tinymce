@@ -191,4 +191,47 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.execCommand('mceListUpdate', false, null);
     TinyAssertions.assertContent(editor, '<p>some text</p>');
   });
+
+  it('TINY-6891: List properties command with lower-alpha list', () => {
+    const editor = hook.editor();
+
+    // Convert to lower-alpha list
+    editor.setContent('<ol><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, '1', 'ab');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;" start="28"><li>1</li><li>2</li></ol>');
+
+    // Convert back to numerical list
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'ab', '1');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
+  });
+
+  it('TINY-6891: List properties command with upper-alpha list', () => {
+    const editor = hook.editor();
+
+    // Convert to upper-alpha list
+    editor.setContent('<ol><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, '1', 'AB');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: upper-alpha;" start="28"><li>1</li><li>2</li></ol>');
+
+    // Convert back to numerical list
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'AB', '1');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
+  });
+
+  it('TINY-6891: List properties command with invalid value should not update the list', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'a', 'abc123');
+    editor.setContent('<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
+  });
 });

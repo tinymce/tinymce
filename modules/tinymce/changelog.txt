@@ -1,5 +1,5 @@
 Version 5.8.0 (TBD)
-
+    Added alpha list numbering support to the `lists` plugin #TINY-6891
 Version 5.7.0 (2021-02-10)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
     Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made #TINY-6643
