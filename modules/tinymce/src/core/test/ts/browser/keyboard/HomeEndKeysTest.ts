@@ -53,15 +53,6 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
-    it('Home key should move caret if is an inline element', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test <a href="google.com">link</a> test</p>');
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
-      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 5);
-      TinyContentActions.keystroke(editor, Keys.home());
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
-    });
-
     context('Inline element', () => {
       it('move caret at the begining on the line', () => {
         const editor = hook.editor();

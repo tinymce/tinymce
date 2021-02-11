@@ -20,6 +20,19 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
 };
 
 const setup = (editor: Editor) => {
+  const blocker = (e) => e.stopImmediatePropagation();
+  editor.on('keydown', (evt) => {
+    if (evt.keyCode === VK.PAGE_UP) {
+      editor.on('NodeChange', blocker, true);
+    }
+  });
+
+  editor.on('keyup', (evt) => {
+    if (evt.keyCode === VK.PAGE_UP) {
+      editor.off('NodeChange', blocker);
+    }
+  });
+
   editor.on('keyup', (evt) => {
     if (evt.isDefaultPrevented() === false) {
       executeKeydownOverride(editor, evt);
