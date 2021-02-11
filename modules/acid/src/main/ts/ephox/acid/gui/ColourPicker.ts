@@ -4,7 +4,6 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { Hex } from '../api/colour/ColourTypes';
-import * as HexColour from '../api/colour/HexColour';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
 import * as Transformations from '../api/colour/Transformations';
@@ -92,40 +91,36 @@ const makeFactory = (
       });
     };
 
-    const paletteUpdates = () => {
+    const onPaletteUpdate = () => {
       const updates = [ updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.PaletteUpdateEvent>) => {
         const value = simulatedEvent.event.value;
-        const oldRgb = state.paletteRgba.get();
-        const oldHex = HexColour.fromRgba(oldRgb);
         const oldHue = state.paletteHue.get();
         const newHsv = HsvColour.hsvColour(oldHue, value.x, (100 - value.y));
-        const newHex = Transformations.hsv2hex(newHsv);
+        const newHex = Transformations.hsvToHex(newHsv);
 
-        if (oldHex.value !== newHex.value) {
-          runUpdates(form, newHex, oldHue, updates);
-        }
+        runUpdates(form, newHex, oldHue, updates);
       };
     };
 
-    const sliderUpdates = () => {
+    const onSliderUpdate = () => {
       const updates = [ updatePalette, updateFields ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.SliderUpdateEvent>) => {
         const hue = hueSliderToDegrees(simulatedEvent.event.value.y);
         const oldRgb = state.paletteRgba.get();
         const oldHsv = HsvColour.fromRgb(oldRgb);
         const newHsv = HsvColour.hsvColour(hue, oldHsv.saturation, oldHsv.value);
-        const newHex = Transformations.hsv2hex(newHsv);
+        const newHex = Transformations.hsvToHex(newHsv);
 
         runUpdates(form, newHex, hue, updates);
       };
     };
 
-    const fieldsUpdates = () => {
+    const onFieldsUpdate = () => {
       const updates = [ updatePalette, updateSlider, updatePaletteThumb ];
       return (form: AlloyComponent, simulatedEvent: SimulatedEvent<ColourEvents.FieldsUpdateEvent>) => {
         const hex = simulatedEvent.event.hex;
-        const hsv = Transformations.hex2hsv(hex);
+        const hsv = Transformations.hexToHsv(hex);
 
         runUpdates(form, hex, hsv.hue, updates);
       };
@@ -142,9 +137,9 @@ const makeFactory = (
 
       behaviours: Behaviour.derive([
         AddEventsBehaviour.config('colour-picker-events', [
-          AlloyEvents.run(ColourEvents.fieldsUpdate, fieldsUpdates()),
-          AlloyEvents.run(ColourEvents.paletteUpdate, paletteUpdates()),
-          AlloyEvents.run(ColourEvents.sliderUpdate, sliderUpdates())
+          AlloyEvents.run(ColourEvents.fieldsUpdate, onFieldsUpdate()),
+          AlloyEvents.run(ColourEvents.paletteUpdate, onPaletteUpdate()),
+          AlloyEvents.run(ColourEvents.sliderUpdate, onSliderUpdate())
         ]),
         Composing.config({
           find: (comp) => memRgb.getOpt(comp)

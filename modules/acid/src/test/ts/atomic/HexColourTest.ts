@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import * as ColourTypes from 'ephox/acid/api/colour/ColourTypes';
 import * as HexColour from 'ephox/acid/api/colour/HexColour';
 
-describe('HexColourTest', () => {
+describe('atomic.acid.HexColourTest', () => {
   const assertHexFromString = (input: string, expected: string) => {
     const hex = HexColour.fromString(input);
     assert.equal(hex.getOrDie().value, expected);
