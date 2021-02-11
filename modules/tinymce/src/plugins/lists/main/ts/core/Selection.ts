@@ -15,7 +15,7 @@ import * as NodeType from './NodeType';
 const getParentList = (editor: Editor, node?: Node) => {
   const selectionStart = node || editor.selection.getStart(true);
 
-  return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart));
+  return editor.dom.getParent(selectionStart, 'OL,UL,DL', getClosestListRootElm(editor, selectionStart)) as HTMLElement;
 };
 
 const isParentListSelected = (parentList, selectedBlocks) => {
@@ -33,11 +33,11 @@ const getSelectedSubLists = (editor) => {
   const selectedBlocks = editor.selection.getSelectedBlocks();
 
   if (isParentListSelected(parentList, selectedBlocks)) {
-    return findSubLists(parentList);
+    return findSubLists(parentList) as HTMLElement[];
   } else {
     return Tools.grep(selectedBlocks, (elm: Node) => {
       return NodeType.isListNode(elm) && parentList !== elm;
-    });
+    }) as HTMLElement[];
   }
 };
 
