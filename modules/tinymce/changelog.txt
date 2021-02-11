@@ -1,4 +1,6 @@
 Version 5.8.0 (TBD)
+    The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
+    The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
 
 Version 5.7.0 (2021-02-10)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
