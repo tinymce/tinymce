@@ -14,9 +14,7 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveOutInlineBoundaries, editor, false) },
     { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveOutInlineBoundaries, editor, true) }
-  ], evt).each((_) => {
-    evt.preventDefault();
-  });
+  ], evt);
 };
 
 const setup = (editor: Editor) => {
