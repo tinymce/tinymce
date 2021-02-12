@@ -174,6 +174,15 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
   });
 
+  it('TINY-6907: mceListUpdate command sets styles', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { styles: { 'list-style-type': 'upper-alpha' }});
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: upper-alpha;"><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
   it('TINY-6907: mceListUpdate command does not break when used on a paragraph', () => {
     const editor = hook.editor();
     editor.setContent('<p>some text</p>');

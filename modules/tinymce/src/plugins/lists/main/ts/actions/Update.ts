@@ -11,11 +11,15 @@ import { getParentList } from '../core/Selection';
 
 interface ListUpdate {
   attrs?: Record<string, string>;
+  styles?: Record<string, string>;
 }
 
 export const updateList = (editor: Editor, update: ListUpdate) => {
   const parentList = getParentList(editor);
   editor.undoManager.transact(() => {
+    if (update.styles) {
+      editor.dom.setStyles(parentList, update.styles);
+    }
     if (update.attrs) {
       Obj.each(update.attrs, (v, k) => editor.dom.setAttrib(parentList, k, v));
     }

@@ -56,11 +56,11 @@ const open = (editor: Editor) => {
           editor.execCommand('mceListUpdate', false, {
             attrs: {
               start: detail.start === '1' ? '' : detail.start
+            },
+            styles: {
+              'list-style-type': detail.listStyleType === false ? '' : detail.listStyleType
             }
           });
-          editor.execCommand('InsertOrderedList', false,
-            { 'list-style-type': detail.listStyleType }
-          );
         });
       });
       api.close();
