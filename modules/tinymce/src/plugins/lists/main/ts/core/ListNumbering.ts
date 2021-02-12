@@ -1,8 +1,8 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
 
 export interface ListDetail {
-  start: string;
-  listStyleType: string | false;
+  readonly start: string;
+  readonly listStyleType: string | false;
 }
 
 const enum ListType {

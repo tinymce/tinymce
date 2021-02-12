@@ -1,5 +1,6 @@
 import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import { parseStartValue, parseDetail, ListDetail } from 'tinymce/plugins/lists/core/ListNumbering';
 
@@ -12,7 +13,7 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
     Assert.eq('Should convert start value to expected detail', expectedDetail, actualDetail, tOptional());
 
     actualDetail.map(parseDetail).each((initialStartValue) => {
-      Assert.eq('Should convert detail back to initial start value', startValue, initialStartValue);
+      assert.equal(startValue, initialStartValue, 'Should convert detail back to initial start value');
     });
   };
 
@@ -21,10 +22,16 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
     Optional.some({ start: '1', listStyleType: false })
   ));
 
-  it('TINY-6891: Converts lowercase letter -> lower-alpha list type detail -> back to initial lowercase letter', () => check(
-    'a',
-    Optional.some({ start: '1', listStyleType: 'lower-alpha' })
-  ));
+  it('TINY-6891: Converts lowercase letter -> lower-alpha list type detail -> back to initial lowercase letter', () => {
+    check(
+      'a',
+      Optional.some({ start: '1', listStyleType: 'lower-alpha' })
+    );
+    check(
+      'z',
+      Optional.some({ start: '26', listStyleType: 'lower-alpha' })
+    );
+  });
 
   it('TINY-6891: Converts uppercase letters -> upper-alpha list type detail -> back to initial uppercase letters', () => {
     check(
@@ -58,10 +65,10 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
     fc.assert(fc.property(
       fc.oneof(...arbitrary),
       (start) => {
-        Assert.eq(
-          'Should be initial start value',
+        assert.equal(
           start,
-          parseStartValue(start).map(parseDetail).getOrDie()
+          parseStartValue(start).map(parseDetail).getOrDie(),
+          'Should be initial start value'
         );
       }
     ), { endOnFailure: true });
