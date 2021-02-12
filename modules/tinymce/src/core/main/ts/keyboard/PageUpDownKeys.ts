@@ -46,7 +46,7 @@ const Blocker = (() => {
 const setup = (editor: Editor) => {
   /*
     Prevents a flickering UI while caret move in and out of the inline boundary element
-    we have no custom page up/down logic so we can't override the default 
+    we have no custom page up/down logic so we can't override the default
   */
   editor.on('keydown', (evt) => {
     Blocker.canAddNewBlocker(evt).exists(() => {
