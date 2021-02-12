@@ -41,8 +41,9 @@ const moveOutside = (editor: Editor, inline: Node, forward: boolean) => {
 };
 
 const selfBoundarylLocation = (editor: Editor, forward: boolean) => {
-  if (isInlineBoundaries(editor)(editor.selection.getNode())) {
-    moveOutside(editor, editor.selection.getNode(), forward);
+  const node = editor.selection.getNode();
+  if (isInlineBoundaries(editor)(node)) {
+    moveOutside(editor, node, forward);
   }
 };
 

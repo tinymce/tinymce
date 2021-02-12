@@ -15,11 +15,11 @@ describe('browser.tinymce.core.keyboard.PageUpDownKeyTest', () => {
   const platform = PlatformDetection.detect();
 
   context('Page Up', () => {
-    it('caret is at the beginning of an inline element, escape outside the node', () => {
+    it('caret is escape outside the node', () => {
       const editor = hook.editor();
-      editor.setContent('<p>text<a href="google.com">link</a>text</p>');
+      editor.setContent('<p>text<a href="google.com">link</a></p>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
-      TinyContentActions.keystroke(editor, Keys.pageUp());
+      TinyContentActions.keyup(editor, Keys.pageUp());
 
       if (platform.browser.isIE()) {
         TinyAssertions.assertCursor(editor, [ 0, 0 ], 4);
@@ -40,7 +40,6 @@ describe('browser.tinymce.core.keyboard.PageUpDownKeyTest', () => {
         TinyAssertions.assertCursor(editor, [ 0 ], 1);
       }
     });
-
     it('caret is not at the beginning/end of an inline element, not escape', () => {
       const editor = hook.editor();
       editor.setContent('<p>text<a href="google.com">link</a>text</p>');
@@ -84,6 +83,5 @@ describe('browser.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinyContentActions.keystroke(editor, Keys.pageDown());
       TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 2);
     });
-
   });
 });
