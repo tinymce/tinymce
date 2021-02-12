@@ -255,6 +255,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 5.3.1 - 2020-05-27
 
+### Fixed
 - Fixed the image upload error alert also incorrectly closing the image dialog #TINY-6020
 - Fixed editor content scrolling incorrectly on focus in Firefox by reverting default content CSS html and body heights added in 5.3.0 #TINY-6019
 
@@ -412,7 +413,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed dialog contents disappearing when clicking a checkbox for right-to-left languages #TINY-4518
-- Fixed the `legacyoutput` plugin registering legacy formats after editior initialization, causing legacy content to be stripped on the initial load #TINY-4447
+- Fixed the `legacyoutput` plugin registering legacy formats after editor initialization, causing legacy content to be stripped on the initial load #TINY-4447
 - Fixed search and replace not cycling through results when searching using special characters #TINY-4506
 - Fixed the `visualchars` plugin converting HTML-like text to DOM elements in certain cases #TINY-4507
 - Fixed an issue with the `paste` plugin not sanitizing content in some cases #TINY-4510
@@ -474,10 +475,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed default setting for `toolbar_drawer` to `floating` #TINY-3634
 - Changed mobile phones to use the `silver` theme by default #TINY-3634
 - Changed some editor settings to default to `false` on touch devices:
--     - `menubar`(phones only) #TINY-4077
--     - `table_grid` #TINY-4075
--     - `resize` #TINY-4157
--     - `object_resizing` #TINY-4157
+  - `menubar`(phones only) #TINY-4077
+  - `table_grid` #TINY-4075
+  - `resize` #TINY-4157
+  - `object_resizing` #TINY-4157
 - Changed toolbars and context toolbars to sidescroll on mobile #TINY-3894 #TINY-4107
 - Changed context menus to render as horizontal menus on touch devices #TINY-4107
 - Changed the editor to use the `VisualViewport` API of the browser where possible #TINY-4078
@@ -578,7 +579,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added ability to utilize UI dialog panels inside other panels #TINY-3305
 - Added help dialog tab explaining keyboard navigation of the editor #TINY-3603
+
+### Changed
 - Changed the "Find and Replace" design to an inline dialog #TINY-3054
+
+### Fixed
 - Fixed issue where autolink spacebar event was not being fired on Edge #TINY-3891
 - Fixed table selection missing the background color #TINY-3892
 - Fixed removing shortcuts not working for function keys #TINY-3871
@@ -601,7 +606,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added support for all HTML color formats in `color_map` setting #TINY-3837
 
-### Changelog
+### Changed
 - Changed backspace key handling to outdent content in appropriate circumstances #TINY-3685
 - Changed default palette for forecolor and backcolor to include some lighter colors suitable for highlights #TINY-2865
 - Changed the search and replace plugin to cycle through results #TINY-3800
@@ -773,7 +778,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing fixed_toolbar_container setting has been reimplemented in the Silver theme #TINY-2712
 - Added a new toolbar setting `toolbar_drawer` that moves toolbar groups which overflow the editor width into either a `sliding` or `floating` toolbar section #TINY-2874
 
-### Updated
+### Changed
 - Updated the build process to include package lock files in the dev distribution archive #TINY-2870
 
 ### Fixed

@@ -57,7 +57,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - adds Chain.label to allow the Chain equivalent of Logger.t
 - adds Step.label as an alternative for Logger.t
 
-
 ### Changed
 - changed Chain.log and Step.log to write an entry in the TestLogs object
 
