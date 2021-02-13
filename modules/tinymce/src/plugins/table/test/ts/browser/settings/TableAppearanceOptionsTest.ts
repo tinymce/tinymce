@@ -1,73 +1,57 @@
-import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
+import { Assertions } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableAppearanceTest', (success, failure) => {
-  TablePlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  it('TBA: test that settings for appearance can be disabled', async () => {
+    const editor = hook.editor();
+    editor.settings.table_appearance_options = false;
+    editor.setContent(tableHtml);
+    TinySelections.select(editor, 'table td', [ 0 ]);
+    editor.execCommand('mceTableProps');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    Assertions.assertPresence(
+      'assert presence of spacing, padding, border and caption inputs',
+      {
+        'label:contains("Cell spacing")': 0,
+        'label:contains("Cell padding")': 0,
+        'label:contains("Border") + input': 0,
+        'label:contains("Caption")': 0
+      },
+      dialog
+    );
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be disabled', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(tableHtml),
-        // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [ 0 ]),
-        tinyApis.sExecCommand('mceTableProps'),
-        Chain.asStep({}, [
-          TableTestUtils.cWaitForDialog,
-          Chain.op((dialog) => {
-            Assertions.assertPresence(
-              'assert presence of spacing, padding, border and caption inputs',
-              {
-                // Remove the label:0 when it is working.
-                'label:contains("Cell spacing")': 0,
-                'label:contains("Cell padding")': 0,
-                'label:contains("Border") + input': 0,
-                'label:contains("Caption")': 0
-              }, dialog);
-          })
-        ]),
-        TableTestUtils.sClickDialogButton('close', false)
-      ]),
-
-      Log.stepsAsStep('TBA', 'Table: test that settings for appearance can be enabled', [
-        tinyApis.sSetSetting('table_appearance_options', true),
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(tableHtml),
-        // This used to be opening the context toolbar.
-        tinyApis.sSelect('table td', [ 0 ]),
-        tinyApis.sExecCommand('mceTableProps'),
-        Chain.asStep({}, [
-          TableTestUtils.cWaitForDialog,
-          Chain.op((dialog) => {
-            Assertions.assertPresence(
-              'assert presence of spacing, padding, border and caption inputs',
-              {
-                // Remove the label:0 when it is working.
-                'label:contains("Cell spacing")': 1,
-                'label:contains("Cell padding")': 1,
-                'label:contains("Border") + input': 1,
-                'label:contains("Caption")': 1
-              }, dialog);
-          })
-        ]),
-        TableTestUtils.sClickDialogButton('close', false)
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    plugins: 'table',
-    toolbar: 'table',
-    table_appearance_options: false,
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  it('TBA: test that settings for appearance can be enabled', async () => {
+    const editor = hook.editor();
+    editor.settings.table_appearance_options = true;
+    editor.setContent(tableHtml);
+    TinySelections.select(editor, 'table td', [ 0 ]);
+    editor.execCommand('mceTableProps');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    Assertions.assertPresence(
+      'assert presence of spacing, padding, border and caption inputs',
+      {
+        'label:contains("Cell spacing")': 1,
+        'label:contains("Cell padding")': 1,
+        'label:contains("Border") + input': 1,
+        'label:contains("Caption")': 1
+      },
+      dialog
+    );
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 });

@@ -1,2 +1,5 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
+
+agar@5.3.0
+mcagar@6.1.0
