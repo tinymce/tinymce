@@ -2,7 +2,7 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 
 export interface ListDetail {
   readonly start: string;
-  readonly listStyleType: string | false;
+  readonly listStyleType: Optional<string>;
 }
 
 const enum ListType {
@@ -60,19 +60,19 @@ const parseStartValue = (start: string): Optional<ListDetail> => {
   switch (deduceListType(start)) {
     case ListType.Numeric:
       return Optional.some({
-        listStyleType: false,
+        listStyleType: Optional.none(),
         start
       });
 
     case ListType.UpperAlpha:
       return Optional.some({
-        listStyleType: 'upper-alpha',
+        listStyleType: Optional.some('upper-alpha'),
         start: parseAlphabeticBase26(start).toString()
       });
 
     case ListType.LowerAlpha:
       return Optional.some({
-        listStyleType: 'lower-alpha',
+        listStyleType: Optional.some('lower-alpha'),
         start: parseAlphabeticBase26(start).toString()
       });
 
@@ -84,13 +84,12 @@ const parseStartValue = (start: string): Optional<ListDetail> => {
 const parseDetail = (detail: ListDetail): string => {
   const start = parseInt(detail.start, 10);
 
-  switch (detail.listStyleType) {
-    case 'upper-alpha':
-      return composeAlphabeticBase26(start);
-    case 'lower-alpha':
-      return composeAlphabeticBase26(start).toLowerCase();
-    default:
-      return detail.start;
+  if (detail.listStyleType.is('upper-alpha')) {
+    return composeAlphabeticBase26(start);
+  } else if (detail.listStyleType.is('lower-alpha')) {
+    return composeAlphabeticBase26(start).toLowerCase();
+  } else {
+    return detail.start;
   }
 };
 

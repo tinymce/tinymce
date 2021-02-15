@@ -8,39 +8,43 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
   const tOptional = OptionalInstances.tOptional;
 
   const check = (startValue: string, expectedDetail: Optional<ListDetail>) => {
-    const actualDetail = parseStartValue(startValue);
+    expectedDetail.each((expected) => {
+      // Test conversion of: start value -> detail
+      const actualDetail = parseStartValue(startValue);
+      Assert.eq('Should convert start value to expected start value', expected.start, actualDetail.getOrDie().start);
+      Assert.eq('Should convert start value to expected list style type', expected.listStyleType, actualDetail.getOrDie().listStyleType, tOptional());
 
-    Assert.eq('Should convert start value to expected detail', expectedDetail, actualDetail, tOptional());
-
-    actualDetail.map(parseDetail).each((initialStartValue) => {
-      assert.equal(startValue, initialStartValue, 'Should convert detail back to initial start value');
+      // When expectedDetail is some, try to convert: detail -> start value
+      expectedDetail.map(parseDetail).each((initialStartValue) => {
+        assert.equal(startValue, initialStartValue, 'Should convert detail back to initial start value');
+      });
     });
   };
 
   it('TINY-6891: Converts number -> numbered list type detail -> back to initial number', () => check(
     '1',
-    Optional.some({ start: '1', listStyleType: false })
+    Optional.some({ start: '1', listStyleType: Optional.none() })
   ));
 
   it('TINY-6891: Converts lowercase letter -> lower-alpha list type detail -> back to initial lowercase letter', () => {
     check(
       'a',
-      Optional.some({ start: '1', listStyleType: 'lower-alpha' })
+      Optional.some({ start: '1', listStyleType: Optional.some('lower-alpha') })
     );
     check(
       'z',
-      Optional.some({ start: '26', listStyleType: 'lower-alpha' })
+      Optional.some({ start: '26', listStyleType: Optional.some('lower-alpha') })
     );
   });
 
   it('TINY-6891: Converts uppercase letters -> upper-alpha list type detail -> back to initial uppercase letters', () => {
     check(
       'A',
-      Optional.some({ start: '1', listStyleType: 'upper-alpha' })
+      Optional.some({ start: '1', listStyleType: Optional.some('upper-alpha') })
     );
     check(
       'ABCD',
-      Optional.some({ start: '19010', listStyleType: 'upper-alpha' })
+      Optional.some({ start: '19010', listStyleType: Optional.some('upper-alpha') })
     );
   });
 

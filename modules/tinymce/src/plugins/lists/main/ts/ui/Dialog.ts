@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { parseDetail, parseStartValue } from '../core/ListNumbering';
 import { isOlNode } from '../core/NodeType';
@@ -33,7 +34,7 @@ const open = (editor: Editor) => {
     initialData: {
       start: parseDetail({
         start: editor.dom.getAttrib(currentList, 'start', '1'),
-        listStyleType: editor.dom.getStyle(currentList, 'list-style-type')
+        listStyleType: Optional.some(editor.dom.getStyle(currentList, 'list-style-type'))
       })
     },
     buttons: [
@@ -52,15 +53,13 @@ const open = (editor: Editor) => {
     onSubmit: (api) => {
       const data = api.getData();
       parseStartValue(data.start).each((detail) => {
-        editor.undoManager.transact(() => {
-          editor.execCommand('mceListUpdate', false, {
-            attrs: {
-              start: detail.start === '1' ? '' : detail.start
-            },
-            styles: {
-              'list-style-type': detail.listStyleType === false ? '' : detail.listStyleType
-            }
-          });
+        editor.execCommand('mceListUpdate', false, {
+          attrs: {
+            start: detail.start === '1' ? '' : detail.start
+          },
+          styles: {
+            'list-style-type': detail.listStyleType.getOr('')
+          }
         });
       });
       api.close();

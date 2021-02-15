@@ -241,6 +241,6 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('mceListProps');
     updateDialog(editor, 'a', 'abc123');
-    editor.setContent('<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
   });
 });
