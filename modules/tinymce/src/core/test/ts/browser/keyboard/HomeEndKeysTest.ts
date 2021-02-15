@@ -53,16 +53,16 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
-    context('Inline element', () => {
-      it('move caret out and at the beginning of the element', () => {
+    context('Inline boundaries', () => {
+      it('TINY-4612: move caret out and at the beginning of the element', () => {
         const editor = hook.editor();
         editor.setContent('<p><a href="google.com">link</a>test</p>');
-        TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+        TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         TinyContentActions.keystroke(editor, Keys.home());
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
       });
 
-      it('move caret at the beginning of the line (parent) if the first element is an inline element', () => {
+      it('TINY-4612: move caret at the beginning of the line (parent) if the first element is an inline element', () => {
         const editor = hook.editor();
         editor.setContent('<p><a href="google.com">link1</a>test</p>');
         TinySelections.setCursor(editor, [ 0, 1 ], 3);
@@ -113,8 +113,8 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
     });
 
-    context('Inline element', () => {
-      it('move caret out and at end of the element', () => {
+    context('Inline boundaries', () => {
+      it('TINY-4612: move caret out and at end of the element', () => {
         const editor = hook.editor();
         editor.setContent('<p>test<a href="google.com">link</a></p>');
         TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
@@ -122,7 +122,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
         TinyAssertions.assertCursor(editor, [ 0 ], 2);
       });
 
-      it('move caret at the end of the line (parent) if the last element is an inline element', () => {
+      it('TINY-4612: move caret at the end of the line (parent) if the last element is an inline element', () => {
         const editor = hook.editor();
         editor.setContent('<p>test<a href="google.com">link 2</a></p>');
         TinySelections.setCursor(editor, [ 0, 0 ], 0);
