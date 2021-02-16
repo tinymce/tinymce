@@ -1,58 +1,34 @@
-import { Assertions, GeneralSteps, Keyboard, Keys, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, Keys } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { McEditor, TinyDom, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
+
+import Editor from 'tinymce/core/api/Editor';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
 import Plugin from 'tinymce/plugins/importcss/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { MenuNavigationTestUtils } from '../module/MenuNavigationTestUtils';
+import { Navigation, pProcessNavigation } from '../module/MenuNavigationTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (success, failure) => {
+interface Assertion {
+  readonly choice: {
+    readonly keysBeforeExecute: number[];
+    readonly presence: string;
+  };
+  readonly navigation: Navigation[];
+}
 
-  Plugin();
-  Theme();
+describe('browser.tinymce.plugins.importcss.ImportCssGroupsTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
+  });
 
-  const sTestEditorWithSettings = (assertions, pluginSettings) => Step.async((onStepSuccess, onStepFailure) => {
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const doc = SugarElement.fromDom(document);
-
-      const tinyUi = TinyUi(editor);
-
-      const sOpenStyleMenu = GeneralSteps.sequence([
-        tinyUi.sClickOnToolbar('Clicking on the styleselect dropdown', 'button')
-      ]);
-
-      const navigationSteps = MenuNavigationTestUtils.generateNavigation(doc, assertions.navigation);
-
-      Pipeline.async({}, Arr.flatten([
-        [
-          Assertions.sAssertPresence(
-            `${assertions.choice.presence} should NOT be present`,
-            {
-              [assertions.choice.presence]: 0
-            },
-            SugarElement.fromDom(editor.getBody())
-          )
-        ],
-        [ sOpenStyleMenu ],
-        navigationSteps,
-        Arr.map(assertions.choice.keysBeforeExecute, (k) => Keyboard.sKeydown(doc, k, { })),
-        [ Keyboard.sKeydown(doc, Keys.enter(), { }) ],
-        [
-          Assertions.sAssertPresence(
-            `${assertions.choice.presence} should now be present`,
-            {
-              [assertions.choice.presence]: 1
-            },
-            SugarElement.fromDom(editor.getBody())
-          )
-        ]
-      ]), onSuccess, onFailure);
-    }, {
+  const pTestEditorWithSettings = async (assertion: Assertion, pluginSettings: RawEditorSettings) => {
+    const editor = await McEditor.pFromSettings<Editor>({
       plugins: 'importcss',
       toolbar: 'styleselect',
-      theme: 'silver',
       content_css: pluginSettings.content_css,
       importcss_append: pluginSettings.importcss_append,
       importcss_selector_filter: pluginSettings.importcss_selector_filter,
@@ -61,156 +37,156 @@ UnitTest.asynctest('browser.tinymce.plugins.importcss.ImportCssGroupsTest', (suc
       importcss_selector_converter: pluginSettings.importcss_selector_converter,
       importcss_exclusive: pluginSettings.importcss_exclusive,
       base_url: '/project/tinymce/js/tinymce'
-    }, () => onStepSuccess(), onStepFailure);
-  });
+    });
 
-  Pipeline.async({ }, [
+    Assertions.assertPresence(
+      `${assertion.choice.presence} should NOT be present`,
+      {
+        [assertion.choice.presence]: 0
+      },
+      TinyDom.body(editor)
+    );
+    TinyUiActions.clickOnToolbar(editor, 'button');
+    await pProcessNavigation(SugarDocument.getDocument(), assertion.navigation);
+    Arr.each(assertion.choice.keysBeforeExecute, (k) => TinyUiActions.keydown(editor, k));
+    TinyUiActions.keydown(editor, Keys.enter());
+    Assertions.assertPresence(
+      `${assertion.choice.presence} should now be present`,
+      {
+        [assertion.choice.presence]: 1
+      },
+      TinyDom.body(editor)
+    );
+    McEditor.remove(editor);
+  };
 
-    Log.step(
-      'TBA',
-      'importcss: content_css with three files, append false, groups with overall selector converter',
-      sTestEditorWithSettings(
+  it('TBA: content_css with three files, append false, groups with overall selector converter', () => pTestEditorWithSettings(
+    {
+      navigation: [
+        { item: 'Other', subitems: [ 'h1.red.DDD', 'p.other.DDD', 'span.inline.DDD' ] },
+        { item: 'Advanced', subitems: [ 'h2.advanced.CCC', 'h3.advanced.CCC', 'h4.advanced.CCC' ] }
+      ],
+      choice: {
+        keysBeforeExecute: [ Keys.right() ],
+        presence: 'span.converted'
+      }
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+        '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
+      ],
+      importcss_append: false,
+      importcss_groups: [
+        { title: 'Advanced', filter: /.adv/, custom: '.CCC' },
+        { title: 'Other', custom: '.DDD' }
+      ],
+
+      importcss_selector_converter: (selector, group) => ({
+        title: selector + group.custom,
+        classes: [ 'converted' ],
+        inline: 'span'
+      })
+    }
+  ));
+
+  it('TBA: content_css with three files, append false, groups with group selector converters', () => pTestEditorWithSettings(
+    {
+      navigation: [
+        { item: 'Other', subitems: [ 'h1.red.OtherGroup', 'p.other.OtherGroup', 'span.inline.OtherGroup' ] },
+        { item: 'Advanced', subitems: [ 'h2.advanced.AdvGroup', 'h3.advanced.AdvGroup', 'h4.advanced.AdvGroup' ] }
+      ],
+      choice: {
+        keysBeforeExecute: [ Keys.down(), Keys.right() ],
+        presence: 'p.advanced'
+      }
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+        '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
+      ],
+      importcss_append: false,
+      importcss_groups: [
         {
-          navigation: [
-            { item: 'Other', subitems: [ 'h1.red.DDD', 'p.other.DDD', 'span.inline.DDD' ] },
-            { item: 'Advanced', subitems: [ 'h2.advanced.CCC', 'h3.advanced.CCC', 'h4.advanced.CCC' ] }
-          ],
-          choice: {
-            keysBeforeExecute: [ Keys.right() ],
-            presence: 'span.converted'
+          title: 'Advanced',
+          filter: /.adv/,
+          selector_converter: (selector, group) => {
+            // eslint-disable-next-line no-console
+            console.log('selector', selector, 'group', group);
+            return {
+              title: selector + '.AdvGroup',
+              // NOTE: This is required so that it isn't disabled.
+              selector: 'p',
+              classes: selector.split('.')[1]
+            };
           }
         },
         {
-          content_css: [
-            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
-            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
-            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
-          ],
-          importcss_append: false,
-          importcss_groups: [
-            { title: 'Advanced', filter: /.adv/, custom: '.CCC' },
-            { title: 'Other', custom: '.DDD' }
-          ],
-
-          importcss_selector_converter: (selector, group) => ({
-            title: selector + group.custom,
-            classes: [ 'converted' ],
-            inline: 'span'
+          title: 'Other',
+          selector_converter: (selector, _group) => ({
+            title: selector + '.OtherGroup',
+            selector: 'p',
+            classes: selector.split('.')[1]
           })
         }
-      )
-    ),
+      ]
+    }
+  ));
 
-    Log.step(
-      'TBA',
-      'importcss: content_css with three files, append false, groups with group selector converters',
-      sTestEditorWithSettings(
-        {
-          navigation: [
-            { item: 'Other', subitems: [ 'h1.red.OtherGroup', 'p.other.OtherGroup', 'span.inline.OtherGroup' ] },
-            { item: 'Advanced', subitems: [ 'h2.advanced.AdvGroup', 'h3.advanced.AdvGroup', 'h4.advanced.AdvGroup' ] }
-          ],
-          choice: {
-            keysBeforeExecute: [ Keys.down(), Keys.right() ],
-            presence: 'p.advanced'
-          }
-        },
-        {
-          content_css: [
-            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
-            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
-            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css'
-          ],
-          importcss_append: false,
-          importcss_groups: [
-            {
-              title: 'Advanced',
-              filter: /.adv/,
-              selector_converter: (selector, group) => {
-                // eslint-disable-next-line no-console
-                console.log('selector', selector, 'group', group);
-                return {
-                  title: selector + '.AdvGroup',
-                  // NOTE: This is required so that it isn't disabled.
-                  selector: 'p',
-                  classes: selector.split('.')[1]
-                };
-              }
-            },
-            {
-              title: 'Other',
-              selector_converter: (selector, _group) => ({
-                title: selector + '.OtherGroup',
-                selector: 'p',
-                classes: selector.split('.')[1]
-              })
-            }
-          ]
-        }
-      )
-    ),
+  it('TBA: content_css with four files (one with clash), groups, and exclusive = false', () => pTestEditorWithSettings(
+    {
+      navigation: [
+        { item: 'Other', subitems: [ 'h1.red', 'p.other', 'span.inline', 'h2.advanced', 'h3.advanced', 'h4.advanced' ] },
+        { item: 'Advanced', subitems: [ 'h2.advanced', 'h3.advanced', 'h4.advanced' ] }
+      ],
+      choice: {
+        keysBeforeExecute: [ Keys.right() ],
+        presence: 'h1.red'
+      }
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+        '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
+        '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
+      ],
+      importcss_append: false,
+      importcss_exclusive: false,
+      importcss_groups: [
+        { title: 'Advanced', filter: /.adv/ },
+        { title: 'Other', custom: 'B' }
+      ]
+    }
+  ));
 
-    Log.step(
-      'TBA',
-      'importcss: content_css with four files (one with clash), groups, and exclusive = false',
-      sTestEditorWithSettings(
-        {
-          navigation: [
-            { item: 'Other', subitems: [ 'h1.red', 'p.other', 'span.inline', 'h2.advanced', 'h3.advanced', 'h4.advanced' ] },
-            { item: 'Advanced', subitems: [ 'h2.advanced', 'h3.advanced', 'h4.advanced' ] }
-          ],
-          choice: {
-            keysBeforeExecute: [ Keys.right() ],
-            presence: 'h1.red'
-          }
-        },
-        {
-          content_css: [
-            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
-            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
-            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
-            '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
-          ],
-          importcss_append: false,
-          importcss_exclusive: false,
-          importcss_groups: [
-            { title: 'Advanced', filter: /.adv/ },
-            { title: 'Other', custom: 'B' }
-          ]
-        }
-      )
-    ),
-
-    Log.step(
-      'TBA',
-      'importcss: content_css with four files (one with clash), groups, and exclusive = true',
-      sTestEditorWithSettings(
-        {
-          navigation: [
-            { item: 'Other', subitems: [ 'h1.red', 'p.other', 'span.inline' ] },
-            { item: 'Advanced', subitems: [ 'h2.advanced', 'h3.advanced', 'h4.advanced' ] }
-          ],
-          choice: {
-            keysBeforeExecute: [ Keys.right(), Keys.down() ],
-            presence: 'p.other'
-          }
-        },
-        {
-          content_css: [
-            '/project/tinymce/src/plugins/importcss/test/css/basic.css',
-            '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
-            '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
-            '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
-          ],
-          importcss_append: false,
-          importcss_exclusive: true,
-          importcss_groups: [
-            { title: 'Advanced', filter: /.adv/ },
-            { title: 'Other', custom: 'B' }
-          ]
-        }
-      )
-    )
-  ], () => success(), failure);
-
+  it('TBA: content_css with four files (one with clash), groups, and exclusive = true', () => pTestEditorWithSettings(
+    {
+      navigation: [
+        { item: 'Other', subitems: [ 'h1.red', 'p.other', 'span.inline' ] },
+        { item: 'Advanced', subitems: [ 'h2.advanced', 'h3.advanced', 'h4.advanced' ] }
+      ],
+      choice: {
+        keysBeforeExecute: [ Keys.right(), Keys.down() ],
+        presence: 'p.other'
+      }
+    },
+    {
+      content_css: [
+        '/project/tinymce/src/plugins/importcss/test/css/basic.css',
+        '/project/tinymce/src/plugins/importcss/test/css/advanced.css',
+        '/project/tinymce/src/plugins/importcss/test/css/other-adv.css',
+        '/project/tinymce/src/plugins/importcss/test/css/clashing.css'
+      ],
+      importcss_append: false,
+      importcss_exclusive: true,
+      importcss_groups: [
+        { title: 'Advanced', filter: /.adv/ },
+        { title: 'Other', custom: 'B' }
+      ]
+    }
+  ));
 });
