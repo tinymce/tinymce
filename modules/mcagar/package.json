@@ -9,7 +9,7 @@
   "files": [
     "lib/main",
     "src/main",
-    "readme.md",
+    "README.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
     "LICENSE.txt"

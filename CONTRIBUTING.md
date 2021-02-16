@@ -49,7 +49,7 @@ This performs compilation steps which webpack requires but are usually once-off.
 
 To build the editor in development, use `yarn tinymce-grunt`. This will output to the `modules/tinymce/js` folder (`build` is effectively `dev` followed by `tinymce-grunt`).
 
-Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/readme.md).
+Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/README.md).
 
 ## Development scripts
 
