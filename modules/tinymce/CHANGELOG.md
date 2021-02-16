@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 
+### Fixed
+- The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
+- The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
+
 ## 5.7.0 - 2021-02-10
 
 ### Added
