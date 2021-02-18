@@ -45,7 +45,7 @@ const isLowercase = (str: string): boolean => /^[a-z]+$/.test(str);
 const isNumeric = (str: string): boolean => /^[0-9]+$/.test(str);
 
 const deduceListType = (start: string): ListType => {
-  if (isNumeric(start)) {
+  if (isNumeric(start) || start === '') {
     return ListType.Numeric;
   } else if (isUppercase(start)) {
     return ListType.UpperAlpha;
