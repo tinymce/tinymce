@@ -36,14 +36,12 @@ const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boo
   blocked.set(block);
 };
 
-/*
-  Prevents a flickering UI while caret move in and out of the inline boundary element
-  we have no custom page up/down logic, so we can't override the default
-*/
+// we use 'keyup' beacuse we have no custom page up/down logic so we can't override the default as we do for the other things home/end that we do have custom code for.
 const setup = (editor: Editor) => {
   const blocked = Cell(false);
 
   editor.on('keydown', (evt) => {
+    //  Prevents a flickering UI while caret move in and out of the inline boundary element
     if (isPageUpDown(evt)) {
       setNodeChangeBlocker(blocked, editor, true);
     }

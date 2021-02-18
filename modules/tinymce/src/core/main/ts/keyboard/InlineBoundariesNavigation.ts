@@ -7,15 +7,18 @@
 
 import { Fun } from '@ephox/katamari';
 import Editor from '../api/Editor';
+import * as Settings from '../api/Settings';
 import CaretPosition from '../caret/CaretPosition';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as BoundarySelection from './BoundarySelection';
 import * as InlineUtils from './InlineUtils';
 import * as NavigationUtils from './NavigationUtils';
 
-const isInlineBoundaries = (editor: Editor) => Fun.curry(InlineUtils.isInlineTarget, editor);
+const isInlineBoundaries = (editor: Editor) => {
+  return (node) => Settings.isInlineBoundariesEnabled(editor) && InlineUtils.isInlineTarget(editor, node);
+};
 
-const moveOutside = (editor: Editor, forward: boolean) => (inline: Node) => {
+const moveOutside = (editor: Editor, forward: boolean, inline: Node) => {
   const pos = forward ? CaretPosition.after(inline) : CaretPosition.before(inline);
   BoundarySelection.setCaretPosition(editor, pos);
 };
@@ -28,8 +31,8 @@ const moveOutInlineBoundaries = (editor: Editor, forward: boolean) => {
   location.each((location) => {
     location.fold(
       Fun.noop,
-      moveOutside(editor, forward),
-      moveOutside(editor, forward),
+      Fun.curry(moveOutside, editor, forward),
+      Fun.curry(moveOutside, editor, forward),
       Fun.noop
     );
   });
@@ -39,7 +42,7 @@ const moveOutInlineBoundaries = (editor: Editor, forward: boolean) => {
 const selfMoveOutside = (editor: Editor, forward: boolean) => {
   const node = editor.selection.getNode();
   if (isInlineBoundaries(editor)(node)) {
-    moveOutside(editor, forward)(node);
+    moveOutside(editor, forward, node);
   }
 };
 
@@ -49,7 +52,7 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean): boolean =>
 
     location.fold(
       () => selfMoveOutside(editor, forward),
-      (loc) => moveOutside(editor, forward)(BoundaryLocation.getElement(loc))
+      (loc) => moveOutside(editor, forward, BoundaryLocation.getElement(loc))
     );
 
     return location.isSome();
