@@ -1,4 +1,4 @@
-import { Assertions, Chain, Log, Pipeline } from '@ephox/agar';
+import { Assertions, Chain, Log, Mouse, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
@@ -17,6 +17,13 @@ UnitTest.asynctest('browser.tinymce.plugins.link.RemoveLinkTest', (success, fail
     const body = SugarElement.fromDom(editor.getBody());
 
     Pipeline.async({}, [
+      Log.stepsAsStep('TINY-6508', 'enable Removing link after double click', [
+        tinyApis.sSetSetting('link_context_toolbar', true),
+        tinyApis.sSetContent('<p><a href="http://www.google.com/">link</a></p>'),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0),
+        Mouse.sTrueDoubleClickOn(body, 'a'),
+        tinyUi.sWaitForUi('Check the link button is enabled', 'button[aria-label="Remove link"]:not(.tox-tbtn--disabled)')
+      ]),
       Log.stepsAsStep('TBA', 'Removing a link with a collapsed selection', [
         tinyApis.sSetContent('<p><a href="http://tiny.cloud">tiny</a></p>'),
         tinyApis.sSetSelection([ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2),

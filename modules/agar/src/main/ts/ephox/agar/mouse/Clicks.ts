@@ -29,7 +29,7 @@ interface Settings {
 }
 
 // Types of events
-type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu';
+type EventType = 'click' | 'dblclick' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu';
 
 // Fire an event
 const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {
@@ -69,6 +69,10 @@ const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: 
 const click = (settings: Settings) => (element: SugarElement<Node>): void => {
   const dom = element.dom;
   Obj.get(dom as any, 'click').fold(() => event('click', settings)(element), Fun.call);
+};
+const doubleClick = (settings: Settings) => (element: SugarElement<Node>): void => {
+  const dom = element.dom;
+  Obj.get(dom as any, 'dblclick').fold(() => event('dblclick', settings)(element), Fun.call);
 };
 const mouseDown = Fun.curry(event, 'mousedown');
 const mouseUp = Fun.curry(event, 'mouseup');
@@ -114,6 +118,7 @@ export {
   rightClickButtons,
   middleClickButtons,
   click,
+  doubleClick,
   mouseDown,
   mouseUp,
   mouseMove,

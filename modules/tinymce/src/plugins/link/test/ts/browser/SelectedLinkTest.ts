@@ -1,6 +1,7 @@
-import { Log, Pipeline } from '@ephox/agar';
+import { Log, Mouse, Pipeline } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { SugarElement } from '@ephox/sugar';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import SilverTheme from 'tinymce/themes/silver/Theme';
 
@@ -14,6 +15,7 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
   TinyLoader.setupLight((editor, onSuccess, onFailure) => {
     const tinyApis = TinyApis(editor);
     const tinyUi = TinyUi(editor);
+    const body = SugarElement.fromDom(editor.getBody());
 
     Pipeline.async({}, [
       Log.stepsAsStep('TBA', 'Link: should not get anchor info if not selected node', [
@@ -29,6 +31,13 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
         }),
         TestLinkUi.sClickCancel,
         TestLinkUi.sClearHistory
+      ]),
+      Log.stepsAsStep('TBA', 'Enable Removing link after double click', [
+        tinyApis.sSetSetting('link_context_toolbar', true),
+        tinyApis.sSetContent('<p><a href="http://www.google.com/">test</a></p>'),
+        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3),
+        Mouse.sTrueDoubleClickOn(body, 'a'),
+        tinyUi.sWaitForUi('Check the link button is enabled', 'button[aria-label="Remove link"]:not(.tox-tbtn--disabled)')
       ]),
       Log.stepsAsStep('TINY-4867', 'Link: link should not be active when multiple links or plain text selected', [
         tinyApis.sSetContent('<p><a href="http://tinymce.com">a</a> b <a href="http://tinymce.com">c</a></p>'),
