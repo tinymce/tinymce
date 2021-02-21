@@ -18,7 +18,7 @@ You need to use `yarn` to install the mcagar devDependencies since `npm` doesn't
 
 Only modules inside the `api` package should be used in other projects. All other modules are implementation detail. There are two types of modules available: BDD and Pipelines.
 
-BDD modules are useful when testing using behaviour driven development testing, such as with Mocha. For information, see the [BDD testing](docs/bdd.md) documentation.
+BDD modules are useful when testing using behavior-driven development testing, such as with Mocha. For information, see the [BDD testing](docs/bdd.md) documentation.
 
 Pipeline modules are an in-house testing framework that relies on Agar Step and Chains to create a pipeline of actions to perform. The pipeline syntax is, at the time of writing, slowly being removed and will eventually be deprecated. For information, see the [Pipeline testing](docs/pipelines.md) documentation.
 
@@ -29,4 +29,3 @@ The tests can be run using `bedrock` via `yarn test`. Note, this will only run t
 To run the tests on Chrome:
 
 `$ yarn test`
-

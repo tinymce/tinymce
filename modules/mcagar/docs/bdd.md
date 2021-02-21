@@ -1,10 +1,10 @@
 # BDD testing
 
-The following are the primary modules used when testing TinyMCE using the behaviour driven development tests.
+The following are the primary modules used when testing TinyMCE using the behavior-driven development tests.
 
 ## TinyHooks
 
-The `TinyHooks` module registers `before` and `after` hooks to set up TinyMCE in a test. It takes the TinyMCE settings and will then initialize the editor during the test suite setup phase. Additional module setup functions (such as a plugin constructor) can also be provided and will be called before the editor is initialized. The editor instance can be accessed by calling the `editor()` function on the object returned by the hook function.
+The `TinyHooks` module registers `before` and `after` hooks to set up TinyMCE in a test. It takes the TinyMCE settings and will then initialize the editor during the test suite setup phase. Additional module setup functions (such as a plugin constructor) can also be provided and will be called before the editor is initialized. The editor instance can be accessed inside a test by calling the `editor()` function on the object returned by the hook function.
 
 > 💡 **Note:** The editor is only initialized once per suite instead of per test, so be sure to close open dialogs, or reset any state after each test.
 
@@ -35,7 +35,7 @@ describe('My Custom Plugin', () => {
 
   it('should include a custom toolbar button', () => {
     const editor = hook.editor();
-    // Assert the editor has a custom toolbat button rendered
+    // Assert the editor has a custom toolbar button rendered
     ...
   });
 });
@@ -97,11 +97,11 @@ The following functions are available to simulate keyboard events in the editor 
 The following functions are available to mouse clicks or wait for changes in the UI:
 
 - `clickOnMenu(editor: Editor, selector: string)`
-  - Clicks on a menu item that matches the specified  selector.
+  - Clicks on a menu item that matches the specified selector.
 - `clickOnToolbar(editor: Editor, selector: string)`
-  - Clicks on a toolbar button that matches the specified  selector.
+  - Clicks on a toolbar button that matches the specified selector.
 - `clickOnUi(editor: Editor, selector: string)`
-  - Clicks on UI element that matches the specified  selector.
+  - Clicks on UI element that matches the specified selector.
 - `pTriggerContextMenu(editor: Editor, targetSelector: string, menuSelector: string)`
   - Activates the context menu on the target selector in the editor content. It will return a `Promise` that will resolve when the specified `menuSelector` is visible in the UI.
 - `pWaitForPopup(editor: Editor, selector: string)`
@@ -184,7 +184,7 @@ The following functions are available to assert the editor content:
 - `assertContent(editor: Editor, expectedContent: string)`
   - Assert the content of the editor matches the expected content. The content is retrieved using `editor.getContent()`.
 - `assertRawContent(editor: Editor, expectedContent: string)`
-  - Assert the raw content of the editor. This is the HTML directly pulled from the editor body using `editor.getBody().innerHTML`.
+  - Assert the raw content of the editor. This is the HTML directly pulled from the editor body using `editor.getBody().innerHTML`. This can be useful to assert content that only appears while editing, such as bogus br elements.
 - `assertContentPresence(editor: Editor, expected: Record<string, number>)`
   - Assert the presence of content in the editor. This takes an object containing a key-value pair where the key is a CSS selector, and the value is the number of times a match should be found for that selector.
 - `assertContentStructure(editor: Editor, expected: StructAssert)`
