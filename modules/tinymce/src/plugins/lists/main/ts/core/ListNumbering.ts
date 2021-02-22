@@ -89,7 +89,7 @@ const parseStartValue = (start: string): Optional<ListDetail> => {
     case ListType.None:
       return Optional.some({
         listStyleType: Optional.none(),
-        start: '1'
+        start: ''
       });
 
     case ListType.Unknown:
