@@ -12,7 +12,7 @@ Available functions:
 - `bddSetup(settings: RawEditorSettings, setupModules?: Array<() => void>, focusOnInit?: boolean)`
   - Sets up the editor using the settings provided. This is the most common way to setup and test TinyMCE.
 - `bddSetupLight(settings: RawEditorSettings, setupModules?: Array<() => void>, focusOnInit?: boolean)`
-  - Similar to `bddSetup`, except that by default the editor `menubar`, `toolbar` and `statusbar` will be disabled. This helps to speed up tests where the UI isn't required since there's less to be rendered.
+  - Similar to `bddSetup`, except that by default the editor `menubar`, `toolbar` and `statusbar` will not be rendered. This helps to speed up tests where the UI isn't required.
 - `bddSetupFromElement(settings: RawEditorSettings, setupElement: () => SetupElement, setupModules?: Array<() => void>, focusOnInit?: boolean)`
   - Provides a way to setup an editor using a custom element. A callback function is required which should setup the element to use and then return a function to teardown the element when the tests have completed.
 - `bddSetupInShadowRoot(settings: RawEditorSettings, setupModules?: Array<() => void>, focusOnInit?: boolean)`
