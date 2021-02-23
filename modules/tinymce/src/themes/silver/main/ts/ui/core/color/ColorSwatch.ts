@@ -187,19 +187,22 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
 };
 
 const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
-  const getOnSubmit = (callback) => (api) => {
+  let isValid = false;
+
+  const getOnSubmit = (callback) => (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>) => {
     const data = api.getData();
-    callback(Optional.from(data.colorpicker));
-    api.close();
+    const hex = data.colorpicker;
+    if (isValid) {
+      callback(Optional.from(hex));
+      api.close();
+    } else {
+      editor.windowManager.alert(editor.translate([ 'Invalid hex color code: {0}', hex ]));
+    }
   };
 
-  const onAction = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
+  const onAction = (_api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
     if (details.name === 'hex-valid') {
-      if (details.value) {
-        api.enable('ok');
-      } else {
-        api.disable('ok');
-      }
+      isValid = details.value;
     }
   };
 
