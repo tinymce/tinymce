@@ -1,19 +1,27 @@
-import { Assertions, Log, Step } from '@ephox/agar';
 import { Arr } from '@ephox/katamari';
-import { TinyApis } from '@ephox/mcagar';
+import { TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { sAssertTableStructureWithSizes } from './TableTestUtils';
+import { assertTableStructureWithSizes } from './TableTestUtils';
 
 type SizingMode = 'relative' | 'fixed' | 'responsive';
 
 interface Scenario {
-  mode: SizingMode;
-  tableWidth: number;
-  cols: number;
-  rows: number;
-  expectedTableWidth: number;
-  expectedWidths: number[][];
-  newMode: SizingMode;
+  readonly mode: SizingMode;
+  readonly tableWidth: number;
+  readonly cols: number;
+  readonly rows: number;
+  readonly expectedTableWidth: number;
+  readonly expectedWidths: number[][];
+  readonly newMode: SizingMode;
+}
+
+interface PartialTableModifiedEvent {
+  readonly type: string;
+  readonly style: boolean;
+  readonly structure: boolean;
 }
 
 const getUnit = (mode: SizingMode): 'px' | '%' | null => {
@@ -58,27 +66,26 @@ const generateTable = (mode: SizingMode, width: number, rows: number, cols: numb
   return `<table border="1" style="border-collapse: collapse;${tableWidth}">${getColumns()}<tbody>${renderedRows}</tbody></table>`;
 };
 
-interface TableModifiedEvent { type: string; structure: boolean; style: boolean }
-const sTableSizingModeScenarioTest = (editor, tinyApis: TinyApis, title: string, description: string, withColGroups: boolean, scenario: Scenario, expectedEvents: TableModifiedEvent[] = [{ type: 'tablemodified', structure: true, style: false }]) => {
-  let events = [];
+const defaultEvents = [{ type: 'tablemodified', structure: true, style: false }];
+
+const tableSizingModeScenarioTest = (editor: Editor, withColGroups: boolean, scenario: Scenario, expectedEvents: PartialTableModifiedEvent[] = defaultEvents) => {
+  let events: PartialTableModifiedEvent[] = [];
   editor.on('TableModified', (event: EditorEvent<{ structure: boolean; style: boolean }>) => events.push({
     type: event.type,
     structure: event.structure,
     style: event.style,
   }));
-  const clearEvents = Step.sync(() => events = []);
+  const clearEvents = () => events = [];
 
-  return Log.stepsAsStep(title, description, [
-    clearEvents,
-    tinyApis.sSetContent(generateTable(scenario.mode, scenario.tableWidth, scenario.rows, scenario.cols, withColGroups)),
-    tinyApis.sSetSelection([ 0, withColGroups ? 1 : 0, 0, 0 ], 0, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0),
-    tinyApis.sExecCommand('mceTableSizingMode', scenario.newMode),
-    sAssertTableStructureWithSizes(editor, scenario.cols, scenario.rows, getUnit(scenario.newMode), scenario.expectedTableWidth, scenario.expectedWidths, withColGroups),
-    Step.sync(() => Assertions.assertEq('Expected events fired', expectedEvents, events)),
-    clearEvents,
-  ]);
+  clearEvents();
+  editor.setContent(generateTable(scenario.mode, scenario.tableWidth, scenario.rows, scenario.cols, withColGroups));
+  TinySelections.setCursor(editor, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0);
+  editor.execCommand('mceTableSizingMode', false, scenario.newMode);
+  assertTableStructureWithSizes(editor, scenario.cols, scenario.rows, getUnit(scenario.newMode), scenario.expectedTableWidth, scenario.expectedWidths, withColGroups);
+  assert.deepEqual(events, expectedEvents, 'Expected events fired');
+  clearEvents();
 };
 
 export {
-  sTableSizingModeScenarioTest
+  tableSizingModeScenarioTest
 };

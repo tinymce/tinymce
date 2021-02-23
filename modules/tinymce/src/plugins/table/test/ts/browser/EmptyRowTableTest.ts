@@ -1,37 +1,31 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.EmptyRowTableTest', (success, failure) => {
-  Theme();
-  Plugin();
-
-  TinyLoader.setupLight((editor, success, failure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TINY-4679', 'Empty tr elements should not be removed', [
-        tinyApis.sSetContent(`
-          <div>
-            <table>
-              <colgroup><col></colgroup>
-              <tbody>
-                <tr><td rowspan="2" >TR 1</td></tr>
-                <tr></tr>
-                <tr><td>TR 3</td></tr>
-                <tr><td >TR 4</td></tr>
-              </tbody>
-            </table>
-          </div>
-        `),
-        tinyApis.sAssertContentPresence({ tr: 4 })
-      ])
-    ], success, failure);
-  }, {
+describe('browser.tinymce.plugins.table.EmptyRowTableTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TINY-4679: Empty tr elements should not be removed', () => {
+    const editor = hook.editor();
+    editor.setContent(`
+      <div>
+        <table>
+          <colgroup><col></colgroup>
+          <tbody>
+            <tr><td rowspan="2" >TR 1</td></tr>
+            <tr></tr>
+            <tr><td>TR 3</td></tr>
+            <tr><td >TR 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+    `);
+    TinyAssertions.assertContentPresence(editor, { tr: 4 });
+  });
 });
