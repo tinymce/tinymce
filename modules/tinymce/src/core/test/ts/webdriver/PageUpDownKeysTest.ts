@@ -76,11 +76,11 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
 
     it('TINY-4612: caret should be placed after the inline element if it is at the end of it', async () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="google.com">link</a>text</p>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.setContent('<p>text<a href="google.com">link</a></p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 4);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
 
-      TinyAssertions.assertCursor(editor, [ 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0 ], 2);
     });
 
     it('TINY-4612: caret wont move if it is not at the beginning/end of the inline element', async function () {

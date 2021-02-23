@@ -42,9 +42,9 @@
     "lib/test",
     "src",
     "tsconfig.json",
-    "readme.md",
+    "README.md",
     "LEGAL.txt",
-    "CHANGELOG.txt",
+    "CHANGELOG.md",
     "LICENSE.txt"
   ],
   "main": "./lib/main/ts/ephox/agar/api/Main.js",

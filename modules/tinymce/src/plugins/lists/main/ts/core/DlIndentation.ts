@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 import { Compare, Replication, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
-import { Indentation } from '../listModel/Indentation';
+import { Indentation } from '../listmodel/Indentation';
 import * as SplitList from './SplitList';
 
 const outdentDlItem = (editor: Editor, item: SugarElement): void => {

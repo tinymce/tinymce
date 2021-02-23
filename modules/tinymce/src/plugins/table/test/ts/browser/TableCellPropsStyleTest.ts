@@ -1,38 +1,34 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableCellPropsStyleTest', (success, failure) => {
-  Plugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Table: change background color on selected table cells', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: blue;" data-mce-selected="1">a</td><td style="background-color: blue;" data-mce-selected="1">b</td></tr></tbody></table>'
-        ),
-        tinyApis.sSetSelection([ 0, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 1, 0 ], 1),
-        tinyApis.sExecCommand('mceTableCellProps'),
-        TableTestUtils.sGotoAdvancedTab,
-        TableTestUtils.sSetInputValue('Background color', 'label.tox-label:contains(Background color) + div>input.tox-textfield', 'red'),
-        TableTestUtils.sClickDialogButton('Clicking Save', true),
-        tinyApis.sAssertContent(
-          '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: red;">a</td><td style="background-color: red;">b</td></tr></tbody></table>'
-        )
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure );
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: change background color on selected table cells', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<tbody>' +
+      '<tr><td style="background-color: blue;" data-mce-selected="1">a</td><td style="background-color: blue;" data-mce-selected="1">b</td></tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 0, 0, 0, 1, 0 ], 1);
+    editor.execCommand('mceTableCellProps');
+    TableTestUtils.gotoAdvancedTab();
+    TableTestUtils.setInputValue('label.tox-label:contains(Background color) + div>input.tox-textfield', 'red');
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContent(editor,
+      '<table style="border-collapse: collapse;" border="1"><tbody><tr><td style="background-color: red;">a</td><td style="background-color: red;">b</td></tr></tbody></table>'
+    );
+  });
 });

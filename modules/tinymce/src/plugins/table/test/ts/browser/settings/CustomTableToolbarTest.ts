@@ -1,47 +1,26 @@
-import { Assertions, Chain, GeneralSteps, Logger, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SelectorFilter } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import TablePlugin from 'tinymce/plugins/table/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
-/*
- *
- * NOTE: This is a context toolbar test. Can't migrate yet.
- *
- */
-
-UnitTest.asynctest('browser.tinymce.plugins.table.CustomTableToolbarTest', (success, failure) => {
-
-  TablePlugin();
-  Theme();
-
-  const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      Logger.t('test custom count of toolbar buttons', GeneralSteps.sequence([
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(tableHtml),
-        TableTestUtils.sOpenToolbarOn(editor, 'table td', [ 0 ]),
-        Chain.asStep({}, [
-          tinyUi.cWaitForUi('no context found', 'div.tox-pop div.tox-toolbar'),
-          Chain.mapper((x) => {
-            return SelectorFilter.descendants(x, 'button').length;
-          }),
-          Assertions.cAssertEq('has correct count', 2)
-        ])
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.table.CustomTableToolbarTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     table_toolbar: 'tableprops tabledelete',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  it('test custom count of toolbar buttons', async () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td>x</td></tr></tbody></table>');
+    TableTestUtils.openContextToolbarOn(editor, 'table td', [ 0 ]);
+    const toolbar = await TinyUiActions.pWaitForUi(editor, 'div.tox-pop div.tox-toolbar');
+    const buttons = SelectorFilter.descendants(toolbar, 'button');
+    assert.lengthOf(buttons, 2, 'has correct count');
+  });
 });
