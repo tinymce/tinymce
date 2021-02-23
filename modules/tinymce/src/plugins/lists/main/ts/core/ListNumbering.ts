@@ -16,6 +16,7 @@ const enum ListType {
   UpperAlpha,
   LowerAlpha,
   Numeric,
+  None,
   Unknown
 }
 
@@ -58,6 +59,8 @@ const deduceListType = (start: string): ListType => {
     return ListType.UpperAlpha;
   } else if (isLowercase(start)) {
     return ListType.LowerAlpha;
+  } else if (Strings.isEmpty(start)) {
+    return ListType.None;
   } else {
     return ListType.Unknown;
   }
@@ -81,6 +84,12 @@ const parseStartValue = (start: string): Optional<ListDetail> => {
       return Optional.some({
         listStyleType: Optional.some('lower-alpha'),
         start: parseAlphabeticBase26(start).toString()
+      });
+
+    case ListType.None:
+      return Optional.some({
+        listStyleType: Optional.none(),
+        start: ''
       });
 
     case ListType.Unknown:
