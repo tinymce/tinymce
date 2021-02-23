@@ -1,312 +1,268 @@
-import { Assertions, Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import * as Helpers from 'tinymce/plugins/table/ui/Helpers';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.HelpersTest', (success, failure) => {
-  Plugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor: Editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 1', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<tbody><tr>' +
-          '<td width="20" height="30" scope="row" class="foo" ' +
-          'style="background-color: #333333; text-align:left; ' +
-          'vertical-align:middle; border-style: dashed; ' +
-          'border-color: #d91111">a</td>' +
-          '</tr></tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('td.foo'),
-          Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
-            Assertions.assertEq('Extracts class', 'foo', cellData.class);
-            Assertions.assertEq('Extracts scope', 'row', cellData.scope);
-            Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
-            Assertions.assertEq('Extracts halign', 'left', cellData.halign);
-            Assertions.assertEq('Extracts valign', 'middle', cellData.valign);
-            Assertions.assertEq('Extracts width', '20', cellData.width);
-            Assertions.assertEq('Extracts height', '30', cellData.height);
-
-            Assertions.assertEq('Extracts background-color', '#333333', cellData.backgroundcolor);
-            Assertions.assertEq('Extracts border-color', '#d91111', cellData.bordercolor);
-            Assertions.assertEq('Extracts border-style', 'dashed', cellData.borderstyle);
-
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 1 with colgroup', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<colgroup>' +
-          '<col width="20" class="foo">' +
-          '</colgroup>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td height="30" scope="row" class="foo" style="background-color: #333333; text-align:left; vertical-align:middle; border-style: dashed; border-color: #d91111">a</td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindAllIn('.foo'),
-          Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
-            Assertions.assertEq('Extracts class', 'foo', cellData.class);
-            Assertions.assertEq('Extracts scope', 'row', cellData.scope);
-            Assertions.assertEq('Extracts celltype', 'td', cellData.celltype);
-            Assertions.assertEq('Extracts halign', 'left', cellData.halign);
-            Assertions.assertEq('Extracts valign', 'middle', cellData.valign);
-            Assertions.assertEq('Does Not Extracts width', '20', cellData.width);
-            Assertions.assertEq('Extracts height', '30', cellData.height);
-
-            Assertions.assertEq('Extracts background-color', '#333333', cellData.backgroundcolor);
-            Assertions.assertEq('Extracts border-color', '#d91111', cellData.bordercolor);
-            Assertions.assertEq('Extracts border-style', 'dashed', cellData.borderstyle);
-
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<tbody><tr>' +
-          '<td class="foo" style="width: 20px; height: 30px; ' +
-          'background-color: rgb(51,51,51); border-color: rgb(217, 17, 17);" ' +
-          'data-mce-selected="1">a</td>' +
-          '</tr></tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('td.foo'),
-          Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
-            Assertions.assertEq('Extracts width from style', '20px', cellData.width);
-            Assertions.assertEq('Extracts height from style', '30px', cellData.height);
-            Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
-            Assertions.assertEq('Extracts border-color from rgb', '#d91111', cellData.bordercolor);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2 with colgroup', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<colgroup>' +
-          '<col style="width: 20px;" class="foo">' +
-          '</colgroup>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td class="foo" style="height: 30px; background-color: rgb(51,51,51); border-color: rgb(217, 17, 17);" data-mce-selected="1">a</td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindAllIn('.foo'),
-          Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
-            Assertions.assertEq('Extracts width from style', '20px', cellData.width);
-            Assertions.assertEq('Extracts height from style', '30px', cellData.height);
-            Assertions.assertEq('Extracts background-color from rgb', '#333333', cellData.backgroundcolor);
-            Assertions.assertEq('Extracts border-color from rgb', '#d91111', cellData.bordercolor);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<tbody><tr>' +
-          '<td class="foo" style="width: 20px; height: 30px; ' +
-          'border: medium dashed #008000;" data-mce-selected="1">a</td>' +
-          '</tr></tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('td.foo'),
-          Chain.op((td) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
-            Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
-            Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromCellElement 2 with colgroup', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1">' +
-          '<colgroup>' +
-          '<col style="width: 20px;" class="foo">' +
-          '</colgroup>' +
-          '<tbody>' +
-          '<tr>' +
-          '<td class="foo" style="height: 30px; border: medium dashed #008000;" data-mce-selected="1">a</td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindAllIn('.foo'),
-          Chain.op((elements: SugarElement[]) => {
-            const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
-            Assertions.assertEq('Extracts border-color from shorthand', '#008000', cellData.bordercolor);
-            Assertions.assertEq('Extracts border-style from shorthand', 'dashed', cellData.borderstyle);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromRowElement', [
-        tinyApis.sSetContent(
-          '<table style="border-collapse: collapse;" border="1"><tbody>' +
-          '<tr class="foo" style="height:30px; ' +
-          'background-color: #333333; text-align:left; vertical-align:middle; ' +
-          'border-style: dashed; border-color: #d91111"><td>a</td></tr>' +
-          '</tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('tr.foo'),
-          Chain.op((tr) => {
-            const rowData = Helpers.extractDataFromRowElement(editor, tr.dom, true);
-            Assertions.assertEq('Extracts height', '30px', rowData.height);
-            Assertions.assertEq('Extracts class', 'foo', rowData.class);
-            Assertions.assertEq('Extracts align', 'left', rowData.align);
-            Assertions.assertEq('Extracts type', 'body', rowData.type);
-            Assertions.assertEq('Extracts border-style', 'dashed', rowData.borderstyle);
-            Assertions.assertEq('Extracts border-color', '#d91111', rowData.bordercolor);
-            Assertions.assertEq('Extracts background-color', '#333333', rowData.backgroundcolor);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 1', [
-        tinyApis.sSetContent(
-          '<table class="foo" cellspacing="1" cellpadding="2" ' +
-          'style="margin-left: auto; margin-right: auto; width: 20px; height:30px;">' +
-          '<caption>A caption</caption><tbody><tr><td>a</td></tr></tbody>' +
-          '</table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts class', 'foo mce-item-table', tableData.class);
-            Assertions.assertEq('Extracts width', '20px', tableData.width);
-            Assertions.assertEq('Extracts height', '30px', tableData.height);
-            Assertions.assertEq('Extracts cellspacing', '1', tableData.cellspacing);
-            Assertions.assertEq('Extracts cellpadding', '2', tableData.cellpadding);
-            Assertions.assertEq('Extracts caption', true, tableData.caption);
-            Assertions.assertEq('Extracts align', 'center', tableData.align);
-
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 2 - right alignment', [
-        tinyApis.sSetContent(
-          '<table class="foo" style="float: right;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts cellpadding from td', '99px', tableData.cellpadding);
-            Assertions.assertEq('Extracts align', 'right', tableData.align);
-
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 2 - left alignment', [
-        tinyApis.sSetContent(
-          '<table class="foo" style="float: left;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts align', 'left', tableData.align);
-
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 3 - border width from border-width style', [
-        tinyApis.sSetSetting('table_style_by_css', true),
-        tinyApis.sSetContent(
-          '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts border-width', '5px', tableData.border);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 4 - border width from border style', [
-        tinyApis.sSetSetting('table_style_by_css', true),
-        tinyApis.sSetContent(
-          '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts border-width', '5px', tableData.border);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 5 - border width from border attr', [
-        tinyApis.sSetSetting('table_style_by_css', false),
-        tinyApis.sSetContent(
-          '<table class="foo" border="5"><tbody><tr><td>a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts border', '5', tableData.border);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 6 - border width from children', [
-        tinyApis.sSetSetting('table_style_by_css', false),
-        tinyApis.sSetContent(
-          '<table class="foo"><tbody><tr><td style="border-width: 5px;">a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts border-width', '5px', tableData.border);
-          })
-        ])
-      ]),
-      Log.stepsAsStep('TBA', 'Table: extractDataFromTableElement 7 - ' +
-                             'border width, style and color from collapsed style', [
-        tinyApis.sSetSetting('table_style_by_css', true),
-        tinyApis.sSetContent(
-          '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
-        ),
-        Chain.asStep(SugarElement.fromDom(editor.getBody()), [
-          UiFinder.cFindIn('table.foo'),
-          Chain.op((table) => {
-            const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
-            Assertions.assertEq('Extracts border-width', '5px', tableData.border);
-            Assertions.assertEq('Extracts border-style', 'double', tableData.borderstyle);
-            Assertions.assertEq('Extracts border-color', 'red', tableData.bordercolor);
-          })
-        ])
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.table.HelpersTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
     indent: false,
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure );
+  }, [ Plugin, Theme ], true);
+
+  it('TBA: extractDataFromCellElement 1', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<tbody><tr>' +
+      '<td width="20" height="30" scope="row" class="foo" ' +
+      'style="background-color: #333333; text-align:left; ' +
+      'vertical-align:middle; border-style: dashed; ' +
+      'border-color: #d91111">a</td>' +
+      '</tr></tbody>' +
+      '</table>'
+    );
+    const td = UiFinder.findIn(TinyDom.body(editor), 'td.foo').getOrDie();
+    const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
+    assert.equal(cellData.class, 'foo', 'Extracts class');
+    assert.equal(cellData.scope, 'row', 'Extracts scope');
+    assert.equal(cellData.celltype, 'td', 'Extracts celltype');
+    assert.equal(cellData.halign, 'left', 'Extracts halign');
+    assert.equal(cellData.valign, 'middle', 'Extracts valign');
+    assert.equal(cellData.width, '20', 'Extracts width');
+    assert.equal(cellData.height, '30', 'Extracts height');
+
+    assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color');
+    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style');
+  });
+
+  it('TBA: extractDataFromCellElement 1 with colgroup', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<colgroup>' +
+      '<col width="20" class="foo">' +
+      '</colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td height="30" scope="row" class="foo" style="background-color: #333333; text-align:left; vertical-align:middle; border-style: dashed; border-color: #d91111">a</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    const elements = UiFinder.findAllIn(TinyDom.body(editor), '.foo');
+    const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
+    assert.equal(cellData.class, 'foo', 'Extracts class');
+    assert.equal(cellData.scope, 'row', 'Extracts scope');
+    assert.equal(cellData.celltype, 'td', 'Extracts celltype');
+    assert.equal(cellData.halign, 'left', 'Extracts halign');
+    assert.equal(cellData.valign, 'middle', 'Extracts valign');
+    assert.equal(cellData.width, '20', 'Does Not Extracts width');
+    assert.equal(cellData.height, '30', 'Extracts height');
+
+    assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color');
+    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style');
+  });
+
+  it('TBA: extractDataFromCellElement 2', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<tbody><tr>' +
+      '<td class="foo" style="width: 20px; height: 30px; ' +
+      'background-color: rgb(51,51,51); border-color: rgb(217, 17, 17);" ' +
+      'data-mce-selected="1">a</td>' +
+      '</tr></tbody>' +
+      '</table>'
+    );
+    const td = UiFinder.findIn(TinyDom.body(editor), 'td.foo').getOrDie();
+    const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
+    assert.equal(cellData.width, '20px', 'Extracts width from style');
+    assert.equal(cellData.height, '30px', 'Extracts height from style');
+    assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color from rgb');
+    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color from rgb');
+  });
+
+  it('TBA: extractDataFromCellElement 2 with colgroup', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<colgroup>' +
+      '<col style="width: 20px;" class="foo">' +
+      '</colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td class="foo" style="height: 30px; background-color: rgb(51,51,51); border-color: rgb(217, 17, 17);" data-mce-selected="1">a</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    const elements = UiFinder.findAllIn(TinyDom.body(editor), '.foo');
+    const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
+    assert.equal(cellData.width, '20px', 'Extracts width from style');
+    assert.equal(cellData.height, '30px', 'Extracts height from style');
+    assert.equal(cellData.backgroundcolor, '#333333', 'Extracts background-color from rgb');
+    assert.equal(cellData.bordercolor, '#d91111', 'Extracts border-color from rgb');
+  });
+
+  it('TBA: extractDataFromCellElement 3', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<tbody><tr>' +
+      '<td class="foo" style="width: 20px; height: 30px; ' +
+      'border: medium dashed #008000;" data-mce-selected="1">a</td>' +
+      '</tr></tbody>' +
+      '</table>'
+    );
+    const td = UiFinder.findIn(TinyDom.body(editor), 'td.foo').getOrDie();
+    const cellData = Helpers.extractDataFromCellElement(editor, td.dom, true, Optional.none());
+    assert.equal(cellData.bordercolor, '#008000', 'Extracts border-color from shorthand');
+    assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style from shorthand');
+  });
+
+  it('TBA: extractDataFromCellElement 3 with colgroup', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1">' +
+      '<colgroup>' +
+      '<col style="width: 20px;" class="foo">' +
+      '</colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td class="foo" style="height: 30px; border: medium dashed #008000;" data-mce-selected="1">a</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    const elements = UiFinder.findAllIn(TinyDom.body(editor), '.foo');
+    const cellData = Helpers.extractDataFromCellElement(editor, elements[1].dom, true, Optional.some(elements[0].dom));
+    assert.equal(cellData.bordercolor, '#008000', 'Extracts border-color from shorthand');
+    assert.equal(cellData.borderstyle, 'dashed', 'Extracts border-style from shorthand');
+  });
+
+  it('TBA: extractDataFromRowElement', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse;" border="1"><tbody>' +
+      '<tr class="foo" style="height:30px; ' +
+      'background-color: #333333; text-align:left; vertical-align:middle; ' +
+      'border-style: dashed; border-color: #d91111"><td>a</td></tr>' +
+      '</tbody></table>'
+    );
+    const tr = UiFinder.findIn(TinyDom.body(editor), 'tr.foo').getOrDie();
+    const rowData = Helpers.extractDataFromRowElement(editor, tr.dom, true);
+    assert.equal(rowData.height, '30px', 'Extracts height');
+    assert.equal(rowData.class, 'foo', 'Extracts class');
+    assert.equal(rowData.align, 'left', 'Extracts align');
+    assert.equal(rowData.type, 'body', 'Extracts type');
+    assert.equal(rowData.borderstyle, 'dashed', 'Extracts border-style');
+    assert.equal(rowData.bordercolor, '#d91111', 'Extracts border-color');
+    assert.equal(rowData.backgroundcolor, '#333333', 'Extracts background-color');
+  });
+
+  it('TBA: extractDataFromTableElement 1', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table class="foo" cellspacing="1" cellpadding="2" ' +
+      'style="margin-left: auto; margin-right: auto; width: 20px; height:30px;">' +
+      '<caption>A caption</caption><tbody><tr><td>a</td></tr></tbody>' +
+      '</table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.class, 'foo mce-item-table', 'Extracts class');
+    assert.equal(tableData.width, '20px', 'Extracts width');
+    assert.equal(tableData.height, '30px', 'Extracts height');
+    assert.equal(tableData.cellspacing, '1', 'Extracts cellspacing');
+    assert.equal(tableData.cellpadding, '2', 'Extracts cellpadding');
+    assert.equal(tableData.caption, true, 'Extracts caption');
+    assert.equal(tableData.align, 'center', 'Extracts align');
+  });
+
+  it('TBA: extractDataFromTableElement 2 - right alignment', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table class="foo" style="float: right;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.cellpadding, '99px', 'Extracts cellpadding from td');
+    assert.equal(tableData.align, 'right', 'Extracts align');
+  });
+
+  it('TBA: extractDataFromTableElement 2 - left alignment', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table class="foo" style="float: left;"><tbody><tr><td style="padding: 99px;">a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.align, 'left', 'Extracts align');
+  });
+
+  it('TBA: extractDataFromTableElement 3 - border width from border-width style', () => {
+    const editor = hook.editor();
+    editor.settings.table_style_by_css = true;
+    editor.setContent(
+      '<table class="foo" style="border-width: 5px" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.border, '5px', 'Extracts border-width');
+  });
+
+  it('TBA: extractDataFromTableElement 4 - border width from border style', () => {
+    const editor = hook.editor();
+    editor.settings.table_style_by_css = true;
+    editor.setContent(
+      '<table class="foo" style="border: 5px solid red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.border, '5px', 'Extracts border-width');
+  });
+
+  it('TBA: extractDataFromTableElement 5 - border width from border attr', () => {
+    const editor = hook.editor();
+    editor.settings.table_style_by_css = false;
+    editor.setContent(
+      '<table class="foo" border="5"><tbody><tr><td>a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.border, '5', 'Extracts border');
+  });
+
+  it('TBA: extractDataFromTableElement 6 - border width from children', () => {
+    const editor = hook.editor();
+    editor.settings.table_style_by_css = false;
+    editor.setContent(
+      '<table class="foo"><tbody><tr><td style="border-width: 5px;">a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.border, '5px', 'Extracts border-width');
+  });
+
+  it('TBA: extractDataFromTableElement 7 - border width, style and color from collapsed style', () => {
+    const editor = hook.editor();
+    editor.settings.table_style_by_css = true;
+    editor.setContent(
+      '<table class="foo" style="border: 5px double red" border="1"><tbody><tr><td>a</td></tr></tbody></table>'
+    );
+    const table = UiFinder.findIn(TinyDom.body(editor), 'table.foo').getOrDie();
+    const tableData = Helpers.extractDataFromTableElement(editor, table.dom, true);
+    assert.equal(tableData.border, '5px', 'Extracts border-width');
+    assert.equal(tableData.borderstyle, 'double', 'Extracts border-style');
+    assert.equal(tableData.bordercolor, 'red', 'Extracts border-color');
+  });
 });

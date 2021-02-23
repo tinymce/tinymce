@@ -1,20 +1,23 @@
-import { Assertions, Chain, Guard, Log, NamedChain, TestLogs, UiFinder } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { McEditor, TinyDom } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { SelectorFind } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableSizeTest', (success, failure) => {
+interface Scenario {
+  readonly html: string;
+}
 
-  Plugin();
-  SilverTheme();
-
-  interface TestData {
-    html: string;
-  }
+describe('browser.tinymce.plugins.table.InsertColumnTableSizeTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
+    plugins: 'table',
+    width: 400,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
   const emptyTable = {
     html: '<table style = "width: 100%;">' +
@@ -128,73 +131,47 @@ UnitTest.asynctest('browser.tinymce.plugins.table.InsertColumnTableSizeTest', (s
           '</table>'
   };
 
-  const cInsertTable = (label: string, table: string) => Chain.control(
-    Chain.mapper((editor: any) => {
-      editor.setContent(table);
-      const bodyElem = TinyDom.fromDom(editor.getBody());
-      const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
-      SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
-        editor.selection.select(cell.dom, true);
-        editor.selection.collapse(true);
-      });
-      return tableElem;
-    }),
-    Guard.addLogging(`Insert ${label}`)
-  );
+  const insertTable = (editor: Editor, table: string) => {
+    editor.setContent(table);
+    const bodyElem = TinyDom.body(editor);
+    const tableElem = UiFinder.findIn(bodyElem, 'table').getOr(bodyElem);
+    SelectorFind.descendant(tableElem, 'td,th').each((cell) => {
+      editor.selection.select(cell.dom, true);
+      editor.selection.collapse(true);
+    });
+    return tableElem;
+  };
 
-  const cInsertColumnMeasureWidth = (label: string, data: TestData) => Log.chain('TBA', 'Insert column before, insert column after, erase column and measure table widths', NamedChain.asChain(
-    [
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      Chain.label('Insert table', NamedChain.direct('editor', cInsertTable(label, data.html), 'element')),
-      Chain.label('Drag SE (-100, 0)', NamedChain.read('editor', TableTestUtils.cDragHandle('se', -100, 0))),
-      Chain.label('Store width before split', NamedChain.write('widthBefore', TableTestUtils.cGetWidth)),
-      Chain.label('Insert column before', NamedChain.read('editor', TableTestUtils.cInsertColumnBefore)),
-      Chain.label('Insert column after', NamedChain.read('editor', TableTestUtils.cInsertColumnAfter)),
-      Chain.label('Delete column', NamedChain.read('editor', TableTestUtils.cDeleteColumn)),
-      Chain.label('Store width after split', NamedChain.write('widthAfter', TableTestUtils.cGetWidth)),
-      NamedChain.merge([ 'widthBefore', 'widthAfter' ], 'widths'),
-      NamedChain.output('widths')
-    ]
-  ));
+  const pInsertColumnMeasureWidth = async (editor: Editor, scenario: Scenario) => {
+    const table = insertTable(editor, scenario.html);
+    await TableTestUtils.pDragHandle(editor, 'se', -100, 0);
+    const widthBefore = TableTestUtils.getWidths(editor, table.dom);
+    TableTestUtils.insertColumnBefore(editor);
+    TableTestUtils.insertColumnAfter(editor);
+    TableTestUtils.deleteColumn(editor);
+    const widthAfter = TableTestUtils.getWidths(editor, table.dom);
+    return {
+      widthBefore,
+      widthAfter
+    };
+  };
 
-  const cAssertWidths = Chain.label(
-    'Assert widths before and after insert column are equal',
-    Chain.op((input: any) => {
-      if (input.widthBefore.isPercent) {
-        // due to rounding errors we can be off by one pixel for percentage tables
-        const actualDiff = Math.abs(input.widthBefore.px - input.widthAfter.px);
-        Assert.eq(`table width should be approx (within 1px): ${input.widthBefore.raw}% (${input.widthBefore.px}px) ~= ${input.widthAfter.raw}% (${input.widthAfter.px}px)`, true, actualDiff <= 1);
-      } else {
-        Assertions.assertEq('table width should not change', input.widthBefore, input.widthAfter);
-      }
-    })
-  );
+  const pInsertColumnAssertWidth = async (scenario: Scenario) => {
+    const widths = await pInsertColumnMeasureWidth(hook.editor(), scenario);
+    TableTestUtils.assertWidths(widths);
+  };
 
-  const cAssertWidth = (label: string, data: TestData) => Chain.label(
-    `Assert width of table ${label} after inserting column`,
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cInsertColumnMeasureWidth(label, data), 'widths'),
-      NamedChain.read('widths', cAssertWidths)
-    ])
-  );
+  context('Insert columns, erase column and assert the table width does not change', () => {
+    it('table which is empty', () => pInsertColumnAssertWidth(emptyTable));
 
-  NamedChain.pipeline(Log.chains('TBA', 'Table: Insert columns, erase column and assert the table width does not change', [
-    NamedChain.write('editor', McEditor.cFromSettings({
-      plugins: 'table',
-      width: 400,
-      theme: 'silver',
-      base_url: '/project/tinymce/js/tinymce'
-    })),
+    it('table with contents in some cells', () => pInsertColumnAssertWidth(contentsInSomeCells));
 
-    NamedChain.read('editor', cAssertWidth('which is empty', emptyTable)),
-    NamedChain.read('editor', cAssertWidth('with contents in some cells', contentsInSomeCells)),
-    NamedChain.read('editor', cAssertWidth('with contents in all cells', contentsInAllCells)),
-    NamedChain.read('editor', cAssertWidth('with headings', tableWithHeadings)),
-    NamedChain.read('editor', cAssertWidth('with caption', tableWithCaption)),
-    NamedChain.read('editor', cAssertWidth('with nested tables', nestedTables)),
+    it('table with contents in all cells', () => pInsertColumnAssertWidth(contentsInAllCells));
 
-    NamedChain.read('editor', McEditor.cRemove)
-  ]),
-  success, failure, TestLogs.init());
+    it('table with headings', () => pInsertColumnAssertWidth(tableWithHeadings));
+
+    it('table with caption', () => pInsertColumnAssertWidth(tableWithCaption));
+
+    it('table with nested tables', () => pInsertColumnAssertWidth(nestedTables));
+  });
 });

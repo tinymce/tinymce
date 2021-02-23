@@ -1,51 +1,53 @@
-import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, McEditor, UiChains } from '@ephox/mcagar';
+import { UiFinder, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { McEditor, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
-import TablePlugin from 'tinymce/plugins/table/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableToolbarTest', (success, failure) => {
-  TablePlugin();
-  Theme();
+describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
+  before(() => {
+    Plugin();
+    Theme();
+  });
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
   const tableWithCaptionHtml = '<table><caption>Caption</caption><tbody><tr><td>x</td></tr></tbody></table>';
 
-  const cCreateEditor = (toolbar: string) => McEditor.cFromSettings({
+  const pCreateEditor = (toolbar: string) => McEditor.pFromSettings<Editor>({
     plugins: 'table',
     table_toolbar: toolbar,
     base_url: '/project/tinymce/js/tinymce'
   });
 
-  Pipeline.async({}, [
-    Log.chainsAsStep('TBA', 'Table: test that table toolbar can be disabled', [
-      cCreateEditor(''),
-      ApiChains.cFocus,
-      ApiChains.cSetContent(tableHtml),
-      ApiChains.cSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
-      Chain.fromIsolatedChainsWith(SugarBody.body(), [
-        Chain.wait(100), // How should I do this better?
-        // I want to check that the inline toolbar does not appear,
-        // but I have to wait unless it won't exist any way because it's too fast
-        UiFinder.cNotExists('div.tox-pop div.tox-toolbar')
-      ]),
-      McEditor.cRemove
-    ]),
-    Log.chainsAsStep('TINY-6006', 'Table: test toolbar icons disabled based on selection or state', [
-      cCreateEditor('tablecopyrow tablepasterowafter tablepasterowbefore'),
-      ApiChains.cFocus,
-      ApiChains.cSetContent(tableWithCaptionHtml),
-      ApiChains.cSetSelection([ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1),
-      UiChains.cWaitForUi('Ensure the copy row toolbar button is disabled', '.tox-pop .tox-tbtn--disabled[title="Copy row"]'),
-      UiChains.cWaitForUi('Ensure the paste row toolbar button is disabled', '.tox-pop .tox-tbtn--disabled[title="Paste row before"]'),
-      ApiChains.cSetSelection([ 0, 1, 0, 0, 0 ], 0, [ 0, 1, 0, 0, 0 ], 0),
-      UiChains.cWaitForUi('Ensure the copy row toolbar button is enabled', '.tox-pop .tox-tbtn[title="Copy row"]:not(.tox-tbtn--disabled)'),
-      UiChains.cWaitForUi('Ensure the paste row toolbar button is disabled', '.tox-pop .tox-tbtn--disabled[title="Paste row before"]'),
-      ApiChains.cExecCommand('mceTableCopyRow'),
-      UiChains.cWaitForUi('Ensure the paste row toolbar button is enabled', '.tox-pop .tox-tbtn[title="Paste row before"]:not(.tox-tbtn--disabled)'),
-      McEditor.cRemove
-    ])
-  ], success, failure);
+  it('TBA: test that table toolbar can be disabled', async () => {
+    const editor = await pCreateEditor('');
+    editor.focus();
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    // Wait for a while to allow the toolbar a chance to render
+    await Waiter.pWait(100);
+    UiFinder.notExists(SugarBody.body(), 'div.tox-pop div.tox-toolbar');
+    McEditor.remove(editor);
+  });
+
+  it('TINY-6006: test toolbar icons disabled based on selection or state', async () => {
+    const editor = await pCreateEditor('tablecopyrow tablepasterowafter tablepasterowbefore');
+    editor.focus();
+    editor.setContent(tableWithCaptionHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
+    // Ensure the copy/paste row buttons are disabled
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[title="Copy row"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[title="Paste row before"]');
+    TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
+    // Ensure the copy row button is enabled, but the paste row button is disabled
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[title="Copy row"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[title="Paste row before"]');
+    editor.execCommand('mceTableCopyRow');
+    // The paste row button should now be enabled
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[title="Paste row before"]:not(.tox-tbtn--disabled)');
+    McEditor.remove(editor);
+  });
 });

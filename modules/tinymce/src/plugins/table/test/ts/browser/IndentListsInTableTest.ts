@@ -1,57 +1,47 @@
-import { Keys, Log, Logger, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.IndentListsInTableTest', (success, failure) => {
-  SilverTheme();
-  TablePlugin();
-  ListsPlugin();
-
-  const sAssertTableInnerHTML = (editor, expected) => {
-    return Logger.t('Assert table InnerHTML ' + expected, Step.sync(() => {
-      const actual = editor.getBody().firstChild.innerHTML;
-      Assert.eq('Does not have correct html', expected, actual);
-    }));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-
-      Log.stepsAsStep('TBA', 'Table: ul > li in table', [
-        tinyApis.sSetContent('<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
-        tinyActions.sContentKeystroke(Keys.tab(), {}),
-        sAssertTableInnerHTML(editor, '<tbody><tr><td><ul><li>a<ul><li>b</li></ul></li></ul></td></tr></tbody>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Table: ol > li in table', [
-        tinyApis.sSetContent('<table><tbody><tr><td><ol><li>a</li><li>b</li></ol></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
-        tinyActions.sContentKeystroke(Keys.tab(), {}),
-        sAssertTableInnerHTML(editor, '<tbody><tr><td><ol><li>a<ol><li>b</li></ol></li></ol></td></tr></tbody>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Table: dl > dt in table', [
-        tinyApis.sSetContent('<table><tbody><tr><td><dl><dt>a</dt><dt>b</dt></dl></td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0, 0, 0, 1 ], 1),
-        tinyActions.sContentKeystroke(Keys.tab(), {}),
-        sAssertTableInnerHTML(editor, '<tbody><tr><td><dl><dt>a</dt><dd>b</dd></dl></td></tr></tbody>')
-      ])
-
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.table.IndentListsInTableTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists table',
     toolbar: 'table numlist',
     indent: false,
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ ListsPlugin, TablePlugin, Theme ], true);
+
+  const assertTableInnerHTML = (editor: Editor, expected: string) => {
+    const table = editor.getBody().firstChild as HTMLTableElement;
+    assert.equal(table.innerHTML, expected, 'Does not have correct html');
+  };
+
+  it('TBA: ul > li in table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td><ul><li>a</li><li>b</li></ul></td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 1 ], 1);
+    TinyContentActions.keystroke(editor, Keys.tab());
+    assertTableInnerHTML(editor, '<tbody><tr><td><ul><li>a<ul><li>b</li></ul></li></ul></td></tr></tbody>');
+  });
+
+  it('TBA: ol > li in table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td><ol><li>a</li><li>b</li></ol></td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 1 ], 1);
+    TinyContentActions.keystroke(editor, Keys.tab());
+    assertTableInnerHTML(editor, '<tbody><tr><td><ol><li>a<ol><li>b</li></ol></li></ol></td></tr></tbody>');
+  });
+
+  it('TBA: dl > dt in table', () => {
+    const editor = hook.editor();
+    editor.setContent('<table><tbody><tr><td><dl><dt>a</dt><dt>b</dt></dl></td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 1 ], 1);
+    TinyContentActions.keystroke(editor, Keys.tab());
+    assertTableInnerHTML(editor, '<tbody><tr><td><dl><dt>a</dt><dd>b</dd></dl></td></tr></tbody>');
+  });
 });

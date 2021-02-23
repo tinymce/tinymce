@@ -76,7 +76,7 @@ const findContainer = <T extends Editor = Editor> (editor: T, selector: string |
   return container;
 };
 
-const setSelection = <T extends Editor = Editor> (editor: T, startSelector: string, startOffset: Offset, endSelector?: string, endOffset?: Offset): void => {
+const setSelection = <T extends Editor = Editor> (editor: T, startSelector: string | Node, startOffset: Offset, endSelector?: string, endOffset?: Offset): void => {
   const startContainer = findContainer(editor, startSelector);
   const endContainer = findContainer(editor, endSelector ? endSelector : startSelector);
   const rng = editor.dom.createRng();
