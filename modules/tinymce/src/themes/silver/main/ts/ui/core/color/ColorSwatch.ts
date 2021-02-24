@@ -12,6 +12,8 @@ import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../../../api/Events';
 import * as Settings from './Settings';
 
+export type ColorInputCallback = (valueOpt: Optional<string>) => void;
+
 export interface ColorSwatchDialogData {
   colorpicker: string;
 }
@@ -186,10 +188,10 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
   });
 };
 
-const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
+const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
   let isValid = false;
 
-  const getOnSubmit = (callback) => (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>) => {
+  const onSubmit = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>) => {
     const data = api.getData();
     const hex = data.colorpicker;
     if (isValid) {
@@ -210,7 +212,6 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     colorpicker: value
   };
 
-  const submit = getOnSubmit(callback);
   editor.windowManager.open({
     title: 'Color Picker',
     size: 'normal',
@@ -239,7 +240,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     ],
     initialData,
     onAction,
-    onSubmit: submit,
+    onSubmit,
     onClose: Fun.noop,
     onCancel: () => {
       callback(Optional.none());
