@@ -92,6 +92,7 @@ interface BaseEditorSettings {
   file_picker_validator_handler?: FilePickerValidationCallback;
   fix_list_elements?: boolean;
   fixed_toolbar_container?: string;
+  fixed_toolbar_container_element?: HTMLElement;
   font_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;

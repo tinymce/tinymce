@@ -100,10 +100,16 @@ const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
+const fixedToolbarContainerElement = (editor): object => editor.getParam('fixed_toolbar_container_element', {}, 'object');
 
 const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
 const fixedContainerElement = (editor): Optional<SugarElement> => {
+  const element = fixedToolbarContainerElement(editor) as HTMLElement;
+  if (element) {
+    return Optional.from(SugarElement.fromDom(element));
+  }
+
   const selector = fixedContainerSelector(editor);
   // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
   return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
