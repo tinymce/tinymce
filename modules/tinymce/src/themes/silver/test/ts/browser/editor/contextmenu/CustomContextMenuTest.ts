@@ -22,7 +22,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
     });
   });
 
-  const closeContextMenu = async () => {
+  const pCloseContextMenu = async () => {
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
     await Waiter.pTryUntil('Close context menu', () => UiFinder.notExists(SugarBody.body(), 'div[role="menu"]'));
   };
@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Ti'.length);
     await TinyUiActions.pTriggerContextMenu(editor, 'a', '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
     UiFinder.exists(SugarBody.body(), '.tox-collection__item-label:contains("Custom Context Menu")');
-    await closeContextMenu();
+    await pCloseContextMenu();
   });
 
   it('TINY-7072: Support custom context menu items with mixed case names', async () => {
@@ -44,6 +44,6 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Ti'.length);
     await TinyUiActions.pTriggerContextMenu(editor, 'a', '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
     UiFinder.exists(SugarBody.body(), '.tox-collection__item-label:contains("Custom Context Menu")');
-    await closeContextMenu();
+    await pCloseContextMenu();
   });
 });
