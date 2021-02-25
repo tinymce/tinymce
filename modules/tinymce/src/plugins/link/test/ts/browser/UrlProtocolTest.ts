@@ -1,101 +1,105 @@
-import { FocusTools, GeneralSteps, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { FocusTools, UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.UrlProtocolTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = TinyDom.fromDom(document);
-
-    const testProtocolConfirm = (url, expectedProtocol) => {
-      const presence = {};
-      presence[`a[href="${expectedProtocol}${url}"]:contains("Something")`] = 1;
-
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>Something</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-
-        FocusTools.sSetActiveValue(doc, url),
-        TestLinkUi.sAssertDialogContents({
-          href: url,
-          text: 'Something',
-          title: '',
-          target: ''
-        }),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sWaitForUi('Wait for confirm dialog to show', '[role="dialog"].tox-confirm-dialog'),
-        TestLinkUi.sClickConfirmYes,
-        TestLinkUi.sAssertContentPresence(tinyApis, presence)
-      ]);
-    };
-
-    const testNoProtocolConfirm = (url) => {
-      const presence = {};
-      presence[`a[href="${url}"]:contains("Something")`] = 1;
-
-      return GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>Something</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-
-        FocusTools.sSetActiveValue(doc, url),
-        TestLinkUi.sAssertDialogContents({
-          href: url,
-          text: 'Something',
-          title: '',
-          target: ''
-        }),
-        TestLinkUi.sClickSave,
-        UiFinder.sNotExists(TinyDom.fromDom(document.body), '[role="dialog"]'),
-        TestLinkUi.sAssertContentPresence(tinyApis, presence)
-      ]);
-    };
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Test regex for non relative ftp link', [
-        testNoProtocolConfirm('ftp://testftp.com')
-      ]),
-      Log.stepsAsStep('TBA', 'Test new regex for non relative http link', [
-        testNoProtocolConfirm('http://testhttp.com'),
-        testNoProtocolConfirm('https://testhttp.com')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for non relative link with no protocol', [
-        testProtocolConfirm('www.http.com', 'http://'),
-        testProtocolConfirm('www3.http.com', 'http://')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for relative link', [
-        testNoProtocolConfirm('test.jpg')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for anchor link', [
-        testNoProtocolConfirm('#test')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for email link with mailto:', [
-        testNoProtocolConfirm('mailto:no-reply@example.com')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for email link', [
-        testProtocolConfirm('no-reply@example.com', 'mailto:')
-      ]),
-      Log.stepsAsStep('TBA', 'Test regex for path with www', [
-        testNoProtocolConfirm('www-example.jpg')
-      ]),
-      Log.stepsAsStep('TINY-5941', 'Test regex for path with @', [
-        testNoProtocolConfirm('imgs/test@2xdpi.jpg')
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.UrlProtocolTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const pTestProtocolConfirm = async (editor: Editor, url: string, expectedProtocol: string) => {
+    const presence = {};
+    presence[`a[href="${expectedProtocol}${url}"]:contains("Something")`] = 1;
+
+    editor.setContent('<p>Something</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length);
+    await TestLinkUi.pOpenLinkDialog(editor);
+
+    FocusTools.setActiveValue(SugarDocument.getDocument(), url);
+    TestLinkUi.assertDialogContents({
+      href: url,
+      text: 'Something',
+      title: '',
+      target: ''
+    });
+    await TestLinkUi.pClickSave(editor);
+    await TinyUiActions.pWaitForDialog(editor, '[role="dialog"].tox-confirm-dialog');
+    await TestLinkUi.pClickConfirmYes(editor);
+    await TestLinkUi.pAssertContentPresence(editor, presence);
+  };
+
+  const pTestNoProtocolConfirm = async (editor: Editor, url: string) => {
+    const presence = {};
+    presence[`a[href="${url}"]:contains("Something")`] = 1;
+
+    editor.setContent('<p>Something</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length);
+    await TestLinkUi.pOpenLinkDialog(editor);
+
+    FocusTools.setActiveValue(SugarDocument.getDocument(), url);
+    TestLinkUi.assertDialogContents({
+      href: url,
+      text: 'Something',
+      title: '',
+      target: ''
+    });
+    await TestLinkUi.pClickSave(editor);
+    UiFinder.notExists(SugarBody.body(), '[role="dialog"]');
+    await TestLinkUi.pAssertContentPresence(editor, presence);
+  };
+
+  it('TBA: Test regex for non relative ftp link', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'ftp://testftp.com');
+  });
+
+  it('TBA: Test new regex for non relative http link', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'http://testhttp.com');
+    await pTestNoProtocolConfirm(editor, 'https://testhttp.com');
+  });
+
+  it('TBA: Test regex for non relative link with no protocol', async () => {
+    const editor = hook.editor();
+    await pTestProtocolConfirm(editor, 'www.http.com', 'http://');
+    await pTestProtocolConfirm(editor, 'www3.http.com', 'http://');
+  });
+
+  it('TBA: Test regex for relative link', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'test.jpg');
+  });
+
+  it('TBA: Test regex for anchor link', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, '#test');
+  });
+
+  it('TBA: Test regex for email link with mailto:', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'mailto:no-reply@example.com');
+  });
+
+  it('TBA: Test regex for email link', async () => {
+    const editor = hook.editor();
+    await pTestProtocolConfirm(editor, 'no-reply@example.com', 'mailto:');
+  });
+
+  it('TBA: Test regex for path with www', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'www-example.jpg');
+  });
+
+  it('TINY-5941: Test regex for path with @', async () => {
+    const editor = hook.editor();
+    await pTestNoProtocolConfirm(editor, 'imgs/test@2xdpi.jpg');
+  });
 });

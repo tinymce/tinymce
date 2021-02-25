@@ -1,78 +1,79 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { describe, it, before, after } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      TestLinkUi.sClearHistory,
-      Log.stepsAsStep('TBA', `Link: doesn't add rel noopener stuff with allow_unsafe_link_target: true`, [
-        tinyApis.sSetSetting('allow_unsafe_link_target', true),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[rel="noopener"]': 0, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Link: adds if allow_unsafe_link_target: false', [
-        tinyApis.sSetSetting('allow_unsafe_link_target', false),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[rel="noopener"]': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-
-      Log.stepsAsStep('TBA', `Link: ...and if it's undefined`, [
-        tinyApis.sSetSetting('allow_unsafe_link_target', undefined),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[rel="noopener"]': 1 })
-      ]),
-
-      Log.stepsAsStep('TBA', 'Link: allow_unsafe_link_target=false: node filter normalizes and secures rel on SetContent', [
-        tinyApis.sSetSetting('allow_unsafe_link_target', false),
-        tinyApis.sSetContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>'),
-        tinyApis.sAssertContent('<p><a href="http://www.google.com" target="_blank" rel="alternate nofollow noopener">Google</a></p>'),
-        tinyApis.sSetContent('')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Link: allow_unsafe_link_target=false: proper option selected for defined rel_list', [
-        tinyApis.sSetSetting('allow_unsafe_link_target', false),
-        tinyApis.sSetSetting('rel_list', [
-          { title: 'Lightbox', value: 'lightbox' },
-          { title: 'Test rel', value: 'alternate nofollow' },
-          { title: 'Table of contents', value: 'toc' }
-        ]),
-        tinyApis.sSetContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>'),
-        tinyApis.sSelect('p', [ 0 ]),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        TestLinkUi.sAssertDialogContents({
-          text: 'Google',
-          title: '',
-          href: 'http://www.google.com',
-          target: '_blank',
-          rel: 'alternate nofollow noopener'
-        }),
-        // Clicking "cancel" here instead of "ok" so that it doesn't fire a pending insert.
-        TestLinkUi.sClickCancel
-      ]),
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
     target_list: [
       { title: 'New page', value: '_blank' }
-    ]
-  }, success, failure);
+    ],
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  it(`TBA: doesn't add rel noopener stuff with allow_unsafe_link_target: true`, async () => {
+    const editor = hook.editor();
+    editor.settings.allow_unsafe_link_target = true;
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[rel="noopener"]': 0, 'a': 1 });
+    editor.setContent('');
+  });
+
+  it('TBA: adds if allow_unsafe_link_target: false', async () => {
+    const editor = hook.editor();
+    editor.settings.allow_unsafe_link_target = false;
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[rel="noopener"]': 1 });
+    editor.setContent('');
+  });
+
+  it(`TBA: adds if allow_unsafe_link_target: undefined`, async () => {
+    const editor = hook.editor();
+    editor.settings.allow_unsafe_link_target = undefined;
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[rel="noopener"]': 1 });
+  });
+
+  it(`TBA: allow_unsafe_link_target=false: node filter normalizes and secures rel on SetContent`, () => {
+    const editor = hook.editor();
+    editor.settings.allow_unsafe_link_target = false;
+    editor.setContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>');
+    TinyAssertions.assertContent(editor, '<p><a href="http://www.google.com" target="_blank" rel="alternate nofollow noopener">Google</a></p>');
+    editor.setContent('');
+  });
+
+  it('TBA: allow_unsafe_link_target=false: proper option selected for defined rel_list', async () => {
+    const editor = hook.editor();
+    editor.settings.allow_unsafe_link_target = false;
+    editor.settings.rel_list = [
+      { title: 'Lightbox', value: 'lightbox' },
+      { title: 'Test rel', value: 'alternate nofollow' },
+      { title: 'Table of contents', value: 'toc' }
+    ];
+    editor.setContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>');
+    TinySelections.select(editor, 'p', [ 0 ]);
+    await TestLinkUi.pOpenLinkDialog(editor);
+    TestLinkUi.assertDialogContents({
+      text: 'Google',
+      title: '',
+      href: 'http://www.google.com',
+      target: '_blank',
+      rel: 'alternate nofollow noopener'
+    });
+    // Clicking "cancel" here instead of "ok" so that it doesn't fire a pending insert.
+    await TestLinkUi.pClickCancel(editor);
+  });
 });
