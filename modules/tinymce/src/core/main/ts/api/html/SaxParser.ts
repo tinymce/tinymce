@@ -222,7 +222,7 @@ const SaxParser = (settings?: SaxParserSettings, schema = Schema()): SaxParser =
     let attributesRequired, attributesDefault, attributesForced;
     let anyAttributesRequired, attrValue, idCount = 0;
     const decode = Entities.decode;
-    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,formaction,poster,xlink:href');
+    const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
     const scriptUriRegExp = /((java|vb)script|mhtml):/i;
     const parsingMode = format === 'html' ? ParsingMode.Html : ParsingMode.Xml;
 
