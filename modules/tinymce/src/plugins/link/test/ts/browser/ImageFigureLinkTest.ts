@@ -30,11 +30,11 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
         '<figcaption>TinyMCE</figcaption>' +
       '</figure>'
     );
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setCursor(editor, [ 0 ], 0);
     await TestLinkUi.pInsertLink(editor, 'http://google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'figure.image > a[href="http://google.com"] > img': 1 });
 
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setCursor(editor, [ 0 ], 0);
     LinkPluginUtils.unlink(editor);
     await TestLinkUi.pAssertContentPresence(editor, { 'figure.image > img': 1 });
   });

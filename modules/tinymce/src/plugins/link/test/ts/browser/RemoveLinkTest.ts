@@ -14,7 +14,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
   it('TBA: Removing a link with a collapsed selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a></p>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.clickOnUi(editor, 'div[title="Remove link"]');
     TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });

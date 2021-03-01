@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     TestLinkUi.clearHistory();
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com">tiny</a></p>');
-    TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 1);
+    TinySelections.setCursor(editor, [ 0 ], 1);
     editor.execCommand('mcelink');
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({
@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"].tox-tbtn--enabled');
     // Check the link button is enabled (collapsed in link)
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"].tox-tbtn--enabled');
     // Check the link button is disabled (text)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
@@ -54,7 +54,7 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"]:not(.tox-tbtn--disabled)');
     // Check the open link button is enabled (collapsed in link)
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"]:not(.tox-tbtn--disabled)');
     // Check the open link button is disabled (text)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
@@ -71,7 +71,7 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"]:not(.tox-tbtn--disabled)');
     // Check the unlink button is enabled (collapsed in link)
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"]:not(.tox-tbtn--disabled)');
     // Check the unlink button is disabled (text)
     TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 2);

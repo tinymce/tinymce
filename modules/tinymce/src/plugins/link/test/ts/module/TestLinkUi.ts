@@ -113,7 +113,7 @@ const pSetListBoxItem = async (editor: Editor, group: string, itemText: string) 
   Mouse.click(element);
   const list = await UiFinder.pWaitForVisible('Wait for list to open', SugarBody.body(), '.tox-menu.tox-collection--list');
   const item = UiFinder.findIn(list, '.tox-collection__item-label:contains(' + itemText + ')').getOrDie();
-  const parent = Traverse.parent(item).getOrDie();
+  const parent = Traverse.parent(item).getOrDie('Failed to find parent');
   Mouse.click(parent);
 };
 

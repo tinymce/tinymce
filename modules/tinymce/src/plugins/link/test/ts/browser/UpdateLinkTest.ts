@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
   it('TBA: should not get anchor info if not selected node', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com" class="shouldbekept" title="shouldalsobekept">tiny</a></p>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     editor.execCommand('mcelink');
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({
@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
   it('TBA: should remove attributes if unset in the dialog', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com" class="shouldbekept" title="shouldnotbekept">tiny</a></p>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     editor.execCommand('mcelink');
     await TinyUiActions.pWaitForDialog(editor);
     TestLinkUi.assertDialogContents({

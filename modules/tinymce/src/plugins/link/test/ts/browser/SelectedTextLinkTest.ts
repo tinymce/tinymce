@@ -105,7 +105,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
   it('TINY-5205: collapsed selection in complex structure should preserve the text when changing URL', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://oldlink/"><strong>word</strong><em>other</em></a></p>');
-    TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 2);
     await pOpenDialog(editor);
     FocusTools.setActiveValue(doc, 'http://something');
     await TestLinkUi.pClickSave(editor);
