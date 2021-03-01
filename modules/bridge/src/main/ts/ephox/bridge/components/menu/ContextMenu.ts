@@ -2,6 +2,7 @@ import { SeparatorMenuItemSpec } from '../../api/Menu';
 import { CommonMenuItemSpec } from './CommonMenuItem';
 
 export interface ContextMenuItem extends CommonMenuItemSpec {
+  text: string;
   icon?: string;
   type?: 'item';
   onAction: () => void;

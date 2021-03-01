@@ -1,2 +1,4 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
+
+bridge@2.2.0
