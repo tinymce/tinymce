@@ -12,7 +12,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
   }, [ Theme ], true);
 
   const pOpenContextMenu = async (editor: Editor, selector: string) =>
-    TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
+    await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
 
   const pCloseContextMenu = async () => {
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.escape());
