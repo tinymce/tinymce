@@ -1,51 +1,43 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import TablePlugin from 'tinymce/plugins/table/Plugin';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.TableClassListTest', (success, failure) => {
-  TablePlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.table.TableClassListTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  it('TBA: no class input without setting', async () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    editor.execCommand('mceTableProps');
+    await TableTestUtils.pAssertDialogPresence(
+      'Checking that class label is not present',
+      editor,
+      {
+        'label:contains("Class")': 0
+      }
+    );
+    await TableTestUtils.pClickDialogButton(editor, false);
+  });
 
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Table: no class input without setting', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
-        tinyApis.sExecCommand('mceTableProps'),
-        TableTestUtils.sAssertDialogPresence(
-          'Checking that class label is not present',
-          {
-            'label:contains("Class")': 0
-          }
-        ),
-        TableTestUtils.sClickDialogButton('close', false),
-        tinyApis.sSetContent('')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Table: class input with setting', [
-        tinyApis.sFocus(),
-        tinyApis.sSetSetting('table_class_list', [{ title: 'test', value: 'test' }]),
-        tinyApis.sSetContent(tableHtml),
-        tinyApis.sSetSelection([ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1),
-        // FIX: Dupe with TableCellClassListTest.
-        tinyApis.sExecCommand('mceTableProps'),
-        TableTestUtils.sAssertListBoxValue('Select class', 'Class', 'test'),
-        TableTestUtils.sClickDialogButton('Trigger test class', true),
-        tinyApis.sAssertContentPresence({ 'table.test': 1 })
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    plugins: 'table',
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  it('TBA: class input with setting', async () => {
+    const editor = hook.editor();
+    editor.settings.table_class_list = [{ title: 'test', value: 'test' }];
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    // FIX: Dupe with TableCellClassListTest.
+    editor.execCommand('mceTableProps');
+    await TableTestUtils.pAssertListBoxValue('Select class', editor, 'Class', 'test');
+    await TableTestUtils.pClickDialogButton(editor, true);
+    TinyAssertions.assertContentPresence(editor, { 'table.test': 1 });
+  });
 });

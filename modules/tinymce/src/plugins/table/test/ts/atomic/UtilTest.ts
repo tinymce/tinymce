@@ -1,54 +1,58 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as fc from 'fast-check';
+
 import { addPxSuffix, isPercentage, isPixel, removePxSuffix } from 'tinymce/plugins/table/core/Util';
 
-UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - isPercentage', () => {
-  Assert.eq('Empty string is false', false, isPercentage(''));
-  Assert.eq('Single % string is false', false, isPercentage('%'));
-  Assert.eq('Percentage string is true', true, isPercentage('10%'));
-  Assert.eq('Percentage with decimal string is true', true, isPercentage('10.125%'));
+describe('atomic.tinymce.plugins.table.core.UtilTest', () => {
+  it('isPercentage', () => {
+    assert.isFalse(isPercentage(''), 'Empty string is false');
+    assert.isFalse(isPercentage('%'), 'Single % string is false');
+    assert.isTrue(isPercentage('10%'), 'Percentage string is true');
+    assert.isTrue(isPercentage('10.125%'), 'Percentage with decimal string is true');
 
-  fc.assert(fc.property(fc.float(1, 100), (n) => {
-    Assert.eq('Arbitrary float with percent string is true', true, isPercentage(n + '%'));
-    Assert.eq('Number string is false', false, isPercentage(n + ''));
-    Assert.eq('Pixel string is false', false, isPercentage(n + 'px'));
-    Assert.eq('String containing % string is false', false, isPercentage(n + '%' + n));
-  }));
-});
+    fc.assert(fc.property(fc.float(1, 100), (n) => {
+      assert.isTrue(isPercentage(n + '%'), 'Arbitrary float with percent string is true');
+      assert.isFalse(isPercentage(n + ''), 'Number string is false');
+      assert.isFalse(isPercentage(n + 'px'), 'Pixel string is false');
+      assert.isFalse(isPercentage(n + '%' + n), 'String containing % string is false');
+    }));
+  });
 
-UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - isPixel', () => {
-  Assert.eq('Empty string is false', false, isPixel(''));
-  Assert.eq('Single px string is false', false, isPixel('px'));
-  Assert.eq('Pixel string is true', true, isPixel('10px'));
-  Assert.eq('Pixel with decimal string is true', true, isPixel('10.125px'));
+  it('isPixel', () => {
+    assert.isFalse(isPixel(''), 'Empty string is false');
+    assert.isFalse(isPixel('px'), 'Single px string is false');
+    assert.isTrue(isPixel('10px'), 'Pixel string is true');
+    assert.isTrue(isPixel('10.125px'), 'Pixel with decimal string is true');
 
-  fc.assert(fc.property(fc.float(1, 100), (n) => {
-    Assert.eq('Arbitrary float with px string is true', true, isPixel(n + 'px'));
-    Assert.eq('Number string is false', false, isPixel(n + ''));
-    Assert.eq('Percent string is false', false, isPixel(n + '%'));
-    Assert.eq('String containing px string is false', false, isPixel(n + 'px' + n));
-  }));
-});
+    fc.assert(fc.property(fc.float(1, 100), (n) => {
+      assert.isTrue(isPixel(n + 'px'), 'Arbitrary float with px string is true');
+      assert.isFalse(isPixel(n + ''), 'Number string is false');
+      assert.isFalse(isPixel(n + '%'), 'Percent string is false');
+      assert.isFalse(isPixel(n + 'px' + n), 'String containing px string is false');
+    }));
+  });
 
-UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - removePxSuffix', () => {
-  Assert.eq('Empty string is identical', '', removePxSuffix(''));
-  Assert.eq('Pixel string has pixel removed', '10', removePxSuffix('10px'));
+  it('removePxSuffix', () => {
+    assert.equal(removePxSuffix(''), '', 'Empty string is identical');
+    assert.equal(removePxSuffix('10px'), '10', 'Pixel string has pixel removed');
 
-  fc.assert(fc.property(fc.float(1, 100), (n) => {
-    Assert.eq('Arbitrary float with px string is true', n + '', removePxSuffix(n + 'px'));
-    Assert.eq('Number string is identical', n + '', removePxSuffix(n + ''));
-    Assert.eq('String with pixel prefix is identical', 'px' + n, removePxSuffix('px' + n));
-    Assert.eq('Percent string is identical', n + '%', removePxSuffix(n + '%'));
-  }));
-});
+    fc.assert(fc.property(fc.float(1, 100), (n) => {
+      assert.equal(removePxSuffix(n + 'px'), n + '', 'Arbitrary float with px string is true');
+      assert.equal(removePxSuffix(n + ''), n + '', 'Number string is identical');
+      assert.equal(removePxSuffix('px' + n), 'px' + n, 'String with pixel prefix is identical');
+      assert.equal(removePxSuffix(n + '%'), n + '%', 'Percent string is identical');
+    }));
+  });
 
-UnitTest.test('atomic.tinymce.plugins.table.core.UtilTest - addPxSuffix', () => {
-  Assert.eq('Empty string is identical', '', addPxSuffix(''));
-  Assert.eq('Number string has px added', '10px', addPxSuffix('10'));
+  it('addPxSuffix', () => {
+    assert.equal(addPxSuffix(''), '', 'Empty string is identical');
+    assert.equal(addPxSuffix('10'), '10px', 'Number string has px added');
 
-  fc.assert(fc.property(fc.float(1, 100), (n) => {
-    Assert.eq('Arbitrary float with px string is true', n + 'px', addPxSuffix(n + ''));
-    Assert.eq('Percent string is identical', n + '%', addPxSuffix(n + '%'));
-    Assert.eq('Pixel string is identical', n + 'px', addPxSuffix(n + 'px'));
-  }));
+    fc.assert(fc.property(fc.float(1, 100), (n) => {
+      assert.equal(addPxSuffix(n + ''), n + 'px', 'Arbitrary float with px string is true');
+      assert.equal(addPxSuffix(n + '%'), n + '%', 'Percent string is identical');
+      assert.equal(addPxSuffix(n + 'px'), n + 'px', 'Pixel string is identical');
+    }));
+  });
 });

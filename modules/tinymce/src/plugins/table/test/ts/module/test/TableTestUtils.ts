@@ -1,18 +1,30 @@
-import {
-  ApproxStructure, Assertions, Chain, Cursors, GeneralSteps, Guard, Log, Logger, Mouse, NamedChain, Step, StructAssert, UiControls, UiFinder, Waiter
-} from '@ephox/agar';
-import { Assert } from '@ephox/bedrock-client';
+import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyApis, TinyDom, TinyUi } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Checked, Class, Html, SelectorFilter, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 
 interface Options {
-  headerRows: number;
-  headerCols: number;
+  readonly headerRows: number;
+  readonly headerCols: number;
 }
 
-const getRawWidth = (editor: Editor, elm: HTMLElement) => {
+export interface WidthData {
+  readonly raw: number | null;
+  readonly px: number;
+  readonly unit: string | null;
+  readonly isPercent: boolean;
+}
+
+const advSelectors = {
+  borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
+  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
+  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+};
+
+const getRawWidth = (editor: Editor, elm: HTMLElement): string => {
   const style = editor.dom.getStyle(elm, 'width');
   if (style) {
     return style;
@@ -22,7 +34,7 @@ const getRawWidth = (editor: Editor, elm: HTMLElement) => {
   }
 };
 
-const getWidths = (editor: Editor, elm: HTMLElement) => {
+const getWidths = (editor: Editor, elm: HTMLElement): WidthData => {
   const rawWidth = getRawWidth(editor, elm);
   const pxWidth = editor.dom.getStyle(elm, 'width', true);
   const unit = rawWidth === '' ? null : /\d+(\.\d+)?(%|px)/.exec(rawWidth)[2];
@@ -34,378 +46,215 @@ const getWidths = (editor: Editor, elm: HTMLElement) => {
   };
 };
 
-const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | null, expectedUnit: string | null) => {
+const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | null, expectedUnit: string | null): void => {
   const widthData = getWidths(editor, elm);
   const nodeName = elm.nodeName.toLowerCase();
   if (expectedWidth === null) {
-    Assert.eq(`${nodeName} width should not be set`, null, widthData.raw);
+    assert.isNull(widthData.raw, `${nodeName} width should not be set`);
   } else {
-    Assert.eq(`${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`, true, Math.abs(widthData.raw - expectedWidth) <= 2);
+    assert.approximately(widthData.raw, expectedWidth, 2, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
   }
-  Assert.eq(`${nodeName} unit is ${expectedUnit}`, expectedUnit, widthData.unit);
+  assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
 };
 
-const sAssertTableStructure = (editor: Editor, structure: StructAssert) => Logger.t('Assert table structure', Step.sync(() => {
-  const table = SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), 'table').getOrDie('Should exist a table');
+const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
+  const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');
   Assertions.assertStructure('Should be a table the expected structure', structure, table);
-}));
-
-const sOpenToolbarOn = (editor, selector, path) => {
-  return Logger.t('Open dialog from toolbar', Chain.asStep(TinyDom.fromDom(editor.getBody()), [
-    UiFinder.cFindIn(selector),
-    Cursors.cFollow(path),
-    Chain.op((target) => {
-      editor.selection.select(target.dom);
-    }),
-    Mouse.cClick
-  ]));
 };
 
-const sOpenTableDialog = (ui: TinyUi) => Logger.t('Open table dialog', GeneralSteps.sequence([
-  Waiter.sTryUntil('Click table properties toolbar button',
-    ui.sClickOnToolbar('Click on toolbar button', 'button:not(.tox-tbtn--disabled)'),
-    50, 1000
-  ),
-  UiFinder.sWaitForVisible('wait for dialog', TinyDom.fromDom(document.body), '.tox-dialog[role="dialog"]')
-]));
+const openContextToolbarOn = (editor: Editor, selector: string, path: number[]): void => {
+  const elem = UiFinder.findIn(TinyDom.body(editor), selector).getOrDie();
+  const target = Cursors.follow(elem, path).getOrDie();
+  editor.selection.select(target.dom);
+  Mouse.click(target);
+};
 
-const sAssertElementStructure = (editor, selector, expected) => Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
-  const body = editor.getBody();
-  body.normalize(); // consolidate text nodes
-
-  Assertions.assertStructure(
-    'Asserting HTML structure of the element: ' + selector,
-    ApproxStructure.fromHtml(expected),
-    SelectorFind.descendant(SugarElement.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
+const pOpenTableDialog = async (editor: Editor): Promise<void> => {
+  await Waiter.pTryUntil('Click table properties toolbar button',
+    () => TinyUiActions.clickOnToolbar(editor, 'button:not(.tox-tbtn--disabled)')
   );
-}));
+  await TinyUiActions.pWaitForDialog(editor);
+};
 
-const sAssertApproxElementStructure = (editor, selector, expected) => Logger.t('Assert HTML structure of the element ' + expected, Step.sync(() => {
+const assertApproxElementStructure = (editor: Editor, selector: string, expected: StructAssert): void => {
   const body = editor.getBody();
   body.normalize(); // consolidate text nodes
+  const target = SelectorFind.descendant(TinyDom.body(editor), selector).getOrDie('Nothing in the editor matches selector: ' + selector);
 
   Assertions.assertStructure(
     'Asserting HTML structure of the element: ' + selector,
     expected,
-    SelectorFind.descendant(SugarElement.fromDom(body), selector).getOrDie('Nothing in the Editor matches selector: ' + selector)
-  );
-}));
-
-const sClickDialogButton = (label: string, isSave: boolean) => Logger.t('Close dialog and wait to confirm dialog goes away', GeneralSteps.sequence([
-  Mouse.sClickOn(TinyDom.fromDom(document.body), '[role="dialog"].tox-dialog button:contains("' + (isSave ? 'Save' : 'Cancel') + '")'),
-  Waiter.sTryUntil(
-    'Waiting for confirm dialog to go away',
-    UiFinder.sNotExists(TinyDom.fromDom(document.body), '.tox-confirm-dialog'),
-    100,
-    1000
-  )
-]));
-
-const cSetInputValue = (section, newValue) => Chain.control(
-  Chain.fromChains([
-    UiFinder.cFindIn(`label:contains(${section}) + div > input`),
-    UiControls.cSetValue(newValue)
-  ]),
-  Guard.addLogging('Set input value' + newValue)
-);
-
-const cWaitForDialog = Chain.control(
-  Chain.fromChains([
-    Chain.inject(SugarBody.body()),
-    UiFinder.cWaitFor('Waiting for dialog', '[role="dialog"]')
-  ]),
-  Guard.addLogging('Wait for dialog to be visible')
-);
-
-const sChooseTab = (tabName: string) => Logger.t('Choose tab ' + tabName, Chain.asStep(SugarBody.body(), [
-  cWaitForDialog,
-  UiFinder.cFindIn(`[role="tab"]:contains(${tabName})`),
-  Mouse.cClick
-]));
-
-const sAssertDialogPresence = (label, expected) => Logger.t('Assert dialog is present', Chain.asStep({}, [
-  cWaitForDialog,
-  Chain.op((dialog) => {
-    Assertions.assertPresence(
-      label,
-      expected,
-      dialog
-    );
-  })
-]));
-
-const sAssertSelectValue = (label, section, expected) => Logger.t('Assert selected value ' + expected, Chain.asStep({}, [
-  cWaitForDialog,
-  UiFinder.cFindIn('label:contains("' + section + '") + .tox-selectfield select'),
-  UiControls.cGetValue,
-  Assertions.cAssertEq('Checking select: ' + label, expected)
-]));
-
-const sAssertListBoxValue = (label, section, expected) => Logger.t('Assert selected value ' + expected, Chain.asStep({}, [
-  cWaitForDialog,
-  UiFinder.cFindIn('label:contains("' + section + '") + .tox-listboxfield > .tox-listbox'),
-  Chain.mapper((elem) => Attribute.get(elem, 'data-value')),
-  Assertions.cAssertEq('Checking listbox: ' + label, expected)
-]));
-
-const cGetBody = Chain.control(
-  Chain.mapper((editor: any) => {
-    return TinyDom.fromDom(editor.getBody());
-  }),
-  Guard.addLogging('Get body')
-);
-
-const cGetDoc = Chain.control(
-  Chain.mapper((editor: Editor) => SugarElement.fromDom(editor.getDoc().documentElement)),
-  Guard.addLogging('Get doc')
-);
-
-const cInsertTable = (cols: number, rows: number) => Chain.mapper((editor: Editor) => TinyDom.fromDom(editor.plugins.table.insertTable(cols, rows)));
-
-const cInsertRaw = (html: string) => Chain.mapper((editor: Editor) => {
-  const element = SugarElement.fromHtml<HTMLElement>(html);
-  Attribute.set(element, 'data-mce-id', '__mce');
-  editor.insertContent(Html.getOuter(element));
-
-  return SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '[data-mce-id="__mce"]').map((el) => {
-    Attribute.remove(el, 'data-mce-id');
-    return el;
-  }).getOrDie();
-});
-
-const cMergeCells = (keys) => Chain.control(
-  Chain.mapper((editor: Editor) => {
-    keys(editor);
-    editor.execCommand('mceTableMergeCells');
-  }),
-  Guard.addLogging('Merge cells')
-);
-
-const cSplitCells = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableSplitCells');
-  }),
-  Guard.addLogging('Split cells')
-);
-
-const cInsertColumnBefore = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableInsertColBefore');
-  }),
-  Guard.addLogging('Insert column before selected column')
-);
-
-const cInsertColumnAfter = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableInsertColAfter');
-  }),
-  Guard.addLogging('Insert column after selected column')
-);
-
-const cDeleteColumn = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableDeleteCol');
-  }),
-  Guard.addLogging('Delete column')
-);
-
-const cInsertRowBefore = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableInsertRowBefore');
-  }),
-  Guard.addLogging('Insert row before selected row')
-);
-
-const cInsertRowAfter = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableInsertRowAfter');
-  }),
-  Guard.addLogging('Insert row after selected row')
-);
-
-const cDeleteRow = Chain.control(
-  Chain.mapper((editor: Editor) => {
-    editor.execCommand('mceTableDeleteRow');
-  }),
-  Guard.addLogging('Delete row')
-);
-
-const cDragHandle = (id, deltaH, deltaV) => {
-  return Chain.control(
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetBody, 'editorBody'),
-      NamedChain.read('editorBody', Chain.control(
-        UiFinder.cFindIn('#mceResizeHandle' + id),
-        Guard.tryUntil('wait for resize handlers', 100, 40000)
-      )),
-      NamedChain.read('editorBody', Chain.fromChains([
-        UiFinder.cFindIn('#mceResizeHandle' + id),
-        Mouse.cMouseDown,
-        Mouse.cMouseMoveTo(deltaH, deltaV),
-        Mouse.cMouseUp
-      ])),
-      NamedChain.outputInput
-    ]),
-    Guard.addLogging('Drag handle')
+    target
   );
 };
 
-const cDragResizeBar = (rowOrCol: 'row' | 'column', index: number, dx: number, dy: number) =>
-  Chain.control(
-    NamedChain.asChain([
-      NamedChain.direct(NamedChain.inputName(), Chain.identity, 'editor'),
-      NamedChain.direct('editor', cGetBody, 'editorBody'),
-      // Need to mouse over the table to trigger the 'resizebar' divs to appear in the dom
-      NamedChain.read('editorBody', Chain.fromChains([
-        UiFinder.cFindIn('td'),
-        Mouse.cMouseOver
-      ])),
-      NamedChain.direct('editor', cGetDoc, 'editorDoc'),
-      NamedChain.read('editorDoc', Chain.fromChains([
-        UiFinder.cFindIn(`div[data-${rowOrCol}='${index}']`),
-        Mouse.cMouseDown
-      ])),
-      NamedChain.read('editorDoc', Chain.fromChains([
-        UiFinder.cFindIn('div.ephox-dragster-blocker'),
-        Mouse.cMouseMove,
-        Mouse.cMouseMoveTo(dx, dy),
-        Mouse.cMouseUpTo(dx, dy)
-      ])),
-      NamedChain.outputInput
-    ]),
-    Guard.addLogging(`Drag ${rowOrCol} ${index} resizer`)
+const assertElementStructure = (editor: Editor, selector: string, expected: string): void =>
+  assertApproxElementStructure(editor, selector, ApproxStructure.fromHtml(expected));
+
+const pClickDialogButton = async (editor: Editor, isSave: boolean): Promise<void> => {
+  const close = isSave ? TinyUiActions.submitDialog : TinyUiActions.cancelDialog;
+  close(editor);
+  await Waiter.pTryUntil(
+    'Waiting for the dialog to go away',
+    () => UiFinder.notExists(SugarBody.body(), '.tox-dialog')
   );
+};
 
-const cGetWidth = Chain.control(
-  Chain.mapper((input: any) => {
-    const editor = input.editor;
-    const elm = input.element.dom;
-    return getWidths(editor, elm);
-  }),
-  Guard.addLogging('Get table width')
-);
+const pAssertDialogPresence = async (label: string, editor: Editor, expected: Record<string, number>): Promise<void> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  Assertions.assertPresence(
+    label,
+    expected,
+    dialog
+  );
+};
 
-const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number) => {
+const pAssertListBoxValue = async (label: string, editor: Editor, section: string, expected: string): Promise<void> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  const elem = UiFinder.findIn(dialog, 'label:contains("' + section + '") + .tox-listboxfield > .tox-listbox').getOrDie();
+  const value = Attribute.get(elem, 'data-value');
+  assert.equal(value, expected, 'Checking listbox: ' + label);
+};
+
+const insertRaw = (editor: Editor, html: string): SugarElement<HTMLTableElement> => {
+  const element = SugarElement.fromHtml<HTMLTableElement>(html);
+  Attribute.set(element, 'data-mce-id', '__mce');
+  editor.insertContent(Html.getOuter(element));
+
+  return SelectorFind.descendant<HTMLTableElement>(TinyDom.body(editor), '[data-mce-id="__mce"]').map((el) => {
+    Attribute.remove(el, 'data-mce-id');
+    return el;
+  }).getOrDie();
+};
+
+const mergeCells = (editor: Editor, keys: (editor: Editor) => void): boolean => {
+  keys(editor);
+  return editor.execCommand('mceTableMergeCells');
+};
+
+const splitCells = (editor: Editor): boolean =>
+  editor.execCommand('mceTableSplitCells');
+
+const insertColumnBefore = (editor: Editor): boolean =>
+  editor.execCommand('mceTableInsertColBefore');
+
+const insertColumnAfter = (editor: Editor): boolean =>
+  editor.execCommand('mceTableInsertColAfter');
+
+const deleteColumn = (editor: Editor): boolean =>
+  editor.execCommand('mceTableDeleteCol');
+
+const insertRowBefore = (editor: Editor): boolean =>
+  editor.execCommand('mceTableInsertRowBefore');
+
+const insertRowAfter = (editor: Editor): boolean =>
+  editor.execCommand('mceTableInsertRowAfter');
+
+const deleteRow = (editor: Editor): boolean =>
+  editor.execCommand('mceTableDeleteRow');
+
+const pDragHandle = async (editor: Editor, id: string, dx: number, dy: number): Promise<void> => {
+  const body = TinyDom.body(editor);
+  const resizeHandle = await Waiter.pTryUntil('wait for resize handlers',
+    () => UiFinder.findIn(body, '#mceResizeHandle' + id).getOrDie()
+  );
+  Mouse.mouseDown(resizeHandle);
+  Mouse.mouseMoveTo(resizeHandle, dx, dy);
+  Mouse.mouseUp(resizeHandle);
+};
+
+const pDragResizeBar = async (editor: Editor, rowOrCol: 'row' | 'column', index: number, dx: number, dy: number): Promise<void> => {
+  const body = TinyDom.body(editor);
+  const docElem = TinyDom.documentElement(editor);
+  // Need to mouse over the table to trigger the 'resizebar' divs to appear in the dom
+  const td = UiFinder.findIn(body, 'td').getOrDie();
+  Mouse.mouseOver(td);
+
+  // Wait for the resize bar to show
+  const resizeBar = await Waiter.pTryUntil('wait for resize bars',
+    () => UiFinder.findIn(docElem, `div[data-${rowOrCol}='${index}']`).getOrDie()
+  );
+  Mouse.mouseDown(resizeBar);
+
+  const blocker = UiFinder.findIn(docElem, 'div.ephox-dragster-blocker').getOrDie();
+  Mouse.mouseMove(blocker);
+  Mouse.mouseMoveTo(blocker, dx, dy);
+  Mouse.mouseUp(blocker);
+};
+
+const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number): WidthData => {
   const row = SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr')[rowNumber];
   const cell = SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td')[columnNumber];
   return getWidths(editor, cell.dom);
 };
 
-const cGetCellWidth = (rowNumber: number, columnNumber: number) => Chain.control(
-  Chain.mapper((input: any) => {
-    const editor = input.editor;
-    const elm = input.element;
-    return getCellWidth(editor, elm, rowNumber, columnNumber);
-  }),
-  Guard.addLogging('Get cell width')
-);
+const getInput = (selector: string) =>
+  UiFinder.findIn(SugarBody.body(), selector).getOrDie();
 
-const cGetInput = (selector: string) => Chain.control(
-  Chain.fromChains([
-    Chain.inject(SugarBody.body()),
-    UiFinder.cFindIn(selector)
-  ]),
-  Guard.addLogging('Get input')
-);
-
-const sAssertInputValue = (label, selector, expected) => Logger.t(label,
-  Chain.asStep({}, [
-    cGetInput(selector),
-    Chain.op((element) => {
-      if (element.dom.type === 'checkbox') {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, element.dom.checked);
-      } else if (Class.has(element, 'tox-listbox')) {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, Attribute.get(element, 'data-value'));
-      } else {
-        Assertions.assertEq(`The input value for ${label} should be: `, expected, Value.get(element));
-      }
-    })
-  ])
-);
-
-const sSetInputValue = (label, selector, value) => Logger.t(label,
-  Chain.asStep({}, [
-    cGetInput(selector),
-    Chain.op((element) => {
-      if (element.dom.type === 'checkbox') {
-        Checked.set(element, value);
-      } else if (Class.has(element, 'tox-listbox')) {
-        Attribute.set(element, 'data-value', value);
-      } else {
-        Value.set(element, value);
-      }
-    })
-  ])
-);
-
-const sGotoGeneralTab = Chain.asStep({}, [
-  Chain.inject(SugarBody.body()),
-  UiFinder.cFindIn('div.tox-tab:contains(General)'),
-  Mouse.cClick
-]);
-
-const sGotoAdvancedTab = Chain.asStep({}, [
-  Chain.inject(SugarBody.body()),
-  UiFinder.cFindIn('div.tox-tab:contains(Advanced)'),
-  Mouse.cClick
-]);
-
-const advSelectors = {
-  borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
-  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
-  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
+  const input = getInput(selector);
+  if (input.dom.type === 'checkbox') {
+    assert.equal(input.dom.checked, expected, `The input value for ${label} should be: ${expected}`);
+  } else if (Class.has(input, 'tox-listbox')) {
+    assert.equal(Attribute.get(input, 'data-value'), expected, `The input value for ${label} should be: ${expected}`);
+  } else {
+    assert.equal(Value.get(input), expected, `The input value for ${label} should be: ${expected}`);
+  }
 };
 
-const sSetTabInputValues = (data, tabSelectors) => {
-  const steps = [];
+const setInputValue = (selector: string, value: string | boolean): void => {
+  const input = getInput(selector);
+  if (input.dom.type === 'checkbox') {
+    Checked.set(input, value as boolean);
+  } else if (Class.has(input, 'tox-listbox')) {
+    Attribute.set(input, 'data-value', value);
+  } else {
+    Value.set(input, value as string);
+  }
+};
+
+const gotoGeneralTab = () => Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(General)');
+const gotoAdvancedTab = () => Mouse.clickOn(SugarBody.body(), 'div.tox-tab:contains(Advanced)');
+
+const setTabInputValues = (data: Record<string, any>, tabSelectors: Record<string, string>): void => {
   Obj.mapToArray(tabSelectors, (value, key) => {
     if (Obj.has(data, key)) {
-      steps.push(sSetInputValue(key, tabSelectors[key], data[key]));
+      setInputValue(tabSelectors[key], data[key]);
     }
   });
-  return GeneralSteps.sequence(steps);
 };
 
-const sSetDialogValues = (data, hasAdvanced, generalSelectors) => {
+const setDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
-    return GeneralSteps.sequence([
-      sGotoGeneralTab,
-      sSetTabInputValues(data, generalSelectors),
-      sGotoAdvancedTab,
-      sSetTabInputValues(data, advSelectors)
-    ]);
+    gotoGeneralTab();
+    setTabInputValues(data, generalSelectors);
+    gotoAdvancedTab();
+    setTabInputValues(data, advSelectors);
+  } else {
+    setTabInputValues(data, generalSelectors);
   }
-  return sSetTabInputValues(data, generalSelectors);
 };
 
-const sAssertTabContents = (data, tabSelectors) => {
-  const steps = [];
+const assertTabContents = (data: Record<string, any>, tabSelectors: Record<string, string>): void => {
   Obj.mapToArray(tabSelectors, (value, key) => {
     if (Obj.has(data, key)) {
-      steps.push(sAssertInputValue(key, value, data[key]));
+      assertInputValue(key, value, data[key]);
     }
   });
-  return GeneralSteps.sequence(steps);
 };
 
-const sAssertDialogValues = (data, hasAdvanced, generalSelectors) => {
+const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
-    return GeneralSteps.sequence([
-      sGotoGeneralTab,
-      sAssertTabContents(data, generalSelectors),
-      sGotoAdvancedTab,
-      sAssertTabContents(data, advSelectors)
-    ]);
+    gotoGeneralTab();
+    assertTabContents(data, generalSelectors);
+    gotoAdvancedTab();
+    assertTabContents(data, advSelectors);
+  } else {
+    assertTabContents(data, generalSelectors);
   }
-  return sAssertTabContents(data, generalSelectors);
 };
 
-const sInsertTable = (editor: Editor, args) =>
-  Logger.t('Insert table ', Step.sync(() =>
-    editor.execCommand('mceInsertTable', false, args)));
-
-const sAssertTableStructureWithSizes = (
+const assertTableStructureWithSizes = (
   editor: Editor,
   cols: number,
   rows: number,
@@ -414,9 +263,8 @@ const sAssertTableStructureWithSizes = (
   widths: Array<number | null>[],
   useColGroups: boolean,
   options: Options = { headerRows: 0, headerCols: 0 }
-): Step<any, any> => {
-
-  const tableWithColGroup = Step.sync(() => {
+): void => {
+  const tableWithColGroup = () => {
     const table = editor.dom.select('table')[0];
     assertWidth(editor, table, tableWidth, unit);
     const row = editor.dom.select('colgroup', table)[0];
@@ -424,9 +272,9 @@ const sAssertTableStructureWithSizes = (
       const column = editor.dom.select('col', row)[columnIndex];
       assertWidth(editor, column, columnWidth, unit);
     });
-  });
+  };
 
-  const tableWithoutColGroup = Step.sync(() => {
+  const tableWithoutColGroup = () => {
     const table = editor.dom.select('table')[0];
     assertWidth(editor, table, tableWidth, unit);
     Arr.each(widths, (rowWidths, rowIndex) => {
@@ -436,9 +284,9 @@ const sAssertTableStructureWithSizes = (
         assertWidth(editor, cell, cellWidth, unit);
       });
     });
-  });
+  };
 
-  const asserTableStructure = sAssertTableStructure(editor, ApproxStructure.build((s, str) => {
+  const structure = () => assertTableStructure(editor, ApproxStructure.build((s, str) => {
     const tbody = s.element('tbody', {
       children: Arr.range(rows, (rowIndex) =>
         s.element('tr', {
@@ -469,23 +317,40 @@ const sAssertTableStructureWithSizes = (
     });
   }));
 
-  return GeneralSteps.sequence(useColGroups ? [ asserTableStructure, tableWithColGroup ] : [ asserTableStructure, tableWithoutColGroup ]);
+  if (useColGroups) {
+    structure();
+    tableWithColGroup();
+  } else {
+    structure();
+    tableWithoutColGroup();
+  }
 };
 
-const sMakeInsertTable = (editor: Editor, cols: number, rows: number) =>
-  Logger.t('Insert table ' + cols + 'x' + rows, Step.sync(() => {
-    editor.plugins.table.insertTable(cols, rows);
-  }));
+const insertTable = (editor: Editor, args: Record<string, any>): boolean =>
+  editor.execCommand('mceInsertTable', false, args);
 
-const sInsertTableTest = (editor, tinyApis: TinyApis, id: string, tableColumns: number, tableRows: number, widths: number[][], withColGroups: boolean) =>
-  Log.stepsAsStep(id, `Table: Insert table ${tableColumns}x${tableRows}`, [
-    tinyApis.sSetContent(''),
-    sMakeInsertTable(editor, tableColumns, tableRows),
-    sAssertTableStructureWithSizes(editor, tableColumns, tableRows, '%', 100, widths, withColGroups),
-    tinyApis.sAssertSelection([ 0, withColGroups ? 1 : 0, 0, 0 ], 0, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0)
-  ]);
+const makeInsertTable = (editor: Editor, cols: number, rows: number): SugarElement<HTMLTableElement> =>
+  SugarElement.fromDom(editor.plugins.table.insertTable(cols, rows));
 
-const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, withColGroups: boolean) => {
+const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number) => {
+  TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
+  await Waiter.pTryUntil('click table menu', () =>
+    TinyUiActions.clickOnUi(editor, 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')
+  );
+  const gridSelector = (cols - 1) + (10 * (rows - 1));
+  await Waiter.pTryUntil('click table grid', () =>
+    TinyUiActions.clickOnUi(editor, `div.tox-insert-table-picker div[role="button"]:nth(${gridSelector})`)
+  );
+};
+
+const insertTableTest = (editor: Editor, tableColumns: number, tableRows: number, widths: number[][], withColGroups: boolean): void => {
+  editor.setContent('');
+  makeInsertTable(editor, tableColumns, tableRows);
+  assertTableStructureWithSizes(editor, tableColumns, tableRows, '%', 100, widths, withColGroups);
+  TinyAssertions.assertCursor(editor, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0);
+};
+
+const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi, withColGroups: boolean): StructAssert[] => {
   const style = {
     width: str.contains('%')
   };
@@ -545,44 +410,53 @@ const createTableChildren = (s: ApproxStructure.StructApi, str: ApproxStructure.
   return withColGroups ? [ columns, tbody ] : [ tbody ];
 };
 
+const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData }) => {
+  if (widths.widthBefore.isPercent) {
+    // due to rounding errors we can be off by one pixel for percentage tables
+    assert.approximately(
+      widths.widthAfter.px,
+      widths.widthBefore.px,
+      1,
+      `table width should be approx (within 1px): ${widths.widthBefore.raw}% (${widths.widthBefore.px}px) ~= ${widths.widthAfter.raw}% (${widths.widthAfter.px}px)`
+    );
+  } else {
+    assert.equal(widths.widthAfter, widths.widthBefore, 'table width should not change');
+  }
+};
+
 export {
   getCellWidth,
-  sAssertDialogPresence,
-  sAssertSelectValue,
-  sAssertListBoxValue,
-  sChooseTab,
-  sOpenToolbarOn,
-  sAssertTableStructure,
-  sAssertTableStructureWithSizes,
+  pAssertDialogPresence,
+  pAssertListBoxValue,
+  openContextToolbarOn,
+  assertTableStructure,
+  assertTableStructureWithSizes,
   createTableChildren,
-  sInsertTableTest,
-  sOpenTableDialog,
-  sGotoGeneralTab,
-  sGotoAdvancedTab,
-  sAssertInputValue,
-  sAssertDialogValues,
-  sSetInputValue,
-  sSetDialogValues,
-  sClickDialogButton,
-  sAssertElementStructure,
-  sAssertApproxElementStructure,
-  cSetInputValue,
-  cWaitForDialog,
-  cGetBody,
-  cGetDoc,
-  cInsertTable,
-  cInsertRaw,
-  cMergeCells,
-  cSplitCells,
-  cDragHandle,
-  cDragResizeBar,
-  cGetWidth,
-  cGetCellWidth,
-  cInsertColumnBefore,
-  cInsertColumnAfter,
-  cDeleteColumn,
-  cInsertRowBefore,
-  cInsertRowAfter,
-  cDeleteRow,
-  sInsertTable
+  insertTableTest,
+  pInsertTableViaGrid,
+  pOpenTableDialog,
+  gotoGeneralTab,
+  gotoAdvancedTab,
+  assertInputValue,
+  assertDialogValues,
+  setInputValue,
+  setDialogValues,
+  pClickDialogButton,
+  assertElementStructure,
+  assertApproxElementStructure,
+  insertRaw,
+  mergeCells,
+  splitCells,
+  pDragHandle,
+  pDragResizeBar,
+  getWidths,
+  insertColumnBefore,
+  insertColumnAfter,
+  deleteColumn,
+  insertRowBefore,
+  insertRowAfter,
+  deleteRow,
+  insertTable,
+  makeInsertTable,
+  assertWidths
 };

@@ -21,33 +21,29 @@ Below is a list of commonly used parts of `katamari`
 
 ## Optional Data Types
 
-`Optional`: A representation of None or Some(x)
-`Result`: A representation of Error(str) or Value(v)
+- `Optional`: A representation of None or Some(x)
+- `Result`: A representation of Error(str) or Value(v)
 
 ## Asynchronous Data Types
 
-`Future`: An abstraction over an asynchronous value
-`FutureResult`: A composition of a `Result` and a `Future`
-`LazyValue`: An asynchronous value that is only calculated once
+- `Future`: An abstraction over an asynchronous value
+- `FutureResult`: A composition of a `Result` and a `Future`
+- `LazyValue`: An asynchronous value that is only calculated once
 
 ## Mutable Data Types
 
-`Cell`: A mutable piece of data'
-`Singleton`: A mutable piece of optional data
-
-## Immutable Data Types
-
-`Struct`: An immmutable collection of fields
+- `Cell`: A mutable piece of data'
+- `Singleton`: A mutable piece of optional data
 
 ## Algebraic Data Types
 
-`Adt`: An approximate representation of an [Algebraic Data Type](https://en.wikipedia.org/wiki/Algebraic_data_type) in JavaScript. It is based on the [Church Encoding](https://en.wikipedia.org/wiki/Church_encoding) method.
+- `Adt`: An approximate representation of an [Algebraic Data Type](https://en.wikipedia.org/wiki/Algebraic_data_type) in JavaScript. It is based on the [Church Encoding](https://en.wikipedia.org/wiki/Church_encoding) method.
 
 # Higher-order Functions
 
-`Arr`: collection of functions that operate on arrays
-`Obj`: collection of functions that operate on JavaScript objects
-`Merger`: collection of functions to merge JavaScript objects
+- `Arr`: collection of functions that operate on arrays
+- `Obj`: collection of functions that operate on JavaScript objects
+- `Merger`: collection of functions to merge JavaScript objects
 
 # Tests
 

@@ -108,7 +108,8 @@ interface DomQuery<T extends Node = Node> extends ArrayLike<T> {
   empty (): this;
   eq (index: number): this;
   filter (selector: string | ((i: number, item) => boolean)): this;
-  find (selector: string): this;
+  find <K extends keyof HTMLElementTagNameMap>(selector: K): DomQuery<HTMLElementTagNameMap[K]>;
+  find <T extends Node>(selector: string): DomQuery<T>;
   first (): this;
   hasClass (className: string): boolean;
   hide (): this;

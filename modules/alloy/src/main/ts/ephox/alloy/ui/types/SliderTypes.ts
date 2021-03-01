@@ -164,6 +164,7 @@ export interface SliderSpec extends CompositeSketchSpec {
 }
 
 export interface SliderApis {
+  setValue: (slider: AlloyComponent, value: SliderValue) => void;
   resetToMin: (slider: AlloyComponent) => void;
   resetToMax: (slider: AlloyComponent) => void;
   refresh: (slider: AlloyComponent) => void;

@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { parseDetail, parseStartValue } from '../core/ListNumbering';
 import { isOlNode } from '../core/NodeType';
 import { getParentList } from '../core/Selection';
 
 const open = (editor: Editor) => {
-  const dom = editor.dom;
-
   // Find the current list and skip opening if the selection isn't in an ordered list
   const currentList = getParentList(editor);
   if (!isOlNode(currentList)) {
@@ -32,7 +32,10 @@ const open = (editor: Editor) => {
       ]
     },
     initialData: {
-      start: dom.getAttrib(currentList, 'start') || '1'
+      start: parseDetail({
+        start: editor.dom.getAttrib(currentList, 'start', '1'),
+        listStyleType: Optional.some(editor.dom.getStyle(currentList, 'list-style-type'))
+      })
     },
     buttons: [
       {
@@ -49,8 +52,15 @@ const open = (editor: Editor) => {
     ],
     onSubmit: (api) => {
       const data = api.getData();
-      editor.undoManager.transact(() => {
-        dom.setAttrib(getParentList(editor), 'start', data.start === '1' ? '' : data.start);
+      parseStartValue(data.start).each((detail) => {
+        editor.execCommand('mceListUpdate', false, {
+          attrs: {
+            start: detail.start === '1' ? '' : detail.start
+          },
+          styles: {
+            'list-style-type': detail.listStyleType.getOr('')
+          }
+        });
       });
       api.close();
     }

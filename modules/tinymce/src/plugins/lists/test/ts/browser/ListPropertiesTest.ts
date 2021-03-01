@@ -5,6 +5,8 @@ import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/PublicApi';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -131,5 +133,123 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
     await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:contains("List properties"):not(.tox-collection__item--state-disabled)');
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
+  });
+
+  it('TINY-6907: List properties dialog uses mceListUpdate command internally to update the DOM', async () => {
+    const editor = hook.editor();
+
+    const blockCommand = (event: EditorEvent<ExecCommandEvent>) => {
+      if (event.command.toLowerCase() === 'mcelistupdate') {
+        event.preventDefault();
+      }
+    };
+
+    // block the command to ensure dialog changes don't work without it
+    editor.on('BeforeExecCommand', blockCommand);
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    await openDialog(editor, 'ol > li');
+    updateDialog(editor, '1', '5');
+    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+
+    // restore the command after the test
+    editor.off('BeforeExecCommand', blockCommand);
+  });
+
+  it('TINY-6907: mceListUpdate command sets the start attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { attrs: { start: 5 }});
+    TinyAssertions.assertContent(editor, '<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
+  it('TINY-6907: mceListUpdate command can remove the start attribute', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol start="5"><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { attrs: { start: '' }});
+    TinyAssertions.assertContent(editor, '<ol><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
+  it('TINY-6907: mceListUpdate command sets styles', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { styles: { 'list-style-type': 'upper-alpha' }});
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: upper-alpha;"><li>Item 1</li><li>Item 2</li></ol>');
+  });
+
+  it('TINY-6907: mceListUpdate command does not break when used on a paragraph', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some text</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, { attrs: { start: 5 }});
+    TinyAssertions.assertContent(editor, '<p>some text</p>');
+  });
+
+  it('TINY-6907: mceListUpdate command does not break when passed null', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>some text</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+
+    editor.execCommand('mceListUpdate', false, null);
+    TinyAssertions.assertContent(editor, '<p>some text</p>');
+  });
+
+  it('TINY-6891: List properties command with lower-alpha list', () => {
+    const editor = hook.editor();
+
+    // Convert to lower-alpha list
+    editor.setContent('<ol><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, '1', 'ab');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;" start="28"><li>1</li><li>2</li></ol>');
+
+    // Convert back to numerical list
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'ab', '1');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
+  });
+
+  it('TINY-6891: List properties command with upper-alpha list', () => {
+    const editor = hook.editor();
+
+    // Convert to upper-alpha list
+    editor.setContent('<ol><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, '1', 'AB');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: upper-alpha;" start="28"><li>1</li><li>2</li></ol>');
+
+    // Convert back to numerical list
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'AB', '1');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
+  });
+
+  it('TINY-6891: List properties command with invalid value should not update the list', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'a', 'abc123');
+    TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
+  });
+
+  it('TINY-6891: Empty string results in numerical list', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol style="list-style-type: lower-alpha;" start="2"><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'b', '');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
   });
 });

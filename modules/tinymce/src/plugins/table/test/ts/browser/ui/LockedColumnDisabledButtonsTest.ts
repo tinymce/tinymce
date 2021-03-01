@@ -1,9 +1,9 @@
-import { GeneralSteps, Log, Pipeline, Keyboard, Keys, Chain } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Keys, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -18,10 +18,7 @@ enum TableContextMenu {
   Column
 }
 
-UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTest', (success, failure) => {
-  Theme();
-  Plugin();
-
+describe('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTest', () => {
   const tableButtons: ButtonDetails[] = [
     { name: 'table', label: 'Table' }
   ];
@@ -69,165 +66,172 @@ UnitTest.asynctest('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTes
 
   const toolbar = Arr.map([ ...tableButtons, ...columnButtons, ...rowButtons, ...cellButtons ], (buttonDetails) => buttonDetails.name).join(' ');
 
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    const doc = SugarElement.fromDom(document);
-
-    const table = (lockedColumns: number[] = [ 0 ]) =>
-      `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
-    '<tbody>' +
-    '<tr>' +
-    `<td>a</td>` +
-    `<td>b</td>` +
-    `<td>c</td>` +
-    '</tr>' +
-    '<tr>' +
-    `<td>d</td>` +
-    `<td>e</td>` +
-    `<td>f</td>` +
-    '</tr>' +
-    '</tbody>' +
-    '</table>';
-
-    const multiCellSelectionTable = (lockedColumns: number[] = [ 0 ]) =>
-      `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
-    '<tbody>' +
-    '<tr>' +
-    `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
-    `<td data-mce-selected="1">b</td>` +
-    `<td data-mce-selected="1" data-mce-last-selected="1">c</td>` +
-    '</tr>' +
-    '<tr>' +
-    `<td>d</td>` +
-    `<td>e</td>` +
-    `<td>f</td>` +
-    '</tr>' +
-    '</tbody>' +
-    '</table>';
-
-    const mergeCellTable = `<table data-snooker-locked-cols="0">` +
-    `<tbody>` +
-    `<tr>` +
-    `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
-    `<td data-mce-selected="1" data-mce-last-selected="1">b</td>` +
-    `</tr>` +
-    `</tbody></table>`;
-
-    const splitCellTable = `<table data-snooker-locked-cols="0">` +
-    `<tbody>` +
-    `<tr>` +
-    `<td colspan="2">a</td>` +
-    `</tr>` +
-    `</tbody>` +
-    `</table>`;
-
-    const sAssertToolbarButtonState = (selector: string, disabled: boolean) => tinyUi.sWaitForUi(`${selector} toolbar button should be ${disabled ? 'disabled' : 'enabled'}`, `button[aria-label="${selector}"][aria-disabled="${disabled}"]`);
-    const sAssertMenuButtonState = (selector: string, disabled: boolean) => tinyUi.sWaitForUi(`${selector} menu button should be ${disabled ? 'disabled' : 'enabled'}`, `div.tox-collection__item[title="${selector}"][aria-disabled="${disabled}"]`);
-
-    const sAssertToolbarButtons = (buttons: ButtonDetails[], expectedDisabledState: boolean) =>
-      GeneralSteps.sequence(Arr.map(buttons, (button) => sAssertToolbarButtonState(button.label, expectedDisabledState)));
-
-    const sAssertMenuButtons = (buttons: ButtonDetails[], expectedDisabledState: boolean) =>
-      GeneralSteps.sequence(Arr.map(buttons, (button) => sAssertMenuButtonState(button.label, expectedDisabledState)));
-
-    const sPopulateTableClipboard = (rowOrCol: 'row' | 'col') => GeneralSteps.sequence([
-      tinyApis.sSetContent(`<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>`),
-      tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-      tinyApis.sExecCommand(rowOrCol === 'col' ? 'mceTableCopyCol' : 'mceTableCopyRow'),
-      tinyApis.sSetContent(''),
-    ]);
-
-    const sOpenContextMenu = (target: string) => Chain.asStep(editor, [
-      tinyUi.cTriggerContextMenu('trigger context menu', target, '.tox-silver-sink [role="menuitem"]'),
-      Chain.wait(0)
-    ]);
-
-    const sSelectContextMenuItem = (index: number) =>
-      GeneralSteps.sequence([
-        sOpenContextMenu('td'),
-        GeneralSteps.sequence(GeneralSteps.repeat(index, Keyboard.sKeydown(doc, Keys.down(), { }))),
-        Keyboard.sKeydown(doc, Keys.right(), {}),
-      ]);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TINY-6765', 'ColBefore, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the first column in the table',
-        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
-          return [
-            sPopulateTableClipboard('col'),
-            tinyApis.sSetContent(tableHtml),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons([ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true),
-            sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true)
-          ];
-        })
-      ),
-      Log.stepsAsStep('TINY-6765', 'ColAfter, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the last column in the table',
-        Arr.bind([ table, multiCellSelectionTable ], (tableHtml) => {
-          return [
-            sPopulateTableClipboard('col'),
-            tinyApis.sSetContent(tableHtml([ 2 ])),
-            tinyApis.sSetCursor([ 0, 0, 0, 2 ], 0),
-            sAssertToolbarButtons([ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true),
-            sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true)
-          ];
-        })
-      ),
-      Log.stepsAsStep('TINY-6765', ' ColRemove, ColCopy buttons should be disabled when locked column is selected',
-        Arr.bind([ table(), multiCellSelectionTable() ], (tableHtml) => {
-          return [
-            sPopulateTableClipboard('col'),
-            tinyApis.sSetContent(tableHtml),
-            tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-            sAssertToolbarButtons([ ...colRemoveButtons, ...colCopyButton ], true),
-            sSelectContextMenuItem(TableContextMenu.Column),
-            sAssertMenuButtons([ ...colRemoveButtons, ...colCopyButton ], true)
-          ];
-        })
-      ),
-      Log.stepsAsStep('TINY-6765', 'ColBefore, ColAfter buttons should not be disabled when locked column is selected but is not the first or last column in the table', [
-        sPopulateTableClipboard('col'),
-        tinyApis.sSetContent(table()),
-        tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
-        sAssertToolbarButtons([ ...colBeforeButtons, ...colAfterButtons ], false),
-        sSelectContextMenuItem(TableContextMenu.Column),
-        sAssertMenuButtons([ ...colBeforeButtons, ...colAfterButtons ], false)
-      ]),
-      Log.stepsAsStep('TINY-6765', 'Column buttons should not be disabled when locked column is not selected', [
-        sPopulateTableClipboard('col'),
-        tinyApis.sSetContent(table()),
-        tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
-        sAssertToolbarButtons(columnButtons, false),
-        sSelectContextMenuItem(TableContextMenu.Column),
-        sAssertMenuButtons(columnButtons, false)
-      ]),
-      Log.stepsAsStep('TINY-6765', 'Row buttons should not be disabled when locked column is in the table', [
-        sPopulateTableClipboard('row'),
-        tinyApis.sSetContent(table()),
-        tinyApis.sSetCursor([ 0, 0, 0, 1 ], 0),
-        sAssertToolbarButtons(rowButtons, false),
-        sSelectContextMenuItem(TableContextMenu.Row),
-        sAssertMenuButtons(rowButtons, false)
-      ]),
-      Log.stepsAsStep('TINY-6765', 'Cell buttons should be disabled when locked column is selected', [
-        tinyApis.sSetContent(mergeCellTable),
-        tinyApis.sSetCursor([ 0, 0, 0, 0 ], 0),
-        sAssertToolbarButtonState(cellButtons[0].label, true),
-        sSelectContextMenuItem(TableContextMenu.Cell),
-        sAssertMenuButtonState(cellButtons[0].label, true),
-        tinyApis.sSetContent(splitCellTable),
-        sAssertToolbarButtonState(cellButtons[1].label, true),
-        sSelectContextMenuItem(TableContextMenu.Cell),
-        sAssertMenuButtonState(cellButtons[1].label, true)
-      ])
-    ], onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     toolbar,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  const table = (lockedColumns: number[] = [ 0 ]) =>
+    `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
+  '<tbody>' +
+  '<tr>' +
+  `<td>a</td>` +
+  `<td>b</td>` +
+  `<td>c</td>` +
+  '</tr>' +
+  '<tr>' +
+  `<td>d</td>` +
+  `<td>e</td>` +
+  `<td>f</td>` +
+  '</tr>' +
+  '</tbody>' +
+  '</table>';
+
+  const multiCellSelectionTable = (lockedColumns: number[] = [ 0 ]) =>
+    `<table data-snooker-locked-cols="${lockedColumns.join(',')}">` +
+  '<tbody>' +
+  '<tr>' +
+  `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
+  `<td data-mce-selected="1">b</td>` +
+  `<td data-mce-selected="1" data-mce-last-selected="1">c</td>` +
+  '</tr>' +
+  '<tr>' +
+  `<td>d</td>` +
+  `<td>e</td>` +
+  `<td>f</td>` +
+  '</tr>' +
+  '</tbody>' +
+  '</table>';
+
+  const mergeCellTable = `<table data-snooker-locked-cols="0">` +
+  `<tbody>` +
+  `<tr>` +
+  `<td data-mce-selected="1" data-mce-first-selected="1">a</td>` +
+  `<td data-mce-selected="1" data-mce-last-selected="1">b</td>` +
+  `</tr>` +
+  `</tbody></table>`;
+
+  const splitCellTable = `<table data-snooker-locked-cols="0">` +
+  `<tbody>` +
+  `<tr>` +
+  `<td colspan="2">a</td>` +
+  `</tr>` +
+  `</tbody>` +
+  `</table>`;
+
+  const pAssertToolbarButtonState = (editor: Editor, selector: string, disabled: boolean) =>
+    TinyUiActions.pWaitForUi(editor, `button[aria-label="${selector}"][aria-disabled="${disabled}"]`);
+
+  const pAssertMenuButtonState = (editor: Editor, selector: string, disabled: boolean) =>
+    TinyUiActions.pWaitForUi(editor, `div.tox-collection__item[title="${selector}"][aria-disabled="${disabled}"]`);
+
+  const pAssertToolbarButtons = async (editor: Editor, buttons: ButtonDetails[], expectedDisabledState: boolean) => {
+    for (const button of buttons) {
+      await pAssertToolbarButtonState(editor, button.label, expectedDisabledState);
+    }
+  };
+
+  const pAssertMenuButtons = async (editor: Editor, buttons: ButtonDetails[], expectedDisabledState: boolean) => {
+    for (const button of buttons) {
+      await pAssertMenuButtonState(editor, button.label, expectedDisabledState);
+    }
+  };
+
+  const populateTableClipboard = (editor: Editor, rowOrCol: 'row' | 'col') => {
+    editor.setContent(`<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+    editor.execCommand(rowOrCol === 'col' ? 'mceTableCopyCol' : 'mceTableCopyRow');
+    editor.setContent('');
+  };
+
+  const pOpenContextMenu = async (editor: Editor, target: string) => {
+    await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
+    await Waiter.pWait(0);
+  };
+
+  const pSelectContextMenuItem = async (editor: Editor, index: number) => {
+    await pOpenContextMenu(editor, 'td');
+    Arr.range(index, () => TinyUiActions.keydown(editor, Keys.down()));
+    TinyUiActions.keydown(editor, Keys.right());
+  };
+
+  it('TINY-6765: ColBefore, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the first column in the table', async () => {
+    const editor = hook.editor();
+    for (const tableHtml of [ table, multiCellSelectionTable ]) {
+      populateTableClipboard(editor, 'col');
+      editor.setContent(tableHtml());
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      await pAssertToolbarButtons(editor, [ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true);
+      await pSelectContextMenuItem(editor, TableContextMenu.Column);
+      await pAssertMenuButtons(editor, [ ...colBeforeButtons, ...colRemoveButtons, ...colCopyButton ], true);
+    }
+  });
+
+  it('TINY-6765: ColAfter, ColRemove, ColCopy buttons should be disabled when locked column is selected and it is the last column in the table', async () => {
+    const editor = hook.editor();
+    for (const tableHtml of [ table, multiCellSelectionTable ]) {
+      populateTableClipboard(editor, 'col');
+      editor.setContent(tableHtml([ 2 ]));
+      TinySelections.setCursor(editor, [ 0, 0, 0, 2 ], 0);
+      await pAssertToolbarButtons(editor, [ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true);
+      await pSelectContextMenuItem(editor, TableContextMenu.Column);
+      await pAssertMenuButtons(editor, [ ...colAfterButtons, ...colRemoveButtons, ...colCopyButton ], true);
+    }
+  });
+
+  it('TINY-6765: ColRemove, ColCopy buttons should be disabled when locked column is selected', async () => {
+    const editor = hook.editor();
+    for (const tableHtml of [ table, multiCellSelectionTable ]) {
+      populateTableClipboard(editor, 'col');
+      editor.setContent(tableHtml());
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+      await pAssertToolbarButtons(editor, [ ...colRemoveButtons, ...colCopyButton ], true);
+      await pSelectContextMenuItem(editor, TableContextMenu.Column);
+      await pAssertMenuButtons(editor, [ ...colRemoveButtons, ...colCopyButton ], true);
+    }
+  });
+
+  it('TINY-6765: ColBefore, ColAfter buttons should not be disabled when locked column is selected but is not the first or last column in the table', async () => {
+    const editor = hook.editor();
+    populateTableClipboard(editor, 'col');
+    editor.setContent(table());
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
+    await pAssertToolbarButtons(editor, [ ...colBeforeButtons, ...colAfterButtons ], false);
+    await pSelectContextMenuItem(editor, TableContextMenu.Column);
+    await pAssertMenuButtons(editor, [ ...colBeforeButtons, ...colAfterButtons ], false);
+  });
+
+  it('TINY-6765: Column buttons should not be disabled when locked column is not selected', async () => {
+    const editor = hook.editor();
+    populateTableClipboard(editor, 'col');
+    editor.setContent(table());
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
+    await pAssertToolbarButtons(editor, columnButtons, false);
+    await pSelectContextMenuItem(editor, TableContextMenu.Column);
+    await pAssertMenuButtons(editor, columnButtons, false);
+  });
+
+  it('TINY-6765: Row buttons should not be disabled when locked column is in the table', async () => {
+    const editor = hook.editor();
+    populateTableClipboard(editor, 'row');
+    editor.setContent(table());
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
+    await pAssertToolbarButtons(editor, rowButtons, false);
+    await pSelectContextMenuItem(editor, TableContextMenu.Row);
+    await pAssertMenuButtons(editor, rowButtons, false);
+  });
+
+  it('TINY-6765: Cell buttons should be disabled when locked column is selected', async () => {
+    const editor = hook.editor();
+    editor.setContent(mergeCellTable);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+    await pAssertToolbarButtonState(editor, cellButtons[0].label, true);
+    await pSelectContextMenuItem(editor, TableContextMenu.Cell);
+    await pAssertMenuButtonState(editor, cellButtons[0].label, true);
+    editor.setContent(splitCellTable);
+    await pAssertToolbarButtonState(editor, cellButtons[1].label, true);
+    await pSelectContextMenuItem(editor, TableContextMenu.Cell);
+    await pAssertMenuButtonState(editor, cellButtons[1].label, true);
+  });
 });

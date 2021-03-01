@@ -1,40 +1,25 @@
-import { Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-import TablePlugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/table/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-import * as TableTestUtils from '../../module/test/TableTestUtils';
-
-/* Note, this test needs a toolbar, but it 'passes', because it is checking that toolbar has
- * been turned off properly. So it fake passes if there is no toolbar support.
- */
-UnitTest.asynctest('browser.tinymce.plugins.table.TableTablNavigationDisabledTest', (success, failure) => {
-  TablePlugin();
-  SilverTheme();
+describe('browser.tinymce.plugins.table.TableTableNavigationDisabledTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    table_tab_navigation: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
   const tableHtml = '<table><tbody><tr><td>a</td></tr><tr><td>a</td></tr></tbody></table>';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Table: test table grid disabled', [
-        tinyApis.sFocus(),
-        tinyApis.sSetContent(tableHtml),
-        // NOTE: This isn't really testing anything because this does not exist yet.
-        TableTestUtils.sOpenToolbarOn(editor, 'td', [ 0 ]),
-        tinyActions.sContentKeystroke(Keys.tab(), {}),
-        tinyApis.sAssertSelection([ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1)
-      ])
-      , onSuccess, onFailure);
-  }, {
-    plugins: 'table',
-    table_tab_navigation: false,
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
-}
-);
+  it('TBA: test table tab navigation does nothing', () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.tab());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
+  });
+});

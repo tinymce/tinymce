@@ -4,11 +4,11 @@ import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Jsc from '@ephox/wrap-jsverify';
 
-import { composeList } from 'tinymce/plugins/lists/listModel/ComposeList';
-import { Entry } from 'tinymce/plugins/lists/listModel/Entry';
-import { normalizeEntries } from 'tinymce/plugins/lists/listModel/NormalizeEntries';
-import { parseLists } from 'tinymce/plugins/lists/listModel/ParseLists';
-import { ListType } from 'tinymce/plugins/lists/listModel/Util';
+import { composeList } from 'tinymce/plugins/lists/listmodel/ComposeList';
+import { Entry } from 'tinymce/plugins/lists/listmodel/Entry';
+import { normalizeEntries } from 'tinymce/plugins/lists/listmodel/NormalizeEntries';
+import { parseLists } from 'tinymce/plugins/lists/listmodel/ParseLists';
+import { ListType } from 'tinymce/plugins/lists/listmodel/Util';
 
 describe('browser.tinymce.plugins.lists.ListModelTest', () => {
   // TODO: Migrate to fast-check
