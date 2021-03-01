@@ -34,6 +34,8 @@
       "tinymce/core/*": ["modules/tinymce/src/core/main/ts/*"],
       "tinymce/themes/silver/demo/*": ["modules/tinymce/src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["modules/tinymce/src/themes/silver/main/ts/*"],
+      "tinymce/models/dom/demo/*": ["modules/tinymce/src/models/dom/demo/ts/*"],
+      "tinymce/models/dom/*": ["modules/tinymce/src/models/dom/main/ts/*"],
       "tinymce/plugins/advlist/*": ["modules/tinymce/src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/anchor/*": ["modules/tinymce/src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["modules/tinymce/src/plugins/autolink/main/ts/*"],

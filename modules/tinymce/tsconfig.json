@@ -12,6 +12,8 @@
       "tinymce/core/*": ["src/core/main/ts/*"],
       "tinymce/themes/silver/demo/*": ["src/themes/silver/demo/ts/*"],
       "tinymce/themes/silver/*": ["src/themes/silver/main/ts/*"],
+      "tinymce/models/dom/demo/*": ["src/models/dom/demo/ts/*"],
+      "tinymce/models/dom/*": ["src/models/dom/main/ts/*"],
       "tinymce/plugins/advlist/*": ["src/plugins/advlist/main/ts/*"],
       "tinymce/plugins/anchor/*": ["src/plugins/anchor/main/ts/*"],
       "tinymce/plugins/autolink/*": ["src/plugins/autolink/main/ts/*"],
@@ -70,6 +72,9 @@
     "src/themes/*/main/ts",
     "src/themes/*/demo/ts",
     "src/themes/*/test/ts",
+    "src/models/*/main/ts",
+    "src/models/*/demo/ts",
+    "src/models/*/test/ts",
     "src/core/dist/globals/tinymce/core/",
     "src/core/dist/globals/**/*.ts"
   ],
