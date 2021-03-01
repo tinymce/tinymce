@@ -25,6 +25,13 @@ const separator: Menu.SeparatorMenuItemSpec = {
 };
 
 const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMenuItemSpec | Menu.ContextSubMenu): MenuItem => {
+  const commonMenuItem = (item: Menu.ContextMenuItem | Menu.ContextSubMenu) => ({
+    text: item.text,
+    icon: item.icon,
+    disabled: item.disabled,
+    shortcut: item.shortcut,
+  });
+
   if (Type.isString(item)) {
     return item;
   } else {
@@ -34,8 +41,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
       case 'submenu':
         return {
           type: 'nestedmenuitem',
-          text: item.text,
-          icon: item.icon,
+          ...commonMenuItem(item),
           getSubmenuItems: () => {
             const items = item.getSubmenuItems();
             if (Type.isString(items)) {
@@ -49,8 +55,7 @@ const makeContextItem = (item: string | Menu.ContextMenuItem | Menu.SeparatorMen
         // case 'item', or anything else really
         return {
           type: 'menuitem',
-          text: item.text,
-          icon: item.icon,
+          ...commonMenuItem(item),
           // disconnect the function from the menu item API bridge defines
           onAction: Fun.noarg(item.onAction)
         };
