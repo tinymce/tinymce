@@ -197,6 +197,8 @@ interface BaseEditorOptions {
   text_patterns?: RawPattern[] | false;
   theme?: string | ThemeInitFunc | false;
   theme_url?: string;
+  model?: string;
+  model_url?: string;
   toolbar?: boolean | string | string[] | Array<ToolbarGroup>;
   toolbar1?: string;
   toolbar2?: string;

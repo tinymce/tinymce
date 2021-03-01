@@ -10,6 +10,7 @@ import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import ModelManager from '../api/ModelManager';
 import * as Options from '../api/Options';
 import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
@@ -17,6 +18,7 @@ import ThemeManager from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
+import * as Rtc from '../Rtc';
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
@@ -91,6 +93,18 @@ const initTheme = (editor: Editor) => {
   } else {
     // Theme set to false or null doesn't produce a theme api
     editor.theme = {};
+  }
+};
+
+const initModel = (editor: Editor) => {
+  const model = Options.getModel(editor);
+  const modelUrl = ModelManager.urls[model];
+  const Model = ModelManager.get(model);
+
+  try {
+    editor.model = Model(editor, modelUrl) || {};
+  } catch (e) {
+    ErrorReporter.modelInitError(editor, model, e);
   }
 };
 
@@ -171,6 +185,9 @@ const init = (editor: Editor) => {
 
   initIcons(editor);
   initTheme(editor);
+  if (!Rtc.isRtc(editor)) {
+    initModel(editor);
+  }
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));

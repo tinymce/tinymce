@@ -37,6 +37,7 @@ import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
 import Styles, { StylesSettings } from './html/Styles';
 import Writer, { WriterSettings } from './html/Writer';
 import IconManager from './IconManager';
+import ModelManager from './ModelManager';
 import NotificationManager from './NotificationManager';
 import PluginManager from './PluginManager';
 import Resource from './Resource';
@@ -78,6 +79,7 @@ interface AddOnManagerNamespace {
   baseURL: string;
   PluginManager: PluginManager;
   ThemeManager: ThemeManager;
+  ModelManager: ModelManager;
 }
 
 interface BookmarkManagerNamespace {
@@ -148,6 +150,7 @@ interface TinyMCE extends EditorManager {
   ScriptLoader: ScriptLoader;
   PluginManager: PluginManager;
   ThemeManager: ThemeManager;
+  ModelManager: ModelManager;
   IconManager: IconManager;
   Resource: Resource;
   FakeClipboard: FakeClipboard;
@@ -242,6 +245,7 @@ const publicApi = {
   ScriptLoader: ScriptLoader.ScriptLoader,
   PluginManager,
   ThemeManager,
+  ModelManager,
   IconManager,
   Resource,
   FakeClipboard,

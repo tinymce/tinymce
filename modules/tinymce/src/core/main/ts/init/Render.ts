@@ -14,6 +14,7 @@ import ScriptLoader from '../api/dom/ScriptLoader';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import ModelManager from '../api/ModelManager';
 import NotificationManager from '../api/NotificationManager';
 import * as Options from '../api/Options';
 import PluginManager from '../api/PluginManager';
@@ -24,6 +25,7 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
+import * as Rtc from '../Rtc';
 import * as Init from './Init';
 
 interface UrlMeta {
@@ -33,9 +35,7 @@ interface UrlMeta {
 
 const DOM = DOMUtils.DOM;
 
-const hasSkipLoadPrefix = (name) => {
-  return name.charAt(0) === '-';
-};
+const hasSkipLoadPrefix = (name: string) => name.charAt(0) === '-';
 
 const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Options.getLanguageCode(editor);
@@ -58,6 +58,18 @@ const loadTheme = (editor: Editor, suffix: string): void => {
     const url = themeUrl ? editor.documentBaseURI.toAbsolute(themeUrl) : `themes/${theme}/theme${suffix}.js`;
     ThemeManager.load(theme, url).catch(() => {
       ErrorReporter.themeLoadError(editor, url, theme);
+    });
+  }
+};
+
+const loadModel = (editor: Editor, suffix: string): void => {
+  const model = Options.getModel(editor);
+  // Special case the 'wait for model' code if RTC is loading, as it will provide a model instead
+  if (!Rtc.isRtc(editor) && !Obj.has(ModelManager.urls, model)) {
+    const modelUrl = Options.getModelUrl(editor);
+    const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
+    ModelManager.load(model, url).catch(() => {
+      ErrorReporter.modelLoadError(editor, url, model);
     });
   }
 };
@@ -113,18 +125,24 @@ const isThemeLoaded = (editor: Editor): boolean => {
   return !Type.isString(theme) || Type.isNonNullable(ThemeManager.get(theme));
 };
 
+const isModelLoaded = (editor: Editor): boolean => {
+  const model = Options.getModel(editor);
+  return Type.isNonNullable(ModelManager.get(model));
+};
+
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   const initEditor = () => {
-    // If the editor has been destroyed or the theme hasn't loaded then
+    // If the editor has been destroyed or the theme and model haven't loaded then
     // don't continue to load the editor
-    if (!editor.removed && isThemeLoaded(editor)) {
+    if (!editor.removed && isThemeLoaded(editor) && isModelLoaded(editor)) {
       Init.init(editor);
     }
   };
 
   loadTheme(editor, suffix);
+  loadModel(editor, suffix);
   loadLanguage(scriptLoader, editor);
   loadIcons(scriptLoader, editor, suffix);
   loadPlugins(editor, suffix);

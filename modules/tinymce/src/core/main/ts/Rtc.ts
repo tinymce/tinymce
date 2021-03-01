@@ -10,6 +10,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
+import { Model } from './api/ModelManager';
 import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
@@ -66,6 +67,7 @@ interface RtcRuntimeApi {
     getContent: (args: Partial<GetSelectionContentArgs>) => Content;
   };
   raw: {
+    getSharedModelApi: () => Model;
     getRawModel: () => any;
   };
   autocompleter: {
@@ -316,6 +318,7 @@ export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
 
       return Optional.some(
         () => setup().then((rtcEditor) => {
+          editorCast.model = rtcEditor.raw.getSharedModelApi();
           editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
           return rtcEditor.rtc.isRemote;
         })
