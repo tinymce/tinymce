@@ -76,8 +76,8 @@ const addContextMenuGroup = (xs: Array<MenuItem>, groupItems: Array<MenuItem>) =
 const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, menuConfig: string[], selectedElement: Element) => {
   const sections = Arr.foldl(menuConfig, (acc, name) => {
     // Either read and convert the list of items out of the plugin, or assume it's a standard menu item reference
-    if (Obj.has(contextMenus, name)) {
-      const items = contextMenus[name].update(selectedElement);
+    return Obj.get(contextMenus, name.toLowerCase()).map((menu) => {
+      const items = menu.update(selectedElement);
       if (Type.isString(items)) {
         return addContextMenuGroup(acc, items.split(' '));
       } else if (items.length > 0) {
@@ -87,9 +87,7 @@ const generateContextMenu = (contextMenus: Record<string, Menu.ContextMenuApi>, 
       } else {
         return acc;
       }
-    } else {
-      return acc.concat([ name ]);
-    }
+    }).getOrThunk(() => acc.concat([ name ]));
   }, []);
 
   // Strip off any trailing separator
