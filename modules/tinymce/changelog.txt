@@ -1,6 +1,7 @@
 Version 5.7.1 (TBD)
     Fixed a bug where context menu items with names that contained uppercase characters were not displayed #TINY-7072
     Fixed an issue where URLs were not correctly filtered in some cases #TINY-7025
+    Fixed context menu items lacking support for the `disabled` and `shortcut` properties #TINY-7073
 Version 5.7.0 (2021-02-10)
     Added IPv6 address support to the URI API. Patch contributed by dev7355608 #GH-4409
     Added new `structure` and `style` properties to the `TableModified` event to indicate what kinds of modifications were made #TINY-6643
