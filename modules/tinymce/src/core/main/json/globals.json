@@ -35,6 +35,7 @@
       "tinymce.core.api.html.Serializer",
       "tinymce.core.api.html.Styles",
       "tinymce.core.api.html.Writer",
+      "tinymce.core.api.ModelManager",
       "tinymce.core.api.NotificationManager",
       "tinymce.core.api.PluginManager",
       "tinymce.core.api.Resource",
