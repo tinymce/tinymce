@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  context('TBA: link_default_protocol: "http"', () => {
+  context('link_default_protocol: "http"', () => {
     before(() => {
       const editor = hook.editor();
       editor.settings.link_default_protocol = 'http';
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkProtocolTest', () => {
     });
   });
 
-  context('TBA: link_default_protocol: "https"', () => {
+  context('link_default_protocol: "https"', () => {
     before(() => {
       const editor = hook.editor();
       editor.settings.link_default_protocol = 'https';

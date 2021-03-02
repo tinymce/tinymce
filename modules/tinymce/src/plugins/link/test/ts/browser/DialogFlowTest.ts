@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, UiControls, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
@@ -31,7 +31,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
   };
 
   // FIX: Dupe
-  const pAssertUrlStructure = async (editor: Editor, expected: (s, str, arr) => any) => {
+  const pAssertUrlStructure = async (editor: Editor, expected: ApproxStructure.Builder<StructAssert>) => {
     const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("URL") + .tox-form__controls-h-stack input');
     Assertions.assertStructure(
       'Checking content of url input',

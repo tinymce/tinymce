@@ -10,9 +10,9 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 interface TestSection {
-  setting: { key: string; value: Optional<any> };
-  selector: string;
-  exists: boolean;
+  readonly setting: { key: string; value: Optional<any> };
+  readonly selector: string;
+  readonly exists: boolean;
 }
 
 describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
@@ -122,13 +122,13 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
     ]);
   };
 
-  context('TBA: Check Target section', () => {
+  context('Check Target section', () => {
     checkTargetSection(false, Optional.some(false));
     checkTargetSection(true, Optional.some(true));
     checkTargetSection(true, Optional.none());
   });
 
-  context('TBA: Check rel section', () => {
+  context('Check rel section', () => {
     checkRelSection(true, Optional.some([
       { title: 'a', value: 'b' },
       { title: 'c', value: 'd' }
@@ -136,12 +136,12 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
     checkRelSection(false, Optional.none());
   });
 
-  context('TBA: Check Title section', () => {
+  context('Check Title section', () => {
     checkTitleSection(false, Optional.some(false));
     checkTitleSection(true, Optional.none());
   });
 
-  context('TBA: Check class section', () => {
+  context('Check class section', () => {
     checkClassSection(true, Optional.some([
       { title: 'a', value: 'b' },
       { title: 'c', value: 'd' }
@@ -149,7 +149,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
     checkClassSection(false, Optional.none());
   });
 
-  context('TBA: Check LinkList section', () => {
+  context('Check LinkList section', () => {
     checkLinkListSection(true, Optional.some([
       { title: 'a', value: 'b' },
       { title: 'c', value: 'd' }

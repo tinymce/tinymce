@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
     TestLinkUi.clearHistory();
   });
 
-  it('TBA: Set content, select and link the selection, assert link is present. Then select and unlink the selection, assert link is not present', async () => {
+  it('TBA: Select and link the selection, assert link is present', async () => {
     const editor = hook.editor();
     editor.setContent(
       '<figure class="image">' +
@@ -33,10 +33,18 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
     TinySelections.setCursor(editor, [ 0 ], 0);
     await TestLinkUi.pInsertLink(editor, 'http://google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'figure.image > a[href="http://google.com"] > img': 1 });
+  });
 
+  it('TBA: Select and unlink the selection, assert link is not present', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<figure class="image">' +
+        '<a href="http://google.com"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" /></a>' +
+        '<figcaption>TinyMCE</figcaption>' +
+      '</figure>'
+    );
     TinySelections.setCursor(editor, [ 0 ], 0);
     LinkPluginUtils.unlink(editor);
     await TestLinkUi.pAssertContentPresence(editor, { 'figure.image > img': 1 });
   });
-
 });

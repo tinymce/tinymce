@@ -95,7 +95,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   it('TBA: Checking that QuickLink can remove an existing link', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud/4">Word</a></p>');
-    TinySelections.setSelection(editor, [ 0, 0, 0 ], 'Wor'.length, [ 0, 0, 0 ], 'Wor'.length);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Wor'.length);
     // TODO FIXME TINY-2691
     // Note the following assert fails on IE
     // TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 'Wor'.length, [ 0, 0, 0 ], 'Wor'.length);
