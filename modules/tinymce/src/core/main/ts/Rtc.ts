@@ -9,6 +9,7 @@ import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
+import { Model } from './api/ModelManager';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -61,6 +62,7 @@ interface RtcRuntimeApi {
     getContent: (args: Partial<GetSelectionContentArgs>) => Content;
   };
   raw: {
+    getSharedModelApi: () => Model;
     getRawModel: () => any;
   };
   rtc: {
@@ -274,6 +276,7 @@ export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
 
       return Optional.some(
         () => setup().then((rtcEditor) => {
+          editorCast.model = rtcEditor.raw.getSharedModelApi();
           editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
           return rtcEditor.rtc.isRemote;
         })
