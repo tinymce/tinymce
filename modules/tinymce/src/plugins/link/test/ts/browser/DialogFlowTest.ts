@@ -30,7 +30,6 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
     assert.equal(value, expected, 'Checking input value');
   };
 
-  // FIX: Dupe
   const pAssertUrlStructure = async (editor: Editor, expected: ApproxStructure.Builder<StructAssert>) => {
     const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("URL") + .tox-form__controls-h-stack input');
     Assertions.assertStructure(

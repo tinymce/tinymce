@@ -29,7 +29,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   const pOpenQuickLink = async (editor: Editor) => {
     editor.execCommand('mceLink');
     // tests were erroneously allowed to pass when the quick link dialog would
-    // open and very quickly close because this was happing at superhuman
+    // open and very quickly close because this was happening at superhuman
     // speeds. So I'm slowing it down.
     await Waiter.pWait(100);
     await FocusTools.pTryOnSelector('Selector should be in context form input', doc, '.tox-toolbar input');
@@ -96,9 +96,6 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud/4">Word</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Wor'.length);
-    // TODO FIXME TINY-2691
-    // Note the following assert fails on IE
-    // TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 'Wor'.length, [ 0, 0, 0 ], 'Wor'.length);
     await pOpenQuickLink(editor);
     TinyUiActions.keydown(editor, Keys.tab());
     TinyUiActions.keydown(editor, Keys.right());

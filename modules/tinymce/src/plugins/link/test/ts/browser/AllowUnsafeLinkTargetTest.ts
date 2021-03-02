@@ -1,4 +1,4 @@
-import { describe, it, before, after } from '@ephox/bedrock-client';
+import { describe, it, before, after, afterEach } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -24,12 +24,15 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
     TestLinkUi.clearHistory();
   });
 
+  afterEach(() => {
+    hook.editor().setContent('');
+  });
+
   it(`TBA: doesn't add rel noopener stuff with allow_unsafe_link_target: true`, async () => {
     const editor = hook.editor();
     editor.settings.allow_unsafe_link_target = true;
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[rel="noopener"]': 0, 'a': 1 });
-    editor.setContent('');
   });
 
   it('TBA: adds if allow_unsafe_link_target: false', async () => {
@@ -37,7 +40,6 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
     editor.settings.allow_unsafe_link_target = false;
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[rel="noopener"]': 1 });
-    editor.setContent('');
   });
 
   it(`TBA: adds if allow_unsafe_link_target: undefined`, async () => {
@@ -52,7 +54,6 @@ describe('browser.tinymce.plugins.link.AllowUnsafeLinkTargetTest', () => {
     editor.settings.allow_unsafe_link_target = false;
     editor.setContent('<a href="http://www.google.com" target="_blank" rel="nofollow alternate">Google</a>');
     TinyAssertions.assertContent(editor, '<p><a href="http://www.google.com" target="_blank" rel="alternate nofollow noopener">Google</a></p>');
-    editor.setContent('');
   });
 
   it('TBA: allow_unsafe_link_target=false: proper option selected for defined rel_list', async () => {
