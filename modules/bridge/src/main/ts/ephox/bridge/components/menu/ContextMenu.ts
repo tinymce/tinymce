@@ -1,13 +1,14 @@
 import { SeparatorMenuItemSpec } from '../../api/Menu';
+import { CommonMenuItemSpec } from './CommonMenuItem';
 
-export interface ContextMenuItem {
+export interface ContextMenuItem extends CommonMenuItemSpec {
   text: string;
   icon?: string;
   type?: 'item';
   onAction: () => void;
 }
 
-export interface ContextSubMenu {
+export interface ContextSubMenu extends CommonMenuItemSpec {
   type: 'submenu';
   text: string;
   icon?: string;

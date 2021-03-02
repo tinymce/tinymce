@@ -18,6 +18,7 @@ const getMenuItems = (editor: Editor, name: string, defaultItems: string): strin
   const contextMenus = editor.ui.registry.getAll().contextMenus;
 
   return Optional.from(editor.getParam(name)).map(patchPipeConfig).getOrThunk(() =>
+    // Filter default context menu items when they are not in the registry (e.g. when the plugin is not loaded)
     Arr.filter(patchPipeConfig(defaultItems), (item) =>
       Obj.has(contextMenus, item)
     )
