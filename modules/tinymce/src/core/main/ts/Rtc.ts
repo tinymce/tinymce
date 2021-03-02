@@ -110,7 +110,7 @@ interface RtcAdaptor {
 }
 
 interface RtcPluginApi {
-  setup: () => Promise<RtcRuntimeApi>;
+  setup?: () => Promise<RtcRuntimeApi>;
 }
 
 // TODO: Perhaps this should be a core API for overriding
@@ -251,15 +251,22 @@ const makeNoopAdaptor = (): RtcAdaptor => {
 
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
+const getRtcSetup = (editor: Editor): Optional<() => Promise<RtcRuntimeApi>> => {
+  return (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).bind((rtcPlugin) => {
+    // This might not exist if the stub plugin is loaded on cloud
+    return Optional.from(rtcPlugin.setup);
+  });
+};
+
 export const setup = (editor: Editor): Optional<Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
-  return (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).fold(
+  return getRtcSetup(editor).fold(
     () => {
       editorCast.rtcInstance = makePlainAdaptor(editor);
       return Optional.none();
     },
-    (rtc) => Optional.some(
-      rtc.setup().then((rtcEditor) => {
+    (setup) => Optional.some(
+      setup().then((rtcEditor) => {
         editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
         return rtcEditor.rtc.isRemote;
       }, (err) => {
