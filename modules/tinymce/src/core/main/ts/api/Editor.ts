@@ -35,6 +35,7 @@ import DomParser from './html/DomParser';
 import AstNode from './html/Node';
 import Schema from './html/Schema';
 import { create, EditorMode } from './Mode';
+import { Model } from './ModelManager';
 import NotificationManager from './NotificationManager';
 import PluginManager, { Plugin } from './PluginManager';
 import * as Settings from './Settings';
@@ -226,6 +227,7 @@ class Editor implements EditorObservable {
   public startContent: string;
   public targetElm: HTMLElement;
   public theme: Theme;
+  public model: Model;
   public undoManager: UndoManager;
   public windowManager: WindowManager;
   public _beforeUnload: () => void;

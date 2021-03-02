@@ -15,6 +15,7 @@ import ScriptLoader from '../api/dom/ScriptLoader';
 import StyleSheetLoader from '../api/dom/StyleSheetLoader';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import ModelManager from '../api/ModelManager';
 import NotificationManager from '../api/NotificationManager';
 import PluginManager from '../api/PluginManager';
 import * as Settings from '../api/Settings';
@@ -128,6 +129,8 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
+  // Should this be configurable?
+  ModelManager.load('dom', 'models/dom/model' + suffix + '.js');
 
   loadTheme(scriptLoader, editor, suffix, () => {
     loadLanguage(scriptLoader, editor);
