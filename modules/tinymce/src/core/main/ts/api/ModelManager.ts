@@ -43,7 +43,7 @@ export interface ModelInline extends ModelElement {
   readonly type: NodeType.Inline;
 }
 
-export interface ModelText extends Node {
+export interface ModelText extends ModelNode {
   readonly type: NodeType.Text;
   readonly value: string;
 }
