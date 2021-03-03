@@ -32,12 +32,10 @@ UnitTest.asynctest('browser.tinymce.plugins.link.SelectedLinkTest', (success, fa
         TestLinkUi.sClickCancel,
         TestLinkUi.sClearHistory
       ]),
-      Log.stepsAsStep('TBA', 'Enable Removing link after double click', [
-        tinyApis.sSetSetting('link_context_toolbar', true),
-        tinyApis.sSetContent('<p><a href="http://www.google.com/">test</a></p>'),
-        tinyApis.sSetSelection([ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3),
-        Mouse.sTrueDoubleClickOn(body, 'a'),
-        tinyUi.sWaitForUi('Check the link button is enabled', 'button[aria-label="Remove link"]:not(.tox-tbtn--disabled)')
+      Log.stepsAsStep('TINY-6508', 'Link: openlink should be enable if selection is after the link but before a br', [
+        tinyApis.sSetContent('<p><b><a href="#">tiny</a></b><br></p>'),
+        tinyApis.sSetSelection([ 0, 0, 0, 0 ], 0, [ 0 ], 1),
+        tinyUi.sWaitForUi('Check the link button is enabled (single link)', 'button[title="Insert/edit link"].tox-tbtn--enabled')
       ]),
       Log.stepsAsStep('TINY-4867', 'Link: link should not be active when multiple links or plain text selected', [
         tinyApis.sSetContent('<p><a href="http://tinymce.com">a</a> b <a href="http://tinymce.com">c</a></p>'),

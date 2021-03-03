@@ -6,13 +6,13 @@
  */
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
-import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import * as Settings from '../api/Settings';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
+import * as NormalizeLink from './NormalizeLink';
 
 const isAnchor = (elm: Node): elm is HTMLAnchorElement => elm && elm.nodeName.toLowerCase() === 'a';
 const isLink = (elm: Node): elm is HTMLAnchorElement => isAnchor(elm) && !!getHref(elm);
@@ -61,40 +61,14 @@ const applyRelTargetRules = (rel: string, isUnsafe: boolean): string => {
 
 const trimCaretContainers = (text: string): string => text.replace(/\uFEFF/g, '');
 
-const isParentAnchor = (element: SugarElement<Node>): boolean => Traverse.parent(element).exists(SugarNode.isTag('a'));
-const isNextSiblingAnchor = (element: SugarElement<Node>): boolean => Traverse.nextSibling(element).exists(SugarNode.isTag('a'));
-const getTextParagraphNode = (start: SugarElement<Node>, end: SugarElement<Node>): SugarElement<Node> | null => {
-  if (SugarNode.isText(start) && SugarNode.isElement(end)) {
-    return start;
-  }
-  if (SugarNode.isText(end) && SugarNode.isElement(start)) {
-    return end;
-  }
-  return null;
-};
-const isTexParagraphtNode = (start: SugarElement<Node>, end: SugarElement<Node>): boolean => getTextParagraphNode(start, end) !== null;
-
 const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
   selectedElm = selectedElm || editor.selection.getNode();
-  const rng = editor.selection.getRng();
-  const start = SugarElement.fromDom(rng.startContainer);
-  const end = SugarElement.fromDom(rng.endContainer);
 
   if (isImageFigure(selectedElm)) {
     // for an image contained in a figure we look for a link inside the selected element
     return editor.dom.select('a[href]', selectedElm)[0] as HTMLAnchorElement;
-  } else if (isTexParagraphtNode(start, end)) {
-    // Firefox and IE select text-paragraph/paragraph-text when there is a dbclick event over an anchor
-    const node = getTextParagraphNode(start, end);
-
-    if (isParentAnchor(node)) {
-      return (Traverse.parent(node).getOrNull().dom) as HTMLAnchorElement;
-    }
-    if (isNextSiblingAnchor(node)) {
-      return (Traverse.nextSibling(node).getOrNull().dom) as HTMLAnchorElement;
-    }
   } else {
-    return editor.dom.getParent(selectedElm, 'a[href]') as HTMLAnchorElement;
+    return NormalizeLink.getSelectedLink(editor, selectedElm);
   }
 };
 
