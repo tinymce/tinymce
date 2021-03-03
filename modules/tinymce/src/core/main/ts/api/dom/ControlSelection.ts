@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 import * as CefUtils from '../../dom/CefUtils';
 import * as NodeType from '../../dom/NodeType';
@@ -106,13 +106,14 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  const getResizeTarget = (elm: HTMLElement): HTMLElement => {
+  const getResizeTargets = (elm: HTMLElement): HTMLElement[] => {
     if (dom.is(elm, 'figure.image')) {
-      return elm.querySelector('img');
+      return [ elm.querySelector('img') ];
     } else if (dom.hasClass(elm, 'mce-preview-object') && Type.isNonNullable(elm.firstElementChild)) {
-      return elm.firstElementChild as HTMLElement;
+      // When resizing a preview object we need to resize both the original element and the wrapper span
+      return [ elm, elm.firstElementChild as HTMLElement ];
     } else {
-      return elm;
+      return [ elm ];
     }
   };
 
@@ -146,11 +147,23 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
+  const setSizeProp = (element: HTMLElement, name: string, value: number | undefined) => {
+    if (Type.isNonNullable(value)) {
+      // Resize by using style or attribute
+      const targets = getResizeTargets(element);
+      Arr.each(targets, (target) => {
+        if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
+          dom.setStyle(target, name, value);
+        } else {
+          dom.setAttrib(target, name, '' + value);
+        }
+      });
+    }
+  };
+
   const setGhostElmSize = (ghostElm: HTMLElement, width: number, height: number) => {
-    dom.setStyles(getResizeTarget(ghostElm), {
-      width,
-      height
-    });
+    setSizeProp(ghostElm, 'width', width);
+    setSizeProp(ghostElm, 'height', height);
   };
 
   const resizeGhostElement = (e: MouseEvent) => {
@@ -235,22 +248,10 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     const wasResizeStarted = resizeStarted;
     resizeStarted = false;
 
-    const setSizeProp = (name: string, value: number) => {
-      if (value) {
-        // Resize by using style or attribute
-        const target = getResizeTarget(selectedElm);
-        if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
-          dom.setStyle(target, name, value);
-        } else {
-          dom.setAttrib(target, name, '' + value);
-        }
-      }
-    };
-
     // Set width/height properties
     if (wasResizeStarted) {
-      setSizeProp('width', width);
-      setSizeProp('height', height);
+      setSizeProp(selectedElm, 'width', width);
+      setSizeProp(selectedElm, 'height', height);
     }
 
     dom.unbind(editableDoc, 'mousemove', resizeGhostElement);
@@ -304,10 +305,12 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         let handleElm;
 
         const startDrag = (e: MouseEvent) => {
+          // Note: We're guaranteed to have at least one target here
+          const target = getResizeTargets(selectedElm)[0];
           startX = e.screenX;
           startY = e.screenY;
-          startW = getResizeTarget(selectedElm).clientWidth;
-          startH = getResizeTarget(selectedElm).clientHeight;
+          startW = target.clientWidth;
+          startH = target.clientHeight;
           ratio = startH / startW;
           selectedHandle = handle as SelectedResizeHandle;
 

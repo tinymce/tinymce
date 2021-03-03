@@ -76,20 +76,17 @@ const createPlaceholderNode = (editor: Editor, node: AstNode) => {
 const createPreviewNode = (editor: Editor, node: AstNode) => {
   const name = node.name;
 
-  const styles = editor.dom.parseStyle(node.attr('style'));
-  // Exclude width/height as they should be on the preview element, not on the wrapper
-  const filteredStyles = Obj.filter(styles, ((value, key) => key !== 'width' && key !== 'height'));
-
   const previewWrapper = new AstNode('span', 1);
   previewWrapper.attr({
     'contentEditable': 'false',
-    'style': editor.dom.serializeStyle(filteredStyles),
+    'style': node.attr('style'),
     'data-mce-object': name,
     'class': 'mce-preview-object mce-object-' + name
   });
 
   retainAttributesAndInnerHtml(editor, node, previewWrapper);
 
+  const styles = editor.dom.parseStyle(node.attr('style'));
   const previewNode = new AstNode(name, 1);
   setDimensions(node, previewNode, styles);
   previewNode.attr({
