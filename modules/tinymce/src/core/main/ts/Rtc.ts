@@ -251,12 +251,11 @@ const makeNoopAdaptor = (): RtcAdaptor => {
 
 export const isRtc = (editor: Editor) => Obj.has(editor.plugins, 'rtc');
 
-const getRtcSetup = (editor: Editor): Optional<() => Promise<RtcRuntimeApi>> => {
-  return (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).bind((rtcPlugin) => {
+const getRtcSetup = (editor: Editor): Optional<() => Promise<RtcRuntimeApi>> =>
+  (Obj.get(editor.plugins, 'rtc') as Optional<RtcPluginApi>).bind((rtcPlugin) =>
     // This might not exist if the stub plugin is loaded on cloud
-    return Optional.from(rtcPlugin.setup);
-  });
-};
+    Optional.from(rtcPlugin.setup)
+  );
 
 export const setup = (editor: Editor): Optional<Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
