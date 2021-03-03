@@ -421,7 +421,7 @@ const uploadImage = (editor: Editor) => (blobInfo: BlobInfo) => ImageUploader(ed
   if (results.length === 0) {
     return Promise.reject('Failed to upload image');
   } else if (results[0].status === false) {
-    return Promise.reject(results[0].error);
+    return Promise.reject(results[0].error.message);
   } else {
     return results[0];
   }
