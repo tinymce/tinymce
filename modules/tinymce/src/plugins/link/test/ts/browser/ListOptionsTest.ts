@@ -1,166 +1,140 @@
-import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it, before, after } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';
 import { RelOptions } from 'tinymce/plugins/link/ui/sections/RelOptions';
 import { TargetOptions } from 'tinymce/plugins/link/ui/sections/TargetOptions';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
+
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.ListOptionsTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    editor.setContent(
-      '<p><a name="Difference"></a>Differences anchor us</p>'
-    );
-
-    const sTestAnchors = Log.stepsAsStep('TBA', 'Link: Checking anchor generation',
-      [
-        tinyApis.sSetContent('<p><a name="Difference"></a>Differences anchor us</p>'),
-        Step.sync(() => {
-
-          const anchors = AnchorListOptions.getAnchors(editor).getOr([ ]);
-          Assertions.assertEq(
-            'Checking anchors found in content',
-            [
-              { text: 'None', value: '' },
-              { text: 'Difference', value: '#Difference' }
-            ],
-            anchors
-          );
-        })
-      ]
-    );
-
-    const sTestLinkClasses = Log.stepsAsStep('TBA', 'Link: Checking link class generation',
-      [
-        tinyApis.sSetSetting('link_class_list', [
-          { title: 'Important', value: 'imp' },
-          { title: 'Insignificant', value: 'insig' }
-        ]),
-        Step.sync(() => {
-          const classes = ClassListOptions.getClasses(editor);
-          Assertions.assertEq(
-            'Checking link classes',
-            [
-              { text: 'Important', value: 'imp' },
-              { text: 'Insignificant', value: 'insig' }
-            ],
-            classes.getOr([ ])
-          );
-        })
-      ]
-    );
-
-    const sTestLinkLists = Log.stepsAsStep('TBA', 'Link: Checking link list generation',
-      [
-        tinyApis.sSetSetting('link_list', (callback) => {
-          callback([
-            {
-              title: 'Alpha',
-              menu: [
-                { value: 'alpha-a', title: 'Alpha-A' },
-                { value: 'alpha-a', title: 'Alpha-A' }
-              ]
-            },
-            {
-              title: 'Beta',
-              value: 'beta'
-            }
-          ]);
-        }),
-        Step.async((next, die) => {
-          LinkListOptions.getLinks(editor).then((links) => {
-            try {
-              Assertions.assertEq(
-                'Checking link_list',
-                [
-                  { text: 'None', value: '' },
-                  {
-                    text: 'Alpha',
-                    items: [
-                      { value: 'alpha-a', text: 'Alpha-A' },
-                      { value: 'alpha-a', text: 'Alpha-A' }
-                    ]
-                  },
-                  {
-                    text: 'Beta',
-                    value: 'beta'
-                  }
-                ],
-                links.getOr([ ])
-              );
-              next();
-            } catch (e) {
-              die(e);
-            }
-          });
-        })
-      ]
-    );
-
-    const sTestRels = Log.stepsAsStep('TBA', 'Link: Checking rel generation',
-      [
-        tinyApis.sSetSetting('rel_list', [
-          { value: '', text: 'None' },
-          { value: 'just one', text: 'Just One' }
-        ]),
-        Step.sync(() => {
-          const rels = RelOptions.getRels(editor, Optional.some('initial-target'));
-          Assertions.assertEq(
-            'Checking rel_list output',
-            [
-              { value: '', text: 'None' },
-              { value: 'just one', text: 'Just One' }
-            ],
-            rels.getOr([ ])
-          );
-        })
-      ]
-    );
-
-    const sTestTargets = Log.stepsAsStep('TBA', 'Link: Checking targets generation',
-      [
-        tinyApis.sSetSetting('target_list', [
-          { value: 'target1', text: 'Target1' },
-          { value: 'target2', text: 'Target2' }
-        ]),
-        Step.sync(() => {
-          const targets = TargetOptions.getTargets(editor);
-          Assertions.assertEq(
-            'Checking target_list output',
-            [
-              { value: 'target1', text: 'Target1' },
-              { value: 'target2', text: 'Target2' }
-            ],
-            targets.getOr([ ])
-          );
-        })
-      ]
-    );
-
-    Pipeline.async({ }, [
-      TestLinkUi.sClearHistory,
-      sTestAnchors,
-      sTestLinkClasses,
-      sTestLinkLists,
-      sTestRels,
-      sTestTargets,
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.ListOptionsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  it('TBA: Checking anchor generation', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a name="Difference"></a>Differences anchor us</p>');
+
+    const anchors = AnchorListOptions.getAnchors(editor);
+    assert.deepEqual(
+      anchors.getOr([ ]),
+      [
+        { text: 'None', value: '' },
+        { text: 'Difference', value: '#Difference' }
+      ],
+      'Checking anchors found in content'
+    );
+  });
+
+  it('TBA: Checking link class generation', () => {
+    const editor = hook.editor();
+    editor.settings.link_class_list = [
+      { title: 'Important', value: 'imp' },
+      { title: 'Insignificant', value: 'insig' }
+    ];
+
+    const classes = ClassListOptions.getClasses(editor);
+    assert.deepEqual(
+      classes.getOr([ ]),
+      [
+        { text: 'Important', value: 'imp' },
+        { text: 'Insignificant', value: 'insig' }
+      ],
+      'Checking link classes'
+    );
+  });
+
+  it('TBA: Checking link list generation', async () => {
+    const editor = hook.editor();
+    editor.settings.link_list = (callback) => {
+      callback([
+        {
+          title: 'Alpha',
+          menu: [
+            { value: 'alpha-a', title: 'Alpha-A' },
+            { value: 'alpha-a', title: 'Alpha-A' }
+          ]
+        },
+        {
+          title: 'Beta',
+          value: 'beta'
+        }
+      ]);
+    };
+
+    const links = await LinkListOptions.getLinks(editor);
+
+    assert.deepEqual(
+      links.getOr([ ]),
+      [
+        { text: 'None', value: '' },
+        {
+          text: 'Alpha',
+          items: [
+            { value: 'alpha-a', text: 'Alpha-A' },
+            { value: 'alpha-a', text: 'Alpha-A' }
+          ]
+        },
+        {
+          text: 'Beta',
+          value: 'beta'
+        }
+      ],
+      'Checking link_list'
+    );
+  });
+
+  it('TBA: Checking rel generation', () => {
+    const editor = hook.editor();
+    editor.settings.rel_list = [
+      { value: '', text: 'None' },
+      { value: 'just one', text: 'Just One' }
+    ];
+
+    const rels = RelOptions.getRels(editor, Optional.some('initial-target'));
+    assert.deepEqual(
+      rels.getOr([ ]),
+      [
+        { value: '', text: 'None' },
+        { value: 'just one', text: 'Just One' }
+      ],
+      'Checking rel_list output'
+    );
+  });
+
+  it('TBA: Checking targets generation', () => {
+    const editor = hook.editor();
+    editor.settings.target_list = [
+      { value: 'target1', text: 'Target1' },
+      { value: 'target2', text: 'Target2' }
+    ];
+
+    const targets = TargetOptions.getTargets(editor);
+    assert.deepEqual(
+      targets.getOr([ ]),
+      [
+        { value: 'target1', text: 'Target1' },
+        { value: 'target2', text: 'Target2' }
+      ],
+      'Checking target_list output'
+    );
+  });
 });
