@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -6,46 +5,77 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 import { Arr } from '@ephox/katamari';
-import ModelManager, { ModelElement } from 'tinymce/core/api/ModelManager';
+import { DomStructure } from '@ephox/robin';
+import { Attribute, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
+import ModelManager, { ModelElement, ModelNode, ModelText } from 'tinymce/core/api/ModelManager';
 
-let elementsAsModelElements = elements => Arr.map(elements, htmlElementToModelElement)
-
-const htmlElementToModelElement = (element: HTMLElement) => {
-  const modelElement = {
-    name: element.tagName.toLowerCase()
-    // todo: need to create a type property based on the tag name and I guess the editor schema?
-  };
-
-  Object.defineProperties(modelElement, {
-    attributes: {
-      get: () => {
-        return Object.freeze(element.attributes);
-      }
-    },
-    children: {
-      get: () => {
-        return Arr.map(element.children, htmlElementToModelElement);
-      }
-    }
-  });
-
-  return modelElement as ModelElement;
+// TODO: How to import enum types across the global API boundary?
+enum NodeType {
+  Block = 'Block',
+  Inline = 'Inline',
+  Text = 'Text',
+  Unknown = 'Unknown'
 }
+
+const classifyElementType = (node: SugarElement<HTMLElement>) => {
+  // TODO: is there an API we can use instead of robin?
+  if (DomStructure.isBlock(node)) {
+    return NodeType.Block;
+  } else if (DomStructure.isInline(node)) {
+    return NodeType.Inline;
+  } else {
+    return NodeType.Unknown;
+  }
+};
+
+const elementsAsModelNodes = (elements) => Arr.map(elements, htmlNodeToModelNode);
+
+const htmlNodeToModelNode = (node: Node): ModelNode | ModelElement | ModelText => {
+  const sugarNode = SugarElement.fromDom(node);
+  if (SugarNode.isText(sugarNode)) {
+    return {
+      type: NodeType.Text,
+      value: SugarText.get(sugarNode)
+    };
+  } else if (SugarNode.isHTMLElement(sugarNode)) {
+    const modelElement = {
+      name: node.nodeName.toLowerCase(),
+      type: classifyElementType(sugarNode)
+    };
+
+    const htmlElement = sugarNode.dom;
+    Object.defineProperties(modelElement, {
+      attributes: {
+        get: () => {
+          return Attribute.clone(sugarNode);
+        }
+      },
+      children: {
+        get: () => {
+          return elementsAsModelNodes(htmlElement.childNodes);
+        }
+      }
+    });
+    return modelElement;
+  } else {
+    return { type: NodeType.Unknown };
+  }
+};
 
 export default () => {
   ModelManager.add('dom', (editor) => {
     const root = editor.getBody();
     return {
-      getNodes: (at = 'selection') => {
+      getNodes: (_at = 'selection') => {
         // TODO: switch behaviour based on `at`. Probably requires `isPath`, `isPoint` etc.
-        return elementsAsModelElements(root.children);
+        return elementsAsModelNodes(root.childNodes);
       },
-      setNodes: (options, attributes, at = 'selection') => {
+      setNodes: (_options, _attributes, _at = 'selection') => {
         return;
       },
-      removeNodes: (options, at = 'selection') => {
+      removeNodes: (_options, _at = 'selection') => {
         return;
       }
-    }
+    };
   });
 };

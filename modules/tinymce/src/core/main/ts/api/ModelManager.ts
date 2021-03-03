@@ -8,9 +8,10 @@
 import AddOnManager from './AddOnManager';
 
 export enum NodeType {
-  Block,
-  Inline,
-  Text
+  Block = 'Block',
+  Inline = 'Inline',
+  Text = 'Text',
+  Unknown = 'Unknown'
 }
 
 export type ModelPath = Array<number>;
