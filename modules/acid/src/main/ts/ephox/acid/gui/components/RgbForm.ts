@@ -240,6 +240,9 @@ const rgbFormFactory = (
       set(prop, Optional.some(val));
       getValueRgb().each((rgb) => {
         const hex = copyRgbToHex(form, rgb);
+        AlloyTriggers.emitWith(form, ColourEvents.fieldsUpdate, {
+          hex
+        });
         updatePreview(form, hex);
       });
     };

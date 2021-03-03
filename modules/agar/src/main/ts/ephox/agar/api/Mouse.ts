@@ -7,7 +7,6 @@ import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 const click = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.click(settings)(element);
-const doubleClick = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.doubleClick(settings)(element);
 const mouseOver = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOver(settings)(element);
 const mouseDown = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseDown(settings)(element);
 const mouseUp = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseUp(settings)(element);
@@ -99,20 +98,13 @@ const trueClick = (elem: SugarElement<HTMLElement>): void => {
   mouseUp(elem);
   Clicks.trigger(elem);
 };
-const trueDoubleClick = (elem: SugarElement<HTMLElement>): void => {
-  Focus.focus(elem);
-  mouseDown(elem);
-  mouseUp(elem);
-  doubleClick(elem);
-};
 const trueClickOn = (container: SugarElement<Node>, selector: string): void => {
   triggerOn(container, selector, trueClick);
 };
 const cTrueClick = Chain.op(trueClick);
 const sTrueClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
   sTriggerOn<T, HTMLElement>(container, selector, trueClick);
-const sTrueDoubleClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
-  sTriggerOn<T, HTMLElement>(container, selector, trueDoubleClick);
+
 // Low level exports
 const leftClickButton = Clicks.leftClickButton ;
 const middleClickButton = Clicks.middleClickButton ;
@@ -154,7 +146,6 @@ export {
   trueClickOn,
   cTrueClick,
   sTrueClickOn,
-  sTrueDoubleClickOn,
 
   leftClickButton,
   middleClickButton,

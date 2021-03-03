@@ -32,7 +32,9 @@ const setupHooks = <T extends EditorType = EditorType>(
   let setup: Optional<SetupElement> = Optional.none();
   let hasFailure = false;
 
-  before((done) => {
+  before(function (done) {
+    // TINY-7039: Double the timeout as sometimes 2s wasn't enough for more complex editor loads
+    this.timeout(4000);
     Arr.each(setupModules, Fun.call);
     setup = setupElement();
     Loader.setup({

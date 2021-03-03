@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { getSelectedLink } from 'tinymce/plugins/link/core/NormalizeLink';
 import Theme from 'tinymce/themes/silver/Theme';
 
-describe('atomic.SelectedLinkTest', () => {
+describe('browser.tinymce.plugins.link.NormalizeLink', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
@@ -59,8 +59,8 @@ describe('atomic.SelectedLinkTest', () => {
     });
   });
 
-  it('TINY-6508: Returna link if the selection start is in the link and end in link text', () => {
-    test('<p><a href="#">link</a></p>', makeRange([ 0, 0 ], 0, [ 0, 0, 0 ], 3), Optional.some(null));
+  it('TINY-6508: Return a link if the selection starts in the link and end in the link text', () => {
+    test('<p><a href="#">link</a></p>', makeRange([ 0, 0 ], 0, [ 0, 0, 0 ], 3), Optional.some([ 0, 0 ]));
   });
 
   it('TINY-6508: Does not return a link since the caret is after the link', () => {

@@ -112,6 +112,8 @@ export {
   range,
   path,
   pathFrom,
+  follow,
+  followPath,
 
   cFollow,
   cFollowPath,

@@ -6,6 +6,7 @@ export interface TinyDom {
   readonly fromRange: (rng: Range) => SimRange;
   readonly body: (editor: Editor) => SugarElement<HTMLElement>;
   readonly document: (editor: Editor) => SugarElement<HTMLDocument>;
+  readonly documentElement: (editor: Editor) => SugarElement<HTMLElement>;
   readonly container: (editor: Editor) => SugarElement<HTMLElement>;
   readonly contentAreaContainer: (editor: Editor) => SugarElement<HTMLElement>;
   readonly targetElement: (editor: Editor) => SugarElement<HTMLElement>;
@@ -30,6 +31,9 @@ const body = (editor: Editor): SugarElement<HTMLElement> =>
 const document = (editor: Editor): SugarElement<HTMLDocument> =>
   SugarElement.fromDom(editor.getDoc());
 
+const documentElement = (editor: Editor): SugarElement<HTMLElement> =>
+  SugarElement.fromDom(editor.getDoc().documentElement);
+
 const container = (editor: Editor): SugarElement<HTMLElement> =>
   SugarElement.fromDom(editor.getContainer());
 
@@ -47,5 +51,6 @@ export const TinyDom: TinyDom = {
   container,
   contentAreaContainer,
   document,
+  documentElement,
   targetElement
 };

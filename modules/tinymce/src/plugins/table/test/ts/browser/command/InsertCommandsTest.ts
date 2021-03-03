@@ -1,112 +1,123 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
+import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (success, failure) => {
-  const suite = LegacyUnit.createSuite<Editor>();
+describe('browser.tinymce.plugins.table.command.InsertCommandsTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'table',
+    indent: false,
+    valid_styles: {
+      '*': 'height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
+    },
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor: Editor) => {
+      editor.on('tablemodified', logEvent);
+    }
+  }, [ Plugin, Theme ], true);
 
-  Plugin();
-  SilverTheme();
+  const cleanTableHtml = (html: string) =>
+    html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
 
-  const cleanTableHtml = (html: string) => {
-    return html.replace(/<p>(&nbsp;|<br[^>]+>)<\/p>$/, '');
-  };
-
-  let events = [];
-  const logEvent = (event: EditorEvent<{}>) => {
+  let events: Array<EditorEvent<TableModifiedEvent>> = [];
+  const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
     events.push(event);
   };
 
-  const clearEvents = () => events = [];
-
   const execCmdAndAssertEvent = (editor: Editor, cmdName: string) => {
-    LegacyUnit.equal(events.length, 0);
+    assert.lengthOf(events, 0);
     editor.execCommand(cmdName);
-    LegacyUnit.equal(events.length, 1);
-    LegacyUnit.equal(events[0].type, 'tablemodified');
-    LegacyUnit.equal(events[0].structure, true);
-    LegacyUnit.equal(events[0].style, false);
-    clearEvents();
+    assert.lengthOf(events, 1);
+    assert.equal(events[0].type, 'tablemodified');
+    assert.isTrue(events[0].structure);
+    assert.isFalse(events[0].style);
+    events = [];
   };
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command', (editor) => {
-    editor.focus();
+  it('TBA: mceTableInsertColAfter command', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertColAfter');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>&nbsp;</td></tr><tr><td>2</td><td>&nbsp;</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColAfter command with two selected columns', (editor) => {
+  it('TBA: mceTableInsertColAfter command with two selected columns', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td data-mce-selected="1">2</td>' +
       '<td>3</td></tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
     );
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertColAfter');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>2</td><td>&nbsp;</td><td>&nbsp;</td><td>3</td></tr>' +
       '<tr><td>4</td><td>5</td><td>&nbsp;</td><td>&nbsp;</td><td>6</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command', (editor) => {
+  it('TBA: mceTableInsertColBefore command', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>1</td></tr><tr><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertColBefore');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>&nbsp;</td><td>1</td></tr><tr><td>&nbsp;</td><td>2</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertColBefore command with two selected columns', (editor) => {
+  it('TBA: mceTableInsertColBefore command with two selected columns', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<table><tr><td>1</td><td data-mce-selected="1">2</td><td data-mce-selected="1">3</td>' +
       '</tr><tr><td>4</td><td>5</td><td>6</td></tr></table>'
     );
     LegacyUnit.setSelection(editor, 'td:nth-child(2)', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertColBefore');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>&nbsp;</td><td>&nbsp;</td><td>2</td><td>3</td>' +
       '</tr><tr><td>4</td><td>&nbsp;</td><td>&nbsp;</td><td>5</td><td>6</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command', (editor) => {
+  it('TBA: mceTableInsertRowAfter command', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowAfter');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command with two selected rows', (editor) => {
+  it('TBA: mceTableInsertRowAfter command with two selected rows', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
     LegacyUnit.setSelection(editor, 'tr', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowAfter');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr><tr>' +
       '<td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowAfter command on merged cells', (editor) => {
+  it('TBA: mceTableInsertRowAfter command on merged cells', () => {
+    const editor = hook.editor();
     editor.setContent(
       '<table>' +
       '<tr><td>1</td><td>2</td><td>3</td></tr>' +
@@ -118,7 +129,7 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowAfter');
 
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
 
       '<table>' +
@@ -132,41 +143,28 @@ UnitTest.asynctest('browser.tinymce.plugins.table.command.InsertCommandsTest', (
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command', (editor) => {
+  it('TBA: mceTableInsertRowBefore command', () => {
+    const editor = hook.editor();
     editor.setContent('<table><tr><td>1</td><td>2</td></tr></table>');
     LegacyUnit.setSelection(editor, 'td', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowBefore');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>1</td><td>2</td></tr></tbody></table>'
     );
   });
 
-  suite.test('TestCase-TBA: Table: mceTableInsertRowBefore command with two selected rows', (editor) => {
+  it('TBA: mceTableInsertRowBefore command with two selected rows', () => {
+    const editor = hook.editor();
     editor.getBody().innerHTML = (
       '<table><tr><td data-mce-selected="1">1</td><td>2</td></tr><tr><td data-mce-selected="1">3</td><td>4</td></tr></table>'
     );
     LegacyUnit.setSelection(editor, 'tr', 0);
     execCmdAndAssertEvent(editor, 'mceTableInsertRowBefore');
-    LegacyUnit.equal(
+    assert.equal(
       cleanTableHtml(editor.getContent()),
       '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr>' +
       '<tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table>'
     );
   });
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, Log.steps('TBA', 'Table: Test insert commands', suite.toSteps(editor)), onSuccess, onFailure);
-  }, {
-    plugins: 'table',
-    indent: false,
-    valid_styles: {
-      '*': 'height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
-    },
-    theme: 'silver',
-    base_url: '/project/tinymce/js/tinymce',
-    setup: (editor: Editor) => {
-      editor.on('tablemodified', logEvent);
-    }
-  }, success, failure);
 });

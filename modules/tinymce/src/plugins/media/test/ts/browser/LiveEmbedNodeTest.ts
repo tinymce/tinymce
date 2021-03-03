@@ -20,7 +20,9 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
       classes: [ arr.has('mce-object-' + tag) ],
       styles: {
         height: str.none('should not have height style'),
-        width: str.none('should not have width style')
+        width: str.none('should not have width style'),
+        // TINY-7074: The wrapper span should have the same width/height styles
+        ...Obj.map(styles, (value) => str.is(value))
       },
       children: [
         s.element(tag, {
@@ -89,5 +91,11 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
     const editor = hook.editor();
     editor.setContent('<audio controls="controls" src="about:blank"></audio>');
     assertStructure(editor, 'audio', [ ], { controls: 'controls', src: 'about:blank' }, { });
+  });
+
+  it('TINY-7074: iframe element with responsive styles', () => {
+    const editor = hook.editor();
+    editor.setContent('<div style="width: 100%; height: 0; padding-top: 50%;"><iframe style="width: 100%; height: 100%;"></iframe></div>');
+    assertStructure(editor, 'iframe', [ ], { }, { width: '100%', height: '100%' });
   });
 });

@@ -243,4 +243,13 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     updateDialog(editor, 'a', 'abc123');
     TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;" start="1"><li>1</li><li>2</li></ol>');
   });
+
+  it('TINY-6891: Empty string results in numerical list', () => {
+    const editor = hook.editor();
+    editor.setContent('<ol style="list-style-type: lower-alpha;" start="2"><li>1</li><li>2</li></ol>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('mceListProps');
+    updateDialog(editor, 'b', '');
+    TinyAssertions.assertContent(editor, '<ol><li>1</li><li>2</li></ol>');
+  });
 });

@@ -56,7 +56,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const dimension = Css.getRaw(element, name).orThunk(() => Attribute.getOpt(element, name))
       .map((v) => parseInt(v, 10))
       .getOr(0);
-    assert.isBelow(Math.abs(dimension - expectedDimension), 3, label + ` ${dimension}px ~= ${expectedDimension}px`);
+    assert.approximately(dimension, expectedDimension, 3, `${label} ${dimension}px ~= ${expectedDimension}px`);
   };
 
   const getAndAssertDimensions = (element: SugarElement<Element>, width: number, height: number) => {
@@ -178,5 +178,14 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
       'span[data-mce-selected=2] video': 1,
       'span[data-mce-selected] audio': 0
     });
+  });
+
+  it('TINY-7074: Resizing a media element should update both the root and wrapper element dimensions', async () => {
+    const editor = hook.editor();
+    editor.setContent(`<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black; width: 400px; height: 200px" src="${Env.transparentSrc}"></iframe></span></p>`);
+    TinySelections.select(editor, 'span', [ ]);
+    await pResizeAndAssertDimensions(editor, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202);
+    const wrapper = UiFinder.findIn(TinyDom.body(editor), 'span.mce-preview-object').getOrDie();
+    getAndAssertDimensions(wrapper, 402 + 100, 202 + 50);
   });
 });
