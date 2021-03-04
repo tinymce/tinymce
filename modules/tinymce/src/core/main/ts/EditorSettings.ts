@@ -81,6 +81,7 @@ const getDefaultSettings = (settings: RawEditorSettings, id: string, documentBas
   const baseDefaults: RawEditorSettings = {
     id,
     theme: 'silver',
+    model: 'dom',
     toolbar_mode: getToolbarMode(settings, 'floating'),
     plugins: '',
     document_base_url: documentBaseUrl,

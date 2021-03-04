@@ -16,12 +16,12 @@ export enum NodeType {
 
 export type ModelPath = Array<number>;
 export interface ModelPoint {
-  path: ModelPath;
-  offset: number;
+  readonly path: ModelPath;
+  readonly offset: number;
 }
 export interface ModelRange {
-  anchor: ModelPoint;
-  focus: ModelPoint;
+  readonly anchor: ModelPoint;
+  readonly focus: ModelPoint;
 }
 
 export type Location = 'selection' | ModelPath | ModelPoint | ModelRange;
@@ -50,25 +50,27 @@ export interface ModelText extends ModelNode {
 }
 
 export interface SetNodeOptions {
-  at?: Location;
-  match: (node: ModelNode) => boolean;
+  readonly at?: Location;
+  readonly match: (node: ModelNode) => boolean;
 }
 
 export interface RemoveNodeOptions {
-  at?: Location;
-  match: (node: ModelNode) => boolean;
+  readonly at?: Location;
+  readonly match: (node: ModelNode) => boolean;
 }
 
 export interface Model {
-  getNodes: (at?: Location) => Array<ModelNode>;
-  setNodes: (options: SetNodeOptions, attributes: Record<string, string>, at?: Location) => void;
-  removeNodes: (options: RemoveNodeOptions, at?: Location) => void;
+  readonly getNodes: (at?: Location) => Array<ModelNode>;
+  readonly setNodes: (options: SetNodeOptions, attributes: Record<string, string>, at?: Location) => void;
+  readonly removeNodes: (options: RemoveNodeOptions, at?: Location) => void;
 }
 
 type ModelManager = AddOnManager<Model>;
 const ModelManager: ModelManager = AddOnManager.ModelManager;
 
 export default ModelManager;
+
+// TODO: Move below to a utils file in core somewhere
 
 // helper methods that should go in a central helper module
 export const isElement = (node: ModelNode): node is ModelElement => {

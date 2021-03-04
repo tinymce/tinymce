@@ -40,7 +40,7 @@ import Styles from './html/Styles';
 import Writer, { WriterSettings } from './html/Writer';
 import IconManager from './IconManager';
 import { EditorModeApi } from './Mode';
-import ModelManager from './ModelManager';
+import ModelManager, { Model } from './ModelManager';
 import NotificationManager, { NotificationApi, NotificationSpec } from './NotificationManager';
 import PluginManager, { Plugin } from './PluginManager';
 import Resource from './Resource';
@@ -142,6 +142,7 @@ export {
   Plugin,
   SchemaSettings,
   Theme,
+  Model,
   WriterSettings,
   XHRSettings
 };

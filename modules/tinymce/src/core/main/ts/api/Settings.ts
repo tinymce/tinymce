@@ -144,7 +144,7 @@ const getServiceMessage = (editor: Editor): string => editor.getParam('service_m
 
 const getTheme = (editor: Editor) => editor.getParam('theme');
 
-const getModel = (editor: Editor) => editor.getParam('model');
+const getModel = (editor: Editor) => editor.getParam('model', 'dom', 'string');
 
 const shouldValidate = (editor: Editor): boolean => editor.getParam('validate');
 
@@ -167,6 +167,8 @@ const canFormatEmptyLines = (editor: Editor) => editor.getParam('format_empty_li
 const getCustomUiSelector = (editor: Editor): string => editor.getParam('custom_ui_selector', '', 'string');
 
 const getThemeUrl = (editor: Editor): string => editor.getParam('theme_url');
+
+const getModelUrl = (editor: Editor): string => editor.getParam('model_url');
 
 const isInline = (editor: Editor): boolean => editor.getParam('inline');
 
@@ -261,6 +263,7 @@ export {
   canFormatEmptyLines,
   getCustomUiSelector,
   getThemeUrl,
+  getModelUrl,
   isInline,
   hasHiddenInput,
   shouldPatchSubmit,

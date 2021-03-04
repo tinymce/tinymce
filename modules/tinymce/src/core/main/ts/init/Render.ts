@@ -28,13 +28,16 @@ import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Init from './Init';
 
+interface UrlMeta {
+  url: string;
+  name: Optional<string>;
+}
+
 const DOM = DOMUtils.DOM;
 
-const hasSkipLoadPrefix = (name) => {
-  return name.charAt(0) === '-';
-};
+const hasSkipLoadPrefix = (name: string) => name.charAt(0) === '-';
 
-const loadLanguage = (scriptLoader, editor: Editor) => {
+const loadLanguage = (scriptLoader: ScriptLoader, editor: Editor) => {
   const languageCode = Settings.getLanguageCode(editor);
   const languageUrl = Settings.getLanguageUrl(editor);
 
@@ -47,7 +50,7 @@ const loadLanguage = (scriptLoader, editor: Editor) => {
   }
 };
 
-const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback) => {
+const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
   const theme = Settings.getTheme(editor);
 
   if (Type.isString(theme)) {
@@ -69,10 +72,18 @@ const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback)
   }
 };
 
-interface UrlMeta {
-  url: string;
-  name: Optional<string>;
-}
+const loadModel = (scriptLoader: ScriptLoader, editor: Editor, suffix: string, callback: () => void) => {
+  const model = Settings.getModel(editor);
+  const modelUrl = Settings.getModelUrl(editor);
+  const url = Type.isString(modelUrl) ? editor.documentBaseURI.toAbsolute(modelUrl) : `models/${model}/model${suffix}.js`;
+  ModelManager.load(model, url);
+
+  scriptLoader.loadQueue(() => {
+    ModelManager.waitFor(model, callback);
+  }, undefined, () => {
+    ErrorReporter.modelLoadError(editor, url, model);
+  });
+};
 
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Settings.getIconsUrl(editor))
   .filter((url) => url.length > 0)
@@ -129,22 +140,24 @@ const loadPlugins = (editor: Editor, suffix: string) => {
 
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
-  // Should this be configurable?
-  ModelManager.load('dom', 'models/dom/model' + suffix + '.js');
 
+  // TODO: Need to look at optimising the load sequence for theme and model
+  // Only want the editor to initialise if both the theme and model can be sucessfully loaded
   loadTheme(scriptLoader, editor, suffix, () => {
-    loadLanguage(scriptLoader, editor);
-    loadIcons(scriptLoader, editor, suffix);
-    loadPlugins(editor, suffix);
+    loadModel(scriptLoader, editor, suffix, () => {
+      loadLanguage(scriptLoader, editor);
+      loadIcons(scriptLoader, editor, suffix);
+      loadPlugins(editor, suffix);
 
-    scriptLoader.loadQueue(() => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
-    }, editor, () => {
-      if (!editor.removed) {
-        Init.init(editor);
-      }
+      scriptLoader.loadQueue(() => {
+        if (!editor.removed) {
+          Init.init(editor);
+        }
+      }, editor, () => {
+        if (!editor.removed) {
+          Init.init(editor);
+        }
+      });
     });
   });
 };

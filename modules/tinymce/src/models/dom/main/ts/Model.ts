@@ -7,7 +7,8 @@
 import { Arr } from '@ephox/katamari';
 import { DomStructure } from '@ephox/robin';
 import { Attribute, SugarElement, SugarNode, SugarText } from '@ephox/sugar';
-import ModelManager, { ModelElement, ModelNode, ModelText } from 'tinymce/core/api/ModelManager';
+import Editor from 'tinymce/core/api/Editor';
+import ModelManager, { Model, ModelElement, ModelNode, ModelText } from 'tinymce/core/api/ModelManager';
 
 // TODO: How to import enum types across the global API boundary?
 enum NodeType {
@@ -62,20 +63,22 @@ const htmlNodeToModelNode = (node: Node): ModelNode | ModelElement | ModelText =
   }
 };
 
+const DomModel = (editor: Editor): Model => {
+  return {
+    getNodes: (_at = 'selection') => {
+      const root = editor.getBody();
+      // TODO: switch behaviour based on `at`. Probably requires `isPath`, `isPoint` etc.
+      return elementsAsModelNodes(root.childNodes);
+    },
+    setNodes: (_options, _attributes, _at = 'selection') => {
+      return;
+    },
+    removeNodes: (_options, _at = 'selection') => {
+      return;
+    }
+  };
+};
+
 export default () => {
-  ModelManager.add('dom', (editor) => {
-    const root = editor.getBody();
-    return {
-      getNodes: (_at = 'selection') => {
-        // TODO: switch behaviour based on `at`. Probably requires `isPath`, `isPoint` etc.
-        return elementsAsModelNodes(root.childNodes);
-      },
-      setNodes: (_options, _attributes, _at = 'selection') => {
-        return;
-      },
-      removeNodes: (_options, _at = 'selection') => {
-        return;
-      }
-    };
-  });
+  ModelManager.add('dom', DomModel);
 };

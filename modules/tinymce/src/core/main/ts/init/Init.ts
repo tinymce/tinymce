@@ -10,6 +10,7 @@ import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import IconManager from '../api/IconManager';
+import ModelManager from '../api/ModelManager';
 import PluginManager from '../api/PluginManager';
 import * as Settings from '../api/Settings';
 import { ThemeInitFunc } from '../api/SettingsTypes';
@@ -96,6 +97,18 @@ const initTheme = (editor: Editor) => {
   }
 };
 
+const initModel = (editor: Editor) => {
+  const model = Settings.getModel(editor);
+  const modelUrl = ModelManager.urls[model];
+  const Model = ModelManager.get(model);
+
+  try {
+    editor.model = new Model(editor, modelUrl);
+  } catch (e) {
+    ErrorReporter.modelInitError(editor, model, e);
+  }
+};
+
 const renderFromLoadedTheme = (editor: Editor) => {
   // Render UI
   return editor.theme.renderUI();
@@ -174,6 +187,7 @@ const init = (editor: Editor) => {
 
   initIcons(editor);
   initTheme(editor);
+  initModel(editor);
   initPlugins(editor);
   const renderInfo = renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));
