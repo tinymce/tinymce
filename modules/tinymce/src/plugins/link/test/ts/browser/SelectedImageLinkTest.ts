@@ -1,76 +1,72 @@
-import { Chain, FocusTools, Log, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { FocusTools, UiFinder } from '@ephox/agar';
+import { describe, it, before, after } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
+
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.SelectedImageTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = TinyDom.fromDom(document);
-
-    Pipeline.async({}, [
-      TestLinkUi.sClearHistory,
-      Log.stepsAsStep('TBA', 'Link: images should be preserved when adding a link', [
-        tinyApis.sSetContent('<p><img src="image.png"></p>'),
-        tinyApis.sSelect('img', []),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        FocusTools.sSetActiveValue(doc, 'http://something'),
-        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
-        TestLinkUi.sClickSave,
-        Waiter.sTryUntil(
-          'Wait until link is inserted',
-          tinyApis.sAssertContentPresence({
-            'a[href="http://something"]': 1,
-            'img[src="image.png"]': 1,
-            'p': 1
-          })
-        )
-      ]),
-      Log.stepsAsStep('TBA', 'Link: images should be preserved when editing a link', [
-        tinyApis.sSetContent('<p><a href="http://www.google.com/"><img src="image.png"></a></p>'),
-        tinyApis.sSelect('a', []),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        FocusTools.sSetActiveValue(doc, 'http://something'),
-        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
-        TestLinkUi.sClickSave,
-        Waiter.sTryUntil(
-          'Wait until link is updated',
-          tinyApis.sAssertContentPresence({
-            'a[href="http://something"]': 1,
-            'img[src="image.png"]': 1,
-            'p': 1
-          })
-        )
-      ]),
-      Log.stepsAsStep('TINY-4706', 'Link: images link urls should be able to be removed', [
-        tinyApis.sSetContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>'),
-        tinyApis.sSelect('a', []),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        Chain.asStep(SugarBody.body(), [
-          FocusTools.cSetActiveValue(''),
-          TestLinkUi.cFireEvent('input')
-        ]),
-        UiFinder.sNotExists(SugarBody.body(), '.tox-label:contains("Text to display")'),
-        TestLinkUi.sAssertDialogContents({
-          url: '',
-          title: 'test'
-        }),
-        TestLinkUi.sClickCancel
-      ]),
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const doc = SugarDocument.getDocument();
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  it('TBA: images should be preserved when adding a link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="image.png"></p>');
+    TinySelections.select(editor, 'img', []);
+    await TestLinkUi.pOpenLinkDialog(editor);
+    FocusTools.setActiveValue(doc, 'http://something');
+    UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'a[href="http://something"]': 1,
+      'img[src="image.png"]': 1,
+      'p': 1
+    });
+  });
+
+  it('TBA: images should be preserved when editing a link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="http://www.google.com/"><img src="image.png"></a></p>');
+    TinySelections.select(editor, 'a', []);
+    await TestLinkUi.pOpenLinkDialog(editor);
+    FocusTools.setActiveValue(doc, 'http://something');
+    UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'a[href="http://something"]': 1,
+      'img[src="image.png"]': 1,
+      'p': 1
+    });
+  });
+
+  it('TINY-4706: images link urls should be able to be removed', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>');
+    TinySelections.select(editor, 'a', []);
+    await TestLinkUi.pOpenLinkDialog(editor);
+    const focused = FocusTools.setActiveValue(doc, '');
+    TestLinkUi.fireEvent(focused, 'input');
+    UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
+    TestLinkUi.assertDialogContents({
+      url: '',
+      title: 'test'
+    });
+    await TestLinkUi.pClickCancel(editor);
+  });
 });

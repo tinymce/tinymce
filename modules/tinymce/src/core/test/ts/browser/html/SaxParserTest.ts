@@ -808,9 +808,10 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<a href=" dAt%61: tExt/html  ; bAse64 , PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">9</a>' +
       '<object data="data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+">10</object>' +
       '<button formaction="javascript:alert(11)">11</button>' +
-      '<table background="javascript:alert(12)"><tr><tr>12</tr></tr></table>' +
-      '<a href="mhtml:13">13</a>' +
-      '<a xlink:href="jAvaScript:alert(1)">14</a>' +
+      '<form action="javascript:alert(12)">12</form>' +
+      '<table background="javascript:alert(13)"><tr><tr>13</tr></tr></table>' +
+      '<a href="mhtml:14">14</a>' +
+      '<a xlink:href="jAvaScript:alert(15)">15</a>' +
       '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">' +
       '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );
@@ -828,9 +829,10 @@ describe('browser.tinymce.core.html.SaxParserTest', () => {
       '<a>9</a>' +
       '<object>10</object>' +
       '<button>11</button>' +
-      '<table><tr></tr><tr>12</tr></table>' +
-      '<a>13</a>' +
+      '<form>12</form>' +
+      '<table><tr></tr><tr>13</tr></table>' +
       '<a>14</a>' +
+      '<a>15</a>' +
       '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" />' +
       '<a href="%E3%82%AA%E3%83%BC%E3%83">Invalid url</a>'
     );

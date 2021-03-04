@@ -1,151 +1,136 @@
-import {
-  ApproxStructure, Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Logger, Mouse, NamedChain, Pipeline, Step, UiControls, UiFinder
-} from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Attribute } from '@ephox/sugar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, UiControls, UiFinder } from '@ephox/agar';
+import { describe, it, before, after } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.DialogFlowTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = TinyDom.fromDom(document);
-
-    const sAssertInputValue = (expected: string, group: string) => Logger.t('Assert input value', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("' + group + '") + input'),
-      UiControls.cGetValue,
-      Assertions.cAssertEq('Checking input value', expected)
-    ]));
-
-    // FIX: Dupe
-    const sAssertUrlStructure = (expected: (s, str, arr) => any) => Logger.t('Assert url structure', Chain.asStep({ }, [
-      TestLinkUi.cFindInDialog('label:contains("URL") + .tox-form__controls-h-stack input'),
-      Chain.op((urlinput) => {
-        Assertions.assertStructure(
-          'Checking content of url input',
-          ApproxStructure.build(expected),
-          urlinput
-        );
-      })
-    ]));
-
-    const testChangingAnchorValue = Log.stepsAsStep('TBA', 'Link: Switching anchor changes the href and text', [
-      tinyApis.sSetContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>'),
-      TestLinkUi.sOpenLinkDialog(tinyUi),
-      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
-      TestLinkUi.sAssertDialogContents({
-        href: '#anchor2',
-        text: 'anchor2',
-        title: '',
-        anchor: '#anchor2',
-        target: ''
-      }),
-      TestLinkUi.sSetListBoxItem('Anchor', 'anchor1'),
-      TestLinkUi.sAssertDialogContents({
-        href: '#anchor1',
-        text: 'anchor1',
-        title: '',
-        anchor: '#anchor1',
-        target: ''
-      }),
-
-      // Change the text ...so text won't change, but href will still
-      TestLinkUi.sSetInputFieldValue('Text to display', 'Other text'),
-      TestLinkUi.sSetListBoxItem('Anchor', 'anchor2'),
-      TestLinkUi.sAssertDialogContents({
-        href: '#anchor2',
-        text: 'Other text',
-        title: '',
-        anchor: '#anchor2',
-        target: ''
-      }),
-
-      TestLinkUi.sClickSave,
-      TestLinkUi.sAssertContentPresence(tinyApis, {
-        'a[href]': 1,
-        'a[href="#anchor2"]:contains("Other text")': 1
-      })
-    ]);
-
-    const testChangingUrlValueWith = (sChooseItem: Step<any, any>) => Log.stepsAsStep('TBA', 'Link: Choosing something in the urlinput changes text and value', [
-      tinyApis.sSetContent('<h1>Header One</h1><h2 id="existing-id">Header2</h2>'),
-      TestLinkUi.sOpenLinkDialog(tinyUi),
-      Keyboard.sKeydown(doc, Keys.down(), { }),
-      UiFinder.sWaitForVisible('Waiting for dropdown', TinyDom.fromDom(document.body), '.tox-menu'),
-      sChooseItem,
-      sAssertUrlStructure((s, str, _arr) => s.element('input', {
-        value: str.startsWith('#h_')
-      })),
-      sAssertInputValue('Header One', 'Text to display'),
-      TestLinkUi.sAssertContentPresence(tinyApis, {
-        'h1[id]': 0,
-        'h2[id]': 1
-      }),
-      TestLinkUi.sClickSave,
-      TestLinkUi.sAssertContentPresence(tinyApis, {
-        'h1[id]': 1
-      }),
-
-      // Check that the h1's id value is referred to by a link containing dog
-      Chain.asStep(TinyDom.fromDom(editor.getBody()), [
-        NamedChain.asChain([
-          NamedChain.direct(NamedChain.inputName(), UiFinder.cFindIn('h1'), 'h1'),
-          NamedChain.direct('h1', Chain.mapper((h1) => Attribute.get(h1, 'id')), 'h1-id'),
-          NamedChain.bundle((obj) => UiFinder.findIn(obj[NamedChain.inputName()], `a[href="#${obj['h1-id']}"]:contains("Header One")`))
-        ])
-      ])
-    ]);
-
-    const testChangingUrlValueWithKeyboard = Log.step('TBA', 'Link: With Keyboard',
-      testChangingUrlValueWith(GeneralSteps.sequence([
-        Keyboard.sKeydown(doc, Keys.enter(), { })
-      ]))
-    );
-
-    const testChangingUrlValueWithMouse = Log.step('TBA', 'Link: With Mouse',
-      testChangingUrlValueWith(Mouse.sClickOn(TinyDom.fromDom(document.body), '.tox-collection__item')
-      )
-    );
-
-    const testChangingUrlValueManually = Log.stepsAsStep('TBA', 'Link: Change urlinput value manually', [
-      tinyApis.sSetContent('<h1>Something</h2>'),
-      tinyApis.sSetSelection([ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length),
-      TestLinkUi.sOpenLinkDialog(tinyUi),
-
-      FocusTools.sSetActiveValue(doc, 'http://www.tiny.cloud'),
-      TestLinkUi.sAssertDialogContents({
-        href: 'http://www.tiny.cloud',
-        text: 'Something',
-        title: '',
-        target: ''
-      }),
-      TestLinkUi.sClickSave,
-      TestLinkUi.sAssertContentPresence(tinyApis, {
-        a: 1
-      })
-    ]
-    );
-
-    Pipeline.async({}, [
-      TestLinkUi.sClearHistory,
-      testChangingAnchorValue,
-      testChangingUrlValueWithKeyboard,
-      testChangingUrlValueWithMouse,
-      testChangingUrlValueManually,
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  const pAssertInputValue = async (editor: Editor, expected: string, group: string) => {
+    const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("' + group + '") + input');
+    const value = UiControls.getValue(input);
+    assert.equal(value, expected, 'Checking input value');
+  };
+
+  const pAssertUrlStructure = async (editor: Editor, expected: ApproxStructure.Builder<StructAssert>) => {
+    const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("URL") + .tox-form__controls-h-stack input');
+    Assertions.assertStructure(
+      'Checking content of url input',
+      ApproxStructure.build(expected),
+      input
+    );
+  };
+
+  const pTestChangingUrlValueWith = async (editor: Editor, chooseItem: () => void) => {
+    editor.setContent('<h1>Header One</h1><h2 id="existing-id">Header2</h2>');
+    await TestLinkUi.pOpenLinkDialog(editor);
+    TinyUiActions.keydown(editor, Keys.down());
+    await UiFinder.pWaitForVisible('Waiting for dropdown', SugarBody.body(), '.tox-menu');
+    chooseItem();
+    await pAssertUrlStructure(editor, (s, str, _arr) => s.element('input', {
+      value: str.startsWith('#h_')
+    }));
+    await pAssertInputValue(editor, 'Header One', 'Text to display');
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'h1[id]': 0,
+      'h2[id]': 1
+    });
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'h1[id]': 1
+    });
+
+    // Check that the h1's id value is referred to by a link containing dog
+    const editorBody = TinyDom.body(editor);
+    const h1ID = UiFinder.findIn(editorBody, 'h1').map((h1) => Attribute.get(h1, 'id')).getOrDie();
+    UiFinder.exists(editorBody, `a[href="#${h1ID}"]:contains("Header One")`);
+  };
+
+  it('TBA: Switching anchor changes the href and text', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a name="anchor1"></a>Our Anchor1</p><p><a name="anchor2"></a>Our Anchor2</p>');
+
+    await TestLinkUi.pOpenLinkDialog(editor);
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor2');
+    TestLinkUi.assertDialogContents({
+      href: '#anchor2',
+      text: 'anchor2',
+      title: '',
+      anchor: '#anchor2',
+      target: ''
+    });
+
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor1');
+    TestLinkUi.assertDialogContents({
+      href: '#anchor1',
+      text: 'anchor1',
+      title: '',
+      anchor: '#anchor1',
+      target: ''
+    });
+
+    // Change the text ...so text won't change, but href will still
+    await TestLinkUi.pSetInputFieldValue(editor, 'Text to display', 'Other text');
+    await TestLinkUi.pSetListBoxItem(editor, 'Anchor', 'anchor2');
+    TestLinkUi.assertDialogContents({
+      href: '#anchor2',
+      text: 'Other text',
+      title: '',
+      anchor: '#anchor2',
+      target: ''
+    });
+
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'a[href]': 1,
+      'a[href="#anchor2"]:contains("Other text")': 1
+    });
+  });
+
+  it('TBA: Change urlinput value with keyboard', async () => {
+    const editor = hook.editor();
+    await pTestChangingUrlValueWith(editor, () => TinyUiActions.keydown(editor, Keys.enter()));
+  });
+
+  it('TBA: Change urlinput value with mouse', async () => {
+    const editor = hook.editor();
+    await pTestChangingUrlValueWith(editor, () => TinyUiActions.clickOnUi(editor, '.tox-collection__item'));
+  });
+
+  it('TBA: Change urlinput value manually', async () => {
+    const editor = hook.editor();
+    editor.setContent('<h1>Something</h2>');
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length);
+    await TestLinkUi.pOpenLinkDialog(editor);
+
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.tiny.cloud');
+    TestLinkUi.assertDialogContents({
+      href: 'http://www.tiny.cloud',
+      text: 'Something',
+      title: '',
+      target: ''
+    });
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, {
+      a: 1
+    });
+  });
 });

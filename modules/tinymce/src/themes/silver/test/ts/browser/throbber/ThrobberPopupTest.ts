@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberPopupTest', () => {
       });
     },
     contextmenu: 'test'
-  }, [ Theme ]);
+  }, [ Theme ], true);
 
   const pWaitForThrobber = () =>
     UiFinder.pWaitForVisible('waiting for throbber to open', SugarBody.body(), '.tox-throbber');
