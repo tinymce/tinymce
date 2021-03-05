@@ -6,21 +6,18 @@
  */
 
 import { Menu } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as ColorSwatch from '../ui/core/color/ColorSwatch';
 import * as Settings from '../ui/core/color/Settings';
 
-type ColorInputCallback = (valueOpt: Optional<string>) => void;
-
 export interface UiFactoryBackstageForColorInput {
-  colorPicker: (callback: ColorInputCallback, value: string) => void;
+  colorPicker: (callback: ColorSwatch.ColorInputCallback, value: string) => void;
   hasCustomColors: () => boolean;
   getColors: () => Menu.ChoiceMenuItemSpec[];
   getColorCols: () => number;
 }
 
-const colorPicker = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
+const colorPicker = (editor: Editor) => (callback: ColorSwatch.ColorInputCallback, value: string) => {
   const dialog = ColorSwatch.colorPickerDialog(editor);
   dialog(callback, value);
 };
