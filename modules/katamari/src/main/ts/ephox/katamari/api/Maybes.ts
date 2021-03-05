@@ -19,7 +19,7 @@ import * as Type from './Type';
 // - We do get fancy helper functions with Maybe
 // - Maybes support nesting, and allow for the type to still be nullable (or
 // another Maybe)
-// - There is no option to turn of strict-maybe-checks like there is for
+// - There is no option to turn off strict-maybe-checks like there is for
 // strict-null-checks
 // - Try to use Maybe instead of null or undefined where you can
 //
@@ -37,10 +37,7 @@ import * as Type from './Type';
 
 // Technically, this will compile down to 0 for Nothing, and 1 for Just. If
 // you're logging a `Maybe<T>` and you see some 1s and 0s where you expected to
-// see useful strings, this is why. Leaving them as numbers comes with two
-// advantages:
-// 1. Makes me feel like a C programmer again, using 0 to mean false
-// 2. Minifies better
+// see useful strings, this is why. This should minify better.
 export const enum Tag {
   Nothing,
   Just
@@ -109,7 +106,7 @@ export const isJust = <T>(self: Maybe<T>): self is Just<T> => self.tag === Tag.J
 // `mapper(self.value)`), and if self **does not** contain a value then
 // neither will the output.
 export const map = <T, U>(mapper: (value: T) => U) => (self: Maybe<T>): Maybe<U> =>
-  self.tag === Tag.Just ? just(mapper(self.value)) : nothing();
+  isJust(self) ? just(mapper(self.value)) : nothing<U>();
 
 // --- Applicative ---
 
@@ -119,7 +116,7 @@ export const map = <T, U>(mapper: (value: T) => U) => (self: Maybe<T>): Maybe<U>
 // will be called (with all of those values as its arguments) and the output
 // will be wrapped in another Maybe.
 export const lift2 = <A, B, Out>(a: Maybe<A>, b: Maybe<B>, fn: (a: A, b: B) => Out): Maybe<Out> => {
-  if (a.tag === Tag.Just && b.tag === Tag.Just) {
+  if (isJust(a) && isJust(b)) {
     return just(fn(a.value, b.value));
   } else {
     return nothing<Out>();
@@ -128,7 +125,7 @@ export const lift2 = <A, B, Out>(a: Maybe<A>, b: Maybe<B>, fn: (a: A, b: B) => O
 
 // Same as lift2, but with 3 maybe objects.
 export const lift3 = <A, B, C, Out>(a: Maybe<A>, b: Maybe<B>, c: Maybe<C>, fn: (a: A, b: B, c: C) => Out): Maybe<Out> => {
-  if (a.tag === Tag.Just && b.tag === Tag.Just && c.tag === Tag.Just) {
+  if (isJust(a) && isJust(b) && isJust(c)) {
     return just(fn(a.value, b.value, c.value));
   } else {
     return nothing<Out>();
@@ -143,7 +140,7 @@ export const lift4 = <A, B, C, D, Out>(
   d: Maybe<D>,
   fn: (a: A, b: B, c: C, d: D) => Out
 ): Maybe<Out> => {
-  if (a.tag === Tag.Just && b.tag === Tag.Just && c.tag === Tag.Just && d.tag === Tag.Just) {
+  if (isJust(a) && isJust(b) && isJust(c) && isJust(d)) {
     return just(fn(a.value, b.value, c.value, d.value));
   } else {
     return nothing<Out>();
@@ -159,7 +156,7 @@ export const lift5 = <A, B, C, D, E, Out>(
   e: Maybe<E>,
   fn: (a: A, b: B, c: C, d: D, e: E) => Out
 ): Maybe<Out> => {
-  if (a.tag === Tag.Just && b.tag === Tag.Just && c.tag === Tag.Just && d.tag === Tag.Just && e.tag === Tag.Just) {
+  if (isJust(a) && isJust(b) && isJust(c) && isJust(d) && isJust(e)) {
     return just(fn(a.value, b.value, c.value, d.value, e.value));
   } else {
     return nothing<Out>();
@@ -176,14 +173,14 @@ export const lift5 = <A, B, C, D, E, Out>(
 // You shouldn't often end up with nested Maybe types to need this function, but
 // if you do it's here.
 export const flatten = <T>(self: Maybe<Maybe<T>>): Maybe<T> =>
-  self.tag === Tag.Just ? self.value : nothing();
+  isJust(self) ? self.value : nothing<T>();
 
 // Perform a transform on a Maybe object, **if** there is a value. Unlike the
 // map function earlier in the piece, here the transform itself also returns a
 // Maybe. Think of this like a combination of `map` and `flatten` at the same
 // time.
 export const bind = <T, U>(binder: (value: T) => Maybe<U>) => (self: Maybe<T>): Maybe<U> =>
-  self.tag === Tag.Just ? binder(self.value) : nothing();
+  isJust(self) ? binder(self.value) : nothing<U>();
 
 // --- Traversable ---
 
@@ -192,13 +189,13 @@ export const bind = <T, U>(binder: (value: T) => Maybe<U>) => (self: Maybe<T>): 
 // that for empty objects it returns false (as no predicate-meeting object
 // exists).
 export const exists = <T>(predicate: (value: T) => boolean) => (self: Maybe<T>): boolean =>
-  self.tag === Tag.Just && predicate(self.value);
+  isJust(self) && predicate(self.value);
 
 // For a given predicate, this function finds out if **all** the values inside
 // this maybe object meet the predicate. In practice, this means that for empty
 // objects it returns true (as all 0 objects do meet the predicate).
 export const forAll = <T>(predicate: (value: T) => boolean) => (self: Maybe<T>): boolean =>
-  self.tag === Tag.Nothing || predicate(self.value);
+  isNothing(self) || predicate(self.value);
 
 // For a given predicate, create a new Maybe object that will retain all the
 // values inside the old Maybe object that meet the predicate. In practice, the
@@ -208,7 +205,7 @@ export const filter: {
   <T, U extends T>(predicate: (value: T) => value is U): (self: Maybe<T>) => Maybe<U>;
   <T>(predicate: (value: T) => boolean): (self: Maybe<T>) => Maybe<T>;
 } = <T>(predicate: (value: T) => boolean) => (self: Maybe<T>) => {
-  if (self.tag === Tag.Just && predicate(self.value)) {
+  if (isJust(self) && predicate(self.value)) {
     return just(self.value);
   } else {
     return nothing();
@@ -220,7 +217,7 @@ export const filter: {
 // Get the value out of the inside of the Maybe object, using a default
 // `replacement` value if the provided Maybe object does not contain a value.
 export const getOr = <T, U = T>(replacement: U) => (self: Maybe<T>): T | U =>
-  self.tag === Tag.Just ? self.value : replacement;
+  isJust(self) ? self.value : replacement;
 
 // Get the value out of the inside of the Maybe object, throwing an exception if
 // the provided Maybe object does not contain a value.
@@ -241,7 +238,7 @@ export const getOr = <T, U = T>(replacement: U) => (self: Maybe<T>): T | U =>
 // you're unable to completely type-check your code (IE: tests). In all other
 // situations, **avoid this method**.
 export const getOrDie = <T>(self: Maybe<T>): T => {
-  if (self.tag === Tag.Nothing) {
+  if (isNothing(self)) {
     throw new Error('Called getOrDie on Nothing');
   }
 
@@ -254,19 +251,19 @@ export const getOrDie = <T>(self: Maybe<T>): T => {
 // to say that you don't pass a value to `getOrThunk`, you pass a function which
 // (if called) will **return** the `value` you want to use.
 export const getOrThunk = <T, U = T>(thunk: () => U) => (self: Maybe<T>): T | U =>
-  self.tag === Tag.Just ? self.value : thunk();
+  isJust(self) ? self.value : thunk();
 
 // --- Comparators ---
 
 // **Is** the value stored inside this Maybe object equal to `other`? Uses `===`
 // to check.
 export const is = <T>(other: T) => (self: Maybe<T>): boolean =>
-  self.tag === Tag.Just && self.value === other;
+  isJust(self) && self.value === other;
 
 // Are these two Maybe objects equal? Equality here means either they're both
 // `Just` (and the values are equal under `===`) or they're both `Nothing`.
 export const equals = <T>(lhs: Maybe<T>, rhs: Maybe<T>): boolean => {
-  if (lhs.tag === Tag.Just && rhs.tag === Tag.Just) {
+  if (isJust(lhs) && isJust(rhs)) {
     return lhs.value === rhs.value;
   } else {
     return lhs.tag === rhs.tag;
@@ -275,7 +272,7 @@ export const equals = <T>(lhs: Maybe<T>, rhs: Maybe<T>): boolean => {
 
 // Same as `equals`, but instead of using `===` a custom comparator function is used.
 export const equals_ = <T, U>(lhs: Maybe<T>, rhs: Maybe<U>, comparator: (lhs: T, rhs: U) => boolean): boolean => {
-  if (lhs.tag === Tag.Just && rhs.tag === Tag.Just) {
+  if (isJust(lhs) && isJust(rhs)) {
     return comparator(lhs.value, rhs.value);
   } else {
     return lhs.tag === rhs.tag;
@@ -290,7 +287,7 @@ export const from = <T>(input: T | null | undefined): Maybe<NonNullable<T>> => {
   if (Type.isNonNullable(input)) {
     return just(input);
   } else {
-    return nothing();
+    return nothing<NonNullable<T>>();
   }
 };
 
@@ -306,17 +303,17 @@ export const getOrUndefined: <T>(self: Maybe<T>) => T | undefined = getOr(undefi
 // (or undefined-able) return types, you don't need to wrap it to use it with
 // bind.
 export const bindFrom = <T, U>(binder: (value: T) => U | null | undefined) => (self: Maybe<T>): Maybe<NonNullable<U>> =>
-  self.tag === Tag.Just ? from(binder(self.value)) : nothing();
+  isJust(self) ? from(binder(self.value)) : nothing<NonNullable<U>>();
 
 // --- Interop with other Katamari modules ---
 
 // Convert a Maybe object to an array. Empty Maybe - empty array. Non-empty Maybe - non-empty array.
 export const toArr = <T>(self: Maybe<T>): T[] =>
-  self.tag === Tag.Just ? [ self.value ] : [];
+  isJust(self) ? [ self.value ] : [];
 
 // Convert a Maybe object to an Optional object. Just === Some, and Nothing === None
 export const toOptional = <T>(self: Maybe<T>): Optional<T> =>
-  self.tag === Tag.Just ? Optional.some(self.value) : Optional.none();
+  isJust(self) ? Optional.some(self.value) : Optional.none();
 
 // Convert an Optional object to a Maybe object. Some === Just, and None === Nothing.
 export const fromOptional = <T>(other: Optional<T>): Maybe<T> =>
@@ -327,4 +324,4 @@ export const fromOptional = <T>(other: Optional<T>): Maybe<T> =>
 // you have a function which is designed to work with `Optional` return types,
 // you don't need to wrap it to use it with bind.
 export const bindO = <T, U>(binder: (value: T) => Optional<U>) => (self: Maybe<T>): Maybe<U> =>
-  self.tag === Tag.Just ? fromOptional(binder(self.value)) : nothing();
+  isJust(self) ? fromOptional(binder(self.value)) : nothing<U>();
