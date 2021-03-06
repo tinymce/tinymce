@@ -1,6 +1,6 @@
-import { RealKeys } from '@ephox/agar';
+import { Keys, RealKeys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -20,36 +20,38 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       editor.setContent('<p><a href="google.com">link</a>text</p>');
       TinySelections.setCursor(editor, [ 0, 1 ], 2);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
+      TinyContentActions.keystroke(editor, Keys.pageUp());
 
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
 
-    it('TINY-4612: caret wont move if it is not at inline element at the start of the line', async function () {
-      // Page Up/Down on Mac scroll the viewport instead of change the caret position/selection
-      if (!platform.os.isOSX()) {
-        this.skip();
-      }
-
+    it('TINY-4612: macOS wont move the caret if it is not at inline element at the start of the line, whereas other OSs do', async () => {
       const editor = hook.editor();
-      editor.setContent('<p>text<a href="google.com">link2</a></p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 4);
+      editor.setContent('<p>text<a href="google.com">link2</a>text</p>');
+      TinySelections.setCursor(editor, [ 0, 2 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
+      TinyContentActions.keystroke(editor, Keys.pageUp());
 
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 4);
+      if (platform.os.isOSX() || platform.browser.isFirefox()) {
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+      } else {
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      }
     });
 
-    it('TINY-4612: caret wont move inline_boundaries: false', async function () {
-      if (!platform.os.isOSX()) {
-        this.skip();
-      }
-
+    it('TINY-4612: inline_boundaries: false macOS doesnt move, whereas other OSs do', async () => {
       const editor = hook.editor();
       editor.settings.inline_boundaries = false;
-      editor.setContent('<p><a href="google.com">link</a>text</p>');
-      TinySelections.setCursor(editor, [ 0, 1 ], 2);
+      editor.setContent('<p>test<a href="google.com">link</a>text</p>');
+      TinySelections.setCursor(editor, [ 0, 2 ], 2);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
+      TinyContentActions.keystroke(editor, Keys.pageUp());
 
-      TinyAssertions.assertCursor(editor, [ 0, 1 ], 2);
+      if (platform.os.isOSX() || platform.browser.isFirefox()) {
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 2);
+      } else {
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      }
       delete editor.settings.inline_boundaries;
     });
   });
@@ -60,36 +62,38 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       editor.setContent('<p>text<a href="google.com">link</a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
+      TinyContentActions.keystroke(editor, Keys.pageDown());
 
       TinyAssertions.assertCursor(editor, [ 0 ], 2);
     });
 
-    it('TINY-4612: caret wont move if it is not at inline element at the end of the line', async function () {
-      // Windows os default behavior (regardless the browser) is moving the caret at the end of the line
-      if (platform.os.isWindows()) {
-        this.skip();
-      }
-
+    it('TINY-4612: macOS wont move the caret if it is not at inline element at the end of the line, whereas other OSs do', async () => {
       const editor = hook.editor();
-      editor.setContent('<p><a href="google.com">link</a>text</p>');
-      TinySelections.setCursor(editor, [ 0, 1 ], 2);
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
-
-      TinyAssertions.assertCursor(editor, [ 0, 1 ], 2);
-    });
-
-    it('TINY-4612: caret wont move inline_boundaries: false', async function () {
-      if (platform.os.isWindows()) {
-        this.skip();
-      }
-
-      const editor = hook.editor();
-      editor.settings.inline_boundaries = false;
-      editor.setContent('<p>text<a href="google.com">link</a></p>');
+      editor.setContent('<p>test<a href="google.com">link</a>text</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
+      TinyContentActions.keystroke(editor, Keys.pageDown());
 
-      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      if (platform.os.isOSX() || platform.browser.isFirefox()) {
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      } else {
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 4);
+      }
+    });
+
+    it('TINY-4612: inline_boundaries: false macOS doesnt move, whereas other OSs do', async () => {
+      const editor = hook.editor();
+      editor.settings.inline_boundaries = false;
+      editor.setContent('<p>test<a href="google.com">link</a>text</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 0);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
+      TinyContentActions.keystroke(editor, Keys.pageDown());
+
+      if (platform.os.isOSX() || platform.browser.isFirefox()) {
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
+      } else {
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 4);
+      }
       delete editor.settings.inline_boundaries;
     });
   });

@@ -14,9 +14,8 @@ import * as BoundarySelection from './BoundarySelection';
 import * as InlineUtils from './InlineUtils';
 import * as NavigationUtils from './NavigationUtils';
 
-const isInlineBoundaries = (editor: Editor, node: Node) => {
-  return Settings.isInlineBoundariesEnabled(editor) && InlineUtils.isInlineTarget(editor, node);
-};
+const isInlineBoundaries = (editor: Editor, node: Node) =>
+  Settings.isInlineBoundariesEnabled(editor) && InlineUtils.isInlineTarget(editor, node);
 
 const moveOutside = (editor: Editor, forward: boolean, inline: Node) => {
   const pos = forward ? CaretPosition.after(inline) : CaretPosition.before(inline);

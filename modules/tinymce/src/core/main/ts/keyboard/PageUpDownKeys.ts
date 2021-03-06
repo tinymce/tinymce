@@ -6,6 +6,7 @@
  */
 
 import { Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import Editor from '../api/Editor';
 import { NodeChangeEvent } from '../api/EventTypes';
 import { EditorEvent } from '../api/PublicApi';
@@ -13,20 +14,27 @@ import VK from '../api/util/VK';
 import * as InlineBoundariesNavigation from './InlineBoundariesNavigation';
 import * as MatchKeys from './MatchKeys';
 
+const platform = PlatformDetection.detect();
+
 const executeKeyupAction = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
+    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) },
+    { keyCode: VK.UP, metaKey: platform.os.isOSX(), action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
+    { keyCode: VK.DOWN, metaKey: platform.os.isOSX(), action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
   ], evt);
 };
 
 const stopImmediatePropagation = (e: EditorEvent<NodeChangeEvent>) => e.stopImmediatePropagation();
 
 const isPageUpDown = (evt: EditorEvent<KeyboardEvent>) =>
-  evt.keyCode === VK.PAGE_UP || evt.keyCode === VK.PAGE_DOWN;
+  evt.keyCode === VK.PAGE_UP || evt.keyCode === VK.PAGE_DOWN ||
+  (evt.keyCode === VK.UP && evt.metaKey === true) ||
+  (evt.keyCode === VK.DOWN && evt.metaKey === true);
 
 const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boolean) => {
-  // Prevents registering multiple event blockers
+  // Node change event is only blocked while the user is holding down the page up/down key it would have limited effects on other things
+  // Prevents a flickering UI while caret move in and out of the inline boundary element
   if (block && !blocked.get()) {
     editor.on('NodeChange', stopImmediatePropagation, true);
   } else if (!block && blocked.get()) {
@@ -36,12 +44,12 @@ const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boo
   blocked.set(block);
 };
 
-// we use 'keyup' beacuse we have no custom page up/down logic so we can't override the default as we do for the other things home/end that we do have custom code for.
+// Determining the correct placement on key up/down is very complicated and would require handling many edge cases,
+// which we don't have the resources to handle currently. As such, we allow the browser to change the selection and then make adjustments later.
 const setup = (editor: Editor) => {
   const blocked = Cell(false);
 
   editor.on('keydown', (evt) => {
-    //  Prevents a flickering UI while caret move in and out of the inline boundary element
     if (isPageUpDown(evt)) {
       setNodeChangeBlocker(blocked, editor, true);
     }
