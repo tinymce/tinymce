@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { ApproxStructure, Assertions, Keys, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Css, SugarBody } from '@ephox/sugar';
@@ -132,10 +132,13 @@ describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
     }
   }, [ Theme ]);
 
+  beforeEach(() => {
+    hook.editor().focus();
+  });
+
   it('Check basic container structure and actions', () => {
     const editor = hook.editor();
     const container = TinyDom.container(editor);
-    editor.focus();
     Assertions.assertStructure(
       'Container structure',
       ApproxStructure.build((s, str, arr) => s.element('div', {
