@@ -115,51 +115,51 @@ export const map = <T, U>(mapper: (value: T) => U) => (self: Maybe<T>): Maybe<U>
 // Maybe (nothing), but if all of the input objects do have a value then `fn`
 // will be called (with all of those values as its arguments) and the output
 // will be wrapped in another Maybe.
-export const lift2 = <A, B, Out>(a: Maybe<A>, b: Maybe<B>, fn: (a: A, b: B) => Out): Maybe<Out> => {
+export const lift2 = <A, B, R>(a: Maybe<A>, b: Maybe<B>, fn: (a: A, b: B) => R): Maybe<R> => {
   if (isJust(a) && isJust(b)) {
     return just(fn(a.value, b.value));
   } else {
-    return nothing<Out>();
+    return nothing<R>();
   }
 };
 
 // Same as lift2, but with 3 maybe objects.
-export const lift3 = <A, B, C, Out>(a: Maybe<A>, b: Maybe<B>, c: Maybe<C>, fn: (a: A, b: B, c: C) => Out): Maybe<Out> => {
+export const lift3 = <A, B, C, R>(a: Maybe<A>, b: Maybe<B>, c: Maybe<C>, fn: (a: A, b: B, c: C) => R): Maybe<R> => {
   if (isJust(a) && isJust(b) && isJust(c)) {
     return just(fn(a.value, b.value, c.value));
   } else {
-    return nothing<Out>();
+    return nothing<R>();
   }
 };
 
 // Same as lift2, but with 4 maybe objects.
-export const lift4 = <A, B, C, D, Out>(
+export const lift4 = <A, B, C, D, R>(
   a: Maybe<A>,
   b: Maybe<B>,
   c: Maybe<C>,
   d: Maybe<D>,
-  fn: (a: A, b: B, c: C, d: D) => Out
-): Maybe<Out> => {
+  fn: (a: A, b: B, c: C, d: D) => R
+): Maybe<R> => {
   if (isJust(a) && isJust(b) && isJust(c) && isJust(d)) {
     return just(fn(a.value, b.value, c.value, d.value));
   } else {
-    return nothing<Out>();
+    return nothing<R>();
   }
 };
 
 // Same as lift2, but with 5 maybe objects.
-export const lift5 = <A, B, C, D, E, Out>(
+export const lift5 = <A, B, C, D, E, R>(
   a: Maybe<A>,
   b: Maybe<B>,
   c: Maybe<C>,
   d: Maybe<D>,
   e: Maybe<E>,
-  fn: (a: A, b: B, c: C, d: D, e: E) => Out
-): Maybe<Out> => {
+  fn: (a: A, b: B, c: C, d: D, e: E) => R
+): Maybe<R> => {
   if (isJust(a) && isJust(b) && isJust(c) && isJust(d) && isJust(e)) {
     return just(fn(a.value, b.value, c.value, d.value, e.value));
   } else {
-    return nothing<Out>();
+    return nothing<R>();
   }
 };
 
