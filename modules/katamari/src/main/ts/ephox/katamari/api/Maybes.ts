@@ -1,3 +1,4 @@
+import * as Fun from './Fun';
 import { Optional } from './Optional';
 import * as Type from './Type';
 
@@ -262,22 +263,16 @@ export const is = <T>(other: T) => (self: Maybe<T>): boolean =>
 
 // Are these two Maybe objects equal? Equality here means either they're both
 // `Just` (and the values are equal under `===`) or they're both `Nothing`.
-export const equals = <T>(lhs: Maybe<T>, rhs: Maybe<T>): boolean => {
-  if (isJust(lhs) && isJust(rhs)) {
-    return lhs.value === rhs.value;
-  } else {
-    return lhs.tag === rhs.tag;
-  }
-};
-
-// Same as `equals`, but instead of using `===` a custom comparator function is used.
-export const equals_ = <T, U>(lhs: Maybe<T>, rhs: Maybe<U>, comparator: (lhs: T, rhs: U) => boolean): boolean => {
+export const equals: {
+  <T, U>(lhs: Maybe<T>, rhs: Maybe<U>, comparator: (lhs: T, rhs: U) => boolean): boolean,
+  <T>(lhs: Maybe<T>, rhs: Maybe<T>, comparator?: (lhs: T, rhs: T) => boolean): boolean,
+} = (lhs, rhs, comparator = Fun.tripleEquals) => {
   if (isJust(lhs) && isJust(rhs)) {
     return comparator(lhs.value, rhs.value);
   } else {
     return lhs.tag === rhs.tag;
   }
-};
+}
 
 // --- Interop with null and undefined ---
 

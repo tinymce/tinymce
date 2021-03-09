@@ -29,7 +29,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
     });
   });
 
-  context('equals', () => {
+  context('equals - without extra argument', () => {
     it('is true for two "Nothing"s', () => {
       assert.isTrue(Maybes.equals(Maybes.nothing(), Maybes.nothing()));
     });
@@ -54,17 +54,17 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
     });
   });
 
-  context('equals_', () => {
+  context('equals - with extra argument', () => {
     const unusedComparator = Fun.die('should not call the comparator');
 
     it('is true for two "Nothing"s', () => {
-      assert.isTrue(Maybes.equals_(Maybes.nothing(), Maybes.nothing(), unusedComparator));
+      assert.isTrue(Maybes.equals(Maybes.nothing(), Maybes.nothing(), unusedComparator));
     });
 
     it('is false for one "Nothing"', () => {
       fc.assert(fc.property(fc.anything(), (thing) => {
-        assert.isFalse(Maybes.equals_(Maybes.nothing(), Maybes.just(thing), unusedComparator));
-        assert.isFalse(Maybes.equals_(Maybes.just(thing), Maybes.nothing(), unusedComparator));
+        assert.isFalse(Maybes.equals(Maybes.nothing(), Maybes.just(thing), unusedComparator));
+        assert.isFalse(Maybes.equals(Maybes.just(thing), Maybes.nothing(), unusedComparator));
       }));
     });
 
@@ -74,7 +74,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
 
       let numCalled = 0;
 
-      const theSame = Maybes.equals_(lhs, rhs, (left, right) => {
+      const theSame = Maybes.equals(lhs, rhs, (left, right) => {
         assert.equal(left, 'left');
         assert.equal(right, 'right');
         numCalled += 1;
@@ -82,7 +82,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
       });
       assert.isTrue(theSame);
 
-      const different = Maybes.equals_(lhs, rhs, (left, right) => {
+      const different = Maybes.equals(lhs, rhs, (left, right) => {
         assert.equal(left, 'left');
         assert.equal(right, 'right');
         numCalled += 1;
