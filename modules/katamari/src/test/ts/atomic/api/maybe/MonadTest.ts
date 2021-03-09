@@ -81,11 +81,11 @@ describe('atomic.katamari.maybe.MonadTest', () => {
     });
   });
 
-  context('bindFrom', () => {
+  context('bindNullable', () => {
     it('does not call the bind function when binding on Nothing', () => {
       const nothing = Fun.pipe(
         Maybes.nothing(),
-        Maybes.bindFrom(Fun.die('Should not call binder as there is nothing to bind'))
+        Maybes.bindNullable(Fun.die('Should not call binder as there is nothing to bind'))
       );
 
       assert.isTrue(Maybes.isNothing(nothing), 'Expected nothing');
@@ -94,7 +94,7 @@ describe('atomic.katamari.maybe.MonadTest', () => {
     it('passes the right values through the bind function when binding on Just', () => {
       const nothing1 = Fun.pipe(
         Maybes.just('test'),
-        Maybes.bindFrom((test) => {
+        Maybes.bindNullable((test) => {
           assert.equal(test, 'test');
           return null;
         })
@@ -103,7 +103,7 @@ describe('atomic.katamari.maybe.MonadTest', () => {
 
       const nothing2 = Fun.pipe(
         Maybes.just('test'),
-        Maybes.bindFrom((test) => {
+        Maybes.bindNullable((test) => {
           assert.equal(test, 'test');
           return undefined;
         })
@@ -112,7 +112,7 @@ describe('atomic.katamari.maybe.MonadTest', () => {
 
       const just = Fun.pipe(
         Maybes.just('test'),
-        Maybes.bindFrom((test) => {
+        Maybes.bindNullable((test) => {
           assert.equal(test, 'test');
           return 'test2';
         })

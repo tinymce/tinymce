@@ -302,7 +302,7 @@ export const getOrUndefined: <T>(self: Maybe<T>) => T | undefined = getOr(undefi
 // sugar so that if you have a function which is designed to work with nullable
 // (or undefined-able) return types, you don't need to wrap it to use it with
 // bind.
-export const bindFrom = <T, U>(binder: (value: T) => U | null | undefined) => (self: Maybe<T>): Maybe<NonNullable<U>> =>
+export const bindNullable = <T, U>(binder: (value: T) => U | null | undefined) => (self: Maybe<T>): Maybe<NonNullable<U>> =>
   isJust(self) ? from(binder(self.value)) : nothing<NonNullable<U>>();
 
 // --- Interop with other Katamari modules ---
