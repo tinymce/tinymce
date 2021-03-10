@@ -28,9 +28,7 @@ const executeKeyupAction = (editor: Editor, evt: KeyboardEvent) => {
 const stopImmediatePropagation = (e: EditorEvent<NodeChangeEvent>) => e.stopImmediatePropagation();
 
 const isPageUpDown = (evt: EditorEvent<KeyboardEvent>) =>
-  evt.keyCode === VK.PAGE_UP || evt.keyCode === VK.PAGE_DOWN ||
-  (evt.keyCode === VK.UP && evt.metaKey === true) ||
-  (evt.keyCode === VK.DOWN && evt.metaKey === true);
+  evt.keyCode === VK.PAGE_UP || evt.keyCode === VK.PAGE_DOWN;
 
 const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boolean) => {
   // Node change event is only blocked while the user is holding down the page up/down key it would have limited effects on other things

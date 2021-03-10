@@ -14,6 +14,8 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
   }, [ Theme ], true);
   const platform = PlatformDetection.detect();
 
+  // It necessary to add a different assertion for Firefox because it does not move the caret start/end on OS windows and Mac,
+  // Linux Firefox could be an exception, nevertheless we does not override the default behavior.
   context('Page Up', () => {
     it('TINY-4612: caret should be placed at the start of the line if the first child is an inline element', async () => {
       const editor = hook.editor();

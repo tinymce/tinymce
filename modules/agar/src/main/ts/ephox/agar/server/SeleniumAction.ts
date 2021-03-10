@@ -12,7 +12,7 @@ const postInfo = (path: string, info: any, die: (err: any) => void, next: (v: {}
     },
     responseType: DataType.JSON
   }).get((res) => {
-    res.fold(die, next);
+    res.fold((e) => die(JSON.stringify(e)), next);
   });
 };
 
