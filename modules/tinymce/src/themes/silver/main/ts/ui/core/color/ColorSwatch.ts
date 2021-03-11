@@ -12,6 +12,8 @@ import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../../../api/Events';
 import * as Settings from './Settings';
 
+export type ColorInputCallback = (valueOpt: Optional<string>) => void;
+
 export interface ColorSwatchDialogData {
   colorpicker: string;
 }
@@ -186,20 +188,23 @@ const registerTextColorMenuItem = (editor: Editor, name: string, format: string,
   });
 };
 
-const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
-  const getOnSubmit = (callback) => (api) => {
+const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
+  let isValid = false;
+
+  const onSubmit = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>) => {
     const data = api.getData();
-    callback(Optional.from(data.colorpicker));
-    api.close();
+    const hex = data.colorpicker;
+    if (isValid) {
+      callback(Optional.from(hex));
+      api.close();
+    } else {
+      editor.windowManager.alert(editor.translate([ 'Invalid hex color code: {0}', hex ]));
+    }
   };
 
-  const onAction = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
+  const onAction = (_api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
     if (details.name === 'hex-valid') {
-      if (details.value) {
-        api.enable('ok');
-      } else {
-        api.disable('ok');
-      }
+      isValid = details.value;
     }
   };
 
@@ -207,7 +212,6 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     colorpicker: value
   };
 
-  const submit = getOnSubmit(callback);
   editor.windowManager.open({
     title: 'Color Picker',
     size: 'normal',
@@ -236,7 +240,7 @@ const colorPickerDialog = (editor: Editor) => (callback, value: string) => {
     ],
     initialData,
     onAction,
-    onSubmit: submit,
+    onSubmit,
     onClose: Fun.noop,
     onCancel: () => {
       callback(Optional.none());
