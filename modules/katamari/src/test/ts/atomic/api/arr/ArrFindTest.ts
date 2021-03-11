@@ -28,6 +28,11 @@ UnitTest.test('Arr.find: Unit tests', () => {
     checkArrHelper(expected, Object.freeze(input), pred);
   };
 
+  const checkArrGuard = <T, U extends T>(expected: U, input: ArrayLike<T>, pred: (n: T, i: number) => n is U): void => {
+    const actual: Optional<U> = Arr.find(input, pred);
+    Assert.eq('some', Optional.some(expected), actual, tOptional());
+  };
+
   checkNone([], (x) => x > 0);
   checkNone([], (_x) => {
     throw new Error('should not be called');
@@ -39,6 +44,8 @@ UnitTest.test('Arr.find: Unit tests', () => {
   checkNone([ 4, 2, 10, 412, 3 ], (x) => x === 41);
 
   checkArr(10, [ 4, 2, 10, 412, 3 ], (x, i) => i === 2);
+
+  checkArrGuard('foo', [ 'foo', 'bar' ], (s): s is 'foo' => s === 'foo');
 });
 
 UnitTest.test('Arr.find: finds a value in the array', () => {

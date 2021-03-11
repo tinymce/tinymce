@@ -40,9 +40,7 @@ const sublist = <T extends PRange>(parray: T[], start: number, finish: number): 
   }).getOr([]);
 };
 
-const find: typeof Arr.find = (parray, pred) => {
-  return Arr.find(parray, pred);
-};
+const find = Arr.find;
 
 export {
   get,

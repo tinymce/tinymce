@@ -4,6 +4,7 @@ import { Optional } from './Optional';
 import * as Type from './Type';
 
 type ArrayMorphism<T, U> = (x: T, i: number) => U;
+type ArrayGuardPredicate<T, U extends T> = (x: T, i: number) => x is U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Comparator<T> = (a: T, b: T) => number;
 
@@ -100,7 +101,7 @@ export const partition = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): {
 };
 
 export const filter: {
-  <T, Q extends T>(xs: ArrayLike<T>, pred: (x: T, i: number) => x is Q): Q[];
+  <T, U extends T>(xs: ArrayLike<T>, pred: ArrayGuardPredicate<T, U>): U[];
   <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[];
 } = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): T[] => {
   const r: T[] = [];
@@ -163,7 +164,10 @@ export const foldl = <T = any, U = any>(xs: ArrayLike<T>, f: (acc: U, x: T) => U
   return acc;
 };
 
-export const findUntil = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>, until: ArrayPredicate<T>): Optional<T> => {
+export const findUntil: {
+  <T, U extends T>(xs: ArrayLike<T>, pred: ArrayGuardPredicate<T, U>, until: ArrayPredicate<T>): Optional<U>;
+  <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>, until: ArrayPredicate<T>): Optional<T>;
+} = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>, until: ArrayPredicate<T>): Optional<T> => {
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i)) {
@@ -175,7 +179,12 @@ export const findUntil = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>, un
   return Optional.none();
 };
 
-export const find = <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T> => findUntil(xs, pred, Fun.never);
+export const find: {
+  <T, U extends T>(xs: ArrayLike<T>, pred: ArrayGuardPredicate<T, U>): Optional<U>;
+  <T = any>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T>;
+} = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<T> => {
+  return findUntil(xs, pred, Fun.never);
+};
 
 export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<number> => {
   for (let i = 0, len = xs.length; i < len; i++) {
