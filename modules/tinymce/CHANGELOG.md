@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.7.1 - TBD
 
 ### Fixed
+- The `help` dialog incorrectly linked to the changelog of TinyMCE 4 instead of TinyMCE 5 #TINY-7031
 - Fixed a bug where error messages were displayed incorrectly in the image dialog #TINY-7099
 - Fixed an issue where URLs were not correctly filtered in some cases #TINY-7025
 - Fixed a bug where context menu items with names that contained uppercase characters were not displayed #TINY-7072
