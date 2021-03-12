@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import { RangeLikeObject } from './RangeTypes';
 
@@ -56,7 +57,18 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
   const collectSiblings = (node: Node, name: string, endNode?: Node) => {
     const siblings = [];
 
-    for (; node && node !== endNode; node = node[name]) {
+    let isValidNode = (iNode: Node) => {
+      if (!iNode) {
+        return false;
+      }
+      if (iNode === endNode) {
+        isValidNode = Fun.never;
+      }
+
+      return true;
+    };
+
+    for (; isValidNode(node); node = node[name]) {
       siblings.push(node);
     }
 
@@ -141,7 +153,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
   const siblings = collectSiblings(
     startPoint === startContainer ? startPoint : startPoint.nextSibling,
     'nextSibling',
-    endPoint === endContainer ? endPoint.nextSibling : endPoint
+    endPoint
   );
 
   if (siblings.length) {
