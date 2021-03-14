@@ -159,6 +159,41 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ol><li>Version 7.0:</li></ol>');
   });
 
+  suite.test('TestCase-TBA: Paste: Paste Word fake list with font changes', (editor) => {
+    editor.setContent('');
+
+    editor.execCommand('mceInsertClipboardContent', false, {
+      content: `<p class=MsoListParagraph style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=EN-US style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;mso-ansi-language:EN-US'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Hello </span><span lang=EN-US style='font-size:20.0pt;line-height:107%;mso-ansi-language:EN-US'>world.</span><span lang=EN-US style='mso-ansi-language:EN-US'> What?<o:p></o:p></span></p>` });
+
+    LegacyUnit.equal(editor.getContent(), '<ul><li>Hello world. What?</li></ul>');
+  });
+
+  suite.test('TestCase-TBA: Paste: Paste Word fake list with single words ending in dot.', (editor) => {
+    editor.setContent('');
+
+    editor.execCommand('mceInsertClipboardContent', false, {
+      content:
+        `<p class=MsoListParagraphCxSpFirst style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span
+        lang=en-FI style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>First.</span><span
+        lang=en-FI><o:p></o:p></span></p>
+      
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span
+        lang=en-FI style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Second.</span><span
+        lang=en-FI><o:p></o:p></span></p>
+      
+        <p class=MsoListParagraphCxSpLast style='text-indent:-18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span
+        lang=en-FI style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Third.</span><span
+        lang=en-FI><o:p></o:p></span></p>` });
+
+    LegacyUnit.equal(editor.getContent(), '<ol><li>First.</li><li>Second.</li><li>Third.</li></ol>');
+  });
+
   suite.test('TestCase-TBA: Paste: Paste Word fake list of ten items with roman numerals', (editor) => {
     editor.setContent('');
 
