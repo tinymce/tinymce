@@ -17,6 +17,17 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
       }));
     });
 
+    it('is always false for "Nothing" with explicit comparator', () => {
+      fc.assert(fc.property(fc.anything(), (thing) => {
+        const matches = Fun.pipe(
+          Maybes.nothing(),
+          Maybes.is(thing, Fun.die('⊥'))
+        );
+
+        assert.isFalse(matches);
+      }));
+    });
+
     it('is correct for "Just"', () => {
       fc.assert(fc.property(fc.string(), (thing) => {
         const matches = Fun.pipe(
@@ -25,6 +36,39 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
         );
 
         assert.isTrue(matches);
+      }));
+
+      fc.assert(fc.property(fc.string(), (thing) => {
+        const matches = Fun.pipe(
+          Maybes.just(thing),
+          Maybes.is(thing + "foo")
+        );
+
+        assert.isFalse(matches);
+      }));
+    });
+
+    it('is correct for "Just" with an explicit comparator', () => {
+
+      // Just an example data type that doesn't have a simple equality
+      const thunkEq = (a: () => string, b: () => string): boolean => a() === b();
+
+      fc.assert(fc.property(fc.string(), (thing) => {
+        const matches = Fun.pipe(
+          Maybes.just(() => thing),
+          Maybes.is(() => thing, thunkEq)
+        );
+
+        assert.isTrue(matches);
+      }));
+
+      fc.assert(fc.property(fc.string(), (thing) => {
+        const matches = Fun.pipe(
+          Maybes.just(() => thing),
+          Maybes.is(() => thing + "foo", thunkEq)
+        );
+
+        assert.isFalse(matches);
       }));
     });
   });

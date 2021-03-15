@@ -256,10 +256,9 @@ export const getOrThunk = <T, U = T>(thunk: () => U) => (self: Maybe<T>): T | U 
 
 // --- Comparators ---
 
-// **Is** the value stored inside this Maybe object equal to `other`? Uses `===`
-// to check.
-export const is = <T>(other: T) => (self: Maybe<T>): boolean =>
-  isJust(self) && self.value === other;
+// **Is** the value stored inside this Maybe object equal to `other`?
+export const is = <T>(other: T, comparator: (a: T, b: T) => boolean = Fun.tripleEquals) => (self: Maybe<T>): boolean =>
+  isJust(self) && comparator(self.value, other);
 
 // Are these two Maybe objects equal? Equality here means either they're both
 // `Just` (and the values are equal under `===`) or they're both `Nothing`.
