@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Introduced `Maybe` as an eventual replacement for `Optional`.
 - Added `pipe` function to the `Fun` API.
 
+### Changed
+- Added type guard predicates to `Arr.find` methods #TINY-7138
+
+## 7.1.0 - 2020-02-02
+
+### Added
+- New `Regex` module
+
 ## 7.0.0
 
 ### Removed
