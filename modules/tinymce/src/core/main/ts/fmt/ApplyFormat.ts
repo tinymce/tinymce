@@ -140,13 +140,9 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     const wrapName = (format as InlineFormat).inline || (format as BlockFormat).block;
     const wrapElm = dom.create(wrapName);
     setElementFormat(wrapElm);
-    console.log('========> applyRngStyle <========');
-    console.log('dom', dom);
-    console.log('rng', rng);
 
     RangeWalk.walk(dom, rng, (nodes) => {
       let currentWrapElm: Element | null;
-      console.log('//////> RangeWalk.walk', nodes);
       /**
        * Process a list of nodes wrap them.
        */
@@ -189,51 +185,35 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           currentWrapElm = null;
           return;
         }
-        console.log('//////> process node', format);
-        console.log(node);
+
         // Handle selector patterns
         if (FormatUtils.isSelectorFormat(format)) {
           const found = applyNodeStyle(formatList, node);
-          console.log('update code here /////// >');
-          console.log('formatList', formatList);
-          console.log('found', found);
-          console.log('hasFormatProperty(format, inline)', hasFormatProperty(format, 'inline'));
 
           const isUL = (node: Node) => node.nodeName === 'UL';
           if (
-            node.parentElement.lastElementChild === node &&
             node.hasChildNodes() &&
             Arr.exists(node.childNodes, isUL) &&
             found
           ) {
             const nestList = Arr.find(node.childNodes, isUL).getOrNull();
-            console.log('Last child: ', node);
-            console.log('nested list: ', nestList);
 
-            Arr.each(nestList.childNodes, (child: ChildNode) => {
-              console.log('child', child);
+            each(formatList, (format: any) => {
+              // Check collapsed state if it exists
+              if ('collapsed' in format && format.collapsed !== isCollapsed) {
+                return;
+              }
 
-              each(formatList, (format: any) => {
-                // Check collapsed state if it exists
-                if ('collapsed' in format && format.collapsed !== isCollapsed) {
-                  return;
-                }
-
-                console.log('format', format);
-                if (dom.is(child, format.selector) && !isCaretNode(node)) {
-                  const styles = Object.keys(format.styles);
-                  Arr.each(styles, (style) => {
-                    const prevStyle = dom.getStyle(child, style);
-                    console.log('style', style, 'prevStyle', prevStyle);
-                    if (prevStyle === '') {
-                      dom.setStyle(child, { [style]: 'initial' });
-                    }
-                  });
-                  // setElementFormat(node, format);
-                }
-              });
+              if (dom.is(nestList, format.selector) && !isCaretNode(node)) {
+                const styles = Object.keys(format.styles);
+                Arr.each(styles, (style) => {
+                  const prevStyle = dom.getStyle(nestList, style);
+                  if (prevStyle === '') {
+                    dom.setStyle(nestList, { [style]: 'initial' });
+                  }
+                });
+              }
             });
-
           }
 
           // Continue processing if a selector match wasn't found and a inline element is defined
