@@ -17,10 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.7.1 - TBD
 
 ### Fixed
+- The `help` dialog incorrectly linked to the changelog of TinyMCE 4 instead of TinyMCE 5 #TINY-7031
+- Fixed a bug where error messages were displayed incorrectly in the image dialog #TINY-7099
 - Fixed an issue where URLs were not correctly filtered in some cases #TINY-7025
 - Fixed a bug where context menu items with names that contained uppercase characters were not displayed #TINY-7072
 - Fixed context menu items lacking support for the `disabled` and `shortcut` properties #TINY-7073
-- Fixed a regression whereby the width and height weren't set correctly when embedding content using the `media` dialog #TINY-7074
+- Fixed a regression where the width and height were incorrectly set when embedding content using the `media` dialog #TINY-7074
 
 ## 5.7.0 - 2021-02-10
 

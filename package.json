@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^11.1.1",
-    "@ephox/bedrock-server": "^11.1.1",
+    "@ephox/bedrock-server": "^11.2.0",
     "@ephox/oxide-icons-tools": "^2.1.1",
     "@ephox/swag": "^4.3.0",
     "@ephox/wrap-jsverify": "^2.0.1",
@@ -41,7 +41,7 @@
     "@tinymce/eslint-plugin": "^1.7.2",
     "@types/chai": "^4.2.15",
     "awesome-typescript-loader": "^5.2.0",
-    "chai": "^4.3.1",
+    "chai": "^4.3.3",
     "chalk": "^4.1.0",
     "emojilib": "^2.4.0",
     "eslint-plugin-mocha": "^7.0.0",

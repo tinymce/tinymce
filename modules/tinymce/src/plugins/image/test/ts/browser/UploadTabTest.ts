@@ -148,9 +148,11 @@ describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-alert-dialog');
+    // TINY-7099: Ensure that the correct error message is displayed
+    UiFinder.exists(SugarBody.body(), '.tox-alert-dialog .tox-dialog__body-content:contains("Error occurred")');
     TinyUiActions.clickOnUi(editor, '.tox-alert-dialog .tox-button:contains("OK")');
-    UiFinder.sNotExists(SugarBody.body(), '.tox-alert-dialog');
-    UiFinder.sExists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")');
+    UiFinder.notExists(SugarBody.body(), '.tox-alert-dialog');
+    UiFinder.exists(SugarBody.body(), '.tox-dialog__body-nav-item--active:contains("Upload")');
     closeDialog(editor);
   });
 
