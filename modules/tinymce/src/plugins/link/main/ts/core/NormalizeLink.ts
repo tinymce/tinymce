@@ -1,3 +1,4 @@
+import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
 import Editor from 'tinymce/core/api/Editor';
 
@@ -16,18 +17,18 @@ const hasSameParent = (editor: Editor, elm: Node, nextNode: Node): elm is HTMLAn
 
 const getSelectedLink = (editor: Editor, selectedElm?: Element): HTMLAnchorElement | null => {
   const rng = editor.selection.getRng();
-  const startRng = rng.startContainer;
-  const endRng = rng.endContainer;
+  const startContainer = rng.startContainer;
+  const endContainer = rng.endContainer;
 
-  const endOffsetChild = endRng.childNodes[rng.endOffset];
-  const startOffsetChild = startRng.childNodes[rng.startOffset];
+  const endOffsetChild = RangeUtils.getNode(endContainer, rng.endOffset);
+  const startOffsetChild = RangeUtils.getNode(startContainer, rng.startOffset);
 
-  if (endRng.nodeType === 1 && isBR(endOffsetChild)) {
+  if (endContainer.nodeType === 1 && isBR(endOffsetChild)) {
     let startNode: Node = endOffsetChild;
     let rootNode: Node = endOffsetChild.parentNode;
-    const startLink = getClosestLink(editor, startRng);
+    const startLink = getClosestLink(editor, startContainer);
 
-    if (!hasSameParent(editor, startRng, endOffsetChild) && isAnchor(startLink)) {
+    if (!hasSameParent(editor, startContainer, endOffsetChild) && isAnchor(startLink)) {
       rootNode = editor.dom.getParent(startLink, 'p');
       startNode = rootNode.lastChild;
     }
@@ -41,7 +42,7 @@ const getSelectedLink = (editor: Editor, selectedElm?: Element): HTMLAnchorEleme
     }
   }
 
-  if (startRng.nodeType === 1 && endRng.nodeType === 3 && isAnchor(startOffsetChild)) {
+  if (startContainer.nodeType === 1 && endContainer.nodeType === 3 && isAnchor(startOffsetChild)) {
     return (startOffsetChild) as HTMLAnchorElement;
   }
 
