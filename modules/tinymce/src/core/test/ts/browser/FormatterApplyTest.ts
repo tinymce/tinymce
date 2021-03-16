@@ -2308,4 +2308,126 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('bold');
     assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
   });
+
+  it('TINY-6567: Apply format including the final bullet point in the list', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b<br />' +
+          '<ul>' +
+            '<li>c</li>' +
+            '<li>d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li li:nth-child(2)', 0);
+    editor.formatter.apply('aligncenter');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: center;">a</li>' +
+        '<li style="text-align: center;">b<br />' +
+          '<ul style="text-align: initial;">' +
+            '<li style="text-align: center;">c</li>' +
+            '<li style="text-align: center;">d</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-6567: Apply aligncenter to a partially select child list', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b<br />' +
+          '<ul>' +
+            '<li>c</li>' +
+            '<li>d</li>' +
+            '<li>e</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li li:nth-child(1)', 0);
+    editor.formatter.apply('aligncenter');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: center;">a</li>' +
+        '<li style="text-align: center;">b<br />' +
+          '<ul style="text-align: initial;">' +
+            '<li style="text-align: center;">c</li>' +
+            '<li>d</li>' +
+            '<li>e</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-6567: Apply alignright to a li but not to its children', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b<br />' +
+          '<ul>' +
+            '<li>c</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    LegacyUnit.setSelection(editor, 'ul', 0, 'li:nth-child(2)', 1);
+    editor.formatter.apply('alignright');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: right;">a</li>' +
+        '<li style="text-align: right;">b<br />' +
+          '<ul style="text-align: initial;">' +
+            '<li>c</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
+
+  it('TINY-6567: Apply alignright only to last nest ul childs', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<ul>' +
+        '<li>a</li>' +
+        '<li>b<br />' +
+          '<ul>' +
+            '<li>1</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li>c</li>' +
+        '<li>d<br />' +
+          '<ul>' +
+            '<li>2</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li:nth-child(4) li', 0);
+    editor.formatter.apply('alignright');
+    assert.equal(getContent(editor),
+      '<ul>' +
+        '<li style="text-align: right;">a</li>' +
+        '<li style="text-align: right;">b<br />' +
+          '<ul>' +
+            '<li>1</li>' +
+          '</ul>' +
+        '</li>' +
+        '<li style="text-align: right;">c</li>' +
+        '<li style="text-align: right;">d<br />' +
+          '<ul style="text-align: initial;">' +
+            '<li style="text-align: right;">2</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>'
+    );
+  });
 });

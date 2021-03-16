@@ -64,6 +64,8 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
+const isUL = (node: Node) => node.nodeName === 'UL';
+
 const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
@@ -190,11 +192,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         if (FormatUtils.isSelectorFormat(format)) {
           const found = applyNodeStyle(formatList, node);
 
-          const isUL = (node: Node) => node.nodeName === 'UL';
           if (
+            found &&
             node.hasChildNodes() &&
             Arr.exists(node.childNodes, isUL) &&
-            found
+            node.parentNode.lastChild === node
           ) {
             const nestList = Arr.find(node.childNodes, isUL).getOrNull();
 
@@ -205,7 +207,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
               }
 
               if (dom.is(nestList, format.selector) && !isCaretNode(node)) {
-                const styles = Object.keys(format.styles);
+                const styles = Obj.keys(format.styles);
                 Arr.each(styles, (style) => {
                   const prevStyle = dom.getStyle(nestList, style);
                   if (prevStyle === '') {
