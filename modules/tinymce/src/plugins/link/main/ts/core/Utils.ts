@@ -68,7 +68,7 @@ const getAnchorElement = (editor: Editor, selectedElm?: Element): HTMLAnchorElem
     // for an image contained in a figure we look for a link inside the selected element
     return editor.dom.select('a[href]', selectedElm)[0] as HTMLAnchorElement;
   } else {
-    return NormalizeLink.getSelectedLink(editor, selectedElm);
+    return NormalizeLink.getSelectedLink(editor, selectedElm).getOrNull();
   }
 };
 
