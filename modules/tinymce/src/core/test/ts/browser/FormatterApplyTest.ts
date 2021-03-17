@@ -2328,7 +2328,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
         '<li style="text-align: center;">b<br />' +
-          '<ul style="text-align: initial;">' +
+          '<ul style="text-align: left;">' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
           '</ul>' +
@@ -2357,7 +2357,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
         '<li style="text-align: center;">b<br />' +
-          '<ul style="text-align: initial;">' +
+          '<ul style="text-align: left;">' +
             '<li style="text-align: center;">c</li>' +
             '<li>d</li>' +
             '<li>e</li>' +
@@ -2367,7 +2367,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     );
   });
 
-  it('TINY-6567: Apply alignright to a li but not to its children', () => {
+  it('TINY-6567: Apply alignright to the final bullet point but not to its children', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -2385,7 +2385,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '<ul>' +
         '<li style="text-align: right;">a</li>' +
         '<li style="text-align: right;">b<br />' +
-          '<ul style="text-align: initial;">' +
+          '<ul style="text-align: left;">' +
             '<li>c</li>' +
           '</ul>' +
         '</li>' +
@@ -2423,7 +2423,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
         '<li style="text-align: right;">c</li>' +
         '<li style="text-align: right;">d<br />' +
-          '<ul style="text-align: initial;">' +
+          '<ul style="text-align: left;">' +
             '<li style="text-align: right;">2</li>' +
           '</ul>' +
         '</li>' +

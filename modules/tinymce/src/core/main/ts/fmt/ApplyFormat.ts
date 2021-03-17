@@ -211,7 +211,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
                 Arr.each(styles, (style) => {
                   const prevStyle = dom.getStyle(nestList, style);
                   if (prevStyle === '') {
-                    dom.setStyle(nestList, { [style]: 'initial' });
+                    dom.setStyle(nestList, { [style]: 'left' });
                   }
                 });
               }
