@@ -13,6 +13,7 @@ import Delay from '../api/util/Delay';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
+import * as Rtc from '../Rtc';
 import * as CaretRangeFromPoint from '../selection/CaretRangeFromPoint';
 
 /**
@@ -769,58 +770,79 @@ const Quirks = (editor: Editor): Quirks => {
     return (!sel || !sel.rangeCount || sel.rangeCount === 0);
   };
 
-  // All browsers
-  removeBlockQuoteOnBackSpace();
-  emptyEditorWhenDeleting();
-
-  // Windows phone will return a range like [body, 0] on mousedown so
-  // it will always normalize to the wrong location
-  if (!Env.windowsPhone) {
-    normalizeSelection();
-  }
-
-  // WebKit
-  if (isWebKit) {
-    inputMethodFocus();
-    selectControlElements();
-    setDefaultBlockType();
-    blockFormSubmitInsideEditor();
-    disableBackspaceIntoATable();
-    removeAppleInterchangeBrs();
-
-    // touchClickEvent();
-
-    // iOS
-    if (Env.iOS) {
-      restoreFocusOnKeyDown();
-      bodyHeight();
-      tapLinksAndImages();
-    } else {
+  if (Rtc.isRtc(editor)) {
+    if (isWebKit) {
+      selectControlElements();
+      blockFormSubmitInsideEditor();
       selectAll();
+
+      if (Env.iOS) {
+        restoreFocusOnKeyDown();
+        bodyHeight();
+        tapLinksAndImages();
+      }
     }
-  }
 
-  if (Env.ie >= 11) {
-    bodyHeight();
-    disableBackspaceIntoATable();
-  }
+    if (isGecko) {
+      focusBody();
+      setGeckoEditingOptions();
+      showBrokenImageIcon();
+      blockCmdArrowNavigation();
+    }
+  } else {
+    // All browsers
+    removeBlockQuoteOnBackSpace();
+    emptyEditorWhenDeleting();
 
-  if (Env.ie) {
-    selectAll();
-    disableAutoUrlDetect();
-    ieInternalDragAndDrop();
-  }
+    // Windows phone will return a range like [body, 0] on mousedown so
+    // it will always normalize to the wrong location
+    if (!Env.windowsPhone) {
+      normalizeSelection();
+    }
 
-  // Gecko
-  if (isGecko) {
-    removeHrOnBackspace();
-    focusBody();
-    removeStylesWhenDeletingAcrossBlockElements();
-    setGeckoEditingOptions();
-    addBrAfterLastLinks();
-    showBrokenImageIcon();
-    blockCmdArrowNavigation();
-    disableBackspaceIntoATable();
+    // WebKit
+    if (isWebKit) {
+      inputMethodFocus();
+      selectControlElements();
+      setDefaultBlockType();
+      blockFormSubmitInsideEditor();
+      disableBackspaceIntoATable();
+      removeAppleInterchangeBrs();
+
+      // touchClickEvent();
+
+      // iOS
+      if (Env.iOS) {
+        restoreFocusOnKeyDown();
+        bodyHeight();
+        tapLinksAndImages();
+      } else {
+        selectAll();
+      }
+    }
+
+    if (Env.ie >= 11) {
+      bodyHeight();
+      disableBackspaceIntoATable();
+    }
+
+    if (Env.ie) {
+      selectAll();
+      disableAutoUrlDetect();
+      ieInternalDragAndDrop();
+    }
+
+    // Gecko
+    if (isGecko) {
+      removeHrOnBackspace();
+      focusBody();
+      removeStylesWhenDeletingAcrossBlockElements();
+      setGeckoEditingOptions();
+      addBrAfterLastLinks();
+      showBrokenImageIcon();
+      blockCmdArrowNavigation();
+      disableBackspaceIntoATable();
+    }
   }
 
   return {

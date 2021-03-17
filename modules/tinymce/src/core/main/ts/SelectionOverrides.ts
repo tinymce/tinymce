@@ -26,6 +26,7 @@ import * as EditorView from './EditorView';
 import * as CefFocus from './focus/CefFocus';
 import * as EditorFocus from './focus/EditorFocus';
 import * as MediaFocus from './focus/MediaFocus';
+import * as Rtc from './Rtc';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
@@ -470,7 +471,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     fakeCaret.hide();
   };
 
-  if (Env.ceFalse) {
+  if (Env.ceFalse && !Rtc.isRtc(editor)) {
     registerEvents();
   }
 
