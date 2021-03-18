@@ -35,14 +35,14 @@ describe('atomic.katamari.maybe.TraversableTest', () => {
 
   context('forAll', () => {
     it('returns true for Nothing', () => {
-      const forAll = Maybes.forAll(Fun.die('Should not call the callback'))(Maybes.nothing());
+      const forAll = Maybes.forall(Fun.die('Should not call the callback'))(Maybes.nothing());
       assert.isTrue(forAll);
     });
 
     it('passes the correct values through the callback', () => {
       Fun.pipe(
         Maybes.just('test'),
-        Maybes.forAll((test) => {
+        Maybes.forall((test) => {
           assert.equal(test, 'test');
           return false;
         })
@@ -50,13 +50,13 @@ describe('atomic.katamari.maybe.TraversableTest', () => {
 
       const doesNotHoldForAll = Fun.pipe(
         Maybes.just('test'),
-        Maybes.forAll(Fun.never)
+        Maybes.forall(Fun.never)
       );
       assert.isFalse(doesNotHoldForAll);
 
       const holdsForAll = Fun.pipe(
         Maybes.just('test'),
-        Maybes.forAll(Fun.always)
+        Maybes.forall(Fun.always)
       );
       assert.isTrue(holdsForAll);
     });
