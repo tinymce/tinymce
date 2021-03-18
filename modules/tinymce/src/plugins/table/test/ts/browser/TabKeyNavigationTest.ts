@@ -4,6 +4,8 @@ import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -41,5 +43,27 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
       '<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2' +
       '</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
     );
+  });
+  it('TBA: Fire TableModified event when row are added via Tab key', () => {
+    const editor = hook.editor();
+
+    const events: Array<EditorEvent<TableModifiedEvent>> = [];
+    const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
+      events.push(event);
+    };
+    editor.on('TableModified', logEvent);
+
+    editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
+
+    LegacyUnit.setSelection(editor, 'tr:nth-child(2) td:nth-child(2)', 0);
+    assert.lengthOf(events, 0);
+    editor.fire('keydown', { keyCode: Keys.tab() } as KeyboardEvent);
+    TinyAssertions.assertContent(editor,
+      '<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2' +
+      '</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
+    );
+    assert.lengthOf(events, 1);
+    assert.equal(events[0].type, 'tablemodified');
+    editor.off('tablemodified', logEvent);
   });
 });
