@@ -139,7 +139,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     const editor = hook.editor();
     editor.setContent('<p>Content</p>');
     resetNames();
-    TinySelections.setCursor(editor, [], 0);
+    // TODO: TINY-7167
+    TinySelections.setCursor(editor, [], 0, false);
     await Waiter.pWait(50); // Need to wait a little for the context toolbar lookup to run
     assertNames([ 'div' ], [ 'div' ], [ 'div' ]);
   });
