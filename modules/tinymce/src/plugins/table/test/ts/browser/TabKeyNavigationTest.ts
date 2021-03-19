@@ -44,7 +44,7 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
       '</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
     );
   });
-  it('TBA: Fire TableModified event when row are added via Tab key', () => {
+  it('TINY-7006: Fire TableModified event when rows are added via the Tab key', () => {
     const editor = hook.editor();
 
     const events: Array<EditorEvent<TableModifiedEvent>> = [];
