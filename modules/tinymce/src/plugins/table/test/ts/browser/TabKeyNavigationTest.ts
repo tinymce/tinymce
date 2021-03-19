@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
 
     LegacyUnit.setSelection(editor, 'tr:nth-child(2) td:nth-child(2)', 0);
     assert.lengthOf(events, 0);
-    editor.fire('keydown', { keyCode: Keys.tab() } as KeyboardEvent);
+    TinyContentActions.keystroke(editor, Keys.tab());
     TinyAssertions.assertContent(editor,
       '<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2' +
       '</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>x</p>'
