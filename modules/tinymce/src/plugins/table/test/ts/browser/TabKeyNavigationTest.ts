@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -18,6 +18,11 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ], true);
+  let events: Array<EditorEvent<TableModifiedEvent>> = [];
+  const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
+    events.push(event);
+  };
+  afterEach(() => events = []);
 
   it('TBA: Tab key navigation', () => {
     const editor = hook.editor();
@@ -48,10 +53,6 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
   it('TINY-7006: Fire TableModified event when rows are added via the Tab key', () => {
     const editor = hook.editor();
 
-    const events: Array<EditorEvent<TableModifiedEvent>> = [];
-    const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
-      events.push(event);
-    };
     editor.on('TableModified', logEvent);
 
     editor.setContent('<table><tbody><tr><td>A1</td><td>A2</td></tr><tr><td>B1</td><td>B2</td></tr></tbody></table><p>x</p>');
