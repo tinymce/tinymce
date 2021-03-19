@@ -6,29 +6,24 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { getSelectedLink } from 'tinymce/plugins/link/core/NormalizeLink';
 import Theme from 'tinymce/themes/silver/Theme';
-
 interface BaseRange {
   startPath: number[];
   startOffset: number;
   endPath: number[];
   endOffset: number;
 }
-
 describe('browser.tinymce.plugins.link.NormalizeLink', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
     indent: false
   }, [ Theme ], true);
-
   const makeRange = (startPath: number[], startOffset: number, endPath: number[], endOffset: number): BaseRange => {
     return { startPath, startOffset, endPath, endOffset };
   };
-
   const makeCaretRange = (path: number[], offset: number): BaseRange => {
     return { startPath: path, startOffset: offset, endPath: path, endOffset: offset };
   };
-
   const resolveTestRange = (scope: SugarElement<Node>, range: BaseRange): Range => {
     const doc = scope.dom.ownerDocument;
     const rng = doc.createRange();
@@ -38,7 +33,6 @@ describe('browser.tinymce.plugins.link.NormalizeLink', () => {
     rng.setEnd(endContainer.dom, range.endOffset);
     return rng;
   };
-
   const test = (html: string, range: BaseRange, expectedLink: Optional<number[]>): void => {
     const editor = hook.editor();
     const scope = SugarElement.fromDom(editor.getBody());
@@ -48,17 +42,15 @@ describe('browser.tinymce.plugins.link.NormalizeLink', () => {
     const link = getSelectedLink(editor, editor.selection.getNode()).getOrNull();
     const solvedLink = link ? SugarElement.fromDom(link) : SugarElement.fromHtml('<b><b/>');
     const path = Hierarchy.path(scope, solvedLink);
-
-    KAssert.eqOptional('Should be expected path', path, expectedLink);
+    KAssert.eqOptional('Should be expected path', expectedLink, path);
   };
-
   describe('Returns a link if the end selection is after the link but before a br', () => {
     it('TINY-6508: Single link', () => {
       test('<p><a href="tiny">test</a><br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 1), Optional.some([ 0, 0 ]));
     });
 
     it('TINY-6508: Multiple short ended elements', () => {
-      test('<p><a href="tiny">test</a><br><img><br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 3), Optional.some([ 0, 0 ]));
+      test('<p><a href="tiny">test</a><br><img><br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 3), Optional.none());
     });
 
     it('TINY-6508: Nest link', () => {
@@ -66,7 +58,7 @@ describe('browser.tinymce.plugins.link.NormalizeLink', () => {
     });
 
     it('TINY-6508: Nest link next to another Nest link', () => {
-      test('<p><b><a href="tiny">test</a></b><b><a>link</a></b><br></p>', makeRange([ 0, 0, 0, 0 ], 0, [ 0 ], 2), Optional.some([ 0, 0, 0 ]));
+      test('<p><b><a href="tiny">test</a></b><b><a href="tiny">tiny</a></b><br></p>', makeRange([ 0, 0, 0, 0 ], 0, [ 0 ], 2), Optional.none());
     });
 
     it('TINY-6508: Single link with one level nest child', () => {
@@ -82,35 +74,35 @@ describe('browser.tinymce.plugins.link.NormalizeLink', () => {
     });
 
     it('TINY-6508: Multiple links', () => {
-      test('<p><a href="tiny">link1</a>content<a href="tiny">link2</a><br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 3), Optional.some([ 0, 0 ]));
+      test('<p><a href="tiny">link1</a>content<a href="tiny">link2</a><br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 3), Optional.none());
     });
 
     it('TINY-6508: Simple link with nest Img', () => {
-      test('<p><a href="tiny"><img src="image.jpg"></a>text<br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.some([ 0, 0 ]));
+      test('<p><a href="tiny"><img src="image.jpg"></a>text<br></p>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.none());
     });
 
     it('TINY-6508: Selection end between two BR', () => {
-      test('<p>text<a href="tiny">test</a><br><br></p>', makeRange([ 0, 1, 0 ], 0, [ 0 ], 3), Optional.some([ 0, 1 ]));
+      test('<p>text<a href="tiny">test</a><br><br></p>', makeRange([ 0, 1, 0 ], 0, [ 0 ], 3), Optional.none());
     });
 
     it('TINY-6508: Range end in another block element (paragraph)', () => {
-      test('<p>text<a href="tiny">test</a><br></p><p>info<br></p>', makeRange([ 0, 1, 0 ], 0, [ 1 ], 1), Optional.some([ 0, 1 ]));
+      test('<p>text<a href="tiny">test</a><br></p><p>info<br></p>', makeRange([ 0, 1, 0 ], 0, [ 1 ], 1), Optional.none());
     });
 
     it('TINY-6508: Nest link in a block element (header)', () => {
-      test('<h1><a href="tiny">tiny</a><em>tiny</em><br></h1>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.some([ 0, 0 ]));
+      test('<h1><a href="tiny">tiny</a><em>tiny</em><br></h1>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.none());
     });
 
     it('TINY-6508: Range end in another block element (header)', () => {
-      test('<h1><a href="tiny">test</a><br></h1><h1>info<br></h1>', makeRange([ 0, 0, 0 ], 0, [ 1 ], 1), Optional.some([ 0, 0 ]));
+      test('<h1><a href="tiny">test</a><br></h1><h1>info<br></h1>', makeRange([ 0, 0, 0 ], 0, [ 1 ], 1), Optional.none());
     });
 
     it('TINY-6508: Nest link in a block element (div)', () => {
-      test('<div><a href="tiny">tiny</a><em>tiny</em><br></div>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.some([ 0, 0 ]));
+      test('<div><a href="tiny">tiny</a><em>tiny</em><br></div>', makeRange([ 0, 0, 0 ], 0, [ 0 ], 2), Optional.none());
     });
 
     it('TINY-6508: Range end in another block element (div)', () => {
-      test('<div><a href="tiny">test</a><br></div><div>info<br></div>', makeRange([ 0, 0, 0 ], 0, [ 1 ], 1), Optional.some([ 0, 0 ]));
+      test('<div><a href="tiny">test</a><br></div><div>info<br></div>', makeRange([ 0, 0, 0 ], 0, [ 1 ], 1), Optional.none());
     });
   });
 
