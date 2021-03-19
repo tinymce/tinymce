@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.7.2 - TBD
 
 ### Fixed
-- Fixed a bug where TableModified event were not fired when adding table row via Tab key #TINY-7006
+- Fixed a bug where the `TableModified` event was not fired when adding a table row via the Tab key #TINY-7006
 
 ## 5.7.1 - 2021-03-17
 
