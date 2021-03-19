@@ -4,6 +4,7 @@ import { Result, Fun } from '@ephox/katamari';
 export interface FancyMenuItemSpec {
   type: 'fancymenuitem';
   fancytype: string;
+  initData?: Record<string, any>;
   onAction: (data: any) => void;
 }
 
@@ -11,6 +12,7 @@ export interface FancyMenuItem {
   type: 'fancymenuitem';
   fancytype: keyof FancyActionArgsMap;
   onAction: <K extends keyof FancyActionArgsMap>(data: FancyActionArgsMap[K]) => void;
+  initData?: Record<string, any>;
 }
 
 export interface FancyActionArgsMap {

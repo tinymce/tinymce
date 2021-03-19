@@ -7,6 +7,7 @@
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 
 export interface StringMap {
   [key: string]: string;
@@ -20,6 +21,48 @@ const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore table
 const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
+};
+
+const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
+  const colors = [];
+
+  const canvas = document.createElement('canvas');
+  canvas.height = 1;
+  canvas.width = 1;
+  const canvasContext = canvas.getContext('2d');
+
+  const byteAsHex = (colorByte: number, alphaByte: number) => {
+    const bg = 255;
+    const alpha = (alphaByte / 255);
+    const colorByteWithWhiteBg = Math.round((colorByte * alpha) + (bg * (1 - alpha)));
+    return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
+  };
+
+  const asHexColor = (color: string) => {
+    // backwards compatibility
+    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+      return '#' + color.toUpperCase();
+    }
+    // all valid colors after this point
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    // invalid colors will be shown as white - the first assignment will pass and the second may be ignored
+    canvasContext.fillStyle = '#FFFFFF'; // lgtm[js/useless-assignment-to-property]
+    canvasContext.fillStyle = color;
+    canvasContext.fillRect(0, 0, 1, 1);
+    const rgba = canvasContext.getImageData(0, 0, 1, 1).data;
+    const r = rgba[0], g = rgba[1], b = rgba[2], a = rgba[3];
+    return '#' + byteAsHex(r, a) + byteAsHex(g, a) + byteAsHex(b, a);
+  };
+
+  for (let i = 0; i < colorMap.length; i += 2) {
+    colors.push({
+      text: colorMap[i + 1],
+      value: asHexColor(colorMap[i]),
+      type: 'choiceitem'
+    });
+  }
+
+  return colors;
 };
 
 const determineDefaultStyles = (editor: Editor) => {
@@ -53,8 +96,15 @@ const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table
 const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
 const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
+
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', [], 'array');
+
+const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', [], 'array');
+
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
+
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
+
 const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
 const isPixelsForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'fixed' || getTableResponseWidth(editor) === false;
 const isResponsiveForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'responsive';
@@ -99,6 +149,14 @@ const hasObjectResizing = (editor: Editor): boolean => {
   return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
+const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return mapColors(editor.getParam('cell_background_color_map', []));
+};
+
+const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return mapColors(editor.getParam('cell_border_color_map', []));
+};
+
 export {
   getDefaultAttributes,
   getDefaultStyles,
@@ -123,5 +181,9 @@ export {
   getColumnResizingBehaviour,
   isPreserveTableColumnResizing,
   isResizeTableColumnResizing,
-  useColumnGroup
+  useColumnGroup,
+  getTableCellBackgroundColors,
+  getTableBorderWidths,
+  getTableBorderStyles,
+  getTableCellBorderColors
 };

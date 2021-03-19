@@ -13,9 +13,30 @@ const cellFormats = {
     styles: { backgroundColor: '%value' },
     remove_similar: true
   },
+  tablecellverticalalign: {
+    selector: 'td,th',
+    styles: {
+      'vertical-align': '%value'
+    },
+    remove_similar: true
+  },
   tablecellbordercolor: {
     selector: 'td,th',
     styles: { borderColor: '%value' },
+    remove_similar: true
+  },
+  tablecellclass: {
+    selector: 'td,th',
+    attributes: {
+      class: '%value'
+    },
+    remove_similar: true
+  },
+  tableclass: {
+    selector: 'table',
+    attributes: {
+      class: '%value'
+    },
     remove_similar: true
   },
   tablecellborderstyle: {

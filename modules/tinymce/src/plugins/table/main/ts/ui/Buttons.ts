@@ -1,3 +1,6 @@
+import { Menu } from '@ephox/bridge';
+import { Arr, Singleton } from '@ephox/katamari';
+/* eslint-disable no-console */
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -6,7 +9,8 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbar } from '../api/Settings';
+import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 
@@ -165,6 +169,198 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     icon: 'table'
   });
 
+  const tableClassList = getTableClassList(editor);
+
+  if (tableClassList.length === 0) {
+    console.error('Missing table class list');
+  } else {
+    editor.ui.registry.addMenuButton('tableclass', {
+      text: 'Class List',
+      icon: 'table-class-list',
+      fetch: (callback) => {
+        callback(Arr.map(tableClassList, (value) => {
+          const item: Menu.ToggleMenuItemSpec = {
+            text: value.title,
+            type: 'togglemenuitem',
+            icon: 'table',
+            onAction: (_api: Menu.MenuItemInstanceApi) => {
+              editor.execCommand('mceTableToggleClass', false, value.value);
+            },
+            onSetup: onSetupToggle(editor, 'tableclass', value.value)
+          };
+
+          return item;
+        }));
+      }
+    });
+  }
+
+  const tableCellClassList = getCellClassList(editor);
+
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tablecellclass', {
+      text: 'Cell Class List',
+      icon: 'table-cell-class-list',
+      fetch: (callback) => {
+        callback(Arr.map(tableCellClassList, (value) => {
+          const item: Menu.ToggleMenuItemSpec = {
+            text: value.title,
+            type: 'togglemenuitem',
+            icon: 'table',
+            onAction: (_api: Menu.MenuItemInstanceApi) => {
+              editor.execCommand('mceTableCellToggleClass', false, value.value);
+            },
+            onSetup: onSetupToggle(editor, 'tablecellclass', value.value)
+          };
+
+          return item;
+        }));
+      }
+    });
+  }
+
+  const alignTableButtons = [
+    {
+      name: 'tablecellvaligntop',
+      text: 'Align Top',
+      cmd: 'top',
+      icon: 'align-cell-top'
+    },
+    {
+      name: 'tablecellvaligncenter',
+      text: 'Align Center',
+      cmd: 'center',
+      icon: 'align-cell-center'
+    },
+    {
+      name: 'tablecellvalignbottom',
+      text: 'Align Bottom',
+      cmd: 'bottom',
+      icon: 'align-cell-bottom'
+    },
+  ];
+
+  editor.ui.registry.addMenuButton('tablecellvalign', {
+    icon: 'table-cell-valign',
+    fetch: (callback) => {
+      callback(Arr.map(alignTableButtons, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.text,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'vertical-align': item.cmd
+            });
+          },
+          icon: item.icon,
+          onSetup: onSetupToggle(editor, 'tablecellverticalalign', item.name)
+        };
+      }));
+    }
+  });
+
+  editor.ui.registry.addButton('tablecaption', {
+    tooltip: 'Toggle Table Caption',
+    onAction: () => {
+      editor.execCommand('mceTableToggleCaption', false, true);
+    },
+    icon: 'table-caption-toggle'
+  });
+
+  const tableCellBackgroundColors = getTableCellBackgroundColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbackground', {
+    icon: 'table-cell-background-color',
+    tooltip: 'Table Cell Background Color',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'fancymenuitem',
+          fancytype: 'colorswatch',
+          initData: {
+            colorselection: tableCellBackgroundColors.length > 0 ? tableCellBackgroundColors : undefined
+          },
+          onAction: (data) => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'background-color': data.value
+            });
+          }
+        }
+      ]);
+    }
+  });
+
+  const tableCellBorderColors = getTableCellBorderColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbordercolor', {
+    icon: 'table-cell-border-color',
+    tooltip: 'Table Cell Border Color',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'fancymenuitem',
+          fancytype: 'colorswatch',
+          initData: {
+            colorselection: tableCellBorderColors.length > 0 ? tableCellBorderColors : undefined
+          },
+          onAction: (data) => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'border-color': data.value
+            });
+          }
+        }
+      ]);
+    }
+  });
+
+  const tableCellBorderWidthsList = getTableBorderWidths(editor);
+  editor.ui.registry.addMenuButton('tablecellborderwidth', {
+    icon: 'border-width',
+    fetch: (callback) => {
+      callback(Arr.map(tableCellBorderWidthsList, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.title,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'border-width': item.value
+            });
+          },
+          onSetup: onSetupToggle(editor, 'tablecellborderwidth', item.value)
+        };
+      }));
+    }
+  });
+
+  const tableCellBorderStylesList = getTableBorderStyles(editor);
+  editor.ui.registry.addMenuButton('tablecellborderstyle', {
+    icon: 'border-style',
+    fetch: (callback) => {
+      callback(Arr.map(tableCellBorderStylesList, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.title,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'border-style': item.value
+            });
+          },
+          onSetup: onSetupToggle(editor, 'tablecellborderstyle', item.value)
+        };
+      }));
+    }
+  });
+
+  editor.ui.registry.addButton('tableheader', {
+    tooltip: 'Table Header',
+    icon: 'toggle-header',
+    onAction: cmd('mceTableToggleHeader'),
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
+  });
+
+  editor.ui.registry.addButton('tablecolprops', {
+    tooltip: 'Column properties',
+    icon: 'table-column-properties',
+    onAction: cmd('mceTableColumnProps'),
+  });
 };
 
 const addToolbars = (editor: Editor) => {
@@ -184,4 +380,25 @@ const addToolbars = (editor: Editor) => {
 export {
   addButtons,
   addToolbars
+};
+
+const onSetupToggle = (editor: Editor, styleName: string, styleValue: string) => {
+  return (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    const boundCallback = Singleton.unbindable();
+
+    const init = () => {
+      const value = {
+        value: styleValue
+      };
+
+      api.setActive(editor.formatter.match(styleName, value));
+      const binding = editor.formatter.formatChanged(styleName, api.setActive);
+      boundCallback.set(binding);
+    };
+
+    // The editor may or may not have been setup yet, so check for that
+    editor.initialized ? init() : editor.on('init', init);
+
+    return boundCallback.clear;
+  };
 };

@@ -27,7 +27,7 @@ export const createPartialChoiceMenu = (
   providersBackstage: UiFactoryBackstageProviders
 ): PartialMenuSpec => {
   const hasIcons = MenuUtils.menuHasIcons(items);
-  const presetItemTypes = presets !== 'color' ? 'normal' : 'color';
+  const presetItemTypes = presets === 'color' ? 'color' : 'normal';
   const alloyItems = createChoiceItems(items, onItemValueHandler, columns, presetItemTypes, itemResponse, select, providersBackstage);
   return MenuUtils.createPartialMenuWithAlloyItems(value, hasIcons, alloyItems, columns, presets);
 };

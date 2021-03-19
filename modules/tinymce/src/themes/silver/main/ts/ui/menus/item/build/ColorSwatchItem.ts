@@ -7,7 +7,7 @@
 
 import { ItemTypes, ItemWidget, Menu as AlloyMenu, MenuTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Fun, Id } from '@ephox/katamari';
+import { Fun, Id, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -17,7 +17,7 @@ import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
 
 export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
-  const items = ColorSwatch.getColors(backstage.colorinput.getColors(), backstage.colorinput.hasCustomColors());
+  const items = getcolorItems(spec, backstage);
   const columns = backstage.colorinput.getColorCols();
   const presets = 'color';
 
@@ -52,4 +52,12 @@ export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFac
       ItemWidget.parts.widget(AlloyMenu.sketch(widgetSpec))
     ]
   };
+};
+
+const getcolorItems = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Menu.ChoiceMenuItemSpec[] => {
+  if (Type.isNonNullable(spec.initData) && spec.initData.colorselection) {
+    return spec.initData.colorselection;
+  } else {
+    return ColorSwatch.getColors(backstage.colorinput.getColors(), backstage.colorinput.hasCustomColors());
+  }
 };
