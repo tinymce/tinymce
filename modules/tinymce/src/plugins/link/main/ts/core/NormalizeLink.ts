@@ -40,7 +40,7 @@ const getSelectedLink = (editor: Editor, selectedElm?: Element): Optional<HTMLAn
       while (walker.current()) {
         const node = walker.prev();
         if (node === startLink) {
-          return Optional.from(node as HTMLAnchorElement);
+          return Optional.from(startLink);
         }
         if (!isValidNode(editor, node)) {
           return Optional.none<HTMLAnchorElement>();
