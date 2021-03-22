@@ -25,7 +25,8 @@ const fancyTypes: (keyof FancyActionArgsMap)[] = [ 'inserttable', 'colorswatch' 
 export const fancyMenuItemSchema = ValueSchema.objOf([
   FieldSchema.strictString('type'),
   FieldSchema.strictStringEnum('fancytype', fancyTypes),
-  FieldSchema.defaultedFunction('onAction', Fun.noop)
+  FieldSchema.defaultedFunction('onAction', Fun.noop),
+  FieldSchema.defaulted('initData', undefined)
 ]);
 
 export const createFancyMenuItem = (spec: FancyMenuItemSpec): Result<FancyMenuItem, ValueSchema.SchemaError<any>> =>

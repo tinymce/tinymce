@@ -111,6 +111,15 @@ export default () => {
         value: 'double'
       }
     ],
+    cell_background_color_map: [
+      '000000', 'Black',
+      '808080', 'Gray',
+      'FFFFFF', 'White',
+      'FF0000', 'Red',
+      'FFFF00', 'Yellow',
+      '008000', 'Green',
+      '0000FF', 'Blue'
+    ],
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true,
     format_empty_lines: true
