@@ -23,6 +23,48 @@ const defaultStyles = {
   'width': '100%'
 };
 
+const defaultCellBorderWidth = [
+  {
+    title: '1 Pixel',
+    value: '1px'
+  },
+  {
+    title: '2 Pixels',
+    value: '2px'
+  },
+  {
+    title: '3 Pixels',
+    value: '3px'
+  },
+  {
+    title: '4 Pixels',
+    value: '4px'
+  },
+  {
+    title: '5 Pixels',
+    value: '5px'
+  }
+];
+
+const defaultCellBorderStyles = [
+  {
+    title: 'Solid',
+    value: 'solid'
+  },
+  {
+    title: 'Dashed',
+    value: 'dashed'
+  },
+  {
+    title: 'Dotted',
+    value: 'dotted'
+  },
+  {
+    title: 'Double',
+    value: 'double'
+  }
+];
+
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors = [];
 
@@ -97,9 +139,9 @@ const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', 
 const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
 
-const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', [], 'array');
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidth, 'array');
 
-const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', [], 'array');
+const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 
@@ -150,11 +192,11 @@ const hasObjectResizing = (editor: Editor): boolean => {
 };
 
 const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return mapColors(editor.getParam('cell_background_color_map', []));
+  return mapColors(editor.getParam('table_cell_background_color_map', []));
 };
 
 const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return mapColors(editor.getParam('cell_border_color_map', []));
+  return mapColors(editor.getParam('table_cell_border_color_map', []));
 };
 
 export {

@@ -87,7 +87,7 @@ export default () => {
     contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen', // */
 
     toolbar_mode: 'floating',
-    table_border_widths: [
+    /*  table_border_widths: [
       {
         title: '1 Pixel',
         value: '1px'
@@ -110,7 +110,7 @@ export default () => {
         title: 'Double',
         value: 'double'
       }
-    ],
+    ],*/
     cell_background_color_map: [
       '000000', 'Black',
       '808080', 'Gray',

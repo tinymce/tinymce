@@ -1,5 +1,5 @@
-import { Menu } from '@ephox/bridge';
-import { Arr, Singleton } from '@ephox/katamari';
+import { Dialog, Menu } from '@ephox/bridge';
+import { Arr, Fun, Optional, Singleton } from '@ephox/katamari';
 /* eslint-disable no-console */
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
@@ -13,6 +13,12 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+
+type ColorInputCallback = (valueOpt: Optional<string>) => void;
+
+interface ColorSwatchDialogData {
+  colorpicker: string;
+}
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -182,7 +188,6 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
           const item: Menu.ToggleMenuItemSpec = {
             text: value.title,
             type: 'togglemenuitem',
-            icon: 'table',
             onAction: (_api: Menu.MenuItemInstanceApi) => {
               editor.execCommand('mceTableToggleClass', false, value.value);
             },
@@ -206,7 +211,6 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
           const item: Menu.ToggleMenuItemSpec = {
             text: value.title,
             type: 'togglemenuitem',
-            icon: 'table',
             onAction: (_api: Menu.MenuItemInstanceApi) => {
               editor.execCommand('mceTableCellToggleClass', false, value.value);
             },
@@ -268,7 +272,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   });
 
   const tableCellBackgroundColors = getTableCellBackgroundColors(editor);
-  editor.ui.registry.addMenuButton('tablecellbackground', {
+  editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
     icon: 'table-cell-background-color',
     tooltip: 'Table Cell Background Color',
     fetch: (callback) => {
@@ -280,8 +284,10 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
             colorselection: tableCellBackgroundColors.length > 0 ? tableCellBackgroundColors : undefined
           },
           onAction: (data) => {
-            editor.execCommand('mceTableApplyCellStyle', false, {
-              'background-color': data.value
+            applyColorSetup(editor, data.value, (value: string) => {
+              editor.execCommand('mceTableApplyCellStyle', false, {
+                'background-color': value
+              });
             });
           }
         }
@@ -302,8 +308,10 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
             colorselection: tableCellBorderColors.length > 0 ? tableCellBorderColors : undefined
           },
           onAction: (data) => {
-            editor.execCommand('mceTableApplyCellStyle', false, {
-              'border-color': data.value
+            applyColorSetup(editor, data.value, (value: string) => {
+              editor.execCommand('mceTableApplyCellStyle', false, {
+                'border-color': value
+              });
             });
           }
         }
@@ -351,14 +359,14 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
 
   editor.ui.registry.addButton('tablecolumnheader', {
     tooltip: 'Table Column Header',
-    icon: 'toggle-column-header',
+    icon: 'table-top-header',
     onAction: cmd('mceTableToggleColumnHeader'),
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 
   editor.ui.registry.addButton('tablerowheader', {
     tooltip: 'Table Row Header',
-    icon: 'toggle-row-header',
+    icon: 'table-left-header',
     onAction: cmd('mceTableToggleRowHeader'),
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
@@ -408,4 +416,77 @@ const onSetupToggle = (editor: Editor, styleName: string, styleValue: string) =>
 
     return boundCallback.clear;
   };
+};
+
+const applyColorSetup = (editor: Editor, value: string, setColor: (colorValue: string) => void) => {
+  if (value === 'custom') {
+    const dialog = colorPickerDialog(editor);
+    dialog((colorOpt) => {
+      colorOpt.each(setColor);
+    }, '#000000');
+  } else if (value === 'remove') {
+    setColor('');
+  } else {
+    setColor(value);
+  }
+};
+
+const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, value: string) => {
+  let isValid = false;
+
+  const onSubmit = (api: Dialog.DialogInstanceApi<ColorSwatchDialogData>) => {
+    const data = api.getData();
+    const hex = data.colorpicker;
+    if (isValid) {
+      callback(Optional.from(hex));
+      api.close();
+    } else {
+      editor.windowManager.alert(editor.translate([ 'Invalid hex color code: {0}', hex ]));
+    }
+  };
+
+  const onAction = (_api: Dialog.DialogInstanceApi<ColorSwatchDialogData>, details) => {
+    if (details.name === 'hex-valid') {
+      isValid = details.value;
+    }
+  };
+
+  const initialData: ColorSwatchDialogData = {
+    colorpicker: value
+  };
+
+  editor.windowManager.open({
+    title: 'Color Picker',
+    size: 'normal',
+    body: {
+      type: 'panel',
+      items: [
+        {
+          type: 'colorpicker',
+          name: 'colorpicker',
+          label: 'Color'
+        }
+      ]
+    },
+    buttons: [
+      {
+        type: 'cancel',
+        name: 'cancel',
+        text: 'Cancel'
+      },
+      {
+        type: 'submit',
+        name: 'save',
+        text: 'Save',
+        primary: true
+      }
+    ],
+    initialData,
+    onAction,
+    onSubmit,
+    onClose: Fun.noop,
+    onCancel: () => {
+      callback(Optional.none());
+    }
+  });
 };
