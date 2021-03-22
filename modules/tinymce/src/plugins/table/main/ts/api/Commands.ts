@@ -7,12 +7,11 @@
 
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, TableOperations, Warehouse } from '@ephox/snooker';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Warehouse } from '@ephox/snooker';
 import { Class, Compare, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
-import { getResizeHandler } from '../actions/ResizeHandler';
 import { AdvancedPasteTableAction, CombinedTargetsTableAction, TableActionResult, TableActions } from '../actions/TableActions';
 import * as Events from '../api/Events';
 import { Clipboard } from '../core/Clipboard';
@@ -31,7 +30,6 @@ const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionSta
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
-  const resizeHandler = getResizeHandler(editor);
 
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
@@ -52,47 +50,33 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   });
 
-  const toggleHeader = () => {
+  const toggleColumnHeader = () => {
     getSelectionStartCell(editor).each((startCell) => {
       TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
-        const cells = TableSelection.getCellsFromSelection(startCell, selections);
-        const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), Optional.none());
-        const cellType = startCell.dom.nodeName.toLowerCase();
+        const targets = TableTargets.forMenu(selections, table, startCell);
+        const currentType = actions.getTableColType(table, targets);
 
-        const warehouse = Warehouse.fromTable(table);
-        const allCells = Warehouse.justCells(warehouse);
+        if (currentType === 'td') {
+          actions.makeColumnsHeader(table, targets);
+        } else {
+          actions.unmakeColumnsHeader(table, targets);
+        }
+      });
+    });
+  };
 
-        const filtered = Arr.filter(allCells, (cellA) =>
-          Arr.exists(cells, (cellB) =>
-            Compare.eq(cellA.element, cellB)
-          )
-        );
+  const toggleRowHeader = () => {
+    getSelectionStartCell(editor).each((startCell) => {
+      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        const targets = TableTargets.forMenu(selections, table, startCell);
+        const currentType = actions.getTableRowType(editor);
 
-        const knownColumnIndexes: number[] = [];
-        const columnCells = Arr.filter(filtered, (cell) => {
-          if (Arr.contains(knownColumnIndexes, cell.column)) {
-            return false;
-          } else {
-            knownColumnIndexes.push(cell.column);
-            return true;
-          }
-        });
-
-        const columnRepresentative = Arr.map(columnCells, (cell) => {
-          return cell.element;
-        });
-
-        Arr.each(columnRepresentative, (cell) => {
-          const target = {
-            element: cell
-          };
-
-          if (cellType === 'td') {
-            TableOperations.makeColumnHeader(resizeHandler.lazyWire(), table, target, generators);
-          } else if (cellType === 'th') {
-            TableOperations.unmakeColumnHeader(resizeHandler.lazyWire(), table, target, generators);
-          }
-        });
+        if (currentType === 'body') {
+          actions.makeRowsHeader(table, targets);
+        } else if (currentType === 'header') {
+          actions.unmakeRowsHeader(table, targets);
+        }
+        // Do nothing on footer
       });
     });
   };
@@ -236,7 +220,8 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTablePasteColAfter: () => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
     mceTablePasteRowBefore: () => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
     mceTablePasteRowAfter: () => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
-    mceTableToggleHeader: toggleHeader,
+    mceTableToggleColumnHeader: toggleColumnHeader,
+    mceTableToggleRowHeader: toggleRowHeader,
     mceTableDelete: eraseTable,
     mceTableToggleCaption: toggleCaption,
     mceTableCellToggleClass: toggleTableCellClass,

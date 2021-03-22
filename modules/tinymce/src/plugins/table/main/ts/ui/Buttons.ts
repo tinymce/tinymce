@@ -349,10 +349,17 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     }
   });
 
-  editor.ui.registry.addButton('tableheader', {
-    tooltip: 'Table Header',
-    icon: 'toggle-header',
-    onAction: cmd('mceTableToggleHeader'),
+  editor.ui.registry.addButton('tablecolumnheader', {
+    tooltip: 'Table Column Header',
+    icon: 'toggle-column-header',
+    onAction: cmd('mceTableToggleColumnHeader'),
+    onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
+  });
+
+  editor.ui.registry.addButton('tablerowheader', {
+    tooltip: 'Table Row Header',
+    icon: 'toggle-row-header',
+    onAction: cmd('mceTableToggleRowHeader'),
     onSetup: selectionTargets.onSetupColumn(LockedDisable.onAny)
   });
 

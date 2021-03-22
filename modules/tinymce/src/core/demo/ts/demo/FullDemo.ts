@@ -83,7 +83,7 @@ export default () => {
     /* toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
     'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
     // */
-    toolbar: 'tablecolprops | tableheader tablecellbackground | tablecellbordercolor tablecellborderstyle | tablecellborderwidth  tableclass tablecellclass tablecellvalign tablecaption',
+    toolbar: 'tablecolprops | tablerowheader tablecolumnheader tablecellbackground | tablecellbordercolor tablecellborderstyle | tablecellborderwidth  tableclass tablecellclass tablecellvalign tablecaption',
     contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen', // */
 
     toolbar_mode: 'floating',
