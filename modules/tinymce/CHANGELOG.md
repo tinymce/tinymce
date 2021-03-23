@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added support for `inline_boundaries` to work with home/end/pgup/pgdown keys
+- The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 
 ### Fixed

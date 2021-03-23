@@ -19,9 +19,7 @@ const platform = PlatformDetection.detect();
 const executeKeyupAction = (editor: Editor, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) },
-    { keyCode: VK.UP, metaKey: platform.os.isOSX(), action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.DOWN, metaKey: platform.os.isOSX(), action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
+    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
   ], evt);
 };
 
@@ -45,6 +43,12 @@ const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boo
 // Determining the correct placement on key up/down is very complicated and would require handling many edge cases,
 // which we don't have the resources to handle currently. As such, we allow the browser to change the selection and then make adjustments later.
 const setup = (editor: Editor) => {
+
+  // Mac Os doesn't move the selection when pressing page up/down and as such TinyMCE shouldn't be moving it either
+  if (platform.os.isOSX()) {
+    return;
+  }
+
   const blocked = Cell(false);
 
   editor.on('keydown', (evt) => {
