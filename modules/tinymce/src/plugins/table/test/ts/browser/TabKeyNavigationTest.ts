@@ -18,11 +18,14 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ], true);
+
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
   const logEvent = (event: EditorEvent<TableModifiedEvent>) => {
     events.push(event);
   };
-  afterEach(() => events = []);
+  const clearEvents = () => events = [];
+
+  afterEach(clearEvents);
 
   it('TBA: Tab key navigation', () => {
     const editor = hook.editor();
@@ -63,6 +66,12 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
     TinyAssertions.assertContentPresence(editor, { tr: 3 });
     assert.lengthOf(events, 1);
     assert.equal(events[0].type, 'tablemodified');
+    // The first Tab keystroke will move to the second column
+    TinyContentActions.keystroke(editor, Keys.tab());
+    TinyContentActions.keystroke(editor, Keys.tab());
+    TinyAssertions.assertContentPresence(editor, { tr: 4 });
+    assert.lengthOf(events, 2);
+    assert.equal(events[1].type, 'tablemodified');
     editor.off('TableModified', logEvent);
   });
 });
