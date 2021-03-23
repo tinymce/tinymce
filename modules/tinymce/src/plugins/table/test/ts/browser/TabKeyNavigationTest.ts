@@ -63,6 +63,6 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
     TinyAssertions.assertContentPresence(editor, { tr: 3 });
     assert.lengthOf(events, 1);
     assert.equal(events[0].type, 'tablemodified');
-    editor.off('tablemodified', logEvent);
+    editor.off('TableModified', logEvent);
   });
 });
