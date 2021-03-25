@@ -41,7 +41,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinyAssertions.assertCursor(editor, [ 0 ], 0);
     });
 
-    it('TINY-4612: "inline_boundaries: false" macOS doesnt move, whereas other OSs do', async () => {
+    it('TINY-4612: "inline_boundaries: false" cursor does not move outside anchor', async () => {
       const editor = hook.editor();
       editor.settings.height = 400;
       editor.settings.inline_boundaries = false;

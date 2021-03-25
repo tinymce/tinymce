@@ -11,6 +11,8 @@ import * as Id from './Id';
 import * as Jam from './Jam';
 import { LazyValue } from './LazyValue';
 import * as LazyValues from './LazyValues';
+import { Maybe } from './Maybe';
+import * as Maybes from './Maybes';
 import * as Merger from './Merger';
 import * as Namespace from './Namespace';
 import * as Num from './Num';
@@ -48,6 +50,8 @@ export {
   Jam,
   LazyValue,
   LazyValues,
+  Maybe,
+  Maybes,
   Merger,
   Namespace,
   Obj,
