@@ -5,7 +5,6 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import { RangeLikeObject } from './RangeTypes';
 
@@ -41,7 +40,6 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
 
     // First node is excluded
     node = nodes[0];
-
     if (node.nodeType === 3 && node === startContainer && startOffset >= node.nodeValue.length) {
       nodes.splice(0, 1);
     }
@@ -55,25 +53,10 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
     return nodes;
   };
 
-  const isLi = (node: Node) => node.nodeName === 'LI';
-
   const collectSiblings = (node: Node, name: string, endNode?: Node) => {
     const siblings = [];
 
-    let nodeValidation = (node: Node, endNode?: Node) => {
-      if (!node) {
-        return false;
-      }
-      // TINY-6567 we want to include the last node in the selection if we are walking through a list
-      if (isLi(node) && node === endNode) {
-        nodeValidation = Fun.never;
-        return true;
-      }
-
-      return node !== endNode;
-    };
-
-    for (; nodeValidation(node, endNode); node = node[name]) {
+    for (; node && node !== endNode; node = node[name]) {
       siblings.push(node);
     }
 
@@ -135,6 +118,7 @@ const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => 
       break;
     }
   }
+
   // Process right side
   for (let node = endContainer; node; node = node.parentNode) {
     if (node === startContainer) {

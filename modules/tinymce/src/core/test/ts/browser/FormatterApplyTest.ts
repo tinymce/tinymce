@@ -2328,7 +2328,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '<ul>' +
         '<li style="text-align: center;">a</li>' +
         '<li style="text-align: center;">b<br />' +
-          '<ul style="text-align: left;">' +
+          '<ul>' +
             '<li style="text-align: center;">c</li>' +
             '<li style="text-align: center;">d</li>' +
           '</ul>' +
@@ -2340,34 +2340,32 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
   it('TINY-6567: Apply aligncenter to a partially select child list', () => {
     const editor = hook.editor();
     editor.setContent(
-      '<ul>' +
+      '<ol>' +
         '<li>a</li>' +
         '<li>b<br />' +
-          '<ul>' +
+          '<ol>' +
             '<li>c</li>' +
             '<li>d</li>' +
-            '<li>e</li>' +
-          '</ul>' +
+          '</ol>' +
         '</li>' +
-      '</ul>'
+      '</ol>'
     );
-    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li li:nth-child(1)', 0);
+    LegacyUnit.setSelection(editor, 'ol', 0, 'ol li li:nth-child(1)', 0);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
-      '<ul>' +
+      '<ol>' +
         '<li style="text-align: center;">a</li>' +
         '<li style="text-align: center;">b<br />' +
-          '<ul style="text-align: left;">' +
+          '<ol>' +
             '<li style="text-align: center;">c</li>' +
             '<li>d</li>' +
-            '<li>e</li>' +
-          '</ul>' +
+          '</ol>' +
         '</li>' +
-      '</ul>'
+      '</ol>'
     );
   });
 
-  it('TINY-6567: Apply alignright to the final bullet point but not to its children', () => {
+  it('TINY-6567: Apply alignright to the last li but not to its children', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
@@ -2385,7 +2383,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '<ul>' +
         '<li style="text-align: right;">a</li>' +
         '<li style="text-align: right;">b<br />' +
-          '<ul style="text-align: left;">' +
+          '<ul>' +
             '<li>c</li>' +
           '</ul>' +
         '</li>' +
@@ -2393,41 +2391,99 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     );
   });
 
-  it('TINY-6567: Apply alignright only to last nest ul childs', () => {
+  it('TINY-6567: Apply h1 to nested list with multiple levels', () => {
     const editor = hook.editor();
     editor.setContent(
       '<ul>' +
-        '<li>a</li>' +
-        '<li>b<br />' +
+        '<li>1</li>' +
+        '<li>2' +
           '<ul>' +
-            '<li>1</li>' +
-          '</ul>' +
-        '</li>' +
-        '<li>c</li>' +
-        '<li>d<br />' +
-          '<ul>' +
-            '<li>2</li>' +
+            '<li>a</li>' +
+            '<li>b' +
+              '<ul>' +
+                '<li>i</li>' +
+                '<li>ii</li>' +
+              '</ul>' +
+            '</li>' +
           '</ul>' +
         '</li>' +
       '</ul>'
     );
-    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li:nth-child(4) li', 0);
-    editor.formatter.apply('alignright');
+    LegacyUnit.setSelection(editor, 'ul', 0, 'ul ul ul li:nth-child(2)', 0);
+    editor.formatter.apply('h1');
     assert.equal(getContent(editor),
       '<ul>' +
-        '<li style="text-align: right;">a</li>' +
-        '<li style="text-align: right;">b<br />' +
+        '<li><h1>1</h1></li>' +
+        '<li><h1>2</h1>' +
           '<ul>' +
-            '<li>1</li>' +
-          '</ul>' +
-        '</li>' +
-        '<li style="text-align: right;">c</li>' +
-        '<li style="text-align: right;">d<br />' +
-          '<ul style="text-align: left;">' +
-            '<li style="text-align: right;">2</li>' +
+            '<li><h1>a</h1></li>' +
+            '<li><h1>b</h1>' +
+              '<ul>' +
+                '<li><h1>i</h1></li>' +
+                '<li><h1>ii</h1></li>' +
+              '</ul>' +
+            '</li>' +
           '</ul>' +
         '</li>' +
       '</ul>'
+    );
+  });
+
+  it('TINY-6567: Apply align center to a div structure', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<div>' +
+        '<div>a</div>' +
+        '<div>b' +
+          '<div>1</div>' +
+        '</div>' +
+        '<div>c</div>' +
+        '<div>d</div>' +
+      '</div>'
+    );
+    LegacyUnit.setSelection(editor, 'div div', 0, 'div div div', 0);
+    editor.formatter.apply('aligncenter');
+    assert.equal(getContent(editor),
+      '<div>' +
+        '<div style="text-align: center;">a</div>' +
+        '<div style="text-align: center;">b' +
+          '<div style="text-align: center;">1</div>' +
+        '</div>' +
+        '<div>c</div>' +
+        '<div>d</div>' +
+      '</div>'
+    );
+  });
+
+  it('TINY-6567: Apply inline element with font Size to a div structure with a partial selection', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<div>' +
+        '<div>a</div>' +
+        '<div>b' +
+          '<div>c</div>' +
+          '<div>d</div>' +
+          '<div>e</div>' +
+        '</div>' +
+      '</div>'
+    );
+    LegacyUnit.setSelection(editor, 'div div', 0, 'div div div:nth-child(2)', 0);
+    editor.formatter.register('formatTest', {
+      inline: 'b',
+      styles: {
+        fontSize: '14px'
+      }
+    });
+    editor.formatter.apply('formatTest');
+    assert.equal(getContent(editor),
+      '<div>' +
+        '<div><b style="font-size: 14px;">a</b></div>' +
+        '<div><b style="font-size: 14px;">b</b>' +
+          '<div><b style="font-size: 14px;">c</b></div>' +
+          '<div>d</div>' +
+          '<div>e</div>' +
+        '</div>' +
+      '</div>'
     );
   });
 });

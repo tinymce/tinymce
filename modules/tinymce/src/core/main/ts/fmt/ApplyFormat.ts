@@ -64,8 +64,6 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const isUL = (node: Node) => node.nodeName === 'UL';
-
 const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject) => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
@@ -134,6 +132,8 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     return found;
   };
 
+  const hasBlockChildren = (elm: Node) => Arr.filter(Arr.from(elm.childNodes), dom.isBlock).length > 0;
+
   const applyRngStyle = (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) => {
     const newWrappers: Element[] = [];
     let contentEditable = true;
@@ -192,30 +192,9 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         if (FormatUtils.isSelectorFormat(format)) {
           const found = applyNodeStyle(formatList, node);
 
-          if (
-            found &&
-            node.hasChildNodes() &&
-            Arr.exists(node.childNodes, isUL) &&
-            node.parentNode.lastChild === node
-          ) {
-            const nestList = Arr.find(node.childNodes, isUL).getOrNull();
-
-            each(formatList, (format: any) => {
-              // Check collapsed state if it exists
-              if ('collapsed' in format && format.collapsed !== isCollapsed) {
-                return;
-              }
-
-              if (dom.is(nestList, format.selector) && !isCaretNode(node)) {
-                const styles = Obj.keys(format.styles);
-                Arr.each(styles, (style) => {
-                  const prevStyle = dom.getStyle(nestList, style);
-                  if (prevStyle === '') {
-                    dom.setStyle(nestList, { [style]: 'left' });
-                  }
-                });
-              }
-            });
+          // TINY-6567 Include the last node in the selection
+          if (node.nodeType === 3 && hasBlockChildren(node.parentNode)) {
+            applyNodeStyle(formatList, node.parentNode);
           }
 
           // Continue processing if a selector match wasn't found and a inline element is defined
