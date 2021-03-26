@@ -1,10 +1,11 @@
-import { Mouse, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { Keyboard, Mouse, UiFinder } from '@ephox/agar';
+import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { Css, Focus, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { resizeToPos } from '../../../module/UiUtils';
@@ -31,6 +32,16 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     // Add a border to ensure we're using the correct height/width (ie border-box sizing)
     editor.dom.setStyles(editor.getContainer(), {
       border: '2px solid #ccc'
+    });
+  });
+
+  // Make sure the height is reset
+  beforeEach(() => {
+    const editor = hook.editor();
+    const container = SugarElement.fromDom(editor.getContainer());
+    Css.setAll(container, {
+      width: '400px',
+      height: '400px'
     });
   });
 
@@ -68,5 +79,26 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     Mouse.mouseDown(resizeHandle);
     resizeToPos(300, 500, 550, 500);
     assertEditorSize(container, 500, 500);
+  });
+
+  it('TINY-4823: can be resized via the keyboard', () => {
+    const editor = hook.editor();
+    const container = TinyDom.container(editor);
+    const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+
+    Focus.focus(resizeHandle);
+
+    // Make it larger
+    for (let i = 0; i < 20; ++i) {
+      Keyboard.keystroke(VK.RIGHT, {}, resizeHandle);
+      Keyboard.keystroke(VK.DOWN, {}, resizeHandle);
+    }
+    assertEditorSize(container, 460, 460);
+
+    for (let i = 0; i < 20; ++i) {
+      Keyboard.keystroke(VK.LEFT, {}, resizeHandle);
+      Keyboard.keystroke(VK.UP, {}, resizeHandle);
+    }
+    assertEditorSize(container, 400, 400);
   });
 });
