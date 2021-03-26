@@ -13,7 +13,7 @@ import * as InlineBoundariesNavigation from './InlineBoundariesNavigation';
 import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 
-const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent, caret: Cell<Text>) => {
+const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.END, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, true) },
     { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
@@ -29,7 +29,7 @@ const executeKeydownOverride = (editor: Editor, evt: KeyboardEvent, caret: Cell<
 const setup = (editor: Editor, caret: Cell<Text>) => {
   editor.on('keydown', (evt) => {
     if (evt.isDefaultPrevented() === false) {
-      executeKeydownOverride(editor, evt, caret);
+      executeKeydownOverride(editor, caret, evt);
     }
   });
 };

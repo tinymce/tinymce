@@ -16,7 +16,7 @@ import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();
 
-const executeKeyupAction = (editor: Editor, evt: KeyboardEvent, caret: Cell<Text>) => {
+const executeKeyupAction = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   MatchKeys.execute([
     { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false, caret) },
     { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true, caret) }
@@ -59,7 +59,7 @@ const setup = (editor: Editor, caret: Cell<Text>) => {
 
   editor.on('keyup', (evt) => {
     if (evt.isDefaultPrevented() === false) {
-      executeKeyupAction(editor, evt, caret);
+      executeKeyupAction(editor, caret, evt);
     }
 
     if (isPageUpDown(evt) && blocked.get()) {

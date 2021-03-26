@@ -18,24 +18,26 @@ import * as NavigationUtils from './NavigationUtils';
 const isInlineBoundaries = (editor: Editor, node: Node) =>
   Settings.isInlineBoundariesEnabled(editor) && InlineUtils.isInlineTarget(editor, node);
 
-const moveOutside = (editor: Editor, caret: Cell<Text>, location: BoundaryLocation.LocationAdt) => {
-  const posOpt = BoundaryCaret.renderCaret(caret, BoundaryLocation.outside(location));
-  return posOpt.exists((pos) => {
+const moveOutside = (editor: Editor, forward: boolean, caret: Cell<Text>, loc: BoundaryLocation.LocationAdt) => {
+  const outsideLoc = BoundaryLocation.outside(loc);
+  return BoundaryCaret.renderCaret(caret, outsideLoc).exists((pos) => {
     BoundarySelection.setCaretPosition(editor, pos);
     return true;
   });
 };
 
+const getCurrentPos = (editor: Editor, forward: boolean) => {
+  const rng = editor.selection.getRng();
+  return forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
+};
+
 const moveToLineEndPoint = (editor: Editor, forward: boolean, caret: Cell<Text>): boolean => {
-  const linePoint = NavigationUtils.getLineEndPoint(editor, forward)
-    .getOrThunk(() => {
-      const rng = editor.selection.getRng();
-      return forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
-    });
+  // Try to find the line endpoint, however if one isn't found then assume we're already at the end point
+  const linePoint = NavigationUtils.getLineEndPoint(editor, forward).getOrThunk(() => getCurrentPos(editor, forward));
 
-  const location = BoundaryLocation.readLocation(Fun.curry(isInlineBoundaries, editor), editor.getBody(), linePoint);
-
-  return location.exists((loc) => moveOutside(editor, caret, loc));
+  return BoundaryLocation.readLocation(Fun.curry(isInlineBoundaries, editor), editor.getBody(), linePoint).exists((loc) => {
+    return moveOutside(editor, forward, caret, loc);
+  });
 };
 
 export {
