@@ -770,7 +770,7 @@ const Quirks = (editor: Editor): Quirks => {
     return (!sel || !sel.rangeCount || sel.rangeCount === 0);
   };
 
-  if (Rtc.isRtc(editor)) {
+  const setupRtc = () => {
     if (isWebKit) {
       selectControlElements();
       blockFormSubmitInsideEditor();
@@ -789,7 +789,9 @@ const Quirks = (editor: Editor): Quirks => {
       showBrokenImageIcon();
       blockCmdArrowNavigation();
     }
-  } else {
+  };
+
+  const setup = () => {
     // All browsers
     removeBlockQuoteOnBackSpace();
     emptyEditorWhenDeleting();
@@ -843,6 +845,12 @@ const Quirks = (editor: Editor): Quirks => {
       blockCmdArrowNavigation();
       disableBackspaceIntoATable();
     }
+  };
+
+  if (Rtc.isRtc(editor)) {
+    setupRtc();
+  } else {
+    setup();
   }
 
   return {
