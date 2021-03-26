@@ -1,7 +1,7 @@
-import { Keyboard, Mouse, UiFinder } from '@ephox/agar';
+import { FocusTools, Mouse, UiFinder } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { Css, Focus, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -38,10 +38,10 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
   // Make sure the height is reset
   beforeEach(() => {
     const editor = hook.editor();
-    const container = SugarElement.fromDom(editor.getContainer());
+    const container = TinyDom.container(editor);
     Css.setAll(container, {
-      width: '400px',
-      height: '400px'
+      width: editor.getParam('width') + 'px',
+      height: editor.getParam('height') + 'px',
     });
   });
 
@@ -84,20 +84,19 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
   it('TINY-4823: can be resized via the keyboard', () => {
     const editor = hook.editor();
     const container = TinyDom.container(editor);
-    const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
 
-    Focus.focus(resizeHandle);
+    FocusTools.setFocus(SugarBody.body(), '.tox-statusbar__resize-handle');
 
     // Make it larger
     for (let i = 0; i < 20; ++i) {
-      Keyboard.keystroke(VK.RIGHT, {}, resizeHandle);
-      Keyboard.keystroke(VK.DOWN, {}, resizeHandle);
+      TinyUiActions.keystroke(editor, VK.RIGHT);
+      TinyUiActions.keystroke(editor, VK.DOWN);
     }
     assertEditorSize(container, 460, 460);
 
     for (let i = 0; i < 20; ++i) {
-      Keyboard.keystroke(VK.LEFT, {}, resizeHandle);
-      Keyboard.keystroke(VK.UP, {}, resizeHandle);
+      TinyUiActions.keystroke(editor, VK.LEFT);
+      TinyUiActions.keystroke(editor, VK.UP);
     }
     assertEditorSize(container, 400, 400);
   });

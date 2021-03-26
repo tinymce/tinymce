@@ -56,11 +56,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 
   const getComponents = (): SimpleSpec[] => {
     const components: SimpleSpec[] = getTextComponents();
-
     const resizeHandler = ResizeHandler.renderResizeHandler(editor, providersBackstage);
-    resizeHandler.each((spec) => components.push(spec));
 
-    return components;
+    return components.concat(resizeHandler.toArray())
   };
 
   return {

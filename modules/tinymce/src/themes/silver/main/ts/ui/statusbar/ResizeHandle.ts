@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Behaviour, Dragging, Focusing, NativeEvents, SimpleSpec, SimulatedEvent, Tabstopping } from '@ephox/alloy';
+import { AlloyEvents, Behaviour, Dragging, Focusing, NativeEvents, NativeSimulatedEvent, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { EventArgs, SugarPosition } from '@ephox/sugar';
 
@@ -29,7 +29,7 @@ const getResizeType = (editor: Editor): ResizeTypes => {
   }
 };
 
-const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, event: SimulatedEvent<EventArgs<KeyboardEvent>>) => {
+const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, event: NativeSimulatedEvent<KeyboardEvent>) => {
   const scale = 3;
   let left = 0, top = 0;
   switch (event.event.raw.keyCode) {
