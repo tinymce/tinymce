@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
-- Added a new KeyCodes `PAGE_UP` and `PAGE_DOWN` #TINY-4612
+- Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 
 ### Fixed

@@ -8,8 +8,8 @@
 import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
+import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
-import * as InlineBoundariesNavigation from './InlineBoundariesNavigation';
 import * as MatchKeys from './MatchKeys';
 import * as MediaNavigation from './MediaNavigation';
 
@@ -19,8 +19,8 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text>, evt: Keyboard
     { keyCode: VK.HOME, action: MatchKeys.action(CefNavigation.moveToLineEndPoint, editor, false) },
     { keyCode: VK.END, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, true) },
     { keyCode: VK.HOME, action: MatchKeys.action(MediaNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.END, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true, caret) },
-    { keyCode: VK.HOME, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false, caret) }
+    { keyCode: VK.END, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, true, caret) },
+    { keyCode: VK.HOME, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, false, caret) }
   ], evt).each((_) => {
     evt.preventDefault();
   });

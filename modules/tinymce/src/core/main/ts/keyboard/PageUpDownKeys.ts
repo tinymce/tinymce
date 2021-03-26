@@ -11,15 +11,15 @@ import Editor from '../api/Editor';
 import { NodeChangeEvent } from '../api/EventTypes';
 import { EditorEvent } from '../api/PublicApi';
 import VK from '../api/util/VK';
-import * as InlineBoundariesNavigation from './InlineBoundariesNavigation';
+import * as BoundarySelection from './BoundarySelection';
 import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();
 
 const executeKeyupAction = (editor: Editor, caret: Cell<Text>, evt: KeyboardEvent) => {
   MatchKeys.execute([
-    { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false, caret) },
-    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true, caret) }
+    { keyCode: VK.PAGE_UP, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, false, caret) },
+    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(BoundarySelection.moveToLineEndPoint, editor, true, caret) }
   ], evt);
 };
 

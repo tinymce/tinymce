@@ -45,7 +45,6 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
 
     it('TINY-4612: "inline_boundaries: false" cursor does not move outside anchor', async () => {
       const editor = hook.editor();
-      editor.settings.height = 400;
       editor.settings.inline_boundaries = false;
       editor.setContent('<p><a href="google.com">link</a>text</p>');
       TinySelections.setCursor(editor, [ 0, 1 ], 4);
@@ -84,7 +83,6 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
 
     it('TINY-4612: "inline_boundaries: false" cursor does not move outside anchor', async () => {
       const editor = hook.editor();
-      editor.settings.height = 400;
       editor.settings.inline_boundaries = false;
       editor.setContent('<p>test<a href="google.com">link</a></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);

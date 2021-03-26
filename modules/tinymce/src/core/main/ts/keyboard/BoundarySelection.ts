@@ -17,6 +17,7 @@ import * as WordSelection from '../selection/WordSelection';
 import * as BoundaryCaret from './BoundaryCaret';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
+import * as NavigationUtils from './NavigationUtils';
 
 const setCaretPosition = (editor: Editor, pos: CaretPosition) => {
   const rng = editor.dom.createRng();
@@ -107,10 +108,31 @@ const setupSelectedState = (editor: Editor): Cell<Text> => {
 const moveNextWord = Fun.curry(moveWord, true);
 const movePrevWord = Fun.curry(moveWord, false);
 
+const moveToLineEndPoint = (editor: Editor, forward: boolean, caret: Cell<Text>): boolean => {
+  if (Settings.isInlineBoundariesEnabled(editor)) {
+    // Try to find the line endpoint, however if one isn't found then assume we're already at the end point
+    const linePoint = NavigationUtils.getLineEndPoint(editor, forward).getOrThunk(() => {
+      const rng = editor.selection.getRng();
+      return forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
+    });
+
+    return BoundaryLocation.readLocation(Fun.curry(InlineUtils.isInlineTarget, editor), editor.getBody(), linePoint).exists((loc) => {
+      const outsideLoc = BoundaryLocation.outside(loc);
+      return BoundaryCaret.renderCaret(caret, outsideLoc).exists((pos) => {
+        setCaretPosition(editor, pos);
+        return true;
+      });
+    });
+  } else {
+    return false;
+  }
+};
+
 export {
   move,
   moveNextWord,
   movePrevWord,
+  moveToLineEndPoint,
   setupSelectedState,
   setCaretPosition
 };
