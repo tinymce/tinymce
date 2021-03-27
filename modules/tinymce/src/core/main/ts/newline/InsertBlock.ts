@@ -38,7 +38,7 @@ const isTableCell = (node) => {
 };
 
 const emptyBlock = (elm) => {
-  elm.innerHTML = '<br data-mce-bogus="1">';
+  elm.innerHTML = '<br data-mce-bogus="1" />';
 };
 
 const containerAndSiblingName = (container, nodeName) => {
