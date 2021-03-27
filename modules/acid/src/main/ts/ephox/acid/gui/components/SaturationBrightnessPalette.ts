@@ -36,7 +36,7 @@ const paletteFactory = (_translate: (key: string) => string, getClass: (key: str
         role: 'presentation'
       },
       classes: [ getClass('sv-palette-thumb') ],
-      innerHtml: `<div class=${getClass('sv-palette-inner-thumb')} role="presentation"></div>`
+      innerHtml: `<div class="${getClass('sv-palette-inner-thumb')}" role="presentation"></div>`
     }
   });
 
