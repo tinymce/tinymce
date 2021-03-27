@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
 - The color picker dialog will now show an alert if it is submitted with an invalid hex color code #TINY-2814
 - Fixed a bug where the `TableModified` event was not fired when adding a table row via the Tab key #TINY-7006
+- Fixed a bug where the `lists` plugin was adding incorrect elements in xhtml documents
 
 ## 5.7.1 - 2021-03-17
 
