@@ -167,13 +167,13 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail) => {
     if (!NodeType.isListItemNode(parent)) {
       if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(dom, sibling, detail)) {
         listBlock = sibling;
-        block = dom.rename(block, listItemName);
+        block = dom.rename(block, listItemName.toLowerCase());
         sibling.appendChild(block);
       } else {
         listBlock = dom.create(listName);
         block.parentNode.insertBefore(listBlock, block);
         listBlock.appendChild(block);
-        block = dom.rename(block, listItemName);
+        block = dom.rename(block, listItemName.toLowerCase());
       }
 
       removeStyles(dom, block, [
@@ -231,7 +231,7 @@ const mergeWithAdjacentLists = (dom: DOMUtils, listBlock: Element) => {
 
 const updateList = (editor: Editor, list: Element, listName: 'UL' | 'OL' | 'DL', detail: ListDetail) => {
   if (list.nodeName !== listName) {
-    const newList = editor.dom.rename(list, listName);
+    const newList = editor.dom.rename(list, listName.toLowerCase());
     updateListWithDetails(editor.dom, newList, detail);
     fireListEvent(editor, listToggleActionFromListName(listName), newList);
   } else {
@@ -272,7 +272,7 @@ const toggleSingleList = (editor, parentList: HTMLElement, listName: 'UL' | 'OL'
     } else {
       const bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
       updateListWithDetails(editor.dom, parentList, detail);
-      const newList = editor.dom.rename(parentList, listName);
+      const newList = editor.dom.rename(parentList, listName.toLowerCase());
       mergeWithAdjacentLists(editor.dom, newList);
       editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
       applyList(editor, listName, detail);
