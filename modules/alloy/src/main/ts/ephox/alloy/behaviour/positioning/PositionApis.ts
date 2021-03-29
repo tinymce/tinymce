@@ -64,7 +64,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
 
     const getBounds = bounds.map(Fun.constant).or(posConfig.getBounds);
 
-    placer(component, anchorage, origin).each((anchoring) => {
+    placer(component, anchorage, origin, getBounds).each((anchoring) => {
       const doPlace = anchoring.placer.getOr(place);
       doPlace(component, origin, anchoring, getBounds, placee);
     });

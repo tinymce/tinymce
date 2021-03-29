@@ -9,8 +9,11 @@ import * as Origins from '../layout/Origins';
 import { Anchoring, NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
-const capRect = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {
-  let newLeft = left, newTop = top, newWidth = width, newHeight = height;
+const capRect = (left: number, top: number, width: number, height: number, cappingViewport: Optional<Boxes.Bounds>): Optional<Boxes.BoxByPoint> => {
+  let newLeft = left;
+  let newTop = top;
+  let newWidth = width;
+  let newHeight = height;
   // Try to prevent the context toolbar from getting above the editor toolbar
   if (left < 0) {
     newLeft = 0;
@@ -20,6 +23,18 @@ const capRect = (left: number, top: number, width: number, height: number): Opti
     newTop = 0;
     newHeight = height + top;
   }
+
+  // Try to prevent the context toolbar from getting below the editor toolbar if we know the bounds of the viewport.
+  cappingViewport.each((cap) => {
+    if ((newLeft + newWidth) > cap.width) {
+      newWidth = cap.width - newLeft;
+    }
+
+    if ((newTop + newHeight) > cap.height) {
+      newHeight = cap.height - newTop;
+    }
+  });
+
   const point = CssPosition.screen(SugarPosition(newLeft, newTop));
   return Optional.some(Boxes.pointed(point, newWidth, newHeight));
 };

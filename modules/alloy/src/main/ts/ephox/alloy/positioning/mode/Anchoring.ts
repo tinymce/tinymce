@@ -18,7 +18,7 @@ export interface CommonAnchorSpec {
 export type AnchorSpec = SelectionAnchorSpec | HotspotAnchorSpec | SubmenuAnchorSpec | MakeshiftAnchorSpec | NodeAnchorSpec;
 
 export interface AnchorDetail<D> {
-  placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt) => Optional<Anchoring>;
+  placement: (comp: AlloyComponent, anchor: D, origin: OriginAdt, getBounds: Optional<() => Bounds>) => Optional<Anchoring>;
 }
 
 export type MaxHeightFunction = (elem: SugarElement, available: number) => void;
