@@ -5,12 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyEvents, Behaviour, Dragging, Focusing, NativeEvents, NativeSimulatedEvent, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { Behaviour, Dragging, Focusing, Keying, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { EventArgs, SugarPosition } from '@ephox/sugar';
+import { SugarPosition } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import VK from 'tinymce/core/api/util/VK';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { get as getIcon } from '../icons/Icons';
@@ -29,29 +28,11 @@ const getResizeType = (editor: Editor): ResizeTypes => {
   }
 };
 
-const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, event: NativeSimulatedEvent<KeyboardEvent>) => {
+const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, x: number, y: number): Optional<boolean> => {
   const scale = 3;
-  let left = 0, top = 0;
-  switch (event.event.raw.keyCode) {
-    case VK.LEFT:
-      left -= scale;
-      break;
-    case VK.RIGHT:
-      left += scale;
-      break;
-    case VK.UP:
-      top -= scale;
-      break;
-    case VK.DOWN:
-      top += scale;
-      break;
-    default:
-      return;
-  }
-
-  const delta = SugarPosition(left, top);
-  event.stop();
+  const delta = SugarPosition(x * scale, y * scale);
   resize(editor, delta, resizeType);
+  return Optional.some(true);
 };
 
 export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): Optional<SimpleSpec> => {
@@ -70,15 +51,19 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       },
       innerHtml: getIcon('resize-handle', providersBackstage.icons)
     },
-    events: AlloyEvents.derive([
-      AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (_comp, event) => keyboardHandler(editor, resizeType, event))
-    ]),
     behaviours: Behaviour.derive([
       Dragging.config({
         mode: 'mouse',
         repositionTarget: false,
         onDrag: (_comp, _target, delta) => resize(editor, delta, resizeType),
         blockerClass: 'tox-blocker'
+      }),
+      Keying.config({
+        mode: 'special',
+        onLeft: () => keyboardHandler(editor, resizeType, -1, 0),
+        onRight: () => keyboardHandler(editor, resizeType, 1, 0),
+        onUp: () => keyboardHandler(editor, resizeType, 0, -1),
+        onDown: () => keyboardHandler(editor, resizeType, 0, 1),
       }),
       Tabstopping.config({}),
       Focusing.config({})
