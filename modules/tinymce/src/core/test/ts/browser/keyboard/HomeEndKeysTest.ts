@@ -59,7 +59,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
         editor.setContent('<p><a href="google.com">link</a>test</p>');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         TinyContentActions.keystroke(editor, Keys.home());
-        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
       });
 
       it('TINY-4612: move caret at the beginning of the line (parent) if the first element is an inline element', () => {
@@ -67,7 +67,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
         editor.setContent('<p><a href="google.com">link1</a>test</p>');
         TinySelections.setCursor(editor, [ 0, 1 ], 3);
         TinyContentActions.keystroke(editor, Keys.home());
-        TinyAssertions.assertCursor(editor, [ 0 ], 0);
+        TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
       });
     });
   });
@@ -119,7 +119,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
         editor.setContent('<p>test<a href="google.com">link</a></p>');
         TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
         TinyContentActions.keystroke(editor, Keys.end());
-        TinyAssertions.assertCursor(editor, [ 0 ], 2);
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
       });
 
       it('TINY-4612: move caret at the end of the line (parent) if the last element is an inline element', () => {
@@ -127,7 +127,7 @@ describe('browser.tinymce.core.keyboard.HomeEndKeysTest', () => {
         editor.setContent('<p>test<a href="google.com">link 2</a></p>');
         TinySelections.setCursor(editor, [ 0, 0 ], 0);
         TinyContentActions.keystroke(editor, Keys.end());
-        TinyAssertions.assertCursor(editor, [ 0 ], 2);
+        TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
       });
     });
   });

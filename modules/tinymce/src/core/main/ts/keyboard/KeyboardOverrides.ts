@@ -27,8 +27,8 @@ const registerKeyboardOverrides = (editor: Editor) => {
   EnterKey.setup(editor);
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
-  HomeEndKeys.setup(editor);
-  PageUpDownKeys.setup(editor);
+  HomeEndKeys.setup(editor, caret);
+  PageUpDownKeys.setup(editor, caret);
 
   return caret;
 };

@@ -16,10 +16,10 @@ import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();
 
-const executeKeyupAction = (editor: Editor, evt: KeyboardEvent) => {
+const executeKeyupAction = (editor: Editor, evt: KeyboardEvent, caret: Cell<Text>) => {
   MatchKeys.execute([
-    { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false) },
-    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true) }
+    { keyCode: VK.PAGE_UP, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, false, caret) },
+    { keyCode: VK.PAGE_DOWN, action: MatchKeys.action(InlineBoundariesNavigation.moveToLineEndPoint, editor, true, caret) }
   ], evt);
 };
 
@@ -42,7 +42,7 @@ const setNodeChangeBlocker = (blocked: Cell<boolean>, editor: Editor, block: boo
 
 // Determining the correct placement on key up/down is very complicated and would require handling many edge cases,
 // which we don't have the resources to handle currently. As such, we allow the browser to change the selection and then make adjustments later.
-const setup = (editor: Editor) => {
+const setup = (editor: Editor, caret: Cell<Text>) => {
 
   // Mac Os doesn't move the selection when pressing page up/down and as such TinyMCE shouldn't be moving it either
   if (platform.os.isOSX()) {
@@ -59,7 +59,7 @@ const setup = (editor: Editor) => {
 
   editor.on('keyup', (evt) => {
     if (evt.isDefaultPrevented() === false) {
-      executeKeyupAction(editor, evt);
+      executeKeyupAction(editor, evt, caret);
     }
 
     if (isPageUpDown(evt) && blocked.get()) {
