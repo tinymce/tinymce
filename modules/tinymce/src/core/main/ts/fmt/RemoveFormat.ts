@@ -470,9 +470,16 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   // as there maybe nested bookmarks
   const isRemoveBookmarkNode = (node: Node) => Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
 
+  const hasBlockChildren = (elm: Node) => Arr.exists(Arr.from(elm.childNodes), dom.isBlock);
+
   // Merges the styles for each node
   const process = (node: Node) => {
     let lastContentEditable: boolean, hasContentEditableState: boolean;
+
+    // TINY-6567 Include the last node in the selection
+    if (!NodeType.isElement(node) && hasBlockChildren(node.parentNode)) {
+      removeFormat(ed, format, vars, node.parentNode, node.parentNode);
+    }
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {

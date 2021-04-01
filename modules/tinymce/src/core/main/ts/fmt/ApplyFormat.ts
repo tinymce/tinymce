@@ -132,7 +132,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     return found;
   };
 
-  const hasBlockChildren = (elm: Node) => Arr.filter(Arr.from(elm.childNodes), dom.isBlock).length > 0;
+  const hasBlockChildren = (elm: Node) => Arr.exists(Arr.from(elm.childNodes), dom.isBlock);
 
   const applyRngStyle = (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) => {
     const newWrappers: Element[] = [];
@@ -193,7 +193,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           const found = applyNodeStyle(formatList, node);
 
           // TINY-6567 Include the last node in the selection
-          if (node.nodeType === 3 && hasBlockChildren(node.parentNode)) {
+          if (!NodeType.isElement(node) && hasBlockChildren(node.parentNode)) {
             applyNodeStyle(formatList, node.parentNode);
           }
 
