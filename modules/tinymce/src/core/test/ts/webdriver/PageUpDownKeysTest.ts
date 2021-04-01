@@ -29,7 +29,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 1 ], 2);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
 
-      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
 
     it('TINY-4612: caret should be placed out of the line element', async () => {
@@ -38,7 +38,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageUp') ]);
 
-      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 0);
     });
 
     it('TINY-4612: "inline_boundaries: false" cursor does not move outside anchor', async () => {
@@ -66,7 +66,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
 
-      TinyAssertions.assertCursor(editor, [ 0 ], 2);
+      TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
     });
 
     it('TINY-4612: caret should be placed out of the line element', async () => {
@@ -75,7 +75,7 @@ describe('webdriver.tinymce.core.keyboard.PageUpDownKeyTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({}, 'PageDown') ]);
 
-      TinyAssertions.assertCursor(editor, [ 0 ], 1);
+      TinyAssertions.assertCursor(editor, [ 0, 1 ], 1);
     });
 
     it('TINY-4612: "inline_boundaries: false" cursor does not move outside anchor', async () => {
