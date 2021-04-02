@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -92,7 +92,11 @@ const matchItems = (dom: DOMUtils, node: Node, format, itemName: string, similar
             return;
           }
 
-          if ((!similar || format.exact) && !isEq(value, FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key))) {
+          const normalizedStyle = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key);
+          // TINY-7227 multiple classes on same element
+          const matchAttribute = Arr.exists(value.split(' '), Fun.curry(isEq, normalizedStyle));
+
+          if ((!similar || format.exact) && !matchAttribute) {
             return;
           }
         }

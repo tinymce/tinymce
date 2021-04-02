@@ -424,6 +424,21 @@ const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData })
   }
 };
 
+const pClickOnMenuBar = async (editor: Editor) => {
+  TinyUiActions.clickOnToolbar(editor, 'button.tox-tbtn.tox-tbtn--select');
+  await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
+};
+
+const pClickOnMenuBarAndSelectOption = async (editor: Editor, option: number) => {
+  await pClickOnMenuBar(editor);
+  TinyUiActions.clickOnUi(editor, `.tox-menu [role="menuitemcheckbox"]:nth-child(${option})`);
+};
+
+const assertMenuItemCount = (expected: number) => {
+  const actual = document.querySelectorAll('.tox-collection__item--enabled').length;
+  assert.equal(actual, expected, 'Should be correct count');
+};
+
 export {
   getCellWidth,
   pAssertDialogPresence,
@@ -458,5 +473,8 @@ export {
   deleteRow,
   insertTable,
   makeInsertTable,
-  assertWidths
+  assertWidths,
+  pClickOnMenuBar,
+  pClickOnMenuBarAndSelectOption,
+  assertMenuItemCount
 };

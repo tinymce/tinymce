@@ -9,13 +9,32 @@ import * as TableTestUtils from '../../module/test/TableTestUtils';
 describe('browser.tinymce.plugins.table.TableCellClassListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'table',
+    table_cell_class_list: [
+      { title: 'test', value: 'test' },
+      { title: 'test2', value: 'test2' },
+      { title: 'test3', value: 'test3' },
+    ],
+    toolbar: 'tablecellclass',
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ], true);
 
   const tableHtml = '<table><tbody><tr><td>x</td></tr></tbody></table>';
 
+  it('TINY-7227: tablecellclass list has multiple activated elements after applying the classes', async () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
+    await TableTestUtils.pClickOnMenuBarAndSelectOption(editor, 1);
+    await TableTestUtils.pClickOnMenuBarAndSelectOption(editor, 2);
+    await TableTestUtils.pClickOnMenuBarAndSelectOption(editor, 3);
+
+    await TableTestUtils.pClickOnMenuBar(editor);
+    TableTestUtils.assertMenuItemCount(3);
+  });
+
   it('TBA: no class input without setting', async () => {
     const editor = hook.editor();
+    editor.settings.table_cell_class_list = [];
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
     editor.execCommand('mceTableCellProps');
