@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Updated the image dialog to show a grid with two columns only if `hasImageCaption` is true, `image` plugin #TINY-6400
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 
 ### Fixed

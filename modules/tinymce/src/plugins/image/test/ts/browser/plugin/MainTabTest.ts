@@ -1,3 +1,4 @@
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
@@ -46,5 +47,30 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
       '<figcaption>Caption</figcaption>' +
       '</figure>'
     ));
+  });
+
+  it('TINY-6400: render image_class_list as Dialog type "panel"', async () => {
+    const editor = hook.editor();
+    editor.settings.image_caption = false;
+    editor.execCommand('mceImage');
+
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    const expected = {
+      ['.tox-form__group button[aria-label="Class"]']: 1,
+      ['.tox-form__grid--2col button[aria-label="Class"]']: 0
+    };
+    Assertions.assertPresence('Asserting presence', expected, dialog);
+  });
+
+  it('TINY-6400: render image_class_list and image_caption as Dialog type "group"', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceImage');
+
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    const expected = {
+      ['.tox-form__grid--2col button[aria-label="Class"]']: 1,
+      ['.tox-form__grid--2col .tox-checkbox']: 1
+    };
+    Assertions.assertPresence('Asserting presence', expected, dialog);
   });
 });
