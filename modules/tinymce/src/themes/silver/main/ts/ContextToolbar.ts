@@ -7,12 +7,13 @@
 
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying,
-  Layout, LayoutInside, MaxHeight, MaxWidth, Positioning
+  Layout, LayoutInside, MaxHeight, MaxWidth, PinnedLayout, Positioning
 } from '@ephox/alloy';
+
 import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Merger, Obj, Optional, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, Focus, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
+import { Classes, Css, Focus, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { getToolbarMode, ToolbarMode } from './api/Settings';
@@ -52,11 +53,26 @@ const anchorOverrides = {
 };
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
-const desktopAnchorSpecLayouts = {
-  onLtr: () => [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
-  onRtl: () => [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+
+const getDesktopAnchorSpecLayouts = (contextbar: AlloyComponent) => {
+  // We try to keep our current pinned layout, so we identify any classes that are on the contextbar,
+  // and prefer that pinned layout to the other pinned layout
+  const getPinnedLayouts = () => {
+    // Something at the top will be anchored from its bottom value and grow upward
+    const isAlreadyAtTop = Classes.hasAll(contextbar.element, bubbleAlignments.bottom);
+    return isAlreadyAtTop ? [ PinnedLayout.pinAtTop, PinnedLayout.pinAtBottom ] : [ PinnedLayout.pinAtBottom, PinnedLayout.pinAtTop ];
+  };
+
+  return {
+    onLtr: () => {
+      const pinned = getPinnedLayouts();
+      return [ Layout.north, Layout.south, Layout.northeast, Layout.southeast, Layout.northwest, Layout.southwest ].concat(pinned);
+    },
+    onRtl: () => {
+      const pinned = getPinnedLayouts();
+      return [ Layout.north, Layout.south, Layout.northwest, Layout.southwest, Layout.northeast, Layout.southeast ].concat(pinned);
+    }
+  };
 };
 
 const mobileAnchorSpecLayouts = {
@@ -66,7 +82,7 @@ const mobileAnchorSpecLayouts = {
     LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
 };
 
-const getAnchorLayout = (position: InlineContent.ContextPosition, isTouch: boolean): Partial<AnchorSpec> => {
+const getAnchorLayout = (position: InlineContent.ContextPosition, contextbar: AlloyComponent, isTouch: boolean): Partial<AnchorSpec> => {
   if (position === 'line') {
     return {
       bubble: Bubble.nu(bubbleSize, 0, bubbleAlignments),
@@ -79,7 +95,7 @@ const getAnchorLayout = (position: InlineContent.ContextPosition, isTouch: boole
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: isTouch ? mobileAnchorSpecLayouts : desktopAnchorSpecLayouts,
+      layouts: isTouch ? mobileAnchorSpecLayouts : getDesktopAnchorSpecLayouts(contextbar),
       overrides: anchorOverrides
     };
   }
@@ -236,7 +252,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     const anchorage = position === 'node' ? extras.backstage.shared.anchors.node(element) : extras.backstage.shared.anchors.cursor();
     return Merger.deepMerge(
       anchorage,
-      getAnchorLayout(position, isTouch())
+      getAnchorLayout(position, contextbar, isTouch())
     );
   };
 
@@ -310,7 +326,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
-          close();
+          // close();
         }
       }, 0);
     });

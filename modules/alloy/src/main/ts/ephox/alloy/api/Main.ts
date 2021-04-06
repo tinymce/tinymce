@@ -21,6 +21,7 @@ import * as LayoutInside from '../positioning/layout/LayoutInside';
 import * as LayoutTypes from '../positioning/layout/LayoutTypes';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import * as MaxWidth from '../positioning/layout/MaxWidth';
+import * as PinnedLayout from '../positioning/layout/PinnedLayout';
 import {
   AnchorSpec, HotspotAnchorSpec, Layouts, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec
 } from '../positioning/mode/Anchoring';
@@ -248,6 +249,7 @@ export {
   // layout
   Layout,
   LayoutInside,
+  PinnedLayout,
   LayoutTypes,
   Bubble,
   MaxHeight,
