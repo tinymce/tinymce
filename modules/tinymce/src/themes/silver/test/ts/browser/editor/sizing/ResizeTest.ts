@@ -1,11 +1,10 @@
-import { FocusTools, Mouse, UiFinder } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import VK from 'tinymce/core/api/util/VK';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import { resizeToPos } from '../../../module/UiUtils';
@@ -89,14 +88,23 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
 
     // Make it larger
     for (let i = 0; i < 3; ++i) {
-      TinyUiActions.keystroke(editor, VK.RIGHT);
-      TinyUiActions.keystroke(editor, VK.DOWN);
+      TinyUiActions.keystroke(editor, Keys.right());
+    }
+    assertEditorSize(container, 460, 400);
+
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.down());
     }
     assertEditorSize(container, 460, 460);
 
+    // Make it smaller again
     for (let i = 0; i < 3; ++i) {
-      TinyUiActions.keystroke(editor, VK.LEFT);
-      TinyUiActions.keystroke(editor, VK.UP);
+      TinyUiActions.keystroke(editor, Keys.left());
+    }
+    assertEditorSize(container, 400, 460);
+
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.up());
     }
     assertEditorSize(container, 400, 400);
   });
