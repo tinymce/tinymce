@@ -29,7 +29,7 @@ const getResizeType = (editor: Editor): ResizeTypes => {
 };
 
 const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, x: number, y: number): Optional<boolean> => {
-  const scale = 3;
+  const scale = 20;
   const delta = SugarPosition(x * scale, y * scale);
   resize(editor, delta, resizeType);
   return Optional.some(true);
@@ -47,7 +47,6 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       classes: [ 'tox-statusbar__resize-handle' ],
       attributes: {
         'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
-        'aria-hidden': 'true'
       },
       innerHtml: getIcon('resize-handle', providersBackstage.icons)
     },

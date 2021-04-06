@@ -88,13 +88,13 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     FocusTools.setFocus(SugarBody.body(), '.tox-statusbar__resize-handle');
 
     // Make it larger
-    for (let i = 0; i < 20; ++i) {
+    for (let i = 0; i < 3; ++i) {
       TinyUiActions.keystroke(editor, VK.RIGHT);
       TinyUiActions.keystroke(editor, VK.DOWN);
     }
     assertEditorSize(container, 460, 460);
 
-    for (let i = 0; i < 20; ++i) {
+    for (let i = 0; i < 3; ++i) {
       TinyUiActions.keystroke(editor, VK.LEFT);
       TinyUiActions.keystroke(editor, VK.UP);
     }
