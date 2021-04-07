@@ -1,6 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
-import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Format } from 'tinymce/core/fmt/FormatTypes';
@@ -9,6 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
+    indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
 
@@ -28,10 +28,6 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
     editor.formatter.register('format', format);
     RemoveFormat.remove(editor, 'format');
     editor.formatter.unregister('format');
-  };
-
-  const getContent = (editor: Editor) => {
-    return editor.getContent().toLowerCase().replace(/[\r|\n]+/g, '');
   };
 
   context('Remove format with collapsed selection', () => {
@@ -134,7 +130,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1 ], 0);
 
       RemoveFormat.remove(editor, 'aligncenter');
-      assert.equal(getContent(editor),
+      TinyAssertions.assertContent(editor,
         '<ul>' +
           '<li>a</li>' +
           '<li>b' +
@@ -169,7 +165,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1, 1, 1 ], 0);
 
       RemoveFormat.remove(editor, 'aligncenter');
-      assert.equal(getContent(editor),
+      TinyAssertions.assertContent(editor,
         '<ul>' +
           '<li>1</li>' +
           '<li>2' +
@@ -203,7 +199,7 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
 
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 1, 0, 0 ], 1);
       doRemoveFormat(editor, removeFormat);
-      assert.equal(getContent(editor),
+      TinyAssertions.assertContent(editor,
         '<div>' +
           '<div>a</div>' +
           '<div>b' +

@@ -1,7 +1,7 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { LegacyUnit, TinyHooks } from '@ephox/mcagar';
+import { LegacyUnit, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -2322,7 +2322,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ul>'
     );
-    LegacyUnit.setSelection(editor, 'ul', 0, 'ul li li:nth-child(2)', 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 1 ], 0);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ul>' +
@@ -2350,7 +2350,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ol>'
     );
-    LegacyUnit.setSelection(editor, 'ol', 0, 'ol li li:nth-child(1)', 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 0);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<ol>' +
@@ -2377,7 +2377,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ul>'
     );
-    LegacyUnit.setSelection(editor, 'ul', 0, 'li:nth-child(2)', 1);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1 ], 1);
     editor.formatter.apply('alignright');
     assert.equal(getContent(editor),
       '<ul>' +
@@ -2409,7 +2409,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</li>' +
       '</ul>'
     );
-    LegacyUnit.setSelection(editor, 'ul', 0, 'ul ul ul li:nth-child(2)', 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1, 1, 1 ], 0);
     editor.formatter.apply('h1');
     assert.equal(getContent(editor),
       '<ul>' +
@@ -2434,19 +2434,19 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.setContent(
       '<div>' +
         '<div>a</div>' +
-        '<div>b' +
+        '<div><br />b' +
           '<div>1</div>' +
         '</div>' +
         '<div>c</div>' +
         '<div>d</div>' +
       '</div>'
     );
-    LegacyUnit.setSelection(editor, 'div div', 0, 'div div div', 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 2, 0 ], 0);
     editor.formatter.apply('aligncenter');
     assert.equal(getContent(editor),
       '<div>' +
         '<div style="text-align: center;">a</div>' +
-        '<div style="text-align: center;">b' +
+        '<div style="text-align: center;"><br />b' +
           '<div style="text-align: center;">1</div>' +
         '</div>' +
         '<div>c</div>' +
@@ -2455,7 +2455,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     );
   });
 
-  it('TINY-6567: Apply inline element with font Size to a div structure with a partial selection', () => {
+  it('TINY-6567: Apply inline element with font size to a div structure with a partial selection', () => {
     const editor = hook.editor();
     editor.setContent(
       '<div>' +
@@ -2467,7 +2467,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
         '</div>' +
       '</div>'
     );
-    LegacyUnit.setSelection(editor, 'div div', 0, 'div div div:nth-child(2)', 0);
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1 ], 1);
     editor.formatter.register('formatTest', {
       inline: 'b',
       styles: {

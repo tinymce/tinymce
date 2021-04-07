@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj } from '@ephox/katamari';
+import { Obj } from '@ephox/katamari';
 import { PredicateExists, SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -132,8 +132,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
     return found;
   };
 
-  const hasBlockChildren = (elm: Node) => Arr.exists(Arr.from(elm.childNodes), dom.isBlock);
-
   const applyRngStyle = (dom: DOMUtils, rng: RangeLikeObject, bookmark: IdBookmark | IndexBookmark, nodeSpecific?: boolean) => {
     const newWrappers: Element[] = [];
     let contentEditable = true;
@@ -193,7 +191,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           const found = applyNodeStyle(formatList, node);
 
           // TINY-6567 Include the last node in the selection
-          if (!NodeType.isElement(node) && hasBlockChildren(node.parentNode)) {
+          if (FormatUtils.isChildText(nodes, node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
             applyNodeStyle(formatList, node.parentNode);
           }
 

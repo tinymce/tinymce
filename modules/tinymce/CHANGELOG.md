@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Updated `applyFormat` and `removeRngStyle` to include the last item in the selection #TINY-6567
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 
 ### Fixed
