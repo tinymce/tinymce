@@ -87,7 +87,7 @@ UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardN
         sPressTab,
         sAssertFocused('Find button', '.tox-button[title="Replace"]'),
         sPressTab,
-        sAssertFocused('Find button', '.tox-button[title="Replace All"]'),
+        sAssertFocused('Find button', '.tox-button[title="Replace all"]'),
         sPressEnter,
         sAssertFocused('Find input', '.tox-textfield[placeholder="Find"]'),
         sPressEsc
