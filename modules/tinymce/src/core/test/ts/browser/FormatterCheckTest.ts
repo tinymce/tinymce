@@ -260,4 +260,28 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.selection.setRng(rng);
     assert.isFalse(editor.formatter.match('link'), 'No match on named anchor');
   });
+
+  it('TINY-7227: match one class on an element with multiple classes', () => {
+    const editor = hook.editor();
+    editor.formatter.register('formatB', { selector: 'p', attributes: { class: '%value' }});
+
+    editor.setContent('<p class="a b c">test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+
+    assert.isTrue(editor.formatter.match('formatB', { value: 'b' }), 'Should match since the onmatch matches on "b" class.');
+  });
+
+  it('TINY-7227: match multiple classes on an element with multiple classes', () => {
+    const editor = hook.editor();
+    editor.formatter.register('formatA', { selector: 'p', attributes: { class: '%value' }});
+    editor.formatter.register('formatB', { selector: 'p', attributes: { class: '%value' }});
+    editor.formatter.register('formatC', { selector: 'p', attributes: { class: '%value' }});
+
+    editor.setContent('<p class="A B C">test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+
+    assert.isTrue(editor.formatter.match('formatA', { value: 'A' }), 'Should match since the onmatch matches on "A" class.');
+    assert.isTrue(editor.formatter.match('formatB', { value: 'B' }), 'Should match since the onmatch matches on "B" class.');
+    assert.isTrue(editor.formatter.match('formatC', { value: 'C' }), 'Should match since the onmatch matches on "C" class.');
+  });
 });
