@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
-- Added a new `fixed_toolbar_container_element` setting which accepts an HTMLElement to render the toolbar in
+- Added a new `fixed_toolbar_container_target` setting which accepts an HTMLElement to render the toolbar in
 
 ### Changed
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285

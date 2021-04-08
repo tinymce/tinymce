@@ -100,12 +100,12 @@ const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
-const fixedToolbarContainerElement = (editor): object => editor.getParam('fixed_toolbar_container_element', undefined, 'object');
+const fixedToolbarContainerTarget = (editor): object => editor.getParam('fixed_toolbar_container_target', undefined, 'object');
 
 const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
-const fixedContainerElement = (editor): Optional<SugarElement> => {
-  const element = fixedToolbarContainerElement(editor) as HTMLElement;
+const fixedContainerTarget = (editor): Optional<SugarElement> => {
+  const element = fixedToolbarContainerTarget(editor) as HTMLElement;
   if (element !== null && element !== undefined) {
     return Optional.from(SugarElement.fromDom(element));
   }
@@ -115,10 +115,10 @@ const fixedContainerElement = (editor): Optional<SugarElement> => {
   return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
 };
 
-const useFixedContainer = (editor): boolean => editor.inline && fixedContainerElement(editor).isSome();
+const useFixedContainer = (editor): boolean => editor.inline && fixedContainerTarget(editor).isSome();
 
 const getUiContainer = (editor: Editor): SugarElement => {
-  const fixedContainer = fixedContainerElement(editor);
+  const fixedContainer = fixedContainerTarget(editor);
   return fixedContainer.getOrThunk(() =>
     SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getElement())))
   );
