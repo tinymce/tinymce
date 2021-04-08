@@ -7,8 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest', () => {
-  let toolbar: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div style="margin: 50px 0;"></div>');
-  let toolbarWithId: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
+  const toolbar: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div style="margin: 50px 0;"></div>');
+  const toolbarWithId: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div id="toolbar" style="margin: 50px 0;"></div>');
   before(() => {
     Insert.append(SugarBody.body(), toolbar);
     Insert.append(SugarBody.body(), toolbarWithId);
@@ -21,7 +21,7 @@ describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest',
   const hook = TinyHooks.bddSetup<Editor>({
     inline: true,
     fixed_toolbar_container_target: toolbar.dom,
-    fixed_toolbar_container: "#toolbar",
+    fixed_toolbar_container: '#toolbar',
     menubar: 'file',
     toolbar: 'undo bold',
     base_url: '/project/tinymce/js/tinymce'
@@ -115,7 +115,7 @@ describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTest',
 
     Assertions.assertStructure(
       'empty structure',
-      ApproxStructure.build((s, str, arr) => s.element('div', {
+      ApproxStructure.build((s) => s.element('div', {
         classes: [],
         children: []
       })),
