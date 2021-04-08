@@ -166,7 +166,6 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     state.status = 1;
     const linkElem = SugarElement.fromTag('link', doc.dom);
     Attribute.setAll(linkElem, {
-      rel: 'stylesheet',
       type: 'text/css',
       id: state.id
     });
