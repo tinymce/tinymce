@@ -11,17 +11,15 @@ import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, Su
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { TableActions } from '../actions/TableActions';
 
 import * as Util from '../core/Util';
-import * as TableTargets from './TableTargets';
 
-const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
-  return go(editor, isRoot, CellNavigation.next(cell), actions);
+const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
+  return go(editor, isRoot, CellNavigation.next(cell));
 };
 
-const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
-  return go(editor, isRoot, CellNavigation.prev(cell), actions);
+const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
+  return go(editor, isRoot, CellNavigation.prev(cell));
 };
 
 const getCellFirstCursorPosition = (editor: Editor, cell: SugarElement<Node>): Range => {
@@ -38,17 +36,14 @@ const getNewRowCursorPosition = (editor: Editor, table: SugarElement<HTMLTableEl
   });
 };
 
-const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation, actions: TableActions): Optional<Range> => {
+const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(editor, cell);
     });
   }, (current) => {
     return TableLookup.table(current, isRoot).bind((table) => {
-      const targets = TableTargets.noMenu(current);
-      editor.undoManager.transact(() => {
-        actions.insertRowsAfter(table, targets);
-      });
+      editor.execCommand('mceTableInsertRowAfter');
       return getNewRowCursorPosition(editor, table);
     });
   });
@@ -56,7 +51,7 @@ const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLoca
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = (event: KeyboardEvent, editor: Editor, actions: TableActions) => {
+const handle = (event: KeyboardEvent, editor: Editor) => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = (element) => {
@@ -70,7 +65,7 @@ const handle = (event: KeyboardEvent, editor: Editor, actions: TableActions) => 
       TableLookup.cell(start, isRoot).each((cell) => {
         event.preventDefault();
         const navigation = event.shiftKey ? backward : forward;
-        const rng = navigation(editor, isRoot, cell, actions);
+        const rng = navigation(editor, isRoot, cell);
         rng.each((range) => {
           editor.selection.setRng(range);
         });

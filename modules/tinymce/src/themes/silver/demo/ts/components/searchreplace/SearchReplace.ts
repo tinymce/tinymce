@@ -56,7 +56,7 @@ export const SearchReplaceDialogSpec: Dialog.DialogSpec<any> = {
     {
       type: 'custom',
       name: 'replaceall',
-      text: 'Replace All',
+      text: 'Replace all',
       align: 'start'
     },
     {

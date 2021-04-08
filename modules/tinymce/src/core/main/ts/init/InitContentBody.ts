@@ -309,7 +309,7 @@ const loadContentCss = (editor: Editor, css: string[]) => {
   Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
 };
 
-const preInit = (editor: Editor, rtcMode: boolean) => {
+const preInit = (editor: Editor) => {
   const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
 
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
@@ -340,8 +340,7 @@ const preInit = (editor: Editor, rtcMode: boolean) => {
     editor.addVisual(editor.getBody());
   });
 
-  // When connected to a server the value on the server should get priority
-  if (rtcMode === false) {
+  if (!Rtc.isRtc(editor)) {
     editor.load({ initial: true, format: 'html' });
   }
 
@@ -456,15 +455,15 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   Events.firePreInit(editor);
 
   Rtc.setup(editor).fold(() => {
-    preInit(editor, false);
+    preInit(editor);
   }, (loadingRtc) => {
     editor.setProgressState(true);
-    loadingRtc.then((rtcMode) => {
+    loadingRtc.then((_rtcMode) => {
       editor.setProgressState(false);
-      preInit(editor, rtcMode);
+      preInit(editor);
     }, (err) => {
       editor.notificationManager.open({ type: 'error', text: String(err) });
-      preInit(editor, true);
+      preInit(editor);
     });
   });
 };

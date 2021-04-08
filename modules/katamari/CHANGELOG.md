@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Introduced `Maybe` as an eventual replacement for `Optional`.
+- Added `pipe` function to the `Fun` API.
+
 ### Changed
 - Added type guard predicates to `Arr.find` methods #TINY-7138
 

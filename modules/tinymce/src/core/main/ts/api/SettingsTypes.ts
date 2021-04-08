@@ -109,6 +109,7 @@ interface BaseEditorSettings {
   icons_url?: string;
   id?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
+  images_file_types?: string;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
   images_upload_base_path?: string;

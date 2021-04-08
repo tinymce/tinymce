@@ -24,6 +24,8 @@ interface VK {
   SPACEBAR: number;
   TAB: number;
   UP: number;
+  PAGE_UP: number;
+  PAGE_DOWN: number;
   END: number;
   HOME: number;
 
@@ -45,6 +47,8 @@ const VK: VK = {
   SPACEBAR: 32,
   TAB: 9,
   UP: 38,
+  PAGE_UP: 33,
+  PAGE_DOWN: 34,
   END: 35,
   HOME: 36,
 
