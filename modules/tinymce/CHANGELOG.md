@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 
 ### Changed
-- The "H Align" and "V Align" input labels in the Cell Properties dialog to be "Horizontal align" and "Vertical align" respectively #TINY-7285
+- Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
 ### Fixed
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
