@@ -53,7 +53,7 @@ export const createTableCellDialog = (): void => {
                   // {
                   //   name: 'halign',
                   //   type: 'selectbox',
-                  //   label: 'H Align',
+                  //   label: 'Horizontal align',
                   //   items: [
                   //     {
                   //       text: 'none',
@@ -68,7 +68,7 @@ export const createTableCellDialog = (): void => {
                   // {
                   //   name: 'valign',
                   //   type: 'selectbox',
-                  //   label: 'V Align',
+                  //   label: 'Vertical align',
                   //   items: [
                   //     {
                   //       text: 'none',
