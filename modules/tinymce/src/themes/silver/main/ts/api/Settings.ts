@@ -104,15 +104,25 @@ const fixedToolbarContainerTarget = (editor): object => editor.getParam('fixed_t
 
 const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
-const fixedContainerTarget = (editor): Optional<SugarElement> => {
-  const element = fixedToolbarContainerTarget(editor) as HTMLElement;
-  if (element !== null && element !== undefined) {
-    return Optional.from(SugarElement.fromDom(element));
+const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
+  if (!editor.inline) {
+    // only when we're in inline mode the fixed_toolbar_container(_target) is available
+    return Optional.none();
   }
 
   const selector = fixedContainerSelector(editor);
-  // If we have a valid selector and are in inline mode, try to get the fixed_toolbar_container
-  return selector.length > 0 && editor.inline ? SelectorFind.descendant(SugarBody.body(), selector) : Optional.none();
+  if (selector.length > 0) {
+    // If we have a valid selector
+    return SelectorFind.descendant(SugarBody.body(), selector);
+  }
+
+  const element = fixedToolbarContainerTarget(editor) as HTMLElement;
+  if (element !== null && element !== undefined) {
+    // If we have a valid target
+    return Optional.from(SugarElement.fromDom(element));
+  }
+
+  return Optional.none();
 };
 
 const useFixedContainer = (editor): boolean => editor.inline && fixedContainerTarget(editor).isSome();
