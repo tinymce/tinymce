@@ -15,6 +15,7 @@ import * as DeleteBackspaceKeys from './DeleteBackspaceKeys';
 import * as EnterKey from './EnterKey';
 import * as HomeEndKeys from './HomeEndKeys';
 import * as InputKeys from './InputKeys';
+import * as PageUpDownKeys from './PageUpDownKeys';
 import * as SpaceKey from './SpaceKey';
 
 const registerKeyboardOverrides = (editor: Editor) => {
@@ -26,7 +27,8 @@ const registerKeyboardOverrides = (editor: Editor) => {
   EnterKey.setup(editor);
   SpaceKey.setup(editor);
   InputKeys.setup(editor);
-  HomeEndKeys.setup(editor);
+  HomeEndKeys.setup(editor, caret);
+  PageUpDownKeys.setup(editor, caret);
 
   return caret;
 };
