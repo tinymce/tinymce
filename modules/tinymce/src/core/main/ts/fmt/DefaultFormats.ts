@@ -42,7 +42,7 @@ const get = (dom: DOMUtils) => {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table',
+        selector: 'img,table,audio,video',
         collapsed: false,
         styles: {
           float: 'left'
@@ -69,7 +69,7 @@ const get = (dom: DOMUtils) => {
         preview: 'font-family font-size'
       },
       {
-        selector: 'img',
+        selector: 'img,audio,video',
         collapsed: false,
         styles: {
           display: 'block',
@@ -107,7 +107,7 @@ const get = (dom: DOMUtils) => {
         defaultBlock: 'div'
       },
       {
-        selector: 'img,table',
+        selector: 'img,table,audio,video',
         collapsed: false,
         styles: {
           float: 'right'
