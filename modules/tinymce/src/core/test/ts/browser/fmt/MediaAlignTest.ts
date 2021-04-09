@@ -14,12 +14,17 @@ describe('browser.tinymce.core.delete.MediaAlignTest', () => {
   }, [ Theme ], true);
 
   const mediaApproxStructure = (tag: string, alignment: Alignment) => {
-    const alignStyles = (str: ApproxStructure.StringApi) => ({
-      left: { float: str.is('left') },
-      center: { 'display': str.is('block'), 'margin-left': str.is('auto'), 'margin-right': str.is('auto') },
-      right: { float: str.is('right') },
-      justify: {}
-    });
+    const alignStyles = (str: ApproxStructure.StringApi) => {
+      if (alignment === 'left') {
+        return { float: str.is('left') };
+      } else if (alignment === 'center') {
+        return { 'display': str.is('block'), 'margin-left': str.is('auto'), 'margin-right': str.is('auto') };
+      } else if (alignment === 'right') {
+        return { float: str.is('right') };
+      } else {
+        return {};
+      }
+    };
 
     return ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -27,7 +32,7 @@ describe('browser.tinymce.core.delete.MediaAlignTest', () => {
           styles: alignment === 'justify' ? { 'text-align': str.is('justify') } : {},
           children: [
             s.element(tag, {
-              styles: alignStyles(str)[alignment]
+              styles: alignStyles(str)
             })
           ]
         }),
