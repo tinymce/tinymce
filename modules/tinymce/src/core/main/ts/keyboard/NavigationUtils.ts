@@ -149,6 +149,7 @@ const moveToLineEndPoint = (editor: Editor, forward: boolean, isElementPosition:
   });
 
 export {
+  getLineEndPoint,
   moveHorizontally,
   moveVertically,
   moveToLineEndPoint,

@@ -33,8 +33,8 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     height: 'label.tox-label:contains(Height) + input.tox-textfield',
     celltype: 'label.tox-label:contains(Cell type) + div.tox-listboxfield > .tox-listbox',
     scope: 'label.tox-label:contains(Scope) + div.tox-listboxfield > .tox-listbox',
-    halign: 'label.tox-label:contains(H Align) + div.tox-listboxfield > .tox-listbox',
-    valign: 'label.tox-label:contains(V Align) + div.tox-listboxfield > .tox-listbox'
+    halign: 'label.tox-label:contains(Horizontal align) + div.tox-listboxfield > .tox-listbox',
+    valign: 'label.tox-label:contains(Vertical align) + div.tox-listboxfield > .tox-listbox'
   };
 
   let events: string[] = [];

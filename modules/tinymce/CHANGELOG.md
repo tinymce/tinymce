@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
+- Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
+- The editor resize handle can now be controlled using the keyboard #TINY-4823
+
+### Changed
+- Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
 ### Fixed
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
@@ -17,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing type for `images_file_types` setting #GH-6607
 - The HTML5 `small` element could not be removed when clearing text formatting #TINY-6633
 - Added HTML5 `audio` and `video` elements to the default alignment formats #TINY-6633
+- The Oxide button text transform variable was incorrectly using `capitalize` instead of `none`. Patch contributed by dakur #GH-6341
+- Fix dialog button text that was using title-style capitalization #TINY-6816
 
 ## 5.7.1 - 2021-03-17
 

@@ -12,5 +12,7 @@ export const Keys = {
   down: Fun.constant(40),
   space: Fun.constant(32),
   home: Fun.constant(36),
-  end: Fun.constant(35)
+  end: Fun.constant(35),
+  pageUp: Fun.constant(33),
+  pageDown: Fun.constant(34)
 };
