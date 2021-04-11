@@ -16,10 +16,10 @@ const getSelectionStartCellFallback = (start: SugarElement<Node>) =>
     TableSelection.retrieve(table, ephemera.firstSelectedSelector)
   ).fold(() => start, (cells) => cells[0]);
 
-const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>) => {
+const getSelectionStartFromSelector = <T extends Element>(selector: string) => (start: SugarElement<Node>, isRoot?: (el: SugarElement<Node>) => boolean) => {
   const startCellName = SugarNode.name(start);
   const startCell = startCellName === 'col' || startCellName === 'colgroup' ? getSelectionStartCellFallback(start) : start;
-  return SelectorFind.closest<T>(startCell, selector);
+  return SelectorFind.closest<T>(startCell, selector, isRoot);
 };
 
 const getSelectionStartCaption = getSelectionStartFromSelector<HTMLTableCaptionElement>('caption');
