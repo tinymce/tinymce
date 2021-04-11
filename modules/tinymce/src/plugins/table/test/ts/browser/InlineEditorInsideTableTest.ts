@@ -61,6 +61,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     await pWaitForMenuBar(editor);
     TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
     // Expect "Delete table" menu button to be disabled
-    await pAssertMenuButtonDisabled(editor, "Delete table", true);
+    await pAssertMenuButtonDisabled(editor, 'Delete table', true);
   });
 });
