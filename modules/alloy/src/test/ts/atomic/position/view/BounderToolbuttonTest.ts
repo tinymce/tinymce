@@ -4,6 +4,7 @@ import { SugarPosition } from '@ephox/sugar';
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import * as LayoutLabels from 'ephox/alloy/positioning/layout/LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
@@ -124,56 +125,56 @@ UnitTest.test('BounderToolbuttonTest', () => {
 
   // Southeast.
   check({
-    label: 'layout-se',
+    label: LayoutLabels.southEast,
     x: 100 - 1,
     y: 55 + 10 - 2
   }, four, bounds(100, 55, 10, 10), panelBox, bubb, view);
 
   // Southwest.
   check({
-    label: 'layout-sw',
+    label: LayoutLabels.southWest,
     x: 281,
     y: 55 + 10 - 2
   }, four, bounds(320, 55, 30, 10), panelBox, bubb, view);
 
   // Northeast.
   check({
-    label: 'layout-ne',
+    label: LayoutLabels.northEast,
     x: 140 - 1,
     y: 235 - 75 + 1
   }, four, bounds(140, 235, 10, 10), panelBox, bubb, view);
 
   // Northwest.
   check({
-    label: 'layout-nw',
+    label: LayoutLabels.northWest,
     x: 261,
     y: 235 - 75 + 1
   }, four, bounds(320, 235, 10, 10), panelBox, bubb, view);
 
   // All fit -> southeast because of order of preference.
   check({
-    label: 'layout-se',
+    label: LayoutLabels.southEast,
     x: 270 - 1,
     y: 100 + 10 - 2
   }, four, bounds(270, 100, 10, 10), panelBox, bubb, view);
 
   // None near top left -> best fit is southeast
   check({
-    label: 'layout-se',
+    label: LayoutLabels.southEast,
     x: 55 - 1,
     y: 55 + 10 - 2
   }, four, bounds(55, 55, 10, 10), bigPanel, bubb, view);
 
   // None near top right -> best fit is southwest
   check({
-    label: 'layout-sw',
+    label: LayoutLabels.southWest,
     x: 350 - 75 + 32 - 1 + 10,
     y: 55 + 10 - 2
   }, four, bounds(350, 55, 10, 10), bigPanel, bubb, view);
 
   // None near bottom left -> best fit is northeast
   check({
-    label: 'layout-ne',
+    label: LayoutLabels.northEast,
     x: 55 - 1,
     y: 50,
     candidateYforTest: 200 - 500 + 1
@@ -181,7 +182,7 @@ UnitTest.test('BounderToolbuttonTest', () => {
 
   // None near bottom right -> best fit is northwest
   check({
-    label: 'layout-nw',
+    label: LayoutLabels.northWest,
     x: 350 - 75 + 32 - 1 + 10,
     y: 50,
     candidateYforTest: 200 - 500 + 1
@@ -189,77 +190,77 @@ UnitTest.test('BounderToolbuttonTest', () => {
 
   // Southeast (1px short on x and y).
   check({
-    label: 'layout-se',
+    label: LayoutLabels.southEast,
     x: 350 + 50 + 1 - 101 - 1,
     y: 220 + 50 + 2 - 10 - 76 + 10 - 2
   }, four, bounds(350 + 50 + 1 - 101, 220 + 50 + 2 - 10 - 76, 10, 10), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
   check({
-    label: 'layout-se',
+    label: LayoutLabels.southEast,
     x: 350 + 50 + 1 - 100 - 1,
     y: 220 + 50 + 2 - 10 - 75 + 10 - 2
   }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Southwest (1px too far on x).
   check({
-    label: 'layout-sw',
+    label: LayoutLabels.southWest,
     x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
     y: 220 + 50 + 2 - 10 - 75 + 10 - 2
   }, four, bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 75, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Northeast (1px too far on y).
   check({
-    label: 'layout-ne',
+    label: LayoutLabels.northEast,
     x: 350 + 50 + 1 - 100 - 1,
     y: 220 + 50 + 2 - 10 - 74 - 75 + 1
   }, four, bounds(350 + 50 + 1 - 100, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 
   // Southeast -> Northwest (1px too far on x and y).
   check({
-    label: 'layout-nw',
+    label: LayoutLabels.northWest,
     x: 350 + 50 + 1 - 99 - 100 + 32 + 10 - 1,
     y: 220 + 50 + 2 - 10 - 74 - 75 + 1
   }, four, bounds(350 + 50 + 1 - 99, 220 + 50 + 2 - 10 - 74, 10, 10), panelBox, bubb, view);
 
   // East
   check({
-    label: 'layout-e',
+    label: LayoutLabels.east,
     x: 55 + 10 - 1,
     y: 150 + 1 - (75 / 2) + (10 / 2)
   }, two, bounds(55, 150, 10, 10), panelBox, bubb, view);
 
   // None near bottom left -> best fit is east (limited to bottom bounds)
   check({
-    label: 'layout-e',
+    label: LayoutLabels.east,
     x: 55 + 10 - 1,
     y: 270 - 75
   }, two, bounds(55, 240, 10, 10), panelBox, bubb, view);
 
   // None near top left -> best fit is east (limited to top bounds)
   check({
-    label: 'layout-e',
+    label: LayoutLabels.east,
     x: 55 + 10 - 1,
     y: 50
   }, two, bounds(55, 80, 10, 10), panelBox, bubb, view);
 
   // West
   check({
-    label: 'layout-w',
+    label: LayoutLabels.west,
     x: 350 - 1 - 100,
     y: 150 + 1 - (75 / 2) + (10 / 2)
   }, two, bounds(350, 150, 10, 10), panelBox, bubb, view);
 
   // None near bottom right -> best fit is west (limited to bottom bounds)
   check({
-    label: 'layout-w',
+    label: LayoutLabels.west,
     x: 350 - 1 - 100,
     y: 270 - 75
   }, two, bounds(350, 240, 10, 10), panelBox, bubb, view);
 
   // None near top right -> best fit is west (limited to top bounds)
   check({
-    label: 'layout-w',
+    label: LayoutLabels.west,
     x: 350 - 1 - 100,
     y: 50
   }, two, bounds(350, 80, 10, 10), panelBox, bubb, view);
