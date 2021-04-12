@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Class, Css, SugarElement } from '@ephox/sugar';
+import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from '../../api/behaviour/PositionUtils';
 import { contextBarTransitionClass } from '../layout/LayoutLabels';
-import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from './PositionLocation';
 import { RepositionDecision } from './Reposition';
 
 export interface PositionCss {

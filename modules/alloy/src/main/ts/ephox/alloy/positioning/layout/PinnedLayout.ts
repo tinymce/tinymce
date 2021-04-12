@@ -2,8 +2,19 @@ import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { boundsRestriction } from './LayoutBounds';
-import { northPinned, southPinned } from './LayoutLabels';
+import * as LayoutLabels from './LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+
+const constrainedTopY = (anchor: AnchorBox, element: AnchorElement) => {
+  return anchor.y - element.height;
+};
+const constrainedBottomY = (anchor: AnchorBox) => {
+  return anchor.y + anchor.height;
+};
+
+const middleX = (anchor: AnchorBox, element: AnchorElement) => {
+  return anchor.x + anchor.width / 2 - element.width / 2;
+};
 
 const pinAtTop: AnchorLayout = (
   anchor: AnchorBox,
@@ -12,12 +23,12 @@ const pinAtTop: AnchorLayout = (
 ) => {
   return NuSpotInfo(
     // cap the bounds.
-    anchor.x + anchor.width / 2 - element.width / 2,
-    anchor.y - element.height,
+    middleX(anchor, element),
+    constrainedTopY(anchor, element),
     bubbles.north(),
     Direction.north(),
     boundsRestriction(anchor, {}),
-    northPinned,
+    LayoutLabels.northPinned,
     true
   );
 };
@@ -29,12 +40,12 @@ const pinAtBottom: AnchorLayout = (
 ) => {
   return NuSpotInfo(
     // cap the bounds.
-    anchor.x + anchor.width / 2 - element.width / 2,
-    anchor.y + anchor.height,
+    middleX(anchor, element),
+    constrainedBottomY(anchor),
     bubbles.south(),
     Direction.south(),
     boundsRestriction(anchor, {}),
-    southPinned,
+    LayoutLabels.southPinned,
     true
   );
 };

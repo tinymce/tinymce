@@ -1,8 +1,7 @@
 import { Optional } from '@ephox/katamari';
-import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 import { Bubble } from '../layout/Bubble';
-import * as LayoutLabels from '../layout/LayoutLabels';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
 import { ReparteeOptions } from '../layout/SimpleLayout';
@@ -32,9 +31,8 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
 const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
-  Classes.remove(element, LayoutLabels.all);
   Classes.add(element, classInfo.on);
-  Classes.add(element, [ decision.label ]);
+  Attribute.set(element, 'data-mce-context-toolbar-location', decision.label);
 };
 
 /*

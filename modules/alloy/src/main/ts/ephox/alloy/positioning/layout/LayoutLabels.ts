@@ -21,29 +21,7 @@ const southPinned = 'tox-layout-pinned-s';
 
 const contextBarTransitionClass = 'tox-context-bar-layout-transition-animation';
 
-const all = [
-  southEast,
-  northEast,
-  southWest,
-  northWest,
-  south,
-  north,
-  east,
-  west,
-  southEastInner,
-  northEastInner,
-  southWestInner,
-  northWestInner,
-  southInner,
-  northInner,
-  eastInner,
-  westInner,
-  northPinned,
-  southPinned
-];
-
 export {
-  all,
   southEast,
   northEast,
   southWest,

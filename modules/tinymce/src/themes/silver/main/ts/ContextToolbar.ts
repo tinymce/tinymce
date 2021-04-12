@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, isElementTopAligned, Keying,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, PositionUtils, Keying,
   Layout, LayoutInside, MaxHeight, MaxWidth, PinnedLayout, Positioning
 } from '@ephox/alloy';
 
@@ -59,7 +59,7 @@ const getDesktopAnchorSpecLayouts = (contextbar: AlloyComponent) => {
   // and prefer that pinned layout to the other pinned layout
   const getPinnedLayouts = () => {
     // Something at the top will be anchored from its bottom value and grow upward
-    const isAlreadyAtTop = isElementTopAligned(contextbar.element);
+    const isAlreadyAtTop = PositionUtils.isElementTopAligned(contextbar.element);
 
     return isAlreadyAtTop ? [ PinnedLayout.pinAtTop, PinnedLayout.pinAtBottom ] : [ PinnedLayout.pinAtBottom, PinnedLayout.pinAtTop ];
   };

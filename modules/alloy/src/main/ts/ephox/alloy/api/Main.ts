@@ -27,7 +27,6 @@ import {
   AnchorSpec, HotspotAnchorSpec, Layouts, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec
 } from '../positioning/mode/Anchoring';
 import * as VerticalDir from '../positioning/mode/VerticalDir';
-import { isElementTopAligned } from '../positioning/view/PositionLocation';
 import * as FormTypes from '../ui/types/FormTypes';
 import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
 import * as MenuTypes from '../ui/types/MenuTypes';
@@ -51,6 +50,7 @@ import { Invalidating } from './behaviour/Invalidating';
 import { Keying, KeyingConfigSpec } from './behaviour/Keying';
 import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
+import * as PositionUtils from './behaviour/PositionUtils';
 import { Receiving } from './behaviour/Receiving';
 import { Reflecting } from './behaviour/Reflecting';
 import { Replacing } from './behaviour/Replacing';
@@ -252,7 +252,7 @@ export {
   Layout,
   LayoutInside,
   PinnedLayout,
-  isElementTopAligned,
+  PositionUtils,
   contextBarTransitionClass,
   LayoutTypes,
   Bubble,
