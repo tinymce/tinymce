@@ -152,7 +152,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
-    await pAssertPosition('top', -309);
+    await pAssertPosition('top', -40);
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyContentActions.keystroke(editor, Keys.enter());
