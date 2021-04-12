@@ -190,7 +190,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>) => 
       {
         type: 'custom',
         name: 'replaceall',
-        text: 'Replace All',
+        text: 'Replace all',
         disabled: true
       }
     ],
