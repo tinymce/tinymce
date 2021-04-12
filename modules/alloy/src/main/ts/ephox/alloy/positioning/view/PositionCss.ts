@@ -1,5 +1,8 @@
 import { Optional } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Class, Css, SugarElement } from '@ephox/sugar';
+import { contextBarTransitionClass } from '../layout/LayoutLabels';
+import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from './PositionLocation';
+import { RepositionDecision } from './Reposition';
 
 export interface PositionCss {
   readonly position: string;
@@ -23,16 +26,45 @@ const NuPositionCss = (
   bottom
 });
 
-const applyPositionCss = (element: SugarElement, position: PositionCss): void => {
+const applyPositionCss = (element: SugarElement, position: PositionCss, decision: Optional<RepositionDecision>): void => {
   const addPx = (num: number) => num + 'px';
 
-  Css.setOptions(element, {
+  const cssOptions = {
     position: Optional.some(position.position),
     left: position.left.map(addPx),
     top: position.top.map(addPx),
     right: position.right.map(addPx),
     bottom: position.bottom.map(addPx)
-  });
+  };
+
+  const changedFromTopToBottom = isElementTopAligned(element) && isDecisionBottomAligned(decision);
+  const changedFromBottomToTop = isElementBottomAligned(element) && isDecisionTopAligned(decision);
+
+  if (changedFromTopToBottom || changedFromBottomToTop) {
+    Css.set(element, 'position', 'absolute');
+
+    const getValue = (key: 'top' | 'left' | 'bottom' | 'right') => {
+      if (cssOptions[key].isSome()) {
+        return Optional.some(Css.get(element, key));
+      } else {
+        return Optional.none<string>();
+      }
+    };
+
+    const intermediateCssOptions = {
+      position: cssOptions.position,
+      top: getValue('top'),
+      right: getValue('right'),
+      bottom: getValue('bottom'),
+      left: getValue('left'),
+    };
+
+    Css.setOptions(element, intermediateCssOptions);
+    Class.add(element, contextBarTransitionClass);
+    Css.reflow(element);
+  }
+
+  Css.setOptions(element, cssOptions);
 };
 
 export {

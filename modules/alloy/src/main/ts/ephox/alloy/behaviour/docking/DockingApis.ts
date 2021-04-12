@@ -1,4 +1,4 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
@@ -13,7 +13,7 @@ const morphToStatic = (component: AlloyComponent, config: DockingConfig): void =
 };
 
 const morphToCoord = (component: AlloyComponent, config: DockingConfig, position: PositionCss): void => {
-  applyPositionCss(component.element, position);
+  applyPositionCss(component.element, position, Optional.none());
   const method = position.position === 'fixed' ? config.onDocked : config.onUndocked;
   method(component);
 };

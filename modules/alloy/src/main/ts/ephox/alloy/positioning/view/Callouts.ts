@@ -1,6 +1,8 @@
+import { Optional } from '@ephox/katamari';
 import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
 
 import { Bubble } from '../layout/Bubble';
+import * as LayoutLabels from '../layout/LayoutLabels';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
 import { ReparteeOptions } from '../layout/SimpleLayout';
@@ -30,7 +32,9 @@ const layout = (anchorBox: AnchorBox, element: SugarElement, bubbles: Bubble, op
 const setClasses = (element: SugarElement, decision: RepositionDecision): void => {
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
+  Classes.remove(element, LayoutLabels.all);
   Classes.add(element, classInfo.on);
+  Classes.add(element, [ decision.label ]);
 };
 
 /*
@@ -54,7 +58,7 @@ const setWidth = (element: SugarElement, decision: RepositionDecision, options: 
 const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  applyPositionCss(element, Origins.reposition(options.origin, decision));
+  applyPositionCss(element, Origins.reposition(options.origin, decision), Optional.some(decision));
 };
 
 export {

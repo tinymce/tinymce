@@ -150,7 +150,7 @@ const attempt = (candidate: SpotInfo, width: number, height: number, bounds: Box
 
   // Take special note that we don't use the futz values in the nofit case; whether this position is a good fit is separate
   // to ensuring that if we choose it the popup is actually on screen properly.
-  return originInBounds && sizeInBounds ? adt.fit(reposition) : adt.nofit(reposition, deltaW, deltaH);
+  return (originInBounds && sizeInBounds) || candidate.fitAnyway ? adt.fit(reposition) : adt.nofit(reposition, deltaW, deltaH);
 };
 
 /**

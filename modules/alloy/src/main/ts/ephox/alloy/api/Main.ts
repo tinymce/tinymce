@@ -18,13 +18,16 @@ import * as Bubble from '../positioning/layout/Bubble';
 
 import * as Layout from '../positioning/layout/Layout';
 import * as LayoutInside from '../positioning/layout/LayoutInside';
+import { contextBarTransitionClass } from '../positioning/layout/LayoutLabels';
 import * as LayoutTypes from '../positioning/layout/LayoutTypes';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import * as MaxWidth from '../positioning/layout/MaxWidth';
+import * as PinnedLayout from '../positioning/layout/PinnedLayout';
 import {
   AnchorSpec, HotspotAnchorSpec, Layouts, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec
 } from '../positioning/mode/Anchoring';
 import * as VerticalDir from '../positioning/mode/VerticalDir';
+import { isElementTopAligned } from '../positioning/view/PositionLocation';
 import * as FormTypes from '../ui/types/FormTypes';
 import * as ItemTypes from '../ui/types/ItemTypes'; // not sure if this is the right thing to expose, but we use it a lot?
 import * as MenuTypes from '../ui/types/MenuTypes';
@@ -248,6 +251,9 @@ export {
   // layout
   Layout,
   LayoutInside,
+  PinnedLayout,
+  isElementTopAligned,
+  contextBarTransitionClass,
   LayoutTypes,
   Bubble,
   MaxHeight,
