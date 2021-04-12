@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Obj, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -58,17 +58,33 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
+// Remove children nodes that are exactly the same as a parent node - name, attributes, styles
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
 
   if (merge) {
-    const root = editor.getBody(), elementUtils = ElementUtils(dom);
+    const root = editor.getBody();
+    const elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
-        if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
-          dom.remove(node, true);
+      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()])) {
+        const nodeStyles = dom.parseStyle(dom.getAttrib(node, 'style'));
+
+        for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
+          const parentStyles = dom.parseStyle(dom.getAttrib(parentNode, 'style'));
+
+          // Check if the parent has a style conflict that would prevent the child node from being safely removed,
+          // even if a exact node match could be found further up the tree
+          const styleConflict = Obj.find(parentStyles, (val, key) => Obj.get(nodeStyles, key).exists((nodeVal) => nodeVal !== val)).isSome();
+          if (styleConflict) {
+            break;
+          }
+
+          if (elementUtils.compare(parentNode, node)) {
+            dom.remove(node, true);
+            break;
+          }
         }
       }
     });

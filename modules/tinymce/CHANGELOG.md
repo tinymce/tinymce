@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The color picker dialog will now show an alert if it is submitted with an invalid hex color code #TINY-2814
 - Fixed a bug where the `TableModified` event was not fired when adding a table row via the Tab key #TINY-7006
 - Added missing type for `images_file_types` setting #GH-6607
+- The `editor.insertContent` API was incorrectly handling nested matching style `span` elements #TINY-6263
 - The HTML5 `small` element could not be removed when clearing text formatting #TINY-6633
 - Added HTML5 `audio` and `video` elements to the default alignment formats #TINY-6633
 - The Oxide button text transform variable was incorrectly using `capitalize` instead of `none`. Patch contributed by dakur #GH-6341
