@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 type Alignment = 'left' | 'center' | 'right' | 'justify';
 
-describe('browser.tinymce.core.delete.MediaAlignTest', () => {
+describe('browser.tinymce.core.fmt.MediaAlignTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
