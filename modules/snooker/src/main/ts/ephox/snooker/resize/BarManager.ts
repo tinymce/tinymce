@@ -102,7 +102,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     mutation.assign(target);
     Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
     Class.add(target, resizeBarDragging);
-    Css.set(target, 'opacity', '0.2');
+    Css.set(target, 'opacity', '1');
     resizing.go(wire.parent());
   };
 
