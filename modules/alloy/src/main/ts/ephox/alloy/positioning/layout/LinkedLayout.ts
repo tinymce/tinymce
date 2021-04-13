@@ -1,6 +1,7 @@
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
+import { LayoutLabels } from './LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 /*
@@ -27,7 +28,7 @@ const southeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   bubbles.southeast(),
   Direction.southeast(),
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
-  'link-layout-se',
+  LayoutLabels.southEastLinked,
   true
 );
 
@@ -37,9 +38,8 @@ const southwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   bubbles.southwest(),
   Direction.southwest(),
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
-  'link-layout-sw',
+  LayoutLabels.southWestLinked,
   true
-
 );
 
 const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -48,9 +48,8 @@ const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   bubbles.northeast(),
   Direction.northeast(),
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'link-layout-ne',
+  LayoutLabels.northEastLinked,
   true
-
 );
 
 const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -59,9 +58,8 @@ const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   bubbles.northwest(),
   Direction.northwest(),
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'link-layout-nw',
+  LayoutLabels.northWestLinked,
   true
-
 );
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest ];

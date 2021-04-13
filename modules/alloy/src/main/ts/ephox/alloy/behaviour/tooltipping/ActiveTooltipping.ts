@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
@@ -53,7 +53,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       state.setTooltip(popup);
       Attachment.attach(sink, popup);
       tooltipConfig.onShow(comp, popup);
-      Positioning.position(sink, tooltipConfig.anchor(comp), popup);
+      Positioning.position(sink, tooltipConfig.anchor(comp), popup, Optional.none());
     }
   };
 

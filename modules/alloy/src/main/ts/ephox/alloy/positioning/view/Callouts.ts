@@ -53,10 +53,10 @@ const setWidth = (element: SugarElement, decision: RepositionDecision, options: 
   maxWidthFunction(element, decision.maxWidth);
 };
 
-const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
+const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions, transitionAnimationClass: Optional<string>): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  applyPositionCss(element, Origins.reposition(options.origin, decision), Optional.some(decision));
+  applyPositionCss(element, Origins.reposition(options.origin, decision), Optional.some(decision), transitionAnimationClass);
 };
 
 export {

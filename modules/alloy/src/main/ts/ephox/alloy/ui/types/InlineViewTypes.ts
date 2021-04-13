@@ -23,6 +23,7 @@ export interface InlineViewDetail extends SingleSketchDetail {
   isExtraPart: (component: AlloyComponent, target: SugarElement) => boolean;
   lazySink: LazySink;
   eventOrder: Record<string, string[]>;
+  transitionAnimationClass: Optional<string>;
   fireDismissalEventInstead: Optional<{
     event: string;
   }>;
@@ -46,6 +47,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   fireDismissalEventInstead?: {
     event?: string;
   };
+  transitionAnimationClass?: Optional<string>;
   fireRepositionEventInstead?: {
     event?: string;
   };

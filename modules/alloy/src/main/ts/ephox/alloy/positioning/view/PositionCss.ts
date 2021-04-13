@@ -1,7 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Class, Css, SugarElement } from '@ephox/sugar';
 import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from '../../api/behaviour/PositionUtils';
-import { contextBarTransitionClass } from '../layout/LayoutLabels';
 import { RepositionDecision } from './Reposition';
 
 export interface PositionCss {
@@ -26,7 +25,7 @@ const NuPositionCss = (
   bottom
 });
 
-const applyPositionCss = (element: SugarElement, position: PositionCss, decision: Optional<RepositionDecision>): void => {
+const applyPositionCss = (element: SugarElement, position: PositionCss, decision: Optional<RepositionDecision>, transitionClass: Optional<string>): void => {
   const addPx = (num: number) => num + 'px';
 
   const cssOptions = {
@@ -37,32 +36,34 @@ const applyPositionCss = (element: SugarElement, position: PositionCss, decision
     bottom: position.bottom.map(addPx)
   };
 
-  const changedFromTopToBottom = isElementTopAligned(element) && isDecisionBottomAligned(decision);
-  const changedFromBottomToTop = isElementBottomAligned(element) && isDecisionTopAligned(decision);
+  transitionClass.each((transition) => {
+    const changedFromTopToBottom = isElementTopAligned(element) && isDecisionBottomAligned(decision);
+    const changedFromBottomToTop = isElementBottomAligned(element) && isDecisionTopAligned(decision);
 
-  if (changedFromTopToBottom || changedFromBottomToTop) {
-    Css.set(element, 'position', 'absolute');
+    if (changedFromTopToBottom || changedFromBottomToTop) {
+      Css.set(element, 'position', 'absolute');
 
-    const getValue = (key: 'top' | 'left' | 'bottom' | 'right') => {
-      if (cssOptions[key].isSome()) {
-        return Optional.some(Css.get(element, key));
-      } else {
-        return Optional.none<string>();
-      }
-    };
+      const getValue = (key: 'top' | 'left' | 'bottom' | 'right') => {
+        if (cssOptions[key].isSome()) {
+          return Optional.some(Css.get(element, key));
+        } else {
+          return Optional.none<string>();
+        }
+      };
 
-    const intermediateCssOptions = {
-      position: cssOptions.position,
-      top: getValue('top'),
-      right: getValue('right'),
-      bottom: getValue('bottom'),
-      left: getValue('left'),
-    };
+      const intermediateCssOptions = {
+        position: cssOptions.position,
+        top: getValue('top'),
+        right: getValue('right'),
+        bottom: getValue('bottom'),
+        left: getValue('left'),
+      };
 
-    Css.setOptions(element, intermediateCssOptions);
-    Class.add(element, contextBarTransitionClass);
-    Css.reflow(element);
-  }
+      Css.setOptions(element, intermediateCssOptions);
+      Class.add(element, transition);
+      Css.reflow(element);
+    }
+  });
 
   Css.setOptions(element, cssOptions);
 };

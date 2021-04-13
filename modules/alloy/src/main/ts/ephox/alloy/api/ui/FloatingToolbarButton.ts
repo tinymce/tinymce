@@ -47,7 +47,7 @@ const position = (button: AlloyComponent, toolbar: AlloyComponent, detail: Float
     overrides: {
       maxWidthFunction: MaxWidth.expandable()
     }
-  }, toolbar, bounds);
+  }, toolbar, bounds, Optional.none());
 };
 
 const setGroups = (button: AlloyComponent, toolbar: AlloyComponent, detail: FloatingToolbarButtonDetail, layouts: Layouts | undefined, groups: AlloySpec[]) => {

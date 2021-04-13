@@ -17,21 +17,21 @@ const cAddPopupToSinkCommon = (data: Record<string, any>, sink: AlloyComponent, 
 
 const cAddPopupToSink = (sinkName: string): NamedChain => NamedChain.bundle((data) => {
   const sink = data[sinkName];
-  const positioner = () => Positioning.position(sink, data.anchor, data.popup);
+  const positioner = () => Positioning.position(sink, data.anchor, data.popup, Optional.none());
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
 const cAddPopupToSinkWithin = (sinkName: string, elem: SugarElement): NamedChain => NamedChain.bundle((data) => {
   const sink = data[sinkName];
   const boxElement = Optional.some(elem);
-  const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement);
+  const positioner = () => Positioning.positionWithin(sink, data.anchor, data.popup, boxElement, Optional.none());
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 
 const cAddPopupToSinkWithinBounds = (sinkName: string, bounds: Bounds): NamedChain => NamedChain.bundle((data) => {
   const sink = data[sinkName];
   const optBounds = Optional.some(bounds);
-  const positioner = () => Positioning.positionWithinBounds(sink, data.anchor, data.popup, optBounds);
+  const positioner = () => Positioning.positionWithinBounds(sink, data.anchor, data.popup, optBounds, Optional.none());
   return cAddPopupToSinkCommon(data, sink, positioner);
 });
 

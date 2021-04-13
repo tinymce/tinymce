@@ -117,7 +117,7 @@ export default (): void => {
       Positioning.position(sink, {
         anchor: 'submenu',
         item
-      }, submenu);
+      }, submenu, Optional.none());
 
     },
 

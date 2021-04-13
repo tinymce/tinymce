@@ -74,7 +74,7 @@ export default (): void => {
             root: button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element,
             node: Optional.from(button.getSystem().getByUid(`inner-${id}-editor`).getOrDie().element),
             layouts
-          }, popup);
+          }, popup, Optional.none());
         }
       })
     ]

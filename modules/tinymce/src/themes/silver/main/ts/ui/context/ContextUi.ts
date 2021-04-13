@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, contextBarTransitionClass, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, GuiFactory, InlineView, Keying, NativeEvents
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
@@ -39,6 +39,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     fireDismissalEventInstead: {
       event: 'doNotDismissYet'
     },
+    transitionAnimationClass: Optional.some('tox-context-bar-layout-transition-animation'),
 
     onShow: (comp) => {
       stack.set([ ]);
@@ -53,7 +54,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (comp, se) => {
           if (se.event.raw.propertyName === 'top' || se.event.raw.propertyName === 'bottom') {
-            Class.remove(comp.element, contextBarTransitionClass);
+            // Class.remove(comp.element, contextBarTransitionClass);
           } else {
             Class.remove(comp.element, resizingClass);
             Css.remove(comp.element, 'width');

@@ -29,21 +29,21 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent): void => {
+const place = (_component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent, transitionAnimationClass: Optional<string>): void => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
-  SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides);
+  SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides, transitionAnimationClass);
 };
 
-const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent): void => {
-  positionWithin(component, posConfig, posState, anchor, placee, Optional.none());
+const position = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, transitionAnimationClass: Optional<string>): void => {
+  positionWithin(component, posConfig, posState, anchor, placee, Optional.none(), transitionAnimationClass);
 };
 
-const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>): void => {
+const positionWithin = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>, transitionAnimationClass: Optional<string>): void => {
   const boundsBox = boxElement.map(box);
-  return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox);
+  return positionWithinBounds(component, posConfig, posState, anchor, placee, boundsBox, transitionAnimationClass);
 };
 
-const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>): void => {
+const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningConfig, _posState: Stateless, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>, transitionAnimationClass: Optional<string>): void => {
   const anchorage: AnchorDetail<any> = ValueSchema.asRawOrDie('positioning anchor.info', AnchorSchema, anchor);
 
   // Preserve the focus as IE 11 loses it when setting visibility to hidden
@@ -66,7 +66,7 @@ const positionWithinBounds = (component: AlloyComponent, posConfig: PositioningC
 
     placer(component, anchorage, origin).each((anchoring) => {
       const doPlace = anchoring.placer.getOr(place);
-      doPlace(component, origin, anchoring, getBounds, placee);
+      doPlace(component, origin, anchoring, getBounds, placee, transitionAnimationClass);
     });
 
     oldVisibility.fold(() => {

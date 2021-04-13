@@ -1,44 +1,27 @@
-const southEast = 'tox-layout-se';
-const southWest = 'tox-layout-sw';
-const northEast = 'tox-layout-ne';
-const northWest = 'tox-layout-nw';
-const north = 'tox-layout-n';
-const south = 'tox-layout-s';
-const east = 'tox-layout-e';
-const west = 'tox-layout-w';
+export enum LayoutLabels {
+  southEast = 'layout-se',
+  southWest = 'layout-sw',
+  northEast = 'layout-ne',
+  northWest = 'layout-nw',
+  north = 'layout-n',
+  south = 'layout-s',
+  east = 'layout-e',
+  west = 'layout-w',
 
-const southEastInner = 'tox-layout-inner-se';
-const southWestInner = 'tox-layout-inner-sw';
-const northEastInner = 'tox-layout-inner-ne';
-const northWestInner = 'tox-layout-inner-nw';
-const northInner = 'tox-layout-inner-n';
-const southInner = 'tox-layout-inner-s';
-const eastInner = 'tox-layout-inner-e';
-const westInner = 'tox-layout-inner-w';
+  southEastInner = 'layout-inner-se',
+  southWestInner = 'layout-inner-sw',
+  northEastInner = 'layout-inner-ne',
+  northWestInner = 'layout-inner-nw',
+  northInner = 'layout-inner-n',
+  southInner = 'layout-inner-s',
+  eastInner = 'layout-inner-e',
+  westInner = 'layout-inner-w',
 
-const northPinned = 'tox-layout-pinned-n';
-const southPinned = 'tox-layout-pinned-s';
+  northPinned = 'layout-pinned-n',
+  southPinned = 'layout-pinned-s',
 
-const contextBarTransitionClass = 'tox-context-bar-layout-transition-animation';
-
-export {
-  southEast,
-  northEast,
-  southWest,
-  northWest,
-  south,
-  north,
-  east,
-  west,
-  southEastInner,
-  northEastInner,
-  southWestInner,
-  northWestInner,
-  southInner,
-  northInner,
-  eastInner,
-  westInner,
-  northPinned,
-  southPinned,
-  contextBarTransitionClass
-};
+  southEastLinked = 'link-layout-se',
+  southWestLinked = 'link-layout-sw',
+  northEastLinked = 'link-layout-ne',
+  northWestLinked = 'link-layout-nw'
+}

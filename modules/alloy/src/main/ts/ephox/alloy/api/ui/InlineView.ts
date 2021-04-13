@@ -67,25 +67,25 @@ const makeMenu = (detail: InlineViewDetail, menuSandbox: AlloyComponent, anchor:
       return Optional.some<boolean>(true);
     },
 
-    onOpenMenu: (tmenu, menu) => {
-      Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds());
+    onOpenMenu: (_tmenu, menu) => {
+      Positioning.positionWithinBounds(lazySink().getOrDie(), anchor, menu, getBounds(), detail.transitionAnimationClass);
     },
 
-    onOpenSubmenu: (tmenu, item, submenu, triggeringPaths) => {
+    onOpenSubmenu: (_tmenu, item, submenu, triggeringPaths) => {
       const sink = lazySink().getOrDie();
       Positioning.position(sink, {
         anchor: 'submenu',
         item,
         ...getSubmenuLayouts(triggeringPaths)
-      }, submenu);
+      }, submenu, detail.transitionAnimationClass);
     },
 
-    onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
+    onRepositionMenu: (_tmenu, primaryMenu, submenuTriggers) => {
       const sink = lazySink().getOrDie();
-      Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds());
+      Positioning.positionWithinBounds(sink, anchor, primaryMenu, getBounds(), detail.transitionAnimationClass);
       Arr.each(submenuTriggers, (st) => {
         const submenuLayouts = getSubmenuLayouts(st.triggeringPath);
-        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu);
+        Positioning.position(sink, { anchor: 'submenu', item: st.triggeringItem, ...submenuLayouts }, st.triggeredMenu, detail.transitionAnimationClass);
       });
     }
   });
@@ -109,7 +109,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
   };
   const showWithinBounds = (sandbox: AlloyComponent, anchor: AnchorSpec, thing: AlloySpec, getBounds: () => Optional<Boxes.Bounds>) => {
     const sink = detail.lazySink(sandbox).getOrDie();
-    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, getBounds()));
+    Sandboxing.openWhileCloaked(sandbox, thing, () => Positioning.positionWithinBounds(sink, anchor, sandbox, getBounds(), detail.transitionAnimationClass));
     Representing.setValue(sandbox, Optional.some({
       mode: 'position',
       anchor,
@@ -146,7 +146,7 @@ const factory: SingleSketchFactory<InlineViewDetail, InlineViewSpec> = (detail: 
             break;
           case 'position':
             const sink = detail.lazySink(sandbox).getOrDie();
-            Positioning.positionWithinBounds(sink, state.anchor, sandbox, state.getBounds());
+            Positioning.positionWithinBounds(sink, state.anchor, sandbox, state.getBounds(), detail.transitionAnimationClass);
             break;
         }
       });
@@ -228,7 +228,8 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
     ]),
     FieldSchema.defaulted('getRelated', Optional.none),
     FieldSchema.defaulted('isExtraPart', Fun.never),
-    FieldSchema.defaulted('eventOrder', Optional.none)
+    FieldSchema.defaulted('eventOrder', Optional.none),
+    FieldSchema.defaulted('transitionAnimationClass', Optional.none())
   ],
   factory,
   apis: {
