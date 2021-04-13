@@ -1,3 +1,5 @@
+import { SugarElement } from '@ephox/sugar';
+import { isElementBottomAligned, isElementTopAligned } from '../../api/behaviour/PositionUtils';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
@@ -51,4 +53,18 @@ const pinAtBottom: AnchorLayout = (
   );
 };
 
-export { pinAtTop, pinAtBottom };
+const contextualPinnedOrder = (element: SugarElement<any>, whenAtTop: () => AnchorLayout[], whenAtBottom: () => AnchorLayout[], whenDefault: () => AnchorLayout[]): AnchorLayout[] => {
+  if (isElementTopAligned(element)) {
+    return whenAtTop();
+  } else if (isElementBottomAligned(element)) {
+    return whenAtBottom();
+  } else {
+    return whenDefault();
+  }
+};
+
+export {
+  pinAtTop,
+  pinAtBottom,
+  contextualPinnedOrder
+};

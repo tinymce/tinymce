@@ -4,7 +4,7 @@ import { LayoutLabels } from '../../positioning/layout/LayoutLabels';
 import { RepositionDecision } from '../../positioning/view/Reposition';
 
 const isElementTopAligned = (element: SugarElement<any>): boolean => {
-  const attribute = Attribute.get(element, 'data-mce-context-toolbar-location');
+  const attribute = Attribute.get(element, 'data-alloy-context-toolbar-location');
 
   return Arr.contains([ LayoutLabels.north, LayoutLabels.northInner, LayoutLabels.northPinned ], attribute);
 };
@@ -14,7 +14,7 @@ const isDecisionTopAligned = (decisionOpt: Optional<RepositionDecision>): boolea
 };
 
 const isElementBottomAligned = (element: SugarElement<any>): boolean => {
-  const attribute = Attribute.get(element, 'data-mce-context-toolbar-location');
+  const attribute = Attribute.get(element, 'data-alloy-context-toolbar-location');
 
   return Arr.contains([ LayoutLabels.south, LayoutLabels.southInner, LayoutLabels.southPinned ], attribute);
 };

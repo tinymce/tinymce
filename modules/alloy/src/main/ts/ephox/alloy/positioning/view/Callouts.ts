@@ -32,7 +32,7 @@ const setClasses = (element: SugarElement, decision: RepositionDecision): void =
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
-  Attribute.set(element, 'data-mce-context-toolbar-location', decision.label);
+  Attribute.set(element, 'data-alloy-context-toolbar-location', decision.label);
 };
 
 /*
