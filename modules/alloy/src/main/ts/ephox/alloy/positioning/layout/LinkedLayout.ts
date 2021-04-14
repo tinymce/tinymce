@@ -29,7 +29,7 @@ const southeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   Direction.southeast(),
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
   LayoutLabels.southEastLinked,
-  true
+  false
 );
 
 const southwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -39,7 +39,7 @@ const southwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   Direction.southwest(),
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
   LayoutLabels.southWestLinked,
-  true
+  false
 );
 
 const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -49,7 +49,7 @@ const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   Direction.northeast(),
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
   LayoutLabels.northEastLinked,
-  true
+  false
 );
 
 const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -59,7 +59,7 @@ const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   Direction.northwest(),
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
   LayoutLabels.northWestLinked,
-  true
+  false
 );
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest ];

@@ -15,13 +15,14 @@ interface TestDecisionSpec {
 }
 
 UnitTest.test('BounderMenuTest', () => {
-  const check = (expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
+  const check = (testLabel: string, expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    assert.eq(expected.label, actual.label);
-    assert.eq(expected.x, actual.x);
-    assert.eq(expected.y, actual.y);
+    assert.eq(expected.label, actual.label, 'Expected ' + expected.label + ', got ' + actual.label + ' for test ' + testLabel +
+      ' (with bounds expected to be x=' + expected.x + ', y=' + expected.y + ' for anchor width=' + anchor.width + ' height=' + anchor.height + ' x=' + anchor.x + ' y=' + anchor.y + ')');
+    assert.eq(expected.x, actual.x, testLabel);
+    assert.eq(expected.y, actual.y, testLabel);
     if (expected.candidateYforTest !== undefined) {
-      assert.eq(expected.candidateYforTest, actual.candidateYforTest);
+      assert.eq(expected.candidateYforTest, actual.candidateYforTest, testLabel);
     }
   };
 
@@ -29,13 +30,13 @@ UnitTest.test('BounderMenuTest', () => {
   const four = [ LinkedLayout.southeast, LinkedLayout.southwest, LinkedLayout.northeast, LinkedLayout.northwest ];
 
   // empty input array is now invalid, just returns anchor coordinates
-  check({
+  check('none', {
     label: 'none',
     x: 0,
     y: 0
   }, [], bounds(0, 0, 10, 10), bounds(0, 0, 50, 50), Bubble.fallback(), bounds(0, 0, 1000, 1000));
 
-  check({
+  check('none', {
     label: 'none',
     x: 100,
     y: 0
@@ -47,56 +48,56 @@ UnitTest.test('BounderMenuTest', () => {
   const bubb = Bubble.fallback();
 
   // Southeast.
-  check({
+  check('SouthEast', {
     label: LayoutLabels.southEastLinked,
     x: 100 + 2,
     y: 55
   }, four, bounds(100, 55, 2, 2), panelBox, bubb, view);
 
   // Southwest.
-  check({
+  check('SouthWest', {
     label: LayoutLabels.southWestLinked,
     x: 320 - 100,
     y: 55
   }, four, bounds(320, 55, 2, 2), panelBox, bubb, view);
 
   // Northeast.
-  check({
+  check('NorthEast', {
     label: LayoutLabels.northEastLinked,
     x: 140 + 2,
     y: 235 + 2 - 75
   }, four, bounds(140, 235, 2, 2), panelBox, bubb, view);
 
   // Northwest.
-  check({
+  check('NorthWest', {
     label: LayoutLabels.northWestLinked,
     x: 320 - 100,
     y: 235 + 2 - 75
   }, four, bounds(320, 235, 2, 2), panelBox, bubb, view);
 
   // All fit -> southeast because of order of preference.
-  check({
+  check('All fit, Southeast due to order preference', {
     label: LayoutLabels.southEastLinked,
     x: 270 + 2,
     y: 100
   }, four, bounds(270, 100, 2, 2), panelBox, bubb, view);
 
   // None near top left -> best fit is southeast
-  check({
+  check('None near top left, best fit is southeast', {
     label: LayoutLabels.southEastLinked,
     x: 55 + 2,
     y: 55
   }, four, bounds(55, 55, 2, 2), bigPanel, bubb, view);
 
   // None near top right -> best fit is southwest
-  check({
+  check('None near top right, best fit is southwest', {
     label: LayoutLabels.southWestLinked,
     x: 350 - 75,
     y: 55
   }, four, bounds(350, 55, 2, 2), bigPanel, bubb, view);
 
   // None near bottom left -> best fit is northeast
-  check({
+  check('None near bottom left, best fit is northeast', {
     label: LayoutLabels.northEastLinked,
     x: 55 + 2,
     y: 50,
@@ -104,7 +105,7 @@ UnitTest.test('BounderMenuTest', () => {
   }, four, bounds(55, 200, 2, 2), bigPanel, bubb, view);
 
   // None near bottom right -> best fit is northwest
-  check({
+  check('None near bottom right, best fit is northwest', {
     label: LayoutLabels.northWestLinked,
     x: 350 - 75,
     y: 50,
@@ -112,35 +113,35 @@ UnitTest.test('BounderMenuTest', () => {
   }, four, bounds(350, 200, 2, 2), bigPanel, bubb, view);
 
   // Southeast (1px short on x and y).
-  check({
+  check('Southeast, 1px short on x and y', {
     label: LayoutLabels.southEastLinked,
     x: 350 + 50 - 2 - 101 + 2,
     y: 220 + 50 - 76
   }, four, bounds(350 + 50 - 2 - 101, 220 + 50 - 76, 2, 2), panelBox, bubb, view);
 
   // Southeast (exactly for x and y).
-  check({
+  check('Southeast, exactly for x and y', {
     label: LayoutLabels.southEastLinked,
     x: 350 + 50 - 2 - 100 + 2,
     y: 220 + 50 - 75
   }, four, bounds(350 + 50 - 2 - 100, 220 + 50 - 75, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Southwest (1px too far on x).
-  check({
+  check('Southeast, southwest, 1px too far on x', {
     label: LayoutLabels.southWestLinked,
     x: 350 + 50 - 2 - 99 - 100,
     y: 220 + 50 - 75
   }, four, bounds(350 + 50 - 2 - 99, 220 + 50 - 75, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Northeast (1px too far on y).
-  check({
+  check('Southeast, northeast, 1px too far on y', {
     label: LayoutLabels.northEastLinked,
     x: 350 + 50 - 100,
     y: 220 + 50 - 74 + 2 - 75
   }, four, bounds(350 + 50 - 2 - 100, 220 + 50 - 74, 2, 2), panelBox, bubb, view);
 
   // Southeast -> Northwest (1px too far on x and y).
-  check({
+  check('Southeast, Northwest, 1px too far on x and y', {
     label: LayoutLabels.northWestLinked,
     x: 350 + 50 - 2 - 99 - 100,
     y: 220 + 50 - 74 + 2 - 75
