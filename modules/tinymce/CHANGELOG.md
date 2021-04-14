@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
-- Changed the apperance of the row & column resize handle in the table plugin
+- Changed the apperance of the row & column resize handles in the table plugin
 
 ### Fixed
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
