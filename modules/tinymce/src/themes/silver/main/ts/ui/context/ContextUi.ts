@@ -54,7 +54,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (comp, se) => {
           if (se.event.raw.propertyName === 'top' || se.event.raw.propertyName === 'bottom') {
-            // Class.remove(comp.element, contextBarTransitionClass);
+            Class.remove(comp.element, 'tox-context-bar-layout-transition-animation');
           } else {
             Class.remove(comp.element, resizingClass);
             Css.remove(comp.element, 'width');
