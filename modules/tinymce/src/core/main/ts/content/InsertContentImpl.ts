@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -58,26 +58,54 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
+const hasInheritableStyles = (styles: string[]): boolean => {
+  // TODO: <Jira> Figure out what else should go in the nonInheritableStyles list
+  // spans which have these styles should not get merged as they have non-inherited properties
+  const nonInheritableStyles = [ 'margin', 'padding', 'border', 'background' ];
+  return Arr.forall(styles, (nodeStyle) => Arr.forall(nonInheritableStyles, (nonInheritableStyle) => !Strings.startsWith(nodeStyle, nonInheritableStyle)));
+};
+
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
+  // TODO: <Jira> Figure out what else should be added
+  const shorthandCssProps = [ 'font', 'text-decoration', 'text-emphasis' ];
 
   if (merge) {
     const root = editor.getBody();
     const elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()])) {
-        const nodeStyles = dom.parseStyle(dom.getAttrib(node, 'style'));
+      const nodeStyles = dom.parseStyle(dom.getAttrib(node, 'style'));
+      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]) && hasInheritableStyles(Obj.keys(nodeStyles))) {
+        const computedNodeStyles = Obj.map(nodeStyles, (_val, key) => dom.getStyle(node, key, true));
 
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
-          const parentStyles = dom.parseStyle(dom.getAttrib(parentNode, 'style'));
+          const parentNodeStyles = dom.parseStyle(dom.getAttrib(parentNode, 'style'));
 
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const styleConflict = Obj.find(parentStyles, (val, key) => Obj.get(nodeStyles, key).exists((nodeVal) => nodeVal !== val)).isSome();
-          if (styleConflict) {
+          const hasStyleConflict = Obj.find(computedNodeStyles, (val, nodeStyleProp) => {
+            // If parent has a longhand property e.g. margin-left but the child (node) style is margin, need to get the margin-left value of node to be able to do a proper comparison
+            // This is is because getting the computed style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values
+            if (!Obj.has(parentNodeStyles, nodeStyleProp) && Arr.exists(shorthandCssProps, (prop) => nodeStyleProp === prop)) {
+              const longhandProps = Obj.filter(
+                parentNodeStyles,
+                (_parentVal, parentKey) => Arr.exists(shorthandCssProps, (prop) => Strings.startsWith(parentKey, prop))
+              );
+              return Arr.exists(Obj.keys(longhandProps), (longhandProp) => {
+                const nodeComputed = dom.getStyle(node, longhandProp, true);
+                const parentComputed = dom.getStyle(parentNode, longhandProp, true);
+                return nodeComputed !== '' && parentComputed !== '' && nodeComputed !== parentComputed;
+              });
+            } else {
+              const parentComputedStyle = dom.getStyle(parentNode, nodeStyleProp, true);
+              return parentComputedStyle !== '' && parentComputedStyle !== val;
+            }
+          }).isSome();
+
+          if (hasStyleConflict) {
             break;
           }
 
