@@ -1,152 +1,176 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
-import { LegacyUnit, TinyLoader } from '@ephox/mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
+import { assert } from 'chai';
+import Editor from 'tinymce/core/api/Editor';
 
-import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', (success, failure) => {
-    const suite = LegacyUnit.createSuite();
-    const formatsCell = Cell<any>({});
+describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
+  const formatsCell = Cell<any>({});
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'legacyoutput',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce',
+    font_formats: 'Arial=arial,helvetica,sans-serif;',
+    setup: (editor) => {
+      // Store the formats on `PostRender`, which is fired before the initial editor content is loaded
+      editor.on('PostRender', () => {
+        formatsCell.set({ ...editor.formatter.get() });
+      });
+    }
+  }, [ Theme ]);
 
-    Plugin();
-    Theme();
+  it('TBA: Setting overrides', () => {
+    const editor = hook.editor();
+    assert.equal(editor.getParam('inline_styles'), false);
+    assert.equal(editor.getParam('fontsize_formats'), '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7');
+    assert.equal(editor.getParam('font_formats'), 'Arial=arial,helvetica,sans-serif;');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Setting overrides', (editor) => {
-      LegacyUnit.equal(editor.getParam('inline_styles'), false);
-      LegacyUnit.equal(editor.getParam('fontsize_formats'), '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7');
-      LegacyUnit.equal(editor.getParam('font_formats'), 'Arial=arial,helvetica,sans-serif;');
-    });
+  it('TBA: Font color', () => {
+    const editor = hook.editor();
+    editor.focus();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Font color', (editor) => {
-      editor.focus();
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('forecolor', false, '#FF0000');
-      LegacyUnit.equal(editor.getContent().toLowerCase(), '<p><font color="#ff0000">text</font></p>');
-    });
+    editor.execCommand('forecolor', false, '#ff0000');
+    TinyAssertions.assertContent(editor, '<p><font color="#ff0000">text</font></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Font size', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('fontsize', false, 7);
-      LegacyUnit.equal(editor.getContent(), '<p><font size="7">text</font></p>');
-    });
+  it('TBA: Font size', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Font face', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('fontname', false, 'times');
-      LegacyUnit.equal(editor.getContent(), '<p><font face="times">text</font></p>');
-    });
+    editor.execCommand('fontsize', false, 7);
+    TinyAssertions.assertContent(editor, '<p><font size="7">text</font></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Bold', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('bold');
-      LegacyUnit.equal(editor.getContent(), '<p><b>text</b></p>');
-    });
+  it('TBA: Font face', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Italic', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('italic');
-      LegacyUnit.equal(editor.getContent(), '<p><i>text</i></p>');
-    });
+    editor.execCommand('fontname', false, 'times');
+    TinyAssertions.assertContent(editor, '<p><font face="times">text</font></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Underline', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('underline');
-      LegacyUnit.equal(editor.getContent(), '<p><u>text</u></p>');
-    });
+  it('TBA: Bold', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Strikethrough', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('strikethrough');
-      LegacyUnit.equal(editor.getContent(), '<p><strike>text</strike></p>');
-    });
+    editor.execCommand('bold');
+    TinyAssertions.assertContent(editor, '<p><b>text</b></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifyleft', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('justifyleft');
-      LegacyUnit.equal(editor.getContent(), '<p align="left">text</p>');
-    });
+  it('TBA: Italic', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifycenter', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('justifycenter');
-      LegacyUnit.equal(editor.getContent(), '<p align="center">text</p>');
-    });
+    editor.execCommand('italic');
+    TinyAssertions.assertContent(editor, '<p><i>text</i></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifyright', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('justifyright');
-      LegacyUnit.equal(editor.getContent(), '<p align="right">text</p>');
-    });
+  it('TBA: Underline', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifyfull', (editor) => {
-      editor.setContent('<p>text</p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 4);
-      editor.execCommand('justifyfull');
-      LegacyUnit.equal(editor.getContent(), '<p align="justify">text</p>');
-    });
+    editor.execCommand('underline');
+    TinyAssertions.assertContent(editor, '<p><u>text</u></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Justifycenter image', (editor) => {
-      editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
-      LegacyUnit.setSelection(editor, 'p', 0);
-      editor.execCommand('justifycenter');
-      LegacyUnit.equal(editor.getContent(), '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
-    });
+  it('TBA: Strikethrough', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TBA: LegacyOutput: Remove text color', (editor) => {
-      editor.setContent('<p><font color="red">text</font></p>');
-      LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
-      editor.execCommand('mceRemoveTextcolor', 'forecolor');
-      LegacyUnit.equal(editor.getContent(), '<p>text</p>');
-    });
+    editor.execCommand('strikethrough');
+    TinyAssertions.assertContent(editor, '<p><strike>text</strike></p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Remove background color', (editor) => {
-      editor.setContent('<p><font style="background-color: red">text</font></p>');
-      LegacyUnit.setSelection(editor, 'font', 0, 'font', 4);
-      editor.execCommand('mceRemoveTextcolor', 'hilitecolor');
-      LegacyUnit.equal(editor.getContent(), '<p>text</p>');
-    });
+  it('TBA: Justifyleft', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    suite.test('TestCase-TINY-4741: LegacyOutput: Convert bold to span if styling attributes are present on format removal', (editor) => {
-      editor.setContent('<p><b class="abc" style="color: red; font-size: 20px;" data-test="2">text</b></p>');
-      LegacyUnit.setSelection(editor, 'b', 0, 'b', 4);
-      editor.execCommand('bold');
-      LegacyUnit.equal(editor.getContent(), '<p><span class="abc" style="color: red; font-size: 20px;">text</span></p>');
-    });
+    editor.execCommand('justifyleft');
+    TinyAssertions.assertContent(editor, '<p align="left">text</p>');
+  });
 
-    suite.test('TestCase-TBA: LegacyOutput: Formats registered before loading initial content', () => {
-      const formats = formatsCell.get();
-      LegacyUnit.equal(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-      LegacyUnit.equal(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-      LegacyUnit.equal(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-      LegacyUnit.equal(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
-    });
+  it('TBA: Justifycenter', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      Pipeline.async({}, Log.steps('TBA', 'LegacyOutput: Test legacy formatting', suite.toSteps(editor)), onSuccess, onFailure);
-    }, {
-      plugins: 'legacyoutput',
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce',
-      font_formats: 'Arial=arial,helvetica,sans-serif;',
-      setup: (editor) => {
-        // Store the formats on `PostRender`, which is fired before the initial editor content is loaded
-        editor.on('PostRender', () => {
-          formatsCell.set({ ...editor.formatter.get() });
-        });
-      }
-    }, success, failure);
-  }
-);
+    editor.execCommand('justifycenter');
+    TinyAssertions.assertContent(editor, '<p align="center">text</p>');
+  });
+
+  it('TBA: Justifyright', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
+
+    editor.execCommand('justifyright');
+    TinyAssertions.assertContent(editor, '<p align="right">text</p>');
+  });
+
+  it('TBA: Justifyfull', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>text</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
+
+    editor.execCommand('justifyfull');
+    TinyAssertions.assertContent(editor, '<p align="justify">text</p>');
+  });
+
+  it('TBA: Justifycenter image', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+
+    editor.execCommand('justifycenter');
+    TinyAssertions.assertContent(editor, '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
+  });
+
+  it('TBA: Remove text color', () => {
+    const editor = hook.editor();
+    const format: any = 'forecolor';
+    editor.setContent('<p><font color="red">text</font></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0, 0 ], 4);
+
+    editor.execCommand('mceRemoveTextcolor', format);
+    TinyAssertions.assertContent(editor, '<p>text</p>');
+  });
+
+  it('TBA: Remove background color', () => {
+    const editor = hook.editor();
+    const format: any = 'hilitecolor';
+    editor.setContent('<p><font style="background-color: red">text</font></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0, 0 ], 4);
+
+    editor.execCommand('mceRemoveTextcolor', format);
+    TinyAssertions.assertContent(editor, '<p>text</p>');
+  });
+
+  it('TINY-4741: Convert bold to span if styling attributes are present on format removal', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><b class="abc" style="color: red; font-size: 20px;" data-test="2">text</b></p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0, 0 ], 4);
+
+    editor.execCommand('bold');
+    TinyAssertions.assertContent(editor, '<p><span class="abc" style="color: red; font-size: 20px;">text</span></p>');
+  });
+
+  it('TBA: Formats registered before loading initial content', () => {
+    const formats = formatsCell.get();
+    assert.deepInclude(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepInclude(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepInclude(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepInclude(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
+  });
+});
