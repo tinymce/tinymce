@@ -77,33 +77,34 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
     const elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      const nodeStyles = dom.parseStyle(dom.getAttrib(node, 'style'));
-      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]) && hasInheritableStyles(Obj.keys(nodeStyles))) {
-        const computedNodeStyles = Obj.map(nodeStyles, (_val, key) => dom.getStyle(node, key, true));
-
+      const nodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(node, 'style')));
+      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]) && hasInheritableStyles(nodeStyleProps)) {
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
-          const parentNodeStyles = dom.parseStyle(dom.getAttrib(parentNode, 'style'));
+          const parentNodeProps = Obj.keys(dom.parseStyle(dom.getAttrib(parentNode, 'style')));
 
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const hasStyleConflict = Obj.find(computedNodeStyles, (val, nodeStyleProp) => {
+          const hasStyleConflict = Arr.exists(nodeStyleProps, (nodeStyleProp) => {
             // If parent has a longhand property e.g. margin-left but the child (node) style is margin, need to get the margin-left value of node to be able to do a proper comparison
-            // This is is because getting the computed style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values
-            if (!Obj.has(parentNodeStyles, nodeStyleProp) && Arr.exists(shorthandCssProps, (prop) => nodeStyleProp === prop)) {
-              const longhandProps = Obj.filter(
-                parentNodeStyles,
-                (_parentVal, parentKey) => Arr.exists(shorthandCssProps, (prop) => Strings.startsWith(parentKey, prop))
+            // This is is because getting the style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values or empty string depending on the browser
+            const propExists = Arr.exists(parentNodeProps, (parentNodeProp) => parentNodeProp === nodeStyleProp);
+            const isShorthand = Arr.exists(shorthandCssProps, (prop) => nodeStyleProp === prop);
+            if (!propExists && isShorthand) {
+              const longhandProps = Arr.filter(
+                parentNodeProps,
+                (parentNodeProp) => Arr.exists(shorthandCssProps, (prop) => Strings.startsWith(parentNodeProp, prop))
               );
-              return Arr.exists(Obj.keys(longhandProps), (longhandProp) => {
-                const nodeComputed = dom.getStyle(node, longhandProp, true);
-                const parentComputed = dom.getStyle(parentNode, longhandProp, true);
-                return nodeComputed !== '' && parentComputed !== '' && nodeComputed !== parentComputed;
+              return Arr.exists(longhandProps, (longhandProp) => {
+                const nodeValue = dom.getStyle(node, longhandProp);
+                const parentValue = dom.getStyle(parentNode, longhandProp);
+                return nodeValue !== '' && parentValue !== '' && nodeValue !== parentValue;
               });
             } else {
-              const parentComputedStyle = dom.getStyle(parentNode, nodeStyleProp, true);
-              return parentComputedStyle !== '' && parentComputedStyle !== val;
+              const nodeValue = dom.getStyle(node, nodeStyleProp);
+              const parentValue = dom.getStyle(parentNode, nodeStyleProp);
+              return parentValue !== '' && parentValue !== nodeValue;
             }
-          }).isSome();
+          });
 
           if (hasStyleConflict) {
             break;
