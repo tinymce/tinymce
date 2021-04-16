@@ -49,19 +49,6 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     ));
   });
 
-  it('TINY-6400: render image_class_list as Dialog type "panel"', async () => {
-    const editor = hook.editor();
-    editor.settings.image_caption = false;
-    editor.execCommand('mceImage');
-    const dialog = await TinyUiActions.pWaitForDialog(editor);
-    const expected = {
-      ['.tox-form__group button[aria-label="Class"]']: 1,
-      ['.tox-form__grid--2col button[aria-label="Class"]']: 0
-    };
-    Assertions.assertPresence('Does not have columns for the class', expected, dialog);
-    delete editor.settings.image_caption;
-  });
-
   it('TINY-6400: render image_class_list and image_caption as Dialog type "group"', async () => {
     const editor = hook.editor();
     editor.execCommand('mceImage');
@@ -72,5 +59,20 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     };
 
     Assertions.assertPresence('Does have columns for the class', expected, dialog);
+    TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
+  });
+
+  it('TINY-6400: render image_class_list as Dialog type "panel"', async () => {
+    const editor = hook.editor();
+    editor.settings.image_caption = false;
+    editor.execCommand('mceImage');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    const expected = {
+      ['.tox-form__group button[aria-label="Class"]']: 1,
+      ['.tox-form__grid--2col button[aria-label="Class"]']: 0
+    };
+    Assertions.assertPresence('Does not have columns for the class', expected, dialog);
+    TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
+    delete editor.settings.image_caption;
   });
 });
