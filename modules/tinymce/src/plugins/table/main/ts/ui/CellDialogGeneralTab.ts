@@ -59,7 +59,7 @@ const children: Dialog.BodyComponentSpec[] = [
   {
     name: 'halign',
     type: 'listbox',
-    label: 'H Align',
+    label: 'Horizontal align',
     items: [
       { text: 'None', value: '' },
       { text: 'Left', value: 'left' },
@@ -70,7 +70,7 @@ const children: Dialog.BodyComponentSpec[] = [
   {
     name: 'valign',
     type: 'listbox',
-    label: 'V Align',
+    label: 'Vertical align',
     items: [
       { text: 'None', value: '' },
       { text: 'Top', value: 'top' },
