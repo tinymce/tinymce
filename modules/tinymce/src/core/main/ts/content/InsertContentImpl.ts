@@ -59,8 +59,8 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
 };
 
 const hasInheritableStyles = (styles: string[]): boolean => {
-  // TODO: <Jira> Figure out what else should go in the nonInheritableStyles list
-  // spans which have these styles should not get merged as they have non-inherited properties
+  // TINY-7326: Figure out what else should go in the nonInheritableStyles list
+  // Elements which have these styles should not get merged as they have non-inherited properties
   const nonInheritableStyles = [ 'margin', 'padding', 'border', 'background' ];
   return Arr.forall(styles, (nodeStyle) => Arr.forall(nonInheritableStyles, (nonInheritableStyle) => !Strings.startsWith(nodeStyle, nonInheritableStyle)));
 };
@@ -69,7 +69,7 @@ const hasInheritableStyles = (styles: string[]): boolean => {
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
-  // TODO: <Jira> Figure out what else should be added
+  // TINY-7326: Figure out what else should be added
   const shorthandCssProps = [ 'font', 'text-decoration', 'text-emphasis' ];
 
   if (merge) {

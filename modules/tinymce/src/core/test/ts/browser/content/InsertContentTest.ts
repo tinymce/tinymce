@@ -14,8 +14,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     disable_nodechange: true,
     entities: 'raw',
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
-    content_style: '.red { color: red; background-color: red; } .blue { color: blue; background-color: blue; }'
+    base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
 
   it('TBA: insertAtCaret - i inside text, converts to em', () => {
