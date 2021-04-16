@@ -16,11 +16,16 @@ interface TestDecisionSpec {
 
 UnitTest.test('BounderMenuTest', () => {
   const check = (testLabel: string, expected: TestDecisionSpec, preference: AnchorLayout[], anchor: AnchorBox, panel: AnchorElement, bubbles: Bubble.Bubble, bounds: Bounds) => {
+    const getExpected = (expected: string | number, actual: string | number) => {
+      return `For test ${testLabel}, expected ${expected}, got ${actual}`;
+    };
+
     const actual = Bounder.attempts(preference, anchor, panel, bubbles, bounds);
-    assert.eq(expected.label, actual.label, 'Expected ' + expected.label + ', got ' + actual.label + ' for test ' + testLabel +
-      ' (with bounds expected to be x=' + expected.x + ', y=' + expected.y + ' for anchor width=' + anchor.width + ' height=' + anchor.height + ' x=' + anchor.x + ' y=' + anchor.y + ')');
-    assert.eq(expected.x, actual.x, testLabel);
-    assert.eq(expected.y, actual.y, testLabel);
+
+    assert.eq(expected.label, actual.label, getExpected(expected.label, actual.label));
+    assert.eq(expected.x, actual.x, getExpected(expected.x, actual.x));
+    assert.eq(expected.y, actual.y, getExpected(expected.y, actual.y));
+
     if (expected.candidateYforTest !== undefined) {
       assert.eq(expected.candidateYforTest, actual.candidateYforTest, testLabel);
     }

@@ -1,4 +1,4 @@
-export enum LayoutLabels {
+export const enum LayoutLabels {
   southEast = 'layout-se',
   southWest = 'layout-sw',
   northEast = 'layout-ne',

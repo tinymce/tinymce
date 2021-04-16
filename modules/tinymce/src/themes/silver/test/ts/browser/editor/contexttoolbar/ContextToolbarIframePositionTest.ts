@@ -151,7 +151,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     const editor = hook.editor();
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
-    await UiFinder.pWaitForVisible('Waiting for toolbar to appear to top inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear to bottom inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
     await pAssertPosition('top', 0);
     TinySelections.setCursor(editor, [ 0 ], 1);
     TinyContentActions.keystroke(editor, Keys.enter());

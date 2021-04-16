@@ -57,21 +57,23 @@ const getDesktopAnchorSpecLayouts = (contextbar: AlloyComponent) => {
   // We try to keep our current pinned layout, so we identify any classes that are on the contextbar,
   // and prefer that pinned layout to the other pinned layout
   const getPinnedLayouts = () => {
-    // Something at the top will be anchored from its bottom value and grow upward
     return PinnedLayout.contextualPinnedOrder(
       contextbar.element,
+      // Something at the top will be anchored from its bottom value and grow upward
       () => {
         return [
           PinnedLayout.pinAtTop,
           PinnedLayout.pinAtBottom
         ];
       },
+      // Something at the bottom will be anchored from its top value and grow upward
       () => {
         return [
           PinnedLayout.pinAtBottom,
           PinnedLayout.pinAtTop
         ];
       },
+      // Default.
       () => {
         return [
           PinnedLayout.pinAtTop,

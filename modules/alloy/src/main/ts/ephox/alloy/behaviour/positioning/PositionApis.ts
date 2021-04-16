@@ -29,7 +29,14 @@ const getRelativeOrigin = (component: AlloyComponent): Origins.OriginAdt => {
   return Origins.relative(position.left, position.top, bounds.width, bounds.height);
 };
 
-const place = (_component: AlloyComponent, origin: Origins.OriginAdt, anchoring: Anchoring, getBounds: Optional<() => Bounds>, placee: AlloyComponent, transitionAnimationClass: Optional<string>): void => {
+const place = (
+  _component: AlloyComponent,
+  origin: Origins.OriginAdt,
+  anchoring: Anchoring,
+  getBounds: Optional<() => Bounds>,
+  placee: AlloyComponent,
+  transitionAnimationClass: Optional<string>
+): void => {
   const anchor = Anchor.box(anchoring.anchorBox, origin);
   SimpleLayout.simple(anchor, placee.element, anchoring.bubble, anchoring.layouts, getBounds, anchoring.overrides, transitionAnimationClass);
 };
