@@ -94,7 +94,7 @@ const matchItems = (dom: DOMUtils, node: Node, format, itemName: string, similar
 
           const normalizedStyle = FormatUtils.normalizeStyleValue(dom, FormatUtils.replaceVars(items[key], vars), key);
           // TINY-7227 multiple classes on same element
-          const matchAttribute = Arr.exists(value.split(' '), Fun.curry(isEq, normalizedStyle));
+          const matchAttribute = isEq(normalizedStyle, value) || Arr.exists(value.split(' '), Fun.curry(isEq, normalizedStyle));
 
           if ((!similar || format.exact) && !matchAttribute) {
             return;

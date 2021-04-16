@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Update `MatchFormat` to match multiple classes on same element #TINY-7227
+- Update `MatchFormat` to match multiple values on same element #TINY-7227
 - The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
 - Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891

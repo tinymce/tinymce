@@ -271,17 +271,25 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     assert.isTrue(editor.formatter.match('formatB', { value: 'b' }), 'Should match since the onmatch matches on "b" class.');
   });
 
-  it('TINY-7227: match multiple classes on an element with multiple classes', () => {
+  it('TINY-7227: match multiple values on an element with multiple attributes values', () => {
     const editor = hook.editor();
-    editor.formatter.register('formatA', { selector: 'p', attributes: { class: '%value' }});
-    editor.formatter.register('formatB', { selector: 'p', attributes: { class: '%value' }});
-    editor.formatter.register('formatC', { selector: 'p', attributes: { class: '%value' }});
+    editor.formatter.register('formatA', { selector: 'p', attributes: { 'data-label': '%value' }});
 
-    editor.setContent('<p class="A B C">test</p>');
+    editor.setContent('<p data-label="A B C">test</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
 
-    assert.isTrue(editor.formatter.match('formatA', { value: 'A' }), 'Should match since the onmatch matches on "A" class.');
-    assert.isTrue(editor.formatter.match('formatB', { value: 'B' }), 'Should match since the onmatch matches on "B" class.');
-    assert.isTrue(editor.formatter.match('formatC', { value: 'C' }), 'Should match since the onmatch matches on "C" class.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'A' }), 'Should match since the onmatch matches on "A" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'B' }), 'Should match since the onmatch matches on "B" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'C' }), 'Should match since the onmatch matches on "C" value.');
+  });
+
+  it('TINY-7227: mach whole value with spaces', () => {
+    const editor = hook.editor();
+    editor.formatter.register('format', { selector: 'p', attributes: { 'data-label': '%value' }});
+
+    editor.setContent('<p data-label="format plus">test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+
+    assert.isTrue(editor.formatter.match('format', { value: 'format plus' }), 'Should match since the onmatch matches on "format plus" value.');
   });
 });
