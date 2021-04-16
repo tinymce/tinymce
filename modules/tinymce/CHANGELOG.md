@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+<<<<<<< HEAD
 - Updated the image dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
+=======
+- The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
+- Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
+>>>>>>> edf347999fcf9581bfe9ecbc50b1f03eb14f0bba
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
+- The editor resize handle can now be controlled using the keyboard #TINY-4823
+
+### Changed
+- Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
 ### Fixed
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
@@ -16,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The color picker dialog will now show an alert if it is submitted with an invalid hex color code #TINY-2814
 - Fixed a bug where the `TableModified` event was not fired when adding a table row via the Tab key #TINY-7006
 - Added missing type for `images_file_types` setting #GH-6607
+- The HTML5 `small` element could not be removed when clearing text formatting #TINY-6633
+- Added HTML5 `audio` and `video` elements to the default alignment formats #TINY-6633
+- The Oxide button text transform variable was incorrectly using `capitalize` instead of `none`. Patch contributed by dakur #GH-6341
+- Fix dialog button text that was using title-style capitalization #TINY-6816
 
 ## 5.7.1 - 2021-03-17
 

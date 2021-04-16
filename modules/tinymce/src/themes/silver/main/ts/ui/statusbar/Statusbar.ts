@@ -5,37 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Behaviour, Dragging, SimpleSpec } from '@ephox/alloy';
+import { SimpleSpec } from '@ephox/alloy';
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { get as getIcon } from '../icons/Icons';
-import { resize, ResizeTypes } from '../sizing/Resize';
 import * as ElementPath from './ElementPath';
+import * as ResizeHandler from './ResizeHandle';
 import { renderWordCount } from './WordCount';
 
 const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
-  const renderResizeHandlerIcon = (resizeType: ResizeTypes): SimpleSpec => ({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-statusbar__resize-handle' ],
-      attributes: {
-        'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
-        'aria-hidden': 'true'
-      },
-      innerHtml: getIcon('resize-handle', providersBackstage.icons)
-    },
-    behaviours: Behaviour.derive([
-      Dragging.config({
-        mode: 'mouse',
-        repositionTarget: false,
-        onDrag: (comp, target, delta) => {
-          resize(editor, delta, resizeType);
-        },
-        blockerClass: 'tox-blocker'
-      })
-    ])
-  });
 
   const renderBranding = (): SimpleSpec => {
     const label = I18n.translate([ 'Powered by {0}', 'Tiny' ]);
@@ -47,19 +25,6 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
         innerHtml: linkHtml
       }
     };
-  };
-
-  const getResizeType = (editor: Editor): ResizeTypes => {
-    // If autoresize is enabled, disable resize
-    const fallback = !editor.hasPlugin('autoresize');
-    const resize = editor.getParam('resize', fallback);
-    if (resize === false) {
-      return ResizeTypes.None;
-    } else if (resize === 'both') {
-      return ResizeTypes.Both;
-    } else {
-      return ResizeTypes.Vertical;
-    }
   };
 
   const getTextComponents = (): SimpleSpec[] => {
@@ -91,12 +56,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
 
   const getComponents = (): SimpleSpec[] => {
     const components: SimpleSpec[] = getTextComponents();
+    const resizeHandler = ResizeHandler.renderResizeHandler(editor, providersBackstage);
 
-    const resizeType = getResizeType(editor);
-    if (resizeType !== ResizeTypes.None) {
-      components.push(renderResizeHandlerIcon(resizeType));
-    }
-    return components;
+    return components.concat(resizeHandler.toArray());
   };
 
   return {

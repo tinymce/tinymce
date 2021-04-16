@@ -38,9 +38,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ]
     }),
     s.element('div', {
-      attrs: {
-        'aria-hidden': str.is('true')
-      },
       classes: [ arr.has('tox-statusbar__resize-handle') ]
     })
   ];
@@ -66,9 +63,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       ]
     }),
     s.element('div', {
-      attrs: {
-        'aria-hidden': str.is('true')
-      },
       classes: [ arr.has('tox-statusbar__resize-handle') ]
     })
   ];
