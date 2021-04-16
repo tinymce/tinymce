@@ -1,5 +1,6 @@
 import { Optional } from '@ephox/katamari';
-import { Attribute, Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { setDataAttribute } from '../../api/behaviour/PositionUtils';
 
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
@@ -32,7 +33,7 @@ const setClasses = (element: SugarElement, decision: RepositionDecision): void =
   const classInfo = decision.classes;
   Classes.remove(element, classInfo.off);
   Classes.add(element, classInfo.on);
-  Attribute.set(element, 'data-alloy-context-toolbar-location', decision.label);
+  setDataAttribute(element, decision.label);
 };
 
 /*
