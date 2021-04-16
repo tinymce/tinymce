@@ -71,7 +71,7 @@ const makeItems = (info: ImageDialogInfo) => {
     ]
   };
 
-  const dialogType = (hasColumns: boolean) => hasColumns ? { type: 'grid', columns: 2 } : { type: 'panel' };
+  const getDialogContainerType = (useColumns: boolean) => useColumns ? { type: 'grid', columns: 2 } : { type: 'panel' };
 
   return Arr.flatten<any>([
     [ imageUrl ],
@@ -81,7 +81,7 @@ const makeItems = (info: ImageDialogInfo) => {
     info.hasImageTitle ? [ imageTitle ] : [],
     info.hasDimensions ? [ imageDimensions ] : [],
     [{
-      ...dialogType(info.hasImageCaption),
+      ...getDialogContainerType(info.classList.isSome() && info.hasImageCaption),
       items: Arr.flatten([
         classList.toArray(),
         info.hasImageCaption ? [ caption ] : []
