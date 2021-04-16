@@ -2,8 +2,9 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { assert } from 'chai';
-import Editor from 'tinymce/core/api/Editor';
 
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/legacyoutput/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
@@ -19,11 +20,11 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
         formatsCell.set({ ...editor.formatter.get() });
       });
     }
-  }, [ Theme ]);
+  }, [ Plugin, Theme ]);
 
   it('TBA: Setting overrides', () => {
     const editor = hook.editor();
-    assert.equal(editor.getParam('inline_styles'), false);
+    assert.isFalse(editor.getParam('inline_styles'));
     assert.equal(editor.getParam('fontsize_formats'), '8pt=1 10pt=2 12pt=3 14pt=4 18pt=5 24pt=6 36pt=7');
     assert.equal(editor.getParam('font_formats'), 'Arial=arial,helvetica,sans-serif;');
   });
@@ -131,7 +132,7 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
   it('TBA: Justifycenter image', () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
+    TinySelections.setCursor(editor, [ 0 ], 0);
 
     editor.execCommand('justifycenter');
     TinyAssertions.assertContent(editor, '<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAF0lEQVR42mP8/5/hPwMJgHFUw6gG7AAAXVgj6XowjMAAAAAASUVORK5CYII=" /></p>');
@@ -168,9 +169,9 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
 
   it('TBA: Formats registered before loading initial content', () => {
     const formats = formatsCell.get();
-    assert.deepInclude(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-    assert.deepInclude(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-    assert.deepInclude(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
-    assert.deepInclude(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
+    assert.deepEqual(formats.bold[0], { inline: 'b', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepEqual(formats.italic[0], { inline: 'i', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepEqual(formats.underline[0], { inline: 'u', remove: 'all', deep: true, split: true, preserve_attributes: [ 'class', 'style' ] });
+    assert.deepEqual(formats.fontname[0], { inline: 'font', toggle: false, attributes: { face: '%value' }, deep: true, split: true });
   });
 });
