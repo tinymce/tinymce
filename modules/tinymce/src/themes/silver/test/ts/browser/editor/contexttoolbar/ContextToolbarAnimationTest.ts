@@ -14,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
     toolbar: '',
     height: 400,
     base_url: '/project/tinymce/js/tinymce',
-    content_style: 'body, p { margin: 50; } .tox-context-bar-layout-transition-animation { transition: top 1s ease, bottom 1s ease; border: 20px solid #000 }',
+    content_style: 'body, p { margin: 50; }',
     setup: (ed: Editor) => {
       ed.ui.registry.addContextToolbar('test-node-toolbar', {
         predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'img',
@@ -66,11 +66,10 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
       const editor = hook.editor();
       setContent(editor);
       TinySelections.setSelection(editor, [ 3 ], 0, [ 3 ], 1, true);
-      await UiFinder.pWaitForVisible('Waiting for toolbar to appear above content', SugarBody.body(), '.tox-pop');
       await TinyUiActions.pWaitForUi(editor, '.tox-pop');
       scrollToBottom(editor);
       await TinyUiActions.pWaitForUi(editor, '.tox-context-bar-layout-transition-animation');
-      await Waiter.pTryUntil('Wait for fullscreen to turn off', () => UiFinder.notExists(SugarBody.body(), '.tox-context-bar-layout-transition-animation'));
+      await Waiter.pTryUntil('Wait for transition animation class to be removed', () => UiFinder.notExists(SugarBody.body(), '.tox-context-bar-layout-transition-animation'));
     });
   });
 });
