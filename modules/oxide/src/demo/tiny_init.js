@@ -65,12 +65,6 @@ tinymce.init({
     },
   },
   setup: (editor) => {
-    editor.ui.registry.addButton("SubmitButton", {
-      text: "POST",
-      onAction: () => {
-        editor.insertContent("&nbsp;<strong>It's my button!</strong>&nbsp;");
-      },
-    });
     editor.ui.registry.addButton("reset", {
       icon: "undo",
       onAction: () => {
