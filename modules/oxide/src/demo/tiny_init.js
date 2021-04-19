@@ -36,9 +36,9 @@ tinymce.init({
   fontsize_formats: [10, 12, 16, 18, 24, 32, 48]
     .map((size) => `${size}=${size}pt`)
     .join(" "),
-  skin: "torn",
   toolbar_sticky: true,
   height: 300,
+  skin_url: "/skins/ui/torn",
   menubar: false,
   statusbar: false,
   templates: [
