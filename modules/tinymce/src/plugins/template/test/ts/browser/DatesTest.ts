@@ -1,23 +1,12 @@
-import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import { insertDefaultTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
-
-const insertTemplate = async (editor: Editor) => {
-  const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
-  const dialogSelector = 'div.tox-dialog';
-
-  TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
-  await TinyUiActions.pWaitForDialog(editor);
-  TinyUiActions.submitDialog(editor);
-  await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), dialogSelector));
-};
 
 describe('browser.tinymce.plugins.template.DatesTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -40,7 +29,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       templates: [{ title: 'a', description: 'b', content: '<p class="cdate">x</p>' }],
       template_cdate_format: 'fake date',
     });
-    await insertTemplate(editor);
+    await insertDefaultTemplate(editor);
     TinyAssertions.assertContent(editor, '<p class="cdate">fake date</p>');
   });
 
@@ -51,7 +40,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       templates: [{ title: 'a', description: 'b', content: '<p class="customCdateClass">x</p>' }],
       template_cdate_format: 'fake date'
     });
-    await insertTemplate(editor);
+    await insertDefaultTemplate(editor);
     TinyAssertions.assertContent(editor,
       '<p class="customCdateClass">fake date</p>'
     );
@@ -64,7 +53,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_cdate_format: 'fake created date',
       templates: [{ title: 'a', description: 'b', content: '<div class="mceTmpl"><p class="mdate"></p><p class="cdate"></p></div>' }]
     });
-    await insertTemplate(editor);
+    await insertDefaultTemplate(editor);
     TinyAssertions.assertContent(editor, [
       '<div class="mceTmpl">',
       '<p class="mdate">fake modified date</p>',
@@ -88,7 +77,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_cdate_format: 'fake created date',
       templates: [{ title: 'a', description: 'b', content: '<div class="mceTmpl"><p class="modified"></p><p class="cdate"></p></div>' }]
     });
-    await insertTemplate(editor);
+    await insertDefaultTemplate(editor);
     TinyAssertions.assertContent(editor, [
       '<div class="mceTmpl">',
       '<p class="modified">fake modified date</p>',

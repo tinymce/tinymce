@@ -1,6 +1,9 @@
 import { Obj } from '@ephox/katamari';
+import { TinyHooks } from '@ephox/mcagar';
 
-const Settings = (hook) => {
+import Editor from 'tinymce/core/api/Editor';
+
+const Settings = (hook: TinyHooks.Hook<Editor>) => {
   let settings = new Set<string>();
 
   const addSettings = (config: Record<string, any>) => {
