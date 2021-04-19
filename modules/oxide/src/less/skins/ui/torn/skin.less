@@ -5,6 +5,26 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-@import 'src/less/theme/theme';
+@import "src/less/theme/theme";
 
-@background-color: #239381;
+@background-color: #f2f2f2;
+
+.tox {
+  .tox-collection__group {
+    display: flex;
+  }
+
+  .tox-tbtn__select-chevron {
+    display: none;
+  }
+
+  .tox-collection--list {
+    position: relative;
+  }
+
+  .tox-collection__item-checkmark {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+}

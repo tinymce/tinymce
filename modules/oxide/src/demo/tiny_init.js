@@ -35,6 +35,9 @@ tinymce.init({
   toolbar_location: "bottom",
   toolbar: toolbarItems,
   toolbar_mode: "floating",
+  fontsize_formats: [10, 12, 16, 18, 24, 32, 48]
+    .map((size) => `${size}=${size}pt`)
+    .join(" "),
   skin: "torn",
   toolbar_sticky: true,
   height: 300,
