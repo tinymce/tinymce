@@ -58,20 +58,26 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
-const hasInheritableStyles = (styles: string[]): boolean => {
-  // TODO: TINY-7326 Figure out what else should go in the nonInheritableStyles list
-  const nonInheritableStyles = [ 'margin', 'padding', 'border', 'background',
-    'float', 'position', 'left', 'right', 'top', 'bottom', 'z-index', 'display',
-    'width', 'max-width', 'min-width', 'height', 'max-height', 'min-height',
-    'overflow', 'text-overflow', 'vertical-align'
-  ];
-  return Arr.forall(styles, (nodeStyle) => Arr.forall(nonInheritableStyles, (nonInheritableStyle) => !Strings.startsWith(nodeStyle, nonInheritableStyle)));
+// TODO: TINY-7326 Figure out what else should go in the nonInheritableStyles list
+const nonInheritableStyles: Record<string, {}> = {
+  'margin': {}, 'margin-left': {}, 'margin-right': {}, 'margin-top': {}, 'margin-bottom': {},
+  'padding': {}, 'padding-left': {}, 'padding-right': {}, 'padding-top': {}, 'padding-bottom': {},
+  'border': {}, 'border-width': {}, 'border-style': {}, 'border-color': {},
+  'background': {}, 'background-attachment': {}, 'background-clip': {}, 'background-color': {},
+  'background-image': {}, 'background-origin': {}, 'background-position': {}, 'background-repeat': {}, 'background-size': {},
+  'float': {}, 'position': {}, 'left': {}, 'right': {}, 'top': {}, 'bottom': {},
+  'z-index': {}, 'display': {},
+  'width': {}, 'max-width': {}, 'min-width': {}, 'height': {}, 'max-height': {}, 'min-height': {},
+  'overflow': {}, 'overflow-x': {}, 'overflow-y': {}, 'text-overflow': {}, 'vertical-align': {}
 };
+
+const hasInheritableStyles = (styles: string[]): boolean =>
+  Arr.forall(styles, (nodeStyle) => !Obj.has(nonInheritableStyles, nodeStyle));
 
 const getLonghandStyleProps = (shorthandStyleProps: string[], nodeStyleProps: string[]): string[] =>
   Arr.filter(nodeStyleProps, (nodeStyleProp) => Arr.exists(shorthandStyleProps, (prop) => Strings.startsWith(nodeStyleProp, prop)));
 
-const hasStyleConflict = (dom: DOMUtils, node: Node, nodeStyleProps: string[], parentNode: Node, parentNodeStyleProps: string[]): boolean => {
+const hasStyleConflict = (dom: DOMUtils, node: Node, parentNode: Node, nodeStyleProps: string[], parentNodeStyleProps: string[]): boolean => {
   // TODO: TINY-7326 Figure out what else should be added
   const shorthandStyleProps = [ 'font', 'text-decoration', 'text-emphasis' ];
 
@@ -105,13 +111,14 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const nodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(node, 'style')));
-      if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]) && hasInheritableStyles(nodeStyleProps)) {
+      const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
+      if (isInline && hasInheritableStyles(nodeStyleProps)) {
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
           const parentNodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(parentNode, 'style')));
 
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const styleConflict = hasStyleConflict(dom, node, nodeStyleProps, parentNode, parentNodeStyleProps);
+          const styleConflict = hasStyleConflict(dom, node, parentNode, nodeStyleProps, parentNodeStyleProps);
           if (styleConflict) {
             break;
           }
