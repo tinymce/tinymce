@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
-import { Height, Insert, Remove, Scroll, Selectors, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
+import { Height, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import TablesPlugin from 'tinymce/plugins/table/Plugin';
@@ -47,20 +47,6 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
         '<p>filler</p>'
       );
     };
-
-    beforeEach(() => {
-      const styleElement = SugarElement.fromHtml('<style id="styleElement" type="text/css">.tox-context-bar-layout-transition-animation { transition: top 0.1s ease, bottom 1s ease; }</style>');
-      SugarBody.body();
-      Insert.append(SugarBody.body(), styleElement);
-    });
-
-    afterEach(() => {
-      const styleElement = Selectors.one('#styleElement', SugarBody.body());
-
-      styleElement.each((element) => {
-        Remove.remove(element);
-      });
-    });
 
     it('The context toolbar should gain the transition class on tables', async () => {
       const editor = hook.editor();
