@@ -59,18 +59,45 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
 };
 
 const hasInheritableStyles = (styles: string[]): boolean => {
-  // TINY-7326: Figure out what else should go in the nonInheritableStyles list
-  // Elements which have these styles should not get merged as they have non-inherited properties
-  const nonInheritableStyles = [ 'margin', 'padding', 'border', 'background' ];
+  // TODO: TINY-7326 Figure out what else should go in the nonInheritableStyles list
+  const nonInheritableStyles = [ 'margin', 'padding', 'border', 'background',
+    'float', 'position', 'left', 'right', 'top', 'bottom', 'z-index', 'display',
+    'width', 'max-width', 'min-width', 'height', 'max-height', 'min-height',
+    'overflow', 'text-overflow', 'vertical-align'
+  ];
   return Arr.forall(styles, (nodeStyle) => Arr.forall(nonInheritableStyles, (nonInheritableStyle) => !Strings.startsWith(nodeStyle, nonInheritableStyle)));
+};
+
+const getLonghandStyleProps = (shorthandStyleProps: string[], nodeStyleProps: string[]): string[] =>
+  Arr.filter(nodeStyleProps, (nodeStyleProp) => Arr.exists(shorthandStyleProps, (prop) => Strings.startsWith(nodeStyleProp, prop)));
+
+const hasStyleConflict = (dom: DOMUtils, node: Node, nodeStyleProps: string[], parentNode: Node, parentNodeStyleProps: string[]): boolean => {
+  // TODO: TINY-7326 Figure out what else should be added
+  const shorthandStyleProps = [ 'font', 'text-decoration', 'text-emphasis' ];
+
+  const valueMismatch = (prop: string) => {
+    const nodeValue = dom.getStyle(node, prop);
+    const parentValue = dom.getStyle(parentNode, prop);
+    return Strings.isNotEmpty(nodeValue) && Strings.isNotEmpty(parentValue) && nodeValue !== parentValue;
+  };
+
+  return Arr.exists(nodeStyleProps, (nodeStyleProp) => {
+    const propExists = (props: string[]) => Arr.exists(props, (prop) => prop === nodeStyleProp);
+    // If parent has a longhand property e.g. margin-left but the child (node) style is margin, need to get the margin-left value of node to be able to do a proper comparison
+    // This is because getting the style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values or empty string depending on the browser
+    if (!propExists(parentNodeStyleProps) && propExists(shorthandStyleProps)) {
+      const longhandProps = getLonghandStyleProps(shorthandStyleProps, parentNodeStyleProps);
+      return Arr.exists(longhandProps, valueMismatch);
+    } else {
+      return valueMismatch(nodeStyleProp);
+    }
+  });
 };
 
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
-  // TINY-7326: Figure out what else should be added
-  const shorthandCssProps = [ 'font', 'text-decoration', 'text-emphasis' ];
 
   if (merge) {
     const root = editor.getBody();
@@ -80,33 +107,12 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
       const nodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(node, 'style')));
       if (Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]) && hasInheritableStyles(nodeStyleProps)) {
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
-          const parentNodeProps = Obj.keys(dom.parseStyle(dom.getAttrib(parentNode, 'style')));
+          const parentNodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(parentNode, 'style')));
 
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const hasStyleConflict = Arr.exists(nodeStyleProps, (nodeStyleProp) => {
-            // If parent has a longhand property e.g. margin-left but the child (node) style is margin, need to get the margin-left value of node to be able to do a proper comparison
-            // This is is because getting the style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values or empty string depending on the browser
-            const propExists = Arr.exists(parentNodeProps, (parentNodeProp) => parentNodeProp === nodeStyleProp);
-            const isShorthand = Arr.exists(shorthandCssProps, (prop) => nodeStyleProp === prop);
-            if (!propExists && isShorthand) {
-              const longhandProps = Arr.filter(
-                parentNodeProps,
-                (parentNodeProp) => Arr.exists(shorthandCssProps, (prop) => Strings.startsWith(parentNodeProp, prop))
-              );
-              return Arr.exists(longhandProps, (longhandProp) => {
-                const nodeValue = dom.getStyle(node, longhandProp);
-                const parentValue = dom.getStyle(parentNode, longhandProp);
-                return nodeValue !== '' && parentValue !== '' && nodeValue !== parentValue;
-              });
-            } else {
-              const nodeValue = dom.getStyle(node, nodeStyleProp);
-              const parentValue = dom.getStyle(parentNode, nodeStyleProp);
-              return parentValue !== '' && parentValue !== nodeValue;
-            }
-          });
-
-          if (hasStyleConflict) {
+          const styleConflict = hasStyleConflict(dom, node, nodeStyleProps, parentNode, parentNodeStyleProps);
+          if (styleConflict) {
             break;
           }
 
