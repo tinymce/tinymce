@@ -114,7 +114,7 @@ gulp.task('copyFonts', function() {
 gulp.task('monitor', function (done) {
   connect.server({
     root: './build',
-    port: 3000,
+    port: 3002,
     livereload: true
   }, function () {
     this.server.on('close', done);
