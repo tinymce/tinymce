@@ -1,12 +1,13 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Obj } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
+import { Settings } from '../module/Settings';
 
 const insertTemplate = async (editor: Editor) => {
   const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
@@ -25,19 +26,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  let settings = new Set<string>();
-  const addSettings = (config: Record<string, any>) => {
-    const editor = hook.editor();
-    Obj.each(config, (val, key) => {
-      editor.settings[key] = val;
-      settings.add(key);
-    });
-  };
-  const delSettings = () => {
-    const editor = hook.editor();
-    settings.forEach((key) => delete editor.settings[key]);
-    settings = new Set<string>();
-  };
+  const { addSettings, delSettings } = Settings(hook);
 
   afterEach(() => {
     const editor = hook.editor();
