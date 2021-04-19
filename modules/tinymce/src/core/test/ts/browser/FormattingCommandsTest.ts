@@ -460,10 +460,10 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     editor.setContent(
       '<p><dfn>dfn tag </dfn> <code>code tag </code> <samp>samp tag</samp> ' +
       '<kbd> kbd tag</kbd> <var> var tag</var> <cite> cite tag</cite> <mark> mark tag</mark> <q> q tag</q> ' +
-      '<strike>strike tag</strike> <s>s tag</s></p>'
+      '<strike>strike tag</strike> <s>s tag</s> <small>small tag</small></p>'
     );
     editor.execCommand('SelectAll');
     editor.execCommand('RemoveFormat');
-    assert.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag strike tag s tag</p>');
+    assert.equal(editor.getContent(), '<p>dfn tag code tag samp tag kbd tag var tag cite tag mark tag q tag strike tag s tag small tag</p>');
   });
 });
