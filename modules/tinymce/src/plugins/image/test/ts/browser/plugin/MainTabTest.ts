@@ -73,6 +73,6 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     };
     Assertions.assertPresence('Does not have columns for the class', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
-    delete editor.settings.image_caption;
+    editor.settings.image_caption = true;
   });
 });
