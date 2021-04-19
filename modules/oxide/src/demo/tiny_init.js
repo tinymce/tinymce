@@ -1,5 +1,3 @@
-const skin = localStorage.getItem("skin") || "default";
-const contentcss = localStorage.getItem("contentcss") || "default";
 const toolbarItems = [
   "reset",
   "bold",
@@ -41,8 +39,6 @@ tinymce.init({
   skin: "torn",
   toolbar_sticky: true,
   height: 300,
-  skin_url: "/skins/ui/" + skin,
-  content_css: "/skins/content/" + contentcss + "/content.css",
   menubar: false,
   statusbar: false,
   templates: [
@@ -83,33 +79,4 @@ tinymce.init({
       },
     });
   },
-});
-
-function addOptionTo(select) {
-  return function (_skin) {
-    const option = document.createElement("option");
-    const text = document.createTextNode(_skin);
-    option.value = _skin;
-    option.appendChild(text);
-    select.appendChild(option);
-  };
-}
-
-function selectOption(select, optionValueToSelect) {
-  for (let i = 0; i < select.options.length; i++) {
-    if (select.options[i].value === optionValueToSelect) {
-      select.selectedIndex = select.options[i].index;
-      break;
-    }
-  }
-}
-
-uiSelect.addEventListener("change", function (e) {
-  localStorage.setItem("skin", e.target.value);
-  location.reload();
-});
-
-contentSelect.addEventListener("change", function (e) {
-  localStorage.setItem("contentcss", e.target.value);
-  location.reload();
 });
