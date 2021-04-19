@@ -1,73 +1,72 @@
-import { Chain, Log, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
-import TemplatePlugin from 'tinymce/plugins/template/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { UiFinder } from '@ephox/agar';
+import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
 
-UnitTest.asynctest('browser.tinymce.plugins.template.TemplateSanityTest', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/template/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  TemplatePlugin();
-  SilverTheme();
+import { insertTemplate } from '../module/InsertTemplate';
+import { Settings } from '../module/Settings';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const docBody = SugarElement.fromDom(document.body);
-    const dialogSelector = 'div.tox-dialog';
-    const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Template: Test basic template insertion', [
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<strong>c</strong>' }]),
-        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p><strong>c</strong></p>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Template: Test basic content replacement', [
-        tinyApis.sSetContent(''),
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<p>{$name} {$email}</p>' }]),
-        tinyApis.sSetSetting('template_replace_values', { name: 'Tester', email: 'test@test.com' }),
-        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p>Tester test@test.com</p>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Template: Test loading in snippet from other file', [
-        tinyApis.sSetContent(''),
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]),
-        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Chain.asStep(docBody, [
-          UiFinder.cFindIn(dialogSelector),
-          UiFinder.cWaitForState('iframe is loaded', 'iframe', (elm) => {
-            const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
-            return iframeDoc.body.firstChild !== null;
-          })
-        ]),
-        UiFinder.sExists(docBody, dialogSelector + ' p:contains("<strong>b</strong>")'),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<p><em>this is external</em></p>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Template: Test command', [
-        tinyApis.sSetContent(''),
-        tinyApis.sSetSetting('template_replace_values', { name: 'Tester' }),
-        tinyApis.sExecCommand('mceInsertTemplate', '<p>{$name}</p>'),
-        tinyApis.sAssertContent('<p>Tester</p>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.template.DatesTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'template',
     toolbar: 'template',
-    indent: false,
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const { addSettings, delSettings } = Settings(hook);
+
+  beforeEach(() => {
+    const editor = hook.editor();
+    editor.setContent('');
+  });
+
+  afterEach(() => {
+    delSettings();
+  });
+
+  it('TBA: Template: Test basic template insertion', async () => {
+    const editor = hook.editor();
+    addSettings({
+      templates: [{ title: 'a', description: 'b', content: '<strong>c</strong>' }],
+    });
+    await insertTemplate(editor);
+    TinyAssertions.assertContent(editor, '<p><strong>c</strong></p>');
+  });
+
+  it('TBA: Template: Test basic content replacement', async () => {
+    const editor = hook.editor();
+    addSettings({
+      template_replace_values: { name: 'Tester', email: 'test@test.com' },
+      templates: [{ title: 'a', description: 'b', content: '<p>{$name} {$email}</p>' }]
+    });
+    await insertTemplate(editor);
+    TinyAssertions.assertContent(editor, '<p>Tester test@test.com</p>');
+  });
+
+  it('TBA: Template: Test loading in snippet from other file', async () => {
+    const editor = hook.editor();
+    addSettings({
+      templates: [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]
+    });
+    await insertTemplate(editor, async (dialogEl) => {
+      await UiFinder.pWaitForState('iframe is loaded', dialogEl, 'iframe', (elm) => {
+        const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
+        return iframeDoc.body.firstChild !== null;
+      });
+      UiFinder.exists(dialogEl, 'p:contains("<strong>b</strong>")');
+    });
+    TinyAssertions.assertContent(editor, '<p><em>this is external</em></p>');
+  });
+
+  it('TBA: Template: Test command', () => {
+    const editor = hook.editor();
+    addSettings({
+      template_replace_values: { name: 'Tester', email: 'test@test.com' },
+    });
+    editor.execCommand('mceInsertTemplate', false, '<p>{$name}</p>');
+    TinyAssertions.assertContent(editor, '<p>Tester</p>');
+  });
 });

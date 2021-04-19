@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { insertDefaultTemplate } from '../module/InsertTemplate';
+import { insertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
 describe('browser.tinymce.plugins.template.DatesTest', () => {
@@ -30,7 +30,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     addSettings({
       templates: [{ title: 'a', description: 'b', content: '<h1 class="selcontent">This will be replaced</h1>' }],
     });
-    await insertDefaultTemplate(editor);
+    await insertTemplate(editor);
     TinyAssertions.assertContent(editor, '<h1 class="selcontent">Text</h1>');
   });
 
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_selected_content_classes: 'customSelected',
       templates: [{ title: 'a', description: 'b', content: '<h1 class="customSelected">This will be replaced/h1>' }],
     });
-    await insertDefaultTemplate(editor);
+    await insertTemplate(editor);
     TinyAssertions.assertContent(editor, '<h1 class="customSelected">Text</h1>'
     );
   });
