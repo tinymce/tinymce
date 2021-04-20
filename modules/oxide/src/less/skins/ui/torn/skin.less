@@ -11,17 +11,58 @@
 @font-stack: "Arial", sans-serif;
 
 .tox {
-  .tox-collection__group {
-    display: flex;
-  }
-
   .tox-tbtn__select-chevron {
     display: none;
   }
 
+  .tox-collection__group {
+    align-items: center;
+    display: flex;
+    font-size: 48pt;
+  }
+
   .tox-collection__item {
+    height: 1em;
+
     &[aria-checked="true"] {
       color: #00a3d9;
+    }
+
+    &-checkmark {
+      display: none;
+    }
+
+    &-label {
+      font-size: inherit;
+    }
+
+    // 10, 12, 16, 18, 24, 32, 48
+    &[title="10"] {
+      font-size: 10pt;
+    }
+
+    &[title="12"] {
+      font-size: 12pt;
+    }
+
+    &[title="16"] {
+      font-size: 16pt;
+    }
+
+    &[title="18"] {
+      font-size: 18pt;
+    }
+
+    &[title="24"] {
+      font-size: 24pt;
+    }
+
+    &[title="32"] {
+      font-size: 32pt;
+    }
+
+    &[title="48"] {
+      font-size: 48pt;
     }
   }
 }
