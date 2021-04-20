@@ -9,6 +9,8 @@
 
 @background-color: #f2f2f2;
 @font-stack: "Arial", sans-serif;
+@toolbar-group-padding-x: 0;
+@toolbar-button-spacing-x: 4px;
 
 .tox {
   .tox-tbtn__select-chevron {
@@ -72,6 +74,20 @@
       .tox-collection__item-label {
         display: none;
       }
+    }
+  }
+}
+
+.tox:not([dir="rtl"]) {
+  .tox-toolbar__group:not(:last-of-type) {
+    border: none;
+
+    &::after {
+      background: linear-gradient(0deg, #ccc0 0, #ccc 50%, #ccc0 100%);
+      content: "";
+      display: block;
+      height: 100%;
+      width: 1px;
     }
   }
 }
