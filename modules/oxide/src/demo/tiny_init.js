@@ -23,9 +23,8 @@ const toolbarItems = [
   "code",
 ].join(" ");
 
-const inlineFormattingItems =
-  "bold italic underline strikethrough | fontsizeselect forecolor | blockquote";
-const blockFormattingItems = "align bullist";
+const inlineFormattingItems = "bold italic underline strikethrough | fontsizeselect forecolor | blockquote";
+const blockFormattingItems = "alignright aligncenter alignright alignjustify bullist";
 
 tinymce.init({
   selector: "textarea",
