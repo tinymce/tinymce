@@ -7,13 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Updated the image dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 - The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
 - Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
 - Added support for alpha list numbering to the `lists` plugin #TINY-6891
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 
 ### Changed
+- Updated the `image` dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
 ### Fixed

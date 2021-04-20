@@ -49,7 +49,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     ));
   });
 
-  it('TINY-6400: render image_class_list and image_caption as Dialog type "group"', async () => {
+  it('TINY-6400: render image_class_list and image_caption as Dialog type "grid"', async () => {
     const editor = hook.editor();
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
       ['.tox-form__grid--2col .tox-checkbox']: 1
     };
 
-    Assertions.assertPresence('Does have columns for the class', expected, dialog);
+    Assertions.assertPresence('Does have columns for the class and checkbox', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
   });
 
@@ -69,10 +69,31 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
       ['.tox-form__group button[aria-label="Class"]']: 1,
-      ['.tox-form__grid--2col button[aria-label="Class"]']: 0
+      ['.tox-form__grid--2col .tox-checkbox']: 0
     };
-    Assertions.assertPresence('Does not have columns for the class', expected, dialog);
+
+    Assertions.assertPresence('Does not have columns for the class but a group', expected, dialog);
     TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
     editor.settings.image_caption = true;
+  });
+
+  it('TINY-6400: render image_caption as Dialog type "panel"', async () => {
+    const editor = hook.editor();
+    delete editor.settings.image_class_list;
+
+    editor.execCommand('mceImage');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    const expected = {
+      ['.tox-form__grid--2col button[aria-label="Class"]']: 0,
+      ['.tox-form__group .tox-checkbox']: 1,
+    };
+
+    Assertions.assertPresence('Does not have columns but a checkbox group', expected, dialog);
+    TinyUiActions.clickOnUi(editor, 'button.tox-button:contains(Cancel)');
+    editor.settings.image_class_list = [
+      { title: 'None', value: '' },
+      { title: 'class1', value: 'class1' },
+      { title: 'class2', value: 'class2' }
+    ];
   });
 });
