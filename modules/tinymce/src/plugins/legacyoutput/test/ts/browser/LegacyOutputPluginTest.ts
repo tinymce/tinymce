@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
         formatsCell.set({ ...editor.formatter.get() });
       });
     }
-  }, [ Plugin, Theme ]);
+  }, [ Plugin, Theme ], true);
 
   it('TBA: Setting overrides', () => {
     const editor = hook.editor();
@@ -31,7 +31,6 @@ describe('browser.tinymce.plugins.legacyoutput.LegacyOutputPluginTest', () => {
 
   it('TBA: Font color', () => {
     const editor = hook.editor();
-    editor.focus();
     editor.setContent('<p>text</p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0, 0 ], 4);
 
