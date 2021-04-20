@@ -8,6 +8,7 @@
 @import "src/less/theme/theme";
 
 @background-color: #f2f2f2;
+@font-stack: "Arial", sans-serif;
 
 .tox {
   .tox-collection__group {
@@ -18,13 +19,9 @@
     display: none;
   }
 
-  .tox-collection--list {
-    position: relative;
-  }
-
-  .tox-collection__item-checkmark {
-    left: 0;
-    position: absolute;
-    top: 0;
+  .tox-collection__item {
+    &[aria-checked="true"] {
+      color: #00a3d9;
+    }
   }
 }
