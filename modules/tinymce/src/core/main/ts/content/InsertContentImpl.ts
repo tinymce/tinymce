@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -19,6 +19,7 @@ import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
+import * as NodeStyleUtils from '../dom/NodeStyleUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
@@ -58,48 +59,6 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
-// TODO: TINY-7326 Figure out what else should go in the nonInheritableStyles list
-const nonInheritableStyles: Record<string, {}> = {
-  'margin': {}, 'margin-left': {}, 'margin-right': {}, 'margin-top': {}, 'margin-bottom': {},
-  'padding': {}, 'padding-left': {}, 'padding-right': {}, 'padding-top': {}, 'padding-bottom': {},
-  'border': {}, 'border-width': {}, 'border-style': {}, 'border-color': {},
-  'background': {}, 'background-attachment': {}, 'background-clip': {}, 'background-color': {},
-  'background-image': {}, 'background-origin': {}, 'background-position': {}, 'background-repeat': {}, 'background-size': {},
-  'float': {}, 'position': {}, 'left': {}, 'right': {}, 'top': {}, 'bottom': {},
-  'z-index': {}, 'display': {},
-  'width': {}, 'max-width': {}, 'min-width': {}, 'height': {}, 'max-height': {}, 'min-height': {},
-  'overflow': {}, 'overflow-x': {}, 'overflow-y': {}, 'text-overflow': {}, 'vertical-align': {}
-};
-
-const hasInheritableStyles = (styles: string[]): boolean =>
-  Arr.forall(styles, (nodeStyle) => !Obj.has(nonInheritableStyles, nodeStyle));
-
-const getLonghandStyleProps = (shorthandStyleProps: string[], nodeStyleProps: string[]): string[] =>
-  Arr.filter(nodeStyleProps, (nodeStyleProp) => Arr.exists(shorthandStyleProps, (prop) => Strings.startsWith(nodeStyleProp, prop)));
-
-const hasStyleConflict = (dom: DOMUtils, node: Node, parentNode: Node, nodeStyleProps: string[], parentNodeStyleProps: string[]): boolean => {
-  // TODO: TINY-7326 Figure out what else should be added
-  const shorthandStyleProps = [ 'font', 'text-decoration', 'text-emphasis' ];
-
-  const valueMismatch = (prop: string) => {
-    const nodeValue = dom.getStyle(node, prop);
-    const parentValue = dom.getStyle(parentNode, prop);
-    return Strings.isNotEmpty(nodeValue) && Strings.isNotEmpty(parentValue) && nodeValue !== parentValue;
-  };
-
-  return Arr.exists(nodeStyleProps, (nodeStyleProp) => {
-    const propExists = (props: string[]) => Arr.exists(props, (prop) => prop === nodeStyleProp);
-    // If parent has a longhand property e.g. margin-left but the child (node) style is margin, need to get the margin-left value of node to be able to do a proper comparison
-    // This is because getting the style using the key of 'margin' on a 'margin-left' parent would give a string of space separated values or empty string depending on the browser
-    if (!propExists(parentNodeStyleProps) && propExists(shorthandStyleProps)) {
-      const longhandProps = getLonghandStyleProps(shorthandStyleProps, parentNodeStyleProps);
-      return Arr.exists(longhandProps, valueMismatch);
-    } else {
-      return valueMismatch(nodeStyleProp);
-    }
-  });
-};
-
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
@@ -110,15 +69,12 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
     const elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      const nodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(node, 'style')));
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
-      if (isInline && hasInheritableStyles(nodeStyleProps)) {
+      if (isInline && NodeStyleUtils.hasInheritableStyles(dom, node)) {
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
-          const parentNodeStyleProps = Obj.keys(dom.parseStyle(dom.getAttrib(parentNode, 'style')));
-
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const styleConflict = hasStyleConflict(dom, node, parentNode, nodeStyleProps, parentNodeStyleProps);
+          const styleConflict = NodeStyleUtils.hasStyleConflict(dom, node, parentNode);
           if (styleConflict) {
             break;
           }
