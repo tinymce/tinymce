@@ -14,12 +14,12 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
+import * as StyleUtils from '../api/html/StyleUtils';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
 import * as TableDelete from '../delete/TableDelete';
-import * as NodeStyleUtils from '../dom/NodeStyleUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
@@ -70,11 +70,11 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
-      if (isInline && NodeStyleUtils.hasInheritableStyles(dom, node)) {
+      if (isInline && StyleUtils.hasInheritableStyles(dom, node)) {
         for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
           // Check if the parent has a style conflict that would prevent the child node from being safely removed,
           // even if a exact node match could be found further up the tree
-          const styleConflict = NodeStyleUtils.hasStyleConflict(dom, node, parentNode);
+          const styleConflict = StyleUtils.hasStyleConflict(dom, node, parentNode);
           if (styleConflict) {
             break;
           }
