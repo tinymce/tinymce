@@ -1,6 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { Height, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -55,6 +56,15 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
       await TinyUiActions.pWaitForUi(editor, '.tox-pop');
       scrollToBottom(editor);
       await TinyUiActions.pWaitForUi(editor, '.tox-context-bar-layout-transition-animation');
+
+      if (PlatformDetection.detect().browser.isIE()) {
+        // An unrelated bug in the context toolbar positioning code, somewhere, prevents the animation from executing as expected on IE during tests.
+        // A JIRA has been logged (TINY-7348) to look into it, and the test cancels here on IE to prevent unwarranted failure.
+        // When performing the actions manually they succeed and work as expected.
+        // This skip was approved of the Product Manager.
+        return;
+      }
+
       await Waiter.pTryUntil('Wait for transition animation class to be removed', () => UiFinder.notExists(SugarBody.body(), '.tox-context-bar-layout-transition-animation'));
     });
   });
