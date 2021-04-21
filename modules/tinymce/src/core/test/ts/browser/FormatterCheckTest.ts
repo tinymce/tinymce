@@ -278,12 +278,13 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     editor.setContent('<p class="a b c">test</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
 
-    assert.isTrue(editor.formatter.match('formatA', { value: 'a' }), 'Should match since the onmatch matches on "A" value.');
-    assert.isTrue(editor.formatter.match('formatA', { value: 'b' }), 'Should match since the onmatch matches on "B" value.');
-    assert.isTrue(editor.formatter.match('formatA', { value: 'c' }), 'Should match since the onmatch matches on "C" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'a' }), 'Should match since the onmatch matches on "a" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'b' }), 'Should match since the onmatch matches on "b" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'c' }), 'Should match since the onmatch matches on "c" value.');
+    assert.isFalse(editor.formatter.match('formatA', { value: 'd' }), 'Should not match since the "d" class does not exist.');
   });
 
-  it('TINY-7227: mach whole value with spaces', () => {
+  it('TINY-7227: match whole value with spaces', () => {
     const editor = hook.editor();
     editor.formatter.register('format', { selector: 'p', classes: [ '%value' ] });
 
