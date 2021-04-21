@@ -263,31 +263,31 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
 
   it('TINY-7227: match one class on an element with multiple classes', () => {
     const editor = hook.editor();
-    editor.formatter.register('formatB', { selector: 'p', attributes: { class: '%value' }});
+    editor.formatter.register('formatA', { selector: 'p', classes: [ '%value' ] });
 
     editor.setContent('<p class="a b c">test</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
 
-    assert.isTrue(editor.formatter.match('formatB', { value: 'b' }), 'Should match since the onmatch matches on "b" class.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'b' }), 'Should match since the onmatch matches on "b" class.');
   });
 
-  it('TINY-7227: match multiple values on an element with multiple attributes values', () => {
+  it('TINY-7227: match multiple values on an element with multiple classes', () => {
     const editor = hook.editor();
-    editor.formatter.register('formatA', { selector: 'p', attributes: { 'data-label': '%value' }});
+    editor.formatter.register('formatA', { selector: 'p', classes: [ '%value' ] });
 
-    editor.setContent('<p data-label="A B C">test</p>');
+    editor.setContent('<p class="a b c">test</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
 
-    assert.isTrue(editor.formatter.match('formatA', { value: 'A' }), 'Should match since the onmatch matches on "A" value.');
-    assert.isTrue(editor.formatter.match('formatA', { value: 'B' }), 'Should match since the onmatch matches on "B" value.');
-    assert.isTrue(editor.formatter.match('formatA', { value: 'C' }), 'Should match since the onmatch matches on "C" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'a' }), 'Should match since the onmatch matches on "A" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'b' }), 'Should match since the onmatch matches on "B" value.');
+    assert.isTrue(editor.formatter.match('formatA', { value: 'c' }), 'Should match since the onmatch matches on "C" value.');
   });
 
   it('TINY-7227: mach whole value with spaces', () => {
     const editor = hook.editor();
-    editor.formatter.register('format', { selector: 'p', attributes: { 'data-label': '%value' }});
+    editor.formatter.register('format', { selector: 'p', classes: [ '%value' ] });
 
-    editor.setContent('<p data-label="format plus">test</p>');
+    editor.setContent('<p class="format plus">test</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
 
     assert.isTrue(editor.formatter.match('format', { value: 'format plus' }), 'Should match since the onmatch matches on "format plus" value.');
