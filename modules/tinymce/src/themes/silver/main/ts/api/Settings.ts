@@ -100,7 +100,7 @@ const getToolbarLocation = (editor: Editor) => editor.getParam('toolbar_location
 const isToolbarLocationBottom = (editor: Editor) => getToolbarLocation(editor) === ToolbarLocation.bottom;
 
 const fixedContainerSelector = (editor): string => editor.getParam('fixed_toolbar_container', '', 'string');
-const fixedToolbarContainerTarget = (editor): any => editor.getParam('fixed_toolbar_container_target');
+const fixedToolbarContainerTarget = (editor): HTMLElement | undefined => editor.getParam('fixed_toolbar_container_target');
 
 const isToolbarPersist = (editor): boolean => editor.getParam('toolbar_persist', false, 'boolean');
 
@@ -119,7 +119,7 @@ const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
   const element = fixedToolbarContainerTarget(editor);
   if (Type.isNonNullable(element)) {
     // If we have a valid target
-    return Optional.from(SugarElement.fromDom(element as HTMLElement));
+    return Optional.some(SugarElement.fromDom(element));
   }
 
   return Optional.none();
