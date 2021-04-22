@@ -1,3 +1,5 @@
+import { Menu } from '@ephox/bridge';
+import { Arr } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -6,9 +8,11 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbar } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { onSetupAttributeToggle, onSetupClassToggle } from './ButtonToggleUtils';
+import { applyColorSetup } from './CustomColorSwatch';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -165,6 +169,303 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     icon: 'table'
   });
 
+  editor.ui.registry.addMenuButton('rowclipboardactions', {
+    icon: 'cut-row',
+    tooltip: 'Row clipboard actions',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'menuitem',
+          text: 'Cut row',
+          icon: 'cut-row',
+          onAction: () => {
+            editor.execCommand('mceTableCutRow');
+          }
+        },
+        {
+          type: 'menuitem',
+          text: 'Copy row',
+          icon: 'duplicate-row',
+          onAction: () => {
+            editor.execCommand('mceTableCopyRow');
+          }
+        },
+        {
+          type: 'togglemenuitem',
+          text: 'Paste row before',
+          icon: 'paste-row-before',
+          onAction: () => {
+            editor.execCommand('mceTablePasteRowBefore');
+          },
+          onSetup: (buttonApi) => {
+            buttonApi.setDisabled(editor.plugins.table.getClipboardRows().length === 0);
+          }
+        },
+        {
+          type: 'togglemenuitem',
+          text: 'Paste row after',
+          icon: 'paste-row-after',
+          onAction: () => {
+            editor.execCommand('mceTablePasteRowAfter');
+          },
+          onSetup: (buttonApi) => {
+            buttonApi.setDisabled(editor.plugins.table.getClipboardRows().length === 0);
+          }
+        },
+      ]);
+    }
+  });
+
+  editor.ui.registry.addMenuButton('colclipboardactions', {
+    icon: 'cut-column',
+    tooltip: 'Column clipboard actions',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'menuitem',
+          text: 'Cut column',
+          icon: 'cut-column',
+          onAction: () => {
+            editor.execCommand('mceTableCutCol');
+          }
+        },
+        {
+          type: 'menuitem',
+          text: 'Copy column',
+          icon: 'duplicate-column',
+          onAction: () => {
+            editor.execCommand('mceTableCopyCol');
+          }
+        },
+        {
+          type: 'togglemenuitem',
+          text: 'Paste column before',
+          icon: 'paste-column-before',
+          onAction: () => {
+            editor.execCommand('mceTablePasteColBefore');
+          },
+          onSetup: (buttonApi) => {
+            buttonApi.setDisabled(editor.plugins.table.getClipboardCols().length === 0);
+          }
+        },
+        {
+          type: 'togglemenuitem',
+          text: 'Paste column after',
+          icon: 'paste-column-after',
+          onAction: () => {
+            editor.execCommand('mceTablePasteColAfter');
+          },
+          onSetup: (buttonApi) => {
+            buttonApi.setDisabled(editor.plugins.table.getClipboardCols().length === 0);
+          }
+        },
+      ]);
+    }
+  });
+
+  const tableClassList = getTableClassList(editor);
+
+  if (tableClassList.length === 0) {
+    // eslint-disable-next-line no-console
+    console.error('Missing table class list');
+  } else {
+    editor.ui.registry.addMenuButton('tableclass', {
+      icon: 'table-classes',
+      tooltip: 'Table styles',
+      fetch: (callback) => {
+        callback(Arr.map(tableClassList, (value) => {
+          const item: Menu.ToggleMenuItemSpec = {
+            text: value.title,
+            type: 'togglemenuitem',
+            onAction: (_api: Menu.MenuItemInstanceApi) => {
+              editor.execCommand('mceTableToggleClass', false, value.value);
+            },
+            onSetup: onSetupClassToggle(editor, 'tableclass', value.value)
+          };
+
+          return item;
+        }));
+      },
+      onSetup: selectionTargets.onSetupTable
+    });
+  }
+
+  const tableCellClassList = getCellClassList(editor);
+
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tablecellclass', {
+      icon: 'table-cell-classes',
+      tooltip: 'Cell styles',
+      fetch: (callback) => {
+        callback(Arr.map(tableCellClassList, (value) => {
+          const item: Menu.ToggleMenuItemSpec = {
+            text: value.title,
+            type: 'togglemenuitem',
+            onAction: (_api: Menu.MenuItemInstanceApi) => {
+              editor.execCommand('mceTableCellToggleClass', false, value.value);
+            },
+            onSetup: onSetupClassToggle(editor, 'tablecellclass', value.value)
+          };
+
+          return item;
+        }));
+      },
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
+
+  const alignTableButtons = [
+    {
+      name: 'tablecellvaligntop',
+      text: 'Top',
+      cmd: 'top'
+    },
+    {
+      name: 'tablecellvaligncenter',
+      text: 'Center',
+      cmd: 'center'
+    },
+    {
+      name: 'tablecellvalignbottom',
+      text: 'Bottom',
+      cmd: 'bottom'
+    },
+  ];
+
+  editor.ui.registry.addMenuButton('tablecellvalign', {
+    icon: 'vertical-align',
+    tooltip: 'Vertical align',
+    fetch: (callback) => {
+      callback(Arr.map(alignTableButtons, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.text,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'vertical-align': item.cmd
+            });
+          },
+          onSetup: onSetupAttributeToggle(editor, 'tablecellverticalalign', item.name)
+        };
+      }));
+    },
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleButton('tablecaption', {
+    tooltip: 'Table caption',
+    onAction: () => {
+      editor.execCommand('mceTableToggleCaption', false, true);
+    },
+    icon: 'table-caption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
+
+  const tableCellBackgroundColors = getTableCellBackgroundColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbackgroundcolor', {
+    icon: 'cell-background-color',
+    tooltip: 'Background color',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'fancymenuitem',
+          fancytype: 'colorswatch',
+          initData: {
+            colorselection: tableCellBackgroundColors.length > 0 ? tableCellBackgroundColors : undefined
+          },
+          onAction: (data) => {
+            applyColorSetup(editor, data.value, (value: string) => {
+              editor.execCommand('mceTableApplyCellStyle', false, {
+                'background-color': value
+              });
+            });
+          }
+        }
+      ]);
+    },
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderColors = getTableCellBorderColors(editor);
+  editor.ui.registry.addMenuButton('tablecellbordercolor', {
+    icon: 'cell-border-color',
+    tooltip: 'Border color',
+    fetch: (callback) => {
+      callback([
+        {
+          type: 'fancymenuitem',
+          fancytype: 'colorswatch',
+          initData: {
+            colorselection: tableCellBorderColors.length > 0 ? tableCellBorderColors : undefined
+          },
+          onAction: (data) => {
+            applyColorSetup(editor, data.value, (value: string) => {
+              editor.execCommand('mceTableApplyCellStyle', false, {
+                'border-color': value
+              });
+            });
+          }
+        }
+      ]);
+    },
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderWidthsList = getTableBorderWidths(editor);
+  editor.ui.registry.addMenuButton('tablecellborderwidth', {
+    icon: 'border-width',
+    tooltip: 'Border width',
+    fetch: (callback) => {
+      callback(Arr.map(tableCellBorderWidthsList, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.title,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'border-width': item.value
+            });
+          },
+          onSetup: onSetupAttributeToggle(editor, 'tablecellborderwidth', item.value)
+        };
+      }));
+    },
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderStylesList = getTableBorderStyles(editor);
+  editor.ui.registry.addMenuButton('tablecellborderstyle', {
+    icon: 'border-style',
+    tooltip: 'Border style',
+    fetch: (callback) => {
+      callback(Arr.map(tableCellBorderStylesList, (item): Menu.ToggleMenuItemSpec => {
+        return {
+          text: item.title,
+          type: 'togglemenuitem',
+          onAction: () => {
+            editor.execCommand('mceTableApplyCellStyle', false, {
+              'border-style': item.value
+            });
+          },
+          onSetup: onSetupAttributeToggle(editor, 'tablecellborderstyle', item.value)
+        };
+      }));
+    },
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  editor.ui.registry.addToggleButton('tablecolheader', {
+    tooltip: 'Column header',
+    icon: 'table-left-header',
+    onAction: cmd('mceTableToggleColumnHeader'),
+    onSetup: selectionTargets.onSetupTableHeaders
+  });
+
+  editor.ui.registry.addToggleButton('tablerowheader', {
+    tooltip: 'Row header',
+    icon: 'table-top-header',
+    onAction: cmd('mceTableToggleRowHeader'),
+    onSetup: selectionTargets.onSetupTableHeaders
+  });
 };
 
 const addToolbars = (editor: Editor) => {

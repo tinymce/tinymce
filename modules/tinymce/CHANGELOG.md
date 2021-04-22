@@ -15,7 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.8.0 - 2021-05-06
 
 ### Added
-- Added the `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API #TINY-4612
+- The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
+- Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
+- Added support for alpha list numbering to the `lists` plugin #TINY-6891
+- Added new buttons for newly created table actions #TINY-7163
+- Added new icons for the newly added table actions #TINY-7157
+- Added the new command `mceTableToggleColumnHeader` which toggles currently selected column to or from a header #TINY-7163
+- Added the new command `mceTableToggleRowHeader` which toggles currently selected row to or from a header #TINY-7163
+- Added the new command `mceTableToggleCaption` which toggles the currently selected table to have a caption #TINY-7163
+- Added the new command `mceTableCellToggleClass` which toggles currently selected cells to have or not have the provided class #TINY-7163
+- Added the new command `mceTableToggleClass` which toggles currently selected table to have or not have the provided class #TINY-7163
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 - Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays
 

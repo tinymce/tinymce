@@ -51,6 +51,8 @@ export interface TableActions {
   setTableRowType: SimpleTableAction;
   makeColumnsHeader: CombinedTargetsTableAction;
   unmakeColumnsHeader: CombinedTargetsTableAction;
+  makeRowsHeader: CombinedTargetsTableAction;
+  unmakeRowsHeader: CombinedTargetsTableAction;
   getTableRowType: (editor: Editor) => string;
   getTableCellType: (editor: Editor) => string;
   getTableColType: (table: SugarElement<HTMLTableElement>, target: RunOperation.TargetSelection) => string;
@@ -141,6 +143,9 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
   const makeColumnsHeader = execute(TableOperations.makeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
   const unmakeColumnsHeader = execute(TableOperations.unmakeColumnsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
 
+  const makeRowsHeader = execute(TableOperations.makeRowsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+  const unmakeRowsHeader = execute(TableOperations.unmakeRowsHeader, Fun.always, Fun.noop, lazyWire, Events.structureModified);
+
   const getTableRowType = (editor: Editor): 'header' | 'body' | 'footer' | '' => {
     const rows = getRowsFromSelection(Util.getSelectionStart(editor), ephemera.selected);
     if (rows.length > 0) {
@@ -185,6 +190,8 @@ export const TableActions = (editor: Editor, lazyWire: () => ResizeWire, selecti
     setTableRowType,
     makeColumnsHeader,
     unmakeColumnsHeader,
+    makeRowsHeader,
+    unmakeRowsHeader,
     getTableRowType,
     getTableCellType,
     getTableColType

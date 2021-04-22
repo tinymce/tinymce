@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
+/* eslint-disable no-console */
 import { SugarElement } from '@ephox/sugar';
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
@@ -109,11 +109,40 @@ export default () => {
       'save table directionality emoticons template paste textcolor importcss colorpicker textpattern',
       'codesample help noneditable print'
     ],
+    table_class_list: [
+      {
+        title: 'Table Class 1',
+        value: 'tableclass1'
+      },
+      {
+        title: 'Table Class 2',
+        value: 'tableclass2'
+      },
+      {
+        title: 'Table Class 3',
+        value: 'tableclass3'
+      },
+    ],
+    table_cell_class_list: [
+      {
+        title: 'Cell Class 1',
+        value: 'cellclass1'
+      },
+      {
+        title: 'Cell Class 2',
+        value: 'cellclass2'
+      },
+      {
+        title: 'Cell Class 3',
+        value: 'cellclass3'
+      },
+    ],
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
     toolbar: 'undo redo sidebar1 | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsizeselect fontselect formatselect styleselect insertfile | styleselect | ' +
-    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl',
+    'bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons table codesample code | ltr rtl' +
+    'tableclass tablecellclass tablecellvalign tablecaption tablecellbackgroundcolor tablecellbordercolor tablecellborderwidth tablecellborderstyle tablecolheader tablerowheader',
     contextmenu: 'link linkchecker image imagetools table lists spellchecker configurepermanentpen',
 
     // Multiple toolbar array

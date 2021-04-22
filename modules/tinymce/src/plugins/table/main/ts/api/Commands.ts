@@ -7,8 +7,8 @@
 
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Warehouse } from '@ephox/snooker';
+import { Class, Compare, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -30,6 +30,7 @@ const getSelectionStartCell = (editor: Editor) => TableSelection.getSelectionSta
 
 const registerCommands = (editor: Editor, actions: TableActions, cellSelection: CellSelectionApi, selections: Selections, clipboard: Clipboard) => {
   const isRoot = Util.getIsRoot(editor);
+
   const eraseTable = () => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
       const cursor = SugarElement.fromText('');
@@ -48,6 +49,65 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
       }
     });
   });
+
+  const toggleColumnHeader = () => {
+    getSelectionStartCell(editor).each((startCell) => {
+      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        const targets = TableTargets.forMenu(selections, table, startCell);
+        const currentType = actions.getTableColType(table, targets);
+
+        if (currentType === 'td') {
+          actions.makeColumnsHeader(table, targets);
+        } else {
+          actions.unmakeColumnsHeader(table, targets);
+        }
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
+
+  const toggleRowHeader = () => {
+    getSelectionStartCell(editor).each((startCell) => {
+      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        const getNewType = () => {
+          const currentType = actions.getTableRowType(editor);
+
+          if (currentType === 'body') {
+            return 'header';
+          } else if (currentType === 'header') {
+            return 'body';
+          }
+
+          return currentType;
+        };
+
+        actions.setTableRowType(editor, {
+          type: getNewType(),
+        });
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
+
+  const toggleCaption = (_ui: boolean, toggleState: boolean, forced?: boolean) => {
+    getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+      TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        let captionElm = editor.dom.select('caption', table.dom)[0];
+
+        if (captionElm && (!forced || toggleState)) {
+          editor.dom.remove(captionElm);
+        } else if (!captionElm && (forced || toggleState)) {
+          captionElm = editor.dom.create('caption');
+          captionElm.innerHTML = 'Caption';
+          table.dom.insertBefore(captionElm, table.dom.firstChild);
+        }
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
 
   const setSizingMode = (sizing: string) => getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
     // Do nothing if tables are forced to use a specific sizing mode
@@ -75,6 +135,47 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     cellSelection.clear(table);
     Util.removeDataStyle(table);
     Events.fireTableModified(editor, table.dom, data.effect);
+  };
+
+  const toggleTableClass = (_ui: boolean, requestedClass: string) => {
+    getSelectionStartCellOrCaption(editor).each((startCell) => {
+      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        if (Class.has(table, requestedClass)) {
+          Class.remove(table, requestedClass);
+        } else {
+          Class.add(table, requestedClass);
+        }
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
+
+  const toggleTableCellClass = (_ui: boolean, requestedClass: string) => {
+    getSelectionStartCell(editor).each((startCell) => {
+      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        const cells = TableSelection.getCellsFromSelection(startCell, selections);
+
+        const warehouse = Warehouse.fromTable(table);
+        const allCells = Warehouse.justCells(warehouse);
+
+        const filtered = Arr.filter(allCells, (cellA) =>
+          Arr.exists(cells, (cellB) =>
+            Compare.eq(cellA.element, cellB)
+          )
+        );
+
+        Arr.each(filtered, (value) => {
+          if (Class.has(value.element, requestedClass)) {
+            Class.remove(value.element, requestedClass);
+          } else {
+            Class.add(value.element, requestedClass);
+          }
+        });
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
   };
 
   const actOnSelection = (execute: CombinedTargetsTableAction): void =>
@@ -121,22 +222,27 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableInsertColAfter: () => actOnSelection(actions.insertColumnsAfter),
     mceTableDeleteCol: () => actOnSelection(actions.deleteColumn),
     mceTableDeleteRow: () => actOnSelection(actions.deleteRow),
-    mceTableCutCol: (_grid) => copyColSelection().each((selection) => {
+    mceTableCutCol: () => copyColSelection().each((selection) => {
       clipboard.setColumns(selection);
       actOnSelection(actions.deleteColumn);
     }),
-    mceTableCutRow: (_grid) => copyRowSelection().each((selection) => {
+    mceTableCutRow: () => copyRowSelection().each((selection) => {
       clipboard.setRows(selection);
       actOnSelection(actions.deleteRow);
     }),
-    mceTableCopyCol: (_grid) => copyColSelection().each((selection) => clipboard.setColumns(selection)),
-    mceTableCopyRow: (_grid) => copyRowSelection().each((selection) => clipboard.setRows(selection)),
-    mceTablePasteColBefore: (_grid) => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
-    mceTablePasteColAfter: (_grid) => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
-    mceTablePasteRowBefore: (_grid) => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
-    mceTablePasteRowAfter: (_grid) => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
+    mceTableCopyCol: () => copyColSelection().each((selection) => clipboard.setColumns(selection)),
+    mceTableCopyRow: () => copyRowSelection().each((selection) => clipboard.setRows(selection)),
+    mceTablePasteColBefore: () => pasteOnSelection(actions.pasteColsBefore, clipboard.getColumns),
+    mceTablePasteColAfter: () => pasteOnSelection(actions.pasteColsAfter, clipboard.getColumns),
+    mceTablePasteRowBefore: () => pasteOnSelection(actions.pasteRowsBefore, clipboard.getRows),
+    mceTablePasteRowAfter: () => pasteOnSelection(actions.pasteRowsAfter, clipboard.getRows),
+    mceTableToggleColumnHeader: toggleColumnHeader,
+    mceTableToggleRowHeader: toggleRowHeader,
     mceTableDelete: eraseTable,
-    mceTableSizingMode: (ui: boolean, sizing: string) => setSizingMode(sizing)
+    mceTableToggleCaption: toggleCaption,
+    mceTableCellToggleClass: toggleTableCellClass,
+    mceTableToggleClass: toggleTableClass,
+    mceTableSizingMode: (_ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 
   // Due to a bug, we need to pass through a reference to the table obtained before the modification

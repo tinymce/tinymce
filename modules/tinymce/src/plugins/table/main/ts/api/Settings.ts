@@ -7,6 +7,8 @@
 
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
+import { mapColors } from '../ui/CustomColorSwatch';
 
 export interface StringMap {
   [key: string]: string;
@@ -21,6 +23,48 @@ const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
 };
+
+const defaultCellBorderWidth = [
+  {
+    title: '1px',
+    value: '1px'
+  },
+  {
+    title: '2px',
+    value: '2px'
+  },
+  {
+    title: '3px',
+    value: '3px'
+  },
+  {
+    title: '4px',
+    value: '4px'
+  },
+  {
+    title: '5px',
+    value: '5px'
+  }
+];
+
+const defaultCellBorderStyles = [
+  {
+    title: 'Solid',
+    value: 'solid'
+  },
+  {
+    title: 'Dashed',
+    value: 'dashed'
+  },
+  {
+    title: 'Dotted',
+    value: 'dotted'
+  },
+  {
+    title: 'Double',
+    value: 'double'
+  }
+];
 
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {
@@ -53,6 +97,11 @@ const hasAppearanceOptions = (editor: Editor): boolean => editor.getParam('table
 const hasTableGrid = (editor: Editor): boolean => editor.getParam('table_grid', true, 'boolean');
 const shouldStyleWithCss = (editor: Editor): boolean => editor.getParam('table_style_by_css', false, 'boolean');
 const getCellClassList = (editor: Editor): ClassList => editor.getParam('table_cell_class_list', [], 'array');
+
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidth, 'array');
+
+const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
+
 const getRowClassList = (editor: Editor): ClassList => editor.getParam('table_row_class_list', [], 'array');
 const getTableClassList = (editor: Editor): ClassList => editor.getParam('table_class_list', [], 'array');
 const isPercentagesForced = (editor: Editor): boolean => getTableSizingMode(editor) === 'relative' || getTableResponseWidth(editor) === true;
@@ -99,6 +148,14 @@ const hasObjectResizing = (editor: Editor): boolean => {
   return Type.isString(objectResizing) ? objectResizing === 'table' : objectResizing;
 };
 
+const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return mapColors(editor.getParam('table_cell_background_color_map', []));
+};
+
+const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
+  return mapColors(editor.getParam('table_cell_border_color_map', []));
+};
+
 export {
   getDefaultAttributes,
   getDefaultStyles,
@@ -123,5 +180,9 @@ export {
   getColumnResizingBehaviour,
   isPreserveTableColumnResizing,
   isResizeTableColumnResizing,
-  useColumnGroup
+  useColumnGroup,
+  getTableCellBackgroundColors,
+  getTableBorderWidths,
+  getTableBorderStyles,
+  getTableCellBorderColors
 };
