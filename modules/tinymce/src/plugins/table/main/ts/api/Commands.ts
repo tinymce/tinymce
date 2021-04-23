@@ -191,7 +191,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     if (!Type.isObject(args)) {
       return;
     }
-    const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, Util.getIsRoot(editor));
+    const cells = TableSelection.getCellsFromSelection(Util.getSelectionStart(editor), selections, isRoot);
     if (cells.length === 0) {
       return;
     }

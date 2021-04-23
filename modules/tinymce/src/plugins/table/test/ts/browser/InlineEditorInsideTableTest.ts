@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     UiFinder.notExists(SugarBody.body(), 'div[data-row="0"]');
   });
 
-  it('TINY-6625: Table menu items shoud be disabled', async () => {
+  it('TINY-6625: Table menu items of inline editor shoud be disabled', async () => {
     const editor = hook.editor();
     focusEditor(editor);
     await pWaitForMenuBar(editor);
@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     await pAssertMenuButtonDisabled(editor, 'Table properties', true);
   });
 
-  context('TINY-6625: Table plugin commands should not affect outside table', () => {
+  context('TINY-6625: Table outside of inline editor should not be affected by table plugin commands', () => {
     it('TINY-6625: mceTableApplyCellStyle', () => {
       const editor = hook.editor();
       focusEditor(editor);
