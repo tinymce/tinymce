@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Cell, Fun, Optional, Thunk, Type } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as Util from '../core/Util';
@@ -40,7 +40,7 @@ export interface SelectionTargets {
   readonly resetTargets: () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
   readonly onSetupTableWithCaption: (api: Toolbar.ToolbarToggleButtonInstanceApi) => () => void;
-  readonly onSetupTableHeaders: (api: Toolbar.ToolbarToggleButtonInstanceApi) => () => void;
+  readonly onSetupTableHeaders: (rows: boolean) => (api: Toolbar.ToolbarToggleButtonInstanceApi) => () => void;
 }
 
 interface ExtractedSelectionDetails {
@@ -48,6 +48,98 @@ interface ExtractedSelectionDetails {
   readonly unmergeable: boolean;
   readonly locked: Record<LockedDisableStrs, boolean>;
 }
+
+const isElementHeader = (cell: SugarElement<HTMLTableCellElement>) => {
+  if (cell.dom.nodeName.toLowerCase() === 'th') {
+    return true;
+  } else {
+    const theadOpt = SelectorFind.ancestor(cell, 'thead');
+
+    return theadOpt.isSome();
+  }
+};
+
+export const isEntireColumnsHeaders = (editor: Editor, selections: Selections) => {
+  const startCellOpt = TableSelection.getSelectionStartCell(Util.getSelectionStart(editor));
+
+  const allHeadersOpt = startCellOpt.map((startCell) => {
+    const potentialTable = TableLookup.table(startCell, Util.getIsRoot(editor));
+
+    const tableOpt = potentialTable.filter(Fun.not(Util.getIsRoot(editor)));
+
+    const allAreHeadersOpt = tableOpt.map((table) => {
+      const warehouse = Warehouse.fromTable(table);
+      const targets = TableTargets.forMenu(selections, table, startCell);
+
+      const usedColumns: number[] = [];
+      Arr.each(warehouse.all, (row) => {
+        Arr.each(row.cells, (cell) => {
+          const existsInSelection = Arr.exists(targets.selection, (element) => {
+            return element.dom === cell.element.dom;
+          });
+
+          if (existsInSelection && !Arr.contains(usedColumns, cell.column)) {
+            usedColumns.push(cell.column);
+          }
+        });
+      });
+
+      return Arr.forall(usedColumns, (value) => {
+        return Arr.forall(warehouse.all, (row) => {
+          const columnCell = Arr.find(row.cells, (cell) => {
+            return cell.column === value;
+          });
+
+          return columnCell.map((cell) => {
+            return isElementHeader(cell.element);
+          }).getOr(true);
+        });
+      });
+    });
+
+    return allAreHeadersOpt.getOr(false);
+  });
+
+  return allHeadersOpt.getOr(false);
+};
+
+export const isEntireRowsHeaders = (editor: Editor, selections: Selections) => {
+  const startCellOpt = TableSelection.getSelectionStartCell(Util.getSelectionStart(editor));
+
+  const allHeadersOpt = startCellOpt.map((startCell) => {
+    const potentialTable = TableLookup.table(startCell, Util.getIsRoot(editor));
+
+    const tableOpt = potentialTable.filter(Fun.not(Util.getIsRoot(editor)));
+
+    const allAreHeadersOpt = tableOpt.map((table) => {
+      const warehouse = Warehouse.fromTable(table);
+      const targets = TableTargets.forMenu(selections, table, startCell);
+
+      const usedRows: number[] = [];
+      Arr.each(warehouse.all, (row) => {
+        Arr.each(row.cells, (cell) => {
+          const existsInSelection = Arr.exists(targets.selection, (element) => {
+            return element.dom === cell.element.dom;
+          });
+
+          if (existsInSelection && !Arr.contains(usedRows, cell.column)) {
+            usedRows.push(cell.row);
+          }
+        });
+      });
+
+      return Arr.forall(usedRows, (rowIndex) => {
+        return Arr.forall(warehouse.all[rowIndex].cells, (cell) => {
+          return isElementHeader(cell.element);
+        });
+      });
+    });
+
+    return allAreHeadersOpt.getOr(false);
+  });
+
+  return allHeadersOpt.getOr(false);
+};
 
 export const getSelectionTargets = (editor: Editor, selections: Selections): SelectionTargets => {
   const targets = Cell<Optional<RunOperation.CombinedTargets>>(Optional.none());
@@ -151,20 +243,22 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
   const onSetupCellOrRow = (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element));
   const onSetupColumn = (lockedDisable: LockedDisable) => (api: UiApi) => onSetup(api, (targets) => isCaption(targets.element) || isDisabledFromLocked(lockedDisable));
 
-  const onSetupTableHeaders = (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
-    return onSetupWithToggle(
-      api,
-      (targets) => {
-        return isCaption(targets.element);
-      },
-      (targets) => {
-        const cellCountsAsHeader = Arr.forall(targets.selection, (element) => {
-          return (element.dom as HTMLElement).nodeName.toLowerCase() === 'th' || (element.dom as HTMLElement).parentElement.parentElement.nodeName.toLowerCase() === 'thead';
-        });
-
-        return cellCountsAsHeader;
-      }
-    );
+  const onSetupTableHeaders = (rows: boolean) => {
+    return (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
+      return onSetupWithToggle(
+        api,
+        (targets) => {
+          return isCaption(targets.element);
+        },
+        () => {
+          if (rows) {
+            return isEntireRowsHeaders(editor, selections);
+          } else {
+            return isEntireColumnsHeaders(editor, selections);
+          }
+        }
+      );
+    };
   };
 
   const onSetupPasteable = (getClipboardData: () => Optional<SugarElement[]>) => (api: UiApi) =>

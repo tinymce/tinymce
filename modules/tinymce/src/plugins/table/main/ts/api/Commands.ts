@@ -18,6 +18,7 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
+import { isEntireColumnsHeaders } from '../selection/SelectionTargets';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
@@ -54,12 +55,11 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     getSelectionStartCell(editor).each((startCell) => {
       TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
         const targets = TableTargets.forMenu(selections, table, startCell);
-        const currentType = actions.getTableColType(table, targets);
 
-        if (currentType === 'td') {
-          actions.makeColumnsHeader(table, targets);
-        } else {
+        if (isEntireColumnsHeaders(editor, selections)) {
           actions.unmakeColumnsHeader(table, targets);
+        } else {
+          actions.makeColumnsHeader(table, targets);
         }
 
         Events.fireTableModified(editor, table.dom, Events.structureModified);
