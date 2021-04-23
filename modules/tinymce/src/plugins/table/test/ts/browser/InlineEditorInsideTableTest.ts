@@ -2,14 +2,14 @@ import { Mouse, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Html, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
-import {assert} from 'chai';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const count = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector).length
+const count = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector).length;
 
 describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
   const setupElement = () => {
@@ -79,9 +79,9 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     it('TINY-6625: mceTableInsertRowBefore', () => {
       const editor = hook.editor();
       focusEditor(editor);
-      const beforeCount = count('tr')
+      const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowBefore');
-      assert.equal(count('tr'), beforeCount)
+      assert.equal(count('tr'), beforeCount);
     });
 
     it('TINY-6625: mceTableInsertRowAfter', () => {
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowAfter');
-      assert.equal(count('tr'), beforeCount)
+      assert.equal(count('tr'), beforeCount);
     });
 
     it('TINY-6625: mceTableInsertColBefore', () => {
@@ -97,7 +97,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableInsertColBefore');
-      assert.equal(count('td'), beforeCount)
+      assert.equal(count('td'), beforeCount);
     });
 
     it('TINY-6625: mceTableInsertColAfter', () => {
@@ -105,7 +105,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableInsertColAfter');
-      assert.equal(count('td'), beforeCount)
+      assert.equal(count('td'), beforeCount);
     });
 
     it('TINY-6625: mceTableDeleteCol', () => {
@@ -113,7 +113,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableDeleteCol');
-      assert.equal(count('td'), beforeCount)
+      assert.equal(count('td'), beforeCount);
     });
 
     it('TINY-6625: mceTableDeleteRow', () => {
@@ -121,7 +121,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('tr');
       editor.execCommand('mceTableDeleteRow');
-      assert.equal(count('tr'), beforeCount)
+      assert.equal(count('tr'), beforeCount);
     });
 
     it('TINY-6625: mceTableDelete', () => {
@@ -129,7 +129,7 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
       focusEditor(editor);
       const beforeCount = count('table');
       editor.execCommand('mceTableDelete');
-      assert.equal(count('table'), beforeCount)
+      assert.equal(count('table'), beforeCount);
     });
   });
 });
