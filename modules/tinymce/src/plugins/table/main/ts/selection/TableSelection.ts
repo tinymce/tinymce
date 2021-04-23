@@ -28,8 +28,8 @@ const getSelectionStartCell = getSelectionStartFromSelector<HTMLTableCellElement
 
 const getSelectionStartCellOrCaption = getSelectionStartFromSelector<HTMLTableCellElement | HTMLTableCaptionElement>('th,td,caption');
 
-const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections): SugarElement<HTMLTableCellElement>[] =>
-  getSelectionStartCell(start)
+const getCellsFromSelection = (start: SugarElement<Node>, selections: Selections, isRoot?: (el: SugarElement<Node>) => boolean): SugarElement<HTMLTableCellElement>[] =>
+  getSelectionStartCell(start, isRoot)
     .map((_cell) => CellOpSelection.selection(selections))
     .getOr([]);
 
