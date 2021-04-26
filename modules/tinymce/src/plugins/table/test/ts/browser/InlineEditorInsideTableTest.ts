@@ -8,7 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-const count = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector).length;
+const findAll = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector);
 
 describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
   const setupElement = () => {
@@ -76,51 +76,44 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableInsertRowBefore', () => {
       const editor = hook.editor();
-      const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowBefore');
-      assert.equal(count('tr'), beforeCount);
+      assert.lengthOf(findAll('tr'), 1);
     });
 
     it('TINY-6625: mceTableInsertRowAfter', () => {
       const editor = hook.editor();
-      const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowAfter');
-      assert.equal(count('tr'), beforeCount);
+      assert.lengthOf(findAll('tr'), 1);
     });
 
     it('TINY-6625: mceTableInsertColBefore', () => {
       const editor = hook.editor();
-      const beforeCount = count('td');
       editor.execCommand('mceTableInsertColBefore');
-      assert.equal(count('td'), beforeCount);
+      assert.lengthOf(findAll('td'), 1);
     });
 
     it('TINY-6625: mceTableInsertColAfter', () => {
       const editor = hook.editor();
-      const beforeCount = count('td');
       editor.execCommand('mceTableInsertColAfter');
-      assert.equal(count('td'), beforeCount);
+      assert.lengthOf(findAll('td'), 1);
     });
 
     it('TINY-6625: mceTableDeleteCol', () => {
       const editor = hook.editor();
-      const beforeCount = count('td');
       editor.execCommand('mceTableDeleteCol');
-      assert.equal(count('td'), beforeCount);
+      assert.lengthOf(findAll('td'), 1);
     });
 
     it('TINY-6625: mceTableDeleteRow', () => {
       const editor = hook.editor();
-      const beforeCount = count('tr');
       editor.execCommand('mceTableDeleteRow');
-      assert.equal(count('tr'), beforeCount);
+      assert.lengthOf(findAll('tr'), 1);
     });
 
     it('TINY-6625: mceTableDelete', () => {
       const editor = hook.editor();
-      const beforeCount = count('table');
       editor.execCommand('mceTableDelete');
-      assert.equal(count('table'), beforeCount);
+      assert.lengthOf(findAll('table'), 1);
     });
   });
 });
