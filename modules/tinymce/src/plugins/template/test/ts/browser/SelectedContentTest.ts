@@ -9,7 +9,7 @@ import { insertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
 describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
-  const hook = TinyHooks.bddSetup<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
