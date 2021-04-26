@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Warehouse } from '@ephox/snooker';
-import { Class, Compare, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Class, Compare, Insert, Remove, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -18,7 +18,7 @@ import { Clipboard } from '../core/Clipboard';
 import * as Util from '../core/Util';
 import * as TableTargets from '../queries/TableTargets';
 import { CellSelectionApi } from '../selection/CellSelection';
-import { isEntireColumnsHeaders } from '../selection/SelectionTargets';
+import { isEntireColumnsHeaders, isEntireRowsHeaders } from '../selection/SelectionTargets';
 import * as TableSelection from '../selection/TableSelection';
 import * as CellDialog from '../ui/CellDialog';
 import { DomModifier } from '../ui/DomModifier';
@@ -54,15 +54,48 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
   const toggleColumnHeader = () => {
     getSelectionStartCell(editor).each((startCell) => {
       TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
-        const targets = TableTargets.forMenu(selections, table, startCell);
-
         if (isEntireColumnsHeaders(editor, selections)) {
-          actions.unmakeColumnsHeader(table, targets);
+          editColumnsHeader(table, startCell, 'td');
         } else {
-          actions.makeColumnsHeader(table, targets);
+          editColumnsHeader(table, startCell, 'th');
         }
 
         Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
+
+  const editColumnsHeader = (table: SugarElement<HTMLTableElement>, startCell: SugarElement<HTMLTableCellElement>, changeTo: 'th' | 'td'): void => {
+    const warehouse = Warehouse.fromTable(table);
+    const targets = TableTargets.forMenu(selections, table, startCell);
+
+    const usedColumns: number[] = [];
+    Arr.each(warehouse.all, (row) => {
+      Arr.each(row.cells, (cell) => {
+        const existsInSelection = Arr.exists(targets.selection, (element) => {
+          return element.dom === cell.element.dom;
+        });
+
+        if (existsInSelection && !Arr.contains(usedColumns, cell.column)) {
+          usedColumns.push(cell.column);
+        }
+      });
+    });
+
+    Arr.each(usedColumns, (value) => {
+      Arr.each(warehouse.all, (row) => {
+        const columnCell = Arr.find(row.cells, (cell) => {
+          return cell.column === value;
+        });
+
+        columnCell.each((cell) => {
+          const theadOpt = SelectorFind.ancestor(cell.element, 'thead');
+
+          if (theadOpt.isNone() && Util.getNodeName(cell.element.dom) !== changeTo) {
+            const newCellElm = editor.dom.rename(cell.element.dom, changeTo) as HTMLTableCellElement;
+            Events.fireNewCell(editor, newCellElm);
+          }
+        });
       });
     });
   };
@@ -71,15 +104,11 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     getSelectionStartCell(editor).each((startCell) => {
       TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
         const getNewType = () => {
-          const currentType = actions.getTableRowType(editor);
-
-          if (currentType === 'body') {
-            return 'header';
-          } else if (currentType === 'header') {
+          if (isEntireRowsHeaders(editor, selections)) {
             return 'body';
+          } else {
+            return 'header';
           }
-
-          return currentType;
         };
 
         actions.setTableRowType(editor, {
