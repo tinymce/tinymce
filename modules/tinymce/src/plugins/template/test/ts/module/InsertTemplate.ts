@@ -1,4 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
+import { Type } from '@ephox/katamari';
 import { TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -10,7 +11,7 @@ const dialogSelector = 'div.tox-dialog';
 const pInsertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => Promise<void>) => {
   TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
   const dialogEl = await TinyUiActions.pWaitForDialog(editor);
-  if (typeof assertFn == 'function') {
+  if (Type.isFunction(assertFn)) {
     await assertFn(dialogEl);
   }
   TinyUiActions.submitDialog(editor);
