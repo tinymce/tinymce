@@ -101,7 +101,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 
   return {
     tooltip: 'Font sizes',
-    icon: Optional.some('change-case'),
+    icon: Optional.some('font-size'),
     isSelectedFor,
     getPreviewFor,
     getCurrentValue,

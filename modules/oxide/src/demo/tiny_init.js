@@ -38,6 +38,7 @@ tinymce.init({
   toolbar_sticky: true,
   height: 300,
   skin_url: "/skins/ui/torn",
+  icons: 'torn',
   menubar: false,
   statusbar: false,
   templates: [

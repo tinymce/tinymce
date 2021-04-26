@@ -43,6 +43,7 @@ export default () => {
       .map((size) => `${size}=${size}pt`)
       .join(' '),
     skin: 'torn',
+    icons: 'torn',
     toolbar_sticky: true,
     height: 300,
     menubar: false,
