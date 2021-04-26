@@ -1,11 +1,10 @@
 import { Mouse, UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, Html, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -43,9 +42,10 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
     statusbar: false
   }, setupElement, [ Plugin, Theme ]);
 
-  const focusEditor = (editor: Editor) => {
-    EditorFocus.focus(editor, false);
-  };
+  beforeEach(() => {
+    const editor = hook.editor();
+    editor.focus();
+  });
 
   const pWaitForMenuBar = (editor: Editor) => TinyUiActions.pWaitForUi(editor, '.tox-menubar');
 
@@ -60,7 +60,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
   it('TINY-6625: Table menu items of inline editor shoud be disabled', async () => {
     const editor = hook.editor();
-    focusEditor(editor);
     await pWaitForMenuBar(editor);
     TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
     await pAssertMenuButtonDisabled(editor, 'Delete table', true);
@@ -70,7 +69,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
   context('TINY-6625: Table outside of inline editor should not be affected by table plugin commands', () => {
     it('TINY-6625: mceTableApplyCellStyle', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       editor.execCommand('mceTableApplyCellStyle', false, { 'background-color': 'pink' });
       const td = editor.getBody().parentElement;
       assert.notEqual(td.style.backgroundColor, 'pink');
@@ -78,7 +76,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableInsertRowBefore', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowBefore');
       assert.equal(count('tr'), beforeCount);
@@ -86,7 +83,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableInsertRowAfter', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('tr');
       editor.execCommand('mceTableInsertRowAfter');
       assert.equal(count('tr'), beforeCount);
@@ -94,7 +90,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableInsertColBefore', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableInsertColBefore');
       assert.equal(count('td'), beforeCount);
@@ -102,7 +97,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableInsertColAfter', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableInsertColAfter');
       assert.equal(count('td'), beforeCount);
@@ -110,7 +104,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableDeleteCol', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('td');
       editor.execCommand('mceTableDeleteCol');
       assert.equal(count('td'), beforeCount);
@@ -118,7 +111,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableDeleteRow', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('tr');
       editor.execCommand('mceTableDeleteRow');
       assert.equal(count('tr'), beforeCount);
@@ -126,7 +118,6 @@ describe('browser.tinymce.plugins.table.InlineEditorInsideTableTest', () => {
 
     it('TINY-6625: mceTableDelete', () => {
       const editor = hook.editor();
-      focusEditor(editor);
       const beforeCount = count('table');
       editor.execCommand('mceTableDelete');
       assert.equal(count('table'), beforeCount);
