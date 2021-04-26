@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     delSettings();
   });
 
-  it('TBA: Template: Test basic template insertion', async () => {
+  it('TBA: Test basic template insertion', async () => {
     const editor = hook.editor();
     addSettings({
       templates: [{ title: 'a', description: 'b', content: '<strong>c</strong>' }],
@@ -36,7 +36,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     TinyAssertions.assertContent(editor, '<p><strong>c</strong></p>');
   });
 
-  it('TBA: Template: Test basic content replacement', async () => {
+  it('TBA: Test basic content replacement', async () => {
     const editor = hook.editor();
     addSettings({
       template_replace_values: { name: 'Tester', email: 'test@test.com' },
@@ -46,7 +46,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     TinyAssertions.assertContent(editor, '<p>Tester test@test.com</p>');
   });
 
-  it('TBA: Template: Test loading in snippet from other file', async () => {
+  it('TBA: Test loading in snippet from other file', async () => {
     const editor = hook.editor();
     addSettings({
       templates: [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]
@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     TinyAssertions.assertContent(editor, '<p><em>this is external</em></p>');
   });
 
-  it('TBA: Template: Test command', () => {
+  it('TBA: Test command', () => {
     const editor = hook.editor();
     addSettings({
       template_replace_values: { name: 'Tester', email: 'test@test.com' },

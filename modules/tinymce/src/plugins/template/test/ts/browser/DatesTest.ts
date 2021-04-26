@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     TinyAssertions.assertContent(editor, '<p class="cdate">fake date</p>');
   });
 
-  it('TBA: Template: Test cdate in snippet with custom class', async () => {
+  it('TBA: Test cdate in snippet with custom class', async () => {
     const editor = hook.editor();
     addSettings({
       template_cdate_classes: 'customCdateClass',
@@ -46,7 +46,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     );
   });
 
-  it('TBA: Template: Test mdate updates with each serialization', async () => {
+  it('TBA: Test mdate updates with each serialization', async () => {
     const editor = hook.editor();
     addSettings({
       template_mdate_format: 'fake modified date',
@@ -69,7 +69,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     ].join('\n'));
   });
 
-  it('TBA: Template: Test mdate updates with each serialization with custom class', async () => {
+  it('TBA: Test mdate updates with each serialization with custom class', async () => {
     const editor = hook.editor();
     addSettings({
       template_mdate_classes: 'modified',

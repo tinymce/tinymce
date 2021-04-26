@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
     editor.setContent('');
   });
 
-  it('TBA: Template: Test selected content replacement with default class', async () => {
+  it('TBA: Test selected content replacement with default class', async () => {
     const editor = hook.editor();
     editor.setContent('Text');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
     TinyAssertions.assertContent(editor, '<h1 class="selcontent">Text</h1>');
   });
 
-  it('TBA: Template: Test selected content replacement with custom class', async () => {
+  it('TBA: Test selected content replacement with custom class', async () => {
     const editor = hook.editor();
     editor.setContent('Text');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);

@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.template.InvalidUrlTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  it('TBA: Template: Test loading in snippet from file that does not exist', async () => {
+  it('TBA: Test loading in snippet from file that does not exist', async () => {
     const editor = hook.editor();
     editor.setContent('');
     editor.settings.templates = [{ title: 'invalid', description: 'b', url: '/custom/404' }, { title: 'a', description: 'a', content: '<strong>c</strong>' }];
