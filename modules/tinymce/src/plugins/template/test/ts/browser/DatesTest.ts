@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { insertTemplate } from '../module/InsertTemplate';
+import { pInsertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
 describe('browser.tinymce.plugins.template.DatesTest', () => {
@@ -29,7 +29,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       templates: [{ title: 'a', description: 'b', content: '<p class="cdate">x</p>' }],
       template_cdate_format: 'fake date',
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor, '<p class="cdate">fake date</p>');
   });
 
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       templates: [{ title: 'a', description: 'b', content: '<p class="customCdateClass">x</p>' }],
       template_cdate_format: 'fake date'
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor,
       '<p class="customCdateClass">fake date</p>'
     );
@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_cdate_format: 'fake created date',
       templates: [{ title: 'a', description: 'b', content: '<div class="mceTmpl"><p class="mdate"></p><p class="cdate"></p></div>' }]
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor, [
       '<div class="mceTmpl">',
       '<p class="mdate">fake modified date</p>',
@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_cdate_format: 'fake created date',
       templates: [{ title: 'a', description: 'b', content: '<div class="mceTmpl"><p class="modified"></p><p class="cdate"></p></div>' }]
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor, [
       '<div class="mceTmpl">',
       '<p class="modified">fake modified date</p>',

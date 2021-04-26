@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 const dialogSelector = 'div.tox-dialog';
 
-const insertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => Promise<void>) => {
+const pInsertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node>) => Promise<void>) => {
   TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
   const dialogEl = await TinyUiActions.pWaitForDialog(editor);
   if (typeof assertFn == 'function') {
@@ -18,5 +18,5 @@ const insertTemplate = async (editor: Editor, assertFn?: (elm: SugarElement<Node
 };
 
 export {
-  insertTemplate
+  pInsertTemplate
 };

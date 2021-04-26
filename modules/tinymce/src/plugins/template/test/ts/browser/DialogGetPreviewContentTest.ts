@@ -74,7 +74,7 @@ describe('browser.tinymce.plugins.template.Dialog.getPreviewContent', () => {
   const { addSettings, delSettings } = Settings(hook);
 
   afterEach(() => {
-    delSettings()
+    delSettings();
   });
 
   it('TINY-6115: Dialog.getPreviewContent: No CORS or content style, no previous HTML', () => {

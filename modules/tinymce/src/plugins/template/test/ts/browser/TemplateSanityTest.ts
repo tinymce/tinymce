@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/template/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import { insertTemplate } from '../module/InsertTemplate';
+import { pInsertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
 describe('browser.tinymce.plugins.template.DatesTest', () => {
@@ -32,7 +32,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     addSettings({
       templates: [{ title: 'a', description: 'b', content: '<strong>c</strong>' }],
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor, '<p><strong>c</strong></p>');
   });
 
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
       template_replace_values: { name: 'Tester', email: 'test@test.com' },
       templates: [{ title: 'a', description: 'b', content: '<p>{$name} {$email}</p>' }]
     });
-    await insertTemplate(editor);
+    await pInsertTemplate(editor);
     TinyAssertions.assertContent(editor, '<p>Tester test@test.com</p>');
   });
 
@@ -51,7 +51,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     addSettings({
       templates: [{ title: 'a', description: '<strong>b</strong>', url: '/project/tinymce/src/plugins/template/test/html/test_template.html' }]
     });
-    await insertTemplate(editor, async (dialogEl) => {
+    await pInsertTemplate(editor, async (dialogEl) => {
       await UiFinder.pWaitForState('iframe is loaded', dialogEl, 'iframe', (elm) => {
         const iframeDoc = elm.dom.contentDocument || elm.dom.contentWindow.document;
         return iframeDoc.body.firstChild !== null;
