@@ -55,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
       TinySelections.setSelection(editor, [ 3 ], 0, [ 3 ], 1, true);
       await TinyUiActions.pWaitForUi(editor, '.tox-pop');
       scrollToBottom(editor);
-      await TinyUiActions.pWaitForUi(editor, '.tox-context-bar-layout-transition-animation');
+      await TinyUiActions.pWaitForUi(editor, '.tox-pop--in-transition');
 
       if (PlatformDetection.detect().browser.isIE()) {
         // An unrelated bug in the context toolbar positioning code, somewhere, prevents the animation from executing as expected on IE during tests.
@@ -65,7 +65,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
         return;
       }
 
-      await Waiter.pTryUntil('Wait for transition animation class to be removed', () => UiFinder.notExists(SugarBody.body(), '.tox-context-bar-layout-transition-animation'));
+      await Waiter.pTryUntil('Wait for transition animation class to be removed', () => UiFinder.notExists(SugarBody.body(), '.tox-pop--in-transition'));
     });
   });
 });
