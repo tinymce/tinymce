@@ -122,7 +122,7 @@ export const isEntireRowsHeaders = (editor: Editor, selections: Selections) => {
             return element.dom === cell.element.dom;
           });
 
-          if (existsInSelection && !Arr.contains(usedRows, cell.column)) {
+          if (existsInSelection && !Arr.contains(usedRows, cell.row)) {
             usedRows.push(cell.row);
           }
         });
