@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin, Theme ]);
 
-  const { addSettings, delSettings } = Settings(hook);
+  const { addSettings, cleanupSettings } = Settings(hook);
 
   beforeEach(() => {
     const editor = hook.editor();
@@ -24,7 +24,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
   });
 
   afterEach(() => {
-    delSettings();
+    cleanupSettings();
   });
 
   it('TBA: Test basic template insertion', async () => {

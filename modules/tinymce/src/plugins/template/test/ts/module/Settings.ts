@@ -14,13 +14,13 @@ const Settings = (hook: TinyHooks.Hook<Editor>) => {
     });
   };
 
-  const delSettings = () => {
+  const cleanupSettings = () => {
     const editor = hook.editor();
     settings.forEach((key) => delete editor.settings[key]);
     settings = new Set<string>();
   };
 
-  return { addSettings, delSettings };
+  return { addSettings, cleanupSettings };
 };
 
 export { Settings };
