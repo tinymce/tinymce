@@ -12,7 +12,7 @@ const alertDialogSelector = 'div.tox-dialog.tox-alert-dialog';
 const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
 
 describe('browser.tinymce.plugins.template.InvalidUrlTest', () => {
-  const hook = TinyHooks.bddSetup<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
