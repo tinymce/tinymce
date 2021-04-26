@@ -8,7 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { insertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
-describe('browser.tinymce.plugins.template.DatesTest', () => {
+describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'template',
     toolbar: 'template',
