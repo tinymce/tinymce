@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.template.DatesTest', () => {
     editor.setContent('');
   });
 
-  it('TBA: Template: Test cdate in snippet with default class', async () => {
+  it('TBA: Test cdate in snippet with default class', async () => {
     const editor = hook.editor();
     addSettings({
       templates: [{ title: 'a', description: 'b', content: '<p class="cdate">x</p>' }],
