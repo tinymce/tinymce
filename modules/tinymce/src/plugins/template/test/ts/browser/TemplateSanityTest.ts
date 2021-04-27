@@ -9,7 +9,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 import { pInsertTemplate } from '../module/InsertTemplate';
 import { Settings } from '../module/Settings';
 
-describe('browser.tinymce.plugins.template.DatesTest', () => {
+describe('browser.tinymce.plugins.template.TemplateSanityTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'template',
     toolbar: 'template',
