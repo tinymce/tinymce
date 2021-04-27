@@ -75,7 +75,7 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
     editor.off('TableModified', logEvent);
   });
 
-  context('TINY-6683: Tab navigation with ranged selection', () => {
+  context('Tab navigation with ranged selection', () => {
     it('TINY-6638: Navigates to next cell', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');
