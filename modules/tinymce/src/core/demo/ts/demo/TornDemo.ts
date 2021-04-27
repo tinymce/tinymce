@@ -1,6 +1,38 @@
 /* eslint-disable no-console */
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
+const addSvgDefToDocument = () => {
+  const gradient =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+      <defs>
+        <linearGradient id="editor-icon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0" stop-color="#888"/>
+          <stop offset="1" stop-color="#bbb"/>
+        </linearGradient>
+        <linearGradient id="editor-icon-gradient__hover" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0" stop-color="#555"/>
+          <stop offset="1" stop-color="#888"/>
+        </linearGradient>
+      <linearGradient id="editor-icon-gradient__disabled" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0" stop-color="#ccc"/>
+        <stop offset="1" stop-color="#ccc"/>
+      </linearGradient>
+        <linearGradient id="editor-icon-gradient__green" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0" stop-color="#637d16"/>
+          <stop offset="1" stop-color="#a4d024"/>
+        </linearGradient>
+        <linearGradient id="editor-icon-gradient__green-hover" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0" stop-color="#5e7715"/>
+          <stop offset="1" stop-color="#90b620"/>
+        </linearGradient>
+      </defs>
+    </svg>`;
+  const svgDefsWrapper = document.createElement('div');
+  svgDefsWrapper.innerHTML = gradient;
+
+  document.body.append(svgDefsWrapper);
+};
+
 declare let tinymce: TinyMCE;
 
 const toolbarItems = [
@@ -33,7 +65,6 @@ const blockFormattingItems = 'align bullist';
 
 export default () => {
   const settings: RawEditorSettings = {
-    skin_url: '../../../../js/tinymce/skins/ui/torn',
     selector: 'textarea',
     plugins: 'link image code emoticons lists',
     toolbar_location: 'bottom',
@@ -72,6 +103,7 @@ export default () => {
       },
     },
     setup: (editor) => {
+      addSvgDefToDocument();
       editor.ui.registry.addButton('reset', {
         icon: 'undo',
         onAction: () => {

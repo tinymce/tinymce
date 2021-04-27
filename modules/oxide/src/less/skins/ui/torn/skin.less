@@ -12,6 +12,7 @@
 @toolbar-group-padding-x: 0;
 @toolbar-button-spacing-x: 4px;
 @tinymce-border-width: 0;
+@toolbar-button-enabled-background-color: none;
 
 .tox {
   .tox-tbtn__select-chevron {
@@ -75,6 +76,21 @@
       .tox-collection__item-label {
         display: none;
       }
+    }
+  }
+
+  .tox-tbtn {
+    svg path {
+      fill: url(#editor-icon-gradient);
+    }
+
+    &.tox-tbtn--enabled svg path,
+    &:hover svg path {
+      fill: url(#editor-icon-gradient__hover);
+    }
+
+    &.disabled svg path {
+      fill: url(#editor-icon-gradient__disabled);
     }
   }
 }
