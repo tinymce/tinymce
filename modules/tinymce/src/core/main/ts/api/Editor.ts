@@ -1002,6 +1002,14 @@ class Editor implements EditorObservable {
     let elm;
 
     if (!self.contentWindow) {
+      const win = self.settings.custom_window;
+
+      if (win) {
+        self.contentWindow = win;
+      }
+    }
+
+    if (!self.contentWindow) {
       elm = self.iframeElement;
 
       if (elm) {
@@ -1020,8 +1028,16 @@ class Editor implements EditorObservable {
    */
   public getDoc(): Document {
     const self = this;
-    let win;
 
+    if (!self.contentDocument) {
+      const document = self.settings.custom_document;
+
+      if (document) {
+        self.contentDocument = document;
+      }
+    }
+
+    let win;
     if (!self.contentDocument) {
       win = self.getWin();
 

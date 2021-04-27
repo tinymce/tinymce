@@ -394,6 +394,15 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
     editor.contentAreaContainer = targetElm;
   }
 
+  if (settings.custom_window) {
+    editor.contentWindow = settings.custom_window;
+    editor.contentDocument = doc = settings.custom_window.document;
+  }
+
+  if (settings.custom_document) {
+    editor.contentDocument = doc = settings.custom_document;
+  }
+
   // It will not steal focus while setting contentEditable
   const body = editor.getBody();
   // disabled isn't valid on all body elements, so need to cast here

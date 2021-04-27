@@ -76,6 +76,8 @@ interface BaseEditorSettings {
   custom_elements?: string;
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
+  custom_window?: Window;
+  custom_document?: Document;
   directionality?: 'ltr' | 'rtl';
   doctype?: string;
   document_base_url?: string;
