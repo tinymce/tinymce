@@ -147,11 +147,11 @@ describe('browser.tinymce.plugins.table.command.ToggleHeadersCommandsTest', () =
         '<table>' +
           '<tbody>' +
             '<tr>' +
-              '<th scope="row">1</th>' +
+              '<th>1</th>' +
               '<td>2</td>' +
             '</tr>' +
             '<tr>' +
-              '<th scope="row">1</th>' +
+              '<th>1</th>' +
               '<td>2</td>' +
             '</tr>' +
           '</tbody>' +
@@ -185,11 +185,11 @@ describe('browser.tinymce.plugins.table.command.ToggleHeadersCommandsTest', () =
         '<table>' +
           '<tbody>' +
             '<tr>' +
-              '<td>1</td>' +
+              '<td scope="row">1</td>' +
               '<td>2</td>' +
             '</tr>' +
             '<tr>' +
-              '<td>1</td>' +
+              '<td scope="row">1</td>' +
               '<td>2</td>' +
             '</tr>' +
           '</tbody>' +
