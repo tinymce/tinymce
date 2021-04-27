@@ -30,7 +30,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       max_width: 500,
       toolbar_mode: toolbarMode,
       toolbar_location: toolbarLocation,
-      toolbar_sticky: true
+      toolbar_sticky: true,
     }, [ FullscreenPlugin, Theme ], true);
 
     PageScroll.bddSetup(hook.editor, 5000);
@@ -146,6 +146,14 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       // and we're setting the scroll position before the window has updated
       await Waiter.pWait(100);
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
+    });
+
+    it('TINY-7337: Check sticky header has the toolbar offset', () => {
+      const sticky_toolbar_offset = 54;
+      const editor = hook.editor();
+      editor.settings.sticky_toolbar_offset = sticky_toolbar_offset;
+
+      StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, sticky_toolbar_offset);
     });
   });
 };
