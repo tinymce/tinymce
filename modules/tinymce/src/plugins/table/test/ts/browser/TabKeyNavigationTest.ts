@@ -123,9 +123,9 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
       assert.equal(editor.selection.getStart().innerHTML, 'cell 1');
       TinyContentActions.keystroke(editor, Keys.tab(), { shiftKey: true });
 
-      // Selection stays the same, table stays the same
+      // Selection stays in the same cell, but collapsed. Table stays the same
       TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 6);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     });
 
     it('TINY-6683: Selection starts inside table, ends outside table', () => {
@@ -143,18 +143,62 @@ describe('browser.tinymce.plugins.table.TabKeyNavigationTest', () => {
       TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     });
 
-    it('TINY-6683: (From top) Selection starts outside table, ends inside table', () => {
+    it('TINY-6683: (From top) Selection starts outside table, ends inside first row', () => {
       const editor = hook.editor();
       editor.setContent('<p>outside</p><table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
 
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 2);
       TinyContentActions.keystroke(editor, Keys.tab());
       TinyAssertions.assertCursor(editor, [ 1, 0, 1, 0, 0 ], 0);
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
 
       // Shift + Tab does nothing
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 2);
       TinyContentActions.keystroke(editor, Keys.tab(), { shiftKey: true });
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 2);
+    });
+
+    it('TINY-6683: (From top) Selection starts outside table, ends inside last row', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>outside</p><table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
+
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 1, 0, 0 ], 2);
+      TinyContentActions.keystroke(editor, Keys.tab());
+
+      // creates new row
+      TinyAssertions.assertContentPresence(editor, { tr: 3, td: 3 });
+      // selection is collapsed in new row
+      TinyAssertions.assertCursor(editor, [ 1, 0, 2, 0 ], 0);
+    });
+
+    it('TINY-6683: Selection is entire table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
+
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 2);
+      TinyContentActions.keystroke(editor, Keys.tab());
+
+      // creates new row
+      TinyAssertions.assertContentPresence(editor, { tr: 3, td: 3 });
+      // selection is collapsed in new row
+      TinyAssertions.assertCursor(editor, [ 0, 0, 2, 0 ], 0);
+    });
+
+    it('TINY-6683: Selection is entire table (shift + tab)', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
+
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 1, 0, 0 ], 2);
+      TinyContentActions.keystroke(editor, Keys.tab(), { shiftKey: true });
+
+      // Does not change table
+      TinyAssertions.assertContentPresence(editor, { tr: 2, td: 2 });
+      // selection is collapsed in first cell
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     });
 
     it('TINY-6683: Tab clears fake selection', () => {
