@@ -62,6 +62,21 @@ describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () =>
     ).getOrDie();
   };
 
+  const pOpenMenu = async () => {
+    const sink = helpers.sink();
+    const doc = hook.root();
+    Focusing.focus(getInput());
+    Keyboard.activeKeydown(doc, Keys.down());
+    await UiFinder.pWaitFor('Waiting for menu to appear', sink, '.tox-menu .tox-collection__item');
+    return UiFinder.findIn(sink, '[role="menu"]').getOrDie();
+  };
+
+  const closeMenu = () => {
+    const doc = hook.root();
+    // Close the menu
+    Keyboard.activeKeydown(doc, Keys.escape());
+  };
+
   beforeEach(() => {
     hook.store().clear();
   });
@@ -76,15 +91,7 @@ describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () =>
   });
 
   it('Check structure of the autocompletion menu', async () => {
-    const sink = helpers.sink();
-    const doc = hook.root();
-    const input = getInput();
-
-    Focusing.focus(input);
-    Keyboard.activeKeydown(doc, Keys.down());
-    await UiFinder.pWaitFor('Waiting for menu to appear', sink, '.tox-menu .tox-collection__item');
-
-    const menu = UiFinder.findIn(sink, '[role="menu"]').getOrDie();
+    const menu = await pOpenMenu();
     Assertions.assertStructure(
       'Checking structure of menu (especially text)',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -121,6 +128,8 @@ describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () =>
       })),
       menu
     );
+
+    closeMenu();
   });
 
   it('Type "He", select an item and assert input state is updated', async () => {
@@ -129,6 +138,7 @@ describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () =>
     const doc = hook.root();
     const input = getInput();
 
+    await pOpenMenu();
     UiControls.setValue(input.element, 'He');
     AlloyTriggers.emit(input, NativeEvents.input());
     await Waiter.pTryUntil(
@@ -189,6 +199,8 @@ describe('phantom.tinymce.themes.silver.components.urlinput.UrlInputTest', () =>
     // Check that attach fires
     repValue.meta.attach();
     store.assertEq('Attach should be in store ... after firing attach', [ 'addToHistory', 'header1.attach' ]);
+
+    closeMenu();
   });
 
   it('Click urlpicker and assert input state is updated', async () => {
