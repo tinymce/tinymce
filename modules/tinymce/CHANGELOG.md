@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added HTML5 `audio` and `video` elements to the default alignment formats #TINY-6633
 - The Oxide button text transform variable was incorrectly using `capitalize` instead of `none`. Patch contributed by dakur #GH-6341
 - Fix dialog button text that was using title-style capitalization #TINY-6816
+- Fixed Tab key navigation inside table cells with a ranged selection #TINY-6638
 - Fixed a regression in the `tinymce.create()` API that caused issues when multiple objects were created #TINY-7358
 
 ## 5.7.1 - 2021-03-17
