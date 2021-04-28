@@ -67,6 +67,8 @@ const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelecti
       event.preventDefault();
       // Clear fake ranged selection because our new selection will always be collapsed
       TableLookup.table(cell, isRoot).each(cellSelection.clear);
+      // Collapse selection to start or end based on shift key
+      editor.selection.collapse(event.shiftKey);
       const navigation = event.shiftKey ? backward : forward;
       const rng = navigation(editor, isRoot, cell);
       rng.each((range) => {
