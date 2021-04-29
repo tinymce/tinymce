@@ -21,6 +21,7 @@
     { "path": "modules/porkbun" },
     { "path": "modules/robin" },
     { "path": "modules/sand" },
+    { "path": "modules/slate-sugar" },
     { "path": "modules/snooker" },
     { "path": "modules/sugar" },
     { "path": "modules/tinymce" }
@@ -136,6 +137,9 @@
       "ephox/sand/test/*": ["modules/sand/src/test/ts/module/ephox/sand/test/*"],
       "ephox/sand/demo/*": ["modules/sand/src/demo/ts/ephox/sand/demo/*"],
       "ephox/sand/*": ["modules/sand/src/main/ts/ephox/sand/*"],
+      "ephox/slate-sugar/test/*": ["modules/slate-sugar/src/test/ts/module/ephox/slate-sugar/test/*"],
+      "ephox/slate-sugar/demo/*": ["modules/slate-sugar/src/demo/ts/ephox/slate-sugar/demo/*"],
+      "ephox/slate-sugar/*": ["modules/slate-sugar/src/main/ts/ephox/slate-sugar/*"],
       "ephox/snooker/test/*": ["modules/snooker/src/test/ts/module/ephox/snooker/test/*"],
       "ephox/snooker/demo/*": ["modules/snooker/src/demo/ts/ephox/snooker/demo/*"],
       "ephox/snooker/*": ["modules/snooker/src/main/ts/ephox/snooker/*"],

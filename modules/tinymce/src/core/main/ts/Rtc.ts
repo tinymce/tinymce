@@ -56,6 +56,7 @@ interface RtcRuntimeApi {
   };
   raw: {
     getRawModel: () => any;
+    getModelApi: () => any;
   };
   rtc: {
     isRemote: boolean;
@@ -106,6 +107,7 @@ interface RtcAdaptor {
   };
   raw: {
     getModel: () => Optional<any>;
+    getModelApi: () => Optional<any>;
   };
 }
 
@@ -155,7 +157,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   raw: {
-    getModel: () => Optional.none()
+    getModel: () => Optional.none(),
+    getModelApi: () => Optional.none()
   }
 });
 
@@ -200,7 +203,8 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       getContent: (_format, args) => selection.getContent(args)
     },
     raw: {
-      getModel: () => Optional.some(raw.getRawModel())
+      getModel: () => Optional.some(raw.getRawModel()),
+      getModelApi: () => Optional.some(raw.getModelApi())
     }
   };
 };
@@ -244,7 +248,8 @@ const makeNoopAdaptor = (): RtcAdaptor => {
       getContent: empty
     },
     raw: {
-      getModel: Fun.constant(Optional.none())
+      getModel: Fun.constant(Optional.none()),
+      getModelApi: Fun.constant(Optional.none()),
     }
   };
 };
