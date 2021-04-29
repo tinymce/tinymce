@@ -110,19 +110,27 @@ const movePrevWord = Fun.curry(moveWord, false);
 
 const moveToLineEndPoint = (editor: Editor, forward: boolean, caret: Cell<Text>): boolean => {
   if (Settings.isInlineBoundariesEnabled(editor)) {
+    const isInlineTarget = Fun.curry(InlineUtils.isInlineTarget, editor);
+    const readLocation = Fun.curry(BoundaryLocation.readLocation, isInlineTarget, editor.getBody());
     // Try to find the line endpoint, however if one isn't found then assume we're already at the end point
     const linePoint = NavigationUtils.getLineEndPoint(editor, forward).getOrThunk(() => {
       const rng = editor.selection.getRng();
       return forward ? CaretPosition.fromRangeEnd(rng) : CaretPosition.fromRangeStart(rng);
     });
 
-    return BoundaryLocation.readLocation(Fun.curry(InlineUtils.isInlineTarget, editor), editor.getBody(), linePoint).exists((loc) => {
-      const outsideLoc = BoundaryLocation.outside(loc);
-      return BoundaryCaret.renderCaret(caret, outsideLoc).exists((pos) => {
-        setCaretPosition(editor, pos);
-        return true;
+    return readLocation(linePoint)
+      .orThunk(() => {
+        const node = editor.selection.getNode();
+        const pos = forward ? CaretPosition.after(node) : CaretPosition.before(node);
+        return readLocation(pos);
+      })
+      .exists((loc) => {
+        const outsideLoc = BoundaryLocation.outside(loc);
+        return BoundaryCaret.renderCaret(caret, outsideLoc).exists((pos) => {
+          setCaretPosition(editor, pos);
+          return true;
+        });
       });
-    });
   } else {
     return false;
   }
