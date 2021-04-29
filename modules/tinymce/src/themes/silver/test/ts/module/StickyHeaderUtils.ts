@@ -215,5 +215,6 @@ export {
   pOpenMenuAndTestScrolling,
   pScrollAndAssertStructure,
   pAssertHeaderDocked,
-  assertEditorClasses
+  assertEditorClasses,
+  scrollRelativeEditor
 };
