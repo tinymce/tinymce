@@ -1,4 +1,4 @@
-const getBody = (api) => api.getOrDie().getBody();
+const getBody = (api) => api.getBody();
 
 export {
   getBody
