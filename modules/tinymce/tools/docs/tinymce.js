@@ -43,9 +43,3 @@
  *
  * @namespace tinymce.util
  */
-
-/**
- * Contains modules to handle data binding.
- *
- * @namespace tinymce.data
- */
