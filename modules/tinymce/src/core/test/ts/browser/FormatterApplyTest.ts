@@ -2308,4 +2308,17 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     editor.formatter.apply('bold');
     assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
   });
+
+  it('TINY-7227: Apply classes with variables', () => {
+    const editor = hook.editor();
+    editor.focus();
+    editor.formatter.register('formatA', { selector: 'p', classes: [ '%value' ] });
+
+    editor.setContent('<p>test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+
+    editor.formatter.apply('formatA', { value: 'a' });
+    editor.formatter.apply('formatA', { value: 'b' });
+    assert.equal(getContent(editor), '<p class="a b">test</p>');
+  });
 });
