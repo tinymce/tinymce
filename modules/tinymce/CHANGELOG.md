@@ -242,6 +242,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.4.0 - 2020-06-30
 
 ### Added
+- Added new `sticky_toolbar_offset` setting to control sticky header offset and new user interface `setToolbarOffset` to update it #TINY-7337
 - Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
 - Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091
 - Added the `Editor.ui.styleSheetLoader` API for loading stylesheets within the Document or ShadowRoot containing the editor UI #TINY-6089

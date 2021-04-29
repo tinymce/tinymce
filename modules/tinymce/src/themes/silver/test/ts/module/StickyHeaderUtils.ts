@@ -190,7 +190,7 @@ const assertHeaderPosition = (top: boolean, location: ToolbarLocation, value: nu
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
 
   return Waiter.pTryUntil(
-    `Wait until head get ${value}px positioned`,
+    `Wait until head get ${value}px`,
     () => assert.equal(Css.get(header, location), `${value}px`)
   );
 };

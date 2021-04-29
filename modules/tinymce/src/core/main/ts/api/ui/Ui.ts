@@ -19,6 +19,7 @@ export interface EditorUiApi {
   enable: () => void;
   disable: () => void;
   isDisabled: () => boolean;
+  setToolbarOffset: (offset: number) => void;
 }
 
 export interface EditorUi extends EditorUiApi {

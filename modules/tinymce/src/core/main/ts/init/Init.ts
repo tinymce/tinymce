@@ -167,6 +167,11 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
       if (!editor.mode.isReadOnly()) {
         Optional.from(api.enable).map(Fun.call);
       }
+    },
+    setToolbarOffset: (offset: number) => {
+      if (!editor.inline) {
+        Optional.from(api.setToolbarOffset).each((fn) => fn(offset));
+      }
     }
   };
   editor.ui = { ...editor.ui, ...uiApiFacade };

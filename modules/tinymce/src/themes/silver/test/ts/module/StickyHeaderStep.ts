@@ -148,12 +148,22 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
     });
 
-    it('TINY-7337: Check sticky header has the toolbar offset', () => {
-      const sticky_toolbar_offset = 54;
+    it('TINY-7337: Checking sticky header and sticky_toolbar_offset are updated by api call', async () => {
       const editor = hook.editor();
-      editor.settings.sticky_toolbar_offset = sticky_toolbar_offset;
+      editor.settings.sticky_toolbar_offset = 0;
 
-      StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, sticky_toolbar_offset);
+      await StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, 0);
+
+      editor.ui.setToolbarOffset(100);
+      await StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, 100);
+      assert.equal(editor.settings.sticky_toolbar_offset, 100);
+
+      editor.ui.setToolbarOffset(200);
+      await StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, 200);
+      assert.equal(editor.settings.sticky_toolbar_offset, 200);
+
+      editor.ui.setToolbarOffset(0);
+      delete editor.settings.sticky_toolbar_offset;
     });
   });
 };

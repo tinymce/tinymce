@@ -66,17 +66,16 @@ const updateIframeContentFlow = (editor: Editor, header: AlloyComponent): void =
   const elm = header.element;
   Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
-    const offsetCongif = getOffsetConfig(editor);
-
+    const offsetConfig = getOffsetConfig(editor);
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
-      Css.set(elm, offsetCongif.position, offsetCongif.offset + 'px');
+      Css.set(elm, offsetConfig.position, offsetConfig.offset + 'px');
       Css.set(parentElem, padding, getOccupiedHeight(elm) + 'px');
     } else {
       Css.remove(elm, 'width');
       Css.remove(parentElem, padding);
-      Css.remove(elm, offsetCongif.position);
+      Css.remove(elm, offsetConfig.position);
     }
   });
 };
@@ -128,6 +127,10 @@ const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComp
 
 const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
   if (!editor.inline) {
+    editor.addCommand('setToolbarOffset', (ui: boolean, offset: number) => {
+      setToolbarOffset(editor, lazyHeader, offset);
+    });
+
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
     if (!sharedBackstage.header.isPositionedAtTop()) {
@@ -250,6 +253,11 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
 
     ...additionalBehaviours
   ];
+};
+
+const setToolbarOffset = (editor: Editor, lazyHeader: () => Optional<AlloyComponent>, offset: number) => {
+  editor.settings.sticky_toolbar_offset = offset;
+  lazyHeader().each(Fun.curry(updateIframeContentFlow, editor));
 };
 
 export {

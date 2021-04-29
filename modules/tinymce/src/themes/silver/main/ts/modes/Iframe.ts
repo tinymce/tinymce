@@ -159,7 +159,8 @@ const render = (editor: Editor, uiComponents: RenderUiComponents, rawUiConfig: R
     disable: () => {
       ReadOnly.broadcastReadonly(uiComponents, true);
     },
-    isDisabled: () => Disabling.isDisabled(outerContainer)
+    isDisabled: () => Disabling.isDisabled(outerContainer),
+    setToolbarOffset: (offset: number) => editor.execCommand('setToolbarOffset', true, offset)
   };
 
   return {
