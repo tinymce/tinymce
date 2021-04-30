@@ -15,6 +15,12 @@
  */
 
 /**
+ * Include EditorManager API docs.
+ *
+ * @include ../../src/core/main/ts/api/EditorManager.ts
+ */
+
+/**
  * Root level namespace this contains classes directly related to the TinyMCE editor.
  *
  * @namespace tinymce
