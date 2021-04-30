@@ -24,8 +24,12 @@ interface SlateLoc {
 
 interface ModelApi {
   getBody: () => SlateLoc;
-  predicateFindClosest: (node: SlateLoc, predicate: (node: SlateLoc) => boolean, isRoot: (node: SlateLoc) => boolean) => SlateLoc;
-  predicateFilterDescendants: (node: SlateLoc, predicate: (node: SlateLoc) => boolean) => SlateLoc[];
+  predicateFind: {
+    closest: (node: SlateLoc, predicate: (node: SlateLoc) => boolean, isRoot: (node: SlateLoc) => boolean) => SlateLoc;
+  };
+  predicateFilter: {
+    descendants: (node: SlateLoc, predicate: (node: SlateLoc) => boolean) => SlateLoc[];
+  };
 }
 
 const getModelApi = (editor: RtcEditor): Optional<ModelApi> => editor.rtcInstance.raw.getModelApi();
