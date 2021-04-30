@@ -15,6 +15,12 @@
  */
 
 /**
+ * Include EditorManager API docs.
+ *
+ * @include ./tinymce.EditorManager.js
+ */
+
+/**
  * Root level namespace this contains classes directly related to the TinyMCE editor.
  *
  * @namespace tinymce
