@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import * as ImageTransformations from 'ephox/imagetools/api/ImageTransformations';
 import * as ResultConversions from 'ephox/imagetools/api/ResultConversions';
 
-// Note: Can't assert the image data URI, as didn't OS/Browser/Hardware produce minor variations
+// Note: Can't assert the image data URI, as different OS/Browser/Hardware produce minor variations
 describe('RotateTest', () => {
   // 25x50px image
   const image = document.createElement('img');
