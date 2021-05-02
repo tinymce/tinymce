@@ -10,6 +10,7 @@
 //
 
 @statusbar-background-color: @background-color;
+@statusbar-focus-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
 @statusbar-font-size: @font-size-xs;
 @statusbar-font-weight: @font-weight-normal;
 @statusbar-height: 18px;
@@ -88,6 +89,14 @@
     svg {
       display: block;
       fill: @statusbar-text-color;
+    }
+
+    &:focus {
+      svg {
+        background-color: @statusbar-focus-background-color;
+        border-radius: 1px;
+        box-shadow: 0 0 0 2px @statusbar-focus-background-color;
+      }
     }
   }
 }

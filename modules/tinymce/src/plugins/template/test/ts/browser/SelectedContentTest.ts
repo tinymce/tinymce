@@ -1,51 +1,49 @@
-import { Log, Mouse, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
-import TemplatePlugin from 'tinymce/plugins/template/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-UnitTest.asynctest('browser.tinymce.plugins.template.SelectedContentTest', (success, failure) => {
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/template/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-  TemplatePlugin();
-  SilverTheme();
+import { pInsertTemplate } from '../module/InsertTemplate';
+import { Settings } from '../module/Settings';
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-
-    const dialogSelector = 'div.tox-dialog';
-    const toolbarButtonSelector = '[role="toolbar"] button[aria-label="Insert template"]';
-
-    const docBody = SugarElement.fromDom(document.body);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Template: Test selectedcontent replacement with default class', [
-        tinyApis.sSetContent('Text'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="selcontent">This will be replaced</h1>' }]),
-        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<h1 class="selcontent">Text</h1>')
-      ]),
-
-      Log.stepsAsStep('TBA', 'Template: Test selectedcontent replacement with custom class', [
-        tinyApis.sSetContent('Text'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-        tinyApis.sSetSetting('template_selected_content_classes', 'customSelected'),
-        tinyApis.sSetSetting('templates', [{ title: 'a', description: 'b', content: '<h1 class="customSelected">This will be replaced/h1>' }]),
-        Mouse.sClickOn(SugarElement.fromDom(editor.getContainer()), toolbarButtonSelector),
-        UiFinder.sWaitForVisible('Waited for dialog to be visible', docBody, dialogSelector),
-        Mouse.sClickOn(docBody, 'button.tox-button:contains(Save)'),
-        Waiter.sTryUntil('Dialog should close', UiFinder.sNotExists(docBody, dialogSelector)),
-        tinyApis.sAssertContent('<h1 class="customSelected">Text</h1>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
+describe('browser.tinymce.plugins.template.SelectedContentTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'template',
     toolbar: 'template',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const { addSettings, cleanupSettings } = Settings(hook);
+
+  afterEach(() => {
+    const editor = hook.editor();
+    cleanupSettings();
+    editor.setContent('');
+  });
+
+  it('TBA: Test selected content replacement with default class', async () => {
+    const editor = hook.editor();
+    editor.setContent('Text');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    addSettings({
+      templates: [{ title: 'a', description: 'b', content: '<h1 class="selcontent">This will be replaced</h1>' }],
+    });
+    await pInsertTemplate(editor);
+    TinyAssertions.assertContent(editor, '<h1 class="selcontent">Text</h1>');
+  });
+
+  it('TBA: Test selected content replacement with custom class', async () => {
+    const editor = hook.editor();
+    editor.setContent('Text');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    addSettings({
+      template_selected_content_classes: 'customSelected',
+      templates: [{ title: 'a', description: 'b', content: '<h1 class="customSelected">This will be replaced/h1>' }],
+    });
+    await pInsertTemplate(editor);
+    TinyAssertions.assertContent(editor, '<h1 class="customSelected">Text</h1>'
+    );
+  });
 });

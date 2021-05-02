@@ -157,7 +157,7 @@ const open = (editor: Editor, insertNewTable: boolean) => {
   // 3. isNew == false && selection parent isn't a table - open dialog with default values and insert a table
 
   if (insertNewTable === false) {
-    tableElm = dom.getParent(editor.selection.getStart(), 'table');
+    tableElm = dom.getParent(editor.selection.getStart(), 'table', editor.getBody());
     if (tableElm) {
       // Case 2 - isNew == false && table parent
       data = Helpers.extractDataFromTableElement(editor, tableElm, hasAdvancedTableTab(editor));

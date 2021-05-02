@@ -11,17 +11,16 @@ import { Compare, CursorPosition, SelectorFilter, SelectorFind, SimSelection, Su
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import { TableActions } from '../actions/TableActions';
 
 import * as Util from '../core/Util';
-import * as TableTargets from './TableTargets';
+import { CellSelectionApi } from '../selection/CellSelection';
 
-const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
-  return go(editor, isRoot, CellNavigation.next(cell), actions);
+const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
+  return go(editor, isRoot, CellNavigation.next(cell));
 };
 
-const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>, actions: TableActions) => {
-  return go(editor, isRoot, CellNavigation.prev(cell), actions);
+const backward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
+  return go(editor, isRoot, CellNavigation.prev(cell));
 };
 
 const getCellFirstCursorPosition = (editor: Editor, cell: SugarElement<Node>): Range => {
@@ -38,17 +37,14 @@ const getNewRowCursorPosition = (editor: Editor, table: SugarElement<HTMLTableEl
   });
 };
 
-const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation, actions: TableActions): Optional<Range> => {
+const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLocation): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(editor, cell);
     });
   }, (current) => {
     return TableLookup.table(current, isRoot).bind((table) => {
-      const targets = TableTargets.noMenu(current);
-      editor.undoManager.transact(() => {
-        actions.insertRowsAfter(table, targets);
-      });
+      editor.execCommand('mceTableInsertRowAfter');
       return getNewRowCursorPosition(editor, table);
     });
   });
@@ -56,7 +52,7 @@ const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLoca
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = (event: KeyboardEvent, editor: Editor, actions: TableActions) => {
+const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi) => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = (element) => {
@@ -65,17 +61,20 @@ const handle = (event: KeyboardEvent, editor: Editor, actions: TableActions) => 
     };
 
     const rng = editor.selection.getRng();
-    if (rng.collapsed) {
-      const start = SugarElement.fromDom(rng.startContainer);
-      TableLookup.cell(start, isRoot).each((cell) => {
-        event.preventDefault();
-        const navigation = event.shiftKey ? backward : forward;
-        const rng = navigation(editor, isRoot, cell, actions);
-        rng.each((range) => {
-          editor.selection.setRng(range);
-        });
+    // If navigating backwards, use the start of the ranged selection
+    const container = SugarElement.fromDom(event.shiftKey ? rng.startContainer : rng.endContainer);
+    TableLookup.cell(container, isRoot).each((cell) => {
+      event.preventDefault();
+      // Clear fake ranged selection because our new selection will always be collapsed
+      TableLookup.table(cell, isRoot).each(cellSelection.clear);
+      // Collapse selection to start or end based on shift key
+      editor.selection.collapse(event.shiftKey);
+      const navigation = event.shiftKey ? backward : forward;
+      const rng = navigation(editor, isRoot, cell);
+      rng.each((range) => {
+        editor.selection.setRng(range);
       });
-    }
+    });
   }
 };
 

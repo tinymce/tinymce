@@ -106,7 +106,7 @@ export const TinyUi = (editor: Editor): TinyUi => {
   };
 
   const getDialogByElement = (element: SugarElement) => {
-    return Arr.find(editor.windowManager.getWindows(), (win) => {
+    return Arr.find(editor.windowManager.getWindows(), (win: any) => {
       return element.dom.id === win._id;
     });
   };

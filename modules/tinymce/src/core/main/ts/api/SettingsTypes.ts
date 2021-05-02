@@ -92,6 +92,7 @@ interface BaseEditorSettings {
   file_picker_validator_handler?: FilePickerValidationCallback;
   fix_list_elements?: boolean;
   fixed_toolbar_container?: string;
+  fixed_toolbar_container_target?: HTMLElement;
   font_formats?: string;
   font_size_classes?: string;
   font_size_legacy_values?: string;
@@ -108,6 +109,7 @@ interface BaseEditorSettings {
   icons_url?: string;
   id?: string;
   images_dataimg_filter?: (imgElm: HTMLImageElement) => boolean;
+  images_file_types?: string;
   images_replace_blob_uris?: boolean;
   images_reuse_filename?: boolean;
   images_upload_base_path?: string;

@@ -50,7 +50,7 @@ const Plugin = (editor: Editor) => {
 
   if (hasTabNavigation(editor)) {
     editor.on('keydown', (e: KeyboardEvent) => {
-      TabContext.handle(e, editor, actions);
+      TabContext.handle(e, editor, cellSelection);
     });
   }
 
