@@ -1,5 +1,14 @@
 {
+  "plugins":[ "notice" ],
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": [ "src/**/main/**/*.ts" ],
+      "rules": {
+        "notice/notice":[ "error", { "templateFile": "copyright-header.js", "chars": 300, "onNonMatchingHeader": "replace" }]
+      }
+    }
+  ]
 }

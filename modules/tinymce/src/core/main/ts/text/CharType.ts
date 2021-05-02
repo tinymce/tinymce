@@ -4,6 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+
 import { Unicode } from '@ephox/katamari';
 
 const is = (expected: string) => (actual: string) => expected === actual;
