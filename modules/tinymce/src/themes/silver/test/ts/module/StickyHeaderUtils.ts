@@ -229,5 +229,6 @@ export {
   pScrollAndAssertStructure,
   pAssertHeaderDocked,
   assertEditorClasses,
-  assertHeaderPosition
+  assertHeaderPosition,
+  scrollRelativeEditor
 };
