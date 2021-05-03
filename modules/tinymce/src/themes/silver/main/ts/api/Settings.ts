@@ -142,7 +142,7 @@ const isStickyToolbar = (editor: Editor) => {
 };
 
 const getStickyToolbarOffset = (editor: Editor) =>
-  editor.getParam('sticky_toolbar_offset', 0, 'number');
+  editor.getParam('toolbar_sticky_offset', 0, 'number');
 
 const isDraggableModal = (editor: Editor): boolean =>
   editor.getParam('draggable_modal', false, 'boolean');

@@ -185,7 +185,9 @@ const assertEditorClasses = (docked: boolean) => {
   })), container);
 };
 
-const assertHeaderPosition = (top: boolean, location: ToolbarLocation, value: number) => {
+const assertHeaderPosition = async (top: boolean, location: ToolbarLocation, value: number) => {
+  scrollRelativeEditor(-100, top);
+  await Waiter.pWait(100);
   scrollRelativeEditor(200, top);
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
 

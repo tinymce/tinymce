@@ -333,8 +333,7 @@ class Editor implements EditorObservable {
       hide: Fun.noop,
       enable: Fun.noop,
       disable: Fun.noop,
-      isDisabled: Fun.never,
-      setToolbarOffset: Fun.noop
+      isDisabled: Fun.never
     };
 
     const self = this;

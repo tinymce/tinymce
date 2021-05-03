@@ -9,12 +9,10 @@ import { Fun } from '@ephox/katamari';
 
 const setup = Fun.noop;
 const isDocked = Fun.never;
-const setToolbarOffset = Fun.noop;
 const getBehaviours = Fun.constant([]);
 
 export {
   setup,
   isDocked,
-  getBehaviours,
-  setToolbarOffset
+  getBehaviours
 };

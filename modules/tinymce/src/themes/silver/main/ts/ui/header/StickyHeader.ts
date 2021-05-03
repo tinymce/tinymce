@@ -6,7 +6,7 @@
  */
 
 import { AlloyComponent, Boxes, Channels, Docking, Focusing, Receiving } from '@ephox/alloy';
-import { Arr, Cell, Fun, Optional, Result } from '@ephox/katamari';
+import { Arr, Cell, Optional, Result } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -58,7 +58,7 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarEl
 
 const isDockedMode = (header: AlloyComponent, mode: 'top' | 'bottom') => Arr.contains(Docking.getModes(header), mode);
 
-const updateIframeContentFlow = (editor: Editor, header: AlloyComponent): void => {
+const updateIframeContentFlow = (header: AlloyComponent): void => {
   const getOccupiedHeight = (elm: SugarElement<HTMLElement>) => Height.getOuter(elm) +
       (parseInt(Css.get(elm, 'margin-top'), 10) || 0) +
       (parseInt(Css.get(elm, 'margin-bottom'), 10) || 0) ;
@@ -66,24 +66,15 @@ const updateIframeContentFlow = (editor: Editor, header: AlloyComponent): void =
   const elm = header.element;
   Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
-    const offsetConfig = getOffsetConfig(editor);
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');
-      Css.set(elm, offsetConfig.position, offsetConfig.offset + 'px');
       Css.set(parentElem, padding, getOccupiedHeight(elm) + 'px');
     } else {
       Css.remove(elm, 'width');
       Css.remove(parentElem, padding);
-      Css.remove(elm, offsetConfig.position);
     }
   });
-};
-
-const getOffsetConfig = (editor: Editor) => {
-  const offset = Settings.getStickyToolbarOffset(editor);
-  const position = Settings.isToolbarLocationBottom(editor) ? 'bottom' : 'top';
-  return { offset, position };
 };
 
 const updateSinkVisibility = (sinkElem: SugarElement<HTMLElement>, visible: boolean): void => {
@@ -127,10 +118,6 @@ const findFocusedElem = (rootElm: SugarElement, lazySink: () => Result<AlloyComp
 
 const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHeader: () => Optional<AlloyComponent>): void => {
   if (!editor.inline) {
-    editor.addCommand('setToolbarOffset', (ui: boolean, offset: number) => {
-      setToolbarOffset(editor, lazyHeader, offset);
-    });
-
     // If using bottom toolbar then when the editor resizes we need to reset docking
     // otherwise it won't know the original toolbar position has moved
     if (!sharedBackstage.header.isPositionedAtTop()) {
@@ -141,7 +128,7 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
 
     // No need to update the content flow in inline mode as the header always floats
     editor.on('ResizeWindow ResizeEditor', () => {
-      lazyHeader().each(Fun.curry(updateIframeContentFlow, editor));
+      lazyHeader().each(updateIframeContentFlow);
     });
 
     // Need to reset the docking position on skin loaded as the original position will have
@@ -184,11 +171,11 @@ const setup = (editor: Editor, sharedBackstage: UiFactoryBackstageShared, lazyHe
 
 const isDocked = (lazyHeader: () => Optional<AlloyComponent>): boolean => lazyHeader().map(Docking.isDocked).getOr(false);
 
-const getIframeBehaviours = (editor: Editor) => [
+const getIframeBehaviours = () => [
   Receiving.config({
     channels: {
       [ EditorChannels.toolbarHeightChange() ]: {
-        onReceive: Fun.curry(updateIframeContentFlow, editor)
+        onReceive: updateIframeContentFlow
       }
     }
   })
@@ -204,14 +191,14 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
 
   const onDockingSwitch = (comp: AlloyComponent) => {
     if (!editor.inline) {
-      updateIframeContentFlow(editor, comp);
+      updateIframeContentFlow(comp);
     }
     updateEditorClasses(editor, Docking.isDocked(comp));
     comp.getSystem().broadcastOn( [ Channels.repositionPopups() ], { });
     lazySink().each((sink) => sink.getSystem().broadcastOn( [ Channels.repositionPopups() ], { }));
   };
 
-  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours(editor);
+  const additionalBehaviours = editor.inline ? [ ] : getIframeBehaviours();
 
   return [
     Focusing.config({ }),
@@ -246,6 +233,13 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
         },
         ...visibility
       },
+      lazyViewport: (comp) => {
+        const win = Boxes.win();
+        const offset = Settings.getStickyToolbarOffset(editor);
+        const top = win.y + (isDockedMode(comp, 'top') ? offset : 0);
+        const height = win.height - (isDockedMode(comp, 'bottom') ? offset : 0);
+        return Boxes.bounds(win.x, top, win.width, height);
+      },
       modes: [ sharedBackstage.header.getDockingMode() ],
       onDocked: onDockingSwitch,
       onUndocked: onDockingSwitch
@@ -253,11 +247,6 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
 
     ...additionalBehaviours
   ];
-};
-
-const setToolbarOffset = (editor: Editor, lazyHeader: () => Optional<AlloyComponent>, offset: number) => {
-  editor.settings.sticky_toolbar_offset = offset;
-  lazyHeader().each(Fun.curry(updateIframeContentFlow, editor));
 };
 
 export {
