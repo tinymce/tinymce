@@ -191,7 +191,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           const found = applyNodeStyle(formatList, node);
 
           // TINY-6567 Include the last node in the selection
-          if (FormatUtils.isChildText(nodes, node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
+          if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
             applyNodeStyle(formatList, node.parentNode);
           }
 

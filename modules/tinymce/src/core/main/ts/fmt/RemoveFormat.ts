@@ -475,7 +475,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     let lastContentEditable: boolean, hasContentEditableState: boolean;
 
     // TINY-6567 Include the last node in the selection
-    if (FormatUtils.isChildText(nodes, node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
+    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
       removeFormat(ed, format, vars, node.parentNode, node.parentNode);
     }
 

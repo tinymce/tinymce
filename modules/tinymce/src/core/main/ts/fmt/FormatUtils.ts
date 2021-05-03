@@ -218,8 +218,6 @@ const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
 
 const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
 
-const isChildText = (nodes: Node[], node: Node) => NodeType.isText(node) && Arr.contains(nodes, node);
-
 export {
   isNode,
   isInlineBlock,
@@ -240,6 +238,5 @@ export {
   isSelectorFormat,
   isInlineFormat,
   isBlockFormat,
-  hasBlockChildren,
-  isChildText
+  hasBlockChildren
 };
