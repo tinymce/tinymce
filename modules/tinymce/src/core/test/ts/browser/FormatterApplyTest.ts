@@ -2486,4 +2486,17 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       '</div>'
     );
   });
+
+  it('TINY-7227: Apply classes with variables', () => {
+    const editor = hook.editor();
+    editor.focus();
+    editor.formatter.register('formatA', { selector: 'p', classes: [ '%value' ] });
+
+    editor.setContent('<p>test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+
+    editor.formatter.apply('formatA', { value: 'a' });
+    editor.formatter.apply('formatA', { value: 'b' });
+    assert.equal(getContent(editor), '<p class="a b">test</p>');
+  });
 });

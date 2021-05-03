@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 - Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays
 
+### Improved
+- Updated the `formatter.matchFormat` API to support matching formats with variables in the `classes` property #TINY-7227
+
 ### Changed
 - Updated the `image` dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
@@ -29,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added HTML5 `audio` and `video` elements to the default alignment formats #TINY-6633
 - The Oxide button text transform variable was incorrectly using `capitalize` instead of `none`. Patch contributed by dakur #GH-6341
 - Fix dialog button text that was using title-style capitalization #TINY-6816
+- Table plugin could perform operations on tables containing the inline editor #TINY-6625
+- Fixed Tab key navigation inside table cells with a ranged selection #TINY-6638
+- Fixed a regression in the `tinymce.create()` API that caused issues when multiple objects were created #TINY-7358
+
 
 ## 5.7.1 - 2021-03-17
 
