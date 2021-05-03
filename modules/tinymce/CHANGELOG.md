@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the `image` dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
+### Deprecated
+- The undocumented `setIconStroke` Split Toolbar Button API has been deprecated and will be removed in a future release #TINY-3551
+
 ### Fixed
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
 - The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
@@ -33,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix dialog button text that was using title-style capitalization #TINY-6816
 - Table plugin could perform operations on tables containing the inline editor #TINY-6625
 - Fixed Tab key navigation inside table cells with a ranged selection #TINY-6638
+- The foreground and background toolbar button color indicator is no longer blurry #TINY-3551
 - Fixed a regression in the `tinymce.create()` API that caused issues when multiple objects were created #TINY-7358
 - Fixed the `LineHeight` command causing the `change` event to be fired inconsistently #TINY-7048
 
