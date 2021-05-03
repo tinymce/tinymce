@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table plugin could perform operations on tables containing the inline editor #TINY-6625
 - Fixed Tab key navigation inside table cells with a ranged selection #TINY-6638
 - Fixed a regression in the `tinymce.create()` API that caused issues when multiple objects were created #TINY-7358
-
+- Fixed the `LineHeight` command causing the `change` event to be fired inconsistently #TINY-7048
 
 ## 5.7.1 - 2021-03-17
 
