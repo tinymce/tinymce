@@ -72,4 +72,19 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
     editor.execCommand('LineHeight', false, '1.4');
     TinyAssertions.assertContent(editor, '<p>Hello</p>');
   });
+
+  it('TINY-7048: LineHeight event order is correct', () => {
+    const events = [];
+    const editor = hook.editor();
+    editor.setContent('<p>Hello</p>');
+    const logEvents = (e) => events.push(e.type.toLowerCase());
+    // Note: It's important that we prepend these events, otherwise the UndoManager `ExecCommand` event handler
+    // will execute first and make it looks like `change` is fired second.
+    editor.on('BeforeExecCommand change ExecCommand', logEvents, true);
+
+    editor.execCommand('LineHeight', false, '2');
+    TinyAssertions.assertContent(editor, '<p style="line-height: 2;">Hello</p>');
+    assert.deepEqual(events, [ 'beforeexeccommand', 'execcommand', 'change' ]);
+    editor.off('BeforeExecCommand change ExecCommand', logEvents);
+  });
 });
