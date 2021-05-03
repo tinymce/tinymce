@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -8,7 +9,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup, Warehouse } from '@ephox/snooker';
-import { Class, Compare, Insert, Remove, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Class, Insert, Remove, Replication, SelectorFind, Selectors, SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -53,7 +54,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const toggleColumnHeader = () => {
     getSelectionStartCell(editor).each((startCell) => {
-      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+      TableLookup.table(startCell, isRoot).each((table) => {
         if (isEntireColumnsHeaders(editor, selections)) {
           editColumnsHeader(table, startCell, 'td');
         } else {
@@ -91,7 +92,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         columnCell.each((cell) => {
           const theadOpt = SelectorFind.ancestor(cell.element, 'thead');
 
-          if (theadOpt.isNone() && Util.getNodeName(cell.element.dom) !== changeTo) {
+          if (theadOpt.isNone() && SugarNode.name(cell.element.dom) !== changeTo) {
             const newCellElm = editor.dom.rename(cell.element.dom, changeTo) as HTMLTableCellElement;
             Events.fireNewCell(editor, newCellElm);
           }
@@ -120,18 +121,21 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   };
 
-  const toggleCaption = (_ui: boolean, toggleState: boolean, forced?: boolean) => {
+  const toggleCaption = () => {
     getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
       TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
-        let captionElm = editor.dom.select('caption', table.dom)[0];
+        const captionElementOpt = Selectors.one('caption', table);
 
-        if (captionElm && (!forced || toggleState)) {
-          editor.dom.remove(captionElm);
-        } else if (!captionElm && (forced || toggleState)) {
-          captionElm = editor.dom.create('caption');
-          captionElm.innerHTML = 'Caption';
-          table.dom.insertBefore(captionElm, table.dom.firstChild);
-        }
+        captionElementOpt.fold(
+          () => {
+            const caption = SugarElement.fromTag('caption');
+            Insert.append(caption, SugarElement.fromText('Caption'));
+            Insert.appendAt(table, caption, 0);
+          },
+          (caption) => {
+            Remove.remove(caption);
+          }
+        );
 
         Events.fireTableModified(editor, table.dom, Events.structureModified);
       });
@@ -182,24 +186,11 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const toggleTableCellClass = (_ui: boolean, requestedClass: string) => {
     getSelectionStartCell(editor).each((startCell) => {
-      TableLookup.table(startCell, isRoot).filter(Fun.not(isRoot)).each((table) => {
+      TableLookup.table(startCell, isRoot).each((table) => {
         const cells = TableSelection.getCellsFromSelection(startCell, selections);
 
-        const warehouse = Warehouse.fromTable(table);
-        const allCells = Warehouse.justCells(warehouse);
-
-        const filtered = Arr.filter(allCells, (cellA) =>
-          Arr.exists(cells, (cellB) =>
-            Compare.eq(cellA.element, cellB)
-          )
-        );
-
-        Arr.each(filtered, (value) => {
-          if (Class.has(value.element, requestedClass)) {
-            Class.remove(value.element, requestedClass);
-          } else {
-            Class.add(value.element, requestedClass);
-          }
+        Arr.each(cells, (value) => {
+          Class.toggle(value, requestedClass);
         });
 
         Events.fireTableModified(editor, table.dom, Events.structureModified);

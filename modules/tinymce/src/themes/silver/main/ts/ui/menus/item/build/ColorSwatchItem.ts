@@ -17,7 +17,7 @@ import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
 
 export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
-  const items = getcolorItems(spec, backstage);
+  const items = getColorItems(spec, backstage);
   const columns = backstage.colorinput.getColorCols();
   const presets = 'color';
 
@@ -54,13 +54,11 @@ export const renderColorSwatchItem = (spec: Menu.FancyMenuItem, backstage: UiFac
   };
 };
 
-const getcolorItems = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Menu.ChoiceMenuItemSpec[] => {
-  if (Type.isNonNullable(spec.initData)) {
-    if (spec.initData.colorselection) {
-      return spec.initData.colorselection.concat(ColorSwatch.getAdditionalColors(false));
-    } else {
-      return ColorSwatch.getColors(backstage.colorinput.getColors(), false);
-    }
+const getColorItems = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Menu.ChoiceMenuItemSpec[] => {
+  if (Type.isArray(spec.initData.colors)) {
+    return spec.initData.colors.concat(ColorSwatch.getAdditionalColors(false));
+  } else if (spec.initData.ignoreCustomColors) {
+    return ColorSwatch.getColors(backstage.colorinput.getColors(), false);
   } else {
     return ColorSwatch.getColors(backstage.colorinput.getColors(), backstage.colorinput.hasCustomColors());
   }

@@ -12,6 +12,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { onSetupAttributeToggle, onSetupClassToggle } from './ButtonToggleUtils';
+import { verticalAlignValues } from './CellAlignValues';
 import { applyColorSetup } from './CustomColorSwatch';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
@@ -174,44 +175,10 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Row clipboard actions',
     fetch: (callback) => {
       callback([
-        {
-          type: 'menuitem',
-          text: 'Cut row',
-          icon: 'cut-row',
-          onAction: () => {
-            editor.execCommand('mceTableCutRow');
-          }
-        },
-        {
-          type: 'menuitem',
-          text: 'Copy row',
-          icon: 'duplicate-row',
-          onAction: () => {
-            editor.execCommand('mceTableCopyRow');
-          }
-        },
-        {
-          type: 'togglemenuitem',
-          text: 'Paste row before',
-          icon: 'paste-row-before',
-          onAction: () => {
-            editor.execCommand('mceTablePasteRowBefore');
-          },
-          onSetup: (buttonApi) => {
-            buttonApi.setDisabled(editor.plugins.table.getClipboardRows().length === 0);
-          }
-        },
-        {
-          type: 'togglemenuitem',
-          text: 'Paste row after',
-          icon: 'paste-row-after',
-          onAction: () => {
-            editor.execCommand('mceTablePasteRowAfter');
-          },
-          onSetup: (buttonApi) => {
-            buttonApi.setDisabled(editor.plugins.table.getClipboardRows().length === 0);
-          }
-        },
+        'tablecutrow',
+        'tablecopyrow',
+        'tablecopyrow',
+        'tablepasterowafter',
       ]);
     }
   });
@@ -221,44 +188,10 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     tooltip: 'Column clipboard actions',
     fetch: (callback) => {
       callback([
-        {
-          type: 'menuitem',
-          text: 'Cut column',
-          icon: 'cut-column',
-          onAction: () => {
-            editor.execCommand('mceTableCutCol');
-          }
-        },
-        {
-          type: 'menuitem',
-          text: 'Copy column',
-          icon: 'duplicate-column',
-          onAction: () => {
-            editor.execCommand('mceTableCopyCol');
-          }
-        },
-        {
-          type: 'togglemenuitem',
-          text: 'Paste column before',
-          icon: 'paste-column-before',
-          onAction: () => {
-            editor.execCommand('mceTablePasteColBefore');
-          },
-          onSetup: (buttonApi) => {
-            buttonApi.setDisabled(editor.plugins.table.getClipboardCols().length === 0);
-          }
-        },
-        {
-          type: 'togglemenuitem',
-          text: 'Paste column after',
-          icon: 'paste-column-after',
-          onAction: () => {
-            editor.execCommand('mceTablePasteColAfter');
-          },
-          onSetup: (buttonApi) => {
-            buttonApi.setDisabled(editor.plugins.table.getClipboardCols().length === 0);
-          }
-        },
+        'tablecutcolumn',
+        'tablecopycolumn',
+        'tablepastecolumnbefore',
+        'tablepastecolumnafter',
       ]);
     }
   });
@@ -301,7 +234,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
           const item: Menu.ToggleMenuItemSpec = {
             text: value.title,
             type: 'togglemenuitem',
-            onAction: (_api: Menu.MenuItemInstanceApi) => {
+            onAction: () => {
               editor.execCommand('mceTableCellToggleClass', false, value.value);
             },
             onSetup: onSetupClassToggle(editor, 'tablecellclass', value.value)
@@ -314,35 +247,17 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     });
   }
 
-  const alignTableButtons = [
-    {
-      name: 'tablecellvaligntop',
-      text: 'Top',
-      cmd: 'top'
-    },
-    {
-      name: 'tablecellvaligncenter',
-      text: 'Center',
-      cmd: 'center'
-    },
-    {
-      name: 'tablecellvalignbottom',
-      text: 'Bottom',
-      cmd: 'bottom'
-    },
-  ];
-
   editor.ui.registry.addMenuButton('tablecellvalign', {
     icon: 'vertical-align',
     tooltip: 'Vertical align',
     fetch: (callback) => {
-      callback(Arr.map(alignTableButtons, (item): Menu.ToggleMenuItemSpec => {
+      callback(Arr.map(verticalAlignValues, (item): Menu.ToggleMenuItemSpec => {
         return {
           text: item.text,
           type: 'togglemenuitem',
           onAction: () => {
             editor.execCommand('mceTableApplyCellStyle', false, {
-              'vertical-align': item.cmd
+              'vertical-align': item.value
             });
           },
           onSetup: onSetupAttributeToggle(editor, 'tablecellverticalalign', item.name)
@@ -355,7 +270,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addToggleButton('tablecaption', {
     tooltip: 'Table caption',
     onAction: () => {
-      editor.execCommand('mceTableToggleCaption', false, true);
+      editor.execCommand('mceTableToggleCaption');
     },
     icon: 'table-caption',
     onSetup: selectionTargets.onSetupTableWithCaption
@@ -371,7 +286,8 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
           type: 'fancymenuitem',
           fancytype: 'colorswatch',
           initData: {
-            colorselection: tableCellBackgroundColors.length > 0 ? tableCellBackgroundColors : undefined
+            colors: tableCellBackgroundColors.length > 0 ? tableCellBackgroundColors : undefined,
+            ignoreCustomColors: true
           },
           onAction: (data) => {
             applyColorSetup(editor, data.value, (value: string) => {
@@ -396,7 +312,8 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
           type: 'fancymenuitem',
           fancytype: 'colorswatch',
           initData: {
-            colorselection: tableCellBorderColors.length > 0 ? tableCellBorderColors : undefined
+            colors: tableCellBorderColors.length > 0 ? tableCellBorderColors : undefined,
+            ignoreCustomColors: true
           },
           onAction: (data) => {
             applyColorSetup(editor, data.value, (value: string) => {

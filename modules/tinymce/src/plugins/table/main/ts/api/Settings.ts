@@ -5,10 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { mapColors } from '../ui/CustomColorSwatch';
 
 export interface StringMap {
   [key: string]: string;
@@ -149,11 +149,11 @@ const hasObjectResizing = (editor: Editor): boolean => {
 };
 
 const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return mapColors(editor.getParam('table_cell_background_color_map', []));
+  return Transformations.anyToHex(editor.getParam('table_cell_background_color_map', []));
 };
 
 const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return mapColors(editor.getParam('table_cell_border_color_map', []));
+  return Transformations.anyToHex(editor.getParam('table_cell_border_color_map', []));
 };
 
 export {

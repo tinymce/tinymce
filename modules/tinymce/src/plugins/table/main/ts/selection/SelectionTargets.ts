@@ -50,7 +50,7 @@ interface ExtractedSelectionDetails {
 }
 
 const isElementHeader = (cell: SugarElement<HTMLTableCellElement>) => {
-  if (cell.dom.nodeName.toLowerCase() === 'th') {
+  if (SugarNode.name(cell) === 'th') {
     return true;
   } else {
     const theadOpt = SelectorFind.ancestor(cell, 'thead');
