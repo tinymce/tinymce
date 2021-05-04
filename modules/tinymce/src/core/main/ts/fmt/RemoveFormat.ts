@@ -471,12 +471,13 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   const isRemoveBookmarkNode = (node: Node) => Bookmarks.isBookmarkNode(node) && NodeType.isElement(node) && (node.id === '_start' || node.id === '_end');
 
   // Merges the styles for each node
-  const process = (nodes: Node[], node: Node) => {
+  const process = (node: Node) => {
     let lastContentEditable: boolean, hasContentEditableState: boolean;
 
     // TINY-6567 Include the last node in the selection
-    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
-      removeFormat(ed, format, vars, node.parentNode, node.parentNode);
+    const parentNode = node.parentNode;
+    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, parentNode)) {
+      removeFormat(ed, format, vars, parentNode, parentNode);
     }
 
     // Node has a contentEditable value
@@ -502,7 +503,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     if (format.deep) {
       if (children.length) {
         for (let i = 0; i < children.length; i++) {
-          process(children, children[i]);
+          process(children[i]);
         }
 
         if (hasContentEditableState) {
@@ -603,7 +604,7 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
     // Remove items between start/end
     RangeWalk.walk(dom, expandedRng, (nodes) => {
       Arr.each(nodes, (node) => {
-        process(nodes, node);
+        process(node);
 
         // Note: Assists with cleaning up any stray text decorations that may been applied when text decorations
         // and text colors were merged together from a applied format
