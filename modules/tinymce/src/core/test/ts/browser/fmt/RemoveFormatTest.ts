@@ -8,6 +8,7 @@ import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
+    indent: false,
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ], true);
 
@@ -111,6 +112,103 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       doRemoveFormat(editor, boldFormat);
       TinyAssertions.assertContent(editor, '<p><em>ab&nbsp; &nbsp;<strong>cd</strong></em></p>');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 2);
+    });
+
+    it('TINY-6567: Remove format including the final item in the list', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<ul>' +
+          '<li style="text-align: center;">a</li>' +
+          '<li style="text-align: center;">b' +
+            '<ul>' +
+              '<li style="text-align: center;">c</li>' +
+              '<li style="text-align: center;">d</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1 ], 0);
+
+      RemoveFormat.remove(editor, 'aligncenter');
+      TinyAssertions.assertContent(editor,
+        '<ul>' +
+          '<li>a</li>' +
+          '<li>b' +
+            '<ul>' +
+              '<li>c</li>' +
+              '<li>d</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1 ], 0);
+    });
+
+    it('TINY-6567: Remove format including the final item in nested lists', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<ul>' +
+          '<li style="text-align: center;">1</li>' +
+          '<li style="text-align: center;">2' +
+            '<ul>' +
+              '<li style="text-align: center;">a</li>' +
+              '<li style="text-align: center;">b' +
+                '<ul>' +
+                  '<li style="text-align: center;">1</li>' +
+                  '<li style="text-align: center;">2</li>' +
+                '</ul>' +
+              '</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1, 1, 1 ], 0);
+
+      RemoveFormat.remove(editor, 'aligncenter');
+      TinyAssertions.assertContent(editor,
+        '<ul>' +
+          '<li>1</li>' +
+          '<li>2' +
+            '<ul>' +
+              '<li>a</li>' +
+              '<li>b' +
+                '<ul>' +
+                  '<li>1</li>' +
+                  '<li>2</li>' +
+                '</ul>' +
+              '</li>' +
+            '</ul>' +
+          '</li>' +
+        '</ul>'
+      );
+      TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 1, 1, 1, 1, 1 ], 0);
+    });
+
+    it('TINY-6567: Remove format including the final item in a div structure with partial selection', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<div>' +
+          '<div><strong>a</strong></div>' +
+          '<div><strong>b</strong>' +
+            '<div><strong>c</strong></div>' +
+            '<div>d</div>' +
+            '<div>e</div>' +
+          '</div>' +
+        '</div>'
+      );
+
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 1, 0, 0 ], 1);
+      doRemoveFormat(editor, removeFormat);
+      TinyAssertions.assertContent(editor,
+        '<div>' +
+          '<div>a</div>' +
+          '<div>b' +
+            '<div>c</div>' +
+            '<div>d</div>' +
+            '<div>e</div>' +
+          '</div>' +
+        '</div>'
+      );
     });
   });
 });

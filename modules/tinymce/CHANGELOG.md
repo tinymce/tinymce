@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The undocumented `setIconStroke` Split Toolbar Button API has been deprecated and will be removed in a future release #TINY-3551
 
 ### Fixed
+- Fixed a bug where it wasn't possible to align nested list items #TINY-6567
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
 - The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
 - The color picker dialog will now show an alert if it is submitted with an invalid hex color code #TINY-2814
