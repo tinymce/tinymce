@@ -66,6 +66,7 @@ const updateIframeContentFlow = (header: AlloyComponent): void => {
   const elm = header.element;
   Traverse.parent(elm).each((parentElem: SugarElement<HTMLElement>) => {
     const padding = 'padding-' + Docking.getModes(header)[0];
+
     if (Docking.isDocked(header)) {
       const parentWidth = Width.get(parentElem);
       Css.set(elm, 'width', parentWidth + 'px');

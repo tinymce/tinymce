@@ -156,7 +156,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       const editor = hook.editor();
       editor.settings.toolbar_sticky_offset = 54;
 
-      await StickyUtils.assertHeaderPosition(isToolbarTop, toolbarLocation, 54);
+      await StickyUtils.assertHeaderPosition(toolbarLocation, 54);
       delete editor.settings.toolbar_sticky_offset;
     });
   });

@@ -185,15 +185,16 @@ const assertEditorClasses = (docked: boolean) => {
   })), container);
 };
 
-const assertHeaderPosition = async (top: boolean, location: ToolbarLocation, value: number) => {
-  scrollRelativeEditor(-100, top);
+const assertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number) => {
+  const isToolbarTop = toolbarLocation === ToolbarLocation.top;
+  scrollRelativeEditor(-100, isToolbarTop);
   await Waiter.pWait(100);
-  scrollRelativeEditor(200, top);
+  scrollRelativeEditor(200, isToolbarTop);
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
 
   return Waiter.pTryUntil(
     `Wait until head get ${value}px`,
-    () => assert.equal(Css.get(header, location), `${value}px`)
+    () => assert.equal(Css.get(header, toolbarLocation), `${value}px`)
   );
 };
 
