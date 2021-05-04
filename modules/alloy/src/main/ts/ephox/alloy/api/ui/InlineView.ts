@@ -229,7 +229,7 @@ const InlineView: InlineViewSketcher = Sketcher.single<InlineViewSpec, InlineVie
     FieldSchema.defaulted('getRelated', Optional.none),
     FieldSchema.defaulted('isExtraPart', Fun.never),
     FieldSchema.defaulted('eventOrder', Optional.none),
-    FieldSchema.defaulted('transitionAnimationClass', Optional.none())
+    FieldSchema.optionString('transitionAnimationClass')
   ],
   factory,
   apis: {

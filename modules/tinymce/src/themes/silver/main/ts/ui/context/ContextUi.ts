@@ -39,7 +39,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     fireDismissalEventInstead: {
       event: 'doNotDismissYet'
     },
-    transitionAnimationClass: Optional.some('tox-pop--in-transition'),
+    transitionAnimationClass: 'tox-pop--in-transition',
 
     onShow: (comp) => {
       stack.set([ ]);

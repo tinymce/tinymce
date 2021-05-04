@@ -47,7 +47,7 @@ export interface InlineViewSpec extends SingleSketchSpec {
   fireDismissalEventInstead?: {
     event?: string;
   };
-  transitionAnimationClass?: Optional<string>;
+  transitionAnimationClass?: string;
   fireRepositionEventInstead?: {
     event?: string;
   };
