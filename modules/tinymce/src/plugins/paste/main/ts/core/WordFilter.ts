@@ -40,8 +40,8 @@ const isNumericList = (text) => {
   let found;
 
   const patterns = [
-    /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
-    /^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
+    /^[IVXLMCD]+\.[ \u00a0]/,  // Roman upper case
+    /^[ivxlmcd]+\.[ \u00a0]/,  // Roman lower case
     /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
     /^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
     /^[0-9]+\.[ \u00a0]/,          // Numeric lists
