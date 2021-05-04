@@ -3,7 +3,6 @@
  *
  * @static
  * @class tinymce
- * @borrow-members tinymce.EditorManager
  * @borrow-members tinymce.util.Tools
  */
 

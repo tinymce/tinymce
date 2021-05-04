@@ -23,10 +23,8 @@ import URI from './util/URI';
 
 declare const window: Window & { tinymce: any; tinyMCEPreInit: any };
 
+// NOTE: the class tag is commented out for the include in `modules/tinymce/tools/docs/tinymce.js`
 /**
- * NOTE: the class tag is commented out for the include in
- * `modules/tinymce/tools/docs/tinymce.js`
- *
  * This class used as a factory for manager for tinymce.Editor instances.
  *
  * @example
