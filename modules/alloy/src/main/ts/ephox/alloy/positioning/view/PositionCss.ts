@@ -44,11 +44,7 @@ const applyPositionCss = (element: SugarElement, position: PositionCss, decision
       Css.set(element, 'position', 'absolute');
 
       const getValue = (key: 'top' | 'left' | 'bottom' | 'right') => {
-        if (cssOptions[key].isSome()) {
-          return Optional.some(Css.get(element, key));
-        } else {
-          return Optional.none<string>();
-        }
+        return cssOptions[key].map(() => Css.get(element, key));
       };
 
       const intermediateCssOptions = {

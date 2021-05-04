@@ -5,20 +5,27 @@ import { RepositionDecision } from '../../positioning/view/Reposition';
 
 const dataAttribute = 'data-alloy-context-toolbar-location';
 
+const northValues = [ LayoutLabels.north, LayoutLabels.northInner, LayoutLabels.northPinned ];
+const southValues = [ LayoutLabels.south, LayoutLabels.southInner, LayoutLabels.southPinned ];
+
 const isElementTopAligned = (element: SugarElement<any>): boolean => {
-  return Arr.contains([ LayoutLabels.north, LayoutLabels.northInner, LayoutLabels.northPinned ], getDataAttribute(element));
+  return Arr.contains(northValues, getDataAttribute(element));
 };
 
 const isDecisionTopAligned = (decisionOpt: Optional<RepositionDecision>): boolean => {
-  return decisionOpt.map((decision) => decision.label === LayoutLabels.north).getOr(false);
+  return decisionOpt.map((decision) => {
+    return Arr.contains(northValues, decision.label);
+  }).getOr(false);
 };
 
 const isElementBottomAligned = (element: SugarElement<any>): boolean => {
-  return Arr.contains([ LayoutLabels.south, LayoutLabels.southInner, LayoutLabels.southPinned ], getDataAttribute(element));
+  return Arr.contains(southValues, getDataAttribute(element));
 };
 
 const isDecisionBottomAligned = (decisionOpt: Optional<RepositionDecision>): boolean => {
-  return decisionOpt.map((decision) => decision.label === LayoutLabels.south).getOr(false);
+  return decisionOpt.map((decision) => {
+    return Arr.contains(southValues, decision.label);
+  }).getOr(false);
 };
 
 const setDataAttribute = (element: SugarElement<any>, label: string): void => {
