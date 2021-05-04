@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added a new `setValue` method to the `SliderUi`. This allows the slider value to be modified without firing a change event.
 
 ### Changed
-- Changed context toolbars to stick to the top or bottom of the view as needed, and transition from one state to the other.
+- Changed positional elements to stick to the top or bottom of the view as needed, and transition from one state to the other.
 
 ## 8.1.0 - 2020-11-18
 

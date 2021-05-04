@@ -3,7 +3,7 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 import { LayoutLabels } from '../../positioning/layout/LayoutLabels';
 import { RepositionDecision } from '../../positioning/view/Reposition';
 
-const dataAttribute = 'data-alloy-context-toolbar-location';
+const dataAttribute = 'data-alloy-positional-element-location';
 
 const northValues = [ LayoutLabels.north, LayoutLabels.northInner, LayoutLabels.northPinned ];
 const southValues = [ LayoutLabels.south, LayoutLabels.southInner, LayoutLabels.southPinned ];
