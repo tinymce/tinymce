@@ -5,7 +5,6 @@ import { PlatformDetection } from '@ephox/sand';
 import { Height, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
-import TablesPlugin from 'tinymce/plugins/table/Plugin';
 import { getGreenImageDataUrl } from 'tinymce/src/themes/silver/test/ts/module/Assets';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -18,13 +17,13 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarAnim
     content_style: 'body, p { margin: 50; }',
     setup: (ed: Editor) => {
       ed.ui.registry.addContextToolbar('test-node-toolbar', {
-        predicate: (node) => node.nodeName && node.nodeName.toLowerCase() === 'img',
+        predicate: (node) => node.nodeName.toLowerCase() === 'img',
         items: 'alpha',
         scope: 'node',
         position: 'node'
       });
     }
-  }, [ TablesPlugin, Theme ], true);
+  }, [ Theme ], true);
 
   context('TINY-7191: context toolbar layout changes', () => {
     const scrollToBottom = (editor: Editor) => {
