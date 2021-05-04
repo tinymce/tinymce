@@ -33,6 +33,7 @@ const description = `<h1>Editor UI keyboard navigation</h1>
   <li>the element path in the footer </li>
   <li>the wordcount toggle button in the footer </li>
   <li>the branding link in the footer </li>
+  <li>the editor resize handle in the footer</li>
 </ul>
 
 <p>Pressing shift + tab will move backwards through the same sections, except when moving from the footer to the toolbar. Focusing the element path then pressing shift + tab will move focus to the first toolbar group, not the last.</p>
