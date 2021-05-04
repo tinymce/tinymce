@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
-import { setDataAttribute } from '../../api/behaviour/PositionUtils';
+import { setDataAttribute } from '../../behaviour/positioning/PositionUtils';
 
 import { Bubble } from '../layout/Bubble';
 import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';

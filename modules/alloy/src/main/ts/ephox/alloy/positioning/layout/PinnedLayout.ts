@@ -1,5 +1,5 @@
 import { SugarElement } from '@ephox/sugar';
-import { isElementBottomAligned, isElementTopAligned } from '../../api/behaviour/PositionUtils';
+import { isElementBottomAligned, isElementTopAligned } from '../../behaviour/positioning/PositionUtils';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';

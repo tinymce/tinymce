@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 import { Class, Css, SugarElement } from '@ephox/sugar';
-import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from '../../api/behaviour/PositionUtils';
+import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from '../../behaviour/positioning/PositionUtils';
 import { RepositionDecision } from './Reposition';
 
 export interface PositionCss {
