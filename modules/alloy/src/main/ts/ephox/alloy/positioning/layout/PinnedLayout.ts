@@ -53,7 +53,7 @@ const pinAtBottom: AnchorLayout = (
   );
 };
 
-const contextualPinnedOrder = (element: SugarElement<any>, whenAtTop: () => AnchorLayout[], whenAtBottom: () => AnchorLayout[], whenDefault: () => AnchorLayout[]): AnchorLayout[] => {
+const contextualPinnedOrder = (element: SugarElement, whenAtTop: () => AnchorLayout[], whenAtBottom: () => AnchorLayout[], whenDefault: () => AnchorLayout[]): AnchorLayout[] => {
   if (isElementTopAligned(element)) {
     return whenAtTop();
   } else if (isElementBottomAligned(element)) {
