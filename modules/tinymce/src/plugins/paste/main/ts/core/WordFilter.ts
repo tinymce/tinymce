@@ -89,28 +89,39 @@ const convertFakeListsToProperLists = (node) => {
     return txt;
   };
 
-  const trimListStart = (node, regExp) => {
-    if (node.type === 3) {
-      if (regExp.test(node.value)) {
-        node.value = node.value.replace(regExp, '');
-        return false;
+  const joinChildTextNodes = (parent) => {
+    let node = parent.firstChild;
+
+    while (node) {
+      const prev = node;
+      node = prev.next;
+
+      // when two sibling nodes are both text nodes
+      if (prev.type === 3 && node && node.type === 3) {
+        // merge their text content to the next child
+        node.value = prev.value + node.value;
+        // and remove the previous child
+        prev.remove();
       }
     }
+  };
 
-    if ((node = node.firstChild)) {
-      do {
-        if (!trimListStart(node, regExp)) {
-          return false;
-        }
-      } while ((node = node.next));
+  const trimFirstTextNode = (parent, regExp) => {
+    if ((node = parent.firstChild) && node.type === 3) {
+      node.value = node.value.replace(regExp, '');
     }
-
-    return true;
   };
 
   const removeIgnoredNodes = (node) => {
     if (node._listIgnore) {
-      node.remove();
+      // Remove any text content or remove the children from the node.
+      // node.remove() would not work here because it sets node.next and node.prev to null,
+      // thus preventing recursion.
+      if (node.type === 3) {
+        node.value = '';
+      } else {
+        node.empty();
+      }
       return;
     }
 
@@ -160,11 +171,13 @@ const convertFakeListsToProperLists = (node) => {
 
     lastLevel = level;
 
-    // Remove start of list item "1. " or "&middot; " etc
+    // Remove start of list item "1. ", "&middot; " or "a) " etc marked by Word style mso-list:Ignore
     removeIgnoredNodes(paragraphNode);
-    trimListStart(paragraphNode, /^\u00a0+/);
-    trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u25CF]|\w+\.)/);
-    trimListStart(paragraphNode, /^\u00a0+/);
+
+    // Some Word versions did not use mso-list:Ignore.
+    // Remove bullets if they still exists at the beginning of text.
+    joinChildTextNodes(paragraphNode);
+    trimFirstTextNode(paragraphNode, /^\s*[\u2022\u00b7\u00a7\u25CF]\u00a0*/);
   };
 
   // Build a list of all root level elements before we start
@@ -186,7 +199,7 @@ const convertFakeListsToProperLists = (node) => {
     node = elements[i];
 
     if (node.name === 'p' && node.firstChild) {
-      // Find first text node in paragraph
+      // Get full text from paragraph
       const nodeText = getText(node);
 
       // Detect unordered lists look for bullets
@@ -240,11 +253,14 @@ const filterStyles = (editor: Editor, validStyles, node, styleValue) => {
           node._listLevel = parseInt(matches[1], 10);
         }
 
-        // Remove these nodes <span style="mso-list:Ignore">o</span>
-        // Since the span gets removed we mark the text node and the span
+        // Remove these nodes and all their children:
+        // - <span style="mso-list:Ignore">o</span>
+        // - <span style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'> </span>i.<span style='font:7.0pt "Times New Roman"'> </span></span></span>
         if (/Ignore/i.test(value) && node.firstChild) {
           node._listIgnore = true;
-          node.firstChild._listIgnore = true;
+          for (let child = node.firstChild; child; child = child.next) {
+            child._listIgnore = true;
+          }
         }
 
         break;
