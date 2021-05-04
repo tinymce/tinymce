@@ -1,7 +1,6 @@
 import { BubbleInstance } from '../layout/Bubble';
 import { DirectionAdt } from '../layout/Direction';
 import { BoundsRestriction } from '../layout/LayoutBounds';
-import { LayoutLabels } from '../layout/LayoutLabels';
 
 export interface SpotInfo {
   readonly x: number;
@@ -19,7 +18,7 @@ const nu = (
   bubble: BubbleInstance,
   direction: DirectionAdt,
   boundsRestriction: BoundsRestriction,
-  label: LayoutLabels,
+  label: string,
   fitAnyway: boolean
 ): SpotInfo => ({
   x,

@@ -4,7 +4,7 @@ import { SugarPosition } from '@ephox/sugar';
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import { Bubble, BubbleInstance } from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
-import { LayoutLabels } from 'ephox/alloy/positioning/layout/LayoutLabels';
+import * as LayoutLabels from 'ephox/alloy/positioning/layout/LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 

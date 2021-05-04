@@ -1,27 +1,53 @@
-export const enum LayoutLabels {
-  southEast = 'layout-se',
-  southWest = 'layout-sw',
-  northEast = 'layout-ne',
-  northWest = 'layout-nw',
-  north = 'layout-n',
-  south = 'layout-s',
-  east = 'layout-e',
-  west = 'layout-w',
+const southEast = 'layout-se';
+const southWest = 'layout-sw';
+const northEast = 'layout-ne';
+const northWest = 'layout-nw';
+const north = 'layout-n';
+const south = 'layout-s';
+const east = 'layout-e';
+const west = 'layout-w';
 
-  southEastInner = 'layout-inner-se',
-  southWestInner = 'layout-inner-sw',
-  northEastInner = 'layout-inner-ne',
-  northWestInner = 'layout-inner-nw',
-  northInner = 'layout-inner-n',
-  southInner = 'layout-inner-s',
-  eastInner = 'layout-inner-e',
-  westInner = 'layout-inner-w',
+const southEastInner = 'layout-inner-se';
+const southWestInner = 'layout-inner-sw';
+const northEastInner = 'layout-inner-ne';
+const northWestInner = 'layout-inner-nw';
+const northInner = 'layout-inner-n';
+const southInner = 'layout-inner-s';
+const eastInner = 'layout-inner-e';
+const westInner = 'layout-inner-w';
 
-  northPinned = 'layout-pinned-n',
-  southPinned = 'layout-pinned-s',
+const northPinned = 'layout-pinned-n';
+const southPinned = 'layout-pinned-s';
 
-  southEastLinked = 'link-layout-se',
-  southWestLinked = 'link-layout-sw',
-  northEastLinked = 'link-layout-ne',
-  northWestLinked = 'link-layout-nw'
-}
+const southEastLinked = 'link-layout-se';
+const southWestLinked = 'link-layout-sw';
+const northEastLinked = 'link-layout-ne';
+const northWestLinked = 'link-layout-nw';
+
+export {
+  southEast,
+  southWest,
+  northEast,
+  northWest,
+  north,
+  south,
+  east,
+  west,
+
+  southEastInner,
+  southWestInner,
+  northEastInner,
+  northWestInner,
+  northInner,
+  southInner,
+  eastInner,
+  westInner,
+
+  northPinned,
+  southPinned,
+
+  southEastLinked,
+  southWestLinked,
+  northEastLinked,
+  northWestLinked
+};

@@ -2,7 +2,7 @@ import { UnitTest, assert } from '@ephox/bedrock-client';
 
 import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
-import { LayoutLabels } from 'ephox/alloy/positioning/layout/LayoutLabels';
+import * as LayoutLabels from 'ephox/alloy/positioning/layout/LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as LinkedLayout from 'ephox/alloy/positioning/layout/LinkedLayout';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';

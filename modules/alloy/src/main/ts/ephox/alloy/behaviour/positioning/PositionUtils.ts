@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
-import { LayoutLabels } from '../../positioning/layout/LayoutLabels';
+import * as LayoutLabels from '../../positioning/layout/LayoutLabels';
 import { RepositionDecision } from '../../positioning/view/Reposition';
 
 const dataAttribute = 'data-alloy-positional-element-location';

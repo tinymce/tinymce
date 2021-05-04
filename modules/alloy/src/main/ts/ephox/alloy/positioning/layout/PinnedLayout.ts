@@ -4,7 +4,7 @@ import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { boundsRestriction } from './LayoutBounds';
-import { LayoutLabels } from './LayoutLabels';
+import * as LayoutLabels from './LayoutLabels';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
 
 const constrainedTopY = (anchor: AnchorBox, element: AnchorElement) => {
