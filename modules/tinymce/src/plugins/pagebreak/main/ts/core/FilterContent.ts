@@ -39,7 +39,7 @@ const setup = (editor: Editor) => {
       while (i--) {
         node = nodes[i];
         className = node.attr('class');
-        if (className && className.indexOf('mce-pagebreak') !== -1) {
+        if (className && className.indexOf(pageBreakClass) !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
           const parentNode = node.parent;
           if (editor.schema.getBlockElements()[parentNode.name] && shouldSplitBlock()) {
