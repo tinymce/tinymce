@@ -7,17 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- The `inline_boundaries` feature now supports the `home`, `end`, `pageup` and `pagedown` keys #TINY-4612
-- Added new `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API
-- Added support for alpha list numbering to the `lists` plugin #TINY-6891
+- The `inline_boundaries` feature now supports the `home`, `end`, `pageup`, and `pagedown` keys #TINY-4612
+- Added the `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API #TINY-4612
+- Added support for alpha list numbering to the list properties dialog #TINY-6891
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 - Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays
 
 ### Improved
 - Updated the `formatter.matchFormat` API to support matching formats with variables in the `classes` property #TINY-7227
+- Updated the `image` dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 
 ### Changed
-- Updated the `image` dialog to display the class list dropdown as full-width if the caption checkbox is not present #TINY-6400
 - Renamed the "H Align" and "V Align" input labels in the Table Cell Properties dialog to "Horizontal align" and "Vertical align" respectively #TINY-7285
 
 ### Deprecated
@@ -28,8 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The RGB fields in the color picker dialog were not staying in sync with the color palette and hue slider #TINY-6952
 - The color preview box in the color picker dialog was not correctly displaying the saturation and value of the chosen color #TINY-6952
 - The color picker dialog will now show an alert if it is submitted with an invalid hex color code #TINY-2814
-- Fixed a bug where the `TableModified` event was not fired when adding a table row via the Tab key #TINY-7006
-- Added missing type for `images_file_types` setting #GH-6607
+- Fixed a bug where the `TableModified` event was not fired when adding a table row with the Tab key #TINY-7006
+- Added missing file type for the `images_file_types` setting #GH-6607
 - Fixed a bug where lists pasted from Word with Roman numeral markers were not displayed correctly. Patch contributed by aautio #GH-6620
 - The `editor.insertContent` API was incorrectly handling nested `span` elements with matching styles #TINY-6263
 - The HTML5 `small` element could not be removed when clearing text formatting #TINY-6633
