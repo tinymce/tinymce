@@ -329,4 +329,22 @@ describe('browser.tinymce.core.util.EventDispatcherTest', () => {
     assert.equal(lastName, 'click');
     assert.isFalse(lastState);
   });
+
+  it('TINY-6383: Callbacks removed in an earlier handler do not run', () => {
+    const dispatcher = new EventDispatcher();
+    const logs = [];
+
+    const func1 = () => {
+      logs.push('func1');
+      dispatcher.off('run', func2);
+    };
+    const func2 = () => logs.push('func2');
+
+    dispatcher.on('run', func1);
+    dispatcher.on('run', func2);
+
+    assert.isEmpty(logs);
+    dispatcher.fire('run');
+    assert.deepEqual(logs, [ 'func1' ]);
+  });
 });

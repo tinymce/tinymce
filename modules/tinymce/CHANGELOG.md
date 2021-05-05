@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Unbound event handlers were incorrectly running when unbound in a previous event handler #TINY-6383
+
 ### 5.8.1 - TBD
 
 ### Fixed

@@ -100,6 +100,7 @@ const nativeEvents = Tools.makeMap(
 
 interface Binding<T, K extends string> {
   func: (event: EditorEvent<MappedEvent<T, K>>) => void;
+  removed: boolean;
   once?: true;
 }
 
@@ -183,6 +184,13 @@ class EventDispatcher<T> {
       for (let i = 0, l = handlers.length; i < l; i++) {
         const callback = handlers[i];
 
+        // The handler was removed by an earlier handler in this loop so skip it. This is needed as
+        // the `handlers` array is not a "live" list, so when the handler is removed while we are
+        // iterating it will remain in the list and incorrectly be executed.
+        if (callback.removed) {
+          continue;
+        }
+
         // Unbind handlers marked with "once"
         if (callback.once) {
           this.off(name, callback.func);
@@ -225,7 +233,8 @@ class EventDispatcher<T> {
 
     if (callback) {
       const wrappedCallback = {
-        func: callback
+        func: callback,
+        removed: false
       };
 
       if (extra) {
@@ -296,7 +305,10 @@ class EventDispatcher<T> {
             // Unbind specific ones
             let hi = handlers.length;
             while (hi--) {
-              if (handlers[hi].func === callback) {
+              const handler = handlers[hi];
+              if (handler.func === callback) {
+                // Mark the callback as removed to ensure it's not executed if the same event is already processing
+                handler.removed = true;
                 handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
                 this.bindings[currentName] = handlers;
               }
