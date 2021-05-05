@@ -1,7 +1,7 @@
 #!groovy
-@Library('waluigi@v3.1.0') _
+@Library('waluigi@v4.5.0') _
 
-def runTests(name, bedrockCommand) {
+def runTests(name, bedrockCommand, runAll) {
   // Clean out the old XML files before running tests, since we junit import *.XML files
   dir('scratch') {
     if (isUnix()) {
@@ -11,18 +11,19 @@ def runTests(name, bedrockCommand) {
     }
   }
 
-  def successfulTests = execHandle(bedrockCommand)
+  def command = runAll ? bedrockCommand + ' --ignore-lerna-changed=true' : bedrockCommand
+  def successfulTests = execHandle(command)
 
   echo "Writing JUnit results for " + name + " on node: $NODE_NAME"
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (!successfulTests) {
     echo "Tests failed for " + name + " so passing failure as exit code for node: $NODE_NAME"
-    sh "exit 1"
+    exec("exit 1")
   }
 }
 
-def runBrowserTests(name, browser, os, bucket, buckets) {
+def runBrowserTests(name, browser, os, bucket, buckets, runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
       " --chunk=200" +
@@ -31,12 +32,12 @@ def runBrowserTests(name, browser, os, bucket, buckets) {
       " --bucket=" + bucket +
       " --buckets=" + buckets;
 
-  runTests(name, bedrockCommand);
+  runTests(name, bedrockCommand, runAll);
 }
 
-def runPhantomTests() {
+def runPhantomTests(runAll) {
   def bedrockCommand = "yarn grunt phantomjs-auto";
-  runTests("PhantomJS", bedrockCommand);
+  runTests("PhantomJS", bedrockCommand, runAll);
 }
 
 standardProperties()
@@ -56,6 +57,7 @@ node("primary") {
 
     def primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
+    def runAllTests = BRANCH_NAME == primaryBranch
 
     stage ("Merge") {
       // cancel build if primary branch doesn't merge cleanly
@@ -108,7 +110,7 @@ node("primary") {
               exec("yarn ci")
 
               echo "Platform: browser tests for " + permutation.name + " on node: $NODE_NAME"
-              runBrowserTests(permutation.name, permutation.browser, permutation.os, c_bucket, buckets)
+              runBrowserTests(permutation.name, permutation.browser, permutation.os, c_bucket, buckets, runAllTests)
             }
           }
         }
@@ -121,7 +123,7 @@ node("primary") {
         // we are re-using the state prepared by `ci-all` below
         // if we ever change these tests to run on a different node, rollup is required in addition to the normal CI command
         echo "Platform: PhantomJS tests on node: $NODE_NAME"
-        runPhantomTests()
+        runPhantomTests(runAllTests)
       }
 
       if (BRANCH_NAME != primaryBranch) {
