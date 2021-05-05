@@ -7,15 +7,11 @@
 
 import Editor from 'tinymce/core/api/Editor';
 import * as FilterContent from '../core/FilterContent';
-import * as Settings from './Settings';
+import * as Settings from '../api/Settings';
 
 const register = (editor: Editor) => {
   editor.addCommand('mcePageBreak', () => {
-    if (Settings.shouldSplitBlock(editor)) {
-      editor.insertContent('<p>' + FilterContent.getPlaceholderHtml() + '</p>');
-    } else {
-      editor.insertContent(FilterContent.getPlaceholderHtml());
-    }
+    editor.insertContent(FilterContent.getPlaceholderHtml(Settings.shouldSplitBlock(editor)));
   });
 };
 

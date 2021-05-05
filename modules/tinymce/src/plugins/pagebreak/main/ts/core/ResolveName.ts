@@ -9,7 +9,7 @@ import * as FilterContent from './FilterContent';
 
 const setup = (editor) => {
   editor.on('ResolveName', (e) => {
-    if (e.target.nodeName === 'IMG' && editor.dom.hasClass(e.target, FilterContent.getPageBreakClass())) {
+    if (e.target.nodeName === 'IMG' && editor.dom.hasClass(e.target, FilterContent.pageBreakClass)) {
       e.name = 'pagebreak';
     }
   });
