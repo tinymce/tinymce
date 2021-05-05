@@ -2,8 +2,7 @@
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 const addSvgDefToDocument = () => {
-  const gradient =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+  const gradient = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
       <defs>
         <linearGradient id="editor-icon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0" stop-color="#888"/>
@@ -79,13 +78,41 @@ export default () => {
     height: 300,
     menubar: false,
     statusbar: false,
-    templates: [
-      {
-        title: 'Some title',
-        description: 'Some description',
-        content: 'Some content',
-      },
+    color_map: [
+      '#D6336C',
+      'Pink',
+      '#F03E3E',
+      'Red',
+      '#F76707',
+      'Orange',
+      '#F59F00',
+      'Yellow',
+      '#AE3EC9',
+      'Grape',
+      '#7048E8',
+      'Violet',
+      '#4263EB',
+      'Indigo',
+      '#1C7CD6',
+      'Blue',
+      '#1098AD',
+      'Cyan',
+      '#0CA678',
+      'Teal',
+      '#37B24D',
+      'Green',
+      '#74B816',
+      'Lime',
+      '#333333',
+      'Black',
+      '#666666',
+      'Gray',
+      '#999999',
+      'Light Gray',
+      '#CCCCCC',
+      'Silver',
     ],
+    custom_colors: false,
     mobile: {
       toolbar_mode: 'floating',
       toolbar: 'reset inlineFormatting blockFormatting',
