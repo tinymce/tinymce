@@ -97,10 +97,6 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
-
-  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
-
   const dataset = buildBasicSettingsDataset(editor, 'fontsize_formats', defaultFontsizeFormats, Delimiter.Space);
 
   return {
@@ -110,8 +106,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     getPreviewFor,
     getCurrentValue,
     onAction,
-    setInitialValue,
-    nodeChangeHandler,
+    updateText: updateSelectMenuText,
     dataset,
     shouldHide: false,
     isInvalid: Fun.never

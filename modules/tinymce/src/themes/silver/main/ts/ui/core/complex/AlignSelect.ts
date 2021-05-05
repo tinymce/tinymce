@@ -36,10 +36,6 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuIcon(comp));
-
-  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuIcon(comp));
-
   const dataset = buildBasicStaticDataset(alignMenuItems);
 
   const onAction = (rawItem: FormatterFormatItem) => () =>
@@ -53,8 +49,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     getCurrentValue: Optional.none,
     getPreviewFor,
     onAction,
-    setInitialValue,
-    nodeChangeHandler,
+    updateText: updateSelectMenuIcon,
     dataset,
     shouldHide: false,
     isInvalid: (item) => !editor.formatter.canApply(item.format)
