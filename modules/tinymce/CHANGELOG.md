@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.8.0 - 2021-05-06
+
 ### Added
 - Added the `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API #TINY-4612
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
