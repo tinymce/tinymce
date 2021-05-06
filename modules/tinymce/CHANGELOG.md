@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fixed a bug where block elements could be removed from the editor content when containing a pagebreak #TINY-3388
+
 ## 5.8.0 - 2021-05-06
 
 ### Added
