@@ -58,5 +58,5 @@ const setup = (editor: Editor) => {
 export {
   pageBreakClass,
   getPlaceholderHtml,
-  setup,
+  setup
 };

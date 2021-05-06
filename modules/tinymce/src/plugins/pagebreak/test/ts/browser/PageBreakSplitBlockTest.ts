@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
       const content = editor.getContent({ source_view: true });
       // NOTE: p that wraps pagebreak is stripped
-      assert.equal(content, `<p>some</p>\n<!-- pagebreak -->\n<p>text</p>`)
+      assert.equal(content, `<p>some</p>\n<!-- pagebreak -->\n<p>text</p>`);
     });
 
     it('TINY-3388: source_view with `pagebreak_split_block=false`', () => {
@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
       clickPageBreak(editor);
 
       const content = editor.getContent({ source_view: true });
-      assert.equal(content, `<p>some<!-- pagebreak -->text</p>`)
+      assert.equal(content, `<p>some<!-- pagebreak -->text</p>`);
     });
 
     it('TINY-3388: getContent with `pagebreak_split_block=true`', () => {
