@@ -1,12 +1,12 @@
 {
   "name": "@ephox/boulder",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^7.2.0"
+    "@ephox/katamari": "^7.2.1"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^2.0.6"
+    "@ephox/katamari-assertions": "^2.0.7"
   },
   "scripts": {
     "test": "bedrock-auto -b phantomjs -d src/test/ts",
