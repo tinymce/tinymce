@@ -6,7 +6,7 @@
  */
 
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, LayoutInside, MaxHeight, MaxWidth, PinnedLayout, Positioning
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, Boxes, Bubble, GuiFactory, InlineView, Keying, Layout, MaxHeight, MaxWidth, PinnedLayout, Positioning
 } from '@ephox/alloy';
 
 import { InlineContent, Toolbar } from '@ephox/bridge';
@@ -53,24 +53,24 @@ const anchorOverrides = {
 
 // On desktop we prioritise north-then-south because it's cleaner, but on mobile we prioritise south to try to avoid overlapping with native context toolbars
 
+const topToBottom = () => {
+  return [
+    PinnedLayout.pinAtTop,
+    PinnedLayout.pinAtBottom
+  ];
+};
+
+const bottomToTop = () => {
+  return [
+    PinnedLayout.pinAtBottom,
+    PinnedLayout.pinAtTop
+  ];
+};
+
 const getDesktopAnchorSpecLayouts = (contextbar: AlloyComponent) => {
   // We try to keep our current pinned layout, so we identify any classes that are on the contextbar,
   // and prefer that pinned layout to the other pinned layout
   const getPinnedLayouts = () => {
-    const topToBottom = () => {
-      return [
-        PinnedLayout.pinAtTop,
-        PinnedLayout.pinAtBottom
-      ];
-    };
-
-    const bottomToTop = () => {
-      return [
-        PinnedLayout.pinAtBottom,
-        PinnedLayout.pinAtTop
-      ];
-    };
-
     return PinnedLayout.contextualPinnedOrder(
       contextbar.element,
       // Something at the top will be anchored from its bottom value and grow upward
@@ -94,11 +94,31 @@ const getDesktopAnchorSpecLayouts = (contextbar: AlloyComponent) => {
   };
 };
 
-const mobileAnchorSpecLayouts = {
-  onLtr: () => [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northeast, LayoutInside.southeast, LayoutInside.northwest, LayoutInside.southwest ],
-  onRtl: () => [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north,
-    LayoutInside.north, LayoutInside.south, LayoutInside.northwest, LayoutInside.southwest, LayoutInside.northeast, LayoutInside.southeast ]
+const getMobileAnchorSpecLayouts = (contextbar: AlloyComponent) => {
+  // We try to keep our current pinned layout, so we identify any classes that are on the contextbar,
+  // and prefer that pinned layout to the other pinned layout
+  const getPinnedLayouts = () => {
+    return PinnedLayout.contextualPinnedOrder(
+      contextbar.element,
+      // Something at the bottom will be anchored from its top value and grow upward
+      bottomToTop,
+      // Something at the top will be anchored from its bottom value and grow upward
+      topToBottom,
+      // Default.
+      bottomToTop
+    );
+  };
+
+  return {
+    onLtr: () => {
+      const pinned = getPinnedLayouts();
+      return [ Layout.south, Layout.southeast, Layout.southwest, Layout.northeast, Layout.northwest, Layout.north ].concat(pinned);
+    },
+    onRtl: () => {
+      const pinned = getPinnedLayouts();
+      return [ Layout.south, Layout.southwest, Layout.southeast, Layout.northwest, Layout.northeast, Layout.north ].concat(pinned);
+    }
+  };
 };
 
 const getAnchorLayout = (position: InlineContent.ContextPosition, contextbar: AlloyComponent, isTouch: boolean): Partial<AnchorSpec> => {
@@ -114,7 +134,7 @@ const getAnchorLayout = (position: InlineContent.ContextPosition, contextbar: Al
   } else {
     return {
       bubble: Bubble.nu(0, bubbleSize, bubbleAlignments),
-      layouts: isTouch ? mobileAnchorSpecLayouts : getDesktopAnchorSpecLayouts(contextbar),
+      layouts: isTouch ? getMobileAnchorSpecLayouts(contextbar) : getDesktopAnchorSpecLayouts(contextbar),
       overrides: anchorOverrides
     };
   }
