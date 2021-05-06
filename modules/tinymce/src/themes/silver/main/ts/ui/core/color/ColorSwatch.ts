@@ -58,7 +58,7 @@ const registerCommands = (editor: Editor) => {
   });
 };
 
-const calcCols = (colors: number) => Math.max(5, Math.ceil(Math.sqrt(colors)));
+const calcCols = (colors: number) => Math.max(8, Math.ceil(Math.sqrt(colors)));
 
 const getColorCols = (editor: Editor) => {
   const colors = Settings.getColors(editor);
@@ -68,12 +68,7 @@ const getColorCols = (editor: Editor) => {
 
 const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
   const type: 'choiceitem' = 'choiceitem';
-  const remove = {
-    type,
-    text: 'Remove color',
-    icon: 'color-swatch-remove-color',
-    value: 'remove'
-  };
+
   const custom = {
     type,
     text: 'Custom color',
@@ -81,9 +76,8 @@ const getAdditionalColors = (hasCustom: boolean): Menu.ChoiceMenuItemSpec[] => {
     value: 'custom'
   };
   return hasCustom ? [
-    remove,
     custom
-  ] : [ remove ];
+  ] : [];
 };
 
 const applyColor = (editor: Editor, format, value, onChoice: (v: string) => void) => {
