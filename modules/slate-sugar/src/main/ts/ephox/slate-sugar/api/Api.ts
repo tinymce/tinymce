@@ -37,10 +37,10 @@ interface ModelApi {
     setPropsAtPath: (path: path, props: Record<string, string>) => void;
   };
   predicateFind: {
-    closest: (node: SlateLoc, predicate: (node: SlateLoc) => boolean, isRoot: (node: SlateLoc) => boolean) => SlateLoc;
+    closest: (loc: SlateLoc, predicate: (loc: SlateLoc) => boolean, isRoot: (loc: SlateLoc) => boolean) => SlateLoc;
   };
   predicateFilter: {
-    descendants: (node: SlateLoc, predicate: (node: SlateLoc) => boolean) => SlateLoc[];
+    descendants: (loc: SlateLoc, predicate: (loc: SlateLoc) => boolean) => SlateLoc[];
   };
   slateLoc: {
     toPathArray: (loc: SlateLoc) => path;
