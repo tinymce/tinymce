@@ -16,8 +16,8 @@ const assertPath = (label: string, root: SugarElement, expPath: number[], expOff
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
-const assertContent = (editor: Editor, expected: string): void => {
-  const content = editor.getContent();
+const assertContent = (editor: Editor, expected: string, args?: object): void => {
+  const content = editor.getContent(args);
   Assertions.assertHtml('Checking TinyMCE content', expected, content);
 };
 
