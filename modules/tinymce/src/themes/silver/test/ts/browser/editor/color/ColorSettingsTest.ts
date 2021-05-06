@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
@@ -38,11 +38,18 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
   const assertColors = (input: string[], expected: ExpectedColor[]) => {
     const extractColor = (color: string) => {
       const m = /^#([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})$/.exec(color);
-      return [ parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16) ];
+
+      return [
+        parseInt(m[1], 16),
+        parseInt(m[2], 16),
+        parseInt(m[3], 16)
+      ];
     };
+
     const assertColor = (expectedColor: string, actualColor: string, delta: number = 0) => {
       const expectedRgb = extractColor(expectedColor);
       const actualRgb = extractColor(actualColor);
+
       assert.isTrue((
         Math.abs(expectedRgb[0] - actualRgb[0]) <= delta &&
         Math.abs(expectedRgb[1] - actualRgb[1]) <= delta &&
@@ -50,8 +57,14 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
       ), 'Color value should match (within ' + delta + '). Expected: ' + expectedColor + ' Actual: ' + actualColor);
     };
 
-    const colors = Settings.mapColors(input);
+    const mockEditor: any = {
+      getParam: Fun.constant(input)
+    };
+
+    const colors = Settings.getColors(mockEditor);
+
     assert.lengthOf(colors, expected.length, 'Colors length should match');
+
     Arr.each(expected, (item, i) => {
       const colorItem = colors[i];
       assert.equal(colorItem.type, item.type, 'Color type should match');
@@ -65,7 +78,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     assert.equal(colors, expected, 'Color cols should be the same');
   };
 
-  const assertCalcCols = (editor: Editor, colors: number, expected: number) => {
+  const assertCalcCols = (colors: number, expected: number) => {
     const sqrt = ColorSwatch.calcCols(colors);
     assert.equal(sqrt, expected, 'Calced cols should be the same');
   };
@@ -98,7 +111,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     },
     {
       text: 'Pale tomato',
-      value: '#FFB0A2',
+      value: '#FF6347',
       type: 'choiceitem',
       delta: 1
     }
@@ -116,17 +129,17 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     const editor = hook.editor();
     assertColors(colorSettings, mappedColors);
     assertCols(editor, 5);
-    assertCalcCols(editor, 1, 5);
-    assertCalcCols(editor, 2, 5);
-    assertCalcCols(editor, 3, 5);
-    assertCalcCols(editor, 4, 5);
-    assertCalcCols(editor, 5, 5);
-    assertCalcCols(editor, 8, 5);
-    assertCalcCols(editor, 9, 5);
-    assertCalcCols(editor, 10, 5);
-    assertCalcCols(editor, 25, 5);
-    assertCalcCols(editor, 26, 6);
-    assertCalcCols(editor, 36, 6);
-    assertCalcCols(editor, 37, 7);
+    assertCalcCols(1, 5);
+    assertCalcCols(2, 5);
+    assertCalcCols(3, 5);
+    assertCalcCols(4, 5);
+    assertCalcCols(5, 5);
+    assertCalcCols(8, 5);
+    assertCalcCols(9, 5);
+    assertCalcCols(10, 5);
+    assertCalcCols(25, 5);
+    assertCalcCols(26, 6);
+    assertCalcCols(36, 6);
+    assertCalcCols(37, 7);
   });
 });

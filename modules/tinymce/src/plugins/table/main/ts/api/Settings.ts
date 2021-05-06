@@ -83,6 +83,21 @@ const defaultAttributes = {
 
 const defaultColumnResizingBehaviour = 'preservetable';
 
+const generateColorMenuItems = (editor: Editor, setting: string): Menu.ChoiceMenuItemSpec[] => {
+  const colorMap = editor.getParam(setting, []);
+  const colors: Menu.ChoiceMenuItemSpec[] = [];
+
+  for (let i = 0; i < colorMap.length; i += 2) {
+    colors.push({
+      text: colorMap[i + 1],
+      value: '#' + Transformations.anyToHex(colorMap[i]).value,
+      type: 'choiceitem'
+    });
+  }
+
+  return colors;
+};
+
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
 
@@ -149,11 +164,11 @@ const hasObjectResizing = (editor: Editor): boolean => {
 };
 
 const getTableCellBackgroundColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return Transformations.anyToHex(editor.getParam('table_cell_background_color_map', []));
+  return generateColorMenuItems(editor, 'table_cell_background_color_map');
 };
 
 const getTableCellBorderColors = (editor: Editor): Menu.ChoiceMenuItemSpec[] => {
-  return Transformations.anyToHex(editor.getParam('table_cell_border_color_map', []));
+  return generateColorMenuItems(editor, 'table_cell_border_color_map');
 };
 
 export {
