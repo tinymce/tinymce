@@ -9,11 +9,11 @@
 <body>
   <main>
     <div id="ephox-ui">
-      <textarea></textarea>
+      <textarea class='tiny-area'></textarea>
     </div>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
-    <script>demos.TornDemo();</script>
+    <script>demos.initializeTinyMCE({customButton: {title: 'Post', action: () => {console.log('Post')}}});</script>
   </main>
 </body>
 

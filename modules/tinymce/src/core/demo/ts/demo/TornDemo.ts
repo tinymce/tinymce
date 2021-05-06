@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { RawEditorSettings, TinyMCE } from 'tinymce/core/api/PublicApi';
+declare let tinymce: TinyMCE;
 
 const addSvgDefToDocument = () => {
   const gradient = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
@@ -32,9 +32,44 @@ const addSvgDefToDocument = () => {
   document.body.append(svgDefsWrapper);
 };
 
-declare let tinymce: TinyMCE;
+const color_map = [
+  '#D6336C',
+  'Pink',
+  '#F03E3E',
+  'Red',
+  '#F76707',
+  'Orange',
+  '#F59F00',
+  'Yellow',
+  '#AE3EC9',
+  'Grape',
+  '#7048E8',
+  'Violet',
+  '#4263EB',
+  'Indigo',
+  '#1C7CD6',
+  'Blue',
+  '#1098AD',
+  'Cyan',
+  '#0CA678',
+  'Teal',
+  '#37B24D',
+  'Green',
+  '#74B816',
+  'Lime',
+  '#333333',
+  'Black',
+  '#666666',
+  'Gray',
+  '#999999',
+  'Light Gray',
+  '#CCCCCC',
+  'Silver',
+];
 
+addSvgDefToDocument();
 const toolbarItems = [
+  'customButton',
   'reset',
   'bold',
   'italic',
@@ -58,13 +93,22 @@ const toolbarItems = [
   '|',
   'code',
 ].join(' ');
+
 const inlineFormattingItems =
   'bold italic underline strikethrough | fontsizeselect forecolor | blockquote';
 const blockFormattingItems = 'align bullist';
 
-export default () => {
+interface EditorInitParams {
+  selector?: string;
+  customButton?: {
+    action: () => void;
+    title: string;
+  };
+}
+
+export const initializeTinyMCE = (options: EditorInitParams) => {
   const settings: RawEditorSettings = {
-    selector: 'textarea',
+    selector: options?.selector ?? 'textarea.tiny-area',
     plugins: 'link image code emoticons lists',
     toolbar_location: 'bottom',
     toolbar: toolbarItems,
@@ -78,40 +122,7 @@ export default () => {
     height: 300,
     menubar: false,
     statusbar: false,
-    color_map: [
-      '#D6336C',
-      'Pink',
-      '#F03E3E',
-      'Red',
-      '#F76707',
-      'Orange',
-      '#F59F00',
-      'Yellow',
-      '#AE3EC9',
-      'Grape',
-      '#7048E8',
-      'Violet',
-      '#4263EB',
-      'Indigo',
-      '#1C7CD6',
-      'Blue',
-      '#1098AD',
-      'Cyan',
-      '#0CA678',
-      'Teal',
-      '#37B24D',
-      'Green',
-      '#74B816',
-      'Lime',
-      '#333333',
-      'Black',
-      '#666666',
-      'Gray',
-      '#999999',
-      'Light Gray',
-      '#CCCCCC',
-      'Silver',
-    ],
+    color_map,
     custom_colors: false,
     mobile: {
       toolbar_mode: 'floating',
@@ -130,7 +141,13 @@ export default () => {
       },
     },
     setup: (editor) => {
-      addSvgDefToDocument();
+      if (options?.customButton) {
+        editor.ui.registry.addButton('customButton', {
+          text: options.customButton.title,
+          onAction: options.customButton.action,
+        });
+      }
+
       editor.ui.registry.addButton('reset', {
         icon: 'undo',
         onAction: () => {
@@ -140,6 +157,6 @@ export default () => {
       });
     },
   };
-
+  
   tinymce.init(settings);
 };
