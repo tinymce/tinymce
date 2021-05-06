@@ -1,6 +1,6 @@
 import { Maybes } from '@ephox/katamari';
 
-import { Api, Body, NodeTransforms, PredicateFilter, PredicateFind, SlateLoc } from 'ephox/slate-sugar/api/Main';
+import { Api, Body, ModelNodeType, NodeTransforms, PredicateFilter, PredicateFind, SlateLoc } from 'ephox/slate-sugar/api/Main';
 
 declare let tinymce: any;
 
@@ -13,13 +13,22 @@ tinymce.init({
     const root = Body.getBody(api);
     void Body.getEditor(api);
 
-    const [ p ] = Maybes.getOrDie(PredicateFilter.descendants(api, root, (el) => el.node.type === 'p'));
-    const div = Maybes.getOrDie(PredicateFind.closest(api, p, (el) => el.node.class === 'content', (el) => el === root));
-    void div;
+    const [ p ] = Maybes.getOrDie(PredicateFilter.descendants(api, root, ({ node }) =>
+      ModelNodeType.isElement(api, node) ? node.type === 'p' : false));
 
-    const path = SlateLoc.toPathArray(api, p);
-    NodeTransforms.setPropsAtPath(api, path, { style: 'font-weight: bold' });
+    const div = Maybes.getOrDie(PredicateFind.closest(api, p, ({ node }) =>
+      ModelNodeType.isElement(api, node) ? node.class === 'content' : false, (el) => el === root));
 
+    const textLocs = Maybes.getOrDie(PredicateFilter.descendants(api, p, ({ node }) => ModelNodeType.isText(api, node)));
+    const [ bye, hello ] = textLocs.reverse();
+    const [ time ] = Maybes.getOrDie(PredicateFilter.descendants(api, div, ({ node }) => ModelNodeType.isInline(api, node)));
+    const blocks = Maybes.getOrDie(PredicateFilter.descendants(api, root, ({ node }) => ModelNodeType.isBlock(api, node)));
+
+    NodeTransforms.setPropsAtPath(api, SlateLoc.toPathArray(api, p), { style: 'font-weight: bold' });
+    blocks.forEach((loc) => NodeTransforms.setPropsAtPath(api, SlateLoc.toPathArray(api, loc), { style: 'border: 1px solid green' }));
+    NodeTransforms.setPropsAtPath(api, SlateLoc.toPathArray(api, time), { style: 'font-size: 10px' });
+    NodeTransforms.setPropsAtPath(api, SlateLoc.toPathArray(api, bye), { forecolor: 'blue' });
+    NodeTransforms.setPropsAtPath(api, SlateLoc.toPathArray(api, hello), { forecolor: 'red' });
   }
 
 });

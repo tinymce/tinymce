@@ -15,23 +15,40 @@ interface RtcEditor extends Editor {
   rtcInstance: RtcAdaptor;
 }
 
+interface SlateElement {
+  type: string;
+  children: Array<SlateNode>;
+  class?: string;
+}
+
+interface SlateText {
+  text: string;
+}
+
+type SlateNode = SlateElement | SlateText;
+
+interface List<T>{
+  hd: T;
+  tl: List<T> | 0;
+}
+
 interface SlateLoc {
-  node: {
-    type: string;
-    class: string;
-    children: Array<SlateLoc>;
-    parent: SlateLoc;
-  };
+  node: SlateNode;
+  parents: List<SlateLoc>;
 }
 
-interface SlateEditor {
-
-}
+interface SlateEditor {}
 
 interface ModelApi {
   body: {
     getBody: () => SlateLoc;
     getEditor: () => SlateEditor;
+  };
+  modelNodeType: {
+    isElement: (node: SlateNode) => node is SlateElement;
+    isText: (node: SlateNode) => node is SlateText;
+    isBlock: (node: SlateNode) => boolean;
+    isInline: (node: SlateNode) => boolean;
   };
   nodeTransforms: {
     setPropsAtPath: (path: path, props: Record<string, string>) => void;
@@ -53,7 +70,10 @@ export {
   getModelApi,
   ModelApi,
   path,
+  SlateEditor,
+  SlateElement,
   SlateLoc,
-  SlateEditor
+  SlateNode,
+  SlateText
 };
 
