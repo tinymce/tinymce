@@ -1,5 +1,3 @@
-import { Menu } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -7,6 +5,8 @@ import { Arr } from '@ephox/katamari';
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Menu } from '@ephox/bridge';
+import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableCellBackgroundColors, getTableCellBorderColors, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
