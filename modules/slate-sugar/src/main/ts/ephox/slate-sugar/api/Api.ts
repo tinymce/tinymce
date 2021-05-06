@@ -1,5 +1,7 @@
 import { Optional } from '@ephox/katamari';
 
+type path = number[];
+
 interface Editor {}
 
 interface RtcAdaptor {
@@ -31,20 +33,27 @@ interface ModelApi {
     getBody: () => SlateLoc;
     getEditor: () => SlateEditor;
   };
+  nodeTransforms: {
+    setPropsAtPath: (path: path, props: Record<string, string>) => void;
+  };
   predicateFind: {
     closest: (node: SlateLoc, predicate: (node: SlateLoc) => boolean, isRoot: (node: SlateLoc) => boolean) => SlateLoc;
   };
   predicateFilter: {
     descendants: (node: SlateLoc, predicate: (node: SlateLoc) => boolean) => SlateLoc[];
   };
+  slateLoc: {
+    toPathArray: (loc: SlateLoc) => path;
+  };
 }
 
 const getModelApi = (editor: RtcEditor): Optional<ModelApi> => editor.rtcInstance.raw.getModelApi();
 
 export {
-  SlateLoc,
-  SlateEditor,
+  getModelApi,
   ModelApi,
-  getModelApi
+  path,
+  SlateLoc,
+  SlateEditor
 };
 

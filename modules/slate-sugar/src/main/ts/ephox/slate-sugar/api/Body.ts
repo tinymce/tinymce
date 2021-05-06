@@ -6,5 +6,5 @@ const getEditor = (api: ModelApi): SlateEditor => api.body.getEditor();
 
 export {
   getBody,
-  getEditor,
+  getEditor
 };
