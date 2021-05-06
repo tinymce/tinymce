@@ -79,8 +79,8 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
     }));
   });
 
-  context('Source view', () => {
-    it('TINY-3388: `pagebreak_split_block` is `true`', () => {
+  context('Editor content', () => {
+    it('TINY-3388: source_view with `pagebreak_split_block=true`', () => {
       const editor = hook.editor();
       editor.settings.pagebreak_split_block = true;
 
@@ -93,7 +93,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
       assert.equal(content, `<p>some</p>\n<!-- pagebreak -->\n<p>text</p>`)
     });
 
-    it('TINY-3388: `pagebreak_split_block` is `false`', () => {
+    it('TINY-3388: source_view with `pagebreak_split_block=false`', () => {
       const editor = hook.editor();
       editor.settings.pagebreak_split_block = false;
 
@@ -103,6 +103,28 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSplitBlockTest', () => {
 
       const content = editor.getContent({ source_view: true });
       assert.equal(content, `<p>some<!-- pagebreak -->text</p>`)
+    });
+
+    it('TINY-3388: getContent with `pagebreak_split_block=true`', () => {
+      const editor = hook.editor();
+      editor.settings.pagebreak_split_block = true;
+
+      editor.setContent('<p>sometext</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 4);
+      clickPageBreak(editor);
+
+      TinyAssertions.assertContent(editor, `<p>some</p>\n<!-- pagebreak -->\n<p>text</p>`);
+    });
+
+    it('TINY-3388: getContent with `pagebreak_split_block=false`', () => {
+      const editor = hook.editor();
+      editor.settings.pagebreak_split_block = false;
+
+      editor.setContent('<p>sometext</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 4);
+      clickPageBreak(editor);
+
+      TinyAssertions.assertContent(editor, '<p>some<!-- pagebreak -->text</p>');
     });
   });
 });

@@ -13,11 +13,7 @@ const pageBreakClass = 'mce-pagebreak';
 
 const getPlaceholderHtml = (shouldSplitBlock: boolean) => {
   const html = `<img src="${Env.transparentSrc}" class="${pageBreakClass}" data-mce-resize="false" data-mce-placeholder />`;
-  if (shouldSplitBlock) {
-    return `<p>${html}</p>`;
-  } else {
-    return html;
-  }
+  return shouldSplitBlock ? `<p>${html}</p>` : html;
 };
 
 const setup = (editor: Editor) => {

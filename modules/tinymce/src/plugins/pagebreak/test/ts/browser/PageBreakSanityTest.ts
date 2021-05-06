@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.pagebreak.PageBreakSanityTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ]);
 
-  it('TBA: PageBreak: Click on the pagebreak toolbar button and assert pagebreak is inserted', () => {
+  it('TBA: Click on the pagebreak toolbar button and assert pagebreak is inserted', () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Page break"]');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => {
