@@ -1,7 +1,10 @@
-import { ModelApi, SlateLoc } from './Api';
+import { ModelApi, SlateLoc, SlateEditor } from './Api';
 
-const getBody = (api: ModelApi): SlateLoc => api.getBody();
+const getBody = (api: ModelApi): SlateLoc => api.body.getBody();
+
+const getEditor = (api: ModelApi): SlateEditor => api.body.getEditor();
 
 export {
-  getBody
+  getBody,
+  getEditor,
 };

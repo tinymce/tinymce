@@ -22,8 +22,15 @@ interface SlateLoc {
   };
 }
 
+interface SlateEditor {
+
+}
+
 interface ModelApi {
-  getBody: () => SlateLoc;
+  body: {
+    getBody: () => SlateLoc;
+    getEditor: () => SlateEditor;
+  };
   predicateFind: {
     closest: (node: SlateLoc, predicate: (node: SlateLoc) => boolean, isRoot: (node: SlateLoc) => boolean) => SlateLoc;
   };
@@ -36,6 +43,7 @@ const getModelApi = (editor: RtcEditor): Optional<ModelApi> => editor.rtcInstanc
 
 export {
   SlateLoc,
+  SlateEditor,
   ModelApi,
   getModelApi
 };
