@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Maybe } from '@ephox/katamari';
 
 type path = number[];
 
@@ -6,8 +6,8 @@ interface Editor {}
 
 interface RtcAdaptor {
   raw: {
-    getModel: () => Optional<any>;
-    getModelApi: () => Optional<any>;
+    getModel: () => Maybe<any>;
+    getModelApi: () => Maybe<ModelApi>;
   };
 }
 
@@ -47,7 +47,7 @@ interface ModelApi {
   };
 }
 
-const getModelApi = (editor: RtcEditor): Optional<ModelApi> => editor.rtcInstance.raw.getModelApi();
+const getModelApi = (editor: RtcEditor): Maybe<ModelApi> => editor.rtcInstance.raw.getModelApi();
 
 export {
   getModelApi,

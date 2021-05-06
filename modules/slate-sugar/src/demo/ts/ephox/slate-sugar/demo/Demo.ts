@@ -9,7 +9,7 @@ tinymce.init({
   plugins: [ 'rtc' ],
   rtc_standalone: true,
   init_instance_callback: (editor) => {
-    const api = Api.getModelApi(editor).getOrDie();
+    const api = Maybes.getOrDie(Api.getModelApi(editor));
     const root = Body.getBody(api);
     void Body.getEditor(api);
 

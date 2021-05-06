@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
+import { Cell, Fun, Maybe, Maybes, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
 import Promise from './api/util/Promise';
@@ -106,8 +106,8 @@ interface RtcAdaptor {
     getContent: (format: ContentFormat, args: GetSelectionContentArgs) => Content;
   };
   raw: {
-    getModel: () => Optional<any>;
-    getModelApi: () => Optional<any>;
+    getModel: () => Maybe<any>;
+    getModelApi: () => Maybe<any>;
   };
 }
 
@@ -157,8 +157,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   raw: {
-    getModel: () => Optional.none(),
-    getModelApi: () => Optional.none()
+    getModel: () => Maybes.nothing(),
+    getModelApi: () => Maybes.nothing()
   }
 });
 
@@ -203,8 +203,8 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       getContent: (_format, args) => selection.getContent(args)
     },
     raw: {
-      getModel: () => Optional.some(raw.getRawModel()),
-      getModelApi: () => Optional.some(raw.getModelApi())
+      getModel: () => Maybes.just(raw.getRawModel()),
+      getModelApi: () => Maybes.just(raw.getModelApi())
     }
   };
 };
@@ -248,8 +248,8 @@ const makeNoopAdaptor = (): RtcAdaptor => {
       getContent: empty
     },
     raw: {
-      getModel: Fun.constant(Optional.none()),
-      getModelApi: Fun.constant(Optional.none()),
+      getModel: Fun.constant(Maybes.nothing()),
+      getModelApi: Fun.constant(Maybes.nothing()),
     }
   };
 };
