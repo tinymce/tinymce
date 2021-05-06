@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 7.2.0 - 2021-05-06
+
 ### Added
 - Introduced `Maybe` as an eventual replacement for `Optional`.
 - Added `pipe` function to the `Fun` API.
