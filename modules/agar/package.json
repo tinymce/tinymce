@@ -1,6 +1,6 @@
 {
   "name": "@ephox/agar",
-  "version": "5.2.1",
+  "version": "5.3.0",
   "description": "Testing infrastructure",
   "repository": {
     "type": "git",
@@ -25,16 +25,16 @@
   "dependencies": {
     "@ephox/bedrock-client": "^11.0.0",
     "@ephox/bedrock-common": "^11.0.0",
-    "@ephox/jax": "^5.0.5",
-    "@ephox/sand": "^4.0.5",
-    "@ephox/sugar": "^7.1.1",
+    "@ephox/jax": "^5.0.6",
+    "@ephox/sand": "^4.0.6",
+    "@ephox/sugar": "^7.1.2",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-promise-polyfill": "^2.2.0",
     "@ephox/wrap-sizzle": "^4.0.0",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^2.0.5"
+    "@ephox/katamari-assertions": "^2.0.6"
   },
   "files": [
     "lib/main",
@@ -42,9 +42,9 @@
     "lib/test",
     "src",
     "tsconfig.json",
-    "readme.md",
+    "README.md",
     "LEGAL.txt",
-    "CHANGELOG.txt",
+    "CHANGELOG.md",
     "LICENSE.txt"
   ],
   "main": "./lib/main/ts/ephox/agar/api/Main.js",

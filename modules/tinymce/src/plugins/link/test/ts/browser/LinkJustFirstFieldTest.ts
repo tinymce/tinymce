@@ -1,47 +1,40 @@
-import { Chain, FocusTools, Keyboard, Keys, Log, Pipeline, Step, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyDom, TinyLoader } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { FocusTools, Keys } from '@ephox/agar';
+import { describe, it, before, after } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.JustFirstFieldTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const doc = TinyDom.fromDom(document);
-
-    Pipeline.async({}, [
-      TestLinkUi.sClearHistory,
-      Log.stepsAsStep('TBA', 'Checking only choosing link and submitting works', [
-        Step.sync(() => {
-          editor.execCommand('mceLink');
-        }),
-        UiFinder.sWaitForVisible('wait for link dialog', TinyDom.fromDom(document.body), '[role="dialog"]'),
-        FocusTools.sTryOnSelector('Selector should be in first field of dialog', doc, '.tox-dialog input'),
-        FocusTools.sSetActiveValue(doc, 'http://goo'),
-        Chain.asStep(doc, [
-          FocusTools.cGetFocused,
-          TestLinkUi.cFireEvent('input')
-        ]),
-        Keyboard.sKeydown(doc, Keys.enter(), { }),
-        Waiter.sTryUntil(
-          'Waiting for link to be inserted',
-          tinyApis.sAssertContentPresence({
-            'a[href="http://goo"]': 1
-          })
-        )
-      ]),
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.JustFirstFieldTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const doc = SugarDocument.getDocument();
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  it('TBA: Checking only choosing link and submitting works', async () => {
+    const editor = hook.editor();
+    editor.execCommand('mceLink');
+    await TinyUiActions.pWaitForDialog(editor);
+    await FocusTools.pTryOnSelector('Selector should be in first field of dialog', doc, '.tox-dialog input');
+    const focused = FocusTools.setActiveValue(doc, 'http://goo');
+    TestLinkUi.fireEvent(focused, 'input');
+    TinyUiActions.keydown(editor, Keys.enter());
+    await TestLinkUi.pAssertContentPresence(editor, {
+      'a[href="http://goo"]': 1
+    });
+  });
 });

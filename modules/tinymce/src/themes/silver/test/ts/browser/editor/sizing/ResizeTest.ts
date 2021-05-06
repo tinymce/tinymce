@@ -1,7 +1,7 @@
-import { Mouse, UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -31,6 +31,16 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     // Add a border to ensure we're using the correct height/width (ie border-box sizing)
     editor.dom.setStyles(editor.getContainer(), {
       border: '2px solid #ccc'
+    });
+  });
+
+  // Make sure the height is reset
+  beforeEach(() => {
+    const editor = hook.editor();
+    const container = TinyDom.container(editor);
+    Css.setAll(container, {
+      width: editor.getParam('width') + 'px',
+      height: editor.getParam('height') + 'px',
     });
   });
 
@@ -68,5 +78,34 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
     Mouse.mouseDown(resizeHandle);
     resizeToPos(300, 500, 550, 500);
     assertEditorSize(container, 500, 500);
+  });
+
+  it('TINY-4823: can be resized via the keyboard', () => {
+    const editor = hook.editor();
+    const container = TinyDom.container(editor);
+
+    FocusTools.setFocus(SugarBody.body(), '.tox-statusbar__resize-handle');
+
+    // Make it larger
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.right());
+    }
+    assertEditorSize(container, 460, 400);
+
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.down());
+    }
+    assertEditorSize(container, 460, 460);
+
+    // Make it smaller again
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.left());
+    }
+    assertEditorSize(container, 400, 460);
+
+    for (let i = 0; i < 3; ++i) {
+      TinyUiActions.keystroke(editor, Keys.up());
+    }
+    assertEditorSize(container, 400, 400);
   });
 });

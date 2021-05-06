@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "author": "Ephox Corporation",
   "license": "Apache-2.0",
   "dependencies": {
-    "@ephox/katamari": "^7.1.3",
+    "@ephox/katamari": "^7.2.0",
     "tslib": "^2.0.0"
   },
   "files": [
@@ -30,7 +30,7 @@
     "lib/test",
     "src",
     "tsconfig.json",
-    "readme.md",
+    "README.md",
     "LEGAL.txt",
     "CHANGELOG.txt",
     "LICENSE.txt"

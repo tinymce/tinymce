@@ -351,4 +351,192 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     InsertContent.insertAtCaret(editor, ' <strong> a </strong> ');
     TinyAssertions.assertContent(editor, '<pre> <strong> a </strong> </pre>');
   });
+
+  it('TINY-6263: insertAtCaret - merge font-size spans', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="font-size: 9pt;">' +
+        '<span style="font-size: 14pt;">' +
+        '<span style="font-size: 9pt;">' +
+        '<span style="font-size: 9pt;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+      '<span style="font-size: 9pt;">' +
+      '<span style="font-size: 14pt;">' +
+      '<span style="font-size: 9pt;">test</span>' +
+      '</span>' +
+      '</span>' +
+      '</p>');
+  });
+
+  it('TINY-6263: insertAtCaret - merge spans with similar node in-between', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="color: red; font-size: 9pt;">' +
+        '<span style="background-color: red; color: red;">' +
+        '<span style="color: red; font-size: 9pt;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+      '<span style="color: red; font-size: 9pt;">' +
+      '<span style="background-color: red; color: red;">test</span>' +
+      '</span>' +
+      '</p>');
+  });
+
+  it('TINY-6263: insertAtCaret - merge font colors with other surrounding inline elements in-between', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="color: yellow;">' +
+        '<span style="background-color: red;">' +
+        '<span style="color: yellow;">' +
+        '<span style="color: red;">red</span>' +
+        'yellow' +
+        '<span style="color: blue;">' +
+        '<strong>' +
+        '<span style="color: blue;">blue</span>' +
+        '</strong>' +
+        '</span>' +
+        '</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+    '<span style="color: yellow;">' +
+    '<span style="background-color: red;">' +
+    '<span style="color: red;">red</span>' +
+    'yellow' +
+    '<span style="color: blue;"><strong>blue</strong></span>' +
+    '</span>' +
+    '</span>' +
+    '</p>');
+  });
+
+  it('TINY-6263: insertAtCaret - spans with non-inheritable styles should not merge', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="margin: 5px;">' +
+        '<span style="margin-left: 5px; margin-right: 5px;">' +
+        '<span style="margin: 5px;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>' +
+        '<p>' +
+        '<span style="border-style: solid;">' +
+        '<span style="border: solid red;">' +
+        '<span style="border-style: solid;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+    '<span style="margin: 5px;">' +
+    '<span style="margin-left: 5px; margin-right: 5px;">' +
+    '<span style="margin: 5px;">test</span>' +
+    '</span>' +
+    '</span>' +
+    '</p>' +
+    '<p>' +
+    '<span style="border-style: solid;">' +
+    '<span style="border: solid red;">' +
+    '<span style="border-style: solid;">test</span>' +
+    '</span>' +
+    '</span>' +
+    '</p>');
+  });
+
+  it('TINY-6263: insertAtCaret - shorthand styles with longhand properties in-between', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="font: italic 10px sans-serif;">' +
+        '<span style="font-size: 10px;">' +
+        '<span style="font: italic 10px sans-serif;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>' +
+        '<p>' +
+        '<span style="font: italic 10px sans-serif;">' +
+        '<span style="font-size: 12px;">' +
+        '<span style="font: italic 10px sans-serif;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+      '<span style="font: italic 10px sans-serif;">' +
+      '<span style="font-size: 10px;">test</span>' +
+      '</span>' +
+      '</p>' +
+      '<p>' +
+      '<span style="font: italic 10px sans-serif;">' +
+      '<span style="font-size: 12px;">' +
+      '<span style="font: italic 10px sans-serif;">test</span>' +
+      '</span>' +
+      '</span>' +
+      '</p>');
+  });
+
+  it('TINY-6263: insertAtCaret - longhand style spans with shorthand style span in-between', () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    InsertContent.insertAtCaret(editor, {
+      content: '<p>' +
+        '<span style="font-style: italic;">' +
+        '<span style="font: italic 12px sans-serif;">' +
+        '<span style="font-style: italic;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>' +
+        '<p>' +
+        '<span style="font-size: 10px;">' +
+        '<span style="font: italic 12px sans-serif;">' +
+        '<span style="font-size: 10px;">test</span>' +
+        '</span>' +
+        '</span>' +
+        '</p>',
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' +
+      '<span style="font-style: italic;">' +
+      '<span style="font: italic 12px sans-serif;">test</span>' +
+      '</span>' +
+      '</p>' +
+      '<p>' +
+      '<span style="font-size: 10px;">' +
+      '<span style="font: italic 12px sans-serif;">' +
+      '<span style="font-size: 10px;">test</span>' +
+      '</span>' +
+      '</span>' +
+      '</p>');
+  });
 });

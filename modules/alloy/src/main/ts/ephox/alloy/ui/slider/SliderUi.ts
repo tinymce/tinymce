@@ -36,11 +36,15 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     });
   };
 
-  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Optional<boolean> => {
+  const setValue = (slider: AlloyComponent, newValue: SliderValue): void => {
     modelDetail.value.set(newValue);
-
     const thumb = getThumb(slider);
     refresh(slider, thumb);
+  };
+
+  const changeValue = (slider: AlloyComponent, newValue: SliderValue): Optional<boolean> => {
+    setValue(slider, newValue);
+    const thumb = getThumb(slider);
     detail.onChange(slider, thumb, newValue);
     return Optional.some<boolean>(true);
   };
@@ -140,7 +144,7 @@ const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: Slider
     apis: {
       resetToMin,
       resetToMax,
-      changeValue,
+      setValue,
       refresh
     },
 

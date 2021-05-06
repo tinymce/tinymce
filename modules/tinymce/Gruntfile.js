@@ -31,10 +31,18 @@ const stripSourceMaps = function (data) {
 };
 
 module.exports = function (grunt) {
-  var packageData = grunt.file.readJSON('package.json');
-  var changelogLine = grunt.file.read('changelog.txt').toString().split('\n')[0];
-  var BUILD_VERSION = packageData.version + (process.env.BUILD_NUMBER ? '-' + process.env.BUILD_NUMBER : '');
-  packageData.date = /^Version [^\(]+\(([^\)]+)\)/.exec(changelogLine)[1];
+  const packageData = grunt.file.readJSON('package.json');
+  const BUILD_VERSION = packageData.version + (process.env.BUILD_NUMBER ? '-' + process.env.BUILD_NUMBER : '');
+
+  // Determine the release date
+  const dateRe = new RegExp('^##\\s+' + packageData.version.toString().replace(/\./g, '\\.') + '\\s+\\-\\s+([\\d-]+)$', 'm');
+  const changelog = grunt.file.read('CHANGELOG.md').toString();
+  const dateMatch = dateRe.exec(changelog);
+  if (dateMatch !== null) {
+    packageData.date = dateMatch[1];
+  } else {
+    packageData.date = 'TBD';
+  }
 
   grunt.initConfig({
     pkg: packageData,
@@ -305,7 +313,7 @@ module.exports = function (grunt) {
           },
           {
             src: 'src/core/main/text/readme_lang.md',
-            dest: 'js/tinymce/langs/readme.md'
+            dest: 'js/tinymce/langs/README.md'
           },
           {
             src: '../../LICENSE.TXT',
@@ -313,7 +321,7 @@ module.exports = function (grunt) {
           },
           {
             src: '../../README.md',
-            dest: 'js/tinymce/readme.md'
+            dest: 'js/tinymce/README.md'
           }
         ]
       },
@@ -368,8 +376,8 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/readme.md',
-            'readme.md'
+            'js/tinymce/README.md',
+            'README.md'
           ],
           to: 'dist/tinymce_<%= pkg.version %>.zip',
           dataFilter: (args) => {
@@ -389,9 +397,9 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
           'js/tinymce/license.txt',
-          'changelog.txt',
+          'CHANGELOG.md',
           'LICENSE.TXT',
-          'readme.md'
+          'README.md'
         ]
       },
 
@@ -416,10 +424,10 @@ module.exports = function (grunt) {
             cwd: '../../',
             src: [
               'modules/*/src',
-              'modules/*/changelog.txt',
+              'modules/*/CHANGELOG.md',
               'modules/*/Gruntfile.js',
               'modules/*/gulpfile.js',
-              'modules/*/readme.md',
+              'modules/*/README.md',
               'modules/*/README.md',
               'modules/*/package.json',
               'modules/*/tsconfig*.json',
@@ -430,7 +438,7 @@ module.exports = function (grunt) {
               'modules/tinymce/tools',
               '.yarnrc',
               'LICENSE.TXT',
-              'readme.md',
+              'README.md',
               'lerna.json',
               'package.json',
               'tsconfig*.json',
@@ -482,8 +490,8 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.full.min.js',
             'js/tinymce/plugins/moxiemanager',
             'js/tinymce/plugins/visualblocks/img',
-            'js/tinymce/readme.md',
-            'readme.md',
+            'js/tinymce/README.md',
+            'README.md',
             'js/tests/.jshintrc'
           ],
           concat: [
@@ -553,7 +561,7 @@ module.exports = function (grunt) {
               'license': 'LGPL-2.1',
               'keywords': ['editor', 'wysiwyg', 'tinymce', 'richtext', 'javascript', 'html'],
               'homepage': 'http://www.tinymce.com',
-              'ignore': ['readme.md', 'composer.json', 'package.json', '.npmignore', 'changelog.txt']
+              'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
             }));
 
             zip.addData('package.json', jsonToBuffer({
@@ -598,7 +606,7 @@ module.exports = function (grunt) {
                 }
               },
               'archive': {
-                'exclude': ['readme.md', 'bower.js', 'package.json', '.npmignore', 'changelog.txt']
+                'exclude': ['README.md', 'bower.js', 'package.json', '.npmignore', 'CHANGELOG.md']
               }
             }));
 
@@ -642,8 +650,8 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.min.js',
           'js/tinymce/jquery.tinymce.min.js',
           'js/tinymce/license.txt',
-          'changelog.txt',
-          'js/tinymce/readme.md'
+          'CHANGELOG.md',
+          'js/tinymce/README.md'
         ]
       }
     },

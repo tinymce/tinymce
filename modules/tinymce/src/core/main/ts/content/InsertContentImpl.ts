@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
@@ -14,6 +14,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
+import * as StyleUtils from '../api/html/StyleUtils';
 import * as Settings from '../api/Settings';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
@@ -58,17 +59,30 @@ const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
+// Remove children nodes that are exactly the same as a parent node - name, attributes, styles
 const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
 
   if (merge) {
-    const root = editor.getBody(), elementUtils = ElementUtils(dom);
+    const root = editor.getBody();
+    const elementUtils = ElementUtils(dom);
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      for (let testNode = node.parentNode; testNode && testNode !== root; testNode = testNode.parentNode) {
-        if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
-          dom.remove(node, true);
+      const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
+      if (isInline && StyleUtils.hasInheritableStyles(dom, node)) {
+        for (let parentNode = node.parentNode; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentNode) {
+          // Check if the parent has a style conflict that would prevent the child node from being safely removed,
+          // even if a exact node match could be found further up the tree
+          const styleConflict = StyleUtils.hasStyleConflict(dom, node, parentNode);
+          if (styleConflict) {
+            break;
+          }
+
+          if (elementUtils.compare(parentNode, node)) {
+            dom.remove(node, true);
+            break;
+          }
         }
       }
     });

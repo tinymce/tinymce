@@ -50,7 +50,7 @@ export default {
               {
                 name: 'halign',
                 type: 'listbox',
-                label: 'H Align',
+                label: 'Horizontal align',
                 items: [
                   {
                     text: 'none',
@@ -65,7 +65,7 @@ export default {
               {
                 name: 'valign',
                 type: 'listbox',
-                label: 'V Align',
+                label: 'Vertical align',
                 items: [
                   {
                     text: 'none',

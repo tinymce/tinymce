@@ -5,18 +5,28 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Type } from '@ephox/katamari';
+import Editor from 'tinymce/core/api/Editor';
 import { flattenListSelection, indentListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
+import { updateList } from '../actions/Update';
+import { getParentList } from '../core/Selection';
 import * as Dialog from '../ui/Dialog';
 
-const queryListCommandState = (editor, listName) => {
+const queryListCommandState = (editor: Editor, listName: string) => {
   return () => {
-    const parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+    const parentList = getParentList(editor);
     return parentList && parentList.nodeName === listName;
   };
 };
 
-const register = (editor) => {
+const registerDialog = (editor: Editor) => {
+  editor.addCommand('mceListProps', () => {
+    Dialog.open(editor);
+  });
+};
+
+const register = (editor: Editor) => {
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 
@@ -43,8 +53,12 @@ const register = (editor) => {
     flattenListSelection(editor);
   });
 
-  editor.addCommand('mceListProps', () => {
-    Dialog.open(editor);
+  registerDialog(editor);
+
+  editor.addCommand('mceListUpdate', (ui, detail) => {
+    if (Type.isObject(detail)) {
+      updateList(editor, detail);
+    }
   });
 
   editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));
@@ -53,5 +67,6 @@ const register = (editor) => {
 };
 
 export {
+  registerDialog,
   register
 };

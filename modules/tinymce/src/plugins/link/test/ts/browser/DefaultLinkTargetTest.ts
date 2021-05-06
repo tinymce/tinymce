@@ -1,76 +1,81 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import LinkPlugin from 'tinymce/plugins/link/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import { describe, it, before, after, afterEach } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/link/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-UnitTest.asynctest('browser.tinymce.plugins.link.DefaultLinkTargetTest', (success, failure) => {
-
-  LinkPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [
-      TestLinkUi.sClearHistory,
-      Log.stepsAsStep('TBA', 'Link: does not add target if no default is set', [
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 0, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-      Log.stepsAsStep('TBA', 'Link: adds target if default is set', [
-        tinyApis.sSetSetting('default_link_target', '_blank'),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-      Log.stepsAsStep('TBA', 'Link: adds target if default is set and target_list is enabled', [
-        tinyApis.sSetSetting('default_link_target', '_blank'),
-        tinyApis.sSetSetting('target_list', [
-          { title: 'None', value: '' },
-          { title: 'New', value: '_blank' }
-        ]),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-      Log.stepsAsStep('TBA', 'Link: adds target if default is set and target_list is disabled', [
-        tinyApis.sSetSetting('default_link_target', '_blank'),
-        tinyApis.sSetSetting('target_list', false),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
-        tinyApis.sSetContent(''),
-        tinyApis.sDeleteSetting('target_list')
-      ]),
-      Log.stepsAsStep('TBA', `Link: changing to current window doesn't apply the default`, [
-        tinyApis.sSetSetting('default_link_target', '_blank'),
-        TestLinkUi.sInsertLink(tinyUi, 'http://www.google.com'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a[target="_blank"]': 1, 'a': 1 }),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        TestLinkUi.sSetListBoxItem('Open link in...', 'Current window'),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-      Log.stepsAsStep('TBA', `Link: default isn't applied to an existing link`, [
-        tinyApis.sSetSetting('default_link_target', '_blank'),
-        tinyApis.sSetContent('<a href="http://www.google.com">https://www.google.com/</a>'),
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),
-        TestLinkUi.sOpenLinkDialog(tinyUi),
-        TestLinkUi.sClickSave,
-        TestLinkUi.sAssertContentPresence(tinyApis, { 'a:not([target="_blank"])': 1, 'a': 1 }),
-        tinyApis.sSetContent('')
-      ]),
-      TestLinkUi.sClearHistory
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
-    theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  before(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  after(() => {
+    TestLinkUi.clearHistory();
+  });
+
+  afterEach(() => {
+    hook.editor().setContent('');
+  });
+
+  it('TBA: does not add target if no default is set', async () => {
+    const editor = hook.editor();
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 0, 'a': 1 });
+  });
+
+  it('TBA: adds target if default is set', async () => {
+    const editor = hook.editor();
+    editor.settings.default_link_target = '_blank';
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
+  });
+
+  it('TBA: adds target if default is set and target_list is enabled', async () => {
+    const editor = hook.editor();
+    editor.settings.default_link_target = '_blank';
+    editor.settings.target_list = [
+      { title: 'None', value: '' },
+      { title: 'New', value: '_blank' }
+    ];
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
+  });
+
+  it('TBA: adds target if default is set and target_list is disabled', async () => {
+    const editor = hook.editor();
+    editor.settings.default_link_target = '_blank';
+    editor.settings.target_list = false;
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
+    delete editor.settings.target_list;
+  });
+
+  it(`TBA: changing to current window doesn't apply the default`, async () => {
+    const editor = hook.editor();
+    editor.settings.default_link_target = '_blank';
+    await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
+    await TestLinkUi.pOpenLinkDialog(editor);
+    await TestLinkUi.pSetListBoxItem(editor, 'Open link in...', 'Current window');
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, { 'a:not([target="_blank"])': 1, 'a': 1 });
+  });
+
+  it(`TBA: default isn't applied to an existing link`, async () => {
+    const editor = hook.editor();
+    editor.settings.default_link_target = '_blank';
+    editor.setContent('<a href="http://www.google.com">https://www.google.com/</a>');
+    await TestLinkUi.pAssertContentPresence(editor, { 'a:not([target="_blank"])': 1, 'a': 1 });
+    await TestLinkUi.pOpenLinkDialog(editor);
+    await TestLinkUi.pClickSave(editor);
+    await TestLinkUi.pAssertContentPresence(editor, { 'a:not([target="_blank"])': 1, 'a': 1 });
+  });
 });

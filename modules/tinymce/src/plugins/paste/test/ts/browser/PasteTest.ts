@@ -159,6 +159,95 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PasteTest', (success, failure)
     LegacyUnit.equal(editor.getContent(), '<ol><li>Version 7.0:</li></ol>');
   });
 
+  suite.test('TestCase-TBA: Paste: Paste Word fake list of ten items with roman numerals', (editor) => {
+    editor.setContent('');
+
+    editor.execCommand('mceInsertClipboardContent', false, {
+      content:
+        `<p class=MsoListParagraphCxSpFirst style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>One</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Two</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>iii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Three</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>iv.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Four</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>v.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Five</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>vi.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Six</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+        </span>vii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Seven</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp; </span>viii.<span
+        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Eight</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpMiddle style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>ix.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Nine</span><span
+        lang=en-FI><o:p></o:p></span></p>
+        
+        <p class=MsoListParagraphCxSpLast style='text-indent:-36.0pt;mso-text-indent-alt:
+        -18.0pt;mso-list:l0 level1 lfo1'><![if !supportLists]><span lang=en-FI
+        style='mso-bidi-font-family:Calibri;mso-bidi-theme-font:minor-latin'><span
+        style='mso-list:Ignore'><span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>x.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span></span></span><![endif]><span lang=EN-US style='mso-ansi-language:EN-US'>Ten</span><span
+        lang=en-FI><o:p></o:p></span></p>`
+    });
+
+    LegacyUnit.equal(editor.getContent(), '<ol><li>One</li><li>Two</li><li>Three</li><li>Four</li><li>Five</li><li>Six</li><li>Seven</li><li>Eight</li><li>Nine</li><li>Ten</li></ol>');
+  });
+
   suite.test('TestCase-TBA: Paste: Paste Word fake list before BR', (editor) => {
     let rng = editor.dom.createRng();
 

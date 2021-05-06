@@ -13,6 +13,10 @@ export interface TableEventData {
   readonly style: boolean;
 }
 
+export interface TableModifiedEvent extends TableEventData {
+  readonly table: HTMLTableElement;
+}
+
 const fireNewRow = (editor: Editor, row: HTMLElement) => editor.fire('newrow', { node: row });
 const fireNewCell = (editor: Editor, cell: HTMLElement) => editor.fire('newcell', { node: cell });
 

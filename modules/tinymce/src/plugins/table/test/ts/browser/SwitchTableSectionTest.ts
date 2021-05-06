@@ -1,21 +1,13 @@
-import { Chain, Log, Pipeline, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { ApiChains, McEditor } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { UiFinder } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+
 import Editor from 'tinymce/core/api/Editor';
 import * as TableSections from 'tinymce/plugins/table/core/TableSections';
 import Plugin from 'tinymce/plugins/table/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (success, failure) => {
-  Plugin();
-  SilverTheme();
-
-  const cSwitchSection = (rowSelector: string, newSectionType: string) => Chain.op((editor: Editor) => {
-    const row = UiFinder.findIn(SugarElement.fromDom(editor.getBody()), rowSelector).getOrDie();
-    TableSections.switchSectionType(editor, row.dom, newSectionType);
-  });
-
+describe('browser.tinymce.plugins.table.SwitchTableSectionTest', () => {
   const basicContent = `<table>
 <tbody>
 <tr id="one">
@@ -74,22 +66,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
 </tr>
 </tbody>
 </table>`;
-
-  const sNewHeaderSwitchTest = (tableHeaderType: string, startContent: string, expected: string) =>
-    Log.chainsAsStep('TINY-6007', `Switch new header, table_header_type = ${tableHeaderType}`, [
-      McEditor.cFromSettings({
-        plugins: 'table',
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_header_type: tableHeaderType
-      }),
-      Chain.fromParent(Chain.identity, [
-        ApiChains.cSetContent(startContent),
-        cSwitchSection('tr#one', 'header'),
-        ApiChains.cAssertContent(expected)
-      ]),
-      McEditor.cRemove
-    ]);
 
   const existingTheadExpected = `<table>
 <thead>
@@ -174,22 +150,6 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
 </thead>
 </table>`;
 
-  const sExistingHeaderSwitchTest = (extraLabel: string, tableHeaderType: string, startContent: string, expected: string) =>
-    Log.chainsAsStep('TINY-6007', `Switch tbody to existing header, table_header_type = ${tableHeaderType}, ${extraLabel}`, [
-      McEditor.cFromSettings({
-        plugins: 'table',
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_header_type: tableHeaderType
-      }),
-      Chain.fromParent(Chain.identity, [
-        ApiChains.cSetContent(startContent),
-        cSwitchSection('tr#two', 'header'),
-        ApiChains.cAssertContent(expected)
-      ]),
-      McEditor.cRemove
-    ]);
-
   const tfootContent = `<table>
 <tbody>
 <tr id="two">
@@ -214,58 +174,186 @@ UnitTest.asynctest('browser.tinymce.plugins.table.SwitchTableSectionTest', (succ
 </tbody>
 </table>`;
 
-  const sSectionSwitchTest = (newSectionType: string, tableHeaderType: string, startContent: string, expected: string) =>
-    Log.chainsAsStep('TINY-6007', `Switch section to ${newSectionType}, table_header_type = ${tableHeaderType}`, [
-      McEditor.cFromSettings({
-        plugins: 'table',
-        theme: 'silver',
-        base_url: '/project/tinymce/js/tinymce',
-        table_header_type: tableHeaderType
-      }),
-      Chain.fromParent(Chain.identity, [
-        ApiChains.cSetContent(startContent),
-        cSwitchSection('tr#one', newSectionType),
-        ApiChains.cAssertContent(expected)
-      ]),
-      McEditor.cRemove
-    ]);
+  const switchSectionType = (editor: Editor, rowSelector: string, newSectionType: string) => {
+    const row = UiFinder.findIn(TinyDom.body(editor), rowSelector).getOrDie();
+    TableSections.switchSectionType(editor, row.dom, newSectionType);
+  };
 
-  Pipeline.async({}, [
-    // Basic tests to switch to header when none exist
-    sNewHeaderSwitchTest('section', basicContent, theadExpected),
-    sNewHeaderSwitchTest('cells', basicContent, thsExpected),
-    sNewHeaderSwitchTest('sectionCells', basicContent, bothExpected),
-    sNewHeaderSwitchTest('section', tfootContent, theadExpected),
-    sNewHeaderSwitchTest('cells', tfootContent, reversedThsExpected),
-    sNewHeaderSwitchTest('sectionCells', tfootContent, bothExpected),
-    sNewHeaderSwitchTest('foo', basicContent, theadExpected), // setting value is invalid so default to section
-    // Switch to a header when one already exists - type is specified and matches
-    sExistingHeaderSwitchTest('type matches existing', 'section', theadExpected, existingTheadExpected),
-    sExistingHeaderSwitchTest('type matches existing', 'cells', thsExpected, existingThsExpected),
-    sExistingHeaderSwitchTest('type matches existing', 'sectionCells', bothExpected, existingBothExpected),
-    // Switch to a header when one already exists - type is specified but doesn't match existing
-    sExistingHeaderSwitchTest('type does not match existing', 'section', thsExpected, thsAndTheadExpected),
-    sExistingHeaderSwitchTest('type does not match existing', 'cells', theadExpected, theadAndThsExpected),
-    sExistingHeaderSwitchTest('type does not match existing', 'sectionCells', thsExpected, thsAndBothExpected),
-    sExistingHeaderSwitchTest('type does not match existing', 'sectionCells', theadExpected, theadAndBothExpected),
-    // Switch to a header when one already exists - type is NOT specified so should match by detection
-    sExistingHeaderSwitchTest('type auto so should detect type from existing', 'auto', theadExpected, existingTheadExpected),
-    sExistingHeaderSwitchTest('type auto so should detect type from existing', 'auto', thsExpected, existingThsExpected),
-    sExistingHeaderSwitchTest('type auto so should detect type from existing', 'auto', bothExpected, existingBothExpected),
-    // General tests for switching between various sections
-    sSectionSwitchTest('footer', 'auto', basicContent, tfootContent), // body to footer
-    sSectionSwitchTest('body', 'auto', tfootContent, reversedBasicContent), // footer to body
-    sSectionSwitchTest('body', 'section', theadExpected, basicContent), // header to body
-    sSectionSwitchTest('body', 'cells', thsExpected, basicContent), // cells to body
-    sSectionSwitchTest('body', 'sectionCells', bothExpected, basicContent), // sectionCells to body
-    sSectionSwitchTest('footer', 'section', theadExpected, tfootContent), // header to footer
-    sSectionSwitchTest('footer', 'cells', thsExpected, tfootContent), // ths to footer
-    sSectionSwitchTest('footer', 'sectionCells', bothExpected, tfootContent), // sectionCells to footer
-    // Test that trying to switch to the same section does nothing
-    sSectionSwitchTest('body', 'auto', basicContent, basicContent),
-    sSectionSwitchTest('header', 'section', theadExpected, theadExpected),
-    sSectionSwitchTest('header', 'cells', thsExpected, thsExpected),
-    sSectionSwitchTest('header', 'sectionCells', bothExpected, bothExpected),
-    sSectionSwitchTest('footer', 'auto', tfootContent, tfootContent)
-  ], success, failure);
+  const switchToHeader = (editor: Editor, startContent: string, expected: string) => {
+    editor.setContent(startContent);
+    switchSectionType(editor, 'tr#one', 'header');
+    TinyAssertions.assertContent(editor, expected);
+  };
+
+  const switchExistingHeader = (editor: Editor, startContent: string, expected: string) => {
+    editor.setContent(startContent);
+    switchSectionType(editor, 'tr#two', 'header');
+    TinyAssertions.assertContent(editor, expected);
+  };
+
+  const switchSection = (editor: Editor, newSectionType: string, startContent: string, expected: string) => {
+    editor.setContent(startContent);
+    switchSectionType(editor, 'tr#one', newSectionType);
+    TinyAssertions.assertContent(editor, expected);
+  };
+
+  context('table_header_type="section"', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'table',
+      base_url: '/project/tinymce/js/tinymce',
+      table_header_type: 'section'
+    }, [ Plugin, Theme ]);
+
+    it('TINY-6007: Switch from body to header', () =>
+      switchToHeader(hook.editor(), basicContent, theadExpected)
+    );
+
+    it('TINY-6007: Switch from footer to header', () =>
+      switchToHeader(hook.editor(), tfootContent, theadExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists and does match', () =>
+      switchExistingHeader(hook.editor(), theadExpected, existingTheadExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists, but does not match (cells)', () =>
+      switchExistingHeader(hook.editor(), thsExpected, thsAndTheadExpected)
+    );
+
+    it('TINY-6007: switching between header section to body', () =>
+      switchSection(hook.editor(), 'body', theadExpected, basicContent)
+    );
+
+    it('TINY-6007: switching between header section to footer', () =>
+      switchSection(hook.editor(), 'footer', theadExpected, tfootContent)
+    );
+
+    it('TINY-6007: trying to switch to the same section (header) does nothing', () =>
+      switchSection(hook.editor(), 'header', theadExpected, theadExpected)
+    );
+  });
+
+  context('table_header_type="cells"', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'table',
+      base_url: '/project/tinymce/js/tinymce',
+      table_header_type: 'cells'
+    }, [ Plugin, Theme ]);
+
+    it('TINY-6007: Switch from body to header', () =>
+      switchToHeader(hook.editor(), basicContent, thsExpected)
+    );
+
+    it('TINY-6007: Switch from footer to header', () =>
+      switchToHeader(hook.editor(), tfootContent, reversedThsExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists and does match', () =>
+      switchExistingHeader(hook.editor(), thsExpected, existingThsExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists, but does not match (section)', () =>
+      switchExistingHeader(hook.editor(), theadExpected, theadAndThsExpected)
+    );
+
+    it('TINY-6007: switching between header cells to body', () =>
+      switchSection(hook.editor(), 'body', thsExpected, basicContent)
+    );
+
+    it('TINY-6007: switching between header cells to footer', () =>
+      switchSection(hook.editor(), 'footer', thsExpected, tfootContent)
+    );
+
+    it('TINY-6007: trying to switch to the same section (header) does nothing', () =>
+      switchSection(hook.editor(), 'header', thsExpected, thsExpected)
+    );
+  });
+
+  context('table_header_type="sectionCells"', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'table',
+      base_url: '/project/tinymce/js/tinymce',
+      table_header_type: 'sectionCells'
+    }, [ Plugin, Theme ]);
+
+    it('TINY-6007: Switch from body to header', () =>
+      switchToHeader(hook.editor(), basicContent, bothExpected)
+    );
+
+    it('TINY-6007: Switch from footer to header', () =>
+      switchToHeader(hook.editor(), tfootContent, bothExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists and does match', () =>
+      switchExistingHeader(hook.editor(), bothExpected, existingBothExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists, but does not match (cells)', () =>
+      switchExistingHeader(hook.editor(), thsExpected, thsAndBothExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists, but does not match (section)', () =>
+      switchExistingHeader(hook.editor(), theadExpected, theadAndBothExpected)
+    );
+
+    it('TINY-6007: switching between header sectionCells to body', () =>
+      switchSection(hook.editor(), 'body', bothExpected, basicContent)
+    );
+
+    it('TINY-6007: switching between header sectionCells to footer', () =>
+      switchSection(hook.editor(), 'footer', bothExpected, tfootContent)
+    );
+
+    it('TINY-6007: trying to switch to the same section (header) does nothing', () =>
+      switchSection(hook.editor(), 'header', bothExpected, bothExpected)
+    );
+  });
+
+  context('table_header_type="auto"', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'table',
+      base_url: '/project/tinymce/js/tinymce',
+      table_header_type: 'auto'
+    }, [ Plugin, Theme ]);
+
+    it('TINY-6007: switch to a header when one already exists using detection (section)', () =>
+      switchExistingHeader(hook.editor(), theadExpected, existingTheadExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists using detection (cells)', () =>
+      switchExistingHeader(hook.editor(), thsExpected, existingThsExpected)
+    );
+
+    it('TINY-6007: switch to a header when one already exists using detection (sectionCells)', () =>
+      switchExistingHeader(hook.editor(), bothExpected, existingBothExpected)
+    );
+
+    it('TINY-6007: switching between body to footer', () =>
+      switchSection(hook.editor(), 'footer', basicContent, tfootContent)
+    );
+
+    it('TINY-6007: switching between footer to body', () =>
+      switchSection(hook.editor(), 'body', tfootContent, reversedBasicContent)
+    );
+
+    it('TINY-6007: trying to switch to the same section (body) does nothing', () =>
+      switchSection(hook.editor(), 'body', basicContent, basicContent)
+    );
+
+    it('TINY-6007: trying to switch to the same section (footer) does nothing', () =>
+      switchSection(hook.editor(), 'footer', tfootContent, tfootContent)
+    );
+  });
+
+  context('table_header_type=invalid', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'table',
+      base_url: '/project/tinymce/js/tinymce',
+      table_header_type: 'foo'
+    }, [ Plugin, Theme ]);
+
+    it('TINY-6007: Setting an invalid option defaults to section when switching header', () =>
+      switchToHeader(hook.editor(), basicContent, theadExpected)
+    );
+  });
 });

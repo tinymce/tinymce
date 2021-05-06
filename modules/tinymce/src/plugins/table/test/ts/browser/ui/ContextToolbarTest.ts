@@ -1,141 +1,135 @@
-import { Assertions, Chain, FocusTools, GeneralSteps, Keyboard, Keys, Log, Mouse, NamedChain, Pipeline, UiFinder, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions, FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyApis, TinyLoader, TinyUi, UiChains } from '@ephox/mcagar';
-import { Html, Remove, Replication, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Html, Remove, Replication, SelectorFilter, SugarBody, SugarDocument } from '@ephox/sugar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.table.ContextToolbarTest', (success, failure) => {
-  Theme();
-  Plugin();
-
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-    const doc = SugarElement.fromDom(document);
-    const body = SugarBody.body();
-
-    const tableHtml = '<table style = "width: 5%;">' +
-    '<tbody>' +
-      '<tr>' +
-        '<td></td>' +
-      '</tr>' +
-    '</tbody>' +
-    '</table>';
-
-    const sAddTableAndOpenContextToolbar = (html: string) => GeneralSteps.sequence([
-      tinyApis.sSetContent(html),
-      tinyUi.sWaitForUi('Wait for table context toolbar', '.tox-toolbar button[aria-label="Table properties"]:not(.tox-tbtn--disabled)')
-    ]);
-
-    // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
-    const sPressKeyboardShortcutKey = Keyboard.sKeydown(SugarElement.fromDom(editor.getDoc()), 120, { ctrl: true });
-    const sPressRightArrowKey = Keyboard.sKeydown(doc, Keys.right(), { });
-    const sPressTabKey = Keyboard.sKeydown(doc, Keys.tab(), { });
-
-    // Assert focus is on the expected toolbar button
-    const sAssertFocusOnItem = (label: string, selector: string) => FocusTools.sTryOnSelector(`Focus should be on: ${label}`, doc, selector);
-
-    const sAssertButtonDisabled = (label: string, selector: string) => tinyUi.sWaitForUi(label, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
-
-    const sClickOnToolbarButton = (selector: string) => Chain.asStep({}, [
-      Chain.fromParent(tinyUi.cWaitForPopup('wait for context toolbar', '.tox-pop__dialog div'), [
-        Chain.fromChains([
-          UiFinder.cFindIn(selector),
-          Mouse.cClick
-        ])
-      ])
-    ]);
-
-    const sAssertHtmlStructure = (label, expectedHtml) => Chain.asStep({ editor }, [ NamedChain.read('editor', Chain.op((editor) => {
-      const elm = Replication.deep(SugarElement.fromDom(editor.getBody()));
-      Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus="all"]'), Remove.remove);
-      const actualHtml = Html.get(elm);
-      Assertions.assertHtmlStructure(label, `<body>${expectedHtml}</body>`, `<body>${actualHtml}</body>`);
-    })) ]);
-
-    const sOpenAndCloseDialog = GeneralSteps.sequence([
-      Chain.asStep(editor, [
-        tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'),
-        UiChains.cCloseDialog('div[role="dialog"]')
-      ]),
-      Waiter.sTryUntil('Wait for dialog to close', UiFinder.sNotExists(body, 'div[role="dialog"]'))
-    ]);
-
-    Pipeline.async({}, [
-      tinyApis.sFocus(),
-      Log.stepsAsStep('TBA', 'Table: context toolbar keyboard navigation test', [
-        sAddTableAndOpenContextToolbar(tableHtml),
-        sPressKeyboardShortcutKey,
-        sAssertFocusOnItem('Table properties button', 'button[aria-label="Table properties"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Delete table button', 'button[aria-label="Delete table"]'),
-        sPressTabKey,
-        sAssertFocusOnItem('Insert row above button', 'button[aria-label="Insert row before"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Insert row below button', 'button[aria-label="Insert row after"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Delete row button', 'button[aria-label="Delete row"]'),
-        sPressTabKey,
-        sAssertFocusOnItem('Insert column before button', 'button[aria-label="Insert column before"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Insert column after button', 'button[aria-label="Insert column after"]'),
-        sPressRightArrowKey,
-        sAssertFocusOnItem('Delete column button', 'button[aria-label="Delete column"]'),
-        sPressTabKey,
-        sAssertFocusOnItem('Table properties button', 'button[aria-label="Table properties"]'),
-        sClickOnToolbarButton('button[aria-label="Delete table"]'),
-        sAssertHtmlStructure('Assert delete table', '<p><br></p>')
-      ]),
-      Log.stepsAsStep('TBA', 'Table: context toolbar functionality test', [
-        sAddTableAndOpenContextToolbar(tableHtml),
-
-        sClickOnToolbarButton('button[aria-label="Table properties"]'),
-        sOpenAndCloseDialog,
-
-        sClickOnToolbarButton('button[aria-label="Insert row before"]'),
-        sAssertHtmlStructure('Assert insert row before', '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Insert row after"]'),
-        sAssertHtmlStructure('Assert insert row after', '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Delete row"]'),
-        sAssertHtmlStructure('Assert delete row', '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Insert column before"]'),
-        sAssertHtmlStructure('Assert insert column before', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Insert column after"]'),
-        sAssertHtmlStructure('Assert insert column after', '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Delete column"]'),
-        sAssertHtmlStructure('Assert delete column', '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>'),
-
-        sClickOnToolbarButton('button[aria-label="Delete table"]'),
-        sAssertHtmlStructure('Assert remove table', '<p><br></p>')
-      ]),
-      Log.stepsAsStep('TBA', 'Table: context toolbar functionality test with focus in caption', [
-        sAddTableAndOpenContextToolbar('<table style = "width: 5%;"><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>'),
-        tinyApis.sSetCursor([ 0, 0, 0 ], 1),
-
-        sClickOnToolbarButton('button[aria-label="Table properties"]'),
-        sOpenAndCloseDialog,
-
-        sAssertButtonDisabled('Assert insert row before disabled', 'button[aria-label="Insert row before"]'),
-        sAssertButtonDisabled('Assert insert row after disabled', 'button[aria-label="Insert row after"]'),
-        sAssertButtonDisabled('Assert delete row disabled', 'button[aria-label="Delete row"]'),
-        sAssertButtonDisabled('Assert insert column before disabled', 'button[aria-label="Insert column before"]'),
-        sAssertButtonDisabled('Assert insert column after disabled', 'button[aria-label="Insert column after"]'),
-        sAssertButtonDisabled('Assert delete column disabled', 'button[aria-label="Delete column"]'),
-
-        sClickOnToolbarButton('button[aria-label="Delete table"]'),
-        sAssertHtmlStructure('Assert remove table', '<p><br></p>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.table.ContextToolbarTest', () => {
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ], true);
+
+  const tableHtml = '<table style = "width: 5%;">' +
+  '<tbody>' +
+    '<tr>' +
+      '<td></td>' +
+    '</tr>' +
+  '</tbody>' +
+  '</table>';
+
+  const pAddTableAndOpenContextToolbar = async (editor: Editor, html: string) => {
+    editor.setContent(html);
+    await TinyUiActions.pWaitForUi(editor, '.tox-toolbar button[aria-label="Table properties"]:not(.tox-tbtn--disabled)');
+  };
+
+  // Use keyboard shortcut ctrl+F9 to navigate to the context toolbar
+  const pressKeyboardShortcutKey = (editor: Editor) => TinyContentActions.keydown(editor, 120, { ctrl: true });
+  const pressRightArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.right());
+  const pressTabKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
+
+  // Assert focus is on the expected toolbar button
+  const pAssertFocusOnItem = (label: string, selector: string) =>
+    FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
+
+  const pAssertButtonDisabled = (editor: Editor, selector: string) =>
+    TinyUiActions.pWaitForUi(editor, `.tox-pop__dialog ${selector}.tox-tbtn--disabled`);
+
+  const pClickOnContextToolbarButton = async (editor: Editor, selector: string) => {
+    const toolbar = await TinyUiActions.pWaitForPopup(editor, '.tox-pop__dialog div');
+    Mouse.clickOn(toolbar, selector);
+  };
+
+  const assertHtmlStructure = (label: string, editor: Editor, expectedHtml: string) => {
+    const elm = Replication.deep(TinyDom.body(editor));
+    Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus="all"]'), Remove.remove);
+    const actualHtml = Html.get(elm);
+    Assertions.assertHtmlStructure(label, `<body>${expectedHtml}</body>`, `<body>${actualHtml}</body>`);
+  };
+
+  const pOpenAndCloseDialog = async (editor: Editor) => {
+    await TinyUiActions.pWaitForDialog(editor);
+    TinyUiActions.closeDialog(editor);
+    await Waiter.pTryUntil(
+      'Wait for dialog to close',
+      () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]')
+    );
+  };
+
+  it('TBA: context toolbar keyboard navigation test', async () => {
+    const editor = hook.editor();
+    await pAddTableAndOpenContextToolbar(editor, tableHtml);
+    pressKeyboardShortcutKey(editor);
+    await pAssertFocusOnItem('Table properties button', 'button[aria-label="Table properties"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Delete table button', 'button[aria-label="Delete table"]');
+    pressTabKey(editor);
+    await pAssertFocusOnItem('Insert row above button', 'button[aria-label="Insert row before"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Insert row below button', 'button[aria-label="Insert row after"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Delete row button', 'button[aria-label="Delete row"]');
+    pressTabKey(editor);
+    await pAssertFocusOnItem('Insert column before button', 'button[aria-label="Insert column before"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Insert column after button', 'button[aria-label="Insert column after"]');
+    pressRightArrowKey(editor);
+    await pAssertFocusOnItem('Delete column button', 'button[aria-label="Delete column"]');
+    pressTabKey(editor);
+    await pAssertFocusOnItem('Table properties button', 'button[aria-label="Table properties"]');
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Delete table"]');
+    assertHtmlStructure('Assert delete table', editor, '<p><br></p>');
+  });
+
+  it('TBA: context toolbar functionality test', async () => {
+    const editor = hook.editor();
+    await pAddTableAndOpenContextToolbar(editor, tableHtml);
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Table properties"]');
+    await pOpenAndCloseDialog(editor);
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Insert row before"]');
+    assertHtmlStructure('Assert insert row before', editor, '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Insert row after"]');
+    assertHtmlStructure('Assert insert row after', editor, '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Delete row"]');
+    assertHtmlStructure('Assert delete row', editor, '<table><tbody><tr><td><br></td></tr><tr><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Insert column before"]');
+    assertHtmlStructure('Assert insert column before', editor, '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Insert column after"]');
+    assertHtmlStructure('Assert insert column after', editor, '<table><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Delete column"]');
+    assertHtmlStructure('Assert delete column', editor, '<table><tbody><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></tbody></table>');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Delete table"]');
+    assertHtmlStructure('Assert remove table', editor, '<p><br></p>');
+  });
+
+  it('TBA: context toolbar functionality test with focus in caption', async () => {
+    const editor = hook.editor();
+    await pAddTableAndOpenContextToolbar(editor, '<table style = "width: 5%;"><caption>abc</caption><tbody><tr><td>x</td></tr></tbody></table>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Table properties"]');
+    await pOpenAndCloseDialog(editor);
+
+    await pAssertButtonDisabled(editor, 'button[aria-label="Insert row before"]');
+    await pAssertButtonDisabled(editor, 'button[aria-label="Insert row after"]');
+    await pAssertButtonDisabled(editor, 'button[aria-label="Delete row"]');
+    await pAssertButtonDisabled(editor, 'button[aria-label="Insert column before"]');
+    await pAssertButtonDisabled(editor, 'button[aria-label="Insert column after"]');
+    await pAssertButtonDisabled(editor, 'button[aria-label="Delete column"]');
+
+    await pClickOnContextToolbarButton(editor, 'button[aria-label="Delete table"]');
+    assertHtmlStructure('Assert remove table', editor, '<p><br></p>');
+  });
 });
