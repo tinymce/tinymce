@@ -306,6 +306,13 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
           }
         }
 
+        // keep style="list-style-type: none" on <li>s
+        if (name === 'style' && NodeType.matchNodeNames([ 'li' ])(elm) && dom.getStyle(elm, 'list-style-type') === 'none') {
+          elm.removeAttribute(name);
+          dom.setStyle(elm, 'list-style-type', 'none');
+          return;
+        }
+
         // IE6 has a bug where the attribute doesn't get removed correctly
         if (name === 'class') {
           elm.removeAttribute('className');
