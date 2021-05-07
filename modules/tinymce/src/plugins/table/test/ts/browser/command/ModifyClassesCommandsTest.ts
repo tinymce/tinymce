@@ -1,11 +1,14 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections } from '@ephox/mcagar';
+import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { TableModifiedEvent } from 'tinymce/plugins/table/api/Events';
 import Plugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+
+const platform = PlatformDetection.detect();
 
 describe('browser.tinymce.plugins.table.command.ModifiyClassesCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -46,7 +49,7 @@ describe('browser.tinymce.plugins.table.command.ModifiyClassesCommandsTest', () 
             '<table>' +
               '<tbody>' +
                 '<tr>' +
-                  '<td class="">1</td>' +
+                  (platform.browser.isIE() ? '<td>1</td>' : '<td class="">1</td>') +
                   '<td>2</td>' +
                 '</tr>' +
               '</tbody>' +
