@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- An unexpected exception was thrown when switching to readonly mode and adjusting the editor width #TINY-6383
 - Fixed a bug where block elements containing a pagebreak could be removed from the editor content #TINY-3388
 
 ## 5.8.0 - 2021-05-06
