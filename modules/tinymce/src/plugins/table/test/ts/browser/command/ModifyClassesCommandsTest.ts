@@ -46,7 +46,7 @@ describe('browser.tinymce.plugins.table.command.ModifiyClassesCommandsTest', () 
             '<table>' +
               '<tbody>' +
                 '<tr>' +
-                  '<td>1</td>' +
+                  '<td class="">1</td>' +
                   '<td>2</td>' +
                 '</tr>' +
               '</tbody>' +

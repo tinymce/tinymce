@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -92,7 +91,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
         columnCell.each((cell) => {
           const theadOpt = SelectorFind.ancestor(cell.element, 'thead');
 
-          if (theadOpt.isNone() && SugarNode.name(cell.element.dom) !== changeTo) {
+          if (theadOpt.isNone() && SugarNode.name(cell.element) !== changeTo) {
             const newCellElm = editor.dom.rename(cell.element.dom, changeTo) as HTMLTableCellElement;
             Events.fireNewCell(editor, newCellElm);
           }
