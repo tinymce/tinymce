@@ -7,8 +7,9 @@
     <script src="/tinymce/tinymce.min.js"></script>
     <script src="tiny_init.js"></script>
   </head>
-  <body>
-    <textarea>
+  <body style="background-color: gray;">
+    <div style=" margin: auto; width: 613px;">
+      <textarea class="tiny-area">
       <h1>The Incomparable Yosemite</h1>
       <p>The walls</p>
       <p>Awful in stern, immovable majesty, how softly these rocks are adorned, and how fine and reassuring the company they keep: their feet among beautiful groves and meadows, their brows in the sky, a thousand flowers leaning confidingly against their feet, bathed in floods of water.</p>
@@ -17,8 +18,13 @@
       <li>bees</li>
       <li>butterflies</li>
       </ul>
-    </textarea>
-
-    
+    </textarea
+      >
+      <script>
+        initializeTinyMCE({
+          actionButton: { title: "Post", action: () => {} },
+        });
+      </script>
+    </div>
   </body>
 </html>

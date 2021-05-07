@@ -10,7 +10,7 @@
 @background-color: #f2f2f2;
 @font-stack: "Arial", sans-serif;
 @toolbar-group-padding-x: 0;
-@toolbar-button-spacing-x: 4px;
+@toolbar-button-spacing-x: 0;
 @tinymce-border-width: 0;
 @toolbar-button-enabled-background-color: none;
 
@@ -92,6 +92,17 @@
     &.disabled svg path {
       fill: url(#editor-icon-gradient__disabled);
     }
+  }
+
+  .torn-btn {
+    background: linear-gradient(180deg, #ccc 0%, #999 60%, #666 100%);
+    border-radius: 5px;
+    font-weight: 700;
+    line-height: 16px;
+    padding: 4px 8px;
+    text-shadow: 0 1px 0 #fff6;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 }
 

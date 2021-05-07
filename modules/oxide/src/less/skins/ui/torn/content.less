@@ -5,9 +5,17 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-@import 'src/less/theme/content-ui';
+@import "src/less/theme/content-ui";
+
+html {
+  height: 100%;
+}
 
 .mce-content-body {
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
   font-size: 12px;
+  height: 100%;
+  margin: 0;
+  padding: 1rem;
 }

@@ -67,9 +67,8 @@ const color_map = [
   'Silver',
 ];
 
-addSvgDefToDocument();
 const toolbarItems = [
-  'customButton',
+  'actionButton',
   'reset',
   'bold',
   'italic',
@@ -99,8 +98,9 @@ const inlineFormattingItems =
 const blockFormattingItems = 'align bullist';
 
 interface EditorInitParams {
+  height: number;
   selector?: string;
-  customButton?: {
+  actionButton?: {
     action: () => void;
     title: string;
   };
@@ -119,7 +119,7 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
     skin: 'torn',
     icons: 'torn',
     toolbar_sticky: true,
-    height: 300,
+    height: options?.height ?? 600,
     menubar: false,
     statusbar: false,
     color_map,
@@ -141,10 +141,10 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
       },
     },
     setup: (editor) => {
-      if (options?.customButton) {
-        editor.ui.registry.addButton('customButton', {
-          text: options.customButton.title,
-          onAction: options.customButton.action,
+      if (options?.actionButton) {
+        editor.ui.registry.addButton('actionButton', {
+          text: `<span class="torn-btn">${options.actionButton.title}</span>`,
+          onAction: options.actionButton.action,
         });
       }
 
@@ -157,6 +157,8 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
       });
     },
   };
-  
+
   tinymce.init(settings);
 };
+
+document.addEventListener('DOMContentLoaded', addSvgDefToDocument, false);

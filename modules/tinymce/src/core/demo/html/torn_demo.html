@@ -9,11 +9,20 @@
 <body>
   <main>
     <div id="ephox-ui">
-      <textarea class='tiny-area'></textarea>
+      <textarea class='tiny-area'>
+        <h1>The Incomparable Yosemite</h1>
+        <p>The walls</p>
+        <p>Awful in stern, immovable majesty, how softly these rocks are adorned, and how fine and reassuring the company they keep: their feet among beautiful groves and meadows, their brows in the sky, a thousand flowers leaning confidingly against their feet, bathed in floods of water.</p>
+        <ul>
+        <li>birds</li>
+        <li>bees</li>
+        <li>butterflies</li>
+        </ul>
+      </textarea>
     </div>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
-    <script>demos.initializeTinyMCE({customButton: {title: 'Post', action: () => {console.log('Post')}}});</script>
+    <script>demos.initializeTinyMCE({actionButton: {title: 'Post', action: () => {console.log('Post')}}});</script>
   </main>
 </body>
 
