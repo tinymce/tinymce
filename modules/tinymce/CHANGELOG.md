@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### 5.8.1 - TBD
+
+### Fixed
+- An unexpected exception was thrown when switching to readonly mode and adjusting the editor width #TINY-6383
+
 ## 5.8.0 - 2021-05-06
 
 ### Added

@@ -106,10 +106,6 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp) => () => updateSelectMenuText(comp));
-
-  const setInitialValue = Optional.some((comp) => updateSelectMenuText(comp));
-
   const dataset = buildBasicSettingsDataset(editor, 'font_formats', defaultFontsFormats, Delimiter.SemiColon);
 
   return {
@@ -119,8 +115,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     getCurrentValue,
     getPreviewFor,
     onAction,
-    setInitialValue,
-    nodeChangeHandler,
+    updateText: updateSelectMenuText,
     dataset,
     shouldHide: false,
     isInvalid: Fun.never
