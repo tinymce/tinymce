@@ -69,21 +69,21 @@ describe('browser.tinymce.plugins.fullpage.FullPagePluginTest', () => {
     const editor = hook.editor();
     editor.settings.fullpage_hide_in_source_view = false;
     editor.setContent('<html><body><p>1</p></body></html>');
-    assert.equal(editor.getContent({ source_view: true }), '<html><body>\n<p>1</p>\n</body></html>');
+    TinyAssertions.assertContent(editor, '<html><body>\n<p>1</p>\n</body></html>', { source_view: true });
   });
 
   it('TBA: fullpage_hide_in_source_view: true', () => {
     const editor = hook.editor();
     editor.settings.fullpage_hide_in_source_view = true;
     editor.setContent('<html><body><p>1</p></body></html>');
-    assert.equal(editor.getContent({ source_view: true }), '<p>1</p>');
+    TinyAssertions.assertContent(editor, '<p>1</p>', { source_view: true });
   });
 
   it('TBA: link elements', () => {
     const editor = hook.editor();
     editor.setContent('<html><head><link rel="stylesheet" href="a.css"><link rel="something"></head><body><p>c</p></body></html>');
-    assert.equal(
-      editor.getContent(),
+    TinyAssertions.assertContent(
+      editor,
       '<html><head><link rel="stylesheet" href="a.css"><link rel="something"></head><body>\n<p>c</p>\n</body></html>'
     );
   });
@@ -183,6 +183,6 @@ describe('browser.tinymce.plugins.fullpage.FullPagePluginTest', () => {
   it('TINY-6541: Text content should not be modified', () => {
     const editor = hook.editor();
     editor.setContent('some plain text');
-    assert.equal(editor.getContent({ format: 'text' }), 'some plain text', 'should return plain text content');
+    TinyAssertions.assertContent(editor, 'some plain text', { format: 'text' });
   });
 });
