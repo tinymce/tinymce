@@ -55,16 +55,13 @@ export interface SelectSpec {
   getPreviewFor: FormatRegister.GetPreviewForType;
   // This is used for clicking on the item
   onAction: (item: FormatterFormatItem) => (api) => void;
-  // This is used for setting up the handler to change the menu text
-  nodeChangeHandler: Optional<(comp: AlloyComponent) => (e) => void>;
+  // This is used to change the menu text
+  updateText: (comp: AlloyComponent) => void;
   // This is true if items should be hidden if they are not an applicable
   // format to the current selection
   shouldHide: boolean;
   // This determines if an item is applicable
   isInvalid: (item: FormatterFormatItem) => boolean;
-
-  // This is used for assigning initial values
-  setInitialValue: Optional<(comp: AlloyComponent) => void>;
 
   dataset: SelectDataset;
 }
@@ -157,18 +154,24 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: Se
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const { items, getStyleItems } = createMenuItems(editor, backstage, spec);
 
-  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: () => comp });
+  const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
 
   const onSetup = (api: BespokeSelectApi): () => void => {
-    spec.setInitialValue.each((f) => f(api.getComponent()));
-    return spec.nodeChangeHandler.map((f) => {
-      const handler = f(api.getComponent());
-      editor.on('NodeChange', handler);
+    const updateText = () => {
+      const comp = api.getComponent();
+      // If the component has been detached then do nothing
+      if (comp.getSystem().isConnected()) {
+        spec.updateText(comp);
+      }
+    };
 
-      return () => {
-        editor.off('NodeChange', handler);
-      };
-    }).getOr(Fun.noop);
+    // Set the initial text when the component is attached and then update on node changes
+    updateText();
+    editor.on('NodeChange', updateText);
+
+    return () => {
+      editor.off('NodeChange', updateText);
+    };
   };
 
   return renderCommonDropdown(
