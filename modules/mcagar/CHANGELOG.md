@@ -6,5 +6,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
-### Changed
+### Added
 - Added optional `args` parameter to `TinyAssertions.assertContent` to be passed to `editor.getContent()` #TINY-3388
