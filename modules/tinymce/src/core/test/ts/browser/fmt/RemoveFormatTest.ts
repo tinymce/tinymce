@@ -30,6 +30,25 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
     editor.formatter.unregister('format');
   };
 
+  context('DefaultFormats remove format behavior', () => {
+    it('TINY-6264: Will not remove style="list-style-type: none" from list item elements', () => {
+      const editor = hook.editor();
+      const nestedListHtml = '<ul><li style="list-style-type: none;"><ul><li>hello</li></ul></li></ul>';
+      editor.setContent(nestedListHtml);
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 5);
+      editor.execCommand('RemoveFormat');
+      TinyAssertions.assertContent(editor, nestedListHtml);
+    });
+
+    it('TINY-6264: Will remove other styles except for style="list-style-type: none" from list item elements', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li style="list-style-type: none; background-color: #000000;"><ul><li>hello</li></ul></li></ul>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 5);
+      editor.execCommand('RemoveFormat');
+      TinyAssertions.assertContent(editor, '<ul><li style="list-style-type: none;"><ul><li>hello</li></ul></li></ul>');
+    });
+  });
+
   context('Remove format with collapsed selection', () => {
     it('In middle of single word wrapped in strong', () => {
       const editor = hook.editor();
