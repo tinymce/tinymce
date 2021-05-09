@@ -26,7 +26,7 @@ describe('browser.tinymce.core.CaretWalkerTest', () => {
     return CaretPosition(DomQuery(selector, getRoot())[0].firstChild, offset);
   };
 
-  let logicalCaret;
+  let logicalCaret: CaretWalker;
   before(() => logicalCaret = CaretWalker(getRoot()));
 
   it('inside empty root', () => {

@@ -42,7 +42,7 @@ const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getConte
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const selection = editor.selection, dom = editor.dom;
-  const isBlock = dom.isBlock;
+  const isBlock = dom.isBlock as (node: Node) => node is HTMLElement;
 
   const rootNode = editor.getBody();
   const fakeCaret = FakeCaret(editor, rootNode, isBlock, () => EditorFocus.hasFocus(editor));

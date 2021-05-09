@@ -27,7 +27,7 @@ describe('browser.tinymce.core.caret.FakeCaretTest', () => {
     fakeCaret.destroy();
   });
 
-  const isBlock = (node: Node) => {
+  const isBlock = (node: Node): node is HTMLDivElement => {
     return node.nodeName === 'DIV';
   };
 

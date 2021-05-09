@@ -30,7 +30,7 @@ const isElement = NodeType.isElement;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
 const isBlock = NodeType.matchStyleValues('display', 'block table');
 const isFloated = NodeType.matchStyleValues('float', 'left right');
-const isValidElementCaretCandidate = Predicate.and(isElement, isCaretCandidate, Fun.not(isFloated));
+const isValidElementCaretCandidate = Predicate.and(isElement, isCaretCandidate, Fun.not(isFloated)) as (node: Node) => node is Element;
 const isNotPre = Fun.not(NodeType.matchStyleValues('white-space', 'pre pre-line pre-wrap'));
 const isText = NodeType.isText;
 const isBr = NodeType.isBr;
@@ -43,10 +43,9 @@ const isRange = (rng: any): rng is Range => !!rng.setStart && !!rng.setEnd;
 const isHiddenWhiteSpaceRange = (range: Range): boolean => {
   const container = range.startContainer;
   const offset = range.startOffset;
-  let text;
 
   if (isWhiteSpace(range.toString()) && isNotPre(container.parentNode) && NodeType.isText(container)) {
-    text = container.data;
+    const text = container.data;
 
     if (isWhiteSpace(text[offset - 1]) || isWhiteSpace(text[offset + 1])) {
       return true;
@@ -74,7 +73,7 @@ const getBrClientRect = (brNode: Element): ClientRect => {
 };
 
 // Safari will not return a rect for <p>a<br>|b</p> for some odd reason
-const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
+const getBoundingClientRectWebKitText = (rng: Range): GeomClientRect.ClientRect | null => {
   const sc = rng.startContainer;
   const ec = rng.endContainer;
   const so = rng.startOffset;
@@ -88,10 +87,11 @@ const getBoundingClientRectWebKitText = (rng: Range): ClientRect => {
   }
 };
 
-const isZeroRect = (r) => r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
+const isZeroRect = (r: GeomClientRect.ClientRect): boolean =>
+  r.left === 0 && r.right === 0 && r.top === 0 && r.bottom === 0;
 
-const getBoundingClientRect = (item: Element | Range): ClientRect => {
-  let clientRect;
+const getBoundingClientRect = (item: Element | Range): GeomClientRect.ClientRect => {
+  let clientRect: ClientRect;
 
   const clientRects = item.getClientRects();
   if (clientRects.length > 0) {
@@ -119,11 +119,10 @@ const collapseAndInflateWidth = (clientRect: ClientRect, toStart: boolean): Geom
   return newClientRect;
 };
 
-const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[] => {
-  const clientRects = [];
-  let beforeNode, node;
+const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRect.ClientRect[] => {
+  const clientRects: GeomClientRect.ClientRect[] = [];
 
-  const addUniqueAndValidRect = (clientRect) => {
+  const addUniqueAndValidRect = (clientRect: GeomClientRect.ClientRect) => {
     if (clientRect.height === 0) {
       return;
     }
@@ -137,7 +136,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
     clientRects.push(clientRect);
   };
 
-  const addCharacterOffset = (container, offset) => {
+  const addCharacterOffset = (container: Text, offset: number) => {
     const range = createRange(container.ownerDocument);
 
     if (offset < container.data.length) {
@@ -177,14 +176,16 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
     }
   };
 
-  if (isText(caretPosition.container())) {
-    addCharacterOffset(caretPosition.container(), caretPosition.offset());
+  const container = caretPosition.container();
+  const offset = caretPosition.offset();
+  if (isText(container)) {
+    addCharacterOffset(container, offset);
     return clientRects;
   }
 
-  if (isElement(caretPosition.container())) {
+  if (isElement(container)) {
     if (caretPosition.isAtEnd()) {
-      node = resolveIndex(caretPosition.container(), caretPosition.offset());
+      const node = resolveIndex(container, offset);
       if (isText(node)) {
         addCharacterOffset(node, node.data.length);
       }
@@ -193,7 +194,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
         addUniqueAndValidRect(collapseAndInflateWidth(getBoundingClientRect(node), false));
       }
     } else {
-      node = resolveIndex(caretPosition.container(), caretPosition.offset());
+      const node = resolveIndex(container, offset);
       if (isText(node)) {
         addCharacterOffset(node, 0);
       }
@@ -203,7 +204,7 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): ClientRect[]
         return clientRects;
       }
 
-      beforeNode = resolveIndex(caretPosition.container(), caretPosition.offset() - 1);
+      const beforeNode = resolveIndex(caretPosition.container(), caretPosition.offset() - 1);
       if (isValidElementCaretCandidate(beforeNode) && !isBr(beforeNode)) {
         if (isBlock(beforeNode) || isBlock(node) || !isValidElementCaretCandidate(node)) {
           addUniqueAndValidRect(collapseAndInflateWidth(getBoundingClientRect(beforeNode), false));
@@ -239,7 +240,7 @@ export interface CaretPosition {
  * @param {Number} offset Offset within that container node.
  * @param {Array} clientRects Optional client rects array for the position.
  */
-export const CaretPosition = (container: Node, offset: number, clientRects?): CaretPosition => {
+export const CaretPosition = (container: Node, offset: number, clientRects?: ClientRect[]): CaretPosition => {
   const isAtStart = () => {
     if (isText(container)) {
       return offset === 0;
