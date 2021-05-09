@@ -108,7 +108,7 @@ const Delay: Delay = {
       return;
     }
 
-    requestAnimationFramePromise = new Promise((resolve) => {
+    requestAnimationFramePromise = new Promise<void>((resolve) => {
       if (!element) {
         element = document.body;
       }

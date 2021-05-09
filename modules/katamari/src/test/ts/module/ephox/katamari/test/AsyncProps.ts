@@ -22,7 +22,7 @@ type Testable<A> = Testable.Testable<A>;
  * @param name
  * @param f
  */
-export const promiseTest = <A>(name: string, f: () => Promise<A>): void => {
+export const promiseTest = (name: string, f: () => Promise<void>): void => {
   UnitTest.asynctest(name, (success, failure) => {
     f().then(success, failure);
   });
