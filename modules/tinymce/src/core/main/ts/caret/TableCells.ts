@@ -73,8 +73,8 @@ const getTopValue = (rect: ClientRect) => rect.top;
 const isAbove = (corner: Corner, y: number) => corner.y < y;
 const isBelow = (corner: Corner, y: number) => corner.y > y;
 
-const getClosestCellAbove = Fun.curry(getClosestCell, getBottomValue, isAbove) as (table: HTMLElement, x: number, y: number) => Optional<CellOrCaption>;
-const getClosestCellBelow = Fun.curry(getClosestCell, getTopValue, isBelow) as (table: HTMLElement, x: number, y: number) => Optional<CellOrCaption>;
+const getClosestCellAbove: (table: HTMLElement, x: number, y: number) => Optional<CellOrCaption> = Fun.curry(getClosestCell, getBottomValue, isAbove);
+const getClosestCellBelow: (table: HTMLElement, x: number, y: number) => Optional<CellOrCaption> = Fun.curry(getClosestCell, getTopValue, isBelow);
 
 const findClosestPositionInAboveCell = (table: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>
   Arr.head(pos.getClientRects())

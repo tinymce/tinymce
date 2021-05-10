@@ -89,12 +89,15 @@ const aboveLineNumber = <T extends LineClientRect>(lineNumber: number, clientRec
 const isLineNumber = <T extends LineClientRect>(lineNumber: number, clientRect: T): boolean =>
   clientRect.line === lineNumber;
 
-const upUntil = Fun.curry(walkUntil, VDirection.Up, ClientRect.isAbove, ClientRect.isBelow) as (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[];
-const downUntil = Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove) as (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[];
+const upUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[] =
+  Fun.curry(walkUntil, VDirection.Up, ClientRect.isAbove, ClientRect.isBelow);
+
+const downUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[] =
+  Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove);
 
 const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPredicate, node: Node): LinePosClientRect[] => {
   const caretWalker = CaretWalker(root);
-  let walkFn;
+  let walkFn: (caretPosition: CaretPosition | null) => CaretPosition | null;
   let isBelowFn: PosPredicate;
   let isAboveFn: PosPredicate;
   let caretPosition: CaretPosition;
