@@ -180,7 +180,7 @@ const normalizeRange = (direction: number, root: Node, range: Range): Range => {
     }
 
     // TODO: The `isCaretContainerBlock` function already asserts container is an element, so
-    //  the above isElement check likely isn't needed which would remove the need for the cast.
+    //       the above isElement check likely isn't needed which would remove the need for the cast.
     const location = (container as Element).getAttribute('data-mce-caret');
 
     if (location === 'before') {
