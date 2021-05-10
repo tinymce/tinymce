@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.quickbars.ToolbarFalseTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ]);
 
-  const assertToolbarNotVisible = async () => {
+  const pAssertToolbarNotVisible = async () => {
     // We can't wait for something to happen, as nothing will change. So instead, just wait some time for when the toolbar would have normally shown
     await Waiter.pWait(300);
     UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
@@ -27,20 +27,20 @@ describe('browser.tinymce.plugins.quickbars.ToolbarFalseTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><blockquote><p>Some quoted content</p></blockquote>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
-    await assertToolbarNotVisible();
+    await pAssertToolbarNotVisible();
   });
 
   it('TBA: Insert toolbar is not shown', async () => {
     const editor = hook.editor();
     editor.setContent('<p>Some <strong>bold</strong> and <em>italic</em> content.</p><p></p>');
     TinySelections.setCursor(editor, [ 1 ], 0);
-    await assertToolbarNotVisible();
+    await pAssertToolbarNotVisible();
   });
 
   it('TBA: Image toolbar is not shown', async () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></p>');
     TinySelections.setCursor(editor, [ 0 ], 0);
-    await assertToolbarNotVisible();
+    await pAssertToolbarNotVisible();
   });
 });
