@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 
 ### 5.8.1 - TBD
 
@@ -263,7 +264,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.4.0 - 2020-06-30
 
 ### Added
-- Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added keyboard navigation support to menus and toolbars when the editor is in a ShadowRoot #TINY-6152
 - Added the ability for menus to be clicked when the editor is in an open shadow root #TINY-6091
 - Added the `Editor.ui.styleSheetLoader` API for loading stylesheets within the Document or ShadowRoot containing the editor UI #TINY-6089

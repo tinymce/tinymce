@@ -185,7 +185,7 @@ const assertEditorClasses = (docked: boolean) => {
   })), container);
 };
 
-const assertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number) => {
+const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number) => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
   scrollRelativeEditor(-100, isToolbarTop);
   await Waiter.pWait(100);
@@ -229,7 +229,7 @@ export {
   pOpenMenuAndTestScrolling,
   pScrollAndAssertStructure,
   pAssertHeaderDocked,
+  pAssertHeaderPosition,
   assertEditorClasses,
-  assertHeaderPosition,
   scrollRelativeEditor
 };
