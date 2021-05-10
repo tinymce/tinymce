@@ -68,7 +68,7 @@ promiseTest('Future: parallel', () => new Promise((resolve, reject) => {
     eqAsync('r[0]', r[0], 'apple', reject);
     eqAsync('r[1]', r[1], 'banana', reject);
     eqAsync('r[2]', r[2], 'carrot', reject);
-    resolve(true);
+    resolve();
   });
 }));
 
@@ -129,7 +129,7 @@ promiseTest('Future: compose', () => {
 
     Futures.compose(f, g)('a').get((r) => {
       eqAsync('compose', 'a g f', r, reject);
-      resolve(true);
+      resolve();
     });
   });
 });
