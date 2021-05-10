@@ -16,10 +16,10 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ], true);
 
-  const pAssertToolbarVisible = async () => Waiter.pTryUntil('toolbar should not exist', () => UiFinder.sNotExists(SugarBody.body(), '.tox-toolbar'));
+  const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should not exist', () => UiFinder.notExists(SugarBody.body(), '.tox-toolbar'));
 
   const pAssertToolbarNotVisible = async () => {
-    await Waiter.pWait(300);
+    await Waiter.pWait(50);
     UiFinder.notExists(SugarBody.body(), '.tox-pop__dialog .tox-toolbar');
   };
 
