@@ -50,7 +50,7 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     await pAssertToolbarNotVisible();
   });
 
-  it('Text selection toolbar is not shown with contenteditable=false span, select span', async () => {
+  it('TBA: Text selection toolbar is not shown with contenteditable=false span, select span', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p><p>abc <span contenteditable="false">click on me</span> 123</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
