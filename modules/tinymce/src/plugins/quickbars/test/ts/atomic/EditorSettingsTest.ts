@@ -1,106 +1,105 @@
-import { Logger } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
+import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from 'tinymce/plugins/quickbars/api/Settings';
 
-UnitTest.test('DialogChanges', () => {
-  Logger.sync(
-    'Quick Toolbars plugin: Quick Toolbars Editor Settings and default values',
-    () => {
+describe('Quick Toolbars Editor Settings and default values', () => {
+  const test = (method: (editor: Editor) => string, settings: any, expected: string) => {
+    const mockEditor = {
+      getParam: (name: string, defaultValue: any) => Obj.get(settings, name).getOr(defaultValue),
+      settings
+    } as Editor;
 
-      const test = (label: string, method: (editor: Editor) => string, settings: any, expected: string) => {
-        const mockEditor = {
-          getParam: (name, defaultValue) => Obj.get(settings, name).getOr(defaultValue),
-          settings
-        } as any;
+    const result = method(mockEditor);
+    assert.equal(result, expected);
+  };
 
-        Logger.sync(label, () => {
-          const result = method(mockEditor);
-          Assert.eq(label, expected, result);
-        });
-      };
-
-      test('getTextSelectionToolbarItems: testing for empty string should return empty string',
+  context('getTextSelectionToolbarItems', () => {
+    it('TBA: testing for empty string should return empty string', () => {
+      test(
         Settings.getTextSelectionToolbarItems,
-        {
-          quickbars_selection_toolbar: ''
-        },
+        { quickbars_selection_toolbar: '' },
         ''
       );
+    });
 
-      test('getTextSelectionToolbarItems: testing for boolean false should return empty string',
+    it('TBA: testing for boolean false should return empty string', () => {
+      test(
         Settings.getTextSelectionToolbarItems,
-        {
-          quickbars_selection_toolbar: false
-        },
+        { quickbars_selection_toolbar: false },
         ''
       );
+    });
 
-      test('getTextSelectionToolbarItems: testing for boolean true should fallback to defaults',
+    it('TBA: testing for boolean true should fallback to defaults', () => {
+      test(
         Settings.getTextSelectionToolbarItems,
-        {
-          quickbars_selection_toolbar: true
-        },
+        { quickbars_selection_toolbar: true },
         'bold italic | quicklink h2 h3 blockquote'
       );
+    });
 
-      test('getTextSelectionToolbarItems: testing for undefined should fallback to defaults',
+    it('TBA: testing for undefined should fallback to defaults', () => {
+      test(
         Settings.getTextSelectionToolbarItems,
         {
           // intentionally blank undefined
         },
         'bold italic | quicklink h2 h3 blockquote'
       );
+    });
 
-      test('getTextSelectionToolbarItems: testing for custom config string',
+    it('TBA: testing for custom config string', () => {
+      test(
         Settings.getTextSelectionToolbarItems,
-        {
-          quickbars_selection_toolbar: 'hello | friend'
-        },
+        { quickbars_selection_toolbar: 'hello | friend' },
         'hello | friend'
       );
+    });
+  });
 
-      test('getInsertToolbarItems: testing for empty string should return empty string',
+  context('getInsertToolbarItems', () => {
+    it('TBA: testing for empty string should return empty string', () => {
+      test(
         Settings.getInsertToolbarItems,
-        {
-          quickbars_insert_toolbar: ''
-        },
+        { quickbars_insert_toolbar: '' },
         ''
       );
+    });
 
-      test('getInsertToolbarItems: testing for boolean false should return empty string',
+    it('TBA: testing for boolean false should return empty string', () => {
+      test(
         Settings.getInsertToolbarItems,
-        {
-          quickbars_insert_toolbar: false
-        },
+        { quickbars_insert_toolbar: false },
         ''
       );
+    });
 
-      test('getInsertToolbarItems: testing for boolean true should fallback to defaults',
+    it('TBA: testing for boolean true should fallback to defaults', () => {
+      test(
         Settings.getInsertToolbarItems,
-        {
-          quickbars_insert_toolbar: true
-        },
+        { quickbars_insert_toolbar: true },
         'quickimage quicktable'
       );
+    });
 
-      test('getInsertToolbarItems: testing for undefined should fallback to defaults',
+    it('TBA: testing for undefined should fallback to defaults', () => {
+      test(
         Settings.getInsertToolbarItems,
         {
           // intentionally blank undefined
         },
         'quickimage quicktable'
       );
+    });
 
-      test('getInsertToolbarItems: testing for custom config string',
+    it('TBA: testing for custom config string', () => {
+      test(
         Settings.getInsertToolbarItems,
-        {
-          quickbars_insert_toolbar: 'bye | now'
-        },
+        { quickbars_insert_toolbar: 'bye | now' },
         'bye | now'
       );
-
-    }
-  );
+    });
+  });
 });
