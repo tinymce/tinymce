@@ -280,14 +280,22 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       });
     },
     setActive: (state) => {
-      // Toggle the pressed aria state component
-      Attribute.set(comp.element, 'aria-pressed', state);
-      // Toggle the inner button state, as that's the toggle component of the split button
-      SelectorFind.descendant(comp.element, 'span').each((button) => {
-        comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
-      });
+      if (comp.getSystem().isConnected()) {
+        // Toggle the pressed aria state component
+        Attribute.set(comp.element, 'aria-pressed', state);
+        // Toggle the inner button state, as that's the toggle component of the split button
+        SelectorFind.descendant(comp.element, 'span').each((button) => {
+          comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
+        });
+      }
     },
-    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn))
+    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => {
+      if (comp.getSystem().isConnected()) {
+        return comp.getSystem().getByDom(button).exists(Toggling.isOn);
+      } else {
+        return false;
+      }
+    })
   });
 
   const editorOffCell = Cell(Fun.noop);
