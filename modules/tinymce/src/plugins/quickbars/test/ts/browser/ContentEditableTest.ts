@@ -8,7 +8,7 @@ import Plugin from 'tinymce/plugins/quickbars/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'quickbars link',
     inline: true,
     toolbar: false,
@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.quickbars.ContentEditableTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ], true);
 
-  const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should not exist', () => UiFinder.notExists(SugarBody.body(), '.tox-toolbar'));
+  const pAssertToolbarVisible = () => Waiter.pTryUntil('toolbar should exist', () => UiFinder.exists(SugarBody.body(), '.tox-toolbar'));
 
   const pAssertToolbarNotVisible = async () => {
     await Waiter.pWait(50);
