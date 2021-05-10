@@ -306,6 +306,11 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
           }
         }
 
+        // Remove mce prefixed attributes (must clean before short circuit operations)
+        if (MCE_ATTR_RE.test(name)) {
+          elm.removeAttribute('data-mce-' + name);
+        }
+
         // keep style="list-style-type: none" on <li>s
         if (name === 'style' && NodeType.matchNodeNames([ 'li' ])(elm) && dom.getStyle(elm, 'list-style-type') === 'none') {
           elm.removeAttribute(name);
@@ -316,11 +321,6 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
         // IE6 has a bug where the attribute doesn't get removed correctly
         if (name === 'class') {
           elm.removeAttribute('className');
-        }
-
-        // Remove mce prefixed attributes
-        if (MCE_ATTR_RE.test(name)) {
-          elm.removeAttribute('data-mce-' + name);
         }
 
         elm.removeAttribute(name);

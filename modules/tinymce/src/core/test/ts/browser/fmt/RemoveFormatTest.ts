@@ -31,9 +31,9 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
   };
 
   context('DefaultFormats remove format behavior', () => {
-    it('TINY-6264: Will not remove style="list-style-type: none" from list item elements', () => {
+    it('TINY-6264: Will not remove style="list-style-type: none" from list item elements (ol)', () => {
       const editor = hook.editor();
-      const nestedListHtml = '<ul><li style="list-style-type: none;"><ul><li>hello</li></ul></li></ul>';
+      const nestedListHtml = '<ol><li style="list-style-type: none;"><ol><li>hello</li></ol></li></ol>';
       editor.setContent(nestedListHtml);
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 5);
       editor.execCommand('RemoveFormat');
@@ -46,6 +46,14 @@ describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {
       TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 5);
       editor.execCommand('RemoveFormat');
       TinyAssertions.assertContent(editor, '<ul><li style="list-style-type: none;"><ul><li>hello</li></ul></li></ul>');
+    });
+
+    it('TINY-6264: Removes data-mce-style attribute when short-circuiting for "list-style-type: none" retention', () => {
+      const editor = hook.editor();
+      editor.setContent('<ol><li data-mce-style="list-style-type: none;" style="list-style-type: none;"><ol><li>hello</li></ol></li></ol>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 5);
+      editor.execCommand('RemoveFormat');
+      TinyAssertions.assertContent(editor, '<ol><li style="list-style-type: none;"><ol><li>hello</li></ol></li></ol>');
     });
   });
 
