@@ -143,7 +143,6 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
 
     RangeWalk.walk(dom, rng, (nodes) => {
       let currentWrapElm: Element | null;
-
       /**
        * Process a list of nodes wrap them.
        */
@@ -191,6 +190,11 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
         if (FormatUtils.isSelectorFormat(format)) {
           const found = applyNodeStyle(formatList, node);
 
+          // TINY-6567 Include the last node in the selection
+          if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, node.parentNode)) {
+            applyNodeStyle(formatList, node.parentNode);
+          }
+
           // Continue processing if a selector match wasn't found and a inline element is defined
           if (!hasFormatProperty(format, 'inline') || found) {
             currentWrapElm = null;
@@ -228,6 +232,7 @@ const applyFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node | 
           // End the last wrapper
           currentWrapElm = null;
         }
+
       };
 
       // Process siblings from range

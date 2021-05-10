@@ -1,7 +1,7 @@
 import { Assertions, Cursors, StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
-import { Editor } from '../../alien/EditorTypes';
+import { Editor, GetContentArgs } from '../../alien/EditorTypes';
 import { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';
 
@@ -16,8 +16,8 @@ const assertPath = (label: string, root: SugarElement, expPath: number[], expOff
   Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
 };
 
-const assertContent = (editor: Editor, expected: string): void => {
-  const content = editor.getContent();
+const assertContent = (editor: Editor, expected: string, args?: GetContentArgs): void => {
+  const content = editor.getContent(args);
   Assertions.assertHtml('Checking TinyMCE content', expected, content);
 };
 

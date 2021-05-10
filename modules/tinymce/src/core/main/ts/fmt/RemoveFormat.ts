@@ -474,6 +474,12 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   const process = (node: Node) => {
     let lastContentEditable: boolean, hasContentEditableState: boolean;
 
+    // TINY-6567 Include the last node in the selection
+    const parentNode = node.parentNode;
+    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, parentNode)) {
+      removeFormat(ed, format, vars, parentNode, parentNode);
+    }
+
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {
       lastContentEditable = contentEditable;
