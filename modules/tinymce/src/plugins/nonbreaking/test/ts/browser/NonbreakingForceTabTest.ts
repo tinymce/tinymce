@@ -9,7 +9,7 @@ import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', () => {
-  const hook = TinyHooks.bddSetup<Editor>({
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
     nonbreaking_force_tab: 5,
@@ -19,7 +19,6 @@ describe('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', () => {
 
   it('TBA: Undo level on insert tab', () => {
     const editor = hook.editor();
-    editor.focus();
     Keyboard.activeKeystroke(TinyDom.document(editor), Keys.tab());
     TinyAssertions.assertContent(editor, '<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>');
     editor.undoManager.undo();
