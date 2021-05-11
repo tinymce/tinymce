@@ -11,7 +11,6 @@ tinymce.init({
   init_instance_callback: (editor) => {
     const api = Maybes.getOrDie(Api.getModelApi(editor));
     const root = Body.getBody(api);
-    void Body.getEditor(api);
 
     const [ p ] = Maybes.getOrDie(PredicateFilter.descendants(api, root, ({ node }) =>
       ModelNodeType.isElement(api, node) ? node.type === 'p' : false));
