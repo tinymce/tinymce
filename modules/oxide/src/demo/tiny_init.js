@@ -79,7 +79,7 @@ function initializeTinyMCE (options) {
       skin_url: "/skins/ui/torn",
       icons: 'torn',
       toolbar_sticky: true,
-      height: 600,
+      height: 400,
       menubar: false,
       statusbar: false,
       color_map: color_map,

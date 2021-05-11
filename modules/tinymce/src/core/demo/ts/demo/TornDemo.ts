@@ -119,7 +119,7 @@ export const initializeTinyMCE = (options: EditorInitParams) => {
     skin: 'torn',
     icons: 'torn',
     toolbar_sticky: true,
-    height: options?.height ?? 600,
+    height: options?.height ?? 400,
     menubar: false,
     statusbar: false,
     color_map,
