@@ -40,6 +40,6 @@ describe('browser.tinymce.plugins.noneditable.NonEditablePluginTest', () => {
   it('TBA: noneditable regexp inside cE=false', () => {
     const editor = hook.editor();
     editor.setContent('<span contenteditable="false">{test1}</span>');
-    assert.equal(editor.dom.select('span').length, 1);
+    assert.lengthOf(editor.dom.select('span'), 1);
   });
 });
