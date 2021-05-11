@@ -70,7 +70,10 @@ const make = <T = any>(run: () => Promise<T>): Future<T> => {
 
 };
 
-const nu = <T = any>(baseFn: (completer: (value?: T) => void) => void): Future<T> => {
+const nu: {
+  <T = any>(baseFn: (completer: (value: T) => void) => void): Future<T>;
+  (baseFn: (completer: () => void) => void): Future<void>;
+} = <T = any>(baseFn: (completer: (value?: T) => void) => void): Future<T | void> => {
   return make(() => new Promise(baseFn));
 };
 
