@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
+- Flash of unstyled content while loading the content css was shown. It will now load the content css first then populate the editor #TINY-7249
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 

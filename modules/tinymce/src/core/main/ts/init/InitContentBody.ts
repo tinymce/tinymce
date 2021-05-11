@@ -284,9 +284,10 @@ const makeStylesheetLoadingPromises = (editor: Editor, css: string[], framedFont
   }
 };
 
-const loadContentCss = (editor: Editor, css: string[]) => {
+const loadContentCss = (editor: Editor) => {
   const styleSheetLoader = getStyleSheetLoader(editor);
   const fontCss = Settings.getFontCss(editor);
+  const css = editor.contentCSS;
 
   const removeCss = () => {
     styleSheetLoader.unloadAll(css);
@@ -301,12 +302,29 @@ const loadContentCss = (editor: Editor, css: string[]) => {
       removeCss();
     } else {
       editor.on('remove', removeCss);
-      initEditor(editor);
     }
   };
 
+  // Add editor specific CSS styles
+  if (editor.contentStyles.length > 0) {
+    let contentCssText = '';
+
+    Tools.each(editor.contentStyles, (style) => {
+      contentCssText += style + '\r\n';
+    });
+
+    editor.dom.addStyle(contentCssText);
+  }
+
   // Load all stylesheets
-  Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
+  const allStylesheets = Promise.all(makeStylesheetLoadingPromises(editor, css, fontCss)).then(loaded).catch(loaded);
+
+  // Append specified content CSS last
+  if (editor.settings.content_style) {
+    appendStyle(editor, editor.settings.content_style);
+  }
+
+  return allStylesheets;
 };
 
 const preInit = (editor: Editor) => {
@@ -318,8 +336,6 @@ const preInit = (editor: Editor) => {
   }
 
   editor.quirks = Quirks(editor);
-
-  Events.firePostRender(editor);
 
   const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {
@@ -340,32 +356,23 @@ const preInit = (editor: Editor) => {
     editor.addVisual(editor.getBody());
   });
 
+  editor.on('compositionstart compositionend', (e) => {
+    editor.composing = e.type === 'compositionstart';
+  });
+};
+
+const loadInitialContent = (editor: Editor) => {
   if (!Rtc.isRtc(editor)) {
     editor.load({ initial: true, format: 'html' });
   }
 
   editor.startContent = editor.getContent({ format: 'raw' });
+};
 
-  editor.on('compositionstart compositionend', (e) => {
-    editor.composing = e.type === 'compositionstart';
-  });
-
-  // Add editor specific CSS styles
-  if (editor.contentStyles.length > 0) {
-    let contentCssText = '';
-
-    Tools.each(editor.contentStyles, (style) => {
-      contentCssText += style + '\r\n';
-    });
-
-    editor.dom.addStyle(contentCssText);
-  }
-
-  loadContentCss(editor, editor.contentCSS);
-
-  // Append specified content CSS last
-  if (settings.content_style) {
-    appendStyle(editor, settings.content_style);
+const initEditorWithInitialContent = (editor: Editor) => {
+  if (editor.removed !== true) {
+    loadInitialContent(editor);
+    initEditor(editor);
   }
 };
 
@@ -453,17 +460,23 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   Placeholder.setup(editor);
 
   Events.firePreInit(editor);
+  preInit(editor);
 
   Rtc.setup(editor).fold(() => {
-    preInit(editor);
-  }, (loadingRtc) => {
+    Events.firePostRender(editor);
+    loadContentCss(editor).then(() => initEditorWithInitialContent(editor));
+  }, (setupRtc) => {
+    Events.firePostRender(editor);
     editor.setProgressState(true);
-    loadingRtc.then((_rtcMode) => {
-      editor.setProgressState(false);
-      preInit(editor);
-    }, (err) => {
-      editor.notificationManager.open({ type: 'error', text: String(err) });
-      preInit(editor);
+
+    loadContentCss(editor).then(() => {
+      setupRtc().then((_rtcMode) => {
+        editor.setProgressState(false);
+        initEditorWithInitialContent(editor);
+      }, (err) => {
+        editor.notificationManager.open({ type: 'error', text: String(err) });
+        initEditorWithInitialContent(editor);
+      });
     });
   });
 };
