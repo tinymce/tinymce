@@ -16,7 +16,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     Assertions.assertStructure('Checking disabled structure', ApproxStructure.build((s, str, arr) =>
       s.element('div', {
         attrs: {
-          'aria-hidden': str.is('true')
+          'aria-hidden': str.is('true'),
+          'aria-busy': str.none()
         },
         classes: [ arr.has('tox-throbber') ],
         styles: {
@@ -31,7 +32,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     Assertions.assertStructure('Checking enabled structure', ApproxStructure.build((s, str, arr) =>
       s.element('div', {
         attrs: {
-          'aria-hidden': str.none()
+          'aria-hidden': str.none(),
+          'aria-busy': str.is('true')
         },
         classes: [ arr.has('tox-throbber') ],
         styles: {

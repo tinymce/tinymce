@@ -33,7 +33,7 @@ export const block: BlockFn = (
   const blockSpec = getBusySpec(root, blockerBehaviours);
   const blocker = root.getSystem().build(blockSpec);
   Replacing.append(root, GuiFactory.premade(blocker));
-  if (blocker.hasConfigured(Keying)) {
+  if (blocker.hasConfigured(Keying) && config.focus) {
     Keying.focusIn(blocker);
   }
 

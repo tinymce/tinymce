@@ -11,16 +11,19 @@ export type BlockFn = (
   state: BlockingState,
   getBusySpec: (root: AlloyComponent, behaviour: Behaviour.AlloyBehaviourRecord) => AlloySpec
 ) => void;
+
 export type UnblockFn = (component: AlloyComponent, config: BlockingConfig, state: BlockingState) => void;
 
 export interface BlockingConfigSpec extends Behaviour.BehaviourConfigSpec {
   readonly getRoot?: (component: AlloyComponent) => Optional<AlloyComponent>;
+  readonly focus?: boolean;
   readonly onBlock?: (component: AlloyComponent) => void;
   readonly onUnblock?: (component: AlloyComponent) => void;
 }
 
 export interface BlockingConfig extends Behaviour.BehaviourConfigDetail {
   readonly getRoot: (component: AlloyComponent) => Optional<AlloyComponent>;
+  readonly focus: boolean;
   readonly onBlock: (component: AlloyComponent) => void;
   readonly onUnblock: (component: AlloyComponent) => void;
 }

@@ -5,14 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
-import { Cell, Optional, Type } from '@ephox/katamari';
+import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
+import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpec => ({
+const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
   dom: {
     tag: 'div',
     attributes: {
@@ -25,25 +25,17 @@ const renderSpinner = (providerBackstage: UiFactoryBackstageProviders): AlloySpe
       dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
     }
   ],
-  behaviours: Behaviour.derive([
-    // Trap the "Tab" key and don't let it escape.
-    Keying.config({
-      mode: 'special',
-      onTab: () => Optional.some(true),
-      onShiftTab: () => Optional.some(true)
-    }),
-    Focusing.config({ })
-  ])
+  behaviours
 });
 
 const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
   const element = comp.element;
   if (state === true) {
-    Replacing.set(comp, [ renderSpinner(providerBackstage) ]);
+    Blocking.block(comp, getBusySpec(providerBackstage));
     Css.remove(element, 'display');
     Attribute.remove(element, 'aria-hidden');
   } else {
-    Replacing.set(comp, [ ]);
+    Blocking.unblock(comp);
     Css.set(element, 'display', 'none');
     Attribute.set(element, 'aria-hidden', 'true');
   }
@@ -62,19 +54,59 @@ const renderThrobber = (spec): AlloySpec => ({
     }
   },
   behaviours: Behaviour.derive([
-    Replacing.config({})
+    Replacing.config({}),
+    Blocking.config({
+      focus: false
+    }),
+    Composing.config({
+      find: (comp) => Arr.head(comp.components())
+    })
   ]),
   components: [ ]
 });
+
+const focusBusyComponent = (throbber: AlloyComponent): void => {
+  Composing.getCurrent(throbber).each((comp) => {
+    Keying.focusIn(comp);
+  });
+};
+
+/*
+* If the throbber has been toggled on, only focus the throbber if the editor had focus as we don't to steal focus if it is on an input or dialog
+* If the throbber has been toggled off, only put focus back on the editor if the throbber had focus.
+* The next logical focus transition from the throbber is to put it back on the editor
+*/
+const handleFocus = (editor: Editor, throbber: AlloyComponent, state: boolean, throbberFocus: boolean) => {
+  if (state) {
+    if (editor.hasFocus()) {
+      focusBusyComponent(throbber);
+    }
+  } else {
+    if (throbberFocus) {
+      editor.focus();
+    }
+  }
+};
 
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
+  // Make sure that when the editor is focused while the throbber is enabled, the focus is moved back to the throbber
+  // This covers native focus and editor.focus() invocations
+  editor.on('focus', () => {
+    if (throbberState.get()) {
+      focusBusyComponent(lazyThrobber());
+    }
+  });
+
   const toggle = (state: boolean) => {
     if (state !== throbberState.get()) {
-      toggleThrobber(lazyThrobber(), state, sharedBackstage.providers);
+      const throbber = lazyThrobber();
+      const throbberFocus = Composing.getCurrent(throbber).exists(Focusing.isFocused);
       throbberState.set(state);
+      toggleThrobber(throbber, state, sharedBackstage.providers);
+      handleFocus(editor, throbber, state, throbberFocus);
       editor.fire('AfterProgressState', { state });
     }
   };
