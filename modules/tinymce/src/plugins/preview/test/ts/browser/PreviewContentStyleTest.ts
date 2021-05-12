@@ -13,11 +13,15 @@ describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ]);
 
-  const assertIframeContains = (editor: Editor, text: string, expected: boolean) => {
+  const assertIframeContains = (editor: Editor, text: string, shouldMatch: boolean) => {
     const actual = IframeContent.getPreviewHtml(editor);
     const regexp = new RegExp(text);
 
-    assert.equal(regexp.test(actual), expected, `Should${expected ? '' : ' not'} be the same html`);
+    if (shouldMatch) {
+      assert.match(actual, regexp, 'Should be the same html');
+    } else {
+      assert.notMatch(actual, regexp, 'Should not be the same html');
+    }
   };
 
   const assertIframeHtmlContains = (editor: Editor, text: string) => assertIframeContains(editor, text, true);
@@ -33,15 +37,12 @@ describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
     assertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>');
   });
 
-  it('TINY-6529: Set content, set style settings and assert content and styles. content_style should take precedence. Delete style and assert style is removed', () => {
+  it('TINY-6529: Set content, set style settings and assert content and styles. content_style should take precedence.', () => {
     const editor = hook.editor();
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
     editor.setContent('<p>hello world</p>');
     editor.settings.content_css_cors = true;
     editor.settings.content_style = 'p {color: blue;}';
     assertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous"><style type="text/css">p {color: blue;}</style>`);
-    editor.settings.content_css_cors = false;
-    delete editor.settings.content_style;
-    assertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>');
   });
 });

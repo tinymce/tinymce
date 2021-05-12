@@ -1,7 +1,7 @@
-import { Keyboard, Keys, UiFinder, Waiter } from '@ephox/agar';
+import { Keys, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/mcagar';
-import { SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/preview/Plugin';
@@ -15,25 +15,27 @@ describe('browser.tinymce.plugins.preview.PreviewSanityTest', () => {
   }, [ Theme, Plugin ]);
 
   const dialogSelector = 'div[role="dialog"]';
-  const docBody = SugarElement.fromDom(document.body);
+  const docBody = SugarBody.body();
 
-  const openDialog = async (editor: Editor) => {
+  const pOpenDialog = async (editor: Editor) => {
     TinyUiActions.clickOnToolbar(editor, 'button');
-    await TinyUiActions.pWaitForPopup(editor, '[role="dialog"] iframe');
+    await TinyUiActions.pWaitForDialog(editor, '[role="dialog"] iframe');
   };
 
-  it('TBA: Set content, open dialog, click Close to close dialog. Open dialog, press escape and assert dialog closes', async () => {
+  it('TBA: Open dialog, click Close to close dialog', async () => {
     const editor = hook.editor();
     editor.setContent('<strong>a</strong>');
-
-    await openDialog(editor);
-    // Close dialog with button
-    TinyUiActions.clickOnUi(editor, '.tox-button:not(.tox-button--secondary)');
+    await pOpenDialog(editor);
+    TinyUiActions.closeDialog(editor);
     await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(docBody, dialogSelector));
 
-    await openDialog(editor);
-    // Close dialog with escape key
-    Keyboard.keydown(Keys.escape(), { }, TinyDom.fromDom(document));
+  });
+
+  it('TBA: Open dialog, press escape to close dialog', async () => {
+    const editor = hook.editor();
+    editor.setContent('<strong>a</strong>');
+    await pOpenDialog(editor);
+    TinyUiActions.keydown(editor, Keys.escape());
     await Waiter.pTryUntil('Dialog should close on esc', () => UiFinder.notExists(docBody, dialogSelector));
   });
 });

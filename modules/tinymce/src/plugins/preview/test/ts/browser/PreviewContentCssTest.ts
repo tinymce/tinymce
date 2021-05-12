@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.preview.PreviewContentCssTest', () => {
     const actual = IframeContent.getPreviewHtml(editor);
     const regexp = new RegExp(text);
 
-    assert.isTrue(regexp.test(actual), 'Should be the same html');
+    assert.match(actual, regexp, 'Should be the same html');
   };
 
   it('TBA: Set content, set content_css_cors and assert link elements. Delete setting and assert crossOrigin attr is removed', () => {
