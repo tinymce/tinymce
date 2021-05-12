@@ -31,7 +31,7 @@ type LineInfoFinder = (scope: HTMLElement, start: CaretPosition) => LineInfo;
 const flip = (direction: HDirection, positions: CaretPosition[]): CaretPosition[] =>
   direction === HDirection.Backwards ? Arr.reverse(positions) : positions;
 
-const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPosition): CaretPosition =>
+const walk = (direction: HDirection, caretWalker: CaretWalker, pos: CaretPosition): CaretPosition | null =>
   direction === HDirection.Forwards ? caretWalker.next(pos) : caretWalker.prev(pos);
 
 const getBreakType = (scope: HTMLElement, direction: HDirection, currentPos: CaretPosition, nextPos: CaretPosition): BreakType => {
@@ -46,11 +46,11 @@ const getBreakType = (scope: HTMLElement, direction: HDirection, currentPos: Car
 
 const getPositionsUntil = (predicate: CheckerPredicate, direction: HDirection, scope: HTMLElement, start: CaretPosition): LineInfo => {
   const caretWalker = CaretWalker(scope);
-  let currentPos = start, nextPos: CaretPosition;
+  let currentPos = start;
   const positions: CaretPosition[] = [];
 
   while (currentPos) {
-    nextPos = walk(direction, caretWalker, currentPos);
+    const nextPos = walk(direction, caretWalker, currentPos);
 
     if (!nextPos) {
       break;
@@ -102,15 +102,19 @@ const findClosestHorizontalPosition = (positions: CaretPosition[], pos: CaretPos
 
 const getPositionsUntilPreviousLine = Fun.curry(getPositionsUntil, CaretPosition.isAbove, -1);
 const getPositionsUntilNextLine = Fun.curry(getPositionsUntil, CaretPosition.isBelow, 1);
-const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
-const isAtLastLine = (scope: HTMLElement, pos: CaretPosition) => getPositionsUntilNextLine(scope, pos).breakAt.isNone();
 const getPositionsAbove = Fun.curry(getAdjacentLinePositions, -1, getPositionsUntilPreviousLine);
 const getPositionsBelow = Fun.curry(getAdjacentLinePositions, 1, getPositionsUntilNextLine);
 
-const getFirstLinePositions = (scope: HTMLElement) =>
+const isAtFirstLine = (scope: HTMLElement, pos: CaretPosition): boolean =>
+  getPositionsUntilPreviousLine(scope, pos).breakAt.isNone();
+
+const isAtLastLine = (scope: HTMLElement, pos: CaretPosition): boolean =>
+  getPositionsUntilNextLine(scope, pos).breakAt.isNone();
+
+const getFirstLinePositions = (scope: HTMLElement): CaretPosition[] =>
   CaretFinder.firstPositionIn(scope).map((pos) => [ pos ].concat(getPositionsUntilNextLine(scope, pos).positions)).getOr([]);
 
-const getLastLinePositions = (scope: HTMLElement) =>
+const getLastLinePositions = (scope: HTMLElement): CaretPosition[] =>
   CaretFinder.lastPositionIn(scope).map((pos) => getPositionsUntilPreviousLine(scope, pos).positions.concat(pos)).getOr([]);
 
 const getClosestPositionAbove = (scope: HTMLElement, pos: CaretPosition): Optional<CaretPosition> =>

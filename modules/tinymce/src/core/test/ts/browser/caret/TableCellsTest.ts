@@ -19,7 +19,7 @@ describe('browser.tinymce.core.caret.TableCellsTest', () => {
     Assertions.assertDomEq('Should be the expected element', expectedContainer, SugarElement.fromDom(cell));
   };
 
-  const assertNone = (opt: Optional<unknown>) => {
+  const assertNone = (opt: Optional<HTMLTableCellElement | HTMLTableCaptionElement>) => {
     assert.isTrue(opt.isNone(), 'Should be the none but got some');
   };
 

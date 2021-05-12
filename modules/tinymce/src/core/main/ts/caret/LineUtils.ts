@@ -62,9 +62,9 @@ const walkUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
 };
 
 const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeChildren: boolean = true): NodeClientRect[] => {
-  let clientRects = [];
+  let clientRects: NodeClientRect[] = [];
 
-  const collect = (checkPosFn, node) => {
+  const collect = (checkPosFn: (clientRect: GeomClientRect.ClientRect, targetRect: NodeClientRect) => boolean, node: Node) => {
     const lineRects = Arr.filter(getClientRects([ node ]), (clientRect) => {
       return !checkPosFn(clientRect, targetNodeRect);
     });
@@ -81,7 +81,8 @@ const findLineNodeRects = (root: Node, targetNodeRect: NodeClientRect, includeCh
   return clientRects;
 };
 
-const getFakeCaretTargets = (root: HTMLElement): HTMLElement[] => Arr.filter(Arr.from(root.getElementsByTagName('*')), isFakeCaretTarget) as HTMLElement[];
+const getFakeCaretTargets = (root: HTMLElement): HTMLElement[] =>
+  Arr.filter(Arr.from(root.getElementsByTagName('*')), isFakeCaretTarget) as HTMLElement[];
 
 const caretInfo = (clientRect: NodeClientRect, clientX: number): CaretInfo => ({
   node: clientRect.node,

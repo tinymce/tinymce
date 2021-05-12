@@ -18,7 +18,7 @@ import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
 
 export interface FakeCaret {
-  show: (before: boolean, element: Element) => Range;
+  show: (before: boolean, element: Element) => Range | null;
   hide: () => void;
   getCss: () => string;
   reposition: () => void;
@@ -40,14 +40,15 @@ const inlineFakeCaretSelector = '*[contentEditable=false],video,audio,embed,obje
 
 const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: boolean): GeomClientRect.ClientRect => {
   const clientRect = GeomClientRect.collapse(element.getBoundingClientRect(), before);
-  let docElm, scrollX, scrollY, margin, rootRect;
+  let scrollX: number;
+  let scrollY: number;
 
   if (root.tagName === 'BODY') {
-    docElm = root.ownerDocument.documentElement;
+    const docElm = root.ownerDocument.documentElement;
     scrollX = root.scrollLeft || docElm.scrollLeft;
     scrollY = root.scrollTop || docElm.scrollTop;
   } else {
-    rootRect = root.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
     scrollX = root.scrollLeft - rootRect.left;
     scrollY = root.scrollTop - rootRect.top;
   }
@@ -58,7 +59,7 @@ const getAbsoluteClientRect = (root: HTMLElement, element: HTMLElement, before: 
   clientRect.bottom += scrollY;
   clientRect.width = 1;
 
-  margin = element.offsetWidth - element.clientWidth;
+  let margin = element.offsetWidth - element.clientWidth;
 
   if (margin > 0) {
     if (before) {
@@ -101,14 +102,15 @@ const trimInlineCaretContainers = (root: HTMLElement): void => {
   }
 };
 
-export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => boolean, hasFocus: () => boolean): FakeCaret => {
+export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Node) => node is HTMLElement, hasFocus: () => boolean): FakeCaret => {
   const lastVisualCaret = Cell<Optional<CaretState>>(Optional.none());
-  let cursorInterval, caretContainerNode;
+  let cursorInterval: number | undefined;
+  let caretContainerNode: Node | null;
   const rootBlock = Settings.getForcedRootBlock(editor);
   const caretBlock = rootBlock.length > 0 ? rootBlock : 'p';
 
-  const show = (before: boolean, element: HTMLElement): Range => {
-    let clientRect, rng;
+  const show = (before: boolean, element: Element): Range | null => {
+    let rng: Range;
 
     hide();
 
@@ -118,10 +120,10 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
     if (isBlock(element)) {
       caretContainerNode = CaretContainer.insertBlock(caretBlock, element, before);
-      clientRect = getAbsoluteClientRect(root, element, before);
+      const clientRect = getAbsoluteClientRect(root, element, before);
       DomQuery(caretContainerNode).css('top', clientRect.top);
 
-      const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css(clientRect).appendTo(root)[0];
+      const caret = DomQuery<HTMLElement>('<div class="mce-visual-caret" data-mce-bogus="all"></div>').css({ ...clientRect }).appendTo(root)[0];
       lastVisualCaret.set(Optional.some({ caret, element, before }));
 
       lastVisualCaret.get().each((caretState) => {
@@ -170,7 +172,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
     if (cursorInterval) {
       Delay.clearInterval(cursorInterval);
-      cursorInterval = null;
+      cursorInterval = undefined;
     }
   };
 
@@ -224,8 +226,8 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
 
 export const isFakeCaretTableBrowser = (): boolean => browser.isIE() || browser.isEdge() || browser.isFirefox();
 
-export const isInlineFakeCaretTarget = (node: Node): node is Element =>
+export const isInlineFakeCaretTarget = (node: Node): node is HTMLElement =>
   isContentEditableFalse(node) || isMedia(node);
 
-export const isFakeCaretTarget = (node: Node): node is Element =>
+export const isFakeCaretTarget = (node: Node): node is HTMLElement =>
   isInlineFakeCaretTarget(node) || (NodeType.isTable(node) && isFakeCaretTableBrowser());
