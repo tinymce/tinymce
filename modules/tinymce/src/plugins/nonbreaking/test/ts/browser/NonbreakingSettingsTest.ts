@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import * as Settings from 'tinymce/plugins/nonbreaking/api/Settings';
 
-describe('browser.tinymce.plugins.nonbreaking.SettingsTest', () => {
+describe('browser.tinymce.plugins.nonbreaking.NonbreakingSettingsTest', () => {
   it('TBA: Should be 0 as default', () => {
     assert.equal(Settings.getKeyboardSpaces(new Editor('x', {}, EditorManager)), 0);
   });
