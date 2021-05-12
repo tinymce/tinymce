@@ -1,33 +1,26 @@
-import { Keys, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { Keyboard, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 
-import SavePlugin from 'tinymce/plugins/save/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/save/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.save.SaveSanityTest', (success, failure) => {
-
-  SavePlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'Save: Assert Save button is disabled when editor is opened. Add content and assert Save button is enabled', [
-        tinyUi.sWaitForUi('check button', 'button.tox-tbtn--disabled[aria-label="Save"]'),
-        tinyApis.sSetContent('<p>a</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 1),
-        tinyActions.sContentKeystroke(Keys.enter(), {}),
-        tinyUi.sWaitForUi('check button', 'button[aria-label="Save"]:not(.tox-tbtn--disabled)')
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.save.SaveSanityTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'save',
     toolbar: 'save',
     base_url: '/project/tinymce/js/tinymce',
-    theme: 'silver'
-  }, success, failure);
+  }, [ Theme, Plugin ]);
+
+  it('TBA: Assert Save button is disabled when editor is opened. Add content and assert Save button is enabled', async () => {
+    const editor = hook.editor();
+    // button is disabled
+    await TinyUiActions.pWaitForUi(editor, 'button.tox-tbtn--disabled[aria-label="Save"]');
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.enter());
+    // button no longer disabled
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Save"]:not(.tox-tbtn--disabled)');
+  });
 });
