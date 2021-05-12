@@ -1,7 +1,7 @@
-import { Keyboard, Keys, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
-import { assert } from 'chai';
+import { FocusTools, Keys } from '@ephox/agar';
+import { after, before, describe, it } from '@ephox/bedrock-client';
+import { TinyContentActions, TinyHooks } from '@ephox/mcagar';
+import { SugarDocument } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/tabfocus/Plugin';
@@ -14,27 +14,23 @@ describe('browser.tinymce.plugins.tabfocus.TabfocusSanityTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme, Plugin ], true);
 
-  const addInputs = (editor: Editor) => {
+  before(() => {
+    const editor = hook.editor();
     const container = editor.getContainer();
     const input1 = document.createElement('input');
     input1.id = 'tempinput1';
     container.parentNode.insertBefore(input1, container);
-  };
+  });
 
-  const removeInputs = () => {
+  after(() => {
     const input1 = document.getElementById('tempinput1');
     input1.parentNode.removeChild(input1);
-  };
+  });
 
   it('TBA: Add an input field outside the editor, focus on the editor, press the tab key and assert focus shifts to the input field', async () => {
     const editor = hook.editor();
-    addInputs(editor);
-    assert.equal(document.activeElement.nodeName, 'IFRAME');
-    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.tab());
-    await Waiter.pTryUntil('Wait for focus', () => {
-      const input = document.getElementById('tempinput1');
-      assert.equal(document.activeElement.outerHTML, input.outerHTML);
-    });
-    removeInputs();
+    FocusTools.isOnSelector('iframe is focused', SugarDocument.getDocument(), 'iframe');
+    TinyContentActions.keystroke(editor, Keys.tab());
+    await FocusTools.pTryOnSelector('Wait for focus to be on input', SugarDocument.getDocument(), '#tempinput1');
   });
 });
