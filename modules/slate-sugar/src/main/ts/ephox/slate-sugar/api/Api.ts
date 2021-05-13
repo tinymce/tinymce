@@ -42,7 +42,6 @@ interface SlateEditor {}
 interface ModelApi {
   body: {
     getBody: () => SlateLoc;
-    getEditor: () => SlateEditor;
   };
   modelNodeType: {
     isElement: (node: SlateNode) => node is SlateElement;
