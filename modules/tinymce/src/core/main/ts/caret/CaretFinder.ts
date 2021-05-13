@@ -12,12 +12,12 @@ import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';
 import { CaretWalker } from './CaretWalker';
 
-const walkToPositionIn = (forward: boolean, root: Node, start: Node) => {
+const walkToPositionIn = (forward: boolean, root: Node, start: Node): Optional<CaretPosition> => {
   const position = forward ? CaretPosition.before(start) : CaretPosition.after(start);
   return fromPosition(forward, root, position);
 };
 
-const afterElement = (node): CaretPosition =>
+const afterElement = (node: Node): CaretPosition =>
   NodeType.isBr(node) ? CaretPosition.before(node) : CaretPosition.after(node);
 
 const isBeforeOrStart = (position: CaretPosition): boolean => {
@@ -43,7 +43,7 @@ const isBeforeAfterSameElement = (from: CaretPosition, to: CaretPosition): boole
 const isAtBr = (position: CaretPosition): boolean =>
   !CaretPosition.isTextPosition(position) && NodeType.isBr(position.getNode());
 
-const shouldSkipPosition = (forward: boolean, from: CaretPosition, to: CaretPosition) => {
+const shouldSkipPosition = (forward: boolean, from: CaretPosition, to: CaretPosition): boolean => {
   if (forward) {
     return !isBeforeAfterSameElement(from, to) && !isAtBr(from) && isAfterOrEnd(from) && isBeforeOrStart(to);
   } else {
@@ -52,13 +52,13 @@ const shouldSkipPosition = (forward: boolean, from: CaretPosition, to: CaretPosi
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>|b</b></p>
-const fromPosition = (forward: boolean, root: Node, pos: CaretPosition) => {
+const fromPosition = (forward: boolean, root: Node, pos: CaretPosition): Optional<CaretPosition> => {
   const walker = CaretWalker(root);
   return Optional.from(forward ? walker.next(pos) : walker.prev(pos));
 };
 
 // Finds: <p>a|<b>b</b></p> -> <p>a<b>b|</b></p>
-const navigate = (forward: boolean, root: Node, from: CaretPosition) =>
+const navigate = (forward: boolean, root: Node, from: CaretPosition): Optional<CaretPosition> =>
   fromPosition(forward, root, from).bind((to) => {
     if (CaretUtils.isInSameBlock(from, to, root) && shouldSkipPosition(forward, from, to)) {
       return fromPosition(forward, root, to);
@@ -72,7 +72,7 @@ const navigateIgnore = (
   root: Element,
   from: CaretPosition,
   ignoreFilter: (pos: CaretPosition) => boolean
-) => navigate(forward, root, from)
+): Optional<CaretPosition> => navigate(forward, root, from)
   .bind((pos) => ignoreFilter(pos) ? navigateIgnore(forward, root, pos, ignoreFilter) : Optional.some(pos));
 
 const positionIn = (forward: boolean, element: Node): Optional<CaretPosition> => {
@@ -90,11 +90,11 @@ const positionIn = (forward: boolean, element: Node): Optional<CaretPosition> =>
   }
 };
 
-const nextPosition = Fun.curry(fromPosition, true) as (root: Node, pos: CaretPosition) => Optional<CaretPosition>;
-const prevPosition = Fun.curry(fromPosition, false) as (root: Node, pos: CaretPosition) => Optional<CaretPosition>;
+const nextPosition: (root: Node, pos: CaretPosition) => Optional<CaretPosition> = Fun.curry(fromPosition, true);
+const prevPosition: (root: Node, pos: CaretPosition) => Optional<CaretPosition> = Fun.curry(fromPosition, false);
 
-const firstPositionIn = Fun.curry(positionIn, true) as (element: Node) => Optional<CaretPosition>;
-const lastPositionIn = Fun.curry(positionIn, false) as (element: Node) => Optional<CaretPosition>;
+const firstPositionIn: (element: Node) => Optional<CaretPosition> = Fun.curry(positionIn, true);
+const lastPositionIn: (element: Node) => Optional<CaretPosition> = Fun.curry(positionIn, false);
 
 export {
   fromPosition,

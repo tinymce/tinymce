@@ -1,9 +1,11 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/mcagar';
-import { SugarBody } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { Css, SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
+import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -13,14 +15,15 @@ import { resizeToPos } from '../../../module/UiUtils';
 describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat',
+    plugins: 'advlist lists',
+    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat | fontselect | bullist',
     toolbar_mode: 'floating',
     menubar: false,
-    width: 300,
+    width: 800, // Make sure all buttons show initially
     height: 400,
     readonly: true,
     resize: 'both'
-  }, [ Theme ]);
+  }, [ AdvListPlugin, ListsPlugin, Theme ]);
 
   const resizeTo = (sx: number, sy: number, dx: number, dy: number) => {
     const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
@@ -87,7 +90,19 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     ]
   });
 
+  it('TINY-6383: No exception thrown when switching modes and resizing', () => {
+    const editor = hook.editor();
+    const container = TinyDom.container(editor);
+    Css.set(container, 'width', '200px');
+    editor.mode.set('design');
+
+    // Revert back to readonly mode
+    editor.mode.set('readonly');
+  });
+
   it('TBA: Test if the toolbar buttons are disabled in readonly mode when toolbar drawer is present', async () => {
+    const editor = hook.editor();
+    Css.set(TinyDom.container(editor), 'width', '300px');
     await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'Bold'),
       s.theRest()
@@ -110,6 +125,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
 
   it('TINY-6014: Test buttons become enabled again when disabling readonly mode and resizing', async () => {
     const editor = hook.editor();
+    Css.set(TinyDom.container(editor), 'width', '400px');
     await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'Bold'),
       s.theRest()
@@ -130,7 +146,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     await pAssertToolbarDrawerButtonState('Assert the toolbar drawer buttons are enabled', (s, str, arr) => [
       enabledButtonStruct(s, str, arr, 'Subscript'),
       enabledButtonStruct(s, str, arr, 'Superscript'),
-      enabledButtonStruct(s, str, arr, 'Clear formatting')
+      enabledButtonStruct(s, str, arr, 'Clear formatting'),
+      s.theRest()
     ]);
 
     resizeTo(400, 400, 450, 400);
@@ -149,7 +166,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     ]);
     await pAssertToolbarDrawerButtonState('Assert the toolbar drawer buttons are enabled', (s, str, arr) => [
       enabledButtonStruct(s, str, arr, 'Superscript'),
-      enabledButtonStruct(s, str, arr, 'Clear formatting')
+      enabledButtonStruct(s, str, arr, 'Clear formatting'),
+      s.theRest()
     ]);
   });
 });

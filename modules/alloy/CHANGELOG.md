@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+## 8.2.0 - 2021-05-06
+
 ### Added
 - Added a new `setValue` method to the `SliderUi`. This allows the slider value to be modified without firing a change event.
 

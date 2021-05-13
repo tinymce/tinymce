@@ -4,10 +4,13 @@ import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
 
+type DropEffect = DataTransfer['dropEffect'];
+type EffectAllowed = DataTransfer['effectAllowed'];
+
 const imageId = Id.generate('image');
 
-const validDropEffects = [ 'none', 'copy', 'link', 'move' ];
-const validEffectAlloweds = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
+const validDropEffects: DropEffect[] = [ 'none', 'copy', 'link', 'move' ];
+const validEffectAlloweds: EffectAllowed[] = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
 
 export interface DragImageData {
   image: Element;
@@ -38,15 +41,15 @@ const normalize = (format: string) => {
 };
 
 const createDataTransfer = (): DataTransfer => {
-  let dropEffect = 'move';
-  let effectAllowed = 'all';
+  let dropEffect: DropEffect = 'move';
+  let effectAllowed: EffectAllowed = 'all';
 
   const dataTransfer: DataTransfer = {
     get dropEffect() {
       return dropEffect;
     },
 
-    set dropEffect(effect: string) {
+    set dropEffect(effect: DropEffect) {
       if (Arr.contains(validDropEffects, effect)) {
         dropEffect = effect;
       }
@@ -56,7 +59,7 @@ const createDataTransfer = (): DataTransfer => {
       return effectAllowed;
     },
 
-    set effectAllowed(allowed: string) {
+    set effectAllowed(allowed: EffectAllowed) {
       if (Arr.contains(validEffectAlloweds, allowed)) {
         effectAllowed = allowed;
       }

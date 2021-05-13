@@ -1,7 +1,7 @@
 import { ApproxStructure, Mouse, UiFinder } from '@ephox/agar';
 import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Optional, OptionalInstances } from '@ephox/katamari';
-import { TinyDom, TinyHooks } from '@ephox/mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -9,7 +9,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Readonly from 'tinymce/core/mode/Readonly';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-import { TinyAssertions, TinySelections } from '../../../../../../mcagar/src/main/ts/ephox/mcagar/api/Main';
 
 const tOptional = OptionalInstances.tOptional;
 

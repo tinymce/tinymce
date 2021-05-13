@@ -41,10 +41,6 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
-
-  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
-
   return {
     tooltip: 'Formats',
     icon: Optional.none(),
@@ -52,8 +48,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
-    setInitialValue,
-    nodeChangeHandler,
+    updateText: updateSelectMenuText,
     shouldHide: editor.getParam('style_formats_autohide', false, 'boolean'),
     isInvalid: (item) => !editor.formatter.canApply(item.format),
     dataset

@@ -1,24 +1,19 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyLoader, TinyUi } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 
-import PrintPlugin from 'tinymce/plugins/print/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/print/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.print.PrintSanityTest', (success, failure) => {
-
-  Theme();
-  PrintPlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({}, [ Log.step('TBA', 'Print: Assert print button exists',
-      tinyUi.sWaitForUi('check print button exists', 'button[aria-label="Print"]')
-    ) ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.print.PrintSanityTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'print',
     toolbar: 'print',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Theme, Plugin ]);
+
+  it('TBA: Assert print button exists', async () => {
+    const editor = hook.editor();
+    await TinyUiActions.pWaitForUi(editor, 'button[aria-label="Print"]');
+  });
 });

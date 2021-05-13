@@ -26,7 +26,7 @@ describe('browser.tinymce.core.dom.ReferrerPolicyTest', () => {
     assert.equal(links.length > 0, expected, `should have link with referrerpolicy="${referrerPolicy}"`);
   };
 
-  const pLoadScript = (url: string) => new PromisePolyfill((resolve, reject) => {
+  const pLoadScript = (url: string): Promise<void> => new PromisePolyfill((resolve, reject) => {
     ScriptLoader.ScriptLoader.loadScript(url, resolve, () => reject('Failed to load script'));
   });
 

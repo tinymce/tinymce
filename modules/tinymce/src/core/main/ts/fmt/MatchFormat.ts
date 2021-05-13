@@ -125,7 +125,7 @@ const matchNode = (ed: Editor, node: Node, name: string, vars?: FormatVars, simi
         // Match classes
         if ((classes = format.classes)) {
           for (x = 0; x < classes.length; x++) {
-            if (!ed.dom.hasClass(node, classes[x])) {
+            if (!ed.dom.hasClass(node, FormatUtils.replaceVars(classes[x], vars))) {
               return;
             }
           }

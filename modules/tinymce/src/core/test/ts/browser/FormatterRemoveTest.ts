@@ -593,4 +593,13 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.formatter.remove('underline');
     assert.equal(getContent(editor), '<p>test test</p>', 'Formatting on the space should not have been removed');
   });
+
+  it('TINY-7227: Remove classes with variables', () => {
+    const editor = hook.editor();
+    editor.formatter.register('formatA', { selector: 'p', classes: [ '%value' ] });
+    editor.setContent('<p class="a b">test</p>');
+    LegacyUnit.setSelection(editor, 'p', 0, 'p', 0);
+    editor.formatter.remove('formatA', { value: 'a' });
+    assert.equal(getContent(editor), '<p class="b">test</p>');
+  });
 });

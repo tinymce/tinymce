@@ -1,6 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for TinyMCE
+labels: 'type: feature'
 
 ---
 

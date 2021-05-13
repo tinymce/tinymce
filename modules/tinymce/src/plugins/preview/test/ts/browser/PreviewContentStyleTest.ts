@@ -1,56 +1,48 @@
-import { Log, Logger, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
+import Plugin from 'tinymce/plugins/preview/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-import PreviewPlugin from 'tinymce/plugins/preview/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+describe('browser.tinymce.plugins.preview.PreviewContentStyleTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'preview',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Theme, Plugin ]);
 
-UnitTest.asynctest('browser.tinymce.plugins.preview.PreviewContentStyleTest', (success, failure) => {
-
-  PreviewPlugin();
-  SilverTheme();
-
-  const sAssertIframeContains = (editor, text, expected) => Step.sync(() => {
+  const assertIframeContains = (editor: Editor, text: string, shouldMatch: boolean) => {
     const actual = IframeContent.getPreviewHtml(editor);
     const regexp = new RegExp(text);
 
-    Assert.eq('Should be same html', expected, regexp.test(actual));
+    if (shouldMatch) {
+      assert.match(actual, regexp, 'Should be the same html');
+    } else {
+      assert.notMatch(actual, regexp, 'Should not be the same html');
+    }
+  };
+
+  const assertIframeHtmlContains = (editor: Editor, text: string) => assertIframeContains(editor, text, true);
+
+  const assertIframeHtmlNotContains = (editor: Editor, text: string) => assertIframeContains(editor, text, false);
+
+  it('TBA: Set content, set style setting and assert content and style. Delete style and assert style is removed', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>hello world</p>');
+    editor.settings.content_style = 'p {color: blue;}';
+    assertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>');
+    delete editor.settings.content_style;
+    assertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>');
   });
 
-  const sAssertIframeHtmlContains = (editor, text) => {
-    return Logger.t('Assert Iframe Html contains ' + text, sAssertIframeContains(editor, text, true));
-  };
-
-  const sAssertIframeHtmlNotContains = (editor, text) => {
-    return Logger.t('Assert Iframe Html does not contain ' + text, sAssertIframeContains(editor, text, false));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  it('TINY-6529: Set content, set style settings and assert content and styles. content_style should take precedence.', () => {
+    const editor = hook.editor();
     const contentCssUrl = editor.documentBaseURI.toAbsolute('/project/tinymce/js/tinymce/skins/content/default/content.css');
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'Preview: Set content, set style setting and assert content and style. Delete style and assert style is removed', [
-        tinyApis.sSetContent('<p>hello world</p>'),
-        tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
-        sAssertIframeHtmlContains(editor, '<style type="text/css">p {color: blue;}</style>'),
-        tinyApis.sDeleteSetting('content_style'),
-        sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-      ]),
-      Log.stepsAsStep('TINY-6529', 'Preview: Set content, set style settings and assert content and styles. content_style should take precedence. Delete style and assert style is removed', [
-        tinyApis.sSetContent('<p>hello world</p>'),
-        tinyApis.sSetSetting('content_css_cors', true),
-        tinyApis.sSetSetting('content_style', 'p {color: blue;}'),
-        sAssertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous"><style type="text/css">p {color: blue;}</style>`),
-        tinyApis.sSetSetting('content_css_cors', false),
-        tinyApis.sDeleteSetting('content_style'),
-        sAssertIframeHtmlNotContains(editor, '<style type="text/css">p {color: blue;}</style>')
-      ])
-    ], onSuccess, onFailure);
-  }, {
-    theme: 'silver',
-    plugins: 'preview',
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+    editor.setContent('<p>hello world</p>');
+    editor.settings.content_css_cors = true;
+    editor.settings.content_style = 'p {color: blue;}';
+    assertIframeHtmlContains(editor, `<link type="text/css" rel="stylesheet" href="${contentCssUrl}" crossorigin="anonymous"><style type="text/css">p {color: blue;}</style>`);
+  });
 });

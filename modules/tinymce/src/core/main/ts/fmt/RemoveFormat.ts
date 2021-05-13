@@ -306,14 +306,21 @@ const removeFormatInternal = (ed: Editor, format: RemoveFormatPartial, vars?: Fo
           }
         }
 
+        // Remove mce prefixed attributes (must clean before short circuit operations)
+        if (MCE_ATTR_RE.test(name)) {
+          elm.removeAttribute('data-mce-' + name);
+        }
+
+        // keep style="list-style-type: none" on <li>s
+        if (name === 'style' && NodeType.matchNodeNames([ 'li' ])(elm) && dom.getStyle(elm, 'list-style-type') === 'none') {
+          elm.removeAttribute(name);
+          dom.setStyle(elm, 'list-style-type', 'none');
+          return;
+        }
+
         // IE6 has a bug where the attribute doesn't get removed correctly
         if (name === 'class') {
           elm.removeAttribute('className');
-        }
-
-        // Remove mce prefixed attributes
-        if (MCE_ATTR_RE.test(name)) {
-          elm.removeAttribute('data-mce-' + name);
         }
 
         elm.removeAttribute(name);
@@ -473,6 +480,12 @@ const remove = (ed: Editor, name: string, vars?: FormatVars, node?: Node | Range
   // Merges the styles for each node
   const process = (node: Node) => {
     let lastContentEditable: boolean, hasContentEditableState: boolean;
+
+    // TINY-6567 Include the last node in the selection
+    const parentNode = node.parentNode;
+    if (NodeType.isText(node) && FormatUtils.hasBlockChildren(dom, parentNode)) {
+      removeFormat(ed, format, vars, parentNode, parentNode);
+    }
 
     // Node has a contentEditable value
     if (NodeType.isElement(node) && dom.getContentEditable(node)) {

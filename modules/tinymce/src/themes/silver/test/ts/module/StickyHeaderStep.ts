@@ -68,9 +68,18 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       await StickyUtils.pAssertHeaderDocked(isToolbarTop);
     });
 
+    it('Scroll editor into view should not have sticky', async () => {
+      // Move the editor out of view first
+      StickyUtils.scrollRelativeEditor(500, isToolbarTop);
+      await StickyUtils.pScrollAndAssertStructure(isToolbarTop, -100, StickyUtils.expectedInFullView);
+      StickyUtils.assertEditorClasses(false);
+    });
+
     context('with open toolbar drawer', () => {
       before(async () => {
-        // Open the more drawer and ensure it's visible
+        // Ensure the editor is in view
+        StickyUtils.scrollRelativeEditor(-100, isToolbarTop);
+        // Open the more drawer
         if (toolbarMode !== ToolbarMode.default) {
           await MenuUtils.pOpenMore(toolbarMode);
           MenuUtils.assertMoreDrawerInViewport(toolbarMode);
@@ -81,11 +90,6 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         if (toolbarMode !== ToolbarMode.default) {
           await MenuUtils.pCloseMore(toolbarMode);
         }
-      });
-
-      it('Scroll back should not have sticky', async () => {
-        await StickyUtils.pScrollAndAssertStructure(isToolbarTop, -100, StickyUtils.expectedInFullView);
-        StickyUtils.assertEditorClasses(false);
       });
 
       it('Open align menu and check sticky states', async () => {

@@ -25,7 +25,7 @@ describe('browser.tinymce.core.CaretFinderTest', () => {
     assert.equal(pos.offset(), expectedOffset, 'Should be the expected offset');
   };
 
-  const assertNone = (pos: Optional<unknown>) => {
+  const assertNone = (pos: Optional<CaretPosition>) => {
     assert.isTrue(pos.isNone(), 'Should be the none but got some');
   };
 

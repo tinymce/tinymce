@@ -46,10 +46,6 @@ const getSpec = (editor: Editor): SelectSpec => {
     });
   };
 
-  const nodeChangeHandler = Optional.some((comp: AlloyComponent) => () => updateSelectMenuText(comp));
-
-  const setInitialValue = Optional.some((comp: AlloyComponent) => updateSelectMenuText(comp));
-
   const dataset = buildBasicSettingsDataset(editor, 'block_formats', defaultBlocks, Delimiter.SemiColon);
 
   return {
@@ -59,8 +55,7 @@ const getSpec = (editor: Editor): SelectSpec => {
     getCurrentValue: Optional.none,
     getPreviewFor,
     onAction: onActionToggleFormat(editor),
-    setInitialValue,
-    nodeChangeHandler,
+    updateText: updateSelectMenuText,
     dataset,
     shouldHide: false,
     isInvalid: (item) => !editor.formatter.canApply(item.format)

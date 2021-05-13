@@ -5,24 +5,27 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 import * as Settings from '../api/Settings';
 
-const getPageBreakClass = () => 'mce-pagebreak';
+const pageBreakClass = 'mce-pagebreak';
 
-const getPlaceholderHtml = () => {
-  return '<img src="' + Env.transparentSrc + '" class="' + getPageBreakClass() + '" data-mce-resize="false" data-mce-placeholder />';
+const getPlaceholderHtml = (shouldSplitBlock: boolean) => {
+  const html = `<img src="${Env.transparentSrc}" class="${pageBreakClass}" data-mce-resize="false" data-mce-placeholder />`;
+  return shouldSplitBlock ? `<p>${html}</p>` : html;
 };
 
-const setup = (editor) => {
+const setup = (editor: Editor) => {
   const separatorHtml = Settings.getSeparatorHtml(editor);
+  const shouldSplitBlock = () => Settings.shouldSplitBlock(editor);
 
   const pageBreakSeparatorRegExp = new RegExp(separatorHtml.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, (a) => {
     return '\\' + a;
   }), 'gi');
 
   editor.on('BeforeSetContent', (e) => {
-    e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml());
+    e.content = e.content.replace(pageBreakSeparatorRegExp, getPlaceholderHtml(shouldSplitBlock()));
   });
 
   editor.on('PreInit', () => {
@@ -32,10 +35,10 @@ const setup = (editor) => {
       while (i--) {
         node = nodes[i];
         className = node.attr('class');
-        if (className && className.indexOf('mce-pagebreak') !== -1) {
+        if (className && className.indexOf(pageBreakClass) !== -1) {
           // Replace parent block node if pagebreak_split_block is enabled
           const parentNode = node.parent;
-          if (editor.schema.getBlockElements()[parentNode.name] && Settings.shouldSplitBlock(editor)) {
+          if (editor.schema.getBlockElements()[parentNode.name] && shouldSplitBlock()) {
             parentNode.type = 3;
             parentNode.value = separatorHtml;
             parentNode.raw = true;
@@ -53,7 +56,7 @@ const setup = (editor) => {
 };
 
 export {
-  setup,
+  pageBreakClass,
   getPlaceholderHtml,
-  getPageBreakClass
+  setup
 };

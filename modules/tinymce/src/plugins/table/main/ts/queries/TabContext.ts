@@ -13,6 +13,7 @@ import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Util from '../core/Util';
+import { CellSelectionApi } from '../selection/CellSelection';
 
 const forward = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: SugarElement<HTMLTableCellElement>) => {
   return go(editor, isRoot, CellNavigation.next(cell));
@@ -51,7 +52,7 @@ const go = (editor: Editor, isRoot: (e: SugarElement) => boolean, cell: CellLoca
 
 const rootElements = [ 'table', 'li', 'dl' ];
 
-const handle = (event: KeyboardEvent, editor: Editor) => {
+const handle = (event: KeyboardEvent, editor: Editor, cellSelection: CellSelectionApi) => {
   if (event.keyCode === VK.TAB) {
     const body = Util.getBody(editor);
     const isRoot = (element) => {
@@ -60,17 +61,20 @@ const handle = (event: KeyboardEvent, editor: Editor) => {
     };
 
     const rng = editor.selection.getRng();
-    if (rng.collapsed) {
-      const start = SugarElement.fromDom(rng.startContainer);
-      TableLookup.cell(start, isRoot).each((cell) => {
-        event.preventDefault();
-        const navigation = event.shiftKey ? backward : forward;
-        const rng = navigation(editor, isRoot, cell);
-        rng.each((range) => {
-          editor.selection.setRng(range);
-        });
+    // If navigating backwards, use the start of the ranged selection
+    const container = SugarElement.fromDom(event.shiftKey ? rng.startContainer : rng.endContainer);
+    TableLookup.cell(container, isRoot).each((cell) => {
+      event.preventDefault();
+      // Clear fake ranged selection because our new selection will always be collapsed
+      TableLookup.table(cell, isRoot).each(cellSelection.clear);
+      // Collapse selection to start or end based on shift key
+      editor.selection.collapse(event.shiftKey);
+      const navigation = event.shiftKey ? backward : forward;
+      const rng = navigation(editor, isRoot, cell);
+      rng.each((range) => {
+        editor.selection.setRng(range);
       });
-    }
+    });
   }
 };
 

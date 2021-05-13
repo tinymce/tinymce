@@ -30,7 +30,7 @@ export enum VDirection {
 }
 
 type PosPredicate = (rect1: ClientRect.ClientRect, rect2: ClientRect.ClientRect) => boolean;
-type RectPredicate = (rect: LinePosClientRect) => boolean;
+type RectPredicate = (rect: ClientRect.ClientRect) => boolean;
 
 const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) => boolean, node: Node): void => {
   while ((node = CaretUtils.findNode(node, direction, CaretCandidate.isEditableCaretCandidate, root))) {
@@ -42,18 +42,17 @@ const findUntil = (direction: VDirection, root: Node, predicateFn: (node: Node) 
 
 const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: PosPredicate, root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition): LineNodeClientRect[] => {
   let line = 0;
-  const result = [];
+  const result: LineNodeClientRect[] = [];
 
   const add = (node: Node) => {
-    let i, clientRect, clientRects;
 
-    clientRects = Dimensions.getClientRects([ node ]);
+    let clientRects = Dimensions.getClientRects([ node ]);
     if (direction === -1) {
       clientRects = clientRects.reverse();
     }
 
-    for (i = 0; i < clientRects.length; i++) {
-      clientRect = clientRects[i];
+    for (let i = 0; i < clientRects.length; i++) {
+      const clientRect = clientRects[i] as LineNodeClientRect;
       if (isBeflowFn(clientRect, targetClientRect)) {
         continue;
       }
@@ -84,17 +83,26 @@ const walkUntil = (direction: VDirection, isAboveFn: PosPredicate, isBeflowFn: P
   return result;
 };
 
-const aboveLineNumber = <T extends LineClientRect>(lineNumber: number, clientRect: T) => clientRect.line > lineNumber;
-const isLineNumber = <T extends LineClientRect>(lineNumber: number, clientRect: T) => clientRect.line === lineNumber;
-const upUntil = Fun.curry(walkUntil, VDirection.Up, ClientRect.isAbove, ClientRect.isBelow) as (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[];
-const downUntil = Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove) as (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[];
+const aboveLineNumber = <T extends LineClientRect>(lineNumber: number, clientRect: T): boolean =>
+  clientRect.line > lineNumber;
+
+const isLineNumber = <T extends LineClientRect>(lineNumber: number, clientRect: T): boolean =>
+  clientRect.line === lineNumber;
+
+const upUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[] =
+  Fun.curry(walkUntil, VDirection.Up, ClientRect.isAbove, ClientRect.isBelow);
+
+const downUntil: (root: Node, predicateFn: RectPredicate, caretPosition: CaretPosition) => LineNodeClientRect[] =
+  Fun.curry(walkUntil, VDirection.Down, ClientRect.isBelow, ClientRect.isAbove);
 
 const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPredicate, node: Node): LinePosClientRect[] => {
   const caretWalker = CaretWalker(root);
-  let walkFn, isBelowFn, isAboveFn,
-    caretPosition;
-  const result = [];
-  let line = 0, clientRect;
+  let walkFn: (caretPosition: CaretPosition | null) => CaretPosition | null;
+  let isBelowFn: PosPredicate;
+  let isAboveFn: PosPredicate;
+  let caretPosition: CaretPosition;
+  const result: LinePosClientRect[] = [];
+  let line = 0;
 
   const getClientRect = (caretPosition: CaretPosition) => {
     if (direction === 1) {
@@ -123,17 +131,17 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
       continue;
     }
 
-    clientRect = getClientRect(caretPosition);
+    const rect = getClientRect(caretPosition);
 
-    if (isAboveFn(clientRect, targetClientRect)) {
+    if (isAboveFn(rect, targetClientRect)) {
       continue;
     }
 
-    if (result.length > 0 && isBelowFn(clientRect, ArrUtils.last(result))) {
+    if (result.length > 0 && isBelowFn(rect, ArrUtils.last(result))) {
       line++;
     }
 
-    clientRect = ClientRect.clone(clientRect);
+    const clientRect = ClientRect.clone(rect) as LinePosClientRect;
     clientRect.position = caretPosition;
     clientRect.line = line;
 
@@ -147,8 +155,8 @@ const positionsUntil = (direction: VDirection, root: Node, predicateFn: RectPred
   return result;
 };
 
-const isAboveLine = (lineNumber: number) => <T extends LineClientRect>(clientRect: T) => aboveLineNumber(lineNumber, clientRect);
-const isLine = (lineNumber: number) => <T extends LineClientRect>(clientRect: T) => isLineNumber(lineNumber, clientRect);
+const isAboveLine = (lineNumber: number) => <T extends LineClientRect>(clientRect: T): boolean => aboveLineNumber(lineNumber, clientRect);
+const isLine = (lineNumber: number) => <T extends LineClientRect>(clientRect: T): boolean => isLineNumber(lineNumber, clientRect);
 
 export {
   upUntil,

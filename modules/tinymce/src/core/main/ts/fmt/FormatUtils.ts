@@ -216,6 +216,8 @@ const isSelectorFormat = (format: ApplyFormat): format is SelectorFormat =>
 const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
   Obj.hasNonNullableKey(format as any, 'inline');
 
+const hasBlockChildren = (dom: DOMUtils, elm: Node) => Arr.exists(elm.childNodes, dom.isBlock);
+
 export {
   isNode,
   isInlineBlock,
@@ -235,5 +237,6 @@ export {
   areSimilarFormats,
   isSelectorFormat,
   isInlineFormat,
-  isBlockFormat
+  isBlockFormat,
+  hasBlockChildren
 };
