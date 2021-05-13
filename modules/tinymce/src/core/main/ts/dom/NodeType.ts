@@ -8,7 +8,7 @@
 import { Arr } from '@ephox/katamari';
 
 const isNodeType = (type: number) => {
-  return (node: Node) => {
+  return (node: Node | null) => {
     return !!node && node.nodeType === type;
   };
 };
@@ -17,12 +17,12 @@ const isNodeType = (type: number) => {
 // won't implement the Object prototype, so Object.getPrototypeOf() will return null or something similar.
 const isRestrictedNode = (node: Node): boolean => !!node && !Object.getPrototypeOf(node);
 
-const isElement = isNodeType(1) as (node: Node) => node is HTMLElement;
+const isElement = isNodeType(1) as (node: Node | null) => node is HTMLElement;
 
 const matchNodeNames = <T extends Node>(names: string[]) => {
   const lowercasedNames = names.map((s) => s.toLowerCase());
 
-  return (node: Node): node is T => {
+  return (node: Node | null): node is T => {
     if (node && node.nodeName) {
       const nodeName = node.nodeName.toLowerCase();
       return Arr.contains(lowercasedNames, nodeName);
@@ -35,7 +35,7 @@ const matchNodeNames = <T extends Node>(names: string[]) => {
 const matchStyleValues = (name: string, values: string) => {
   const items = values.toLowerCase().split(' ');
 
-  return (node) => {
+  return (node: Node) => {
     let i, cssValue;
 
     if (isElement(node)) {
@@ -92,14 +92,14 @@ const hasContentEditableState = (value: string) => {
 
 const isTextareaOrInput = matchNodeNames<HTMLTextAreaElement | HTMLInputElement>([ 'textarea', 'input' ]);
 
-const isText = isNodeType(3) as (node: Node) => node is Text;
-const isComment = isNodeType(8) as (node: Node) => node is Comment;
-const isDocument = isNodeType(9) as (node: Node) => node is Document;
-const isDocumentFragment = isNodeType(11) as (node: Node) => node is DocumentFragment;
+const isText = isNodeType(3) as (node: Node | null) => node is Text;
+const isComment = isNodeType(8) as (node: Node | null) => node is Comment;
+const isDocument = isNodeType(9) as (node: Node | null) => node is Document;
+const isDocumentFragment = isNodeType(11) as (node: Node | null) => node is DocumentFragment;
 const isBr = matchNodeNames<HTMLBRElement>([ 'br' ]);
 const isImg = matchNodeNames<HTMLImageElement>([ 'img' ]);
-const isContentEditableTrue = hasContentEditableState('true') as (node: Node) => node is HTMLElement;
-const isContentEditableFalse = hasContentEditableState('false') as (node: Node) => node is HTMLElement;
+const isContentEditableTrue = hasContentEditableState('true') as (node: Node | null) => node is HTMLElement;
+const isContentEditableFalse = hasContentEditableState('false') as (node: Node | null) => node is HTMLElement;
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);

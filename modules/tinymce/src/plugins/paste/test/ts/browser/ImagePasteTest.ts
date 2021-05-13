@@ -77,7 +77,7 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.ImagePasteTest', (success, fai
     return editor.selection.getRng();
   };
 
-  const waitFor = (predicate: () => boolean) => {
+  const waitFor = (predicate: () => boolean): Promise<void> => {
     return new Promise((resolve, reject) => {
       const check = (time, count) => {
         if (predicate()) {

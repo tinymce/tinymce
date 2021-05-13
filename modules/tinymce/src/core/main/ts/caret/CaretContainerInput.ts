@@ -14,17 +14,16 @@ import * as CaretContainer from './CaretContainer';
  * This module shows the invisible block that the caret is currently in when contents is added to that block.
  */
 
-const findBlockCaretContainer = (editor: Editor) => {
-  return SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]').fold(Fun.constant(null), (elm) => {
-    return elm.dom;
-  });
-};
+const findBlockCaretContainer = (editor: Editor): Element | null =>
+  SelectorFind.descendant(SugarElement.fromDom(editor.getBody()), '*[data-mce-caret]')
+    .map((elm) => elm.dom)
+    .getOrNull();
 
-const removeIeControlRect = (editor: Editor) => {
+const removeIeControlRect = (editor: Editor): void => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const showBlockCaretContainer = (editor: Editor, blockCaretContainer: HTMLElement) => {
+const showBlockCaretContainer = (editor: Editor, blockCaretContainer: Element): void => {
   if (blockCaretContainer.hasAttribute('data-mce-caret')) {
     CaretContainer.showCaretContainerBlock(blockCaretContainer);
     removeIeControlRect(editor);
@@ -32,7 +31,7 @@ const showBlockCaretContainer = (editor: Editor, blockCaretContainer: HTMLElemen
   }
 };
 
-const handleBlockContainer = (editor: Editor, e: Event) => {
+const handleBlockContainer = (editor: Editor, e: Event): void => {
   const blockCaretContainer = findBlockCaretContainer(editor);
 
   if (!blockCaretContainer) {
@@ -52,7 +51,7 @@ const handleBlockContainer = (editor: Editor, e: Event) => {
   }
 };
 
-const setup = (editor: Editor) => {
+const setup = (editor: Editor): void => {
   editor.on('keyup compositionstart', Fun.curry(handleBlockContainer, editor));
 };
 

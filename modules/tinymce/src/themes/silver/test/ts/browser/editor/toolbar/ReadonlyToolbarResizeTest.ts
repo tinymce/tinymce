@@ -4,6 +4,8 @@ import { TinyDom, TinyHooks } from '@ephox/mcagar';
 import { Css, SugarBody } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import AdvListPlugin from 'tinymce/plugins/advlist/Plugin';
+import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Settings';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -13,14 +15,15 @@ import { resizeToPos } from '../../../module/UiUtils';
 describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat | fontselect',
+    plugins: 'advlist lists',
+    toolbar: 'bold | italic | underline | strikethrough | cut | copy | paste | indent | subscript | superscript | removeformat | fontselect | bullist',
     toolbar_mode: 'floating',
     menubar: false,
-    width: 300,
+    width: 800, // Make sure all buttons show initially
     height: 400,
     readonly: true,
     resize: 'both'
-  }, [ Theme ]);
+  }, [ AdvListPlugin, ListsPlugin, Theme ]);
 
   const resizeTo = (sx: number, sy: number, dx: number, dy: number) => {
     const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();

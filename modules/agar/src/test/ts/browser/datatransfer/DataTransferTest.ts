@@ -14,13 +14,13 @@ UnitTest.test('DataTransfer: setEffects', () => {
   transfer.dropEffect = 'copy';
   Assert.eq('Should be expected new value', 'copy', transfer.dropEffect);
 
-  transfer.dropEffect = 'xyz';
+  transfer.dropEffect = 'xyz' as any;
   Assert.eq('Should be unchanged', 'copy', transfer.dropEffect);
 
   transfer.effectAllowed = 'copyLink';
   Assert.eq('Should be expected new value', 'copyLink', transfer.effectAllowed);
 
-  transfer.effectAllowed = 'xyz';
+  transfer.effectAllowed = 'xyz' as any;
   Assert.eq('Should be unchanged', 'copyLink', transfer.effectAllowed);
 });
 
