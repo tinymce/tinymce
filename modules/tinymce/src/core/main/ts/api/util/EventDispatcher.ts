@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
 
 export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
@@ -179,34 +179,34 @@ class EventDispatcher<T> {
       this.settings.beforeFire(args);
     }
 
-    const handlers = this.bindings[name];
-    if (handlers) {
-      for (let i = 0, l = handlers.length; i < l; i++) {
-        const callback = handlers[i];
+    // Lookup the handlers and make a clone to ensure the array won't be mutated while we're iterating
+    // otherwise some handlers could be skipped due to elements being prepended or removed
+    const handlers = Obj.get(this.bindings, name).map(Arr.from).getOr([]);
+    for (let i = 0, l = handlers.length; i < l; i++) {
+      const callback = handlers[i];
 
-        // The handler was removed by an earlier handler in this loop so skip it. This is needed as
-        // the `handlers` array is not a "live" list, so when the handler is removed while we are
-        // iterating it will remain in the list and incorrectly be executed.
-        if (callback.removed) {
-          continue;
-        }
+      // The handler was removed by an earlier handler in this loop so skip it. This is needed as the
+      // `handlers` array is a cloned list as noted above, so when the handler is removed while we are
+      // iterating it will remain in the list and incorrectly be executed.
+      if (callback.removed) {
+        continue;
+      }
 
-        // Unbind handlers marked with "once"
-        if (callback.once) {
-          this.off(name, callback.func);
-        }
+      // Unbind handlers marked with "once"
+      if (callback.once) {
+        this.off(name, callback.func);
+      }
 
-        // Stop immediate propagation if needed
-        if (args.isImmediatePropagationStopped()) {
-          args.stopPropagation();
-          return args;
-        }
+      // Stop immediate propagation if needed
+      if (args.isImmediatePropagationStopped()) {
+        args.stopPropagation();
+        return args;
+      }
 
-        // If callback returns false then prevent default and stop all propagation
-        if (callback.func.call(this.scope, args) === false) {
-          args.preventDefault();
-          return args;
-        }
+      // If callback returns false then prevent default and stop all propagation
+      if (callback.func.call(this.scope, args) === false) {
+        args.preventDefault();
+        return args;
       }
     }
 
@@ -302,17 +302,14 @@ class EventDispatcher<T> {
           if (!callback) {
             handlers.length = 0;
           } else {
-            // Unbind specific ones
-            let hi = handlers.length;
-            while (hi--) {
-              const handler = handlers[hi];
-              if (handler.func === callback) {
-                // Mark the callback as removed to ensure it's not executed if the same event is already processing
-                handler.removed = true;
-                handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
-                this.bindings[currentName] = handlers;
-              }
-            }
+            // Unbind specific handlers
+            const filteredHandlers = Arr.partition(handlers, (handler) => handler.func === callback);
+            handlers = filteredHandlers.fail;
+            this.bindings[currentName] = handlers;
+            // Mark the removed handlers in case this event is already being processed in `fire`
+            Arr.each(filteredHandlers.pass, (handler) => {
+              handler.removed = true;
+            });
           }
 
           if (!handlers.length) {
