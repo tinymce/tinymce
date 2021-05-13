@@ -1,42 +1,34 @@
-import { Keys, Log, Pipeline, Step } from '@ephox/agar';
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keyboard, Keys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
+
+import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
-import NonbreakingPlugin from 'tinymce/plugins/nonbreaking/Plugin';
-import SilverTheme from 'tinymce/themes/silver/Theme';
+import Plugin from 'tinymce/plugins/nonbreaking/Plugin';
+import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', (success, failure) => {
-
-  NonbreakingPlugin();
-  SilverTheme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TBA', 'NonBreaking: Undo level on insert tab', [
-        tinyActions.sContentKeystroke(Keys.tab(), {}),
-        tinyApis.sAssertContent('<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>'),
-        Step.sync(() => {
-          editor.undoManager.undo();
-        }),
-        tinyApis.sAssertContent('')
-      ]),
-      Log.step('TBA', 'NonBreaking: Prevent default and other handlers on insert tab',
-        Step.sync(() => {
-          const args = editor.fire('keydown', { keyCode: VK.TAB });
-          Assert.eq('Default should be prevented', true, args.isDefaultPrevented());
-          Assert.eq('Should not propagate', true, args.isImmediatePropagationStopped());
-        })
-      )
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.nonbreaking.NonbreakingForceTabTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'nonbreaking',
     toolbar: 'nonbreaking',
     nonbreaking_force_tab: 5,
     theme: 'silver',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
-}
-);
+  }, [ Theme, Plugin ], true);
+
+  it('TBA: Undo level on insert tab', () => {
+    const editor = hook.editor();
+    Keyboard.activeKeystroke(TinyDom.document(editor), Keys.tab());
+    TinyAssertions.assertContent(editor, '<p><span class="mce-nbsp-wrap" contenteditable="false">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>');
+    editor.undoManager.undo();
+    TinyAssertions.assertContent(editor, '');
+  });
+
+  it('TBA: Prevent default and other handlers on insert tab', () => {
+    const editor = hook.editor();
+    const args = editor.fire('keydown', { keyCode: VK.TAB } as KeyboardEvent);
+    assert.isTrue(args.isDefaultPrevented());
+    assert.isTrue(args.isImmediatePropagationStopped());
+  });
+});
