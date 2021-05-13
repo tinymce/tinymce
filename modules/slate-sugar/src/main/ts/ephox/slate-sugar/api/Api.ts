@@ -15,51 +15,44 @@ interface RtcEditor extends Editor {
   rtcInstance: RtcAdaptor;
 }
 
-interface SlateElement {
+interface ModelElement {
   type: string;
-  children: Array<SlateNode>;
+  children: Array<ModelNode>;
   class?: string;
 }
 
-interface SlateText {
+interface ModelText {
   text: string;
 }
 
-type SlateNode = SlateElement | SlateText;
+type ModelNode = ModelElement | ModelText;
 
-interface List<T>{
-  hd: T;
-  tl: List<T> | 0;
+interface ModelLocation {
+  node: ModelNode;
+  parents: Array<ModelLocation>;
 }
-
-interface SlateLoc {
-  node: SlateNode;
-  parents: List<SlateLoc>;
-}
-
-interface SlateEditor {}
 
 interface ModelApi {
   body: {
-    getBody: () => SlateLoc;
+    getBody: () => ModelLocation;
   };
   modelNodeType: {
-    isElement: (node: SlateNode) => node is SlateElement;
-    isText: (node: SlateNode) => node is SlateText;
-    isBlock: (node: SlateNode) => boolean;
-    isInline: (node: SlateNode) => boolean;
+    isElement: (node: ModelNode) => node is ModelElement;
+    isText: (node: ModelNode) => node is ModelText;
+    isBlock: (node: ModelNode) => boolean;
+    isInline: (node: ModelNode) => boolean;
   };
   nodeTransforms: {
     setPropsAtPath: (path: path, props: Record<string, string>) => void;
   };
   predicateFind: {
-    closest: (loc: SlateLoc, predicate: (loc: SlateLoc) => boolean, isRoot: (loc: SlateLoc) => boolean) => SlateLoc;
+    closest: (loc: ModelLocation, predicate: (loc: ModelLocation) => boolean, isRoot: (loc: ModelLocation) => boolean) => ModelLocation;
   };
   predicateFilter: {
-    descendants: (loc: SlateLoc, predicate: (loc: SlateLoc) => boolean) => SlateLoc[];
+    descendants: (loc: ModelLocation, predicate: (loc: ModelLocation) => boolean) => ModelLocation[];
   };
   slateLoc: {
-    toPathArray: (loc: SlateLoc) => path;
+    toPathArray: (loc: ModelLocation) => path;
   };
 }
 
@@ -69,10 +62,8 @@ export {
   getModelApi,
   ModelApi,
   path,
-  SlateEditor,
-  SlateElement,
-  SlateLoc,
-  SlateNode,
-  SlateText
+  ModelElement,
+  ModelLocation,
+  ModelNode,
+  ModelText
 };
-

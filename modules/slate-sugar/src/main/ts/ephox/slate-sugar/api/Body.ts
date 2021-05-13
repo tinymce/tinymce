@@ -1,6 +1,6 @@
-import { ModelApi, SlateLoc } from './Api';
+import { ModelApi, ModelLocation } from './Api';
 
-const getBody = (api: ModelApi): SlateLoc => api.body.getBody();
+const getBody = (api: ModelApi): ModelLocation => api.body.getBody();
 
 export {
   getBody

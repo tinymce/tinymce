@@ -1,10 +1,9 @@
 import { Maybes, Maybe } from '@ephox/katamari';
-import { ModelApi, SlateLoc } from './Api';
+import { ModelApi, ModelLocation } from './Api';
 
-const closest = (api: ModelApi, loc: SlateLoc, predicate: (loc: SlateLoc) => boolean, isRoot: (loc: SlateLoc) => boolean): Maybe<SlateLoc> =>
+const closest = (api: ModelApi, loc: ModelLocation, predicate: (loc: ModelLocation) => boolean, isRoot: (loc: ModelLocation) => boolean): Maybe<ModelLocation> =>
   Maybes.from(api.predicateFind.closest(loc, predicate, isRoot));
 
 export {
   closest
 };
-

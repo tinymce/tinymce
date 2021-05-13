@@ -1,15 +1,15 @@
-import { ModelApi, SlateNode, SlateElement, SlateText } from './Api';
+import { ModelApi, ModelNode, ModelElement, ModelText } from './Api';
 
-const isElement = (api: ModelApi, node: SlateNode): node is SlateElement =>
+const isElement = (api: ModelApi, node: ModelNode): node is ModelElement =>
   api.modelNodeType.isElement(node);
 
-const isText = (api: ModelApi, node: SlateNode): node is SlateText =>
+const isText = (api: ModelApi, node: ModelNode): node is ModelText =>
   api.modelNodeType.isText(node);
 
-const isBlock = (api: ModelApi, node: SlateNode): boolean =>
+const isBlock = (api: ModelApi, node: ModelNode): boolean =>
   api.modelNodeType.isBlock(node);
 
-const isInline = (api: ModelApi, node: SlateNode): boolean =>
+const isInline = (api: ModelApi, node: ModelNode): boolean =>
   api.modelNodeType.isInline(node);
 
 export {
@@ -18,4 +18,3 @@ export {
   isBlock,
   isInline
 };
-

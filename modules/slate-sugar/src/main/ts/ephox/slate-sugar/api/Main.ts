@@ -1,10 +1,10 @@
 import * as Api from './Api';
 import * as Body from './Body';
+import * as ModelLocation from './ModelLocation';
 import * as ModelNodeType from './ModelNodeType';
 import * as NodeTransforms from './NodeTransforms';
 import * as PredicateFilter from './PredicateFilter';
 import * as PredicateFind from './PredicateFind';
-import * as SlateLoc from './SlateLoc';
 
 export {
   Api,
@@ -13,5 +13,5 @@ export {
   NodeTransforms,
   PredicateFilter,
   PredicateFind,
-  SlateLoc
+  ModelLocation
 };
