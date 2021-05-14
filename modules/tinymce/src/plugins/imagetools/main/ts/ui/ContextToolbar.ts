@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Maybes } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import * as Actions from '../core/Actions';
@@ -12,7 +13,7 @@ import * as Actions from '../core/Actions';
 const register = (editor: Editor) => {
   editor.ui.registry.addContextToolbar('imagetools', {
     items: Settings.getToolbarItems(editor),
-    predicate: (elem) => Actions.getEditableImage(editor, elem).isSome(),
+    predicate: (elem) => Maybes.isJust(Actions.getEditableImage(editor, elem)),
     position: 'node',
     scope: 'node'
   });

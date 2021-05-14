@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun } from '@ephox/katamari';
+import { Cell, Fun, Maybes } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Actions from '../core/Actions';
@@ -53,11 +53,9 @@ const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => () => 
     ],
     onSubmit: (api) => {
       const blob = api.getData().imagetools.blob;
-      originalImgOpt.each((originalImg) => {
-        originalSizeOpt.each((originalSize) => {
-          Actions.handleDialogBlob(editor, imageUploadTimerState, originalImg.dom, originalSize, blob);
-        });
-      });
+      if (Maybes.isJust(originalImgOpt) && Maybes.isJust(originalSizeOpt)) {
+        Actions.handleDialogBlob(editor, imageUploadTimerState, originalImgOpt.value.dom, originalSizeOpt.value, blob);
+      }
       api.close();
     },
     onCancel: Fun.noop, // TODO: reimplement me
@@ -82,16 +80,19 @@ const makeOpen = (editor: Editor, imageUploadTimerState: Cell<number>) => () => 
   });
 
   const originalImgOpt = Actions.getSelectedImage(editor);
-  const originalSizeOpt = originalImgOpt.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom));
+  const originalSizeOpt = Fun.pipe(originalImgOpt,
+    Maybes.map((origImg) => ImageSize.getNaturalImageSize(origImg.dom))
+  );
 
-  originalImgOpt.each((img) => {
-    Actions.getEditableImage(editor, img.dom).each((_) => {
+  if (Maybes.isJust(originalImgOpt)) {
+    const img = originalImgOpt.value;
+    if (Maybes.isJust(Actions.getEditableImage(editor, img.dom))) {
       Actions.findBlob(editor, img.dom).then((blob) => {
         const state = createState(blob);
         editor.windowManager.open(getLoadedSpec(state));
       });
-    });
-  });
+    }
+  }
 };
 
 export {

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Fun, Maybes } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Actions from '../core/Actions';
 
@@ -41,9 +42,10 @@ const register = (editor: Editor) => {
     onAction: cmd('mceEditImage'),
     onSetup: (buttonApi) => {
       const setDisabled = () => {
-        const disabled = Actions.getSelectedImage(editor).forall((element) => {
-          return Actions.getEditableImage(editor, element.dom).isNone();
-        });
+        const disabled = Fun.pipe(
+          Actions.getSelectedImage(editor),
+          Maybes.forall((element) => Maybes.isNothing(Actions.getEditableImage(editor, element.dom)))
+        );
         buttonApi.setDisabled(disabled);
       };
 
@@ -62,14 +64,16 @@ const register = (editor: Editor) => {
   });
 
   editor.ui.registry.addContextMenu('imagetools', {
-    update: (element) =>
+    update: (element) => Fun.pipe(
       // since there's no menu item available, this has to be it's own thing
-      Actions.getEditableImage(editor, element).fold(() => [], (_) => [{
+      Actions.getEditableImage(editor, element),
+      Maybes.map(() => ({
         text: 'Edit image',
         icon: 'edit-image',
         onAction: cmd('mceEditImage')
-      }])
-
+      })),
+      Maybes.toArr
+    )
   });
 };
 

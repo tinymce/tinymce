@@ -6,7 +6,7 @@
  */
 
 import { BlobConversions, ImageResult, ImageTransformations, Proxy, ResultConversions } from '@ephox/imagetools';
-import { Cell, Optional, Type } from '@ephox/katamari';
+import { Cell, Fun, Maybe, Maybes, Type } from '@ephox/katamari';
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -26,22 +26,24 @@ const enum FileExtractType {
   NameExt = 1
 }
 
-const getFigureImg = (elem: HTMLElement) => SelectorFind.child<HTMLImageElement>(SugarElement.fromDom(elem), 'img');
+const getFigureImg = (elem: HTMLElement) => Maybes.fromOptional(SelectorFind.child<HTMLImageElement>(SugarElement.fromDom(elem), 'img'));
 
 const isFigure = (editor: Editor, elem: Node): elem is HTMLElement => editor.dom.is(elem, 'figure');
 
 const isImage = (editor: Editor, imgNode: Node): imgNode is HTMLImageElement => editor.dom.is(imgNode, 'img:not([data-mce-object],[data-mce-placeholder])');
 
-const getEditableImage = (editor: Editor, node: Node): Optional<HTMLImageElement> => {
+const getEditableImage = (editor: Editor, node: Node): Maybe<HTMLImageElement> => {
   const isEditable = (imgNode: Node): imgNode is HTMLImageElement =>
     isImage(editor, imgNode) && (isLocalImage(editor, imgNode) || isCorsImage(editor, imgNode) || Type.isNonNullable(Settings.getProxyUrl(editor)));
 
   if (isFigure(editor, node)) {
-    return getFigureImg(node).bind((img) => {
-      return isEditable(img.dom) ? Optional.some(img.dom) : Optional.none();
-    });
+    return Fun.pipe(
+      getFigureImg(node),
+      Maybes.map((img) => img.dom),
+      Maybes.filter(isEditable)
+    );
   } else {
-    return isEditable(node) ? Optional.some(node) : Optional.none();
+    return isEditable(node) ? Maybes.just(node) : Maybes.nothing();
   }
 };
 
@@ -52,15 +54,15 @@ const displayError = (editor: Editor, error: string) => {
   });
 };
 
-const getSelectedImage = (editor: Editor): Optional<SugarElement<HTMLImageElement>> => {
+const getSelectedImage = (editor: Editor): Maybe<SugarElement<HTMLImageElement>> => {
   const elem = editor.selection.getNode();
   const figureElm = editor.dom.getParent(elem, 'figure.image');
   if (figureElm !== null && isFigure(editor, figureElm)) {
     return getFigureImg(figureElm);
   } else if (isImage(editor, elem)) {
-    return Optional.some(SugarElement.fromDom(elem));
+    return Maybes.just(SugarElement.fromDom(elem));
   } else {
-    return Optional.none();
+    return Maybes.nothing();
   }
 };
 
@@ -102,10 +104,14 @@ const defaultFetchImage = (editor: Editor, img: HTMLImageElement) => {
   return BlobConversions.imageToBlob(img);
 };
 
-const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => Settings.getFetchImage(editor).fold(
-  () => defaultFetchImage(editor, img),
-  (customFetchImage) => customFetchImage(img)
-);
+const imageToBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => {
+  const customFetchImage = Settings.getFetchImage(editor);
+  if (Maybes.isJust(customFetchImage)) {
+    return customFetchImage.value(img);
+  } else {
+    return defaultFetchImage(editor, img);
+  }
+};
 
 const findBlob = (editor: Editor, img: HTMLImageElement): Promise<Blob> => {
   const blobInfo = editor.editorUpload.blobCache.getByUri(img.src);
@@ -196,29 +202,32 @@ const updateSelectedImage = (editor: Editor, origBlob: Blob, ir: ImageResult, up
 const selectedImageOperation = (editor: Editor, imageUploadTimerState: Cell<number>, fn: (ir: ImageResult) => Promise<ImageResult>, size?: ImageSize.ImageSize) => {
   return () => {
     const imgOpt = getSelectedImage(editor);
-    return imgOpt.fold(() => {
+    if (Maybes.isNothing(imgOpt)) {
       displayError(editor, 'Could not find selected image');
-    }, (img) => editor._scanForImages()
-      .then(() => findBlob(editor, img.dom))
-      .then((blob) => {
-        return ResultConversions.blobToImageResult(blob)
-          .then(fn)
-          .then((imageResult) => updateSelectedImage(editor, blob, imageResult, false, imageUploadTimerState, img.dom, size));
-      })
-      .catch((error) => {
-        displayError(editor, error);
-      })
-    );
+    } else {
+      const img = imgOpt.value;
+      editor._scanForImages()
+        .then(() => findBlob(editor, img.dom))
+        .then((blob) => {
+          return ResultConversions.blobToImageResult(blob)
+            .then(fn)
+            .then((imageResult) => updateSelectedImage(editor, blob, imageResult, false, imageUploadTimerState, img.dom, size));
+        })
+        .catch((error) => {
+          displayError(editor, error);
+        });
+    }
   };
 };
 
 const rotate = (editor: Editor, imageUploadTimerState: Cell<number>, angle: number) => {
   return () => {
-    const imgOpt = getSelectedImage(editor);
-    const flippedSize = imgOpt.fold(() => null, (img) => {
-      const size = ImageSize.getImageSize(img.dom);
-      return size ? { w: size.h, h: size.w } : null;
-    });
+    const flippedSize = Fun.pipe(
+      getSelectedImage(editor),
+      Maybes.bindNullable((img) => ImageSize.getImageSize(img.dom)),
+      Maybes.map((size) => ({ w: size.h, h: size.w })),
+      Maybes.getOrNull
+    );
 
     return selectedImageOperation(editor, imageUploadTimerState, (imageResult) => {
       return ImageTransformations.rotate(imageResult, angle);
