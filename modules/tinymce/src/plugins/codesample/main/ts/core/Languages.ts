@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Maybes } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import * as Settings from '../api/Settings';
 import * as CodeSample from './CodeSample';
@@ -35,10 +36,12 @@ const getLanguages = (editor: Editor): LanguageSpec[] => {
 const getCurrentLanguage = (editor: Editor, fallback: string): string => {
   const node = CodeSample.getSelectedCodeSample(editor);
 
-  return node.fold(() => fallback, (n) => {
-    const matches = n.className.match(/language-(\w+)/);
+  if (Maybes.isNothing(node)) {
+    return fallback;
+  } else {
+    const matches = node.value.className.match(/language-(\w+)/);
     return matches ? matches[1] : fallback;
-  });
+  }
 };
 
 export {

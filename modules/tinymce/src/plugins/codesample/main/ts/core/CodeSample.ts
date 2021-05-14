@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional } from '@ephox/katamari';
+import { Fun, Maybes } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import * as Utils from '../util/Utils';
@@ -15,10 +15,10 @@ const getSelectedCodeSample = (editor: Editor) => {
   const node = editor.selection ? editor.selection.getNode() : null;
 
   if (Utils.isCodeSample(node)) {
-    return Optional.some(node);
+    return Maybes.just(node);
   }
 
-  return Optional.none<Element>();
+  return Maybes.nothing<Element>();
 };
 
 const insertCodeSample = (editor: Editor, language: string, code: string) => {
@@ -27,21 +27,24 @@ const insertCodeSample = (editor: Editor, language: string, code: string) => {
 
     code = DOMUtils.DOM.encode(code);
 
-    return node.fold(() => {
+    if (Maybes.isNothing(node)) {
       editor.insertContent('<pre id="__new" class="language-' + language + '">' + code + '</pre>');
       editor.selection.select(editor.$('#__new').removeAttr('id')[0]);
-    }, (n) => {
+    } else {
+      const n = node.value;
       editor.dom.setAttrib(n, 'class', 'language-' + language);
       n.innerHTML = code;
       Prism.get(editor).highlightElement(n);
       editor.selection.select(n);
-    });
+    }
   });
 };
 
 const getCurrentCode = (editor: Editor): string => {
-  const node = getSelectedCodeSample(editor);
-  return node.fold(() => '', (n) => n.textContent);
+  return Fun.pipe(
+    getSelectedCodeSample(editor),
+    Maybes.fold(Fun.constant(''), (n) => n.textContent)
+  );
 };
 
 export {
