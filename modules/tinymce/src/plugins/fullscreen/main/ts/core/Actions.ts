@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Cell, Fun, Maybes, Singleton } from '@ephox/katamari';
 import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -132,7 +132,10 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     handleClasses(DOM.removeClass);
 
     viewportUpdate.unbind();
-    Optional.from(fullscreenState.get()).each((info) => info.fullscreenChangeHandler.unbind());
+    const info = Maybes.from(fullscreenState.get());
+    if (Maybes.isJust(info)) {
+      info.value.fullscreenChangeHandler.unbind();
+    }
   };
 
   if (!fullscreenInfo) {
