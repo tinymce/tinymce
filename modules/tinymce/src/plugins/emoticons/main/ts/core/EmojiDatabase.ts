@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Cell, Merger, Obj, Optional, Strings } from '@ephox/katamari';
+import { Cell, Fun, Maybe, Maybes, Merger, Obj, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Delay from 'tinymce/core/api/util/Delay';
@@ -56,8 +56,8 @@ const getUserDefinedEmoticons = (editor: Editor) => {
 
 // TODO: Consider how to share this loading across different editors
 const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): EmojiDatabase => {
-  const categories = Cell<Optional<Record<string, EmojiEntry[]>>>(Optional.none());
-  const all = Cell<Optional<EmojiEntry[]>>(Optional.none());
+  const categories = Cell<Maybe<Record<string, EmojiEntry[]>>>(Maybes.nothing());
+  const all = Cell<Maybe<EmojiEntry[]>>(Maybes.nothing());
 
   const emojiImagesUrl = Settings.getEmotionsImageUrl(editor);
 
@@ -87,8 +87,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
       everything.push(entry);
     });
 
-    categories.set(Optional.some(cats));
-    all.set(Optional.some(everything));
+    categories.set(Maybes.just(cats));
+    all.set(Maybes.just(everything));
   };
 
   editor.on('init', () => {
@@ -98,8 +98,8 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     }, (err) => {
       // eslint-disable-next-line no-console
       console.log(`Failed to load emoticons: ${err}`);
-      categories.set(Optional.some({}));
-      all.set(Optional.some([]));
+      categories.set(Maybes.just({}));
+      all.set(Maybes.just([]));
     });
   });
 
@@ -107,14 +107,18 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     if (category === ALL_CATEGORY) {
       return listAll();
     }
-    return categories.get().bind((cats) => Optional.from(cats[category])).getOr([]);
+    return Fun.pipe(
+      categories.get(),
+      Maybes.bindNullable((cats) => cats[category]),
+      Maybes.getOr([])
+    );
   };
 
-  const listAll = (): EmojiEntry[] => all.get().getOr([]);
+  const listAll = (): EmojiEntry[] => Maybes.getOr<EmojiEntry[]>([])(all.get());
 
   const listCategories = (): string[] =>
     // TODO: Category key order should be adjusted to match the standard
-    [ ALL_CATEGORY ].concat(Obj.keys(categories.get().getOr({})));
+    [ ALL_CATEGORY ].concat(Obj.keys(Maybes.getOr({})(categories.get())));
 
   const waitForLoad = (): Promise<boolean> => {
     if (hasLoaded()) {
@@ -140,7 +144,7 @@ const initDatabase = (editor: Editor, databaseUrl: string, databaseId: string): 
     }
   };
 
-  const hasLoaded = (): boolean => categories.get().isSome() && all.get().isSome();
+  const hasLoaded = (): boolean => Maybes.isJust(categories.get()) && Maybes.isJust(all.get());
 
   return {
     listCategories,

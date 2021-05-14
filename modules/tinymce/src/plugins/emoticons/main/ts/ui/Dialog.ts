@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Cell, Optional, Throttler } from '@ephox/katamari';
+import { Arr, Cell, Maybes, Throttler } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { insertEmoticon } from '../core/Actions';
@@ -18,7 +18,7 @@ const open = (editor: Editor, database: EmojiDatabase) => {
 
   const initialState = {
     pattern: '',
-    results: emojisFrom(database.listAll(), '', Optional.some(300))
+    results: emojisFrom(database.listAll(), '', Maybes.just(300))
   };
 
   const currentTab = Cell(ALL_CATEGORY);
@@ -27,7 +27,7 @@ const open = (editor: Editor, database: EmojiDatabase) => {
     const dialogData = dialogApi.getData();
     const category = currentTab.get();
     const candidates = database.listCategory(category);
-    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Optional.some(300) : Optional.none());
+    const results = emojisFrom(candidates, dialogData[patternName], category === ALL_CATEGORY ? Maybes.just(300) : Maybes.nothing());
     dialogApi.setData({
       results
     });
