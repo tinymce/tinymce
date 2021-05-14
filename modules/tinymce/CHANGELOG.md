@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An unexpected exception was thrown when switching to readonly mode and adjusting the editor width #TINY-6383
 - Fixed a bug where block elements containing a pagebreak could be removed from the editor content #TINY-3388
 - Fixed a bug where the `list-style-type: none;` style on nested list items was incorrectly removed when clearing formatting #TINY-6264
+- URLs were not always detected when pasting over a selection. Patch contributed by jwcooper #TINY-6997
 
 ## 5.8.0 - 2021-05-06
 
