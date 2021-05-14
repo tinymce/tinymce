@@ -1,6 +1,6 @@
 import { Maybes } from '@ephox/katamari';
 
-import { Api, Body, ModelNodeType, NodeTransforms, PredicateFilter, PredicateFind, ModelLocation } from 'ephox/slate-sugar/api/Main';
+import { Api, Body, ModelNodeType, NodeTransforms, PredicateFilter, PredicateFind, ModelLocationToPath } from 'ephox/slate-sugar/api/Main';
 
 declare let tinymce: any;
 
@@ -23,11 +23,11 @@ tinymce.init({
     const [ time ] = PredicateFilter.descendants(api, div, ({ node }) => ModelNodeType.isInline(api, node));
     const blocks = PredicateFilter.descendants(api, root, ({ node }) => ModelNodeType.isBlock(api, node));
 
-    NodeTransforms.setPropsAtPath(api, ModelLocation.toPathArray(api, p), { style: 'font-weight: bold' });
-    blocks.forEach((loc) => NodeTransforms.setPropsAtPath(api, ModelLocation.toPathArray(api, loc), { style: 'border: 1px solid green' }));
-    NodeTransforms.setPropsAtPath(api, ModelLocation.toPathArray(api, time), { style: 'font-size: 10px' });
-    NodeTransforms.setPropsAtPath(api, ModelLocation.toPathArray(api, bye), { forecolor: 'blue' });
-    NodeTransforms.setPropsAtPath(api, ModelLocation.toPathArray(api, hello), { forecolor: 'red' });
+    NodeTransforms.setPropsAtPath(api, ModelLocationToPath.toPathArray(api, p), { style: 'font-weight: bold' });
+    blocks.forEach((loc) => NodeTransforms.setPropsAtPath(api, ModelLocationToPath.toPathArray(api, loc), { style: 'border: 1px solid green' }));
+    NodeTransforms.setPropsAtPath(api, ModelLocationToPath.toPathArray(api, time), { style: 'font-size: 10px' });
+    NodeTransforms.setPropsAtPath(api, ModelLocationToPath.toPathArray(api, bye), { forecolor: 'blue' });
+    NodeTransforms.setPropsAtPath(api, ModelLocationToPath.toPathArray(api, hello), { forecolor: 'red' });
   }
 
 });

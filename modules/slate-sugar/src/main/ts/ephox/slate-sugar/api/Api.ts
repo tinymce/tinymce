@@ -51,7 +51,7 @@ interface ModelApi {
   predicateFilter: {
     descendants: (loc: ModelLocation, predicate: (loc: ModelLocation) => boolean) => ModelLocation[];
   };
-  slateLoc: {
+  modelLocationToPath: {
     toPathArray: (loc: ModelLocation) => path;
   };
 }

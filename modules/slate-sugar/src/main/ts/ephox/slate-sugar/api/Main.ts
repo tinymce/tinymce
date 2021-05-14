@@ -1,6 +1,6 @@
 import * as Api from './Api';
 import * as Body from './Body';
-import * as ModelLocation from './ModelLocation';
+import * as ModelLocationToPath from './ModelLocationToPath';
 import * as ModelNodeType from './ModelNodeType';
 import * as NodeTransforms from './NodeTransforms';
 import * as PredicateFilter from './PredicateFilter';
@@ -13,5 +13,5 @@ export {
   NodeTransforms,
   PredicateFilter,
   PredicateFind,
-  ModelLocation
+  ModelLocationToPath
 };
