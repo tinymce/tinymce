@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Maybes } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -69,7 +70,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
     },
     select: (value) => {
       const listStyleType = ListUtils.getSelectedStyleType(editor);
-      return listStyleType.map((listStyle) => value === listStyle).getOr(false);
+      return Maybes.exists((listStyle) => listStyle === value)(listStyleType);
     },
     onSetup: (api) => {
       const nodeChangeHandler = (e) => {
