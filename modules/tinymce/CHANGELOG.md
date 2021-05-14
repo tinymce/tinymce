@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Fixed
-- Unbound event handlers were incorrectly running when unbound in a previous event handler #TINY-7436
+- Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
+- Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 
 ### 5.8.1 - TBD
 
