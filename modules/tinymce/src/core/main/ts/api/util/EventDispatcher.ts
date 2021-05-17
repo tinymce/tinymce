@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import Tools from './Tools';
 
 export type MappedEvent<T, K extends string> = K extends keyof T ? T[K] : any;
@@ -100,6 +100,7 @@ const nativeEvents = Tools.makeMap(
 
 interface Binding<T, K extends string> {
   func: (event: EditorEvent<MappedEvent<T, K>>) => void;
+  removed: boolean;
   once?: true;
 }
 
@@ -178,10 +179,19 @@ class EventDispatcher<T> {
       this.settings.beforeFire(args);
     }
 
+    // Don't clone the array here as this is a hot code path, so instead the handlers
+    // array is recreated and the this.bindings[name] reference is updated in the `on`
+    // and `off` functions. This is done to avoid the handlers array being mutated while
+    // we're iterating over it below.
     const handlers = this.bindings[name];
     if (handlers) {
       for (let i = 0, l = handlers.length; i < l; i++) {
         const callback = handlers[i];
+
+        // The handler was removed by an earlier handler in this loop so skip it.
+        if (callback.removed) {
+          continue;
+        }
 
         // Unbind handlers marked with "once"
         if (callback.once) {
@@ -225,7 +235,8 @@ class EventDispatcher<T> {
 
     if (callback) {
       const wrappedCallback = {
-        func: callback
+        func: callback,
+        removed: false
       };
 
       if (extra) {
@@ -238,15 +249,17 @@ class EventDispatcher<T> {
         const currentName = names[i];
         let handlers = this.bindings[currentName];
         if (!handlers) {
-          handlers = this.bindings[currentName] = [];
+          handlers = [];
           this.toggleEvent(currentName, true);
         }
 
         if (prepend) {
-          handlers.unshift(wrappedCallback);
+          handlers = [ wrappedCallback, ...handlers ];
         } else {
-          handlers.push(wrappedCallback);
+          handlers = [ ...handlers, wrappedCallback ];
         }
+
+        this.bindings[currentName] = handlers;
       }
     }
 
@@ -293,14 +306,14 @@ class EventDispatcher<T> {
           if (!callback) {
             handlers.length = 0;
           } else {
-            // Unbind specific ones
-            let hi = handlers.length;
-            while (hi--) {
-              if (handlers[hi].func === callback) {
-                handlers = handlers.slice(0, hi).concat(handlers.slice(hi + 1));
-                this.bindings[currentName] = handlers;
-              }
-            }
+            // Unbind specific handlers
+            const filteredHandlers = Arr.partition(handlers, (handler) => handler.func === callback);
+            handlers = filteredHandlers.fail;
+            this.bindings[currentName] = handlers;
+            // Mark the removed handlers in case this event is already being processed in `fire`
+            Arr.each(filteredHandlers.pass, (handler) => {
+              handler.removed = true;
+            });
           }
 
           if (!handlers.length) {

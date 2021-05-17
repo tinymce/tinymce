@@ -159,10 +159,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
   const onSetup = (api: BespokeSelectApi): () => void => {
     const updateText = () => {
       const comp = api.getComponent();
-      // If the component has been detached then do nothing
-      if (comp.getSystem().isConnected()) {
-        spec.updateText(comp);
-      }
+      spec.updateText(comp);
     };
 
     // Set the initial text when the component is attached and then update on node changes
