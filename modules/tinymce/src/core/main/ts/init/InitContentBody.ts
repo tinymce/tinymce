@@ -330,12 +330,16 @@ const loadContentCss = (editor: Editor) => {
 const preInit = (editor: Editor) => {
   const settings = editor.settings, doc = editor.getDoc(), body = editor.getBody();
 
+  Events.firePreInit(editor);
+
   if (!settings.browser_spellcheck && !settings.gecko_spellcheck) {
     doc.body.spellcheck = false; // Gecko
     DOM.setAttrib(body, 'spellcheck', 'false');
   }
 
   editor.quirks = Quirks(editor);
+
+  Events.firePostRender(editor);
 
   const directionality = Settings.getDirectionality(editor);
   if (directionality !== undefined) {
@@ -459,14 +463,13 @@ const initContentBody = (editor: Editor, skipWrite?: boolean) => {
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
 
-  Events.firePreInit(editor);
+  const setupRtcThunk = Rtc.setup(editor);
+
   preInit(editor);
 
-  Rtc.setup(editor).fold(() => {
-    Events.firePostRender(editor);
+  setupRtcThunk.fold(() => {
     loadContentCss(editor).then(() => initEditorWithInitialContent(editor));
   }, (setupRtc) => {
-    Events.firePostRender(editor);
     editor.setProgressState(true);
 
     loadContentCss(editor).then(() => {
