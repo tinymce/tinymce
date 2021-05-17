@@ -1,84 +1,19 @@
-import { Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { Obj } from '@ephox/katamari';
-import { McEditor } from '@ephox/mcagar';
+import { Clipboard, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Obj } from '@ephox/katamari';
+import { McEditor, TinyAssertions, TinyDom } from '@ephox/mcagar';
 
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import { RawEditorSettings } from 'tinymce/core/api/SettingsTypes';
+import PromisePolyfill from 'tinymce/core/api/util/Promise';
+import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as MockDataTransfer from '../module/test/MockDataTransfer';
-
-UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, failure) => {
-  Theme();
-  PastePlugin();
-
-  const cCreateEditorFromSettings = (settings, _html?) => {
-    return Chain.control(
-      McEditor.cFromSettings({
-        ...settings,
-        base_url: '/project/tinymce/js/tinymce',
-        indent: false
-      }),
-      Guard.addLogging(`Create editor from ${settings}`)
-    );
-  };
-
-  const cRemoveEditor = () => {
-    return Chain.control(
-      McEditor.cRemove,
-      Guard.addLogging('Remove editor')
-    );
-  };
-
-  const cClearEditor = () => {
-    return Chain.control(
-      Chain.async((editor: any, next, _die) => {
-        editor.setContent('');
-        next(editor);
-      }),
-      Guard.addLogging('Clear editor')
-    );
-  };
-
-  const cFireFakePasteEvent = (data) => {
-    return Chain.control(
-      Chain.async((editor: any, next, _die) => {
-        editor.fire('paste', { clipboardData: MockDataTransfer.create(data) });
-        next(editor);
-      }),
-      Guard.addLogging(`Fire fake paste event ${data}`)
-    );
-  };
-
-  const cAssertEditorContent = (label, expected) => {
-    return Chain.control(
-      Chain.async((editor: any, next, _die) => {
-        Assertions.assertHtml(label || 'Asserting editors content', expected, editor.getContent());
-        next(editor);
-      }),
-      Guard.addLogging(`Assert editor content ${expected}`)
-    );
-  };
-
-  const cAssertClipboardPaste = (expected, data) => {
-    const chains = [];
-
-    Obj.each(data, (data, label) => {
-      chains.push(
-        cFireFakePasteEvent(data),
-        Chain.control(
-          cAssertEditorContent(label, expected),
-          Guard.tryUntil('Wait for paste to succeed.')
-        ),
-        cClearEditor()
-      );
-    });
-
-    return Chain.control(
-      Chain.fromChains(chains),
-      Guard.addLogging(`Assert clipboard paste ${expected}`)
-    );
-  };
+describe('browser.tinymce.plugins.paste.PlainTextPaste', () => {
+  before(() => {
+    Theme();
+    Plugin();
+  });
 
   const srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';
 
@@ -105,33 +40,49 @@ UnitTest.asynctest('browser.tinymce.plugins.paste.PlainTextPaste', (success, fai
   const expectedWithRootBlockAndAttrs = '<p class="attr">one<br />two</p><p class="attr">three</p><p class="attr"><br />four</p><p class="attr">&nbsp;</p><p class="attr">.</p>';
   const expectedWithoutRootBlock = 'one<br />two<br /><br />three<br /><br /><br />four<br /><br /><br /><br />.';
 
-  Pipeline.async({}, [
-    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block <p></p> is added to the pasted data', [
-      cCreateEditorFromSettings({
-        plugins: 'paste',
-        forced_root_block: 'p' // default
-      }),
-      cAssertClipboardPaste(expectedWithRootBlock, pasteData),
-      cRemoveEditor()
-    ])),
-    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block <p class="attr"></p> is added to the pasted data', [
-      cCreateEditorFromSettings({
-        plugins: 'paste',
-        forced_root_block: 'p',
-        forced_root_block_attrs: {
-          class: 'attr'
-        }
-      }),
-      cAssertClipboardPaste(expectedWithRootBlockAndAttrs, pasteData),
-      cRemoveEditor()
-    ])),
-    Chain.asStep({}, Log.chains('TBA', 'Paste: Assert forced_root_block is not added to the pasted data', [
-      cCreateEditorFromSettings({
-        plugins: 'paste',
-        forced_root_block: false
-      }),
-      cAssertClipboardPaste(expectedWithoutRootBlock, pasteData),
-      cRemoveEditor()
-    ]))
-  ], success, failure);
+  const pCreateEditorFromSettings = (settings: RawEditorSettings) =>
+    McEditor.pFromSettings<Editor>({
+      ...settings,
+      base_url: '/project/tinymce/js/tinymce',
+      indent: false
+    });
+
+  const pAssertClipboardPaste = (editor: Editor, expected: string, data: Record<string, Record<string, string>>) => {
+    const arr = Obj.mapToArray(data, (data, label): [ string, Record<string, string>] => [ label, data ]);
+    return Arr.foldl(arr, (p, [ label, data ]) => p.then(async () => {
+      editor.setContent('');
+      Clipboard.pasteItems(TinyDom.body(editor), data);
+      await Waiter.pTryUntil(`Wait for ${label} paste to succeed`, () => TinyAssertions.assertContent(editor, expected));
+    }), PromisePolyfill.resolve());
+  };
+
+  it('TBA: Assert forced_root_block <p></p> is added to the pasted data', async () => {
+    const editor = await pCreateEditorFromSettings({
+      plugins: 'paste',
+      forced_root_block: 'p' // default
+    });
+    await pAssertClipboardPaste(editor, expectedWithRootBlock, pasteData);
+    McEditor.remove(editor);
+  });
+
+  it('TBA: Assert forced_root_block <p class="attr"></p> is added to the pasted data', async () => {
+    const editor = await pCreateEditorFromSettings({
+      plugins: 'paste',
+      forced_root_block: 'p',
+      forced_root_block_attrs: {
+        class: 'attr'
+      }
+    });
+    await pAssertClipboardPaste(editor, expectedWithRootBlockAndAttrs, pasteData);
+    McEditor.remove(editor);
+  });
+
+  it('TBA: Assert forced_root_block is not added to the pasted data', async () => {
+    const editor = await pCreateEditorFromSettings({
+      plugins: 'paste',
+      forced_root_block: false
+    });
+    await pAssertClipboardPaste(editor, expectedWithoutRootBlock, pasteData);
+    McEditor.remove(editor);
+  });
 });
