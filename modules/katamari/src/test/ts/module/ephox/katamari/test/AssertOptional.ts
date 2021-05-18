@@ -1,8 +1,9 @@
 import { assert } from 'chai';
 import { Optional } from 'ephox/katamari/api/Optional';
+import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 
 export const assertOptional = <T> (actual: Optional<T>, expected: Optional<T>): void => {
-  if (!actual.equals(expected)) {
+  if (!tOptional().eq(actual, expected)) {
     assert.fail(`Expected ${expected.toString()} but got ${actual.toString()}`);
   }
 };
