@@ -24,14 +24,14 @@ describe('atomic.katamari.api.arr.DifferenceTest', () => {
     check([ 2 ], [ 1, 2, 3, 4 ], [ 3, 4, 5, 1, 10, 10000, 56 ]);
   });
 
-  it('obeys: ∀ xs ys. x ∈ xs -> x ∉ (ys - xs)', () => {
+  it('ys-xs contains no elements from xs', () => {
     fc.assert(fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
       const diff = Arr.difference(ys, xs);
       return Arr.forall(xs, (x) => !Arr.contains(diff, x));
     }));
   });
 
-  it('obeys: ∀ xs ys. x ∈ (ys - xs) -> x ∉ ys', () => {
+  it('every member of ys-xs is in ys', () => {
     fc.assert(fc.property(fc.array(fc.integer()), fc.array(fc.integer()), (xs, ys) => {
       const diff = Arr.difference(ys, xs);
       return Arr.forall(diff, (d) => Arr.contains(ys, d));
