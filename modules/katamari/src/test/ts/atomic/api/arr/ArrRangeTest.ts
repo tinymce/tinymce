@@ -23,7 +23,7 @@ describe('atomic.katamari.api.arr.ArrRangeTest', () => {
       (num) => {
         const range = Arr.range(num, Fun.identity);
         assert.deepEqual(num, range.length);
-        return Arr.forall(range, (x, i) => x === i);
+        assert.isTrue(Arr.forall(range, (x, i) => x === i));
       }));
   });
 });
