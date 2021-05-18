@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## Added
+- Added new `pasteDataTransfer`, `pasteItems`, `pasteFiles`, `cut` and `copy` helpers to the `Clipboard` module.
+
+### Fixed
+- The `DataTransfer.clearData` API threw an exception when no format was provided.
+- The `Keyboard` module generated fake keys was missing the `charCode` property for `keypress` events.
+
+## 5.3.0 - 2021-05-06
+
+### Added
 - Added `pageUp` and `pageDown` constants to the `Keys` API
 
 ## 4.13.1 - 2019-05-20
