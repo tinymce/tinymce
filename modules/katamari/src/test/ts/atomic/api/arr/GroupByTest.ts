@@ -5,7 +5,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 
 describe('atomic.katamari.api.arr.GroupByTest', () => {
 
-  it('Arr.groupBy: unit tests', () => {
+  it('unit tests', () => {
     const check = (input: unknown[], expected) => {
       const f = (b) => b;
       assert.deepEqual(Arr.groupBy(input, f), expected);
@@ -42,7 +42,7 @@ describe('atomic.katamari.api.arr.GroupByTest', () => {
     );
   });
 
-  it('Arr.groupBy: Adjacent groups have different hashes, and everything in a group has the same hash', () => {
+  it('Adjacent groups have different hashes, and everything in a group has the same hash', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
       fc.func(fc.asciiString()),

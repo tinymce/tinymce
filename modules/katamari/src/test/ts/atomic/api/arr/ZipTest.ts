@@ -8,7 +8,7 @@ import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
 
 describe('atomic.katamari.api.arr.ZipTest', () => {
-  it('Zip: unit tests', () => {
+  it('unit tests', () => {
     const check1 = (expectedZipToObject: Optional<Record<string, string>>, expectedZipToTuples: Optional<Array<{ k: string; v: string }>>, keys: string[], values: string[]) => {
       const sort = <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) => {
         const c = a.slice();
@@ -89,7 +89,7 @@ describe('atomic.katamari.api.arr.ZipTest', () => {
     );
   });
 
-  it('zipToObject has matching keys and values', () => {
+  it('returns matching keys and values', () => {
     fc.assert(fc.property(
       fc.array(fc.asciiString(1, 30)),
       (rawValues: string[]) => {
@@ -111,7 +111,7 @@ describe('atomic.katamari.api.arr.ZipTest', () => {
     ));
   });
 
-  it('zipToTuples matches corresponding tuples', () => {
+  it('matches corresponding tuples', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
       fc.array(fc.integer()),

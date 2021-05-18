@@ -5,17 +5,17 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.arr.ObjFilterTest', () => {
-  it('Obj.filter: filter const true is identity', () => {
+  it('filter const true is identity', () => {
     fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
       assert.deepEqual(Obj.filter(obj, Fun.always), obj);
     }));
   });
 
-  it('Obj.filter: filter bottom of {} = {}', () => {
-    assert.deepEqual(Obj.filter({}, Fun.die('boom')), {});
+  it('filter of {} = {}', () => {
+    assert.deepEqual(Obj.filter({}, Fun.die('should not be called')), {});
   });
 
-  it('Obj.filter: unit tests', () => {
+  it('unit tests', () => {
     assert.deepEqual(Obj.filter({ a: 1, b: 2 }, (x) => x === 1), { a: 1 });
     assert.deepEqual(Obj.filter({ a: 1, b: 2 }, (x) => x === 2), { b: 2 });
     assert.deepEqual(Obj.filter({ c: 5, a: 1, b: 2 }, (x) => x >= 2), { b: 2, c: 5 });

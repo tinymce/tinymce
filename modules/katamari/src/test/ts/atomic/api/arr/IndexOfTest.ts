@@ -6,7 +6,7 @@ import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.arr.ArrLastTest', () => {
 
-  it('Arr.indexOf: unit tests', () => {
+  it('unit tests', () => {
     const checkNoneHelper = (xs, x) => {
       assertNone(Arr.indexOf(xs, x));
     };
@@ -35,14 +35,14 @@ describe('atomic.katamari.api.arr.ArrLastTest', () => {
     check(2, [ 'dog', 3, 'cat' ], 'cat');
   });
 
-  it('Arr.indexOf: find in middle of array', () => {
+  it('finds element in middle of array', () => {
     fc.assert(fc.property(fc.array(fc.nat()), arbNegativeInteger(), fc.array(fc.nat()), (prefix, element, suffix) => {
       const arr = prefix.concat([ element ]).concat(suffix);
       assertSome(Arr.indexOf(arr, element), prefix.length);
     }));
   });
 
-  it('Arr.indexOf: indexOf of an empty array is none', () => {
+  it('indexOf of an empty array is none', () => {
     fc.property(
       fc.integer(),
       (x) => {
@@ -51,7 +51,7 @@ describe('atomic.katamari.api.arr.ArrLastTest', () => {
     );
   });
 
-  it('Arr.indexOf: indexOf of a [value].concat(array) is some(0)', () => {
+  it('indexOf of a [value].concat(array) is some(0)', () => {
     fc.property(
       fc.array(fc.integer()),
       fc.integer(),

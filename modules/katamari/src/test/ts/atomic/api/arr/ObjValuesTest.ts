@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.arr.ObjValuesTest', () => {
-  it('Obj.values', () => {
+  it('unit test', () => {
     const check = (expValues, input) => {
       const c = (expected, v) => {
         v.sort();

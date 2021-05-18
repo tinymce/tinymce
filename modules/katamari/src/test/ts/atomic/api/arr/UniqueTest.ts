@@ -5,7 +5,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Unique from 'ephox/katamari/api/Unique';
 
 describe('atomic.katamari.api.arr.UniqueTest', () => {
-  it('Arr.unique: unit tests', () => {
+  it('unit tests', () => {
     const expected = [ 'three', 'two', 'one' ];
 
     const check = (input) => {
@@ -21,14 +21,14 @@ describe('atomic.katamari.api.arr.UniqueTest', () => {
     check([ 'three', 'three', 'two', 'two', 'one', 'one', 'three', 'two', 'one' ]);
   });
 
-  it('Arr.unique: each element is not found in the rest of the array', () => {
+  it('each element is not found in the rest of the array', () => {
     fc.assert(fc.property(fc.array(fc.string()), (arr) => {
       const unique = Unique.stringArray(arr);
       return Arr.forall(unique, (x, i) => !Arr.contains(unique.slice(i + 1), x));
     }));
   });
 
-  it('Arr.unique is idempotent', () => {
+  it('is idempotent', () => {
     fc.assert(fc.property(fc.array(fc.string()), (arr) => {
       const once = Unique.stringArray(arr);
       const twice = Unique.stringArray(once);

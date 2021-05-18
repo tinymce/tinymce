@@ -4,7 +4,7 @@ import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 
 describe('atomic.katamari.api.arr.ReverseTest', () => {
-  it('Arr.reverse: unit tests', () => {
+  it('unit tests', () => {
     const check = (expected, input) => {
       assert.deepEqual(Arr.reverse(input), expected);
       assert.deepEqual(Arr.reverse(Object.freeze(input.slice())), expected);
@@ -17,31 +17,31 @@ describe('atomic.katamari.api.arr.ReverseTest', () => {
     check([ 1, 4, 5, 3, 2 ], [ 2, 3, 5, 4, 1 ]);
   });
 
-  it('Arr.reverse: Reversing twice is identity', () => {
+  it('Reversing twice is identity', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
       assert.deepEqual(Arr.reverse(Arr.reverse(arr)), arr);
     }));
   });
 
-  it('Arr.reverse: 1 element', () => {
+  it('reversing a one element array is identity', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (a) => {
       assert.deepEqual(Arr.reverse([ a ]), [ a ]);
     }));
   });
 
-  it('Arr.reverse: 2 elements', () => {
+  it('reverses 2 elements', () => {
     fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
       assert.deepEqual(Arr.reverse([ a, b ]), [ b, a ]);
     }));
   });
 
-  it('Arr.reverse: 3 elements', () => {
+  it('reverses 3 elements', () => {
     fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
       assert.deepEqual(Arr.reverse([ a, b, c ]), [ c, b, a ]);
     }));
   });
 
-  it('Arr.reverse: ∀ xs. x ∈ (reverse xs) <-> x ∈ xs', () => {
+  it('every element in the input is in the output, and vice-versa', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (xs) => {
       const rxs = Arr.reverse(xs);
       assert.isTrue(Arr.forall(rxs, (x) => Arr.contains(xs, x)));

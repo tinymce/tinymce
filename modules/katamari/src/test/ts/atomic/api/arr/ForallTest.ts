@@ -5,7 +5,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ForallTest', () => {
-  it('Arr.forall: unit tests', () => {
+  it('unit tests', () => {
     const isOne = (i) => i === 1;
 
     const check = (expected, input, f) => {

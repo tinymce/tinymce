@@ -5,7 +5,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.PartitionTest', () => {
-  it('Arr.partition: unit tests', () => {
+  it('unit tests', () => {
     const check = (input: unknown[], expected) => {
       const f = (n) => n.indexOf('yes') > -1;
       assert.deepEqual(Arr.partition(input, f), expected);

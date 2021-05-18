@@ -6,7 +6,7 @@ import * as Jam from 'ephox/katamari/api/Jam';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.arr.IntersperseTest', () => {
-  it('Intersperse', () => {
+  it('unit tests', () => {
     const check = (expected, input, delimiter) => {
       const actual = Jam.intersperse(input, delimiter);
       assert.deepEqual(actual, expected);

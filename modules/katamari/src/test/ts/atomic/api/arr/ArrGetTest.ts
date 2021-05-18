@@ -4,27 +4,33 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.arr.ArrGetTest', () => {
-  it('Arr.get: empty', () => {
+  it('returns none for element of empty list', () => {
+    fc.assert(fc.property(fc.integer(), (n) => {
+      assertNone(Arr.get<number>([], n));
+    }));
+  });
+
+  it('returns none for element 0 of empty list', () => {
     assertNone(Arr.get<number>([], 0));
   });
 
-  it('Arr.get: empty with non zero index', () => {
+  it('returns none for non-zero index of empty list', () => {
     assertNone(Arr.get<number>([], 5));
   });
 
-  it('Arr.get: invalid index', () => {
+  it('returns none for invalid index', () => {
     assertNone(Arr.get<number>([], -1));
   });
 
-  it('Arr.get: index out of bounds', () => {
+  it('returns none for index out of bounds', () => {
     assertNone(Arr.get<number>([ 10, 20, 30 ], 5));
   });
 
-  it('Arr.get: valid index', () => {
+  it('returns some for valid index (unit test)', () => {
     assertSome(Arr.get<number>([ 10, 20, 30, 13 ], 3), 13);
   });
 
-  it('Arr.get: fc valid index', () => {
+  it('returns some for valid index (property test)', () => {
     fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.integer(), (array, h, t) => {
       const arr = [ h ].concat(array);
       const length = arr.push(t);

@@ -10,7 +10,7 @@ const bottom = () => {
 };
 
 describe('atomic.katamari.api.arr.ExistsTest', () => {
-  it('Arr.exists: unit test', () => {
+  it('unit test', () => {
     const check = (expected: boolean, input: number[], f: (b: number) => boolean) => {
       assert.deepEqual(Arr.exists(input, f), expected);
       assert.deepEqual(Arr.exists(Object.freeze(input.slice()), f), expected);

@@ -5,7 +5,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.arr.ObjKeysTest', () => {
-  it('Obj.keys: unit tests', () => {
+  it('unit tests', () => {
     const check = (expKeys, input) => {
       const c = (expected, v) => {
         v.sort();
