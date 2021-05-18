@@ -19,7 +19,6 @@ describe('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>cats cats cats</p>');
 
-    // TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Find and replace"]');
     await Utils.pOpenDialog(editor);
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'cats');
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Replace with"]', 'dogs');

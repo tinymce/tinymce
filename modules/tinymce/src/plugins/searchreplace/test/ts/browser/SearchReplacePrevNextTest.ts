@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     await pAssertNextPrevButtonsDisabled();
 
     // Ensure the replace button is still enabled, for the last match
-    UiFinder.pWaitFor('wait for replace button to be enabled', body, 'button[title="Replace"]:not([disabled])');
+    await UiFinder.pWaitFor('wait for replace button to be enabled', body, 'button[title="Replace"]:not([disabled])');
     TinyAssertions.assertContent(editor, '<p>squid squid fish</p>');
   });
 });

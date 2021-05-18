@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
-import { Class, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Class, SelectorFilter } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
   }, [ Theme, Plugin ]);
 
   const assertMatchFound = (editor: Editor, index: number) => {
-    const matches = SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '.mce-match-marker');
+    const matches = SelectorFilter.descendants(TinyDom.body(editor), '.mce-match-marker');
     const elem = matches[index];
     assert.isTrue(Class.has(elem, 'mce-match-marker-selected'), `Check match ${index} is marked as selected`);
   };
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
         editor.setContent('<p>fish fish fish</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
         await Utils.pOpenDialog(editor);
-        Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
+        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
         Utils.clickFind(editor);
         assertMatchFound(editor, 0);
         cycle(editor);
