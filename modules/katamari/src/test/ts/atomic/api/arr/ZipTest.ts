@@ -120,8 +120,8 @@ describe('atomic.katamari.api.arr', () => {
           assert.throws(() => Zip.zipToTuples(keys, values));
         } else {
           const output = Zip.zipToTuples(keys, values);
-          assert.deepEqual(output.length, keys.length);
-          assert.deepEqual(Arr.forall(output, (x, i) => x.k === keys[i] && x.v === values[i]), true);
+          assert.equal(output.length, keys.length);
+          assert.isTrue(Arr.forall(output, (x, i) => x.k === keys[i] && x.v === values[i]));
         }
       }
     ));
