@@ -19,7 +19,7 @@ describe('atomic.katamari.api.arr.ArrArrayLikeTest', () => {
   });
 
   it('contains', () => {
-    assert.deepEqual(Arr.contains(arrayLike, 3), true);
+    assert.isTrue(Arr.contains(arrayLike, 3));
   });
 
   it('map', () => {
