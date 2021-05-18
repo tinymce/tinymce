@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
@@ -19,7 +18,7 @@ describe('atomic.katamari.api.arr', () => {
 
     const checkArrHelper = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
       const actual = Arr.find(input, pred);
-      assert.deepEqual(actual.getOrDie(), expected);
+      assertSome(actual, expected);
     };
 
     const checkArr = (expected: number, input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
