@@ -1,6 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
-import * as Arr from 'ephox/katamari/api/Arr';
+import { Arr } from 'ephox/katamari/api/Main';
+import { assertSome } from 'ephox/katamari/test/AssertOptional';
 
 const arrayLike: ArrayLike<number> = {
   length: 6,
@@ -15,7 +16,7 @@ const arrayLike: ArrayLike<number> = {
 describe('atomic.katamari.api.arr.ArrArrayLikeTest', () => {
   context('Arr functions using ArrayLike values', () => {
     it('indexOf', () => {
-      assert.deepEqual(Arr.indexOf(arrayLike, 3).getOrDie('test should have found a 3'), 3);
+      assertSome(Arr.indexOf(arrayLike, 3), 3);
     });
 
     it('contains', () => {
@@ -27,15 +28,15 @@ describe('atomic.katamari.api.arr.ArrArrayLikeTest', () => {
     });
 
     it('find', () => {
-      assert.deepEqual(Arr.find(arrayLike, ((n) => n === 3)).getOrDie('test should have found a 3'), 3);
+      assertSome(Arr.find(arrayLike, ((n) => n === 3)), 3);
     });
 
     it('head', () => {
-      assert.deepEqual(Arr.head(arrayLike).getOrDie('array like object should have a head'), 0);
+      assertSome(Arr.head(arrayLike), 0);
     });
 
     it('last', () => {
-      assert.deepEqual(Arr.last(arrayLike).getOrDie('array like object should have a last'), 5);
+      assertSome(Arr.last(arrayLike), 5);
     });
   });
 });
