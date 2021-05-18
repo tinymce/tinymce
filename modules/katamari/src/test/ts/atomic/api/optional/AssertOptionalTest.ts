@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
+import fc from 'fast-check';
 import { Optional } from 'ephox/katamari/api/Main';
 import { assertOptional } from 'ephox/katamari/test/AssertOptional';
-import fc from 'fast-check';
 
 describe('atomic.katamari.api.optional.AssertOptionalTest', () => {
   it('fails for none vs some', () => {
