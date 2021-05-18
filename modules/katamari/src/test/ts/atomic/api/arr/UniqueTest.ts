@@ -4,7 +4,7 @@ import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Unique from 'ephox/katamari/api/Unique';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.UniqueTest', () => {
   it('Arr.unique: unit tests', () => {
     const expected = [ 'three', 'two', 'one' ];
 

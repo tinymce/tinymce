@@ -4,7 +4,7 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ObjFilterTest', () => {
   it('Obj.filter: filter const true is identity', () => {
     fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
       assert.deepEqual(Obj.filter(obj, Fun.always), obj);

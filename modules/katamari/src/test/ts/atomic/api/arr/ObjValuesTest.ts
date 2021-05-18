@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ObjValuesTest', () => {
   it('Obj.values', () => {
     const check = (expValues, input) => {
       const c = (expected, v) => {

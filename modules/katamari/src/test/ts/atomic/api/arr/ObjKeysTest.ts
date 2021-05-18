@@ -4,7 +4,7 @@ import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ObjKeysTest', () => {
   it('Obj.keys: unit tests', () => {
     const check = (expKeys, input) => {
       const c = (expected, v) => {

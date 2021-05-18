@@ -26,7 +26,7 @@ describe('atomic.katamari.api.arr.ArrFindMapTest', () => {
     fc.assert(fc.property(
       fc.array(fc.integer()),
       (arr) => {
-        assertNone(Arr.findMap(arr, () => Optional.none()));
+        assertNone(Arr.findMap(arr, Optional.none));
       }
     ));
   });

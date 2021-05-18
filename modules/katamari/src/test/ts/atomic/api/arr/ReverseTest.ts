@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ReverseTest', () => {
   it('Arr.reverse: unit tests', () => {
     const check = (expected, input) => {
       assert.deepEqual(Arr.reverse(input), expected);

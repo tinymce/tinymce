@@ -7,7 +7,7 @@ import { Optional } from 'ephox/katamari/api/Optional';
 import * as Unique from 'ephox/katamari/api/Unique';
 import * as Zip from 'ephox/katamari/api/Zip';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ZipTest', () => {
   it('Zip: unit tests', () => {
     const check1 = (expectedZipToObject: Optional<Record<string, string>>, expectedZipToTuples: Optional<Array<{ k: string; v: string }>>, keys: string[], values: string[]) => {
       const sort = <T>(a: T[], ord: (a: T, b: T) => -1 | 0 | 1) => {

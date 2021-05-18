@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ObjSizeTest', () => {
   it('unit tests', () => {
     const check = (expected: number, input: Record<string, string>) => {
       assert.deepEqual(Obj.size(input), expected);

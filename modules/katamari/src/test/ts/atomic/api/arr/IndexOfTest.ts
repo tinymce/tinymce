@@ -4,7 +4,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import { arbNegativeInteger } from 'ephox/katamari/test/arb/ArbDataTypes';
 import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ArrLastTest', () => {
 
   it('Arr.indexOf: unit tests', () => {
     const checkNoneHelper = (xs, x) => {

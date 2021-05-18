@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
-import { Arr } from 'ephox/katamari/api/Main';
+import * as Arr from 'ephox/katamari/api/Arr';
 import { assertSome } from 'ephox/katamari/test/AssertOptional';
 
 const arrayLike: ArrayLike<number> = {

@@ -5,7 +5,7 @@ import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
-describe('atomic.katamari.api.arr', () => {
+describe('atomic.katamari.api.arr.ArrFindTest', () => {
   it('unit tests', () => {
     const checkNoneHelper = (input: ArrayLike<number>, pred: (n: number, i: number) => boolean): void => {
       assertNone(Arr.find(input, pred));
