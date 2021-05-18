@@ -27,11 +27,13 @@ describe('atomic.katamari.api.arr.ChunkTest', () => {
         const chunkSize = rawChunkSize + 1;
         const chunks = Arr.chunk(arr, chunkSize);
 
-        const hasRightSize = (part) => part.length === chunkSize;
-
         const numChunks = chunks.length;
         const firstParts = chunks.slice(0, numChunks - 1);
-        assert.deepEqual(Arr.forall(firstParts, hasRightSize), true);
+
+        for (const firstPart of firstParts) {
+          assert.lengthOf(firstPart, chunkSize);
+        }
+
         if (arr.length === 0) {
           assert.deepEqual(chunks, []);
         } else {
