@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
-import { Optional } from 'ephox/katamari/api/Main';
+import { Optional } from 'ephox/katamari/api/Optional';
 import { assertOptional } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.AssertOptionalTest', () => {
