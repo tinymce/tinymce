@@ -1,31 +1,31 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-UnitTest.test('Obj.size: unit tests', () => {
-  const check = (expected: number, input: Record<string, string>) => {
-    Assert.eq('eq', expected, Obj.size(input));
-  };
+describe('atomic.katamari.api.arr', () => {
+  it('unit tests', () => {
+    const check = (expected: number, input: Record<string, string>) => {
+      assert.deepEqual(Obj.size(input), expected);
+    };
 
-  check(0, {});
-  check(1, { a: 'a' });
-  check(3, { a: 'a', b: 'b', c: 'c' });
-});
-
-// Phantomjs gives incorrect results for this test
-if (navigator.userAgent.indexOf('PhantomJS') <= -1) {
-// NOTE: This breaks for empty keys
-  UnitTest.test('Obj.size: inductive case', () => {
-    fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(1, 30), fc.integer()),
-      fc.asciiString(1, 30),
-      fc.integer(),
-      (obj, k, v) => {
-        const objWithoutK = Obj.filter(obj, (x, i) => i !== k);
-        Assert.eq('Adding key adds 1 to size',
-          Obj.size(objWithoutK) + 1,
-          Obj.size({ k: v, ...objWithoutK })
-        );
-      }));
+    check(0, {});
+    check(1, { a: 'a' });
+    check(3, { a: 'a', b: 'b', c: 'c' });
   });
-}
+
+  // Phantomjs gives incorrect results for this test
+  if (navigator.userAgent.indexOf('PhantomJS') <= -1) {
+    // NOTE: This breaks for empty keys
+    it('inductive case', () => {
+      fc.assert(fc.property(
+        fc.dictionary(fc.asciiString(1, 30), fc.integer()),
+        fc.asciiString(1, 30),
+        fc.integer(),
+        (obj, k, v) => {
+          const objWithoutK = Obj.filter(obj, (x, i) => i !== k);
+          assert.deepEqual(Obj.size({ k: v, ...objWithoutK }), Obj.size(objWithoutK) + 1);
+        }));
+    });
+  }
+});
