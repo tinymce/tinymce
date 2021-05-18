@@ -15,11 +15,13 @@ if (!/phantom/i.test(navigator.userAgent)) {
 
     const cutUnbinder = DomEvent.bind(pastebin, 'cut', (evt) => {
       const dataTransfer = evt.raw.clipboardData;
+      dataTransfer.clearData();
       dataTransfer.setData('text/plain', 'cut-data');
     });
 
     const copyUnbinder = DomEvent.bind(pastebin, 'copy', (evt) => {
       const dataTransfer = evt.raw.clipboardData;
+      dataTransfer.clearData();
       dataTransfer.setData('text/plain', 'copy-data');
     });
 
@@ -77,14 +79,14 @@ if (!/phantom/i.test(navigator.userAgent)) {
       Logger.t('Cut', Chain.isolate(pastebin, ChainSequence.sequence([
         cCut,
         Chain.op((dataTransfer: DataTransfer) => {
-          Assert.eq('Should be extected cut data', 'cut-data', dataTransfer.getData('text/plain'));
+          Assert.eq('Should be extracted cut data', 'cut-data', dataTransfer.getData('text/plain'));
         })
       ]))),
 
       Logger.t('Copy', Chain.isolate(pastebin, ChainSequence.sequence([
         cCopy,
         Chain.op((dataTransfer: DataTransfer) => {
-          Assert.eq('Should be extected copy data', 'copy-data', dataTransfer.getData('text/plain'));
+          Assert.eq('Should be extracted copy data', 'copy-data', dataTransfer.getData('text/plain'));
         })
       ])))
     ]), () => {
