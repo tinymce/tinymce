@@ -1,57 +1,55 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ArrBindTest', () => {
-  context('Arr.bind', () => {
-    it('unit tests', () => {
-      const len = (x) => [ x.length ];
+  it('unit tests', () => {
+    const len = (x) => [ x.length ];
 
-      const check = (expected, input: any[], f) => {
-        assert.deepEqual(Arr.bind(input, f), expected);
-        assert.deepEqual(Arr.bind(Object.freeze(input.slice()), f), expected);
-      };
+    const check = (expected, input: any[], f) => {
+      assert.deepEqual(Arr.bind(input, f), expected);
+      assert.deepEqual(Arr.bind(Object.freeze(input.slice()), f), expected);
+    };
 
-      check([], [], len);
-      check([ 1 ], [[ 1 ]], len);
-      check([ 1, 1 ], [[ 1 ], [ 2 ]], len);
-      check([ 2, 0, 1, 2, 0 ], [[ 1, 2 ], [], [ 3 ], [ 4, 5 ], []], len);
-    });
+    check([], [], len);
+    check([ 1 ], [[ 1 ]], len);
+    check([ 1, 1 ], [[ 1 ], [ 2 ]], len);
+    check([ 2, 0, 1, 2, 0 ], [[ 1, 2 ], [], [ 3 ], [ 4, 5 ], []], len);
+  });
 
-    it('binding an array of empty arrays with identity equals an empty array', () => {
-      fc.assert(fc.property(fc.array(fc.constant<number[]>([])), (arr) => {
-        assert.deepEqual(Arr.bind(arr, Fun.identity), []);
-      }));
-    });
+  it('binding an array of empty arrays with identity equals an empty array', () => {
+    fc.assert(fc.property(fc.array(fc.constant<number[]>([])), (arr) => {
+      assert.deepEqual(Arr.bind(arr, Fun.identity), []);
+    }));
+  });
 
-    it('bind (pure .) is map', () => {
-      fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
-        const f = (x: number) => x + j;
-        assert.deepEqual(Arr.bind(arr, Fun.compose(Arr.pure, f)), Arr.map(arr, f));
-      }));
-    });
+  it('bind (pure .) is map', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
+      const f = (x: number) => x + j;
+      assert.deepEqual(Arr.bind(arr, Fun.compose(Arr.pure, f)), Arr.map(arr, f));
+    }));
+  });
 
-    it('Monad Law: left identity', () => {
-      fc.assert(fc.property(fc.integer(), fc.integer(), (i, j) => {
-        const f = (x: number) => [ x, j, x + j ];
-        assert.deepEqual(Arr.bind(Arr.pure(i), f), f(i));
-      }));
-    });
+  it('Monad Law: left identity', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (i, j) => {
+      const f = (x: number) => [ x, j, x + j ];
+      assert.deepEqual(Arr.bind(Arr.pure(i), f), f(i));
+    }));
+  });
 
-    it('Monad Law: right identity', () => {
-      fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-        assert.deepEqual(Arr.bind(arr, Arr.pure), arr);
-      }));
-    });
+  it('Monad Law: right identity', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+      assert.deepEqual(Arr.bind(arr, Arr.pure), arr);
+    }));
+  });
 
-    it('Monad Law: associativity', () => {
-      fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
-        const f = (x: number) => [ x, j, x + j ];
-        const g = (x: number) => [ j, x, x + j ];
-        assert.deepEqual(Arr.bind(Arr.bind(arr, f), g), Arr.bind(arr, (x) => Arr.bind(f(x), g)));
-      }));
-    });
+  it('Monad Law: associativity', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
+      const f = (x: number) => [ x, j, x + j ];
+      const g = (x: number) => [ j, x, x + j ];
+      assert.deepEqual(Arr.bind(Arr.bind(arr, f), g), Arr.bind(arr, (x) => Arr.bind(f(x), g)));
+    }));
   });
 });
