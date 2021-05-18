@@ -5,10 +5,33 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { getToolbar } from '../api/Settings';
+import { Menu } from 'tinymce/core/api/ui/Ui';
+import { ClassList, getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { onSetupToggle } from './ButtonToggleUtils';
+
+const filterNoneItem = (list: ClassList) =>
+  Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
+
+const makeClassFetch = (editor: Editor, list: ClassList, command: string, format: string) => {
+  return (callback) => {
+    callback(Arr.map(filterNoneItem(list), (value) => {
+      const item: Menu.ToggleMenuItemSpec = {
+        text: value.title,
+        type: 'togglemenuitem',
+        onAction: () => {
+          editor.execCommand(command, false, value.value);
+        },
+        onSetup: onSetupToggle(editor, format, value.value)
+      };
+
+      return item;
+    }));
+  };
+};
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -165,6 +188,25 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     icon: 'table'
   });
 
+  const tableClassList = getTableClassList(editor);
+  if (tableClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tableclass', {
+      icon: 'table-classes',
+      tooltip: 'Table styles',
+      fetch: makeClassFetch(editor, tableClassList, 'mceTableToggleClass', 'tableclass'),
+      onSetup: selectionTargets.onSetupTable
+    });
+  }
+
+  const tableCellClassList = getCellClassList(editor);
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addMenuButton('tablecellclass', {
+      icon: 'table-cell-classes',
+      tooltip: 'Cell styles',
+      fetch: makeClassFetch(editor, tableCellClassList, 'mceTableCellToggleClass', 'tablecellclass'),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
 };
 
 const addToolbars = (editor: Editor) => {

@@ -12,7 +12,7 @@ export interface StringMap {
   [key: string]: string;
 }
 
-type ClassList = Array<{title: string; value: string}>;
+export type ClassList = Array<{title: string; value: string}>;
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';

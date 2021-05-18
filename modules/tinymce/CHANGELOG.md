@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
+- Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
+- Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
