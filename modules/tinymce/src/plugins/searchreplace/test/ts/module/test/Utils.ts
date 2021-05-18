@@ -1,64 +1,59 @@
-import { Assertions, Chain, GeneralSteps, Guard, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { TinyUi } from '@ephox/mcagar';
+import { UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { TinyUiActions } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
 
-const cFakeEvent = (name: string) => Chain.label('Fake event',
-  Chain.op((elm: SugarElement) => {
-    const evt = document.createEvent('HTMLEvents');
-    evt.initEvent(name, true, true);
-    elm.dom.dispatchEvent(evt);
-  })
-);
+import Editor from 'tinymce/core/api/Editor';
 
-const cFindInDialog = (ui: TinyUi, selector: string) => Chain.control(
-  Chain.fromChains([
-    ui.cWaitForPopup('Wait for dialog', 'div[role="dialog"]'),
-    UiFinder.cFindIn(selector)
-  ]),
-  Guard.addLogging(`Find ${selector} in dialog`)
-);
+const fakeEvent = (elm: SugarElement<HTMLElement>, name: string) => {
+  const evt = document.createEvent('HTMLEvents');
+  evt.initEvent(name, true, true);
+  elm.dom.dispatchEvent(evt);
+};
 
-const sAssertFieldValue = (ui: TinyUi, selector: string, value: string) => Waiter.sTryUntil(`Wait for new ${selector} value`,
-  Chain.asStep({}, [
-    cFindInDialog(ui, selector),
-    UiControls.cGetValue,
-    Assertions.cAssertEq(`Assert ${value} value`, value)
-  ]), 20, 3000
-);
+const pFindInDialog = async (editor: Editor, selector: string) => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor, 'div[role="dialog"]');
+  return UiFinder.findIn(dialog, selector);
+};
 
-const sSetFieldValue = (ui: TinyUi, selector: string, value: string) => Chain.asStep({}, [
-  cFindInDialog(ui, selector),
-  UiControls.cSetValue(value),
-  cFakeEvent('input')
-]);
+const pAssertFieldValue = async (editor: Editor, selector: string, value: string) => {
+  await Waiter.pTryUntil('', async () => {
+    const result = await pFindInDialog(editor, selector);
+    const actualValue = UiControls.getValue(result.getOrDie());
+    return actualValue === value;
+  });
+};
 
-const sOpenDialog = (ui: TinyUi) => GeneralSteps.sequence([
-  ui.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
-  ui.sWaitForPopup('Wait for dialog', 'div[role="dialog"]')
-]);
+const pSetFieldValue = async (editor: Editor, selector: string, value: string) => {
+  const elm = (await pFindInDialog(editor, selector)).getOrDie();
+  UiControls.setValue(elm, value);
+  fakeEvent(elm, 'input');
+};
 
-const sCloseDialog = (ui: TinyUi) =>
-  // Note: Can't use UiChains.cCloseDialog here, as the dialog doesn't have a cancel button in the footer
-  ui.sClickOnUi('Click cancel button', 'div[role="dialog"] button[aria-label=Close]');
+const pOpenDialog = async (editor: Editor) => {
+  TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Find and replace"]');
+  await TinyUiActions.pWaitForDialog(editor, 'div[role="dialog"]');
+};
 
-const sClickFind = (ui) => ui.sClickOnUi('Click find', '[role=dialog] button:contains("Find")');
-const sClickNext = (ui) => ui.sClickOnUi('Click next', '[role=dialog] button[title="Next"]');
-const sClickPrev = (ui) => ui.sClickOnUi('Click previous', '[role=dialog] button[title="Previous"]');
+const clickFind = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button:contains("Find")');
+const clickNext = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Next"]');
+const clickPrev = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Previous"]');
+const clickReplace = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[title="Replace"]');
+const clickClose = (editor: Editor) => TinyUiActions.clickOnUi(editor, '[role=dialog] button[aria-label="Close"]');
 
-const sSelectPreference = (ui, name: string) => GeneralSteps.sequence([
-  ui.sClickOnUi('Click preferences', 'button[title="Preferences"]'),
-  ui.sWaitForPopup('Wait for menu to show', '.tox-selected-menu[role=menu]'),
-  ui.sClickOnUi('Click preferences menu item', '.tox-selected-menu[role=menu] div[title="' + name + '"]')
-]);
+const pSelectPreference = async (editor: Editor, name: string) => {
+  TinyUiActions.clickOnUi(editor, 'button[title="Preferences"]');
+  await TinyUiActions.pWaitForPopup(editor, '.tox-selected-menu[role=menu]');
+  TinyUiActions.clickOnUi(editor, '.tox-selected-menu[role=menu] div[title="' + name + '"]');
+};
 
 export {
-  cFindInDialog,
-  sAssertFieldValue,
-  sSetFieldValue,
-  sOpenDialog,
-  sCloseDialog,
-  sClickFind,
-  sClickNext,
-  sClickPrev,
-  sSelectPreference
+  clickFind,
+  clickNext,
+  clickPrev,
+  clickReplace,
+  clickClose,
+  pOpenDialog,
+  pAssertFieldValue,
+  pSelectPreference,
+  pSetFieldValue
 };
