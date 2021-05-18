@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
@@ -32,24 +32,26 @@ describe('atomic.katamari.api.arr.ArrBindTest', () => {
     }));
   });
 
-  it('Monad Law: left identity', () => {
-    fc.assert(fc.property(fc.integer(), fc.integer(), (i, j) => {
-      const f = (x: number) => [ x, j, x + j ];
-      assert.deepEqual(Arr.bind(Arr.pure(i), f), f(i));
-    }));
-  });
+  context('monad laws', () => {
+    it('obeys left identity law', () => {
+      fc.assert(fc.property(fc.integer(), fc.integer(), (i, j) => {
+        const f = (x: number) => [ x, j, x + j ];
+        assert.deepEqual(Arr.bind(Arr.pure(i), f), f(i));
+      }));
+    });
 
-  it('Monad Law: right identity', () => {
-    fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-      assert.deepEqual(Arr.bind(arr, Arr.pure), arr);
-    }));
-  });
+    it('obeys right identity law', () => {
+      fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+        assert.deepEqual(Arr.bind(arr, Arr.pure), arr);
+      }));
+    });
 
-  it('Monad Law: associativity', () => {
-    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
-      const f = (x: number) => [ x, j, x + j ];
-      const g = (x: number) => [ j, x, x + j ];
-      assert.deepEqual(Arr.bind(Arr.bind(arr, f), g), Arr.bind(arr, (x) => Arr.bind(f(x), g)));
-    }));
+    it('is associative', () => {
+      fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (arr, j) => {
+        const f = (x: number) => [ x, j, x + j ];
+        const g = (x: number) => [ j, x, x + j ];
+        assert.deepEqual(Arr.bind(Arr.bind(arr, f), g), Arr.bind(arr, (x) => Arr.bind(f(x), g)));
+      }));
+    });
   });
 });
