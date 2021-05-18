@@ -20,15 +20,15 @@ describe('atomic.katamari.api.arr.ContainsTest', () => {
   });
 
   it('returns false when array is empty', () => {
-    assert.deepEqual(Arr.contains([], () => {
+    assert.isFalse(Arr.contains([], () => {
       throw new Error('⊥');
-    }), false);
+    }));
   });
 
   it('returns true when element is in array', () => {
     fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, element, suffix) => {
       const arr2 = [ ...prefix, element, ...suffix ];
-      assert.deepEqual(Arr.contains(arr2, element), true);
+      assert.isTrue(Arr.contains(arr2, element));
     }));
   });
 });

@@ -35,10 +35,9 @@ describe('atomic.katamari.api.arr.ChunkTest', () => {
         if (arr.length === 0) {
           assert.deepEqual(chunks, []);
         } else {
-          assert.deepEqual(chunks[chunks.length - 1].length <= chunkSize, true);
+          assert.isAtMost(chunks[chunks.length - 1].length, chunkSize);
         }
       }
     ));
   });
-
 });
