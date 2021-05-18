@@ -44,8 +44,8 @@ describe('atomic.katamari.api.arr', () => {
   it('Arr.reverse: ∀ xs. x ∈ (reverse xs) <-> x ∈ xs', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (xs) => {
       const rxs = Arr.reverse(xs);
-      assert.deepEqual(Arr.forall(rxs, (x) => Arr.contains(xs, x)), true);
-      assert.deepEqual(Arr.forall(xs, (x) => Arr.contains(rxs, x)), true);
+      assert.isTrue(Arr.forall(rxs, (x) => Arr.contains(xs, x)));
+      assert.isFalse(Arr.forall(xs, (x) => Arr.contains(rxs, x)));
     }));
   });
 });
