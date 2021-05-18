@@ -8,7 +8,7 @@ import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.arr.ArrFindMapTest', () => {
   it('Arr.findMap of empty is none', () => {
-    assertNone(Arr.findMap([], Fun.die('⊥')));
+    assertNone(Arr.findMap([], Fun.die('should not be called')));
   });
 
   it('Arr.findMap of non-empty is first if f is Optional.some', () => {

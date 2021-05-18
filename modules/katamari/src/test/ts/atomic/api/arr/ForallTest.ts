@@ -6,31 +6,28 @@ import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ForallTest', () => {
   it('Arr.forall: unit tests', () => {
-    const isone = (i) => i === 1;
+    const isOne = (i) => i === 1;
 
     const check = (expected, input, f) => {
       assert.deepEqual(Arr.forall(input, f), expected);
       assert.deepEqual(Arr.forall(Object.freeze(input.slice()), f), expected);
     };
 
-    check(true, [ 1, 1, 1 ], isone);
-    check(false, [ 1, 2, 1 ], isone);
+    check(true, [ 1, 1, 1 ], isOne);
+    check(false, [ 1, 2, 1 ], isOne);
     check(false, [ 1, 2, 1 ], (x, i) => i === 0);
     check(true, [ 1, 12, 3 ], (x, i) => i < 10);
   });
 
   it('forall of an empty array is true', () => {
-    assert.deepEqual(Arr.forall([], () => {
-      throw new Error('⊥');
-    }), true);
+    assert.isTrue(Arr.forall([], Fun.die('should not be called')));
   });
 
   it('forall of a non-empty array with a predicate that always returns false is false', () => {
     fc.assert(fc.property(
       fc.array(fc.integer(), 1, 30),
       (xs) => {
-        const output = Arr.forall(xs, Fun.never);
-        assert.deepEqual(output, false);
+        assert.isFalse(Arr.forall(xs, Fun.never));
       }
     ));
   });
@@ -39,10 +36,8 @@ describe('atomic.katamari.api.arr.ForallTest', () => {
     fc.assert(fc.property(
       fc.array(fc.integer(), 1, 30),
       (xs) => {
-        const output = Arr.forall(xs, Fun.always);
-        assert.deepEqual(output, true);
+        assert.isTrue(Arr.forall(xs, Fun.always));
       }
     ));
   });
-
 });

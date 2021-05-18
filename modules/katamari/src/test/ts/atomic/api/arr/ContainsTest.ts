@@ -2,6 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
+import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.arr.ContainsTest', () => {
   it('unit test', () => {
@@ -20,9 +21,7 @@ describe('atomic.katamari.api.arr.ContainsTest', () => {
   });
 
   it('returns false when array is empty', () => {
-    assert.isFalse(Arr.contains([], () => {
-      throw new Error('⊥');
-    }));
+    assert.isFalse(Arr.contains([], Fun.die('should not be called')));
   });
 
   it('returns true when element is in array', () => {

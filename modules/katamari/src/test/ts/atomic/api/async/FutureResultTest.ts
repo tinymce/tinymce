@@ -74,14 +74,14 @@ promiseTest('FutureResult: value mapResult', () => {
 });
 
 promiseTest('FutureResult: error mapResult', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-  FutureResult.error(i).mapResult(Fun.die('⊥')).get((ii) => {
+  FutureResult.error(i).mapResult(Fun.die('should not be called')).get((ii) => {
     eqAsync('eq', Result.error(i), ii, reject, tResult());
     resolve();
   });
 }))));
 
 promiseTest('FutureResult: value mapError', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-  FutureResult.value(i).mapError(Fun.die('⊥')).get((ii) => {
+  FutureResult.value(i).mapError(Fun.die('should not be called')).get((ii) => {
     eqAsync('eq', Result.value(i), ii, reject, tResult());
     resolve();
   });
@@ -113,7 +113,7 @@ promiseTest('FutureResult: bindFuture: value bindFuture error', () => fc.assert(
 }))));
 
 promiseTest('FutureResult: error bindFuture', () => fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
-  FutureResult.error(i).bindFuture(Fun.die('⊥')).get((actual) => {
+  FutureResult.error(i).bindFuture(Fun.die('should not be called')).get((actual) => {
     eqAsync('bind result', Result.error(i), actual, reject, tResult(tNumber));
     resolve();
   });
