@@ -119,11 +119,6 @@ const focusEditor = (editor: Editor) => {
     normalizeSelection(editor, rng);
   }
 
-  // This should be safe as the the focusin listener calls editor.focus(true) which means the focusEditor function is not called
-  // TODO: Should this also include the last blurredEditor?
-  // TODO: Need some tests for this
-  editor.fire('focus');
-
   activateEditor(editor);
 };
 
@@ -134,7 +129,13 @@ const focus = (editor: Editor, skipFocus: boolean) => {
     return;
   }
 
-  skipFocus ? activateEditor(editor) : focusEditor(editor);
+  if (skipFocus) {
+    activateEditor(editor);
+  } else {
+    focusEditor(editor);
+  }
+
+  editor.fire('EditorFocus');
 };
 
 export {

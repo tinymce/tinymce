@@ -28,16 +28,32 @@ const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: 
   behaviours
 });
 
-const toggleThrobber = (comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
+const focusBusyComponent = (throbber: AlloyComponent): void =>
+  Composing.getCurrent(throbber).each(Keying.focusIn);
+
+/*
+* If the throbber has been toggled on, only focus the throbber if the editor had focus as we don't to steal focus if it is on an input or dialog
+* If the throbber has been toggled off, only put focus back on the editor if the throbber had focus.
+* The next logical focus transition from the throbber is to put it back on the editor
+*/
+const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
   const element = comp.element;
-  if (state === true) {
+  if (state) {
     Blocking.block(comp, getBusySpec(providerBackstage));
     Css.remove(element, 'display');
     Attribute.remove(element, 'aria-hidden');
+    if (editor.hasFocus()) {
+      focusBusyComponent(comp);
+    }
   } else {
+    // Get the focus of the busy component before it is removed from the DOM
+    const throbberFocus = Composing.getCurrent(comp).exists(Focusing.isFocused);
     Blocking.unblock(comp);
     Css.set(element, 'display', 'none');
     Attribute.set(element, 'aria-hidden', 'true');
+    if (throbberFocus) {
+      editor.focus();
+    }
   }
 };
 
@@ -65,36 +81,13 @@ const renderThrobber = (spec): AlloySpec => ({
   components: [ ]
 });
 
-const focusBusyComponent = (throbber: AlloyComponent): void => {
-  Composing.getCurrent(throbber).each((comp) => {
-    Keying.focusIn(comp);
-  });
-};
-
-/*
-* If the throbber has been toggled on, only focus the throbber if the editor had focus as we don't to steal focus if it is on an input or dialog
-* If the throbber has been toggled off, only put focus back on the editor if the throbber had focus.
-* The next logical focus transition from the throbber is to put it back on the editor
-*/
-const handleFocus = (editor: Editor, throbber: AlloyComponent, state: boolean, throbberFocus: boolean) => {
-  if (state) {
-    if (editor.hasFocus()) {
-      focusBusyComponent(throbber);
-    }
-  } else {
-    if (throbberFocus) {
-      editor.focus();
-    }
-  }
-};
-
 const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBackstage: UiFactoryBackstageShared) => {
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
   // Make sure that when the editor is focused while the throbber is enabled, the focus is moved back to the throbber
-  // This covers native focus and editor.focus() invocations
-  editor.on('focus', () => {
+  // This covers native focusin and editor.focus() invocations
+  editor.on('EditorFocus', () => {
     if (throbberState.get()) {
       focusBusyComponent(lazyThrobber());
     }
@@ -102,11 +95,8 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
 
   const toggle = (state: boolean) => {
     if (state !== throbberState.get()) {
-      const throbber = lazyThrobber();
-      const throbberFocus = Composing.getCurrent(throbber).exists(Focusing.isFocused);
       throbberState.set(state);
-      toggleThrobber(throbber, state, sharedBackstage.providers);
-      handleFocus(editor, throbber, state, throbberFocus);
+      toggleThrobber(editor, lazyThrobber(), state, sharedBackstage.providers);
       editor.fire('AfterProgressState', { state });
     }
   };

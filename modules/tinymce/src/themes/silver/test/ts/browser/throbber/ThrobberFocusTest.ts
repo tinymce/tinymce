@@ -69,7 +69,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     await pAssertFocus();
   };
 
-  const pDisableThrobber = async (editor: Editor, pAssertFocus: () => Promise<any> = pAssertEditorFocus) => {
+  const pDisableThrobber = async (editor: Editor, pAssertFocus: () => Promise<SugarElement> = pAssertEditorFocus) => {
     editor.setProgressState(false);
     await pAssertThrobberHidden();
     await pAssertFocus();
