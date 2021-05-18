@@ -51,48 +51,46 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     });
   };
 
-  const setProgressState = (editor: Editor, state: boolean, time?: number) => {
-    if (state) {
-      editor.setProgressState(true, time);
-    } else {
-      editor.setProgressState(false);
-    }
+  const pAssertThrobberVisible = () =>
+    UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
+
+  const pAssertThrobberHidden = () =>
+    UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
+
+  const pAssertThrobberFocus = () =>
+    FocusTools.pTryOnSelector('Throbber has focus', SugarDocument.getDocument(), 'div.tox-throbber__busy-spinner');
+
+  const pAssertEditorFocus = () =>
+    FocusTools.pTryOnSelector('Editor iframe has focus', SugarDocument.getDocument(), 'iframe.tox-edit-area__iframe');
+
+  const pEnableThrobber = async (editor: Editor, pAssertFocus: () => Promise<SugarElement> = pAssertThrobberFocus) => {
+    editor.setProgressState(true);
+    await pAssertThrobberVisible();
+    await pAssertFocus();
   };
 
-  const pAssertThrobberVisible = async () => {
-    await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-  };
-
-  const pAssertThrobberHidden = async () => {
-    await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
-  };
-
-  const pAssertThrobberHasFocus = async () => {
-    await FocusTools.pTryOnSelector('Throbber has focus', SugarDocument.getDocument(), 'div.tox-throbber__busy-spinner');
+  const pDisableThrobber = async (editor: Editor, pAssertFocus: () => Promise<any> = pAssertEditorFocus) => {
+    editor.setProgressState(false);
+    await pAssertThrobberHidden();
+    await pAssertFocus();
   };
 
   it('TINY-7373: should focus throbber when enabled and focus editor when disabled', async () => {
     const editor = hook.editor();
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
-    await pAssertThrobberHasFocus();
+    await pEnableThrobber(editor);
     assert.isFalse(editor.hasFocus());
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
+    await pDisableThrobber(editor);
     assert.isTrue(editor.hasFocus());
   });
 
   it('TINY-7373: should not steal focus if editor is not focused when throbber is enabled', async () => {
     const editor = hook.editor();
+    const pAssertInputFocus = () => FocusTools.pTryOnSelector('Focus should remain on input', SugarDocument.getDocument(), '#tempInput');
+
     FocusTools.setFocus(SugarBody.body(), '#tempInput');
+    await pEnableThrobber(editor, pAssertInputFocus);
+    await pDisableThrobber(editor, pAssertInputFocus);
 
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
-    await FocusTools.pTryOnSelector('Focus should remain on input (1)', SugarDocument.getDocument(), '#tempInput');
-
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
-    await FocusTools.pTryOnSelector('Focus should remain on input (2)', SugarDocument.getDocument(), '#tempInput');
     assert.isFalse(editor.hasFocus());
   });
 
@@ -100,90 +98,78 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     const editor = hook.editor();
     FocusTools.setFocus(SugarBody.body(), '#tempInput');
 
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
-    await FocusTools.pTryOnSelector('Focus should remain on input (1)', SugarDocument.getDocument(), '#tempInput');
-
+    await pEnableThrobber(editor, () => FocusTools.pTryOnSelector('Focus should remain on input', SugarDocument.getDocument(), '#tempInput'));
     editor.focus();
-    await pAssertThrobberHasFocus();
+    await pAssertThrobberFocus();
     assert.isFalse(editor.hasFocus());
 
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
+    await pDisableThrobber(editor);
     assert.isTrue(editor.hasFocus());
   });
 
   it('TINY-7373: should have correct focus transitions when opening and closing dialog', async () => {
     const editor = hook.editor();
+    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
 
     openDialog(editor);
     TinyUiActions.pWaitForDialog(editor);
-    await FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
+    await pAssertDialogFocus();
 
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
     // Throbber should not steal focus from the dialog
-    await FocusTools.pTryOnSelector('Dialog input has focus (2)', SugarDocument.getDocument(), 'input.tox-textfield');
+    await pEnableThrobber(editor, pAssertDialogFocus);
 
-    TinyUiActions.cancelDialog(editor);
-    await Waiter.pTryUntil('Anchor Dialog should close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
     // Throbber should get focus when dialog is closed instead of editor
-    await pAssertThrobberHasFocus();
+    TinyUiActions.cancelDialog(editor);
+    await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
+    await pAssertThrobberFocus();
 
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
     // Focus returns to the editor when throbber is closed (this should happen since a dialog will normally focus the editor on close)
+    await pDisableThrobber(editor);
     assert.isTrue(editor.hasFocus());
   });
 
   // In theory, this combination shouldn't be possible as the user cannot click any buttons to open dialogs when the throbber is enabled
   // However, it is still important that all of the focus transitions make sense
-  it('TINY-7373: should not set focus on the editor if the throbber did  not have focus when disabled', async () => {
+  it('TINY-7373: should not set focus on the editor if the throbber did not have focus when disabled', async () => {
     const editor = hook.editor();
+    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
 
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
-    await pAssertThrobberHasFocus();
-
+    await pEnableThrobber(editor);
     openDialog(editor);
     TinyUiActions.pWaitForDialog(editor);
-    await FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
+    await pAssertDialogFocus();
 
     // Disable the throbber when the dialog is open
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
-    await FocusTools.pTryOnSelector('Dialog input has focus (2)', SugarDocument.getDocument(), 'input.tox-textfield');
-
-    TinyUiActions.cancelDialog(editor);
-    await Waiter.pTryUntil('Anchor Dialog should close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
+    await pDisableThrobber(editor, pAssertDialogFocus);
 
     // Focus returns to the editor when the dialog is closed the throbber is not enabled
+    TinyUiActions.cancelDialog(editor);
+    await Waiter.pTryUntil('Dialog should close', () => UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]'));
     assert.isTrue(editor.hasFocus());
   });
 
   it('TINY-7373: should have correct focus transitions when opening and closing notification', async () => {
     const editor = hook.editor();
+    const pAssertNotificationFocus = () =>
+      FocusTools.pTryOnSelector('Notification close button has focus', SugarDocument.getDocument(), 'button.tox-notification__dismiss');
     const notification = editor.notificationManager.open({
       text: 'Test',
       closeButton: true
     });
     const popup = await TinyUiActions.pWaitForPopup(editor, 'div.tox-notification') as SugarElement<HTMLElement>;
     Focus.focus(popup);
-    await FocusTools.pTryOnSelector('Notification close button has focus', SugarDocument.getDocument(), 'button.tox-notification__dismiss');
+    await pAssertNotificationFocus();
 
-    setProgressState(editor, true);
-    await pAssertThrobberVisible();
     // Throbber should not steal focus from the notification
-    await FocusTools.pTryOnSelector('Notification close button has focus', SugarDocument.getDocument(), 'button.tox-notification__dismiss');
+    await pEnableThrobber(editor, pAssertNotificationFocus);
 
+    // Throbber should get focus when notification is closed instead of editor
     notification.close();
     await Waiter.pTryUntil('Notification should close', () => UiFinder.notExists(SugarBody.body(), 'div.tox-notification'));
-    // Throbber should get focus when notification is closed instead of editor
-    await pAssertThrobberHasFocus();
+    await pAssertThrobberFocus();
 
-    setProgressState(editor, false);
-    await pAssertThrobberHidden();
     // Focus returns to the editor when throbber is closed (this should happen since a dialog will normally focus the editor on close)
+    await pDisableThrobber(editor);
     assert.isTrue(editor.hasFocus());
   });
 });

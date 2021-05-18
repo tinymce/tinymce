@@ -50,7 +50,7 @@ const makeComponent = (focus: boolean = true) => (_store: TestStore, _doc: Sugar
   return component;
 };
 
-describe('browser.alloy.blocking.BlockingFocusTest', () => {
+describe('browser.alloy.behaviour.blocking.BlockingFocusTest', () => {
   context('Config: focus = true', () => {
     const hook = GuiSetup.bddSetup(makeComponent(true));
 

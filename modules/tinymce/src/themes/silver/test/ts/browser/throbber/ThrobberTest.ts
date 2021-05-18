@@ -61,34 +61,26 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     ), throbber);
   };
 
-  const setProgressState = (editor: Editor, state: boolean, time?: number) => {
-    if (state) {
-      editor.setProgressState(true, time);
-    } else {
-      editor.setProgressState(false);
-    }
-  };
-
   it('TINY-3453: Throbber actions test', async () => {
     const editor = hook.editor();
     assertThrobberHiddenStructure();
-    setProgressState(editor, true);
+    editor.setProgressState(true);
     await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
     assertThrobberShownStructure();
-    setProgressState(editor, false);
+    editor.setProgressState(false);
     await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
     assertThrobberHiddenStructure();
   });
 
   it('TINY-3453: Throbber actions with timeout test', async () => {
     const editor = hook.editor();
-    setProgressState(editor, true, 300);
+    editor.setProgressState(true, 300);
     // Wait for a little and make sure the throbber is still hidden
     await Waiter.pWait(150);
     assertThrobberHiddenStructure();
     await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
     assertThrobberShownStructure();
-    setProgressState(editor, false);
+    editor.setProgressState(false);
     await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
     assertThrobberHiddenStructure();
   });

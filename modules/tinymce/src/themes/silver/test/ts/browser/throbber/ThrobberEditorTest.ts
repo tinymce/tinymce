@@ -1,5 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
@@ -11,22 +12,19 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [ Theme ]);
 
-  const setProgressState = (editor: Editor, state: boolean, time?: number) => {
-    if (state) {
-      editor.setProgressState(true, time);
-    } else {
-      editor.setProgressState(false);
-    }
+  const pToggleThrobber = async (editor: Editor, action: () => void = Fun.noop) => {
+    editor.setProgressState(true);
+    await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
+    action();
+    editor.setProgressState(false);
+    await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
   };
 
   it('TINY-7373: should not change the editor selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-    setProgressState(editor, true);
-    await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-    setProgressState(editor, false);
-    await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
+    await pToggleThrobber(editor);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
   });
 
@@ -35,11 +33,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      setProgressState(editor, true);
-      await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-      editor.execCommand('Bold');
-      setProgressState(editor, false);
-      await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
+      await pToggleThrobber(editor, () => editor.execCommand('Bold'));
       TinyAssertions.assertContent(editor, '<p><strong>abc</strong></p>');
     });
   });
@@ -49,11 +43,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      setProgressState(editor, true);
-      await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-      editor.insertContent('d');
-      setProgressState(editor, false);
-      await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
+      await pToggleThrobber(editor, () => editor.insertContent('d'));
       TinyAssertions.assertContent(editor, '<p>adbc</p>');
     });
 
@@ -61,11 +51,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
       const editor = hook.editor();
       editor.setContent('<p>abc</p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
-      setProgressState(editor, true);
-      await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
-      setProgressState(editor, false);
-      await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
+      await pToggleThrobber(editor, () => TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2));
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
     });
   });
