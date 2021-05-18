@@ -45,7 +45,7 @@ describe('atomic.katamari.api.arr.ReverseTest', () => {
     fc.assert(fc.property(fc.array(fc.integer()), (xs) => {
       const rxs = Arr.reverse(xs);
       assert.isTrue(Arr.forall(rxs, (x) => Arr.contains(xs, x)));
-      assert.isFalse(Arr.forall(xs, (x) => Arr.contains(rxs, x)));
+      assert.isTrue(Arr.forall(xs, (x) => Arr.contains(rxs, x)));
     }));
   });
 });
