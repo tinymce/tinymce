@@ -87,7 +87,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
 
   // Make sure that when the editor is focused while the throbber is enabled, the focus is moved back to the throbber
   // This covers native focusin and editor.focus() invocations
-  editor.on('EditorFocus', () => {
+  editor.on('AfterEditorFocus', () => {
     if (throbberState.get()) {
       focusBusyComponent(lazyThrobber());
     }

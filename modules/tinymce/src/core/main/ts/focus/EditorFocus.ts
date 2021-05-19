@@ -135,7 +135,7 @@ const focus = (editor: Editor, skipFocus: boolean) => {
     focusEditor(editor);
   }
 
-  editor.fire('EditorFocus');
+  editor.fire('AfterEditorFocus');
 };
 
 export {
