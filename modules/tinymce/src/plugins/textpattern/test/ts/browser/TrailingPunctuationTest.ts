@@ -1,5 +1,5 @@
 import { ApproxStructure, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -38,16 +38,21 @@ describe('browser.tinymce.plugins.textpattern.TrailingPunctuationTest', () => {
     );
   };
 
-  it('em with ,', pTypeAndTriggerTest('*a*', ',', 'em', 'a'));
-  it('strong with ,', pTypeAndTriggerTest('**a**', ',', 'strong', 'a'));
-  it('em with .', pTypeAndTriggerTest('*a*', '.', 'em', 'a'));
-  it('strong with .', pTypeAndTriggerTest('**a**', '.', 'strong', 'a'));
-  it('em with ;', pTypeAndTriggerTest('*a*', ';', 'em', 'a'));
-  it('strong with ;', pTypeAndTriggerTest('**a**', ';', 'strong', 'a'));
-  it('em with :', pTypeAndTriggerTest('*a*', ':', 'em', 'a'));
-  it('strong with :', pTypeAndTriggerTest('**a**', ':', 'strong', 'a'));
-  it('em with !', pTypeAndTriggerTest('*a*', '!', 'em', 'a'));
-  it('strong with !', pTypeAndTriggerTest('**a**', '!', 'strong', 'a'));
-  it('em with ?', pTypeAndTriggerTest('*a*', '?', 'em', 'a'));
-  it('strong with ?', pTypeAndTriggerTest('**a**', '?', 'strong', 'a'));
+  context('em', () => {
+    it('with ,', pTypeAndTriggerTest('*a*', ',', 'em', 'a'));
+    it('with .', pTypeAndTriggerTest('*a*', '.', 'em', 'a'));
+    it('with ;', pTypeAndTriggerTest('*a*', ';', 'em', 'a'));
+    it('with :', pTypeAndTriggerTest('*a*', ':', 'em', 'a'));
+    it('with !', pTypeAndTriggerTest('*a*', '!', 'em', 'a'));
+    it('with ?', pTypeAndTriggerTest('*a*', '?', 'em', 'a'));
+  });
+
+  context('strong', () => {
+    it('with ,', pTypeAndTriggerTest('**a**', ',', 'strong', 'a'));
+    it('with .', pTypeAndTriggerTest('**a**', '.', 'strong', 'a'));
+    it('with ;', pTypeAndTriggerTest('**a**', ';', 'strong', 'a'));
+    it('with :', pTypeAndTriggerTest('**a**', ':', 'strong', 'a'));
+    it('with !', pTypeAndTriggerTest('**a**', '!', 'strong', 'a'));
+    it('with ?', pTypeAndTriggerTest('**a**', '?', 'strong', 'a'));
+  });
 });
