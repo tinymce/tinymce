@@ -23,9 +23,7 @@ const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: Item
   // If there is an action, run the action
   runWithApi(info, comp)(info.onAction);
   if (!info.triggersSubmenu && itemResponse === ItemResponse.CLOSE_ON_EXECUTE) {
-    if (comp.getSystem().isConnected()) {
-      AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
-    }
+    AlloyTriggers.emit(comp, SystemEvents.sandboxClose());
     simulatedEvent.stop();
   }
 });

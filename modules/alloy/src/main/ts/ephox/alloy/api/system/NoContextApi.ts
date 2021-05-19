@@ -5,17 +5,26 @@ import { AlloyComponent } from '../component/ComponentApi';
 import { AlloySystemApi } from './SystemApi';
 
 const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
-  const fail = (event: string) => () => {
-    throw new Error('The component must be in a context to send: ' + event +
-        (getComp ? '\n' + AlloyLogger.element(getComp().element) + ' is not in context.' : '')
-    );
+  const getMessage = (event: string) => `The component must be in a context to execute: ${event}` +
+    (getComp ? '\n' + AlloyLogger.element(getComp().element) + ' is not in context.' : '');
+
+  const fail = (event: string) => (): never => {
+    throw new Error(getMessage(event));
+  };
+
+  const warn = (event: string) => (): void => {
+    // eslint-disable-next-line no-console
+    console.warn(getMessage(event));
   };
 
   return {
     debugInfo: Fun.constant('fake'),
-    triggerEvent: fail('triggerEvent'),
-    triggerFocus: fail('triggerFocus'),
-    triggerEscape: fail('triggerEscape'),
+    triggerEvent: warn('triggerEvent'),
+    triggerFocus: warn('triggerFocus'),
+    triggerEscape: warn('triggerEscape'),
+    broadcast: warn('broadcast'),
+    broadcastOn: warn('broadcastOn'),
+    broadcastEvent: warn('broadcastEvent'),
     build: fail('build'),
     addToWorld: fail('addToWorld'),
     removeFromWorld: fail('removeFromWorld'),
@@ -23,9 +32,6 @@ const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
     removeFromGui: fail('removeFromGui'),
     getByUid: fail('getByUid'),
     getByDom: fail('getByDom'),
-    broadcast: fail('broadcast'),
-    broadcastOn: fail('broadcastOn'),
-    broadcastEvent: fail('broadcastEvent'),
     isConnected: Fun.never
   };
 };

@@ -11,24 +11,32 @@ import * as Zwsp from '../text/Zwsp';
 import * as CaretContainer from './CaretContainer';
 import CaretPosition from './CaretPosition';
 
+interface TrimCount {
+  readonly count: number;
+  readonly text: string;
+}
+
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 
-const removeNode = (node: Node) => {
+const removeNode = (node: Node): void => {
   const parentNode = node.parentNode;
   if (parentNode) {
     parentNode.removeChild(node);
   }
 };
 
-const trimCount = (text: string) => {
+const trimCount = (text: string): TrimCount => {
   const trimmedText = Zwsp.trim(text);
-  return { count: text.length - trimmedText.length, text: trimmedText };
+  return {
+    count: text.length - trimmedText.length,
+    text: trimmedText
+  };
 };
 
-const deleteZwspChars = (caretContainer: Text) => {
+const deleteZwspChars = (caretContainer: Text): void => {
   // We use the Text.deleteData API here so as to preserve selection offsets
-  let idx;
+  let idx: number;
   while ((idx = caretContainer.data.lastIndexOf(Zwsp.ZWSP)) !== -1) {
     caretContainer.deleteData(idx, 1);
   }
@@ -61,16 +69,16 @@ const removeElementAndReposition = (caretContainer: Node, pos: CaretPosition): C
   return newPosition;
 };
 
-const removeTextCaretContainer = (caretContainer: Node, pos: CaretPosition) =>
+const removeTextCaretContainer = (caretContainer: Node, pos: CaretPosition): CaretPosition =>
   isText(caretContainer) && pos.container() === caretContainer ? removeTextAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 
-const removeElementCaretContainer = (caretContainer: Node, pos: CaretPosition) =>
+const removeElementCaretContainer = (caretContainer: Node, pos: CaretPosition): CaretPosition =>
   pos.container() === caretContainer.parentNode ? removeElementAndReposition(caretContainer, pos) : removeUnchanged(caretContainer, pos);
 
-const removeAndReposition = (container: Node, pos: CaretPosition) =>
+const removeAndReposition = (container: Node, pos: CaretPosition): CaretPosition =>
   CaretPosition.isTextPosition(pos) ? removeTextCaretContainer(container, pos) : removeElementCaretContainer(container, pos);
 
-const remove = (caretContainerNode: Node) => {
+const remove = (caretContainerNode: Node): void => {
   if (isElement(caretContainerNode) && CaretContainer.isCaretContainer(caretContainerNode)) {
     if (CaretContainer.hasContent(caretContainerNode)) {
       caretContainerNode.removeAttribute('data-mce-caret');
