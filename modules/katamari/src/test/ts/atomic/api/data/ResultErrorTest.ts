@@ -4,8 +4,8 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
-import { assertResult } from 'ephox/katamari/test/AssertResult';
 import { assertNone } from 'ephox/katamari/test/AssertOptional';
+import { assertResult } from 'ephox/katamari/test/AssertResult';
 
 describe('atomic.katamari.api.data.ResultErrorTest', () => {
 
@@ -35,7 +35,7 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
     });
 
     assert.isFalse(s.exists(Fun.always));
-    assert.isTrue(s.forall(Fun.never),);
+    assert.isTrue(s.forall(Fun.never));
 
     assertNone(Result.error(4).toOptional());
   });
