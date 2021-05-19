@@ -69,13 +69,13 @@ describe('atomic.tinymce.plugins.paste.FragmentParserTest', () => {
 
     it('should be the content inside the fragment markers for lists', () => {
       const simple = FragmentParser.getFragmentHtml('<BODY><UL><!--StartFragment--><LI>abc</LI><!--EndFragment--></UL></BODY>');
-      assert.deepEqual(simple, '<LI>abc</LI>', 'simple list');
+      assert.equal(simple, '<LI>abc</LI>', 'simple list');
 
       const newLines = FragmentParser.getFragmentHtml('<BODY>\n<UL>\n<!--StartFragment-->\n<LI>abc</LI>\n<!--EndFragment-->\n</UL>\n</BODY>');
-      assert.deepEqual(newLines, '\n<LI>abc</LI>\n', 'list with new lines');
+      assert.equal(newLines, '\n<LI>abc</LI>\n', 'list with new lines');
 
       const withRoot = FragmentParser.getFragmentHtml('<BODY CLASS="x"><!--StartFragment--><UL><LI>abc</LI></UL><!--EndFragment--></BODY>');
-      assert.deepEqual(withRoot, '<UL><LI>abc</LI></UL>', 'list with root element');
+      assert.equal(withRoot, '<UL><LI>abc</LI></UL>', 'list with root element');
     });
 
     it('should be the content inside the body', () => {

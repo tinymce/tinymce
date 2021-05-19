@@ -49,7 +49,7 @@ describe('atomic.tinymce.plugins.paste.NewlinesTest', () => {
         'time,u,ul,var,video,wbr').split(','), (tag) => {
         const content = `<p>a</p><${tag}>b</${tag}><p>c<br>d</p>`;
         return {
-          label: tag.toUpperCase() + ` tag should qualify content (${content}) as not plain text`,
+          label: `${tag.toUpperCase()} tag should qualify content (${content}) as not plain text`,
           content
         };
       })
