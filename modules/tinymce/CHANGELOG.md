@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - An unexpected exception was thrown when switching to readonly mode and adjusting the editor width #TINY-6383
-- Fixed a bug where block elements containing a pagebreak could be removed from the editor content #TINY-3388
-- Fixed a bug where the `list-style-type: none;` style on nested list items was incorrectly removed when clearing formatting #TINY-6264
+- Block elements containing a pagebreak could be removed from the editor content #TINY-3388
+- The `list-style-type: none;` style on nested list items was incorrectly removed when clearing formatting #TINY-6264
 - URLs were not always detected when pasting over a selection. Patch contributed by jwcooper #TINY-6997
 - Properties on the `OpenNotification` event were incorrectly namespaced #TINY-7486
 
