@@ -1,20 +1,19 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import { Optional } from 'ephox/katamari/api/Optional';
 import { Result } from 'ephox/katamari/api/Result';
 
-UnitTest.test('Result.fromOption tests', () => {
-  const extractError = <T, E>(result: Result<T, E>): Optional<E> => result.fold(
-    (e) => Optional.some(e),
-    () => Optional.none()
-  );
+describe('atomic.katamari.api.data.ResultFromOptionTest', () => {
+  it('unit tests', () => {
+    const extractError = <T, E>(result: Result<T, E>): Optional<E> => result.fold(
+      (e) => Optional.some(e),
+      () => Optional.none()
+    );
 
-  const testSanity = () => {
     const err = Result.fromOption(Optional.none(), 'err');
-    Assert.eq('eq', 'err', extractError(err).getOrDie('Could not get error value'));
+    assert.equal(extractError(err).getOrDie('Could not get error value'), 'err');
 
     const val = Result.fromOption(Optional.some('val'), 'err');
-    Assert.eq('eq', 'val', val.getOrDie());
-  };
-
-  testSanity();
+    assert.equal(val.getOrDie(), 'val');
+  });
 });
