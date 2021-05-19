@@ -18,7 +18,7 @@ const lazyCounter = () => {
 };
 
 describe('atomic.katamari.api.async.LazyValueTest', () => {
-  it('LazyValue: get', () => new Promise<void>((resolve, reject) => {
+  it('get', () => new Promise<void>((resolve, reject) => {
     const lazy = lazyCounter();
 
     lazy.get((val) => {
@@ -30,7 +30,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('LazyValue: map', () => new Promise<void>((resolve, reject) => {
+  it('map', () => new Promise<void>((resolve, reject) => {
     const f = (x) => x + 'hello';
 
     const lazy = LazyValue.nu((callback) => {
@@ -45,7 +45,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('LazyValue: isReady', () => new Promise<void>((resolve, reject) => {
+  it('isReady', () => new Promise<void>((resolve, reject) => {
     const lazy = LazyValue.nu((callback) => {
       setTimeout(() => {
         callback('extra');
@@ -59,7 +59,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('LazyValue: pure', () =>
+  it('pure', () =>
     fc.assert(fc.asyncProperty(fc.integer(), (i) => new Promise((resolve, reject) => {
       LazyValue.pure(i).get((v) => {
         eqAsync('LazyValue.pure', i, v, reject);
@@ -67,7 +67,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
       });
     }))));
 
-  it('LazyValue: pure, map', () =>
+  it('pure, map', () =>
     fc.assert(fc.asyncProperty(fc.integer(), fc.func(fc.string()), (i, f) => new Promise((resolve, reject) => {
       LazyValue.pure(i).map(f).get((v) => {
         eqAsync('LazyValue.map', f(i), v, reject);
@@ -75,7 +75,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
       });
     }))));
 
-  it('LazyValue: delayed, map', () =>
+  it('delayed, map', () =>
     fc.assert(fc.asyncProperty(fc.integer(), fc.func(fc.string()), (i, f) => new Promise((resolve, reject) => {
       LazyValue.nu((c) => {
         setTimeout(() => {
@@ -87,7 +87,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
       });
     }))));
 
-  it('LazyValue: parallel', () => new Promise<void>((resolve, reject) => {
+  it('parallel', () => new Promise<void>((resolve, reject) => {
     const f = LazyValue.nu((callback) => {
       setTimeout(Fun.curry(callback, 'apple'), 10);
     });
@@ -106,7 +106,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('LazyValue: parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.integer(), 0, 20), (vals) => new Promise((resolve, reject) => {
+  it('parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.integer(), 0, 20), (vals) => new Promise((resolve, reject) => {
     const lazyVals = Arr.map(vals, LazyValue.pure);
     LazyValues.par(lazyVals).get((actual) => {
       eqAsync('pars', vals, actual, reject);
@@ -114,7 +114,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }))));
 
-  it('LazyValue: TINY-6106: LazyValue should only use the value from the first time the callback is called', () =>
+  it('TINY-6106: LazyValue should only use the value from the first time the callback is called', () =>
     new Promise<void>((resolve, reject) => {
       LazyValue.nu((completer) => {
         // Since lazyvalue kicks off the computation straight away, both completer calls happen before the callback is fired.
@@ -127,14 +127,14 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
       });
     }));
 
-  it('LazyValue: TINY-6107: LazyValues.withTimeout - never returns', () => new Promise<void>((resolve, reject) => {
+  it('TINY-6107: LazyValues.withTimeout never returns', () => new Promise<void>((resolve, reject) => {
     LazyValues.withTimeout(Fun.noop, 1).get((actual) => {
       eqAsync('should time out', Optional.none(), actual, reject, tOptional());
       resolve();
     });
   }));
 
-  it('LazyValue: TINY-6107: LazyValues.withTimeout - times out before it returns', () => new Promise<void>((resolve, reject) => {
+  it('TINY-6107: LazyValues.withTimeout times out before it returns', () => new Promise<void>((resolve, reject) => {
     LazyValues.withTimeout((cb) => {
       setTimeout(() => cb(88), 50);
     }, 1).get((actual) => {
@@ -143,7 +143,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('LazyValue: TINY-6107: LazyValues.withTimeout - times out after it returns', () => new Promise<void>((resolve, reject) => {
+  it('TINY-6107: LazyValues.withTimeout times out after it returns', () => new Promise<void>((resolve, reject) => {
     LazyValues.withTimeout<string>((cb) => {
       setTimeout(() => {
         cb('cat');
