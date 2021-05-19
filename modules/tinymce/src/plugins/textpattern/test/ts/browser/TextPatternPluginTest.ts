@@ -1,210 +1,251 @@
-import { ApproxStructure, Assertions, GeneralSteps, Keys, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { ApproxStructure, Keys } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinyActions, TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
+import { assert } from 'chai';
 
-import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import ListsPlugin from 'tinymce/plugins/lists/Plugin';
+import TextPatternPlugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextPatternPluginTest', (success, failure) => {
+describe('browser.tinymce.plugins.textpattern.TextPatternPluginTest', () => {
   const detection = PlatformDetection.detect();
-
-  TextpatternPlugin();
-  Theme();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyActions = TinyActions(editor);
-
-    // TODO TINY-3258 renable this test when issues with Chrome 72-75 are sorted out
-    const browserSpecificTests = !detection.browser.isChrome() ? [
-      Step.label('test inline and block at the same time', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* **important list**'),
-        tinyApis.sAssertContentPresence({ ul: 1, li: 2, strong: 1 })
-      ]))
-    ] : [];
-
-    const steps = Utils.withTeardown([
-      Step.label('Space on ** without content does nothing', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**'),
-        Step.label('Check ** was left unchanged', tinyApis.sAssertContent('<p>**&nbsp;</p>'))
-      ])),
-      Step.label('Italic format on single word using space 1', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a&nbsp; *', 5),
-        Step.label('Check italic format was applied around the "a" and trailing whitespace',
-          tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-            return Utils.bodyStruct([
-              s.element('p', {
-                children: [
-                  s.element('em', {
-                    children: [
-                      s.text(str.is('a\u00A0 '), true)
-                    ]
-                  }),
-                  s.text(str.is(Unicode.nbsp), true)
-                ]
-              })
-            ]);
-          })))
-      ])),
-      Step.label('Italic format on single word using space 2', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '*a*'),
-        Step.label('Check italic format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('em', 'a')))
-      ])),
-      Step.label('Bold format on single word using space', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a**'),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a')))
-      ])),
-      Step.label('Bold/italic format on single word using space', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '***a***'),
-        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return Utils.bodyStruct([
-            s.element('p', {
-              children: [
-                s.element('em', {
-                  children: [
-                    s.element('strong', {
-                      children: [
-                        s.text(str.is('a'), true)
-                      ]
-                    })
-                  ]
-                }),
-                s.text(str.is(Unicode.nbsp), true)
-              ]
-            })
-          ]);
-        })))
-      ])),
-      Step.label('Bold format on multiple words using space', GeneralSteps.sequence([
-        Utils.sSetContentAndPressSpace(tinyApis, tinyActions, '**a b**'),
-        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(Utils.inlineStructHelper('strong', 'a b')))
-      ])),
-      Step.label('Bold format on single word using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a**'),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
-      ])),
-      Step.label('Bold/italic format on single word using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '***a***'),
-        Step.label('Check bold and italic formats were applied', tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-          return Utils.bodyStruct([
-            s.element('p', {
-              children: [
-                s.element('em', {
-                  children: [
-                    s.element('strong', {
-                      children: [
-                        s.text(str.is('a'), true)
-                      ]
-                    })
-                  ]
-                }),
-                s.zeroOrOne(s.text(str.is(''), true))
-              ]
-            }),
-            s.element('p', {})
-          ]);
-        })))
-      ])),
-      Step.label('H1 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '# a'),
-        Step.label('Check h1 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h1', ' a')))
-      ])),
-      Step.label('H2 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '## a'),
-        Step.label('Check h2 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h2', ' a')))
-      ])),
-      Step.label('H3 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '### a'),
-        Step.label('Check h3 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h3', ' a')))
-      ])),
-      Step.label('H4 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '#### a'),
-        Step.label('Check h4 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h4', ' a')))
-      ])),
-      Step.label('H5 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '##### a'),
-        Step.label('Check h5 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h5', ' a')))
-      ])),
-      Step.label('H6 format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '###### a'),
-        Step.label('Check h6 format was applied', tinyApis.sAssertContentStructure(Utils.blockStructHelper('h6', ' a')))
-      ])),
-      Step.label('OL format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '1. a'),
-        tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
-      ])),
-      Step.label('UL format on single word node using enter', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '* a'),
-        tinyApis.sAssertContentPresence({ ul: 1, li: 2 })
-      ])),
-      Step.label('enter with uncollapsed range does not insert list', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>* ab</p>'),
-        tinyApis.sFocus(),
-        tinyApis.sSetSelection([ 0, 0 ], 3, [ 0, 0 ], 4),
-        tinyActions.sContentKeystroke(Keys.enter(), {}),
-        tinyApis.sAssertContentPresence({ ul: 0 })
-      ])),
-      Step.label('enter with only pattern does not insert list', GeneralSteps.sequence([
-        tinyApis.sSetContent('<p>*</p>'),
-        tinyApis.sFocus(),
-        tinyApis.sSetCursor([ 0, 0 ], 1),
-        tinyActions.sContentKeystroke(Keys.enter(), {}),
-        tinyApis.sAssertContentPresence({ ul: 0 })
-      ])),
-      Step.label('inline format with fragmented start sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [ 0, 1 ]),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
-      ])),
-      Step.label('inline format with fragmented end sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [ 0, 1 ]),
-        Step.label('Check bold format was applied', tinyApis.sAssertContentStructure(Utils.inlineBlockStructHelper('strong', 'a')))
-      ])),
-      Step.label('block format with fragmented start sequence', GeneralSteps.sequence([
-        Utils.sSetContentAndPressEnter(tinyApis, tinyActions, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [ 0, 1 ]),
-        tinyApis.sAssertContentPresence({ ol: 1, li: 2 })
-      ])),
-      Step.label('getPatterns/setPatterns', Step.sync(() => {
-        // Store the original patterns
-        const origPatterns = editor.plugins.textpattern.getPatterns();
-
-        editor.plugins.textpattern.setPatterns([
-          { start: '#', format: 'h1' },
-          { start: '##', format: 'h2' },
-          { start: '###', format: 'h3' }
-        ]);
-
-        Assertions.assertEq(
-          'should be the same',
-          editor.plugins.textpattern.getPatterns(),
-          [
-            {
-              format: 'h3',
-              start: '###'
-            },
-            {
-              format: 'h2',
-              start: '##'
-            },
-
-            {
-              format: 'h1',
-              start: '#'
-            }
-          ]
-        );
-
-        // Restore the original patterns
-        editor.plugins.textpattern.setPatterns(origPatterns);
-      }))
-    ].concat(browserSpecificTests), tinyApis.sSetContent(''));
-
-    Pipeline.async({}, steps, onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'textpattern lists',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ ListsPlugin, TextPatternPlugin, Theme ]);
+
+  beforeEach(() => {
+    const editor = hook.editor();
+    editor.setContent('');
+  });
+
+  it('Space on ** without content does nothing', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '**');
+    TinyAssertions.assertContent(editor, '<p>**&nbsp;</p>');
+  });
+
+  it('Italic format on single word using space 1', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '*a&nbsp; *', 5);
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return Utils.bodyStruct([
+        s.element('p', {
+          children: [
+            s.element('em', {
+              children: [
+                s.text(str.is('a\u00A0 '), true)
+              ]
+            }),
+            s.text(str.is(Unicode.nbsp), true)
+          ]
+        })
+      ]);
+    }));
+  });
+
+  it('Italic format on single word using space 2', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '*a*');
+    TinyAssertions.assertContentStructure(editor, Utils.inlineStructHelper('em', 'a'));
+  });
+
+  it('Bold format on single word using space', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '**a**');
+    TinyAssertions.assertContentStructure(editor, Utils.inlineStructHelper('strong', 'a'));
+  });
+
+  it('Bold/italic format on single word using space', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '***a***');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return Utils.bodyStruct([
+        s.element('p', {
+          children: [
+            s.element('em', {
+              children: [
+                s.element('strong', {
+                  children: [
+                    s.text(str.is('a'), true)
+                  ]
+                })
+              ]
+            }),
+            s.text(str.is(Unicode.nbsp), true)
+          ]
+        })
+      ]);
+    }));
+  });
+
+  it('Bold format on multiple words using space', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '**a b**');
+    TinyAssertions.assertContentStructure(editor, Utils.inlineStructHelper('strong', 'a b'));
+  });
+
+  it('Bold format on single word using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '**a**');
+    TinyAssertions.assertContentStructure(editor, Utils.inlineBlockStructHelper('strong', 'a'));
+  });
+
+  it('Bold/italic format on single word using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '***a***');
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      return Utils.bodyStruct([
+        s.element('p', {
+          children: [
+            s.element('em', {
+              children: [
+                s.element('strong', {
+                  children: [
+                    s.text(str.is('a'), true)
+                  ]
+                })
+              ]
+            }),
+            s.zeroOrOne(s.text(str.is(''), true))
+          ]
+        }),
+        s.element('p', {})
+      ]);
+    }));
+  });
+
+  it('H1 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '# a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h1', ' a'));
+  });
+
+  it('H2 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '## a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h2', ' a'));
+  });
+
+  it('H3 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '### a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h3', ' a'));
+  });
+
+  it('H4 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '#### a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h4', ' a'));
+  });
+
+  it('H5 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '##### a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h5', ' a'));
+  });
+
+  it('H6 format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '###### a');
+    TinyAssertions.assertContentStructure(editor, Utils.blockStructHelper('h6', ' a'));
+  });
+
+  it('OL format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '1. a');
+    TinyAssertions.assertContentPresence(editor, { ol: 1, li: 2 });
+  });
+
+  it('UL format on single word node using enter', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '* a');
+    TinyAssertions.assertContentPresence(editor, { ul: 1, li: 2 });
+  });
+
+  it('enter with uncollapsed range does not insert list', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>* ab</p>');
+    editor.focus();
+    TinySelections.setSelection(editor, [ 0, 0 ], 3, [ 0, 0 ], 4);
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, { ul: 0 });
+  });
+
+  it('enter with only pattern does not insert list', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>*</p>');
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContentPresence(editor, { ul: 0 });
+  });
+
+  it('inline format with fragmented start sequence', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '<span data-mce-spellcheck="invalid">*</span>*a**', 4, [ 0, 1 ]);
+    TinyAssertions.assertContentStructure(editor, Utils.inlineBlockStructHelper('strong', 'a'));
+  });
+
+  it('inline format with fragmented end sequence', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '**a*<span data-mce-spellcheck="invalid">*</span>', 1, [ 0, 1 ]);
+    TinyAssertions.assertContentStructure(editor, Utils.inlineBlockStructHelper('strong', 'a'));
+  });
+
+  it('block format with fragmented start sequence', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '<span data-mce-spellcheck="invalid">1</span>. a', 3, [ 0, 1 ]);
+    TinyAssertions.assertContentPresence(editor, { ol: 1, li: 2 });
+  });
+
+  it('getPatterns/setPatterns', () => {
+    const editor = hook.editor();
+    // Store the original patterns
+    const origPatterns = editor.plugins.textpattern.getPatterns();
+
+    editor.plugins.textpattern.setPatterns([
+      { start: '#', format: 'h1' },
+      { start: '##', format: 'h2' },
+      { start: '###', format: 'h3' }
+    ]);
+
+    assert.deepEqual(
+      editor.plugins.textpattern.getPatterns(),
+      [
+        {
+          format: 'h3',
+          start: '###'
+        },
+        {
+          format: 'h2',
+          start: '##'
+        },
+
+        {
+          format: 'h1',
+          start: '#'
+        }
+      ],
+      'should be the same'
+    );
+
+    // Restore the original patterns
+    editor.plugins.textpattern.setPatterns(origPatterns);
+  });
+
+  // TODO TINY-3258 reenable this test when issues with Chrome 72-75 are sorted out
+  it('test inline and block at the same time', function () {
+    if (detection.browser.isChrome()) {
+      this.skip();
+    }
+    const editor = hook.editor();
+    Utils.setContentAndPressEnter(editor, '* **important list**');
+    TinyAssertions.assertContentPresence(editor, { ul: 1, li: 2, strong: 1 });
+  });
 });
