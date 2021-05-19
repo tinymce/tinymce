@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 
 ### Fixed
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
@@ -21,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 5.8.0 - 2021-05-06
 
 ### Added
-- Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added the `PAGE_UP` and `PAGE_DOWN` key code constants to the `VK` API #TINY-4612
 - The editor resize handle can now be controlled using the keyboard #TINY-4823
 - Added a new `fixed_toolbar_container_target` setting which renders the toolbar in the specified `HTMLElement`. Patch contributed by pvrobays
