@@ -1,130 +1,133 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Result } from 'ephox/katamari/api/Result';
-import { tResult } from 'ephox/katamari/api/ResultInstances';
 import { arbResultError, arbResultValue } from 'ephox/katamari/test/arb/ArbDataTypes';
+import { assertResult } from 'ephox/katamari/test/AssertResult';
 
-UnitTest.test('Result.value: unit tests', () => {
-  const s = Result.value(5);
-  Assert.eq('eq', true, s.is(5));
-  Assert.eq('eq', true, s.isValue());
-  Assert.eq('eq', false, s.isError());
-  Assert.eq('eq', 5, s.getOr(6));
-  Assert.eq('eq', 5, s.getOrThunk(() => 6));
-  Assert.eq('eq', 5, s.getOrDie());
-  Assert.eq('eq', 5, s.or(Result.value(6)).getOrDie());
-  Assert.eq('eq', 5, s.orThunk(() => Result.error('Should not get here.')).getOrDie());
+describe('atomic.katamari.api.arr.ResultValueTest', () => {
+  it('unit tests', () => {
+    const s = Result.value(5);
+    assert.deepEqual(s.is(5), true);
+    assert.deepEqual(s.isValue(), true);
+    assert.deepEqual(s.isError(), false);
+    assert.deepEqual(s.getOr(6), 5);
+    assert.deepEqual(s.getOrThunk(() => 6), 5);
+    assert.deepEqual(s.getOrDie(), 5);
+    assert.deepEqual(s.or(Result.value(6)).getOrDie(), 5);
+    assert.deepEqual(s.orThunk(() => Result.error('Should not get here.')).getOrDie(), 5);
 
-  Assert.eq('eq', 11, s.fold((_e) => {
-    throw new Error('Should not get here!');
-  }, (v) => v + 6));
+    assert.deepEqual(s.fold((_e) => {
+      throw new Error('Should not get here!');
+    }, (v) => v + 6), 11);
 
-  Assert.eq('eq', 10, s.map((v) => v * 2).getOrDie());
+    assert.deepEqual(s.map((v) => v * 2).getOrDie(), 10);
 
-  Assert.eq('eq', 'test5', s.bind((v) => Result.value('test' + v)).getOrDie());
+    assert.deepEqual(s.bind((v) => Result.value('test' + v)).getOrDie(), 'test5');
 
-  Assert.eq('eq', true, s.exists(Fun.always));
-  Assert.eq('eq', false, s.forall(Fun.never));
+    assert.deepEqual(s.exists(Fun.always), true);
+    assert.deepEqual(s.forall(Fun.never), false);
 
-  Assert.eq('eq', true, Result.value(5).toOptional().isSome());
-});
+    assert.deepEqual(Result.value(5).toOptional().isSome(), true);
+  });
 
-UnitTest.test('Checking value.is(value.getOrDie()) === true', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', true, res.is(res.getOrDie()));
-  }));
-});
+  it('Checking value.is(value.getOrDie()) === true', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      assert.deepEqual(res.is(res.getOrDie()), true);
+    }));
+  });
 
-UnitTest.test('Checking value.isValue === true', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', true, res.isValue());
-  }));
-});
+  it('Checking value.isValue === true', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      assert.deepEqual(res.isValue(), true);
+    }));
+  });
 
-UnitTest.test('Checking value.isError === false', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', false, res.isError());
-  }));
-});
+  it('Checking value.isError === false', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      assert.deepEqual(res.isError(), false);
+    }));
+  });
 
-UnitTest.test('Checking value.getOr(v) === value.value', () => {
-  fc.assert(fc.property(fc.integer(), (a) => {
-    Assert.eq('eq', a, Result.value(a).getOr(a));
-  }));
-});
+  it('Checking value.getOr(v) === value.value', () => {
+    fc.assert(fc.property(fc.integer(), (a) => {
+      assert.deepEqual(Result.value(a).getOr(a), a);
+    }));
+  });
 
-UnitTest.test('Checking value.getOrDie() does not throw', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    res.getOrDie();
-  }));
-});
+  it('Checking value.getOrDie() does not throw', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      res.getOrDie();
+    }));
+  });
 
-UnitTest.test('Checking value.or(oValue) === value', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-    Assert.eq('eq value', Result.value(a), Result.value(a).or(Result.value(b)), tResult());
-  }));
-});
+  it('Checking value.or(oValue) === value', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+      assertResult(Result.value(a).or(Result.value(b)), Result.value(a));
+    }));
+  });
 
-UnitTest.test('Checking error.or(value) === value', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-    Assert.eq('eq or', Result.value(b), Result.error(a).or(Result.value(b)), tResult());
-  }));
-});
+  it('Checking error.or(value) === value', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+      assertResult(Result.error(a).or(Result.value(b)), Result.value(b));
+    }));
+  });
 
-UnitTest.test('Checking value.orThunk(die) does not throw', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    res.orThunk(Fun.die('dies'));
-  }));
-});
+  it('Checking value.orThunk(die) does not throw', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      res.orThunk(Fun.die('dies'));
+    }));
+  });
 
-UnitTest.test('Checking value.fold(die, id) === value.getOrDie()', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    const actual = res.getOrDie();
-    Assert.eq('eq', actual, res.fold(Fun.die('should not get here'), Fun.identity));
-  }));
-});
+  it('Checking value.fold(die, id) === value.getOrDie()', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      const actual = res.getOrDie();
+      assert.deepEqual(res.fold(Fun.die('should not get here'), Fun.identity), actual);
+    }));
+  });
 
-UnitTest.test('Checking value.map(f) === f(value.getOrDie())', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.json()), (res, f) => {
-    Assert.eq('eq', res.map(f).getOrDie(), f(res.getOrDie()));
-  }));
-});
+  it('Checking value.map(f) === f(value.getOrDie())', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.json()), (res, f) => {
+      assert.deepEqual(f(res.getOrDie()), res.map(f).getOrDie());
+    }));
+  });
 
-UnitTest.test('Checking value.each(f) === undefined', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.json()), (res, f) => {
-    const actual = res.each(f);
-    Assert.eq('eq', undefined, actual);
-  }));
-});
+  it('Checking value.each(f) === undefined', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.json()), (res, f) => {
+      const actual = res.each(f);
+      assert.deepEqual(actual, undefined);
+    }));
+  });
 
-UnitTest.test('Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultValue(fc.integer())), (res, f) => {
-    Assert.eq('eq', res.bind(f).getOrDie(), f(res.getOrDie()).getOrDie());
-  }));
-});
+  it('Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultValue(fc.integer())), (res, f) => {
+      assert.deepEqual(f(res.getOrDie()).getOrDie(), res.bind(f).getOrDie());
+    }));
+  });
 
-UnitTest.test('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultError(fc.integer())), (res, f) => {
-    const toErrString = (r) => r.fold(Fun.identity, Fun.die('Not a Result.error'));
-    Assert.eq('eq', toErrString(res.bind(f)), toErrString(f(res.getOrDie())));
-  }));
-});
+  it('Given f :: s -> RE, checking value.bind(f).fold(id, die) === f(value.getOrDie()).fold(id, die)', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultError(fc.integer())), (res, f) => {
+      const toErrString = (r) => r.fold(Fun.identity, Fun.die('Not a Result.error'));
+      assert.deepEqual(toErrString(f(res.getOrDie())), toErrString(res.bind(f)));
+    }));
+  });
 
-UnitTest.test('Checking value.forall is true iff. f(value.getOrDie() === true)', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
-    Assert.eq('eq', f(res.getOrDie()), res.forall(f));
-  }));
-});
+  it('Checking value.forall is true iff. f(value.getOrDie() === true)', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
+      assert.deepEqual(res.forall(f), f(res.getOrDie()));
+    }));
+  });
 
-UnitTest.test('Checking value.exists is true iff. f(value.getOrDie() === true)', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
-    Assert.eq('eq', f(res.getOrDie()), res.exists(f));
-  }));
-});
+  it('Checking value.exists is true iff. f(value.getOrDie() === true)', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.boolean()), (res, f) => {
+      assert.deepEqual(res.exists(f), f(res.getOrDie()));
+    }));
+  });
 
-UnitTest.test('Checking value.toOptional is always Optional.some(value.getOrDie())', () => {
-  fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-    Assert.eq('eq', res.getOrDie(), res.toOptional().getOrDie());
-  }));
+  it('Checking value.toOptional is always Optional.some(value.getOrDie())', () => {
+    fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
+      assert.deepEqual(res.toOptional().getOrDie(), res.getOrDie());
+    }));
+  });
 });
