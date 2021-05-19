@@ -6,7 +6,7 @@ import * as KAssert from 'ephox/katamari-assertions/api/KAssert';
 
 const { tNumber } = Testable;
 
-const tBoom = () => Testable.testable(Eq.eq(Fun.die('⊥')), Pprint.pprint(Fun.die('⊥')));
+const tBoom = () => Testable.testable(Eq.eq(Fun.die('should not be called')), Pprint.pprint(Fun.die('should not be called')));
 
 const twoDifferentNumbers = fc.tuple(fc.integer(), fc.integer()).filter(([ a, b ]) => a !== b);
 
