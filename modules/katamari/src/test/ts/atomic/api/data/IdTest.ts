@@ -1,16 +1,19 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Id from 'ephox/katamari/api/Id';
 
-UnitTest.test('Id: Unit Tests', () => {
-  const one = Id.generate('test');
-  const two = Id.generate('test');
-  Assert.eq('id has prefix #1', 0, one.indexOf('test'));
-  Assert.eq('id has prefix #1', 0, two.indexOf('test'));
-  Assert.eq('subsequent ids are inequal', false, one === two);
-});
+describe('atomic.katamari.api.data.IdTest', () => () => {
+  it('Unit Tests', () => {
+    const one = Id.generate('test');
+    const two = Id.generate('test');
+    assert.equal(one.indexOf('test'), 0);
+    assert.equal(two.indexOf('test'), 0);
+    assert.notEqual(one, two);
+  });
 
-UnitTest.test('Id: Two ids should not be the same', () => {
-  const arbId = fc.string(1, 30).map(Id.generate);
-  fc.assert(fc.property(arbId, arbId, (id1, id2) => id1 !== id2));
+  it('should not generate identical IDs', () => {
+    const arbId = fc.string(1, 30).map(Id.generate);
+    fc.assert(fc.property(arbId, arbId, (id1, id2) => id1 !== id2));
+  });
 });
