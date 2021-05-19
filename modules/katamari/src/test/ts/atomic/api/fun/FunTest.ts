@@ -1,141 +1,141 @@
-import { Assert, context, describe, it, UnitTest } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 
-UnitTest.test('Fun: unit tests', () => {
-  const add2 = (n) => n + 2;
+describe('atomic.katamari.api.fun.FunTest', () => {
+  it('unit tests', () => {
+    const add2 = (n) => n + 2;
 
-  const squared = (n) => n * n;
+    const squared = (n) => n * n;
 
-  const add2squared = Fun.compose(squared, add2);
+    const add2squared = Fun.compose(squared, add2);
 
-  const f0 = (...args: any[]) => {
-    return Assert.eq('eq', 0, args.length);
-  };
-  Fun.noarg(f0)(1, 2, 3);
+    const f0 = (...args: any[]) => {
+      return assert.deepEqual(args.length, 0);
+    };
+    Fun.noarg(f0)(1, 2, 3);
 
-  Assert.eq('eq', 16, add2squared(2));
+    assert.deepEqual(add2squared(2), 16);
 
-  Assert.eq('eq', undefined, Fun.identity(undefined));
-  Assert.eq('eq', 10, Fun.identity(10));
-  Assert.eq('eq', [ 1, 2, 4 ], Fun.identity([ 1, 2, 4 ]));
-  Assert.eq('eq', { a: 'a', b: 'b' }, Fun.identity({ a: 'a', b: 'b' }));
+    assert.deepEqual(Fun.identity(undefined), undefined);
+    assert.deepEqual(Fun.identity(10), 10);
+    assert.deepEqual(Fun.identity([ 1, 2, 4 ]), [ 1, 2, 4 ]);
+    assert.deepEqual(Fun.identity({ a: 'a', b: 'b' }), { a: 'a', b: 'b' });
 
-  Assert.eq('eq', undefined, Fun.constant(undefined)());
-  Assert.eq('eq', 10, Fun.constant(10)());
-  Assert.eq('eq', { a: 'a' }, Fun.constant({ a: 'a' })());
+    assert.deepEqual(Fun.constant(undefined)(), undefined);
+    assert.deepEqual(Fun.constant(10)(), 10);
+    assert.deepEqual(Fun.constant({ a: 'a' })(), { a: 'a' });
 
-  Assert.eq('eq', false, Fun.never());
-  Assert.eq('eq', true, Fun.always());
+    assert.deepEqual(Fun.never(), false);
+    assert.deepEqual(Fun.always(), true);
 
-  const c = (...args) => args;
+    const c = (...args) => args;
 
-  Assert.eq('eq', [], Fun.curry(c)());
-  Assert.eq('eq', [ 'a' ], Fun.curry(c, 'a')());
-  Assert.eq('eq', [ 'a', 'b' ], Fun.curry(c, 'a')('b'));
-  Assert.eq('eq', [ 'a', 'b' ], Fun.curry(c)('a', 'b'));
-  Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c)('a', 'b', 'c'));
-  Assert.eq('eq', [ 'a', 'b', 'c' ], Fun.curry(c, 'a', 'b')('c'));
+    assert.deepEqual(Fun.curry(c)(), []);
+    assert.deepEqual(Fun.curry(c, 'a')(), [ 'a' ]);
+    assert.deepEqual(Fun.curry(c, 'a')('b'), [ 'a', 'b' ]);
+    assert.deepEqual(Fun.curry(c)('a', 'b'), [ 'a', 'b' ]);
+    assert.deepEqual(Fun.curry(c)('a', 'b', 'c'), [ 'a', 'b', 'c' ]);
+    assert.deepEqual(Fun.curry(c, 'a', 'b')('c'), [ 'a', 'b', 'c' ]);
 
-  Assert.eq('eq', false, Fun.not((_x: number) => true)(3));
-  Assert.eq('eq', true, Fun.not((_x: string) => false)('cat'));
+    assert.deepEqual(Fun.not((_x: number) => true)(3), false);
+    assert.deepEqual(Fun.not((_x: string) => false)('cat'), true);
 
-  Assert.throws('should die', Fun.die('Died!'));
+    assert.throws(Fun.die('Died!'));
 
-  let called = false;
-  const f = () => {
-    called = true;
-  };
-  Fun.apply(f);
-  Assert.eq('eq', true, called);
-  called = false;
-  Fun.apply(f);
-  Assert.eq('eq', true, called);
-});
+    let called = false;
+    const f = () => {
+      called = true;
+    };
+    Fun.apply(f);
+    assert.deepEqual(called, true);
+    called = false;
+    Fun.apply(f);
+    assert.deepEqual(called, true);
+  });
 
-UnitTest.test('Check compose :: compose(f, g)(x) = f(g(x))', () => {
-  fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
-    const h = Fun.compose(f, g);
-    Assert.eq('eq', f(g(x)), h(x));
-  }));
-});
+  it('Check compose :: compose(f, g)(x) = f(g(x))', () => {
+    fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
+      const h = Fun.compose(f, g);
+      assert.deepEqual(h(x), f(g(x)));
+    }));
+  });
 
-UnitTest.test('Check compose1 :: compose1(f, g)(x) = f(g(x))', () => {
-  fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
-    const h = Fun.compose1(f, g);
-    Assert.eq('eq', f(g(x)), h(x));
-  }));
-});
+  it('Check compose1 :: compose1(f, g)(x) = f(g(x))', () => {
+    fc.assert(fc.property(fc.string(), fc.func(fc.string()), fc.func(fc.string()), (x, f, g) => {
+      const h = Fun.compose1(f, g);
+      assert.deepEqual(h(x), f(g(x)));
+    }));
+  });
 
-UnitTest.test('Check constant :: constant(a)() === a', () => {
-  fc.assert(fc.property(fc.json(), (json) => {
-    Assert.eq('eq', json, Fun.constant(json)());
-  }));
-});
+  it('Check constant :: constant(a)() === a', () => {
+    fc.assert(fc.property(fc.json(), (json) => {
+      assert.deepEqual(Fun.constant(json)(), json);
+    }));
+  });
 
-UnitTest.test('Check identity :: identity(a) === a', () => {
-  fc.assert(fc.property(fc.json(), (json) => {
-    Assert.eq('eq', json, Fun.identity(json));
-  }));
-});
+  it('Check identity :: identity(a) === a', () => {
+    fc.assert(fc.property(fc.json(), (json) => {
+      assert.deepEqual(Fun.identity(json), json);
+    }));
+  });
 
-UnitTest.test('Check always :: f(x) === true', () => {
-  fc.assert(fc.property(fc.json(), (json) => {
-    Assert.eq('eq', true, Fun.always(json));
-  }));
-});
+  it('Check always :: f(x) === true', () => {
+    fc.assert(fc.property(fc.json(), (json) => {
+      assert.deepEqual(Fun.always(json), true);
+    }));
+  });
 
-UnitTest.test('Check never :: f(x) === false', () => {
-  fc.assert(fc.property(fc.json(), (json) => {
-    Assert.eq('eq', false, Fun.never(json));
-  }));
-});
+  it('Check never :: f(x) === false', () => {
+    fc.assert(fc.property(fc.json(), (json) => {
+      assert.deepEqual(Fun.never(json), false);
+    }));
+  });
 
-UnitTest.test('Check curry', () => {
-  fc.assert(fc.property(fc.json(), fc.json(), fc.json(), fc.json(), (a, b, c, d) => {
-    const f = (a, b, c, d) => [ a, b, c, d ];
+  it('Check curry', () => {
+    fc.assert(fc.property(fc.json(), fc.json(), fc.json(), fc.json(), (a, b, c, d) => {
+      const f = (a, b, c, d) => [ a, b, c, d ];
 
-    Assert.eq('curry 1', Fun.curry(f, a)(b, c, d), [ a, b, c, d ]);
-    Assert.eq('curry 2', Fun.curry(f, a, b)(c, d), [ a, b, c, d ]);
-    Assert.eq('curry 3', Fun.curry(f, a, b, c)(d), [ a, b, c, d ]);
-    Assert.eq('curry 4', Fun.curry(f, a, b, c, d)(), [ a, b, c, d ]);
-  }));
-});
+      assert.deepEqual([ a, b, c, d ], Fun.curry(f, a)(b, c, d));
+      assert.deepEqual([ a, b, c, d ], Fun.curry(f, a, b)(c, d));
+      assert.deepEqual([ a, b, c, d ], Fun.curry(f, a, b, c)(d));
+      assert.deepEqual([ a, b, c, d ], Fun.curry(f, a, b, c, d)());
+    }));
+  });
 
-UnitTest.test('Check not :: not(f(x)) === !f(x)', () => {
-  fc.assert(fc.property(fc.json(), fc.func(fc.boolean()), (x, f) => {
-    const g = Fun.not(f);
-    Assert.eq('eq', f(x), !g(x));
-  }));
-});
+  it('Check not :: not(f(x)) === !f(x)', () => {
+    fc.assert(fc.property(fc.json(), fc.func(fc.boolean()), (x, f) => {
+      const g = Fun.not(f);
+      assert.deepEqual(!g(x), f(x));
+    }));
+  });
 
-UnitTest.test('Check not :: not(not(f(x))) === f(x)', () => {
-  fc.assert(fc.property(fc.json(), fc.func(fc.boolean()), (x, f) => {
-    const g = Fun.not(Fun.not(f));
-    Assert.eq('eq', f(x), g(x));
-  }));
-});
+  it('Check not :: not(not(f(x))) === f(x)', () => {
+    fc.assert(fc.property(fc.json(), fc.func(fc.boolean()), (x, f) => {
+      const g = Fun.not(Fun.not(f));
+      assert.deepEqual(g(x), f(x));
+    }));
+  });
 
-UnitTest.test('Check apply :: apply(constant(a)) === a', () => {
-  fc.assert(fc.property(fc.json(), (x) => {
-    Assert.eq('eq', x, Fun.apply(Fun.constant(x)));
-  }));
-});
+  it('Check apply :: apply(constant(a)) === a', () => {
+    fc.assert(fc.property(fc.json(), (x) => {
+      assert.deepEqual(Fun.apply(Fun.constant(x)), x);
+    }));
+  });
 
-UnitTest.test('Check call :: apply(constant(a)) === undefined', () => {
-  fc.assert(fc.property(fc.json(), (x) => {
-    let hack: any = null;
-    const output = Fun.call(() => {
-      hack = x;
-    });
+  it('Check call :: apply(constant(a)) === undefined', () => {
+    fc.assert(fc.property(fc.json(), (x) => {
+      let hack: any = null;
+      const output = Fun.call(() => {
+        hack = x;
+      });
 
-    Assert.eq('eq', undefined, output);
-    Assert.eq('eq', x, hack);
-  }));
-});
+      assert.deepEqual(output, undefined);
+      assert.deepEqual(hack, x);
+    }));
+  });
 
-describe('katamari.Fun', () => {
   context('pipe', () => {
     const maker = <T, U>(from: T, to: U): (input: T) => U => (input) => {
       assert.deepEqual(input, from);
