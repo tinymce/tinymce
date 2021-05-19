@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added new `focus` property to the `Blocking` behaviour config
+
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
 

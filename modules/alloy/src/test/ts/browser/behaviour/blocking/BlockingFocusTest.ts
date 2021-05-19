@@ -30,7 +30,7 @@ const memFocusDiv = Memento.record({
   ])
 });
 
-const makeComponent = (focus: boolean = true) => (_store: TestStore, _doc: SugarElement<Document>, _body: SugarElement<Node>) => {
+const makeComponent = (focus: boolean) => (_store: TestStore, _doc: SugarElement<Document>, _body: SugarElement<Node>) => {
   const component = GuiFactory.build({
     dom: {
       tag: 'div'

@@ -109,7 +109,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
 
   it('TINY-7373: should have correct focus transitions when opening and closing dialog', async () => {
     const editor = hook.editor();
-    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
+    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus', SugarDocument.getDocument(), 'input.tox-textfield');
 
     openDialog(editor);
     TinyUiActions.pWaitForDialog(editor);
@@ -132,7 +132,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
   // However, it is still important that all of the focus transitions make sense
   it('TINY-7373: should not set focus on the editor if the throbber did not have focus when disabled', async () => {
     const editor = hook.editor();
-    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus (1)', SugarDocument.getDocument(), 'input.tox-textfield');
+    const pAssertDialogFocus = () => FocusTools.pTryOnSelector('Dialog input has focus', SugarDocument.getDocument(), 'input.tox-textfield');
 
     await pEnableThrobber(editor);
     openDialog(editor);
