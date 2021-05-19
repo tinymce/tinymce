@@ -66,11 +66,8 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     } as any;
   };
 
-  const pWaitFor = (predicate: () => boolean) =>
-    Waiter.pTryUntilPredicate('Wait for predicate to be true', predicate);
-
   const pWaitForSelector = (editor: Editor, selector: string) =>
-    pWaitFor(() => editor.dom.select(selector).length > 0);
+    Waiter.pTryUntilPredicate(`Wait for ${selector} to exist`, () => editor.dom.select(selector).length > 0);
 
   it('TBA: pasteImages should set unique id in blobcache', async () => {
     const editor = hook.editor();
@@ -85,7 +82,7 @@ describe('browser.tinymce.plugins.paste.ImagePasteTest', () => {
     clipboard.pasteImageData(event, editor.selection.getRng());
 
     await pWaitForSelector(editor, 'img');
-    await pWaitFor(() => hasCachedItem('mceclip0') && hasCachedItem('mceclip1'));
+    await Waiter.pTryUntilPredicate('Wait for image to be cached', () => hasCachedItem('mceclip0') && hasCachedItem('mceclip1'));
 
     const cachedBlob1 = editor.editorUpload.blobCache.get('mceclip0');
     const cachedBlob2 = editor.editorUpload.blobCache.get('mceclip1');
