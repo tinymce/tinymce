@@ -89,7 +89,7 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
 
   it('Checking value.map(f) === f(value.getOrDie())', () => {
     fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(fc.json()), (res, f) => {
-      assert.deepEqual(f(res.getOrDie()), res.map(f).getOrDie());
+      assert.equal(f(res.getOrDie()), res.map(f).getOrDie());
     }));
   });
 
@@ -102,7 +102,7 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
 
   it('Given f :: s -> RV, checking value.bind(f).getOrDie() === f(value.getOrDie()).getOrDie()', () => {
     fc.assert(fc.property(arbResultValue(fc.integer()), fc.func(arbResultValue(fc.integer())), (res, f) => {
-      assert.deepEqual(f(res.getOrDie()).getOrDie(), res.bind(f).getOrDie());
+      assert.equal(f(res.getOrDie()).getOrDie(), res.bind(f).getOrDie());
     }));
   });
 
