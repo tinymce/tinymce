@@ -34,7 +34,7 @@ describe('atomic.katamari.api.arr.ResultValueTest', () => {
 
   it('Checking value.is(value.getOrDie()) === true', () => {
     fc.assert(fc.property(arbResultValue(fc.integer()), (res) => {
-      assert.deepEqual(res.is(res.getOrDie()), true);
+      assert.isTrue(res.is(res.getOrDie()));
     }));
   });
 
