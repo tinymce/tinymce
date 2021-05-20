@@ -61,7 +61,7 @@ describe('atomic.katamari.api.data.ResultsTest', () => {
       fc.array(arbResult(fc.integer(), fc.string())),
       (results) => {
         const actual = Results.partition(results);
-        assert.deepEqual(actual.errors.length + actual.values.length, results.length);
+        assert.equal(actual.errors.length + actual.values.length, results.length);
       }
     ));
   });
@@ -132,8 +132,8 @@ describe('atomic.katamari.api.data.ResultsTest', () => {
 
   it('Results.unite', () => {
     fc.assert(fc.property(fc.integer(), (a) => {
-      assert.deepEqual(Results.unite(Result.error<number, number>(a)), a);
-      assert.deepEqual(Results.unite(Result.value<number, number>(a)), a);
+      assert.equal(Results.unite(Result.error<number, number>(a)), a);
+      assert.equal(Results.unite(Result.value<number, number>(a)), a);
     }));
   });
 });
