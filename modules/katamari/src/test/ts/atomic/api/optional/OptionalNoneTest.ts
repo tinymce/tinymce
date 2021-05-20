@@ -1,89 +1,92 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
+import { assertNone } from 'ephox/katamari/test/AssertOptional';
 
-UnitTest.test('Optional.none: unit tests', () => {
-  const s = Optional.none<number>();
-  Assert.throws('getOrDie dies', () => {
-    s.getOrDie('Died!');
-  });
-  Assert.eq('or', 6, s.or(Optional.some(6)).getOrDie());
-  Assert.eq('orThunk', 6, s.orThunk(() => Optional.some(6)).getOrDie());
-
-  Assert.eq('map is none', Optional.none(), s.map((v) => v * 2), tOptional());
-  Assert.eq('map bottom is none', Optional.none(), s.map(Fun.die('boom')), tOptional());
-
-  Assert.eq('bind none some is none', Optional.none(), s.bind((v) => Optional.some('test' + v)), tOptional());
-
-  Assert.eq('from null is none', Optional.none(), Optional.from(null), tOptional());
-  Assert.eq('from undefined is none', Optional.none(), Optional.from(undefined), tOptional());
-
-  Assert.eq('none or some(7) is some(s)', true, Optional.none().or(Optional.some(7)).equals(Optional.some(7)));
-  Assert.eq('none or none is none', true, Optional.none().or(Optional.none()).equals(Optional.none()));
-
-  Assert.eq('none to array is empty array', [], Optional.none().toArray());
-
-  Assert.eq('fold #1', 'zz', Optional.none().fold(() => 'zz', Fun.die('boom')));
-  Assert.eq('fold #2', [], Optional.none().fold((...args: any[]) => {
-    return args;
-  }, Fun.die('boom')));
-
-  Assert.eq('fold #3', 'b', Optional.none().fold(Fun.constant('b'), Fun.die('boom')));
-  Assert.eq('bind', Optional.none(), Optional.none().bind(Fun.die('boom')), tOptional());
-  Assert.eq('each', undefined, Optional.none().each(Fun.die('boom')));
-
-  Assert.eq('forall none is true', true, Optional.none().forall(Fun.die('boom')));
-  Assert.eq('exists none is false', false, Optional.none().exists(Fun.die('boom')));
-
-  Assert.eq('toString', 'none()', Optional.none().toString());
-});
-
-UnitTest.test('Checking none.fold(_ -> x, die) === x', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    const actual = Optional.none<string>().fold(Fun.constant(i), Fun.die('Should not die'));
-    Assert.eq('eq', i, actual);
-  }));
-});
-
-UnitTest.test('Checking none.is === false', () => {
-  fc.assert(fc.property(fc.integer(), (v) => {
-    Assert.eq('none is', false, Optional.none<number>().is(v));
-  }));
-});
-
-UnitTest.test('Checking none.getOr(v) === v', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('eq', i, Optional.none<any>().getOr(i));
-  }));
-});
-
-UnitTest.test('Checking none.getOrThunk(_ -> v) === v', () => {
-  fc.assert(fc.property(fc.func(fc.integer()), (thunk) => {
-    Assert.eq('eq', thunk(), Optional.none<number>().getOrThunk(thunk));
-  }));
-});
-
-UnitTest.test('Checking none.getOrDie() always throws', () => {
-  // Require non empty string of msg falsiness gets in the way.
-  fc.assert(fc.property(fc.string(1, 40), (s) => {
-    Assert.throws('getOrDie', () => {
-      Optional.none().getOrDie(s);
+describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
+  it('Optional.none: unit tests', () => {
+    const s = Optional.none<number>();
+    assert.throws(() => {
+      s.getOrDie('Died!');
     });
-  }));
-});
+    assert.deepEqual(s.or(Optional.some(6)).getOrDie(), 6);
+    assert.deepEqual(s.orThunk(() => Optional.some(6)).getOrDie(), 6);
 
-UnitTest.test('Checking none.or(oSomeValue) === oSomeValue', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    const output = Optional.none().or(Optional.some(i));
-    Assert.eq('eq', true, output.is(i));
-  }));
-});
+    assertNone(s.map((v) => v * 2));
+    assertNone(s.map(Fun.die('boom')));
 
-UnitTest.test('Checking none.orThunk(_ -> v) === v', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    const output = Optional.none().orThunk(() => Optional.some(i));
-    Assert.eq('eq', true, output.is(i));
-  }));
+    assertNone(s.bind((v) => Optional.some('test' + v)));
+
+    assert.deepEqual(Optional.from(null), Optional.none());
+    assert.deepEqual(Optional.from(undefined), Optional.none());
+
+    assert.deepEqual(Optional.none().or(Optional.some(7)).equals(Optional.some(7)), true);
+    assert.deepEqual(Optional.none().or(Optional.none()).equals(Optional.none()), true);
+
+    assert.deepEqual(Optional.none().toArray(), []);
+
+    assert.deepEqual(Optional.none().fold(() => 'zz', Fun.die('boom')), 'zz');
+    assert.deepEqual(Optional.none().fold((...args: any[]) => {
+      return args;
+    }, Fun.die('boom')), []);
+
+    assert.deepEqual(Optional.none().fold(Fun.constant('b'), Fun.die('boom')), 'b');
+    assert.deepEqual(Optional.none().bind(Fun.die('boom')), Optional.none());
+    assert.deepEqual(Optional.none().each(Fun.die('boom')), undefined);
+
+    assert.deepEqual(Optional.none().forall(Fun.die('boom')), true);
+    assert.deepEqual(Optional.none().exists(Fun.die('boom')), false);
+
+    assert.deepEqual(Optional.none().toString(), 'none()');
+  });
+
+  it('Checking none.fold(_ -> x, die) === x', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      const actual = Optional.none<string>().fold(Fun.constant(i), Fun.die('Should not die'));
+      assert.deepEqual(actual, i);
+    }));
+  });
+
+  it('Checking none.is === false', () => {
+    fc.assert(fc.property(fc.integer(), (v) => {
+      assert.deepEqual(Optional.none<number>().is(v), false);
+    }));
+  });
+
+  it('Checking none.getOr(v) === v', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      assert.deepEqual(Optional.none<any>().getOr(i), i);
+    }));
+  });
+
+  it('Checking none.getOrThunk(_ -> v) === v', () => {
+    fc.assert(fc.property(fc.func(fc.integer()), (thunk) => {
+      assert.deepEqual(Optional.none<number>().getOrThunk(thunk), thunk());
+    }));
+  });
+
+  it('Checking none.getOrDie() always throws', () => {
+  // Require non empty string of msg falsiness gets in the way.
+    fc.assert(fc.property(fc.string(1, 40), (s) => {
+      assert.throws(() => {
+        Optional.none().getOrDie(s);
+      });
+    }));
+  });
+
+  it('Checking none.or(oSomeValue) === oSomeValue', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      const output = Optional.none().or(Optional.some(i));
+      assert.deepEqual(output.is(i), true);
+    }));
+  });
+
+  it('Checking none.orThunk(_ -> v) === v', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      const output = Optional.none().orThunk(() => Optional.some(i));
+      assert.deepEqual(output.is(i), true);
+    }));
+  });
 });

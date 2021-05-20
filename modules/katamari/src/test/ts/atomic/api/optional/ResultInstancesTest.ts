@@ -1,91 +1,66 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Pprint, Testable } from '@ephox/dispute';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import { Result } from 'ephox/katamari/api/Result';
 import { tResult } from 'ephox/katamari/api/ResultInstances';
 
 const { tNumber, tString } = Testable;
 
-UnitTest.test('ResultInstances.eq: value(x) = value(x)', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq(
-      'results should be equal',
-      Result.value<number, string>(i),
-      Result.value<number, string>(i),
-      tResult(tNumber, tString)
-    );
-  }));
-});
+describe('atomic.katamari.api.optional.ResultInstancesTest', () => {
+  it('ResultInstances.eq: value(x) = value(x)', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      assert.deepEqual(Result.value<number, string>(i), Result.value<number, string>(i));
+    }));
+  });
 
-UnitTest.test('ResultInstances.eq: error(x) = error(x)', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq(
-      'results should be equal',
-      Result.error<string, number>(i),
-      Result.error<string, number>(i),
-      tResult(tString, tNumber)
-    );
-  }));
-});
+  it('ResultInstances.eq: error(x) = error(x)', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      assert.deepEqual(Result.error<string, number>(i), Result.error<string, number>(i));
+    }));
+  });
 
-UnitTest.test('ResultInstances.eq: value(a) != error(e)', () => {
-  fc.assert(fc.property(fc.integer(), fc.string(), (a, e) => {
-    Assert.eq(
-      'results should not be equal #1',
-      false,
-      tResult(tNumber, tString).eq(
+  it('ResultInstances.eq: value(a) != error(e)', () => {
+    fc.assert(fc.property(fc.integer(), fc.string(), (a, e) => {
+      assert.deepEqual(tResult(tNumber, tString).eq(
         Result.value<number, string>(a),
         Result.error<number, string>(e)
-      ));
+      ), false);
 
-    Assert.eq(
-      'results should not be equal #2',
-      false,
-      tResult(tNumber, tString).eq(
+      assert.deepEqual(tResult(tNumber, tString).eq(
         Result.error<number, string>(e),
         Result.value<number, string>(a)
-      ));
-  }));
-});
+      ), false);
+    }));
+  });
 
-UnitTest.test('ResultInstances.eq: (a = b) = (value(a) = value(b))', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-    Assert.eq(
-      'eq',
-      a === b,
-      tResult(tNumber, tString).eq(
+  it('ResultInstances.eq: (a = b) = (value(a) = value(b))', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+      assert.deepEqual(tResult(tNumber, tString).eq(
         Result.value<number, string>(a),
         Result.value<number, string>(b)
-      ));
-  }));
-});
+      ), a === b);
+    }));
+  });
 
-UnitTest.test('ResultInstances.eq: (a = b) = (error(a) = error(b))', () => {
-  fc.assert(fc.property(fc.string(), fc.string(), (a, b) => {
-    Assert.eq(
-      'eq',
-      a === b,
-      tResult(tNumber, tString).eq(
+  it('ResultInstances.eq: (a = b) = (error(a) = error(b))', () => {
+    fc.assert(fc.property(fc.string(), fc.string(), (a, b) => {
+      assert.deepEqual(tResult(tNumber, tString).eq(
         Result.error<number, string>(a),
         Result.error<number, string>(b)
-      ));
-  }));
-});
+      ), a === b);
+    }));
+  });
 
-UnitTest.test('ResultInstances.pprint', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('pprint value',
-      `Result.value(
+  it('ResultInstances.pprint', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      assert.deepEqual(Pprint.render(Result.value(i), tResult(tNumber, tString)), `Result.value(
   ${i}
-)`,
-      Pprint.render(Result.value(i), tResult(tNumber, tString))
-    );
+)`);
 
-    Assert.eq('pprint error',
-      `Result.error(
+      assert.deepEqual(Pprint.render(Result.error(i), tResult(tString, tNumber)), `Result.error(
   ${i}
-)`,
-      Pprint.render(Result.error(i), tResult(tString, tNumber))
-    );
-  }));
+)`);
+    }));
+  });
 });

@@ -1,58 +1,56 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
 
-UnitTest.test('Optionals.sequence: unit tests', () => {
-  Assert.eq('eq', Optional.some([]), Optionals.sequence<number>([]), tOptional());
-  Assert.eq('eq', Optional.some([ 3 ]), Optionals.sequence<number>([ Optional.some(3) ]), tOptional());
-  Assert.eq('eq', Optional.some([ 1, 2 ]), Optionals.sequence<number>([ Optional.some(1), Optional.some(2) ]), tOptional());
+describe('atomic.katamari.api.optional.OptionalsSequenceTest', () => {
+  it('Optionals.sequence: unit tests', () => {
+    assert.deepEqual(Optionals.sequence<number>([]), Optional.some([]));
+    assert.deepEqual(Optionals.sequence<number>([ Optional.some(3) ]), Optional.some([ 3 ]));
+    assert.deepEqual(Optionals.sequence<number>([ Optional.some(1), Optional.some(2) ]), Optional.some([ 1, 2 ]));
 
-  Assert.eq('eq', Optional.none(), Optionals.sequence<number>([ Optional.some(1), Optional.none() ]), tOptional());
-  Assert.eq('eq', Optional.none(), Optionals.sequence<number>([ Optional.none(), Optional.some(343) ]), tOptional());
-});
+    assert.deepEqual(Optionals.sequence<number>([ Optional.some(1), Optional.none() ]), Optional.none());
+    assert.deepEqual(Optionals.sequence<number>([ Optional.none(), Optional.some(343) ]), Optional.none());
+  });
 
-UnitTest.test('Optionals.sequence: Single some value', () => {
-  fc.assert(fc.property(fc.integer(), (n) => {
-    Assert.eq('eq', Optional.some([ n ]), Optionals.sequence([ Optional.some(n) ]), tOptional());
-  }));
-});
+  it('Optionals.sequence: Single some value', () => {
+    fc.assert(fc.property(fc.integer(), (n) => {
+      assert.deepEqual(Optionals.sequence([ Optional.some(n) ]), Optional.some([ n ]));
+    }));
+  });
 
-UnitTest.test('Optionals.sequence: Two some values', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (n, m) => {
-    Assert.eq('eq', Optional.some([ n, m ]), Optionals.sequence<number>([ Optional.some(n), Optional.some(m) ]), tOptional());
-  }));
-});
+  it('Optionals.sequence: Two some values', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (n, m) => {
+      assert.deepEqual(Optionals.sequence<number>([ Optional.some(n), Optional.some(m) ]), Optional.some([ n, m ]));
+    }));
+  });
 
-UnitTest.test('Optionals.sequence: Array of numbers', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (n) => {
-    const someNumbers = Arr.map(n, (x) => Optional.some(x));
-    Assert.eq('eq', Optional.some(n), Optionals.sequence<number>(someNumbers), tOptional());
-  }));
-});
+  it('Optionals.sequence: Array of numbers', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (n) => {
+      const someNumbers = Arr.map(n, (x) => Optional.some(x));
+      assert.deepEqual(Optionals.sequence<number>(someNumbers), Optional.some(n));
+    }));
+  });
 
-UnitTest.test('Optionals.sequence: Some then none', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (n) => {
-    const someNumbers = Arr.map(n, (x) => Optional.some(x));
-    Assert.eq('eq', Optional.none(), Optionals.sequence<number>([ ...someNumbers, Optional.none<number>() ]), tOptional());
-  }));
-});
+  it('Optionals.sequence: Some then none', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (n) => {
+      const someNumbers = Arr.map(n, (x) => Optional.some(x));
+      assert.deepEqual(Optionals.sequence<number>([ ...someNumbers, Optional.none<number>() ]), Optional.none());
+    }));
+  });
 
-UnitTest.test('Optionals.sequence: None then some', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (n) => {
-    const someNumbers = Arr.map(n, (x) => Optional.some(x));
-    Assert.eq('eq', Optional.none(), Optionals.sequence<number>([ Optional.none<number>(), ...someNumbers ]), tOptional());
-  }));
-});
+  it('Optionals.sequence: None then some', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (n) => {
+      const someNumbers = Arr.map(n, (x) => Optional.some(x));
+      assert.deepEqual(Optionals.sequence<number>([ Optional.none<number>(), ...someNumbers ]), Optional.none());
+    }));
+  });
 
-UnitTest.test('Optionals.sequence: all some', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (n) =>
-    Assert.eq('eq',
-      Optionals.traverse<number, number>(n, (x) => Optional.some(x)),
-      Optionals.sequence<number>(Arr.map(n, (x) => Optional.some(x))),
-      tOptional()
-    )
-  ));
+  it('Optionals.sequence: all some', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (n) =>
+      assert.deepEqual(Optionals.sequence<number>(Arr.map(n, (x) => Optional.some(x))), Optionals.traverse<number, number>(n, (x) => Optional.some(x)))
+    ));
+  });
 });

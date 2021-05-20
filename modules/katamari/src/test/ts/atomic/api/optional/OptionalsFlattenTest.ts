@@ -1,17 +1,19 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import fc from 'fast-check';
 import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
+import { assertOptional } from 'ephox/katamari/test/AssertOptional';
 
-UnitTest.test('Optionals.flatten: unit tests', () => {
-  Assert.eq('none', Optional.none(), Optionals.flatten(Optional.none<Optional<string>>()), tOptional());
-  Assert.eq('some(none)', Optional.none(), Optionals.flatten(Optional.some(Optional.none<string>())), tOptional());
-  Assert.eq('some(some)', Optional.some('meow'), Optionals.flatten(Optional.some(Optional.some<string>('meow'))), tOptional());
-});
+describe('atomic.katamari.api.optional.OptionalsFlattenTest', () => {
+  it('Optionals.flatten: unit tests', () => {
+    assertOptional(Optionals.flatten(Optional.none<Optional<string>>()), Optional.none());
+    assertOptional(Optionals.flatten(Optional.some(Optional.none<string>())), Optional.none());
+    assertOptional(Optionals.flatten(Optional.some(Optional.some<string>('meow'))), Optional.some('meow'));
+  });
 
-UnitTest.test('Optionals.flatten: some(some(x))', () => {
-  fc.assert(fc.property(fc.integer(), (n) => {
-    Assert.eq('eq', Optional.some(n), Optionals.flatten(Optional.some(Optional.some<number>(n))), tOptional());
-  }));
+  it('Optionals.flatten: some(some(x))', () => {
+    fc.assert(fc.property(fc.integer(), (n) => {
+      assertOptional(Optionals.flatten(Optional.some(Optional.some<number>(n))), Optional.some(n));
+    }));
+  });
 });
