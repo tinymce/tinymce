@@ -4,7 +4,7 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
-import { assertNone } from 'ephox/katamari/test/AssertOptional';
+import { assertNone, assertOptional } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   it('OptionSomeTest', () => {
@@ -14,14 +14,14 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
 
     const s = Optional.some(5);
     assert.deepEqual(s.getOrDie('Died!'), 5);
-    assert.deepEqual(s.or(Optional.some(6)), Optional.some(5));
-    assert.deepEqual(s.orThunk(boom), Optional.some(5));
+    assertOptional(s.or(Optional.some(6)), Optional.some(5));
+    assertOptional(s.orThunk(boom), Optional.some(5));
 
     assert.deepEqual(s.map((v) => v * 2).getOrDie(), 10);
 
-    assert.deepEqual(s.bind((v) => Optional.some('test' + v)), Optional.some('test5'));
+    assertOptional(s.bind((v) => Optional.some('test' + v)), Optional.some('test5'));
 
-    assert.deepEqual(Optional.from(5), Optional.some(5));
+    assertOptional(Optional.from(5), Optional.some(5));
 
     assert.deepEqual(Optional.some(1).toArray(), [ 1 ]);
     assert.deepEqual(Optional.some({ cat: 'dog' }).toArray(), [{ cat: 'dog' }]);
