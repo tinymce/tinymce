@@ -8,7 +8,7 @@ import { arbOptionalSome as arbOptionSome } from 'ephox/katamari/test/arb/ArbDat
 const boom = Fun.die('boom');
 
 describe('atomic.katamari.api.optional.OptionalsEqualTest', () => {
-  it('Optionals.equals: none === none', () => {
+  it('none === none', () => {
     assert.isTrue(Optional.none().equals(Optional.none()));
   });
 
@@ -41,7 +41,7 @@ describe('atomic.katamari.api.optional.OptionalsEqualTest', () => {
     }));
   });
 
-  it('Optional.some: unit tests', () => {
+  it('unit tests', () => {
     assert.isTrue(Optional.none().equals(Optional.none()));
     assert.isFalse(Optional.none().equals(Optional.some(3)));
 

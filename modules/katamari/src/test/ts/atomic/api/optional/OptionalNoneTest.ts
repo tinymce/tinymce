@@ -6,7 +6,7 @@ import { Optional } from 'ephox/katamari/api/Optional';
 import { assertNone } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
-  it('Optional.none: unit tests', () => {
+  it('unit tests', () => {
     const s = Optional.none<number>();
     assert.throws(() => {
       s.getOrDie('Died!');
@@ -19,8 +19,8 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
     assertNone(s.bind((v) => Optional.some('test' + v)));
 
-    assert.deepEqual(Optional.from(null), Optional.none());
-    assert.deepEqual(Optional.from(undefined), Optional.none());
+    assertNone(Optional.from(null));
+    assertNone(Optional.from(undefined));
 
     assert.deepEqual(Optional.none().or(Optional.some(7)).equals(Optional.some(7)), true);
     assert.deepEqual(Optional.none().or(Optional.none()).equals(Optional.none()), true);
@@ -33,7 +33,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
     }, Fun.die('boom')), []);
 
     assert.deepEqual(Optional.none().fold(Fun.constant('b'), Fun.die('boom')), 'b');
-    assert.deepEqual(Optional.none().bind(Fun.die('boom')), Optional.none());
+    assertNone(Optional.none().bind(Fun.die('boom')));
     assert.deepEqual(Optional.none().each(Fun.die('boom')), undefined);
 
     assert.deepEqual(Optional.none().forall(Fun.die('boom')), true);
@@ -44,7 +44,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
   it('Checking none.fold(_ -> x, die) === x', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
-      const actual = Optional.none<string>().fold(Fun.constant(i), Fun.die('Should not die'));
+      const actual = Optional.none<string>().fold(Fun.constant(i), Fun.die('Should not be called'));
       assert.deepEqual(actual, i);
     }));
   });
@@ -57,7 +57,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
   it('Checking none.getOr(v) === v', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
-      assert.deepEqual(Optional.none<any>().getOr(i), i);
+      assert.deepEqual(Optional.none<number>().getOr(i), i);
     }));
   });
 
@@ -79,14 +79,14 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
   it('Checking none.or(oSomeValue) === oSomeValue', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const output = Optional.none().or(Optional.some(i));
-      assert.deepEqual(output.is(i), true);
+      assert.isTrue(output.is(i));
     }));
   });
 
   it('Checking none.orThunk(_ -> v) === v', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const output = Optional.none().orThunk(() => Optional.some(i));
-      assert.deepEqual(output.is(i), true);
+      assert.isTrue(output.is(i));
     }));
   });
 });

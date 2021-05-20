@@ -3,15 +3,16 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as Optionals from 'ephox/katamari/api/Optionals';
+import { assertNone } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalsSomeIfTest', () => {
-  it('Optionals.someIf: false -> none', () => {
+  it('someIf(false) is none', () => {
     fc.assert(fc.property(fc.integer(), (n) => {
-      assert.deepEqual(Optionals.someIf<number>(false, n), Optional.none());
+      assertNone(Optionals.someIf<number>(false, n));
     }));
   });
 
-  it('Optionals.someIf: true -> some', () => {
+  it('someIf(true) is some', () => {
     fc.assert(fc.property(fc.integer(), (n) => {
       assert.deepEqual(Optionals.someIf<number>(true, n), Optional.some(n));
     }));

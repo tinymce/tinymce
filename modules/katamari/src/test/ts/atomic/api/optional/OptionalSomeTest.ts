@@ -4,6 +4,7 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
 import * as ArbDataTypes from 'ephox/katamari/test/arb/ArbDataTypes';
+import { assertNone } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   it('OptionSomeTest', () => {
@@ -125,7 +126,7 @@ describe('atomic.katamari.api.optional.OptionalsSomeTest', () => {
   it('Given f :: s -> none, checking some(x).bind(f) === none', () => {
     fc.assert(fc.property(arbOptionSome(fc.integer()), fc.func(arbOptionNone()), (opt, f) => {
       const actual = opt.bind(f);
-      assert.deepEqual(actual, Optional.none());
+      assertNone(actual);
     }));
   });
 
