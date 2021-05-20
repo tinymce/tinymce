@@ -21,7 +21,7 @@ describe('atomic.katamari.api.optional.OptionalsTest', () => {
       fc.array(ArbDataTypes.arbOptionalNone()),
       (options) => {
         const output = Optionals.cat(options);
-        assert.deepEqual(output.length, 0);
+        assert.deepEqual(output, []);
       }
     ));
   });
@@ -31,7 +31,7 @@ describe('atomic.katamari.api.optional.OptionalsTest', () => {
       fc.array(ArbDataTypes.arbOptionalSome(fc.integer())),
       (options) => {
         const output = Optionals.cat(options);
-        assert.deepEqual(output.length, options.length);
+        assert.equal(output.length, options.length);
       }
     ));
   });
@@ -52,7 +52,7 @@ describe('atomic.katamari.api.optional.OptionalsTest', () => {
       fc.array(ArbDataTypes.arbOptional(fc.integer())),
       (arr) => {
         const output = Optionals.cat(arr);
-        assert.deepEqual(true, output.length <= arr.length);
+        assert.isAtMost(output.length, arr.length);
       }
     ));
   });
