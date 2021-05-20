@@ -87,10 +87,17 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
 
   // Make sure that when the editor is focused while the throbber is enabled, the focus is moved back to the throbber
   // This covers native focusin and editor.focus() invocations
-  editor.on('AfterEditorFocus', () => {
-    if (throbberState.get()) {
-      focusBusyComponent(lazyThrobber());
-    }
+  editor.on('PreInit', () => {
+    const target = editor.inline ? editor.getBody() : editor.getWin();
+    editor.dom.bind(target, 'focusin', () => {
+      // console.log('here');
+      if (throbberState.get()) {
+        // Issues:
+        // Ran into an issue where the cursor is still set in iframe. As result, ned this to run after on focus events
+        // For inline, need to try and focus throbber after the UI has been fully rendered and shown
+        focusBusyComponent(lazyThrobber());
+      }
+    });
   });
 
   const toggle = (state: boolean) => {
