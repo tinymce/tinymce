@@ -1,8 +1,10 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Contracts from 'ephox/katamari/api/Contracts';
 import * as Fun from 'ephox/katamari/api/Fun';
 
-UnitTest.test('ContractsTest', () => {
+describe('atomic.katamari.api.struct.ContractsTest', () => {
+
   const a = Fun.constant('element');
   const b = Fun.constant('destroy');
   const c = Fun.constant('events');
@@ -17,31 +19,31 @@ UnitTest.test('ContractsTest', () => {
     }
   });
 
-  (() => {
+  it('bagger', () => {
     const t1 = bagger({
       element: a,
       destroy: b,
       events: c
     });
 
-    Assert.eq('eq', 'element', t1.element());
-    Assert.eq('eq', 'destroy', t1.destroy());
-    Assert.eq('eq', 'events', t1.events());
-  })();
+    assert.deepEqual(t1.element(), 'element');
+    assert.deepEqual(t1.destroy(), 'destroy');
+    assert.deepEqual(t1.events(), 'events');
+  });
 
-  (() => {
+  it('baggermin', () => {
     const t1 = baggerMin({
       element: a,
       destroy: b,
       events: c
     });
 
-    Assert.eq('eq', 'element', t1.element());
-    Assert.eq('eq', 'destroy', t1.destroy());
-    Assert.eq('eq', 'events', t1.events());
-  })();
+    assert.deepEqual(t1.element(), 'element');
+    assert.deepEqual(t1.destroy(), 'destroy');
+    assert.deepEqual(t1.events(), 'events');
+  });
 
-  (() => {
+  it('fails 1', () => {
     const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
       bagger({
@@ -50,13 +52,13 @@ UnitTest.test('ContractsTest', () => {
         events: 'events'
       });
 
-      Assert.fail('Expected failure: ' + expected);
+      assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      Assert.eq('eq', expected, err.message);
+      assert.deepEqual(err.message, expected);
     }
-  })();
+  });
 
-  (() => {
+  it('fails 2', () => {
     const expected = 'All values need to be of type: function. Keys (element, events) were not.';
     try {
       baggerMin({
@@ -65,13 +67,13 @@ UnitTest.test('ContractsTest', () => {
         events: 'events'
       });
 
-      Assert.fail('Expected failure: ' + expected);
+      assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      Assert.eq('eq', expected, err.message);
+      assert.deepEqual(err.message, expected);
     }
-  })();
+  });
 
-  (() => {
+  it('fails with invalid key', () => {
     const expected = 'Unsupported keys for object: blah';
     try {
       bagger({
@@ -81,14 +83,13 @@ UnitTest.test('ContractsTest', () => {
         blah: 'balh'
       });
 
-      Assert.fail('Expected failure: ' + expected);
+      assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      Assert.eq('eq', expected, err.message);
+      assert.deepEqual(err.message, expected);
     }
-  })();
+  });
 
-  (() => {
-    // Ensure supports extra keys, with any type.
+  it('supports extra keys, with any type', () => {
     const bg = baggerMin({
       element: a,
       destroy: b,
@@ -96,12 +97,12 @@ UnitTest.test('ContractsTest', () => {
       blah: 'balh'
     });
 
-    Assert.eq('eq', 'element', bg.element());
-    Assert.eq('eq', 'destroy', bg.destroy());
-    Assert.eq('eq', 'events', bg.events());
-  })();
+    assert.deepEqual(bg.element(), 'element');
+    assert.deepEqual(bg.destroy(), 'destroy');
+    assert.deepEqual(bg.events(), 'events');
+  });
 
-  (() => {
+  it('fails if values are wrong type', () => {
     const expected = 'All values need to be of type: 10 if mustBe10. Keys (mustBe10) were not.';
     try {
       baggerMin10({
@@ -109,20 +110,19 @@ UnitTest.test('ContractsTest', () => {
         any: 'cat'
       });
 
-      Assert.fail('Expected failure: ' + expected);
+      assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      Assert.eq('eq', expected, err.message);
+      assert.deepEqual(err.message, expected);
     }
-  })();
+  });
 
-  (() => {
-    // EnsureWith provides a custom value validator.
+  it('EnsureWith provides a custom value validator', () => {
     const bg = baggerMin10({
       mustBe10: 10,
       any: 'cat'
     });
 
-    Assert.eq('eq', 10, bg.mustBe10);
-    Assert.eq('eq', 'cat', bg.any);
-  })();
+    assert.deepEqual(bg.mustBe10, 10);
+    assert.deepEqual(bg.any, 'cat');
+  });
 });
