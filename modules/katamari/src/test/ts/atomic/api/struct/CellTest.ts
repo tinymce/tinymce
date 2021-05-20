@@ -14,7 +14,7 @@ describe('atomic.katamari.api.struct.CellTest', () => {
   it('cell(x).get() === x', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const cell = Cell(i);
-      assert.deepEqual(cell.get(), i);
+      assert.equal(cell.get(), i);
     }));
   });
 

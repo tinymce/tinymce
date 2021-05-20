@@ -5,7 +5,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.RemoveLeadingTest', () => {
   it('unit tests', () => {
-    const check = (expected, str, trail) => {
+    const check = (expected: string, str: string, trail: string) => {
       const actual = Strings.removeLeading(str, trail);
       assert.equal(actual, expected);
     };

@@ -5,7 +5,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.CapitalizeTest', () => {
   it('unit tests', () => {
-    const check = (expected, input) => {
+    const check = (expected: string, input: string) => {
       const actual = Strings.capitalize(input);
       assert.equal(actual, expected);
     };

@@ -26,9 +26,9 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       events: c
     });
 
-    assert.deepEqual(t1.element(), 'element');
-    assert.deepEqual(t1.destroy(), 'destroy');
-    assert.deepEqual(t1.events(), 'events');
+    assert.equal(t1.element(), 'element');
+    assert.equal(t1.destroy(), 'destroy');
+    assert.equal(t1.events(), 'events');
   });
 
   it('baggermin', () => {
@@ -38,9 +38,9 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       events: c
     });
 
-    assert.deepEqual(t1.element(), 'element');
-    assert.deepEqual(t1.destroy(), 'destroy');
-    assert.deepEqual(t1.events(), 'events');
+    assert.equal(t1.element(), 'element');
+    assert.equal(t1.destroy(), 'destroy');
+    assert.equal(t1.events(), 'events');
   });
 
   it('fails 1', () => {
@@ -54,7 +54,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      assert.deepEqual(err.message, expected);
+      assert.equal(err.message, expected);
     }
   });
 
@@ -69,7 +69,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      assert.deepEqual(err.message, expected);
+      assert.equal(err.message, expected);
     }
   });
 
@@ -85,7 +85,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      assert.deepEqual(err.message, expected);
+      assert.equal(err.message, expected);
     }
   });
 
@@ -97,9 +97,9 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       blah: 'balh'
     });
 
-    assert.deepEqual(bg.element(), 'element');
-    assert.deepEqual(bg.destroy(), 'destroy');
-    assert.deepEqual(bg.events(), 'events');
+    assert.equal(bg.element(), 'element');
+    assert.equal(bg.destroy(), 'destroy');
+    assert.equal(bg.events(), 'events');
   });
 
   it('fails if values are wrong type', () => {
@@ -112,7 +112,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
 
       assert.fail('Expected failure: ' + expected);
     } catch (err) {
-      assert.deepEqual(err.message, expected);
+      assert.equal(err.message, expected);
     }
   });
 
@@ -122,7 +122,7 @@ describe('atomic.katamari.api.struct.ContractsTest', () => {
       any: 'cat'
     });
 
-    assert.deepEqual(bg.mustBe10, 10);
-    assert.deepEqual(bg.any, 'cat');
+    assert.equal(bg.mustBe10, 10);
+    assert.equal(bg.any, 'cat');
   });
 });

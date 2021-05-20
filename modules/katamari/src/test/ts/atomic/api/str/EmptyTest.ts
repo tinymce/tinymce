@@ -5,7 +5,7 @@ import * as Strings from 'ephox/katamari/api/Strings';
 
 describe('atomic.katamari.api.str.EmptyTest', () => {
   it('isEmpty unit test', () => {
-    const check = (expected, str) => {
+    const check = (expected: boolean, str: string) => {
       assert.equal(Strings.isEmpty(str), expected);
     };
 
@@ -15,7 +15,7 @@ describe('atomic.katamari.api.str.EmptyTest', () => {
   });
 
   it('isNonEmpty unit test', () => {
-    const check = (expected, str) => {
+    const check = (expected: boolean, str: string) => {
       assert.equal(Strings.isNotEmpty(str), expected);
     };
 
