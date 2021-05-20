@@ -108,14 +108,13 @@ const createDataTransfer = (): DataTransfer => {
 
     clearData: (format?: string) => {
       if (isInReadWriteMode(dataTransfer)) {
-        const normalizedFormat = normalize(format);
-
-        if (Type.isString(normalizedFormat)) {
+        if (Type.isString(format)) {
+          const normalizedFormat = normalize(format);
           Arr.findIndex(Arr.from(items), (item) => item.type === normalizedFormat).each((idx) => {
             items.remove(idx);
           });
         } else {
-          for (let i = items.length; i >= 0; i--) {
+          for (let i = items.length - 1; i >= 0; i--) {
             if (items[i].kind === 'string') {
               items.remove(i);
             }

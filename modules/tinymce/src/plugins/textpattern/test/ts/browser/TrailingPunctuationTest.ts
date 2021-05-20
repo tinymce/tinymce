@@ -1,75 +1,58 @@
-import { ApproxStructure, GeneralSteps, Log, Logger, Pipeline, Step, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
-import Editor from 'tinymce/core/api/Editor';
+import { ApproxStructure, Waiter } from '@ephox/agar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.textpattern.TrailingPunctuationTest', (success, failure) => {
+describe('browser.tinymce.plugins.textpattern.TrailingPunctuationTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'textpattern',
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
-    Theme();
-    TextpatternPlugin();
+  const pTypeAndTriggerTest = (patternText: string, trigger: string, tag: string, rawText: string) => async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>' + patternText + trigger + '</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], patternText.length + 1);
+    TinyContentActions.keypress(editor, trigger.charCodeAt(0));
+    await Waiter.pTryUntil(
+      'did not get expected format',
+      () => TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+        return s.element('body', {
+          children: [
+            s.element('p', {
+              children: [
+                s.element(tag, {
+                  children: [
+                    s.text(str.is(rawText))
+                  ]
+                }),
+                s.text(str.is(trigger), true)
+              ]
+            })
+          ]
+        });
+      }))
+    );
+  };
 
-    const sTypeChar = (editor: Editor, character: string) => {
-      return Logger.t(`Type ${character}`, Step.sync(() => {
-        const charCode = character.charCodeAt(0);
-        editor.fire('keypress', { charCode } as KeyboardEvent);
-      }));
-    };
+  context('em', () => {
+    it('with ,', pTypeAndTriggerTest('*a*', ',', 'em', 'a'));
+    it('with .', pTypeAndTriggerTest('*a*', '.', 'em', 'a'));
+    it('with ;', pTypeAndTriggerTest('*a*', ';', 'em', 'a'));
+    it('with :', pTypeAndTriggerTest('*a*', ':', 'em', 'a'));
+    it('with !', pTypeAndTriggerTest('*a*', '!', 'em', 'a'));
+    it('with ?', pTypeAndTriggerTest('*a*', '?', 'em', 'a'));
+  });
 
-    const sTypeAndTrigger = (tinyApis: TinyApis, editor: Editor) => {
-      return (label, patternText, trigger, tag, rawText) => {
-        return Logger.t(label, GeneralSteps.sequence([
-          tinyApis.sSetContent('<p>' + patternText + trigger + '</p>'),
-          tinyApis.sFocus(),
-          tinyApis.sSetCursor([ 0, 0 ], patternText.length + 1),
-          sTypeChar(editor, trigger),
-          Waiter.sTryUntil(
-            'did not get expected format',
-            tinyApis.sAssertContentStructure(ApproxStructure.build((s, str) => {
-              return s.element('body', {
-                children: [
-                  s.element('p', {
-                    children: [
-                      s.element(tag, {
-                        children: [
-                          s.text(str.is(rawText))
-                        ]
-                      }),
-                      s.text(str.is(trigger), true)
-                    ]
-                  })
-                ]
-              });
-            })), 10, 10000
-          )
-        ]));
-      };
-    };
-
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
-      const tnt = sTypeAndTrigger(tinyApis, editor);
-
-      Pipeline.async({}, Log.steps('TBA', 'TextPattern: TrailingPunctuationTest', [
-        tnt('em with ,', '*a*', ',', 'em', 'a'),
-        tnt('strong with ,', '**a**', ',', 'strong', 'a'),
-        tnt('em with .', '*a*', '.', 'em', 'a'),
-        tnt('strong with .', '**a**', '.', 'strong', 'a'),
-        tnt('em with ;', '*a*', ';', 'em', 'a'),
-        tnt('strong with ;', '**a**', ';', 'strong', 'a'),
-        tnt('em with :', '*a*', ':', 'em', 'a'),
-        tnt('strong with :', '**a**', ':', 'strong', 'a'),
-        tnt('em with !', '*a*', '!', 'em', 'a'),
-        tnt('strong with !', '**a**', '!', 'strong', 'a'),
-        tnt('em with ?', '*a*', '?', 'em', 'a'),
-        tnt('strong with ?', '**a**', '?', 'strong', 'a')
-      ]), onSuccess, onFailure);
-    }, {
-      plugins: 'textpattern',
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
-  }
-);
+  context('strong', () => {
+    it('with ,', pTypeAndTriggerTest('**a**', ',', 'strong', 'a'));
+    it('with .', pTypeAndTriggerTest('**a**', '.', 'strong', 'a'));
+    it('with ;', pTypeAndTriggerTest('**a**', ';', 'strong', 'a'));
+    it('with :', pTypeAndTriggerTest('**a**', ':', 'strong', 'a'));
+    it('with !', pTypeAndTriggerTest('**a**', '!', 'strong', 'a'));
+    it('with ?', pTypeAndTriggerTest('**a**', '?', 'strong', 'a'));
+  });
+});
