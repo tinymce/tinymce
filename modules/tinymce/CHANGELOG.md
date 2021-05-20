@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 5.8.1 - 2021-05-20
+
 ### Fixed
 - An unexpected exception was thrown when switching to readonly mode and adjusting the editor width #TINY-6383
 - Content could be lost when the `pagebreak_split_block` setting was enabled #TINY-3388
