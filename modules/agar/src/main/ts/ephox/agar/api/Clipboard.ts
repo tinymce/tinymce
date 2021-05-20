@@ -8,30 +8,38 @@ import * as ChainSequence from './ChainSequence';
 import { Step } from './Step';
 import { cFindIn } from './UiFinder';
 
-const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chain<SugarElement<any>, SugarElement<any>> =>
-  Chain.op<SugarElement<any>>((target) => {
-    const win = getWindowFromElement(target);
-    const dataTransfer = createDataTransfer();
-    const event = createPasteEvent(win, 0, 0, dataTransfer);
+const pasteDataTransfer = (target: SugarElement<Element>, mutator: (dataTransfer: DataTransfer) => void): void => {
+  const win = getWindowFromElement(target);
+  const dataTransfer = createDataTransfer();
+  const event = createPasteEvent(win, 0, 0, dataTransfer);
 
-    mutator(dataTransfer);
+  mutator(dataTransfer);
 
-    target.dom.dispatchEvent(event);
-  });
+  target.dom.dispatchEvent(event);
+};
 
-const cPasteItems = (items: Record<string, string>): Chain<SugarElement<any>, SugarElement<any>> =>
-  cPasteDataTransfer((dataTransfer) => {
+const pasteItems = (target: SugarElement<Element>, items: Record<string, string>): void =>
+  pasteDataTransfer(target, (dataTransfer) => {
     Obj.each(items, (data, mime) => {
       dataTransfer.setData(mime, data);
     });
   });
 
-const cPasteFiles = (files: File[]): Chain<SugarElement<any>, SugarElement<any>> =>
-  cPasteDataTransfer((dataTransfer) => {
+const pasteFiles = (target: SugarElement<Element>, files: File[]): void =>
+  pasteDataTransfer(target, (dataTransfer) => {
     Arr.each(files, (file) => {
       dataTransfer.items.add(file);
     });
   });
+
+const cPasteDataTransfer = (mutator: (dataTransfer: DataTransfer) => void): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.op((target) => pasteDataTransfer(target, mutator));
+
+const cPasteItems = (items: Record<string, string>): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.op((target) => pasteItems(target, items));
+
+const cPasteFiles = (files: File[]): Chain<SugarElement<any>, SugarElement<any>> =>
+  Chain.op((target) => pasteFiles(target, files));
 
 const sPasteDataTransfer = <T>(mutator: (dataTransfer: DataTransfer) => void, selector: string): Step<T, T> =>
   Chain.isolate({}, ChainSequence.sequence([
@@ -54,35 +62,44 @@ const sPasteFiles = <T>(files: File[], selector: string): Step<T, T> =>
     cPasteFiles(files)
   ]));
 
+const cut = (target: SugarElement<Element>): DataTransfer => {
+  const win = getWindowFromElement(target);
+  const dataTransfer = createDataTransfer();
+  const event = createCutEvent(win, 0, 0, dataTransfer);
+
+  target.dom.dispatchEvent(event);
+
+  return dataTransfer;
+};
+
+const copy = (target: SugarElement<Element>): DataTransfer => {
+  const win = getWindowFromElement(target);
+  const dataTransfer = createDataTransfer();
+  const event = createCopyEvent(win, 0, 0, dataTransfer);
+
+  target.dom.dispatchEvent(event);
+
+  return dataTransfer;
+};
+
 const cCut: Chain<SugarElement<any>, DataTransfer> =
-  Chain.mapper<SugarElement<any>, DataTransfer>((target) => {
-    const win = getWindowFromElement(target);
-    const dataTransfer = createDataTransfer();
-    const event = createCutEvent(win, 0, 0, dataTransfer);
-
-    target.dom.dispatchEvent(event);
-
-    return dataTransfer;
-  });
+  Chain.mapper(cut);
 
 const cCopy: Chain<SugarElement<any>, DataTransfer> =
-  Chain.mapper<SugarElement, DataTransfer>((target) => {
-    const win = getWindowFromElement(target);
-    const dataTransfer = createDataTransfer();
-    const event = createCopyEvent(win, 0, 0, dataTransfer);
-
-    target.dom.dispatchEvent(event);
-
-    return dataTransfer;
-  });
+  Chain.mapper(copy);
 
 export {
+  pasteDataTransfer,
+  pasteItems,
+  pasteFiles,
   cPasteDataTransfer,
   cPasteItems,
   cPasteFiles,
   sPasteDataTransfer,
   sPasteItems,
   sPasteFiles,
+  cut,
+  copy,
   cCut,
   cCopy
 };
