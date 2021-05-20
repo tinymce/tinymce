@@ -1,27 +1,30 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
-UnitTest.test('removeLeading: unit tests', () => {
-  const check = (expected, str, trail) => {
-    const actual = Strings.removeLeading(str, trail);
-    Assert.eq('removeLeading', expected, actual);
-  };
+describe('atomic.katamari.api.str.RemoveLeadingTest', () => {
+  it('unit tests', () => {
+    const check = (expected, str, trail) => {
+      const actual = Strings.removeLeading(str, trail);
+      assert.equal(actual, expected);
+    };
 
-  check('', '', '');
-  check('cat', 'cat', '');
-  check('', '', '/');
-  check('cat', '/cat', '/');
-  check('', 'cat/', 'cat/');
-  check('dog', 'catdog', 'cat');
-});
+    check('', '', '');
+    check('cat', 'cat', '');
+    check('', '', '/');
+    check('cat', '/cat', '/');
+    check('', 'cat/', 'cat/');
+    check('dog', 'catdog', 'cat');
+  });
 
-UnitTest.test('removeLeading removes prefix', () => {
-  fc.assert(fc.property(
-    fc.asciiString(),
-    fc.asciiString(),
-    (prefix, suffix) => {
-      Assert.eq('removeLeading', suffix, Strings.removeLeading(prefix + suffix, prefix));
-    }
-  ));
+  it('removeLeading removes prefix', () => {
+    fc.assert(fc.property(
+      fc.asciiString(),
+      fc.asciiString(),
+      (prefix, suffix) => {
+        assert.equal(Strings.removeLeading(prefix + suffix, prefix), suffix);
+      }
+    ));
+  });
 });
