@@ -11,8 +11,8 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
     assert.throws(() => {
       s.getOrDie('Died!');
     });
-    assert.deepEqual(s.or(Optional.some(6)).getOrDie(), 6);
-    assert.deepEqual(s.orThunk(() => Optional.some(6)).getOrDie(), 6);
+    assert.equal(s.or(Optional.some(6)).getOrDie(), 6);
+    assert.equal(s.orThunk(() => Optional.some(6)).getOrDie(), 6);
 
     assertNone(s.map((v) => v * 2));
     assertNone(s.map(Fun.die('boom')));
@@ -22,48 +22,48 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
     assertNone(Optional.from(null));
     assertNone(Optional.from(undefined));
 
-    assert.deepEqual(Optional.none().or(Optional.some(7)).equals(Optional.some(7)), true);
-    assert.deepEqual(Optional.none().or(Optional.none()).equals(Optional.none()), true);
+    assert.isTrue(Optional.none().or(Optional.some(7)).equals(Optional.some(7)));
+    assert.isTrue(Optional.none().or(Optional.none()).equals(Optional.none()));
 
     assert.deepEqual(Optional.none().toArray(), []);
 
-    assert.deepEqual(Optional.none().fold(() => 'zz', Fun.die('boom')), 'zz');
+    assert.equal(Optional.none().fold(() => 'zz', Fun.die('boom')), 'zz');
     assert.deepEqual(Optional.none().fold((...args: any[]) => {
       return args;
     }, Fun.die('boom')), []);
 
-    assert.deepEqual(Optional.none().fold(Fun.constant('b'), Fun.die('boom')), 'b');
+    assert.equal(Optional.none().fold(Fun.constant('b'), Fun.die('boom')), 'b');
     assertNone(Optional.none().bind(Fun.die('boom')));
-    assert.deepEqual(Optional.none().each(Fun.die('boom')), undefined);
+    assert.isUndefined(Optional.none().each(Fun.die('boom')));
 
-    assert.deepEqual(Optional.none().forall(Fun.die('boom')), true);
-    assert.deepEqual(Optional.none().exists(Fun.die('boom')), false);
+    assert.isTrue(Optional.none().forall(Fun.die('boom')));
+    assert.isFalse(Optional.none().exists(Fun.die('boom')));
 
-    assert.deepEqual(Optional.none().toString(), 'none()');
+    assert.equal(Optional.none().toString(), 'none()');
   });
 
   it('Checking none.fold(_ -> x, die) === x', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
       const actual = Optional.none<string>().fold(Fun.constant(i), Fun.die('Should not be called'));
-      assert.deepEqual(actual, i);
+      assert.equal(actual, i);
     }));
   });
 
   it('Checking none.is === false', () => {
     fc.assert(fc.property(fc.integer(), (v) => {
-      assert.deepEqual(Optional.none<number>().is(v), false);
+      assert.equal(Optional.none<number>().is(v), false);
     }));
   });
 
   it('Checking none.getOr(v) === v', () => {
     fc.assert(fc.property(fc.integer(), (i) => {
-      assert.deepEqual(Optional.none<number>().getOr(i), i);
+      assert.equal(Optional.none<number>().getOr(i), i);
     }));
   });
 
   it('Checking none.getOrThunk(_ -> v) === v', () => {
     fc.assert(fc.property(fc.func(fc.integer()), (thunk) => {
-      assert.deepEqual(Optional.none<number>().getOrThunk(thunk), thunk());
+      assert.equal(Optional.none<number>().getOrThunk(thunk), thunk());
     }));
   });
 
