@@ -6,17 +6,17 @@ import * as Num from 'ephox/katamari/api/Num';
 describe('atomic.katamari.api.num.NumCycleByTest', () => {
 
   it(' Unit tests', () => {
-    assert.deepEqual(Num.cycleBy(1, 0, 1, 12), 1);
-    assert.deepEqual(Num.cycleBy(1, 1, 1, 12), 2);
-    assert.deepEqual(Num.cycleBy(1, 2, 1, 12), 3);
-    assert.deepEqual(Num.cycleBy(1, 3, 1, 12), 4);
-    assert.deepEqual(Num.cycleBy(1, 11, 1, 12), 12);
-    assert.deepEqual(Num.cycleBy(1, 12, 1, 12), 1);
+    assert.equal(Num.cycleBy(1, 0, 1, 12), 1);
+    assert.equal(Num.cycleBy(1, 1, 1, 12), 2);
+    assert.equal(Num.cycleBy(1, 2, 1, 12), 3);
+    assert.equal(Num.cycleBy(1, 3, 1, 12), 4);
+    assert.equal(Num.cycleBy(1, 11, 1, 12), 12);
+    assert.equal(Num.cycleBy(1, 12, 1, 12), 1);
 
-    assert.deepEqual(Num.cycleBy(-10, 1, -5, 5), 5);
-    assert.deepEqual(Num.cycleBy(-10, 50, -5, 5), -5);
+    assert.equal(Num.cycleBy(-10, 1, -5, 5), 5);
+    assert.equal(Num.cycleBy(-10, 50, -5, 5), -5);
 
-    assert.deepEqual(Num.cycleBy(50, -150, -5, 5), 5);
+    assert.equal(Num.cycleBy(50, -150, -5, 5), 5);
   });
 
   it('should have an adjustment of delta, or be the min or max', () => {
@@ -36,7 +36,7 @@ describe('atomic.katamari.api.num.NumCycleByTest', () => {
   it('0 has no effect', () => {
     fc.assert(fc.property(fc.nat(), fc.nat(), (value, delta) => {
       const actual = Num.cycleBy(value, 0, value, value + delta);
-      assert.deepEqual(actual, value);
+      assert.equal(actual, value);
     }));
   });
 
@@ -44,7 +44,7 @@ describe('atomic.katamari.api.num.NumCycleByTest', () => {
     fc.assert(fc.property(fc.nat(), fc.nat(), (value, delta) => {
       const max = value + delta;
       const actual = Num.cycleBy(value, delta, value, max);
-      assert.deepEqual(actual, max);
+      assert.equal(actual, max);
     }));
   });
 });

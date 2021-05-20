@@ -27,8 +27,8 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
       fc.dictionary(fc.asciiString(), fc.string(1, 40)),
       (obj) => {
         const output = Obj.bifilter(obj, Fun.never);
-        assert.deepEqual(Obj.keys(output.f).length, Obj.keys(obj).length);
-        assert.deepEqual(Obj.keys(output.t).length, 0);
+        assert.lengthOf(Obj.keys(output.f), Obj.keys(obj).length);
+        assert.lengthOf(Obj.keys(output.t), 0);
         return true;
       }
     ));
@@ -39,8 +39,8 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
       fc.dictionary(fc.asciiString(), fc.string(1, 40)),
       (obj) => {
         const output = Obj.bifilter(obj, Fun.always);
-        assert.deepEqual(Obj.keys(output.f).length, 0);
-        assert.deepEqual(Obj.keys(output.t).length, Obj.keys(obj).length);
+        assert.lengthOf(Obj.keys(output.f), 0);
+        assert.lengthOf(Obj.keys(output.t), Obj.keys(obj).length);
         return true;
       }
     ));

@@ -12,23 +12,23 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     const add2squared = Fun.compose(squared, add2);
 
     const f0 = (...args: any[]) => {
-      return assert.deepEqual(args.length, 0);
+      return assert.lengthOf(args, 0);
     };
     Fun.noarg(f0)(1, 2, 3);
 
-    assert.deepEqual(add2squared(2), 16);
+    assert.equal(add2squared(2), 16);
 
-    assert.deepEqual(Fun.identity(undefined), undefined);
-    assert.deepEqual(Fun.identity(10), 10);
+    assert.isUndefined(Fun.identity(undefined));
+    assert.equal(Fun.identity(10), 10);
     assert.deepEqual(Fun.identity([ 1, 2, 4 ]), [ 1, 2, 4 ]);
     assert.deepEqual(Fun.identity({ a: 'a', b: 'b' }), { a: 'a', b: 'b' });
 
-    assert.deepEqual(Fun.constant(undefined)(), undefined);
-    assert.deepEqual(Fun.constant(10)(), 10);
+    assert.isUndefined(Fun.constant(undefined)());
+    assert.equal(Fun.constant(10)(), 10);
     assert.deepEqual(Fun.constant({ a: 'a' })(), { a: 'a' });
 
-    assert.deepEqual(Fun.never(), false);
-    assert.deepEqual(Fun.always(), true);
+    assert.isFalse(Fun.never());
+    assert.isTrue(Fun.always());
 
     const c = (...args) => args;
 
@@ -39,8 +39,8 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     assert.deepEqual(Fun.curry(c)('a', 'b', 'c'), [ 'a', 'b', 'c' ]);
     assert.deepEqual(Fun.curry(c, 'a', 'b')('c'), [ 'a', 'b', 'c' ]);
 
-    assert.deepEqual(Fun.not((_x: number) => true)(3), false);
-    assert.deepEqual(Fun.not((_x: string) => false)('cat'), true);
+    assert.isFalse(Fun.not((_x: number) => true)(3));
+    assert.isTrue(Fun.not((_x: string) => false)('cat'));
 
     assert.throws(Fun.die('Died!'));
 
@@ -49,10 +49,10 @@ describe('atomic.katamari.api.fun.FunTest', () => {
       called = true;
     };
     Fun.apply(f);
-    assert.deepEqual(called, true);
+    assert.isTrue(called);
     called = false;
     Fun.apply(f);
-    assert.deepEqual(called, true);
+    assert.isTrue(called);
   });
 
   it('Check compose :: compose(f, g)(x) = f(g(x))', () => {
@@ -131,7 +131,7 @@ describe('atomic.katamari.api.fun.FunTest', () => {
         hack = x;
       });
 
-      assert.deepEqual(output, undefined);
+      assert.isUndefined(output);
       assert.deepEqual(hack, x);
     }));
   });
