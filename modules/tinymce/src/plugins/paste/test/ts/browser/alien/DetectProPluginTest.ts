@@ -1,21 +1,33 @@
-import { Assertions } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { assert } from 'chai';
+
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import * as DetectProPlugin from 'tinymce/plugins/paste/alien/DetectProPlugin';
 
-UnitTest.test('browser.tinymce.plugins.paste.alien.DetectProPluginTest', () => {
-  // Fake loading of powerpaste
-  PluginManager.add('powerpaste', Fun.noop);
+describe('browser.tinymce.plugins.paste.alien.DetectProPluginTest', () => {
+  before(() => {
+    // Fake loading of powerpaste
+    PluginManager.add('powerpaste', Fun.noop);
+  });
 
-  Assertions.assertEq('TestCase-TBA: Paste: Should not have pro plugin', false, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should not have pro plugin', false, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: '' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'powerpaste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste powerpaste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'powerpaste paste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste powerpaste paste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste,powerpaste,paste' }, EditorManager)));
-  Assertions.assertEq('TestCase-TBA: Paste: Should have pro plugin', true, DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste  powerpaste  paste' }, EditorManager)));
+  after(() => {
+    PluginManager.remove('powerpaste');
+  });
+
+  it('should not detect the powerpaste plugin is enabled', () => {
+    assert.isFalse(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste' }, EditorManager)));
+    assert.isFalse(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: '' }, EditorManager)));
+  });
+
+  it('should detect the powerpaste plugin is enabled', () => {
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'powerpaste' }, EditorManager)));
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste powerpaste' }, EditorManager)));
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'powerpaste paste' }, EditorManager)));
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste powerpaste paste' }, EditorManager)));
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste,powerpaste,paste' }, EditorManager)));
+    assert.isTrue(DetectProPlugin.hasProPlugin(new Editor('id', { plugins: 'paste  powerpaste  paste' }, EditorManager)));
+  });
 });

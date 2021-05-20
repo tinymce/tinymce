@@ -1,48 +1,36 @@
-import { Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Keys } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/mcagar';
 
-import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/textpattern/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as Utils from '../module/test/Utils';
+describe('browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'textpattern',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ], true);
 
-UnitTest.asynctest(
-  'browser.tinymce.plugins.textpattern.TriggerInlinePatternBeginningTest', (success, failure) => {
+  beforeEach(() => {
+    const editor = hook.editor();
+    editor.setContent('');
+  });
 
-    Theme();
-    TextpatternPlugin();
+  it('TBA: enter after first * in *a*', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>*a*</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p>*</p><p>a*</p>');
+  });
 
-    TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-      const tinyApis = TinyApis(editor);
-      // var tinyActions = TinyActions(editor);
-
-      const steps = Utils.withTeardown([
-        Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *a*', [
-          tinyApis.sSetContent('<p>*a*</p>'),
-          tinyApis.sFocus(),
-          tinyApis.sSetCursor([ 0, 0 ], 1),
-          Step.sync(() => {
-            editor.fire('keydown', { keyCode: 13 });
-          }),
-          tinyApis.sAssertContent('<p>*</p><p>a*</p>')
-        ]),
-        Log.stepsAsStep('TBA', 'TextPattern: enter after first * in *b*', [
-          tinyApis.sSetContent('<p><strong>a</strong>*b*</p>'),
-          tinyApis.sFocus(),
-          tinyApis.sSetCursor([ 0, 1 ], 1),
-          Step.sync(() => {
-            editor.fire('keydown', { keyCode: 13 });
-          }),
-          tinyApis.sAssertContent('<p><strong>a</strong>*</p><p>b*</p>')
-        ])
-      ], tinyApis.sSetContent(''));
-
-      Pipeline.async({}, steps, onSuccess, onFailure);
-    }, {
-      plugins: 'textpattern',
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce'
-    }, success, failure);
-  }
-);
+  it('TBA: enter after first * in *b*', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><strong>a</strong>*b*</p>');
+    TinySelections.setCursor(editor, [ 0, 1 ], 1);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p><strong>a</strong>*</p><p>b*</p>');
+  });
+});
