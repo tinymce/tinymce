@@ -1,40 +1,34 @@
-import { Log, PhantomSkipper, Pipeline, RealMouse, Waiter } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { PhantomSkipper, RealMouse, Waiter } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { PlatformDetection } from '@ephox/sand';
 
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('webdriver.tinymce.plugins.paste.CutTest', (success, failure) => {
-
-  Theme();
-  PastePlugin();
-
-  const platform = PlatformDetection.detect();
-
-  /* Test does not work on Phantom */
-  if (PhantomSkipper.detect()) {
-    return success();
-  }
-
-  TinyLoader.setup((editor, onSuccess, onFailure) => {
-    const api = TinyApis(editor);
-    const ui = TinyUi(editor);
-
+describe('webdriver.tinymce.plugins.paste.CutTest', () => {
+  before(function () {
     // Cut doesn't seem to work in webdriver mode on ie
-    Pipeline.async({}, platform.browser.isIE() ? [] :
-      Log.steps('TBA', 'Paste: Set and select content, cut using edit menu and assert cut content', [
-        api.sSetContent('<p>abc</p>'),
-        api.sSetSelection([ 0, 0 ], 1, [ 0, 0 ], 2),
-        ui.sClickOnMenu('Click Edit menu', 'button:contains("Edit")'),
-        ui.sWaitForUi('Wait for dropdown', '*[role="menu"]'),
-        RealMouse.sClickOn('div[title="Cut"]'),
-        Waiter.sTryUntil('Cut is async now, so need to wait for content', api.sAssertContent('<p>ac</p>'))
-      ]), onSuccess, onFailure);
-  }, {
+    const platform = PlatformDetection.detect();
+    if (platform.browser.isIE() || PhantomSkipper.detect()) {
+      this.skip();
+    }
+  });
+
+  const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    theme: 'silver',
+    toolbar: false,
     statusbar: false
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: Set and select content, cut using edit menu and assert cut content', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
+    TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
+    await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
+    await RealMouse.pClickOn('div[title="Cut"]');
+    await Waiter.pTryUntil('Cut is async now, so need to wait for content', () => TinyAssertions.assertContent(editor, '<p>ac</p>'));
+  });
 });

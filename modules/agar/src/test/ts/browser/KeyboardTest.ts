@@ -12,25 +12,30 @@ import * as DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('KeyboardTest', (success, failure) => {
 
-  const sAssertEvent = (type, code, modifiers, raw) =>
-    Assertions.sAssertEq(
-      'Checking ' + type + ' event',
-      {
-        which: code,
-        ctrlKey: modifiers.ctrlKey || false,
-        shiftKey: modifiers.shiftKey || false,
-        altKey: modifiers.altKey || false,
-        metaKey: modifiers.metaKey || false,
-        type
-      }, {
-        which: raw.which,
-        ctrlKey: raw.ctrlKey,
-        shiftKey: raw.shiftKey,
-        altKey: raw.altKey,
-        metaKey: raw.metaKey,
-        type: raw.type
-      }
-    );
+  const sAssertEvent = (type: string, code: number, modifiers: Record<string, boolean>, raw: KeyboardEvent) => {
+    const expected: Record<string, any> = {
+      which: code,
+      ctrlKey: modifiers.ctrlKey || false,
+      shiftKey: modifiers.shiftKey || false,
+      altKey: modifiers.altKey || false,
+      metaKey: modifiers.metaKey || false,
+      type
+    };
+    const actual: Record<string, any> = {
+      which: raw.which,
+      ctrlKey: raw.ctrlKey,
+      shiftKey: raw.shiftKey,
+      altKey: raw.altKey,
+      metaKey: raw.metaKey,
+      type: raw.type
+    };
+    // Keypress events should also include a charCode
+    if (type === 'keypress') {
+      expected.charCode = code;
+      actual.charCode = raw.charCode;
+    }
+    return Assertions.sAssertEq('Checking ' + type + ' event', expected, actual);
+  };
 
   const listenOn = (type, f, code, modifiers) =>
     Step.control(

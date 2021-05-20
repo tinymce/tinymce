@@ -1,21 +1,27 @@
-import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { Assertions } from '@ephox/agar';
+import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import TextpatternPlugin from 'tinymce/plugins/textpattern/Plugin';
+import Plugin from 'tinymce/plugins/textpattern/Plugin';
 import * as TextSearch from 'tinymce/plugins/textpattern/text/TextSearch';
 import { SpotPoint } from 'tinymce/plugins/textpattern/utils/Spot';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as Utils from '../module/test/Utils';
+describe('browser.tinymce.plugins.textpattern.TextSearchTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'textpattern',
+    indent: false,
+    base_url: '/project/tinymce/js/tinymce'
+  }, [ Plugin, Theme ]);
 
-UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (success, failure) => {
-
-  Theme();
-  TextpatternPlugin();
+  beforeEach(() => {
+    const editor = hook.editor();
+    editor.setContent('');
+  });
 
   const process = (content: string) => (element: Text, offset: number) => element.data === content ? offset : -1;
 
@@ -35,106 +41,104 @@ UnitTest.asynctest('browser.tinymce.plugins.textpattern.TextSearchTest', (succes
     );
   };
 
-  const assertSpot = (label: string, spotOpt: Optional<SpotPoint<Text>>, elementText: String, offset: number) => {
+  const assertSpot = (label: string, spotOpt: Optional<SpotPoint<Text>>, elementText: string, offset: number) => {
     const spot = spotOpt.getOrDie(`${label} - Spot not found`);
 
-    Assertions.assertEq(label, elementText, spot.container.textContent);
-    Assertions.assertEq(label, offset, spot.offset);
+    assert.equal(spot.container.textContent, elementText, label);
+    assert.equal(spot.offset, offset, label);
   };
 
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
+  it('TBA: text before from element', () => {
+    const editor = hook.editor();
     const editorBody = editor.getBody();
+    editor.setContent('<p>*<a href="#">a</a>bc</p>');
+    // Select the end of the paragraph
+    TinySelections.setCursor(editor, [ 0 ], 1);
 
-    const steps = Utils.withTeardown([
-      Log.stepsAsStep('TBA', 'TextSearch: text before from element', [
-        tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        // Select the end of the paragraph
-        tinyApis.sSetCursor([ 0 ], 1),
-        Step.sync(() => {
-          const rng = editor.selection.getRng();
-          const content = TextSearch.textBefore(rng.startContainer, rng.startOffset, editorBody);
-          assertSpot('Text before from end of paragraph', content, 'bc', 2);
-          const anchorElm = rng.startContainer.childNodes[1];
-          const anchor = TextSearch.textBefore(anchorElm, 1, editorBody);
-          assertSpot('Text before from end of anchor', anchor, 'a', 1);
-        })
-      ]),
-      Log.stepsAsStep('TBA', 'TextSearch: text before from text node', [
-        tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([ 0, 2 ], 2),
-        Step.sync(() => {
-          const rng = editor.selection.getRng();
-          const contentEnd = TextSearch.textBefore(rng.startContainer, 2, editorBody);
-          assertSpot('Text before within text node', contentEnd, 'bc', 2);
-          const contentStart = TextSearch.textBefore(rng.startContainer, 0, editorBody);
-          assertSpot('Text before within text node', contentStart, 'bc', 0);
-        })
-      ]),
-      Log.stepsAsStep('TBA', 'TextSearch: scan right over fragmented text', [
-        tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        Step.sync(() => {
-          const startNode = editor.selection.getRng().startContainer as Text;
-          const start = TextSearch.scanRight(startNode, 1, editorBody);
-          const anchor = TextSearch.scanRight(startNode, 2, editorBody);
-          const content = TextSearch.scanRight(startNode, 4, editorBody);
-          const outOfRange = TextSearch.scanRight(startNode, 10, editorBody);
-          assertSpot('Scan right same text node', start, '*', 1);
-          assertSpot('Scan right into anchor element', anchor, 'a', 1);
-          assertSpot('Scan right over anchor element', content, 'bc', 2);
-          Assertions.assertEq('Scan right with out of range offset is none', true, outOfRange.isNone());
-        })
-      ]),
-      Log.stepsAsStep('TBA', 'TextSearch: scan left over fragmented text', [
-        tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([ 0, 2 ], 2),
-        Step.sync(() => {
-          const startNode = editor.selection.getRng().startContainer as Text;
-          const start = TextSearch.scanLeft(startNode, 1, editorBody);
-          const anchor = TextSearch.scanLeft(startNode, -1, editorBody);
-          const content = TextSearch.scanLeft(startNode, -2, editorBody);
-          const outOfRange = TextSearch.scanLeft(startNode, -10, editorBody);
-          assertSpot('Scan left same text node', start, 'bc', 1);
-          assertSpot('Scan left into anchor element', anchor, 'a', 0);
-          assertSpot('Scan left over anchor element', content, '*', 0);
-          Assertions.assertEq('Scan left with out of range offset is none', true, outOfRange.isNone());
-        })
-      ]),
-      Log.stepsAsStep('TBA', 'TextSearch: repeat left over fragmented text', [
-        tinyApis.sSetContent('<p>def</p><p>*<a href="#">a</a>bc</p>'),
-        tinyApis.sSetCursor([ 1, 2 ], 2),
-        Step.sync(() => {
-          const asteriskNode = editorBody.childNodes[1].firstChild;
-          const anchorNode = asteriskNode.nextSibling.firstChild;
-          const asterisk = repeatLeftUntil(editor, '*');
-          Assertions.assertDomEq('Repeat left until asterisk found', SugarElement.fromDom(asteriskNode), SugarElement.fromDom(asterisk));
-          const anchor = repeatLeftUntil(editor, 'a');
-          Assertions.assertDomEq('Repeat left until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
-          const boundary = repeatLeftUntil(editor, 'def');
-          Assertions.assertEq('Repeat left until block boundary found', null, boundary);
-        })
-      ]),
-      Log.stepsAsStep('TBA', 'TextSearch: repeat right over fragmented text', [
-        tinyApis.sSetContent('<p>*<a href="#">a</a>bc</p><p>def</p>'),
-        tinyApis.sSetCursor([ 0, 0 ], 0),
-        Step.sync(() => {
-          const contentNode = editorBody.childNodes[0].lastChild;
-          const anchorNode = contentNode.previousSibling.firstChild;
-          const asterisk = repeatRightUntil(editor, 'bc');
-          Assertions.assertDomEq('Repeat right until bc found', SugarElement.fromDom(contentNode), SugarElement.fromDom(asterisk));
-          const anchor = repeatRightUntil(editor, 'a');
-          Assertions.assertDomEq('Repeat right until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
-          const boundary = repeatRightUntil(editor, 'def');
-          Assertions.assertEq('Repeat right until block boundary found', null, boundary);
-        })
-      ])
-    ], tinyApis.sSetContent(''));
+    const rng = editor.selection.getRng();
+    const content = TextSearch.textBefore(rng.startContainer, rng.startOffset, editorBody);
+    assertSpot('Text before from end of paragraph', content, 'bc', 2);
+    const anchorElm = rng.startContainer.childNodes[1];
+    const anchor = TextSearch.textBefore(anchorElm, 1, editorBody);
+    assertSpot('Text before from end of anchor', anchor, 'a', 1);
+  });
 
-    Pipeline.async({}, steps, onSuccess, onFailure);
-  }, {
-    plugins: 'textpattern',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  it('TBA: text before from text node', () => {
+    const editor = hook.editor();
+    const editorBody = editor.getBody();
+    editor.setContent('<p>*<a href="#">a</a>bc</p>');
+    TinySelections.setCursor(editor, [ 0, 2 ], 2);
+
+    const rng = editor.selection.getRng();
+    const contentEnd = TextSearch.textBefore(rng.startContainer, 2, editorBody);
+    assertSpot('Text before within text node', contentEnd, 'bc', 2);
+    const contentStart = TextSearch.textBefore(rng.startContainer, 0, editorBody);
+    assertSpot('Text before within text node', contentStart, 'bc', 0);
+  });
+
+  it('TBA: scan right over fragmented text', () => {
+    const editor = hook.editor();
+    const editorBody = editor.getBody();
+    editor.setContent('<p>*<a href="#">a</a>bc</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+
+    const startNode = editor.selection.getRng().startContainer as Text;
+    const start = TextSearch.scanRight(startNode, 1, editorBody);
+    const anchor = TextSearch.scanRight(startNode, 2, editorBody);
+    const content = TextSearch.scanRight(startNode, 4, editorBody);
+    const outOfRange = TextSearch.scanRight(startNode, 10, editorBody);
+    assertSpot('Scan right same text node', start, '*', 1);
+    assertSpot('Scan right into anchor element', anchor, 'a', 1);
+    assertSpot('Scan right over anchor element', content, 'bc', 2);
+    assert.isTrue(outOfRange.isNone(), 'Scan right with out of range offset is none');
+  });
+
+  it('TBA: scan left over fragmented text', () => {
+    const editor = hook.editor();
+    const editorBody = editor.getBody();
+    editor.setContent('<p>*<a href="#">a</a>bc</p>');
+    TinySelections.setCursor(editor, [ 0, 2 ], 2);
+
+    const startNode = editor.selection.getRng().startContainer as Text;
+    const start = TextSearch.scanLeft(startNode, 1, editorBody);
+    const anchor = TextSearch.scanLeft(startNode, -1, editorBody);
+    const content = TextSearch.scanLeft(startNode, -2, editorBody);
+    const outOfRange = TextSearch.scanLeft(startNode, -10, editorBody);
+    assertSpot('Scan left same text node', start, 'bc', 1);
+    assertSpot('Scan left into anchor element', anchor, 'a', 0);
+    assertSpot('Scan left over anchor element', content, '*', 0);
+    assert.isTrue(outOfRange.isNone(), 'Scan left with out of range offset is none');
+  });
+
+  it('TBA: repeat left over fragmented text', () => {
+    const editor = hook.editor();
+    const editorBody = editor.getBody();
+    editor.setContent('<p>def</p><p>*<a href="#">a</a>bc</p>');
+    TinySelections.setCursor(editor, [ 1, 2 ], 2);
+
+    const asteriskNode = editorBody.childNodes[1].firstChild;
+    const anchorNode = asteriskNode.nextSibling.firstChild;
+    const asterisk = repeatLeftUntil(editor, '*');
+    Assertions.assertDomEq('Repeat left until asterisk found', SugarElement.fromDom(asteriskNode), SugarElement.fromDom(asterisk));
+    const anchor = repeatLeftUntil(editor, 'a');
+    Assertions.assertDomEq('Repeat left until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
+    const boundary = repeatLeftUntil(editor, 'def');
+    assert.isNull(boundary, 'Repeat left until block boundary found');
+  });
+
+  it('TBA: repeat right over fragmented text', () => {
+    const editor = hook.editor();
+    const editorBody = editor.getBody();
+    editor.setContent('<p>*<a href="#">a</a>bc</p><p>def</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+
+    const contentNode = editorBody.childNodes[0].lastChild;
+    const anchorNode = contentNode.previousSibling.firstChild;
+    const asterisk = repeatRightUntil(editor, 'bc');
+    Assertions.assertDomEq('Repeat right until bc found', SugarElement.fromDom(contentNode), SugarElement.fromDom(asterisk));
+    const anchor = repeatRightUntil(editor, 'a');
+    Assertions.assertDomEq('Repeat right until anchor found', SugarElement.fromDom(anchorNode), SugarElement.fromDom(anchor));
+    const boundary = repeatRightUntil(editor, 'def');
+    assert.isNull(boundary, 'Repeat right until block boundary found');
+  });
 });
