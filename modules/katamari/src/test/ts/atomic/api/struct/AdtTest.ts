@@ -107,10 +107,10 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
 
     const cheese = Fun.constant('cheese');
 
-    assert.deepEqual(adtNone.fold(cheese, die, die, die), 'cheese');
-    assert.deepEqual(adtRoot.fold(die, cheese, die, die), 'cheese');
-    assert.deepEqual(adtCreated.fold(die, die, cheese, die), 'cheese');
-    assert.deepEqual(adtActual.fold(die, die, die, cheese), 'cheese');
+    assert.equal(adtNone.fold(cheese, die, die, die), 'cheese');
+    assert.equal(adtRoot.fold(die, cheese, die, die), 'cheese');
+    assert.equal(adtCreated.fold(die, die, cheese, die), 'cheese');
+    assert.equal(adtActual.fold(die, die, die, cheese), 'cheese');
   });
 
   const newAdt = Adt.generate([
