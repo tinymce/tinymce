@@ -33,6 +33,12 @@ interface ModelLocation {
 }
 
 interface ModelApi {
+  attribute: {
+    getAttribute: (node: ModelNode, key: string) => string;
+    hasAttribute: (node: ModelNode, key: string) => boolean;
+    getAttributes: (node: ModelNode) => Record<string, string>;
+    removePropsAtPath: (path: path, props: string[]) => void;
+  };
   body: {
     getBody: () => ModelLocation;
   };
@@ -53,6 +59,7 @@ interface ModelApi {
   };
   path: {
     modelLocationToPath: (loc: ModelLocation) => path;
+    pathToModelLocation: (path: path) => ModelLocation;
   };
 }
 
