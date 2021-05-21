@@ -5,18 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Focusing, Keying, Replacing } from '@ephox/alloy';
-import { Arr, Cell, Optional, Type } from '@ephox/katamari';
-import { Attribute, Css } from '@ephox/sugar';
+import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
+import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
+import { Attribute, Css, Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
+import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
-const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
+const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, _behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
   dom: {
     tag: 'div',
     attributes: {
-      'aria-label': providerBackstage.translate('Loading...')
+      'aria-label': providerBackstage.translate('Loading...'),
+      // Make the busy component part of sequential keyboard navigation
+      'tabindex': '0'
     },
     classes: [ 'tox-throbber__busy-spinner' ]
   },
@@ -25,11 +28,28 @@ const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: 
       dom: DomFactory.fromHtml('<div class="tox-spinner"><div></div><div></div><div></div></div>')
     }
   ],
-  behaviours
 });
 
 const focusBusyComponent = (throbber: AlloyComponent): void =>
-  Composing.getCurrent(throbber).each(Keying.focusIn);
+  Composing.getCurrent(throbber).each((comp) => Focus.focus(comp.element));
+
+// When the throbber is enabled, prevent the iframe from being part of the sequential keyboard navigation when Tabbing
+const toggleEditorTabIndex = (editor: Editor, state: boolean) => {
+  Optional.from(editor.iframeElement)
+    .map(SugarElement.fromDom)
+    .each((iframe) => {
+      if (state) {
+        Attribute.set(iframe, 'tabindex', -1);
+      } else {
+        Obj.get(Settings.getIframeAttrs(editor), 'tabindex')
+          .fold(() => {
+            Attribute.remove(iframe, 'tabindex');
+          }, (val) => {
+            Attribute.set(iframe, 'tabindex', val);
+          });
+      }
+    });
+};
 
 /*
 * If the throbber has been toggled on, only focus the throbber if the editor had focus as we don't to steal focus if it is on an input or dialog
@@ -38,7 +58,9 @@ const focusBusyComponent = (throbber: AlloyComponent): void =>
 */
 const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, providerBackstage: UiFactoryBackstageProviders) => {
   const element = comp.element;
+  toggleEditorTabIndex(editor, state);
   if (state) {
+    editor._busy = state;
     Blocking.block(comp, getBusySpec(providerBackstage));
     Css.remove(element, 'display');
     Attribute.remove(element, 'aria-hidden');
@@ -47,10 +69,11 @@ const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, pr
     }
   } else {
     // Get the focus of the busy component before it is removed from the DOM
-    const throbberFocus = Composing.getCurrent(comp).exists(Focusing.isFocused);
+    const throbberFocus = Composing.getCurrent(comp).exists((busyComp) => Focus.hasFocus(busyComp.element));
     Blocking.unblock(comp);
     Css.set(element, 'display', 'none');
     Attribute.set(element, 'aria-hidden', 'true');
+    editor._busy = state;
     if (throbberFocus) {
       editor.focus();
     }
@@ -85,20 +108,33 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
-  // Make sure that when the editor is focused while the throbber is enabled, the focus is moved back to the throbber
-  // This covers native focusin and editor.focus() invocations
-  editor.on('PreInit', () => {
-    const target = editor.inline ? editor.getBody() : editor.getWin();
-    editor.dom.bind(target, 'focusin', () => {
-      // console.log('here');
-      if (throbberState.get()) {
-        // Issues:
-        // Ran into an issue where the cursor is still set in iframe. As result, ned this to run after on focus events
-        // For inline, need to try and focus throbber after the UI has been fully rendered and shown
-        focusBusyComponent(lazyThrobber());
-      }
+  // Set the initial state of the private busy variable
+  editor._busy = false;
+
+  const stealFocus = (e) => {
+    if (throbberState.get()) {
+      // console.log('stealfocus');
+      e.preventDefault();
+      focusBusyComponent(lazyThrobber());
+    }
+  };
+
+  // TODO: <Jira> Only worrying about iframe mode at this stage since inline mode has a number of other issues
+  if (!editor.inline) {
+    editor.on('PreInit', () => {
+      // Cover focus when when the editor is focused natively
+      editor.dom.bind(editor.getWin(), 'focusin', stealFocus);
+      // Cover stealing focus for when editor.focus() is called
+      editor.on('BeforeExecCommand', (e) => {
+        if (e.command.toLowerCase() === 'mcefocus') {
+          stealFocus(e);
+        }
+      });
+
+      // TODO: Don't think we need this one
+      // editor.on('activate', stealFocus);
     });
-  });
+  }
 
   const toggle = (state: boolean) => {
     if (state !== throbberState.get()) {

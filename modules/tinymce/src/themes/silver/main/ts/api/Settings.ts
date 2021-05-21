@@ -180,6 +180,8 @@ const getFilePickerValidatorHandler = (editor: Editor) => {
   }
 };
 
+const getIframeAttrs = (editor: Editor): Record<string, string> => editor.getParam('iframe_attrs', {});
+
 export {
   getSkinUrl,
   isReadOnly,
@@ -217,5 +219,6 @@ export {
   noTypeaheadUrls,
   getAnchorTop,
   getAnchorBottom,
-  getFilePickerValidatorHandler
+  getFilePickerValidatorHandler,
+  getIframeAttrs
 };

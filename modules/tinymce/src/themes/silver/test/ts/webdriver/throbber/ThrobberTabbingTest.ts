@@ -73,6 +73,7 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
         assert.isTrue(editor.hasFocus());
       });
 
+      // TODO: Need to figure out if this is what we want
       it('TINY-7373: should not be able to tab out of the throbber if it has focus', async () => {
         const editor = hook.editor();
         FocusTools.setFocus(SugarBody.body(), '#tempInput');

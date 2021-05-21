@@ -262,6 +262,7 @@ class Editor implements EditorObservable {
   public _pendingNativeEvents: string[];
   public _selectionOverrides: SelectionOverrides;
   public _skinLoaded: boolean;
+  public _busy: boolean;
 
   // EditorObservable patches
   public bindPendingEventDelegates: EditorObservable['bindPendingEventDelegates'];
@@ -368,7 +369,12 @@ class Editor implements EditorObservable {
    * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
    */
   public focus(skipFocus?: boolean) {
-    EditorFocus.focus(this, skipFocus);
+    // TODO: Need to consider activateEditor
+    const success = this.execCommand('mceFocus', false, skipFocus);
+    if (!success) {
+      this.editorManager.setActive(this);
+    }
+    // EditorFocus.focus(this, skipFocus);
   }
 
   /**
@@ -721,6 +727,16 @@ class Editor implements EditorObservable {
    */
   public setProgressState(state: boolean, time?: number) {
     this.fire('ProgressState', { state, time });
+  }
+
+  /**
+   * Gets the progress state of the editor.
+   *
+   * @method getProgressState
+   * @returns {Boolean}
+   */
+  public getProgressState(): boolean {
+    return this._busy;
   }
 
   /**

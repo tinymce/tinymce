@@ -12,6 +12,7 @@ import * as IndentOutdent from '../commands/IndentOutdent';
 import * as LineHeightCommands from '../commands/LineHeight';
 import * as InsertContent from '../content/InsertContent';
 import * as NodeType from '../dom/NodeType';
+import * as EditorFocus from '../focus/EditorFocus';
 import * as InsertBr from '../newline/InsertBr';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
@@ -74,10 +75,12 @@ class EditorCommands {
       return;
     }
 
-    if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
-      self.editor.focus();
-    } else {
-      SelectionBookmark.restore(self.editor);
+    if (command !== 'mceFocus') {
+      if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
+        self.editor.focus();
+      } else {
+        SelectionBookmark.restore(self.editor);
+      }
     }
 
     args = self.editor.fire('BeforeExecCommand', { command, ui, value });
@@ -287,6 +290,12 @@ class EditorCommands {
       // Add undo manager logic
       'mceEndUndoLevel,mceAddUndoLevel': () => {
         editor.undoManager.add();
+      },
+
+      'mceFocus': (_command, _ui, value?: boolean) => {
+        // editor.focus(value);
+        // TODO: Not sure if this should call EditorFocus.focus directly
+        EditorFocus.focus(editor, value);
       },
 
       'Cut,Copy,Paste': (command) => {
