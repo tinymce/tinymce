@@ -5,32 +5,32 @@ import { Adt } from 'ephox/katamari/api/Adt';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 
+const checkInvalid = (message, f) => {
+  let error = false;
+  try {
+    f();
+  } catch (e) {
+    if (e === 'ADTWHOOPS') {
+      // eslint-disable-next-line no-console
+      console.log('die function incorrectly called');
+    } else {
+      error = true;
+    }
+  }
+
+  if (!error) {
+    throw new Error('Unexpected pass: ' + message);
+  }
+};
+
+const checkInvalidGenerate = (cases, message) => {
+  checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
+    Adt.generate(cases);
+  });
+};
+
 describe('atomic.katamari.api.struct.AdtTest', () => {
-  it('ADT Test', () => {
-    const checkInvalid = (message, f) => {
-      let error = false;
-      try {
-        f();
-      } catch (e) {
-        if (e === 'ADTWHOOPS') {
-          // eslint-disable-next-line no-console
-          console.log('die function incorrectly called');
-        } else {
-          error = true;
-        }
-      }
-
-      if (!error) {
-        throw new Error('Unexpected pass: ' + message);
-      }
-    };
-
-    const checkInvalidGenerate = (cases, message) => {
-      checkInvalid('generate() did not throw an error. Input: "' + message + '"', () => {
-        Adt.generate(cases);
-      });
-    };
-
+  it('checkInvalidGenerate', () => {
     checkInvalidGenerate({}, 'object instead of array');
     checkInvalidGenerate([], 'empty cases array');
     checkInvalidGenerate([ 'f' ], 'array contains strings');
@@ -44,7 +44,9 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
         two: []
       }
     ], 'two cases in one');
+  });
 
+  it('works with real Adt from the soldier project', () => {
     // A real Adt from the soldier project
     const soldierBlock = Adt.generate([
       { none: [] },
