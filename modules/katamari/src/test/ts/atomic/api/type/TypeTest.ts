@@ -1,3 +1,5 @@
+// noinspection JSPrimitiveTypeWrapperUsage
+
 import { Assert, describe, it } from '@ephox/bedrock-client';
 import { Pprint } from '@ephox/dispute';
 import { assert } from 'chai';
@@ -6,30 +8,30 @@ import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
 import * as Type from 'ephox/katamari/api/Type';
 
+const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
+  const actual = method(input);
+  assert.equal(
+    actual,
+    expected,
+    'Expected: ' + methodName + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected
+  );
+};
+
+// eslint-disable-next-line no-new-wrappers
+const objectString = new String('ball');
+const noop = Fun.noop;
+
+const checkIsNull = check(Type.isNull, 'isNull');
+const checkIsUndefined = check(Type.isUndefined, 'isUndefined');
+const checkIsBoolean = check(Type.isBoolean, 'isBoolean');
+const checkIsString = check(Type.isString, 'isString');
+const checkIsObject = check(Type.isObject, 'isObject');
+const checkIsArray = check(Type.isArray, 'isArray');
+const checkIsFunction = check(Type.isFunction, 'isFunction');
+const checkIsNumber = check(Type.isNumber, 'isNumber');
+
 describe('atomic.katamari.api.struct.TypeTest', () => {
-  it('Type.is* unit tests', () => {
-    const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
-      const actual = method(input);
-      assert.equal(
-        actual,
-        expected,
-        'Expected: ' + methodName + '(' + Pprint.render(input, Pprint.pprintAny) + ') to be ' + expected
-      );
-    };
-
-    // eslint-disable-next-line no-new-wrappers
-    const objectString = new String('ball');
-    const noop = Fun.noop;
-
-    const checkIsNull = check(Type.isNull, 'isNull');
-    const checkIsUndefined = check(Type.isUndefined, 'isUndefined');
-    const checkIsBoolean = check(Type.isBoolean, 'isBoolean');
-    const checkIsString = check(Type.isString, 'isString');
-    const checkIsObject = check(Type.isObject, 'isObject');
-    const checkIsArray = check(Type.isArray, 'isArray');
-    const checkIsFunction = check(Type.isFunction, 'isFunction');
-    const checkIsNumber = check(Type.isNumber, 'isNumber');
-
+  it('isNull', () => {
     checkIsNull(true, null);
     checkIsNull(false, undefined);
     checkIsNull(false, true);
@@ -41,7 +43,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsNull(false, noop);
     checkIsNull(false, [ 1, 3, 4, 5 ]);
     checkIsNull(false, 1);
+  });
 
+  it('isUndefined', () => {
     checkIsUndefined(false, null);
     checkIsUndefined(true, undefined);
     checkIsUndefined(false, true);
@@ -53,7 +57,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsUndefined(false, noop);
     checkIsUndefined(false, [ 1, 3, 4, 5 ]);
     checkIsUndefined(false, 1);
+  });
 
+  it('isBoolean', () => {
     checkIsBoolean(false, null);
     checkIsBoolean(false, undefined);
     checkIsBoolean(true, true);
@@ -65,7 +71,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsBoolean(false, noop);
     checkIsBoolean(false, [ 1, 3, 4, 5 ]);
     checkIsBoolean(false, 1);
+  });
 
+  it('isString', () => {
     checkIsString(false, null);
     checkIsString(false, undefined);
     checkIsString(false, true);
@@ -77,7 +85,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsString(false, noop);
     checkIsString(false, [ 1, 3, 4, 5 ]);
     checkIsString(false, 1);
+  });
 
+  it('isObject', () => {
     checkIsObject(false, null);
     checkIsObject(false, undefined);
     checkIsObject(false, true);
@@ -89,7 +99,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsObject(false, noop);
     checkIsObject(false, [ 1, 3, 4, 5 ]);
     checkIsObject(false, 1);
+  });
 
+  it('isArray', () => {
     checkIsArray(false, null);
     checkIsArray(false, undefined);
     checkIsArray(false, true);
@@ -101,7 +113,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsArray(false, noop);
     checkIsArray(true, [ 1, 3, 4, 5 ]);
     checkIsArray(false, 1);
+  });
 
+  it('isFunction', () => {
     checkIsFunction(false, null);
     checkIsFunction(false, undefined);
     checkIsFunction(false, true);
@@ -113,7 +127,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsFunction(true, noop);
     checkIsFunction(false, [ 1, 3, 4, 5 ]);
     checkIsFunction(false, 1);
+  });
 
+  it('isNumber', () => {
     checkIsNumber(false, null);
     checkIsNumber(false, undefined);
     checkIsNumber(false, true);
@@ -125,7 +141,6 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsNumber(false, noop);
     checkIsNumber(false, [ 1, 3, 4, 5 ]);
     checkIsNumber(true, 1);
-
   });
 
   it('Type.is*: only one should match for every value', () => {
@@ -170,6 +185,7 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     // this is testing a compile-time check of the type guard
     const os: string | null | undefined = 'hello';
     if (Type.isNonNullable(os)) {
+      // noinspection UnnecessaryLocalVariableJS
       const s: string = os;
       Assert.eq('s', s, os);
     }
