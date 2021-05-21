@@ -7,7 +7,7 @@ import { assertNone, assertOptional } from 'ephox/katamari/test/AssertOptional';
 
 describe('atomic.katamari.api.optional.OptionalsMapFromTest', () => {
   it('Optionals.mapFrom', () => {
-    assert.deepEqual(Optionals.mapFrom(3, (x) => x + 1).getOrDie(), 4);
+    assert.equal(Optionals.mapFrom(3, (x) => x + 1).getOrDie(), 4);
     assertNone(Optionals.mapFrom<number, number>(null, Fun.die('boom')));
     assertNone(Optionals.mapFrom<number, number>(undefined, Fun.die('boom')));
   });

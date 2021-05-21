@@ -12,8 +12,8 @@ describe('atomic.katamari.api.optional.OptionalsTest', () => {
     const arr1 = [ Optional.some(1), Optional.none(), Optional.some(2), Optional.some(3), Optional.none(), Optional.none(), Optional.none(), Optional.none(), Optional.some(4) ];
     assert.deepEqual(Optionals.cat(arr1), [ 1, 2, 3, 4 ]);
 
-    assert.deepEqual(Optional.some(1).each(Fun.identity), undefined);
-    assert.deepEqual(Optional.none().each(Fun.identity), undefined);
+    assert.isUndefined(Optional.some(1).each(Fun.identity));
+    assert.isUndefined(Optional.none().each(Fun.identity));
   });
 
   it('Optionals.cat of only nones should be an empty array', () => {
@@ -31,7 +31,7 @@ describe('atomic.katamari.api.optional.OptionalsTest', () => {
       fc.array(ArbDataTypes.arbOptionalSome(fc.integer())),
       (options) => {
         const output = Optionals.cat(options);
-        assert.equal(output.length, options.length);
+        assert.lengthOf(output, options.length);
       }
     ));
   });
