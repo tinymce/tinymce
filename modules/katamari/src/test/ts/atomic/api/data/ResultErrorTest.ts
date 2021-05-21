@@ -11,20 +11,20 @@ describe('atomic.katamari.api.data.ResultErrorTest', () => {
 
   it('unit tests', () => {
     const s = Result.error('error');
-    assert.deepEqual(s.is('error'), false);
-    assert.deepEqual(s.isValue(), false);
-    assert.deepEqual(s.isError(), true);
-    assert.deepEqual(s.getOr(6), 6);
-    assert.deepEqual(s.getOrThunk(() => 6), 6);
+    assert.isFalse(s.is('error'));
+    assert.isFalse(s.isValue());
+    assert.isTrue(s.isError());
+    assert.equal(s.getOr(6), 6);
+    assert.equal(s.getOrThunk(() => 6), 6);
     assert.throws(() => {
       s.getOrDie();
     });
-    assert.deepEqual(s.or(Result.value(6)).getOrDie(), 6);
+    assert.equal(s.or(Result.value(6)).getOrDie(), 6);
     assert.throws(() => {
       s.orThunk(() => Result.error('Should not get here.')).getOrDie();
     });
 
-    assert.deepEqual(s.fold((e) => e + '!', (v) => v + 6), 'error!');
+    assert.equal(s.fold((e) => e + '!', (v) => v + 6), 'error!');
 
     assert.throws(() => {
       s.map((v) => v * 2).getOrDie();
