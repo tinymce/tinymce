@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
+- Fix active state in context toolbar for link button
 
 ## 5.8.1 - 2021-05-20
 
