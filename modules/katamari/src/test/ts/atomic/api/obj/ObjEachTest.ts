@@ -31,7 +31,7 @@ describe('atomic.katamari.api.obj.ObjEachTest', () => {
           values[i] = x;
         });
         assert.deepEqual(values, obj);
-        assert.deepEqual(output, undefined);
+        assert.isUndefined(output);
       }
     ));
   });

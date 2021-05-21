@@ -1,5 +1,6 @@
-import { Assert, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import Promise from '@ephox/wrap-promise-polyfill';
+import { assert } from 'chai';
 import * as Throttler from 'ephox/katamari/api/Throttler';
 
 describe('atomic.katamari.api.fun.ThrottlerTest', () => {
@@ -16,11 +17,11 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
     throttler.throttle('frog');
 
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog' ], data);
+      assert.deepEqual(data, [ 'frog' ]);
       throttler.throttle('frog-goose');
       throttler.throttle('goose');
       setTimeout(() => {
-        Assert.eq('eq', [ 'frog', 'goose' ], data);
+        assert.deepEqual(data, [ 'frog', 'goose' ]);
         success();
       }, 500);
     }, 500);
@@ -38,11 +39,11 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
     throttler.throttle('frog');
 
     setTimeout(() => {
-      Assert.eq('eq', [ 'cat' ], data);
+      assert.deepEqual(data, [ 'cat' ]);
       throttler.throttle('frog-goose');
       throttler.throttle('goose');
       setTimeout(() => {
-        Assert.eq('eq', [ 'cat', 'frog-goose' ], data);
+        assert.deepEqual(data, [ 'cat', 'frog-goose' ]);
         success();
       }, 500);
     }, 500);
@@ -60,11 +61,11 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
     throttler.throttle('frog');
 
     setTimeout(() => {
-      Assert.eq('eq', [ 'frog' ], data);
+      assert.deepEqual(data, [ 'frog' ]);
       throttler.throttle('frog-goose');
       throttler.throttle('goose');
       setTimeout(() => {
-        Assert.eq('eq', [ 'frog', 'goose' ], data);
+        assert.deepEqual(data, [ 'frog', 'goose' ]);
         success();
       }, 500);
     }, 500);

@@ -14,9 +14,9 @@ describe('atomic.katamari.api.num.NumClampTest', () => {
         const med = low + b;
         const high = med + c;
         // low <= med <= high
-        assert.deepEqual(Num.clamp(med, low, high), med);
-        assert.deepEqual(Num.clamp(med, low, high), med);
-        assert.deepEqual(Num.clamp(high, low, med), med);
+        assert.equal(Num.clamp(med, low, high), med);
+        assert.equal(Num.clamp(med, low, high), med);
+        assert.equal(Num.clamp(high, low, med), med);
       }));
   });
 });
