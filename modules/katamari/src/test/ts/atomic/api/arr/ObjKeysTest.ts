@@ -1,26 +1,29 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-UnitTest.test('Obj.keys: unit tests', () => {
-  const check = (expKeys, input) => {
-    const c = (expected, v) => {
-      v.sort();
-      Assert.eq('keys', expected, v);
+describe('atomic.katamari.api.arr.ObjKeysTest', () => {
+  it('unit tests', () => {
+    const check = (expKeys, input) => {
+      const c = (expected, v) => {
+        v.sort();
+        assert.deepEqual(v, expected);
+      };
+
+      c(expKeys, Obj.keys(input));
     };
 
-    c(expKeys, Obj.keys(input));
-  };
+    check([], {});
+    check([ 'a' ], { a: 'A' });
+    check([ 'a', 'b', 'c' ], { a: 'A', c: 'C', b: 'B' });
+  });
 
-  check([], {});
-  check([ 'a' ], { a: 'A' });
-  check([ 'a', 'b', 'c' ], { a: 'A', c: 'C', b: 'B' });
-});
-
-UnitTest.test('Obj.keys are all in input', () => {
-  fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
-    const keys = Obj.keys(obj);
-    return Arr.forall(keys, (k) => obj.hasOwnProperty(k));
-  }));
+  it('only returns elements that are in the input', () => {
+    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+      const keys = Obj.keys(obj);
+      return Arr.forall(keys, (k) => obj.hasOwnProperty(k));
+    }));
+  });
 });

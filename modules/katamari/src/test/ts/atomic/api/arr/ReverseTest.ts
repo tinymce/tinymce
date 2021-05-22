@@ -1,48 +1,51 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 
-UnitTest.test('Arr.reverse: unit tests', () => {
-  const check = (expected, input) => {
-    Assert.eq('reverse', expected, Arr.reverse(input));
-    Assert.eq('reverse frozen', expected, Arr.reverse(Object.freeze(input.slice())));
-  };
+describe('atomic.katamari.api.arr.ReverseTest', () => {
+  it('unit tests', () => {
+    const check = (expected, input) => {
+      assert.deepEqual(Arr.reverse(input), expected);
+      assert.deepEqual(Arr.reverse(Object.freeze(input.slice())), expected);
+    };
 
-  check([], []);
-  check([ 1 ], [ 1 ]);
-  check([ 1, 2 ], [ 2, 1 ]);
-  check([ 2, 1 ], [ 1, 2 ]);
-  check([ 1, 4, 5, 3, 2 ], [ 2, 3, 5, 4, 1 ]);
-});
+    check([], []);
+    check([ 1 ], [ 1 ]);
+    check([ 1, 2 ], [ 2, 1 ]);
+    check([ 2, 1 ], [ 1, 2 ]);
+    check([ 1, 4, 5, 3, 2 ], [ 2, 3, 5, 4, 1 ]);
+  });
 
-UnitTest.test('Arr.reverse: Reversing twice is identity', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
-    Assert.eq('reverse twice', arr, Arr.reverse(Arr.reverse(arr)));
-  }));
-});
+  it('Reversing twice is identity', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (arr) => {
+      assert.deepEqual(Arr.reverse(Arr.reverse(arr)), arr);
+    }));
+  });
 
-UnitTest.test('Arr.reverse: 1 element', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (a) => {
-    Assert.eq('reverse 1 element', [ a ], Arr.reverse([ a ]));
-  }));
-});
+  it('reversing a one element array is identity', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (a) => {
+      assert.deepEqual(Arr.reverse([ a ]), [ a ]);
+    }));
+  });
 
-UnitTest.test('Arr.reverse: 2 elements', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
-    Assert.eq('reverse 2 elements', [ b, a ], Arr.reverse([ a, b ]));
-  }));
-});
+  it('reverses 2 elements', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), (a, b) => {
+      assert.deepEqual(Arr.reverse([ a, b ]), [ b, a ]);
+    }));
+  });
 
-UnitTest.test('Arr.reverse: 3 elements', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
-    Assert.eq('reverse 3 elements', [ c, b, a ], Arr.reverse([ a, b, c ]));
-  }));
-});
+  it('reverses 3 elements', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
+      assert.deepEqual(Arr.reverse([ a, b, c ]), [ c, b, a ]);
+    }));
+  });
 
-UnitTest.test('Arr.reverse: ∀ xs. x ∈ (reverse xs) <-> x ∈ xs', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (xs) => {
-    const rxs = Arr.reverse(xs);
-    Assert.eq('∀ xs. x ∈ (reverse xs) -> x ∈ xs', true, Arr.forall(rxs, (x) => Arr.contains(xs, x)));
-    Assert.eq('∀ xs. x ∈ xs -> x ∈ (reverse xs)', true, Arr.forall(xs, (x) => Arr.contains(rxs, x)));
-  }));
+  it('every element in the input is in the output, and vice-versa', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (xs) => {
+      const rxs = Arr.reverse(xs);
+      assert.isTrue(Arr.forall(rxs, (x) => Arr.contains(xs, x)));
+      assert.isTrue(Arr.forall(xs, (x) => Arr.contains(rxs, x)));
+    }));
+  });
 });

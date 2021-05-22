@@ -1,38 +1,33 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Clipboard } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as Paste from '../module/test/Paste';
+describe('browser.tinymce.plugins.paste.PasteFormatToggleTest', () => {
+  before(function () {
+    if (!Env.webkit) {
+      this.skip();
+    }
+  });
 
-UnitTest.asynctest('browser.tinymce.plugins.paste.PasteFormatToggleTest', (success, failure) => {
-  Theme();
-  PastePlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const steps = Env.webkit ?
-      Log.steps('TBA', 'Paste: paste plain text',
-        [
-          tinyApis.sExecCommand('mceTogglePlainTextPaste'),
-          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>' }),
-          tinyApis.sAssertContent('<p>test</p>'),
-          tinyApis.sSetContent(''),
-          tinyApis.sExecCommand('mceTogglePlainTextPaste'),
-          Paste.sPaste(editor, { 'text/html': '<p><strong>test</strong></p>' }),
-          tinyApis.sAssertContent('<p><strong>test</strong></p>')
-        ]
-      )
-      : [];
-
-    Pipeline.async({}, steps, onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'paste',
-    toolbar: '',
     valid_styles: 'font-family,color',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: paste plain text', () => {
+    const editor = hook.editor();
+    editor.execCommand('mceTogglePlainTextPaste');
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<p><strong>test</strong></p>' });
+    TinyAssertions.assertContent(editor, '<p>test</p>');
+    editor.setContent('');
+    editor.execCommand('mceTogglePlainTextPaste');
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<p><strong>test</strong></p>' });
+    TinyAssertions.assertContent(editor, '<p><strong>test</strong></p>');
+  });
 });

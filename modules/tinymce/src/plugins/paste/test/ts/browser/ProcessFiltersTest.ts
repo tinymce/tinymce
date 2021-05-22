@@ -1,126 +1,118 @@
-import { Assertions, Chain, Guard, Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { TinyLoader } from '@ephox/mcagar';
+import { TinyHooks } from '@ephox/mcagar';
+import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ProcessFilters from 'tinymce/plugins/paste/core/ProcessFilters';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-UnitTest.asynctest('browser.tinymce.plugins.paste.ProcessFiltersTest', (success, failure) => {
+type PreProcessHandler = (e: EditorEvent<{ content: string; internal: boolean; wordContent: boolean }>) => void;
+type PostProcessHandler = (e: EditorEvent<{ node: HTMLElement; internal: boolean; wordContent: boolean }>) => void;
 
-  Theme();
-  PastePlugin();
-
-  const cProcessPre = (html, internal, preProcess) => {
-    return Chain.control(
-      Chain.mapper((editor: any) => {
-        editor.on('PastePreProcess', preProcess);
-
-        const result = ProcessFilters.process(editor, html, internal);
-
-        editor.off('PastePreProcess', preProcess);
-
-        return result;
-      }),
-      Guard.addLogging('Paste preprocess')
-    );
-  };
-
-  const cProcessPrePost = (html, internal, preProcess, postProcess) => {
-    return Chain.control(
-      Chain.mapper((editor: any) => {
-        editor.on('PastePreProcess', preProcess);
-        editor.on('PastePostProcess', postProcess);
-
-        const result = ProcessFilters.process(editor, html, internal);
-
-        editor.off('PastePreProcess', preProcess);
-        editor.off('PastePostProcess', postProcess);
-
-        return result;
-      }),
-      Guard.addLogging('Paste preprocess and paste postprocess')
-    );
-  };
-
-  const preventHandler = (e) => {
-    e.preventDefault();
-  };
-
-  const preProcessHandler = (e) => {
-    e.content += 'X';
-  };
-
-  const postProcessHandler = (editor) => {
-    return (e) => {
-      editor.dom.remove(editor.dom.select('b', e.node), true);
-    };
-  };
-
-  const assertInternal = (expectedFlag) => {
-    return (e) => {
-      Assertions.assertEq('Should be expected internal flag', expectedFlag, e.internal);
-    };
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    Pipeline.async({}, [
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre process only', [
-        cProcessPre('a', true, preProcessHandler),
-        Assertions.cAssertEq('Should be preprocessed by adding a X', { content: 'aX', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough as is', [
-        cProcessPrePost('a', true, Fun.noop, Fun.noop),
-        Assertions.cAssertEq('Should be unchanged with safe content', { content: 'a', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process passthough unsafe content', [
-        cProcessPrePost(`<img src="non-existent.png" onerror="alert('!')">`, true, Fun.noop, Fun.noop),
-        Assertions.cAssertEq('Should be changed if dangerous content', { content: '<img src="non-existent.png">', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process assert internal false', [
-        cProcessPrePost('a', false, assertInternal(false), assertInternal(false)),
-        Assertions.cAssertEq('Should be unchanged', { content: 'a', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process assert internal true', [
-        cProcessPrePost('a', true, assertInternal(true), assertInternal(true)),
-        Assertions.cAssertEq('Should be unchanged', { content: 'a', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process alter on preprocess', [
-        cProcessPrePost('a', true, preProcessHandler, Fun.noop),
-        Assertions.cAssertEq('Should be preprocessed by adding a X', { content: 'aX', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process alter on postprocess', [
-        cProcessPrePost('a<b>b</b>c', true, Fun.noop, postProcessHandler(editor)),
-        Assertions.cAssertEq('Should have all b elements removed', { content: 'abc', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process alter on preprocess/postprocess', [
-        cProcessPrePost('a<b>b</b>c', true, preProcessHandler, postProcessHandler(editor)),
-        Assertions.cAssertEq('Should have all b elements removed and have a X added', { content: 'abcX', cancelled: false })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process prevent default on preProcess', [
-        cProcessPrePost('a<b>b</b>c', true, preventHandler, postProcessHandler(editor)),
-        Assertions.cAssertEq('Should have all b elements removed and be cancelled', { content: 'a<b>b</b>c', cancelled: true })
-      ])),
-
-      Chain.asStep(editor, Log.chains('TBA', 'Paste: Paste pre/post process prevent default on postProcess', [
-        cProcessPrePost('a<b>b</b>c', true, preProcessHandler, preventHandler),
-        Assertions.cAssertEq('Should have a X added and be cancelled', { content: 'a<b>b</b>cX', cancelled: true })
-      ]))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.paste.ProcessFiltersTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     indent: false,
     plugins: 'paste',
     base_url: '/project/tinymce/js/tinymce',
     extended_valid_elements: 'b[*]'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  const processPre = (editor: Editor, html: string, internal: boolean, preProcess: PreProcessHandler) => {
+    editor.on('PastePreProcess', preProcess);
+    const result = ProcessFilters.process(editor, html, internal);
+    editor.off('PastePreProcess', preProcess);
+    return result;
+  };
+
+  const processPrePost = (editor: Editor, html: string, internal: boolean, preProcess: PreProcessHandler, postProcess: PostProcessHandler) => {
+    editor.on('PastePreProcess', preProcess);
+    editor.on('PastePostProcess', postProcess);
+
+    const result = ProcessFilters.process(editor, html, internal);
+
+    editor.off('PastePreProcess', preProcess);
+    editor.off('PastePostProcess', postProcess);
+
+    return result;
+  };
+
+  const preventHandler = (e: EditorEvent<any>) => {
+    e.preventDefault();
+  };
+
+  const preProcessHandler = (): PreProcessHandler => (e) => {
+    e.content += 'X';
+  };
+
+  const postProcessHandler = (editor: Editor): PostProcessHandler => (e) => {
+    editor.dom.remove(editor.dom.select('b', e.node), true);
+  };
+
+  const assertInternal = (expectedFlag: boolean) => (e: EditorEvent<{ internal: boolean }>) => {
+    assert.equal(e.internal, expectedFlag, 'Should be expected internal flag');
+  };
+
+  it('TBA: Paste pre process only', () => {
+    const editor = hook.editor();
+    const result = processPre(editor, 'a', true, preProcessHandler());
+    assert.deepEqual(result, { content: 'aX', cancelled: false }, 'Should be preprocessed by adding a X');
+  });
+
+  it('TBA: Paste pre/post process passthough as is', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a', true, Fun.noop, Fun.noop);
+    assert.deepEqual(result, { content: 'a', cancelled: false }, 'Should be unchanged with safe content');
+  });
+
+  it('TBA: Paste pre/post process passthough unsafe content', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, `<img src="non-existent.png" onerror="alert('!')">`, true, Fun.noop, Fun.noop);
+    assert.deepEqual(result, { content: '<img src="non-existent.png">', cancelled: false }, 'Should be changed if dangerous content');
+  });
+
+  it('TBA: Paste pre/post process assert internal false', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a', false, assertInternal(false), assertInternal(false));
+    assert.deepEqual(result, { content: 'a', cancelled: false }, 'Should be unchanged');
+  });
+
+  it('TBA: Paste pre/post process assert internal true', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a', true, assertInternal(true), assertInternal(true));
+    assert.deepEqual(result, { content: 'a', cancelled: false }, 'Should be unchanged');
+  });
+
+  it('TBA: Paste pre/post process alter on preprocess', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a', true, preProcessHandler(), Fun.noop);
+    assert.deepEqual(result, { content: 'aX', cancelled: false }, 'Should be preprocessed by adding a X');
+  });
+
+  it('TBA: Paste pre/post process alter on postprocess', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a<b>b</b>c', true, Fun.noop, postProcessHandler(editor));
+    assert.deepEqual(result, { content: 'abc', cancelled: false }, 'Should have all b elements removed');
+  });
+
+  it('TBA: Paste pre/post process alter on preprocess/postprocess', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a<b>b</b>c', true, preProcessHandler(), postProcessHandler(editor));
+    assert.deepEqual(result, { content: 'abcX', cancelled: false }, 'Should have all b elements removed and have a X added');
+  });
+
+  it('TBA: Paste pre/post process prevent default on preProcess', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a<b>b</b>c', true, preventHandler, postProcessHandler(editor));
+    assert.deepEqual(result, { content: 'a<b>b</b>c', cancelled: true }, 'Should have all b elements removed and be cancelled');
+  });
+
+  it('TBA: Paste pre/post process prevent default on postProcess', () => {
+    const editor = hook.editor();
+    const result = processPrePost(editor, 'a<b>b</b>c', true, preProcessHandler(), preventHandler);
+    assert.deepEqual(result, { content: 'a<b>b</b>cX', cancelled: true }, 'Should have a X added and be cancelled');
+  });
 });
