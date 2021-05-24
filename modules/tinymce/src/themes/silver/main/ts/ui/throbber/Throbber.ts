@@ -60,7 +60,6 @@ const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, pr
   const element = comp.element;
   toggleEditorTabIndex(editor, state);
   if (state) {
-    editor._busy = state;
     Blocking.block(comp, getBusySpec(providerBackstage));
     Css.remove(element, 'display');
     Attribute.remove(element, 'aria-hidden');
@@ -73,7 +72,6 @@ const toggleThrobber = (editor: Editor, comp: AlloyComponent, state: boolean, pr
     Blocking.unblock(comp);
     Css.set(element, 'display', 'none');
     Attribute.set(element, 'aria-hidden', 'true');
-    editor._busy = state;
     if (throbberFocus) {
       editor.focus();
     }
@@ -108,9 +106,6 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
-  // Set the initial state of the private busy variable
-  editor._busy = false;
-
   const stealFocus = (e) => {
     if (throbberState.get()) {
       e.preventDefault();
@@ -126,6 +121,7 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
       // Cover stealing focus when editor.focus() is called
       editor.on('BeforeExecCommand', (e) => {
         if (e.command.toLowerCase() === 'mcefocus') {
+          editor.editorManager.setActive(editor);
           stealFocus(e);
         }
       });

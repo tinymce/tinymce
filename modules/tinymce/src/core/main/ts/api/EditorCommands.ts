@@ -75,7 +75,7 @@ class EditorCommands {
       return;
     }
 
-    if (command !== 'mceFocus') {
+    if (command.toLowerCase() !== 'mcefocus') {
       if (!/^(mceAddUndoLevel|mceEndUndoLevel|mceBeginUndoLevel|mceRepaint)$/.test(command) && (!args || !args.skip_focus)) {
         self.editor.focus();
       } else {
@@ -293,8 +293,6 @@ class EditorCommands {
       },
 
       'mceFocus': (_command, _ui, value?: boolean) => {
-        // editor.focus(value);
-        // TODO: Not sure if this should call EditorFocus.focus directly
         EditorFocus.focus(editor, value);
       },
 

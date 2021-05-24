@@ -1,5 +1,6 @@
 import { FocusTools, RealKeys, UiFinder } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/mcagar';
 import { Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
@@ -13,12 +14,18 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   }, [ Theme ]);
 
   before(() => {
-    const input = SugarElement.fromHtml('<input id="tempInput" />');
-    Insert.append(SugarBody.body(), input);
+    const editor = hook.editor();
+    const target = SugarElement.fromDom(editor.getElement());
+    const inputBefore = SugarElement.fromHtml('<div><input id="beforeInput" /></div>');
+    const inputAfter = SugarElement.fromHtml('<div><input id="afterInput" /></div>');
+    Insert.before(target, inputBefore);
+    Insert.append(SugarBody.body(), inputAfter);
   });
 
   after(() => {
-    Remove.remove(SelectorFind.descendant(SugarBody.body(), '#tempInput').getOrDie());
+    Arr.each([ '#beforeInput', '#afterInput' ], (selector) => {
+      Remove.remove(SelectorFind.descendant(SugarBody.body(), selector).getOrDie());
+    });
   });
 
   const pAssertFocus = (label: string, selector: string) =>
@@ -30,8 +37,11 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   const pAssertEditorFocus = (editor: Editor) => () =>
     pAssertFocus('Editor has focus', editor.inline ? 'div.mce-edit-focus' : 'iframe.tox-edit-area__iframe');
 
-  const pAsserInputFocus = () =>
-    pAssertFocus('Input has focus', '#tempInput');
+  const pAssertInputFocus = (before: boolean) => () =>
+    pAssertFocus('Input has focus', before ? '#beforeInput' : '#afterInput');
+
+  const pPressTab = (selector: string, shiftKey?: boolean) =>
+    RealKeys.pSendKeysOn(selector, [ RealKeys.combo({ shiftKey }, '\u0009') ] );
 
   const pEnableThrobber = async (editor: Editor, pAssertFocus: () => Promise<SugarElement>) => {
     editor.setProgressState(true);
@@ -47,42 +57,52 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
 
   it('TINY-7373: should be able to tab into editor if throbber is disabled', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#tempInput');
-    await RealKeys.pSendKeysOn('#tempInput', [ RealKeys.combo({}, '\u0009') ] );
+    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    await pPressTab('#beforeInput');
     await pAssertEditorFocus(editor)();
     assert.isTrue(editor.hasFocus());
   });
 
   it('TINY-7373: should take focus if editor is tabbed into and throbber is enabled', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#tempInput');
-    pEnableThrobber(editor, pAsserInputFocus);
+    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    pEnableThrobber(editor, pAssertInputFocus(true));
 
     // Make sure throbber gets focus if the editor is tabbed into
-    await RealKeys.pSendKeysOn('#tempInput', [ RealKeys.combo({}, '\u0009') ] );
+    await pPressTab('#beforeInput');
     await pAssertThrobberFocus();
 
     await pDisableThrobber(editor, pAssertEditorFocus(editor));
     assert.isTrue(editor.hasFocus());
   });
 
-  // TODO: Need to figure out if this is what we want
-  it('TINY-7373: should not be able to tab out of the throbber if it has focus', async () => {
+  it('TINY-7373: should be able to Tab out of the throbber if it has focus', async () => {
     const editor = hook.editor();
-    FocusTools.setFocus(SugarBody.body(), '#tempInput');
-    pEnableThrobber(editor, pAsserInputFocus);
+    FocusTools.setFocus(SugarBody.body(), '#beforeInput');
+    pEnableThrobber(editor, pAssertInputFocus(true));
 
-    // Make sure throbber gets focus if the editor is tabbed into
-    await RealKeys.pSendKeysOn('#tempInput', [ RealKeys.combo({}, '\u0009') ] );
+    await pPressTab('#beforeInput');
     await pAssertThrobberFocus();
 
-    // Make sure cannot tab out of the throbber
-    await RealKeys.pSendKeysOn('div.tox-throbber__busy-spinner', [ RealKeys.combo({ shiftKey: true }, '\u0009') ]);
-    await pAssertThrobberFocus();
-    await RealKeys.pSendKeysOn('div.tox-throbber__busy-spinner', [ RealKeys.combo({}, '\u0009') ]);
+    await pPressTab('div.tox-throbber__busy-spinner');
+    await pAssertInputFocus(false)();
+
+    await pDisableThrobber(editor, pAssertInputFocus(false));
+    assert.isFalse(editor.hasFocus());
+  });
+
+  it('TINY-7373: should be able to Shift+Tab out of the throbber if it has focus', async () => {
+    const editor = hook.editor();
+    FocusTools.setFocus(SugarBody.body(), '#afterInput');
+    pEnableThrobber(editor, pAssertInputFocus(false));
+
+    await pPressTab('#afterInput', true);
     await pAssertThrobberFocus();
 
-    await pDisableThrobber(editor, pAssertEditorFocus(editor));
-    assert.isTrue(editor.hasFocus());
+    await pPressTab('div.tox-throbber__busy-spinner', true);
+    await pAssertInputFocus(true)();
+
+    await pDisableThrobber(editor, pAssertInputFocus(true));
+    assert.isFalse(editor.hasFocus());
   });
 });

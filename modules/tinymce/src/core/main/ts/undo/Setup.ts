@@ -12,6 +12,18 @@ import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
 import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
+const skipCommand = (cmd: string): boolean => {
+  switch (cmd) {
+    case 'undo':
+    case 'redo':
+    case 'mcerepaint':
+    case 'mcefocus':
+      return true;
+    default:
+      return false;
+  }
+};
+
 export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
   const isFirstTypedCharacter = Cell(false);
 
@@ -29,7 +41,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   editor.on('BeforeExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 
-    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
+    if (!skipCommand(cmd)) {
       endTyping(undoManager, locks);
       undoManager.beforeChange();
     }
@@ -39,7 +51,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
   editor.on('ExecCommand', (e) => {
     const cmd = e.command.toLowerCase();
 
-    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
+    if (!skipCommand(cmd)) {
       addNonTypingUndoLevel(e);
     }
   });
