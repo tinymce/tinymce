@@ -39,7 +39,6 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     fireDismissalEventInstead: {
       event: 'doNotDismissYet'
     },
-    transitionAnimationClass: 'tox-pop--in-transition',
 
     onShow: (comp) => {
       stack.set([ ]);
@@ -53,12 +52,8 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (comp, se) => {
-          if (Arr.contains([ 'top', 'bottom' ], se.event.raw.propertyName)) {
-            Class.remove(comp.element, 'tox-pop--in-transition');
-          } else {
-            Class.remove(comp.element, resizingClass);
-            Css.remove(comp.element, 'width');
-          }
+          Class.remove(comp.element, resizingClass);
+          Css.remove(comp.element, 'width');
         }),
 
         AlloyEvents.run<ChangeSlideEvent>(changeSlideEvent, (comp, se) => {

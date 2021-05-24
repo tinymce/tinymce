@@ -1,4 +1,3 @@
-import { Optional } from '@ephox/katamari';
 import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
 import { setDataAttribute } from '../../behaviour/positioning/PositionUtils';
 
@@ -54,10 +53,10 @@ const setWidth = (element: SugarElement, decision: RepositionDecision, options: 
   maxWidthFunction(element, decision.maxWidth);
 };
 
-const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions, transitionAnimationClass: Optional<string>): void => {
+const position = (element: SugarElement, decision: RepositionDecision, options: ReparteeOptions): void => {
   // This is a point of difference between Alloy and Repartee. Repartee appears to use Measure to calculate the available space for fixed origin
   // That is not ported yet.
-  applyPositionCss(element, Origins.reposition(options.origin, decision), Optional.some(decision), transitionAnimationClass);
+  applyPositionCss(element, Origins.reposition(options.origin, decision));
 };
 
 export {

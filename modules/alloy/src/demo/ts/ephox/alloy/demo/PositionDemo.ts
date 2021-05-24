@@ -1,4 +1,3 @@
-import { Optional } from '@ephox/katamari';
 import { Class, Css, DomEvent, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -63,7 +62,7 @@ export default (): void => {
           Positioning.position(sink, {
             anchor: 'hotspot',
             hotspot: comp
-          }, popup, Optional.none());
+          }, popup);
         } else {
           Attachment.detach(popup);
         }
@@ -106,7 +105,7 @@ export default (): void => {
               Positioning.position(sink, {
                 anchor: 'submenu',
                 item
-              }, popup, Optional.none());
+              }, popup);
             })
           ])
         })
@@ -148,7 +147,7 @@ export default (): void => {
             Positioning.position(sink, {
               anchor: 'selection',
               root: button.getSystem().getByUid('text-editor').getOrDie().element
-            }, popup, Optional.none());
+            }, popup);
           }
         })
       ]
@@ -183,7 +182,7 @@ export default (): void => {
             Positioning.position(sink, {
               anchor: 'selection',
               root: SugarElement.fromDom(Traverse.defaultView(frame).dom.document.body)
-            }, popup, Optional.none());
+            }, popup);
           }
         })
       ]

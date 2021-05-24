@@ -1,7 +1,6 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import * as LayoutLabels from '../../positioning/layout/LayoutLabels';
-import { RepositionDecision } from '../../positioning/view/Reposition';
 
 const dataAttribute = 'data-alloy-positional-element-location';
 
@@ -12,20 +11,8 @@ const isElementTopAligned = (element: SugarElement<any>): boolean => {
   return Arr.contains(northValues, getDataAttribute(element));
 };
 
-const isDecisionTopAligned = (decisionOpt: Optional<RepositionDecision>): boolean => {
-  return decisionOpt.map((decision) => {
-    return Arr.contains(northValues, decision.label);
-  }).getOr(false);
-};
-
 const isElementBottomAligned = (element: SugarElement<any>): boolean => {
   return Arr.contains(southValues, getDataAttribute(element));
-};
-
-const isDecisionBottomAligned = (decisionOpt: Optional<RepositionDecision>): boolean => {
-  return decisionOpt.map((decision) => {
-    return Arr.contains(southValues, decision.label);
-  }).getOr(false);
 };
 
 const setDataAttribute = (element: SugarElement<any>, label: string): void => {
@@ -38,8 +25,6 @@ const getDataAttribute = (element: SugarElement<any>) => {
 
 export {
   isElementTopAligned,
-  isDecisionTopAligned,
   isElementBottomAligned,
-  isDecisionBottomAligned,
   setDataAttribute
 };

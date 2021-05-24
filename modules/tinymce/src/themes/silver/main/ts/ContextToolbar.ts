@@ -207,7 +207,7 @@ const register = (editor: Editor, registryContextToolbars, sink: AlloyComponent,
       if (shouldContextToolbarHide()) {
         Css.set(contextBarEle, 'display', 'none');
       } else {
-        Positioning.positionWithinBounds(sink, anchor, contextbar, Optional.some(getBounds()), Optional.some('tox-pop--in-transition'));
+        Positioning.positionWithinBounds(sink, anchor, contextbar, Optional.some(getBounds()));
       }
     });
   };

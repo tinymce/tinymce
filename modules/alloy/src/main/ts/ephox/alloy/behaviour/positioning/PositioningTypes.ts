@@ -8,9 +8,9 @@ import { AnchorSpec } from '../../positioning/mode/Anchoring';
 
 export interface PositioningBehaviour extends Behaviour.AlloyBehaviour<PositioningConfigSpec, PositioningConfig> {
   config: (config: PositioningConfigSpec) => Behaviour.NamedConfiguredBehaviour<PositioningConfigSpec, PositioningConfig>;
-  position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, transitionAnimationClass: Optional<string>) => void;
-  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>, transitionAnimationClass: Optional<string>) => void;
-  positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>, transitionAnimationClass: Optional<string>) => void;
+  position: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent) => void;
+  positionWithin: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, boxElement: Optional<SugarElement>) => void;
+  positionWithinBounds: (component: AlloyComponent, anchor: AnchorSpec, placee: AlloyComponent, bounds: Optional<Bounds>) => void;
   getMode: (component: AlloyComponent) => string;
 }
 

@@ -1,7 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { Class, Css, SugarElement } from '@ephox/sugar';
-import { isDecisionBottomAligned, isDecisionTopAligned, isElementBottomAligned, isElementTopAligned } from '../../behaviour/positioning/PositionUtils';
-import { RepositionDecision } from './Reposition';
+import { Css, SugarElement } from '@ephox/sugar';
 
 export interface PositionCss {
   readonly position: string;
@@ -25,7 +23,7 @@ const NuPositionCss = (
   bottom
 });
 
-const applyPositionCss = (element: SugarElement, position: PositionCss, decision: Optional<RepositionDecision>, transitionClass: Optional<string>): void => {
+const applyPositionCss = (element: SugarElement, position: PositionCss): void => {
   const addPx = (num: number) => num + 'px';
 
   const cssOptions = {
@@ -35,31 +33,6 @@ const applyPositionCss = (element: SugarElement, position: PositionCss, decision
     right: position.right.map(addPx),
     bottom: position.bottom.map(addPx)
   };
-
-  transitionClass.each((transition) => {
-    const changedFromTopToBottom = isElementTopAligned(element) && isDecisionBottomAligned(decision);
-    const changedFromBottomToTop = isElementBottomAligned(element) && isDecisionTopAligned(decision);
-
-    if (changedFromTopToBottom || changedFromBottomToTop) {
-      Css.set(element, 'position', 'absolute');
-
-      const getValue = (key: 'top' | 'left' | 'bottom' | 'right') => {
-        return cssOptions[key].map(() => Css.get(element, key));
-      };
-
-      const intermediateCssOptions = {
-        position: cssOptions.position,
-        top: getValue('top'),
-        right: getValue('right'),
-        bottom: getValue('bottom'),
-        left: getValue('left'),
-      };
-
-      Css.setOptions(element, intermediateCssOptions);
-      Class.add(element, transition);
-      Css.reflow(element);
-    }
-  });
 
   Css.setOptions(element, cssOptions);
 };
