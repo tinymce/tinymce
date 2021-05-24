@@ -114,7 +114,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     const pAssertDialogFocus = () => pAssertFocus('Dialog input has focus', 'input.tox-textfield');
 
     openDialog(editor);
-    TinyUiActions.pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     await pAssertDialogFocus();
 
     // Throbber should not steal focus from the dialog
@@ -138,7 +138,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
 
     await pEnableThrobber(editor, pAssertThrobberFocus);
     openDialog(editor);
-    TinyUiActions.pWaitForDialog(editor);
+    await TinyUiActions.pWaitForDialog(editor);
     await pAssertDialogFocus();
 
     // Disable the throbber when the dialog is open
