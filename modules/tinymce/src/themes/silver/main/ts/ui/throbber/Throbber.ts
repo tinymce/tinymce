@@ -18,7 +18,6 @@ const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: 
     tag: 'div',
     attributes: {
       'aria-label': providerBackstage.translate('Loading...'),
-      // Make the busy component part of sequential keyboard navigation
       'tabindex': '0'
     },
     classes: [ 'tox-throbber__busy-spinner' ]
@@ -34,6 +33,7 @@ const focusBusyComponent = (throbber: AlloyComponent): void =>
   Composing.getCurrent(throbber).each((comp) => Focus.focus(comp.element));
 
 // When the throbber is enabled, prevent the iframe from being part of the sequential keyboard navigation when Tabbing
+// TODO: TINY-7500 Only works for iframe mode at this stage
 const toggleEditorTabIndex = (editor: Editor, state: boolean) => {
   Optional.from(editor.iframeElement)
     .map(SugarElement.fromDom)
@@ -113,26 +113,22 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
 
   const stealFocus = (e) => {
     if (throbberState.get()) {
-      // console.log('stealfocus');
       e.preventDefault();
       focusBusyComponent(lazyThrobber());
     }
   };
 
-  // TODO: <Jira> Only worrying about iframe mode at this stage since inline mode has a number of other issues
+  // TODO: TINY-7500 Only worrying about iframe mode at this stage since inline mode has a number of other issues
   if (!editor.inline) {
     editor.on('PreInit', () => {
       // Cover focus when when the editor is focused natively
       editor.dom.bind(editor.getWin(), 'focusin', stealFocus);
-      // Cover stealing focus for when editor.focus() is called
+      // Cover stealing focus when editor.focus() is called
       editor.on('BeforeExecCommand', (e) => {
         if (e.command.toLowerCase() === 'mcefocus') {
           stealFocus(e);
         }
       });
-
-      // TODO: Don't think we need this one
-      // editor.on('activate', stealFocus);
     });
   }
 
