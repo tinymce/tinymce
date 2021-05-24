@@ -37,7 +37,8 @@ interface ModelApi {
     getAttribute: (node: ModelNode, key: string) => string;
     hasAttribute: (node: ModelNode, key: string) => boolean;
     getAttributes: (node: ModelNode) => Record<string, string>;
-    removePropsAtPath: (path: path, props: string[]) => void;
+    removeAttributesByPath: (path: path, keys: string[]) => void;
+    setAttributesByPath: (path: path, attrs: Record<string, string>) => void;
   };
   body: {
     getBody: () => ModelLocation;
@@ -49,7 +50,8 @@ interface ModelApi {
     isInline: (node: ModelNode) => boolean;
   };
   nodeTransforms: {
-    setPropsAtPath: (path: path, props: Record<string, string>) => void;
+    setPropsByPath: (path: path, props: Record<string, string>) => void;
+    removePropsByPath: (path: path, props: string[]) => void;
   };
   predicateFind: {
     closest: (loc: ModelLocation, predicate: (loc: ModelLocation) => boolean, isRoot: (loc: ModelLocation) => boolean) => ModelLocation;

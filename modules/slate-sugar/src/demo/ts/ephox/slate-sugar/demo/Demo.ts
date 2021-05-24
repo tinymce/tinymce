@@ -23,11 +23,11 @@ tinymce.init({
     const [ time ] = PredicateFilter.descendants(api, div, ({ node }) => ModelNodeType.isInline(api, node));
     const blocks = PredicateFilter.descendants(api, root, ({ node }) => ModelNodeType.isBlock(api, node));
 
-    NodeTransforms.setPropsAtPath(api, Path.modelLocationToPath(api, p), { style: 'font-weight: bold' });
-    blocks.forEach((loc) => NodeTransforms.setPropsAtPath(api, Path.modelLocationToPath(api, loc), { style: 'border: 1px solid green' }));
-    NodeTransforms.setPropsAtPath(api, Path.modelLocationToPath(api, time), { style: 'font-size: 10px' });
-    NodeTransforms.setPropsAtPath(api, Path.modelLocationToPath(api, bye), { forecolor: 'blue' });
-    NodeTransforms.setPropsAtPath(api, Path.modelLocationToPath(api, hello), { forecolor: 'red' });
+    NodeTransforms.setPropsByPath(api, Path.modelLocationToPath(api, p), { style: 'font-weight: bold' });
+    blocks.forEach((loc) => NodeTransforms.setPropsByPath(api, Path.modelLocationToPath(api, loc), { style: 'border: 1px solid green' }));
+    NodeTransforms.setPropsByPath(api, Path.modelLocationToPath(api, time), { style: 'font-size: 10px' });
+    NodeTransforms.setPropsByPath(api, Path.modelLocationToPath(api, bye), { forecolor: 'blue' });
+    NodeTransforms.setPropsByPath(api, Path.modelLocationToPath(api, hello), { forecolor: 'red' });
 
     const assertTrue = (title, v) => {
       if (v !== true) {

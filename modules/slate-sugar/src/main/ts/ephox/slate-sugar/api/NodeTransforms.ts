@@ -1,8 +1,12 @@
 import { ModelApi, path } from './Api';
 
-const setPropsAtPath = (api: ModelApi, path: path, props: Record<string, string>): void =>
-  api.nodeTransforms.setPropsAtPath(path, props);
+const setPropsByPath = (api: ModelApi, path: path, props: Record<string, string>): void =>
+  api.nodeTransforms.setPropsByPath(path, props);
+
+const removePropsByPath = (api: ModelApi, path: path, props: string[]): void =>
+  api.nodeTransforms.removePropsByPath(path, props);
 
 export {
-  setPropsAtPath
+  setPropsByPath,
+  removePropsByPath
 };
