@@ -1,57 +1,55 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
-import * as Fun from 'ephox/katamari/api/Fun';
+import { never, always } from 'ephox/katamari/api/Fun';
 
 const eqc = (x) => (a) => x === a;
-const never = Fun.never;
-const always = Fun.always;
 const bottom = () => {
   throw new Error('error');
 };
 
-UnitTest.test('Arr.exists: unit test', () => {
-  const check = (expected, input: any[], f) => {
-    Assert.eq('exists', expected, Arr.exists(input, f));
-    Assert.eq('exists frozen', expected, Arr.exists(Object.freeze(input.slice()), f));
-  };
+describe('atomic.katamari.api.arr.ExistsTest', () => {
+  it('unit test', () => {
+    const check = (expected: boolean, input: number[], f: (b: number) => boolean) => {
+      assert.deepEqual(Arr.exists(input, f), expected);
+      assert.deepEqual(Arr.exists(Object.freeze(input.slice()), f), expected);
+    };
 
-  check(true, [ 1, 2, 3 ], eqc(1));
-  check(false, [ 2, 3, 4 ], eqc(1));
+    check(true, [ 1, 2, 3 ], eqc(1));
+    check(false, [ 2, 3, 4 ], eqc(1));
 
-  Assert.eq('Element does not exist in empty array when predicate is ⊥',
-    false, Arr.exists([], bottom));
+    assert.isFalse(Arr.exists([], bottom));
+    assert.isFalse(Arr.exists([], always));
+  });
 
-  Assert.eq('Element does not exist in empty array even when predicate always returns true',
-    false, Arr.exists([], always));
-});
+  it('Element exists in middle of array', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, element, suffix) => {
+      const arr2 = Arr.flatten([ prefix, [ element ], suffix ]);
+      assert.isTrue(Arr.exists(arr2, eqc(element)));
+    }));
+  });
 
-UnitTest.test('Element exists in middle of array', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), fc.array(fc.integer()), (prefix, element, suffix) => {
-    const arr2 = Arr.flatten([ prefix, [ element ], suffix ]);
-    Assert.eq('in array', true, Arr.exists(arr2, eqc(element)));
-  }));
-});
+  it('Element exists in singleton array of itself', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (i) => {
+      assert.isTrue(Arr.exists([ i ], eqc(i)));
+    }));
+  });
 
-UnitTest.test('Element exists in singleton array of itself', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (i) => {
-    Assert.eq('in array', true, Arr.exists([ i ], eqc(i)));
-  }));
-});
+  it('Element does not exist in empty array', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (i) => {
+      assert.isFalse(Arr.exists([], eqc(i)));
+    }));
+  });
 
-UnitTest.test('Element does not exist in empty array', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (i) => {
-    Assert.eq('not in empty array', false, Arr.exists([], eqc(i)));
-  }));
-});
+  it('Element not found when predicate always returns false', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), (arr) => !Arr.exists(arr, never)));
+  });
 
-UnitTest.test('Element not found when predicate always returns false', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), (arr) => !Arr.exists(arr, never)));
-});
-
-UnitTest.test('Element exists in non-empty array when predicate always returns true', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (xs, x) => {
-    const arr = Arr.flatten([ xs, [ x ]]);
-    return Arr.exists(arr, always);
-  }));
+  it('Element exists in non-empty array when predicate always returns true', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (xs, x) => {
+      const arr = Arr.flatten([ xs, [ x ]]);
+      assert.isTrue(Arr.exists(arr, always));
+    }));
+  });
 });

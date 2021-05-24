@@ -1,46 +1,39 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Testable } from '@ephox/dispute';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
-
-const { tArray, tNumber } = Testable;
 
 const dbl = (x) => x * 2;
 
 const plus3 = (x) => x + 3;
 
-UnitTest.test('Arr.map: unit tests', () => {
+describe('atomic.katamari.api.arr.ArrMapTest', () => {
+  it('unit tests', () => {
+    const checkA = (expected, input, f) => {
+      assert.deepEqual(Arr.map(input, f), expected);
+      assert.deepEqual(Arr.map(Object.freeze(input.slice()), f), expected);
+    };
 
-  const checkA = (expected, input, f) => {
-    Assert.eq('map', expected, Arr.map(input, f));
-    Assert.eq('map frozen', expected, Arr.map(Object.freeze(input.slice()), f));
-  };
+    checkA([], [], dbl);
+    checkA([ 2 ], [ 1 ], dbl);
+    checkA([ 4, 6, 10 ], [ 2, 3, 5 ], dbl);
+  });
 
-  checkA([], [], dbl);
-  checkA([ 2 ], [ 1 ], dbl);
-  checkA([ 4, 6, 10 ], [ 2, 3, 5 ], dbl);
-});
+  context('functor laws', () => {
+    it('obeys identity law', () => {
+      fc.assert(fc.property(fc.array(fc.nat()), (xs) =>
+        assert.deepEqual(Arr.map(xs, Fun.identity), xs)
+      ));
+    });
 
-UnitTest.test('Arr.map: functor laws', () => {
-  fc.assert(fc.property(fc.array(fc.nat()), (xs) =>
-    Assert.eq(
-      'map id = id',
-      Fun.identity(xs),
-      Arr.map(xs, Fun.identity),
-      tArray(tNumber)
-    )
-  ));
+    it('obeys associative law', () => {
+      const f = plus3;
+      const g = dbl;
 
-  const f = plus3;
-  const g = dbl;
-
-  fc.assert(fc.property(fc.array(fc.nat()), (xs) =>
-    Assert.eq(
-      'map (f . g) = map f . map g',
-      Arr.map(xs, Fun.compose(f, g)),
-      Arr.map(Arr.map(xs, g), f),
-      tArray(tNumber)
-    )
-  ));
+      fc.assert(fc.property(fc.array(fc.nat()), (xs) =>
+        assert.deepEqual(Arr.map(Arr.map(xs, g), f), Arr.map(xs, Fun.compose(f, g)))
+      ));
+    });
+  });
 });

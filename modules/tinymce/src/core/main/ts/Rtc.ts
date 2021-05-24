@@ -8,7 +8,6 @@
 import { Cell, Fun, Maybe, Maybes, Obj, Optional, Type } from '@ephox/katamari';
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import Promise from './api/util/Promise';
 import { Content, ContentFormat, GetContentArgs, SetContentArgs } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -262,23 +261,24 @@ const getRtcSetup = (editor: Editor): Optional<() => Promise<RtcRuntimeApi>> =>
     Optional.from(rtcPlugin.setup)
   );
 
-export const setup = (editor: Editor): Optional<Promise<boolean>> => {
+export const setup = (editor: Editor): Optional<() => Promise<boolean>> => {
   const editorCast = editor as RtcEditor;
   return getRtcSetup(editor).fold(
     () => {
       editorCast.rtcInstance = makePlainAdaptor(editor);
       return Optional.none();
     },
-    (setup) => Optional.some(
-      setup().then((rtcEditor) => {
-        editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
-        return rtcEditor.rtc.isRemote;
-      }, (err) => {
-        // We need to provide a noop adaptor on init failure since otherwise calls to hasUndo etc will continue to throw errors
-        editorCast.rtcInstance = makeNoopAdaptor();
-        return Promise.reject<boolean>(err);
-      })
-    )
+    (setup) => {
+      // We need to provide a noop adaptor while initializing since any call by the theme or plugins to say undoManager.hasUndo would throw errors
+      editorCast.rtcInstance = makeNoopAdaptor();
+
+      return Optional.some(
+        () => setup().then((rtcEditor) => {
+          editorCast.rtcInstance = makeRtcAdaptor(rtcEditor);
+          return rtcEditor.rtc.isRemote;
+        })
+      );
+    }
   );
 };
 

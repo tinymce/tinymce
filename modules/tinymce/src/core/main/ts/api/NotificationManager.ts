@@ -126,7 +126,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       reposition();
 
       // Ensure notification is not passed by reference to prevent mutation
-      editor.fire('OpenNotification', { ...notification });
+      editor.fire('OpenNotification', { notification: { ...notification }});
       return notification;
     });
   };

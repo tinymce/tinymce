@@ -1,67 +1,58 @@
-import { Log, Pipeline } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader } from '@ephox/mcagar';
+import { Clipboard } from '@ephox/agar';
+import { before, describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/mcagar';
 
+import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import PastePlugin from 'tinymce/plugins/paste/Plugin';
+import Plugin from 'tinymce/plugins/paste/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as Paste from '../module/test/Paste';
+describe('browser.tinymce.plugins.paste.PasteStylesTest', () => {
+  before(function () {
+    if (!Env.webkit) {
+      this.skip();
+    }
+  });
 
-UnitTest.asynctest('Browser Test: .PasteStylesTest', (success, failure) => {
-
-  Theme();
-  PastePlugin();
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const steps = Env.webkit ? [
-      Log.stepsAsStep('TBA', 'Paste: Paste span with encoded style attribute, paste_webkit_styles: font-family',
-        [
-          tinyApis.sSetSetting('paste_webkit_styles', 'font-family'),
-          tinyApis.sSetContent('<p>test</p>'),
-          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-          Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;color:green;">b</span>' }),
-          tinyApis.sAssertContent(`<p><span style="font-family: 'a b';">b</span></p>`)
-        ]
-      ),
-
-      Log.stepsAsStep('TBA', 'Paste: Paste span with encoded style attribute, paste_webkit_styles: all',
-        [
-          tinyApis.sSetSetting('paste_webkit_styles', 'all'),
-          tinyApis.sSetContent('<p>test</p>'),
-          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-          Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;; color: green;">b</span>' }),
-          tinyApis.sAssertContent(`<p><span style="font-family: 'a b'; color: green;">b</span></p>`)
-        ]
-      ),
-
-      Log.stepsAsStep('TBA', 'Paste: Paste span with encoded style attribute, paste_webkit_styles: none',
-        [
-          tinyApis.sSetSetting('paste_webkit_styles', 'none'),
-          tinyApis.sSetContent('<p>test</p>'),
-          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-          Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' }),
-          tinyApis.sAssertContent('<p>b</p>')
-        ]
-      ),
-
-      Log.stepsAsStep('TBA', 'Paste: Paste span with encoded style attribute, paste_remove_styles_if_webkit: false',
-        [
-          tinyApis.sSetSetting('paste_remove_styles_if_webkit', false),
-          tinyApis.sSetContent('<p>test</p>'),
-          tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-          Paste.sPaste(editor, { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' }),
-          tinyApis.sAssertContent(`<p><span style="font-family: 'a b';">b</span></p>`)
-        ]
-      )
-    ] : [];
-
-    Pipeline.async({}, steps, onSuccess, onFailure);
-  }, {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'paste',
-    toolbar: '',
     valid_styles: 'font-family,color',
     base_url: '/project/tinymce/js/tinymce'
-  }, success, failure);
+  }, [ Plugin, Theme ]);
+
+  it('TBA: Paste span with encoded style attribute, paste_webkit_styles: font-family', () => {
+    const editor = hook.editor();
+    editor.settings.paste_webkit_styles = 'font-family';
+    editor.setContent('<p>test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;color:green;">b</span>' });
+    TinyAssertions.assertContent(editor, `<p><span style="font-family: 'a b';">b</span></p>`);
+  });
+
+  it('TBA: Paste span with encoded style attribute, paste_webkit_styles: all', () => {
+    const editor = hook.editor();
+    editor.settings.paste_webkit_styles = 'all';
+    editor.setContent('<p>test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;; color: green;">b</span>' });
+    TinyAssertions.assertContent(editor, `<p><span style="font-family: 'a b'; color: green;">b</span></p>`);
+  });
+
+  it('TBA: Paste span with encoded style attribute, paste_webkit_styles: none', () => {
+    const editor = hook.editor();
+    editor.settings.paste_webkit_styles = 'none';
+    editor.setContent('<p>test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' });
+    TinyAssertions.assertContent(editor, '<p>b</p>');
+  });
+
+  it('TBA: Paste span with encoded style attribute, paste_remove_styles_if_webkit: false', () => {
+    const editor = hook.editor();
+    editor.settings.paste_remove_styles_if_webkit = false;
+    editor.setContent('<p>test</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+    Clipboard.pasteItems(TinyDom.body(editor), { 'text/html': '<span style="font-family: &quot;a b&quot;;">b</span>' });
+    TinyAssertions.assertContent(editor, `<p><span style="font-family: 'a b';">b</span></p>`);
+  });
 });

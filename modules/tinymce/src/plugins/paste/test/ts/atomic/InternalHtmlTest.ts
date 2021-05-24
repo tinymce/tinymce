@@ -1,28 +1,25 @@
-import { assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
+
 import * as InternalHtml from 'tinymce/plugins/paste/core/InternalHtml';
 
-UnitTest.test('atomic.tinymce.plugins.paste.InternalHtmlTest', () => {
-  const testMark = () => {
-    assert.eq('<!-- x-tinymce/html -->abc', InternalHtml.mark('abc'));
-  };
+describe('atomic.tinymce.plugins.paste.InternalHtmlTest', () => {
+  it('mark', () => {
+    assert.equal(InternalHtml.mark('abc'), '<!-- x-tinymce/html -->abc');
+  });
 
-  const testUnmark = () => {
-    assert.eq('abc', InternalHtml.unmark('<!-- x-tinymce/html -->abc'));
-    assert.eq('abc', InternalHtml.unmark('abc<!-- x-tinymce/html -->'));
-  };
+  it('unmark', () => {
+    assert.equal(InternalHtml.unmark('<!-- x-tinymce/html -->abc'), 'abc');
+    assert.equal(InternalHtml.unmark('abc<!-- x-tinymce/html -->'), 'abc');
+  });
 
-  const testIsMarked = () => {
-    assert.eq(true, InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
-    assert.eq(true, InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
-    assert.eq(false, InternalHtml.isMarked('abc'));
-  };
+  it('isMarked', () => {
+    assert.isTrue(InternalHtml.isMarked('<!-- x-tinymce/html -->abc'));
+    assert.isTrue(InternalHtml.isMarked('abc<!-- x-tinymce/html -->'));
+    assert.isFalse(InternalHtml.isMarked('abc'));
+  });
 
-  const testInternalHtmlMime = () => {
-    assert.eq('x-tinymce/html', InternalHtml.internalHtmlMime());
-  };
-
-  testMark();
-  testUnmark();
-  testIsMarked();
-  testInternalHtmlMime();
+  it('internalHtmlMime', () => {
+    assert.equal(InternalHtml.internalHtmlMime(), 'x-tinymce/html');
+  });
 });
