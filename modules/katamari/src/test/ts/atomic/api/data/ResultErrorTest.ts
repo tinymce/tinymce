@@ -94,9 +94,9 @@ UnitTest.test('Result.error: error.fold(_ -> x, die) === x', () => {
   }));
 });
 
-UnitTest.test('Result.error: error.map(⊥) === error', () => {
+UnitTest.test('Result.error: error.map returns an error', () => {
   fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('eq', Result.error(i), Result.error(i).map(Fun.die('⊥')), tResult());
+    Assert.eq('eq', Result.error(i), Result.error(i).map(Fun.die('should not be called')), tResult());
   }));
 });
 
@@ -107,9 +107,9 @@ UnitTest.test('Result.error: error.mapError(f) === f(error)', () => {
   }));
 });
 
-UnitTest.test('Result.error: error.each(⊥) === undefined', () => {
+UnitTest.test('Result.error: error.each returns undefined', () => {
   fc.assert(fc.property(arbResultError(fc.integer()), (res) => {
-    const actual = res.each(Fun.die('⊥'));
+    const actual = res.each(Fun.die('should not be called'));
     Assert.eq('eq', undefined, actual);
   }));
 });
@@ -136,7 +136,7 @@ UnitTest.test('Result.error: error.forall === true', () => {
 
 UnitTest.test('Result.error: error.exists === false', () => {
   fc.assert(fc.property(fc.integer(), (i) => {
-    Assert.eq('eq', false, Result.error<unknown, number>(i).exists(Fun.die('⊥')));
+    Assert.eq('eq', false, Result.error<unknown, number>(i).exists(Fun.die('should not be called')));
   }));
 });
 

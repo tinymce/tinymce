@@ -1,19 +1,18 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Testable } from '@ephox/dispute';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
-import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
+import { assertSome } from 'ephox/katamari/test/AssertOptional';
 
-const { tNumber } = Testable;
+describe('atomic.katamari.api.arr.ArrHeadTest', () => {
+  it('returns none when empty', () => {
+    assert.isTrue(Arr.head<number>([]).isNone());
+  });
 
-UnitTest.test('Arr.head: empty', () => {
-  Assert.eq('empty', Optional.none<number>(), Arr.head<number>([]), tOptional(tNumber));
-});
-
-UnitTest.test('Arr.head: nonEmpty', () => {
-  fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (t, h) => {
-    const arr = [ h ].concat(t);
-    Assert.eq('nonEmpty', Optional.some(h), Arr.head(arr), tOptional(tNumber));
-  }));
+  it('returns first element when nonEmpty', () => {
+    fc.assert(fc.property(fc.array(fc.integer()), fc.integer(), (t, h) => {
+      const arr = [ h, ...t ];
+      assertSome(Arr.head(arr), h);
+    }));
+  });
 });

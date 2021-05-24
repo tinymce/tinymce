@@ -42,7 +42,7 @@ const createDragEvent = createDndEvent('drag');
 
 const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
 
-const dispatchDndEvent = (event: DragEvent, target: SugarElement<any>): DragEvent => {
+const dispatchDndEvent = (event: DragEvent, target: SugarElement<Node>): DragEvent => {
   if (event.type === 'dragstart') {
     setReadWriteMode(event.dataTransfer);
   } else if (event.type === 'drop') {
@@ -56,7 +56,7 @@ const dispatchDndEvent = (event: DragEvent, target: SugarElement<any>): DragEven
   return event;
 };
 
-const getWindowFromElement = (element: SugarElement<any>): Window => element.dom.ownerDocument.defaultView;
+const getWindowFromElement = (element: SugarElement<Element>): Window => element.dom.ownerDocument.defaultView;
 
 export {
   createDndEvent,

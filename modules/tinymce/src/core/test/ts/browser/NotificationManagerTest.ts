@@ -52,6 +52,9 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         assert.equal(unmodified.text, 'service notification text', 'Should have unmodified text');
         assert.equal(unmodified.type, 'warning', 'Should have unmodified type');
         assert.equal(unmodified.timeout, 0, 'Should have unmodified timeout');
+
+        // Notification event should have "notification" field
+        assert.property(openEvents[0], 'notification');
       });
 
       it('TBA: Should not add duplicate text message', () => {

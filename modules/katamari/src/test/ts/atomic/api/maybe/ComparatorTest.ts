@@ -21,7 +21,7 @@ describe('atomic.katamari.maybe.ComparatorTest', () => {
       fc.assert(fc.property(fc.anything(), (thing) => {
         const matches = Fun.pipe(
           Maybes.nothing(),
-          Maybes.is(thing, Fun.die('⊥'))
+          Maybes.is(thing, Fun.die('should not be called'))
         );
 
         assert.isFalse(matches);
