@@ -147,8 +147,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     assert.isTrue(editor.hasFocus());
   });
 
-  // In theory, this combination shouldn't be possible as the user cannot click any buttons to open dialogs when the throbber is enabled
-  // However, it is still important that all of the focus transitions make sense
   it('TINY-7373: should not set focus on the editor if the throbber did not have focus when disabled', async () => {
     const editor = hook.editor();
     const pAssertDialogFocus = () => pAssertFocus('Dialog input has focus', 'input.tox-textfield');

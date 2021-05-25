@@ -3,6 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
@@ -53,6 +54,30 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
       await pToggleThrobber(editor, () => TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2));
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+    });
+  });
+
+  context('Editor TabIndex', () => {
+    const assertTabIndex = (editor: Editor, tabIndex: string, dataTabIndex: string) => {
+      const iframe = editor.iframeElement;
+      assert.equal(editor.dom.getAttrib(iframe, 'tabindex'), tabIndex);
+      assert.equal(editor.dom.getAttrib(iframe, 'data-mce-tabindex'), dataTabIndex);
+    };
+
+    it('TINY-7373: should have tabindex on iframe when the throbber is enabled', async () => {
+      const editor = hook.editor();
+      assertTabIndex(editor, '', '');
+      await pToggleThrobber(editor, () => assertTabIndex(editor, '-1', ''));
+      assertTabIndex(editor, '', '');
+    });
+
+    it('TINY-7373: should set correct tabindex on iframe when the throbber is disabled', async () => {
+      const editor = hook.editor();
+      const iframe = editor.iframeElement;
+      iframe.tabIndex = 1;
+      assertTabIndex(editor, '1', '');
+      await pToggleThrobber(editor, () => assertTabIndex(editor, '-1', '1'));
+      assertTabIndex(editor, '1', '');
     });
   });
 });

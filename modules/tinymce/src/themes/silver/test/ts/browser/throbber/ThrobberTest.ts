@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
-import { assert, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/mcagar';
 import { SugarBody } from '@ephox/sugar';
 
@@ -62,10 +62,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     ), throbber);
   };
 
-  const assertEditorTabIndex = (editor: Editor, state: boolean) => {
-    assert.eq(state ? -1 : 0, editor.iframeElement.tabIndex);
-  };
-
   const pAssertThrobber = async (editor: Editor, state: boolean) => {
     const finder = state ? UiFinder.pWaitForVisible : UiFinder.pWaitForHidden;
     await finder(`Wait for throbber to be ${state ? 'visible' : 'hidden'}`, SugarBody.body(), '.tox-throbber');
@@ -74,7 +70,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     } else {
       assertThrobberHiddenStructure();
     }
-    assertEditorTabIndex(editor, state);
   };
 
   it('TINY-3453: Throbber actions test', async () => {
@@ -92,7 +87,6 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     // Wait for a little and make sure the throbber is still hidden
     await Waiter.pWait(150);
     assertThrobberHiddenStructure();
-    assertEditorTabIndex(editor, false);
     await pAssertThrobber(editor, true);
     editor.setProgressState(false);
     await pAssertThrobber(editor, false);

@@ -92,21 +92,23 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
     assert.isFalse(editor.hasFocus());
   });
 
-  // Automated test doesn't work on Safari but works manually
-  if (!Env.browser.isSafari()) {
-    it('TINY-7373: should be able to Shift+Tab out of the throbber if it has focus', async () => {
-      const editor = hook.editor();
-      FocusTools.setFocus(SugarBody.body(), '#afterInput');
-      await pEnableThrobber(editor, pAssertInputFocus(false));
+  it('TINY-7373: should be able to Shift+Tab out of the throbber if it has focus', async function () {
+    // Automated test doesn't work on Safari but works manually
+    if (Env.browser.isSafari()) {
+      this.skip();
+    }
 
-      await pPressTab('#afterInput', true);
-      await pAssertThrobberFocus();
+    const editor = hook.editor();
+    FocusTools.setFocus(SugarBody.body(), '#afterInput');
+    await pEnableThrobber(editor, pAssertInputFocus(false));
 
-      await pPressTab('div.tox-throbber__busy-spinner', true);
-      await pAssertInputFocus(true)();
+    await pPressTab('#afterInput', true);
+    await pAssertThrobberFocus();
 
-      await pDisableThrobber(editor, pAssertInputFocus(true));
-      assert.isFalse(editor.hasFocus());
-    });
-  }
+    await pPressTab('div.tox-throbber__busy-spinner', true);
+    await pAssertInputFocus(true)();
+
+    await pDisableThrobber(editor, pAssertInputFocus(true));
+    assert.isFalse(editor.hasFocus());
+  });
 });

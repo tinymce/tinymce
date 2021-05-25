@@ -6,11 +6,10 @@
  */
 
 import { AlloyComponent, AlloySpec, Behaviour, Blocking, Composing, DomFactory, Replacing } from '@ephox/alloy';
-import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Optional, Type } from '@ephox/katamari';
 import { Attribute, Css, Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import * as Settings from '../../api/Settings';
 import { UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 const getBusySpec = (providerBackstage: UiFactoryBackstageProviders) => (_root: AlloyComponent, _behaviours: Behaviour.AlloyBehaviourRecord): AlloySpec => ({
@@ -35,18 +34,20 @@ const focusBusyComponent = (throbber: AlloyComponent): void =>
 // When the throbber is enabled, prevent the iframe from being part of the sequential keyboard navigation when Tabbing
 // TODO: TINY-7500 Only works for iframe mode at this stage
 const toggleEditorTabIndex = (editor: Editor, state: boolean) => {
+  const tabIndexAttr = 'tabindex';
+  const dataTabIndexAttr = `data-mce-${tabIndexAttr}`;
   Optional.from(editor.iframeElement)
     .map(SugarElement.fromDom)
     .each((iframe) => {
       if (state) {
-        Attribute.set(iframe, 'tabindex', -1);
+        Attribute.getOpt(iframe, tabIndexAttr).each((tabIndex) => Attribute.set(iframe, dataTabIndexAttr, tabIndex));
+        Attribute.set(iframe, tabIndexAttr, -1);
       } else {
-        Obj.get(Settings.getIframeAttrs(editor), 'tabindex')
-          .fold(() => {
-            Attribute.remove(iframe, 'tabindex');
-          }, (val) => {
-            Attribute.set(iframe, 'tabindex', val);
-          });
+        Attribute.remove(iframe, tabIndexAttr);
+        Attribute.getOpt(iframe, dataTabIndexAttr).each((tabIndex) => {
+          Attribute.set(iframe, tabIndexAttr, tabIndex);
+          Attribute.remove(iframe, dataTabIndexAttr);
+        });
       }
     });
 };

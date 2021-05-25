@@ -12,8 +12,8 @@ import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
 import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
-const skipCommand = (cmd: string): boolean => {
-  switch (cmd) {
+const shouldIgnoreCommand = (cmd: string): boolean => {
+  switch (cmd.toLowerCase()) {
     case 'undo':
     case 'redo':
     case 'mcerepaint':
@@ -39,9 +39,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Get position before an execCommand is processed
   editor.on('BeforeExecCommand', (e) => {
-    const cmd = e.command.toLowerCase();
+    const cmd = e.command;
 
-    if (!skipCommand(cmd)) {
+    if (!shouldIgnoreCommand(cmd)) {
       endTyping(undoManager, locks);
       undoManager.beforeChange();
     }
@@ -49,9 +49,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Add undo level after an execCommand call was made
   editor.on('ExecCommand', (e) => {
-    const cmd = e.command.toLowerCase();
+    const cmd = e.command;
 
-    if (!skipCommand(cmd)) {
+    if (!shouldIgnoreCommand(cmd)) {
       addNonTypingUndoLevel(e);
     }
   });
