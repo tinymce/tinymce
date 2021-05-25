@@ -109,6 +109,23 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => {
     assert.isTrue(editor.hasFocus());
   });
 
+  it('TINY-7373: should not take focus if editor.focus(true) is called', async () => {
+    const editor = hook.editor();
+    const pAssertInputFocus = () => pAssertFocus('Focus on input', '#tempInput');
+
+    FocusTools.setFocus(SugarBody.body(), '#tempInput');
+    await pEnableThrobber(editor, pAssertInputFocus);
+
+    editor.focus(true);
+    await pAssertInputFocus();
+    assert.isFalse(editor.hasFocus());
+    editor.focus();
+    await pAssertThrobberFocus();
+
+    await pDisableThrobber(editor, pAssertEditorFocus(editor));
+    assert.isTrue(editor.hasFocus());
+  });
+
   it('TINY-7373: should have correct focus transitions when opening and closing dialog', async () => {
     const editor = hook.editor();
     const pAssertDialogFocus = () => pAssertFocus('Dialog input has focus', 'input.tox-textfield');

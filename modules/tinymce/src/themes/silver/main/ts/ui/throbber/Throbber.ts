@@ -106,10 +106,13 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   const throbberState = Cell<boolean>(false);
   const timer = Cell<Optional<number>>(Optional.none());
 
-  const stealFocus = (e) => {
+  const stealFocus = (setActive: boolean) => (e) => {
     if (throbberState.get()) {
       e.preventDefault();
       focusBusyComponent(lazyThrobber());
+      if (setActive) {
+        editor.editorManager.setActive(editor);
+      }
     }
   };
 
@@ -117,12 +120,12 @@ const setup = (editor: Editor, lazyThrobber: () => AlloyComponent, sharedBacksta
   if (!editor.inline) {
     editor.on('PreInit', () => {
       // Cover focus when when the editor is focused natively
-      editor.dom.bind(editor.getWin(), 'focusin', stealFocus);
+      editor.dom.bind(editor.getWin(), 'focusin', stealFocus(false));
       // Cover stealing focus when editor.focus() is called
       editor.on('BeforeExecCommand', (e) => {
-        if (e.command.toLowerCase() === 'mcefocus') {
-          editor.editorManager.setActive(editor);
-          stealFocus(e);
+        // If skipFocus is specified as true in the command, don't focus the Throbber
+        if (e.command.toLowerCase() === 'mcefocus' && e.value !== true) {
+          stealFocus(true)(e);
         }
       });
     });
