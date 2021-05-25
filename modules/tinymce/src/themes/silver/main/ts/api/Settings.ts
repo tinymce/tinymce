@@ -141,6 +141,9 @@ const isStickyToolbar = (editor: Editor) => {
   return (isStickyToolbar || editor.inline) && !useFixedContainer(editor) && !isDistractionFree(editor);
 };
 
+const getStickyToolbarOffset = (editor: Editor) =>
+  editor.getParam('toolbar_sticky_offset', 0, 'number');
+
 const isDraggableModal = (editor: Editor): boolean =>
   editor.getParam('draggable_modal', false, 'boolean');
 
@@ -205,6 +208,7 @@ export {
   isDraggableModal,
   isDistractionFree,
   isStickyToolbar,
+  getStickyToolbarOffset,
   getToolbarLocation,
   isToolbarLocationBottom,
   getToolbarGroups,
