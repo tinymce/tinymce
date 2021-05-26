@@ -1,32 +1,8 @@
 /* eslint-disable @tinymce/no-unimported-promise */
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 
 type Testable<A> = Testable.Testable<A>;
-
-// TODO: move to bedrock
-/**
- * Execute a test defined as a Promise.
- *
- * Useful for fast-check asyncProperty tests. e.g.:
- *
- * ```
- * promiseTest('', () => {
- *   return fc.assert(fc.asyncProperty(fc.integer(), (i) => {
- *     return new Promise((resolve, reject) => {
- *
- *     });
- *   }));
- * });
- * ```
- * @param name
- * @param f
- */
-export const promiseTest = (name: string, f: () => Promise<void>): void => {
-  UnitTest.asynctest(name, (success, failure) => {
-    f().then(success, failure);
-  });
-};
 
 // TODO: move to bedrock
 export const eqAsync = <A>(label: string, expected: A, actual: A, reject: (a: any) => void, testableA: Testable<A> = Testable.tAny): void => {

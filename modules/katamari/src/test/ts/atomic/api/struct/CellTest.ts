@@ -1,28 +1,31 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import { Cell } from 'ephox/katamari/api/Cell';
 
-UnitTest.test('Cell: unit test', () => {
-  const single = Cell('hello world');
-  Assert.eq('get 1', 'hello world', single.get());
-  single.set('again');
-  Assert.eq('get 2', 'again', single.get());
-});
+describe('atomic.katamari.api.struct.CellTest', () => {
+  it('unit test', () => {
+    const single = Cell('hello world');
+    assert.equal(single.get(), 'hello world');
+    single.set('again');
+    assert.equal(single.get(), 'again');
+  });
 
-UnitTest.test('Cell: cell(x).get() === x', () => {
-  fc.assert(fc.property(fc.integer(), (i) => {
-    const cell = Cell(i);
-    Assert.eq('eq', i, cell.get());
-  }));
-});
+  it('cell(x).get() === x', () => {
+    fc.assert(fc.property(fc.integer(), (i) => {
+      const cell = Cell(i);
+      assert.equal(cell.get(), i);
+    }));
+  });
 
-UnitTest.test('Cell: cell.get() === last set call', () => {
-  fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
-    const cell = Cell(a);
-    Assert.eq('a', a, cell.get());
-    cell.set(b);
-    Assert.eq('b', b, cell.get());
-    cell.set(c);
-    Assert.eq('c', c, cell.get());
-  }));
+  it('cell.get() === last set call', () => {
+    fc.assert(fc.property(fc.integer(), fc.integer(), fc.integer(), (a, b, c) => {
+      const cell = Cell(a);
+      assert.equal(cell.get(), a);
+      cell.set(b);
+      assert.equal(cell.get(), b);
+      cell.set(c);
+      assert.equal(cell.get(), c);
+    }));
+  });
 });
