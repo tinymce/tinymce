@@ -1,17 +1,18 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import fc from 'fast-check';
-import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
+import { assertNone, assertSome } from 'ephox/katamari/test/AssertOptional';
 
-UnitTest.test('Optionals.someIf: false -> none', () => {
-  fc.assert(fc.property(fc.integer(), (n) => {
-    Assert.eq('eq', Optional.none(), Optionals.someIf<number>(false, n), tOptional());
-  }));
-});
+describe('atomic.katamari.api.optional.OptionalsSomeIfTest', () => {
+  it('someIf(false) is none', () => {
+    fc.assert(fc.property(fc.integer(), (n) => {
+      assertNone(Optionals.someIf<number>(false, n));
+    }));
+  });
 
-UnitTest.test('Optionals.someIf: true -> some', () => {
-  fc.assert(fc.property(fc.integer(), (n) => {
-    Assert.eq('eq', Optional.some(n), Optionals.someIf<number>(true, n), tOptional());
-  }));
+  it('someIf(true) is some', () => {
+    fc.assert(fc.property(fc.integer(), (n) => {
+      assertSome(Optionals.someIf<number>(true, n), n);
+    }));
+  });
 });
