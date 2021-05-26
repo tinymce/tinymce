@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Strings, Optional } from '@ephox/katamari';
 import { Hex, Rgba } from './ColourTypes';
 
 const hexColour = (value: string): Hex => ({
@@ -10,7 +10,9 @@ const longformRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
 
 const isHexString = (hex: string): boolean => shorthandRegex.test(hex) || longformRegex.test(hex);
 
-const fromString = (hex: string): Optional<Hex> => isHexString(hex) ? Optional.some({ value: hex }) : Optional.none();
+const normalizeHex = (hex: string): string => Strings.removeLeading(hex, '#').toUpperCase();
+
+const fromString = (hex: string): Optional<Hex> => isHexString(hex) ? Optional.some({ value: normalizeHex(hex) }) : Optional.none();
 
 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
 const getLongForm = (hex: Hex): Hex => {

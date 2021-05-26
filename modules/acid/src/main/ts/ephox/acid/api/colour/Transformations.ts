@@ -7,7 +7,7 @@ const hexToHsv = (hex: Hex): Hsv => HsvColour.fromRgb(RgbaColour.fromHex(hex));
 const hsvToHex = (hsv: Hsv): Hex => HexColour.fromRgba(RgbaColour.fromHsv(hsv));
 
 const anyToHex = (color: string): Hex =>
-  HexColour.fromString(color.replace('#', '').toUpperCase())
+  HexColour.fromString(color)
     .orThunk(() => RgbaColour.fromString(color).map((color) => HexColour.fromRgba(color)))
     .getOrThunk(() => {
       // Not dealing with Hex or RGBA so use a canvas to parse the color

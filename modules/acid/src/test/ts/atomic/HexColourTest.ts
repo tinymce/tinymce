@@ -72,22 +72,22 @@ describe('atomic.acid.HexColourTest', () => {
   context('fromString', () => {
     it('TINY-6952: gets a Hex from a string', () => {
       // with #
-      assertHexFromString('#FFF', '#FFF');
-      assertHexFromString('#0ED', '#0ED');
-      assertHexFromString('#0ed', '#0ed');
-      assertHexFromString('#FFFFFF', '#FFFFFF');
-      assertHexFromString('#00EEDD', '#00EEDD');
-      assertHexFromString('#00eedd', '#00eedd');
-      assertHexFromString('#00eeDD', '#00eeDD');
+      assertHexFromString('#FFF', 'FFF');
+      assertHexFromString('#0ED', '0ED');
+      assertHexFromString('#0ed', '0ED');
+      assertHexFromString('#FFFFFF', 'FFFFFF');
+      assertHexFromString('#00EEDD', '00EEDD');
+      assertHexFromString('#00eedd', '00EEDD');
+      assertHexFromString('#00eeDD', '00EEDD');
 
       // without #
       assertHexFromString('FFF', 'FFF');
       assertHexFromString('0ED', '0ED');
-      assertHexFromString('0ed', '0ed');
+      assertHexFromString('0ed', '0ED');
       assertHexFromString('FFFFFF', 'FFFFFF');
       assertHexFromString('00EEDD', '00EEDD');
-      assertHexFromString('00eedd', '00eedd');
-      assertHexFromString('00eeDD', '00eeDD');
+      assertHexFromString('00eedd', '00EEDD');
+      assertHexFromString('00eeDD', '00EEDD');
     });
 
     it('TINY-6952: fails for invalid hex strings', () => {
