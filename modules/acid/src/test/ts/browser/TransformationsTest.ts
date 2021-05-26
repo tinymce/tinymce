@@ -50,5 +50,10 @@ describe('TransformationsTest', () => {
         assert.equal(result.value, hex);
       });
     });
+
+    it('TINY-7480: falls back to white for unknown colors', () => {
+      const result = Transformations.anyToHex('unknowncolor');
+      assert.equal(result.value, 'FFFFFF');
+    });
   });
 });
