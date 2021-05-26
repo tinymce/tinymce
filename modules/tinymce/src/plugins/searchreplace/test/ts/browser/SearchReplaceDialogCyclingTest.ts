@@ -1,111 +1,109 @@
-import { Assertions, Log, Pipeline, Step } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
-import { Class, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
+import { Class, SelectorFilter } from '@ephox/sugar';
+import { assert } from 'chai';
 
-import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
+import Editor from 'tinymce/core/api/Editor';
+import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
-
 import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest', (success, failure) => {
-  Theme();
-  SearchreplacePlugin();
+enum Direction {
+  FORWARDS,
+  BACKWARDS
+}
 
-  enum Direction {
-    FORWARDS,
-    BACKWARDS
-  }
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    const sFind = Utils.sClickFind(tinyUi);
-    const sNext = Utils.sClickNext(tinyUi);
-    const sPrev = Utils.sClickPrev(tinyUi);
-    const sSelectPreference = (name: string) => Utils.sSelectPreference(tinyUi, name);
-
-    const sAssertMatchFound = (index: number) => Step.sync(() => {
-      const matches = SelectorFilter.descendants(SugarElement.fromDom(editor.getBody()), '.mce-match-marker');
-      const elem = matches[index];
-      Assertions.assertEq(`Check match ${index} is marked as selected`, true, Class.has(elem, 'mce-match-marker-selected'));
-    });
-
-    const sTestCycling = (sCycle: Step<any, any>, dir: Direction) => [
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results without any preferences', [
-        tinyApis.sSetContent('<p>fish fish fish</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 4),
-        Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'fish'),
-        sFind,
-        sAssertMatchFound(0),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 1 : 2),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 2 : 1),
-        sCycle,
-        sAssertMatchFound(0),
-        Utils.sCloseDialog(tinyUi)
-      ]),
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with matchcase enabled', [
-        tinyApis.sSetContent('<p>fish Fish fish Fish</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 5, [ 0, 0 ], 9),
-        Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'Fish'),
-        sSelectPreference('Match case'),
-        sFind,
-        sAssertMatchFound(0),
-        sCycle,
-        sAssertMatchFound(1),
-        sCycle,
-        sAssertMatchFound(0),
-        sSelectPreference('Match case'),
-        Utils.sCloseDialog(tinyUi)
-      ]),
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with wholewords enabled', [
-        tinyApis.sSetContent('<p>ttt TTT ttt ttttt</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 3),
-        Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', 'ttt'),
-        sSelectPreference('Find whole words only'),
-        sFind,
-        sAssertMatchFound(0),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 1 : 2),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 2 : 1),
-        sCycle,
-        sAssertMatchFound(0),
-        sSelectPreference('Find whole words only'),
-        Utils.sCloseDialog(tinyUi)
-      ]),
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling through results with special characters', [
-        tinyApis.sSetContent('<p>^^ ^^ ^^ fish</p>'),
-        tinyApis.sSetSelection([ 0, 0 ], 0, [ 0, 0 ], 2),
-        Utils.sOpenDialog(tinyUi),
-        Utils.sAssertFieldValue(tinyUi, 'input.tox-textfield[placeholder="Find"]', '^^'),
-        sFind,
-        sAssertMatchFound(0),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 1 : 2),
-        sCycle,
-        sAssertMatchFound(dir === Direction.FORWARDS ? 2 : 1),
-        sCycle,
-        sAssertMatchFound(0),
-        Utils.sCloseDialog(tinyUi)
-      ])
-    ];
-
-    Pipeline.async({}, [
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling using find', sTestCycling(sFind, Direction.FORWARDS)),
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling using next', sTestCycling(sNext, Direction.FORWARDS)),
-      Log.stepsAsStep('TINY-4506', 'SearchReplace: Test cycling using previous', sTestCycling(sPrev, Direction.BACKWARDS))
-    ], onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
-    theme: 'silver'
-  }, success, failure);
+  }, [ Theme, Plugin ]);
+
+  const assertMatchFound = (editor: Editor, index: number) => {
+    const matches = SelectorFilter.descendants(TinyDom.body(editor), '.mce-match-marker');
+    const elem = matches[index];
+    assert.isTrue(Class.has(elem, 'mce-match-marker-selected'), `Check match ${index} is marked as selected`);
+  };
+
+  Arr.each([
+    { label: 'Test cycling using find', scenario: { cycle: Utils.clickFind, dir: Direction.FORWARDS }},
+    { label: 'Test cycling using next', scenario: { cycle: Utils.clickNext, dir: Direction.FORWARDS }},
+    { label: 'Test cycling using previous', scenario: { cycle: Utils.clickPrev, dir: Direction.BACKWARDS }},
+  ], (testCase) => {
+    context(testCase.label, () => {
+      const { dir, cycle } = testCase.scenario;
+
+      it('TINY-4506: Test cycling through results without any preferences', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>fish fish fish</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
+        await Utils.pOpenDialog(editor);
+        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
+        Utils.clickFind(editor);
+        assertMatchFound(editor, 0);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 1 : 2);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 2 : 1);
+        cycle(editor);
+        assertMatchFound(editor, 0);
+        TinyUiActions.closeDialog(editor);
+      });
+
+      it('TINY-4506: Test cycling through results with matchcase enabled', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>fish Fish fish Fish</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 9);
+        await Utils.pOpenDialog(editor);
+        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'Fish');
+        await Utils.pSelectPreference(editor, 'Match case');
+        Utils.clickFind(editor);
+        assertMatchFound(editor, 0);
+        cycle(editor);
+        assertMatchFound(editor, 1);
+        cycle(editor);
+        assertMatchFound(editor, 0);
+        await Utils.pSelectPreference(editor, 'Match case');
+        TinyUiActions.closeDialog(editor);
+      });
+
+      it('TINY-4506: Test cycling through results with wholewords enabled', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>ttt TTT ttt ttttt</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+        await Utils.pOpenDialog(editor);
+        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'ttt');
+        await Utils.pSelectPreference(editor, 'Find whole words only');
+        Utils.clickFind(editor);
+        assertMatchFound(editor, 0);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 1 : 2);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 2 : 1);
+        cycle(editor);
+        assertMatchFound(editor, 0);
+        await Utils.pSelectPreference(editor, 'Find whole words only');
+        TinyUiActions.closeDialog(editor);
+      });
+
+      it('TINY-4506: Test cycling through results with special characters', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>^^ ^^ ^^ fish</p>');
+        TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
+        await Utils.pOpenDialog(editor);
+        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', '^^');
+        Utils.clickFind(editor);
+        assertMatchFound(editor, 0);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 1 : 2);
+        cycle(editor);
+        assertMatchFound(editor, dir === Direction.FORWARDS ? 2 : 1);
+        cycle(editor);
+        assertMatchFound(editor, 0);
+        TinyUiActions.closeDialog(editor);
+      });
+    });
+  });
 });

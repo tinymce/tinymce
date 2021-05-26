@@ -83,13 +83,13 @@ describe('atomic.katamari.api.fun.FunTest', () => {
 
   it('Check always :: f(x) === true', () => {
     fc.assert(fc.property(fc.json(), (json) => {
-      assert.deepEqual(Fun.always(json), true);
+      assert.isTrue(Fun.always(json));
     }));
   });
 
   it('Check never :: f(x) === false', () => {
     fc.assert(fc.property(fc.json(), (json) => {
-      assert.deepEqual(Fun.never(json), false);
+      assert.isFalse(Fun.never(json));
     }));
   });
 
