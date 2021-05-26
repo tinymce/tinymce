@@ -38,7 +38,7 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
     await McEditor.pFromHtml('<textarea></textarea>', {
       ...settings,
       setup: (editor: Editor) => {
-        editor.on('LoadContent', () => {
+        editor.on('PreInit', () => {
           // Hook the function called when stylesheets are loaded
           // so we can remove the editor right after starting to load them.
           const realLoadAll = editor.ui.styleSheetLoader.loadAll;
