@@ -1,74 +1,35 @@
-import { Chain, Log, Logger, Mouse, Pipeline, Step, UiControls, UiFinder } from '@ephox/agar';
-import { UnitTest } from '@ephox/bedrock-client';
-import { TinyApis, TinyLoader, TinyUi } from '@ephox/mcagar';
+import { UiFinder } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/mcagar';
+import { SugarBody } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
-
-import SearchreplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
+import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 import Theme from 'tinymce/themes/silver/Theme';
+import * as Utils from '../module/test/Utils';
 
-UnitTest.asynctest('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', (success, failure) => {
-
-  Theme();
-  SearchreplacePlugin();
-
-  const sUndo = (editor: Editor) => {
-    return Logger.t('Undo', Step.sync(() => {
-      editor.undoManager.undo();
-    }));
-  };
-
-  const sRedo = (editor: Editor) => {
-    return Logger.t('Redo', Step.sync(() => {
-      editor.undoManager.redo();
-    }));
-  };
-
-  TinyLoader.setupLight((editor, onSuccess, onFailure) => {
-    const tinyApis = TinyApis(editor);
-    const tinyUi = TinyUi(editor);
-
-    Pipeline.async({},
-      Log.steps('TBA', 'SearchReplace: replace one of three found, undo and redo and assert there is no matcher spans in editor', [
-        tinyApis.sSetContent('<p>cats cats cats</p>'),
-        tinyUi.sClickOnToolbar('click on searchreplace button', 'button[aria-label="Find and replace"]'),
-        Chain.asStep({}, [
-          Chain.fromParent(tinyUi.cWaitForPopup('wait for dialog', 'div[role="dialog"]'), [
-            Chain.fromChains([
-              UiFinder.cFindIn('input.tox-textfield[placeholder="Find"]'),
-              UiControls.cSetValue('cats')
-            ]),
-            Chain.fromChains([
-              UiFinder.cFindIn('input.tox-textfield[placeholder="Replace with"]'),
-              UiControls.cSetValue('dogs')
-            ]),
-            Chain.fromChains([
-              UiFinder.cFindIn('button:contains("Find")'),
-              Mouse.cClick
-            ]),
-            Chain.fromChains([
-              UiFinder.cWaitFor('wait for button to be enabled', 'button[disabled!="disabled"]:contains("Replace")')
-            ]),
-            Chain.fromChains([
-              UiFinder.cFindIn('button:contains("Replace")'),
-              Mouse.cClick
-            ]),
-            Chain.fromChains([
-              UiFinder.cFindIn('button[aria-label="Close"]'),
-              Mouse.cClick
-            ])
-          ])
-        ]),
-        sUndo(editor),
-        tinyApis.sAssertContent('<p>cats cats cats</p>'),
-        sRedo(editor),
-        tinyApis.sAssertContentPresence({ 'span.mce-match-marker': 0 }),
-        tinyApis.sAssertContent('<p>dogs cats cats</p>')
-      ])
-      , onSuccess, onFailure);
-  }, {
+describe('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'searchreplace',
     toolbar: 'searchreplace',
     base_url: '/project/tinymce/js/tinymce',
-    theme: 'silver'
-  }, success, failure);
+  }, [ Theme, Plugin ]);
+
+  it('TBA: replace one of three found, undo and redo and assert there is no matcher spans in editor', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>cats cats cats</p>');
+
+    await Utils.pOpenDialog(editor);
+    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'cats');
+    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Replace with"]', 'dogs');
+    Utils.clickFind(editor);
+    await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button[disabled!="disabled"]:contains("Replace")');
+    Utils.clickReplace(editor);
+    Utils.clickClose(editor);
+    editor.undoManager.undo();
+    TinyAssertions.assertContent(editor, '<p>cats cats cats</p>');
+    editor.undoManager.redo();
+    TinyAssertions.assertContentPresence(editor, { 'span.mce-match-marker': 0 });
+    TinyAssertions.assertContent(editor, '<p>dogs cats cats</p>');
+  });
 });

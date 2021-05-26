@@ -4,6 +4,7 @@ import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement } from '@eph
 import { assert } from 'chai';
 
 import PromisePolyfill from 'tinymce/core/api/util/Promise';
+import { ToolbarLocation } from 'tinymce/themes/silver/api/Settings';
 
 const staticPartsOuter = (s: ApproxStructure.StructApi, _str: ApproxStructure.StringApi, arr: ApproxStructure.ArrayApi): StructAssert[] =>
   // should not change
@@ -184,6 +185,19 @@ const assertEditorClasses = (docked: boolean) => {
   })), container);
 };
 
+const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number) => {
+  const isToolbarTop = toolbarLocation === ToolbarLocation.top;
+  scrollRelativeEditor(-100, isToolbarTop);
+  await Waiter.pWait(100);
+  scrollRelativeEditor(200, isToolbarTop);
+  const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
+
+  return Waiter.pTryUntil(
+    `Wait until head get ${value}px`,
+    () => assert.equal(Css.get(header, toolbarLocation), `${value}px`)
+  );
+};
+
 const pCloseMenus = (numOpenedMenus: number) => {
   const menuArray = Arr.range(numOpenedMenus, Fun.identity);
   return Arr.foldl(menuArray, (p) => p.then(async () => {
@@ -215,6 +229,7 @@ export {
   pOpenMenuAndTestScrolling,
   pScrollAndAssertStructure,
   pAssertHeaderDocked,
+  pAssertHeaderPosition,
   assertEditorClasses,
   scrollRelativeEditor
 };
