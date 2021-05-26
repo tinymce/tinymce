@@ -1,8 +1,11 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Namespace from 'ephox/katamari/api/Namespace';
 
-UnitTest.test('NamespaceTest', () => {
-  const styles = Namespace.css('ephox.test');
-  const css = styles.resolve('doubletest');
-  Assert.eq('style is namespaced', 'ephox-test-doubletest', css);
+describe('atomic.katamari.api.data.NamespaceTest', () => {
+  it('NamespaceTest', () => {
+    const styles = Namespace.css('ephox.test');
+    const css = styles.resolve('doubletest');
+    assert.equal(css, 'ephox-test-doubletest');
+  });
 });
