@@ -15,7 +15,7 @@ describe('TransformationsTest', () => {
       }));
     });
 
-    it('TINY-7480: transform rgb colours', () => {
+    it('TINY-7480: transform rgb colors', () => {
       Obj.each({
         'rgb(155, 89, 182)': '9B59B6', // Purple
         'rgb(0,0,255)': '0000FF', // Blue
@@ -40,7 +40,7 @@ describe('TransformationsTest', () => {
       });
     });
 
-    it('TINY-7480: transform hsl colours', () => {
+    it('TINY-7480: transform hsl colors', () => {
       Obj.each({
         'hsl(145, 63.2%, 49.0%)': '2ECC70',
         'hsl(25,100%,60%)': 'FF8833',
