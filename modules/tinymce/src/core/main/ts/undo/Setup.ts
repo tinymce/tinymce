@@ -12,6 +12,8 @@ import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
 import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
+// Avoid adding non-typing undo levels for commands that could cause duplicate undo levels to be created
+// or do not alter the editor content or selection in any way
 const shouldIgnoreCommand = (cmd: string): boolean => {
   switch (cmd.toLowerCase()) {
     case 'undo':

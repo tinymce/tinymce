@@ -51,6 +51,15 @@ const makeComponent = (focus: boolean) => (_store: TestStore, _doc: SugarElement
 };
 
 describe('browser.alloy.behaviour.blocking.BlockingFocusTest', () => {
+  const busyComponentClass = 'put-spinner-here';
+
+  const pAssertBusyComponentFocus = (hasFocus: boolean) =>
+    FocusTools.pTryOnSelector(
+      `Busy component ${hasFocus ? 'has focus' : 'does not have focus'}`,
+      SugarDocument.getDocument(),
+      hasFocus ? `div.${busyComponentClass}` : `div:not(.${busyComponentClass})`
+    );
+
   context('Config: focus = true', () => {
     const hook = GuiSetup.bddSetup(makeComponent(true));
 
@@ -60,19 +69,19 @@ describe('browser.alloy.behaviour.blocking.BlockingFocusTest', () => {
       Blocking.block(comp, (_comp, behaviours) => ({
         dom: {
           tag: 'div',
-          classes: [ 'put-spinner-here' ]
+          classes: [ busyComponentClass ]
         },
         behaviours
       }));
-      await FocusTools.pTryOnSelector('Busy component has focus', SugarDocument.getDocument(), 'div.put-spinner-here');
+      await pAssertBusyComponentFocus(true);
       Blocking.unblock(comp);
     });
 
     it('does not focus if busy component does not have Keying configured', async () => {
       const comp = hook.component();
       Focusing.focus(memFocusDiv.get(comp));
-      Blocking.block(comp, Fun.constant({ dom: { tag: 'div', classes: [ 'put-spinner-here' ] }}));
-      await FocusTools.pTryOnSelector('Busy component has focus', SugarDocument.getDocument(), 'div.focus-div');
+      Blocking.block(comp, Fun.constant({ dom: { tag: 'div', classes: [ busyComponentClass ] }}));
+      await pAssertBusyComponentFocus(false);
       Blocking.unblock(comp);
     });
   });
@@ -86,11 +95,11 @@ describe('browser.alloy.behaviour.blocking.BlockingFocusTest', () => {
       Blocking.block(comp, (_comp, behaviours) => ({
         dom: {
           tag: 'div',
-          classes: [ 'put-spinner-here' ]
+          classes: [ busyComponentClass ]
         },
         behaviours
       }));
-      await FocusTools.pTryOnSelector('Busy component has focus', SugarDocument.getDocument(), 'div.focus-div');
+      await pAssertBusyComponentFocus(false);
       Blocking.unblock(comp);
     });
   });
