@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Singleton } from '@ephox/katamari';
+import { Arr, Singleton, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
@@ -26,6 +26,21 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
   };
 };
 
+const filterNoneItem = <T extends { value: string }>(list: T[]) =>
+  Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
+
+const generateItems = (baseName: string, listLength: number) =>
+  Arr.range(listLength, (index) => baseName + index).join(' ');
+
+const generateItemNames = (baseName: string, listLength: number) =>
+  () => generateItems(baseName, listLength);
+
+const generateItemNamesCallback = (baseName: string, listLength: number) =>
+  (callback) => callback(generateItems(baseName, listLength));
+
 export {
-  onSetupToggle
+  onSetupToggle,
+  generateItemNames,
+  generateItemNamesCallback,
+  filterNoneItem
 };

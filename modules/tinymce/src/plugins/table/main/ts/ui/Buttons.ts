@@ -5,33 +5,11 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
-import { ClassList, getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
+import { getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
-import { onSetupToggle } from './ButtonToggleUtils';
-
-const filterNoneItem = (list: ClassList) =>
-  Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
-
-const makeClassFetch = (editor: Editor, list: ClassList, command: string, format: string) => {
-  return (callback) => {
-    callback(Arr.map(filterNoneItem(list), (value) => {
-      const item: Menu.ToggleMenuItemSpec = {
-        text: value.title,
-        type: 'togglemenuitem',
-        onAction: () => {
-          editor.execCommand(command, false, value.value);
-        },
-        onSetup: onSetupToggle(editor, format, value.value)
-      };
-
-      return item;
-    }));
-  };
-};
+import { filterNoneItem, generateItemNamesCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -188,22 +166,22 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     icon: 'table'
   });
 
-  const tableClassList = getTableClassList(editor);
+  const tableClassList = filterNoneItem(getTableClassList(editor));
   if (tableClassList.length !== 0) {
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
-      fetch: makeClassFetch(editor, tableClassList, 'mceTableToggleClass', 'tableclass'),
+      fetch: generateItemNamesCallback('tableclassitem', tableClassList.length),
       onSetup: selectionTargets.onSetupTable
     });
   }
 
-  const tableCellClassList = getCellClassList(editor);
+  const tableCellClassList = filterNoneItem(getCellClassList(editor));
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
-      fetch: makeClassFetch(editor, tableCellClassList, 'mceTableCellToggleClass', 'tablecellclass'),
+      fetch: generateItemNamesCallback('tablecellclassitem', tableCellClassList.length),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
