@@ -3,8 +3,10 @@ import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from 'ephox/sand/core/PlatformDetection';
 import * as PlatformQuery from 'ephox/sand/test/PlatformQuery';
 
+type PlatformQuery = typeof PlatformQuery;
+
 UnitTest.test('BrowserTest', () => {
-  const check = (expectedQuery: string, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) => {
+  const check = (expectedQuery: keyof PlatformQuery, expectedOs: string, expectedBrowser: string, expectedMajor: number, expectedMinor: number, userAgent: string) => {
     const platform = PlatformDetection.detect(userAgent, Fun.never);
     assert.eq(expectedBrowser, platform.browser.current);
     assert.eq(expectedOs, platform.os.current);
@@ -13,9 +15,6 @@ UnitTest.test('BrowserTest', () => {
     assert.eq(expectedMajor, actualBrowserVersion.major);
     assert.eq(expectedMinor, actualBrowserVersion.minor);
 
-    if (!PlatformQuery.hasOwnProperty(expectedQuery)) {
-      assert.fail('Platform query: ' + expectedQuery + ' not known');
-    }
     assert.eq(true, PlatformQuery[expectedQuery](platform), 'The query ' + expectedQuery + ' should match.\nUser Agent: ' + userAgent + '\nbrowser: ' + expectedBrowser);
   };
 

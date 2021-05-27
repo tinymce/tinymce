@@ -5,13 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import Editor from '../Editor';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
 
 const deleteFromCallbackMap = (callbackMap, selector, callback) => {
-  if (callbackMap && callbackMap.hasOwnProperty(selector)) {
+  if (callbackMap && Obj.has(callbackMap, selector)) {
     const newCallbacks = Arr.filter(callbackMap[selector], (cb) => cb !== callback);
 
     if (newCallbacks.length === 0) {

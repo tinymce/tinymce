@@ -77,7 +77,7 @@ export const EventRegistry = (): EventRegistry => {
   const unregisterId = (id: string): void => {
     // INVESTIGATE: Find a better way than mutation if we can.
     Obj.each(registry, (handlersById: Record<string, CurriedHandler>, _eventName) => {
-      if (handlersById.hasOwnProperty(id)) {
+      if (Obj.has(handlersById, id)) {
         delete handlersById[id];
       }
     });

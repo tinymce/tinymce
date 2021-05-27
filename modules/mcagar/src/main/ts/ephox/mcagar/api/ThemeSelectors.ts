@@ -1,4 +1,4 @@
-import { Arr, Global } from '@ephox/katamari';
+import { Arr, Global, Obj } from '@ephox/katamari';
 import { Editor } from '../alien/EditorTypes';
 
 const isSilver = (): boolean => {
@@ -6,7 +6,7 @@ const isSilver = (): boolean => {
   if (!tinymce) {
     throw new Error('Failed to get global tinymce');
   }
-  return tinymce.activeEditor.hasOwnProperty('ui');
+  return Obj.has(tinymce.activeEditor, 'ui');
 };
 
 const isModern = (): boolean => !isSilver();

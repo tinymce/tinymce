@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import Entities from 'tinymce/core/api/html/Entities';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -35,7 +36,7 @@ const openContainer = (rootTag: string, rootAttrs: RootAttrs) => {
 
   if (typeof rootAttrs === 'object') {
     for (key in rootAttrs) {
-      if (rootAttrs.hasOwnProperty(key)) {
+      if (Obj.has(rootAttrs, key)) {
         attrs.push(key + '="' + Entities.encodeAllRaw(rootAttrs[key]) + '"');
       }
     }

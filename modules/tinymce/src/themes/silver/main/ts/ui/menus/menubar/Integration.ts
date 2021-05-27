@@ -10,15 +10,20 @@ import Editor from 'tinymce/core/api/Editor';
 import { getRemovedMenuItems } from 'tinymce/themes/silver/api/Settings';
 import { MenubarItemSpec } from './SilverMenubar';
 
+interface MenuSpec {
+  readonly title: string;
+  readonly items: string;
+}
+
 export interface MenuRegistry {
   menuItems: Record<string, any>;
   menubar: string | boolean;
-  menus: Record<string, any>;
+  menus: Record<string, MenuSpec>;
 }
 
 const defaultMenubar = 'file edit view insert format tools table help';
 
-const defaultMenus = {
+const defaultMenus: Record<string, MenuSpec> = {
   file: { title: 'File', items: 'newdocument restoredraft | preview | export print | deleteallconversations' },
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
   view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
@@ -64,9 +69,14 @@ const identifyMenus = (editor: Editor, registry: MenuRegistry): MenubarItemSpec[
   const userDefinedMenus = Obj.keys(registry.menus).length > 0;
 
   const menubar: string[] = registry.menubar === undefined || registry.menubar === true ? parseItemsString(defaultMenubar) : parseItemsString(registry.menubar === false ? '' : registry.menubar);
-  const validMenus = Arr.filter(menubar, (menuName) => userDefinedMenus ? (registry.menus.hasOwnProperty(menuName) && registry.menus[menuName].hasOwnProperty('items')
-      || defaultMenus.hasOwnProperty(menuName))
-    : defaultMenus.hasOwnProperty(menuName));
+  const validMenus = Arr.filter(menubar, (menuName) => {
+    const isDefaultMenu = Obj.has(defaultMenus, menuName);
+    if (userDefinedMenus) {
+      return isDefaultMenu || Obj.get(registry.menus, menuName).exists((menu) => Obj.has(menu, 'items'));
+    } else {
+      return isDefaultMenu;
+    }
+  });
 
   const menus: MenubarItemSpec[] = Arr.map(validMenus, (menuName) => {
     const menuData = rawMenuData[menuName];

@@ -5,13 +5,15 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import Promise from 'tinymce/core/api/util/Promise';
 import * as Settings from '../api/Settings';
 import * as DataToHtml from './DataToHtml';
 import { MediaData } from './Types';
 
-const cache = {};
+const cache: Record<string, unknown> = {};
+
 const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback, handler) => {
   return new Promise<{url: string; html: string}>((res, rej) => {
     const wrappedResolve = (response) => {
@@ -49,9 +51,8 @@ const getEmbedHtml = (editor: Editor, data: MediaData) => {
   return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
 };
 
-const isCached = (url: string) => {
-  return cache.hasOwnProperty(url);
-};
+const isCached = (url: string): boolean =>
+  Obj.has(cache, url);
 
 export {
   getEmbedHtml,

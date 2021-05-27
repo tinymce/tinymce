@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -81,7 +81,7 @@ const matchItems = (dom: DOMUtils, node: Node, format, itemName: string, similar
     // Non indexed object
     if (typeof items.length === 'undefined') {
       for (key in items) {
-        if (items.hasOwnProperty(key)) {
+        if (Obj.has(items, key)) {
           if (itemName === 'attributes') {
             value = dom.getAttrib(node, key);
           } else {

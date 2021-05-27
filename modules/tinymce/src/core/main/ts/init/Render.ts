@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Attribute, SugarElement } from '@ephox/sugar';
 import { UrlObject } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
@@ -50,7 +50,7 @@ const loadTheme = (scriptLoader: ScriptLoader, editor: Editor, suffix, callback)
   const theme = Settings.getTheme(editor);
 
   if (Type.isString(theme)) {
-    if (!hasSkipLoadPrefix(theme) && !ThemeManager.urls.hasOwnProperty(theme)) {
+    if (!hasSkipLoadPrefix(theme) && !Obj.has(ThemeManager.urls, theme)) {
       const themeUrl = Settings.getThemeUrl(editor);
 
       if (themeUrl) {

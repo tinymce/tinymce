@@ -7,7 +7,7 @@
 
 import { ItemTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderColorSwatchItem } from './ColorSwatchItem';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';
@@ -17,11 +17,8 @@ const fancyMenuItems: Record<keyof Menu.FancyActionArgsMap, (mi: Menu.FancyMenuI
   colorswatch: renderColorSwatchItem
 };
 
-const valueOpt = <T>(obj: Record<string, T>, key): Optional<T> => Object.prototype.hasOwnProperty.call(obj, key)
-  ? Optional.some(obj[key])
-  : Optional.none();
-
-const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Optional<ItemTypes.WidgetItemSpec> => valueOpt(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
+const renderFancyMenuItem = (spec: Menu.FancyMenuItem, backstage: UiFactoryBackstage): Optional<ItemTypes.WidgetItemSpec> =>
+  Obj.get(fancyMenuItems, spec.fancytype).map((render) => render(spec, backstage));
 
 export {
   renderFancyMenuItem

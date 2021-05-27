@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 import Tools from 'tinymce/core/api/util/Tools';
 import { ListGroup, ListItem, ListValue, UserListItem } from '../ui/DialogTypes';
 
@@ -48,7 +48,7 @@ const sanitizer = (extracter = getValue) => (list: UserListItem[]): Optional<Lis
 
 const sanitize = (list: UserListItem[]) => sanitizer(getValue)(list);
 
-const isGroup = (item: ListItem): item is ListGroup => Object.prototype.hasOwnProperty.call(item, 'items');
+const isGroup = (item: ListItem): item is ListGroup => Obj.has(item as ListGroup, 'items');
 
 const findEntryDelegate = (list: ListItem[], value: string): Optional<ListValue> => Arr.findMap(list, (item) => {
   if (isGroup(item)) {

@@ -53,7 +53,7 @@ const setAllHistory = (history: Record<string, string[]>) => {
 
 const getHistory = (fileType: string): string[] => {
   const history = getAllHistory();
-  return Object.prototype.hasOwnProperty.call(history, fileType) ? history[fileType] : [];
+  return Obj.get(history, fileType).getOr([]);
 };
 
 const addToHistory = (url: string, fileType: string) => {
@@ -61,7 +61,7 @@ const addToHistory = (url: string, fileType: string) => {
     return;
   }
   const history = getAllHistory();
-  const items = Object.prototype.hasOwnProperty.call(history, fileType) ? history[fileType] : [];
+  const items = Obj.get(history, fileType).getOr([]);
   const itemsWithoutUrl = Arr.filter(items, (item) => item !== url);
   history[fileType] = [ url ].concat(itemsWithoutUrl).slice(0, HISTORY_LENGTH);
   setAllHistory(history);

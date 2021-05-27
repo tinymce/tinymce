@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import * as Bookmarks from '../../bookmark/Bookmarks';
 import Tools from '../util/Tools';
 import DOMUtils from './DOMUtils';
@@ -73,7 +74,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
 
       for (name in obj1) {
         // Obj1 has item obj2 doesn't have
-        if (obj1.hasOwnProperty(name)) {
+        if (Obj.has(obj1, name)) {
           value = obj2[name];
 
           // Obj2 doesn't have obj1 item
@@ -94,7 +95,7 @@ const ElementUtils = (dom: DOMUtils): ElementUtils => {
       // Check if obj 2 has something obj 1 doesn't have
       for (name in obj2) {
         // Obj2 has item obj1 doesn't have
-        if (obj2.hasOwnProperty(name)) {
+        if (Obj.has(obj2, name)) {
           return false;
         }
       }

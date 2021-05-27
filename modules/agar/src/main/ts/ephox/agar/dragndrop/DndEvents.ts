@@ -1,6 +1,11 @@
+import { Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 import { setProtectedMode, setReadOnlyMode, setReadWriteMode } from '../datatransfer/Mode';
+
+interface IeDragEvent extends DragEvent {
+  readonly ieDefaultPrevented?: boolean;
+}
 
 const platform = PlatformDetection.detect();
 
@@ -40,7 +45,7 @@ const createDragenterEvent = createDndEvent('dragenter');
 const createDropEvent = createDndEvent('drop');
 const createDragEvent = createDndEvent('drag');
 
-const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || evt.hasOwnProperty('ieDefaultPrevented');
+const isDefaultPrevented = (evt: DragEvent): boolean => evt.defaultPrevented || Obj.has(evt as IeDragEvent, 'ieDefaultPrevented');
 
 const dispatchDndEvent = (event: DragEvent, target: SugarElement<Node>): DragEvent => {
   if (event.type === 'dragstart') {

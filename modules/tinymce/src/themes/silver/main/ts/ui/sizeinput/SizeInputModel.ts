@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Optional, Optionals, Result } from '@ephox/katamari';
+import { Obj, Optional, Optionals, Result } from '@ephox/katamari';
 
 export type SizeUnit = '' | 'cm' | 'mm' | 'in' | 'px' | 'pt' | 'pc' | 'em' | 'ex' | 'ch' | 'rem' | 'vw' | 'vh' | 'vmin' | 'vmax' | '%';
 
@@ -54,7 +54,7 @@ export const parseSize = (sizeText: string): Result<Size, string> => {
 };
 
 export const convertUnit = (size: Size, unit: SizeUnit): Optional<number> => {
-  const inInch = {
+  const inInch: Record<string, number> = {
     '': 96,
     'px': 96,
     'pt': 72,
@@ -63,9 +63,8 @@ export const convertUnit = (size: Size, unit: SizeUnit): Optional<number> => {
     'mm': 25.4,
     'in': 1
   };
-  type ConvertableSizeUnit = keyof typeof inInch;
-  const supported = (u: SizeUnit): u is ConvertableSizeUnit =>
-    Object.prototype.hasOwnProperty.call(inInch, u);
+  const supported = (u: SizeUnit) => Obj.has(inInch, u);
+
   if (size.unit === unit) {
     return Optional.some(size.value);
   } else if (supported(size.unit) && supported(unit)) {

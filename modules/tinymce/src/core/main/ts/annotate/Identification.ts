@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 
@@ -60,7 +60,7 @@ const findAll = (editor: Editor, name: string): Record<string, SugarElement[]> =
   const directory: Record<string, SugarElement[]> = { };
   Arr.each(markers, (m) => {
     const uid = Attribute.get(m, Markings.dataAnnotationId());
-    const nodesAlready = directory.hasOwnProperty(uid) ? directory[uid] : [ ];
+    const nodesAlready = Obj.get(directory, uid).getOr([]);
     directory[uid] = nodesAlready.concat([ m ]);
   });
   return directory;

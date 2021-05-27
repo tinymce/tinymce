@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 
@@ -58,13 +58,13 @@ const findMatchingNodes = (nodeFilters: ParserFilter[], attributeFilters: Parser
   }
 
   for (const name in nodeMatches) {
-    if (nodeMatches.hasOwnProperty(name)) {
+    if (Obj.has(nodeMatches, name)) {
       matches.push(nodeMatches[name]);
     }
   }
 
   for (const name in attrMatches) {
-    if (attrMatches.hasOwnProperty(name)) {
+    if (Obj.has(attrMatches, name)) {
       matches.push(attrMatches[name]);
     }
   }

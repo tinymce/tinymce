@@ -7,7 +7,7 @@
 
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Cell, Optional } from '@ephox/katamari';
+import { Cell, Obj, Optional } from '@ephox/katamari';
 import Resource from 'tinymce/core/api/Resource';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
@@ -15,7 +15,8 @@ import { ComposingConfigs } from '../alien/ComposingConfigs';
 type CustomEditorSpec = Dialog.CustomEditor;
 type CustomEditorInitFn = Dialog.CustomEditorInitFn;
 
-const isOldCustomEditor = (spec: CustomEditorSpec): spec is Dialog.CustomEditorOld => Object.prototype.hasOwnProperty.call(spec, 'init');
+const isOldCustomEditor = (spec: CustomEditorSpec): spec is Dialog.CustomEditorOld =>
+  Obj.has(spec as Dialog.CustomEditorOld, 'init');
 
 export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   const editorApi = Cell(Optional.none<Dialog.CustomEditorInit>());

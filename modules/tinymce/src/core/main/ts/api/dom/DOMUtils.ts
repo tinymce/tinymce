@@ -736,7 +736,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     outHtml += '<' + name;
 
     for (key in attrs) {
-      if (attrs.hasOwnProperty(key) && attrs[key] !== null && typeof attrs[key] !== 'undefined') {
+      if (Obj.hasNonNullableKey(attrs, key)) {
         outHtml += ' ' + key + '="' + encode(attrs[key]) + '"';
       }
     }

@@ -40,7 +40,7 @@ const setup = (editor: Editor, _registry: AnnotationsRegistry): AnnotationChange
 
   const updateCallbacks = (name: string, f: (inputData: AnnotationListenerData) => AnnotationListenerData) => {
     const callbackMap = changeCallbacks.get();
-    const data = callbackMap.hasOwnProperty(name) ? callbackMap[name] : initData();
+    const data = Obj.get(callbackMap, name).getOrThunk(initData);
     const outputData = f(data);
     callbackMap[name] = outputData;
     changeCallbacks.set(callbackMap);

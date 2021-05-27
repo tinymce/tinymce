@@ -1,3 +1,4 @@
+import * as Obj from './Obj';
 import * as Type from './Type';
 
 type MergeStrategy = (old: any, nu: any) => any;
@@ -25,9 +26,6 @@ interface ShallowMergeFunc {
   (...objs: Array<Record<string, any>>): Record<string, any>;
 }
 
-// eslint-disable-next-line @typescript-eslint/unbound-method
-const hasOwnProperty = Object.prototype.hasOwnProperty;
-
 const shallow = (old: Record<string, any>, nu: Record<string, any>) => {
   return nu;
 };
@@ -47,7 +45,7 @@ const baseMerge = (merger: MergeStrategy): (...objs: Array<Record<string, any>>)
     for (let j = 0; j < objects.length; j++) {
       const curObject = objects[j];
       for (const key in curObject) {
-        if (hasOwnProperty.call(curObject, key)) {
+        if (Obj.has(curObject, key)) {
           ret[key] = merger(ret[key], curObject[key]);
         }
       }
