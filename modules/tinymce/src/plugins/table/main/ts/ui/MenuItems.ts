@@ -1,4 +1,3 @@
-import { Arr } from '@ephox/katamari';
 /**
  * Copyright (c) Tiny Technologies, Inc. All rights reserved.
  * Licensed under the LGPL or a commercial license.
@@ -9,23 +8,10 @@ import { Arr } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { ClassList, getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
+import { getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
-import { filterNoneItem, generateItemNames, onSetupToggle } from './UiUtils';
-
-const createSubMenuItems = (editor: Editor, name: string, list: ClassList, command: string, format: string) => {
-  Arr.each(list, (value, index) => {
-    editor.ui.registry.addToggleMenuItem(name + index, {
-      text: value.title,
-      type: 'togglemenuitem',
-      onAction: () => {
-        editor.execCommand(command, false, value.value);
-      },
-      onSetup: onSetupToggle(editor, format, value.value)
-    });
-  });
-};
+import { filterNoneItem, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -228,22 +214,18 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   const tableClassList = filterNoneItem(getTableClassList(editor));
   if (tableClassList.length !== 0) {
-    createSubMenuItems(editor, 'tableclassitem', tableClassList, 'mceTableToggleClass', 'tableclass');
-
     editor.ui.registry.addNestedMenuItem('tableclasss', {
       icon: 'table-classes',
-      getSubmenuItems: generateItemNames('tableclassitem', tableClassList.length),
+      getSubmenuItems: () => generateItems(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
       onSetup: selectionTargets.onSetupTable
     });
   }
 
   const tableCellClassList = filterNoneItem(getCellClassList(editor));
   if (tableCellClassList.length !== 0) {
-    createSubMenuItems(editor, 'tablecellclassitem', tableCellClassList, 'mceTableCellToggleClass', 'tablecellclass');
-
     editor.ui.registry.addNestedMenuItem('tablecellclasss', {
       icon: 'table-cell-classes',
-      getSubmenuItems: generateItemNames('tablecellclassitem', tableCellClassList.length),
+      getSubmenuItems: () => generateItems(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }

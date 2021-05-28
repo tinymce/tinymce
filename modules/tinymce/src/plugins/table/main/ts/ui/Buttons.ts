@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
-import { filterNoneItem, generateItemNamesCallback } from './UiUtils';
+import { filterNoneItem, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -171,7 +171,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
-      fetch: generateItemNamesCallback('tableclassitem', tableClassList.length),
+      fetch: generateItemsCallback(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
       onSetup: selectionTargets.onSetupTable
     });
   }
@@ -181,7 +181,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
-      fetch: generateItemNamesCallback('tablecellclassitem', tableCellClassList.length),
+      fetch: generateItemsCallback(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }

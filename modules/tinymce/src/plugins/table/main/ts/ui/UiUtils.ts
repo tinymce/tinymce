@@ -7,7 +7,14 @@
 
 import { Arr, Singleton, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+
+interface ValueItem {
+  readonly value: string;
+}
+interface Item extends ValueItem {
+  readonly title: string;
+}
 
 const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
   return (api: Toolbar.ToolbarMenuButtonInstanceApi) => {
@@ -26,21 +33,27 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
   };
 };
 
-const filterNoneItem = <T extends { value: string }>(list: T[]) =>
+const filterNoneItem = <T extends ValueItem>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
 
-const generateItems = (baseName: string, listLength: number) =>
-  Arr.range(listLength, (index) => baseName + index).join(' ');
+const generateItem = (editor: Editor, command: string, format: string, item: Item): Menu.ToggleMenuItemSpec => ({
+  text: item.title,
+  type: 'togglemenuitem',
+  onAction: () => {
+    editor.execCommand(command, false, item.value);
+  },
+  onSetup: onSetupToggle(editor, format, item.value)
+});
 
-const generateItemNames = (baseName: string, listLength: number) =>
-  () => generateItems(baseName, listLength);
+const generateItems = (editor: Editor, command: string, format: string, items: Item[]): Menu.ToggleMenuItemSpec[] =>
+  Arr.map(items, (item) => generateItem(editor, command, format, item));
 
-const generateItemNamesCallback = (baseName: string, listLength: number) =>
-  (callback) => callback(generateItems(baseName, listLength));
+const generateItemsCallback = (editor: Editor, command: string, format: string, items: Item[]) =>
+  (callback: (items: Menu.ToggleMenuItemSpec[]) => void) => callback(generateItems(editor, command, format, items));
 
 export {
   onSetupToggle,
-  generateItemNames,
-  generateItemNamesCallback,
+  generateItems,
+  generateItemsCallback,
   filterNoneItem
 };
