@@ -16,7 +16,7 @@
 declare const window: any;
 declare const setImmediate: (f: Function, timeout?: number) => number;
 
-const promise = function () {
+const promise = () => {
   // Polyfill for Function.prototype.bind
   const bind = (fn, thisArg) => {
     return (...args: any[]) => {

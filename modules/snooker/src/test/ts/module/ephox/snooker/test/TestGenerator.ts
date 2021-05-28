@@ -21,11 +21,11 @@ export default (): SimpleGenerators => {
 
   const replace = (elem: SugarElement<Node> | string | number) => {
     if (typeof elem === 'string' || typeof elem === 'number') {
-      const r = `h(${ elem })_${ replaceCounter }`;
+      const r = `h(${elem})_${replaceCounter}`;
       replaceCounter++;
       return r;
     } else {
-      TextContent.set(elem, `h(${ TextContent.get(elem) })_${ replaceCounter }`);
+      TextContent.set(elem, `h(${TextContent.get(elem)})_${replaceCounter}`);
       replaceCounter++;
       return elem;
     }

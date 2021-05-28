@@ -60,7 +60,7 @@ describe('phantom.tinymce.themes.silver.window.SilverDialogTest', () => {
   };
 
   const assertScrollLock = (enabled: boolean) => {
-    Assertions.assertStructure(`"tox-dialog__scroll-disable" ${ enabled ? 'should' : 'should not' } exist on the body`,
+    Assertions.assertStructure(`"tox-dialog__scroll-disable" ${enabled ? 'should' : 'should not'} exist on the body`,
       ApproxStructure.build((s, str, arr) => s.element('body', {
         classes: [ enabled ? arr.has('tox-dialog__disable-scroll') : arr.not('tox-dialog__disable-scroll') ]
       })),

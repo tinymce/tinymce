@@ -23,7 +23,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolb
   const focusInput = () => Focus.focus(inputElm);
 
   const pWaitForContextToolbarState = (state: boolean) => Waiter.pTryUntil(
-    `Wait for context toolbar to ${ state ? 'appear' : 'disappear' }`,
+    `Wait for context toolbar to ${state ? 'appear' : 'disappear'}`,
     () => {
       const assert = state ? UiFinder.exists : UiFinder.notExists;
       assert(SugarBody.body(), '.tox-pop');

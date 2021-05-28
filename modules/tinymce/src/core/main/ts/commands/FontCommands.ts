@@ -39,7 +39,7 @@ const normalizeFontNames = (font: string) => {
   return Arr.map(fonts, (font) => {
     if (font.indexOf(' ') !== -1 && !(Strings.startsWith(font, '"') || Strings.startsWith(font, `'`))) {
       // TINY-3801: The font has spaces, so need to wrap with quotes as the browser sometimes automatically handles this, but not always
-      return `'${ font }'`;
+      return `'${font}'`;
     } else {
       return font;
     }
