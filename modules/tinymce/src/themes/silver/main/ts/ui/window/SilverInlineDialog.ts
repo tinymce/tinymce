@@ -77,7 +77,7 @@ const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: S
       attributes: {
         role: 'dialog',
         ['aria-labelledby']: dialogLabelId,
-        ['aria-describedby']: `${ dialogContentId }`
+        ['aria-describedby']: dialogContentId
       }
     },
     eventOrder: {
