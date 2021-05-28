@@ -1,33 +1,37 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import fc from 'fast-check';
 import * as Thunk from 'ephox/katamari/api/Thunk';
 
-UnitTest.test('ThunkTest', () => {
-  let callArgs: any[] | null = null;
-  const f = Thunk.cached((...args: any[]) => {
-    callArgs = args;
-    return args;
-  });
-  const r1 = f('a');
-  Assert.eq('eq', [ 'a' ], callArgs);
-  Assert.eq('eq', [ 'a' ], r1);
-  const r2 = f('b');
-  Assert.eq('eq', [ 'a' ], callArgs);
-  Assert.eq('eq', [ 'a' ], r2);
-});
+describe('atomic.katamari.api.fun.ThunkTest', () => {
 
-UnitTest.test('Thunk.cached counter', () => {
-  fc.assert(fc.property(fc.json(), fc.func(fc.json()), fc.json(), (a, f, b) => {
-    let counter = 0;
-    const thunk = Thunk.cached((x) => {
-      counter++;
-      return {
-        counter,
-        output: f(x)
-      };
+  it('ThunkTest', () => {
+    let callArgs: any[] | null = null;
+    const f = Thunk.cached((...args: any[]) => {
+      callArgs = args;
+      return args;
     });
-    const value = thunk(a);
-    const other = thunk(b);
-    Assert.eq('eq', value, other);
-  }));
+    const r1 = f('a');
+    assert.deepEqual(callArgs, [ 'a' ]);
+    assert.deepEqual(r1, [ 'a' ]);
+    const r2 = f('b');
+    assert.deepEqual(callArgs, [ 'a' ]);
+    assert.deepEqual(r2, [ 'a' ]);
+  });
+
+  it('Thunk.cached counter', () => {
+    fc.assert(fc.property(fc.json(), fc.func(fc.json()), fc.json(), (a, f, b) => {
+      let counter = 0;
+      const thunk = Thunk.cached((x) => {
+        counter++;
+        return {
+          counter,
+          output: f(x)
+        };
+      });
+      const value = thunk(a);
+      const other = thunk(b);
+      assert.deepEqual(other, value);
+    }));
+  });
 });

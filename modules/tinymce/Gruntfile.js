@@ -436,6 +436,7 @@ module.exports = function (grunt) {
               'modules/*/.stylelintignore',
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
+              'modules/tinymce/copyright-header.js',
               '.yarnrc',
               'LICENSE.TXT',
               'README.md',

@@ -1,79 +1,76 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
+import { assertNone, assertOptional } from 'ephox/katamari/test/AssertOptional';
 
-const assertOption = <A> (a: Optional<A>, b: Optional<A>) => {
-  Assert.eq('option eq', a, b, tOptional());
-};
+const boom = Fun.die('should not be called');
 
-const boom = (): never => {
-  throw new Error('barf');
-};
+describe('atomic.katamari.api.optional.OptionalsLiftNTest', () => {
+  it('Optionals.lift2', () => {
+    assertNone(Optionals.lift2(Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift2(Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift2(Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertOptional(Optionals.lift2(Optional.some<string>('a'), Optional.some<number>(11), (a, b) => a + b), Optional.some<string>('a11'));
+  });
 
-UnitTest.test('Optionals.lift2', () => {
-  assertOption(Optional.none<string>(), Optionals.lift2(Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift2(Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift2(Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.some<string>('a11'), Optionals.lift2(Optional.some<string>('a'), Optional.some<number>(11), (a, b) => a + b));
-});
+  it('Optionals.lift3', () => {
+    assertNone(Optionals.lift3(Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift3(Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift3(Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-UnitTest.test('Optionals.lift3', () => {
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift3(Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift3(Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift3(Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift3(Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertOptional(Optionals.lift3(Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c) => a + b + c), Optional.some<string>('za11'));
+  });
 
-  assertOption(Optional.some<string>('za11'), Optionals.lift3(Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c) => a + b + c));
-});
+  it('Optionals.lift4', () => {
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-UnitTest.test('Optionals.lift4', () => {
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift4(Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertOptional(Optionals.lift4(Optional.some<number>(2), Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c, d) => a + b + c + d), Optional.some<string>('2za11'));
+  });
 
-  assertOption(Optional.some<string>('2za11'), Optionals.lift4(Optional.some<number>(2), Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c, d) => a + b + c + d));
-});
+  it('Optionals.lift5', () => {
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-UnitTest.test('Optionals.lift5', () => {
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.none<boolean>(), Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
+    assertNone(Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
 
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.none<number>(), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.none<string>(), Optional.some<string>('a'), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.none<number>(), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.none<string>(), Optional.some<number>(3), boom));
-  assertOption(Optional.none<string>(), Optionals.lift5(Optional.some<boolean>(true), Optional.some<number>(1), Optional.some<string>('z'), Optional.some<string>('a'), Optional.none<number>(), boom));
-
-  assertOption(Optional.some<string>('false2za11'), Optionals.lift5(Optional.some<boolean>(false), Optional.some<number>(2), Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c, d, e) => a + '' + b + c + d + e));
+    assertOptional(Optionals.lift5(Optional.some<boolean>(false), Optional.some<number>(2), Optional.some<string>('z'), Optional.some<string>('a'), Optional.some<number>(11), (a, b, c, d, e) => a + '' + b + c + d + e), Optional.some<string>('false2za11'));
+  });
 });

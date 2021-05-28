@@ -1,27 +1,30 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as fc from 'fast-check';
 import * as Strings from 'ephox/katamari/api/Strings';
 
-UnitTest.test('startsWith: unit tests', () => {
-  const check = (expected, str, prefix) => {
-    const actual = Strings.startsWith(str, prefix);
-    Assert.eq('startsWith', expected, actual);
-  };
+describe('atomic.katamari.api.str.StartsWithTest', () => {
+  it('unit tests', () => {
+    const check = (expected, str, prefix) => {
+      const actual = Strings.startsWith(str, prefix);
+      assert.equal(actual, expected);
+    };
 
-  check(true, '', '');
-  check(true, 'a', '');
-  check(true, 'a', 'a');
-  check(true, 'ab', 'a');
-  check(true, 'abc', 'ab');
+    check(true, '', '');
+    check(true, 'a', '');
+    check(true, 'a', 'a');
+    check(true, 'ab', 'a');
+    check(true, 'abc', 'ab');
 
-  check(false, '', 'a');
-  check(false, 'caatatetatat', 'cat');
-});
+    check(false, '', 'a');
+    check(false, 'caatatetatat', 'cat');
+  });
 
-UnitTest.test('startsWith: property test', () => {
-  fc.assert(fc.property(
-    fc.asciiString(),
-    fc.asciiString(),
-    (str, contents) => Strings.startsWith(contents + str, contents)
-  ));
+  it('property test', () => {
+    fc.assert(fc.property(
+      fc.asciiString(),
+      fc.asciiString(),
+      (str, contents) => Strings.startsWith(contents + str, contents)
+    ));
+  });
 });

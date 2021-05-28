@@ -1,23 +1,26 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';
-import { tOptional } from 'ephox/katamari/api/OptionalInstances';
 import * as Optionals from 'ephox/katamari/api/Optionals';
+import { assertNone, assertOptional } from 'ephox/katamari/test/AssertOptional';
 
-UnitTest.test('Optionals.mapFrom', () => {
-  Assert.eq('eq', 4, Optionals.mapFrom(3, (x) => x + 1).getOrDie());
-  Assert.eq('eq', Optional.none(), Optionals.mapFrom<number, number>(null, Fun.die('boom')), tOptional());
-  Assert.eq('eq', Optional.none(), Optionals.mapFrom<number, number>(undefined, Fun.die('boom')), tOptional());
-});
+describe('atomic.katamari.api.optional.OptionalsMapFromTest', () => {
+  it('Optionals.mapFrom', () => {
+    assert.equal(Optionals.mapFrom(3, (x) => x + 1).getOrDie(), 4);
+    assertNone(Optionals.mapFrom<number, number>(null, Fun.die('boom')));
+    assertNone(Optionals.mapFrom<number, number>(undefined, Fun.die('boom')));
+  });
 
-UnitTest.test('Optionals.mapFrom === Optionals.map().from()', () => {
-  const f = (x) => x + 1;
+  it('Optionals.mapFrom === Optionals.map().from()', () => {
+    const f = (x) => x + 1;
 
-  const check = (input: number | null | undefined) => {
-    Assert.eq('eq', true, Optionals.mapFrom(input, f).equals(Optional.from(input).map(f)));
-  };
+    const check = (input: number | null | undefined) => {
+      assertOptional(Optionals.mapFrom(input, f), Optional.from(input).map(f));
+    };
 
-  check(3);
-  check(null);
-  check(undefined);
+    check(3);
+    check(null);
+    check(undefined);
+  });
 });

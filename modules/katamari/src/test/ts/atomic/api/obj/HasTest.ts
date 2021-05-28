@@ -1,13 +1,16 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
+import { assert } from 'chai';
 import * as Obj from 'ephox/katamari/api/Obj';
 
-UnitTest.test('HasTest', () => {
-  const withoutObjProto = Object.create(null);
-  withoutObjProto.a = 1;
+describe('atomic.katamari.api.obj.HasTest', () => {
+  it('HasTest', () => {
+    const withoutObjProto = Object.create(null);
+    withoutObjProto.a = 1;
 
-  Assert.eq('eq', true, Obj.has(withoutObjProto, 'a'));
-  Assert.eq('eq', false, Obj.has(withoutObjProto, 'b'));
+    assert.isTrue(Obj.has(withoutObjProto, 'a'));
+    assert.isFalse(Obj.has(withoutObjProto, 'b'));
 
-  Assert.eq('eq', true, Obj.has({ a: 1 }, 'a'));
-  Assert.eq('eq', false, Obj.has({ a: 1 } as Record<string, number>, 'b'));
+    assert.isTrue(Obj.has({ a: 1 }, 'a'));
+    assert.isFalse(Obj.has({ a: 1 } as Record<string, number>, 'b'));
+  });
 });
