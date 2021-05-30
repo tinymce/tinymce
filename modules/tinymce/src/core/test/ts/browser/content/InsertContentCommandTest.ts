@@ -312,7 +312,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.getBody().innerHTML = '';
     editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
     // Opera adds an extra paragraph since it adds a BR at the end of the contents pass though this for now since it's an minority browser
-    assert.equal(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<strong>123</strong></p><!-- a -->');
+    assert.equal(editor.getContent().replace(/<p>\u00a0<\/p>/g, ''), '<p>test<b>123</b></p><!-- a -->');
   });
 
   it('mceInsertContent - mixed inline content inside td', () => {
@@ -321,7 +321,7 @@ describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
     editor.getBody().innerHTML = '<table><tr><td>X</td></tr></table>';
     LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
     editor.execCommand('mceInsertContent', false, 'test<b>123</b><!-- a -->');
-    assert.equal(editor.getContent(), '<table><tbody><tr><td>test<strong>123</strong><!-- a -->X</td></tr></tbody></table>');
+    assert.equal(editor.getContent(), '<table><tbody><tr><td>test<b>123</b><!-- a -->X</td></tr></tbody></table>');
   });
 
   it('mceInsertContent - invalid insertion with spans on page', () => {

@@ -408,7 +408,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     const root = parser.parse('<ul><li>1<li><b>2</b><li><em><b>3</b></em></ul>');
     assert.equal(
       serializer.serialize(root),
-      '<ul><li>1</li><li><strong>2</strong></li><li><em><strong>3</strong></em></li></ul>',
+      '<ul><li>1</li><li><b>2</b></li><li><em><b>3</b></em></li></ul>',
       'Split out LI elements in LI elements.'
     );
   });
@@ -486,7 +486,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     );
     assert.equal(
       serializer.serialize(root),
-      '<!-- a --><p>b<strong>c</strong></p><p>d</p><p>e</p><p>f<strong>g</strong>h</p>',
+      '<!-- a --><p>b<b>c</b></p><p>d</p><p>e</p><p>f<b>g</b>h</p>',
       'Mixed text nodes, inline elements and blocks.'
     );
   });
@@ -506,10 +506,10 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       'h'
     );
     assert.equal(serializer.serialize(root), '<!-- a -->' +
-      '<p class="class1">b<strong>c</strong></p>' +
+      '<p class="class1">b<b>c</b></p>' +
       '<p>d</p>' +
       '<p>e</p>' +
-      '<p class="class1">f<strong>g</strong>h</p>',
+      '<p class="class1">f<b>g</b>h</p>',
     'Mixed text nodes, inline elements and blocks.');
   });
 

@@ -397,7 +397,7 @@ describe('browser.tinymce.plugins.paste.PasteTest', () => {
       )
     });
 
-    TinyAssertions.assertContent(editor, '<p><strong>bold</strong><em>italic</em><strong><em>bold + italic</em></strong><strong><span style="color: red;">bold + color</span></strong></p>');
+    TinyAssertions.assertContent(editor, '<p><b>bold</b><i>italic</i><b><i>bold + italic</i></b><b><span style="color: red;">bold + color</span></b></p>');
   });
 
   it('TBA: paste track changes comment', () => {

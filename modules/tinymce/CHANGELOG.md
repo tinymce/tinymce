@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
 
 ### Fixed
+- The `schema` correctly defaults to 'html5', as documented. <b> and <i> aren't converted.
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436

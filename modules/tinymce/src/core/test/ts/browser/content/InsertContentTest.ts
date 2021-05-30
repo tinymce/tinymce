@@ -17,15 +17,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Theme ]);
 
-  it('TBA: insertAtCaret - i inside text, converts to em', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>1234</p>');
-    editor.focus();
-    TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
-    InsertContent.insertAtCaret(editor, '<i>a</i>');
-    TinyAssertions.assertContent(editor, '<p>12<em>a</em>34</p>');
-  });
-
   it('TBA: insertAtCaret - ul at beginning of li', () => {
     const editor = hook.editor();
     editor.setContent('<ul><li>12</li></ul>');

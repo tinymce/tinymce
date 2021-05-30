@@ -456,7 +456,8 @@ const Schema = (settings?: SchemaSettings): Schema => {
   };
 
   settings = settings || {};
-  const schemaItems = compileSchema(settings.schema);
+  const schema = settings.schema ?? 'html5';
+  const schemaItems = compileSchema(schema);
 
   // Allow all elements and attributes if verify_html is set to false
   if (settings.verify_html === false) {
@@ -710,7 +711,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     const childRuleRegExp = /^([+\-]?)([A-Za-z0-9_\-.\u00b7\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u037d\u037f-\u1fff\u200c-\u200d\u203f-\u2040\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd]+)\[([^\]]+)]$/; // from w3c's custom grammar (above)
 
     // Invalidate the schema cache if the schema is mutated
-    mapCache[settings.schema] = null;
+    mapCache[schema] = null;
 
     if (validChildren) {
       each(split(validChildren, ','), (rule) => {
@@ -772,7 +773,7 @@ const Schema = (settings?: SchemaSettings): Schema => {
     });
 
     // Switch these on HTML4
-    if (settings.schema !== 'html5') {
+    if (schema !== 'html5') {
       each(split('strong/b em/i'), (item) => {
         const items = split(item, '/');
         elements[items[1]].outputName = items[0];
