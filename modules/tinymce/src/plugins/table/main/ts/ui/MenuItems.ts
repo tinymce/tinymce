@@ -8,9 +8,10 @@
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { hasTableGrid } from '../api/Settings';
+import { getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { filterNoneItem, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -210,6 +211,24 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       });
     }
   });
+
+  const tableClassList = filterNoneItem(getTableClassList(editor));
+  if (tableClassList.length !== 0) {
+    editor.ui.registry.addNestedMenuItem('tableclasss', {
+      icon: 'table-classes',
+      getSubmenuItems: () => generateItems(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
+      onSetup: selectionTargets.onSetupTable
+    });
+  }
+
+  const tableCellClassList = filterNoneItem(getCellClassList(editor));
+  if (tableCellClassList.length !== 0) {
+    editor.ui.registry.addNestedMenuItem('tablecellclasss', {
+      icon: 'table-cell-classes',
+      getSubmenuItems: () => generateItems(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
+      onSetup: selectionTargets.onSetupCellOrRow
+    });
+  }
 };
 
 export {

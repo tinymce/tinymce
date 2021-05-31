@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
+- Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
+- Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373

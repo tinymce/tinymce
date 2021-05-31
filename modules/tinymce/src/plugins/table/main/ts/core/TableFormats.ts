@@ -18,6 +18,16 @@ const cellFormats = {
     styles: { borderColor: '%value' },
     remove_similar: true
   },
+  tablecellclass: {
+    selector: 'td,th',
+    classes: [ '%value' ],
+    remove_similar: true
+  },
+  tableclass: {
+    selector: 'table',
+    classes: [ '%value' ],
+    remove_similar: true
+  },
   tablecellborderstyle: {
     selector: 'td,th',
     styles: { borderStyle: '%value' },
