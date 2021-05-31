@@ -129,7 +129,11 @@ const focus = (editor: Editor, skipFocus: boolean) => {
     return;
   }
 
-  skipFocus ? activateEditor(editor) : focusEditor(editor);
+  if (skipFocus) {
+    activateEditor(editor);
+  } else {
+    focusEditor(editor);
+  }
 };
 
 export {

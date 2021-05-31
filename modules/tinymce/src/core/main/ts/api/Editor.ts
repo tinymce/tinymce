@@ -368,7 +368,7 @@ class Editor implements EditorObservable {
    * @param {Boolean} skipFocus Skip DOM focus. Just set is as the active editor.
    */
   public focus(skipFocus?: boolean) {
-    EditorFocus.focus(this, skipFocus);
+    this.execCommand('mceFocus', false, skipFocus);
   }
 
   /**

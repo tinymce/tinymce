@@ -12,6 +12,20 @@ import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
 import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
+// Avoid adding non-typing undo levels for commands that could cause duplicate undo levels to be created
+// or do not alter the editor content or selection in any way
+const shouldIgnoreCommand = (cmd: string): boolean => {
+  switch (cmd.toLowerCase()) {
+    case 'undo':
+    case 'redo':
+    case 'mcerepaint':
+    case 'mcefocus':
+      return true;
+    default:
+      return false;
+  }
+};
+
 export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: Locks) => {
   const isFirstTypedCharacter = Cell(false);
 
@@ -27,9 +41,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Get position before an execCommand is processed
   editor.on('BeforeExecCommand', (e) => {
-    const cmd = e.command.toLowerCase();
+    const cmd = e.command;
 
-    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
+    if (!shouldIgnoreCommand(cmd)) {
       endTyping(undoManager, locks);
       undoManager.beforeChange();
     }
@@ -37,9 +51,9 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   // Add undo level after an execCommand call was made
   editor.on('ExecCommand', (e) => {
-    const cmd = e.command.toLowerCase();
+    const cmd = e.command;
 
-    if (cmd !== 'undo' && cmd !== 'redo' && cmd !== 'mcerepaint') {
+    if (!shouldIgnoreCommand(cmd)) {
       addNonTypingUndoLevel(e);
     }
   });

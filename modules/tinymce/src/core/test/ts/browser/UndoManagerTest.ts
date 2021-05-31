@@ -189,7 +189,7 @@ describe('browser.tinymce.core.UndoManager', () => {
     editor.dom.fire(editor.getBody(), 'keyup', evt);
 
     assert.isFalse(added);
-    assert.deepEqual(commands, [ 'Undo' ]);
+    assert.deepEqual(commands, [ 'mceFocus', 'mceFocus', 'Undo' ]);
   });
 
   it('Transact', () => {
@@ -554,6 +554,13 @@ describe('browser.tinymce.core.UndoManager', () => {
     const editor = hook.editor();
     editor.undoManager.clear();
     editor.execCommand('mceRepaint');
+    assert.isFalse(editor.undoManager.hasUndo());
+  });
+
+  it('TINY-7373: undo filter for mceFocus is case insensitive', () => {
+    const editor = hook.editor();
+    editor.undoManager.clear();
+    editor.execCommand('mceFocus');
     assert.isFalse(editor.undoManager.hasUndo());
   });
 });

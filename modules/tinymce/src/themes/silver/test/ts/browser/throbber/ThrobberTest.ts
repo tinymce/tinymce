@@ -16,7 +16,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     Assertions.assertStructure('Checking disabled structure', ApproxStructure.build((s, str, arr) =>
       s.element('div', {
         attrs: {
-          'aria-hidden': str.is('true')
+          'aria-hidden': str.is('true'),
+          'aria-busy': str.none()
         },
         classes: [ arr.has('tox-throbber') ],
         styles: {
@@ -31,7 +32,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     Assertions.assertStructure('Checking enabled structure', ApproxStructure.build((s, str, arr) =>
       s.element('div', {
         attrs: {
-          'aria-hidden': str.none()
+          'aria-hidden': str.none(),
+          'aria-busy': str.is('true')
         },
         classes: [ arr.has('tox-throbber') ],
         styles: {
@@ -40,7 +42,8 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
         children: [
           s.element('div', {
             attrs: {
-              'aria-label': str.is('Loading...')
+              'aria-label': str.is('Loading...'),
+              'tabindex': str.is('0'),
             },
             classes: [ arr.has('tox-throbber__busy-spinner') ],
             children: [
@@ -59,35 +62,33 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
     ), throbber);
   };
 
-  const setProgressState = (editor: Editor, state: boolean, time?: number) => {
+  const pAssertThrobber = async (editor: Editor, state: boolean) => {
+    const finder = state ? UiFinder.pWaitForVisible : UiFinder.pWaitForHidden;
+    await finder(`Wait for throbber to be ${state ? 'visible' : 'hidden'}`, SugarBody.body(), '.tox-throbber');
     if (state) {
-      editor.setProgressState(true, time);
+      assertThrobberShownStructure();
     } else {
-      editor.setProgressState(false);
+      assertThrobberHiddenStructure();
     }
   };
 
   it('TINY-3453: Throbber actions test', async () => {
     const editor = hook.editor();
-    assertThrobberHiddenStructure();
-    setProgressState(editor, true);
-    await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-    assertThrobberShownStructure();
-    setProgressState(editor, false);
-    await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
-    assertThrobberHiddenStructure();
+    await pAssertThrobber(editor, false);
+    editor.setProgressState(true);
+    await pAssertThrobber(editor, true);
+    editor.setProgressState(false);
+    await pAssertThrobber(editor, false);
   });
 
   it('TINY-3453: Throbber actions with timeout test', async () => {
     const editor = hook.editor();
-    setProgressState(editor, true, 300);
+    editor.setProgressState(true, 300);
     // Wait for a little and make sure the throbber is still hidden
     await Waiter.pWait(150);
     assertThrobberHiddenStructure();
-    await UiFinder.pWaitForVisible('Wait for throbber to show', SugarBody.body(), '.tox-throbber');
-    assertThrobberShownStructure();
-    setProgressState(editor, false);
-    await UiFinder.pWaitForHidden('Wait for throbber to hide', SugarBody.body(), '.tox-throbber');
-    assertThrobberHiddenStructure();
+    await pAssertThrobber(editor, true);
+    editor.setProgressState(false);
+    await pAssertThrobber(editor, false);
   });
 });
