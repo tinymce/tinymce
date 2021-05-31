@@ -98,7 +98,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     },
     {
       text: 'Pale tomato',
-      value: '#FFB0A2',
+      value: '#FF6347',
       type: 'choiceitem',
       delta: 1
     }

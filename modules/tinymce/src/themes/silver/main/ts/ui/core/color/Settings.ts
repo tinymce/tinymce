@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Transformations } from '@ephox/acid';
 import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
@@ -44,40 +45,12 @@ const defaultColors = [
 const colorCache = ColorCache(10);
 
 const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
-  const colors = [];
-
-  const canvas = document.createElement('canvas');
-  canvas.height = 1;
-  canvas.width = 1;
-  const ctx = canvas.getContext('2d');
-
-  const byteAsHex = (colorByte: number, alphaByte: number) => {
-    const bg = 255;
-    const alpha = (alphaByte / 255);
-    const colorByteWithWhiteBg = Math.round((colorByte * alpha) + (bg * (1 - alpha)));
-    return ('0' + colorByteWithWhiteBg.toString(16)).slice(-2).toUpperCase();
-  };
-
-  const asHexColor = (color: string) => {
-    // backwards compatibility
-    if (/^[0-9A-Fa-f]{6}$/.test(color)) {
-      return '#' + color.toUpperCase();
-    }
-    // all valid colors after this point
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // invalid colors will be shown as white - the first assignment will pass and the second may be ignored
-    ctx.fillStyle = '#FFFFFF'; // lgtm[js/useless-assignment-to-property]
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, 1, 1);
-    const rgba = ctx.getImageData(0, 0, 1, 1).data;
-    const r = rgba[0], g = rgba[1], b = rgba[2], a = rgba[3];
-    return '#' + byteAsHex(r, a) + byteAsHex(g, a) + byteAsHex(b, a);
-  };
+  const colors: Menu.ChoiceMenuItemSpec[] = [];
 
   for (let i = 0; i < colorMap.length; i += 2) {
     colors.push({
       text: colorMap[i + 1],
-      value: asHexColor(colorMap[i]),
+      value: '#' + Transformations.anyToHex(colorMap[i]).value,
       type: 'choiceitem'
     });
   }

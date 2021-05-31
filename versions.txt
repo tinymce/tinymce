@@ -1,6 +1,7 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 
+acid@3.1.0
 agar@5.4.0
 alloy@8.3.0
 mcagar@6.2.0
