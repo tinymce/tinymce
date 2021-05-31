@@ -5,11 +5,14 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
+import { Menu } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
-import { filterNoneItem, generateItemsCallback } from './UiUtils';
+import { verticalAlignValues } from './CellAlignValues';
+import { filterNoneItem, generateItemsCallback, onSetupToggle } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
