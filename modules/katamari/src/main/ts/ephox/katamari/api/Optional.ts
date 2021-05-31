@@ -9,9 +9,6 @@ export interface Optional<T> {
   /** If none, run whenNone; if some(a) run whenSome(a) */
   readonly fold: <T2> (whenNone: () => T2, whenSome: (v: T) => T2) => T2;
 
-  /** is this value some(t)?  */
-  readonly is: (t: T) => boolean;
-
   readonly isSome: () => boolean;
   readonly isNone: () => boolean;
 
@@ -62,12 +59,6 @@ export interface Optional<T> {
     (f: (x: T) => boolean): Optional<T>;
   };
 
-  /** Compare two Options using === */
-  readonly equals: (opt: Optional<T>) => boolean;
-
-  /** Compare two Options using a specified comparator. */
-  readonly equals_: <T2> (opt: Optional<T2>, equality: (a: T, b: T2) => boolean) => boolean;
-
   /** Returns all the values in this Optional as an array */
   readonly toArray: () => T[];
 
@@ -77,16 +68,11 @@ export interface Optional<T> {
 const none = <T>(): Optional<T> => NONE;
 
 const NONE: Optional<any> = (() => {
-  const eq = (o) => {
-    return o.isNone();
-  };
-
   // inlined from peanut, maybe a micro-optimisation?
   const call = (thunk) => thunk();
   const id = (n) => n;
   const me: Optional<any> = {
     fold: (n, _s) => n(),
-    is: Fun.never,
     isSome: Fun.never,
     isNone: Fun.always,
     getOr: id,
@@ -104,8 +90,6 @@ const NONE: Optional<any> = (() => {
     exists: Fun.never,
     forall: Fun.always,
     filter: none,
-    equals: eq,
-    equals_: eq,
     toArray: () => [],
     toString: Fun.constant('none()')
   };
@@ -125,7 +109,6 @@ const some = <T>(a: T): Optional<T> => {
 
   const me: Optional<T> = {
     fold: <T2> (n: () => T2, s: (v: T) => T2): T2 => s(a),
-    is: (v: T): boolean => a === v,
     isSome: Fun.always,
     isNone: Fun.never,
     getOr: constant_a,
@@ -145,16 +128,7 @@ const some = <T>(a: T): Optional<T> => {
     filter: <Q extends T>(f: (value: T) => value is Q): Optional<Q> =>
       f(a) ? me as Optional<Q> : NONE,
     toArray: () => [ a ],
-    toString: () => 'some(' + a + ')',
-    equals: (o: Optional<T>) => {
-      return o.is(a);
-    },
-    equals_: <T2>(o: Optional<T2>, elementEq: (a: T, b: T2) => boolean) => {
-      return o.fold(
-        Fun.never,
-        (b) => elementEq(a, b)
-      );
-    }
+    toString: () => 'some(' + a + ')'
   };
   return me;
 };

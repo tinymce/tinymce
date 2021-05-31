@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unreleased
 
+### Added
+- Added static `Optionals.is` and `Optionals.equals` methods.
+
+### Removed
+- Removed the `.is`, `.equals` and `.equals_` APIs from `Optional`.
+
+### Improved
+- The `Optional` type is now covariant with respect to its type argument.
+  - In particular, this means that if all `Cat`s are `Animal`s, then all `Optional<Cat>`s are now `Optional<Animal>`s.
+
 ## 7.2.0 - 2021-05-06
 
 ### Added

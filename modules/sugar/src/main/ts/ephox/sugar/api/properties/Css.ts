@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Strings, Type } from '@ephox/katamari';
 import * as Style from '../../impl/Style';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
@@ -126,7 +126,7 @@ const remove = (element: SugarElement<Node>, property: string): void => {
 
   internalRemove(dom, property);
 
-  if (Attribute.getOpt(element as SugarElement<Element>, 'style').map(Strings.trim).is('')) {
+  if (Optionals.is(Attribute.getOpt(element as SugarElement<Element>, 'style').map(Strings.trim), '')) {
     // No more styles left, remove the style attribute as well
     Attribute.remove(element as SugarElement<Element>, 'style');
   }

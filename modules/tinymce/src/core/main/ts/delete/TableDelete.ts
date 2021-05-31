@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -41,7 +41,7 @@ const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLT
   }
   // Clean up any additional leftover nodes. If the last block wasn't a direct child, then we also need to clean up siblings
   if (!Compare.eq(cell, lastBlock)) {
-    const additionalCleanupNodes = Traverse.parent(lastBlock).is(cell) ? [] : Traverse.siblings(lastBlock);
+    const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), cell) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(cell)), (node) => {
       if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock)) {
         Remove.remove(node);
