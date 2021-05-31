@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { UploadHandler } from '../file/Uploader';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
@@ -22,7 +22,7 @@ const getBodySetting = (editor: Editor, name: string, defaultValue: string) => {
 
   if (value.indexOf('=') !== -1) {
     const bodyObj = editor.getParam(name, '', 'hash');
-    return bodyObj.hasOwnProperty(editor.id) ? bodyObj[editor.id] : defaultValue;
+    return Obj.get(bodyObj, editor.id).getOr(defaultValue);
   } else {
     return value;
   }

@@ -109,7 +109,7 @@ UnitTest.test('DomDefinitionTest', () => {
         Assert.eq(
           () => 'Defn Style: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
-          result.styles[k] === v || result.styles[k] === mod.styles[k] && mod.styles.hasOwnProperty(k)
+          result.styles[k] === v || result.styles[k] === mod.styles[k] && Obj.has(mod.styles, k)
         );
       });
 
@@ -123,7 +123,7 @@ UnitTest.test('DomDefinitionTest', () => {
         Assert.eq(
           () => 'Defn attribute: ' + k + '=' + v + ' should appear in result: ' + JSON.stringify(result, null, 2) + '., unless modification changed it',
           true,
-          result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && mod.attributes.hasOwnProperty(k)
+          result.attributes[k] === v || result.attributes[k] === mod.attributes[k] && Obj.has(mod.attributes, k)
         );
       });
       return true;

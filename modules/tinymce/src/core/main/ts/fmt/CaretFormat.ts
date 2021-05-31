@@ -349,7 +349,7 @@ const replaceWithCaretFormat = (targetNode: Node, formatNodes: Node[]) => {
 
 const isFormatElement = (editor: Editor, element: SugarElement) => {
   const inlineElements = editor.schema.getTextInlineElements();
-  return inlineElements.hasOwnProperty(SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
+  return Obj.has(inlineElements, SugarNode.name(element)) && !isCaretNode(element.dom) && !NodeType.isBogus(element.dom);
 };
 
 const isEmptyCaretFormatElement = (element: SugarElement) => {

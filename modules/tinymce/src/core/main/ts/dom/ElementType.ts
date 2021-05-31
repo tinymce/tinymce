@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
 const blocks = [
@@ -40,7 +40,7 @@ const lazyLookup = <T extends Node = HTMLElement>(items: string[]) => {
   let lookup;
   return (node: SugarElement<Node>): node is SugarElement<T> => {
     lookup = lookup ? lookup : Arr.mapToObject(items, Fun.always);
-    return lookup.hasOwnProperty(SugarNode.name(node));
+    return Obj.has(lookup, SugarNode.name(node));
   };
 };
 

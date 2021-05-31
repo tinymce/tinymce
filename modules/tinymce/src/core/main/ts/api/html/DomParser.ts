@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as ParserFilters from '../../html/ParserFilters';
 import { hasOnlyChild, isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
@@ -80,10 +81,10 @@ interface DomParser {
 }
 
 const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser => {
-  const nodeFilters = {};
-  const attributeFilters = [];
-  let matchedNodes = {};
-  let matchedAttributes = {};
+  const nodeFilters: Record<string, ParserFilterCallback[]> = {};
+  const attributeFilters: ParserFilter[] = [];
+  let matchedNodes: Record<string, AstNode[]> = {};
+  let matchedAttributes: Record<string, AstNode[]> = {};
 
   settings = settings || {};
   settings.validate = 'validate' in settings ? settings.validate : true;
@@ -263,7 +264,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @method {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addNodeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
+  const addNodeFilter = (name: string, callback: ParserFilterCallback) => {
     each(explode(name), (name) => {
       let list = nodeFilters[name];
 
@@ -279,7 +280,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const out = [];
 
     for (const name in nodeFilters) {
-      if (nodeFilters.hasOwnProperty(name)) {
+      if (Obj.has(nodeFilters, name)) {
         out.push({ name, callbacks: nodeFilters[name] });
       }
     }
@@ -301,7 +302,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
    * @param {String} name Comma separated list of nodes to collect.
    * @param {function} callback Callback function to execute once it has collected nodes.
    */
-  const addAttributeFilter = (name: string, callback: (nodes: AstNode[], name: string, args: ParserArgs) => void) => {
+  const addAttributeFilter = (name: string, callback: ParserFilterCallback) => {
     each(explode(name), (name) => {
       let i;
 
@@ -359,7 +360,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
     const isAllWhiteSpaceRegExp = /^[ \t\r\n]+$/;
 
-    isInWhiteSpacePreservedElement = whiteSpaceElements.hasOwnProperty(args.context) || whiteSpaceElements.hasOwnProperty(settings.root_name);
+    isInWhiteSpacePreservedElement = Obj.has(whiteSpaceElements, args.context) || Obj.has(whiteSpaceElements, settings.root_name);
 
     const addRootBlocks = () => {
       let node = rootNode.firstChild, next, rootBlockNode;
@@ -703,7 +704,7 @@ const DomParser = (settings?: DomParserSettings, schema = Schema()): DomParser =
     if (!args.invalid) {
       // Run node filters
       for (name in matchedNodes) {
-        if (!matchedNodes.hasOwnProperty(name)) {
+        if (!Obj.has(matchedNodes, name)) {
           continue;
         }
         list = nodeFilters[name];

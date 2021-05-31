@@ -7,7 +7,7 @@
 
 import { AlloyEvents, FocusManagers, ItemTypes, Keying, MenuTypes, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
 import { InlineContent, Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
-import { Arr, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -171,7 +171,7 @@ export const createPartialMenu = (
       // Have to check each item for an icon, instead of as part of hasIcons above,
       // else in horizontal menus, items with an icon but without text will display
       // with neither
-      const itemHasIcon = (i: SingleMenuItemSpec) => isHorizontalMenu ? !i.hasOwnProperty('text') : hasIcons;
+      const itemHasIcon = (i: SingleMenuItemSpec) => isHorizontalMenu ? !Obj.has(i as Record<string, unknown>, 'text') : hasIcons;
       const createItem = (i: SingleMenuItemSpec) => createMenuItemFromBridge(
         i,
         itemResponse,

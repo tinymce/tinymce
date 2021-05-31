@@ -129,7 +129,7 @@ const applyLinkOverrides = (editor: Editor, linkAttrs: Record<string, string>) =
 const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional<string>, linkAttrs: Record<string, string>) => {
   // If we have text, then update the anchor elements text content
   text.each((text) => {
-    if (anchorElm.hasOwnProperty('innerText')) {
+    if (Obj.has(anchorElm, 'innerText')) {
       anchorElm.innerText = text;
     } else {
       anchorElm.textContent = text;

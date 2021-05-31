@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Obj, Optional } from '@ephox/katamari';
 import * as Canvas from '../util/Canvas';
 import * as ImageSize from '../util/ImageSize';
 import { Promise } from '../util/Promise';
@@ -175,7 +175,7 @@ const _createProgram = (gl: WebGLRenderingContext): WebGLProgram => {
   const program = gl.createProgram() as WebGLProgram;
 
   for (const type in shaders.bilinear) {
-    if (Object.hasOwnProperty.call(shaders.bilinear, type)) {
+    if (Obj.has(shaders.bilinear, type)) {
       _loadShader(gl, shaders.bilinear[type], type).each((shader) => gl.attachShader(program, shader));
     }
   }

@@ -66,12 +66,12 @@ const extractSections = (keys, settings) => {
 
 const getSection = (sectionResult: SectionResult, name: string, defaults: Partial<RawEditorSettings> = { }) => {
   const sections = sectionResult.sections();
-  const sectionSettings = sections.hasOwnProperty(name) ? sections[name] : { };
+  const sectionSettings = Obj.get(sections, name).getOr({});
   return Tools.extend({}, defaults, sectionSettings);
 };
 
 const hasSection = (sectionResult: SectionResult, name: string) => {
-  return sectionResult.sections().hasOwnProperty(name);
+  return Obj.has(sectionResult.sections(), name);
 };
 
 const isSectionTheme = (sectionResult: SectionResult, name: string, theme: string) => {

@@ -90,10 +90,13 @@ const external = (spec: ExternalElement): PremadeSpec => {
 // There are other solutions than this ... not sure if they are going to have better performance, though
 const uids = Tagger.generate;
 
+const isSimpleOrSketchSpec = (spec: AlloySpec): spec is SimpleOrSketchSpec =>
+  Obj.has(spec as SimpleOrSketchSpec, 'uid');
+
 // INVESTIGATE: A better way to provide 'meta-specs'
 const build = (spec: AlloySpec): AlloyComponent => GuiTypes.getPremade(spec).fold(() => {
   // EFFICIENCY: Consider not merging here, and passing uid through separately
-  const userSpecWithUid = spec.hasOwnProperty('uid') ? spec as SimpleOrSketchSpec : {
+  const userSpecWithUid = isSimpleOrSketchSpec(spec) ? spec : {
     uid: uids(''),
     ...spec
   } as SimpleOrSketchSpec;

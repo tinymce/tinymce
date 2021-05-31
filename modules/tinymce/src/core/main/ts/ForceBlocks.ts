@@ -5,9 +5,10 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import Editor from './api/Editor';
+import { SchemaMap } from './api/html/Schema';
 import * as Settings from './api/Settings';
 import * as Bookmarks from './bookmark/Bookmarks';
 import * as NodeType from './dom/NodeType';
@@ -21,9 +22,8 @@ import * as EditorFocus from './focus/EditorFocus';
  * @class tinymce.ForceBlocks
  */
 
-const isBlockElement = (blockElements, node) => {
-  return blockElements.hasOwnProperty(node.nodeName);
-};
+const isBlockElement = (blockElements: SchemaMap, node: Node) =>
+  Obj.has(blockElements, node.nodeName);
 
 const isValidTarget = (blockElements, node) => {
   if (NodeType.isText(node)) {

@@ -5,6 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
+import { Obj } from '@ephox/katamari';
 import * as ArrUtils from '../../util/ArrUtils';
 import Env from '../Env';
 
@@ -117,9 +118,7 @@ const makeMap = (items, delim?, map?) => {
  * @param {String} prop
  * @returns {Boolean}
  */
-const hasOwnProperty = (obj, prop) => {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-};
+const hasOwnProperty = Obj.has;
 
 /**
  * Creates a class, subclass or static singleton.
@@ -258,7 +257,7 @@ const extend = (obj, ...exts: any[]) => {
   for (let i = 0; i < exts.length; i++) {
     const ext = exts[i];
     for (const name in ext) {
-      if (ext.hasOwnProperty(name)) {
+      if (Obj.has(ext, name)) {
         const value = ext[name];
         if (value !== undefined) {
           obj[name] = value;

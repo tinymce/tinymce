@@ -1,5 +1,5 @@
 import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 import { Composing } from '../../api/behaviour/Composing';
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -14,7 +14,7 @@ import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { ItemSpec } from '../types/ItemTypes';
+import { ItemSpec, WidgetItemSpec } from '../types/ItemTypes';
 import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
 
 const itemSchema = ValueSchema.choose(
@@ -64,7 +64,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
     unit: 'item',
     defaults: (detail, u) => {
       // Switch this to a common library
-      return u.hasOwnProperty('uid') ? u : {
+      return Obj.has(u as WidgetItemSpec, 'uid') ? u : {
         ...u,
         uid: Tagger.generate('item')
       };
