@@ -1,5 +1,5 @@
 import { Universe } from '@ephox/boss';
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { WordDecisionItem } from '../words/WordDecision';
 
 export interface ZoneDetails<E> {
@@ -138,7 +138,7 @@ const strictBounder = (envLang: string, onlyLang: string) => {
 const softBounder = (optLang: Optional<string>) => {
   return <E, D>(universe: Universe<E, D>, item: E): boolean => {
     const itemLang = calculate(universe, item);
-    return !optLang.equals(itemLang);
+    return !Optionals.equals(optLang, itemLang);
   };
 };
 

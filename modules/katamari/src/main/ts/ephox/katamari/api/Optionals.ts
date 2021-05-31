@@ -2,6 +2,22 @@ import * as Arr from './Arr';
 import * as Fun from './Fun';
 import { Optional } from './Optional';
 
+/**
+ **Is** the value stored inside this Optional object equal to `other`?
+ */
+export const is = <T>(lhs: Optional<T>, rhs: T, comparator: (a: T, b: T) => boolean = Fun.tripleEquals): boolean =>
+  lhs.exists((left) => comparator(left, rhs));
+
+/**
+ Are these two Optional objects equal? Equality here means either they're both
+ `Some` (and the values are equal under the comparator) or they're both `None`.
+ */
+export const equals: {
+  <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean);
+  <T>(lhs: Optional<T>, rhs: Optional<T>);
+} = <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean = Fun.tripleEquals as any): boolean =>
+  lift2(lhs, rhs, comparator).getOr(lhs.isNone() && rhs.isNone());
+
 export const cat = <A>(arr: Optional<A>[]): A[] => {
   const r: A[] = [];
   const push = (x: A) => {

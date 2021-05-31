@@ -1,6 +1,6 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import { Optional, Optionals } from '@ephox/katamari';
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
 
 UnitTest.test('LanguageGetTest', () => {
@@ -10,7 +10,7 @@ UnitTest.test('LanguageGetTest', () => {
     Assert.eq(
       () => 'check lang(). Expected: ' + lang.getOr('none') + ', actual: ' + itemLang.getOr('none'),
       true,
-      lang.equals(itemLang)
+      Optionals.equals(lang, itemLang)
     );
   };
 

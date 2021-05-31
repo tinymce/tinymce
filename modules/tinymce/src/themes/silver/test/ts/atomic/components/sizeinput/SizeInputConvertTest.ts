@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
@@ -10,7 +10,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest
 
   const check = (expected: Optional<number>, size: Size, unit: SizeUnit) => {
     const result = convertUnit(size, unit);
-    assert.isTrue(expected.equals(result),
+    assert.isTrue(Optionals.equals(expected, result),
       'Expected conversion of ' + JSON.stringify(size) +
       ' to ' + unit + ' = ' + result.toString()
     );

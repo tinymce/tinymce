@@ -1,5 +1,6 @@
 import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
 import { Optional } from './Optional';
+import * as Optionals from './Optionals';
 
 type Pprint<A> = Pprint.Pprint<A>;
 type Eq<A> = Eq.Eq<A>;
@@ -13,7 +14,7 @@ export const pprintOptional = <A> (pprintA: Pprint<A> = Pprint.pprintAny): Pprin
 );
 
 export const eqOptional = <A> (eqA: Eq<A> = Eq.eqAny): Eq<Optional<A>> =>
-  Eq.eq((oa, ob) => oa.equals_(ob, eqA.eq));
+  Eq.eq((oa, ob) => Optionals.equals(oa, ob, eqA.eq));
 
 export const tOptional = <A> (testableA: Testable<A> = Testable.tAny): Testable<Optional<A>> =>
   Testable.testable(eqOptional(testableA), pprintOptional(testableA));

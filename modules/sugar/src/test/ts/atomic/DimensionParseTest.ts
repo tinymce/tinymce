@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Optionals } from '@ephox/katamari';
 import fc from 'fast-check';
 import * as Dimension from 'ephox/sugar/api/view/Dimension';
 
@@ -26,10 +27,10 @@ UnitTest.test('All valid integers are valid', () => {
 });
 
 UnitTest.test('Accepts known units', () => {
-  Assert.succeeds('Accepts % in relative', () => Dimension.parse('1%', [ 'relative' ]).is({ value: 1, unit: '%' }));
-  Assert.succeeds('Accepts px in fixed', () => Dimension.parse('20px', [ 'fixed' ]).is({ value: 20, unit: 'px' }));
+  Assert.succeeds('Accepts % in relative', () => Optionals.is(Dimension.parse('1%', [ 'relative' ]), { value: 1, unit: '%' as const }));
+  Assert.succeeds('Accepts px in fixed', () => Optionals.is(Dimension.parse('20px', [ 'fixed' ]), { value: 20, unit: 'px' as const }));
   Assert.succeeds('Does not accept % in fixed', () => Dimension.parse('1%', [ 'fixed' ]).isNone());
-  Assert.succeeds('Accepts px in fixed/relative', () => Dimension.parse('20px', [ 'fixed', 'relative' ]).is({ value: 20, unit: 'px' }));
-  Assert.succeeds('Accepts unitless in unitless', () => Dimension.parse('1.4', [ 'empty' ]).is({ value: 1.4, unit: '' }));
+  Assert.succeeds('Accepts px in fixed/relative', () => Optionals.is(Dimension.parse('20px', [ 'fixed', 'relative' ]), { value: 20, unit: 'px' as const }));
+  Assert.succeeds('Accepts unitless in unitless', () => Optionals.is(Dimension.parse('1.4', [ 'empty' ]), { value: 1.4, unit: '' as const }));
   Assert.succeeds('Does not accept unitless without unitless', () => Dimension.parse('1.4', [ 'fixed', 'unsupportedLength', 'relative' ]).isNone());
 });
