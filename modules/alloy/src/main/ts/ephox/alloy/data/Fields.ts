@@ -1,25 +1,25 @@
-import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, ValueProcessorTypes, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Result } from '@ephox/katamari';
 
 import * as Debugging from '../debugging/Debugging';
 import * as MenuMarkers from '../menu/util/MenuMarkers';
 
-const _initSize: FieldProcessorAdt = FieldSchema.strictObjOf('initSize', [
+const _initSize: ValueProcessorTypes = FieldSchema.strictObjOf('initSize', [
   FieldSchema.strict('numColumns'),
   FieldSchema.strict('numRows')
 ]);
 
-const itemMarkers: () => FieldProcessorAdt = () => FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
+const itemMarkers: () => ValueProcessorTypes = () => FieldSchema.strictOf('markers', MenuMarkers.itemSchema());
 
-const menuMarkers: () => FieldProcessorAdt = () => FieldSchema.strictOf('markers', MenuMarkers.schema());
+const menuMarkers: () => ValueProcessorTypes = () => FieldSchema.strictOf('markers', MenuMarkers.schema());
 
-const tieredMenuMarkers: () => FieldProcessorAdt = () => FieldSchema.strictObjOf('markers', [
+const tieredMenuMarkers: () => ValueProcessorTypes = () => FieldSchema.strictObjOf('markers', [
   FieldSchema.strict('backgroundMenu')
 ].concat(MenuMarkers.menuFields()).concat(MenuMarkers.itemFields()));
 
-const markers = (required: string[]): FieldProcessorAdt => FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
+const markers = (required: string[]): ValueProcessorTypes => FieldSchema.strictObjOf('markers', Arr.map(required, FieldSchema.strict));
 
-const onPresenceHandler = (label: string, fieldName: string, presence: any): FieldProcessorAdt => {
+const onPresenceHandler = (label: string, fieldName: string, presence: any): ValueProcessorTypes => {
   // We care about where the handler was declared (in terms of which schema)
   const trace = Debugging.getTrace();
   return FieldSchema.field(
@@ -37,19 +37,19 @@ const onPresenceHandler = (label: string, fieldName: string, presence: any): Fie
   );
 };
 
-const onHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
+const onHandler = (fieldName: string): ValueProcessorTypes => onPresenceHandler('onHandler', fieldName, FieldPresence.defaulted(Fun.noop));
 
-const onKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Optional.none));
+const onKeyboardHandler = (fieldName: string): ValueProcessorTypes => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.defaulted(Optional.none));
 
-const onStrictHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
+const onStrictHandler = (fieldName: string): ValueProcessorTypes => onPresenceHandler('onHandler', fieldName, FieldPresence.strict());
 
-const onStrictKeyboardHandler = (fieldName: string): FieldProcessorAdt => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
+const onStrictKeyboardHandler = (fieldName: string): ValueProcessorTypes => onPresenceHandler('onKeyboardHandler', fieldName, FieldPresence.strict());
 
-const output = (name: string, value: any): FieldProcessorAdt => FieldSchema.state(name, Fun.constant(value));
+const output = (name: string, value: any): ValueProcessorTypes => FieldSchema.state(name, Fun.constant(value));
 
-const snapshot = (name: string): FieldProcessorAdt => FieldSchema.state(name, Fun.identity);
+const snapshot = (name: string): ValueProcessorTypes => FieldSchema.state(name, Fun.identity);
 
-const initSize: () => FieldProcessorAdt = Fun.constant(_initSize);
+const initSize: () => ValueProcessorTypes = Fun.constant(_initSize);
 
 export {
   initSize,

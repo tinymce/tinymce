@@ -5,6 +5,7 @@ import * as Objects from '../api/Objects';
 import { ResultCombine } from '../combine/ResultCombine';
 import * as ObjWriter from './ObjWriter';
 import * as SchemaError from './SchemaError';
+import * as ValuePresence from './ValuePresence';
 
 type SchemaError = SchemaError.SchemaError;
 
@@ -18,49 +19,9 @@ export interface Processor {
   toString: () => string;
 }
 
-interface FieldData {
-  key: string;
-  okey: string;
-  presence: FieldPresence.FieldPresenceTypes;
-  prop: Processor;
-}
+const output = (okey: string, value: any): ValuePresence.StateProcessorData => ValuePresence.state(okey, Fun.constant(value));
 
-interface StateData {
-  okey: string;
-  instantiator: (obj: any) => Optional<unknown>;
-}
-
-interface ValueProcessorData<D, T> {
-  discriminator: D;
-  data: T;
-}
-
-type FieldProcesserData = ValueProcessorData<'field', FieldData>;
-type StateProcessorData = ValueProcessorData<'state', StateData>;
-
-export type FieldValueProcessor<T> = (key: string, okey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor) => T;
-export type StateValueProcessor<T> = (okey: string, instantiator: (obj: any) => Optional<unknown>) => T;
-
-export type ValueProcessorTypes = FieldProcesserData | StateProcessorData;
-
-const constructors = {
-  field: (key: string, okey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor): FieldProcesserData => ({ discriminator: 'field', data: { key, okey, presence, prop }}),
-  state: (okey: string, instantiator: (obj: any) => Optional<unknown>): StateProcessorData => ({ discriminator: 'state', data: { okey, instantiator }})
-};
-
-const valueProcessorFold = <T>(value: ValueProcessorTypes, ifField: FieldValueProcessor<T>, ifState: StateValueProcessor<T>) => {
-  switch (value.discriminator) {
-    case 'field': {
-      const data = value.data;
-      return ifField(data.key, data.okey, data.presence, data.prop);
-    }
-    case 'state': return ifState(value.data.okey, value.data.instantiator);
-  }
-};
-
-const output = (okey: string, value: any): StateProcessorData => constructors.state(okey, Fun.constant(value));
-
-const snapshot = (okey: string): StateProcessorData => constructors.state(okey, Fun.identity);
+const snapshot = (okey: string): ValuePresence.StateProcessorData => ValuePresence.state(okey, Fun.identity);
 
 const strictAccess = <T>(path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> => {
   // In strict mode, if it undefined, it is an error.
@@ -84,8 +45,8 @@ const optionDefaultedAccess = <T>(obj: Record<string, T | true>, key: string, fa
 type SimpleBundle = SimpleResult<SchemaError[], any>;
 type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 
-const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValueProcessorTypes, strength: Strength): SimpleResult<SchemaError[], T> => {
-  return valueProcessorFold(
+const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePresence.ValueProcessorTypes, strength: Strength): SimpleResult<SchemaError[], T> => {
+  return ValuePresence.fold(
     value,
     (key, okey, presence, prop) => {
       const bundle = (av: any): SimpleBundle => {
@@ -147,7 +108,7 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValueProc
   );
 };
 
-const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValueProcessorTypes[], strength: Strength): SimpleResult<SchemaError[], T> => {
+const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValuePresence.ValueProcessorTypes[], strength: Strength): SimpleResult<SchemaError[], T> => {
   const results = Arr.map(fields, (field) => cExtractOne(path, obj, field, strength));
   return ResultCombine.consolidateObj(results, {});
 };
@@ -183,11 +144,11 @@ const value = (validator: ValueValidator): Processor => {
 // This is because Obj.keys can return things where the key is set to undefined.
 const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
-const objOfOnly = (fields: ValueProcessorTypes[]): Processor => {
+const objOfOnly = (fields: ValuePresence.ValueProcessorTypes[]): Processor => {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValueProcessorTypes, Record<string, string>>(fields, (acc, value: ValueProcessorTypes) => {
-    return valueProcessorFold(
+  const fieldNames = Arr.foldr<ValuePresence.ValueProcessorTypes, Record<string, string>>(fields, (acc, value: ValuePresence.ValueProcessorTypes) => {
+    return ValuePresence.fold(
       value,
       (key) => Merger.deepMerge(acc, Objects.wrap(key, true)),
       Fun.constant(acc)
@@ -208,11 +169,11 @@ const objOfOnly = (fields: ValueProcessorTypes[]): Processor => {
   };
 };
 
-const objOf = (values: ValueProcessorTypes[]): Processor => {
+const objOf = (values: ValuePresence.ValueProcessorTypes[]): Processor => {
   const extract = (path: string[], strength: Strength, o: Record<string, any>) => cExtract(path, o, values, strength);
 
   const toString = () => {
-    const fieldStrings = Arr.map(values, (value) => valueProcessorFold(
+    const fieldStrings = Arr.map(values, (value) => ValuePresence.fold(
       value,
       (key, _okey, _presence, prop) => key + ' -> ' + prop.toString(),
       (okey, _instantiator) => 'state(' + okey + ')'
@@ -273,7 +234,7 @@ const setOf = (validator: ValueValidator, prop: Processor): Processor => {
     const validatedKeys = validateKeys(path, keys);
     return SimpleResult.bind(validatedKeys, (validKeys) => {
       const schema = Arr.map(validKeys, (vk) => {
-        return constructors.field(vk, vk, FieldPresence.strict(), prop);
+        return ValuePresence.field(vk, vk, FieldPresence.strict(), prop);
       });
 
       return objOf(schema).extract(path, strength, o);
@@ -320,8 +281,8 @@ const thunk = (_desc: string, processor: () => Processor): Processor => {
 const anyValue = Fun.constant(value(SimpleResult.svalue));
 const arrOfObj = Fun.compose(arrOf, objOf);
 
-const state = constructors.state;
-const field = constructors.field;
+const state = ValuePresence.state; // remove, use directly
+const field = ValuePresence.field;
 
 export {
   anyValue,

@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, ValueProcessorTypes, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
 import { SimpleOrSketchSpec } from '../api/component/SpecTypes';
@@ -16,7 +16,7 @@ export interface BasePartDetail<D extends CompositeSketchDetail, PS> {
   name: string;
   overrides: OverrideHandler<D, PS>;
   pname: string;
-  schema: FieldProcessorAdt[];
+  schema: ValueProcessorTypes[];
 }
 
 export interface PartDetail<D extends CompositeSketchDetail, PS> extends BasePartDetail<D, PS> {

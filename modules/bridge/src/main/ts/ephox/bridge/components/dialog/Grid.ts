@@ -1,4 +1,4 @@
-import { FieldSchema, FieldProcessorAdt } from '@ephox/boulder';
+import { FieldSchema, ValueProcessorTypes } from '@ephox/boulder';
 import { BodyComponentSpec, BodyComponent } from './BodyComponent';
 
 export interface GridSpec {
@@ -13,7 +13,7 @@ export interface Grid {
   items: BodyComponent[];
 }
 
-export const createGridFields = (itemsField: FieldProcessorAdt): FieldProcessorAdt[] => [
+export const createGridFields = (itemsField: ValueProcessorTypes): ValueProcessorTypes[] => [
   FieldSchema.strictString('type'),
   FieldSchema.strictNumber('columns'),
   itemsField

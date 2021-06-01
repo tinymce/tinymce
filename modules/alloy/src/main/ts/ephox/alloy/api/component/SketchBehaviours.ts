@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
 import { AlloyBehaviourRecord, derive, NamedConfiguredBehaviour } from '../behaviour/Behaviour';
@@ -7,7 +7,7 @@ export interface SketchBehaviours {
   dump: AlloyBehaviourRecord;
 }
 
-const field = (name: string, forbidden: Array<{ name: () => string }>): FieldProcessorAdt =>
+const field = (name: string, forbidden: Array<{ name: () => string }>): ValueProcessorTypes =>
   FieldSchema.defaultedObjOf(name, { }, Arr.map(
     forbidden,
     (f) => FieldSchema.forbid(f.name(), 'Cannot configure ' + f.name() + ' for ' + name)

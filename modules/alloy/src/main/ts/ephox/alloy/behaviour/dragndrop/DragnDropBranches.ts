@@ -1,11 +1,11 @@
-import { FieldProcessorAdt } from '@ephox/boulder';
+import { ValueProcessorTypes } from '@ephox/boulder';
 
 import DragStarting from '../../dragging/dragndrop/DragStarting';
 import Dropping from '../../dragging/dragndrop/Dropping';
 
 const ex: {
-  drag: FieldProcessorAdt[];
-  drop: FieldProcessorAdt[];
+  drag: ValueProcessorTypes[];
+  drop: ValueProcessorTypes[];
 } = {
   drag: DragStarting,
   drop: Dropping

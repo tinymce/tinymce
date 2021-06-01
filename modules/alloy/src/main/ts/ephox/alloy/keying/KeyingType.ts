@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -19,13 +19,13 @@ import { FocusInsideModes, GeneralKeyingConfig } from './KeyingModeTypes';
 type GetRulesFunc<C extends GeneralKeyingConfig, S extends BehaviourState> = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>, keyingConfig: C, keyingState: S) => Array<KeyRules.KeyRule<C, S>>;
 
 export interface KeyingType <C extends GeneralKeyingConfig, S extends BehaviourState> {
-  readonly schema: () => FieldProcessorAdt[];
+  readonly schema: () => ValueProcessorTypes[];
   readonly processKey: (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent, getRules: GetRulesFunc<C, S>, keyingConfig: C, keyingState: S) => Optional<boolean>;
   readonly toEvents: (keyingConfig: C, keyingState: S) => AlloyEvents.AlloyEventRecord;
 }
 
 const typical = <C extends GeneralKeyingConfig, S extends BehaviourState>(
-  infoSchema: FieldProcessorAdt[],
+  infoSchema: ValueProcessorTypes[],
   stateInit: (config: C) => BehaviourState,
   getKeydownRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,
   getKeyupRules: (comp: AlloyComponent, se: NativeSimulatedEvent, config: C, state: S) => Array<KeyRules.KeyRule<C, S>>,

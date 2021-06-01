@@ -1,4 +1,4 @@
-import { FieldProcessorAdt } from '@ephox/boulder';
+import { ValueProcessorTypes } from '@ephox/boulder';
 import { EventArgs } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -16,7 +16,7 @@ const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: Draggin
   ...TouchDragging.events(dragConfig, dragState, updateStartState)
 ] as AlloyEventKeyAndHandler<EventArgs<UIEvent>>[];
 
-const schema: FieldProcessorAdt[] = [
+const schema: ValueProcessorTypes[] = [
   ...DraggingSchema.schema,
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)

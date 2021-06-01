@@ -1,12 +1,12 @@
-import { FieldProcessorAdt, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema, Processor, ValueSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
-const menuFields: () => FieldProcessorAdt[] = Fun.constant([
+const menuFields: () => ValueProcessorTypes[] = Fun.constant([
   FieldSchema.strict('menu'),
   FieldSchema.strict('selectedMenu')
 ]);
 
-const itemFields: () => FieldProcessorAdt[] = Fun.constant([
+const itemFields: () => ValueProcessorTypes[] = Fun.constant([
   FieldSchema.strict('item'),
   FieldSchema.strict('selectedItem')
 ]);

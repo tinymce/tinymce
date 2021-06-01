@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import { Highlighting } from '../../api/behaviour/Highlighting';
@@ -13,7 +13,7 @@ import * as PartType from '../../parts/PartType';
 import { TabbarDetail } from '../types/TabbarTypes';
 import { TabButtonSpec } from '../types/TabButtonTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
+const schema: () => ValueProcessorTypes[] = Fun.constant([
   FieldSchema.strict('tabs'),
 
   FieldSchema.strict('dom'),

@@ -1,4 +1,4 @@
-import { FieldProcessorAdt } from '@ephox/boulder';
+import { ValueProcessorTypes } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
@@ -52,7 +52,7 @@ const events = <E>(dragConfig: MouseDraggingConfig<E>, dragState: DraggingState,
   })
 ];
 
-const schema: FieldProcessorAdt[] = [
+const schema: ValueProcessorTypes[] = [
   ...DraggingSchema.schema,
   Fields.output('dragger', {
     handlers: DragUtils.handlers(events)

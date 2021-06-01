@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import { Coupling } from '../../api/behaviour/Coupling';
@@ -13,7 +13,7 @@ import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 import { DropdownDetail, DropdownSpec } from '../types/DropdownTypes';
 
-const schema: () => FieldProcessorAdt[] = Fun.constant([
+const schema: () => ValueProcessorTypes[] = Fun.constant([
   FieldSchema.strict('dom'),
   FieldSchema.strict('fetch'),
   Fields.onHandler('onOpen'),

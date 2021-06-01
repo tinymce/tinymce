@@ -1,4 +1,4 @@
-import { FieldPresence, FieldProcessorAdt, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { FieldPresence, ValueProcessorTypes, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Id, Optional } from '@ephox/katamari';
 
 export interface CommonMenuItemSpec {
@@ -22,7 +22,7 @@ export interface CommonMenuItem {
   shortcut: Optional<string>;
 }
 
-export const commonMenuItemFields: FieldProcessorAdt[] = [
+export const commonMenuItemFields: ValueProcessorTypes[] = [
   FieldSchema.defaultedBoolean('disabled', false),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('shortcut'),

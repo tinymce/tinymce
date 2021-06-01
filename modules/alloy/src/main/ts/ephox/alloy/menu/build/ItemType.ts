@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -74,7 +74,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
   eventOrder: detail.eventOrder
 });
 
-const schema: FieldProcessorAdt[] = [
+const schema: ValueProcessorTypes[] = [
   FieldSchema.strict('data'),
   FieldSchema.strict('components'),
   FieldSchema.strict('dom'),

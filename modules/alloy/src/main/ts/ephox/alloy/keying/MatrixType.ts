@@ -1,4 +1,4 @@
-import { FieldProcessorAdt, FieldSchema } from '@ephox/boulder';
+import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Focus, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -14,7 +14,7 @@ import { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 
-const schema: FieldProcessorAdt[] = [
+const schema: ValueProcessorTypes[] = [
   FieldSchema.strictObjOf('selectors', [
     FieldSchema.strict('row'),
     FieldSchema.strict('cell')
