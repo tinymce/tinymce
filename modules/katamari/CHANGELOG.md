@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added static `Optionals.is` and `Optionals.equals` methods.
+- Added `Type.isPlainObject` function to distinguish between classes and plain objects.
 
 ### Removed
 - Removed the `.is`, `.equals` and `.equals_` APIs from `Optional`.

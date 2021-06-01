@@ -1,11 +1,12 @@
 // noinspection JSPrimitiveTypeWrapperUsage
 
-import { Assert, describe, it } from '@ephox/bedrock-client';
+import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Pprint } from '@ephox/dispute';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Fun from 'ephox/katamari/api/Fun';
+import { Optional } from 'ephox/katamari/api/Optional';
 import * as Type from 'ephox/katamari/api/Type';
 
 const check = (method: (u: unknown) => boolean, methodName: string) => (expected: boolean, input: unknown) => {
@@ -189,5 +190,31 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
       const s: string = os;
       Assert.eq('s', s, os);
     }
+  });
+
+  context('Type.isPlainObject', () => {
+    it('returns false for null and undefined', () => {
+      assert.isFalse(Type.isPlainObject(null));
+      assert.isFalse(Type.isPlainObject(undefined));
+    });
+
+    it('returns false for things that are not even objects', () => {
+      assert.isFalse(Type.isPlainObject('hello'));
+      assert.isFalse(Type.isPlainObject(5));
+      assert.isFalse(Type.isPlainObject([ 1, 2, 4 ]));
+    });
+
+    it('returns true for actual plain objects', () => {
+      assert.isTrue(Type.isPlainObject({}));
+      assert.isTrue(Type.isPlainObject({ a: 3 }));
+      assert.isTrue(Type.isPlainObject({ field: 'more-fields', next: 'other-field' }));
+    });
+
+    it('returns false for classes', () => {
+      assert.isFalse(Type.isPlainObject(new Set()));
+      assert.isFalse(Type.isPlainObject(new Map()));
+      assert.isFalse(Type.isPlainObject(Optional.none()));
+      assert.isFalse(Type.isPlainObject(Optional.some(5)));
+    });
   });
 });
