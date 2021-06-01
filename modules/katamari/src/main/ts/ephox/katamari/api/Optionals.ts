@@ -3,7 +3,7 @@ import * as Fun from './Fun';
 import { Optional } from './Optional';
 
 /**
- **Is** the value stored inside this Optional object equal to `other`?
+ **Is** the value stored inside this Optional object equal to `rhs`?
  */
 export const is = <T>(lhs: Optional<T>, rhs: T, comparator: (a: T, b: T) => boolean = Fun.tripleEquals): boolean =>
   lhs.exists((left) => comparator(left, rhs));
