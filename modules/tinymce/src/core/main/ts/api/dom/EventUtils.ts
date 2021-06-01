@@ -5,35 +5,21 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Fun, Obj } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
+import * as Utils from '../../events/EventUtils';
 
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void;
+export type EventUtilsEvent<T> = Utils.NormalizedEvent<T> & {
+  metaKey: boolean;
+};
 
-interface PartialEvent {
-  type: string;
-  target?: any;
-  isDefaultPrevented?: () => boolean;
-  preventDefault?: () => void;
-  isPropagationStopped?: () => boolean;
-  stopPropagation?: () => void;
-  isImmediatePropagationStopped?: () => boolean;
-  stopImmediatePropagation?: () => void;
-  returnValue?: boolean;
-  defaultPrevented?: boolean;
-  cancelBubble?: boolean;
-  composedPath?: () => EventTarget[];
+interface PartialEvent extends Utils.PartialEvent {
+  readonly type: string;
 }
 
-export type EventUtilsEvent<T> = T & {
-  type: string;
-  target: any;
-  isDefaultPrevented: () => boolean;
-  preventDefault: () => void;
-  isPropagationStopped: () => boolean;
-  stopPropagation: () => void;
-  isImmediatePropagationStopped: () => boolean;
-  stopImmediatePropagation: () => void;
-};
+interface ReadyEvent {
+  readonly type: string;
+}
 
 /**
  * This class wraps the browsers native event logic with more convenient methods.
@@ -43,21 +29,6 @@ export type EventUtilsEvent<T> = T & {
 
 const eventExpandoPrefix = 'mce-data-';
 const mouseEventRe = /^(?:mouse|contextmenu)|click/;
-const deprecated = {
-  keyLocation: 1, layerX: 1, layerY: 1, returnValue: 1,
-  webkitMovementX: 1, webkitMovementY: 1, keyIdentifier: 1, mozPressure: 1
-};
-
-// Checks if it is our own isDefaultPrevented function
-const hasIsDefaultPrevented = (event) => {
-  return event.isDefaultPrevented === returnTrue || event.isDefaultPrevented === returnFalse;
-};
-
-// Dummy function that gets replaced on the delegation state functions
-const returnFalse = Fun.never;
-
-// Dummy function that gets replaced on the delegation state functions
-const returnTrue = Fun.always;
 
 /**
  * Binds a native event to a callback on the speified target.
@@ -81,90 +52,31 @@ const removeEvent = (target, name, callback, capture?) => {
   }
 };
 
-const isMouseEvent = (event: any): event is MouseEvent => mouseEventRe.test(event.type);
+const isMouseEvent = (event: PartialEvent | null): event is MouseEvent =>
+  Type.isNonNullable(event) && mouseEventRe.test(event.type);
 
 /**
  * Normalizes a native event object or just adds the event specific methods on a custom event.
  */
 const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<T> => {
-  let name: string;
-  const event = data || {} as EventUtilsEvent<T>;
-
-  // Copy all properties from the original event
-  for (name in originalEvent) {
-    // layerX/layerY is deprecated in Chrome and produces a warning
-    if (!deprecated[name]) {
-      event[name] = originalEvent[name];
-    }
-  }
-
-  // Normalize target IE uses srcElement
-  if (!event.target) {
-    event.target = event.srcElement || document;
-  }
-
-  if (event.composedPath) {
-    event.composedPath = () => originalEvent.composedPath();
-  }
+  const event = Utils.normalize<T>(originalEvent.type, originalEvent, document, data) as EventUtilsEvent<T>;
 
   // Calculate pageX/Y if missing and clientX/Y available
-  if (originalEvent && isMouseEvent(originalEvent) && originalEvent.pageX === undefined && originalEvent.clientX !== undefined) {
+  if (isMouseEvent(originalEvent) && Type.isUndefined(originalEvent.pageX) && !Type.isUndefined(originalEvent.clientX)) {
     const eventDoc = event.target.ownerDocument || document;
     const doc = eventDoc.documentElement;
     const body = eventDoc.body;
+    const mouseEvent = event as EventUtilsEvent<T> & { pageX: number; pageY: number };
 
-    event.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+    mouseEvent.pageX = originalEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
       (doc && doc.clientLeft || body && body.clientLeft || 0);
 
-    event.pageY = originalEvent.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) -
+    mouseEvent.pageY = originalEvent.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) -
       (doc && doc.clientTop || body && body.clientTop || 0);
   }
 
-  // Add preventDefault method
-  event.preventDefault = () => {
-    event.defaultPrevented = true;
-    event.isDefaultPrevented = returnTrue;
-
-    // Execute preventDefault on the original event object
-    if (originalEvent) {
-      if (originalEvent.preventDefault) {
-        originalEvent.preventDefault();
-      } else {
-        originalEvent.returnValue = false; // IE
-      }
-    }
-  };
-
-  // Add stopPropagation
-  event.stopPropagation = () => {
-    event.cancelBubble = true;
-    event.isPropagationStopped = returnTrue;
-
-    // Execute stopPropagation on the original event object
-    if (originalEvent) {
-      if (originalEvent.stopPropagation) {
-        originalEvent.stopPropagation();
-      } else {
-        originalEvent.cancelBubble = true; // IE
-      }
-    }
-  };
-
-  // Add stopImmediatePropagation
-  event.stopImmediatePropagation = () => {
-    event.isImmediatePropagationStopped = returnTrue;
-    event.stopPropagation();
-  };
-
-  // Add event delegation states
-  if (hasIsDefaultPrevented(event) === false) {
-    event.isDefaultPrevented = event.defaultPrevented === true ? returnTrue : returnFalse;
-    event.isPropagationStopped = event.cancelBubble === true ? returnTrue : returnFalse;
-    event.isImmediatePropagationStopped = returnFalse;
-  }
-
   // Add missing metaKey for IE 8
-  if (typeof event.metaKey === 'undefined') {
+  if (Type.isUndefined(event.metaKey)) {
     event.metaKey = false;
   }
 
@@ -175,7 +87,7 @@ const fix = <T extends PartialEvent> (originalEvent: T, data?): EventUtilsEvent<
  * Bind a DOMContentLoaded event across browsers and executes the callback once the page DOM is initialized.
  * It will also set/check the domLoaded state of the event_utils instance so ready isn't called multiple times.
  */
-const bindOnReady = (win, callback, eventUtils) => {
+const bindOnReady = (win: Window, callback: (event: ReadyEvent) => void, eventUtils: EventUtils) => {
   const doc = win.document, event = { type: 'ready' };
 
   if (eventUtils.domLoaded) {
@@ -490,9 +402,7 @@ class EventUtils {
     }
 
     // Build event object by patching the args
-    const event = fix(null, args);
-    event.type = name;
-    event.target = target;
+    const event = fix({ type: name, target }, args);
 
     do {
       // Found an expando that means there is listeners to execute
