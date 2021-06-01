@@ -107,7 +107,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     await pCheckMenuPresence(editor, 'There should be a checkmark', expected, sugarContainer);
   };
 
-  it('TINY-7477: Check that valign works for top value', async () => {
+  it('TINY-7477: Check that valign works for Top value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);
@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     checkStructureDoNotHaveValign(editor);
   });
 
-  it('TINY-7477: Check that valign works for middle value', async () => {
+  it('TINY-7477: Check that valign works for Middle value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);
@@ -137,7 +137,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     checkStructureDoNotHaveValign(editor);
   });
 
-  it('TINY-7477: Check that valign works for bottom value', async () => {
+  it('TINY-7477: Check that valign works for Bottom value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);

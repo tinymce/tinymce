@@ -5,14 +5,12 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { filterNoneItem, generateItemsCallback, onSetupToggle } from './UiUtils';
+import { filterNoneItem, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -174,7 +172,9 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     editor.ui.registry.addMenuButton('tableclass', {
       icon: 'table-classes',
       tooltip: 'Table styles',
-      fetch: generateItemsCallback(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
+      fetch: generateItemsCallback(editor, tableClassList, 'tableclass', (item) => item.title, (item) => {
+        editor.execCommand('mceTableToggleClass', false, item.value);
+      }),
       onSetup: selectionTargets.onSetupTable
     });
   }
@@ -184,7 +184,9 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     editor.ui.registry.addMenuButton('tablecellclass', {
       icon: 'table-cell-classes',
       tooltip: 'Cell styles',
-      fetch: generateItemsCallback(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
+      fetch: generateItemsCallback(editor, tableCellClassList, 'tablecellclass', (item) => item.title, (item) => {
+        editor.execCommand('mceTableCellToggleClass', false, item.value);
+      }),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
@@ -192,20 +194,11 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addMenuButton('tablecellvalign', {
     icon: 'vertical-align',
     tooltip: 'Vertical align',
-    fetch: (callback) => {
-      callback(Arr.map(verticalAlignValues, (item): Menu.ToggleMenuItemSpec => {
-        return {
-          text: item.text,
-          type: 'togglemenuitem',
-          onAction: () => {
-            editor.execCommand('mceTableApplyCellStyle', false, {
-              'vertical-align': item.value
-            });
-          },
-          onSetup: onSetupToggle(editor, 'tablecellverticalalign', item.value)
-        };
-      }));
-    },
+    fetch: generateItemsCallback(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'vertical-align': item.value
+      });
+    }),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
