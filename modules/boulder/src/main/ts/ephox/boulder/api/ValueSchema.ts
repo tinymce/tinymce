@@ -2,7 +2,7 @@ import { Fun, Obj, Result, Type } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 import { choose as _choose } from '../core/ChoiceProcessor';
 import {
-  arrOf, arrOfObj as _arrOfObj, FieldProcessorAdt, func, objOf, objOfOnly, oneOf, Processor, setOf as doSetOf, thunk, value, ValueProcessorAdt,
+  arrOf, arrOfObj as _arrOfObj, func, objOf, objOfOnly, oneOf, Processor, setOf as doSetOf, thunk, value, ValueProcessorTypes,
   valueThunk
 } from '../core/ValueProcessor';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';
@@ -14,7 +14,7 @@ export interface SchemaError<T> {
 
 const _anyValue: Processor = value(SimpleResult.svalue);
 
-const arrOfObj = (objFields: ValueProcessorAdt[]): Processor => {
+const arrOfObj = (objFields: ValueProcessorTypes[]): Processor => {
   return _arrOfObj(objFields);
 };
 
@@ -79,7 +79,7 @@ const chooseProcessor = (key: string, branches: Record<string, Processor>): Proc
   return _choose(key, branches);
 };
 
-const choose = (key: string, branches: Record<string, FieldProcessorAdt[]>): Processor => {
+const choose = (key: string, branches: Record<string, ValueProcessorTypes[]>): Processor => {
   return _choose(key, Obj.map(branches, objOf));
 };
 

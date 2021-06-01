@@ -1,65 +1,44 @@
-import { Adt, Fun } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
 export type StrictField<T> = () => T;
 export type DefaultedThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
 export type AsOptionField<T> = () => T;
 export type AsDefaultedOptionThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
 export type MergeWithThunkField<T> = (baseThunk: (...rest: any[]) => any) => T;
-export interface FieldPresenceAdt {
-  fold: <T>(
-    strict: StrictField<T>,
-    defaultedThunk: DefaultedThunkField<T>,
-    asOption: AsOptionField<T>,
-    asDefaultedOptionThunk: AsDefaultedOptionThunkField<T>,
-    mergeWithThunk: MergeWithThunkField<T>
-  ) => T;
-  match: <T>(branches: {
-    strict: StrictField<T>;
-    defaultedThunk: DefaultedThunkField<T>;
-    asOption: AsOptionField<T>;
-    asDefaultedOptionThunk: AsDefaultedOptionThunkField<T>;
-    mergeWithThunk: MergeWithThunkField<T>;
-  }) => T;
-  log: (label: string) => void;
+
+type Callback = (...rest: any[]) => any;
+interface FieldPresenceData<D, T> {
+  discriminator: D;
+  callback: T;
 }
 
-const adt: {
-  strict: StrictField<FieldPresenceAdt>;
-  defaultedThunk: DefaultedThunkField<FieldPresenceAdt>;
-  asOption: AsOptionField<FieldPresenceAdt>;
-  asDefaultedOptionThunk: MergeWithThunkField<FieldPresenceAdt>;
-  mergeWithThunk: MergeWithThunkField<FieldPresenceAdt>;
-} = Adt.generate([
-  { strict: [ ] },
-  { defaultedThunk: [ 'fallbackThunk' ] },
-  { asOption: [ ] },
-  { asDefaultedOptionThunk: [ 'fallbackThunk' ] },
-  { mergeWithThunk: [ 'baseThunk' ] }
-]);
+type StrictData = FieldPresenceData<'strict', {}>;
+type DefaultedThunkData = FieldPresenceData<'defaultedThunk', Callback>;
+type AsOptionData = FieldPresenceData<'asOption', {}>;
+type AsDefaultedOptionThunkData = FieldPresenceData<'asDefaultedOptionThunk', Callback>;
+type MergeWithThunkData = FieldPresenceData<'mergeWithThunk', Callback>;
 
-const defaulted = <T>(fallback: T): FieldPresenceAdt => {
-  return adt.defaultedThunk(
-    Fun.constant(fallback)
-  );
+export type FieldPresenceTypes = StrictData | DefaultedThunkData | AsOptionData | AsDefaultedOptionThunkData | MergeWithThunkData;
+
+const constructors = {
+  strict: (): StrictData => ({ discriminator: 'strict', callback: { }}),
+  defaultedThunk: (fallbackThunk: Callback): DefaultedThunkData => ({ discriminator: 'defaultedThunk', callback: fallbackThunk }),
+  asOption: (): AsOptionData => ({ discriminator: 'asOption', callback: { }}),
+  asDefaultedOptionThunk: (fallbackThunk: Callback): AsDefaultedOptionThunkData => ({ discriminator: 'asDefaultedOptionThunk', callback: fallbackThunk }),
+  mergeWithThunk: (baseThunk: Callback): MergeWithThunkData => ({ discriminator: 'mergeWithThunk', callback: baseThunk }),
 };
 
-const asDefaultedOption = <T>(fallback: T): FieldPresenceAdt => {
-  return adt.asDefaultedOptionThunk(
-    Fun.constant(fallback)
-  );
-};
+const defaulted = <T>(fallback: T): DefaultedThunkData => constructors.defaultedThunk(Fun.constant(fallback));
 
-const mergeWith = (base: {}): FieldPresenceAdt => {
-  return adt.mergeWithThunk(
-    Fun.constant(base)
-  );
-};
+const asDefaultedOption = <T>(fallback: T): AsDefaultedOptionThunkData => constructors.asDefaultedOptionThunk(Fun.constant(fallback));
 
-const strict = adt.strict;
-const asOption = adt.asOption;
-const defaultedThunk = adt.defaultedThunk;
-const asDefaultedOptionThunk = adt.asDefaultedOptionThunk;
-const mergeWithThunk = adt.mergeWithThunk;
+const mergeWith = (base: {}): MergeWithThunkData => constructors.mergeWithThunk(Fun.constant(base));
+
+const strict = constructors.strict;
+const asOption = constructors.asOption;
+const defaultedThunk = constructors.defaultedThunk;
+const asDefaultedOptionThunk = constructors.asDefaultedOptionThunk;
+const mergeWithThunk = constructors.mergeWithThunk;
 
 export {
   strict,

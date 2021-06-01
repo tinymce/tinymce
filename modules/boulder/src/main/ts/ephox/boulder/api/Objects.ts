@@ -19,10 +19,6 @@ const wrapAll = <K extends string | number, T>(keyvalues: Array<{ key: K; value:
   return ObjWriter.wrapAll(keyvalues);
 };
 
-const indexOnKey = <T extends Record<string, any>, K extends keyof T>(array: T[], key: K): {[A in T[K]]: T} => {
-  return ObjChanger.indexOnKey(array, key);
-};
-
 const mergeValues = <T>(values: T[], base: T) => {
   return values.length === 0 ? Result.value(base) : Result.value(
     Merger.deepMerge(
@@ -47,6 +43,5 @@ export {
   exclude,
   wrap,
   wrapAll,
-  indexOnKey,
   consolidate
 };
