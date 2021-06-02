@@ -1,30 +1,30 @@
 import { Obj } from '@ephox/katamari';
 import { missingBranch, missingKey } from './SchemaError';
-import { Processor, Strength } from './ValueProcessor';
+import { Processor } from './ValueProcessor';
 
-const chooseFrom = (path: string[], strength: Strength, input: Record<string, any>, branches: Record<string, Processor>, ch: string) => {
+const chooseFrom = (path: string[], input: Record<string, any>, branches: Record<string, Processor>, ch: string) => {
   const fields = Obj.get(branches, ch);
   return fields.fold(
     () => missingBranch(path, branches, ch),
-    (vp) => vp.extract(path.concat([ 'branch: ' + ch ]), strength, input)
+    (vp) => vp.extractProp(path.concat([ 'branch: ' + ch ]), input)
   );
 };
 
 // The purpose of choose is to have a key which picks which of the schemas to follow.
 // The key will index into the object of schemas: branches
 const choose = (key: string, branches: Record<string, Processor>): Processor => {
-  const extract = (path: string[], strength, input: Record<string, any>) => {
+  const extractChoice = (path: string[], input: Record<string, any>) => {
     const choice = Obj.get(input, key);
     return choice.fold(
       () => missingKey(path, key),
-      (chosen) => chooseFrom(path, strength, input, branches, chosen)
+      (chosen) => chooseFrom(path, input, branches, chosen)
     );
   };
 
   const toString = () => 'chooseOn(' + key + '). Possible values: ' + Obj.keys(branches);
 
   return {
-    extract,
+    extractProp: extractChoice,
     toString
   };
 };

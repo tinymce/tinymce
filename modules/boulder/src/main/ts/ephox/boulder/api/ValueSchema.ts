@@ -22,23 +22,20 @@ const arrOfVal = (): Processor => arrOf(_anyValue);
 const valueThunkOf = valueThunk;
 
 const valueOf = (validator: (a: any) => Result<any, any>): Processor =>
-  value((v) =>
-    // Intentionally not exposing "strength" at the API level
-    validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue)
-  );
+  value((v) => validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue));
 
 const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
-const extract = (label: string, prop: Processor, strength, obj: any): SimpleResult<any, any> => {
-  const res = prop.extract([ label ], strength, obj);
+const extractValue = (label: string, prop: Processor, obj: any): SimpleResult<any, any> => {
+  const res = prop.extractProp([ label ], obj);
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
 const asStruct = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
-  SimpleResult.toResult(extract(label, prop, Fun.constant, obj));
+  SimpleResult.toResult(extractValue(label, prop, obj));
 
 const asRaw = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
-  SimpleResult.toResult(extract(label, prop, Fun.identity, obj));
+  SimpleResult.toResult(extractValue(label, prop, obj));
 
 const getOrDie = (extraction: Result<any, any>): any => {
   return extraction.fold(
@@ -71,7 +68,7 @@ const thunkOf = (desc: string, schema: () => Processor): Processor =>
   thunk(desc, schema);
 
 const funcOrDie = (args: any[], prop: Processor): Processor => {
-  const retriever = (output, strength) => getOrDie(SimpleResult.toResult(extract('()', prop, strength, output)));
+  const retriever = (output) => getOrDie(SimpleResult.toResult(extractValue('()', prop, output)));
   return func(args, prop, retriever);
 };
 
