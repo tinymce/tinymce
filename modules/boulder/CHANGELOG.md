@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Improved
+- Improved the performance of the `StructureProcessor.objOf` and `StructureProcessor.objOfOnly` functions #TINY-7572
+
 ### Changed
 - Replaced `FieldPresenceAdt` with the native TypeScript equivalent, and renamed to `FieldPresence`  #TINY-7549
 - Replaced `ValueProcessorAdt` (and its alias `FieldProcessorAdt`) with the native TypeScript equivalent, and renamed to `FieldProcessor` #TINY-7549
