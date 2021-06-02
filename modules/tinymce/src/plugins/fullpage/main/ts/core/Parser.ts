@@ -29,17 +29,17 @@ interface Data {
   active_color?: string;
 }
 
-const parseHeader = (head: string) => {
+const parseHeader = (editor: Editor, head: string) => {
   // Parse the contents with a DOM parser
   return DomParser({
     validate: false,
     root_name: '#document'
   // Parse as XHTML to allow for inclusion of the XML processing instruction
-  }).parse(head, { format: 'xhtml' });
+  }, editor.schema).parse(head, { format: 'xhtml' });
 };
 
 const htmlToData = (editor: Editor, head: string) => {
-  const headerFragment = parseHeader(head);
+  const headerFragment = parseHeader(editor, head);
   const data: Data = {};
   let elm, matches;
 
@@ -136,7 +136,7 @@ const dataToHtml = (editor: Editor, data: Data, head) => {
     }
   };
 
-  const headerFragment = parseHeader(head);
+  const headerFragment = parseHeader(editor, head);
   headElement = headerFragment.getAll('head')[0];
   if (!headElement) {
     elm = headerFragment.getAll('html')[0];
