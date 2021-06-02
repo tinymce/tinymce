@@ -6,7 +6,7 @@
  */
 
 import Editor from 'tinymce/core/api/Editor';
-import { getCellClassList, getTableClassList, getToolbar } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableClassList, getToolbar } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -202,6 +202,29 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
+  const tableCellBorderWidthsList = getTableBorderWidths(editor);
+  editor.ui.registry.addMenuButton('tablecellborderwidth', {
+    icon: 'border-width',
+    tooltip: 'Border width',
+    fetch: generateItemsCallback(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'border-width': item.value
+      });
+    }),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderStylesList = getTableBorderStyles(editor);
+  editor.ui.registry.addMenuButton('tablecellborderstyle', {
+    icon: 'border-style',
+    tooltip: 'Border style',
+    fetch: generateItemsCallback(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'border-style': item.value
+      });
+    }),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
 };
 
 const addToolbars = (editor: Editor) => {

@@ -8,7 +8,7 @@
 import { SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
-import { getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
+import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
@@ -240,6 +240,29 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     getSubmenuItems: () => generateItems(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, (item) => {
       editor.execCommand('mceTableApplyCellStyle', false, {
         'vertical-align': item.value
+      });
+    }),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderWidthsList = getTableBorderWidths(editor);
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    getSubmenuItems: () => generateItems(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'border-width': item.value
+      });
+    }),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
+
+  const tableCellBorderStylesList = getTableBorderStyles(editor);
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+
+    getSubmenuItems: () => generateItems(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'border-style': item.value
       });
     }),
     onSetup: selectionTargets.onSetupCellOrRow

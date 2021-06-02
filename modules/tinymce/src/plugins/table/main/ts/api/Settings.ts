@@ -22,6 +22,48 @@ const defaultStyles = {
   'width': '100%'
 };
 
+const defaultCellBorderWidth = [
+  {
+    title: '1px',
+    value: '1px'
+  },
+  {
+    title: '2px',
+    value: '2px'
+  },
+  {
+    title: '3px',
+    value: '3px'
+  },
+  {
+    title: '4px',
+    value: '4px'
+  },
+  {
+    title: '5px',
+    value: '5px'
+  }
+];
+
+const defaultCellBorderStyles = [
+  {
+    title: 'Solid',
+    value: 'solid'
+  },
+  {
+    title: 'Dashed',
+    value: 'dashed'
+  },
+  {
+    title: 'Dotted',
+    value: 'dotted'
+  },
+  {
+    title: 'Double',
+    value: 'double'
+  }
+];
+
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {
     const editorWidth = editor.getBody().offsetWidth;
@@ -41,6 +83,10 @@ const defaultColumnResizingBehaviour = 'preservetable';
 
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
+
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidth, 'array');
+
+const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
@@ -123,5 +169,7 @@ export {
   getColumnResizingBehaviour,
   isPreserveTableColumnResizing,
   isResizeTableColumnResizing,
+  getTableBorderWidths,
+  getTableBorderStyles,
   useColumnGroup
 };
