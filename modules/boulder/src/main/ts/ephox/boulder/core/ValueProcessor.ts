@@ -264,7 +264,7 @@ const func = (args: string[], _schema: Processor, retriever: (obj: any) => any):
 const thunk = (_desc: string, processor: () => Processor): Processor => {
   const getP = Thunk.cached(processor);
 
-  const extract = getP().extractProp;
+  const extract = (path: string[], val: any) => getP().extractProp(path, val);
 
   const toString = () => getP().toString();
 
