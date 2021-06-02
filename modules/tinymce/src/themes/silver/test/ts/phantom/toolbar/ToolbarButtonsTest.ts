@@ -180,7 +180,7 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   it('First button (button1): normal button', () => {
     const component = hook.component();
     const store = hook.store();
-    hook.store().clear();
+    store.clear();
 
     const button1 = getButton('.button1-container .tox-tbtn');
     Assertions.assertStructure(
@@ -217,7 +217,7 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   it('Second button (button2): toggle button', () => {
     const component = hook.component();
     const store = hook.store();
-    hook.store().clear();
+    store.clear();
 
     const button2 = getButton('.button2-container .tox-tbtn');
     Mouse.clickOn(component.element, '.button2-container .tox-tbtn');
@@ -252,7 +252,7 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     const body = hook.body();
     const component = hook.component();
     const store = hook.store();
-    hook.store().clear();
+    store.clear();
 
     const button3 = getButton('.button3-container .tox-split-button');
     Assertions.assertStructure(
@@ -337,7 +337,7 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     const body = hook.body();
     const component = hook.component();
     const store = hook.store();
-    hook.store().clear();
+    store.clear();
 
     const button4 = getButton('.button4-container .tox-mbtn');
     Assertions.assertStructure(
