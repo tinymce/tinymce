@@ -34,12 +34,6 @@ const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(l
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };
 
-const asStructOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: ValueProcessorTypes[], spec: S, partSchemas: any[], partUidsSchemas: any[]): D => {
-  const baseS = base(partSchemas, partUidsSchemas);
-  return ValueSchema.asStructOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
-};
-
 export {
-  asRawOrDie,
-  asStructOrDie
+  asRawOrDie
 };

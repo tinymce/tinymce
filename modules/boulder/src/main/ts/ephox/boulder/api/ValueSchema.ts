@@ -31,9 +31,6 @@ const extractValue = (label: string, prop: Processor, obj: any): SimpleResult<an
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
-const asStruct = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
-  SimpleResult.toResult(extractValue(label, prop, obj));
-
 const asRaw = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
   SimpleResult.toResult(extractValue(label, prop, obj));
 
@@ -49,9 +46,6 @@ const getOrDie = (extraction: Result<any, any>): any => {
 
 const asRawOrDie = (label: string, prop: Processor, obj: any): any =>
   getOrDie(asRaw(label, prop, obj));
-
-const asStructOrDie = (label: string, prop: Processor, obj: any): any =>
-  getOrDie(asStruct(label, prop, obj));
 
 const formatError = (errInfo: SchemaError<any>): string => {
   return 'Errors: \n' + formatErrors(errInfo.errors).join('\n') +
@@ -136,10 +130,8 @@ export {
   objOf,
   objOfOnly,
 
-  asStruct,
   asRaw,
 
-  asStructOrDie,
   asRawOrDie,
 
   getOrDie,

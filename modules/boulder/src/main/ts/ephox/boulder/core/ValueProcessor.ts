@@ -64,40 +64,36 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
         });
       };
 
-      const processPresence = (presence: FieldPresence.FieldPresenceTypes) => {
-        switch (presence.discriminator) {
-          case 'strict':
-            return SimpleResult.bind(
-              strictAccess(path, obj, key),
-              bundle
-            );
-          case 'defaultedThunk':
-            return SimpleResult.bind(
-              fallbackAccess(obj, key, presence.callback),
-              bundle
-            );
-          case 'asOption':
-            return SimpleResult.bind(
-              optionAccess(obj, key),
-              bundleAsOption
-            );
-          case 'asDefaultedOptionThunk':
-            return SimpleResult.bind(
-              optionDefaultedAccess(obj, key, presence.callback),
-              bundleAsOption
-            );
-          case 'mergeWithThunk': {
-            const base = presence.callback(obj);
-            const result = SimpleResult.map(
-              fallbackAccess(obj, key, Fun.constant({})),
-              (v) => Merger.deepMerge(base, v)
-            );
-            return SimpleResult.bind(result, bundle);
-          }
+      switch (presence.discriminator) {
+        case 'strict':
+          return SimpleResult.bind(
+            strictAccess(path, obj, key),
+            bundle
+          );
+        case 'defaultedThunk':
+          return SimpleResult.bind(
+            fallbackAccess(obj, key, presence.callback),
+            bundle
+          );
+        case 'asOption':
+          return SimpleResult.bind(
+            optionAccess(obj, key),
+            bundleAsOption
+          );
+        case 'asDefaultedOptionThunk':
+          return SimpleResult.bind(
+            optionDefaultedAccess(obj, key, presence.callback),
+            bundleAsOption
+          );
+        case 'mergeWithThunk': {
+          const base = presence.callback(obj);
+          const result = SimpleResult.map(
+            fallbackAccess(obj, key, Fun.constant({})),
+            (v) => Merger.deepMerge(base, v)
+          );
+          return SimpleResult.bind(result, bundle);
         }
-      };
-
-      return (() => processPresence(presence))();
+      }
     },
     (newKey, instantiator) => {
       const state = instantiator(obj);
