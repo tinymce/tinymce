@@ -126,10 +126,10 @@ const setContent = (editor: Editor, content: string, args: SelectionSetContentAr
   }
 
   // Sanitize the content
-  args.content = cleanContent(editor, updatedArgs);
+  updatedArgs.content = cleanContent(editor, updatedArgs);
 
   const rng = editor.selection.getRng();
-  rngSetContent(rng, rng.createContextualFragment(args.content));
+  rngSetContent(rng, rng.createContextualFragment(updatedArgs.content));
   editor.selection.setRng(rng);
 
   ScrollIntoView.scrollRangeIntoView(editor, rng);
