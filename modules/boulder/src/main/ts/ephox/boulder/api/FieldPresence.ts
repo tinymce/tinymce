@@ -14,25 +14,14 @@ type MergeWithThunkData = FieldPresenceData<'mergeWithThunk', Callback>;
 
 export type FieldPresenceTypes = StrictData | DefaultedThunkData | AsOptionData | AsDefaultedOptionThunkData | MergeWithThunkData;
 
-const constructors = {
-  strict: (): StrictData => ({ discriminator: 'strict', callback: { }}),
-  defaultedThunk: (fallbackThunk: Callback): DefaultedThunkData => ({ discriminator: 'defaultedThunk', callback: fallbackThunk }),
-  asOption: (): AsOptionData => ({ discriminator: 'asOption', callback: { }}),
-  asDefaultedOptionThunk: (fallbackThunk: Callback): AsDefaultedOptionThunkData => ({ discriminator: 'asDefaultedOptionThunk', callback: fallbackThunk }),
-  mergeWithThunk: (baseThunk: Callback): MergeWithThunkData => ({ discriminator: 'mergeWithThunk', callback: baseThunk }),
-};
-
-const defaulted = <T>(fallback: T): DefaultedThunkData => constructors.defaultedThunk(Fun.constant(fallback));
-
-const asDefaultedOption = <T>(fallback: T): AsDefaultedOptionThunkData => constructors.asDefaultedOptionThunk(Fun.constant(fallback));
-
-const mergeWith = (base: {}): MergeWithThunkData => constructors.mergeWithThunk(Fun.constant(base));
-
-const strict = constructors.strict;
-const asOption = constructors.asOption;
-const defaultedThunk = constructors.defaultedThunk;
-const asDefaultedOptionThunk = constructors.asDefaultedOptionThunk;
-const mergeWithThunk = constructors.mergeWithThunk;
+const strict = (): StrictData => ({ discriminator: 'strict', callback: { }});
+const defaultedThunk = (fallbackThunk: Callback): DefaultedThunkData => ({ discriminator: 'defaultedThunk', callback: fallbackThunk });
+const defaulted = <T>(fallback: T): DefaultedThunkData => defaultedThunk(Fun.constant(fallback));
+const asOption = (): AsOptionData => ({ discriminator: 'asOption', callback: { }});
+const asDefaultedOptionThunk = (fallbackThunk: Callback): AsDefaultedOptionThunkData => ({ discriminator: 'asDefaultedOptionThunk', callback: fallbackThunk });
+const asDefaultedOption = <T>(fallback: T): AsDefaultedOptionThunkData => asDefaultedOptionThunk(Fun.constant(fallback));
+const mergeWithThunk = (baseThunk: Callback): MergeWithThunkData => ({ discriminator: 'mergeWithThunk', callback: baseThunk });
+const mergeWith = (base: {}): MergeWithThunkData => mergeWithThunk(Fun.constant(base));
 
 export {
   strict,

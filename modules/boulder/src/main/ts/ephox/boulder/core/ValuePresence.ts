@@ -27,10 +27,8 @@ export type ValueProcessorTypes = FieldProcesserData | StateProcessorData;
 export type FieldValueProcessor<T> = (key: string, newKey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor) => T;
 export type StateValueProcessor<T> = (newKey: string, instantiator: (obj: any) => any) => T;
 
-const constructors = {
-  field: (key: string, newKey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor): FieldProcesserData => ({ discriminator: 'field', data: { key, newKey, presence, prop }}),
-  state: (newKey: string, instantiator: (obj: any) => any): StateProcessorData => ({ discriminator: 'state', data: { newKey, instantiator }})
-};
+const field = (key: string, newKey: string, presence: FieldPresence.FieldPresenceTypes, prop: Processor): FieldProcesserData => ({ discriminator: 'field', data: { key, newKey, presence, prop }});
+const state = (newKey: string, instantiator: (obj: any) => any): StateProcessorData => ({ discriminator: 'state', data: { newKey, instantiator }});
 
 const fold = <T>(value: ValueProcessorTypes, ifField: FieldValueProcessor<T>, ifState: StateValueProcessor<T>): T => {
   switch (value.discriminator) {
@@ -41,9 +39,6 @@ const fold = <T>(value: ValueProcessorTypes, ifField: FieldValueProcessor<T>, if
     case 'state': return ifState(value.data.newKey, value.data.instantiator);
   }
 };
-
-const field = constructors.field;
-const state = constructors.state;
 
 export {
   field,
