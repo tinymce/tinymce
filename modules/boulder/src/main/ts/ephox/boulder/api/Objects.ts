@@ -3,21 +3,17 @@ import * as ObjChanger from '../core/ObjChanger';
 import * as ObjWriter from '../core/ObjWriter';
 
 // Perhaps this level of indirection is unnecessary.
-const narrow = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T, fields: F): Pick<T, F[number]> => {
-  return ObjChanger.narrow(obj, fields);
-};
+const narrow = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T, fields: F): Pick<T, F[number]> =>
+  ObjChanger.narrow(obj, fields);
 
-const exclude = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T, fields: F): Omit<T, F[number]> => {
-  return ObjChanger.exclude(obj, fields);
-};
+const exclude = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T, fields: F): Omit<T, F[number]> =>
+  ObjChanger.exclude(obj, fields);
 
-const wrap = <V>(key: string, value: V): {[key: string]: V} => {
-  return ObjWriter.wrap(key, value);
-};
+const wrap = <V>(key: string, value: V): { [key: string]: V } =>
+  ObjWriter.wrap(key, value);
 
-const wrapAll = <K extends string | number, T>(keyvalues: Array<{ key: K; value: T }>): Record<K, T> => {
-  return ObjWriter.wrapAll(keyvalues);
-};
+const wrapAll = <K extends string | number, T>(keyvalues: Array<{ key: K; value: T }>): Record<K, T> =>
+  ObjWriter.wrapAll(keyvalues);
 
 const mergeValues = <T>(values: T[], base: T) => {
   return values.length === 0 ? Result.value(base) : Result.value(
@@ -29,11 +25,10 @@ const mergeValues = <T>(values: T[], base: T) => {
   );
 };
 
-const mergeErrors = (errors: string[][]): Result<unknown, string[]> => {
-  return Result.error(Arr.flatten(errors));
-};
+const mergeErrors = (errors: string[][]): Result<unknown, string[]> =>
+  Result.error(Arr.flatten(errors));
 
-const consolidate = <T>(objs: Array<Result<T, string[]>>, base: T): Result <T, string> => {
+const consolidate = <T>(objs: Array<Result<T, string[]>>, base: T): Result<T, string> => {
   const partitions = Results.partition(objs);
   return partitions.errors.length > 0 ? mergeErrors(partitions.errors) : mergeValues(partitions.values, base);
 };

@@ -15,33 +15,23 @@ const nu = <T>(path: string[], getErrorInfo: () => string): SimpleResult<SchemaE
 };
 
 const missingStrict = <T>(path: string[], key: string, obj: any): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => {
-    return 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj);
-  });
+  return nu(path, () => 'Could not find valid *strict* value for "' + key + '" in ' + formatObj(obj));
 };
 
 const missingKey = <T>(path: string[], key: string): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => {
-    return 'Choice schema did not contain choice key: "' + key + '"';
-  });
+  return nu(path, () => 'Choice schema did not contain choice key: "' + key + '"');
 };
 
 const missingBranch = <T>(path: string[], branches: Record<string, any>, branch: string): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => {
-    return 'The chosen schema: "' + branch + '" did not exist in branches: ' + formatObj(branches);
-  });
+  return nu(path, () => 'The chosen schema: "' + branch + '" did not exist in branches: ' + formatObj(branches));
 };
 
 const unsupportedFields = <T>(path: string[], unsupported: string[]): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => {
-    return 'There are unsupported fields: [' + unsupported.join(', ') + '] specified';
-  });
+  return nu(path, () => 'There are unsupported fields: [' + unsupported.join(', ') + '] specified');
 };
 
 const custom = <T>(path: string[], err: string): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => {
-    return err;
-  });
+  return nu(path, () => err);
 };
 
 const toString = (error: SchemaError): string => {

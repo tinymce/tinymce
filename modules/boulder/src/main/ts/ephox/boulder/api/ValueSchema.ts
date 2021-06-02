@@ -15,22 +15,17 @@ export interface SchemaError<T> {
 
 const _anyValue: Processor = value(SimpleResult.svalue);
 
-const arrOfObj = (objFields: ValuePresence.ValueProcessorTypes[]): Processor => {
-  return _arrOfObj(objFields);
-};
+const arrOfObj = (objFields: ValuePresence.ValueProcessorTypes[]): Processor => _arrOfObj(objFields);
 
-const arrOfVal = (): Processor => {
-  return arrOf(_anyValue);
-};
+const arrOfVal = (): Processor => arrOf(_anyValue);
 
 const valueThunkOf = valueThunk;
 
-const valueOf = (validator: (a: any) => Result<any, any>): Processor => {
-  return value((v) =>
+const valueOf = (validator: (a: any) => Result<any, any>): Processor =>
+  value((v) =>
     // Intentionally not exposing "strength" at the API level
     validator(v).fold<any>(SimpleResult.serror, SimpleResult.svalue)
   );
-};
 
 const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
@@ -39,61 +34,44 @@ const extract = (label: string, prop: Processor, strength, obj: any): SimpleResu
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
-const asStruct = <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> => {
-  return SimpleResult.toResult(
-    extract(label, prop, Fun.constant, obj)
-  );
-};
+const asStruct = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
+  SimpleResult.toResult(extract(label, prop, Fun.constant, obj));
 
-const asRaw = <T, U = any> (label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> => {
-  return SimpleResult.toResult(
-    extract(label, prop, Fun.identity, obj)
-  );
-};
+const asRaw = <T, U = any>(label: string, prop: Processor, obj: U): Result<T, SchemaError<U>> =>
+  SimpleResult.toResult(extract(label, prop, Fun.identity, obj));
 
 const getOrDie = (extraction: Result<any, any>): any => {
   return extraction.fold(
     (errInfo) => {
       // A readable version of the error.
-      throw new Error(
-        formatError(errInfo)
-      );
+      throw new Error(formatError(errInfo));
     },
     Fun.identity
   );
 };
 
-const asRawOrDie = (label: string, prop: Processor, obj: any): any => {
-  return getOrDie(asRaw(label, prop, obj));
-};
+const asRawOrDie = (label: string, prop: Processor, obj: any): any =>
+  getOrDie(asRaw(label, prop, obj));
 
-const asStructOrDie = (label: string, prop: Processor, obj: any): any => {
-  return getOrDie(asStruct(label, prop, obj));
-};
+const asStructOrDie = (label: string, prop: Processor, obj: any): any =>
+  getOrDie(asStruct(label, prop, obj));
 
 const formatError = (errInfo: SchemaError<any>): string => {
   return 'Errors: \n' + formatErrors(errInfo.errors).join('\n') +
     '\n\nInput object: ' + formatObj(errInfo.input);
 };
 
-const chooseProcessor = (key: string, branches: Record<string, Processor>): Processor => {
-  return _choose(key, branches);
-};
+const chooseProcessor = (key: string, branches: Record<string, Processor>): Processor =>
+  _choose(key, branches);
 
-const choose = (key: string, branches: Record<string, ValuePresence.ValueProcessorTypes[]>): Processor => {
-  return _choose(key, Obj.map(branches, objOf));
-};
+const choose = (key: string, branches: Record<string, ValuePresence.ValueProcessorTypes[]>): Processor =>
+  _choose(key, Obj.map(branches, objOf));
 
-const thunkOf = (desc: string, schema: () => Processor): Processor => {
-  return thunk(desc, schema);
-};
+const thunkOf = (desc: string, schema: () => Processor): Processor =>
+  thunk(desc, schema);
 
 const funcOrDie = (args: any[], prop: Processor): Processor => {
-  const retriever = (output, strength) => {
-    return getOrDie(
-      SimpleResult.toResult(extract('()', prop, strength, output))
-    );
-  };
+  const retriever = (output, strength) => getOrDie(SimpleResult.toResult(extract('()', prop, strength, output)));
   return func(args, prop, retriever);
 };
 
@@ -113,7 +91,7 @@ const functionProcessor = typedValue(Type.isFunction, 'function');
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 // from https://stackoverflow.com/a/32673910/7377237 with adjustments for typescript
 const isPostMessageable = (val: any): boolean => {
-  const every = <T> (iter: Iterator<T>, callbackFn: (value: T) => boolean): boolean => {
+  const every = <T>(iter: Iterator<T>, callbackFn: (value: T) => boolean): boolean => {
     let result = iter.next();
     while (!result.done) {
       if (!callbackFn(result.value)) {

@@ -1,15 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
-export type StrictField<T> = () => T;
-export type DefaultedThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
-export type AsOptionField<T> = () => T;
-export type AsDefaultedOptionThunkField<T> = (fallbackThunk: (...rest: any[]) => any) => T;
-export type MergeWithThunkField<T> = (baseThunk: (...rest: any[]) => any) => T;
-
 type Callback = (...rest: any[]) => any;
 interface FieldPresenceData<D, T> {
-  discriminator: D;
-  callback: T;
+  readonly discriminator: D;
+  readonly callback: T;
 }
 
 type StrictData = FieldPresenceData<'strict', {}>;

@@ -19,9 +19,9 @@ export interface Processor {
   toString: () => string;
 }
 
-const output = (okey: string, value: any): ValuePresence.StateProcessorData => ValuePresence.state(okey, Fun.constant(value));
+const output = (newKey: string, value: any): ValuePresence.StateProcessorData => ValuePresence.state(newKey, Fun.constant(value));
 
-const snapshot = (okey: string): ValuePresence.StateProcessorData => ValuePresence.state(okey, Fun.identity);
+const snapshot = (newKey: string): ValuePresence.StateProcessorData => ValuePresence.state(newKey, Fun.identity);
 
 const strictAccess = <T>(path: string[], obj: Record<string, T>, key: string): SimpleResult<SchemaError[], T> => {
   // In strict mode, if it undefined, it is an error.
@@ -48,20 +48,20 @@ type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePresence.ValueProcessorTypes, strength: Strength): SimpleResult<SchemaError[], T> => {
   return ValuePresence.fold(
     value,
-    (key, okey, presence, prop) => {
+    (key, newKey, presence, prop) => {
       const bundle = (av: any): SimpleBundle => {
         const result = prop.extract(path.concat([ key ]), strength, av);
-        return SimpleResult.map(result, (res) => ObjWriter.wrap(okey, strength(res)));
+        return SimpleResult.map(result, (res) => ObjWriter.wrap(newKey, strength(res)));
       };
 
       const bundleAsOption = (optValue: Optional<any>): OptionBundle => {
         return optValue.fold(() => {
-          const outcome = ObjWriter.wrap(okey, strength(Optional.none()));
+          const outcome = ObjWriter.wrap(newKey, strength(Optional.none()));
           return SimpleResult.svalue(outcome);
         }, (ov) => {
           const result: SimpleResult<any, any> = prop.extract(path.concat([ key ]), strength, ov);
           return SimpleResult.map(result, (res) => {
-            return ObjWriter.wrap(okey, strength(Optional.some(res)));
+            return ObjWriter.wrap(newKey, strength(Optional.some(res)));
           });
         });
       };
@@ -101,9 +101,9 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
 
       return (() => processPresence(presence))();
     },
-    (okey, instantiator) => {
+    (newKey, instantiator) => {
       const state = instantiator(obj);
-      return SimpleResult.svalue(ObjWriter.wrap(okey, strength(state)));
+      return SimpleResult.svalue(ObjWriter.wrap(newKey, strength(state)));
     }
   );
 };
@@ -176,7 +176,7 @@ const objOf = (values: ValuePresence.ValueProcessorTypes[]): Processor => {
     const fieldStrings = Arr.map(values, (value) => ValuePresence.fold(
       value,
       (key, _okey, _presence, prop) => key + ' -> ' + prop.toString(),
-      (okey, _instantiator) => 'state(' + okey + ')'
+      (newKey, _instantiator) => 'state(' + newKey + ')'
     ));
     return 'obj{\n' + fieldStrings.join('\n') + '}';
   };
@@ -281,9 +281,6 @@ const thunk = (_desc: string, processor: () => Processor): Processor => {
 const anyValue = Fun.constant(value(SimpleResult.svalue));
 const arrOfObj = Fun.compose(arrOf, objOf);
 
-const state = ValuePresence.state; // remove, use directly
-const field = ValuePresence.field;
-
 export {
   anyValue,
   value,
@@ -296,8 +293,6 @@ export {
   setOf,
   arrOfObj,
 
-  state,
-  field,
   output,
   snapshot,
   thunk,

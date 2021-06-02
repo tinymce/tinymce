@@ -81,10 +81,10 @@ Note, there are many other APIs as well, but they tend to be convenience functio
 
 - take a `schema` for an object and an object (`obj`), and return a plain version of the object in a `Result.value` if it matches the schema. If it does not match, returns `Result.error` with the validation errors. This output will not be *structified*.
 
-### <a name="field">FieldSchema.field(key, okey, presence, schema)</a>
+### <a name="field">FieldSchema.field(key, newKey, presence, schema)</a>
 
-- define a field for an object schema. Presence (`strict` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `okey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.strict('key')`.
+- define a field for an object schema. Presence (`strict` \| `defaulted` \| `asOption` | `asDefaultedOption`) is used to determine how to handle whether the field `key` is there, and `schema` defines the schema to match for the field's value. In the output object, `newKey` will be used as the field name. Note, this method has many convenience methods defined such as `FieldSchema.strict('key')`.
 
-### <a name="state">FieldSchema.state(okey, instantiator)</a>
+### <a name="state">FieldSchema.state(newKey, instantiator)</a>
 
 - define a generated output field for an object. This has no schema requirements, but can be useful for taking a snapshot of the original object, or creating some state for each extracted version of an object.
