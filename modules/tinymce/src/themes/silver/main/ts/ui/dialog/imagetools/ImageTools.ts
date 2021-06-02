@@ -10,8 +10,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { ImageResult, ResultConversions } from '@ephox/imagetools';
-import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { ComposingConfigs } from 'tinymce/themes/silver/ui/alien/ComposingConfigs';
@@ -71,27 +70,29 @@ export const renderImageTools = (detail: ImageToolsSpec, providersBackstage: UiF
     AlloyTriggers.emitWith(anyInSystem, ImageToolsEvents.external.formActionEvent, { name: ImageToolsEvents.external.enable(), value: { }});
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, src: string): Promise<Optional<SugarElement>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, src: string): Promise<void> => {
     block(anyInSystem);
     return imagePanel.updateSrc(anyInSystem, src);
   };
 
-  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): Promise<Optional<SugarElement>> => {
+  const blobManipulate = (anyInSystem: AlloyComponent, blob: Blob, filter: (ir: ImageResult) => ImageResult | PromiseLike<ImageResult>, action: (blob: Blob) => string, swap: () => void): void => {
     block(anyInSystem);
-    return ResultConversions.blobToImageResult(blob)
+    ResultConversions.blobToImageResult(blob)
       .then(filter)
       .then(imageResultToBlob)
       .then(action)
-      .then((url) => updateSrc(anyInSystem, url).then((oImg) => {
+      .then((url) => updateSrc(anyInSystem, url))
+      .then(() => {
         updateButtonUndoStates(anyInSystem);
         swap();
         unblock(anyInSystem);
-        return oImg;
-      })).catch((err) => {
-      // eslint-disable-next-line no-console
+      }).catch((err) => {
+        // eslint-disable-next-line no-console
         console.log(err); // TODO: Notify the user?
-        unblock(anyInSystem);
-        return err;
+        // Make sure the component is still attached, as it may have already been destroyed
+        if (anyInSystem.getSystem().isConnected()) {
+          unblock(anyInSystem);
+        }
       });
   };
 
