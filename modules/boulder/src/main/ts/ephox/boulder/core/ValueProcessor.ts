@@ -112,7 +112,7 @@ const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValuePresen
 };
 
 const valueThunk = (getDelegate: () => Processor): Processor => {
-  const extract = getDelegate().extractProp;
+  const extract = (path: string[], val: any) => getDelegate().extractProp(path, val);
 
   const toString = () => getDelegate().toString();
 
@@ -262,7 +262,7 @@ const func = (args: string[], _schema: Processor, retriever: (obj: any) => any):
 };
 
 const thunk = (_desc: string, processor: () => Processor): Processor => {
-  const getP = Thunk.cached(() => processor());
+  const getP = Thunk.cached(processor);
 
   const extract = getP().extractProp;
 
