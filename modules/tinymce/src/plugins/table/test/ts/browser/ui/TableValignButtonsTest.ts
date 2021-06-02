@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
   };
 
-  const checkStructureHasValign = (editor: Editor, align: 'top' | 'middle' | 'bottom') => {
+  const assertStructureHasValign = (editor: Editor, align: 'top' | 'middle' | 'bottom') => {
     TinyAssertions.assertContent(editor, '<table>' +
       '<tbody>' +
         '<tr>' +
@@ -52,7 +52,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     '</table>');
   };
 
-  const checkStructureDoNotHaveValign = (editor: Editor) => {
+  const assertStructureDoNotHaveValign = (editor: Editor) => {
     TinyAssertions.assertContent(editor, '<table>' +
       '<tbody>' +
         '<tr>' +
@@ -68,7 +68,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
   const closeMenu = (editor) =>
     TinyUiActions.keydown(editor, Keys.escape());
 
-  const pCheckMenuPresence = async (editor: Editor, label: string, expected: Record<string, number>, container: SugarElement<HTMLElement>) => {
+  const pAssertMenuPresence = async (editor: Editor, label: string, expected: Record<string, number>, container: SugarElement<HTMLElement>) => {
     openMenu(editor);
     await Waiter.pTryUntil('Ensure the correct values are present', () =>
       Assertions.assertPresence(label, expected, container)
@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     closeMenu(editor);
   };
 
-  const pNoCheckmarksInMenu = async (editor: Editor, container: SugarElement<HTMLElement>) => {
+  const pAssertNoCheckmarksInMenu = async (editor: Editor, container: SugarElement<HTMLElement>) => {
     const expected = {
       '.tox-menu': 1,
       '.tox-collection__item[aria-checked="true"]': 0,
@@ -87,7 +87,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
       'div[title="Bottom"]': 1
     };
 
-    await pCheckMenuPresence(editor, 'Menu should open, but not have any checkmarks', expected, container);
+    await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', expected, container);
   };
 
   const pToggleValign = async (editor: Editor, align: 'None' | 'Top' | 'Middle' | 'Bottom') => {
@@ -97,58 +97,58 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     closeMenu(editor);
   };
 
-  const pTestCheckmark = async (editor: Editor, align: 'None' | 'Top' | 'Middle' | 'Bottom', sugarContainer: SugarElement<HTMLElement>) => {
+  const pAssertCheckmark = async (editor: Editor, align: 'None' | 'Top' | 'Middle' | 'Bottom', sugarContainer: SugarElement<HTMLElement>) => {
     const expected = {
       '.tox-menu': 1,
       [`.tox-collection__item[aria-checked="true"][title="${align}"]`]: 1,
       '.tox-collection__item[aria-checked="false"]': 3,
       '.tox-collection__item[aria-checked="true"]': 1,
     };
-    await pCheckMenuPresence(editor, 'There should be a checkmark', expected, sugarContainer);
+    await pAssertMenuPresence(editor, 'There should be a checkmark', expected, sugarContainer);
   };
 
   it('TINY-7477: Check that valign works for Top value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);
-    await pNoCheckmarksInMenu(editor, sugarContainer);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
     await pToggleValign(editor, 'Top');
-    await pTestCheckmark(editor, 'Top', sugarContainer);
-    checkStructureHasValign(editor, 'top');
+    await pAssertCheckmark(editor, 'Top', sugarContainer);
+    assertStructureHasValign(editor, 'top');
 
     await pToggleValign(editor, 'None');
-    await pNoCheckmarksInMenu(editor, sugarContainer);
-    checkStructureDoNotHaveValign(editor);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+    assertStructureDoNotHaveValign(editor);
   });
 
   it('TINY-7477: Check that valign works for Middle value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);
-    await pNoCheckmarksInMenu(editor, sugarContainer);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
     await pToggleValign(editor, 'Middle');
-    await pTestCheckmark(editor, 'Middle', sugarContainer);
-    checkStructureHasValign(editor, 'middle');
+    await pAssertCheckmark(editor, 'Middle', sugarContainer);
+    assertStructureHasValign(editor, 'middle');
 
     await pToggleValign(editor, 'None');
-    await pNoCheckmarksInMenu(editor, sugarContainer);
-    checkStructureDoNotHaveValign(editor);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+    assertStructureDoNotHaveValign(editor);
   });
 
   it('TINY-7477: Check that valign works for Bottom value', async () => {
     const editor = hook.editor();
     const sugarContainer = SugarBody.body();
     setEditorContentTableAndSelection(editor);
-    await pNoCheckmarksInMenu(editor, sugarContainer);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
     await pToggleValign(editor, 'Bottom');
-    await pTestCheckmark(editor, 'Bottom', sugarContainer);
-    checkStructureHasValign(editor, 'bottom');
+    await pAssertCheckmark(editor, 'Bottom', sugarContainer);
+    assertStructureHasValign(editor, 'bottom');
 
     await pToggleValign(editor, 'None');
-    await pNoCheckmarksInMenu(editor, sugarContainer);
-    checkStructureDoNotHaveValign(editor);
+    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+    assertStructureDoNotHaveValign(editor);
   });
 });

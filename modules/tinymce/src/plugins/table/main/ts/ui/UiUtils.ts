@@ -36,9 +36,7 @@ const filterNoneItem = <T extends Item>(list: T[]) =>
 const generateItem = <T extends Item>(editor: Editor, item: T, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
   text: extractText(item),
   type: 'togglemenuitem',
-  onAction: () => {
-    onAction(item);
-  },
+  onAction: () => onAction(item),
   onSetup: onSetupToggle(editor, format, item.value)
 });
 
