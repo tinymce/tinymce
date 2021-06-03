@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
-- Added a new `tablecellvalign` toolbar button and menuitem for vertical table cell alignment #TINY-7477
+- Added a new `tablecellvalign` toolbar button and menu item for vertical table cell alignment #TINY-7477
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
