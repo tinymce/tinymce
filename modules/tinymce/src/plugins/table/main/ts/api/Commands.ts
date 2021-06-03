@@ -8,7 +8,7 @@
 import { Selections } from '@ephox/darwin';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { CopyCols, CopyRows, Sizes, TableFill, TableLookup } from '@ephox/snooker';
-import { Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, Replication, Selectors, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { enforceNone, enforcePercentage, enforcePixels } from '../actions/EnforceUnit';
 import { insertTableWithDataValidation } from '../actions/InsertTable';
@@ -91,6 +91,27 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     });
   };
 
+  const toggleCaption = () => {
+    getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
+      TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
+        const captionElementOpt = Selectors.one('caption', table);
+
+        captionElementOpt.fold(
+          () => {
+            const caption = SugarElement.fromTag('caption');
+            Insert.append(caption, SugarElement.fromText('Caption'));
+            Insert.appendAt(table, caption, 0);
+          },
+          (caption) => {
+            Remove.remove(caption);
+          }
+        );
+
+        Events.fireTableModified(editor, table.dom, Events.structureModified);
+      });
+    });
+  };
+
   const postExecute = (table: SugarElement<HTMLTableElement>) => (data: TableActionResult): void => {
     editor.selection.setRng(data.rng);
     editor.focus();
@@ -156,6 +177,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
     mceTableDelete: eraseTable,
     mceTableCellToggleClass: toggleTableCellClass,
     mceTableToggleClass: toggleTableClass,
+    mceTableToggleCaption: toggleCaption,
     mceTableSizingMode: (_ui: boolean, sizing: string) => setSizingMode(sizing)
   }, (func, name) => editor.addCommand(name, func));
 

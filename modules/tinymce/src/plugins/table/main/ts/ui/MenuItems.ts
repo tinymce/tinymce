@@ -280,6 +280,14 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
     ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
+
+  editor.ui.registry.addMenuItem('tablecaption', {
+    onAction: () => {
+      editor.execCommand('mceTableToggleCaption');
+    },
+    icon: 'table-caption',
+    onSetup: selectionTargets.onSetupTableWithCaption
+  });
 };
 
 export {

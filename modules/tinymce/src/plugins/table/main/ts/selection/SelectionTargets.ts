@@ -6,7 +6,7 @@
  */
 
 import { Selections } from '@ephox/darwin';
-import { Arr, Cell, Optional, Thunk } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Thunk, Type } from '@ephox/katamari';
 import { RunOperation, Structs, TableLookup, Warehouse } from '@ephox/snooker';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -38,6 +38,7 @@ export interface SelectionTargets {
   readonly onSetupMergeable: (api: UiApi) => () => void;
   readonly onSetupUnmergeable: (api: UiApi) => () => void;
   readonly resetTargets: () => void;
+  readonly onSetupTableWithCaption: (api: Toolbar.ToolbarToggleButtonInstanceApi) => () => void;
   readonly targets: () => Optional<RunOperation.CombinedTargets>;
 }
 
@@ -122,6 +123,26 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     };
   };
 
+  const onSetupWithToggle = (api: Toolbar.ToolbarToggleButtonInstanceApi, isDisabled: (targets: RunOperation.CombinedTargets) => boolean, isActive: (targets: RunOperation.CombinedTargets) => boolean) => {
+    const handler = () => targets.get().fold(() => {
+      api.setDisabled(true);
+      api.setActive(false);
+    }, (targets) => {
+      api.setDisabled(isDisabled(targets));
+      api.setActive(isActive(targets));
+    });
+
+    // Execute the handler to set the initial state
+    handler();
+
+    // Register the handler so we can update the state when resetting targets
+    changeHandlers.set(changeHandlers.get().concat([ handler ]));
+
+    return () => {
+      changeHandlers.set(Arr.filter(changeHandlers.get(), (h) => h !== handler));
+    };
+  };
+
   const isDisabledFromLocked = (lockedDisable: LockedDisable) =>
     selectionDetails.exists((details) => details.locked[lockedDisable]);
 
@@ -134,7 +155,17 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetup(api, (targets) => isCaption(targets.element) || getClipboardData().isNone() || isDisabledFromLocked(lockedDisable));
   const onSetupMergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('mergeable'));
   const onSetupUnmergeable = (api: UiApi) => onSetup(api, (_targets) => isDisabledForSelection('unmergeable'));
+  const onSetupTableWithCaption = (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    return onSetupWithToggle(api, Fun.never, (targets) => {
+      const potentialTables = TableLookup.table(targets.element, Util.getIsRoot(editor));
+      const tableOpt = potentialTables.filter(Fun.not(Util.getIsRoot(editor)));
 
+      return tableOpt.map((table) => {
+        const captionElm = editor.dom.select('caption', table.dom)[0];
+        return Type.isNonNullable(captionElm);
+      }).getOr(false);
+    });
+  };
   editor.on('NodeChange ExecCommand TableSelectorChange', resetTargets);
 
   return {
@@ -146,6 +177,7 @@ export const getSelectionTargets = (editor: Editor, selections: Selections): Sel
     onSetupMergeable,
     onSetupUnmergeable,
     resetTargets,
+    onSetupTableWithCaption,
     targets: () => targets.get()
   };
 };

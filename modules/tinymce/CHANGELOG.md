@@ -9,17 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added a new `toolbar_sticky_offset` setting to allow the toolbar to be offset from the top of the page #TINY-7337
 - Added a new `mceFocus` command that focuses the editor. Equivalent to using `editor.focus()` #TINY-7373
+- Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
+- Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 - Added a new `tablecellvalign` toolbar button and menu item for vertical table cell alignment #TINY-7477
 - Added a new `tablecellborderwidth` toolbar button and menu item to change table cell border width #TINY-7478
 - Added a new `tablecellborderstyle` toolbar button and menu item to change table cell border style #TINY-7478
+- Added a new `tablecaption` toolbar button and menu item to toggle captions on tables #TINY-7479
 
 ### Improved
 - Improved the load time of the `fullpage` plugin by using the existing editor schema rather than creating a new one #TINY-6504
 
 ### Changed
 - Changed the load order so that the content css gets loaded before the editor gets populated with contents. #TINY-7249
-- Added a new `mceTableToggleClass` command which toggles the provided class on the currently selected table #TINY-7476
-- Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
 - `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254

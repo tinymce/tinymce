@@ -81,11 +81,11 @@ const assertStructureHasCustomStyle = (editor: Editor, rows: number, columns: nu
 const closeMenu = (editor) =>
   TinyUiActions.keydown(editor, Keys.escape());
 
-const openMenu = (editor: Editor, title: string) =>
+const clickOnToolbarButton = (editor: Editor, title: string) =>
   TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
 
 const pAssertMenuPresence = async (editor: Editor, label: string, menuTitle: string, expected: Record<string, number>, container: SugarElement<HTMLElement>) => {
-  openMenu(editor, menuTitle);
+  clickOnToolbarButton(editor, menuTitle);
   await Waiter.pTryUntil('Ensure the correct values are present', () =>
     Assertions.assertPresence(label, expected, container)
   );
@@ -103,7 +103,7 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
 };
 
 const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: Optional<string>) => {
-  openMenu(editor, menuTitle);
+  clickOnToolbarButton(editor, menuTitle);
   await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   TinyUiActions.clickOnUi(editor, `div[title="${itemTitle.getOr('None')}"]`);
   closeMenu(editor);
@@ -137,5 +137,7 @@ export {
   pAssertStyleCanBeToggledOnAndOff,
   setEditorContentTableAndSelection,
   pAssertNoCheckmarksInMenu,
-  pAssertMenuPresence
+  pAssertMenuPresence,
+  clickOnToolbarButton,
+  assertStructureIsRestoredToDefault
 };
