@@ -3,14 +3,14 @@ import * as Fun from './Fun';
 import { Optional } from './Optional';
 
 /**
- **Is** the value stored inside this Optional object equal to `rhs`?
+ * **Is** the value stored inside this Optional object equal to `rhs`?
  */
 export const is = <T>(lhs: Optional<T>, rhs: T, comparator: (a: T, b: T) => boolean = Fun.tripleEquals): boolean =>
   lhs.exists((left) => comparator(left, rhs));
 
 /**
- Are these two Optional objects equal? Equality here means either they're both
- `Some` (and the values are equal under the comparator) or they're both `None`.
+ * Are these two Optional objects equal? Equality here means either they're both
+ * `Some` (and the values are equal under the comparator) or they're both `None`.
  */
 export const equals: {
   <A, B>(lhs: Optional<A>, rhs: Optional<B>, comparator: (a: A, b: B) => boolean);

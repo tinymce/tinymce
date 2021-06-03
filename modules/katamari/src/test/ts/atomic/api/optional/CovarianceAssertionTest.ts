@@ -4,11 +4,11 @@ import { Optional } from 'ephox/katamari/api/Optional';
 import * as Optionals from 'ephox/katamari/api/Optionals';
 
 interface Animal {
-  name: string;
+  readonly name: string;
 }
 
 interface Cat extends Animal {
-  length: number;
+  readonly length: number;
 }
 
 // https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)

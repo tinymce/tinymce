@@ -132,7 +132,7 @@ const text = (s: StringAssert, combineSiblings = false): StructAssert => {
       }, (t: string) => {
         let text = t;
         if (combineSiblings) {
-          while (queue.peek().map(SugarNode.isText).getOr(false)) {
+          while (queue.peek().exists(SugarNode.isText)) {
             text += queue.take().bind(SugarText.getOption).getOr('');
           }
         }
