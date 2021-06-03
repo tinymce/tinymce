@@ -1,5 +1,5 @@
 import { Assertions, Keys, Waiter } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/mcagar';
 import { SugarBody, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     events = [];
   });
 
-  const setEditorContentTableAndSelection = (editor: Editor) => {
+  const setEditorSingleCellContentTableAndSelection = (editor: Editor) => {
     editor.setContent(
       '<table>' +
         '<tbody>' +
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
   };
 
-  const assertStructureHasValign = (editor: Editor, align: 'top' | 'middle' | 'bottom') => {
+  const assertSingleCellStructureHasValign = (editor: Editor, align: 'top' | 'middle' | 'bottom') => {
     TinyAssertions.assertContent(editor, '<table>' +
       '<tbody>' +
         '<tr>' +
@@ -52,10 +52,59 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     '</table>');
   };
 
-  const assertStructureDoNotHaveValign = (editor: Editor) => {
+  const assertSingleCellStructureDoNotHaveValign = (editor: Editor) => {
     TinyAssertions.assertContent(editor, '<table>' +
       '<tbody>' +
         '<tr>' +
+          '<td>Filler</td>' +
+        '</tr>' +
+      '</tbody>' +
+    '</table>');
+  };
+
+  const setEditorMultipleCellsContentTableAndSelection = (editor: Editor) => {
+    editor.setContent(
+      '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td data-mce-selected="1" data-mce-first-selected="1">Filler</td>' +
+            '<td data-mce-selected="1">Filler</td>' +
+          '</tr>' +
+          '<tr>' +
+            '<td data-mce-selected="1">Filler</td>' +
+            '<td data-mce-selected="1" data-mce-last-selected="1">Filler</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+    );
+
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
+  };
+
+  const assertMultipleCellsStructureHasValign = (editor: Editor, align: 'top' | 'middle' | 'bottom') => {
+    TinyAssertions.assertContent(editor, '<table>' +
+      '<tbody>' +
+        '<tr>' +
+          `<td style="vertical-align: ${align};">Filler</td>` +
+          `<td style="vertical-align: ${align};">Filler</td>` +
+        '</tr>' +
+        '<tr>' +
+          `<td style="vertical-align: ${align};">Filler</td>` +
+          `<td style="vertical-align: ${align};">Filler</td>` +
+        '</tr>' +
+      '</tbody>' +
+    '</table>');
+  };
+
+  const assertMultipleCellsStructureDoNotHaveValign = (editor: Editor) => {
+    TinyAssertions.assertContent(editor, '<table>' +
+      '<tbody>' +
+        '<tr>' +
+          '<td>Filler</td>' +
+          '<td>Filler</td>' +
+        '</tr>' +
+        '<tr>' +
+          '<td>Filler</td>' +
           '<td>Filler</td>' +
         '</tr>' +
       '</tbody>' +
@@ -107,48 +156,97 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
     await pAssertMenuPresence(editor, 'There should be a checkmark', expected, sugarContainer);
   };
 
-  it('TINY-7477: Check that valign works for Top value', async () => {
-    const editor = hook.editor();
-    const sugarContainer = SugarBody.body();
-    setEditorContentTableAndSelection(editor);
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+  context('Test for a single cell selection', () => {
+    it('TINY-7477: Check that valign works for Top value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorSingleCellContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
-    await pToggleValign(editor, 'Top');
-    await pAssertCheckmark(editor, 'Top', sugarContainer);
-    assertStructureHasValign(editor, 'top');
+      await pToggleValign(editor, 'Top');
+      await pAssertCheckmark(editor, 'Top', sugarContainer);
+      assertSingleCellStructureHasValign(editor, 'top');
 
-    await pToggleValign(editor, 'None');
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
-    assertStructureDoNotHaveValign(editor);
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertSingleCellStructureDoNotHaveValign(editor);
+    });
+
+    it('TINY-7477: Check that valign works for Middle value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorSingleCellContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+
+      await pToggleValign(editor, 'Middle');
+      await pAssertCheckmark(editor, 'Middle', sugarContainer);
+      assertSingleCellStructureHasValign(editor, 'middle');
+
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertSingleCellStructureDoNotHaveValign(editor);
+    });
+
+    it('TINY-7477: Check that valign works for Bottom value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorSingleCellContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+
+      await pToggleValign(editor, 'Bottom');
+      await pAssertCheckmark(editor, 'Bottom', sugarContainer);
+      assertSingleCellStructureHasValign(editor, 'bottom');
+
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertSingleCellStructureDoNotHaveValign(editor);
+    });
   });
 
-  it('TINY-7477: Check that valign works for Middle value', async () => {
-    const editor = hook.editor();
-    const sugarContainer = SugarBody.body();
-    setEditorContentTableAndSelection(editor);
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+  context('Test for multiple cell selection', () => {
+    it('TINY-7477: Check that valign works for Top value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorMultipleCellsContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
-    await pToggleValign(editor, 'Middle');
-    await pAssertCheckmark(editor, 'Middle', sugarContainer);
-    assertStructureHasValign(editor, 'middle');
+      await pToggleValign(editor, 'Top');
+      await pAssertCheckmark(editor, 'Top', sugarContainer);
+      assertMultipleCellsStructureHasValign(editor, 'top');
 
-    await pToggleValign(editor, 'None');
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
-    assertStructureDoNotHaveValign(editor);
-  });
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertMultipleCellsStructureDoNotHaveValign(editor);
+    });
 
-  it('TINY-7477: Check that valign works for Bottom value', async () => {
-    const editor = hook.editor();
-    const sugarContainer = SugarBody.body();
-    setEditorContentTableAndSelection(editor);
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+    it('TINY-7477: Check that valign works for Middle value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorMultipleCellsContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
 
-    await pToggleValign(editor, 'Bottom');
-    await pAssertCheckmark(editor, 'Bottom', sugarContainer);
-    assertStructureHasValign(editor, 'bottom');
+      await pToggleValign(editor, 'Middle');
+      await pAssertCheckmark(editor, 'Middle', sugarContainer);
+      assertMultipleCellsStructureHasValign(editor, 'middle');
 
-    await pToggleValign(editor, 'None');
-    await pAssertNoCheckmarksInMenu(editor, sugarContainer);
-    assertStructureDoNotHaveValign(editor);
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertMultipleCellsStructureDoNotHaveValign(editor);
+    });
+
+    it('TINY-7477: Check that valign works for Bottom value', async () => {
+      const editor = hook.editor();
+      const sugarContainer = SugarBody.body();
+      setEditorMultipleCellsContentTableAndSelection(editor);
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+
+      await pToggleValign(editor, 'Bottom');
+      await pAssertCheckmark(editor, 'Bottom', sugarContainer);
+      assertMultipleCellsStructureHasValign(editor, 'bottom');
+
+      await pToggleValign(editor, 'None');
+      await pAssertNoCheckmarksInMenu(editor, sugarContainer);
+      assertMultipleCellsStructureDoNotHaveValign(editor);
+    });
   });
 });
