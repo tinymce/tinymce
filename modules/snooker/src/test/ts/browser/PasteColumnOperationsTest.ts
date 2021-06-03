@@ -498,6 +498,72 @@ UnitTest.test('PasteColumnOperationsTest', () => {
     TableOperations.pasteColsAfter, 0, 0, 1
   );
 
+  Assertions.checkPasteRaw(
+    'TINY-6675: Paste cells/col from colgroup table into non-colgroup table',
+
+    generateTestTable(
+      [
+        '<tr><td>X1</td><td>C2</td></tr>',
+        '<tr><td>X2</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>X1</td><td>C2</td></tr>',
+        '<tr><td>X2</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [] }
+    ),
+
+    TableOperations.pasteCells, 0, 0, 0
+  );
+
+  Assertions.checkPasteRaw(
+    'TINY-6675: Paste cells/col from non-colgroup table into colgroup table',
+
+    generateTestTable(
+      [
+        '<tr><td>X1</td><td>C2</td></tr>',
+        '<tr><td>X2</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>A2</td><td>B2</td></tr>',
+        '<tr><td>A3</td><td>B3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: true, lockedColumns: [] }
+    ),
+
+    generateTestTable(
+      [
+        '<tr><td>X1</td><td>C2</td></tr>',
+        '<tr><td>X2</td><td>C3</td></tr>'
+      ],
+      [], [],
+      { numCols: 2, colgroup: false, lockedColumns: [] }
+    ),
+
+    TableOperations.pasteCells, 1, 0, 0
+  );
+
   /*
   TINY-6910
   TODO: Need a way to test multi-cell selections - will require something like Asserstions.pasteMultiple or Assertions.checkPaste should be changed to take an array
