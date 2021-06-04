@@ -324,31 +324,91 @@ describe('browser.tinymce.core.delete.TableDeleteTest', () => {
   });
 
   context('Delete partially selected tables', () => {
-    it('Delete from before table into table', () => {
+    it('TINY-6044: Fully select and delete from before table into table', () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 1);
       doDelete(editor);
-      TinyAssertions.assertSelection(editor, [ 1, 0, 0, 0 ], 0, [ 1, 0, 0, 0 ], 0);
-      TinyAssertions.assertContent(editor, '<p>a</p><table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>');
+      TinyAssertions.assertCursor(editor, [], 0);
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>');
     });
 
-    it('Delete from after table into table', () => {
+    it('TINY-6044: Fully select and delete from after table into table', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>a</p>');
       TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 1, 0 ], 1);
       doDelete(editor);
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1 ], 0, [ 0, 0, 0, 1 ], 0);
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><p>a</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1 ], 0);
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table>');
     });
 
-    it('Delete from one table into another table', () => {
+    it('TINY-6044: Partially select and delete from before table into table', () => {
       const editor = hook.editor();
-      editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>');
+      editor.setContent('<p>abcd</p><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 1, 0, 0, 0, 0 ], 1);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 2);
+      TinyAssertions.assertContent(editor, '<p>ab</p><table><tbody><tr><td>&nbsp;</td><td>b</td></tr></tbody></table>');
+    });
+
+    it('TINY-6044: Partially select and delete from after table into table', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table><p>abcd</p>');
+      TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 1, 0 ], 2);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1 ], 0);
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><p>cd</p>');
+    });
+
+    it('TINY-6044: Delete from one table into another table', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>'
+      );
       TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 1, 0, 0, 0, 0 ], 1);
       doDelete(editor);
-      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1 ], 0, [ 0, 0, 0, 1 ], 0);
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table><table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>');
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1 ], 0);
+      TinyAssertions.assertContent(
+        editor,
+        '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>&nbsp;</td><td>d</td></tr></tbody></table>'
+      );
+    });
+
+    it('TINY-6044: Delete from one table into another table with content between', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>' +
+        '<p>aa</p>' +
+        '<table><tbody><tr><td>c</td><td>d</td></tr></tbody></table>' +
+        '<p>bb</p>' +
+        '<table><tbody><tr><td>e</td><td>f</td></tr></tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 1, 0 ], 1, [ 4, 0, 0, 0, 0 ], 1);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1 ], 0);
+      TinyAssertions.assertContent(
+        editor,
+        '<table><tbody><tr><td>a</td><td>&nbsp;</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>&nbsp;</td><td>f</td></tr></tbody></table>'
+      );
+    });
+
+    it('TINY-6044: Delete from one table into another table with all cells selected', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>e</td><td>f</td></tr><tr><td>g</td><td>h</td></tr></tbody></table>'
+      );
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 1, 0, 1, 1, 0 ], 1);
+      doDelete(editor);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContent(
+        editor,
+        '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>' +
+        '<table><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>'
+      );
     });
   });
 

@@ -5,7 +5,7 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Compare, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -24,12 +24,72 @@ const freefallRtl = (root: SugarElement<Node>): Optional<SugarElement<Node>> => 
   return child.bind(freefallRtl).orThunk(() => Optional.some(root));
 };
 
+const isRootFromElement = (root: SugarElement<any>) =>
+  (cur: SugarElement<any>): boolean => Compare.eq(root, cur);
+
+const unSelectCells = (rng: Range, startTableOpt: Optional<SugarElement<HTMLTableElement>>, endTableOpt: Optional<SugarElement<HTMLTableElement>>) => {
+  const sameTable = Optionals.lift2(startTableOpt, endTableOpt, (startTable, endTable) => Compare.eq(startTable, endTable)).getOr(false);
+  if (!sameTable) {
+    startTableOpt.each((startTable) => rng.setStartAfter(startTable.dom));
+    endTableOpt.each((endTable) => rng.setEndBefore(endTable.dom));
+  } else if (startTableOpt.isSome()) {
+    startTableOpt.each((startTable) => rng.setStartAfter(startTable.dom));
+  } else {
+    endTableOpt.each((endTable) => rng.setEndBefore(endTable.dom));
+  }
+};
+
+/*
+ * Runs whenever cells are included in a selection
+ * - the start and end of the selection is contained within the same table (called directly from deleteRange)
+ * - part of a table and content outside is selected (partial selection)
+ * - the start of the selection is in a table and the end of the selection is is another table
+ */
 const emptyCells = (editor: Editor, cells: SugarElement<HTMLTableCellElement>[]) => {
+  const selection = editor.selection;
+  const rng = selection.getRng();
+  const startContainer = rng.startContainer;
+  const startOffset = rng.startOffset;
+  const endContainer = rng.endContainer;
+
+  const isRoot = isRootFromElement(SugarElement.fromDom(editor.getBody()));
+  const getTable = (elm: SugarElement<Node>) => TableCellSelection.getClosestTable(elm, isRoot);
+  const startTableOpt = getTable(SugarElement.fromDom(startContainer));
+  const endTableOpt = getTable(SugarElement.fromDom(endContainer));
+  const startInTable = startTableOpt.isSome();
+  const endInTable = endTableOpt.isSome();
+  // Partial selection - selection is not within the same table
+  const partialSelection = Optionals.lift2(startTableOpt, endTableOpt, (startTable, endTable) => !Compare.eq(startTable, endTable)).getOr(true);
+  const multiTableSelection = partialSelection && startInTable && endInTable;
+
+  // Remove content from selected cells
   Arr.each(cells, PaddingBr.fillWithPaddingBr);
-  editor.selection.setCursorLocation(cells[0].dom, 0);
+
+  // Change the selection so that the cells are no longer selected and delete the rest of the selected content
+  if (partialSelection) {
+    unSelectCells(rng, startTableOpt, endTableOpt);
+    rng.deleteContents();
+  }
+
+  // Make sure cursor collapses to the start of the original selection
+  if (startInTable) {
+    selection.setCursorLocation(cells[0].dom, 0);
+  } else {
+    selection.setCursorLocation(startContainer, startOffset);
+  }
+
+  // Clean up parent block outside the table if it is empty since rng.deleteContents leaves it
+  if (partialSelection && !multiTableSelection) {
+    const outsideBlock = SugarElement.fromDom(editor.dom.getParent(startInTable ? endContainer : startContainer, editor.dom.isBlock));
+    if (Empty.isEmpty(outsideBlock)) {
+      Remove.remove(outsideBlock);
+    }
+  }
+
   return true;
 };
 
+// Runs on a single cell table that has all of its content selected
 const deleteCellContents = (editor: Editor, rng: Range, cell: SugarElement<HTMLTableCellElement>) => {
   rng.deleteContents();
   // Pad the last block node

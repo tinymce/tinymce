@@ -28,10 +28,10 @@ const defaultPatterns = (patterns: KeyPattern[]): KeyPattern[] => Arr.map(patter
 
 const matchesEvent = (pattern: KeyPattern, evt: KeyboardEvent) => (
   evt.keyCode === pattern.keyCode &&
-  evt.shiftKey === pattern.shiftKey &&
-  evt.altKey === pattern.altKey &&
-  evt.ctrlKey === pattern.ctrlKey &&
-  evt.metaKey === pattern.metaKey
+   evt.shiftKey === pattern.shiftKey &&
+   evt.altKey === pattern.altKey &&
+   evt.ctrlKey === pattern.ctrlKey &&
+   evt.metaKey === pattern.metaKey
 );
 
 const match = (patterns: KeyPattern[], evt: KeyboardEvent) =>

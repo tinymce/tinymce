@@ -103,18 +103,35 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
     assert.equal(table, '<table><tbody><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>d</td><td>e</td><td>f</td></tr></tbody></table>', 'should be table');
   });
 
-  it('select between two tables', () => {
+  it('TINY-6044: select between two tables, not all cells', () => {
     const action = fromHtml(
-      '<div><table><tbody><tr><td>a</td></tr></tbody></table><table><tbody><tr><td>b</td></tr></tbody></table></div>',
-      [ 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 1
+      '<div>' +
+      '<table><tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table>' +
+      'foo' +
+      '<table><tbody><tr><td>e</td></tr><tr><td>f</td></tr></tbody></table>' +
+      '</div>',
+      [ 0, 0, 0, 1, 0 ], 0, [ 2, 0, 0, 0, 0 ], 1
     );
-    const table = extractTableFromDeleteAction(action);
-    assert.equal(table, '<table><tbody><tr><td>a</td></tr></tbody></table>', 'should be cell from first table only');
+    const cells = extractActionCells(action);
+    assert.equal(cells, '<td>b</td><td>c</td><td>d</td><td>e</td>', 'should be cells');
+  });
+
+  it('TINY-6044: select between two tables, all cells', () => {
+    const action = fromHtml(
+      '<div>' +
+      '<table><tbody><tr><td>a</td></tr><tr><td>b</td></tr></tbody></table>' +
+      'foo' +
+      '<table><tbody><tr><td>c</td></tr><tr><td>d</td></tr></tbody></table>' +
+      '</div>',
+      [ 0, 0, 0, 0, 0 ], 0, [ 2, 0, 1, 0, 0 ], 1
+    );
+    const cells = extractActionCells(action);
+    assert.equal(cells, '<td>a</td><td>b</td><td>c</td><td>d</td>', 'should be cells');
   });
 
   it('select between table and content after', () => {
     const action = fromHtml(
-      '<div><table><tbody><tr><td>a</td></tr></tbody></table>b',
+      '<div><table><tbody><tr><td>a</td></tr></tbody></table>b</div>',
       [ 0, 0, 0, 0, 0 ], 0, [ 1 ], 1
     );
     const table = extractTableFromDeleteAction(action);
@@ -123,7 +140,7 @@ describe('browser.tinymce.core.delete.TableDeleteActionTest', () => {
 
   it('select between table and content before', () => {
     const action = fromHtml(
-      '<div>a<table><tbody><tr><td>b</td></tr></tbody></table>',
+      '<div>a<table><tbody><tr><td>b</td></tr></tbody></table></div>',
       [ 0 ], 0, [ 1, 0, 0, 0, 0 ], 1
     );
     const table = extractTableFromDeleteAction(action);
