@@ -12,7 +12,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { applyTableCellStyleAction, filterNoneItem, generateItems } from './UiUtils';
+import { applyTableCellStyle, filterNoneItem, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   const cmd = (command: string) => () => editor.execCommand(command);
@@ -237,14 +237,14 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
 
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
-    getSubmenuItems: () => generateItems<{ text: string; value: string }>(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'vertical-align')),
+    getSubmenuItems: () => generateItems(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, applyTableCellStyle(editor, 'vertical-align')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   const tableCellBorderWidthsList = getTableBorderWidths(editor);
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
-    getSubmenuItems: () => generateItems<{ title: string; value: string }>(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'border-width')),
+    getSubmenuItems: () => generateItems(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, applyTableCellStyle(editor, 'border-width')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
@@ -252,7 +252,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
 
-    getSubmenuItems: () => generateItems<{ title: string; value: string }>(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'border-style')),
+    getSubmenuItems: () => generateItems(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, applyTableCellStyle(editor, 'border-style')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 };

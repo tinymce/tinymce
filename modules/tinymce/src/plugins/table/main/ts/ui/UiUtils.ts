@@ -29,9 +29,9 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
     return boundCallback.clear;
   };
 };
-const applyTableCellStyleAction = (editor: Editor, action: string, style: string) =>
-  (item: Item) =>
-    editor.execCommand(action, false, { [style]: item.value });
+const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
+  (item: T) =>
+    editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
 
 const filterNoneItem = <T extends Item>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
@@ -55,5 +55,5 @@ export {
   generateItems,
   generateItemsCallback,
   filterNoneItem,
-  applyTableCellStyleAction
+  applyTableCellStyle
 };
