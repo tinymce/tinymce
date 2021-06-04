@@ -10,7 +10,7 @@ import { getCellClassList, getTableBorderStyles, getTableBorderWidths, getTableC
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 import { verticalAlignValues } from './CellAlignValues';
-import { filterNoneItem, generateItemsCallback } from './UiUtils';
+import { applyTableCellStyleAction, filterNoneItem, generateItemsCallback } from './UiUtils';
 
 const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
   editor.ui.registry.addMenuButton('table', {
@@ -194,11 +194,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addMenuButton('tablecellvalign', {
     icon: 'vertical-align',
     tooltip: 'Vertical align',
-    fetch: generateItemsCallback(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, (item) => {
-      editor.execCommand('mceTableApplyCellStyle', false, {
-        'vertical-align': item.value
-      });
-    }),
+    fetch: generateItemsCallback<{ text: string; value: string }>(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'vertical-align')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
@@ -206,11 +202,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addMenuButton('tablecellborderwidth', {
     icon: 'border-width',
     tooltip: 'Border width',
-    fetch: generateItemsCallback(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, (item) => {
-      editor.execCommand('mceTableApplyCellStyle', false, {
-        'border-width': item.value
-      });
-    }),
+    fetch: generateItemsCallback<{ title: string; value: string }>(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'border-width')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
@@ -218,11 +210,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
   editor.ui.registry.addMenuButton('tablecellborderstyle', {
     icon: 'border-style',
     tooltip: 'Border style',
-    fetch: generateItemsCallback(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, (item) => {
-      editor.execCommand('mceTableApplyCellStyle', false, {
-        'border-style': item.value
-      });
-    }),
+    fetch: generateItemsCallback<{ title: string; value: string }>(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, applyTableCellStyleAction(editor, 'mceTableApplyCellStyle', 'border-style')),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 };

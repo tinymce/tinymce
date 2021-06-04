@@ -21,48 +21,14 @@ const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
 };
+const defaultCellBorderWidth = Arr.range(5, (i) => {
+  const size = `${i + 1}px`;
+  return { title: size, value: size };
+});
 
-const defaultCellBorderWidth = [
-  {
-    title: '1px',
-    value: '1px'
-  },
-  {
-    title: '2px',
-    value: '2px'
-  },
-  {
-    title: '3px',
-    value: '3px'
-  },
-  {
-    title: '4px',
-    value: '4px'
-  },
-  {
-    title: '5px',
-    value: '5px'
-  }
-];
-
-const defaultCellBorderStyles = [
-  {
-    title: 'Solid',
-    value: 'solid'
-  },
-  {
-    title: 'Dashed',
-    value: 'dashed'
-  },
-  {
-    title: 'Dotted',
-    value: 'dotted'
-  },
-  {
-    title: 'Double',
-    value: 'double'
-  }
-];
+const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dashed', 'Dotted', 'Double' ], (type) => {
+  return { title: type, value: type.toLowerCase() };
+});
 
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {

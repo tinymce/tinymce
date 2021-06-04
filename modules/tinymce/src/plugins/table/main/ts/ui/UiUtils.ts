@@ -29,6 +29,9 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
     return boundCallback.clear;
   };
 };
+const applyTableCellStyleAction = (editor: Editor, action: string, style: string) =>
+  (item: Item) =>
+    editor.execCommand(action, false, { [style]: item.value });
 
 const filterNoneItem = <T extends Item>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
@@ -51,5 +54,6 @@ export {
   onSetupToggle,
   generateItems,
   generateItemsCallback,
-  filterNoneItem
+  filterNoneItem,
+  applyTableCellStyleAction
 };
