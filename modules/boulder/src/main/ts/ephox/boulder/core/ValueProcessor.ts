@@ -64,29 +64,29 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
         });
       };
 
-      switch (presence.discriminator) {
-        case 'strict':
+      switch (presence.tag) {
+        case FieldPresence.FieldType.Strict:
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
           );
-        case 'defaultedThunk':
+        case FieldPresence.FieldType.DefaultedThunk:
           return SimpleResult.bind(
-            fallbackAccess(obj, key, presence.callback),
+            fallbackAccess(obj, key, presence.process),
             bundle
           );
-        case 'asOption':
+        case FieldPresence.FieldType.Option:
           return SimpleResult.bind(
             optionAccess(obj, key),
             bundleAsOption
           );
-        case 'asDefaultedOptionThunk':
+        case FieldPresence.FieldType.DefaultedOptionThunk:
           return SimpleResult.bind(
-            optionDefaultedAccess(obj, key, presence.callback),
+            optionDefaultedAccess(obj, key, presence.process),
             bundleAsOption
           );
-        case 'mergeWithThunk': {
-          const base = presence.callback(obj);
+        case FieldPresence.FieldType.MergeWithThunk: {
+          const base = presence.process(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
             (v) => Merger.deepMerge(base, v)
