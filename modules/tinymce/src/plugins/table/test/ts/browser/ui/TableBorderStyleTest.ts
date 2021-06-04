@@ -23,13 +23,11 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     ]
   }, [ Plugin, Theme ], true);
 
-  it('TINY-7478: Ensure the table border style adds and removes it as expected for a single cell', async () => {
-    const editor = hook.editor();
-    await pAssertStyleCanBeToggledOnAndOff(editor, 'Border style', 'Solid', 2, 1, 1, 'border-style: solid');
-  });
+  it('TINY-7478: Ensure the table border style adds and removes it as expected for a single cell', async () =>
+    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Border style', 'Solid', 2, 1, 1, 'border-style: solid')
+  );
 
-  it('TINY-7478: Ensure the table border style adds and removes it as expected for multiple cells', async () => {
-    const editor = hook.editor();
-    await pAssertStyleCanBeToggledOnAndOff(editor, 'Border style', 'Solid', 2, 2, 2, 'border-style: solid');
-  });
+  it('TINY-7478: Ensure the table border style adds and removes it as expected for multiple cells', async () =>
+    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Border style', 'Solid', 2, 2, 2, 'border-style: solid')
+  );
 });
