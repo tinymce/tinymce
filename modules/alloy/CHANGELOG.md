@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
 
+### Fixed
+- Fixed a number of positioning bugs when using an "inside" layout, especially any that renders at the bottom.
+
 ## 8.2.0 - 2021-05-06
 
 ### Added
