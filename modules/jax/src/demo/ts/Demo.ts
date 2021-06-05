@@ -1,5 +1,8 @@
 import { FutureResult } from '@ephox/katamari';
-import { DataType, Http, HttpData, HttpJwt } from 'ephox/jax/api/Main';
+import { DataType } from 'ephox/jax/core/DataType';
+import * as Http from 'ephox/jax/core/Http';
+import * as HttpData from 'ephox/jax/core/HttpData';
+import * as HttpJwt from 'ephox/jax/core/HttpJwt';
 
 /* eslint-disable no-console */
 

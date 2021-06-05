@@ -1,6 +1,6 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Obj } from '@ephox/katamari';
-import { JPEGMeta } from 'ephox/imagetools/api/Main';
+import * as JPEGMeta from 'ephox/imagetools/meta/JPEGMeta';
 import * as Assertion from 'ephox/imagetools/test/Assertion';
 import { Promise } from 'ephox/imagetools/util/Promise';
 
