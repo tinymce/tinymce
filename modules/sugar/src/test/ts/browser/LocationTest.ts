@@ -4,11 +4,11 @@ import { PlatformDetection } from '@ephox/sand';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as DomEvent from 'ephox/sugar/api/events/DomEvent';
-import { Traverse } from 'ephox/sugar/api/Main';
 import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as Css from 'ephox/sugar/api/properties/Css';
+import * as Traverse from 'ephox/sugar/api/search/Traverse';
 import * as Scroll from 'ephox/sugar/api/view/Scroll';
 import * as SugarLocation from 'ephox/sugar/api/view/SugarLocation';
 

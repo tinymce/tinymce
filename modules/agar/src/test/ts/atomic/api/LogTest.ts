@@ -1,6 +1,10 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Assertions, Chain, Log, Pipeline, Step } from 'ephox/agar/api/Main';
+import * as Assertions from 'ephox/agar/api/Assertions';
+import { Chain } from 'ephox/agar/api/Chain';
+import * as Log from 'ephox/agar/api/Log';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
 import * as StepAssertions from 'ephox/agar/test/StepAssertions';
 
 UnitTest.asynctest('LogTest', (success, failure) => {

@@ -1,7 +1,7 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions } from '@ephox/mcagar';
 
-import Editor from 'tinymce/src/core/main/ts/api/Editor';
+import Editor from 'tinymce/core/api/Editor';
 import Theme from 'tinymce/themes/silver/Theme';
 
 describe('browser.tinymce.core.content.EditorContentWsTest', () => {
