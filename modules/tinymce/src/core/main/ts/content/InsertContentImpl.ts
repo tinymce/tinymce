@@ -9,9 +9,9 @@ import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import DOMUtils from '../api/dom/DOMUtils';
 import ElementUtils from '../api/dom/ElementUtils';
-import EditorSelection from '../api/dom/Selection';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
+import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
 import * as StyleUtils from '../api/html/StyleUtils';
@@ -24,12 +24,13 @@ import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
+import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 import { trimOrPadLeftRight } from './NbspTrim';
 
 const isTableCell = NodeType.isTableCell;
 
-const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null) => {
+const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null): boolean => {
   if (cell !== null) {
     const endCell = dom.getParent(rng.endContainer, isTableCell);
     return cell === endCell && SelectionUtils.hasAllContentsSelected(SugarElement.fromDom(cell), rng);
@@ -38,7 +39,7 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
   }
 };
 
-const validInsertion = (editor: Editor, value: string, parentNode: Element) => {
+const validInsertion = (editor: Editor, value: string, parentNode: Element): void => {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
@@ -55,12 +56,12 @@ const validInsertion = (editor: Editor, value: string, parentNode: Element) => {
   }
 };
 
-const trimBrsFromTableCell = (dom: DOMUtils, elm: Element) => {
+const trimBrsFromTableCell = (dom: DOMUtils, elm: Element): void => {
   Optional.from(dom.getParent(elm, 'td,th')).map(SugarElement.fromDom).each(PaddingBr.trimBlockTrailingBr);
 };
 
 // Remove children nodes that are exactly the same as a parent node - name, attributes, styles
-const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
+const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): void => {
   const textInlineElements = editor.schema.getTextInlineElements();
   const dom = editor.dom;
 
@@ -89,7 +90,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean) => {
   }
 };
 
-const markFragmentElements = (fragment: AstNode) => {
+const markFragmentElements = (fragment: AstNode): void => {
   let node = fragment;
 
   while ((node = node.walk())) {
@@ -99,26 +100,26 @@ const markFragmentElements = (fragment: AstNode) => {
   }
 };
 
-const unmarkFragmentElements = (elm: Element) => {
-  Tools.each(elm.getElementsByTagName('*'), (elm: Element) => {
+const unmarkFragmentElements = (elm: Element): void => {
+  Tools.each(elm.getElementsByTagName('*'), (elm) => {
     elm.removeAttribute('data-mce-fragment');
   });
 };
 
-const isPartOfFragment = (node: Element) => {
+const isPartOfFragment = (node: Element): boolean => {
   return !!node.getAttribute('data-mce-fragment');
 };
 
-const canHaveChildren = (editor: Editor, node) => {
+const canHaveChildren = (editor: Editor, node: Node | undefined): boolean => {
   return node && !editor.schema.getShortEndedElements()[node.nodeName];
 };
 
-const moveSelectionToMarker = (editor: Editor, marker) => {
-  let nextRng;
-  const dom = editor.dom, selection = editor.selection;
-  let node2;
+const moveSelectionToMarker = (editor: Editor, marker: HTMLElement | null): void => {
+  let nextRng: Range;
+  const dom = editor.dom;
+  const selection = editor.selection;
 
-  const getContentEditableFalseParent = (node: Node) => {
+  const getContentEditableFalseParent = (node: Node): Node | null => {
     const root = editor.getBody();
 
     for (; node && node !== root; node = node.parentNode) {
@@ -149,13 +150,13 @@ const moveSelectionToMarker = (editor: Editor, marker) => {
 
   // If previous sibling is a text node set the selection to the end of that node
   const node = marker.previousSibling;
-  if (node && node.nodeType === 3) {
+  if (NodeType.isText(node)) {
     rng.setStart(node, node.nodeValue.length);
 
     // TODO: Why can't we normalize on IE
     if (!Env.ie) {
-      node2 = marker.nextSibling;
-      if (node2 && node2.nodeType === 3) {
+      const node2 = marker.nextSibling;
+      if (NodeType.isText(node2)) {
         node.appendData(node2.data);
         node2.parentNode.removeChild(node2);
       }
@@ -166,7 +167,7 @@ const moveSelectionToMarker = (editor: Editor, marker) => {
     rng.setEndBefore(marker);
   }
 
-  const findNextCaretRng = (rng) => {
+  const findNextCaretRng = (rng: Range): Range | undefined => {
     let caretPos = CaretPosition.fromRangeStart(rng);
     const caretWalker = CaretWalker(editor.getBody());
 
@@ -197,7 +198,7 @@ const moveSelectionToMarker = (editor: Editor, marker) => {
   selection.setRng(rng);
 };
 
-const deleteSelectedContent = (editor: Editor) => {
+const deleteSelectedContent = (editor: Editor): void => {
   const dom = editor.dom;
   // Fix for #2595 seems that delete removes one extra character on
   // WebKit for some odd reason if you double click select a word
@@ -213,10 +214,11 @@ const deleteSelectedContent = (editor: Editor) => {
   }
 };
 
-export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
-  let parentNode, rootNode, args;
-  let marker, rng, node;
-  const selection: EditorSelection = editor.selection, dom = editor.dom;
+export const insertHtmlAtCaret = (editor: Editor, value: string, details: InsertContentDetails): void => {
+  let parentNode;
+  let rng, node;
+  const selection = editor.selection;
+  const dom = editor.dom;
 
   // Check for whitespace before/after value
   if (/^ | $/.test(value)) {
@@ -233,8 +235,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
   const bookmarkHtml = '<span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span>';
 
   // Run beforeSetContent handlers on the HTML to be inserted
-  args = { content: value, format: 'html', selection: true, paste: details.paste };
-  args = editor.fire('BeforeSetContent', args);
+  const args = editor.fire('BeforeSetContent', { content: value, format: 'html', selection: true, paste: details.paste });
   if (args.isDefaultPrevented()) {
     editor.fire('SetContent', { content: args.content, format: 'html', selection: true, paste: details.paste });
     return;
@@ -271,7 +272,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
   parentNode = selection.getNode();
 
   // Parse the fragment within the context of the parent node
-  const parserArgs: any = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
+  const parserArgs: ParserArgs = { context: parentNode.nodeName.toLowerCase(), data: details.data, insert: true };
   const fragment = parser.parse(value, parserArgs);
 
   // Custom handling of lists
@@ -287,7 +288,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
   // Move the caret to a more suitable location
   node = fragment.lastChild;
   if (node.attr('id') === 'mce_marker') {
-    marker = node;
+    const marker = node;
 
     for (node = node.prev; node; node = node.walk(true)) {
       if (node.type === 3 || !dom.isBlock(node.name)) {
@@ -312,7 +313,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details) => {
     // Insert bookmark node and get the parent
     editor.selection.setContent(bookmarkHtml);
     parentNode = selection.getNode();
-    rootNode = editor.getBody();
+    const rootNode = editor.getBody();
 
     // Opera will return the document node when selection is in root
     if (parentNode.nodeType === 9) {
