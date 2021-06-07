@@ -9,11 +9,8 @@ import { Arr, Singleton, Strings } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-interface ValueItem {
+interface Item {
   readonly value: string;
-}
-interface Item extends ValueItem {
-  readonly title: string;
 }
 
 const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) => {
@@ -33,23 +30,22 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
   };
 };
 
-const filterNoneItem = <T extends ValueItem>(list: T[]) =>
+const filterNoneItem = <T extends Item>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
 
-const generateItem = (editor: Editor, command: string, format: string, item: Item): Menu.ToggleMenuItemSpec => ({
-  text: item.title,
+const generateItem = <T extends Item>(editor: Editor, item: T, format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec => ({
+  text: extractText(item),
   type: 'togglemenuitem',
-  onAction: () => {
-    editor.execCommand(command, false, item.value);
-  },
+  onAction: () => onAction(item),
   onSetup: onSetupToggle(editor, format, item.value)
 });
 
-const generateItems = (editor: Editor, command: string, format: string, items: Item[]): Menu.ToggleMenuItemSpec[] =>
-  Arr.map(items, (item) => generateItem(editor, command, format, item));
+const generateItems = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void): Menu.ToggleMenuItemSpec[] =>
+  Arr.map(items, (item) => generateItem(editor, item, format, extractText, onAction));
 
-const generateItemsCallback = (editor: Editor, command: string, format: string, items: Item[]) =>
-  (callback: (items: Menu.ToggleMenuItemSpec[]) => void) => callback(generateItems(editor, command, format, items));
+const generateItemsCallback = <T extends Item>(editor: Editor, items: T[], format: string, extractText: (item: T) => string, onAction: (item: T) => void) =>
+  (callback: (items: Menu.ToggleMenuItemSpec[]) => void) =>
+    callback(generateItems(editor, items, format, extractText, onAction));
 
 export {
   onSetupToggle,

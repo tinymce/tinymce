@@ -11,6 +11,7 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList, getTableClassList, hasTableGrid } from '../api/Settings';
 import { Clipboard } from '../core/Clipboard';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { verticalAlignValues } from './CellAlignValues';
 import { filterNoneItem, generateItems } from './UiUtils';
 
 const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipboard: Clipboard) => {
@@ -216,7 +217,9 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tableclasss', {
       icon: 'table-classes',
-      getSubmenuItems: () => generateItems(editor, 'mceTableToggleClass', 'tableclass', tableClassList),
+      getSubmenuItems: () => generateItems(editor, tableClassList, 'tableclass', (item) => item.title, (item) => {
+        editor.execCommand('mceTableToggleClass', false, item.value);
+      }),
       onSetup: selectionTargets.onSetupTable
     });
   }
@@ -225,10 +228,22 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tablecellclasss', {
       icon: 'table-cell-classes',
-      getSubmenuItems: () => generateItems(editor, 'mceTableCellToggleClass', 'tablecellclass', tableCellClassList),
+      getSubmenuItems: () => generateItems(editor, tableCellClassList, 'tablecellclass', (item) => item.title, (item) => {
+        editor.execCommand('mceTableCellToggleClass', false, item.value);
+      }),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
+
+  editor.ui.registry.addNestedMenuItem('tablecellvalign', {
+    icon: 'vertical-align',
+    getSubmenuItems: () => generateItems(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, (item) => {
+      editor.execCommand('mceTableApplyCellStyle', false, {
+        'vertical-align': item.value
+      });
+    }),
+    onSetup: selectionTargets.onSetupCellOrRow
+  });
 };
 
 export {
