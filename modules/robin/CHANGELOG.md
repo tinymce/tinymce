@@ -7,7 +7,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Unreleased
 
 ### Added
-* Made `TextZones.Zone` type public
-* Made `Words.WordScope` type public
-
-## 8.0.8
+- Made `TextZones.Zone` type public.
+- Made `Words.WordScope` type public.
