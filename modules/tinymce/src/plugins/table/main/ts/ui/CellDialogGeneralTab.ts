@@ -9,6 +9,7 @@ import { Optional } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { getCellClassList } from '../api/Settings';
+import { verticalAlignValues } from './CellAlignValues';
 import * as Helpers from './Helpers';
 
 const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
@@ -71,12 +72,7 @@ const children: Dialog.BodyComponentSpec[] = [
     name: 'valign',
     type: 'listbox',
     label: 'Vertical align',
-    items: [
-      { text: 'None', value: '' },
-      { text: 'Top', value: 'top' },
-      { text: 'Middle', value: 'middle' },
-      { text: 'Bottom', value: 'bottom' }
-    ]
+    items: verticalAlignValues
   }
 ];
 
