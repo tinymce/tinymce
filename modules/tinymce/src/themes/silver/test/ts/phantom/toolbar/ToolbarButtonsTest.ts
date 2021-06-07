@@ -168,7 +168,6 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   };
 
   afterEach(() => {
-    hook.store().clear();
     shouldDisable.set(false);
     shouldActivate.set(false);
   });
@@ -181,6 +180,8 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   it('First button (button1): normal button', () => {
     const component = hook.component();
     const store = hook.store();
+    store.clear();
+
     const button1 = getButton('.button1-container .tox-tbtn');
     Assertions.assertStructure(
       'Checking initial structure',
@@ -216,8 +217,9 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   it('Second button (button2): toggle button', () => {
     const component = hook.component();
     const store = hook.store();
-    const button2 = getButton('.button2-container .tox-tbtn');
+    store.clear();
 
+    const button2 = getButton('.button2-container .tox-tbtn');
     Mouse.clickOn(component.element, '.button2-container .tox-tbtn');
     store.assertEq('Store should have action2', [ 'onToggleAction.2' ]);
     store.clear();
@@ -250,8 +252,9 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     const body = hook.body();
     const component = hook.component();
     const store = hook.store();
-    const button3 = getButton('.button3-container .tox-split-button');
+    store.clear();
 
+    const button3 = getButton('.button3-container .tox-split-button');
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -334,8 +337,9 @@ describe('phantom.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
     const body = hook.body();
     const component = hook.component();
     const store = hook.store();
-    const button4 = getButton('.button4-container .tox-mbtn');
+    store.clear();
 
+    const button4 = getButton('.button4-container .tox-mbtn');
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, arr) => s.element('button', {

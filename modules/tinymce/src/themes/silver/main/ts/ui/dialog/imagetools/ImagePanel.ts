@@ -117,34 +117,39 @@ const renderImagePanel = (initialUrl: string) => {
     });
   };
 
-  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<Optional<SugarElement>> => {
+  const updateSrc = (anyInSystem: AlloyComponent, url: string): Promise<void> => {
     const img = SugarElement.fromTag('img');
     Attribute.set(img, 'src', url);
-    return loadImage(img.dom).then(() => memContainer.getOpt(anyInSystem).map((panel) => {
-      const aImg = GuiFactory.external({
-        element: img
-      });
+    return loadImage(img.dom).then(() => {
+      // Ensure the component hasn't been removed while the image was loading
+      // if it has, then just do nothing
+      if (anyInSystem.getSystem().isConnected()) {
+        memContainer.getOpt(anyInSystem).map((panel) => {
+          const aImg = GuiFactory.external({
+            element: img
+          });
 
-      Replacing.replaceAt(panel, 1, Optional.some(aImg));
+          Replacing.replaceAt(panel, 1, Optional.some(aImg));
 
-      const lastViewRect = viewRectState.get();
-      const viewRect = {
-        x: 0,
-        y: 0,
-        w: img.dom.naturalWidth,
-        h: img.dom.naturalHeight
-      };
-      viewRectState.set(viewRect);
-      const rect = Rect.inflate(viewRect, -20, -20);
-      rectState.set(rect);
+          const lastViewRect = viewRectState.get();
+          const viewRect = {
+            x: 0,
+            y: 0,
+            w: img.dom.naturalWidth,
+            h: img.dom.naturalHeight
+          };
+          viewRectState.set(viewRect);
+          const rect = Rect.inflate(viewRect, -20, -20);
+          rectState.set(rect);
 
-      if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
-        zoomFit(panel, img);
+          if (lastViewRect.w !== viewRect.w || lastViewRect.h !== viewRect.h) {
+            zoomFit(panel, img);
+          }
+
+          repaintImg(panel, img);
+        });
       }
-
-      repaintImg(panel, img);
-      return img;
-    }));
+    });
   };
 
   const zoom = (anyInSystem: AlloyComponent, direction: number): void => {
