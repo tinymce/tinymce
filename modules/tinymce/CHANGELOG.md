@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
-- `editor.fire` was incorrectly mutating the original custom data provided #TINY-3254
+- `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
 - The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
 - Tabbing out of the editor after calling `setProgressState(true)` was inconsistent in iframe mode #TINY-7373
