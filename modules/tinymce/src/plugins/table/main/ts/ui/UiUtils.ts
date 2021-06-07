@@ -29,6 +29,7 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
     return boundCallback.clear;
   };
 };
+
 const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
   (item: T) =>
     editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });

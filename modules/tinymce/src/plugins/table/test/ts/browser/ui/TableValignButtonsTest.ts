@@ -15,29 +15,71 @@ describe('browser.tinymce.plugins.table.ui.TableValignButtonsTest', () => {
 
   context('Test for a single cell selection', () => {
     it('TINY-7477: Check that valign works for Top value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Top', 4, 1, 1, 'vertical-align: top')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Top',
+        checkMarkEntries: 4,
+        rows: 1,
+        columns: 1,
+        customStyle: 'vertical-align: top'
+      })
     );
 
     it('TINY-7477: Check that valign works for Middle value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Middle', 4, 1, 1, 'vertical-align: middle')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Middle',
+        checkMarkEntries: 4,
+        rows: 1,
+        columns: 1,
+        customStyle: 'vertical-align: middle'
+      })
     );
 
     it('TINY-7477: Check that valign works for Bottom value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Bottom', 4, 1, 1, 'vertical-align: bottom')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Bottom',
+        checkMarkEntries: 4,
+        rows: 1,
+        columns: 1,
+        customStyle: 'vertical-align: bottom'
+      })
     );
   });
 
   context('Test for multiple cell selection', () => {
     it('TINY-7477: Check that valign works for Top value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Top', 4, 2, 2, 'vertical-align: top')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Top',
+        checkMarkEntries: 4,
+        rows: 2,
+        columns: 2,
+        customStyle: 'vertical-align: top'
+      })
     );
 
     it('TINY-7477: Check that valign works for Middle value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Middle', 4, 2, 2, 'vertical-align: middle')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Middle',
+        checkMarkEntries: 4,
+        rows: 2,
+        columns: 2,
+        customStyle: 'vertical-align: middle'
+      })
     );
 
     it('TINY-7477: Check that valign works for Bottom value', async () =>
-      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Vertical align', 'Bottom', 4, 2, 2, 'vertical-align: bottom')
+      await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+        menuTitle: 'Vertical align',
+        subMenuTitle: 'Bottom',
+        checkMarkEntries: 4,
+        rows: 2,
+        columns: 2,
+        customStyle: 'vertical-align: bottom'
+      })
     );
   });
 });

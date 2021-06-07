@@ -24,10 +24,24 @@ describe('browser.tinymce.plugins.table.ui.TableBorderWidthTest', () => {
   }, [ Plugin, Theme ], true);
 
   it('TINY-7478: Ensure the table border width adds and removes it as expected with a single cell', async () =>
-    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Border width', '1PX', 2, 1, 1, 'border-width: 1px')
+    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+      menuTitle: 'Border width',
+      subMenuTitle: '1PX',
+      checkMarkEntries: 2,
+      rows: 1,
+      columns: 1,
+      customStyle: 'border-width: 1px'
+    })
   );
 
   it('TINY-7478: Ensure the table border width adds and removes it as expected with multiple cells', async () =>
-    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), 'Border width', '1PX', 2, 2, 2, 'border-width: 1px')
+    await pAssertStyleCanBeToggledOnAndOff(hook.editor(), {
+      menuTitle: 'Border width',
+      subMenuTitle: '1PX',
+      checkMarkEntries: 2,
+      rows: 2,
+      columns: 2,
+      customStyle: 'border-width: 1px'
+    })
   );
 });

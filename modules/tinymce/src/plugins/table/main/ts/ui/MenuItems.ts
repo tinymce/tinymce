@@ -217,9 +217,13 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tableclasss', {
       icon: 'table-classes',
-      getSubmenuItems: () => generateItems(editor, tableClassList, 'tableclass', (item) => item.title, (item) => {
-        editor.execCommand('mceTableToggleClass', false, item.value);
-      }),
+      getSubmenuItems: () => generateItems(
+        editor,
+        tableClassList,
+        'tableclass',
+        (item) => item.title,
+        (item) => editor.execCommand('mceTableToggleClass', false, item.value)
+      ),
       onSetup: selectionTargets.onSetupTable
     });
   }
@@ -228,31 +232,52 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
   if (tableCellClassList.length !== 0) {
     editor.ui.registry.addNestedMenuItem('tablecellclasss', {
       icon: 'table-cell-classes',
-      getSubmenuItems: () => generateItems(editor, tableCellClassList, 'tablecellclass', (item) => item.title, (item) => {
-        editor.execCommand('mceTableCellToggleClass', false, item.value);
-      }),
+      getSubmenuItems: () => generateItems(
+        editor,
+        tableCellClassList,
+        'tablecellclass',
+        (item) => item.title,
+        (item) => editor.execCommand('mceTableCellToggleClass', false, item.value)
+      ),
       onSetup: selectionTargets.onSetupCellOrRow
     });
   }
 
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
-    getSubmenuItems: () => generateItems(editor, verticalAlignValues, 'tablecellverticalalign', (item) => item.text, applyTableCellStyle(editor, 'vertical-align')),
+    getSubmenuItems: () => generateItems(
+      editor,
+      verticalAlignValues,
+      'tablecellverticalalign',
+      (item) => item.text,
+      applyTableCellStyle(editor, 'vertical-align')
+    ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   const tableCellBorderWidthsList = getTableBorderWidths(editor);
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
-    getSubmenuItems: () => generateItems(editor, tableCellBorderWidthsList, 'tablecellborderwidth', (item) => item.title, applyTableCellStyle(editor, 'border-width')),
+    getSubmenuItems: () => generateItems(
+      editor,
+      tableCellBorderWidthsList,
+      'tablecellborderwidth',
+      (item) => item.title,
+      applyTableCellStyle(editor, 'border-width')
+    ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 
   const tableCellBorderStylesList = getTableBorderStyles(editor);
   editor.ui.registry.addNestedMenuItem('tablecellvalign', {
     icon: 'vertical-align',
-
-    getSubmenuItems: () => generateItems(editor, tableCellBorderStylesList, 'tablecellborderstyle', (item) => item.title, applyTableCellStyle(editor, 'border-style')),
+    getSubmenuItems: () => generateItems(
+      editor,
+      tableCellBorderStylesList,
+      'tablecellborderstyle',
+      (item) => item.title,
+      applyTableCellStyle(editor, 'border-style')
+    ),
     onSetup: selectionTargets.onSetupCellOrRow
   });
 };

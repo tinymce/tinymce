@@ -21,7 +21,8 @@ const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
 };
-const defaultCellBorderWidth = Arr.range(5, (i) => {
+
+const defaultCellBorderWidths = Arr.range(5, (i) => {
   const size = `${i + 1}px`;
   return { title: size, value: size };
 });
@@ -50,7 +51,7 @@ const defaultColumnResizingBehaviour = 'preservetable';
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
 
-const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidth, 'array');
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
 const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 

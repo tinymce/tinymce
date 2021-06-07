@@ -5,6 +5,15 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+interface AssertStyleOptions {
+  menuTitle: string;
+  subMenuTitle: string;
+  checkMarkEntries: number;
+  rows: number;
+  columns: number;
+  customStyle: string;
+}
+
 const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number) => {
   const getSelectionStartEnd = (row: number, column: number) => {
     if (row === 0 && column === 0) {
@@ -110,18 +119,18 @@ const pAssertNoCheckmarksInMenu = async (editor: Editor, menuTitle: string, expe
   await pAssertMenuPresence(editor, 'Menu should open, but not have any checkmarks', menuTitle, expected, container);
 };
 
-const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, menuTitle: string, subMenuTitle: string, checkMarkEntries: number, rows: number, columns: number, customStyle: string) => {
+const pAssertStyleCanBeToggledOnAndOff = async (editor: Editor, options: AssertStyleOptions) => {
   const sugarContainer = SugarBody.body();
-  setEditorContentTableAndSelection(editor, rows, columns);
-  await pAssertNoCheckmarksInMenu(editor, menuTitle, checkMarkEntries, sugarContainer);
+  setEditorContentTableAndSelection(editor, options.rows, options.columns);
+  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer);
 
-  await pClickOnSubMenu(editor, menuTitle, Optional.some(subMenuTitle));
-  await pAssertCheckmarkOn(editor, menuTitle, subMenuTitle, checkMarkEntries - 1, sugarContainer);
-  assertStructureHasCustomStyle(editor, rows, columns, customStyle);
+  await pClickOnSubMenu(editor, options.menuTitle, Optional.some(options.subMenuTitle));
+  await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuTitle, options.checkMarkEntries - 1, sugarContainer);
+  assertStructureHasCustomStyle(editor, options.rows, options.columns, options.customStyle);
 
-  await pClickOnSubMenu(editor, menuTitle, Optional.none());
-  await pAssertNoCheckmarksInMenu(editor, menuTitle, checkMarkEntries, sugarContainer);
-  assertStructureIsRestoredToDefault(editor, rows, columns);
+  await pClickOnSubMenu(editor, options.menuTitle, Optional.none());
+  await pAssertNoCheckmarksInMenu(editor, options.menuTitle, options.checkMarkEntries, sugarContainer);
+  assertStructureIsRestoredToDefault(editor, options.rows, options.columns);
 };
 
 export {
