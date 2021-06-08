@@ -61,11 +61,18 @@ const mergeTables = (startAddress: Structs.Address, gridA: Structs.RowCells[], g
 
 const getValidStartAddress = (currentStartAddress: Structs.Address, grid: Structs.RowCells[], lockedColumns: number[]): Structs.Address => {
   const gridColLength = GridRow.cellLength(grid[0]);
+  /*
+    When we paste from a table without colgroups to a table that has them, we need to ensure we are inserting them at
+    the correct row index (the `col`s are treated as cells in the Structs.RowCells array).
+
+    To do this, we get the number of `col`s in the destination table and add that to the startAddress row.
+  */
+  const adjustedRowAddress = GridRow.extractGridDetails(grid).cols.length + currentStartAddress.row;
   const possibleColAddresses = Arr.range(gridColLength - currentStartAddress.column, (num) => num + currentStartAddress.column);
   // Find a starting column address that isn't a locked column
   const validColAddress = Arr.find(possibleColAddresses, (num) => Arr.forall(lockedColumns, (col) => col !== num)).getOr(gridColLength - 1);
   return {
-    ...currentStartAddress,
+    row: adjustedRowAddress,
     column: validColAddress
   };
 };
@@ -76,9 +83,14 @@ const getLockedColumnsWithinBounds = (startAddress: Structs.Address, grid: Struc
 const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: Structs.RowCells[], generator: SimpleGenerators, comparator: (a: SugarElement, b: SugarElement) => boolean): Result<Structs.RowCells[], string> => {
   const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(gridA);
   const validStartAddress = getValidStartAddress(startAddress, gridA, lockedColumns);
-  const lockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridB, lockedColumns);
+  /*
+    We always remove the cols (extract the rows) from the table being pasted. This ensures that if we are pasting from a table with colgroups into a table
+    without them, we don't insert the `col` elements as if they were `td`s
+  */
+  const gridBRows = GridRow.extractGridDetails(gridB).rows;
+  const lockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridBRows, lockedColumns);
 
-  const result = Fitment.measure(validStartAddress, gridA, gridB);
+  const result = Fitment.measure(validStartAddress, gridA, gridBRows);
   /*
     Need to subtract extra delta for locked columns between startAddress and the startAddress + gridB column count as
     locked column cells cannot be merged into. Therefore, extra column cells need to be added to gridA to allow gridB cells to be merged
@@ -93,8 +105,8 @@ const merge = (startAddress: Structs.Address, gridA: Structs.RowCells[], gridB: 
 
     // Need to recalculate lockedColumnsWithinBounds as tailoring may have inserted columns before last locked column which changes the locked index
     const newLockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(fittedGrid);
-    const newLockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridB, newLockedColumns);
-    return mergeTables(validStartAddress, fittedGrid, gridB, generator, comparator, newLockedColumnsWithinBounds);
+    const newLockedColumnsWithinBounds = getLockedColumnsWithinBounds(validStartAddress, gridBRows, newLockedColumns);
+    return mergeTables(validStartAddress, fittedGrid, gridBRows, generator, comparator, newLockedColumnsWithinBounds);
   });
 };
 
