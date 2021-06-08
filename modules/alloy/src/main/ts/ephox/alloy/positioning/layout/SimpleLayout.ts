@@ -45,6 +45,7 @@ const go = (anchorBox: LayoutTypes.AnchorBox, element: SugarElement, bubble: Bub
   const decision = Callouts.layout(anchorBox, element, bubble, options);
 
   Callouts.position(element, decision, options);
+  Callouts.setPlacement(element, decision);
   Callouts.setClasses(element, decision);
   Callouts.setHeight(element, decision, options);
   Callouts.setWidth(element, decision, options);

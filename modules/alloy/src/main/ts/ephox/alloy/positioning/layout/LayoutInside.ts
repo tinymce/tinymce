@@ -1,8 +1,10 @@
+import { SugarElement } from '@ephox/sugar';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+import * as Placement from './Placement';
 
 /*
   Layouts for things that overlay over the anchor element/box. These are designed to mirror
@@ -11,6 +13,8 @@ import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
   As an example `Layout.north` will appear horizontally centered above the anchor, whereas
   `LayoutInside.north` will appear horizontally centered overlapping the top of the anchor.
  */
+
+const labelPrefix = 'layout-inner';
 
 // returns left edge of anchor - used to display element to the left, left edge against the anchor
 const westEdgeX = (anchor: AnchorBox): number => anchor.x;
@@ -36,8 +40,9 @@ const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor, element),
   bubbles.innerSouthwest(),
   Direction.northwest(),
+  Placement.southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'layout-inner-sw'
+  labelPrefix
 );
 
 // positions element relative to the bottom left of the anchor
@@ -46,8 +51,9 @@ const southeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   southY(anchor, element),
   bubbles.innerSoutheast(),
   Direction.northeast(),
+  Placement.southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'layout-inner-se'
+  labelPrefix
 );
 
 // positions element relative to the top right of the anchor
@@ -56,8 +62,9 @@ const northwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor),
   bubbles.innerNorthwest(),
   Direction.southwest(),
+  Placement.northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
-  'layout-inner-nw'
+  labelPrefix
 );
 
 // positions element relative to the top left of the anchor
@@ -66,8 +73,9 @@ const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
   northY(anchor),
   bubbles.innerNortheast(),
   Direction.southeast(),
+  Placement.northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
-  'layout-inner-ne'
+  labelPrefix
 );
 
 // positions element relative to the top of the anchor, horizontally centered
@@ -76,8 +84,10 @@ const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   northY(anchor),
   bubbles.innerNorth(),
   Direction.south(),
+  Placement.north,
   boundsRestriction(anchor, { top: AnchorBoxBounds.TopEdge }),
-  'layout-inner-n');
+  labelPrefix
+);
 
 // positions element relative to the bottom of the anchor, horizontally centered
 const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -85,8 +95,9 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
   southY(anchor, element),
   bubbles.innerSouth(),
   Direction.north(),
+  Placement.south,
   boundsRestriction(anchor, { bottom: AnchorBoxBounds.BottomEdge }),
-  'layout-inner-s'
+  labelPrefix
 );
 
 // positions element with the right edge against the anchor, vertically centered
@@ -95,8 +106,10 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.innerEast(),
   Direction.west(),
+  Placement.east,
   boundsRestriction(anchor, { right: AnchorBoxBounds.RightEdge }),
-  'layout-inner-e');
+  labelPrefix
+);
 
 // positions element with the left each against the anchor, vertically centered
 const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -104,13 +117,45 @@ const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
   centreY(anchor, element),
   bubbles.innerWest(),
   Direction.east(),
+  Placement.west,
   boundsRestriction(anchor, { left: AnchorBoxBounds.LeftEdge }),
-  'layout-inner-w'
+  labelPrefix
 );
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest, south, north, east, west ];
-
 const allRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast, south, north, east, west ];
+
+const lookupPreserveLayout = (lastPlacement: Placement.Placement) => {
+  switch (lastPlacement) {
+    case Placement.north:
+      return north;
+    case Placement.northeast:
+      return northeast;
+    case Placement.northwest:
+      return northwest;
+    case Placement.south:
+      return south;
+    case Placement.southeast:
+      return southeast;
+    case Placement.southwest:
+      return southwest;
+    case Placement.east:
+      return east;
+    case Placement.west:
+      return west;
+  }
+};
+
+const preserve: AnchorLayout = (
+  anchor: AnchorBox,
+  element: AnchorElement,
+  bubbles: Bubble,
+  placee: SugarElement<HTMLElement>
+) => {
+  const lastPlacement = Placement.getPlacement(placee).getOr(Placement.north);
+  const layout = lookupPreserveLayout(lastPlacement);
+  return layout(anchor, element, bubbles, placee);
+};
 
 export {
   southeast,
@@ -122,5 +167,6 @@ export {
   east,
   west,
   all,
-  allRtl
+  allRtl,
+  preserve
 };

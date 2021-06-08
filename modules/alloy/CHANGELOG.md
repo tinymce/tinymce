@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Added new `focus` property to the `Blocking` behaviour config.
+- Added a new `preserve` option to `LayoutInside` which will preserve the previous placement inside the component.
+- Added the `alwaysFit` layout property which allows for the layout to specify if it should always fit, no matter what.
 
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.

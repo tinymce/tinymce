@@ -2,12 +2,15 @@ import { nu as NuSpotInfo } from '../view/SpotInfo';
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';
+import * as Placement from './Placement';
 
 /*
   Layout for submenus;
   Either left or right of the anchor menu item. Never above or below.
   Aligned to the top or bottom of the anchor as appropriate.
  */
+
+const labelPrefix = 'link-layout';
 
 // display element to the right, left edge against the right of the menu
 const eastX = (anchor: AnchorBox): number => anchor.x + anchor.width;
@@ -26,16 +29,19 @@ const southeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   southY(anchor),
   bubbles.southeast(),
   Direction.southeast(),
+  Placement.southeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, top: AnchorBoxBounds.TopEdge }),
-  'link-layout-se');
+  labelPrefix
+);
 
 const southwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   westX(anchor, element),
   southY(anchor),
   bubbles.southwest(),
   Direction.southwest(),
+  Placement.southwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, top: AnchorBoxBounds.TopEdge }),
-  'link-layout-sw'
+  labelPrefix
 );
 
 const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -43,8 +49,9 @@ const northeast: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   northY(anchor, element),
   bubbles.northeast(),
   Direction.northeast(),
+  Placement.northeast,
   boundsRestriction(anchor, { left: AnchorBoxBounds.RightEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'link-layout-ne'
+  labelPrefix
 );
 
 const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
@@ -52,12 +59,12 @@ const northwest: AnchorLayout = (anchor, element, bubbles) => NuSpotInfo(
   northY(anchor, element),
   bubbles.northwest(),
   Direction.northwest(),
+  Placement.northwest,
   boundsRestriction(anchor, { right: AnchorBoxBounds.LeftEdge, bottom: AnchorBoxBounds.BottomEdge }),
-  'link-layout-nw'
+  labelPrefix
 );
 
 const all = (): AnchorLayout[] => [ southeast, southwest, northeast, northwest ];
-
 const allRtl = (): AnchorLayout[] => [ southwest, southeast, northwest, northeast ];
 
 export {

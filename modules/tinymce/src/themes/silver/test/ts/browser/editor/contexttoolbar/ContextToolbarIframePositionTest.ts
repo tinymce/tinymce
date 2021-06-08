@@ -219,4 +219,32 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
     await UiFinder.pWaitForHidden('Waiting for toolbar to be hidden', SugarBody.body(), '.tox-pop');
     Css.remove(TinyDom.container(editor), 'margin-bottom');
   });
+
+  it('TINY-7545: Context toolbar preserves the previous position when scrolling top to bottom and back', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<p style="padding-top: 200px"></p>' +
+      `<p><img src="${getGreenImageDataUrl()}" style="height: 500px; width: 100px"></p>` +
+      '<p style="padding-top: 200px"></p>'
+    );
+    TinySelections.select(editor, 'img', []);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top outside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
+    await pAssertPosition('bottom', 111);
+
+    scrollTo(editor, 0, 400);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the top inside content', SugarBody.body(), '.tox-pop.tox-pop--top');
+    await pAssertPosition('top', -309);
+
+    // Note: Can't wait for the anchor classes here as they will remain the same
+    scrollTo(editor, 0, 700);
+    await pAssertPosition('top', -234);
+
+    scrollTo(editor, 0, 400);
+    await UiFinder.pWaitForVisible('Waiting for toolbar to appear at the bottom inside content', SugarBody.body(), '.tox-pop.tox-pop--bottom');
+    await pAssertPosition('bottom', 12);
+
+    // Note: Can't wait for the anchor classes here as they will remain the same
+    scrollTo(editor, 0, 0);
+    await pAssertPosition('bottom', 111);
+  });
 });
