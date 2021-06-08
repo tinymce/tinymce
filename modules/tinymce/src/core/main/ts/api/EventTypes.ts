@@ -101,6 +101,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'ProgressState': ProgressStateEvent;
   'AfterProgressState': AfterProgressStateEvent;
   'PlaceholderToggle': PlaceholderToggleEvent;
+  'ViewUpdate': { };
   'tap': TouchEvent;
   'longpress': TouchEvent;
   'longpresscancel': { };

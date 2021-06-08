@@ -20,7 +20,7 @@ const setup = (editor: Editor, api: WordCountApi, delay: number) => {
   editor.on('init', () => {
     updateCount(editor, api);
     Delay.setEditorTimeout(editor, () => {
-      editor.on('SetContent BeforeAddUndo Undo Redo keyup', debouncedUpdate);
+      editor.on('SetContent BeforeAddUndo Undo Redo ViewUpdate keyup', debouncedUpdate);
     }, 0);
   });
 };
