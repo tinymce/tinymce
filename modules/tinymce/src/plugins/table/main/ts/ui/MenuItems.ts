@@ -275,7 +275,7 @@ const addMenuItems = (editor: Editor, selectionTargets: SelectionTargets, clipbo
       editor,
       tableCellBorderStylesList,
       'tablecellborderstyle',
-      (item) => item.title,
+      (item) => item.text,
       applyTableCellStyle(editor, 'border-style')
     ),
     onSetup: selectionTargets.onSetupCellOrRow

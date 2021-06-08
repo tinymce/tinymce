@@ -234,7 +234,7 @@ const addButtons = (editor: Editor, selectionTargets: SelectionTargets, clipboar
       editor,
       tableCellBorderStylesList,
       'tablecellborderstyle',
-      (item) => item.title,
+      (item) => item.text,
       applyTableCellStyle(editor, 'border-style')
     ),
     onSetup: selectionTargets.onSetupCellOrRow

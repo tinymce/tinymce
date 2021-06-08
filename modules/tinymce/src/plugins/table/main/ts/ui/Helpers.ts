@@ -142,53 +142,6 @@ const getSharedValues = <T>(data: Array<T>) => {
   return baseData;
 };
 
-const getAdvancedTab = (dialogName: 'table' | 'row' | 'cell') => {
-  const advTabItems: Dialog.BodyComponentSpec[] = [
-    {
-      name: 'borderstyle',
-      type: 'listbox',
-      label: 'Border style',
-      items: [
-        { text: 'Select...', value: '' },
-        { text: 'Solid', value: 'solid' },
-        { text: 'Dotted', value: 'dotted' },
-        { text: 'Dashed', value: 'dashed' },
-        { text: 'Double', value: 'double' },
-        { text: 'Groove', value: 'groove' },
-        { text: 'Ridge', value: 'ridge' },
-        { text: 'Inset', value: 'inset' },
-        { text: 'Outset', value: 'outset' },
-        { text: 'None', value: 'none' },
-        { text: 'Hidden', value: 'hidden' }
-      ]
-    },
-    {
-      name: 'bordercolor',
-      type: 'colorinput',
-      label: 'Border color'
-    },
-    {
-      name: 'backgroundcolor',
-      type: 'colorinput',
-      label: 'Background color'
-    }
-  ];
-
-  const borderWidth: Dialog.InputSpec = {
-    name: 'borderwidth',
-    type: 'input',
-    label: 'Border width'
-  };
-
-  const items = dialogName === 'cell' ? ([ borderWidth ] as Dialog.BodyComponentSpec[]).concat(advTabItems) : advTabItems;
-
-  return {
-    title: 'Advanced',
-    name: 'advanced',
-    items
-  };
-};
-
 // The extractDataFrom... functions are in this file partly for code reuse and partly so we can test them,
 // because some of these are crazy complicated
 
@@ -307,5 +260,5 @@ const extractDataFromCellElement = (editor: Editor, cell: HTMLTableCellElement, 
   };
 };
 
-export { buildListItems, extractAdvancedStyles, getSharedValues, getAdvancedTab, extractDataFromTableElement, extractDataFromRowElement, extractDataFromCellElement, extractDataFromSettings };
+export { buildListItems, extractAdvancedStyles, getSharedValues, extractDataFromTableElement, extractDataFromRowElement, extractDataFromCellElement, extractDataFromSettings };
 

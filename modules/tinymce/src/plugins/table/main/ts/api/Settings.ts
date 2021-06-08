@@ -13,6 +13,8 @@ export interface StringMap {
 }
 
 export type ClassList = Array<{title: string; value: string}>;
+export type TextList = Array<{text: string; value: string}>;
+
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
@@ -27,8 +29,8 @@ const defaultCellBorderWidths = Arr.range(5, (i) => {
   return { title: size, value: size };
 });
 
-const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dashed', 'Dotted', 'Double' ], (type) => {
-  return { title: type, value: type.toLowerCase() };
+const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double', 'Groove', 'Ridge', 'Inset', 'Outset', 'None', 'Hidden' ], (type) => {
+  return { text: type, value: type.toLowerCase() };
 });
 
 const determineDefaultStyles = (editor: Editor) => {
@@ -53,7 +55,7 @@ const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.ge
 
 const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
-const getTableBorderStyles = (editor: Editor): ClassList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
+const getTableBorderStyles = (editor: Editor): TextList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
