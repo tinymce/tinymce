@@ -9,7 +9,7 @@ const narrow = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T,
 const exclude = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T, fields: F): Omit<T, F[number]> =>
   ObjChanger.exclude(obj, fields);
 
-const wrap = <V>(key: string, value: V): { [key: string]: V } =>
+const wrap = <V>(key: string, value: V): Record<string, V> =>
   ObjWriter.wrap(key, value);
 
 const wrapAll = <K extends string | number, T>(keyvalues: Array<{ key: K; value: T }>): Record<K, T> =>

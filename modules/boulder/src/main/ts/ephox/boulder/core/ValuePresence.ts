@@ -6,25 +6,19 @@ export const enum ValueType {
   State = 'state'
 }
 
-interface FieldData {
+export interface FieldProcessorData {
+  readonly tag: ValueType.Field;
   readonly key: string;
   readonly newKey: string;
   readonly presence: FieldPresence.FieldPresenceTypes;
   readonly prop: Processor;
 }
 
-interface StateData {
+export interface StateProcessorData {
+  readonly tag: ValueType.State;
   readonly newKey: string;
   readonly instantiator: (obj: any) => unknown;
 }
-
-interface ValuePresenceData<D extends ValueType, T> {
-  readonly tag: D;
-  readonly data: T;
-}
-
-export type FieldProcessorData = ValuePresenceData<ValueType.Field, FieldData>;
-export type StateProcessorData = ValuePresenceData<ValueType.State, StateData>;
 
 export type ValueProcessorTypes = FieldProcessorData | StateProcessorData;
 
@@ -37,10 +31,9 @@ const state = (newKey: string, instantiator: (obj: any) => any): StateProcessorD
 
 const fold = <T>(value: ValueProcessorTypes, ifField: FieldValueProcessor<T>, ifState: StateValueProcessor<T>): T => {
   switch (value.tag) {
-    case ValueType.Field: {
+    case ValueType.Field:
       const data = value.data;
       return ifField(data.key, data.newKey, data.presence, data.prop);
-    }
     case ValueType.State:
       return ifState(value.data.newKey, value.data.instantiator);
   }

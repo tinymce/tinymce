@@ -140,13 +140,13 @@ const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefi
 const objOfOnly = (fields: ValuePresence.ValueProcessorTypes[]): Processor => {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValuePresence.ValueProcessorTypes, Record<string, string>>(fields, (acc, value: ValuePresence.ValueProcessorTypes) => {
+  const fieldNames = Arr.foldr(fields, (acc, value) => {
     return ValuePresence.fold(
       value,
       (key) => Merger.deepMerge(acc, Objects.wrap(key, true)),
       Fun.constant(acc)
     );
-  }, {});
+  }, {} as Record<string, boolean>);
 
   const extract = (path, o) => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
