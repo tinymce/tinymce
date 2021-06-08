@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
+- Word count was not updated when editor content has been changed by remote part #TINY-7168
 
 ## 5.8.1 - 2021-05-20
 
