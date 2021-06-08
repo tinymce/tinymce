@@ -13,11 +13,11 @@ describe('browser.tinymce.plugins.table.ui.TableBorderStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     table_border_styles: [
       {
-        title: 'Solid',
+        text: 'Solid',
         value: 'solid'
       },
       {
-        title: 'None',
+        text: 'None',
         value: ''
       },
     ]
