@@ -13,7 +13,7 @@ export interface StringMap {
 }
 
 export type ClassList = Array<{title: string; value: string}>;
-export type TextList = Array<{text: string; value: string}>;
+export type MenuItemList = Array<{text: string; value: string}>;
 
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
@@ -55,7 +55,7 @@ const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.ge
 
 const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
 
-const getTableBorderStyles = (editor: Editor): TextList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
+const getTableBorderStyles = (editor: Editor): MenuItemList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');

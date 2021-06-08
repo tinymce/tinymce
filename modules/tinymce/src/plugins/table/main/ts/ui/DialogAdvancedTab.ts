@@ -29,9 +29,9 @@ const getAdvancedTab = (editor: Editor, dialogName: 'table' | 'row' | 'cell') =>
       name: 'borderstyle',
       type: 'listbox',
       label: 'Border style',
-      items: getTableBorderStyles(editor).concat([
+      items: [
         { text: 'Select...', value: '' },
-      ])
+      ].concat(getTableBorderStyles(editor))
     },
     {
       name: 'bordercolor',
