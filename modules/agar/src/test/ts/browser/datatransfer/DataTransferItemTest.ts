@@ -2,7 +2,9 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { createFile } from 'ephox/agar/api/Files';
-import { Logger, Pipeline, Step } from 'ephox/agar/api/Main';
+import * as Logger from 'ephox/agar/api/Logger';
+import { Pipeline } from 'ephox/agar/api/Pipeline';
+import { Step } from 'ephox/agar/api/Step';
 import { createDataTransfer } from 'ephox/agar/datatransfer/DataTransfer';
 import { createDataTransferItemFromFile, createDataTransferItemFromString, getData } from 'ephox/agar/datatransfer/DataTransferItem';
 

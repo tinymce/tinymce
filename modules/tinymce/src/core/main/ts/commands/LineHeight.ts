@@ -10,7 +10,7 @@ import { Compare, Css, SugarElement, TransformFind } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import { mapRange } from '../selection/RangeMap';
 
-export const lineHeightQuery = (editor: Editor) => mapRange(editor, (elm) => {
+export const lineHeightQuery = (editor: Editor): string => mapRange(editor, (elm) => {
   const root = SugarElement.fromDom(editor.getBody());
 
   const specifiedStyle = TransformFind.closest(elm, (elm) => Css.getRaw(elm, 'line-height'), Fun.curry(Compare.eq, root));
@@ -24,7 +24,7 @@ export const lineHeightQuery = (editor: Editor) => mapRange(editor, (elm) => {
   return specifiedStyle.getOrThunk(computedStyle);
 }).getOr('');
 
-export const lineHeightAction = (editor: Editor, lineHeight: number) => {
+export const lineHeightAction = (editor: Editor, lineHeight: number): void => {
   editor.formatter.toggle('lineheight', { value: String(lineHeight) });
   editor.nodeChanged();
 };

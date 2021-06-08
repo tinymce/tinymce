@@ -20,12 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a new `mceTableCellToggleClass` command which toggles the provided class on the currently selected table cells #TINY-7476
 
 ### Fixed
+- `editor.fire` was incorrectly mutating the original `args` provided #TINY-3254
+- The `SetContent` event contained the incorrect `content` when using the `editor.selection.setContent()` API #TINY-3254
 - The editor content could be edited after calling `setProgressState(true)` in iframe mode #TINY-7373
 - Tabbing out of the editor after calling `setProgressState(true)` was inconsistent in iframe mode #TINY-7373
 - Flash of unstyled content while loading the editor because the content css was loaded after the editor content was rendered #TINY-7249
 - Unbinding an event handler did not take effect immediately while the event was firing #TINY-7436
 - Binding an event handler incorrectly took effect immediately while the event was firing #TINY-7436
 - Partially transparent RGBA values provided in the `color_map` setting were given the wrong hex value #TINY-7163
+- Fixed an issue when pasting cells from tables containing `colgroup`s into tables without `colgroup`s #TINY-6675
 - Word count was not updated when editor content has been changed by remote part #TINY-7168
 
 ## 5.8.1 - 2021-05-20

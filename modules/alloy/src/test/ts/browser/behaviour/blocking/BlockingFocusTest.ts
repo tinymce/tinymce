@@ -4,10 +4,10 @@ import { Fun } from '@ephox/katamari';
 import { SugarDocument, SugarElement } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Blocking } from 'ephox/alloy/api/behaviour/Blocking';
+import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import { Focusing } from 'ephox/alloy/api/Main';
 import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { TestStore } from 'ephox/alloy/api/testhelpers/TestHelpers';
 

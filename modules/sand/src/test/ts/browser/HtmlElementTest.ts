@@ -1,5 +1,5 @@
 import { assert, UnitTest } from '@ephox/bedrock-client';
-import { SandHTMLElement } from 'ephox/sand/api/Main';
+import * as SandHTMLElement from 'ephox/sand/api/SandHTMLElement';
 
 UnitTest.test('HtmlElementTest', () => {
   const span = document.createElement('div');

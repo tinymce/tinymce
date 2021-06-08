@@ -21,9 +21,10 @@ import { Content, SetContentArgs } from './ContentTypes';
 
 const defaultFormat = 'html';
 
-const isTreeNode = (content: any): content is AstNode => content instanceof AstNode;
+const isTreeNode = (content: unknown): content is AstNode =>
+  content instanceof AstNode;
 
-const moveSelection = (editor: Editor) => {
+const moveSelection = (editor: Editor): void => {
   if (EditorFocus.hasFocus(editor)) {
     CaretFinder.firstPositionIn(editor.getBody()).each((pos) => {
       const node = pos.getNode();
@@ -33,18 +34,16 @@ const moveSelection = (editor: Editor) => {
   }
 };
 
-const setEditorHtml = (editor: Editor, html: string) => {
+const setEditorHtml = (editor: Editor, html: string): void => {
   editor.dom.setHTML(editor.getBody(), html);
   moveSelection(editor);
 };
 
 const setContentString = (editor: Editor, body: HTMLElement, content: string, args: SetContentArgs): string => {
-  let forcedRootBlockName, padd;
-
   // Padd empty content in Gecko and Safari. Commands will otherwise fail on the content
   // It will also be impossible to place the caret in the editor unless there is a BR element present
   if (content.length === 0 || /^\s+$/.test(content)) {
-    padd = '<br data-mce-bogus="1">';
+    const padd = '<br data-mce-bogus="1">';
 
     // Todo: There is a lot more root elements that need special padding
     // so separate this and add all of them at some point.
@@ -54,7 +53,7 @@ const setContentString = (editor: Editor, body: HTMLElement, content: string, ar
       content = '<li>' + padd + '</li>';
     }
 
-    forcedRootBlockName = Settings.getForcedRootBlock(editor);
+    const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
     // Check if forcedRootBlock is configured and that the block is a valid child of the body
     if (forcedRootBlockName && editor.schema.isValidChild(body.nodeName.toLowerCase(), forcedRootBlockName.toLowerCase())) {
@@ -104,20 +103,19 @@ const setContentTree = (editor: Editor, body: HTMLElement, content: AstNode, arg
 };
 
 export const setContentInternal = (editor: Editor, content: Content, args: SetContentArgs): Content => {
-  args.format = args.format ? args.format : defaultFormat;
-  args.set = true;
-  args.content = isTreeNode(content) ? '' : content;
-
-  if (!args.no_events) {
-    editor.fire('BeforeSetContent', args);
-  }
+  const updatedArgs = args.no_events ? args : editor.fire('BeforeSetContent', {
+    format: defaultFormat,
+    ...args,
+    set: true,
+    content: isTreeNode(content) ? '' : content
+  });
 
   if (!isTreeNode(content)) {
-    content = args.content;
+    content = updatedArgs.content;
   }
 
   return Optional.from(editor.getBody()).fold(
     Fun.constant(content),
-    (body) => isTreeNode(content) ? setContentTree(editor, body, content, args) : setContentString(editor, body, content, args)
+    (body) => isTreeNode(content) ? setContentTree(editor, body, content, updatedArgs) : setContentString(editor, body, content, updatedArgs)
   );
 };
