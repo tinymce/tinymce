@@ -86,28 +86,30 @@ const getSerializedContent = (editor: Editor, args: GetSelectionContentArgs): Co
 };
 
 export const getSelectedContentInternal = (editor: Editor, format: ContentFormat, args: GetSelectionContentArgs = {}): Content => {
-  args.get = true;
-  args.format = format;
-  args.selection = true;
+  const updatedArgs = editor.fire('BeforeGetContent', {
+    ...args,
+    format,
+    get: true,
+    selection: true
+  });
 
-  args = editor.fire('BeforeGetContent', args);
-  if (args.isDefaultPrevented()) {
-    editor.fire('GetContent', args);
-    return args.content;
+  if (updatedArgs.isDefaultPrevented()) {
+    editor.fire('GetContent', updatedArgs);
+    return updatedArgs.content;
   }
 
-  if (args.format === 'text') {
+  if (updatedArgs.format === 'text') {
     return getTextContent(editor);
   } else {
-    args.getInner = true;
-    const content = getSerializedContent(editor, args);
+    updatedArgs.getInner = true;
+    const content = getSerializedContent(editor, updatedArgs);
 
-    if (args.format === 'tree') {
+    if (updatedArgs.format === 'tree') {
       return content;
     } else {
-      args.content = editor.selection.isCollapsed() ? '' : content as string;
-      editor.fire('GetContent', args);
-      return args.content;
+      updatedArgs.content = editor.selection.isCollapsed() ? '' : content as string;
+      editor.fire('GetContent', updatedArgs);
+      return updatedArgs.content;
     }
   }
 };

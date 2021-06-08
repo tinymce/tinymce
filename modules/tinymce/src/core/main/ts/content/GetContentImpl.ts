@@ -23,38 +23,36 @@ const trimEmptyContents = (editor: Editor, html: string): string => {
 };
 
 const getContentFromBody = (editor: Editor, args: GetContentArgs, format: ContentFormat, body: HTMLElement): Content => {
-  let content;
+  const updatedArgs = args.no_events ? args : editor.fire('BeforeGetContent', {
+    ...args,
+    format,
+    get: true,
+    getInner: true
+  });
 
-  args.format = format;
-  args.get = true;
-  args.getInner = true;
-
-  if (!args.no_events) {
-    editor.fire('BeforeGetContent', args);
-  }
-
-  if (args.format === 'raw') {
+  let content: string;
+  if (updatedArgs.format === 'raw') {
     content = Tools.trim(TrimHtml.trimExternal(editor.serializer, body.innerHTML));
-  } else if (args.format === 'text') {
+  } else if (updatedArgs.format === 'text') {
     // return empty string for text format when editor is empty to avoid bogus elements being returned in content
     content = editor.dom.isEmpty(body) ? '' : Zwsp.trim(body.innerText || body.textContent);
-  } else if (args.format === 'tree') {
-    content = editor.serializer.serialize(body, args);
+  } else if (updatedArgs.format === 'tree') {
+    content = editor.serializer.serialize(body, updatedArgs);
   } else {
-    content = trimEmptyContents(editor, editor.serializer.serialize(body, args));
+    content = trimEmptyContents(editor, editor.serializer.serialize(body, updatedArgs));
   }
 
-  if (!Arr.contains([ 'text', 'tree' ], args.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
-    args.content = Tools.trim(content);
+  if (!Arr.contains([ 'text', 'tree' ], updatedArgs.format) && !isWsPreserveElement(SugarElement.fromDom(body))) {
+    updatedArgs.content = Tools.trim(content);
   } else {
-    args.content = content;
+    updatedArgs.content = content;
   }
 
-  if (!args.no_events) {
-    editor.fire('GetContent', args);
+  if (updatedArgs.no_events) {
+    return updatedArgs.content;
+  } else {
+    return editor.fire('GetContent', updatedArgs).content;
   }
-
-  return args.content;
 };
 
 export const getContentInternal = (editor: Editor, args: GetContentArgs, format: ContentFormat): Content => Optional.from(editor.getBody())

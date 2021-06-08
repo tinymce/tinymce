@@ -10,7 +10,6 @@ import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import BookmarkManager from '../api/dom/BookmarkManager';
 import Editor from '../api/Editor';
 import HtmlSerializer from '../api/html/Serializer';
-import { EditorEvent } from '../api/util/EventDispatcher';
 import CaretPosition from '../caret/CaretPosition';
 import { SetContentArgs } from '../content/ContentTypes';
 import * as MergeText from '../delete/MergeText';
@@ -113,28 +112,30 @@ const cleanContent = (editor: Editor, args: SelectionSetContentArgs) => {
 };
 
 const setContent = (editor: Editor, content: string, args: SelectionSetContentArgs = {}) => {
-  // Note: Need to cast as an EditorEvent due to reusing the variable for the editor.fire() return value
-  let contentArgs = setupArgs(args, content) as EditorEvent<SelectionSetContentArgs>;
+  const contentArgs = setupArgs(args, content);
 
+  let updatedArgs = contentArgs;
   if (!contentArgs.no_events) {
-    contentArgs = editor.fire('BeforeSetContent', contentArgs);
-    if (contentArgs.isDefaultPrevented()) {
-      editor.fire('SetContent', contentArgs);
+    const eventArgs = editor.fire('BeforeSetContent', contentArgs);
+    if (eventArgs.isDefaultPrevented()) {
+      editor.fire('SetContent', eventArgs);
       return;
+    } else {
+      updatedArgs = eventArgs;
     }
   }
 
   // Sanitize the content
-  args.content = cleanContent(editor, contentArgs);
+  updatedArgs.content = cleanContent(editor, updatedArgs);
 
   const rng = editor.selection.getRng();
-  rngSetContent(rng, rng.createContextualFragment(args.content));
+  rngSetContent(rng, rng.createContextualFragment(updatedArgs.content));
   editor.selection.setRng(rng);
 
   ScrollIntoView.scrollRangeIntoView(editor, rng);
 
-  if (!contentArgs.no_events) {
-    editor.fire('SetContent', contentArgs);
+  if (!updatedArgs.no_events) {
+    editor.fire('SetContent', updatedArgs);
   }
 };
 
