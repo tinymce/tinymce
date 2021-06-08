@@ -6,3 +6,4 @@ agar@5.4.0
 alloy@8.3.0
 mcagar@6.2.0
 robin@8.1.0
+snooker@8.0.4
