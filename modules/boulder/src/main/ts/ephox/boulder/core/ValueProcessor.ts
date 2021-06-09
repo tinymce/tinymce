@@ -63,29 +63,29 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
         });
       };
 
-      switch (presence.discriminator) {
-        case FieldPresence.FieldTypes.Strict:
+      switch (presence.tag) {
+        case FieldPresence.FieldType.Strict:
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
           );
-        case FieldPresence.FieldTypes.DefaultedThunk:
+        case FieldPresence.FieldType.DefaultedThunk:
           return SimpleResult.bind(
-            fallbackAccess(obj, key, presence.callback),
+            fallbackAccess(obj, key, presence.process),
             bundle
           );
-        case FieldPresence.FieldTypes.AsOption:
+        case FieldPresence.FieldType.Option:
           return SimpleResult.bind(
             optionAccess(obj, key),
             bundleAsOption
           );
-        case FieldPresence.FieldTypes.AsDefaultedOptionThunk:
+        case FieldPresence.FieldType.DefaultedOptionThunk:
           return SimpleResult.bind(
-            optionDefaultedAccess(obj, key, presence.callback),
+            optionDefaultedAccess(obj, key, presence.process),
             bundleAsOption
           );
-        case FieldPresence.FieldTypes.MergeWithThunk: {
-          const base = presence.callback(obj);
+        case FieldPresence.FieldType.MergeWithThunk: {
+          const base = presence.process(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
             (v) => Merger.deepMerge(base, v)
@@ -139,13 +139,13 @@ const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefi
 const objOfOnly = (fields: ValuePresence.ValueProcessor[]): Processor => {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValuePresence.ValueProcessor, Record<string, string>>(fields, (acc, value: ValuePresence.ValueProcessor) => {
+  const fieldNames = Arr.foldr(fields, (acc, value) => {
     return ValuePresence.fold(
       value,
       (key) => Merger.deepMerge(acc, Objects.wrap(key, true)),
       Fun.constant(acc)
     );
-  }, {});
+  }, {} as Record<string, boolean>);
 
   const extract = (path, o) => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);

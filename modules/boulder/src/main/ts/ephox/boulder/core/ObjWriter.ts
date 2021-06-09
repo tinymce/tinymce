@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-const wrap = <V>(key: string, value: V): { [key: string]: V} => ({ [key]: value });
+const wrap = <V>(key: string, value: V): Record<string, V> => ({ [key]: value });
 
 const wrapAll = <K extends string | number, T>(keyvalues: Array<{ key: K; value: T }>): Record<K, T> => {
   const r = {} as Record<K, T>;

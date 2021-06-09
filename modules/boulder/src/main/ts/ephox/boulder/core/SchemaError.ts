@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 import { formatObj } from '../format/PrettyPrinter';
 
@@ -31,7 +32,7 @@ const unsupportedFields = <T>(path: string[], unsupported: string[]): SimpleResu
 };
 
 const custom = <T>(path: string[], err: string): SimpleResult<SchemaError[], T> => {
-  return nu(path, () => err);
+  return nu(path, Fun.constant(err));
 };
 
 const toString = (error: SchemaError): string => {
