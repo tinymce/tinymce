@@ -9,31 +9,31 @@ const validateEnum = (values) => ValueSchema.valueOf((value) => Arr.contains(val
   Result.value(value) :
   Result.error(`Unsupported value: "${value}", choose one of "${values.join(', ')}".`));
 
-const strict = (key: string): ValuePresence.ValueProcessorTypes =>
+const strict = (key: string): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.strict(), anyValue());
 
-const strictOf = (key: string, schema: Processor): ValuePresence.ValueProcessorTypes =>
+const strictOf = (key: string, schema: Processor): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.strict(), schema);
 
-const strictNumber = (key: string): ValuePresence.ValueProcessorTypes =>
+const strictNumber = (key: string): ValuePresence.ValueProcessor =>
   strictOf(key, ValueSchema.number);
 
-const strictString = (key: string): ValuePresence.ValueProcessorTypes =>
+const strictString = (key: string): ValuePresence.ValueProcessor =>
   strictOf(key, ValueSchema.string);
 
-const strictStringEnum = (key: string, values: string[]): ValuePresence.ValueProcessorTypes =>
+const strictStringEnum = (key: string, values: string[]): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.strict(), validateEnum(values));
 
-const strictBoolean = (key: string): ValuePresence.ValueProcessorTypes =>
+const strictBoolean = (key: string): ValuePresence.ValueProcessor =>
   strictOf(key, ValueSchema.boolean);
 
-const strictFunction = (key: string): ValuePresence.ValueProcessorTypes =>
+const strictFunction = (key: string): ValuePresence.ValueProcessor =>
   strictOf(key, ValueSchema.func);
 
-const strictPostMsg = (key: string): ValuePresence.ValueProcessorTypes =>
+const strictPostMsg = (key: string): ValuePresence.ValueProcessor =>
   strictOf(key, ValueSchema.postMessageable);
 
-const forbid = (key: string, message: string): ValuePresence.ValueProcessorTypes =>
+const forbid = (key: string, message: string): ValuePresence.ValueProcessor =>
   ValuePresence.field(
     key,
     key,
@@ -41,10 +41,10 @@ const forbid = (key: string, message: string): ValuePresence.ValueProcessorTypes
     value((_v) => SimpleResult.serror('The field: ' + key + ' is forbidden. ' + message))
   );
 
-const strictObjOf = (key: string, objSchema: ValuePresence.ValueProcessorTypes[]): ValuePresence.ValueProcessorTypes =>
+const strictObjOf = (key: string, objSchema: ValuePresence.ValueProcessor[]): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.strict(), objOf(objSchema));
 
-const strictArrayOfObj = (key: string, objFields: any[]): ValuePresence.ValueProcessorTypes =>
+const strictArrayOfObj = (key: string, objFields: any[]): ValuePresence.ValueProcessor =>
   ValuePresence.field(
     key,
     key,
@@ -52,7 +52,7 @@ const strictArrayOfObj = (key: string, objFields: any[]): ValuePresence.ValuePro
     arrOfObj(objFields)
   );
 
-const strictArrayOf = (key: string, schema: Processor): ValuePresence.ValueProcessorTypes =>
+const strictArrayOf = (key: string, schema: Processor): ValuePresence.ValueProcessor =>
   ValuePresence.field(
     key,
     key,
@@ -60,67 +60,67 @@ const strictArrayOf = (key: string, schema: Processor): ValuePresence.ValueProce
     arrOf(schema)
   );
 
-const option = (key: string): ValuePresence.ValueProcessorTypes =>
+const option = (key: string): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.asOption(), anyValue());
 
-const optionOf = (key: string, schema: Processor): ValuePresence.ValueProcessorTypes =>
+const optionOf = (key: string, schema: Processor): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.asOption(), schema);
 
-const optionNumber = (key: string): ValuePresence.ValueProcessorTypes =>
+const optionNumber = (key: string): ValuePresence.ValueProcessor =>
   optionOf(key, ValueSchema.number);
 
-const optionString = (key: string): ValuePresence.ValueProcessorTypes =>
+const optionString = (key: string): ValuePresence.ValueProcessor =>
   optionOf(key, ValueSchema.string);
 
-const optionStringEnum = (key: string, values: string[]): ValuePresence.ValueProcessorTypes =>
+const optionStringEnum = (key: string, values: string[]): ValuePresence.ValueProcessor =>
   optionOf(key, validateEnum(values));
 
-const optionBoolean = (key: string): ValuePresence.ValueProcessorTypes =>
+const optionBoolean = (key: string): ValuePresence.ValueProcessor =>
   optionOf(key, ValueSchema.boolean);
 
-const optionFunction = (key: string): ValuePresence.ValueProcessorTypes =>
+const optionFunction = (key: string): ValuePresence.ValueProcessor =>
   optionOf(key, ValueSchema.func);
 
-const optionPostMsg = (key: string): ValuePresence.ValueProcessorTypes =>
+const optionPostMsg = (key: string): ValuePresence.ValueProcessor =>
   optionOf(key, ValueSchema.postMessageable);
 
-const optionArrayOf = (key: string, schema: Processor): ValuePresence.ValueProcessorTypes =>
+const optionArrayOf = (key: string, schema: Processor): ValuePresence.ValueProcessor =>
   optionOf(key, arrOf(schema));
 
-const optionObjOf = (key: string, objSchema: ValuePresence.ValueProcessorTypes[]): ValuePresence.ValueProcessorTypes =>
+const optionObjOf = (key: string, objSchema: ValuePresence.ValueProcessor[]): ValuePresence.ValueProcessor =>
   optionOf(key, objOf(objSchema));
 
-const optionObjOfOnly = (key: string, objSchema: ValuePresence.ValueProcessorTypes[]): ValuePresence.ValueProcessorTypes =>
+const optionObjOfOnly = (key: string, objSchema: ValuePresence.ValueProcessor[]): ValuePresence.ValueProcessor =>
   optionOf(key, objOfOnly(objSchema));
 
-const defaulted = (key: string, fallback: any): ValuePresence.ValueProcessorTypes =>
+const defaulted = (key: string, fallback: any): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.defaulted(fallback), anyValue());
 
-const defaultedOf = (key: string, fallback: any, schema: Processor): ValuePresence.ValueProcessorTypes =>
+const defaultedOf = (key: string, fallback: any, schema: Processor): ValuePresence.ValueProcessor =>
   ValuePresence.field(key, key, FieldPresence.defaulted(fallback), schema);
 
-const defaultedNumber = (key: string, fallback: number): ValuePresence.ValueProcessorTypes =>
+const defaultedNumber = (key: string, fallback: number): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, ValueSchema.number);
 
-const defaultedString = (key: string, fallback: string): ValuePresence.ValueProcessorTypes =>
+const defaultedString = (key: string, fallback: string): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, ValueSchema.string);
 
-const defaultedStringEnum = (key: string, fallback: string, values: string[]): ValuePresence.ValueProcessorTypes =>
+const defaultedStringEnum = (key: string, fallback: string, values: string[]): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, validateEnum(values));
 
-const defaultedBoolean = (key: string, fallback: boolean): ValuePresence.ValueProcessorTypes =>
+const defaultedBoolean = (key: string, fallback: boolean): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, ValueSchema.boolean);
 
-const defaultedFunction = (key: string, fallback: (...x: any[]) => any): ValuePresence.ValueProcessorTypes =>
+const defaultedFunction = (key: string, fallback: (...x: any[]) => any): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, ValueSchema.func);
 
-const defaultedPostMsg = (key: string, fallback: any): ValuePresence.ValueProcessorTypes =>
+const defaultedPostMsg = (key: string, fallback: any): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, ValueSchema.postMessageable);
 
-const defaultedArrayOf = (key: string, fallback: any[], schema: Processor): ValuePresence.ValueProcessorTypes =>
+const defaultedArrayOf = (key: string, fallback: any[], schema: Processor): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, arrOf(schema));
 
-const defaultedObjOf = (key: string, fallback: object, objSchema: ValuePresence.ValueProcessorTypes[]): ValuePresence.ValueProcessorTypes =>
+const defaultedObjOf = (key: string, fallback: object, objSchema: ValuePresence.ValueProcessor[]): ValuePresence.ValueProcessor =>
   defaultedOf(key, fallback, objOf(objSchema));
 
 const state = ValuePresence.state;

@@ -15,7 +15,7 @@ export interface SchemaError<T> {
 
 const _anyValue: Processor = value(SimpleResult.svalue);
 
-const arrOfObj = (objFields: ValuePresence.ValueProcessorTypes[]): Processor => _arrOfObj(objFields);
+const arrOfObj = (objFields: ValuePresence.ValueProcessor[]): Processor => _arrOfObj(objFields);
 
 const arrOfVal = (): Processor => arrOf(_anyValue);
 
@@ -27,7 +27,7 @@ const valueOf = (validator: (a: any) => Result<any, any>): Processor =>
 const setOf = (validator: (a) => Result<any, any>, prop: Processor): Processor => doSetOf((v) => SimpleResult.fromResult(validator(v)), prop);
 
 const extractValue = (label: string, prop: Processor, obj: any): SimpleResult<any, any> => {
-  const res = prop.extractProp([ label ], obj);
+  const res = prop.getProp([ label ], obj);
   return SimpleResult.mapError(res, (errs) => ({ input: obj, errors: errs }));
 };
 
@@ -55,7 +55,7 @@ const formatError = (errInfo: SchemaError<any>): string => {
 const chooseProcessor = (key: string, branches: Record<string, Processor>): Processor =>
   _choose(key, branches);
 
-const choose = (key: string, branches: Record<string, ValuePresence.ValueProcessorTypes[]>): Processor =>
+const choose = (key: string, branches: Record<string, ValuePresence.ValueProcessor[]>): Processor =>
   _choose(key, Obj.map(branches, objOf));
 
 const thunkOf = (desc: string, schema: () => Processor): Processor =>

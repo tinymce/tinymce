@@ -1,4 +1,4 @@
-import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -7,7 +7,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
 import { CustomListDetail } from '../types/CustomListTypes';
 
-const schema: () => ValueProcessorTypes[] = Fun.constant([
+const schema: () => ValueProcessor[] = Fun.constant([
   FieldSchema.defaulted('shell', false),
   FieldSchema.strict('makeItem'),
   FieldSchema.defaulted('setupItem', Fun.noop),

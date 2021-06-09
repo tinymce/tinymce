@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Replaced the FieldPresence and ValueProcessor ADTs with standard functions
+
 ### Removed
-- `FieldPresenceAdt` and `ValueProcessorAdt` (which was aliased to `FieldProcessorAdt` externally) #TINY-7549
-- `asStruct` and `asStructOrDie` from ValueSchema as they were unused #TINY-7549
-- The Strength concept #TINY-7549
+- Removed the `FieldPresenceAdt` and `ValueProcessorAdt` types (which was aliased to `FieldProcessorAdt` externally) #TINY-7549
+- Removed `asStruct` and `asStructOrDie` from ValueSchema as they were unused #TINY-7549
+- Removed the Strength concept #TINY-7549
+- Removed `indexOnKey` from the `Objects` API #TINY-7549

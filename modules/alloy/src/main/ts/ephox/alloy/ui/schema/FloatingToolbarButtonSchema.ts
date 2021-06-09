@@ -1,4 +1,4 @@
-import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -16,7 +16,7 @@ import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes
 import { ToolbarSpec } from '../types/ToolbarTypes';
 import * as ToolbarSchema from './ToolbarSchema';
 
-const schema: () => ValueProcessorTypes[] = Fun.constant([
+const schema: () => ValueProcessor[] = Fun.constant([
   Fields.markers([ 'toggledClass' ]),
   FieldSchema.strict('lazySink'),
   FieldSchema.strictFunction('fetch'),

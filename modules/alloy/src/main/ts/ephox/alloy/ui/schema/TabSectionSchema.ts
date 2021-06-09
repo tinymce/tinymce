@@ -1,4 +1,4 @@
-import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
@@ -10,7 +10,7 @@ import { TabbarSpec } from '../types/TabbarTypes';
 import { TabSectionDetail } from '../types/TabSectionTypes';
 import { TabviewSpec } from '../types/TabviewTypes';
 
-const schema: () => ValueProcessorTypes[] = Fun.constant([
+const schema: () => ValueProcessor[] = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),
   Fields.onHandler('onChangeTab'),
   Fields.onHandler('onDismissTab'),

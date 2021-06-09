@@ -1,4 +1,4 @@
-import { ValueProcessorTypes, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
@@ -19,14 +19,14 @@ type SketcherApisFuncRecord<A extends FunctionRecord<A>> = { [K in keyof A]: A[K
 
 export interface SingleSketch<S extends SingleSketchSpec> {
   readonly name: string;
-  readonly configFields: ValueProcessorTypes[];
+  readonly configFields: ValueProcessor[];
   readonly sketch: (spec: S) => SketchSpec;
 }
 
 export interface SingleSketcherSpec<S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
   name: string;
   factory: UiSketcher.SingleSketchFactory<D, S>;
-  configFields: ValueProcessorTypes[];
+  configFields: ValueProcessor[];
   apis?: Record<string, SketcherApisFunc<A, any>>;
   extraApis?: E;
 }
@@ -34,7 +34,7 @@ export interface SingleSketcherSpec<S extends SingleSketchSpec, D extends Single
 export interface SingleSketcherRawDetail<S extends SingleSketchSpec, D extends SingleSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
   name: string;
   factory: UiSketcher.SingleSketchFactory<D, S>;
-  configFields: ValueProcessorTypes[];
+  configFields: ValueProcessor[];
   apis: Record<string, SketcherApisFunc<A, any>>;
   extraApis: E;
 }
@@ -47,7 +47,7 @@ export interface CompositeSketchDetail extends BaseSketchDetail<CompositeSketchS
 
 export interface CompositeSketch<S extends CompositeSketchSpec> {
   readonly name: string;
-  readonly configFields: ValueProcessorTypes[];
+  readonly configFields: ValueProcessor[];
   readonly partFields: PartTypeAdt[];
   readonly sketch: (spec: S) => SketchSpec;
   readonly parts: AlloyParts.GeneratedParts;
@@ -56,7 +56,7 @@ export interface CompositeSketch<S extends CompositeSketchSpec> {
 export interface CompositeSketcherSpec<S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
   name: string;
   factory: UiSketcher.CompositeSketchFactory<D, S>;
-  configFields: ValueProcessorTypes[];
+  configFields: ValueProcessor[];
   partFields: PartTypeAdt[];
   apis?: Record<string, SketcherApisFunc<A, any>>;
   extraApis?: E;
@@ -65,7 +65,7 @@ export interface CompositeSketcherSpec<S extends CompositeSketchSpec, D extends 
 export interface CompositeSketcherRawDetail<S extends CompositeSketchSpec, D extends CompositeSketchDetail, A extends FunctionRecord<A>, E extends FunctionRecord<E> = {}> {
   name: string;
   factory: UiSketcher.CompositeSketchFactory<D, S>;
-  configFields: ValueProcessorTypes[];
+  configFields: ValueProcessor[];
   partFields: PartTypeAdt[];
   apis: Record<string, SketcherApisFunc<A, any>>;
   extraApis: E;

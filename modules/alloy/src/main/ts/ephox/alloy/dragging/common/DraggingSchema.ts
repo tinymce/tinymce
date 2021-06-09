@@ -1,10 +1,10 @@
-import { ValueProcessorTypes, FieldSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Boxes from '../../alien/Boxes';
 import SnapSchema from './SnapSchema';
 
-const schema: ValueProcessorTypes[] = [
+const schema: ValueProcessor[] = [
   // Is this used?
   FieldSchema.defaulted('useFixed', Fun.never),
   FieldSchema.strict('blockerClass'),

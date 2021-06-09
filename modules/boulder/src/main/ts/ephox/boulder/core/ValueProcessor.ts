@@ -11,9 +11,8 @@ type SchemaError = SchemaError.SchemaError;
 
 export type ValueValidator = (a) => SimpleResult<string, any>;
 export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaError[], any>;
-export type ValueExtractor = (label: string, prop: Processor, obj: any) => SimpleResult<SchemaError[], string>;
 export interface Processor {
-  extractProp: PropExtractor;
+  getProp: PropExtractor;
   toString: () => string;
 }
 
@@ -43,12 +42,12 @@ const optionDefaultedAccess = <T>(obj: Record<string, T | true>, key: string, fa
 type SimpleBundle = SimpleResult<SchemaError[], any>;
 type OptionBundle = SimpleResult<SchemaError[], Record<string, Optional<any>>>;
 
-const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePresence.ValueProcessorTypes): SimpleResult<SchemaError[], T> => {
+const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePresence.ValueProcessor): SimpleResult<SchemaError[], T> => {
   return ValuePresence.fold(
     value,
     (key, newKey, presence, prop) => {
       const bundle = (av: any): SimpleBundle => {
-        const result = prop.extractProp(path.concat([ key ]), av);
+        const result = prop.getProp(path.concat([ key ]), av);
         return SimpleResult.map(result, (res) => ObjWriter.wrap(newKey, res));
       };
 
@@ -57,7 +56,7 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
           const outcome = ObjWriter.wrap(newKey, Optional.none());
           return SimpleResult.svalue(outcome);
         }, (ov) => {
-          const result: SimpleResult<any, any> = prop.extractProp(path.concat([ key ]), ov);
+          const result: SimpleResult<any, any> = prop.getProp(path.concat([ key ]), ov);
           return SimpleResult.map(result, (res) => {
             return ObjWriter.wrap(newKey, Optional.some(res));
           });
@@ -65,27 +64,27 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
       };
 
       switch (presence.discriminator) {
-        case 'strict':
+        case FieldPresence.FieldTypes.Strict:
           return SimpleResult.bind(
             strictAccess(path, obj, key),
             bundle
           );
-        case 'defaultedThunk':
+        case FieldPresence.FieldTypes.DefaultedThunk:
           return SimpleResult.bind(
             fallbackAccess(obj, key, presence.callback),
             bundle
           );
-        case 'asOption':
+        case FieldPresence.FieldTypes.AsOption:
           return SimpleResult.bind(
             optionAccess(obj, key),
             bundleAsOption
           );
-        case 'asDefaultedOptionThunk':
+        case FieldPresence.FieldTypes.AsDefaultedOptionThunk:
           return SimpleResult.bind(
             optionDefaultedAccess(obj, key, presence.callback),
             bundleAsOption
           );
-        case 'mergeWithThunk': {
+        case FieldPresence.FieldTypes.MergeWithThunk: {
           const base = presence.callback(obj);
           const result = SimpleResult.map(
             fallbackAccess(obj, key, Fun.constant({})),
@@ -102,18 +101,18 @@ const cExtractOne = <T>(path: string[], obj: Record<string, T>, value: ValuePres
   );
 };
 
-const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValuePresence.ValueProcessorTypes[]): SimpleResult<SchemaError[], T> => {
+const cExtract = <T>(path: string[], obj: Record<string, T>, fields: ValuePresence.ValueProcessor[]): SimpleResult<SchemaError[], T> => {
   const results = Arr.map(fields, (field) => cExtractOne(path, obj, field));
   return ResultCombine.consolidateObj(results, {});
 };
 
 const valueThunk = (getDelegate: () => Processor): Processor => {
-  const extract = (path: string[], val: any) => getDelegate().extractProp(path, val);
+  const extract = (path: string[], val: any) => getDelegate().getProp(path, val);
 
   const toString = () => getDelegate().toString();
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
@@ -129,7 +128,7 @@ const value = (validator: ValueValidator): Processor => {
   const toString = () => 'val';
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
@@ -137,10 +136,10 @@ const value = (validator: ValueValidator): Processor => {
 // This is because Obj.keys can return things where the key is set to undefined.
 const getSetKeys = (obj) => Obj.keys(Obj.filter(obj, (value) => value !== undefined && value !== null));
 
-const objOfOnly = (fields: ValuePresence.ValueProcessorTypes[]): Processor => {
+const objOfOnly = (fields: ValuePresence.ValueProcessor[]): Processor => {
   const delegate = objOf(fields);
 
-  const fieldNames = Arr.foldr<ValuePresence.ValueProcessorTypes, Record<string, string>>(fields, (acc, value: ValuePresence.ValueProcessorTypes) => {
+  const fieldNames = Arr.foldr<ValuePresence.ValueProcessor, Record<string, string>>(fields, (acc, value: ValuePresence.ValueProcessor) => {
     return ValuePresence.fold(
       value,
       (key) => Merger.deepMerge(acc, Objects.wrap(key, true)),
@@ -152,16 +151,16 @@ const objOfOnly = (fields: ValuePresence.ValueProcessorTypes[]): Processor => {
     const keys = Type.isBoolean(o) ? [] : getSetKeys(o);
     const extra = Arr.filter(keys, (k) => !Obj.hasNonNullableKey(fieldNames, k));
 
-    return extra.length === 0 ? delegate.extractProp(path, o) : SchemaError.unsupportedFields(path, extra);
+    return extra.length === 0 ? delegate.getProp(path, o) : SchemaError.unsupportedFields(path, extra);
   };
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString: delegate.toString
   };
 };
 
-const objOf = (values: ValuePresence.ValueProcessorTypes[]): Processor => {
+const objOf = (values: ValuePresence.ValueProcessor[]): Processor => {
   const extract = (path: string[], o: Record<string, any>) => cExtract(path, o, values);
 
   const toString = () => {
@@ -174,21 +173,21 @@ const objOf = (values: ValuePresence.ValueProcessorTypes[]): Processor => {
   };
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
 
 const arrOf = (prop: Processor): Processor => {
   const extract = (path, array) => {
-    const results = Arr.map(array, (a, i) => prop.extractProp(path.concat([ '[' + i + ']' ]), a));
+    const results = Arr.map(array, (a, i) => prop.getProp(path.concat([ '[' + i + ']' ]), a));
     return ResultCombine.consolidateArr(results);
   };
 
   const toString = () => 'array(' + prop.toString() + ')';
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
@@ -199,7 +198,7 @@ const oneOf = (props: Processor[]): Processor => {
 
     // Return on first match
     for (const prop of props) {
-      const res = prop.extractProp(path, val);
+      const res = prop.getProp(path, val);
       if (res.stype === SimpleResultType.Value) {
         return res;
       }
@@ -213,13 +212,13 @@ const oneOf = (props: Processor[]): Processor => {
   const toString = () => 'oneOf(' + Arr.map(props, (prop) => prop.toString()).join(', ') + ')';
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
 
 const setOf = (validator: ValueValidator, prop: Processor): Processor => {
-  const validateKeys = (path, keys) => arrOf(value(validator)).extractProp(path, keys);
+  const validateKeys = (path, keys) => arrOf(value(validator)).getProp(path, keys);
   const extract = (path, o) => {
     //
     const keys = Obj.keys(o);
@@ -229,14 +228,14 @@ const setOf = (validator: ValueValidator, prop: Processor): Processor => {
         return ValuePresence.field(vk, vk, FieldPresence.strict(), prop);
       });
 
-      return objOf(schema).extractProp(path, o);
+      return objOf(schema).getProp(path, o);
     });
   };
 
   const toString = () => 'setOf(' + prop.toString() + ')';
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };
@@ -252,7 +251,7 @@ const func = (args: string[], _schema: Processor, retriever: (obj: any) => any):
   });
 
   return {
-    extractProp: delegate.extractProp,
+    getProp: delegate.getProp,
     toString: Fun.constant('function')
   };
 };
@@ -260,12 +259,12 @@ const func = (args: string[], _schema: Processor, retriever: (obj: any) => any):
 const thunk = (_desc: string, processor: () => Processor): Processor => {
   const getP = Thunk.cached(processor);
 
-  const extract = (path: string[], val: any) => getP().extractProp(path, val);
+  const extract = (path: string[], val: any) => getP().getProp(path, val);
 
   const toString = () => getP().toString();
 
   return {
-    extractProp: extract,
+    getProp: extract,
     toString
   };
 };

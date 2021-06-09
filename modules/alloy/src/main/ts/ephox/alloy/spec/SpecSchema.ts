@@ -1,4 +1,4 @@
-import { ValueProcessorTypes, FieldSchema, ValueSchema } from '@ephox/boulder';
+import { ValueProcessor, FieldSchema, ValueSchema } from '@ephox/boulder';
 
 import { AlloySpec, OptionalDomSchema } from '../api/component/SpecTypes';
 import * as Fields from '../data/Fields';
@@ -15,7 +15,7 @@ export interface BaseSketchDetail<T extends BaseSketchSpec> {
   'debug.sketcher': { };
 }
 
-const base = (partSchemas: ValueProcessorTypes[], partUidsSchemas: ValueProcessorTypes[]) => {
+const base = (partSchemas: ValueProcessor[], partUidsSchemas: ValueProcessor[]) => {
   const ps = partSchemas.length > 0 ? [
     FieldSchema.strictObjOf('parts', partSchemas)
   ] : [ ];
@@ -29,7 +29,7 @@ const base = (partSchemas: ValueProcessorTypes[], partUidsSchemas: ValueProcesso
   ]).concat(partUidsSchemas);
 };
 
-const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: ValueProcessorTypes[], spec: S, partSchemas: ValueProcessorTypes[], partUidsSchemas: ValueProcessorTypes[]): D => {
+const asRawOrDie = <D extends BaseSketchDetail<any>, S extends BaseSketchSpec>(label: string, schema: ValueProcessor[], spec: S, partSchemas: ValueProcessor[], partUidsSchemas: ValueProcessor[]): D => {
   const baseS = base(partSchemas, partUidsSchemas);
   return ValueSchema.asRawOrDie(label + ' [SpecSchema]', ValueSchema.objOfOnly(baseS.concat(schema)), spec);
 };

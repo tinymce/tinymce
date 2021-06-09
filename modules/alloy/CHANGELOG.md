@@ -12,9 +12,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Changed disconnected components to log a warning instead of throwing an error when triggering or broadcasting events.
 
-### Removed
-- `asStructOrDie` from SpecSchema as it was unused
-
 ## 8.2.0 - 2021-05-06
 
 ### Added

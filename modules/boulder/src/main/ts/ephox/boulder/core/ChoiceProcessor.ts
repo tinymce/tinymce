@@ -6,7 +6,7 @@ const chooseFrom = (path: string[], input: Record<string, any>, branches: Record
   const fields = Obj.get(branches, ch);
   return fields.fold(
     () => missingBranch(path, branches, ch),
-    (vp) => vp.extractProp(path.concat([ 'branch: ' + ch ]), input)
+    (vp) => vp.getProp(path.concat([ 'branch: ' + ch ]), input)
   );
 };
 
@@ -24,7 +24,7 @@ const choose = (key: string, branches: Record<string, Processor>): Processor => 
   const toString = () => 'chooseOn(' + key + '). Possible values: ' + Obj.keys(branches);
 
   return {
-    extractProp: extractChoice,
+    getProp: extractChoice,
     toString
   };
 };
