@@ -13,6 +13,8 @@ export interface StringMap {
 }
 
 export type ClassList = Array<{title: string; value: string}>;
+export type MenuItemList = Array<{text: string; value: string}>;
+
 type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
@@ -21,6 +23,15 @@ const defaultStyles = {
   'border-collapse': 'collapse',
   'width': '100%'
 };
+
+const defaultCellBorderWidths = Arr.range(5, (i) => {
+  const size = `${i + 1}px`;
+  return { title: size, value: size };
+});
+
+const defaultCellBorderStyles = Arr.map([ 'Solid', 'Dotted', 'Dashed', 'Double', 'Groove', 'Ridge', 'Inset', 'Outset', 'None', 'Hidden' ], (type) => {
+  return { text: type, value: type.toLowerCase() };
+});
 
 const determineDefaultStyles = (editor: Editor) => {
   if (isPixelsForced(editor)) {
@@ -41,6 +52,10 @@ const defaultColumnResizingBehaviour = 'preservetable';
 
 const getTableSizingMode = (editor: Editor): TableSizingMode => editor.getParam('table_sizing_mode', 'auto');
 const getTableResponseWidth = (editor: Editor): boolean | undefined => editor.getParam('table_responsive_width');
+
+const getTableBorderWidths = (editor: Editor): ClassList => editor.getParam('table_border_widths', defaultCellBorderWidths, 'array');
+
+const getTableBorderStyles = (editor: Editor): MenuItemList => editor.getParam('table_border_styles', defaultCellBorderStyles, 'array');
 
 const getDefaultAttributes = (editor: Editor): StringMap => editor.getParam('table_default_attributes', defaultAttributes, 'object');
 const getDefaultStyles = (editor: Editor): StringMap => editor.getParam('table_default_styles', determineDefaultStyles(editor), 'object');
@@ -123,5 +138,7 @@ export {
   getColumnResizingBehaviour,
   isPreserveTableColumnResizing,
   isResizeTableColumnResizing,
+  getTableBorderWidths,
+  getTableBorderStyles,
   useColumnGroup
 };

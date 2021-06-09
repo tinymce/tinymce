@@ -30,6 +30,10 @@ const onSetupToggle = (editor: Editor, formatName: string, formatValue: string) 
   };
 };
 
+const applyTableCellStyle = <T extends Item>(editor: Editor, style: string) =>
+  (item: T) =>
+    editor.execCommand('mceTableApplyCellStyle', false, { [style]: item.value });
+
 const filterNoneItem = <T extends Item>(list: T[]) =>
   Arr.filter(list, (item) => Strings.isNotEmpty(item.value));
 
@@ -51,5 +55,6 @@ export {
   onSetupToggle,
   generateItems,
   generateItemsCallback,
-  filterNoneItem
+  filterNoneItem,
+  applyTableCellStyle
 };
