@@ -93,7 +93,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
 
   const toggleCaption = () => {
     getSelectionStartCellOrCaption(editor).each((cellOrCaption) => {
-      TableLookup.table(cellOrCaption, isRoot).filter(Fun.not(isRoot)).each((table) => {
+      TableLookup.table(cellOrCaption, isRoot).each((table) => {
         const captionElementOpt = Selectors.one('caption', table);
 
         captionElementOpt.fold(
@@ -102,9 +102,7 @@ const registerCommands = (editor: Editor, actions: TableActions, cellSelection: 
             Insert.append(caption, SugarElement.fromText('Caption'));
             Insert.appendAt(table, caption, 0);
           },
-          (caption) => {
-            Remove.remove(caption);
-          }
+          Remove.remove
         );
 
         Events.fireTableModified(editor, table.dom, Events.structureModified);
